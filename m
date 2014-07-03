@@ -1,616 +1,97 @@
-From: Daniel Jeong <gshark.jeong@gmail.com>
-Subject: [RFC v4 1/2] backlight: add new tps611xx backlight driver
-Date: Thu,  3 Jul 2014 15:01:16 +0900
-Message-ID: <1404367277-12003-2-git-send-email-gshark.jeong@gmail.com>
-References: <1404367277-12003-1-git-send-email-gshark.jeong@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404367277-12003-1-git-send-email-gshark.jeong@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: Daniel Jeong <daniel.jeong@ti.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Daniel Jeong <gshark.jeong@gmail.com>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: add pxa27x clock drivers
+Date: Thu, 3 Jul 2014 14:12:11 +0800
+Message-ID: <CAN1soZzoiGAz3OicdKbg5Dv2tW3yeinsu2i=M7KX+j1HuMs3Kg@mail.gmail.com>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+	<1404066744-13416-2-git-send-email-robert.jarzmik@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404066744-13416-2-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver is a general version for tps611xx backlgiht chips of TI.
-It supports tps61158, tps61161, tps61163 and tps61165 backlight driver
-based on EasyScale protocol(1-Wire Control Interface).
+On Mon, Jun 30, 2014 at 2:32 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Move pxa27x clock drivers from arch/arm/mach-pxa to driver/clk.
+> In the move :
+>  - convert to new clock framework legacy clocks
+>  - provide clocks as before for platform data based boards
+>  - provide clocks through devicetree with clk-pxa-dt
+>
+> This is the preliminary step in the conversion. The remaining steps are
+> :
+>  - migrate pxa25x and pxa3xx
+>  - once PXA is fully converted to device tree, if that happens,
+>    clk-pxa2* and clk-pxa3* should only hold the core clocks which cannot
+>    be described in devicetree.
+>
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> ---
+>  drivers/clk/Makefile         |   1 +
+>  drivers/clk/pxa/Makefile     |   4 +
+>  drivers/clk/pxa/clk-pxa-dt.c |  76 ++++++++++
+>  drivers/clk/pxa/clk-pxa27x.c | 324 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/pxa/clk-pxa2xx.c |  74 ++++++++++
+>  drivers/clk/pxa/clk-pxa2xx.h |  47 +++++++
+>  6 files changed, 526 insertions(+)
+>  create mode 100644 drivers/clk/pxa/Makefile
+>  create mode 100644 drivers/clk/pxa/clk-pxa-dt.c
+>  create mode 100644 drivers/clk/pxa/clk-pxa27x.c
+>  create mode 100644 drivers/clk/pxa/clk-pxa2xx.c
+>  create mode 100644 drivers/clk/pxa/clk-pxa2xx.h
+>
+> +
+> +static struct pxa27x_clocks_fixed_cken pxa27x_without_dt_clocks[] __initdata = {
+> +       PXA2_FIXED_RATE("pxa2xx-uart.0", NULL, FFUART, 14857000, 1),
+> +       PXA2_FIXED_RATE("pxa2xx-uart.1", NULL, BTUART, 14857000, 1),
+> +       PXA2_FIXED_RATE("pxa2xx-uart.2", NULL, STUART, 14857000, 1),
+> +       PXA2_FIXED_RATE(NULL, "UARTCLK", STUART, 14857000, 1),
+> +       PXA2_FIXED_RATE("pxa2xx-i2s", NULL, I2S, 14682000, 0),
+> +       PXA2_FIXED_RATE("pxa2xx-i2c.0", NULL, I2C, 32842000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-udc", NULL, USB, 48000000, 5),
+> +       PXA2_FIXED_RATE("pxa2xx-mci.0", NULL, MMC, 19500000, 0),
+> +       PXA2_FIXED_RATE("pxa2xx-ir", "FICPCLK", FICP, 48000000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-ohci", NULL, USBHOST, 48000000, 0),
+> +       PXA2_FIXED_RATE("pxa2xx-i2c.1", NULL, PWRI2C, 13000000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-keypad", NULL, KEYPAD, 32768, 0),
+> +       PXA2_FIXED_RATE("pxa27x-ssp.0", NULL, SSP1, 13000000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-ssp.1", NULL, SSP2, 13000000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-ssp.2", NULL, SSP3, 13000000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-pwm.0", NULL, PWM0, 13000000, 0),
+> +       PXA2_FIXED_RATE("pxa27x-pwm.1", NULL, PWM1, 13000000, 0),
+> +       PXA2_FIXED_RATE(NULL, "AC97CLK", AC97, 24576000, 0),
+> +       PXA2_FIXED_RATE(NULL, "AC97CONFCLK", AC97CONF, 24576000, 0),
+> +       PXA2_FIXED_RATE(NULL, "MSLCLK", MSL, 48000000, 0),
+> +       PXA2_FIXED_RATE(NULL, "USIMCLK", USIM, 48000000, 0),
+> +       PXA2_FIXED_RATE(NULL, "MSTKCLK", MEMSTK, 19500000, 0),
+> +       PXA2_FIXED_RATE(NULL, "IMCLK", IM, 0, 0),
+> +       PXA2_FIXED_RATE_AO("pxa27x-memc", "MEMCLK", MEMC, 0, 0),
+> +};
+> +
+> +static struct pxa27x_clocks_var_rate pxa27x_var_rate_clocks[] __initdata = {
+> +       PXA2_VAR_RATE("pxa2xx-fb", true, LCD, &clk_pxa27x_lcd_ops),
+> +       PXA2_VAR_RATE("pxa27x-camera.0", true, CAMERA, &clk_pxa27x_lcd_ops),
+> +       PXA2_VAR_RATE("pxa2xx-pcmcia", false, MEMC, &clk_pxa27x_mem_ops),
+> +};
+> +
 
-EasyScale
-EasyScale is a simple but flexible one pin interface to configure the current.
-The interface is based on a master-slave structure, where the master is
-typically a microcontroller or application processor and the IC is the slave.
-The advantage of EasyScale compared with other one pin interfaces is that
-its bit detection is in a large extent independent from the bit transmission
-rate. It can automatically detect bit rates between 1.7kBit/sec and up
-to 160kBit/sec.
+It's not good to define a VAR table any more.
 
-EasyScale on TPS61163
-A command consists of 24 bits, including an 8-bit device address byte and
-a 16-bit data byte. All of the 24 bits should be transmitted together each
-time, and the LSB bit should be transmitted first. The device address byte
-A7(MSB)~A0(LSB) is fixed to 0x8F.
-The data byte includes 9 bits D8(MSB)~D0(LSB) for brightness information
-and an RFA bit. The RFA bit set to "1" indicates the Request for Acknowledge
-condition. The Acknowledge condition is only applied when the protocol is
-received correctly.
-Bit sream : D0-D8 | 0 | RFA | 00000 | A0-A7
-Please refer to the links below  for more details.
-http://www.ti.com/lit/ds/symlink/tps61163.pdf
+Now we have the common clock framework. Since these three clocks are
+used as clock
+gate. And their clock frequency is controlled by other bits in
+peripheral controller registers.
+We can define parent & child clocks in clock tables. I think that you
+can get a lot of
+reference in clock drivers, such as exynos, hisilicon, ...
 
-EasyScale on TPS61158/61/65
-A command consists of 16 bits, including an 8-bit device address byte
-and a 8-bit data byte. All of the 16 bits should be transmitted together
-each time, and the MSB bit should be transmitted first. The device address
-byte A7(MSB)~A0(LSB) is fixed (tps61158 0x58 tps61161 and tps61165 0x72).
-The data byte includes an RFA bit.
-The RFA bit set to "1" indicates the Request for Acknowledge condition.
-The Acknowledge condition is only applied when the protocol is received
-correctly.
-Bit sream : A7-A0 | RFA | 00 | D4-D0
-Please refer to the links below  for more details.
-http://www.ti.com/lit/ds/symlink/tps61158.pdf
-http://www.ti.com.cn/cn/lit/ds/symlink/tps61161-q1.pdf
-http://www.ti.com/lit/ds/symlink/tps61165.pdf
+Same comment on PXA_FIXED_RATE table.
 
-Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
----
- drivers/video/backlight/Kconfig           |    7 +
- drivers/video/backlight/Makefile          |    1 +
- drivers/video/backlight/tps611xx_bl.c     |  479 +++++++++++++++++++++++++++++
- include/linux/platform_data/tps611xx_bl.h |   31 ++
- 4 files changed, 518 insertions(+)
- create mode 100644 drivers/video/backlight/tps611xx_bl.c
- create mode 100644 include/linux/platform_data/tps611xx_bl.h
-
-diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index 5a3eb2e..c779a85 100644
---- a/drivers/video/backlight/Kconfig
-+++ b/drivers/video/backlight/Kconfig
-@@ -418,6 +418,13 @@ config BACKLIGHT_TPS65217
- 	  If you have a Texas Instruments TPS65217 say Y to enable the
- 	  backlight driver.
- 
-+config BACKLIGHT_TPS611xx
-+	tristate "TPS611xx Backlight"
-+	depends on BACKLIGHT_CLASS_DEVICE && GPIOLIB
-+	help
-+	  This supports TI TPS61158,TPS61161, TPS61163 and TPS61165
-+	  backlight driver based on EasyScale Protocol.
-+
- config BACKLIGHT_AS3711
- 	tristate "AS3711 Backlight"
- 	depends on BACKLIGHT_CLASS_DEVICE && MFD_AS3711
-diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-index bb82002..5c39945 100644
---- a/drivers/video/backlight/Makefile
-+++ b/drivers/video/backlight/Makefile
-@@ -51,5 +51,6 @@ obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
- obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
- obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
- obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
-+obj-$(CONFIG_BACKLIGHT_TPS611xx)	+= tps611xx_bl.o
- obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
- obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
-diff --git a/drivers/video/backlight/tps611xx_bl.c b/drivers/video/backlight/tps611xx_bl.c
-new file mode 100644
-index 0000000..6c485ff
---- /dev/null
-+++ b/drivers/video/backlight/tps611xx_bl.c
-@@ -0,0 +1,479 @@
-+/*
-+ * Simple driver for Texas Instruments TPS611XX Backlight driver chip
-+ *        using EasyScale Interface. It supports TPS61158, TPS61161,
-+ *        TPS61163 and TPS61165.
-+ *
-+ * Copyright (C) 2014 Texas Instruments
-+ * Author: Daniel Jeong  <gshark.jeong@gmail.com>
-+ *	       Ldd Mlp <ldd-mlp@list.ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/fb.h>
-+#include <linux/gpio.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_data/tps611xx_bl.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define CMD_FORWARD 0
-+#define CMD_BACKWARD 1
-+
-+enum tps611xx_id {
-+	TPS61158_ID = 0,
-+	TPS61161_ID,
-+	TPS61163_ID,
-+	TPS61165_ID,
-+};
-+
-+/*
-+ * easyscale time spec
-+ * @es_delay : es delay time(ns)
-+ * @es_det   : es detection time(ns)
-+ * @start    : start time of data stream(ns)
-+ * @eos      : end time of data stream(ns)
-+ * @reset    : ic shutdown time(ms)
-+ * @logic_1_low : low time high bit(ns)
-+ * @logic_0_low : low time low bit(ns)
-+ * @ackn        : duation of ack condistion(ns)
-+ * @ack_poll    : ack polling duration(ns)
-+ */
-+struct tps611xx_time {
-+	unsigned int es_delay;
-+	unsigned int es_det;
-+	unsigned int start;
-+	unsigned int eos;
-+	unsigned int reset;
-+	unsigned int logic_1_low;
-+	unsigned int logic_0_low;
-+	unsigned int ackn;
-+	unsigned int ack_poll;
-+};
-+
-+/*
-+ * @seq : sequence of data transfer
-+ * @size: size of data
-+ * @brt_max : max brightness
-+ * @brt_bmask : bit mask of dimming bits
-+ * @rfa_bmask : bit mask of RFA(Request for Acknowledge condition)
-+ */
-+struct tps611xx_command {
-+	int seq;
-+	int size;
-+	int brt_max;
-+	int brt_bmask;
-+	int rfa_bmask;
-+};
-+
-+/*
-+ * @id : product id
-+ * @name : product name
-+ * @addr : device address
-+ * @cmd  : es command info
-+ * @time : es time info
-+ */
-+struct tps611xx_esdata {
-+	enum tps611xx_id id;
-+	char *name;
-+	int addr;
-+	struct tps611xx_command cmd;
-+	struct tps611xx_time time;
-+};
-+
-+struct tps611xx_bl_data {
-+	struct device *dev;
-+	struct backlight_device *bled;
-+	struct tps611xx_platform_data *pdata;
-+
-+	/*
-+	 * @rfa_en : RFA enable (Request for Acknowledge condition)
-+	 * @en_gpio: enable pin gpio no.
-+	 * @esdata : easyscale data
-+	 */
-+	int rfa_en;
-+	unsigned int en_gpio;
-+	const struct tps611xx_esdata *esdata;
-+};
-+
-+static struct tps611xx_esdata tps611xx_info[] = {
-+	[TPS61158_ID] = {
-+		.id = TPS61158_ID,
-+		.name = "tps61158",
-+		.addr = 0x5800,
-+		.cmd = {
-+			.seq = CMD_FORWARD,
-+			.size = 16,
-+			.brt_max = 31,
-+			.brt_bmask = 0x1f,
-+			.rfa_bmask = 0x80
-+		},
-+		.time = {
-+			.es_delay = 100000,
-+			.es_det = 450000,
-+			.start = 3500,
-+			.eos = 3500,
-+			.reset = 4,
-+			.logic_1_low = 5000,
-+			.logic_0_low = 15000,
-+			.ackn = 900000,
-+			.ack_poll = 2000
-+		},
-+	},
-+
-+	[TPS61161_ID] = {
-+		.id = TPS61161_ID,
-+		.name = "tps61161",
-+		.addr = 0x7200,
-+		.cmd = {
-+			.seq = CMD_FORWARD,
-+			.size = 16,
-+			.brt_max = 31,
-+			.brt_bmask = 0x1f,
-+			.rfa_bmask = 0x80
-+		},
-+		.time = {
-+			.es_delay = 120000,
-+			.es_det = 280000,
-+			.start = 2000,
-+			.eos = 2000,
-+			.reset = 3,
-+			.logic_1_low = 3000,
-+			.logic_0_low = 7000,
-+			.ackn = 512000,
-+			.ack_poll = 2000
-+		},
-+	},
-+
-+	[TPS61163_ID] = {
-+		.id = TPS61163_ID,
-+		.name = "tps61163",
-+		.addr = 0x8F0000,
-+		.cmd = {
-+			.seq = CMD_BACKWARD,
-+			.size = 24,
-+			.brt_max = 511,
-+			.brt_bmask = 0x1ff,
-+			.rfa_bmask = 0x400
-+		},
-+		.time = {
-+			.es_delay = 100000,
-+			.es_det = 260000,
-+			.start = 2000,
-+			.eos = 2000,
-+			.reset = 3,
-+			.logic_1_low = 3000,
-+			.logic_0_low = 7000,
-+			.ackn = 512000,
-+			.ack_poll = 2000
-+		},
-+	},
-+
-+	[TPS61165_ID] = {
-+		.id = TPS61165_ID,
-+		.name = "tps61165",
-+		.addr = 0x7200,
-+		.cmd = {
-+			.seq = CMD_FORWARD,
-+			.size = 16,
-+			.brt_max = 31,
-+			.brt_bmask = 0x1f,
-+			.rfa_bmask = 0x80
-+		},
-+		.time = {
-+			.es_delay = 120000,
-+			.es_det = 280000,
-+			.start = 4000,
-+			.eos = 4000,
-+			.reset = 3,
-+			.logic_1_low = 3000,
-+			.logic_0_low = 7000,
-+			.ackn = 512000,
-+			.ack_poll = 2000
-+		},
-+	},
-+};
-+
-+static int tps611xx_bl_update_status(struct backlight_device *bl)
-+{
-+	struct tps611xx_bl_data *pchip = bl_get_data(bl);
-+	const struct tps611xx_esdata *esdata = pchip->esdata;
-+	int data_in, t_low, t_logic, max_bmask;
-+	unsigned long flags;
-+
-+	data_in = esdata->addr | (bl->props.brightness & esdata->cmd.brt_bmask);
-+	if (pchip->rfa_en)
-+		data_in |= esdata->cmd.rfa_bmask;
-+
-+	max_bmask = 0x1 << esdata->cmd.size;
-+	t_logic = esdata->time.logic_1_low + esdata->time.logic_0_low;
-+
-+	local_irq_save(flags);
-+	/* t_start : 2us high before data byte */
-+	gpio_direction_output(pchip->en_gpio, 1);
-+	ndelay(esdata->time.start);
-+
-+	/* forward command transfer */
-+	if (esdata->cmd.seq == CMD_FORWARD) {
-+		int addr_bmask = max_bmask >> 8;
-+
-+		for (max_bmask >>= 1; max_bmask > 0x0; max_bmask >>= 1) {
-+			if (data_in & max_bmask)
-+				t_low = esdata->time.logic_1_low;
-+			else
-+				t_low = esdata->time.logic_0_low;
-+
-+			gpio_direction_output(pchip->en_gpio, 0);
-+			ndelay(t_low);
-+			gpio_direction_output(pchip->en_gpio, 1);
-+			ndelay(t_logic - t_low);
-+
-+			if (max_bmask == addr_bmask) {
-+				gpio_direction_output(pchip->en_gpio, 0);
-+				/* t_eos : low after address byte */
-+				ndelay(esdata->time.eos);
-+				gpio_direction_output(pchip->en_gpio, 1);
-+				/* t_start : high before data byte */
-+				ndelay(esdata->time.start);
-+			}
-+		}
-+	} else {
-+		/* backward command tansfer */
-+		int bmask;
-+
-+		for (bmask = 0x01; bmask < max_bmask; bmask <<= 1) {
-+			if (data_in & bmask)
-+				t_low = esdata->time.logic_1_low;
-+			else
-+				t_low = esdata->time.logic_0_low;
-+
-+			gpio_direction_output(pchip->en_gpio, 0);
-+			ndelay(t_low);
-+			gpio_direction_output(pchip->en_gpio, 1);
-+			ndelay(t_logic - t_low);
-+		}
-+	}
-+
-+	/*
-+	 * t_eos : low after address byte
-+	 * t_ackVal is also t_eos
-+	 */
-+	gpio_direction_output(pchip->en_gpio, 0);
-+	ndelay(esdata->time.eos);
-+
-+	/* RFA management  */
-+	if (pchip->rfa_en) {
-+		int max_ack_time = esdata->time.ackn;
-+		/* set input */
-+		gpio_direction_input(pchip->en_gpio);
-+		/* read acknowledge from chip */
-+		while (max_ack_time > 0) {
-+			if (gpio_get_value(pchip->en_gpio) == 0)
-+				break;
-+			max_ack_time -= esdata->time.ack_poll;
-+		}
-+		if (max_ack_time <= 0)
-+			dev_err(pchip->dev,
-+				"easyscale : no ack from %s\n", esdata->name);
-+		else
-+			ndelay(max_ack_time);
-+	}
-+	gpio_direction_output(pchip->en_gpio, 1);
-+	local_irq_restore(flags);
-+
-+	return bl->props.brightness;
-+}
-+
-+static const struct backlight_ops tps611xx_bl_ops = {
-+	.update_status = tps611xx_bl_update_status,
-+};
-+
-+static ssize_t tps611xx_enable_store(struct device *dev,
-+				     struct device_attribute *devAttr,
-+				     const char *buf, size_t size)
-+{
-+	struct tps611xx_bl_data *pchip = dev_get_drvdata(dev);
-+	const struct tps611xx_esdata *esdata = pchip->esdata;
-+	unsigned long flags;
-+	unsigned int input;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 10, &input);
-+	if (ret)
-+		return -EINVAL;
-+
-+	local_irq_save(flags);
-+	if (input == 0) {
-+		/* chip disable */
-+		gpio_direction_output(pchip->en_gpio, 0);
-+		/* low more than reset ms to reset */
-+		mdelay(esdata->time.reset);
-+	} else {
-+		/* easyscale detection window */
-+		gpio_direction_output(pchip->en_gpio, 1);
-+		ndelay(esdata->time.es_delay);
-+		gpio_direction_output(pchip->en_gpio, 0);
-+		ndelay(esdata->time.es_det);
-+		gpio_direction_output(pchip->en_gpio, 1);
-+	}
-+	local_irq_restore(flags);
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR(enable, S_IWUSR, NULL, tps611xx_enable_store);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id tps611xx_backlight_of_match[] = {
-+	{.compatible = "ti,tps61158", .data = &tps611xx_info[TPS61158_ID]},
-+	{.compatible = "ti,tps61161", .data = &tps611xx_info[TPS61161_ID]},
-+	{.compatible = "ti,tps61163", .data = &tps611xx_info[TPS61163_ID]},
-+	{.compatible = "ti,tps61165", .data = &tps611xx_info[TPS61165_ID]},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, tps611xx_backlight_of_match);
-+
-+static int tps611xx_backlight_parse_dt(struct tps611xx_bl_data *pchip)
-+{
-+	struct device *dev = pchip->dev;
-+	struct device_node *node = dev->of_node;
-+	const struct of_device_id *of_id =
-+	    of_match_device(tps611xx_backlight_of_match, dev);
-+
-+	if (!node)
-+		return -ENODEV;
-+
-+	if (!of_id || !of_id->data) {
-+		dev_err(dev, "Failed to find tps611xx chip id\n");
-+		return -EFAULT;
-+	}
-+	pchip->esdata = of_id->data;
-+	pchip->rfa_en = of_property_read_bool(node, "rfa-enable");
-+	pchip->en_gpio = of_get_named_gpio(node, "es-gpio", 0);
-+
-+	return 0;
-+}
-+#else
-+static int tps611xx_backlight_parse_dt(struct tps611xx_bl_data *pchip)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
-+static int tps611xx_backlight_probe(struct platform_device *pdev)
-+{
-+	struct tps611xx_bl_data *pchip;
-+	struct backlight_properties props;
-+	const struct tps611xx_esdata *esdata;
-+	struct tps611xx_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	unsigned long flags;
-+	int ret;
-+
-+	pchip = devm_kzalloc(&pdev->dev,
-+			     sizeof(struct tps611xx_bl_data), GFP_KERNEL);
-+	if (pchip == NULL)
-+		return -ENOMEM;
-+	pchip->dev = &pdev->dev;
-+
-+	if (pdata == NULL) {
-+		ret = tps611xx_backlight_parse_dt(pchip);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		pchip->rfa_en = pdata->rfa_en;
-+		pchip->en_gpio = pdata->en_gpio_num;
-+		pchip->esdata = (const struct tps611xx_esdata *)
-+		    platform_get_device_id(pdev)->driver_data;
-+	}
-+	esdata = pchip->esdata;
-+
-+	memset(&props, 0, sizeof(struct backlight_properties));
-+	props.brightness = esdata->cmd.brt_max;
-+	props.max_brightness = esdata->cmd.brt_max;
-+	props.type = BACKLIGHT_RAW;
-+	pchip->bled =
-+	    devm_backlight_device_register(pchip->dev, TPS611XX_NAME,
-+					   pchip->dev, pchip,
-+					   &tps611xx_bl_ops, &props);
-+	if (IS_ERR(pchip->bled))
-+		return PTR_ERR(pchip->bled);
-+
-+	/* for enable/disable */
-+	ret = device_create_file(&(pchip->bled->dev), &dev_attr_enable);
-+	if (ret < 0) {
-+		dev_err(pchip->dev, "failed : add sysfs entries\n");
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, pchip);
-+
-+	/* EasyScale init */
-+	ret = gpio_request_one(pchip->en_gpio, GPIOF_OUT_INIT_HIGH, "tps611xx");
-+	if (ret) {
-+		device_remove_file(&(pchip->bled->dev), &dev_attr_enable);
-+		dev_err(pchip->dev, "failed : get gpio %d\n", pchip->en_gpio);
-+		return ret;
-+	}
-+
-+	/*
-+	 * ES Detection Window
-+	 *   - ES detect delay
-+	 *   - ES detect time
-+	 */
-+	local_irq_save(flags);
-+	gpio_direction_output(pchip->en_gpio, 1);
-+	ndelay(esdata->time.es_delay);
-+	gpio_direction_output(pchip->en_gpio, 0);
-+	ndelay(esdata->time.es_det);
-+	gpio_direction_output(pchip->en_gpio, 1);
-+	local_irq_restore(flags);
-+	dev_info(pchip->dev,
-+		 "%s EasyScale is initialized\n", pchip->esdata->name);
-+	return 0;
-+}
-+
-+static int tps611xx_backlight_remove(struct platform_device *pdev)
-+{
-+	struct tps611xx_bl_data *pchip = platform_get_drvdata(pdev);
-+	const struct tps611xx_esdata *esdata = pchip->esdata;
-+
-+	device_remove_file(&(pchip->bled->dev), &dev_attr_enable);
-+	gpio_direction_output(pchip->en_gpio, 0);
-+	mdelay(esdata->time.reset);
-+	return 0;
-+}
-+
-+static const struct platform_device_id tps611xx_id_table[] = {
-+	{TPS61158_NAME, (unsigned long)&tps611xx_info[TPS61158_ID]},
-+	{TPS61161_NAME, (unsigned long)&tps611xx_info[TPS61161_ID]},
-+	{TPS61163_NAME, (unsigned long)&tps611xx_info[TPS61163_ID]},
-+	{TPS61165_NAME, (unsigned long)&tps611xx_info[TPS61165_ID]},
-+	{}
-+};
-+
-+static struct platform_driver tps611xx_backlight_driver = {
-+	.driver = {
-+		.name = TPS611XX_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(tps611xx_backlight_of_match),
-+	},
-+	.probe = tps611xx_backlight_probe,
-+	.remove = tps611xx_backlight_remove,
-+	.id_table = tps611xx_id_table,
-+};
-+
-+module_platform_driver(tps611xx_backlight_driver);
-+
-+MODULE_DESCRIPTION("EasyScale based tps611xx Backlight Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:tps611xx_bl");
-diff --git a/include/linux/platform_data/tps611xx_bl.h b/include/linux/platform_data/tps611xx_bl.h
-new file mode 100644
-index 0000000..f16b43b
---- /dev/null
-+++ b/include/linux/platform_data/tps611xx_bl.h
-@@ -0,0 +1,31 @@
-+/*
-+ * Simple driver for Texas Instruments TPS611xx Backlight driver chip
-+ * Copyright (C) 2014 Texas Instruments
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#ifndef __TPS611XX_H
-+#define __TPS611XX_H
-+
-+#define TPS611XX_NAME "tps611xx"
-+#define TPS61158_NAME "tps61158"
-+#define TPS61161_NAME "tps61161"
-+#define TPS61163_NAME "tps61163"
-+#define TPS61165_NAME "tps61165"
-+
-+/*
-+ * struct tps611xx platform data
-+ * @rfa_en : request for acknowledge
-+ * @en_gpio_num : gpio number for en_pin
-+ */
-+struct tps611xx_platform_data {
-+
-+	int rfa_en;
-+	unsigned int en_gpio_num;
-+};
-+
-+#endif /* __TPS611XX_H */
--- 
-1.7.9.5
+Regards
+Haojian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
