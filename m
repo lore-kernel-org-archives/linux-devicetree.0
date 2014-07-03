@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v2 0/4] Add reset controllers for STiH407 SoC
-Date: Thu, 3 Jul 2014 10:33:48 +0100
-Message-ID: <20140703093348.GA32208@lee--X1>
+Date: Thu, 3 Jul 2014 10:40:01 +0100
+Message-ID: <20140703094001.GB32208@lee--X1>
 References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
  <1404317194.4109.13.camel@paszta.hi.pengutronix.de>
  <20140702165924.GB17665@lee--X1>
@@ -19,9 +19,6 @@ Cc: Maxime Coquelin <maxime.coquelin@st.com>, Peter Griffin <peter.griffin@linar
 List-Id: devicetree@vger.kernel.org
 
 On Thu, 03 Jul 2014, Philipp Zabel wrote:
-
-> Hi,
->=20
 > Am Donnerstag, den 03.07.2014, 10:06 +0200 schrieb Maxime Coquelin:
 > > I will queue patch 4 to STi DT branch for v3.17.
 > > For now, no nodes uses reset for STiH407, so we don't need the=20
@@ -36,14 +33,10 @@ ight=20
 w
 > about I take the first two, and you merge that branch and then take 3
 > and 4 on top?
->=20
->     git://git.pengutronix.de/git/pza/linux.git reset/for_v3.17
->=20
-> Lee, shall I also add your Ack to the documentation patch?
 
-I don't think there's anything to contentious in there:
-
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+That approach sounds reasonable.  Once you've applied the patches can
+you tag the branch and provide Maxime with a pull-request please
+Philipp?
 
 --=20
 Lee Jones
