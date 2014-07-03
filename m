@@ -1,88 +1,87 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 5/9] serial: 8250_dw: Add optional reset
- control support
-Date: Thu,  3 Jul 2014 22:55:45 +0800
-Message-ID: <1404399349-20237-6-git-send-email-wens@csie.org>
-References: <1404399349-20237-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 04/18] AT91: Rework ramc mapping code
+Date: Thu, 3 Jul 2014 16:53:00 +0200
+Message-ID: <20140703145300.GF31996@lukather>
+References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1404396906-25194-5-git-send-email-maxime.ripard@free-electrons.com>
+ <1DD61BDB-B880-49B4-BDAD-DC2BBE011F77@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBBG62WOQKGQEQH7UMHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1404399349-20237-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6921129276062897611=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1DD61BDB-B880-49B4-BDAD-DC2BBE011F77@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree@vger.kernel.org, dbaryshkov@gmail.com, Nicolas FERRE <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, dwmw2@infradead.org, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A31 and A23 SoCs have a reset controller
-maintaining the UART in reset by default.
 
-This patch adds optional reset support to the driver.
+--===============6921129276062897611==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6v9BRtpmy+umdQlo"
+Content-Disposition: inline
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt | 1 +
- drivers/tty/serial/8250/8250_dw.c                             | 9 +++++++++
- 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-index f13f1c5..cb9af84 100644
---- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-@@ -7,6 +7,7 @@ Required properties:
- - clock-frequency : the input clock frequency for the UART.
- 
- Optional properties:
-+- resets : phandle to the parent reset controller.
- - reg-shift : quantity to shift the register offsets by.  If this property is
-   not present then the register offsets are not shifted.
- - reg-io-width : the size (in bytes) of the IO accesses that should be
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index 51b307a..cb1b3dc 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -26,6 +26,7 @@
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/clk.h>
-+#include <linux/reset.h>
- #include <linux/pm_runtime.h>
- 
- #include <asm/byteorder.h>
-@@ -59,6 +60,7 @@ struct dw8250_data {
- 	int			last_mcr;
- 	int			line;
- 	struct clk		*clk;
-+	struct reset_control	*rst;
- 	struct uart_8250_dma	dma;
- };
- 
-@@ -408,6 +410,10 @@ static int dw8250_probe(struct platform_device *pdev)
- 		uart.port.uartclk = clk_get_rate(data->clk);
- 	}
- 
-+	data->rst = devm_reset_control_get_optional(&pdev->dev, NULL);
-+	if (!IS_ERR(data->rst))
-+		reset_control_deassert(data->rst);
-+
- 	data->dma.rx_chan_id = -1;
- 	data->dma.tx_chan_id = -1;
- 	data->dma.rx_param = data;
-@@ -451,6 +457,9 @@ static int dw8250_remove(struct platform_device *pdev)
- 
- 	serial8250_unregister_port(data->line);
- 
-+	if (!IS_ERR(data->rst))
-+		reset_control_assert(data->rst);
-+
- 	if (!IS_ERR(data->clk))
- 		clk_disable_unprepare(data->clk);
- 
--- 
-2.0.1
+--6v9BRtpmy+umdQlo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 03, 2014 at 10:34:17PM +0800, Jean-Christophe PLAGNIOL-VILLARD =
+wrote:
+> patch 4 and 18 what is the difference?
+
+There's none, I just messed up at sending the patches. The resend
+should be on its way.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--6v9BRtpmy+umdQlo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtW5MAAoJEBx+YmzsjxAg2bcQAJy5WeUXGi6RZ6kMR360aa8f
+vZrulcZC9MyQl2NF7EVrNWHVtGEDcPGFNbwfUXnbLkhEqug4le2VjA6V1Z27DNDz
+KDKWqwgqIw9/PnWDI1VYx2ylcdgV/Nr1cUdThuL04jKhNi6pGmee50VQgd871l2L
+yRSwe0D1+bzkvl068HodAywEMytSSrQ2Rc6tCSt6jixlxYSiP/oEnj/wl2V5dawl
+YP+EwKJWBAKwv4M9FQS/VUvFSZH1f8czzB3yYvIifLUg9LUm3ZSEws1fXL40UXfz
+5+4b/9qZAyIvcVjCzGbFbkq8G1pz+rVFVYPWdV8Gr+ZtRbijC2k3wO/RPVE3mjn7
+VsAYvs5R00CUEl3Rg8f5bHooA7ZVhEmFCWEn5RDIuEwzG3W3YCc4nlVYrP1Ux0nq
+jIUdA7lqm5IK2ekDkE0rvIctC+c2v/tuYj9kfyjI6txvrCEH+GZN4MdticBmlcFA
+eZPul7SXz45K4KSIVhM3Qye6lL3LyhhOWv3QBqSdY6/HQ+hw/VNeyavnJ12ovh1L
+zPdoVoApeXoMV3mBvkl8DcX0XZDOGmdjKikqBcrA4TALBWwu3WTL7yta2k1nyzhd
+LA2DC4uZJaOacRH0NFooN6aG4liMKZNvkWRIPD54R3+EVq5lK0gSQYzNyQZz3jwb
+zoCWNW2rxU/WWgzFRqLB
+=yiXD
+-----END PGP SIGNATURE-----
+
+--6v9BRtpmy+umdQlo--
+
+
+--===============6921129276062897611==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6921129276062897611==--
