@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH RESEND 05/18] AT91: SAMA5D3: DT: Add shutdown controller
-Date: Thu,  3 Jul 2014 16:41:20 +0200
-Message-ID: <1404398493-28907-6-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH RESEND 07/18] AT91: DT: Remove the old-style reset probing
+Date: Thu,  3 Jul 2014 16:41:22 +0200
+Message-ID: <1404398493-28907-8-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404398493-28907-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1404398493-28907-1-git-send-email-maxime.ripard@free-electrons.com>
@@ -10,29 +10,60 @@ To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe
 Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The SAMA5D3 has a shutdown controller identical to the sam9x5 SoC family.
-Declare it in the DT.
+Now that the reset code is a driver of its own, just let the usual DT probing
+mecanism do its job, and remove the code entirely in this case.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sama5d3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-at91/setup.c | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index e0b15a6e8897..8bcf1c442c96 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1178,6 +1178,11 @@
- 				reg = <0xfffffe00 0x10>;
- 			};
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index cc520596f23b..71003e40f01c 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -354,34 +354,6 @@ void __init at91_ioremap_matrix(u32 base_addr)
+ }
  
-+			shutdown-controller@fffffe10 {
-+				compatible = "atmel,at91sam9x5-shdwc";
-+				reg = <0xfffffe10 0x10>;
-+			};
-+
- 			pit: timer@fffffe30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe30 0xf>;
+ #if defined(CONFIG_OF) && !defined(CONFIG_ARCH_AT91X40)
+-static struct of_device_id rstc_ids[] = {
+-	{ .compatible = "atmel,at91sam9260-rstc", .data = at91sam9_alt_restart },
+-	{ .compatible = "atmel,at91sam9g45-rstc", .data = at91sam9g45_restart },
+-	{ /*sentinel*/ }
+-};
+-
+-static void at91_dt_rstc(void)
+-{
+-	struct device_node *np;
+-	const struct of_device_id *of_id;
+-
+-	np = of_find_matching_node(NULL, rstc_ids);
+-	if (!np)
+-		panic(pr_fmt("unable to find compatible rstc node in dtb\n"));
+-
+-	at91_rstc_base = of_iomap(np, 0);
+-	if (!at91_rstc_base)
+-		panic(pr_fmt("unable to map rstc cpu registers\n"));
+-
+-	of_id = of_match_node(rstc_ids, np);
+-	if (!of_id)
+-		panic(pr_fmt("rtsc no restart function available\n"));
+-
+-	arm_pm_restart = of_id->data;
+-
+-	of_node_put(np);
+-}
+-
+ static struct of_device_id ramc_ids[] = {
+ 	{ .compatible = "atmel,at91rm9200-sdramc", .data = at91rm9200_standby },
+ 	{ .compatible = "atmel,at91sam9260-sdramc", .data = at91sam9_sdram_standby },
+@@ -507,7 +479,6 @@ void __init at91rm9200_dt_initialize(void)
+ 
+ void __init at91_dt_initialize(void)
+ {
+-	at91_dt_rstc();
+ 	at91_dt_ramc();
+ 	at91_dt_shdwc();
+ 
 -- 
 2.0.1
