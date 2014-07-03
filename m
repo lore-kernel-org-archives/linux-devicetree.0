@@ -1,128 +1,208 @@
-Return-Path: <kiran.padwal@smartplayin.com>
-Date: Mon, 21 Jul 2014 07:13:22 -0400 (EDT)
-Subject: RE: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
-From: kiran.padwal@smartplayin.com
+Return-Path: <gshark.jeong@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;boundary="----=_20140721071322000000_82253"
-In-Reply-To: <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
- <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-Message-ID: <1405941202.870420632@apps.rackspace.com>
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20140625093259.GC29789@leverpostej>
+References: <1403594330-15387-1-git-send-email-gshark.jeong@gmail.com>
+	<1403594330-15387-3-git-send-email-gshark.jeong@gmail.com>
+	<20140625093259.GC29789@leverpostej>
+Date: Thu, 3 Jul 2014 15:26:00 +0900
+Message-ID: <CAPqQCJW5EYVbys0FYiSnBQ7TxtTMBeUE=t8+fbe=qSpDJ-pzZA@mail.gmail.com>
+Subject: Re: [RFC v3 2/2] backlight: device tree: add new tps611xx backlight driver
+From: Daniel Jeong <gshark.jeong@gmail.com>
+Content-Type: multipart/alternative; boundary=089e012949861a79cb04fd4415cd
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Daniel Jeong <daniel.jeong@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-------=_20140721071322000000_82253
-Content-Type: text/plain; charset="UTF-8"
+--089e012949861a79cb04fd4415cd
+Content-Type: text/plain; charset=UTF-8
+
+Hello.
+
+Thank you for your comment.
+
+2014-06-25 18:32 GMT+09:00 Mark Rutland <mark.rutland@arm.com>:
+
+> Hello,
+>
+> Please fix the subject: this is a _binding_, not a driver.
+>
+> On Tue, Jun 24, 2014 at 08:18:50AM +0100, Daniel Jeong wrote:
+> > This commit is about tps611xx device tree documentation.
+> >
+> > Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
+> > ---
+> >  .../video/backlight/tps611xx-backlight.txt         |   16
+> ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> >
+> > diff --git
+> a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> > new file mode 100644
+> > index 0000000..01f110d
+> > --- /dev/null
+> > +++
+> b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> > @@ -0,0 +1,16 @@
+> > +TPS611xx family of backlight driver based on EasyScale.
+> > +
+> > +It supports tps61158, tps61161, tps61163 and tps61165.
+>
+> What supports these? The driver?
+>
+> The binding should describe the _hardware_, not the driver.
+>
+> > +Required properties:
+> > +- compatible: "ti,tps61158_bl", "ti,tps61161_bl", "ti,tps61163_bl",
+> "ti,tps61165_bl"
+>
+> Use '-' rather than '_' in compatible strings and properties.
+>
+> Is there any reason for the "bl" suffix? Does that actually form part of
+> the name of the unit, or is that just to point out it's a backlight? If
+> it's the latter, drop it.
+>
+> Are these all very similar? Can I use a particular string as a fallback?
+>
+> It followed video/backlgiht/ file naming. It is fixed at v4
+
+
+> To allow for future expansion, the addition of notes, and to make this
+> easier to read, I would recommend formatting this something like:
+>
+> - compatible: should contain at least one of:
+>   * "ti,tps61158"
+>   * "ti,tps61161"
+>   * "ti,tps61163"
+>   * "ti,tps61165"
+>
+> > +- rfa_en: enable request for acknowledge. ( 0 : disable , 1 : enable )
+>
+> Use empty properties for describing booleans.
+>
+> It is fixed to empty properties at v4
+
+That said, why does this need to be in the DT? When would I want this
+> and when wouldn't I? Why can't the driver choose?
+>
+> > +- en_gpio_num: gpio number for en pin.
+>
+> Use the GPIO bindings. The numbering Linux uses internally is completely
+> arbitrary, so this is completely broken.
+>
+> It is fixed to use GPIO bindings at v4
+
+> Are there other pins we might need to describe? Regulators? Clocks?
+>
+> There are only three input pins, CTRL, Vin and comp and it can control
+brightness only
+using one line interface.
+
+> Mark.
+>
+Thank you.
+
+--089e012949861a79cb04fd4415cd
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-=0AHi,=0A =0AOn Thursday, July 17, 2014 11:25am, "Ivan T. Ivanov" <iivanov@=
-mm-sol.com> said:=0A=0A=0A=0A> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>=
-=0A> =0A> This is the pinctrl, pinmux, pinconf and gpiolib driver for the=
-=0A> Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.=0A>=
- =0A> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>=0A> ---=0A> driver=
-s/pinctrl/Kconfig | 12 +=0A> drivers/pinctrl/Makefile | 1 +=0A.=0A[snip]=0A=
-.=0A> diff --git a/drivers/pinctrl/pinctrl-qpnp.c b/drivers/pinctrl/pinctrl=
--qpnp.c=0A> new file mode 100644=0A> index 0000000..aedc72e=0A> --- /dev/nu=
-ll=0A> +++ b/drivers/pinctrl/pinctrl-qpnp.c=0A.=0A[snip]=0A.=0A> +#define Q=
-PNP_MPP_CS_OUT_40MA 7=0A> +=0A> +/* revision registers base address offsets=
- */=0A =0Aunused define, can you please remove it=0A=0A> +#define QPNP_REG_=
-DIG_MINOR_REV 0x0=0A> +#define QPNP_REG_DIG_MAJOR_REV 0x1=0A =0Aditto=0A=0A=
-> +#define QPNP_REG_ANA_MINOR_REV 0x2=0A> +=0A> +/* type registers base add=
-ress offsets */=0A> +#define QPNP_REG_TYPE 0x4=0A> +#define QPNP_REG_SUBTYP=
-E 0x5=0A> +=0A> +/* GPIO peripheral type and subtype values */=0A> +#define=
- QPNP_GPIO_TYPE 0x10=0A> +#define QPNP_GPIO_SUBTYPE_GPIO_4CH 0x1=0A> +#defi=
-ne QPNP_GPIO_SUBTYPE_GPIOC_4CH 0x5=0A> +#define QPNP_GPIO_SUBTYPE_GPIO_8CH =
-0x9=0A> +#define QPNP_GPIO_SUBTYPE_GPIOC_8CH 0xd=0A> +=0A> +/* mpp peripher=
-al type and subtype values */=0A> +#define QPNP_MPP_TYPE 0x11=0A> +#define =
-QPNP_MPP_SUBTYPE_4CH_NO_ANA_OUT 0x3=0A> +#define QPNP_MPP_SUBTYPE_ULT_4CH_N=
-O_ANA_OUT 0x4=0A> +#define QPNP_MPP_SUBTYPE_4CH_NO_SINK 0x5=0A> +#define QP=
-NP_MPP_SUBTYPE_ULT_4CH_NO_SINK 0x6=0A> +#define QPNP_MPP_SUBTYPE_4CH_FULL_F=
-UNC 0x7=0A> +#define QPNP_MPP_SUBTYPE_8CH_FULL_FUNC 0xf=0A> +=0A> +#define =
-QPNP_REG_STATUS1 0x8=0A> +#define QPNP_REG_STATUS1_VAL_MASK 0x1=0A> +#defin=
-e QPNP_REG_STATUS1_GPIO_EN_REV0_MASK 0x2=0A> +#define QPNP_REG_STATUS1_GPIO=
-_EN_MASK 0x80=0A> +#define QPNP_REG_STATUS1_MPP_EN_MASK 0x80=0A> +=0A> +/* =
-control register base address offsets */=0A> +#define QPNP_REG_MODE_CTL 0x4=
-0=0A> +#define QPNP_REG_DIG_VIN_CTL 0x41=0A> +#define QPNP_REG_DIG_PULL_CTL=
- 0x42=0A =0Aditto=0A=0A> +#define QPNP_REG_DIG_IN_CTL 0x43=0A> +#define QPN=
-P_REG_DIG_OUT_CTL 0x45=0A> +#define QPNP_REG_EN_CTL 0x46=0A> +#define QPNP_=
-REG_AOUT_CTL 0x4b=0A.=0A[snip]=0A.=0A> +#define PM8XXX_MPP_AIN_ABUS3 6=0A> =
-+#define PM8XXX_MPP_AIN_ABUS4 7=0A> +=0A> +#endif=0A> --=0A> 1.8.3.2=0A> =
-=0A> --=0A> To unsubscribe from this list: send the line "unsubscribe linux=
--arm-msm" in=0A> the body of a message to majordomo@vger.kernel.org=0A> Mor=
-e majordomo info at http://vger.kernel.org/majordomo-info.html=0A> =0A =0AR=
-egards,=0A--Kiran
-------=_20140721071322000000_82253
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+<div dir=3D"ltr">Hello. <br><div><div class=3D"gmail_extra"><br></div><div =
+class=3D"gmail_extra">Thank you for your comment. <br></div><div class=3D"g=
+mail_extra"><br><div class=3D"gmail_quote">2014-06-25 18:32 GMT+09:00 Mark =
+Rutland <span dir=3D"ltr">&lt;<a href=3D"mailto:mark.rutland@arm.com" targe=
+t=3D"_blank">mark.rutland@arm.com</a>&gt;</span>:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">Hello,<br>
+<br>
+Please fix the subject: this is a _binding_, not a driver.<br>
+<div class=3D""><br>
+On Tue, Jun 24, 2014 at 08:18:50AM +0100, Daniel Jeong wrote:<br>
+&gt; This commit is about tps611xx device tree documentation.<br>
+&gt;<br>
+&gt; Signed-off-by: Daniel Jeong &lt;<a href=3D"mailto:gshark.jeong@gmail.c=
+om">gshark.jeong@gmail.com</a>&gt;<br>
+&gt; ---<br>
+&gt; =C2=A0.../video/backlight/tps611xx-backlight.txt =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 | =C2=A0 16 ++++++++++++++++<br>
+&gt; =C2=A01 file changed, 16 insertions(+)<br>
+&gt; =C2=A0create mode 100644 Documentation/devicetree/bindings/video/backl=
+ight/tps611xx-backlight.txt<br>
+&gt;<br>
+&gt; diff --git a/Documentation/devicetree/bindings/video/backlight/tps611x=
+x-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611x=
+x-backlight.txt<br>
+&gt; new file mode 100644<br>
+&gt; index 0000000..01f110d<br>
+&gt; --- /dev/null<br>
+&gt; +++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backl=
+ight.txt<br>
+&gt; @@ -0,0 +1,16 @@<br>
+&gt; +TPS611xx family of backlight driver based on EasyScale.<br>
+&gt; +<br>
+&gt; +It supports tps61158, tps61161, tps61163 and tps61165.<br>
+<br>
+</div>What supports these? The driver?<br>
+<br>
+The binding should describe the _hardware_, not the driver.<br>
+<div class=3D""><br>
+&gt; +Required properties:<br>
+&gt; +- compatible: &quot;ti,tps61158_bl&quot;, &quot;ti,tps61161_bl&quot;,=
+ &quot;ti,tps61163_bl&quot;, &quot;ti,tps61165_bl&quot;<br>
+<br>
+</div>Use &#39;-&#39; rather than &#39;_&#39; in compatible strings and pro=
+perties.<br>
+<br>
+Is there any reason for the &quot;bl&quot; suffix? Does that actually form =
+part of<br>
+the name of the unit, or is that just to point out it&#39;s a backlight? If=
+<br>
+it&#39;s the latter, drop it.<br>
+<br>
+Are these all very similar? Can I use a particular string as a fallback?<br=
+>
+<br></blockquote><div>It followed video/backlgiht/ file naming. It is fixed=
+ at v4</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"mar=
+gin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
+ex">
 
-<font face=3D"arial" size=3D"2"><p style=3D"margin:0;padding:0;font-family:=
- arial; font-size: 10pt;">Hi,</p>=0A<p style=3D"margin:0;padding:0;font-fam=
-ily: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin:0;padding:0;f=
-ont-family: arial; font-size: 10pt;">On Thursday, July 17, 2014 11:25am, "I=
-van T. Ivanov" &lt;iivanov@mm-sol.com&gt; said:<br /><br /></p>=0A<div id=
-=3D"SafeStyles1405940668">=0A<p style=3D"margin:0;padding:0;font-family: ar=
-ial; font-size: 10pt;">&gt; From: "Ivan T. Ivanov" &lt;iivanov@mm-sol.com&g=
-t;<br />&gt; <br />&gt; This is the pinctrl, pinmux, pinconf and gpiolib dr=
-iver for the<br />&gt; Qualcomm GPIO and MPP sub-function blocks found in t=
-he PMIC chips.<br />&gt; <br />&gt; Signed-off-by: Ivan T. Ivanov &lt;iivan=
-ov@mm-sol.com&gt;<br />&gt; ---<br />&gt; drivers/pinctrl/Kconfig | 12 +<br=
- />&gt; drivers/pinctrl/Makefile | 1 +</p>=0A<p style=3D"margin:0;padding:0=
-;font-family: arial; font-size: 10pt;">.</p>=0A<p style=3D"margin:0;padding=
-:0;font-family: arial; font-size: 10pt;">[snip]</p>=0A<p style=3D"margin:0;=
-padding:0;font-family: arial; font-size: 10pt;">.<br />&gt; diff --git a/dr=
-ivers/pinctrl/pinctrl-qpnp.c b/drivers/pinctrl/pinctrl-qpnp.c<br />&gt; new=
- file mode 100644<br />&gt; index 0000000..aedc72e<br />&gt; --- /dev/null<=
-br />&gt; +++ b/drivers/pinctrl/pinctrl-qpnp.c</p>=0A<p style=3D"margin:0;p=
-adding:0;font-family: arial; font-size: 10pt;">.</p>=0A<p style=3D"margin:0=
-;padding:0;font-family: arial; font-size: 10pt;">[snip]</p>=0A<p style=3D"m=
-argin:0;padding:0;font-family: arial; font-size: 10pt;">.</p>=0A<p style=3D=
-"margin:0;padding:0;font-family: arial; font-size: 10pt;">&gt; +#define QPN=
-P_MPP_CS_OUT_40MA 7<br />&gt; +<br />&gt; +/* revision registers base addre=
-ss offsets */</p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font=
--size: 10pt;">&nbsp;</p>=0A<p style=3D"margin:0;padding:0;font-family: aria=
-l; font-size: 10pt;"><span style=3D"font-family: monospace;">unused define,=
- can you please remove it</span></p>=0A<p style=3D"margin:0;padding:0;font-=
-family: arial; font-size: 10pt;"><br />&gt; +#define QPNP_REG_DIG_MINOR_REV=
- 0x0<br />&gt; +#define QPNP_REG_DIG_MAJOR_REV 0x1</p>=0A<p style=3D"margin=
-:0;padding:0;font-family: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D=
-"margin:0;padding:0;font-family: arial; font-size: 10pt;">ditto</p>=0A<p st=
-yle=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;"><br />&gt; =
-+#define QPNP_REG_ANA_MINOR_REV 0x2<br />&gt; +<br />&gt; +/* type register=
-s base address offsets */<br />&gt; +#define QPNP_REG_TYPE 0x4<br />&gt; +#=
-define QPNP_REG_SUBTYPE 0x5<br />&gt; +<br />&gt; +/* GPIO peripheral type =
-and subtype values */<br />&gt; +#define QPNP_GPIO_TYPE 0x10<br />&gt; +#de=
-fine QPNP_GPIO_SUBTYPE_GPIO_4CH 0x1<br />&gt; +#define QPNP_GPIO_SUBTYPE_GP=
-IOC_4CH 0x5<br />&gt; +#define QPNP_GPIO_SUBTYPE_GPIO_8CH 0x9<br />&gt; +#d=
-efine QPNP_GPIO_SUBTYPE_GPIOC_8CH 0xd<br />&gt; +<br />&gt; +/* mpp periphe=
-ral type and subtype values */<br />&gt; +#define QPNP_MPP_TYPE 0x11<br />&=
-gt; +#define QPNP_MPP_SUBTYPE_4CH_NO_ANA_OUT 0x3<br />&gt; +#define QPNP_MP=
-P_SUBTYPE_ULT_4CH_NO_ANA_OUT 0x4<br />&gt; +#define QPNP_MPP_SUBTYPE_4CH_NO=
-_SINK 0x5<br />&gt; +#define QPNP_MPP_SUBTYPE_ULT_4CH_NO_SINK 0x6<br />&gt;=
- +#define QPNP_MPP_SUBTYPE_4CH_FULL_FUNC 0x7<br />&gt; +#define QPNP_MPP_SU=
-BTYPE_8CH_FULL_FUNC 0xf<br />&gt; +<br />&gt; +#define QPNP_REG_STATUS1 0x8=
-<br />&gt; +#define QPNP_REG_STATUS1_VAL_MASK 0x1<br />&gt; +#define QPNP_R=
-EG_STATUS1_GPIO_EN_REV0_MASK 0x2<br />&gt; +#define QPNP_REG_STATUS1_GPIO_E=
-N_MASK 0x80<br />&gt; +#define QPNP_REG_STATUS1_MPP_EN_MASK 0x80<br />&gt; =
-+<br />&gt; +/* control register base address offsets */<br />&gt; +#define=
- QPNP_REG_MODE_CTL 0x40<br />&gt; +#define QPNP_REG_DIG_VIN_CTL 0x41<br />&=
-gt; +#define QPNP_REG_DIG_PULL_CTL 0x42</p>=0A<p style=3D"margin:0;padding:=
-0;font-family: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin:0;p=
-adding:0;font-family: arial; font-size: 10pt;">ditto</p>=0A<p style=3D"marg=
-in:0;padding:0;font-family: arial; font-size: 10pt;"><br />&gt; +#define QP=
-NP_REG_DIG_IN_CTL 0x43<br />&gt; +#define QPNP_REG_DIG_OUT_CTL 0x45<br />&g=
-t; +#define QPNP_REG_EN_CTL 0x46<br />&gt; +#define QPNP_REG_AOUT_CTL 0x4b<=
-/p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;">=
-.</p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;=
-">[snip]</p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font-size=
-: 10pt;">.<br />&gt; +#define PM8XXX_MPP_AIN_ABUS3 6<br />&gt; +#define PM8=
-XXX_MPP_AIN_ABUS4 7<br />&gt; +<br />&gt; +#endif<br />&gt; --<br />&gt; 1.=
-8.3.2<br />&gt; <br />&gt; --<br />&gt; To unsubscribe from this list: send=
- the line "unsubscribe linux-arm-msm" in<br />&gt; the body of a message to=
- majordomo@vger.kernel.org<br />&gt; More majordomo info at http://vger.ker=
-nel.org/majordomo-info.html<br />&gt;&nbsp;</p>=0A<p style=3D"margin:0;padd=
-ing:0;font-family: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin=
-:0;padding:0;font-family: arial; font-size: 10pt;">Regards,</p>=0A<p style=
-=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;">--Kiran</p>=0A=
-</div></font>
-------=_20140721071322000000_82253--
+To allow for future expansion, the addition of notes, and to make this<br>
+easier to read, I would recommend formatting this something like:<br>
+<br>
+- compatible: should contain at least one of:<br>
+=C2=A0 * &quot;ti,tps61158&quot;<br>
+=C2=A0 * &quot;ti,tps61161&quot;<br>
+=C2=A0 * &quot;ti,tps61163&quot;<br>
+=C2=A0 * &quot;ti,tps61165&quot;<br>
+<div class=3D""><br>
+&gt; +- rfa_en: enable request for acknowledge. ( 0 : disable , 1 : enable =
+)<br>
+<br>
+</div>Use empty properties for describing booleans.<br>
+<br></blockquote><div>It is fixed to empty properties at v4 <br><br></div><=
+blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
+eft:1px solid rgb(204,204,204);padding-left:1ex">
+That said, why does this need to be in the DT? When would I want this<br>
+and when wouldn&#39;t I? Why can&#39;t the driver choose?<br>
+<div class=3D""><br>
+&gt; +- en_gpio_num: gpio number for en pin.<br>
+<br>
+</div>Use the GPIO bindings. The numbering Linux uses internally is complet=
+ely<br>
+arbitrary, so this is completely broken.<br>
+<br></blockquote><div>It is fixed to use GPIO bindings at v4 <br></div><blo=
+ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
+:1px solid rgb(204,204,204);padding-left:1ex">
+Are there other pins we might need to describe? Regulators? Clocks?<br>
+<span class=3D""><font color=3D"#888888"><br></font></span></blockquote><di=
+v>There are only three input pins, CTRL, Vin and comp and it can control br=
+ightness only <br></div><div>using one line interface. <br></div><blockquot=
+e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px s=
+olid rgb(204,204,204);padding-left:1ex">
+<span class=3D""><font color=3D"#888888">
+Mark.<br>
+</font></span></blockquote></div>Thank you.<br></div><div class=3D"gmail_ex=
+tra"><br></div></div></div>
+
+--089e012949861a79cb04fd4415cd--
