@@ -1,16 +1,17 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [RFC] drm/msm: DT support for 8960/8064
-Date: Thu, 3 Jul 2014 07:13:33 -0400
-Message-ID: <CAF6AEGuu1bHpMvPAQ4wGzHLAnbaRwCmuaYKkCkAqmXw-JUuMRg@mail.gmail.com>
-References: <1404241055-3579-1-git-send-email-robdclark@gmail.com>
- <20140702180928.GA29837@leverpostej>
- <CAF6AEGuK-_frg5ErRNXGpqHfXv85E_6-_iKHWuHyz5g6udVt8Q@mail.gmail.com>
- <20140703091503.GD29837@leverpostej>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Thu, 3 Jul 2014 13:34:06 +0200
+Message-ID: <20140703133406.2d3e3a1d@armhf>
+References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
+ <20140702195154.47d6f6b4@armhf>
+ <20140702194252.GN410@sirena.org.uk>
+ <20140703074959.7c489912@armhf>
+ <20140703104432.GV410@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140703091503.GD29837@leverpostej>
+In-Reply-To: <20140703104432.GV410@sirena.org.uk>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -20,345 +21,30 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 3, 2014 at 5:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Wed, Jul 02, 2014 at 10:01:40PM +0100, Rob Clark wrote:
->> On Wed, Jul 2, 2014 at 2:09 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Tue, Jul 01, 2014 at 07:57:35PM +0100, Rob Clark wrote:
->> >> Now that we (almost) have enough dependencies in place (MMCC, RPM, etc),
->> >> add necessary DT support so that we can use drm/msm on upstream kernel.
->> >>
->> >> Signed-off-by: Rob Clark <robdclark@gmail.com>
->> >> ---
->> >> Commence bikeshedding :-)
->> >>
->> >>  Documentation/devicetree/bindings/drm/msm/gpu.txt  | 51 ++++++++++++++++++++
->> >>  Documentation/devicetree/bindings/drm/msm/hdmi.txt | 43 +++++++++++++++++
->> >>  Documentation/devicetree/bindings/drm/msm/msm.txt  | 40 ++++++++++++++++
->> >>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c              |  2 +
->> >>  drivers/gpu/drm/msm/hdmi/hdmi.c                    | 55 ++++++++++++++--------
->> >>  drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c            | 10 ++--
->> >>  drivers/gpu/drm/msm/msm_drv.c                      | 29 ++++++++++--
->> >>  7 files changed, 204 insertions(+), 26 deletions(-)
->> >>  create mode 100644 Documentation/devicetree/bindings/drm/msm/gpu.txt
->> >>  create mode 100644 Documentation/devicetree/bindings/drm/msm/hdmi.txt
->> >>  create mode 100644 Documentation/devicetree/bindings/drm/msm/msm.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/drm/msm/gpu.txt b/Documentation/devicetree/bindings/drm/msm/gpu.txt
->> >> new file mode 100644
->> >> index 0000000..6e33efe
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/drm/msm/gpu.txt
->> >> @@ -0,0 +1,51 @@
->> >> +Qualcomm adreno/snapdragon GPU
->> >> +
->> >> +Required properties:
->> >> +- compatible: "qcom,adreno-3xx"
->> >
->> > As Olof said, choose a definite name here, and have variants claim
->> > compatibility with that in addition to a variant specific string.
->> >
->> >> +- reg: Physical base address and length of the controller's registers.
->> >
->> > Just the one reg entry?
->>
->> as far as I know.. keep in mind, I'm working without docs
->
-> Sure. If we only know about one reg entrty that's fine.
->
->>
->> > The example has reg-names. Either document the name or drop it.
->> >
->> >> +- interrupts: The interrupt outputs from the controller.
->> >
->> > How many? Which ones? Names?
->> >
->> >> +- clocks: device clocks
->> >> +  See ../clocks/clock-bindings.txt for details.
->> >
->> > Similarly?
->> >
->> > I should be able to read the binding and put together a DTS. Currently I
->> > cannot.
->> >
->> >> +- qcom,chipid: gpu chip-id.  Note this may become optional for future
->> >> +  devices if we can reliably read the chipid from hw
->> >
->> > What's the problem with reading chipid from HW at the moment?
->> >
->> > Should this possibly be optional, and only if not possible to read from
->> > HW?
->>
->> As far as I can tell from diving downstream android kgsl code, seems
->> like some a2xx you might be able to read the value from hw.  Beyond
->> that I'm not entirely sure.  (Remember, no docs.)
->>
->> I'm leaving it as-is and if someone who has docs wants to submit patch
->> to change it, that is fine.
->
-> My concern is that the statement "this may become optional" is useless,
-> as it doesn't tell you what expected if it's not present.
->
-> I would reword this as:
->
-> - qcom,chip-id: The gpu chip-id, if the hardware value is not reliable.
-
-yeah, ok.  That is more clear.
-
-> And then read from the HW if it's not present.
->
->> >> +- qcom,gpu-pwrlevels: array of OPPs, sorted highest to lowest
->> >
->> > This is confusing. This is a node rather than a property, and in general
->> > it's not a good idea to rely on node ordering (there's no such thing as
->> > an array of nodes in the DTB).
-
-btw, we don't actually rely on the ordering in the parsing code.
-Although I think it is more readable if it is kept sorted.  So I
-suppose consider that as more of a suggestion.
-
->> >
->> >> +  - compatible: "qcom,gpu-pwrlevels"
->> >> +  - for each qcom,gpu-pwrlevel:
->> >
->> > Is that a compatible string for each node, name, or what?
->> >
->> > Any reason for having this as a container node at all?
->>
->> some of the decisions are made to make it easier to re-use/support
->> existing bindings in downstream kernel..
->
-> I don't see why we should be beholden to downstream kernel bindings.
-
-Well, unfortunately since devices that run upstream kernel are few and
-far between, I get to port upstream driver to more downstream device
-kernels than I'd care to.  To simplify this, as much as possible I'd
-like to share DT binding code.  The alternative is more error prone
-and time consuming, and it's not exactly like I'm running out of
-things to do.
-
->>
->> >> +    - qcom,gpu-freq: requested gpu clock speed
->> >> +    - NOTE: downstream android driver defines additional parameters to
->> >> +      configure memory bandwidth scaling per OPP.
->> >
->> > So? Either define those or don't bother. Having a halfway house binding
->> > is not helpful.
->>
->> I'm not really in a position to document them at this point, sorry.
->
-> Then drop it.
-
-Not sure I understand.  The gpu-freq we need.  I could drop the NOTE,
-although it does kind of explain why a simple list of integers is not
-used.
-
-Anything added later would be optional, ofc, for backwards compat.
-
->> >> +
->> >> +Optional properties:
->> >> +- n/a
->> >
->> > Drop this if there are no optional properties.
->> >
->> >> +
->> >> +Example:
->> >> +
->> >> +/ {
->> >> +       ...
->> >> +
->> >> +       gpu: qcom,kgsl-3d0@4300000 {
->> >> +               compatible = "qcom,adreno-3xx";
->> >> +               reg = <0x04300000 0x20000>;
->> >> +               reg-names = "kgsl_3d0_reg_memory";
->> >> +               interrupts = <GIC_SPI 80 0>;
->> >> +               interrupt-names = "kgsl_3d0_irq";
->> >> +               clock-names =
->> >> +                   "core_clk",
->> >> +                   "iface_clk",
->> >> +                   "mem_iface_clk";
->> >> +               clocks =
->> >> +                   <&mmcc GFX3D_CLK>,
->> >> +                   <&mmcc GFX3D_AHB_CLK>,
->> >> +                   <&mmcc MMSS_IMEM_AHB_CLK>;
->> >> +               qcom,chipid = <0x03020100>;
->> >> +               qcom,gpu-pwrlevels {
->> >> +                       compatible = "qcom,gpu-pwrlevels";
->> >> +                       qcom,gpu-pwrlevel@0 {
->> >> +                               qcom,gpu-freq = <450000000>;
->> >> +                       };
->> >> +                       qcom,gpu-pwrlevel@1 {
->> >> +                               qcom,gpu-freq = <27000000>;
->> >> +                       };
->> >> +               };
->> >> +       };
->> >> +};
->> >> diff --git a/Documentation/devicetree/bindings/drm/msm/hdmi.txt b/Documentation/devicetree/bindings/drm/msm/hdmi.txt
->> >> new file mode 100644
->> >> index 0000000..051a49f
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/drm/msm/hdmi.txt
->> >> @@ -0,0 +1,43 @@
->> >> +Qualcomm adreno/snapdragon hdmi output
->> >> +
->> >> +Required properties:
->> >> +- compatible: "qcom,hdmi-tx-8x60", "qcom,hdmi-tx-8960", "qcom,hdmi-tx-8x74"
->> >
->> > Please don't use wildcard strings.
->> >
->> > Is a node expected to have one of these entries, or all?
->>
->> not quite sure what you mean.. Yes a node is expected to have
->> 'compatible'.  Which should have one of those values (with potentially
->> more values added later)
->
-> Sorry for the lack of clarity. I meant is it expected that I should
-> have:
->
-> compatible = "qcom,hdmi-tx-8x60", "qcom,hdmi-tx-8960",
->              "qcom,hdmi-tx-8x74";
->
-> Or just a single string for a given device?
->
-> I assume the latter.
-
-oh, yes.  I kinda thought the use of "compatible" everywhere was
-enough that it would be obvious that this meant "pick one"..
-
-I guess re-arranging as a bullet-list would make that more clear.
-
->>
->> > I would recommend using a bulleted list to describe compatible strings.
->> > It allows for easier extension and the easy addition of notes. e.g.
->> >
->> > - compatible: should contain:
->> >   * "foo,bar-xtreme" for bar variants with the xtreme extensions.
->> >   * "foo,bar" for all bar variants (inc. xtreme).
->> >   * "foo,baz" for baz variants.
->> >   * "foo,foo" for all variants.
->>
->> sure
->>
->> >> +- reg: Physical base address and length of the controller's registers.
->> >> +- interrupts: The interrupt outputs from the controller.
->> >> +- clocks: device clocks
->> >
->> > One entry? Multiple?
->> >
->> > What do they correspond to on the data sheet?
->>
->> get someone to send me a data sheet.  I'd love to tell you then ;-)
->
-> Sure :)
->
->> > Names?
->> >
->> >> +  See ../clocks/clock-bindings.txt for details.
->> >> +- qcom,hdmi-tx-ddc-clk: ddc clk pin
->> >> +- qcom,hdmi-tx-ddc-data: ddc data pin
->> >> +- qcom,hdmi-tx-hpd: hpd pin
->> >
->> > GPIOs should be called *-gpios.
->>
->> again just trying to be compatible with some existing downstream DT..
->
-> And again I'm not certain that's a good idea...
->
->> >> +- core-vdda-supply: phandle to supply regulator
->> >> +- hdmi-mux-supply: phandle to mux regulator
->> >> +
->> >> +Optional properties:
->> >> +- qcom,hdmi-tx-mux-en: hdmi mux enable pin
->> >> +- qcom,hdmi-tx-mux-sel: hdmi mux select pin
->> >
->> > GPIOs again.
->> >
->> >> +
->> >> +Example:
->> >> +
->> >> +/ {
->> >> +       ...
->> >> +
->> >> +       hdmi: qcom,hdmi-tx-8960@4a00000 {
->> >> +               compatible = "qcom,hdmi-tx-8960";
->> >> +               reg-names = "core_physical";
->> >> +               reg = <0x04a00000 0x1000>;
->> >> +               interrupts = <GIC_SPI 79 0>;
->> >> +               clock-names =
->> >> +                   "core_clk",
->> >> +                   "master_iface_clk",
->> >> +                   "slave_iface_clk";
->> >> +               clocks =
->> >> +                   <&mmcc HDMI_APP_CLK>,
->> >> +                   <&mmcc HDMI_M_AHB_CLK>,
->> >> +                   <&mmcc HDMI_S_AHB_CLK>;
->> >> +               qcom,hdmi-tx-ddc-clk = <&msmgpio 70 GPIO_ACTIVE_HIGH>;
->> >> +               qcom,hdmi-tx-ddc-data = <&msmgpio 71 GPIO_ACTIVE_HIGH>;
->> >> +               qcom,hdmi-tx-hpd = <&msmgpio 72 GPIO_ACTIVE_HIGH>;
->> >> +               core-vdda-supply = <&pm8921_hdmi_mvs>;
->> >> +               hdmi-mux-supply = <&ext_3p3v>;
->> >> +       };
->> >> +};
->> >> diff --git a/Documentation/devicetree/bindings/drm/msm/msm.txt b/Documentation/devicetree/bindings/drm/msm/msm.txt
->> >> new file mode 100644
->> >> index 0000000..484cc12
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/drm/msm/msm.txt
->> >> @@ -0,0 +1,40 @@
->> >> +Qualcomm adreno/snapdragon
->> >
->> > What exactly is this unit? Judging by the GPU phandle it's not the GPU
->> > itself.
->>
->> the display
->
-> I see. Could that be mentioned in the heading line above?
-
-will do
-
->>
->> >> +
->> >> +Required properties:
->> >> +- compatible: "qcom,mdp" (mdp4) or "qcom,mdss_mdp" (mdp5)
->> >> +- reg: Physical base address and length of the controller's registers.
->> >> +- interrupts: The interrupt outputs from the controller.
->> >
->> > All of my prior points for these properties stand.
->> >
->> >> +- connectors: array of phandles for output device(s)
->> >
->> > What are valid devices to point this at?
->> >
->> >> +- clocks: device clocks
->> >
->> > Likewise, see my above points regarding clocks.
->> >
->> >> +  See ../clocks/clock-bindings.txt for details.
->> >> +
->> >> +Optional properties:
->> >> +- gpus: phandle for gpu device
->> >
->> > What exactly is this used for?
->>
->> 'gpus' and 'connectors' is basically part of the componentized device
->> support.  It is how the master/toplevel drm device knows what
->> sub-devices exist.
->>
->> Currently there is just one valid possibility for each, but as we add
->> DSI, DP, etc, and support for various other generations there will
->> hopefully be more.  (For example, some older snapdragons had one 3d
->> core and zero to two 2d cores.)
->
-> Ok. I must admit to being unfamiliar with how that's expected to work.
-
-in case you are curious:
-http://lists.freedesktop.org/archives/dri-devel/2014-January/051249.html
-
-BR,
--R
-
-> Thanks,
-> Mark.
+T24gVGh1LCAzIEp1bCAyMDE0IDExOjQ0OjMyICswMTAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
+bmVsLm9yZz4gd3JvdGU6Cgo+ID4gPiBJJ2QgZXhwZWN0IHRoaXMgdG8gcmV0dXJuIGFuIGVycm9y
+IGZvciB0aGUgYnVzeSBEQUkgcmF0aGVyIHRoYW4ganVzdAo+ID4gPiBzaWxlbnRseSBpZ25vcmUg
+aXQgZmFpbGluZyB0byBzdGFydCBvciAoYmV0dGVyKSBpbXBsZW1lbnQgc29tZSBjb250cm9sCj4g
+PiA+IHRvIGxldCB0aGUgdXNlciBzZWxlY3Qgd2hpY2ggb2YgdGhlIERBSXMgaXMgYWN0aXZlLiAg
+Cj4gCj4gPiBUaGlzIGlzIG5vdCBhbiBlcnJvci4gSWYgdGhlIGF1ZGlvIHN1YnN5c3RlbSAoRFBD
+TSwgbm90IHRoZSB1c2VyKQo+ID4gY2hvb3NlcyB0byBhY3RpdmF0ZSBib3RoIEkyUyBhbmQgUy9Q
+RElGLCB0aGlzIG1lYW5zIHRoZSBIRE1JIGF1ZGlvIG1heQo+ID4gYmUgdGFrZW4gZWl0aGVyIGZy
+b20gSTJTIG9yIGZyb20gUy9QRElGOiBib3RoIGlucHV0cyBoYXZlIHRoZSByaWdodAo+ID4gZm9y
+bWF0IGFuZCByYXRlLiAgCj4gCj4gWW91ciBib2FyZCBoYXBwZW5zIHRvIG9ubHkgYmUgYWJsZSB0
+byBwcmVzZW50IHRoZSBzYW1lIGlucHV0IG9uIGJvdGggSTJTCj4gYW5kIFMvUERJRiBidXQgdGhh
+dCBtaWdodCBub3QgYXBwbHkgdG8gb3RoZXIgYm9hcmRzLCB0aGV5IG1heSBiZSBhYmxlIHRvCj4g
+cm91dGUgZGlmZmVyZW50IHNpZ25hbHMgdG8gZWFjaCB3aGljaCB3b3VsZCBwcmVzZW50IGEgcHJh
+Y3RpY2FsIHByb2JsZW0uCgpJZiB0aGVyZSBhcmUgdHdvIGRpZmZlcmVudCBzdHJlYW1zcyBvbiBJ
+MlMgYW5kIFMvUERJRiwgYW5kIGlmIHRoZSBhdWRpbwpzdWJzeXN0ZW0gd2FudHMgdG8gcm91dGUg
+dGhlc2Ugc3RyZWFtcyB0byB0aGUgc2FtZSBjb25uZWN0b3IgKHdpZGdldAonaGRtaS1vdXQnKSwg
+dGhlbiwgc29tZXdoZXJlLCB0aGVyZSBzaG91bGQgYmUgYSBzb2Z0d2FyZSBvciBhIGRlc2lnbgpi
+dWcuIE5vPwoKQW55d2F5LCB0aGUgdGRhOTk4eCBjYW5ub3Qga25vdyBpZiB0aGUgZG91YmxlIHJv
+dXRlIGlzIHdhbnRlZCBvciBub3QuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJy
+ZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
