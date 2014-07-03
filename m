@@ -1,85 +1,192 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Thu, 3 Jul 2014 16:43:25 +0100
-Message-ID: <20140703154325.GY32514@n2100.arm.linux.org.uk>
-References: <20140702165628.GO20799@lunn.ch> <20140702195154.47d6f6b4@armhf>
- <20140702194252.GN410@sirena.org.uk> <20140703074959.7c489912@armhf>
- <20140703104432.GV410@sirena.org.uk> <20140703133406.2d3e3a1d@armhf>
- <20140703115924.GY410@sirena.org.uk> <20140703152826.103c9d6c@armhf>
- <20140703134346.GW32514@n2100.arm.linux.org.uk>
- <20140703172909.60caf2c7@armhf>
+From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH 3/3 V2] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Thu, 3 Jul 2014 10:47:41 -0500
+Message-ID: <53B57B1D.8090308@amd.com>
+References: <1404314544-7762-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <20140702163903.GA26903@leverpostej> <53B465B9.7000407@amd.com>
+ <20140703084608.GB29837@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20140703172909.60caf2c7@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140703084608.GB29837@leverpostej>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 03, 2014 at 05:29:09PM +0200, Jean-Francois Moine wrote:
-> I think that you did not look at my code.
-> 
-> Both S/PDIF and I2S work with the TDA998x. It is a choice of the audio
-> subsystem to do this choice, not Russell King.
+On 7/3/2014 3:46 AM, Mark Rutland wrote:
+> On Wed, Jul 02, 2014 at 09:04:09PM +0100, Suravee Suthikulanit wrote:
+>> Thanks again for the review. Please see my comments below.
+>>
+>> On 7/2/2014 11:39 AM, Mark Rutland wrote:
+>>> On Wed, Jul 02, 2014 at 04:22:23PM +0100, suravee.suthikulpanit@amd.com wrote:
+>>>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+>>>> index 5573c08..9e46f7f 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/gic.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+>>>> @@ -12,11 +12,13 @@ Main node required properties:
+>>>>
+>>>>    - compatible : should be one of:
+>>>>           "arm,gic-400"
+>>>> +       "arm,gic-400-plus"
+>>>
+>>> I am not keen on this name.
+>>
+>> Ok, I'll change it. Any suggestion on name?  I'm not sure what is the
+>> "official" product name. I've seen this in some slides from ARM. What
+>> about "gic-400-v2m"??.
+>
+> I'll query this internally.
+Thanks.
 
-If you think I'm arguing because I personally want something, then we're
-not going to make any progress.
+>>>> @@ -37,9 +39,16 @@ Main node required properties:
+>>>>           the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
+>>>>           the interrupt is wired to that CPU.  Only valid for PPI interrupts.
+>>>>
+>>>> -- reg : Specifies base physical address(s) and size of the GIC registers. The
+>>>> -  first region is the GIC distributor register base and size. The 2nd region is
+>>>> -  the GIC cpu interface register base and size.
+>>>> +- reg : Specifies base physical address(s) and size of the GIC register frames.
+>>>> +
+>>>> +  Region | Description
+>>>> +  Index  |
+>>>> +  -------------------------------------------------------------------
+>>>> +     0   | GIC distributor register base and size
+>>>> +     1   | GIC cpu interface register base and size
+>>>> +     2   | VGIC interface control register base and size (Optional)
+>>>> +     3   | VGIC CPU interface register base and size (Optional)
+>>>> +     4   | GICv2m MSI interface register base and size (Optional)
+>>>
+>>> As far as I am aware, the MSI interface is completely orthogonal to
+>>> having a GICH and GICV.
+>>
+>> Agree. I'm not doing anything with it. I'm just listing them here since
+>> they are also mentioned in the gic.txt
+>>
+>>>
+>>> We should figure out how we expect to handle that (zero-sized reg
+>>> entries? reg-names?).
+>>
+>> I'm not sure how VGIC stuff handles reg/size = 0.
+>
+> Neither am I.
+>
+> However, what I said was that we should figure out how we _expect_ to
+> handle that case. If we have to make changes to handle it, that's fine
+> given we already have to make changes to support GICv2m.
 
-What I want is for this to be _correct_ and _not_ to introduce silly
-restrictions which break people's setups.
+Looking through the code in virt/kvm/arm/vgic.c, I believe this would 
+ended up returning -EINVAL or -ENXIO from kvm_vgic_hyp_init().
 
-> When DPCM will handle the formats and rates, the audio subsystem will
-> find by itself if such stream will go to the HDMI only or to the S/PDIF
-> only or to both. The kirwood audio driver will work as it is and the tda998x
-> CODEC will work as it is. There will be no need to change these drivers.
+>>>
+>>>>
+>>>>    Optional
+>>>>    - interrupts   : Interrupt source of the parent interrupt controller on
+>>>> @@ -55,6 +64,10 @@ Optional
+>>>>                     by a crossbar/multiplexer preceding the GIC. The GIC irq
+>>>>                     input line is assigned dynamically when the corresponding
+>>>>                     peripheral's crossbar line is mapped.
+>>>> +
+>>>> +- msi-controller : Identifies the node as an MSI controller.  This requires
+>>>> +  the register region index 4.
+>>>
+>>> That last clarifying comment is more confusing than helpful.
+>>
+>> If you are referring to the table, I added that since it was easier to
+>> see than scanning the text.
+>
+> I was referring to "This requires the register region index 4".
+>
+> How about:
+>
+> - msi-controller : Identifies the node as an MSI controller. Requried
+>    for GICv2m.
 
-Except, as Mark has already pointed out, and as I keep pointing out to
-you, and you keep refusing to accept, the kirkwood driver as it stands
-is *not* a DPCM driver.  It makes no use of that stuff at all.
+OK
 
-What you're doing in kirkwood-i2s is providing two plain DAI links,
-and then insisting that only one can be active any any one time.
+>>
+>>> [...]
+>>>
+>>>> +#define GIC_V2M_MIN_SPI                        32
+>>>> +#define GIC_V2M_MAX_SPI                        1024
+>>>
+>>> GIC interrupt IDs 1020 and above are reserved, no?
+>>>
+>>> Surely the max ID an SPI can take is 1019?
+>>
+>> Right, thanks for catching. But the spec says that the SPI ID value must
+>> be in the range of 32 to 1020. I guess it was a bit unclear, but
+>> definitely not 1024 :)
+>
+> Which spec?
 
-A DPCM solution provides at least one frontend DAI link and at least
-one backend DAI link.  Your code does not do this.
+This was in the "Server Base System Architecture v1.0".
+>
+> In the GICv2 spec I see:
+>
+> * "Interrupt numbers ID32-ID1019 are used for SPIs." in
+>    2.2.1 Interrupt IDs.
+>
+> * "The GIC architecture reserves interrupt ID numbers 1020-1023 for
+>    special purposes." in 3.2.5 Special interrupt numbers.
+>
+>>
+>>>> +#define GIC_OF_MSIV2M_RANGE_INDEX      4
+>>>> +
+>>>> +/**
+>>>> + * alloc_msi_irq - Allocate MSIs from avaialbe MSI bitmap.
+>>>> + * @data: Pointer to v2m_data
+>>>> + * @nvec: Number of interrupts to allocate
+>>>> + * @irq: Pointer to the allocated irq
+>>>> + *
+>>>> + * Allocates interrupts only if the contiguous range of MSIs
+>>>> + * with specified nvec are available. Otherwise return the number
+>>>> + * of available interrupts. If none are available, then returns -ENOENT.
+>>>> + */
+>>>
+>>> This function is overly complicated, and pointlessly so.
+>>>
+>>> It doesn't achieve anything useful as it returns the size of the _last_
+>>> contiguous block rather than the _largest_ contiguous block, and the
+>>> only caller (gicv2m_setup_msi_irq) doesn't even care.
+>>>
+>>> Simplify this to just return an error code if allocation is impossible.
+>>
+>> Actually, I made another mistake in the gicv2m_setup_msi_irq when
+>> returning from the alloc_msi_irq().
+>
+> Ok.
+>
+>> My understanding is the arch_setup_msi_irqs() is supposed to return the
+>> number of available vectors if the requested amount could not be
+>> allocated. I notice that the current "drivers/pci/msi.c:
+>> arch_setup_msi_irqs()" does not do so, which is okay.
+>>
+>> However, We are also working on adding support for multi-MSI support
+>> since some of the devices we have are using it, which means we will need
+>> to provide a different version of the "arch_setup_msi_irqs()" as the
+>> current one does not allow (PCI_CAP_ID_MSI && nvec > 1).
+>>
+>> Therefore, I implemented the "alloc_msi_irq" this way to account for
+>> future changes.
+>
+> Per my comments, I still think the function is broken given it returns
+> the size of the last contiguous block of available interrupts.
 
-The second point is that - and as I keep telling you - that as soon
-as you couple your existing code (which restricts things like the
-sample rates) you can no longer output anything else through the
-optical out ON THE CUBOX.  For this statement, I'm not talking
-_generally_,  I'm talking _specifically_ about _one_ _platform_.
+Actually, the current logic for alloc_msi_irq() should do the following:
+     - Return the next available contiguous block of nvec.
+     - In case the requested nvec is not available, return the size of 
+of the largest available range, since the for loop always call the 
+"bitmap_find_next_zero_area()" from the first index of the bitmap.
 
-> All we need actually is some more code in DPCM or multi-codec or
-> whatever mechanism which will route the stream according to the rates
-> and formats.
+Actually, let me just add the code for multiple MSIs, which should be 
+making use of this function also in the V3 patch set.  That way, it 
+would be clear.
 
-Yes, DPCM currently lacks full support, that's been known about for
-some time - I've reported it to Mark, but it seems that this isn't
-something that is going to get fixed until others put work into it.
+Thanks,
 
-> Eventually, the TDA998x is used in other machines. Are you sure that
-> the audio controllers of all these machines have a S/PDIF output
-> connected to the S/PDIF input of the tda998x?
+Suravee
 
-Which bit of "we need to support both I2S and SPDIF" in my previous
-emails was not clear.  Which bit of "We should only support SPDIF
-on the Cubox" was not clear?
-
-I *fully* acknowledge that we need to support both, but I'm putting
-a _strong_ recommendation to you _with_ technical reasons why we
-should _only_ support SPDIF on the Cubox.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Suravee
