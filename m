@@ -1,88 +1,86 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Thu, 3 Jul 2014 08:14:04 +0530
-Message-ID: <CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
-	<CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
-	<53B4B0B3.9080000@codeaurora.org>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
+Date: Thu, 3 Jul 2014 11:48:41 +0800
+Message-ID: <20140703034839.GA20450@shlinux1.ap.freescale.net>
+References: <1403863246-18822-1-git-send-email-b29396@freescale.com>
+ <1403863246-18822-2-git-send-email-b29396@freescale.com>
+ <53ADB1E8.1030504@hartkopp.net>
+ <20140630082622.GB25689@shlinux1.ap.freescale.net>
+ <53B4473B.2050003@hartkopp.net> <53B459C3.6070807@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <53B4B0B3.9080000@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, linux-arm-msm@vger.kernel.org, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B459C3.6070807@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org, wg@grandegger.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 3 July 2014 06:54, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> I gave it a spin. It works so you can have my
->
-> Tested-by: Stephen Boyd <sboyd@codeaurora.org>
+On Wed, Jul 02, 2014 at 09:13:07PM +0200, Marc Kleine-Budde wrote:
+> On 07/02/2014 07:54 PM, Oliver Hartkopp wrote:
+> > I'm not really familiar with the naming concept in device trees.
+> > 
+> > What is your opinion about the remarks below?
+> 
+> The entries in the DT, at least on freescale baords, follow the naming
+> scheme of the reference manual. E.g. on the mx25 it's can1 and can2:
+> 
+>     can1: can@43f88000 { ... }
+>     can2: can@43f8c000 { ... }
+> 
+> And on the mx28, its:
+> 
+>     can0: can@80032000 { ... }
+>     can1: can@80034000 { ... }
+> 
+> Because the imx25 datasheet uses a "1" based counting scheme, while the
+> imx28 uses a "0" based one.
+> 
+> So it's best practise to follow the naming and numbering scheme of the
+> hardware reference manual.....and if you have access to the
+> documentation of the m_can core, use clock names of the m_can core for
+> the clock-names property.
+> 
 
-Thanks, all suggested improvements are made and pushed again with
-your Tested-by..
+Based on my knowledge, device tree allows define phandle name according to
+the real device name of HW according spec while the device node name should
+be general(e.g can@80032000 rather than flexcan@80032000).
+For imx6sx, there are already following entries in
+arch/arm/boot/dts/imx6sx.dtsi
+flexcan1: can@02090000 {...}
+flexcan2: can@02094000 {...}
+So i'd prefer to define as:
+m_can1: canfd@020e8000 {...}
+m_can2: canfd@020f0000 {...}
 
-> I'm still concerned about the patch where we figure out if the clocks
-> are shared. I worry about a configuration where there are different
-> clocks for on/off (i.e. gates) that are per-cpu but they all source from
-> the same divider or something that is per-cluster. In DT this may be
-> described as different clock provider outputs for the gates and in the
-> cpu node we would have different clock specifiers but in reality all the
-> CPUs in that cluster are affected by the same frequency scaling.
 
-Yeah, this is probably what matches with Rob's doubt. These can
-actually be different. Good point.
+One problem is there're can alias already.
+aliases {
+	can0 = &flexcan1;
+	can1 = &flexcan2;
+	...
+}
+I'm not sure adding can2&can3 for mcan is properly:
+aliases {
+	can0 = &flexcan1;
+	can1 = &flexcan2;
+	can2 = &m_can1;
+	can3 = &m_can2;
+	...
+}
+Since the m_can driver does not need to use aliases,
+so i will not add them.
 
-> In this case we'll need to get help from the clock framework to
-> determine that those gates clocks don't have any .set_rate() callback so
-> they can't actually change rate independently, and then walk up the tree
-> to their parents to see if they have a common ancestor that does change
-> rates. That's where it becomes useful to have a clock framework API for
-> this, like clk_shares_rate(struct clk *clk, struct clk *peer) or
-> something that can hide all this from cpufreq. Here's what I think it
-> would look like (totally untested/uncompiled):
->
-> static struct clk *find_rate_changer(struct clk *clk)
-> {
->
->         if (!clk)
->                 return NULL;
->
->         do {
->                 /* Rate could change by changing parents */
->                 if (clk->num_parents > 1)
->                         return clk;
->
->                 /* Rate could change by calling clk_set_rate() */
->                 if (clk->ops->set_rate)
->                         return clk;
->
->                 /*
->                  * This is odd, clk_set_rate() doesn't propagate
->                  * and this clock can't change rate or parents
->                  * so we must be at the root and the clock we
->                  * started at can't change rates. Just return the
->                  * root so that we can see if the other clock shares
->                  * the same root although CPUfreq should never care.
->                  */
->                 if (!(clk->flags & CLK_SET_RATE_PARENT))
->                         return clk;
->         } while ((clk = clk->parent))
->
->         return NULL;
-> }
->
-> bool clk_shares_rate(struct clk *clk, struct clk *peer)
-> {
->         struct clk *p1, *p2;
->
->         p1 = find_rate_changer(clk);
->         p2 = find_rate_changer(peer)
->
->         return p1 == p2;
-> }
+Regards
+Dong Aisheng
 
-I find it much better then doing what I did initially, simply matching clk_get()
-outputs. Lets see what Mike has to say..
+> Marc
+> -- 
+> Pengutronix e.K.                  | Marc Klein-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
 
-@Mike: Is this less ugly ? :)
+
