@@ -1,292 +1,117 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH RESEND 09/18] AT91: Probe the reset driver
-Date: Thu,  3 Jul 2014 16:41:24 +0200
-Message-ID: <1404398493-28907-10-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH RESEND 13/18] AT91: DT: Remove poweroff DT probing
+Date: Thu,  3 Jul 2014 16:41:28 +0200
+Message-ID: <1404398493-28907-14-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404398493-28907-1-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1404398493-28907-1-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Register the reset device in the right SoCs so that the reset driver is
-actually probed even in the old-style probing case.
+Now that the poweroff code is a driver of its own, remove the DT probing in
+mach-at91 and let the usual DT code do its job.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/mach-at91/at91sam9260.c | 26 ++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9261.c | 26 ++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9263.c | 26 ++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9g45.c | 31 +++++++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9rl.c  | 26 ++++++++++++++++++++++++++
- 5 files changed, 135 insertions(+)
+ arch/arm/mach-at91/setup.c | 77 ----------------------------------------------
+ 1 file changed, 77 deletions(-)
 
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index c3d22be73b7c..9ffab0cf94cd 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/platform_device.h>
- #include <linux/clk/at91_pmc.h>
- 
- #include <asm/proc-fns.h>
-@@ -358,6 +359,30 @@ static void __init at91sam9260_initialize(void)
- 	at91_gpio_init(at91sam9260_gpio, 3);
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index fe0601e0a3c0..ae269291d19d 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -387,82 +387,6 @@ static void at91_dt_ramc(void)
+ 	at91_pm_set_standby(of_id->data);
  }
  
-+static struct resource rstc_resources[] = {
-+	[0] = {
-+		.start  = AT91SAM9260_BASE_RSTC,
-+		.end    = AT91SAM9260_BASE_RSTC + SZ_16 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start  = AT91SAM9260_BASE_SDRAMC,
-+		.end    = AT91SAM9260_BASE_SDRAMC + SZ_512 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device rstc_device = {
-+	.name           = "at91-sam9-reset",
-+	.resource       = rstc_resources,
-+	.num_resources  = ARRAY_SIZE(rstc_resources),
-+};
-+
-+static void __init at91sam9260_register_devices(void)
-+{
-+	platform_device_register(&rstc_device);
-+}
-+
- /* --------------------------------------------------------------------
-  *  Interrupt initialization
-  * -------------------------------------------------------------------- */
-@@ -407,5 +432,6 @@ AT91_SOC_START(at91sam9260)
- 		    | (1 << AT91SAM9260_ID_IRQ2),
- 	.ioremap_registers = at91sam9260_ioremap_registers,
- 	.register_clocks = at91sam9260_register_clocks,
-+	.register_devices = at91sam9260_register_devices,
- 	.init = at91sam9260_initialize,
- AT91_SOC_END
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index fb164a5d04a9..41fa9b9a6f05 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -11,6 +11,7 @@
-  */
+-static struct of_device_id shdwc_ids[] = {
+-	{ .compatible = "atmel,at91sam9260-shdwc", },
+-	{ .compatible = "atmel,at91sam9rl-shdwc", },
+-	{ .compatible = "atmel,at91sam9x5-shdwc", },
+-	{ /*sentinel*/ }
+-};
+-
+-static const char *shdwc_wakeup_modes[] = {
+-	[AT91_SHDW_WKMODE0_NONE]	= "none",
+-	[AT91_SHDW_WKMODE0_HIGH]	= "high",
+-	[AT91_SHDW_WKMODE0_LOW]		= "low",
+-	[AT91_SHDW_WKMODE0_ANYLEVEL]	= "any",
+-};
+-
+-const int at91_dtget_shdwc_wakeup_mode(struct device_node *np)
+-{
+-	const char *pm;
+-	int err, i;
+-
+-	err = of_property_read_string(np, "atmel,wakeup-mode", &pm);
+-	if (err < 0)
+-		return AT91_SHDW_WKMODE0_ANYLEVEL;
+-
+-	for (i = 0; i < ARRAY_SIZE(shdwc_wakeup_modes); i++)
+-		if (!strcasecmp(pm, shdwc_wakeup_modes[i]))
+-			return i;
+-
+-	return -ENODEV;
+-}
+-
+-static void at91_dt_shdwc(void)
+-{
+-	struct device_node *np;
+-	int wakeup_mode;
+-	u32 reg;
+-	u32 mode = 0;
+-
+-	np = of_find_matching_node(NULL, shdwc_ids);
+-	if (!np) {
+-		pr_debug("unable to find compatible shutdown (shdwc) controller node in dtb\n");
+-		return;
+-	}
+-
+-	at91_shdwc_base = of_iomap(np, 0);
+-	if (!at91_shdwc_base)
+-		panic(pr_fmt("unable to map shdwc cpu registers\n"));
+-
+-	wakeup_mode = at91_dtget_shdwc_wakeup_mode(np);
+-	if (wakeup_mode < 0) {
+-		pr_warn("shdwc unknown wakeup mode\n");
+-		goto end;
+-	}
+-
+-	if (!of_property_read_u32(np, "atmel,wakeup-counter", &reg)) {
+-		if (reg > AT91_SHDW_CPTWK0_MAX) {
+-			pr_warn("shdwc wakeup counter 0x%x > 0x%x reduce it to 0x%x\n",
+-				reg, AT91_SHDW_CPTWK0_MAX, AT91_SHDW_CPTWK0_MAX);
+-			reg = AT91_SHDW_CPTWK0_MAX;
+-		}
+-		mode |= AT91_SHDW_CPTWK0_(reg);
+-	}
+-
+-	if (of_property_read_bool(np, "atmel,wakeup-rtc-timer"))
+-			mode |= AT91_SHDW_RTCWKEN;
+-
+-	if (of_property_read_bool(np, "atmel,wakeup-rtt-timer"))
+-			mode |= AT91_SHDW_RTTWKEN;
+-
+-	at91_shdwc_write(AT91_SHDW_MR, wakeup_mode | mode);
+-
+-end:
+-	pm_power_off = at91sam9_poweroff;
+-
+-	of_node_put(np);
+-}
+-
+ void __init at91rm9200_dt_initialize(void)
+ {
+ 	at91_dt_ramc();
+@@ -480,7 +404,6 @@ void __init at91rm9200_dt_initialize(void)
+ void __init at91_dt_initialize(void)
+ {
+ 	at91_dt_ramc();
+-	at91_dt_shdwc();
  
- #include <linux/module.h>
-+#include <linux/platform_device.h>
- #include <linux/clk/at91_pmc.h>
- 
- #include <asm/proc-fns.h>
-@@ -321,6 +322,30 @@ static void __init at91sam9261_initialize(void)
- 	at91_gpio_init(at91sam9261_gpio, 3);
- }
- 
-+static struct resource rstc_resources[] = {
-+	[0] = {
-+		.start  = AT91SAM9261_BASE_RSTC,
-+		.end    = AT91SAM9261_BASE_RSTC + SZ_16 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start  = AT91SAM9261_BASE_SDRAMC,
-+		.end    = AT91SAM9261_BASE_SDRAMC + SZ_512 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device rstc_device = {
-+	.name           = "at91-sam9-reset",
-+	.resource       = rstc_resources,
-+	.num_resources  = ARRAY_SIZE(rstc_resources),
-+};
-+
-+static void __init at91sam9261_register_devices(void)
-+{
-+	platform_device_register(&rstc_device);
-+}
-+
- /* --------------------------------------------------------------------
-  *  Interrupt initialization
-  * -------------------------------------------------------------------- */
-@@ -370,5 +395,6 @@ AT91_SOC_START(at91sam9261)
- 		    | (1 << AT91SAM9261_ID_IRQ2),
- 	.ioremap_registers = at91sam9261_ioremap_registers,
- 	.register_clocks = at91sam9261_register_clocks,
-+	.register_devices = at91sam9261_register_devices,
- 	.init = at91sam9261_initialize,
- AT91_SOC_END
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index f30290572293..0c6949c342dc 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/platform_device.h>
- #include <linux/clk/at91_pmc.h>
- 
- #include <asm/proc-fns.h>
-@@ -339,6 +340,30 @@ static void __init at91sam9263_initialize(void)
- 	at91_gpio_init(at91sam9263_gpio, 5);
- }
- 
-+static struct resource rstc_resources[] = {
-+	[0] = {
-+		.start  = AT91SAM9263_BASE_RSTC,
-+		.end    = AT91SAM9263_BASE_RSTC + SZ_16 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start  = AT91SAM9263_BASE_SDRAMC0,
-+		.end    = AT91SAM9263_BASE_SDRAMC0 + SZ_512 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device rstc_device = {
-+	.name           = "at91-sam9-reset",
-+	.resource       = rstc_resources,
-+	.num_resources  = ARRAY_SIZE(rstc_resources),
-+};
-+
-+static void __init at91sam9263_register_devices(void)
-+{
-+	platform_device_register(&rstc_device);
-+}
-+
- /* --------------------------------------------------------------------
-  *  Interrupt initialization
-  * -------------------------------------------------------------------- */
-@@ -387,5 +412,6 @@ AT91_SOC_START(at91sam9263)
- 	.extern_irq = (1 << AT91SAM9263_ID_IRQ0) | (1 << AT91SAM9263_ID_IRQ1),
- 	.ioremap_registers = at91sam9263_ioremap_registers,
- 	.register_clocks = at91sam9263_register_clocks,
-+	.register_devices = at91sam9263_register_devices,
- 	.init = at91sam9263_initialize,
- AT91_SOC_END
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index 9d3d544ac19c..61c0bc1185e9 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/dma-mapping.h>
- #include <linux/clk/at91_pmc.h>
-+#include <linux/platform_device.h>
- 
- #include <asm/irq.h>
- #include <asm/mach/arch.h>
-@@ -388,6 +389,35 @@ static void __init at91sam9g45_initialize(void)
- 	at91_gpio_init(at91sam9g45_gpio, 5);
- }
- 
-+static struct resource rstc_resources[] = {
-+	[0] = {
-+		.start  = AT91SAM9G45_BASE_RSTC,
-+		.end    = AT91SAM9G45_BASE_RSTC + SZ_16 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start  = AT91SAM9G45_BASE_DDRSDRC1,
-+		.end    = AT91SAM9G45_BASE_DDRSDRC1 + SZ_512 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+	[2] = {
-+		.start  = AT91SAM9G45_BASE_DDRSDRC0,
-+		.end    = AT91SAM9G45_BASE_DDRSDRC0 + SZ_512 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device rstc_device = {
-+	.name           = "at91-g45-reset",
-+	.resource       = rstc_resources,
-+	.num_resources  = ARRAY_SIZE(rstc_resources),
-+};
-+
-+static void __init at91sam9g45_register_devices(void)
-+{
-+	platform_device_register(&rstc_device);
-+}
-+
- /* --------------------------------------------------------------------
-  *  Interrupt initialization
-  * -------------------------------------------------------------------- */
-@@ -436,5 +466,6 @@ AT91_SOC_START(at91sam9g45)
- 	.extern_irq = (1 << AT91SAM9G45_ID_IRQ0),
- 	.ioremap_registers = at91sam9g45_ioremap_registers,
- 	.register_clocks = at91sam9g45_register_clocks,
-+	.register_devices = at91sam9g45_register_devices,
- 	.init = at91sam9g45_initialize,
- AT91_SOC_END
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index a79960f57e6a..417c8b6fb85e 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/platform_device.h>
- #include <linux/clk/at91_pmc.h>
- 
- #include <asm/proc-fns.h>
-@@ -331,6 +332,30 @@ static void __init at91sam9rl_initialize(void)
- 	at91_gpio_init(at91sam9rl_gpio, 4);
- }
- 
-+static struct resource rstc_resources[] = {
-+	[0] = {
-+		.start  = AT91SAM9RL_BASE_RSTC,
-+		.end    = AT91SAM9RL_BASE_RSTC + SZ_16 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start  = AT91SAM9RL_BASE_SDRAMC,
-+		.end    = AT91SAM9RL_BASE_SDRAMC + SZ_512 - 1,
-+		.flags  = IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device rstc_device = {
-+	.name           = "at91-sam9-reset",
-+	.resource       = rstc_resources,
-+	.num_resources  = ARRAY_SIZE(rstc_resources),
-+};
-+
-+static void __init at91sam9rl_register_devices(void)
-+{
-+	platform_device_register(&rstc_device);
-+}
-+
- /* --------------------------------------------------------------------
-  *  Interrupt initialization
-  * -------------------------------------------------------------------- */
-@@ -381,5 +406,6 @@ AT91_SOC_START(at91sam9rl)
- #if defined(CONFIG_OLD_CLK_AT91)
- 	.register_clocks = at91sam9rl_register_clocks,
- #endif
-+	.register_devices = at91sam9rl_register_devices,
- 	.init = at91sam9rl_initialize,
- AT91_SOC_END
+ 	/* Init clock subsystem */
+ 	at91_dt_clock_init();
 -- 
 2.0.1
