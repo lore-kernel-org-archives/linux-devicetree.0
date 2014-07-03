@@ -1,194 +1,68 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] dts: add devicetree bindings for pxa27x clocks
-Date: Thu, 03 Jul 2014 15:03:28 -0700
-Message-ID: <20140703220328.11380.22037@quantum>
-References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
- <1404066744-13416-3-git-send-email-robert.jarzmik@free.fr>
- <CAN1soZys4k6g5RgPLbreopOxTwDJ+bfPOq8XPwsNpyt5+YURjg@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] devicetree/bindings: Add binding for micron n25q512a
+ memory
+Date: Thu, 3 Jul 2014 17:10:00 -0500
+Message-ID: <1404425400.21434.89.camel@snotra.buserror.net>
+References: <1404382376-3115-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN1soZys4k6g5RgPLbreopOxTwDJ+bfPOq8XPwsNpyt5+YURjg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404382376-3115-1-git-send-email-Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Haojian Zhuang (2014-07-02 23:14:33)
-> On Mon, Jun 30, 2014 at 2:32 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> > Add the clock tree description for the PXA27x based boards.
-> >
-> > Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/pxa27x.dtsi            | 134 ++++++++++++++++++++++++++++++-
-> >  include/dt-bindings/clock/pxa2xx-clock.h |  45 +++++++++++
-> >  2 files changed, 178 insertions(+), 1 deletion(-)
-> >  create mode 100644 include/dt-bindings/clock/pxa2xx-clock.h
-> >
-> > diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-> > index a705469..badaa71 100644
-> > --- a/arch/arm/boot/dts/pxa27x.dtsi
-> > +++ b/arch/arm/boot/dts/pxa27x.dtsi
-> > @@ -1,5 +1,6 @@
-> >  /* The pxa3xx skeleton simply augments the 2xx version */
-> > -/include/ "pxa2xx.dtsi"
-> > +#include "pxa2xx.dtsi"
-> > +#include "dt-bindings/clock/pxa2xx-clock.h"
-> >
-> >  / {
-> >         model = "Marvell PXA27x familiy SoC";
-> > @@ -35,4 +36,135 @@
-> >                         #pwm-cells = <1>;
-> >                 };
-> >         };
-> > +
-> > +       clocks {
-> > +              /*
-> > +               * The muxing of external clocks/internal dividers for osc* clock
-> > +               * sources has been hidden under the carpet by now.
-> > +               */
-> > +               #address-cells = <1>;
-> > +               #size-cells = <1>;
-> > +               ranges;
-> > +
-> > +               osc13mhz:osc13mhz {
-> > +                       compatible = "fixed-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clock-frequency = <13000000>;
-> > +               };
-> > +
-> > +               osc32_768khz:osc32_768khz {
-> > +                       compatible = "fixed-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clock-frequency = <32768>;
-> > +               };
-> > +
-> > +               pll_312mhz:pll_312mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&osc13mhz>;
-> > +                       clock-div = <1>;
-> > +                       clock-mult = <24>;
-> > +               };
-> > +
-> > +               clk_48mhz:clk_48mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&pll_312mhz>;
-> > +                       clock-div = <13>;
-> > +                       clock-mult = <2>;
-> > +               };
-> > +
-> > +               clk_32_842mhz:clk_32_842mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&pll_312mhz>;
-> > +                       clock-div = <19>;
-> > +                       clock-mult = <2>;
-> > +               };
-> > +
-> > +               clk_19_5mhz:clk_19_5mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&pll_312mhz>;
-> > +                       clock-div = <32>;
-> > +                       clock-mult = <2>;
-> > +               };
-> > +
-> > +               clk_14_857mhz:clk_14_857mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&pll_312mhz>;
-> > +                       clock-div = <42>;
-> > +                       clock-mult = <2>;
-> > +               };
-> > +
-> > +               clk_14_682mhz:clk_14_682mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&pll_312mhz>;
-> > +                       clock-div = <51>;
-> > +                       clock-mult = <2>;
-> > +               };
-> > +
-> > +               clk_13mhz:clk_13mhz {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&osc13mhz>;
-> > +                       clock-div = <1>;
-> > +                       clock-mult = <1>;
-> > +               };
-> > +
-> > +               clk_dummy:clk_dummy {
-> > +                       compatible = "fixed-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clock-frequency = <0>;
-> > +               };
-> > +
-> > +               clk_ostimer:clk_ostimer {
-> > +                       compatible = "fixed-factor-clock";
-> > +                        #clock-cells = <0>;
-> > +                       clocks = <&osc13mhz>;
-> > +                       clock-div = <4>;
-> > +                       clock-mult = <1>;
-> > +               };
-> > +
-> > +               pxa27x_sysclks:pxa27x_sysclks {
-> > +                       compatible = "marvell,pxa270-core-clocks";
-> > +                       #clock-cells = <1>;
-> > +                       clocks = <&osc13mhz>;
-> > +                       clock-output-names = "run mode", "half-turbo mode",
-> > +                               "turbo mode", "cpu core", "system bus", "memory", "lcd";
-> > +               };
-> > +
-> > +               pxa2xx_clks: pxa2xx_clks@41300004 {
-> > +                       compatible = "marvell,pxa-clocks";
-> > +                       reg = <0x41300004 0x4>;
-> > +                       clocks =
-> > +                               <&clk_13mhz>, <&clk_13mhz>, <&clk_dummy>, <&clk_13mhz>,
-> > +                               <&clk_13mhz>, <&clk_14_857mhz>, <&clk_14_857mhz>, <&clk_14_857mhz>,
-> > +                               <&clk_14_682mhz>, <&clk_ostimer>, <&clk_48mhz>, <&clk_48mhz>,
-> > +                               <&clk_19_5mhz>, <&clk_48mhz>, <&clk_32_842mhz>, <&clk_13mhz>,
-> > +                               <&pxa27x_sysclks 6>, <&clk_48mhz>, <&clk_48mhz>, <&osc32_768khz>,
-> > +                               <&clk_dummy>, <&clk_19_5mhz>, <&pxa27x_sysclks 4>, <&clk_13mhz>,
-> > +                               <&pxa27x_sysclks 6>, <&clk_dummy>;
-> > +                       #clock-cells = <1>;
-> > +                       clock-output-names =
-> > +                               "pwm 0,2", "pwm 1,3", "ac97", "ssp2",
-> > +                               "ssp3,hwuart", "stuart", "ffuart", "btuart",
-> > +                               "i2s", "nssp,ostimer", "usb host,assp", "usb udc",
-> > +                               "mmc", "ficp", "i2c", "pwri2c",
-> > +                               "lcd", "msl", "usim", "keypad",
-> > +                                "im", "memstk", "memc", "ssp1",
-> > +                                "camera", "ac97conf";
-> > +                       clock-indices = <
-> > +                               CKEN_PWM0 CKEN_PWM1 CKEN_AC97 CKEN_SSP2
-> > +                               CKEN_SSP3 CKEN_STUART CKEN_FFUART CKEN_BTUART
-> > +                               CKEN_I2S CKEN_OSTIMER CKEN_USBHOST CKEN_USB
-> > +                               CKEN_MMC CKEN_FICP CKEN_I2C CKEN_PWRI2C
-> > +                               CKEN_LCD CKEN_MSL CKEN_USIM CKEN_KEYPAD
-> > +                               CKEN_IM CKEN_MEMSTK 65 CKEN_SSP1
-> > +                               CKEN_CAMERA CKEN_AC97CONF >;
-> > +               };
-> > +       };
-> > +
-> >  };
+On Thu, 2014-07-03 at 15:42 +0530, Priyanka Jain wrote:
+> -Micron n25q512a memory is supported by m25p80 driver.
+>  Add compatible field required to support n25q512a in m25p80.txt
+> -Add micron to the vendor-prefixes.txt file
 > 
-> Maybe defining these clocks in pxa27x clock driver is better.
+> Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/m25p80.txt   |    1 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  2 files changed, 2 insertions(+), 0 deletions(-)
 
-Agreed. After a long time trying to figure out the best DT binding for
-clocks it seems that defining the per-clock data in DTS is not the best
-way. The qcom msm and samsung exynos clock bindings and DTS data are
-good examples.
+Why did you send this to the ppc list but not the spi or mtd lists?
 
-Regards,
-Mike
+I'm having a hard time following the flow of how these SPI devices get
+bound -- is the compatible involved at all?  I don't see this string
+(with vendor prefix included) in the driver.  I do see a table that
+contains what looks like device IDs.  If the device can report its id,
+shouldn't we rely on that rather than device tree compatible?
 
-> 
-> Regards
-> Haojian
+-Scott
+
+
+> diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
+> index 4611aa8..ce02e81 100644
+> --- a/Documentation/devicetree/bindings/mtd/m25p80.txt
+> +++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>                 the DT binding is not Linux-only, but in case of Linux, see the
+>                 "spi_nor_ids" table in drivers/mtd/spi-nor/spi-nor.c for the list
+>                 of supported chips.
+> +               example: "micron,n25q512a"
+>  - reg : Chip-Select number
+>  - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
+>  
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 4d7f375..a44cfee 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -79,6 +79,7 @@ marvell	Marvell Technology Group Ltd.
+>  maxim	Maxim Integrated Products
+>  micrel	Micrel Inc.
+>  microchip	Microchip Technology Inc.
+> +micron	Micron Technology Inc.
+>  mosaixtech	Mosaix Technologies, Inc.
+>  moxa	Moxa
+>  mpl	MPL AG
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
