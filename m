@@ -1,82 +1,115 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 00/18] AT91: cleanup of the reset and poweroff code
-Date: Thu,  3 Jul 2014 16:14:33 +0200
-Message-ID: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/5] ARM: dts: AM43x: Add TPS65218 device tree nodes
+Date: Thu, 3 Jul 2014 09:20:45 -0500
+Message-ID: <20140703142045.GI5814@saruman.home>
+References: <1404395102-21469-1-git-send-email-j-keerthy@ti.com>
+ <1404395102-21469-4-git-send-email-j-keerthy@ti.com>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fU0UwhtRbpo05rnG"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404395102-21469-4-git-send-email-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--fU0UwhtRbpo05rnG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patchset is an attempt to further cleanup mach-at91 by removing
-code that can be put into a driver nowadays.
+On Thu, Jul 03, 2014 at 07:15:00PM +0530, Keerthy wrote:
+> Add TPS65218 device tree nodes.
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  arch/arm/boot/dts/am43x-epos-evm.dts |   38 ++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 38 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am4=
+3x-epos-evm.dts
+> index 19f1f7e..749098b 100644
+> --- a/arch/arm/boot/dts/am43x-epos-evm.dts
+> +++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+> @@ -323,6 +323,44 @@
+>  	status =3D "okay";
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&i2c0_pins>;
+> +	clock-frequency =3D <400000>;
 
-This time, the target is the reset and poweroff code, that can now be
-put in drivers/power/reset.
+looks unrelated but small enough that it should suffice to mention on
+commit log.
 
-Maxime
+> +	tps65218: tps65218@24 {
+> +		reg =3D <0x24>;
+> +		compatible =3D "ti,tps65218";
+> +		interrupts =3D <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
+> +		interrupt-parent =3D <&gic>;
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <2>;
+> +
+> +		dcdc1: regulator-dcdc1 {
+> +			compatible =3D "ti,tps65218-dcdc1";
+> +			/* VDD_CORE voltage limits min of OPP50 and max of OPP100 */
+> +			regulator-name =3D "vdd_core";
+> +			regulator-min-microvolt =3D <912000>;
+> +			regulator-max-microvolt =3D <1144000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		dcdc2: regulator-dcdc2 {
+> +			compatible =3D "ti,tps65218-dcdc2";
+> +			/* VDD_MPU voltage limits min of OPP50 and max of OPP_NITRO */
+> +			regulator-name =3D "vdd_mpu";
+> +			regulator-min-microvolt =3D <912000>;
+> +			regulator-max-microvolt =3D <1378000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
 
-Maxime Ripard (18):
-  power: reset: Add if statement isntead of multiple depends on
-  AT91: setup: Switch to pr_fmt
-  AT91: G45: DT: Declare a second ram controller
-  AT91: Rework ramc mapping code
-  AT91: SAMA5D3: DT: Add shutdown controller
-  power: reset: Add AT91 reset driver
-  AT91: DT: Remove the old-style reset probing
-  AT91: soc: Introduce register_devices callback
-  AT91: Probe the reset driver
-  AT91: Call at91_register_devices in the board files
-  AT91: Remove reset code the machine code
-  power: reset: Add AT91 poweroff driver
-  AT91: DT: Remove poweroff DT probing
-  AT91: Register the poweroff driver
-  AT91: Remove poweroff code
-  AT91: pm: Remove show_reset_status function
-  AT91: Remove rstc and shdwnc global base addresses
-  AT91: Remove rstc and shdwc headers
+missing vdcdc3, vdcdc4, vdcdc5 and vdcdc6.
 
- arch/arm/boot/dts/at91sam9g45.dtsi      |   8 +-
- arch/arm/boot/dts/sama5d3.dtsi          |   5 +
- arch/arm/mach-at91/Kconfig              |   8 --
- arch/arm/mach-at91/Makefile             |   2 -
- arch/arm/mach-at91/at91_rstc.h          |  53 ---------
- arch/arm/mach-at91/at91_shdwc.h         |  50 --------
- arch/arm/mach-at91/at91sam9260.c        |  45 ++++++-
- arch/arm/mach-at91/at91sam9261.c        |  45 ++++++-
- arch/arm/mach-at91/at91sam9263.c        |  45 ++++++-
- arch/arm/mach-at91/at91sam9_alt_reset.S |  40 -------
- arch/arm/mach-at91/at91sam9g45.c        |  49 +++++++-
- arch/arm/mach-at91/at91sam9g45_reset.S  |  45 -------
- arch/arm/mach-at91/at91sam9rl.c         |  45 ++++++-
- arch/arm/mach-at91/board-afeb-9260v1.c  |   2 +
- arch/arm/mach-at91/board-cam60.c        |   2 +
- arch/arm/mach-at91/board-cpu9krea.c     |   2 +
- arch/arm/mach-at91/board-flexibity.c    |   2 +
- arch/arm/mach-at91/board-sam9-l9260.c   |   2 +
- arch/arm/mach-at91/board-sam9260ek.c    |   3 +-
- arch/arm/mach-at91/board-sam9261ek.c    |   3 +-
- arch/arm/mach-at91/board-sam9263ek.c    |   3 +-
- arch/arm/mach-at91/board-sam9m10g45ek.c |   3 +-
- arch/arm/mach-at91/board-sam9rlek.c     |   3 +-
- arch/arm/mach-at91/board-snapper9260.c  |   2 +
- arch/arm/mach-at91/generic.h            |  10 +-
- arch/arm/mach-at91/pm.c                 |  72 ------------
- arch/arm/mach-at91/setup.c              | 178 +++++-----------------------
- arch/arm/mach-at91/soc.h                |   1 +
- drivers/power/reset/Kconfig             |  31 +++--
- drivers/power/reset/Makefile            |   2 +
- drivers/power/reset/at91-poweroff.c     | 156 ++++++++++++++++++++++++
- drivers/power/reset/at91-reset.c        | 202 ++++++++++++++++++++++++++++++++
- 32 files changed, 657 insertions(+), 462 deletions(-)
- delete mode 100644 arch/arm/mach-at91/at91_rstc.h
- delete mode 100644 arch/arm/mach-at91/at91_shdwc.h
- delete mode 100644 arch/arm/mach-at91/at91sam9_alt_reset.S
- delete mode 100644 arch/arm/mach-at91/at91sam9g45_reset.S
- create mode 100644 drivers/power/reset/at91-poweroff.c
- create mode 100644 drivers/power/reset/at91-reset.c
+> +
+> +		ldo1: regulator-ldo1 {
+> +			compatible =3D "ti,tps65218-ldo1";
+> +			regulator-min-microvolt =3D <1800000>;
+> +			regulator-max-microvolt =3D <1800000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +	};
+> =20
+>  	at24@50 {
+>  		compatible =3D "at24,24c256";
 
--- 
-2.0.1
+--=20
+balbi
+
+--fU0UwhtRbpo05rnG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtWa9AAoJEIaOsuA1yqRENboQAKRyjHGvdnLDdnlwaTV2KoPC
+6giTcpVJksywCTSy3oe/0ZV5I0u3tBYTQGc+epj7bMweG0BiA4o8A04OXjgYkGwG
+SfiaTLee54h/OiseSLe3QhgQCkaaYF69YarU8xlWRCbXGnaVX+I0ucE2zD661zH1
+vOoIzFnJPfFzGGZ4EQW4pfVVT8zRAOGMcWMl24//U1Y6ESjATkXaSLN/TfNbs1/a
+kYt8jI01QLm1jZdrqHm6AFuy3q6EmwaNTXfWJYmyZ+OA5V631dO5bnfA0qdetSYK
+Xi7wcugi0TNMEGMUb2gCHlk81AmyoD+OA5NNkSIEPwk4P5Dd1OLXsqLZi+RMY7vE
+eL7nuaK+T93rZ0vRTLgqiumyaA4K5kPbdL6EK1NJjJZ+VEiWs+OFilnVBp0ok8+h
+rCOKN+JVa5cTmlSB6ROnwvaz02VE76OxJWeCHBmVaYJWtf7SlQHkvgetf6y/kPfJ
+YLSDY/0F0asywzUwtnNtJHleXp/IRGgn155CXWjZtgEa3fzo7hnSlFiIXCnFF4fH
+/B+ijVuQimymZKvefohHk+VBZHAAB0Dm91CxvJEVQGIT2iOOXcq4uGypp53oRPq2
+q+CLzPOrw0mMAHUybBnrErd4+5eniIAz32rmkwMBiTdqmfmY+0t49Bke81N/NtSB
+HkFmOkiDqZfiCvCeeZzz
+=ugrz
+-----END PGP SIGNATURE-----
+
+--fU0UwhtRbpo05rnG--
