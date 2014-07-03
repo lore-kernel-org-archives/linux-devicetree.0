@@ -1,55 +1,85 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v2] Documentation: devicetree: Fix tps65090 typos in example
-Date: Thu, 03 Jul 2014 17:40:39 +0200
-Message-ID: <53B57977.6010309@suse.de>
-References: <1403737664-6426-1-git-send-email-afaerber@suse.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Thu, 3 Jul 2014 16:43:25 +0100
+Message-ID: <20140703154325.GY32514@n2100.arm.linux.org.uk>
+References: <20140702165628.GO20799@lunn.ch> <20140702195154.47d6f6b4@armhf>
+ <20140702194252.GN410@sirena.org.uk> <20140703074959.7c489912@armhf>
+ <20140703104432.GV410@sirena.org.uk> <20140703133406.2d3e3a1d@armhf>
+ <20140703115924.GY410@sirena.org.uk> <20140703152826.103c9d6c@armhf>
+ <20140703134346.GW32514@n2100.arm.linux.org.uk>
+ <20140703172909.60caf2c7@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403737664-6426-1-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Doug Anderson <dianders@chromium.org>, Simon Glass <sjg@chromium.org>, Mark Brown <broonie@linaro.org>, Michael Spang <spang@chromium.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20140703172909.60caf2c7@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 26.06.2014 01:07, schrieb Andreas F=C3=A4rber:
-> Specification and existing device trees use vsys-l{1,2}-supply,
-> not vsys_l{1,2}-supply. Fix the example to match the specification.
->=20
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->  v1 -> v2:
->  * More verbose commit message (requested by Mark Rutland)
+On Thu, Jul 03, 2014 at 05:29:09PM +0200, Jean-Francois Moine wrote:
+> I think that you did not look at my code.
+> 
+> Both S/PDIF and I2S work with the TDA998x. It is a choice of the audio
+> subsystem to do this choice, not Russell King.
 
-Ping! Any issue remaining or maintainers/lists missing in CC?
+If you think I'm arguing because I personally want something, then we're
+not going to make any progress.
 
-Thanks,
-Andreas
+What I want is for this to be _correct_ and _not_ to introduce silly
+restrictions which break people's setups.
 
->  Documentation/devicetree/bindings/regulator/tps65090.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt=
- b/Documentation/devicetree/bindings/regulator/tps65090.txt
-> index 34098023..ca69f5e 100644
-> --- a/Documentation/devicetree/bindings/regulator/tps65090.txt
-> +++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
-> @@ -45,8 +45,8 @@ Example:
->  		infet5-supply =3D <&some_reg>;
->  		infet6-supply =3D <&some_reg>;
->  		infet7-supply =3D <&some_reg>;
-> -		vsys_l1-supply =3D <&some_reg>;
-> -		vsys_l2-supply =3D <&some_reg>;
-> +		vsys-l1-supply =3D <&some_reg>;
-> +		vsys-l2-supply =3D <&some_reg>;
-> =20
->  		regulators {
->  			dcdc1 {
+> When DPCM will handle the formats and rates, the audio subsystem will
+> find by itself if such stream will go to the HDMI only or to the S/PDIF
+> only or to both. The kirwood audio driver will work as it is and the tda998x
+> CODEC will work as it is. There will be no need to change these drivers.
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+Except, as Mark has already pointed out, and as I keep pointing out to
+you, and you keep refusing to accept, the kirkwood driver as it stands
+is *not* a DPCM driver.  It makes no use of that stuff at all.
+
+What you're doing in kirkwood-i2s is providing two plain DAI links,
+and then insisting that only one can be active any any one time.
+
+A DPCM solution provides at least one frontend DAI link and at least
+one backend DAI link.  Your code does not do this.
+
+The second point is that - and as I keep telling you - that as soon
+as you couple your existing code (which restricts things like the
+sample rates) you can no longer output anything else through the
+optical out ON THE CUBOX.  For this statement, I'm not talking
+_generally_,  I'm talking _specifically_ about _one_ _platform_.
+
+> All we need actually is some more code in DPCM or multi-codec or
+> whatever mechanism which will route the stream according to the rates
+> and formats.
+
+Yes, DPCM currently lacks full support, that's been known about for
+some time - I've reported it to Mark, but it seems that this isn't
+something that is going to get fixed until others put work into it.
+
+> Eventually, the TDA998x is used in other machines. Are you sure that
+> the audio controllers of all these machines have a S/PDIF output
+> connected to the S/PDIF input of the tda998x?
+
+Which bit of "we need to support both I2S and SPDIF" in my previous
+emails was not clear.  Which bit of "We should only support SPDIF
+on the Cubox" was not clear?
+
+I *fully* acknowledge that we need to support both, but I'm putting
+a _strong_ recommendation to you _with_ technical reasons why we
+should _only_ support SPDIF on the Cubox.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
