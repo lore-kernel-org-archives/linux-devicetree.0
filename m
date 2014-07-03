@@ -1,58 +1,68 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Thu, 3 Jul 2014 15:28:26 +0200
-Message-ID: <20140703152826.103c9d6c@armhf>
-References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
- <20140702195154.47d6f6b4@armhf>
- <20140702194252.GN410@sirena.org.uk>
- <20140703074959.7c489912@armhf>
- <20140703104432.GV410@sirena.org.uk>
- <20140703133406.2d3e3a1d@armhf>
- <20140703115924.GY410@sirena.org.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [GIT PULL] STiH407 reset controller support
+Date: Thu, 03 Jul 2014 15:32:21 +0200
+Message-ID: <1404394341.18039.35.camel@paszta.hi.pengutronix.de>
+References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
+	 <1404317194.4109.13.camel@paszta.hi.pengutronix.de>
+	 <20140702165924.GB17665@lee--X1> <53B50EFD.2070007@st.com>
+	 <1404379248.18039.31.camel@paszta.hi.pengutronix.de>
+	 <20140703094001.GB32208@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140703115924.GY410@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140703094001.GB32208@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <maxime.coquelin@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAzIEp1bCAyMDE0IDEyOjU5OjI0ICswMTAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cgo+ID4gPiBZb3VyIGJvYXJkIGhhcHBlbnMgdG8gb25seSBiZSBhYmxl
-IHRvIHByZXNlbnQgdGhlIHNhbWUgaW5wdXQgb24gYm90aCBJMlMKPiA+ID4gYW5kIFMvUERJRiBi
-dXQgdGhhdCBtaWdodCBub3QgYXBwbHkgdG8gb3RoZXIgYm9hcmRzLCB0aGV5IG1heSBiZSBhYmxl
-IHRvCj4gPiA+IHJvdXRlIGRpZmZlcmVudCBzaWduYWxzIHRvIGVhY2ggd2hpY2ggd291bGQgcHJl
-c2VudCBhIHByYWN0aWNhbCBwcm9ibGVtLiAgCj4gCj4gPiBJZiB0aGVyZSBhcmUgdHdvIGRpZmZl
-cmVudCBzdHJlYW1zcyBvbiBJMlMgYW5kIFMvUERJRiwgYW5kIGlmIHRoZSBhdWRpbwo+ID4gc3Vi
-c3lzdGVtIHdhbnRzIHRvIHJvdXRlIHRoZXNlIHN0cmVhbXMgdG8gdGhlIHNhbWUgY29ubmVjdG9y
-ICh3aWRnZXQKPiA+ICdoZG1pLW91dCcpLCB0aGVuLCBzb21ld2hlcmUsIHRoZXJlIHNob3VsZCBi
-ZSBhIHNvZnR3YXJlIG9yIGEgZGVzaWduCj4gPiBidWcuIE5vPyAgCj4gCj4gWWVzLCB3aGljaCBp
-cyB3aHkgdGhlIGRyaXZlciBzaG91bGRuJ3Qgc2lsZW50bHkgaWdub3JlIHRoZSBzaXR1YXRpb24u
-Cj4gCj4gPiBBbnl3YXksIHRoZSB0ZGE5OTh4IGNhbm5vdCBrbm93IGlmIHRoZSBkb3VibGUgcm91
-dGUgaXMgd2FudGVkIG9yIG5vdC4gIAo+IAo+IEl0IGRvZXNuJ3QgbmVlZCB0byBrbm93LCBpdCBq
-dXN0IG5lZWRzIHRvIGlkZW50aWZ5IHNvbWV0aGluZyBpdCBjYW4ndAo+IHN1cHBvcnQgZWl0aGVy
-IGJ5IHByb3ZpZGluZyBhIHdheSB0byBwaWNrIHdoaWNoIGludGVyZmFjZSBpcyB1c2VkIG9yIGJ5
-Cj4gcmVqZWN0aW5nIHRoZSBzZWNvbmQgaW50ZXJmYWNlLgoKT0suIG5vIHByb2JsZW0sIEkgY2Fu
-IGRvIHRoYXQ6IG9ubHkgdGhlIGZpcnN0IHN0cmVhbSBpcyBzd2l0Y2hlZCBhbmQKdGhlIHNlY29u
-ZCBpcyByZWplY3RlZC4KCkJ1dCwgdGhpcyBtZWFucyB0aGF0IHRoZXJlIHdpbGwgYmUgYSBsb3Qg
-b2YgZXJyb3JzIHdoZW4gRFBDTSB3aWxsIGJlCnVzZWQsIGJlY2F1c2UsIGluIG1vc3QgY2FzZXMg
-Zm9yIHRoZSBDdWJveCAoa2lya3dvb2QgYXVkaW8gKyB0ZGE5OTh4KSwKYm90aCB3YXlzIEkyUyBh
-bmQgUy9QRElGIHdpbGwgYmUgYWN0aXZhdGVkIGF0IHRoZSBzYW1lIHRpbWUgZm9yIGEKc2luZ2xl
-IHN0cmVhbSAoeW91IG1heSBub3RlIHRoYXQgdGhlIHJvdXRlcyBmcm9tIHRoZSBzZWNvbmQgaW5w
-dXQKY2Fubm90IGJlIGJsb2NrZWQgYnkgdGhlIENPREVDIGFmdGVyIGl0IHJlY2VpdmVkIHRoZSBm
-aXJzdCBpbnB1dCwKYmVjYXVzZSB0aGVzZSByb3V0ZXMgaGF2ZSBhbHJlYWR5IGJlZW4gY29tcHV0
-ZWQpLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRh
-diEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Maxime,
+
+Am Donnerstag, den 03.07.2014, 10:40 +0100 schrieb Lee Jones:
+> On Thu, 03 Jul 2014, Philipp Zabel wrote:
+> > Patch 4 depends on patch 1 for the header. My tree is still empty, how
+> > about I take the first two, and you merge that branch and then take 3
+> > and 4 on top?
+> 
+> That approach sounds reasonable.  Once you've applied the patches can
+> you tag the branch and provide Maxime with a pull-request please
+> Philipp?
+
+The following changes since commit
+7171511eaec5bf23fb06078f59784a3a0626b38f:
+
+  Linux 3.16-rc1 (2014-06-15 17:45:28 -1000)
+
+are available in the git repository at:
+
+  git://git.pengutronix.de/git/pza/linux.git tags/reset-for-sti-3.17
+
+for you to fetch changes up to d29d2a38d1c1b21730487e991183ffe7e16e1ef5:
+
+  reset: sti: Document sti-picophyreset controllers bindings.
+(2014-07-03 14:58:22 +0200)
+
+----------------------------------------------------------------
+STiH407 reset controller support
+
+----------------------------------------------------------------
+Peter Griffin (2):
+      reset: stih407: Add softreset, powerdown and picophy controllers
+      reset: sti: Document sti-picophyreset controllers bindings.
+
+ .../bindings/reset/st,sti-picophyreset.txt         |  42 ++++++
+ drivers/reset/sti/Kconfig                          |   4 +
+ drivers/reset/sti/Makefile                         |   1 +
+ drivers/reset/sti/reset-stih407.c                  | 158
++++++++++++++++++++++
+ .../dt-bindings/reset-controller/stih407-resets.h  |  61 ++++++++
+ 5 files changed, 266 insertions(+)
+ create mode 100644
+Documentation/devicetree/bindings/reset/st,sti-picophyreset.txt
+ create mode 100644 drivers/reset/sti/reset-stih407.c
+ create mode 100644
+include/dt-bindings/reset-controller/stih407-resets.h
+
+regards
+Philipp
