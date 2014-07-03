@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 07/18] AT91: soc: Introduce register_devices callback
-Date: Thu,  3 Jul 2014 16:14:44 +0200
-Message-ID: <1404396906-25194-12-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 08/18] AT91: soc: Introduce register_devices callback
+Date: Thu,  3 Jul 2014 16:14:46 +0200
+Message-ID: <1404396906-25194-14-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -46,10 +46,10 @@ index 631fa3b8c16d..4c2c96195a50 100644
   /* Timer */
  extern void at91rm9200_ioremap_st(u32 addr);
 diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index 3463b9e14418..771e0495bfe5 100644
+index 71003e40f01c..fe0601e0a3c0 100644
 --- a/arch/arm/mach-at91/setup.c
 +++ b/arch/arm/mach-at91/setup.c
-@@ -506,3 +506,8 @@ void __init at91_initialize(unsigned long main_clock)
+@@ -508,3 +508,8 @@ void __init at91_initialize(unsigned long main_clock)
  
  	pinctrl_provide_dummies();
  }
