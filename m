@@ -1,84 +1,63 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv5 04/15] hwspinlock/core: add common OF helpers
-Date: Thu, 3 Jul 2014 12:35:45 -0500
-Message-ID: <53B59471.30703@ti.com>
-References: <1398904476-26200-1-git-send-email-s-anna@ti.com> <1398904476-26200-5-git-send-email-s-anna@ti.com> <CAK=WgbbZvBLT7U638fBfPjF7-MJaP=4WJcrT_fEg6Uu3cXRAyg@mail.gmail.com> <53B47626.4040506@ti.com> <CAK=WgbbJ6a17wrsEcvNq6tPiaciQ=E+22QE06t9EA8RFqicNRg@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Thu, 3 Jul 2014 18:57:06 +0100
+Message-ID: <20140703175706.GI17372@arm.com>
+References: <20140423170821.GJ5649@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+ <5360FB07.5030407@arm.com>
+ <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
+ <20140513184503.GF16388@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A087573F@SC-VEXCH4.marvell.com>
+ <537337F3.4080300@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED90182308172@SC-VEXCH4.marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK=WgbbJ6a17wrsEcvNq6tPiaciQ=E+22QE06t9EA8RFqicNRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9034CBD80F070943B59700D7F8149ED90182308172-r8ILAu4/owuq90oVIqnETxL4W9x8LtSr@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "'linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org'" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org'" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+On Mon, Jun 30, 2014 at 11:39:15AM +0100, Neil Zhang wrote:
+> > > > I will prepare another patch to add DT description under PMU since
+> > > > there is no generic power domain support for pm notifier if no other
+> > > concerns.
+> > > > We can change the manner if there is generic power domain support
+> > > > for
+> > > pm notifier later.
+> > > > Thanks.
+> > >
+> > > No, please don't add any DT bindings for power domains specific to PMU
+> > > node.
+> > > We can't change the DT bindings once added.
+> > >
+> > > As I pointed out the DT bindings for generic power domains are under
+> > > discussion.
+> > > See if you can reuse it, if not help in extending it so that it can be used.
+> > >
+> > 
+> > Sorry for reply later.
+> > As I said before the under discussed generic power domain is not suitable for
+> > CPU peripherals since they are all known belong to CPU or cluster power
+> > domain.
+> > If we want to follow the way they are discussion, we need to register core
+> > and cluster power provider, and need vfp/gic/pmu etc to require them.
+> > Is it really suitable?
+> > 
+> Do you have any comments?
+> If no, I would like to put it under PMU node.
 
-On 07/03/2014 02:15 AM, Ohad Ben-Cohen wrote:
-> Hi Suman,
-> 
-> On Thu, Jul 3, 2014 at 12:14 AM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->>> Do we have a use case today that require the xlate() method?
->>>
->>> If not, let's remove it as we could always add it back if some new
->>> hardware shows up that needs it.
->>
->> The xlate() method is to support the phandle + args specifier way of
->> requesting hwlocks, platform implementations are free to implement their
->> own xlate functions, but the above supports the simplest case of
->> controller + relative lock index within controller.
-> 
-> Do we have a use case for a different implementation other than the
-> simplest case? If not, it seems to me this will just become redundant
-> boilerplate code (every platform will use the simple xlate method).
+Sudeep is a better person to comment than me, but I'd still rather this was
+handled more generically as opposed to a PMU-specific hack. I don't see a
+problem including GIC and VFP here, but only when we actually need to
+save/restore them (i.e. what the hardware guys went crazy with the power
+domains).
 
-Not at the moment, with the existing platform implementations. So, if I
-understand you correctly, you are asking to leave out the xlate ops and
-make the of_hwspin_lock_simple_xlate() internal until a need for an
-xlate method arises. This also means, we only support a value of 1 for
-#hwlock-cells.
-
-> 
->> This function again is to support the phandle + args specifier way of
->> requesting hwlocks, the hwspin_lock_request_specific() is invoked
->> internally within this function, so we are still reusing the actual
->> request code other than handling the DT parsing portion. If we go back
->> to using global locks in client hwlocks property, we don't need a
->> of_hwspin_lock_get_id(), the same can be achieved using the existing DT
->> function, of_property_read_u32_index().
-> 
-> I think you may have misunderstood me, sorry. I'm ok with the phandle
-> + args specifier. I just think we can use it, together with the
-> base_id property, to infer the global lock id from the DT data. 
-
-Aah ok, its minor code rearrangement for what you are asking - I just
-need to leave out invoking the request_specific invocation in the OF
-request specific existing function, just return the global id and let
-the client users call the normal request_specific API themselves.
-
-But, that would mean DT-based client users would have to invoke two
-function calls to request a hwspinlock. We already have an API to get
-the lock id given a hwspinlock - hwspin_lock_get_id(), so I added the OF
-API for requesting a lock directly rather than giving an OF API for
-getting the lock id. This is in keeping in convention with what other
-drivers do normally - a regular get and an OF get. I can modify it if
-you still prefer the OF API for getting a global lock id, but I feel its
-a burden for client users.
-
-Also, do you prefer an open property-name in client users (like I am
-doing at the moment) or imposing a standard property name "hwlocks"?
-
-regards
-Suman
-
-> This is not only a must to support heterogenous multi-processing systems,
-> it will also substantially simplify the code.
-> 
-> Thanks,
-> Ohad.
-> 
-
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
