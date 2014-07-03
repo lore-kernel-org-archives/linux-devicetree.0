@@ -1,121 +1,80 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 2/2] arm: dra7xx: Add hwmod data for pcie1 and pcie2 subsystems
-Date: Thu, 3 Jul 2014 13:37:55 +0530
-Message-ID: <53B50F5B.7010505@ti.com>
-References: <1403719366-9656-1-git-send-email-kishon@ti.com> <1403719366-9656-3-git-send-email-kishon@ti.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: busses: i2c-pxa.c: Fix for possible null pointer
+ dereferenc
+Date: Thu, 3 Jul 2014 10:41:09 +0200
+Message-ID: <20140703084108.GA3012@katana>
+References: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <009301cf93f6$f938a270$eba9e750$%han@samsung.com>
+ <CAFo99gY2qEEqwJgu-NQryAe2=o5AsDjL+SFaau6BA7CBMH8Xkg@mail.gmail.com>
+ <003601cf9660$83368990$89a39cb0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1403719366-9656-3-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <003601cf9660$83368990$89a39cb0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Rickard Strandqvist' <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Leilei Shang' <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Peter Korsgaard' <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 June 2014 11:32 PM, Kishon Vijay Abraham I wrote:
-> Added hwmod data for pcie1 and pcie2 subsystem present in DRA7xx SOC.
-> 
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> Please find the bootlog with these hwmod patches
-> http://paste.ubuntu.com/7701601/
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c |   55 +++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> index 6ff40a6..934aa9d 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> @@ -1290,6 +1290,43 @@ static struct omap_hwmod dra7xx_ocp2scp3_hwmod = {
->  };
->  
->  /*
-> + * 'PCIE' class
-> + *
-> + */
-> +
-> +static struct omap_hwmod_class dra7xx_pcie_hwmod_class = {
-> +	.name	= "pcie",
-> +};
-> +
-> +/* pcie1 */
-> +static struct omap_hwmod dra7xx_pcie1_hwmod = {
-> +	.name		= "pcie1",
-> +	.class		= &dra7xx_pcie_hwmod_class,
-> +	.clkdm_name	= "l3init_clkdm",
 
-The TRM tells me it belongs to 'pcie_clkdm' instead. Can you please recheck?
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	.main_clk	= "l4_root_clk_div",
-> +	.prcm = {
-> +		.omap4 = {
-> +			.clkctrl_offs	= DRA7XX_CM_PCIE_CLKSTCTRL_OFFSET,
-> +			.modulemode	= MODULEMODE_SWCTRL,
-> +		},
-> +	},
-> +};
-> +
-> +/* pcie2 */
-> +static struct omap_hwmod dra7xx_pcie2_hwmod = {
-> +	.name		= "pcie2",
-> +	.class		= &dra7xx_pcie_hwmod_class,
-> +	.clkdm_name	= "l3init_clkdm",
-> +	.main_clk	= "l4_root_clk_div",
-> +	.prcm = {
-> +		.omap4 = {
-> +			.clkctrl_offs = DRA7XX_CM_PCIE_CLKSTCTRL_OFFSET,
-> +			.modulemode   = MODULEMODE_SWCTRL,
-> +		},
-> +	},
-> +};
-> +
-> +/*
->   * 'PCIE PHY' class
->   *
->   */
-> @@ -2448,6 +2485,22 @@ static struct omap_hwmod_ocp_if dra7xx_l4_cfg__ocp2scp1 = {
->  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->  };
->  
-> +/* l4_cfg -> pcie1 */
+Hi Rickard, hi Jingoo,
 
-There seems to be a slave port on l3_init as well which seems to be missing?
+> I also trust Wolfram. He is one of the most important and active
+> person for Linux kernel.
 
-Refer to 'Figure 24-157. PCIe Controllers Integration' of TRM version P.
+Oh, thanks. I'm flattered :)
 
-regards,
-Rajendra
+> Wolfram may mean devm_ioremap_resource(), not devm_ioremap().
 
-> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie1 = {
-> +	.master		= &dra7xx_l4_cfg_hwmod,
-> +	.slave		= &dra7xx_pcie1_hwmod,
-> +	.clk		= "l4_root_clk_div",
-> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-> +};
-> +
-> +/* l4_cfg -> pcie2 */
-> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie2 = {
-> +	.master		= &dra7xx_l4_cfg_hwmod,
-> +	.slave		= &dra7xx_pcie2_hwmod,
-> +	.clk		= "l4_root_clk_div",
-> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-> +};
-> +
->  /* l4_cfg -> pcie1 phy */
->  static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie1_phy = {
->  	.master		= &dra7xx_l4_cfg_hwmod,
-> @@ -2813,6 +2866,8 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
->  	&dra7xx_l4_cfg__mpu,
->  	&dra7xx_l4_cfg__ocp2scp1,
->  	&dra7xx_l4_cfg__ocp2scp3,
-> +	&dra7xx_l4_cfg__pcie1,
-> +	&dra7xx_l4_cfg__pcie2,
->  	&dra7xx_l4_cfg__pcie1_phy,
->  	&dra7xx_l4_cfg__pcie2_phy,
->  	&dra7xx_l3_main_1__qspi,
-> 
+Yes, you are right. Sorry for missing this detail when suggesting an
+example to convert to devm_*. devm_ioremap_resource should be favoured
+over devm_ioremap.
+
+> 1. devm_ioremap_resource(): IS_ERR() can be used.
+>=20
+> 	dev->virtbase =3D devm_ioremap_resource(&adev->dev, res));
+> 	if (IS_ERR(dev->virtbase)) {
+
+This is correct and preferred.
+
+BTW I don't care much about splitting up the patch as long as the commit
+message says that the original bug is a motivation to swicth to devm_*.
+
+Thanks Rickard for picking up the task, and thanks Jingoo for reviewing.
+
+Kind regards,
+
+   Wolfram
+
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtRckAAoJEBQN5MwUoCm2XjkQAK8POEB0KElgjpP8k9x0j09h
+69ESNBt+P6f5NFWXfC2Ibw+iOc0/jvlkjGexAqVmCZy4W4O2r98/IVmZFzmJw/kp
+KPJz/N086s3VBx3vXJWk48pqwKfpGVdn7VT3+J9y0n/NZKZeqPlO2LK9K/4+WkKv
+uMoLggosM0fXOPqZDzYMO1JYBnjx/sdsVfAMQ00AWsUgeptEaNeUUjUWXbvNXtTB
+YziIrvJ9EYDNxF9yIC7rpko2zFge3V9vFqpH/6PAH6HLmpq7jftfLRANxpGeKCEo
+10J5C/eaKcWP6eICZUNDBCVLrnCsCY3s1vzbyVZGjnLWkE/zqBRFiC5GlOLnAy/2
+kjthNo0B0REOpUHqwsV5uTY2+roxyQnViXapV7o6724ceSbxRV88Wp3QAmLjG69b
+dqEeFSyTQcRLn1OQ0rxngYH34DPclcU5/q68vKsFPpzel0xjPOqvIUI62CHNdvXA
+SOkJ+deIX69TNkxuXAeM/FJjkaQloQfKdNC7e1+LMC6z3JdvQuanp+r5mz9wWdiM
+53Pma9Q+8v+nROBIe5FlkILTyKnebTza+FZoXMm/st/2Vb//e2rHP2vIcF1ZWBVa
+4A2tEjxbYsrng2vxPpH07DmCLM3/pIGnpq4ITQs5PHzp6uEN4P8cuK/NRC5weR0A
+81fTBxpFBRvPfOWJb7hB
+=GM6g
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
