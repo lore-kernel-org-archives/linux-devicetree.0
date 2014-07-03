@@ -1,53 +1,109 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCHv5 03/15] hwspinlock/core: maintain a list of registered
- hwspinlock banks
-Date: Thu, 3 Jul 2014 10:00:18 +0300
-Message-ID: <CAK=WgbYtJ7TGqvjG3VAPPD5tVXx9-jEJU3iKEStUMxOvD1v=LQ@mail.gmail.com>
-References: <1398904476-26200-1-git-send-email-s-anna@ti.com>
- <1398904476-26200-4-git-send-email-s-anna@ti.com> <CAK=WgbakGbTaYz+4K24aT3vyRkDYwPKCm6XrcJvH667NMMfTTA@mail.gmail.com>
- <53B47621.6090307@ti.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
+Date: Thu, 03 Jul 2014 09:12:49 +0200
+Message-ID: <53B50271.8070307@pengutronix.de>
+References: <1403863246-18822-1-git-send-email-b29396@freescale.com> <1403863246-18822-2-git-send-email-b29396@freescale.com> <53ADB1E8.1030504@hartkopp.net> <20140630082622.GB25689@shlinux1.ap.freescale.net> <53B4473B.2050003@hartkopp.net> <53B459C3.6070807@pengutronix.de> <20140703034839.GA20450@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53B47621.6090307@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="jF3lwkNfAIJjBP7UcuBdXp478etr3MRfS"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20140703034839.GA20450@shlinux1.ap.freescale.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org, wg@grandegger.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--jF3lwkNfAIJjBP7UcuBdXp478etr3MRfS
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 3, 2014 at 12:14 AM, Suman Anna <s-anna@ti.com> wrote:
->> I'm not sure we need this patch.
->
-> This patch is needed if we use the controller-phandle + args specifier
-> for requesting hwlocks by a client, as we need to translate
-> controller-phandle to the corresponding hwspinlock_device.
->
-> Looks like we still don't have a closure on the semantics of how
-> clients have to request a lock in DT. You are suggesting something like
->     hwlocks = <global_lock1 global_lock2 ...>;
->
-> whereas this patch is built to support based on comments from
-> DT-maintainers,
->     hwlocks = <controller-phandle lock-specifier1>, <controller-phandle
-> lock-specifier2>...;
+On 07/03/2014 05:48 AM, Dong Aisheng wrote:
+> On Wed, Jul 02, 2014 at 09:13:07PM +0200, Marc Kleine-Budde wrote:
+>> On 07/02/2014 07:54 PM, Oliver Hartkopp wrote:
+>>> I'm not really familiar with the naming concept in device trees.
+>>>
+>>> What is your opinion about the remarks below?
+>>
+>> The entries in the DT, at least on freescale baords, follow the naming=
 
-I'm actually ok with this suggestion and haven't suggested otherwise.
+>> scheme of the reference manual. E.g. on the mx25 it's can1 and can2:
+>>
+>>     can1: can@43f88000 { ... }
+>>     can2: can@43f8c000 { ... }
+>>
+>> And on the mx28, its:
+>>
+>>     can0: can@80032000 { ... }
+>>     can1: can@80034000 { ... }
+>>
+>> Because the imx25 datasheet uses a "1" based counting scheme, while th=
+e
+>> imx28 uses a "0" based one.
+>>
+>> So it's best practise to follow the naming and numbering scheme of the=
 
-All I propose is that we add the base_id property to the controller
-node (as you have done in the subsequent patches), and then drivers
-will be able to infer the global lock id from the DT data by adding
-the controller's base_id to the lock specifier.
+>> hardware reference manual.....and if you have access to the
+>> documentation of the m_can core, use clock names of the m_can core for=
 
-Controllers with non standard lock indexing may use an xlate() method
-if needed but frankly this is fictional right now. We can start
-without this, and add it later when needed, as this doesn't affect the
-DT data.
+>> the clock-names property.
+>>
+>=20
+> Based on my knowledge, device tree allows define phandle name according=
+ to
+> the real device name of HW according spec while the device node name sh=
+ould
+> be general(e.g can@80032000 rather than flexcan@80032000).
+> For imx6sx, there are already following entries in
+> arch/arm/boot/dts/imx6sx.dtsi
+> flexcan1: can@02090000 {...}
+> flexcan2: can@02094000 {...}
+> So i'd prefer to define as:
+> m_can1: canfd@020e8000 {...}
+> m_can2: canfd@020f0000 {...}
+>=20
+>=20
+> One problem is there're can alias already.
+> aliases {
+> 	can0 =3D &flexcan1;
+> 	can1 =3D &flexcan2;
+> 	...
+> }
+> I'm not sure adding can2&can3 for mcan is properly:
+> aliases {
+> 	can0 =3D &flexcan1;
+> 	can1 =3D &flexcan2;
+> 	can2 =3D &m_can1;
+> 	can3 =3D &m_can2;
+> 	...
+> }
+> Since the m_can driver does not need to use aliases,
+> so i will not add them.
 
-With the global lock id in hand, drivers could simply use the existing
-hwspin_lock_request_specific API to obtain a specific lock, and then
-we don't need this patch.
+IMHO It's fine too add the can{2,3} aliases to m_can, too.
 
-Thanks,
-Ohad.
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--jF3lwkNfAIJjBP7UcuBdXp478etr3MRfS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlO1AnEACgkQjTAFq1RaXHOF8QCfVAY+N/IkeYhtbqn2ABLXD7lC
+NM4An3PO6AN8pUjs0+efjueXiDzCU0tl
+=T9WT
+-----END PGP SIGNATURE-----
+
+--jF3lwkNfAIJjBP7UcuBdXp478etr3MRfS--
