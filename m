@@ -1,53 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v6] ARM: shmobile: genmai reference dts: Add RSPI node
-Date: Thu,  3 Jul 2014 14:02:45 +0200
-Message-ID: <1404388965-4853-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 11/16] ARM: mvebu: dts: Add CA9 MPcore SoC Controller
+ node
+Date: Thu, 03 Jul 2014 14:51:44 +0200
+Message-ID: <53B551E0.6040103@free-electrons.com>
+References: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>	<1403875377-940-12-git-send-email-gregory.clement@free-electrons.com> <20140630173755.32793586@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140630173755.32793586@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add SPI device for RSPI on Genmai.
+Hi Thomas,
 
-On this board, only rspi4 is in use. Its bus contains a single device
-(a wm8978 audio codec), for which no bindings are defined yet.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v6:
-  - Rebased on top of renesas-devel-v3.16-rc3-20140701,
-  - Dropped pinctrl settings, as the pinctrl driver is not yet integrated.
-v5:
-  - Rebased on top of renesas-devel-v3.14-rc1-20140204
-v4:
-  - No changes
-v3:
-  - No changes
-v2:
-  - Use generic "codec" instead of specific "wm8978" node name.
----
- arch/arm/boot/dts/r7s72100-genmai.dts |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+> On Fri, 27 Jun 2014 15:22:52 +0200, Gregory CLEMENT wrote:
+>> The CA9 MPcore SoC Control block allows to do some configuration that
+>> the SoC could use for a specific use case. In most cases the defaults
+>> case is enough. However there is few exception: for cpuidle we need to
+>> use the CA9 MPcore Reset Control register.
+> 
+> I'd reword this to something like:
+> 
+> """
+> The CA9 MPcore SoC Control block is a set of registers that allows to
+> configure certain internal aspects of the core blocks of the SoC
+> (Cortex-A9, L2 cache controller, etc.). In most cases, the default
+> values are fine so they aren't many reasons to touch those registers,
+> but there is one exception: to support cpuidle on Armada 38x, we need
+> to modify the value of the CA9 MPcore Reset Control register.
+> 
+> Therefore, this commit adds a new Device Tree binding for this hardware
+> block, and uses this new binding for the Armada 38x Device Tree file.
+> 
+> """
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index 56849b55e1c2..20705467f4c9 100644
---- a/arch/arm/boot/dts/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -57,3 +57,13 @@
- &scif2 {
- 	status = "okay";
- };
-+
-+&spi4 {
-+	status = "okay";
-+
-+	codec: codec@0 {
-+		compatible = "wlf,wm8978";
-+		reg = <0>;
-+		spi-max-frequency = <5000000>;
-+	};
-+};
+[...]
+
+>> +- reg: should be register base and length as documented in the
+> 
+> should be *the* register base and length
+> 
+			reg = <0x21010 0x1c>;
+> 
+> With those fixed:
+> 
+> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+
+
+I will apply your change.
+
+Thanks,
+
+Gregory
+
+
+
 -- 
-1.7.9.5
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
