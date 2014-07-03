@@ -1,80 +1,202 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: busses: i2c-pxa.c: Fix for possible null pointer
- dereferenc
-Date: Thu, 3 Jul 2014 10:41:09 +0200
-Message-ID: <20140703084108.GA3012@katana>
-References: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <009301cf93f6$f938a270$eba9e750$%han@samsung.com>
- <CAFo99gY2qEEqwJgu-NQryAe2=o5AsDjL+SFaau6BA7CBMH8Xkg@mail.gmail.com>
- <003601cf9660$83368990$89a39cb0$%han@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/3 V2] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Thu, 3 Jul 2014 09:46:08 +0100
+Message-ID: <20140703084608.GB29837@leverpostej>
+References: <1404314544-7762-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <20140702163903.GA26903@leverpostej> <53B465B9.7000407@amd.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <003601cf9660$83368990$89a39cb0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Rickard Strandqvist' <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Leilei Shang' <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Peter Korsgaard' <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <53B465B9.7000407@amd.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 02, 2014 at 09:04:09PM +0100, Suravee Suthikulanit wrote:
+> Thanks again for the review. Please see my comments below.
+> 
+> On 7/2/2014 11:39 AM, Mark Rutland wrote:
+> > On Wed, Jul 02, 2014 at 04:22:23PM +0100, suravee.suthikulpanit@amd.com wrote:
+> >> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> >> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> >> index 5573c08..9e46f7f 100644
+> >> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> >> @@ -12,11 +12,13 @@ Main node required properties:
+> >>
+> >>   - compatible : should be one of:
+> >>          "arm,gic-400"
+> >> +       "arm,gic-400-plus"
+> >
+> > I am not keen on this name.
+> 
+> Ok, I'll change it. Any suggestion on name?  I'm not sure what is the 
+> "official" product name. I've seen this in some slides from ARM. What 
+> about "gic-400-v2m"??.
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll query this internally.
 
-Hi Rickard, hi Jingoo,
+> >>          "arm,cortex-a15-gic"
+> >>          "arm,cortex-a9-gic"
+> >>          "arm,cortex-a7-gic"
+> >>          "arm,arm11mp-gic"
+> >>   - interrupt-controller : Identifies the node as an interrupt controller
+> >> +
+> >>   - #interrupt-cells : Specifies the number of cells needed to encode an
+> >>     interrupt source.  The type shall be a <u32> and the value shall be 3.
+> >
+> > Random (inconsistent) whitespace change?
+> It looks to me like there should have been a space here to keep the 
+> consistent look, and make it easy to read
 
-> I also trust Wolfram. He is one of the most important and active
-> person for Linux kernel.
+As far as I can see it's inconsistent because you didn't add a newline
+before the "interrupt-controller" line immediately before.
 
-Oh, thanks. I'm flattered :)
+I'm not against adding spacing between the properties, so long as it is
+consistent.
 
-> Wolfram may mean devm_ioremap_resource(), not devm_ioremap().
+> >> @@ -37,9 +39,16 @@ Main node required properties:
+> >>          the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
+> >>          the interrupt is wired to that CPU.  Only valid for PPI interrupts.
+> >>
+> >> -- reg : Specifies base physical address(s) and size of the GIC registers. The
+> >> -  first region is the GIC distributor register base and size. The 2nd region is
+> >> -  the GIC cpu interface register base and size.
+> >> +- reg : Specifies base physical address(s) and size of the GIC register frames.
+> >> +
+> >> +  Region | Description
+> >> +  Index  |
+> >> +  -------------------------------------------------------------------
+> >> +     0   | GIC distributor register base and size
+> >> +     1   | GIC cpu interface register base and size
+> >> +     2   | VGIC interface control register base and size (Optional)
+> >> +     3   | VGIC CPU interface register base and size (Optional)
+> >> +     4   | GICv2m MSI interface register base and size (Optional)
+> >
+> > As far as I am aware, the MSI interface is completely orthogonal to
+> > having a GICH and GICV.
+> 
+> Agree. I'm not doing anything with it. I'm just listing them here since 
+> they are also mentioned in the gic.txt
+> 
+> >
+> > We should figure out how we expect to handle that (zero-sized reg
+> > entries? reg-names?).
+> 
+> I'm not sure how VGIC stuff handles reg/size = 0.
 
-Yes, you are right. Sorry for missing this detail when suggesting an
-example to convert to devm_*. devm_ioremap_resource should be favoured
-over devm_ioremap.
+Neither am I.
 
-> 1. devm_ioremap_resource(): IS_ERR() can be used.
->=20
-> 	dev->virtbase =3D devm_ioremap_resource(&adev->dev, res));
-> 	if (IS_ERR(dev->virtbase)) {
+However, what I said was that we should figure out how we _expect_ to
+handle that case. If we have to make changes to handle it, that's fine
+given we already have to make changes to support GICv2m.
 
-This is correct and preferred.
+> >
+> >>
+> >>   Optional
+> >>   - interrupts   : Interrupt source of the parent interrupt controller on
+> >> @@ -55,6 +64,10 @@ Optional
+> >>                    by a crossbar/multiplexer preceding the GIC. The GIC irq
+> >>                    input line is assigned dynamically when the corresponding
+> >>                    peripheral's crossbar line is mapped.
+> >> +
+> >> +- msi-controller : Identifies the node as an MSI controller.  This requires
+> >> +  the register region index 4.
+> >
+> > That last clarifying comment is more confusing than helpful.
+> 
+> If you are referring to the table, I added that since it was easier to 
+> see than scanning the text.
 
-BTW I don't care much about splitting up the patch as long as the commit
-message says that the original bug is a motivation to swicth to devm_*.
+I was referring to "This requires the register region index 4".
 
-Thanks Rickard for picking up the task, and thanks Jingoo for reviewing.
+How about:
 
-Kind regards,
+- msi-controller : Identifies the node as an MSI controller. Requried
+  for GICv2m.
 
-   Wolfram
+> 
+> > [...]
+> >
+> >> +#define GIC_V2M_MIN_SPI                        32
+> >> +#define GIC_V2M_MAX_SPI                        1024
+> >
+> > GIC interrupt IDs 1020 and above are reserved, no?
+> >
+> > Surely the max ID an SPI can take is 1019?
+> 
+> Right, thanks for catching. But the spec says that the SPI ID value must 
+> be in the range of 32 to 1020. I guess it was a bit unclear, but 
+> definitely not 1024 :)
 
+Which spec?
 
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In the GICv2 spec I see:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+* "Interrupt numbers ID32-ID1019 are used for SPIs." in 
+  2.2.1 Interrupt IDs.
 
-iQIcBAEBAgAGBQJTtRckAAoJEBQN5MwUoCm2XjkQAK8POEB0KElgjpP8k9x0j09h
-69ESNBt+P6f5NFWXfC2Ibw+iOc0/jvlkjGexAqVmCZy4W4O2r98/IVmZFzmJw/kp
-KPJz/N086s3VBx3vXJWk48pqwKfpGVdn7VT3+J9y0n/NZKZeqPlO2LK9K/4+WkKv
-uMoLggosM0fXOPqZDzYMO1JYBnjx/sdsVfAMQ00AWsUgeptEaNeUUjUWXbvNXtTB
-YziIrvJ9EYDNxF9yIC7rpko2zFge3V9vFqpH/6PAH6HLmpq7jftfLRANxpGeKCEo
-10J5C/eaKcWP6eICZUNDBCVLrnCsCY3s1vzbyVZGjnLWkE/zqBRFiC5GlOLnAy/2
-kjthNo0B0REOpUHqwsV5uTY2+roxyQnViXapV7o6724ceSbxRV88Wp3QAmLjG69b
-dqEeFSyTQcRLn1OQ0rxngYH34DPclcU5/q68vKsFPpzel0xjPOqvIUI62CHNdvXA
-SOkJ+deIX69TNkxuXAeM/FJjkaQloQfKdNC7e1+LMC6z3JdvQuanp+r5mz9wWdiM
-53Pma9Q+8v+nROBIe5FlkILTyKnebTza+FZoXMm/st/2Vb//e2rHP2vIcF1ZWBVa
-4A2tEjxbYsrng2vxPpH07DmCLM3/pIGnpq4ITQs5PHzp6uEN4P8cuK/NRC5weR0A
-81fTBxpFBRvPfOWJb7hB
-=GM6g
------END PGP SIGNATURE-----
+* "The GIC architecture reserves interrupt ID numbers 1020-1023 for
+  special purposes." in 3.2.5 Special interrupt numbers.
 
---vtzGhvizbBRQ85DL--
+> 
+> >> +#define GIC_OF_MSIV2M_RANGE_INDEX      4
+> >> +
+> >> +/**
+> >> + * alloc_msi_irq - Allocate MSIs from avaialbe MSI bitmap.
+> >> + * @data: Pointer to v2m_data
+> >> + * @nvec: Number of interrupts to allocate
+> >> + * @irq: Pointer to the allocated irq
+> >> + *
+> >> + * Allocates interrupts only if the contiguous range of MSIs
+> >> + * with specified nvec are available. Otherwise return the number
+> >> + * of available interrupts. If none are available, then returns -ENOENT.
+> >> + */
+> >
+> > This function is overly complicated, and pointlessly so.
+> >
+> > It doesn't achieve anything useful as it returns the size of the _last_
+> > contiguous block rather than the _largest_ contiguous block, and the
+> > only caller (gicv2m_setup_msi_irq) doesn't even care.
+> >
+> > Simplify this to just return an error code if allocation is impossible.
+> 
+> Actually, I made another mistake in the gicv2m_setup_msi_irq when 
+> returning from the alloc_msi_irq().
+
+Ok.
+
+> My understanding is the arch_setup_msi_irqs() is supposed to return the 
+> number of available vectors if the requested amount could not be 
+> allocated. I notice that the current "drivers/pci/msi.c: 
+> arch_setup_msi_irqs()" does not do so, which is okay.
+> 
+> However, We are also working on adding support for multi-MSI support 
+> since some of the devices we have are using it, which means we will need 
+> to provide a different version of the "arch_setup_msi_irqs()" as the 
+> current one does not allow (PCI_CAP_ID_MSI && nvec > 1).
+> 
+> Therefore, I implemented the "alloc_msi_irq" this way to account for 
+> future changes.
+
+Per my comments, I still think the function is broken given it returns
+the size of the last contiguous block of available interrupts.
+
+If we don't yet have support for multi-MSI, just return an error code
+for now. The code isn't helpful and that path isn't tested.
+
+We can fix up the driver when we add multi-MSI support.
+
+Thanks,
+Mark.
