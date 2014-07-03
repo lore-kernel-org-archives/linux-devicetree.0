@@ -1,133 +1,91 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 1/9] clk: sunxi: Add A23 APB0 divider clock support
-Date: Thu,  3 Jul 2014 22:55:41 +0800
-Message-ID: <1404399349-20237-2-git-send-email-wens@csie.org>
-References: <1404399349-20237-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 09/18] AT91: Call at91_register_devices in the board files
+Date: Thu, 3 Jul 2014 16:52:22 +0200
+Message-ID: <20140703145222.GE31996@lukather>
+References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1404396906-25194-15-git-send-email-maxime.ripard@free-electrons.com>
+ <D103F102-4B04-4CC6-8F20-58CEB0EC8E36@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBA662WOQKGQEYELLW6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1404399349-20237-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============5627525796115524065=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <D103F102-4B04-4CC6-8F20-58CEB0EC8E36@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree@vger.kernel.org, dbaryshkov@gmail.com, Nicolas FERRE <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, dwmw2@infradead.org, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The A23 has an almost identical PRCM clock tree. The difference in
-the APB0 clock is the smallest divisor is 1, instead of 2.
 
-This patch adds a separate sun8i-a23-apb0-clk driver to support it.
+--===============5627525796115524065==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3XA6nns4nE4KvaS/"
+Content-Disposition: inline
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- drivers/clk/sunxi/Makefile                        |  4 +-
- drivers/clk/sunxi/clk-sun8i-apb0.c                | 68 +++++++++++++++++++++++
- 3 files changed, 72 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/sunxi/clk-sun8i-apb0.c
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 18030ce..68dbd3d 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -28,6 +28,7 @@ Required properties:
- 	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
- 	"allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
- 	"allwinner,sun6i-a31-apb0-clk" - for the APB0 clock on A31
-+	"allwinner,sun8i-a23-apb0-clk" - for the APB0 clock on A23
- 	"allwinner,sun4i-a10-apb0-gates-clk" - for the APB0 gates on A10
- 	"allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
- 	"allwinner,sun5i-a10s-apb0-gates-clk" - for the APB0 gates on A10s
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index 762fd64..6850cba 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -6,4 +6,6 @@ obj-y += clk-sunxi.o clk-factors.o
- obj-y += clk-a10-hosc.o
- obj-y += clk-a20-gmac.o
- 
--obj-$(CONFIG_MFD_SUN6I_PRCM) += clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o
-+obj-$(CONFIG_MFD_SUN6I_PRCM) += \
-+	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
-+	clk-sun8i-apb0.o
-diff --git a/drivers/clk/sunxi/clk-sun8i-apb0.c b/drivers/clk/sunxi/clk-sun8i-apb0.c
-new file mode 100644
-index 0000000..196a499
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-sun8i-apb0.c
-@@ -0,0 +1,68 @@
-+/*
-+ * Copyright (C) 2014 Chen-Yu Tsai
-+ * Author: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * Allwinner A23 APB0 clock driver
-+ *
-+ * License Terms: GNU General Public License v2
-+ *
-+ * Based on clk-sun6i-apb0.c
-+ * Allwinner A31 APB0 clock driver
-+ *
-+ * Copyright (C) 2014 Free Electrons
-+ * Author: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	const char *clk_name = np->name;
-+	const char *clk_parent;
-+	struct resource *r;
-+	void __iomem *reg;
-+	struct clk *clk;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reg = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(reg))
-+		return PTR_ERR(reg);
-+
-+	clk_parent = of_clk_get_parent_name(np, 0);
-+	if (!clk_parent)
-+		return -EINVAL;
-+
-+	of_property_read_string(np, "clock-output-names", &clk_name);
-+
-+	/* The A23 APB0 clock is a standard 2 bit wide divider clock */
-+	clk = clk_register_divider(&pdev->dev, clk_name, clk_parent, 0, reg,
-+				   0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+}
-+
-+const struct of_device_id sun8i_a23_apb0_clk_dt_ids[] = {
-+	{ .compatible = "allwinner,sun8i-a23-apb0-clk" },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver sun8i_a23_apb0_clk_driver = {
-+	.driver = {
-+		.name = "sun8i-a23-apb0-clk",
-+		.owner = THIS_MODULE,
-+		.of_match_table = sun8i_a23_apb0_clk_dt_ids,
-+	},
-+	.probe = sun8i_a23_apb0_clk_probe,
-+};
-+module_platform_driver(sun8i_a23_apb0_clk_driver);
-+
-+MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
-+MODULE_DESCRIPTION("Allwinner A23 APB0 clock Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.0.1
+--3XA6nns4nE4KvaS/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Jul 03, 2014 at 10:29:58PM +0800, Jean-Christophe PLAGNIOL-VILLARD =
+wrote:
+> no do this at SoC level
+
+Since it has to be done at init_machine, I don't see any other easy
+way to do this at the SoC level.
+
+What is your suggestion?
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--3XA6nns4nE4KvaS/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtW4mAAoJEBx+YmzsjxAg3MUQAInAlJsAnscIG2n2uUxwpKLL
+6YKy9CLZL7wIaWlT3XFspUg6QrWRX9fpjcEkpNlhg7VV+JP0R+ak9sOTpshaerAc
+2hmsrFFVoqtKUxwhd0J0B534XyUcSl2FFTRKk+8eLWV13DuKP2yVLkDcVmf+ofAm
+y0XP+3549hlfL8TJN2SSN7+tYttJ9zSZ0FJoAl6MHE9wJPes6u1dc0oXiV1KTL0f
+eAVw0zGygwQOngF8dRHsA8Fl4rfZ67TVjThYbTuOIa1SLmNs6KsWiwsRof7Ho5Ag
+6b2M61DswdcHUJqdZzUOAoqbfZH+Gl8Lkc4+htbmOYGJDIIDaX79Fj+eezEjzIyq
+YmUQsuluegXOQwVRniJneCbMOKAEjCtwkJK5uR3B2rgm+enkzT5wsh4WziWMreFs
+eeJGYZls2clQObv/XNOKQ462TFk6JXSCPuFDjmFHjMtV+rv7fdIE8Yu3PFmhBM8Y
+jR3tAlI5IPWdDEHSK3nSrqOkVd06e0UisfbgsY2YXbxVD2rhVcF6YQ884HiPnrC4
++Fj6QKV+tvnmJqg6IxuYVcKuuFx97wRzGiKhY/KtYGxNMH7wG2yVAPblKfrwqata
+St9a7VCA8miQBSU3de/sr9zHNEgtJ7hdVPUkF3nE+NjXbthzMkYMXQZU01HxXvpN
+Bn309VsA0afYCn02gtcS
+=3Fk1
+-----END PGP SIGNATURE-----
+
+--3XA6nns4nE4KvaS/--
+
+
+--===============5627525796115524065==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5627525796115524065==--
