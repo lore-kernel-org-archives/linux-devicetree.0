@@ -1,117 +1,34 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 13/18] AT91: DT: Remove poweroff DT probing
-Date: Thu,  3 Jul 2014 16:14:55 +0200
-Message-ID: <1404396906-25194-23-git-send-email-maxime.ripard@free-electrons.com>
-References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/2] phy: add hix5hd2-sata-phy driver
+Date: Thu,  3 Jul 2014 22:28:36 +0800
+Message-ID: <1404397718-11495-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>, arnd@arndb.de, mark.rutland@arm.com, haifeng.yan@linaro.org, jchxue@gmail.com, zhangfei.gao@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the poweroff code is a driver of its own, remove the DT probing in
-mach-at91 and let the usual DT code do its job.
+v3:
+Suggested by Kishon
+Change binding doc name to hix5hd2-phy.txt
+Add HAS_IOMEM depends, and change include file sequence
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/mach-at91/setup.c | 77 ----------------------------------------------
- 1 file changed, 77 deletions(-)
+v2:
+Suggested by Mark
+Remove hisilicon,reg-init and init the register in phy-hix5hd2-sata.c
+Change property name accordingly.
 
-diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index fe0601e0a3c0..ae269291d19d 100644
---- a/arch/arm/mach-at91/setup.c
-+++ b/arch/arm/mach-at91/setup.c
-@@ -387,82 +387,6 @@ static void at91_dt_ramc(void)
- 	at91_pm_set_standby(of_id->data);
- }
- 
--static struct of_device_id shdwc_ids[] = {
--	{ .compatible = "atmel,at91sam9260-shdwc", },
--	{ .compatible = "atmel,at91sam9rl-shdwc", },
--	{ .compatible = "atmel,at91sam9x5-shdwc", },
--	{ /*sentinel*/ }
--};
--
--static const char *shdwc_wakeup_modes[] = {
--	[AT91_SHDW_WKMODE0_NONE]	= "none",
--	[AT91_SHDW_WKMODE0_HIGH]	= "high",
--	[AT91_SHDW_WKMODE0_LOW]		= "low",
--	[AT91_SHDW_WKMODE0_ANYLEVEL]	= "any",
--};
--
--const int at91_dtget_shdwc_wakeup_mode(struct device_node *np)
--{
--	const char *pm;
--	int err, i;
--
--	err = of_property_read_string(np, "atmel,wakeup-mode", &pm);
--	if (err < 0)
--		return AT91_SHDW_WKMODE0_ANYLEVEL;
--
--	for (i = 0; i < ARRAY_SIZE(shdwc_wakeup_modes); i++)
--		if (!strcasecmp(pm, shdwc_wakeup_modes[i]))
--			return i;
--
--	return -ENODEV;
--}
--
--static void at91_dt_shdwc(void)
--{
--	struct device_node *np;
--	int wakeup_mode;
--	u32 reg;
--	u32 mode = 0;
--
--	np = of_find_matching_node(NULL, shdwc_ids);
--	if (!np) {
--		pr_debug("unable to find compatible shutdown (shdwc) controller node in dtb\n");
--		return;
--	}
--
--	at91_shdwc_base = of_iomap(np, 0);
--	if (!at91_shdwc_base)
--		panic(pr_fmt("unable to map shdwc cpu registers\n"));
--
--	wakeup_mode = at91_dtget_shdwc_wakeup_mode(np);
--	if (wakeup_mode < 0) {
--		pr_warn("shdwc unknown wakeup mode\n");
--		goto end;
--	}
--
--	if (!of_property_read_u32(np, "atmel,wakeup-counter", &reg)) {
--		if (reg > AT91_SHDW_CPTWK0_MAX) {
--			pr_warn("shdwc wakeup counter 0x%x > 0x%x reduce it to 0x%x\n",
--				reg, AT91_SHDW_CPTWK0_MAX, AT91_SHDW_CPTWK0_MAX);
--			reg = AT91_SHDW_CPTWK0_MAX;
--		}
--		mode |= AT91_SHDW_CPTWK0_(reg);
--	}
--
--	if (of_property_read_bool(np, "atmel,wakeup-rtc-timer"))
--			mode |= AT91_SHDW_RTCWKEN;
--
--	if (of_property_read_bool(np, "atmel,wakeup-rtt-timer"))
--			mode |= AT91_SHDW_RTTWKEN;
--
--	at91_shdwc_write(AT91_SHDW_MR, wakeup_mode | mode);
--
--end:
--	pm_power_off = at91sam9_poweroff;
--
--	of_node_put(np);
--}
--
- void __init at91rm9200_dt_initialize(void)
- {
- 	at91_dt_ramc();
-@@ -480,7 +404,6 @@ void __init at91rm9200_dt_initialize(void)
- void __init at91_dt_initialize(void)
- {
- 	at91_dt_ramc();
--	at91_dt_shdwc();
- 
- 	/* Init clock subsystem */
- 	at91_dt_clock_init();
+Jiancheng Xue (2):
+  Documentation: Document Hisilicon hix5hd2 sata PHY
+  phy: add hix5hd2-sata-phy driver
+
+ .../devicetree/bindings/phy/hix5hd2-phy.txt        |   22 +++
+ drivers/phy/Kconfig                                |    8 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-hix5hd2-sata.c                     |  192 ++++++++++++++++++++
+ 4 files changed, 223 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/hix5hd2-phy.txt
+ create mode 100644 drivers/phy/phy-hix5hd2-sata.c
+
 -- 
-2.0.1
+1.7.9.5
