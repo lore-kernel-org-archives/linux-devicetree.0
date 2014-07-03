@@ -1,46 +1,52 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v2 0/4] Add reset controllers for STiH407 SoC
-Date: Thu, 03 Jul 2014 11:20:48 +0200
-Message-ID: <1404379248.18039.31.camel@paszta.hi.pengutronix.de>
+Date: Thu, 3 Jul 2014 10:33:48 +0100
+Message-ID: <20140703093348.GA32208@lee--X1>
 References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
  <1404317194.4109.13.camel@paszta.hi.pengutronix.de>
- <20140702165924.GB17665@lee--X1> <53B50EFD.2070007@st.com>
+ <20140702165924.GB17665@lee--X1>
+ <53B50EFD.2070007@st.com>
+ <1404379248.18039.31.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53B50EFD.2070007@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <maxime.coquelin@st.com>
-Cc: devicetree@vger.kernel.org, srinivas.kandagatla@gmail.com, linux-kernel@vger.kernel.org, patrice.chotard@st.com, Peter Griffin <peter.griffin@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404379248.18039.31.camel@paszta.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Maxime Coquelin <maxime.coquelin@st.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 03 Jul 2014, Philipp Zabel wrote:
 
-Am Donnerstag, den 03.07.2014, 10:06 +0200 schrieb Maxime Coquelin:
-> I will queue patch 4 to STi DT branch for v3.17.
-> For now, no nodes uses reset for STiH407, so we don't need the 
-> dt-bindings header file in the STi tree.
-> 
-> If we have a DT node using a reset line before my pull-request, I might 
-> have to integrate the series in the STi DT branch.
-> Philipp, does that sound reasonable?
+> Hi,
+>=20
+> Am Donnerstag, den 03.07.2014, 10:06 +0200 schrieb Maxime Coquelin:
+> > I will queue patch 4 to STi DT branch for v3.17.
+> > For now, no nodes uses reset for STiH407, so we don't need the=20
+> > dt-bindings header file in the STi tree.
+> >=20
+> > If we have a DT node using a reset line before my pull-request, I m=
+ight=20
+> > have to integrate the series in the STi DT branch.
+> > Philipp, does that sound reasonable?
+>=20
+> Patch 4 depends on patch 1 for the header. My tree is still empty, ho=
+w
+> about I take the first two, and you merge that branch and then take 3
+> and 4 on top?
+>=20
+>     git://git.pengutronix.de/git/pza/linux.git reset/for_v3.17
+>=20
+> Lee, shall I also add your Ack to the documentation patch?
 
-Patch 4 depends on patch 1 for the header. My tree is still empty, how
-about I take the first two, and you merge that branch and then take 3
-and 4 on top?
+I don't think there's anything to contentious in there:
 
-    git://git.pengutronix.de/git/pza/linux.git reset/for_v3.17
+  Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Lee, shall I also add your Ack to the documentation patch?
-
-regards
-Philipp
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
