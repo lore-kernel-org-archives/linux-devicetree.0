@@ -1,87 +1,123 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Subject: Re: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
  basic clocks
-Date: Thu, 3 Jul 2014 09:26:54 +0200
-Message-ID: <20140703072654.GC31996@lukather>
-References: <1403798144-32188-1-git-send-email-wens@csie.org>
- <20140702223552.7440.60829@quantum>
+Date: Thu, 3 Jul 2014 15:37:36 +0800
+Message-ID: <CAGb2v67ceT8X-zmB7ULPg6Kqd8PRpmo0x_Vu9iF4s_6euXg_FQ@mail.gmail.com>
+References: <1403798144-32188-1-git-send-email-wens@csie.org> <20140702223552.7440.60829@quantum>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBHEN2SOQKGQEORBEORA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBVMQ2SOQKGQENNOJSYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20140702223552.7440.60829@quantum>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---oJ71EGRlYNjSvfq7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Mike,
-
-On Wed, Jul 02, 2014 at 03:35:52PM -0700, Mike Turquette wrote:
+On Thu, Jul 3, 2014 at 6:35 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 > Quoting Chen-Yu Tsai (2014-06-26 08:55:38)
-> > Hi everyone,
-> >=20
-> > This is v4 of the sun8i clock series, which adds basic clock
-> > support for the A23 SoC. It is based on my initial sun8i bring
-> > up series [1]. This series was split up from the original A23
-> > series [2]. Yet to come are more clocks, reset controllers,
-> > prcm, pinctrl, and mmc.
->=20
+>> Hi everyone,
+>>
+>> This is v4 of the sun8i clock series, which adds basic clock
+>> support for the A23 SoC. It is based on my initial sun8i bring
+>> up series [1]. This series was split up from the original A23
+>> series [2]. Yet to come are more clocks, reset controllers,
+>> prcm, pinctrl, and mmc.
+>
 > Hello Chen-Yu,
->=20
+>
 > This series looks good to me.
->=20
+
+Thanks. Assuming no one else raises any issues, I consider this
+series merged. I'll send the next sun8i series later today.
+
+The remaining series still have some clock patches, so thanks
+in advance.
+
+
+Cheers
+ChenYu
+
+
 > Maxime,
->=20
+>
 > I see that you Acked it already. Are you planning to roll this into a
 > pull request later on?
-
-I think that was an question Emilio asked a few days ago :)
-
-It would probably be easier if we just handle all the sunxi clocks
-ourselves, so I guess Emilio can just send you a pull request later
-on.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---oJ71EGRlYNjSvfq7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTtQW+AAoJEBx+YmzsjxAgj9oP/2Qo0MeGNM1enHnroPBlpo82
-+8Z3bN5CznqlZkshYnCDqa9VNvB/m/3kSo/JGUA80SyeqJ2KLcB1dvjUWjIxFGlR
-zUMFdTcD1mU3geWZuG3T09O4Y0ZmcYq54qjKdTz4ZBI9/zZnWIJP1gOGA+qinrmF
-1xibnDIy6PS4HiJud0trScKNfVc011ybhvr4A1pCv/jdjTWY//8M5m/5mQeNN0KY
-wBcOuEOEFeo7byGYlHy0237JnpfucZAYort1xwtt9h68+6wrg9njHwhjvpuWr5Q1
-ps9ZcSET9WRofda1/7kLOF/C44PeI3oSEDBXIbA0eocGyj2HLzzYDDQLcgTrkMaG
-8/WtPUN3PWWgZqoDpyZDg7ZflGQon+tV3hqLmQDJ6+gfsV0SJltq3fCRp4wFHXpD
-Gw98oRGq5QtfSzmAujF9uILOXYhlglCJaWg8An8Gi77pttWtOalsWSmMTW7FTECN
-TkmBpPcDDd9zLhtgFW0S5WtwSXmwxArg+d5MomGwxwLHgpirVZ3ZSYfDSIUR/MdB
-Ba8odBVQUJ6FyGTbYAp2SISKmLB17JLHyp769v/MDU7kaVp7/LPhaIrvkD0nESlF
-HD14IVoS+UTLhidU+hK6Vl4xiCHPveT+7dtd0+/dS7w9Qv1CAEFIOTiViF+dEg33
-fytonWnPLneVn20p2Hs/
-=00PN
------END PGP SIGNATURE-----
-
---oJ71EGRlYNjSvfq7--
+>
+> Regards,
+> Mike
+>
+>>
+>> The first patch fixes the reworked clock protection code merged in
+>> 3.16-rc1, which unintentionally made clock gates unprotectable.
+>>
+>> The second patch moves the remaining "ahb_sdram" clock to the
+>> protected clock list, now that it works.
+>>
+>> The third patch adds support for factor clocks that have an N factor
+>> not starting from 0. This is found on some PLLs in A31/A23.
+>>
+>> The fourth patch adds table-based dividers for div clocks, as some
+>> clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
+>> on sun8i.
+>>
+>> The fifth patch adds support for the basic clocks in the A23, just
+>> PLL1 for cpus, and the system bus clocks and gates.
+>>
+>> The last patch adds the DT nodes for the newly added clocks, and
+>> updates clock phandles for existing peripherals, the uarts.
+>>
+>> Originally I intended for patch 1 to be merged as a fix for 3.16.
+>> However, the only user of the affected code, sun6i's "ahb1_sdram"
+>> clock, doesn't seem to result in any runtime issues. So this whole
+>> series can go into 3.17.
+>>
+>>
+>> Related changes since v3:
+>>
+>>   - Dropped fields with default values from sun8i_a23_axi_div_data
+>>   - Added Maxime's Acked-by
+>>   - Fixed incorrect compatible string for axi clock node
+>>   - Updated clock phandles for uarts in dtsi
+>>
+>> Related changes since v2:
+>>
+>>   - Rewrote factor clocks to support any (0~255) N factor starting value
+>>
+>> Related changes since v1:
+>>
+>>   - Added "clk: sunxi: Add support for table-based divider clocks"
+>>   - Added table-based divider axi clock
+>>   - Fixed incorrectly squashed fixups
+>>
+>>
+>> Cheers
+>> ChenYu
+>>
+>>
+>>   [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265211.html
+>>   [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259097.html
+>>
+>> Chen-Yu Tsai (6):
+>>   clk: sunxi: register clock gates with clkdev
+>>   clk: sunxi: move "ahb_sdram" to protected clock list
+>>   clk: sunxi: Support factor clocks with N factor starting not from 0
+>>   clk: sunxi: Add support for table-based divider clocks
+>>   clk: sunxi: Add A23 clocks support
+>>   ARM: sun8i: Add basic clock nodes to the DTSI
+>>
+>>  Documentation/devicetree/bindings/clock/sunxi.txt |   5 +
+>>  arch/arm/boot/dts/sun8i-a23.dtsi                  | 125 +++++++++++++++++++++-
+>>  drivers/clk/sunxi/clk-factors.c                   |   2 +-
+>>  drivers/clk/sunxi/clk-factors.h                   |   1 +
+>>  drivers/clk/sunxi/clk-sunxi.c                     | 119 ++++++++++++++++++--
+>>  5 files changed, 237 insertions(+), 15 deletions(-)
+>>
+>> --
+>> 2.0.0
+>>
