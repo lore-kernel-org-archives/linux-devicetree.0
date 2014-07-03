@@ -1,53 +1,119 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: henninger: add CAN0 DT support
-Date: Thu, 3 Jul 2014 02:46:16 +0400
-Message-ID: <201407030246.17501.sergei.shtylyov@cogentembedded.com>
-References: <201407030239.15921.sergei.shtylyov@cogentembedded.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v5 07/14] dt-bindings: add documentation for rk3188 clock and reset unit
+Date: Thu, 03 Jul 2014 02:00:44 +0200
+Message-ID: <2639230.7DXV8nUj6k@diego>
+References: <156042792.J76K6jxIGl@diego>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201407030239.15921.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <156042792.J76K6jxIGl@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define the Henninger board dependent part of the CAN0 device node.
+This add bindings documentation for the clock and reset unit found on
+rk3188 and rk3066 SoCs from Rockchip.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Also deprecate the old gate clock binding, as these shouldn't be used
+in the future.
 
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Acked-By: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Tested-By: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7791-henninger.dts |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../bindings/clock/rockchip,rk3188-cru.txt         | 61 ++++++++++++++++++++++
+ .../devicetree/bindings/clock/rockchip.txt         |  3 ++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -125,6 +125,11 @@
- 				 "msiof0_tx";
- 		renesas,function = "msiof0";
- 	};
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+new file mode 100644
+index 0000000..0c2bf5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+@@ -0,0 +1,61 @@
++* Rockchip RK3188/RK3066 Clock and Reset Unit
 +
-+	can0_pins: can0 {
-+		renesas,groups = "can0_data_a", "can_clk_d";
-+		renesas,function = "can0";
++The RK3188/RK3066 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
++
++Required Properties:
++
++- compatible: should be "rockchip,rk3188-cru", "rockchip,rk3188a-cru" or
++			"rockchip,rk3066a-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing pll rates are not changable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3188-cru.h and
++dt-bindings/clock/rk3066-cru.h headers and can be used in device tree sources.
++Similar macros exist for the reset sources in these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "xin32k" - rtc clock - optional,
++ - "xin27m" - 27mhz crystal input on rk3066 - optional,
++ - "ext_hsadc" - external HSADC clock - optional,
++ - "ext_cif0" - external camera clock - optional,
++ - "ext_rmii" - external RMII clock - optional,
++ - "ext_jtag" - externalJTAG clock - optional
++
++Example: Clock controller node:
++
++	cru: cru@20000000 {
++		compatible = "rockchip,rk3188-cru";
++		reg = <0x20000000 0x1000>;
++		rockchip,grf = <&grf>;
++
++		#clock-cells = <1>;
++		#reset-cells = <1>;
 +	};
- };
- 
- &scif0 {
-@@ -175,6 +180,12 @@
- 	status = "okay";
- };
- 
-+&can0 {
-+	pinctrl-0 = <&can0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
 +
- &i2c2 {
- 	pinctrl-0 = <&i2c2_pins>;
- 	pinctrl-names = "default";
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@10124000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x10124000 0x400>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <1>;
++		clocks = <&cru SCLK_UART0>;
++	};
+diff --git a/Documentation/devicetree/bindings/clock/rockchip.txt b/Documentation/devicetree/bindings/clock/rockchip.txt
+index a891c82..22f6769 100644
+--- a/Documentation/devicetree/bindings/clock/rockchip.txt
++++ b/Documentation/devicetree/bindings/clock/rockchip.txt
+@@ -6,6 +6,9 @@ This binding uses the common clock binding[1].
+ 
+ == Gate clocks ==
+ 
++These bindings are deprecated!
++Please use the soc specific CRU bindings instead.
++
+ The gate registers form a continuos block which makes the dt node
+ structure a matter of taste, as either all gates can be put into
+ one gate clock spanning all registers or they can be divided into
+-- 
+1.9.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
