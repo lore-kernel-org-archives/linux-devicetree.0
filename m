@@ -1,99 +1,74 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 01/18] power: reset: Add if statement isntead of multiple depends on
-Date: Thu,  3 Jul 2014 16:14:34 +0200
-Message-ID: <1404396906-25194-2-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 07/18] AT91: soc: Introduce register_devices callback
+Date: Thu,  3 Jul 2014 16:14:44 +0200
+Message-ID: <1404396906-25194-12-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-All the config option so far are depending on the POWER_RESET symbol
+Some core devices should be registered by the SoC itself rather than by every
+board using this SoC. Introduce a register_devices callback that should be
+called during the init_machine in order to do that.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/power/reset/Kconfig | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ arch/arm/mach-at91/generic.h | 2 ++
+ arch/arm/mach-at91/setup.c   | 5 +++++
+ arch/arm/mach-at91/soc.h     | 1 +
+ 3 files changed, 8 insertions(+)
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index bdcf5173e377..19d546c5edfa 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -6,15 +6,17 @@ menuconfig POWER_RESET
+diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
+index 631fa3b8c16d..4c2c96195a50 100644
+--- a/arch/arm/mach-at91/generic.h
++++ b/arch/arm/mach-at91/generic.h
+@@ -37,6 +37,8 @@ extern int  __init at91_aic5_of_init(struct device_node *node,
+ extern void __init at91_sysirq_mask_rtc(u32 rtc_base);
+ extern void __init at91_sysirq_mask_rtt(u32 rtt_base);
  
- 	  Say Y here to enable board reset and power off
++ /* Devices */
++extern void __init at91_register_devices(void);
  
-+if POWER_RESET
+  /* Timer */
+ extern void at91rm9200_ioremap_st(u32 addr);
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index 3463b9e14418..771e0495bfe5 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -506,3 +506,8 @@ void __init at91_initialize(unsigned long main_clock)
+ 
+ 	pinctrl_provide_dummies();
+ }
 +
- config POWER_RESET_AS3722
- 	bool "ams AS3722 power-off driver"
--	depends on MFD_AS3722 && POWER_RESET
-+	depends on MFD_AS3722
- 	help
- 	  This driver supports turning off board via a ams AS3722 power-off.
++void __init at91_register_devices(void)
++{
++	at91_boot_soc.register_devices();
++}
+diff --git a/arch/arm/mach-at91/soc.h b/arch/arm/mach-at91/soc.h
+index a1e1482c6da8..ab983f2cc7dd 100644
+--- a/arch/arm/mach-at91/soc.h
++++ b/arch/arm/mach-at91/soc.h
+@@ -11,6 +11,7 @@ struct at91_init_soc {
+ 	void (*map_io)(void);
+ 	void (*ioremap_registers)(void);
+ 	void (*register_clocks)(void);
++	void (*register_devices)(void);
+ 	void (*init)(void);
+ };
  
- config POWER_RESET_AXXIA
- 	bool "LSI Axxia reset driver"
--	depends on POWER_RESET && ARCH_AXXIA
-+	depends on ARCH_AXXIA
- 	help
- 	  This driver supports restart for Axxia SoC.
- 
-@@ -22,7 +24,7 @@ config POWER_RESET_AXXIA
- 
- config POWER_RESET_GPIO
- 	bool "GPIO power-off driver"
--	depends on OF_GPIO && POWER_RESET
-+	depends on OF_GPIO
- 	help
- 	  This driver supports turning off your board via a GPIO line.
- 	  If your board needs a GPIO high/low to power down, say Y and
-@@ -30,13 +32,13 @@ config POWER_RESET_GPIO
- 
- config POWER_RESET_MSM
- 	bool "Qualcomm MSM power-off driver"
--	depends on POWER_RESET && ARCH_QCOM
-+	depends on ARCH_QCOM
- 	help
- 	  Power off and restart support for Qualcomm boards.
- 
- config POWER_RESET_QNAP
- 	bool "QNAP power-off driver"
--	depends on OF_GPIO && POWER_RESET && PLAT_ORION
-+	depends on OF_GPIO && PLAT_ORION
- 	help
- 	  This driver supports turning off QNAP NAS devices by sending
- 	  commands to the microcontroller which controls the main power.
-@@ -54,14 +56,13 @@ config POWER_RESET_RESTART
- config POWER_RESET_SUN6I
- 	bool "Allwinner A31 SoC reset driver"
- 	depends on ARCH_SUNXI
--	depends on POWER_RESET
- 	help
- 	  Reboot support for the Allwinner A31 SoCs.
- 
- config POWER_RESET_VEXPRESS
- 	bool "ARM Versatile Express power-off and reset driver"
- 	depends on ARM || ARM64
--	depends on POWER_RESET && VEXPRESS_CONFIG
-+	depends on VEXPRESS_CONFIG
- 	help
- 	  Power off and reset support for the ARM Ltd. Versatile
- 	  Express boards.
-@@ -69,7 +70,6 @@ config POWER_RESET_VEXPRESS
- config POWER_RESET_XGENE
- 	bool "APM SoC X-Gene reset driver"
- 	depends on ARM64
--	depends on POWER_RESET
- 	help
- 	  Reboot support for the APM SoC X-Gene Eval boards.
- 
-@@ -80,3 +80,4 @@ config POWER_RESET_KEYSTONE
- 	help
- 	  Reboot support for the KEYSTONE SoCs.
- 
-+endif
 -- 
 2.0.1
