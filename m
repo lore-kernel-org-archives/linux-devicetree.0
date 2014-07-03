@@ -1,68 +1,33 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 4/5] ARM: imx: Add initial support for Freescale LS1021A
-Date: Thu, 3 Jul 2014 10:17:12 +0000
-Message-ID: <cb01fef2c4d44711b04a321fddae33d4@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
- <1404291772-2644-5-git-send-email-jingchang.lu@freescale.com>
- <20140702112125.GE14665@leverpostej>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 2/9] pci: Export find_pci_host_bridge() function.
+Date: Thu, 03 Jul 2014 12:26:32 +0200
+Message-ID: <12857279.nHR7kEbqBW@wuerfel>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <7101568.8DVJFku5jp@wuerfel> <CACoXjcn5wdOwQx6PSfhTyuo-FQqBL62o-MNj3i6EfENRnUNt6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140702112125.GE14665@leverpostej>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CACoXjcn5wdOwQx6PSfhTyuo-FQqBL62o-MNj3i6EfENRnUNt6g@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Tanmay Inamdar <tinamdar@apm.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, patches <patches@apm.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogTWFyayBSdXRsYW5kIFttYWlsdG86
-bWFyay5ydXRsYW5kQGFybS5jb21dDQo+U2VudDogV2VkbmVzZGF5LCBKdWx5IDAyLCAyMDE0IDc6
-MjEgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBzaGF3bi5ndW9AbGluYXJvLm9y
-ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPmRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBMdSBKaW5nY2hhbmctQjM1MDgzDQo+U3ViamVjdDogUmU6IFtQQVRDSCA0
-LzVdIEFSTTogaW14OiBBZGQgaW5pdGlhbCBzdXBwb3J0IGZvciBGcmVlc2NhbGUNCj5MUzEwMjFB
-DQo+DQo+T24gV2VkLCBKdWwgMDIsIDIwMTQgYXQgMTA6MDI6NTFBTSArMDEwMCwgSmluZ2NoYW5n
-IEx1IHdyb3RlOg0KPj4gRnJvbTogSmluZ2NoYW5nIEx1IDxiMzUwODNAZnJlZXNjYWxlLmNvbT4N
-Cj4+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+
-IGIvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0DQo+PiBpbmRleCAwMDAwMDAwLi5kMWE5YmI5DQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysg
-Yi9hcmNoL2FybS9tYWNoLWlteC9tYWNoLWxzMTAyMWEuYw0KPj4gQEAgLTAsMCArMSw0OSBAQA0K
-Pj4gKy8qDQo+PiArICogQ29weXJpZ2h0IDIwMTMtMjAxNCBGcmVlc2NhbGUgU2VtaWNvbmR1Y3Rv
-ciwgSW5jLg0KPj4gKyAqDQo+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlv
-dSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KPj4gK21vZGlmeQ0KPj4gKyAqIGl0IHVuZGVy
-IHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVk
-DQo+PiArYnkNCj4+ICsgKiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVy
-c2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBvcg0KPj4gKyAqIChhdCB5b3VyIG9wdGlvbikgYW55IGxh
-dGVyIHZlcnNpb24uDQo+PiArICovDQo+PiArDQo+PiArI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRm
-b3JtLmg+DQo+PiArI2luY2x1ZGUgPGFzbS9tYWNoL2FyY2guaD4NCj4+ICsNCj4+ICsjaW5jbHVk
-ZSAiY29tbW9uLmgiDQo+PiArDQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-b2ZfbHMxMDIxYV9tYXRjaF90YWJsZVtdID0gew0KPj4gKwl7DQo+PiArCQkuY29tcGF0aWJsZSA9
-CSJzaW1wbGUtYnVzIiwNCj4+ICsJfSwNCj4+ICsJew0KPj4gKwkJLmNvbXBhdGlibGUgICAgID0g
-ImZzbCxpZmMiLA0KPj4gKwl9LA0KPj4gKwl7DQo+PiArCQkuY29tcGF0aWJsZQk9ICJmc2wsZnBn
-YS1xaXhpcyIsDQo+PiArCX0sDQo+PiArCXsNCj4+ICsJCS5jb21wYXRpYmxlCT0gImZzbCxxZSIs
-DQo+PiArCX0sDQo+PiArCXt9DQo+PiArfTsNCj4NCj5BcmUgYW55IG9mIHRoc2Ugbm90IGFsd2F5
-cy1vbiAob3IgZGVmYXVsdC1vbikgTU1JTyBidXNzZXM/DQo+DQo+SXMgdGhlcmUgYW55IHJlYXNv
-biBmb3Igbm90IGdpdmluZyB0aGVtIHRoZWlyIG93biBkcml2ZXJzPw0KPg0KTm9ybWFsbHkgdGhl
-c2UgYXJlIGFsd2F5cy1vbi4gVGhlIGNoaWxkIG5vZGVzIGFyZSBoYW5kbGVkIGJ5IGRpZmZlcmVu
-dCBkcml2ZXJzLA0Kc28gdG8gbWFrZSB0aGUgZGV2aWNlcyBiZWluZyBhZGRlZCBieSB0aGUgb2Yg
-c3lzdGVtLCB0aGV5IGFyZSBjbGFpbWVkIGhlcmUuDQpUaGFua3MuDQo+PiArDQo+PiArc3RhdGlj
-IHZvaWQgX19pbml0IGxzMTAyMWFfaW5pdF9tYWNoaW5lKHZvaWQpIHsNCj4+ICsJbXhjX2FyY2hf
-cmVzZXRfaW5pdF9kdCgpOw0KPg0KPlRoaXMgbG9va3MgdG8gb25seSBiZSB1c2VkIHRvIHNldCB1
-cCBhIHdhdGNoZG9nIHRpbWVyLiBJcyB0aGVyZSBhbnkgcmVhc29uDQo+dGhpcyBsb2dpYyBjYW4n
-dCBiZSBtb3ZlZCB0byB0aGUgd2F0Y2hkb2cgdGltZXIgZHJpdmVyPw0KPg0KPj4gKw0KPj4gK0RU
-X01BQ0hJTkVfU1RBUlQoTFMxMDIxQSwgIkZyZWVzY2FsZSBMUzEwMjFBIikgI2lmZGVmIENPTkZJ
-R19aT05FX0RNQQ0KPj4gKwkuZG1hX3pvbmVfc2l6ZQk9IFNaXzEyOE0sDQo+PiArI2VuZGlmDQo+
-PiArCS5pbml0X21hY2hpbmUgICA9IGxzMTAyMWFfaW5pdF9tYWNoaW5lLA0KPj4gKwkuZHRfY29t
-cGF0CT0gbHMxMDIxYV9kdF9jb21wYXQsDQo+PiArCS5yZXN0YXJ0CT0gbXhjX3Jlc3RhcnQsDQo+
-DQo+QUZBSUNULCB0aGF0IGpzdXQgdXNlcyB0aGUgV0RUIGZvciByZXN0YXJ0LiBXaHkgY2FuJ3Qg
-dGhlIHdhdGNoZG9nIGRyaXZlcg0KPnJlZ2lzdGVyIGl0c2VsZiBhcyBhIHJlc3RhcnQgZGV2aWNl
-Pw0KPg0KPlRoYXQgd291bGQgYnJpbmcgdXMgY2xvc2UgdG8gYW4gZW1wdHkgbWFjaGluZSBkZXNj
-cmlwdG9yLCBhbmQgZW5hYmxlIHJldXNlDQo+b2YgdGhlIFdEVCBhbmQgdGhvc2UgYnVzc2VzLg0K
-Pg0KPlRoYW5rcywNCj5NYXJrLg0KWWVzLCB3ZSB1c2UgdGhlIHdhdGNoZG9nIHRpbWVyIGZvciBy
-ZXN0YXJ0LCBqdXN0IGFzIGkuTVggYW5kIFZ5YnJpZCwgdGhlIFdEVCBhcyBhDQpjb21tb24gZHJp
-dmVyIGl0IGlzIHN0aWxsIHdvcmsgZm9yIHdhdGNoZG9nLiBUaGFua3MuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wednesday 02 July 2014 13:43:41 Tanmay Inamdar wrote:
+> On Wed, Jul 2, 2014 at 12:12 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > I think EXPORT_SYMBOL_GPL() is better here. The new symbols are unlikely
+> > to be used by a peripheral device driver, and PCI host controllers are
+> > already restricted by EXPORT_SYMBOL_GPL.
+> >
+> 
+> You are right as long as the functions are not used directly. But what
+> if GPL functions are called indirectly.  For example, 'pci_domain_nr'
+> implementation in Liviu's V7 series calls 'find_pci_host_bridge'.
+
+Good point. If pci_domain_nr() doesn't require access to an EXPORT_SYMBOL_GPL
+symbol, it should not start doing that after this patch.
+
+For of_create_pci_host_bridge() however, I can't think of any reason to use
+a legacy EXPORT_SYMBOL.
+
+	Arnd
