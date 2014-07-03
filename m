@@ -1,66 +1,54 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 11/16] ARM: mvebu: dts: Add CA9 MPcore SoC Controller
- node
-Date: Thu, 03 Jul 2014 14:51:44 +0200
-Message-ID: <53B551E0.6040103@free-electrons.com>
-References: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>	<1403875377-940-12-git-send-email-gregory.clement@free-electrons.com> <20140630173755.32793586@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140630173755.32793586@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [RFC PATCH v2 0/5] Support for Qualcomm QPNP PMIC's
+Date: Thu,  3 Jul 2014 16:13:58 +0300
+Message-ID: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Hello to all,
 
+Here is the second version of the RFC for Qualcomm QPNP PMIC's support.
+The difference since first version [1] is that now we use platform
+devices for PMIC peripherals instead of new qpnp-bus. The first patch
+in the set implements an *of* based parsing of PMIC peripheral
+resources and adding mfd cell for it. The devicetree node should
+contain a compatible and reg proparties. The intention was to keep
+things simple and similar to the other mfd drivers.
 
-> On Fri, 27 Jun 2014 15:22:52 +0200, Gregory CLEMENT wrote:
->> The CA9 MPcore SoC Control block allows to do some configuration that
->> the SoC could use for a specific use case. In most cases the defaults
->> case is enough. However there is few exception: for cpuidle we need to
->> use the CA9 MPcore Reset Control register.
-> 
-> I'd reword this to something like:
-> 
-> """
-> The CA9 MPcore SoC Control block is a set of registers that allows to
-> configure certain internal aspects of the core blocks of the SoC
-> (Cortex-A9, L2 cache controller, etc.). In most cases, the default
-> values are fine so they aren't many reasons to touch those registers,
-> but there is one exception: to support cpuidle on Armada 38x, we need
-> to modify the value of the CA9 MPcore Reset Control register.
-> 
-> Therefore, this commit adds a new Device Tree binding for this hardware
-> block, and uses this new binding for the Armada 38x Device Tree file.
-> 
-> """
+The second patch describes the devicetree binding of the slave devices
+attached to the SPMI interface. The other few patches are example of
+a qpnp-rtc driver and binding documentation.
 
-[...]
+Comments are welcome.
 
->> +- reg: should be register base and length as documented in the
-> 
-> should be *the* register base and length
-> 
-			reg = <0x21010 0x1c>;
-> 
-> With those fixed:
-> 
-> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+regards,
+Stan
 
+[1] http://www.spinics.net/lists/linux-arm-msm/msg09745.html
 
-I will apply your change.
+Ivan T. Ivanov (1):
+  dt: qcom: msm8974: add qpnp-spmi device nodes
 
-Thanks,
+Josh Cartwright (1):
+  mfd: qpnp: add support for Qualcomm QPNP PMICs
 
-Gregory
+Stanimir Varbanov (3):
+  rtc: add qpnp rtc driver
+  dt: msm8974: add qpnp rtc device node
+  dt: rtc: add binding document for qpnp rtc
 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+ .../devicetree/bindings/rtc/qcom,rtc-qpnp.txt      |   24 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |   53 +++
+ drivers/mfd/Kconfig                                |   15 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/qpnp-spmi.c                            |  129 +++++
+ drivers/rtc/Kconfig                                |    8 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-qpnp.c                             |  489 ++++++++++++++++++++
+ 8 files changed, 720 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/qcom,rtc-qpnp.txt
+ create mode 100644 drivers/mfd/qpnp-spmi.c
+ create mode 100644 drivers/rtc/rtc-qpnp.c
