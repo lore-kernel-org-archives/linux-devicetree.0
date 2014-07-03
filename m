@@ -1,52 +1,41 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 2/5] regulator: Add DT bindings for tps65218 PMIC regulators.
-Date: Thu, 3 Jul 2014 19:14:59 +0530
-Message-ID: <1404395102-21469-3-git-send-email-j-keerthy@ti.com>
-References: <1404395102-21469-1-git-send-email-j-keerthy@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v5 1/2] libahci: Implement the function
+ ahci_restart_engine to restart the port dma engine.
+Date: Thu, 3 Jul 2014 10:03:35 -0400
+Message-ID: <20140703140335.GD16191@htj.dyndns.org>
+References: <1404296108-16233-1-git-send-email-stripathi@apm.com>
+ <1404296108-16233-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1404395102-21469-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404296108-16233-2-git-send-email-stripathi@apm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for tps65218 PMIC regulators.
+Hello,
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- .../devicetree/bindings/regulator/tps65218.txt     |   21 ++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/tps65218.txt
+On Wed, Jul 02, 2014 at 03:45:07PM +0530, Suman Tripathi wrote:
+> +int ahci_restart_engine(struct ata_port *ap)
+> +{
+> +	struct ahci_host_priv *hpriv = ap->host->private_data;
+> +
+> +	ahci_stop_engine(ap);
+> +	ahci_start_fis_rx(ap);
+> +	hpriv->start_engine(ap);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ahci_restart_engine);
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps65218.txt b/Documentation/devicetree/bindings/regulator/tps65218.txt
-new file mode 100644
-index 0000000..6272a73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/tps65218.txt
-@@ -0,0 +1,21 @@
-+TPS65218 family of regulators
-+
-+Required properties:
-+For tps65218 regulators/LDOs
-+- compatible:
-+  - "ti,tps65218-dcdc1" for DCDC1 
-+  - "ti,tps65218-dcdc2" for DCDC2
-+  - "ti,tps65218-dcdc3" for DCDC3
-+  - "ti,tps65218-dcdc4" for DCDC4
-+  - "ti,tps65218-ldo1" for LDO1
-+
-+Optional properties:
-+- Any optional property defined in bindings/regulator/regulator.txt
-+
-+Example:
-+
-+	xyz: regulator@0 {
-+		compatible = "ti,tps65218-dcdc1";
-+		regulator-min-microvolt  = <1000000>;
-+		regulator-max-microvolt  = <3000000>;
-+	};
+I don't get this function.  No other ahci needs it and it's not even
+contained libahci proper.  It calls back to the calling low level
+driver.  Why not just expose ahci_start_fis_rx() and implement the
+above in xgene?
+
+Thanks.
+
 -- 
-1.7.9.5
-
+tejun
