@@ -1,43 +1,31 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Thu, 3 Jul 2014 07:49:59 +0200
-Message-ID: <20140703074959.7c489912@armhf>
-References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
- <20140702195154.47d6f6b4@armhf>
- <20140702194252.GN410@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140702194252.GN410@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Daniel Jeong <gshark.jeong@gmail.com>
+Subject: [RFC v4 0/2]  backlight: add new tps611xx backlight driver
+Date: Thu,  3 Jul 2014 15:01:15 +0900
+Message-ID: <1404367277-12003-1-git-send-email-gshark.jeong@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
+Cc: Daniel Jeong <daniel.jeong@ti.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Daniel Jeong <gshark.jeong@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyIEp1bCAyMDE0IDIwOjQyOjUyICswMTAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cgo+ID4gSSB0ZXN0ZWQgdGhpcyBDT0RFQyB3aXRoIGJvdGggREFQTSBh
-bmQgRFBDTS4gSWYgdGhlIGF1ZGlvIHN1YnN5c3RlbQo+ID4gYXNrcyBmb3Igc3RyZWFtaW5nIG9u
-IGJvdGggSTJTIGFuZCBTL1BESUYsIG9ubHkgdGhlIGxhc3QgY2FsbCBpcyBzZXJ2ZWQKPiA+ICh0
-aGlzIGRlcGVuZHMgb24gdGhlIG9yZGVyIG9mIHRoZSBEQUkgbGlua3MgaW4gdGhlIGF1ZGlvIGNh
-cmQgY3JlYXRpb24KPiA+IHRhYmxlKS4gIAo+IAo+IEknZCBleHBlY3QgdGhpcyB0byByZXR1cm4g
-YW4gZXJyb3IgZm9yIHRoZSBidXN5IERBSSByYXRoZXIgdGhhbiBqdXN0Cj4gc2lsZW50bHkgaWdu
-b3JlIGl0IGZhaWxpbmcgdG8gc3RhcnQgb3IgKGJldHRlcikgaW1wbGVtZW50IHNvbWUgY29udHJv
-bAo+IHRvIGxldCB0aGUgdXNlciBzZWxlY3Qgd2hpY2ggb2YgdGhlIERBSXMgaXMgYWN0aXZlLgoK
-TWFyaywKClRoaXMgaXMgbm90IGFuIGVycm9yLiBJZiB0aGUgYXVkaW8gc3Vic3lzdGVtIChEUENN
-LCBub3QgdGhlIHVzZXIpCmNob29zZXMgdG8gYWN0aXZhdGUgYm90aCBJMlMgYW5kIFMvUERJRiwg
-dGhpcyBtZWFucyB0aGUgSERNSSBhdWRpbyBtYXkKYmUgdGFrZW4gZWl0aGVyIGZyb20gSTJTIG9y
-IGZyb20gUy9QRElGOiBib3RoIGlucHV0cyBoYXZlIHRoZSByaWdodApmb3JtYXQgYW5kIHJhdGUu
-CgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6aCBoYSBMaW51eCBhdGF2ISAq
-KgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This driver is a general version for tps611xx backlgiht chips of TI.
+It supports tps61158, tps61161, tps61163 and tps61165 backlight driver
+based on EasyScale protocol.
+
+Daniel Jeong (2):
+  backlight
+  backlight: add new tps611xx backlight device tree support
+
+ .../video/backlight/tps611xx-backlight.txt         |   24 +
+ drivers/video/backlight/Kconfig                    |    7 +
+ drivers/video/backlight/Makefile                   |    1 +
+ drivers/video/backlight/tps611xx_bl.c              |  479 ++++++++++++++++++++
+ include/linux/platform_data/tps611xx_bl.h          |   31 ++
+ 5 files changed, 542 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+ create mode 100644 drivers/video/backlight/tps611xx_bl.c
+ create mode 100644 include/linux/platform_data/tps611xx_bl.h
+
+-- 
+1.7.9.5
+
