@@ -1,149 +1,79 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
-Date: Thu, 03 Jul 2014 11:04:36 +0200
-Message-ID: <53B51CA4.3060203@pengutronix.de>
-References: <1403863246-18822-1-git-send-email-b29396@freescale.com> <1403863246-18822-2-git-send-email-b29396@freescale.com> <53ADB1E8.1030504@hartkopp.net> <20140630082622.GB25689@shlinux1.ap.freescale.net> <53B4473B.2050003@hartkopp.net> <53B459C3.6070807@pengutronix.de> <20140703034839.GA20450@shlinux1.ap.freescale.net> <53B50271.8070307@pengutronix.de> <20140703084803.GA11012@shlinux1.ap.freescale.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC v4 2/2] backlight: device tree: add new tps611xx backlight
+ binding
+Date: Thu, 3 Jul 2014 10:04:47 +0100
+Message-ID: <20140703090447.GC29837@leverpostej>
+References: <1404367277-12003-1-git-send-email-gshark.jeong@gmail.com>
+ <1404367277-12003-3-git-send-email-gshark.jeong@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Ij2mHLF4tu7Q4KW9JHBrRlbAir2mWUakS"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140703084803.GA11012-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404367277-12003-3-git-send-email-gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Jeong <gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Daniel Jeong <daniel.jeong-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Ij2mHLF4tu7Q4KW9JHBrRlbAir2mWUakS
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 03, 2014 at 07:01:17AM +0100, Daniel Jeong wrote:
+> This commit is about tps611xx device tree documentation.
+> 
+> Signed-off-by: Daniel Jeong <gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../video/backlight/tps611xx-backlight.txt         |   24 ++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> new file mode 100644
+> index 0000000..7af8182
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> @@ -0,0 +1,24 @@
+> +TPS611xx family of backlight driver based on EasyScale.
+> +
+> +EasyScale is a simple but flexible one pin interface to configure the current.
+> +
+> +Required properties:
+> +- compatible: should contain at least one of
+> +  "ti,tps61158_bl"
+> +  "ti,tps61161_bl"
+> +  "ti,tps61163_bl"
+> +  "ti,tps61165_bl"
 
-On 07/03/2014 10:48 AM, Dong Aisheng wrote:
-> On Thu, Jul 03, 2014 at 09:12:49AM +0200, Marc Kleine-Budde wrote:
->> On 07/03/2014 05:48 AM, Dong Aisheng wrote:
->>> On Wed, Jul 02, 2014 at 09:13:07PM +0200, Marc Kleine-Budde wrote:
->>>> On 07/02/2014 07:54 PM, Oliver Hartkopp wrote:
->>>>> I'm not really familiar with the naming concept in device trees.
->>>>>
->>>>> What is your opinion about the remarks below?
->>>>
->>>> The entries in the DT, at least on freescale baords, follow the nami=
-ng
->>>> scheme of the reference manual. E.g. on the mx25 it's can1 and can2:=
+In v3 I asked you to get rid of the "_bl" suffix.
 
->>>>
->>>>     can1: can@43f88000 { ... }
->>>>     can2: can@43f8c000 { ... }
->>>>
->>>> And on the mx28, its:
->>>>
->>>>     can0: can@80032000 { ... }
->>>>     can1: can@80034000 { ... }
->>>>
->>>> Because the imx25 datasheet uses a "1" based counting scheme, while =
-the
->>>> imx28 uses a "0" based one.
->>>>
->>>> So it's best practise to follow the naming and numbering scheme of t=
-he
->>>> hardware reference manual.....and if you have access to the
->>>> documentation of the m_can core, use clock names of the m_can core f=
-or
->>>> the clock-names property.
->>>>
->>>
->>> Based on my knowledge, device tree allows define phandle name accordi=
-ng to
->>> the real device name of HW according spec while the device node name =
-should
->>> be general(e.g can@80032000 rather than flexcan@80032000).
->>> For imx6sx, there are already following entries in
->>> arch/arm/boot/dts/imx6sx.dtsi
->>> flexcan1: can@02090000 {...}
->>> flexcan2: can@02094000 {...}
->>> So i'd prefer to define as:
->>> m_can1: canfd@020e8000 {...}
->>> m_can2: canfd@020f0000 {...}
->>>
->>>
->>> One problem is there're can alias already.
->>> aliases {
->>> 	can0 =3D &flexcan1;
->>> 	can1 =3D &flexcan2;
->>> 	...
->>> }
->>> I'm not sure adding can2&can3 for mcan is properly:
->>> aliases {
->>> 	can0 =3D &flexcan1;
->>> 	can1 =3D &flexcan2;
->>> 	can2 =3D &m_can1;
->>> 	can3 =3D &m_can2;
->>> 	...
->>> }
->>> Since the m_can driver does not need to use aliases,
->>> so i will not add them.
->>
->> IMHO It's fine too add the can{2,3} aliases to m_can, too.
->>
->=20
-> I think the main problem for doing this way is that the meaning of id
-> return by of_alias_get_id may be not persistent.
-> e.g
-> For MX6SX
-> aliases {
-> 	can0 =3D &flexcan1;
-> 	can1 =3D &flexcan2;
-> 	can2 =3D &m_can1;
-> 	can3 =3D &m_can2;
-> 	...
-> }
->=20
-> For other platform, it could be:
-> aliases {
-> 	can0 =3D &m_can1;
-> 	can1 =3D &m_can2;
-> 	...
-> }
-> It's hard for driver to use.
+> +- rfa-enable: enable request for acknowledge.
+> +  If RFA is enabled, the data byte includes the RFA bit and device will wait
+> +  and check acknowledge from device.
 
-The driver doesn't make use of it, does it?
+You didn't answer my question as to why this should be in the DT.
 
-> And actually the M_CAN driver does not need to use the alias.
-> So i wonder if it makes sense to add the alias for m_can devices
-> like that.
+> +- es-gpio : GPIO for easy-scale communication.(see GPIO binding[0])
+> +
+> +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
+> +
+> +Example:
+> +
+> +	backlight {
+> +		compatible = "ti,tps61163";
 
-For example the imx53 has two different SPI units, in the alias section
-we see:
+This now doesn't match the Documentation above.
 
-                spi0 =3D &ecspi1;
-                spi1 =3D &ecspi2;
-                spi2 =3D &cspi;
+Thanks,
+Mark.
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---Ij2mHLF4tu7Q4KW9JHBrRlbAir2mWUakS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlO1HKQACgkQjTAFq1RaXHPLNQCgiZ0vFUqmCl4uztSf2usSOYin
-KB0AnjnA8TEjnRSDEWjdPmgIB0TPX1uM
-=5K2c
------END PGP SIGNATURE-----
-
---Ij2mHLF4tu7Q4KW9JHBrRlbAir2mWUakS--
+> +		rfa-enable;
+> +		es-gpio = <&gpio 45 0>;
+> +	};
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
