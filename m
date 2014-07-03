@@ -1,104 +1,163 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 1/4] clk: add pxa27x clock drivers
-Date: Fri, 04 Jul 2014 00:28:44 +0200
-Message-ID: <87ha2ynkkj.fsf@free.fr>
-References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
-	<1404066744-13416-2-git-send-email-robert.jarzmik@free.fr>
-	<CAN1soZzoiGAz3OicdKbg5Dv2tW3yeinsu2i=M7KX+j1HuMs3Kg@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/2] mmc: hsmmc: Add reset gpio configuration option.
+Date: Thu, 3 Jul 2014 17:41:46 -0500
+Message-ID: <20140703224146.GC2540@saruman.home>
+References: <1404420564-30245-1-git-send-email-marek@goldelico.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN1soZzoiGAz3OicdKbg5Dv2tW3yeinsu2i=M7KX+j1HuMs3Kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Haojian Zhuang's message of "Thu, 3 Jul 2014 14:12:11 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404420564-30245-1-git-send-email-marek@goldelico.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tony@atomide.com, linux@arm.linux.org.uk, balajitk@ti.com, chris@printf.net, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, hns@goldelico.com, NeilBrown <neilb@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+--Pk6IbRAofICFmK5e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Jun 30, 2014 at 2:32 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
->> +static struct pxa27x_clocks_var_rate pxa27x_var_rate_clocks[] __initdata = {
->> +       PXA2_VAR_RATE("pxa2xx-fb", true, LCD, &clk_pxa27x_lcd_ops),
->> +       PXA2_VAR_RATE("pxa27x-camera.0", true, CAMERA, &clk_pxa27x_lcd_ops),
->> +       PXA2_VAR_RATE("pxa2xx-pcmcia", false, MEMC, &clk_pxa27x_mem_ops),
->> +};
->> +
->
-> It's not good to define a VAR table any more.
->
-> Now we have the common clock framework. Since these three clocks are
-> used as clock
-> gate. And their clock frequency is controlled by other bits in
-> peripheral controller registers.
-I understand the clock hierarchy part.
+Hi,
 
-> We can define parent & child clocks in clock tables. I think that you
-> can get a lot of
-> reference in clock drivers, such as exynos, hisilicon, ...
->
-> Same comment on PXA_FIXED_RATE table.
-That's a bit of work which will be thrown away anyway.
-The goal is :
- - keep same level of clock functionnality in non-DT builds
- - have the full clock framework power for DT builds
- - have non-DT builds removed once everything is ported to device-tree
+On Thu, Jul 03, 2014 at 10:49:23PM +0200, Marek Belisko wrote:
+> From: NeilBrown <neilb@suse.de>
+>=20
+> If a 'gpio_reset' is specified, then hold it low while
+> turning the power regulator on.
+> This is needed for some wi2wi wireless modules, particularly
+> when the regulator is held active by some other client.
+> The wi2wi needs to be reset if power isn't actually removed, and
+> the gpio can be used to do this.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  arch/arm/mach-omap2/hsmmc.c            |  7 ++++++-
+>  arch/arm/mach-omap2/hsmmc.h            |  3 +++
+>  drivers/mmc/host/omap_hsmmc.c          | 26 +++++++++++++++++++++++---
+>  include/linux/platform_data/mmc-omap.h |  1 +
+>  4 files changed, 33 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-omap2/hsmmc.c b/arch/arm/mach-omap2/hsmmc.c
+> index 07d4c7b..046bfdd 100644
+> --- a/arch/arm/mach-omap2/hsmmc.c
+> +++ b/arch/arm/mach-omap2/hsmmc.c
+> @@ -172,6 +172,10 @@ static inline void omap_hsmmc_mux(struct omap_mmc_pl=
+atform_data *mmc_controller,
+>  		(mmc_controller->slots[0].gpio_wp < OMAP_MAX_GPIO_LINES))
+>  		omap_mux_init_gpio(mmc_controller->slots[0].gpio_wp,
+>  					OMAP_PIN_INPUT_PULLUP);
+> +	if (gpio_is_valid(mmc_controller->slots[0].gpio_reset) &&
+> +		(mmc_controller->slots[0].gpio_reset < OMAP_MAX_GPIO_LINES))
+> +		omap_mux_init_gpio(mmc_controller->slots[0].gpio_reset,
+> +					OMAP_PIN_OUTPUT);
+>  	if (cpu_is_omap34xx()) {
+>  		if (controller_nr =3D=3D 0) {
+>  			omap_mux_init_signal("sdmmc1_clk",
+> @@ -270,6 +274,7 @@ static int __init omap_hsmmc_pdata_init(struct omap2_=
+hsmmc_info *c,
+> =20
+>  	mmc->slots[0].switch_pin =3D c->gpio_cd;
+>  	mmc->slots[0].gpio_wp =3D c->gpio_wp;
+> +	mmc->slots[0].gpio_reset =3D c->gpio_reset;
+> =20
+>  	mmc->slots[0].remux =3D c->remux;
+>  	mmc->slots[0].init_card =3D c->init_card;
+> @@ -389,7 +394,7 @@ void omap_hsmmc_late_init(struct omap2_hsmmc_info *c)
+>  			continue;
+> =20
+>  		mmc_pdata->slots[0].switch_pin =3D c->gpio_cd;
+> -		mmc_pdata->slots[0].gpio_wp =3D c->gpio_wp;
+> +		mmc_pdata->slots[0].gpio_reset =3D c->gpio_reset;
+> =20
+>  		res =3D omap_device_register(pdev);
+>  		if (res)
+> diff --git a/arch/arm/mach-omap2/hsmmc.h b/arch/arm/mach-omap2/hsmmc.h
+> index 7f2e790..16b2ac5 100644
+> --- a/arch/arm/mach-omap2/hsmmc.h
+> +++ b/arch/arm/mach-omap2/hsmmc.h
+> @@ -24,6 +24,9 @@ struct omap2_hsmmc_info {
+>  	bool	deferred;	/* mmc needs a deferred probe */
+>  	int	gpio_cd;	/* or -EINVAL */
+>  	int	gpio_wp;	/* or -EINVAL */
+> +	int	gpio_reset;	/* or -EINVAL - reset is held low during
+> +				 * power-on
+> +				 */
+>  	char	*name;		/* or NULL for default */
+>  	struct platform_device *pdev;	/* mmc controller instance */
+>  	int	ocr_mask;	/* temporary HACK */
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 9656726..4a264fc 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -300,6 +300,8 @@ static int omap_hsmmc_set_power(struct device *dev, i=
+nt slot, int power_on,
+>  	if (!host->vcc)
+>  		return 0;
+> =20
+> +	if (gpio_is_valid(mmc_slot(host).gpio_reset))
+> +		gpio_set_value_cansleep(mmc_slot(host).gpio_reset, 0);
+>  	if (mmc_slot(host).before_set_reg)
+>  		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
+> =20
+> @@ -365,6 +367,8 @@ static int omap_hsmmc_set_power(struct device *dev, i=
+nt slot, int power_on,
+> =20
+>  	if (mmc_slot(host).after_set_reg)
+>  		mmc_slot(host).after_set_reg(dev, slot, power_on, vdd);
+> +	if (gpio_is_valid(mmc_slot(host).gpio_reset))
+> +		gpio_set_value_cansleep(mmc_slot(host).gpio_reset, 1);
+> =20
+>  error_set_power:
+>  	return ret;
+> @@ -481,10 +485,22 @@ static int omap_hsmmc_gpio_init(struct omap_mmc_pla=
+tform_data *pdata)
+>  	} else
+>  		pdata->slots[0].gpio_wp =3D -EINVAL;
+> =20
+> -	return 0;
+> +	if (gpio_is_valid(pdata->slots[0].gpio_reset)) {
+> +		ret =3D gpio_request(pdata->slots[0].gpio_reset, "mmc_reset");
+> +		if (ret)
+> +			goto err_free_wp;
+> +		ret =3D gpio_direction_output(pdata->slots[0].gpio_reset, 1);
+> +		if (ret)
+> +			goto err_free_reset;
+> +	} else
+> +		pdata->slots[0].gpio_reset =3D -EINVAL;
 
-Therefore, I don't want to redefine the full clock hierarchy in non-DT
-builds. That's a lot of work for nothing. This patchset doesn't aim at a full
-clock rework part, it aims at enabling porting all PXA platforms to DT without
-breaking the non-DT part.
+looks like this should be implemented as a reset-gpio.c driver. This
+piece of code would, then
 
-For DT, we already have this type of clock tree :
-\u@\h:\w\$ cat /sys/kernel/debug/clk/clk_summary 
-   clock                         enable_cnt  prepare_cnt        rate   accuracy
---------------------------------------------------------------------------------
- clk_dummy                                1            1           0          0
-    im                                    0            0           0          0
- osc32_768khz                             1            1       32768          0
-    keypad                                1            1       32768          0
- osc13mhz                                 3            3    13000000          0
-    lcd                                   0            0    52000000          0
-       camera                             0            0    52000000          0
-    memory                                0            0   104000000          0
-    system bus                            0            0   104000000          0
-    cpu core                              0            0   104000000          0
-    halt-turbo mode                       0            0    52000000          0
-    turbo mode                            0            0   104000000          0
-    run mode                              0            0   104000000          0
-    clk_ostimer                           1            1     3250000          0
-       nssp,ostimer                       1            1     3250000          0
-    clk_13mhz                             2            2    13000000          0
-       ssp1                               0            0    13000000          0
-       pwri2c                             1            1    13000000          0
-       ssp3,hwuart                        0            0    13000000          0
-       ssp2                               0            0    13000000          0
-       pwm 1,3                            0            0    13000000          0
-       pwm 0,2                            1            1    13000000          0
-    pll_312mhz                            3            3   312000000          0
-       clk_14_682mhz                      0            0    12235294          0
-          i2s                             0            0    12235294          0
-       clk_14_857mhz                      1            3    14857142          0
-          btuart                          1            2    14857142          0
-          ffuart                          0            1    14857142          0
-          stuart                          0            1    14857142          0
-       clk_19_5mhz                        0            0    19500000          0
-          memstk                          0            0    19500000          0
-          mmc                             0            0    19500000          0
-       clk_32_842mhz                      1            1    32842105          0
-          i2c                             1            1    32842105          0
-       clk_48mhz                          1            1    48000000          0
-          usim                            0            0    48000000          0
-          msl                             0            0    48000000          0
-          ficp                            0            0    48000000          0
-          usb udc                         1            1    48000000          0
-          usb host,assp                   0            0    48000000          0
+	reset_assert(slot->reset);
+	do_the_magic_dance();
+	reset_deassert(slot->reset);
 
-Cheers.
+--=20
+balbi
 
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Pk6IbRAofICFmK5e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtdwqAAoJEIaOsuA1yqRE5hIQAJX1keT9fUAe9kHxDskrlxGn
+NMrq/uZOKrsuen+8SNZfdGvrPiYKyHSG6apZ6AKvHi6ERjymb//dIlSjHzouzD/x
+bhbHX1N0e/tnjFfeW2/zPmJBitR60f7DF9T3bqc2YrB6JDs2PN46LEBaqhzJQ5sV
+ixe2sz4ejTf1LQY8i2p+k2GVWG+juSh727tCOOWriE/FxGkdgeb9DIiCRnPOP2Nu
+aPrZpCuVFag4sCRP/pE6LyizBRBGzcfaKHK3xT3QjsfAA/SjUA/Zta6fbRaGk3BB
+EC/dyjOUe+NuynKZq3ODty2Hsu7qqdBnXURcRjha6NymCfD0taJR25BYaFxtVabs
+L1AgeZ8JC4H6CNw0BqEp7bzKmoVRSVJaISbHq1WArcehZG56m0ff7bWQo4wLCsoc
+tMNdhaOSlh68KOByZFfuH9GdgGhxalzRHPzASN8dEr95ntGqrbwu/xyllDDsIPJI
+/w0takRIeRfRLk8dWoUzylI0N9Dsk04QbUgtg1u7mSA74iQSvXAUDGlep7XcLYzu
+fbzBLarAO8/z+ikvV7Ja8Fc46vIWDBwg8q41tS+9sQ9r+4fhRikVWgmXTRDkuc+d
+J2kWhu8P8ViuBGpI31TLAVOJCteRMYEAtcSvbX7LOifpiNiPini8GcAvR4Ei4qXD
+gz/qrkNngnMnqhcEWNts
+=jvA3
+-----END PGP SIGNATURE-----
+
+--Pk6IbRAofICFmK5e--
