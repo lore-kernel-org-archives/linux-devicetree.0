@@ -1,38 +1,126 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 05/18] AT91: SAMA5D3: DT: Add shutdown controller
-Date: Thu,  3 Jul 2014 16:14:39 +0200
-Message-ID: <1404396906-25194-7-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 15/18] AT91: pm: Remove show_reset_status function
+Date: Thu,  3 Jul 2014 16:14:59 +0200
+Message-ID: <1404396906-25194-27-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The SAMA5D3 has a shutdown controller identical to the sam9x5 SoC family.
-Declare it in the DT.
+Both the reset and poweroff drivers are now implementing what the
+show_reset_status function used to do. Hence, we can remove this rather hackish
+function that prevents us from doing further cleanup.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sama5d3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-at91/pm.c | 72 -------------------------------------------------
+ 1 file changed, 72 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index e0b15a6e8897..8bcf1c442c96 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1178,6 +1178,11 @@
- 				reg = <0xfffffe00 0x10>;
- 			};
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index e95554532987..213606111d9a 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -34,79 +34,8 @@
+ #include "pm.h"
+ #include "gpio.h"
  
-+			shutdown-controller@fffffe10 {
-+				compatible = "atmel,at91sam9x5-shdwc";
-+				reg = <0xfffffe10 0x10>;
-+			};
-+
- 			pit: timer@fffffe30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe30 0xf>;
+-/*
+- * Show the reason for the previous system reset.
+- */
+-
+-#include "at91_rstc.h"
+-#include "at91_shdwc.h"
+-
+ static void (*at91_pm_standby)(void);
+ 
+-static void __init show_reset_status(void)
+-{
+-	static char reset[] __initdata = "reset";
+-
+-	static char general[] __initdata = "general";
+-	static char wakeup[] __initdata = "wakeup";
+-	static char watchdog[] __initdata = "watchdog";
+-	static char software[] __initdata = "software";
+-	static char user[] __initdata = "user";
+-	static char unknown[] __initdata = "unknown";
+-
+-	static char signal[] __initdata = "signal";
+-	static char rtc[] __initdata = "rtc";
+-	static char rtt[] __initdata = "rtt";
+-	static char restore[] __initdata = "power-restored";
+-
+-	char *reason, *r2 = reset;
+-	u32 reset_type, wake_type;
+-
+-	if (!at91_shdwc_base || !at91_rstc_base)
+-		return;
+-
+-	reset_type = at91_rstc_read(AT91_RSTC_SR) & AT91_RSTC_RSTTYP;
+-	wake_type = at91_shdwc_read(AT91_SHDW_SR);
+-
+-	switch (reset_type) {
+-	case AT91_RSTC_RSTTYP_GENERAL:
+-		reason = general;
+-		break;
+-	case AT91_RSTC_RSTTYP_WAKEUP:
+-		/* board-specific code enabled the wakeup sources */
+-		reason = wakeup;
+-
+-		/* "wakeup signal" */
+-		if (wake_type & AT91_SHDW_WAKEUP0)
+-			r2 = signal;
+-		else {
+-			r2 = reason;
+-			if (wake_type & AT91_SHDW_RTTWK)	/* rtt wakeup */
+-				reason = rtt;
+-			else if (wake_type & AT91_SHDW_RTCWK)	/* rtc wakeup */
+-				reason = rtc;
+-			else if (wake_type == 0)	/* power-restored wakeup */
+-				reason = restore;
+-			else				/* unknown wakeup */
+-				reason = unknown;
+-		}
+-		break;
+-	case AT91_RSTC_RSTTYP_WATCHDOG:
+-		reason = watchdog;
+-		break;
+-	case AT91_RSTC_RSTTYP_SOFTWARE:
+-		reason = software;
+-		break;
+-	case AT91_RSTC_RSTTYP_USER:
+-		reason = user;
+-		break;
+-	default:
+-		reason = unknown;
+-		break;
+-	}
+-	pr_info("AT91: Starting after %s %s\n", reason, r2);
+-}
+-
+ static int at91_pm_valid_state(suspend_state_t state)
+ {
+ 	switch (state) {
+@@ -338,7 +267,6 @@ static int __init at91_pm_init(void)
+ 
+ 	suspend_set_ops(&at91_pm_ops);
+ 
+-	show_reset_status();
+ 	return 0;
+ }
+ arch_initcall(at91_pm_init);
 -- 
 2.0.1
