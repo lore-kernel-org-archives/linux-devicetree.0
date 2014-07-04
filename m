@@ -1,142 +1,68 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] i2c: busses: i2c-pxa.c:  Fix for possible null pointer
- dereferenc
-Date: Fri, 04 Jul 2014 09:02:07 +0900
-Message-ID: <002401cf971b$32209120$9661b360$%han@samsung.com>
-References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Subject: [PATCH v2 0/4] Tegra USB probe order issue fix
+Date: Fri,  4 Jul 2014 04:09:35 +0300
+Message-ID: <1404436179-10745-1-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1404418756-10550-2-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Content-language: ko
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Rickard Strandqvist' <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: 'Wolfram Sang' <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Leilei Shang' <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Peter Korsgaard' <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, July 04, 2014 5:19 AM, Rickard Strandqvist wrote:
-> 
-> Fix for possible null pointer dereferenc, and there is a risk
-> for memory leak if something unexpected
+Hi all,
 
-s/dereferenc/dereference
+Here's a second version of the probe order issue series. This time I've
+added the USB1 resets to the PHYs, thus replacing the really ugly parts
+with something slightly better. Old device trees will still probe
+successfully, but instead of this bugfix they'll get a dev_warn().
 
-The columns of this commit is too long.
-Please keep about 80 columns.
+The reset control patch was dropped, as a similar patch from someone
+else has landed in linux-next.
 
-> happens and the function returns.
-> It now use Managed Device Resource instead.
+For a recap of the issue from the previous series:
 
-s/use/uses
+Basically, the register area of the 1st USB controller contains some
+registers that are global to all of the controllers, but that are also
+cleared when reset is asserted to the 1st controller. So if (say) the
+3rd controller would be the first one to finish probing successfully,
+then the reset that happens during the 1st controller's probe would
+result in broken USB. So the before doing anything with the USB HW,
+we should reset the 1st controller once, and then never ever reset
+it again.
 
-> 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-> ---
->  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
->  1 file changed, 16 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> index be671f7..2edb633 100644
-> --- a/drivers/i2c/busses/i2c-pxa.c
-> +++ b/drivers/i2c/busses/i2c-pxa.c
-> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  	struct resource *res = NULL;
->  	int ret, irq;
-> 
-> -	i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
-> +	i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
->  	if (!i2c) {
->  		ret = -ENOMEM;
-> -		goto emalloc;
-> +		goto err_nothing_to_release;
->  	}
-> 
->  	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
-> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  	if (ret > 0)
->  		ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
->  	if (ret < 0)
-> -		goto eclk;
-> +		goto err_nothing_to_release;
-> 
->  	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
->  	irq = platform_get_irq(dev, 0);
->  	if (res == NULL || irq < 0) {
->  		ret = -ENODEV;
-> -		goto eclk;
-> +		goto err_nothing_to_release;
->  	}
-> 
-> -	if (!request_mem_region(res->start, resource_size(res), res->name)) {
-> +	if (!devm_request_mem_region(&dev->dev, res->start,
-> +				resource_size(res), res->name)) {
->  		ret = -ENOMEM;
-> -		goto eclk;
-> +		goto emalloc;
->  	}
-> 
->  	i2c->adap.owner   = THIS_MODULE;
-> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> 
->  	strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
-> 
-> -	i2c->clk = clk_get(&dev->dev, NULL);
-> +	i2c->clk = devm_clk_get(&dev->dev, NULL);
->  	if (IS_ERR(i2c->clk)) {
->  		ret = PTR_ERR(i2c->clk);
-> -		goto eclk;
-> +		goto emalloc;
->  	}
-> 
-> -	i2c->reg_base = ioremap(res->start, resource_size(res));
-> -	if (!i2c->reg_base) {
-> +	i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
-> +	if (IS_ERR(i2c->reg_base)) {
->  		ret = -EIO;
-> -		goto eremap;
-> +		goto emalloc;
->  	}
-> 
->  	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
-> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  		i2c->adap.algo = &i2c_pxa_pio_algorithm;
->  	} else {
->  		i2c->adap.algo = &i2c_pxa_algorithm;
-> -		ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
-> -				  dev_name(&dev->dev), i2c);
-> +		ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
-> +				 IRQF_SHARED, dev_name(&dev->dev), i2c);
->  		if (ret)
-> -			goto ereqirq;
-> +			goto emalloc;
->  	}
-> 
->  	i2c_pxa_reset(i2c);
-> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  eadapt:
->  	if (!i2c->use_pio)
->  		free_irq(irq, i2c);
-> -ereqirq:
-> -	clk_disable_unprepare(i2c->clk);
-> -	iounmap(i2c->reg_base);
-> -eremap:
-> -	clk_put(i2c->clk);
-> -eclk:
-> -	kfree(i2c);
->  emalloc:
->  	release_mem_region(res->start, resource_size(res));
+While testing that the 1st USB controller still works without a reset
+when the driver is unbound and bound again, I discovered an unbalanced
+regulator_disable + clk_disable_unprepare in the PHY code if the EHCI
+driver is unbound and rebound. This is fixed in patch 4.
 
-This function can be removed, because devm_request_mem_region()
-is used. So, please remove release_mem_region().
+Thanks,
+Tuomas.
 
-Best regards,
-Jingoo Han
+Tuomas Tynkkynen (4):
+  USB: tegra: Add resets & has-utmi-pad-registers flag to the PHY
+    binding
+  ARM: tegra: Add resets & has-utmi-pad-registers flag to all USB PHYs
+  USB: EHCI: tegra: Fix probe order issue leading to broken USB
+  USB: PHY: tegra: Call tegra_usb_phy_close only on device removal
 
-> +err_nothing_to_release:
->  	return ret;
->  }
-> 
-> --
-> 1.7.10.4
+ .../bindings/usb/nvidia,tegra20-usb-phy.txt        |    8 +++
+ arch/arm/boot/dts/tegra114.dtsi                    |    5 ++
+ arch/arm/boot/dts/tegra124.dtsi                    |    7 +++
+ arch/arm/boot/dts/tegra20.dtsi                     |    7 +++
+ arch/arm/boot/dts/tegra30.dtsi                     |    7 +++
+ drivers/usb/host/ehci-tegra.c                      |   62 +++++++++++++++++++-
+ drivers/usb/phy/phy-tegra-usb.c                    |    8 +--
+ 7 files changed, 96 insertions(+), 8 deletions(-)
+
+-- 
+1.7.9.5
