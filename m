@@ -1,184 +1,166 @@
-From: Emil Goode <emilgoode-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] i2c: busses: i2c-pxa.c: Fix for possible null pointer
- dereferenc
-Date: Fri, 4 Jul 2014 19:24:57 +0200
-Message-ID: <20140704172457.GA3404@lianli>
-References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <20140704091000.GA4738@lianli>
- <CAFo99gYU6v_ohZa6rSfHwUhk6Lw1dCtVWOQsLk3tZ_GRyqExbg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] spi: add driver for Rockchip RK3xxx SoCs
+ integrated SPI
+Date: Fri, 4 Jul 2014 19:32:49 +0100
+Message-ID: <20140704183249.GC14896@sirena.org.uk>
+References: <1403582852-9751-1-git-send-email-addy.ke@rock-chips.com>
+ <1404176639-3315-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFo99gYU6v_ohZa6rSfHwUhk6Lw1dCtVWOQsLk3tZ_GRyqExbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404176639-3315-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-I noticed one more thing.
+--E/DnYTRukya0zdZ1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Jul 04, 2014 at 07:07:48PM +0200, Rickard Strandqvist wrote:
-> 2014-07-04 11:10 GMT+02:00 Emil Goode <emilgoode-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> > Hello Rickard,
-> >
-> > Since this is a probe function there is also no need to release the devm_*
-> > resources in the i2c_pxa_remove function, this leads to double free.
-> >
-> > Also I have a few nit-pick comments below.
-> >
-> > On Thu, Jul 03, 2014 at 10:19:16PM +0200, Rickard Strandqvist wrote:
-> >> Fix for possible null pointer dereferenc, and there is a risk for memory leak if something unexpected happens and the function returns.
-> >> It now use Managed Device Resource instead.
-> >>
-> >> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-> >> ---
-> >>  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
-> >>  1 file changed, 16 insertions(+), 21 deletions(-)
-> >>
-> >> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> >> index be671f7..2edb633 100644
-> >> --- a/drivers/i2c/busses/i2c-pxa.c
-> >> +++ b/drivers/i2c/busses/i2c-pxa.c
-> >> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> >>       struct resource *res = NULL;
-> >>       int ret, irq;
-> >>
-> >> -     i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
-> >> +     i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
-> >>       if (!i2c) {
-> >>               ret = -ENOMEM;
-> >> -             goto emalloc;
-> >> +             goto err_nothing_to_release;
-> >
-> > Perhaps its a good idea to return directly here, then the label
-> > err_nothing_to_release can be removed.
-> >
-> >>       }
-> >>
-> >>       /* Default adapter num to device id; i2c_pxa_probe_dt can override. */
-> >> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> >>       if (ret > 0)
-> >>               ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
-> >>       if (ret < 0)
-> >> -             goto eclk;
-> >> +             goto err_nothing_to_release;
-> >
-> > Same here.
-> >
-> >>
-> >>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
-> >>       irq = platform_get_irq(dev, 0);
-> >>       if (res == NULL || irq < 0) {
-> >>               ret = -ENODEV;
-> >> -             goto eclk;
-> >> +             goto err_nothing_to_release;
-> >
-> > Same here.
-> >
-> >>       }
-> >>
-> >> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
-> >> +     if (!devm_request_mem_region(&dev->dev, res->start,
-> >> +                             resource_size(res), res->name)) {
-> >>               ret = -ENOMEM;
-> >> -             goto eclk;
-> >> +             goto emalloc;
-> >
-> > We could also return directly here since the release_mem_region call should
-> > be removed, as mentioned in Jingoos reply.
-> >
-> >>       }
-> >>
-> >>       i2c->adap.owner   = THIS_MODULE;
-> >> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> >>
-> >>       strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
-> >>
-> >> -     i2c->clk = clk_get(&dev->dev, NULL);
-> >> +     i2c->clk = devm_clk_get(&dev->dev, NULL);
-> >>       if (IS_ERR(i2c->clk)) {
-> >>               ret = PTR_ERR(i2c->clk);
-> >> -             goto eclk;
-> >> +             goto emalloc;
-> >
-> > Same here.
-> >
-> >>       }
-> >>
-> >> -     i2c->reg_base = ioremap(res->start, resource_size(res));
-> >> -     if (!i2c->reg_base) {
-> >> +     i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
-> >> +     if (IS_ERR(i2c->reg_base)) {
-> >>               ret = -EIO;
-> >> -             goto eremap;
-> >> +             goto emalloc;
-> >
-> > Same here.
-> >
-> >>       }
-> >>
-> >>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
-> >> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> >>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
-> >>       } else {
-> >>               i2c->adap.algo = &i2c_pxa_algorithm;
-> >> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
-> >> -                               dev_name(&dev->dev), i2c);
-> >> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
-> >> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
-> >>               if (ret)
-> >> -                     goto ereqirq;
-> >> +                     goto emalloc;
-> >
-> > Same here.
-> >
-> >>       }
-> >>
-> >>       i2c_pxa_reset(i2c);
-> >> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> >>  eadapt:
-> >>       if (!i2c->use_pio)
-> >>               free_irq(irq, i2c);
-> >
-> > The free_irq() call should also be removed since devm_request_irq() was used.
-> >
-> >> -ereqirq:
-> >> -     clk_disable_unprepare(i2c->clk);
+On Tue, Jul 01, 2014 at 09:03:59AM +0800, addy ke wrote:
+> In order to facilitate understanding, rockchip SPI controller IP design
+> looks similar in its registers to designware. But IC implementation
+> is different from designware, So we need a dedicated driver for Rockchip
+> RK3XXX SoCs integrated SPI. The main differences:
 
-I think we should keep the clk_disable_unprepare() call.
+This looks good overall, a nice clean driver.  I've applied it but there
+are a few small issues that need fixing up which I've noted below, can
+you please send followup patches dealing with these?
 
-> >> -     iounmap(i2c->reg_base);
-> >> -eremap:
-> >> -     clk_put(i2c->clk);
-> >> -eclk:
-> >> -     kfree(i2c);
-> >>  emalloc:
-> >>       release_mem_region(res->start, resource_size(res));
-> >> +err_nothing_to_release:
-> >>       return ret;
-> >>  }
-> >>
-> >
-> > Best regards,
-> >
-> > Emil Goode
-> 
-> Hi All!
-> 
-> Ok, so there is literally nothing to do release anymore.
-> A good system Devres, I understand you want everyone to use it.
-> 
-> I also think it is also better to return directly then.
-> But who decides, Wolfram?
+> +	 * static void spi_set_cs(struct spi_device *spi, bool enable)
+> +	 * {
+> +	 *		if (spi->mode & SPI_CS_HIGH)
+> +	 *			enable = !enable;
+> +	 *
+> +	 *		if (spi->cs_gpio >= 0)
+> +	 *			gpio_set_value(spi->cs_gpio, !enable);
+> +	 *		else if (spi->master->set_cs)
+> +	 *		spi->master->set_cs(spi, !enable);
+> +	 * }
+> +	 *
+> +	 * Note: enable(rockchip_spi_set_cs) = !enable(spi_set_cs)
+> +	 */
 
-Yes, Wolfram is the maintainer.
+So, the point here is that chip select is an active low signal by
+default which means that if chip select is asserted we have a low logic
+level and the parameter means "asserted" not "logic level for the
+output".  It doesn't really matter but it might be clearer to say so
+directly.
 
-Personally I would do the devm_* convertion in a second patch.
+> +	if (spi->mode & SPI_CS_HIGH) {
+> +		dev_err(rs->dev, "spi_cs_hign: not support\n");
+> +		return -EINVAL;
 
-Best regards,
+Typo here (high).
 
-Emil Goode
+> +static int rockchip_spi_unprepare_message(struct spi_master *master,
+> +		struct spi_message *msg)
+> +{
+> +	unsigned long flags;
+> +	struct rockchip_spi *rs = spi_master_get_devdata(master);
+> +
+> +	spin_lock_irqsave(&rs->lock, flags);
+> +
+> +	if (rs->use_dma) {
+> +		if (rs->state & RXBUSY) {
+> +			dmaengine_terminate_all(rs->dma_rx.ch);
+> +			flush_fifo(rs);
+> +		}
+> +
+> +		if (rs->state & TXBUSY)
+> +			dmaengine_terminate_all(rs->dma_tx.ch);
+> +	}
+
+This initially looks wrong - the DMA should all be quiesced by the time
+that we get to unpreparing the hardware, otherwise the transfer might be
+ongoing while the chip select is deasserted.  However this is really
+just error handling in case something went wrong which is sensible and
+reasonable, a comment explaining this would help so can you please send
+a followup patch adding one.
+
+The error handling here is actually a good point - we should probably
+add a callback for the core to use when it times out since the issue
+also applies if there are further transactions queued with the hardware.
+I'll look into that later unless someone does it first.
+
+> +	/* Delay until the FIFO data completely */
+> +	if (xfer->tx_buf)
+> +		xfer->delay_usecs
+> +			= rs->fifo_len * rs->bpw * 1000000 / rs->speed;
+
+The driver shouldn't be doing this, if it needs a delay it needs to
+implement it itself.  delay_usecs can be set by devices if they need a
+delay between transfers, it should be in addition to the time taken for
+the transfer to complete.
+
+Please send a followup patch fixing this.
+
+> +static bool rockchip_spi_can_dma(struct spi_master *master,
+> +		struct spi_device *spi,
+> +		struct spi_transfer *xfer)
+> +{
+> +	struct rockchip_spi *rs = spi_master_get_devdata(master);
+> +
+> +	return (xfer->len > rs->fifo_len);
+> +}
+
+We should factor this out into the core as well, just let the driver set
+the minimum size for DMA since it's such a common pattern.  I'll look
+into this as well.
+
+> +	master = spi_alloc_master(&pdev->dev, sizeof(struct rockchip_spi));
+> +	if (!master) {
+> +		dev_err(&pdev->dev, "No memory for spi_master\n");
+> +		return -ENOMEM;
+> +	}
+
+No need to print an error message - OOM messags from the memory
+management subsystem are already noisy enough as it is.
+
+> +	dev_info(&pdev->dev, "Rockchip SPI controller initialized\n");
+
+Please send a followup patch removing this, it's not really adding
+anything and there's core debug messages that can be enabled - usually
+these prints are done when there is some information that has been read
+back from the hardware (eg, IP revisions).
+
+> +static const struct of_device_id rockchip_spi_dt_match[] = {
+> +	{ .compatible = "rockchip,rk3066-spi", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, rockchip_spi_dt_match);
+
+Your DT binding defined some additional compatible strings, please add
+those to the driver.
+
+--E/DnYTRukya0zdZ1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTtvNOAAoJELSic+t+oim9AZ0QAJTDMzcAA9zy8yPpNZCO/3qs
+/60RdNNIAbrqWO2X4nl3ihEoCHflUtf0LgEhKhubvXSS21bVG0056Q6Bba69YaL6
+4Z7DgBdHJ3Hx2h1HRZLtpXztJcd5hZa3+7mePGWE0ucXeyFbnTTpr7fEvyl3In71
+5MapcJhM+rcFrOAbBCbMrBP89WVHCH1tK04NExPRivM8M3lAuJpDzIm93tbo8DMP
+dYnvMYH3X0q4+qGY9kMXAD5pK5l6yCk/DGg9xcwBm4hzTkunQq7TniUo3xmsl+qt
+0Fo8wSWk+wTnIJ0YRCwEwEzxiffY6PjroCAji4NY6CuVyuuLS1rCTiWcNWT0CgRc
+8T7Kmv+u/p9OC78mKRdauhlCMgjMxY69X6Nb6swd8+hO0wAsPtC4OU+7GFnEVrEu
+q35hpYz+tk/thx0JGV9QAfD37O/0IEeRq91ZVXBJJUaLhpj+3r5Y5r4vMtbAvHVX
+ShVBCUXIQVOXrrkqFHKzgl9ZNmONOxHaee46/HrMIbUAn4Q0G5li9CSce0HerwFG
+vqpoB40CYcETpsk3wc32aPym+1DsjjmaWNYkkpAyd6wzITaX7x+reZmKOSCVdYDa
+itL+dUu2AYunV9qtmKc88N6eQ3QQYKo7QPiF2diB35gvmgxWhGAFytRzFtCwytgI
+aS3y/2XspxVDHGu3epL0
+=ZtBZ
+-----END PGP SIGNATURE-----
+
+--E/DnYTRukya0zdZ1--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
