@@ -1,200 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Sat, 05 Jul 2014 00:53:13 +0400
-Message-ID: <53B71439.8040709@cogentembedded.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <538F05BC.7000800@ti.com> <538F95A7.8010409@cogentembedded.com> <5396E160.7000707@ti.com> <53AB4A48.5030805@cogentembedded.com> <53B2B37F.6080300@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos5410: Fill in CPU clock-frequency
+Date: Sat, 05 Jul 2014 06:06:35 +0900
+Message-ID: <53B7175B.1030109@samsung.com>
+References: <1403466596-3347-1-git-send-email-afaerber@suse.de> <53A7DCF8.4090108@samsung.com> <53B690B9.2090906@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53B2B37F.6080300@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53B690B9.2090906@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LKML <linux-kernel@vger.kernel.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kumar Gala <galak@codeaurora.org>, "ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 07/01/2014 05:11 PM, Kishon Vijay Abraham I wrote:
-
->>>>>> This PHY, though formally being a part of Renesas USBHS controller, contains
->>>>>> the
->>>>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
->>>>>> them
->>>>>> channels) to the different USB controllers: channel 0 can be connected to
->>>>>> either
->>>>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
->>>>>> EHCI/OHCI
->>>>>> or xHCI controllers.
-
-> .
-> .
-> <snip>
-> .
-> .
-
->>>>> IIUC, channel 0 can be configured for either EHCI/OHCI or HS-USB but can't be
->>>>> used for both.  And channel 1 can be configured for either PCI EHCI/OHCI or
->>>>> xHCI. right?
-
->>>>      Yes. However that depends on the driver load order: if e.g. xHCI driver is
->>>> loaded later than PCI USB drivers,
->>>> it will override the channel routing.
-
->>> So will the PCI USB drivers will be notified of that?
-
->>     Unfortunately, no. But this is also the case with the other multi-PHY
->> drivers...
-
-> IIRC, in the case of other existing multi-phy drivers, all the PHYs can
-> co-exist without actually overriding anything that was configured previously.
-
-    'phy-exynos-mipi-video' driver looked somewhat suspicious in this respect 
-(I didn't understand why they used "#phy-cells" of 1, having 2 channels with 
-two PHYs each) but upon further scrutiny it appears that the PHYs on one 
-channel function quite independently...
-
-[...]
-
->>>>> So ideally only two sub-nodes should be created for channel '0' and channel
->>>>> '1'.
-
->>>>      Hm, but I need to perform a special PHY power up sequence for the USBHS PHY
->>>> itself (corresponding to channel #0, selector #1).
-
->>>>> You can configure a channel to a particular mode by passing the mode in
->>>>> PHY specifier
-
->>>>      I already have "#phy-cells" prop equal to 2.
-
->>>>> (The channel should be configured to a particualr mode in xlate).
-
->>>>      I have even considered using the of_xlate() method at first but then
->>>> abandoned that idea for the phy_init() method...
-
->>> If you want to configure the PHY to a particular mode, xlate should be the best
->>> place.
-
->>     I tried to move the code there from the init() method but then I realized
->> that I need to prepare/enable the USBHS clock before writing to the UGCTRL2
->> register and there's no place I can disable/unprepare this clock if I do the
-
-    Unless I prepare/enable the clock when probing, and undo it on removal, 
-that is.
-
->> channel routing in the xlate() method. So no, I don't agree here.
-
-> enabling clock from init() seems correct to me. We need a better way to avoid
-> overriding the PHY to a particular mode.
-
-    In fact, in my case such override may be rather desirable.
-
-[...]
-> .
-> .
-> <snip>
-> .
-> .
+On 07/04/14 20:32, Andreas F=C3=A4rber wrote:
+> Am 23.06.2014 09:53, schrieb Tarek Dakhran:
+>> On 06/22/2014 11:49 PM, Andreas F=C3=A4rber wrote:
+>>> It's 1.6 GHz for the Cortex-A15.
+>>>
+>>> Avoids warnings like "/cpus/cpu@0 missing clock-frequency property"=
+=2E
+>>>
+>>> Signed-off-by: Andreas afaerber@suse.de>
+>>> ---
+>>>    arch/arm/boot/dts/exynos5410.dtsi | 4 ++++
+>>>    1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5410.dtsi
+>>> b/arch/arm/boot/dts/exynos5410.dtsi
+>>> index 3839c26..9d0b8cc 100644
+>>> --- a/arch/arm/boot/dts/exynos5410.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5410.dtsi
+>>> @@ -28,24 +28,28 @@
+>>>                device_type =3D "cpu";
+>>>                compatible =3D "arm,cortex-a15";
+>>>                reg =3D<0x0>;
+>>> +            clock-frequency =3D<1600000000>;
+>>>
+>>
+>> Reviewed-by: Tarek Dakhran<t.dakhran@samsung.com>
 >
->>>>>> +struct rcar_gen2_phy_driver {
->>>>>> +    void __iomem *base;
->>>>>> +    struct clk *clk;
->>>>>> +    spinlock_t lock;
->>>>>> +    struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
-
->>>>> This can be created dynamically based on the number of sub-nodes. In this case
-
->>     Did you mean that I'll need to use linked list here instead of an array?
-
-> Nope. I meant something like below.
-
-> struct rcar_gen2_phy_driver {
-> 	.
-> 	.
-> 	struct rcar_gen2_phy **phys;
-> }
+> Ping? Seems really trivial...
 >
-> probe()
-> {
-> 	<snip>
-> 	int i = 0, channel_count;
-> 	struct rcar_gen2_phy **phys;
-> 	channel_count = of_get_child_count(np);
+Will apply.
 
-    Didn't know of such function...
+BTW Andreas, I can't use 'F=C3=A4rber' in my git tree so which one is r=
+ight=20
+or more preferred? Farber, Faerber, Ferber? Sorry.
 
-> 	phys = kzalloc(sizeof(*phys) * channel_count, GFP_KERNEL);
-
-    Rather kcalloc().
-
-> 	for_each_child_of_node(dev->of_node, np) {
-> 		struct rcar_gen2_phy *phy;
-> 		.
-> 		.
-> 		phy = kzalloc(sizeof(*phy), GFP_KERNEL);
-> 		.
-> 		.
-> 		phy->phy = devm_phy_create(dev, &rcar_gen2_phy_ops, NULL);
-> 		phys[i++] = phy;
-> 	}
-> 	drv->phys = phys;
-> 	<snip>
-> }
-
-> Then you can access 'phys' just like how you access an array.
-
-    Aren't you over-engineering things? I'd rather have just an array of 
-'struct rcar_gen2_phy' dynamically allocated at once, instead of an array of 
-pointers to struct rcar_gen2_phy' and then PHYs allocated piecemeal...
-
-    Anyway, this means that I'll have to do linear search for the needed PHY 
-in the xlate() method, just like it would have been with a linked list. 
-Complication. :-)
-
-[...]
-
->>>>> it'll be only rcar_gen2_phy phys[2], one for each channel.
->>>>> By this we need not hard code NUM_USB_CHANNELS.
-
->>>>      I don't quite understand what's up with hard-coding it -- this constant is
->>>> dictated by the UGCTRL2 register layout anyway.
-
->>> right but you don't want to change the driver a whole lot when they change the
->>> no of channels in the next version
-
->>     They have already done so: R8A7790 has 3 USB channels, R8A7791 has only 2.
->> However, the number of controllable channels didn't change.
-
-> right.. that's where I'd like to have status = "disabled" for that channel in
-> your dt node.
-
-    I disagree here. First, channel #1 is not controllable anyway, so of no 
-interest to us. Anyway, if more controllable channel appear, may point is that 
-should be a matter of introducing and properly handling a new "compatible" 
-property, not just adding/removing subnodes.
-
->>> or they use a slightly modified version of
->>> this IP in a different SoC. And finding the number of channels dynamically is
->>> not complicated anyway IMO.
-
->>     Sorry, but what you're saying here just doesn't make sense to me. I'd need
->> to modify the driver for the different number of the controllable channels in
->> any case since the UGCTRL2 masks/values have to be hard coded in the driver as
->> you said. If they were read from the device tree, that would have made sense
->> but you seem to be against that...
-
-> R8A7790 has 3 USB channels and R8A7791 has only 2. So what should be the
-> NUM_CHANNELS in this driver?
-
-    Two; we have only two controllable channels in any case.
-
-> Modifying the driver _can_ be adding macros for
-> registers, bit masks etc.. and maybe appropriately modifying of_device data.
-
-    s/_can_/must/.
-
-> Cheers
-> Kishon
-
-WBR, Sergei
-
+Thanks,
+Kukjin
