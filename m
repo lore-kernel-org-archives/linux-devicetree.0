@@ -1,750 +1,821 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v7 3/9] OF: selftest: Add overlay self-test support.
-Date: Fri,  4 Jul 2014 19:59:22 +0300
-Message-Id: <1404493168-8980-4-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH] configfs: Implement binary attributes (v2)
+Date: Fri,  4 Jul 2014 19:58:31 +0300
+Message-Id: <1404493111-8875-1-git-send-email-pantelis.antoniou@konsulko.com>
 To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds overlay tests to the OF selftest.
+ConfigFS lacked binary attributes up until now. This patch
+introduces support for binary attributes in a somewhat similar
+manner of sysfs binary attributes albeit with changes that
+fit the configfs usage model.
 
-It tests overlay device addition/removal and whether
-the apply revert sequence is correct.
+Problems that configfs binary attributes fix are everything that
+requires a binary blob as part of the configuration of a resource,
+such as bitstream loading for FPGAs, DTBs for dynamically created
+devices etc.
+
+Look at Documentation/filesystems/configfs/configfs.txt for internals
+and howto use them.
+
+Changes since V1:
+* Uses vmalloc instead of kmalloc.
+* Renamed bin_attribute members.
+* Implemented maximum limit of attribute.
+* Cosmetic, whitespace, checkpatch fixes.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- Documentation/devicetree/bindings/selftest.txt |  14 +
- drivers/of/selftest.c                          | 481 +++++++++++++++++++++++++
- drivers/of/testcase-data/testcases.dtsi        |   1 +
- drivers/of/testcase-data/tests-overlay.dtsi    | 180 +++++++++
- 4 files changed, 676 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/selftest.txt
- create mode 100644 drivers/of/testcase-data/tests-overlay.dtsi
+ Documentation/filesystems/configfs/configfs.txt |  71 +++++-
+ fs/configfs/configfs_internal.h                 |  16 +-
+ fs/configfs/dir.c                               |  19 +-
+ fs/configfs/file.c                              | 318 ++++++++++++++++++++++--
+ fs/configfs/inode.c                             |   2 +-
+ include/linux/configfs.h                        |  98 ++++++++
+ 6 files changed, 491 insertions(+), 33 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/selftest.txt b/Documentation/devicetree/bindings/selftest.txt
-new file mode 100644
-index 0000000..0f92a22
---- /dev/null
-+++ b/Documentation/devicetree/bindings/selftest.txt
-@@ -0,0 +1,14 @@
-+* OF selftest platform device
+diff --git a/Documentation/filesystems/configfs/configfs.txt b/Documentation/filesystems/configfs/configfs.txt
+index b40fec9..576ddf4 100644
+--- a/Documentation/filesystems/configfs/configfs.txt
++++ b/Documentation/filesystems/configfs/configfs.txt
+@@ -51,15 +51,27 @@ configfs tree is always there, whether mounted on /config or not.
+ An item is created via mkdir(2).  The item's attributes will also
+ appear at this time.  readdir(3) can determine what the attributes are,
+ read(2) can query their default values, and write(2) can store new
+-values.  Like sysfs, attributes should be ASCII text files, preferably
+-with only one value per file.  The same efficiency caveats from sysfs
+-apply.  Don't mix more than one attribute in one attribute file.
+-
+-Like sysfs, configfs expects write(2) to store the entire buffer at
+-once.  When writing to configfs attributes, userspace processes should
+-first read the entire file, modify the portions they wish to change, and
+-then write the entire buffer back.  Attribute files have a maximum size
+-of one page (PAGE_SIZE, 4096 on i386).
++values.  Don't mix more than one attribute in one attribute file.
 +
-+** selftest
++There are two types of configfs attributes:
 +
-+Required properties:
-+- compatible: must be "selftest"
++* Normal attributes, which similar to sysfs attributes, are small ASCII text
++files, with a maximum size of one page (PAGE_SIZE, 4096 on i386).  Preferably
++only one value per file should be used, and the same caveats from sysfs apply.
++Configfs expects write(2) to store the entire buffer at once.  When writing to
++normal configfs attributes, userspace processes should first read the entire
++file, modify the portions they wish to change, and then write the entire
++buffer back.
 +
-+All other properties are optional.
-+
-+Example:
-+	selftest {
-+		compatible = "selftest";
-+		status = "okay";
-+	};
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 077314e..1c74676 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -15,6 +15,8 @@
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_platform.h>
++* Binary attributes, which are somewhat similar to sysfs binary attributes,
++but with a few slight changes to semantics.  The PAGE_SIZE limitation does not
++apply, but the whole binary item must fit in single kernel vmalloc'ed buffer.
++The write(2) calls from user space are buffered, and the attributes'
++write_bin_attribute method will be invoked on the final close, therefore it is
++imperative for user-space to check the return code of close(2) in order to
++verify that the operation finished succesfully.
++To avoid a malicious user OOMing the kernel, there's a per-binary attribute
++maximum buffer value.
  
- static struct selftest_results {
- 	int passed;
-@@ -517,6 +519,484 @@ static void __init of_selftest_platform_populate(void)
- 	}
+ When an item needs to be destroyed, remove it with rmdir(2).  An
+ item cannot be destroyed if any other item has a link to it (via
+@@ -166,6 +178,12 @@ among other things.  For that, it needs a type.
+ 		ssize_t (*store_attribute)(struct config_item *,
+ 					   struct configfs_attribute *,
+ 					   const char *, size_t);
++		ssize_t (*read_bin_attribute)(struct config_item *,
++					      struct configfs_bin_attribute *,
++					      void *, size_t);
++		ssize_t (*write_bin_attribute)(struct config_item *,
++					       struct configfs_bin_attribute *,
++					       const void *, size_t);
+ 		int (*allow_link)(struct config_item *src,
+ 				  struct config_item *target);
+ 		int (*drop_link)(struct config_item *src,
+@@ -177,15 +195,18 @@ among other things.  For that, it needs a type.
+ 		struct configfs_item_operations         *ct_item_ops;
+ 		struct configfs_group_operations        *ct_group_ops;
+ 		struct configfs_attribute               **ct_attrs;
++		struct configfs_bin_attribute		**ct_bin_attrs;
+ 	};
+ 
+ The most basic function of a config_item_type is to define what
+ operations can be performed on a config_item.  All items that have been
+ allocated dynamically will need to provide the ct_item_ops->release()
+ method.  This method is called when the config_item's reference count
+-reaches zero.  Items that wish to display an attribute need to provide
+-the ct_item_ops->show_attribute() method.  Similarly, storing a new
+-attribute value uses the store_attribute() method.
++reaches zero.  Items that wish to display an normal attribute need to provide
++the ct_item_ops->show_attribute() method, while binary attributes provide the
++ct_item_ops->read_bin_attribute(). Similarly, storing a new normal attribute
++value uses the store_attribute() method, while the binarys' attribute equivalent
++is the ct_item_ops->write_bin_attribute() method.
+ 
+ [struct configfs_attribute]
+ 
+@@ -207,6 +228,32 @@ ct_item_ops->show_attribute() method, that method will be called
+ whenever userspace asks for a read(2) on the attribute.  The converse
+ will happen for write(2).
+ 
++[struct configfs_bin_attribute]
++
++	struct configfs_attribute {
++		struct configfs_attribute	cb_attr;
++		void				*cb_private;
++		size_t				cb_max_size;
++	};
++
++The binary attribute is used when the one needs to use binary blob to
++appear as the contents of a file in the item's configfs directory.
++To do so add the binary attribute to the NULL-terminated array
++config_item_type->ct_bin_attrs, and the item appears in configfs, the
++attribute file will appear with the configfs_bin_attribute->cb_attr.ca_name
++filename.  configfs_bin_attribute->cb_attr.ca_mode specifies the file
++permissions.
++The cb_private member is provided for use by the driver, while the
++cb_max_size member specifies the maximum amount of vmalloc buffer
++to be used.
++
++If binary attribute is readable and the config_item provides a
++ct_item_ops->read_bin_attribute() method, that method will be called
++whenever userspace asks for a read(2) on the attribute.  The converse
++will happen for write(2). The reads/writes are bufferred so only a
++single read/write will occur; the attributes' need not concern itself
++with it.
++
+ [struct config_group]
+ 
+ A config_item cannot live in a vacuum.  The only way one can be created
+diff --git a/fs/configfs/configfs_internal.h b/fs/configfs/configfs_internal.h
+index bd4a3c1..b0517b3 100644
+--- a/fs/configfs/configfs_internal.h
++++ b/fs/configfs/configfs_internal.h
+@@ -53,13 +53,14 @@ struct configfs_dirent {
+ #define CONFIGFS_ROOT		0x0001
+ #define CONFIGFS_DIR		0x0002
+ #define CONFIGFS_ITEM_ATTR	0x0004
++#define CONFIGFS_ITEM_BIN_ATTR	0x0008
+ #define CONFIGFS_ITEM_LINK	0x0020
+ #define CONFIGFS_USET_DIR	0x0040
+ #define CONFIGFS_USET_DEFAULT	0x0080
+ #define CONFIGFS_USET_DROPPING	0x0100
+ #define CONFIGFS_USET_IN_MKDIR	0x0200
+ #define CONFIGFS_USET_CREATING	0x0400
+-#define CONFIGFS_NOT_PINNED	(CONFIGFS_ITEM_ATTR)
++#define CONFIGFS_NOT_PINNED	(CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)
+ 
+ extern struct mutex configfs_symlink_mutex;
+ extern spinlock_t configfs_dirent_lock;
+@@ -74,11 +75,15 @@ extern int configfs_inode_init(void);
+ extern void configfs_inode_exit(void);
+ 
+ extern int configfs_create_file(struct config_item *, const struct configfs_attribute *);
++extern int configfs_create_bin_file(struct config_item *,
++				    const struct configfs_bin_attribute *);
+ extern int configfs_make_dirent(struct configfs_dirent *,
+ 				struct dentry *, void *, umode_t, int);
+ extern int configfs_dirent_is_ready(struct configfs_dirent *);
+ 
+ extern int configfs_add_file(struct dentry *, const struct configfs_attribute *, int);
++extern int configfs_add_bin_file(struct dentry *,
++				 const struct configfs_bin_attribute *, int);
+ extern void configfs_hash_and_remove(struct dentry * dir, const char * name);
+ 
+ extern const unsigned char * configfs_get_name(struct configfs_dirent *sd);
+@@ -91,7 +96,7 @@ extern void configfs_release_fs(void);
+ extern struct rw_semaphore configfs_rename_sem;
+ extern const struct file_operations configfs_dir_operations;
+ extern const struct file_operations configfs_file_operations;
+-extern const struct file_operations bin_fops;
++extern const struct file_operations configfs_bin_file_operations;
+ extern const struct inode_operations configfs_dir_inode_operations;
+ extern const struct inode_operations configfs_root_inode_operations;
+ extern const struct inode_operations configfs_symlink_inode_operations;
+@@ -122,6 +127,13 @@ static inline struct configfs_attribute * to_attr(struct dentry * dentry)
+ 	return ((struct configfs_attribute *) sd->s_element);
  }
  
-+#ifdef CONFIG_OF_OVERLAY
-+
-+static int selftest_probe(struct platform_device *pdev)
++static inline struct configfs_bin_attribute *to_bin_attr(struct dentry *dentry)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
++	struct configfs_attribute *attr = to_attr(dentry);
 +
-+	if (np == NULL) {
-+		dev_err(dev, "No OF data for device\n");
++	return container_of(attr, struct configfs_bin_attribute, cb_attr);
++}
++
+ static inline struct config_item *configfs_get_config_item(struct dentry *dentry)
+ {
+ 	struct config_item * item = NULL;
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index 668dcab..b086153 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -257,6 +257,13 @@ static int configfs_init_file(struct inode * inode)
+ 	return 0;
+ }
+ 
++static int configfs_init_bin_file(struct inode *inode)
++{
++	inode->i_size = 0;
++	inode->i_fop = &configfs_bin_file_operations;
++	return 0;
++}
++
+ static int init_symlink(struct inode * inode)
+ {
+ 	inode->i_op = &configfs_symlink_inode_operations;
+@@ -431,7 +438,9 @@ static int configfs_attach_attr(struct configfs_dirent * sd, struct dentry * den
+ 	spin_unlock(&configfs_dirent_lock);
+ 
+ 	error = configfs_create(dentry, (attr->ca_mode & S_IALLUGO) | S_IFREG,
+-				configfs_init_file);
++				(sd->s_type & CONFIGFS_ITEM_ATTR) ?
++					configfs_init_file :
++					configfs_init_bin_file);
+ 	if (error) {
+ 		configfs_put(sd);
+ 		return error;
+@@ -591,6 +600,7 @@ static int populate_attrs(struct config_item *item)
+ {
+ 	struct config_item_type *t = item->ci_type;
+ 	struct configfs_attribute *attr;
++	struct configfs_bin_attribute *bin_attr;
+ 	int error = 0;
+ 	int i;
+ 
+@@ -602,6 +612,13 @@ static int populate_attrs(struct config_item *item)
+ 				break;
+ 		}
+ 	}
++	if (t->ct_bin_attrs) {
++		for (i = 0; (bin_attr = t->ct_bin_attrs[i]) != NULL; i++) {
++			error = configfs_create_bin_file(item, bin_attr);
++			if (error)
++				break;
++		}
++	}
+ 
+ 	if (error)
+ 		detach_attrs(item);
+diff --git a/fs/configfs/file.c b/fs/configfs/file.c
+index 1d1c41f..0cbc848 100644
+--- a/fs/configfs/file.c
++++ b/fs/configfs/file.c
+@@ -28,6 +28,7 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
++#include <linux/vmalloc.h>
+ #include <asm/uaccess.h>
+ 
+ #include <linux/configfs.h>
+@@ -48,6 +49,10 @@ struct configfs_buffer {
+ 	struct configfs_item_operations	* ops;
+ 	struct mutex		mutex;
+ 	int			needs_read_fill;
++	int			read_in_progress;
++	int			write_in_progress;
++	char			*bin_buffer;
++	int			bin_buffer_size;
+ };
+ 
+ 
+@@ -107,8 +112,16 @@ static ssize_t
+ configfs_read_file(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ {
+ 	struct configfs_buffer * buffer = file->private_data;
++	struct configfs_dirent *sd;
+ 	ssize_t retval = 0;
+ 
++	sd = file->f_path.dentry->d_fsdata;
++	if (WARN_ON(sd == NULL))
 +		return -EINVAL;
 +
-+	}
++	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_ATTR)))
++		return -EINVAL;
 +
-+	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
-+	return 0;
-+}
+ 	mutex_lock(&buffer->mutex);
+ 	if (buffer->needs_read_fill) {
+ 		if ((retval = fill_read_buffer(file->f_path.dentry,buffer)))
+@@ -123,6 +136,97 @@ out:
+ 	return retval;
+ }
+ 
++/**
++ *	configfs_read_bin_file - read a binary attribute.
++ *	@file:	file pointer.
++ *	@buf:	buffer to fill.
++ *	@count:	number of bytes to read.
++ *	@ppos:	starting offset in file.
++ *
++ *	Userspace wants to read a binary attribute file. The attribute
++ *	descriptor is in the file's ->d_fsdata. The target item is in the
++ *	directory's ->d_fsdata.
++ *
++ *	We check whether we need to refill the buffer. If so we will
++ *	call the attributes' ops->read_bin_attribute() twice. The first time we
++ *	will pass a NULL as a buffer pointer, which the attributes' method
++ *	will use to return the size of the buffer required. If no error
++ *	occurs we will allocate the buffer using vmalloc and call
++ *	ops->read_bin_atribute() again passing that buffer as an argument.
++ *	Then we just copy to user-space using simple_read_from_buffer.
++ */
 +
-+static int selftest_remove(struct platform_device *pdev)
++static ssize_t
++configfs_read_bin_file(struct file *file, char __user *buf,
++		       size_t count, loff_t *ppos)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
++	struct configfs_buffer *buffer = file->private_data;
++	struct dentry *dentry = file->f_path.dentry;
++	struct configfs_dirent *sd = dentry->d_fsdata;
++	struct config_item *item = to_item(dentry->d_parent);
++	struct configfs_item_operations *ops = buffer->ops;
++	struct configfs_bin_attribute *bin_attr = to_bin_attr(dentry);
++	ssize_t retval = 0;
++	ssize_t len = min_t(size_t, count, PAGE_SIZE);
 +
-+	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
-+	return 0;
-+}
++	if (WARN_ON(sd == NULL))
++		return -EINVAL;
 +
-+static struct of_device_id selftest_match[] = {
-+	{ .compatible = "selftest", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, altera_jtaguart_match);
++	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_BIN_ATTR)))
++		return -EINVAL;
 +
-+static struct platform_driver selftest_driver = {
-+	.probe			= selftest_probe,
-+	.remove			= selftest_remove,
-+	.driver = {
-+		.name		= "selftest",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(selftest_match),
-+	},
-+};
++	mutex_lock(&buffer->mutex);
 +
-+/* get the platform device instantiated at the path */
-+static struct platform_device *of_path_to_platform_device(const char *path)
-+{
-+	struct device_node *np;
-+	struct platform_device *pdev;
-+
-+	np = of_find_node_by_path(path);
-+	if (np == NULL)
-+		return NULL;
-+
-+	pdev = of_find_device_by_node(np);
-+	of_node_put(np);
-+
-+	return pdev;
-+}
-+
-+/* find out if a platform device exists at that path */
-+static int of_path_platform_device_exists(const char *path)
-+{
-+	struct platform_device *pdev;
-+
-+	pdev = of_path_to_platform_device(path);
-+	platform_device_put(pdev);
-+	return pdev != NULL;
-+}
-+
-+static const char *selftest_path(int nr)
-+{
-+	static char buf[256];
-+
-+	snprintf(buf, sizeof(buf) - 1,
-+		"/testcase-data/overlay-node/test-bus/test-selftest%d", nr);
-+	buf[sizeof(buf) - 1] = '\0';
-+
-+	return buf;
-+}
-+
-+static const char *overlay_path(int nr)
-+{
-+	static char buf[256];
-+
-+	snprintf(buf, sizeof(buf) - 1,
-+		"/testcase-data/overlay%d", nr);
-+	buf[sizeof(buf) - 1] = '\0';
-+
-+	return buf;
-+}
-+
-+static const char *bus_path = "/testcase-data/overlay-node/test-bus";
-+
-+static int of_selftest_apply_overlay(int selftest_nr, int overlay_nr,
-+		int *overlay_id)
-+{
-+	struct device_node *np = NULL;
-+	int ret, id = -1;
-+
-+	np = of_find_node_by_path(overlay_path(overlay_nr));
-+	if (np == NULL) {
-+		selftest(0, "could not find overlay node @\"%s\"\n",
-+				overlay_path(overlay_nr));
-+		ret = -EINVAL;
++	/* we don't support switching read/write modes */
++	if (buffer->write_in_progress) {
++		retval = -EINVAL;
 +		goto out;
 +	}
++	buffer->read_in_progress = 1;
 +
-+	ret = of_overlay_create(np);
-+	if (ret < 0) {
-+		selftest(0, "could not create overlay from \"%s\"\n",
-+				overlay_path(overlay_nr));
-+		goto out;
++	if (buffer->needs_read_fill) {
++
++		/* perform first read with buf == NULL to get extent */
++		len = ops->read_bin_attribute(item, bin_attr, NULL, 0);
++		if (len < 0) {
++			retval = len;
++			goto out;
++		}
++
++		/* do not exceed the maximum value */
++		if (bin_attr->cb_max_size && len > bin_attr->cb_max_size) {
++			retval = -EFBIG;
++			goto out;
++		}
++
++		buffer->bin_buffer = vmalloc(len);
++		if (buffer->bin_buffer == NULL) {
++			retval = -ENOMEM;
++			goto out;
++		}
++		buffer->bin_buffer_size = len;
++
++		/* perform second read to fill buffer */
++		len = ops->read_bin_attribute(item, bin_attr,
++				buffer->bin_buffer, len);
++		if (len < 0) {
++			retval = len;
++			vfree(buffer->bin_buffer);
++			buffer->bin_buffer_size = 0;
++			buffer->bin_buffer = NULL;
++			goto out;
++		}
++
++		buffer->needs_read_fill = 0;
 +	}
-+	id = ret;
 +
-+	ret = 0;
-+
++	retval = simple_read_from_buffer(buf, count, ppos, buffer->bin_buffer,
++					buffer->bin_buffer_size);
 +out:
-+	of_node_put(np);
++	mutex_unlock(&buffer->mutex);
++	return retval;
++}
 +
-+	if (overlay_id)
-+		*overlay_id = id;
+ 
+ /**
+  *	fill_write_buffer - copy buffer from userspace.
+@@ -197,9 +301,16 @@ flush_write_buffer(struct dentry * dentry, struct configfs_buffer * buffer, size
+ static ssize_t
+ configfs_write_file(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+ {
+-	struct configfs_buffer * buffer = file->private_data;
++	struct configfs_buffer *buffer = file->private_data;
++	struct configfs_dirent *sd = file->f_path.dentry->d_fsdata;
+ 	ssize_t len;
+ 
++	if (WARN_ON(sd == NULL))
++		return -EINVAL;
 +
++	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_ATTR)))
++		return -EINVAL;
++
+ 	mutex_lock(&buffer->mutex);
+ 	len = fill_write_buffer(buffer, buf, count);
+ 	if (len > 0)
+@@ -210,10 +321,86 @@ configfs_write_file(struct file *file, const char __user *buf, size_t count, lof
+ 	return len;
+ }
+ 
+-static int check_perm(struct inode * inode, struct file * file)
++/**
++ *	configfs_write_bin_file - write a binary attribute.
++ *	@file:	file pointer
++ *	@buf:	data to write
++ *	@count:	number of bytes
++ *	@ppos:	starting offset
++ *
++ *	Writting to a binary attribute file is similar to a normal read.
++ *	We buffer the consecutive writes (binary attribute files do not
++ *	support lseek) in a continuously growing buffer, but we don't
++ *	commit until the close of the file.
++ */
++
++static ssize_t
++configfs_write_bin_file(struct file *file, const char __user *buf,
++			size_t count, loff_t *ppos)
++{
++	struct configfs_buffer *buffer = file->private_data;
++	struct dentry *dentry = file->f_path.dentry;
++	struct configfs_dirent *sd = dentry->d_fsdata;
++	struct configfs_bin_attribute *bin_attr = to_bin_attr(dentry);
++	void *tbuf = NULL;
++	ssize_t len;
++
++	if (WARN_ON(sd == NULL))
++		return -EINVAL;
++
++	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_BIN_ATTR)))
++		return -EINVAL;
++
++	mutex_lock(&buffer->mutex);
++
++	/* we don't support switching read/write modes */
++	if (buffer->read_in_progress) {
++		len = -EINVAL;
++		goto out;
++	}
++	buffer->write_in_progress = 1;
++
++	/* buffer grows? */
++	if (*ppos + count > buffer->bin_buffer_size) {
++
++		if (bin_attr->cb_max_size &&
++			*ppos + count > bin_attr->cb_max_size) {
++			len = -EFBIG;
++		}
++
++		tbuf = vmalloc(*ppos + count);
++		if (tbuf == NULL) {
++			len = -ENOMEM;
++			goto out;
++		}
++
++		/* copy old contents */
++		if (buffer->bin_buffer) {
++			memcpy(tbuf, buffer->bin_buffer,
++				buffer->bin_buffer_size);
++			vfree(buffer->bin_buffer);
++		}
++
++		/* clear the new area */
++		memset(tbuf + buffer->bin_buffer_size, 0,
++			*ppos + count - buffer->bin_buffer_size);
++		buffer->bin_buffer = tbuf;
++		buffer->bin_buffer_size = *ppos + count;
++	}
++
++	len = simple_write_to_buffer(buffer->bin_buffer,
++			buffer->bin_buffer_size, ppos, buf, count);
++	if (len > 0)
++		*ppos += len;
++out:
++	mutex_unlock(&buffer->mutex);
++	return len;
++}
++
++static int check_perm(struct inode *inode, struct file *file,
++		      struct config_item *item, struct configfs_attribute *attr,
++		      int type)
+ {
+-	struct config_item *item = configfs_get_config_item(file->f_path.dentry->d_parent);
+-	struct configfs_attribute * attr = to_attr(file->f_path.dentry);
+ 	struct configfs_buffer * buffer;
+ 	struct configfs_item_operations * ops = NULL;
+ 	int error = 0;
+@@ -238,9 +425,16 @@ static int check_perm(struct inode * inode, struct file * file)
+ 	 */
+ 	if (file->f_mode & FMODE_WRITE) {
+ 
+-		if (!(inode->i_mode & S_IWUGO) || !ops->store_attribute)
++		if (!(inode->i_mode & S_IWUGO))
++			goto Eaccess;
++
++		if ((type & CONFIGFS_ITEM_ATTR) &&
++				!ops->store_attribute)
+ 			goto Eaccess;
+ 
++		if ((type & CONFIGFS_ITEM_BIN_ATTR) &&
++				!ops->write_bin_attribute)
++			goto Eaccess;
+ 	}
+ 
+ 	/* File needs read support.
+@@ -248,7 +442,13 @@ static int check_perm(struct inode * inode, struct file * file)
+ 	 * must be a show method for it.
+ 	 */
+ 	if (file->f_mode & FMODE_READ) {
+-		if (!(inode->i_mode & S_IRUGO) || !ops->show_attribute)
++		if (!(inode->i_mode & S_IRUGO))
++			goto Eaccess;
++
++		if ((type & CONFIGFS_ITEM_ATTR) && !ops->show_attribute)
++			goto Eaccess;
++
++		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !ops->read_bin_attribute)
+ 			goto Eaccess;
+ 	}
+ 
+@@ -262,6 +462,8 @@ static int check_perm(struct inode * inode, struct file * file)
+ 	}
+ 	mutex_init(&buffer->mutex);
+ 	buffer->needs_read_fill = 1;
++	buffer->read_in_progress = 0;
++	buffer->write_in_progress = 0;
+ 	buffer->ops = ops;
+ 	file->private_data = buffer;
+ 	goto Done;
+@@ -279,17 +481,12 @@ static int check_perm(struct inode * inode, struct file * file)
+ 	return error;
+ }
+ 
+-static int configfs_open_file(struct inode * inode, struct file * filp)
+-{
+-	return check_perm(inode,filp);
+-}
+-
+-static int configfs_release(struct inode * inode, struct file * filp)
++static int do_release(struct inode *inode, struct file *filp,
++		      struct config_item *item, struct configfs_attribute *attr,
++		      int type)
+ {
+-	struct config_item * item = to_item(filp->f_path.dentry->d_parent);
+-	struct configfs_attribute * attr = to_attr(filp->f_path.dentry);
+-	struct module * owner = attr->ca_owner;
+-	struct configfs_buffer * buffer = filp->private_data;
++	struct module *owner = attr->ca_owner;
++	struct configfs_buffer *buffer = filp->private_data;
+ 
+ 	if (item)
+ 		config_item_put(item);
+@@ -305,14 +502,87 @@ static int configfs_release(struct inode * inode, struct file * filp)
+ 	return 0;
+ }
+ 
++static int configfs_open_file(struct inode *inode, struct file *filp)
++{
++	return check_perm(inode, filp,
++			configfs_get_config_item(filp->f_path.dentry->d_parent),
++			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_ATTR);
++}
++
++static int configfs_release_file(struct inode *inode, struct file *filp)
++{
++	return do_release(inode, filp,
++			to_item(filp->f_path.dentry->d_parent),
++			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_ATTR);
++}
++
++static int configfs_open_bin_file(struct inode *inode, struct file *filp)
++{
++	return check_perm(inode, filp,
++			configfs_get_config_item(filp->f_path.dentry->d_parent),
++			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_BIN_ATTR);
++}
++
++/**
++ *	configfs_release_bin_file - write a binary attribute.
++ *	@inode: inode pointer
++ *	@filp:	file pointer
++ *
++ *	Releasing a binary attribute file is similar for a read op
++ *	to the normal attribute file. When writting we call the
++ *	attributes' ops->write_bin_attribute() method to commit the
++ *	changes to the attribute.
++ */
++
++static int configfs_release_bin_file(struct inode *inode, struct file *filp)
++{
++	struct configfs_buffer *buffer = filp->private_data;
++	struct dentry *dentry = filp->f_path.dentry;
++	struct config_item *item = to_item(dentry->d_parent);
++	struct configfs_item_operations *ops = buffer->ops;
++	struct configfs_bin_attribute *bin_attr = to_bin_attr(dentry);
++	ssize_t len = 0;
++	int ret;
++
++	buffer->read_in_progress = 0;
++
++	if (buffer->write_in_progress) {
++		buffer->write_in_progress = 0;
++
++		len = ops->write_bin_attribute(item, bin_attr,
++				buffer->bin_buffer, buffer->bin_buffer_size);
++
++		/* vfree on NULL is safe */
++		vfree(buffer->bin_buffer);
++		buffer->bin_buffer = NULL;
++		buffer->bin_buffer_size = 0;
++		buffer->needs_read_fill = 1;
++	}
++
++	ret = do_release(inode, filp,
++			to_item(filp->f_path.dentry->d_parent),
++			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_BIN_ATTR);
++	if (len < 0)
++		return len;
 +	return ret;
 +}
 +
-+/* apply an overlay while checking before and after states */
-+static int of_selftest_apply_overlay_check(int overlay_nr, int selftest_nr,
-+		int before, int after)
-+{
-+	int ret;
 +
-+	/* selftest device must not be in before state */
-+	if (of_path_platform_device_exists(selftest_path(selftest_nr))
-+			!= before) {
-+		selftest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				selftest_path(selftest_nr),
-+				!before ? "enabled" : "disabled");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_selftest_apply_overlay(overlay_nr, selftest_nr, NULL);
-+	if (ret != 0) {
-+		/* of_selftest_apply_overlay already called selftest() */
-+		return ret;
-+	}
-+
-+	/* selftest device must be to set to after state */
-+	if (of_path_platform_device_exists(selftest_path(selftest_nr))
-+			!= after) {
-+		selftest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				selftest_path(selftest_nr),
-+				!after ? "enabled" : "disabled");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/* apply an overlay and then revert it while checking before, after states */
-+static int of_selftest_apply_revert_overlay_check(int overlay_nr,
-+		int selftest_nr, int before, int after)
-+{
-+	int ret, ov_id;
-+
-+	/* selftest device must be in before state */
-+	if (of_path_platform_device_exists(selftest_path(selftest_nr))
-+			!= before) {
-+		selftest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				selftest_path(selftest_nr),
-+				!before ? "enabled" : "disabled");
-+		return -EINVAL;
-+	}
-+
-+	/* apply the overlay */
-+	ret = of_selftest_apply_overlay(overlay_nr, selftest_nr, &ov_id);
-+	if (ret != 0) {
-+		/* of_selftest_apply_overlay already called selftest() */
-+		return ret;
-+	}
-+
-+	/* selftest device must be in after state */
-+	if (of_path_platform_device_exists(selftest_path(selftest_nr))
-+			!= after) {
-+		selftest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				selftest_path(selftest_nr),
-+				!after ? "enabled" : "disabled");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_overlay_destroy(ov_id);
-+	if (ret != 0) {
-+		selftest(0, "overlay @\"%s\" failed to be destroyed @\"%s\"\n",
-+				overlay_path(overlay_nr),
-+				selftest_path(selftest_nr));
-+		return ret;
-+	}
-+
-+	/* selftest device must be again in before state */
-+	if (of_path_platform_device_exists(selftest_path(selftest_nr))
-+			!= before) {
-+		selftest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				selftest_path(selftest_nr),
-+				!before ? "enabled" : "disabled");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/* test activation of device */
-+static void of_selftest_overlay_0(void)
-+{
-+	int ret;
-+
-+	/* device should enable */
-+	ret = of_selftest_apply_overlay_check(0, 0, 0, 1);
-+	if (ret != 0)
-+		return;
-+
-+	selftest(1, "overlay test %d passed\n", 0);
-+}
-+
-+/* test deactivation of device */
-+static void of_selftest_overlay_1(void)
-+{
-+	int ret;
-+
-+	/* device should disable */
-+	ret = of_selftest_apply_overlay_check(1, 1, 1, 0);
-+	if (ret != 0)
-+		return;
-+
-+	selftest(1, "overlay test %d passed\n", 1);
-+}
-+
-+/* test activation of device */
-+static void of_selftest_overlay_2(void)
-+{
-+	int ret;
-+
-+	/* device should enable */
-+	ret = of_selftest_apply_overlay_check(2, 2, 0, 1);
-+	if (ret != 0)
-+		return;
-+
-+	selftest(1, "overlay test %d passed\n", 2);
-+}
-+
-+/* test deactivation of device */
-+static void of_selftest_overlay_3(void)
-+{
-+	int ret;
-+
-+	/* device should disable */
-+	ret = of_selftest_apply_overlay_check(3, 3, 1, 0);
-+	if (ret != 0)
-+		return;
-+
-+	selftest(1, "overlay test %d passed\n", 3);
-+}
-+
-+/* test activation of a full device node */
-+static void of_selftest_overlay_4(void)
-+{
-+	int ret;
-+
-+	/* device should disable */
-+	ret = of_selftest_apply_overlay_check(4, 4, 0, 1);
-+	if (ret != 0)
-+		return;
-+
-+	selftest(1, "overlay test %d passed\n", 4);
-+}
-+
-+/* test overlay apply/revert sequence */
-+static void of_selftest_overlay_5(void)
-+{
-+	int ret;
-+
-+	/* device should disable */
-+	ret = of_selftest_apply_revert_overlay_check(5, 5, 0, 1);
-+	if (ret != 0)
-+		return;
-+
-+	selftest(1, "overlay test %d passed\n", 5);
-+}
-+
-+/* test overlay application in sequence */
-+static void of_selftest_overlay_6(void)
-+{
-+	struct device_node *np;
-+	int ret, i, ov_id[2];
-+	int overlay_nr = 6, selftest_nr = 6;
-+	int before = 0, after = 1;
-+
-+	/* selftest device must be in before state */
-+	for (i = 0; i < 2; i++) {
-+		if (of_path_platform_device_exists(
-+					selftest_path(selftest_nr + i))
-+				!= before) {
-+			selftest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+					overlay_path(overlay_nr + i),
-+					selftest_path(selftest_nr + i),
-+					!before ? "enabled" : "disabled");
-+			return;
-+		}
-+	}
-+
-+	/* apply the overlays */
-+	for (i = 0; i < 2; i++) {
-+
-+		np = of_find_node_by_path(overlay_path(overlay_nr + i));
-+		if (np == NULL) {
-+			selftest(0, "could not find overlay node @\"%s\"\n",
-+					overlay_path(overlay_nr + i));
-+			return;
-+		}
-+
-+		ret = of_overlay_create(np);
-+		if (ret < 0)  {
-+			selftest(0, "could not create overlay from \"%s\"\n",
-+					overlay_path(overlay_nr + i));
-+			return;
-+		}
-+		ov_id[i] = ret;
-+	}
-+
-+	for (i = 0; i < 2; i++) {
-+		/* selftest device must be in after state */
-+		if (of_path_platform_device_exists(
-+					selftest_path(selftest_nr + i))
-+				!= after) {
-+			selftest(0, "overlay @\"%s\" failed @\"%s\" %s\n",
-+					overlay_path(overlay_nr + i),
-+					selftest_path(selftest_nr + i),
-+					!after ? "enabled" : "disabled");
-+			return;
-+		}
-+	}
-+
-+	for (i = 1; i >= 0; i--) {
-+		ret = of_overlay_destroy(ov_id[i]);
-+		if (ret != 0) {
-+			selftest(0, "overlay @\"%s\" failed destroy @\"%s\"\n",
-+					overlay_path(overlay_nr + i),
-+					selftest_path(selftest_nr + i));
-+			return;
-+		}
-+	}
-+
-+	for (i = 0; i < 2; i++) {
-+		/* selftest device must be again in before state */
-+		if (of_path_platform_device_exists(
-+					selftest_path(selftest_nr + i))
-+				!= before) {
-+			selftest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+					overlay_path(overlay_nr + i),
-+					selftest_path(selftest_nr + i),
-+					!before ? "enabled" : "disabled");
-+			return;
-+		}
-+	}
-+
-+	selftest(1, "overlay test %d passed\n", 6);
-+}
-+
-+/* test overlay application in sequence */
-+static void of_selftest_overlay_8(void)
-+{
-+	struct device_node *np;
-+	int ret, i, ov_id[2];
-+	int overlay_nr = 8, selftest_nr = 8;
-+
-+	/* we don't care about device state in this test */
-+
-+	/* apply the overlays */
-+	for (i = 0; i < 2; i++) {
-+
-+		np = of_find_node_by_path(overlay_path(overlay_nr + i));
-+		if (np == NULL) {
-+			selftest(0, "could not find overlay node @\"%s\"\n",
-+					overlay_path(overlay_nr + i));
-+			return;
-+		}
-+
-+		ret = of_overlay_create(np);
-+		if (ret < 0)  {
-+			selftest(0, "could not create overlay from \"%s\"\n",
-+					overlay_path(overlay_nr + i));
-+			return;
-+		}
-+		ov_id[i] = ret;
-+	}
-+
-+	/* now try to remove first overlay (it should fail) */
-+	ret = of_overlay_destroy(ov_id[0]);
-+	if (ret == 0) {
-+		selftest(0, "overlay @\"%s\" was destroyed @\"%s\"\n",
-+				overlay_path(overlay_nr + 0),
-+				selftest_path(selftest_nr));
-+		return;
-+	}
-+
-+	/* removing them in order should work */
-+	for (i = 1; i >= 0; i--) {
-+		ret = of_overlay_destroy(ov_id[i]);
-+		if (ret != 0) {
-+			selftest(0, "overlay @\"%s\" not destroyed @\"%s\"\n",
-+					overlay_path(overlay_nr + i),
-+					selftest_path(selftest_nr));
-+			return;
-+		}
-+	}
-+
-+	selftest(1, "overlay test %d passed\n", 8);
-+}
-+
-+static void __init of_selftest_overlay(void)
-+{
-+	struct device_node *bus_np = NULL;
-+	int ret;
-+
-+	ret = platform_driver_register(&selftest_driver);
-+	if (ret != 0) {
-+		selftest(0, "could not register selftest driver\n");
-+		goto out;
-+	}
-+
-+	bus_np = of_find_node_by_path(bus_path);
-+	if (bus_np == NULL) {
-+		selftest(0, "could not find bus_path \"%s\"\n", bus_path);
-+		goto out;
-+	}
-+
-+	ret = of_platform_populate(bus_np, of_default_bus_match_table,
-+			NULL, NULL);
-+	if (ret != 0) {
-+		selftest(0, "could not populate bus @ \"%s\"\n", bus_path);
-+		goto out;
-+	}
-+
-+	if (!of_path_platform_device_exists(selftest_path(100))) {
-+		selftest(0, "could not find selftest0 @ \"%s\"\n",
-+				selftest_path(100));
-+		goto out;
-+	}
-+
-+	if (of_path_platform_device_exists(selftest_path(101))) {
-+		selftest(0, "selftest1 @ \"%s\" should not exist\n",
-+				selftest_path(101));
-+		goto out;
-+	}
-+
-+	selftest(1, "basic infrastructure of overlays passed");
-+
-+	/* tests in sequence */
-+	of_selftest_overlay_0();
-+	of_selftest_overlay_1();
-+	of_selftest_overlay_2();
-+	of_selftest_overlay_3();
-+	of_selftest_overlay_4();
-+	of_selftest_overlay_5();
-+	of_selftest_overlay_6();
-+	of_selftest_overlay_8();
-+
-+out:
-+	of_node_put(bus_np);
-+}
-+
-+#else
-+static inline void __init of_selftest_overlay(void) { }
-+#endif
-+
- static int __init of_selftest(void)
- {
- 	struct device_node *np;
-@@ -537,6 +1017,7 @@ static int __init of_selftest(void)
- 	of_selftest_parse_interrupts_extended();
- 	of_selftest_match_node();
- 	of_selftest_platform_populate();
-+	of_selftest_overlay();
- 	pr_info("end of selftest - %i passed, %i failed\n",
- 		selftest_results.passed, selftest_results.failed);
- 	return 0;
-diff --git a/drivers/of/testcase-data/testcases.dtsi b/drivers/of/testcase-data/testcases.dtsi
-index 6d8d980a..a54fd68 100644
---- a/drivers/of/testcase-data/testcases.dtsi
-+++ b/drivers/of/testcase-data/testcases.dtsi
-@@ -2,3 +2,4 @@
- #include "tests-interrupts.dtsi"
- #include "tests-match.dtsi"
- #include "tests-platform.dtsi"
-+#include "tests-overlay.dtsi"
-diff --git a/drivers/of/testcase-data/tests-overlay.dtsi b/drivers/of/testcase-data/tests-overlay.dtsi
-new file mode 100644
-index 0000000..75976da
---- /dev/null
-+++ b/drivers/of/testcase-data/tests-overlay.dtsi
-@@ -0,0 +1,180 @@
-+
-+/ {
-+	testcase-data {
-+		overlay-node {
-+
-+			/* test bus */
-+			selftestbus: test-bus {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				selftest100: test-selftest100 {
-+					compatible = "selftest";
-+					status = "okay";
-+					reg = <100>;
-+				};
-+
-+				selftest101: test-selftest101 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <101>;
-+				};
-+
-+				selftest0: test-selftest0 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <0>;
-+				};
-+
-+				selftest1: test-selftest1 {
-+					compatible = "selftest";
-+					status = "okay";
-+					reg = <1>;
-+				};
-+
-+				selftest2: test-selftest2 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <2>;
-+				};
-+
-+				selftest3: test-selftest3 {
-+					compatible = "selftest";
-+					status = "okay";
-+					reg = <3>;
-+				};
-+
-+				selftest5: test-selftest5 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <5>;
-+				};
-+
-+				selftest6: test-selftest6 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <6>;
-+				};
-+
-+				selftest7: test-selftest7 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <7>;
-+				};
-+
-+				selftest8: test-selftest8 {
-+					compatible = "selftest";
-+					status = "disabled";
-+					reg = <8>;
-+				};
-+			};
-+		};
-+
-+		/* test enable using absolute target path */
-+		overlay0 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest0";
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		/* test disable using absolute target path */
-+		overlay1 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest1";
-+				__overlay__ {
-+					status = "disabled";
-+				};
-+			};
-+		};
-+
-+		/* test enable using label */
-+		overlay2 {
-+			fragment@0 {
-+				target = <&selftest2>;
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		/* test disable using label */
-+		overlay3 {
-+			fragment@0 {
-+				target = <&selftest3>;
-+				__overlay__ {
-+					status = "disabled";
-+				};
-+			};
-+		};
-+
-+		/* test insertion of a full node */
-+		overlay4 {
-+			fragment@0 {
-+				target = <&selftestbus>;
-+				__overlay__ {
-+
-+					/* suppress DTC warning */
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					test-selftest4 {
-+						compatible = "selftest";
-+						status = "okay";
-+						reg = <4>;
-+					};
-+				};
-+			};
-+		};
-+
-+		/* test overlay apply revert */
-+		overlay5 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest5";
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		/* test overlays application and removal in sequence */
-+		overlay6 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest6";
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+		overlay7 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest7";
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		/* test overlays application and removal in bad sequence */
-+		overlay8 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest8";
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+		overlay9 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus/test-selftest8";
-+				__overlay__ {
-+					property-foo = "bar";
-+				};
-+			};
-+		};
-+
-+	};
+ const struct file_operations configfs_file_operations = {
+ 	.read		= configfs_read_file,
+ 	.write		= configfs_write_file,
+ 	.llseek		= generic_file_llseek,
+ 	.open		= configfs_open_file,
+-	.release	= configfs_release,
++	.release	= configfs_release_file,
+ };
+ 
++const struct file_operations configfs_bin_file_operations = {
++	.read		= configfs_read_bin_file,
++	.write		= configfs_write_bin_file,
++	.llseek		= NULL,		/* bin file is not seekable */
++	.open		= configfs_open_bin_file,
++	.release	= configfs_release_bin_file,
 +};
+ 
+ int configfs_add_file(struct dentry * dir, const struct configfs_attribute * attr, int type)
+ {
+@@ -342,3 +612,17 @@ int configfs_create_file(struct config_item * item, const struct configfs_attrib
+ 				 CONFIGFS_ITEM_ATTR);
+ }
+ 
++/**
++ *	configfs_create_bin_file - create a binary attribute file for an item.
++ *	@item:	item we're creating for.
++ *	@attr:	atrribute descriptor.
++ */
++
++int configfs_create_bin_file(struct config_item *item,
++		const struct configfs_bin_attribute *bin_attr)
++{
++	BUG_ON(!item || !item->ci_dentry || !bin_attr);
++
++	return configfs_add_file(item->ci_dentry, &bin_attr->cb_attr,
++				 CONFIGFS_ITEM_BIN_ATTR);
++}
+diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
+index 5946ad9..dd9c24b 100644
+--- a/fs/configfs/inode.c
++++ b/fs/configfs/inode.c
+@@ -231,7 +231,7 @@ const unsigned char * configfs_get_name(struct configfs_dirent *sd)
+ 	if (sd->s_type & (CONFIGFS_DIR | CONFIGFS_ITEM_LINK))
+ 		return sd->s_dentry->d_name.name;
+ 
+-	if (sd->s_type & CONFIGFS_ITEM_ATTR) {
++	if (sd->s_type & (CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)) {
+ 		attr = sd->s_element;
+ 		return attr->ca_name;
+ 	}
+diff --git a/include/linux/configfs.h b/include/linux/configfs.h
+index 34025df..2e416b4 100644
+--- a/include/linux/configfs.h
++++ b/include/linux/configfs.h
+@@ -51,6 +51,7 @@ struct module;
+ struct configfs_item_operations;
+ struct configfs_group_operations;
+ struct configfs_attribute;
++struct configfs_bin_attribute;
+ struct configfs_subsystem;
+ 
+ struct config_item {
+@@ -84,6 +85,7 @@ struct config_item_type {
+ 	struct configfs_item_operations		*ct_item_ops;
+ 	struct configfs_group_operations	*ct_group_ops;
+ 	struct configfs_attribute		**ct_attrs;
++	struct configfs_bin_attribute		**ct_bin_attrs;
+ };
+ 
+ /**
+@@ -207,6 +209,96 @@ static ssize_t _item##_attr_store(struct config_item *item,		\
+ 	return ret;							\
+ }
+ 
++struct file;
++struct vm_area_struct;
++
++struct configfs_bin_attribute {
++	struct configfs_attribute	cb_attr;	/* std. attribute */
++	void				*cb_private;	/* for user       */
++	size_t				cb_max_size;	/* max core size  */
++};
++
++/*
++ * Similar to CONFIGFS_ATTR_STRUCT
++ */
++#define CONFIGFS_BIN_ATTR_STRUCT(_item)					\
++struct _item##_bin_attribute {						\
++	struct configfs_bin_attribute bin_attr;				\
++	ssize_t (*read)(struct _item *, void *, size_t);		\
++	ssize_t (*write)(struct _item *, const void *, size_t);		\
++}
++
++/* macros to create static binary attributes easier */
++#define __CONFIGFS_BIN_ATTR(_name, _mode, _read, _write, _priv, _max)	\
++{									\
++	.bin_attr = {							\
++		.cb_attr	= {					\
++				.ca_name = __stringify(_name),		\
++				.ca_mode = _mode,			\
++				.ca_owner = THIS_MODULE,		\
++		},							\
++		.cb_private	= _priv,				\
++		.cb_max_size	= _max,					\
++	},								\
++	.read	= _read,						\
++	.write	= _write,						\
++}
++
++#define __CONFIGFS_BIN_ATTR_RO(_name, _priv, _max) {			\
++	.bin_attr = {							\
++		.cb_attr	= {					\
++			.ca_name = __stringify(_name),			\
++			.ca_mode = _mode,				\
++			.ca_owner = THIS_MODULE,			\
++		},							\
++		.cb_private	= _priv,				\
++		.cb_max_size	= _max,					\
++	},								\
++	.read	= _read,						\
++}
++
++#define __CONFIGFS_BIN_ATTR_RW(_name)					\
++	__CONFIGFS_BIN_ATTR(_name, (S_IWUSR | S_IRUGO),			\
++		_name##_read, _name##_write)
++
++#define CONFIGFS_BIN_ATTR(_name, _mode, _read, _write)			\
++struct configfs_bin_attribute bin_attr_##_name =			\
++	__CONFIGFS_BIN_ATTR(_name, _mode, _read, _write)
++
++#define CONFIGFS_BIN_ATTR_RO(_name)					\
++struct configfs_bin_attribute bin_attr_##_name =			\
++	__CONFIGFS_BIN_ATTR_RO(_name)
++
++#define CONFIGFS_BIN_ATTR_OPS(_item)					\
++static ssize_t _item##_bin_attr_read(struct config_item *item,		\
++			struct configfs_bin_attribute *bin_attr,	\
++			void *buf, size_t max_count)			\
++{									\
++	struct _item *_item = to_##_item(item);				\
++	struct _item##_bin_attribute *_item##_bin_attr =		\
++		container_of(bin_attr, struct _item##_bin_attribute,	\
++				bin_attr);				\
++	ssize_t ret = 0;						\
++									\
++	if (_item##_bin_attr->read)					\
++		ret = _item##_bin_attr->read(_item, buf, max_count);	\
++	return ret;							\
++}									\
++static ssize_t _item##_bin_attr_write(struct config_item *item,		\
++			struct configfs_bin_attribute *bin_attr,	\
++			const void *buf, size_t count)			\
++{									\
++	struct _item *_item = to_##_item(item);				\
++	struct _item##_bin_attribute *_item##_bin_attr =		\
++		container_of(bin_attr, struct _item##_bin_attribute,	\
++				bin_attr);				\
++	ssize_t ret = -EINVAL;						\
++									\
++	if (_item##_bin_attr->write)					\
++		ret = _item##_bin_attr->write(_item, buf, count);	\
++	return ret;							\
++}
++
+ /*
+  * If allow_link() exists, the item can symlink(2) out to other
+  * items.  If the item is a group, it may support mkdir(2).
+@@ -225,6 +317,12 @@ struct configfs_item_operations {
+ 	void (*release)(struct config_item *);
+ 	ssize_t	(*show_attribute)(struct config_item *, struct configfs_attribute *,char *);
+ 	ssize_t	(*store_attribute)(struct config_item *,struct configfs_attribute *,const char *, size_t);
++	ssize_t (*read_bin_attribute)(struct config_item *,
++				      struct configfs_bin_attribute *,
++				      void *, size_t);
++	ssize_t (*write_bin_attribute)(struct config_item *,
++				       struct configfs_bin_attribute *,
++				       const void *, size_t);
+ 	int (*allow_link)(struct config_item *src, struct config_item *target);
+ 	int (*drop_link)(struct config_item *src, struct config_item *target);
+ };
 -- 
 1.7.12
