@@ -1,79 +1,42 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v6 06/23] mfd: max77686: Make error checking consistent
-Date: Fri, 04 Jul 2014 12:54:05 +0200
-Message-ID: <1404471245.14069.1.camel@AMDC1943>
-References: <1404467722-26687-1-git-send-email-javier.martinez@collabora.co.uk>
- <1404467722-26687-7-git-send-email-javier.martinez@collabora.co.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/2] ASoC: samsung: Add machine driver for odroidx2
+Date: Fri, 04 Jul 2014 13:04:18 +0200
+Message-ID: <53B68A32.8000203@samsung.com>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+ <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
+ <20140522185334.GT12304@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1404467722-26687-7-git-send-email-javier.martinez@collabora.co.uk>
+In-reply-to: <20140522185334.GT12304@sirena.org.uk>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On pi=C4=85, 2014-07-04 at 11:55 +0200, Javier Martinez Canillas wrote:
-> Error checking across the driver is mostly consistent besides
-> a few exceptions, so change these exceptions for consistency.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> ---
->  drivers/mfd/max77686.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+On 22/05/14 20:53, Mark Brown wrote:
+>> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
+>> > +					| SND_SOC_DAIFMT_NB_NF
+>> > +					| SND_SOC_DAIFMT_CBM_CFM);
+>> > +	if (ret < 0)
+>> > +		return ret;
+>> > +
+>> > +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
+>> > +					| SND_SOC_DAIFMT_NB_NF
+>> > +					| SND_SOC_DAIFMT_CBM_CFM);
+>> > +	if (ret < 0)
+>> > +		return ret;
+>
+> These are constant, set these in the dai_link.
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+set_fmt also sets master/slave mode of the I2S DAI, after I moved
+this into the cpu_dai link data structure after suspend/resume cycle
+the I2S IP block is not being properly re-configured. Should the
+format setting be added in resume_post callback, or is there any
+other preferred way ? Similarly the syclk settings are being lost
+over suspend/resume cycle and nothing restores them.
 
-Best regards,
-Krzysztof
-
-
-> diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
-> index ada4976..87fe52e 100644
-> --- a/drivers/mfd/max77686.c
-> +++ b/drivers/mfd/max77686.c
-> @@ -134,7 +134,7 @@ static int max77686_i2c_probe(struct i2c_client *=
-i2c,
-> =20
->  	max77686 =3D devm_kzalloc(&i2c->dev,
->  				sizeof(struct max77686_dev), GFP_KERNEL);
-> -	if (max77686 =3D=3D NULL)
-> +	if (!max77686)
->  		return -ENOMEM;
-> =20
->  	i2c_set_clientdata(i2c, max77686);
-> @@ -153,8 +153,8 @@ static int max77686_i2c_probe(struct i2c_client *=
-i2c,
->  		return ret;
->  	}
-> =20
-> -	if (regmap_read(max77686->regmap,
-> -			 MAX77686_REG_DEVICE_ID, &data) < 0) {
-> +	ret =3D regmap_read(max77686->regmap, MAX77686_REG_DEVICE_ID, &data=
-);
-> +	if (ret < 0) {
->  		dev_err(max77686->dev,
->  			"device not found on this channel (this is not an error)\n");
->  		return -ENODEV;
-> @@ -180,7 +180,7 @@ static int max77686_i2c_probe(struct i2c_client *=
-i2c,
->  				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
->  				  IRQF_SHARED, 0, &max77686_irq_chip,
->  				  &max77686->irq_data);
-> -	if (ret !=3D 0) {
-> +	if (ret) {
->  		dev_err(&i2c->dev, "failed to add PMIC irq chip: %d\n", ret);
->  		goto err_unregister_i2c;
->  	}
-> @@ -188,7 +188,7 @@ static int max77686_i2c_probe(struct i2c_client *=
-i2c,
->  				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
->  				  IRQF_SHARED, 0, &max77686_rtc_irq_chip,
->  				  &max77686->rtc_irq_data);
-> -	if (ret !=3D 0) {
-> +	if (ret) {
->  		dev_err(&i2c->dev, "failed to add RTC irq chip: %d\n", ret);
->  		goto err_del_irqc;
->  	}
+--
+Thanks,
+Sylwester
