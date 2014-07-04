@@ -1,51 +1,90 @@
-From: Tushar Behera <tushar.b@samsung.com>
-Subject: [PATCH 2/2] ASoC: core: Fix possible NULL pointer dereference
-Date: Fri,  4 Jul 2014 14:23:00 +0530
-Message-ID: <1404463980-25027-2-git-send-email-tushar.b@samsung.com>
-References: <1404463980-25027-1-git-send-email-tushar.b@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404463980-25027-1-git-send-email-tushar.b@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, tiwai@suse.de, perex@perex.cz, broonie@kernel.org, lgirdwood@gmail.com, galak@codeaurora.org, kgene.kim@samsung.com, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, trblinux@gmail.com
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: at_xdmac: add bindings documentation
+Date: Fri, 4 Jul 2014 09:58:34 +0100
+Message-ID: <20140704085834.GC31812@leverpostej>
+References: <1404459370-3540-1-git-send-email-ludovic.desroches@atmel.com>
+ <1404459370-3540-3-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404459370-3540-3-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org" <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-snd_soc_of_parse_card_name() may be called before card->dev has been
-set, which results in a kernel panic.
+On Fri, Jul 04, 2014 at 08:36:10AM +0100, Ludovic Desroches wrote:
+> Add bindings documentation for the new Atmel DMA controller (XDMAC)
+> introduced with SAMA5D4.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/dma/atmel-xdma.txt         |   39 ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> new file mode 100644
+> index 0000000..1e09fda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> @@ -0,0 +1,39 @@
+> +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> +
+> +Required properties:
+> +- compatible: Should be "atmel,<chip>-dma".
+> +- reg: Should contain DMA registers location and length.
+> +- interrupts: Should contain DMA interrupt.
+> +- #dma-cells: Must be <2>, used to represent the number of integer cells in
+> +the dmas property of client devices.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000210
-PC is at snd_soc_of_parse_card_name+0x18/0x54
-LR is at snow_probe+0x5c/0xd4
+Could you please move the description of the two cells in the
+dma-specifier here? It makes it far easier to read the binding.
 
-Add an error check in snd_soc_of_parse_card_name() to take care of this
-case and print out a message in case of error.
+Cheers,
+Mark.
 
-Signed-off-by: Tushar Behera <tushar.b@samsung.com>
----
- sound/soc/soc-core.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index c4db07f..2e4bdc0 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -4391,9 +4391,16 @@ EXPORT_SYMBOL_GPL(snd_soc_unregister_codec);
- int snd_soc_of_parse_card_name(struct snd_soc_card *card,
- 			       const char *propname)
- {
--	struct device_node *np = card->dev->of_node;
-+	struct device_node *np;
- 	int ret;
- 
-+	if (!card->dev) {
-+		pr_err("card->dev is not set before calling %s\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	np = card->dev->of_node;
-+
- 	ret = of_property_read_string_index(np, propname, 0, &card->name);
- 	/*
- 	 * EINVAL means the property does not exist. This is fine providing
--- 
-1.7.9.5
+> +
+> +Example:
+> +
+> +dma1: dma-controller@f0004000 {
+> +	compatible = "atmel,sama5d4-dma";
+> +	reg = <0xf0004000 0x200>;
+> +	interrupts = <50 4 0>;
+> +	#dma-cells = <2>;
+> +};
+> +
+> +DMA clients connected to the Atmel XDMA controller must use the format
+> +described in the dma.txt file, using a three-cell specifier for each channel:
+> +a phandle plus two integer cells.
+> +The two cells in order are:
+> +
+> +1. A phandle pointing to the DMA controller.
+> +2. The memory interface (16 most significant bits), the peripheral interface
+> +(16 less significant bits).
+> +3. Channel configuration register. Configurable fields are:
+> +  - bit 30-24: PERID, peripheral identifier.
+> +
+> +Example:
+> +
+> +i2c2: i2c@f8024000 {
+> +	compatible = "atmel,at91sam9x5-i2c";
+> +	reg = <0xf8024000 0x4000>;
+> +	interrupts = <34 4 6>;
+> +	dmas = <&dma0 0x00000001 0x06000000>,
+> +	       <&dma0 0x00000001 0x07000000>;
+> +	dma-names = "tx", "rx";
+> +};
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
