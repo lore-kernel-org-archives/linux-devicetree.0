@@ -1,195 +1,419 @@
-Return-Path: <gshark.jeong@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <20140703090447.GC29837@leverpostej>
-References: <1404367277-12003-1-git-send-email-gshark.jeong@gmail.com>
-	<1404367277-12003-3-git-send-email-gshark.jeong@gmail.com>
-	<20140703090447.GC29837@leverpostej>
-Date: Fri, 4 Jul 2014 11:10:00 +0900
-Message-ID: <CAPqQCJUYqgireOiqK9DLpSAkw_4DdmKD+G7bXxVxf=bb0nTj6Q@mail.gmail.com>
-Subject: Re: [RFC v4 2/2] backlight: device tree: add new tps611xx backlight binding
-From: Daniel Jeong <gshark.jeong@gmail.com>
-Content-Type: multipart/alternative; boundary=001a1139bcd465def304fd549f48
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Daniel Jeong <daniel.jeong@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-Path: <pantelis.antoniou@konsulko.com>
+Return-Path: <pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v7 4/9] OF: DT-Overlay configfs interface
+Date: Fri,  4 Jul 2014 19:59:23 +0300
+Message-Id: <1404493168-8980-5-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a1139bcd465def304fd549f48
-Content-Type: text/plain; charset=UTF-8
+Add a runtime interface to using configfs for generic device tree overlay
+usage.
 
-Hi.
-Thank you for comments.
+A device-tree configfs entry is created in /config/device-tree/overlays
 
-2014-07-03 18:04 GMT+09:00 Mark Rutland <mark.rutland@arm.com>:
+* To create an overlay you mkdir the directory:
 
-> On Thu, Jul 03, 2014 at 07:01:17AM +0100, Daniel Jeong wrote:
-> > This commit is about tps611xx device tree documentation.
-> >
-> > Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
-> > ---
-> >  .../video/backlight/tps611xx-backlight.txt         |   24
-> ++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-> >
-> > diff --git
-> a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-> b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-> > new file mode 100644
-> > index 0000000..7af8182
-> > --- /dev/null
-> > +++
-> b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-> > @@ -0,0 +1,24 @@
-> > +TPS611xx family of backlight driver based on EasyScale.
-> > +
-> > +EasyScale is a simple but flexible one pin interface to configure the
-> current.
-> > +
-> > +Required properties:
-> > +- compatible: should contain at least one of
-> > +  "ti,tps61158_bl"
-> > +  "ti,tps61161_bl"
-> > +  "ti,tps61163_bl"
-> > +  "ti,tps61165_bl"
->
-> In v3 I asked you to get rid of the "_bl" suffix.
->
-> Sorry. I should have checked it before sending it.  It will be fixed.
+	# mkdir /config/device-tree/overlays/foo
 
-> > +- rfa-enable: enable request for acknowledge.
-> > +  If RFA is enabled, the data byte includes the RFA bit and device will
-> wait
-> > +  and check acknowledge from device.
->
-> You didn't answer my question as to why this should be in the DT.
->
-> According to the RFA enable, the easy scale pin works differently.
-This value should be set before the first data transfer.
+* Either you echo the overlay firmware file to the path property file.
 
-> +- es-gpio : GPIO for easy-scale communication.(see GPIO binding[0])
-> > +
-> > +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-> > +
-> > +Example:
-> > +
-> > +     backlight {
-> > +             compatible = "ti,tps61163";
->
-> This now doesn't match the Documentation above.
->
-> Thanks,
-> Mark.
->
-> > +             rfa-enable;
-> > +             es-gpio = <&gpio 45 0>;
-> > +     };
-> > --
-> > 1.7.9.5
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
->
-Thanks.
+	# echo foo.dtbo >/config/device-tree/overlays/foo/path
 
---001a1139bcd465def304fd549f48
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+* Or you cat the contents of the overlay to the dtbo file
 
-<div dir=3D"ltr">Hi.<br><div><div class=3D"gmail_extra">Thank you for comme=
-nts. <br><br></div><div class=3D"gmail_extra"><div class=3D"gmail_quote">20=
-14-07-03 18:04 GMT+09:00 Mark Rutland <span dir=3D"ltr">&lt;<a href=3D"mail=
-to:mark.rutland@arm.com" target=3D"_blank">mark.rutland@arm.com</a>&gt;</sp=
-an>:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"">On Thu, Jul 03, 2014 at 07:0=
-1:17AM +0100, Daniel Jeong wrote:<br>
-&gt; This commit is about tps611xx device tree documentation.<br>
-&gt;<br>
-&gt; Signed-off-by: Daniel Jeong &lt;<a href=3D"mailto:gshark.jeong@gmail.c=
-om">gshark.jeong@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt; =C2=A0.../video/backlight/tps611xx-backlight.txt =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 | =C2=A0 24 ++++++++++++++++++++<br>
-&gt; =C2=A01 file changed, 24 insertions(+)<br>
-&gt; =C2=A0create mode 100644 Documentation/devicetree/bindings/video/backl=
-ight/tps611xx-backlight.txt<br>
-&gt;<br>
-&gt; diff --git a/Documentation/devicetree/bindings/video/backlight/tps611x=
-x-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611x=
-x-backlight.txt<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..7af8182<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backl=
-ight.txt<br>
-&gt; @@ -0,0 +1,24 @@<br>
-&gt; +TPS611xx family of backlight driver based on EasyScale.<br>
-&gt; +<br>
-&gt; +EasyScale is a simple but flexible one pin interface to configure the=
- current.<br>
-&gt; +<br>
-&gt; +Required properties:<br>
-&gt; +- compatible: should contain at least one of<br>
-&gt; + =C2=A0&quot;ti,tps61158_bl&quot;<br>
-&gt; + =C2=A0&quot;ti,tps61161_bl&quot;<br>
-&gt; + =C2=A0&quot;ti,tps61163_bl&quot;<br>
-&gt; + =C2=A0&quot;ti,tps61165_bl&quot;<br>
-<br>
-</div>In v3 I asked you to get rid of the &quot;_bl&quot; suffix.<br>
-<div class=3D""><br></div></blockquote><div>Sorry. I should have checked it=
- before sending it.=C2=A0 It will be fixed.<br></div><blockquote class=3D"g=
-mail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-l=
-eft:1ex">
-<div class=3D"">
-&gt; +- rfa-enable: enable request for acknowledge.<br>
-&gt; + =C2=A0If RFA is enabled, the data byte includes the RFA bit and devi=
-ce will wait<br>
-&gt; + =C2=A0and check acknowledge from device.<br>
-<br>
-</div>You didn&#39;t answer my question as to why this should be in the DT.=
-<br>
-<div class=3D""><br></div></blockquote><div>According to the RFA enable, th=
-e easy scale pin works differently.<br></div><div>This value should be set =
-before the first data transfer. <br></div><div><br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex">
-<div class=3D"">
-&gt; +- es-gpio : GPIO for easy-scale communication.(see GPIO binding[0])<b=
-r>
-&gt; +<br>
-&gt; +[0]: Documentation/devicetree/bindings/gpio/gpio.txt<br>
-&gt; +<br>
-&gt; +Example:<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 backlight {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D &quot;ti,tp=
-s61163&quot;;<br>
-<br>
-</div>This now doesn&#39;t match the Documentation above.<br>
-<br>
-Thanks,<br>
-Mark.<br>
-<div class=3D"HOEnZb"><div class=3D"h5"><br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rfa-enable;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 es-gpio =3D &lt;&amp;gpio =
-45 0&gt;;<br>
-&gt; + =C2=A0 =C2=A0 };<br>
-&gt; --<br>
-&gt; 1.7.9.5<br>
-&gt;<br>
-</div></div><span class=3D"HOEnZb"><font color=3D"#888888">&gt; --<br>
-&gt; To unsubscribe from this list: send the line &quot;unsubscribe devicet=
-ree&quot; in<br>
-&gt; the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">=
-majordomo@vger.kernel.org</a><br>
-&gt; More majordomo info at =C2=A0<a href=3D"http://vger.kernel.org/majordo=
-mo-info.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html<=
-/a><br>
-&gt;<br>
-</font></span></blockquote></div>Thanks.<br></div></div></div>
+	# cat foo.dtbo >/config/device-tree/overlays/foo/dtbo
 
---001a1139bcd465def304fd549f48--
+The overlay file will be applied.
+
+To remove it simply rmdir the directory.
+
+	# rmdir /config/device-tree/overlays/foo
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/of/Kconfig    |   7 ++
+ drivers/of/Makefile   |   1 +
+ drivers/of/configfs.c | 340 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 348 insertions(+)
+ create mode 100644 drivers/of/configfs.c
+
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 5ebde98..1a2ff48 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -91,4 +91,11 @@ config OF_OVERLAY
+ 	select OF_DEVICE
+ 	select OF_RESOLVE
+ 
++config OF_CONFIGFS
++	bool "OpenFirmware Overlay ConfigFS interface"
++	select CONFIGFS_FS
++	select OF_OVERLAY
++	help
++	  Enable a simple user-space driver DT overlay interface.
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index a9ba136..4f067ca 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ obj-$(CONFIG_OF_OVERLAY) += overlay.o
++obj-$(CONFIG_OF_CONFIGFS) += configfs.o
+ 
+ CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+ CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+diff --git a/drivers/of/configfs.c b/drivers/of/configfs.c
+new file mode 100644
+index 0000000..d82d709
+--- /dev/null
++++ b/drivers/of/configfs.c
+@@ -0,0 +1,340 @@
++/*
++ * Configfs entries for device-tree
++ *
++ * Copyright (C) 2013 - Pantelis Antoniou <panto@antoniou-consulting.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++#include <linux/ctype.h>
++#include <linux/cpu.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/spinlock.h>
++#include <linux/slab.h>
++#include <linux/proc_fs.h>
++#include <linux/configfs.h>
++#include <linux/types.h>
++#include <linux/stat.h>
++#include <linux/limits.h>
++#include <linux/file.h>
++#include <linux/vmalloc.h>
++#include <linux/firmware.h>
++
++#include "of_private.h"
++
++#ifdef CONFIG_OF_OVERLAY
++
++struct cfs_overlay_item {
++	struct config_item	item;
++
++	char			path[PATH_MAX];
++
++	const struct firmware	*fw;
++	struct device_node	*overlay;
++	int			ov_id;
++
++	void			*dtbo;
++	int			dtbo_size;
++};
++
++static int create_overlay(struct cfs_overlay_item *overlay, void *blob)
++{
++	int err;
++
++	/* unflatten the tree */
++	of_fdt_unflatten_tree((void *)blob, &overlay->overlay);
++	if (overlay->overlay == NULL) {
++		pr_err("%s: failed to unflatten tree\n", __func__);
++		err = -EINVAL;
++		goto out_err;
++	}
++	pr_debug("%s: unflattened OK\n", __func__);
++
++	/* mark it as detached */
++	of_node_set_flag(overlay->overlay, OF_DETACHED);
++
++	/* perform resolution */
++	err = of_resolve(overlay->overlay);
++	if (err != 0) {
++		pr_err("%s: Failed to resolve tree\n", __func__);
++		goto out_err;
++	}
++	pr_debug("%s: resolved OK\n", __func__);
++
++	err = of_overlay_create(overlay->overlay);
++	if (err < 0) {
++		pr_err("%s: Failed to create overlay (err=%d)\n",
++				__func__, err);
++		goto out_err;
++	}
++	overlay->ov_id = err;
++
++out_err:
++	return err;
++}
++
++static inline struct cfs_overlay_item *to_cfs_overlay_item(
++		struct config_item *item)
++{
++	return item ? container_of(item, struct cfs_overlay_item, item) : NULL;
++}
++
++CONFIGFS_ATTR_STRUCT(cfs_overlay_item);
++#define CFS_OVERLAY_ITEM_ATTR(_name, _mode, _show, _store)	\
++struct cfs_overlay_item_attribute cfs_overlay_item_attr_##_name = \
++	__CONFIGFS_ATTR(_name, _mode, _show, _store)
++#define CFS_OVERLAY_ITEM_ATTR_RO(_name, _show)	\
++struct cfs_overlay_item_attribute cfs_overlay_item_attr_##_name = \
++	__CONFIGFS_ATTR_RO(_name, _show)
++
++CONFIGFS_BIN_ATTR_STRUCT(cfs_overlay_item);
++#define CFS_OVERLAY_ITEM_BIN_ATTR(_name, _mode, _read, _write, _priv, _max) \
++struct cfs_overlay_item_bin_attribute cfs_overlay_item_bin_attr_##_name = \
++	__CONFIGFS_BIN_ATTR(_name, _mode, _read, _write, _priv, _max)
++#define CFS_OVERLAY_ITEM_BIN_ATTR_RO(_name, _read, _priv, _max)	\
++struct cfs_overlay_item_bin_attribute cfs_overlay_item_bin_attr_##_name = \
++	__CONFIGFS_BIN_ATTR_RO(_name, _read, _priv, _max)
++
++static ssize_t cfs_overlay_item_path_show(struct cfs_overlay_item *overlay,
++		char *page)
++{
++	return sprintf(page, "%s\n", overlay->path);
++}
++
++static ssize_t cfs_overlay_item_path_store(struct cfs_overlay_item *overlay,
++		const char *page, size_t count)
++{
++	const char *p = page;
++	char *s;
++	int err;
++
++	/* if it's set do not allow changes */
++	if (overlay->path[0] != '\0' || overlay->dtbo_size > 0)
++		return -EPERM;
++
++	/* copy to path buffer (and make sure it's always zero terminated */
++	count = snprintf(overlay->path, sizeof(overlay->path) - 1, "%s", p);
++	overlay->path[sizeof(overlay->path) - 1] = '\0';
++
++	/* strip trailing newlines */
++	s = overlay->path + strlen(overlay->path);
++	while (s > overlay->path && *--s == '\n')
++		*s = '\0';
++
++	pr_debug("%s: path is '%s'\n", __func__, overlay->path);
++
++	err = request_firmware(&overlay->fw, overlay->path, NULL);
++	if (err != 0)
++		goto out_err;
++
++	err = create_overlay(overlay, (void *)overlay->fw->data);
++	if (err != 0)
++		goto out_err;
++
++	return count;
++
++out_err:
++
++	release_firmware(overlay->fw);
++	overlay->fw = NULL;
++
++	overlay->path[0] = '\0';
++	return err;
++}
++
++static ssize_t cfs_overlay_item_status_show(struct cfs_overlay_item *overlay,
++		char *page)
++{
++	return sprintf(page, "%s\n",
++			overlay->ov_id >= 0 ? "applied" : "unapplied");
++}
++
++CFS_OVERLAY_ITEM_ATTR(path, S_IRUGO | S_IWUSR,
++		cfs_overlay_item_path_show, cfs_overlay_item_path_store);
++CFS_OVERLAY_ITEM_ATTR_RO(status, cfs_overlay_item_status_show);
++
++static struct configfs_attribute *cfs_overlay_attrs[] = {
++	&cfs_overlay_item_attr_path.attr,
++	&cfs_overlay_item_attr_status.attr,
++	NULL,
++};
++
++ssize_t cfs_overlay_item_dtbo_read(struct cfs_overlay_item *overlay,
++		void *buf, size_t max_count)
++{
++	pr_debug("%s: buf=%p max_count=%u\n", __func__,
++			buf, max_count);
++
++	if (overlay->dtbo == NULL)
++		return 0;
++
++	/* copy if buffer provided */
++	if (buf != NULL) {
++		/* the buffer must be large enough */
++		if (overlay->dtbo_size > max_count)
++			return -ENOSPC;
++
++		memcpy(buf, overlay->dtbo, overlay->dtbo_size);
++	}
++
++	return overlay->dtbo_size;
++}
++
++ssize_t cfs_overlay_item_dtbo_write(struct cfs_overlay_item *overlay,
++		const void *buf, size_t count)
++{
++	int err;
++
++	/* if it's set do not allow changes */
++	if (overlay->path[0] != '\0' || overlay->dtbo_size > 0)
++		return -EPERM;
++
++	/* copy the contents */
++	overlay->dtbo = kmemdup(buf, count, GFP_KERNEL);
++	if (overlay->dtbo == NULL)
++		return -ENOMEM;
++
++	overlay->dtbo_size = count;
++
++	err = create_overlay(overlay, overlay->dtbo);
++	if (err != 0)
++		goto out_err;
++
++	return count;
++
++out_err:
++	kfree(overlay->dtbo);
++	overlay->dtbo = NULL;
++	overlay->dtbo_size = 0;
++
++	return err;
++}
++
++CFS_OVERLAY_ITEM_BIN_ATTR(dtbo, S_IRUGO | S_IWUSR,
++		cfs_overlay_item_dtbo_read, cfs_overlay_item_dtbo_write,
++		NULL, SZ_1M);
++
++static struct configfs_bin_attribute *cfs_overlay_bin_attrs[] = {
++	&cfs_overlay_item_bin_attr_dtbo.bin_attr,
++	NULL,
++};
++
++static void cfs_overlay_release(struct config_item *item)
++{
++	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
++
++	if (overlay->ov_id >= 0)
++		of_overlay_destroy(overlay->ov_id);
++	if (overlay->fw)
++		release_firmware(overlay->fw);
++	/* kfree with NULL is safe */
++	kfree(overlay->dtbo);
++	kfree(overlay);
++}
++
++CONFIGFS_ATTR_OPS(cfs_overlay_item);
++CONFIGFS_BIN_ATTR_OPS(cfs_overlay_item);
++static struct configfs_item_operations cfs_overlay_item_ops = {
++	.release		= cfs_overlay_release,
++	.show_attribute		= cfs_overlay_item_attr_show,
++	.store_attribute	= cfs_overlay_item_attr_store,
++	.read_bin_attribute	= cfs_overlay_item_bin_attr_read,
++	.write_bin_attribute	= cfs_overlay_item_bin_attr_write,
++};
++
++static struct config_item_type cfs_overlay_type = {
++	.ct_item_ops	= &cfs_overlay_item_ops,
++	.ct_attrs	= cfs_overlay_attrs,
++	.ct_bin_attrs	= cfs_overlay_bin_attrs,
++	.ct_owner	= THIS_MODULE,
++};
++
++static struct config_item *cfs_overlay_group_make_item(
++		struct config_group *group, const char *name)
++{
++	struct cfs_overlay_item *overlay;
++
++	overlay = kzalloc(sizeof(*overlay), GFP_KERNEL);
++	if (!overlay)
++		return ERR_PTR(-ENOMEM);
++	overlay->ov_id = -1;
++
++	config_item_init_type_name(&overlay->item, name, &cfs_overlay_type);
++	return &overlay->item;
++}
++
++static void cfs_overlay_group_drop_item(struct config_group *group,
++		struct config_item *item)
++{
++	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
++
++	config_item_put(&overlay->item);
++}
++
++static struct configfs_group_operations overlays_ops = {
++	.make_item	= cfs_overlay_group_make_item,
++	.drop_item	= cfs_overlay_group_drop_item,
++};
++
++static struct config_item_type overlays_type = {
++	.ct_group_ops   = &overlays_ops,
++	.ct_owner       = THIS_MODULE,
++};
++
++#endif /* CONFIG_OF_OVERLAY */
++
++static struct configfs_group_operations of_cfs_ops = {
++	/* empty - we don't allow anything to be created */
++};
++
++static struct config_item_type of_cfs_type = {
++	.ct_group_ops   = &of_cfs_ops,
++	.ct_owner       = THIS_MODULE,
++};
++
++struct config_group of_cfs_overlay_group;
++
++struct config_group *of_cfs_def_groups[] = {
++#ifdef CONFIG_OF_OVERLAY
++	&of_cfs_overlay_group,
++#endif
++	NULL
++};
++
++static struct configfs_subsystem of_cfs_subsys = {
++	.su_group = {
++		.cg_item = {
++			.ci_namebuf = "device-tree",
++			.ci_type = &of_cfs_type,
++		},
++		.default_groups = of_cfs_def_groups,
++	},
++	.su_mutex = __MUTEX_INITIALIZER(of_cfs_subsys.su_mutex),
++};
++
++static int __init of_cfs_init(void)
++{
++	int ret;
++
++	pr_info("%s\n", __func__);
++
++	config_group_init(&of_cfs_subsys.su_group);
++#ifdef CONFIG_OF_OVERLAY
++	config_group_init_type_name(&of_cfs_overlay_group, "overlays",
++			&overlays_type);
++#endif
++
++	ret = configfs_register_subsystem(&of_cfs_subsys);
++	if (ret != 0) {
++		pr_err("%s: failed to register subsys\n", __func__);
++		goto out;
++	}
++	pr_info("%s: OK\n", __func__);
++out:
++	return ret;
++}
++late_initcall(of_cfs_init);
+-- 
+1.7.12
