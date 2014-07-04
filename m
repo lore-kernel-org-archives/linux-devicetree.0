@@ -1,128 +1,525 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] rcar_can: document device tree bindings
-Date: Thu, 31 Jul 2014 23:31:59 +0200
-Message-ID: <53DAB5CF.8000407@pengutronix.de>
-References: <201408010124.26505.sergei.shtylyov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="FsXowED51Aco8VL12W78o92IgaqntontE"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201408010124.26505.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
-List-Id: devicetree@vger.kernel.org
+Return-Path: <pantelis.antoniou@konsulko.com>
+Return-Path: <pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v7 1/9] OF: Introduce Device Tree resolve support.
+Date: Fri,  4 Jul 2014 19:59:20 +0300
+Message-Id: <1404493168-8980-2-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+List-ID: <devicetree@vger.kernel.org>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---FsXowED51Aco8VL12W78o92IgaqntontE
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Introduce support for dynamic device tree resolution.
+Using it, it is possible to prepare a device tree that's
+been loaded on runtime to be modified and inserted at the kernel
+live tree.
 
-On 07/31/2014 11:24 PM, Sergei Shtylyov wrote:
-> Document the R-Car CAN device tree bindings.
->=20
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Export of of_resolve and bug fix of double free by
+	Guenter Roeck <groeck@juniper.net>
 
-The series looks good from the CAN perpective. I'll apply the patches
-after we've got an Acked-by from the DT folks.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ .../devicetree/dynamic-resolution-notes.txt        |  25 ++
+ drivers/of/Kconfig                                 |   6 +
+ drivers/of/Makefile                                |   1 +
+ drivers/of/resolver.c                              | 403 +++++++++++++++++++++
+ include/linux/of.h                                 |  16 +
+ 5 files changed, 451 insertions(+)
+ create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+ create mode 100644 drivers/of/resolver.c
 
-Marc
-
->=20
-> ---
-> The patch is against the 'linux-can-next.git' repo.
->=20
-> Changes in version 2:
-> - new patch, split from the driver's device tree support patch;
-> - adjusted "clocks" property to refer to 3 clocks instead of 1;
-> - added mandatory "clock-names" property;
-> - renamed the "clock-select" property to "renesas,can-clock-select".
->=20
->  Documentation/devicetree/bindings/net/can/rcar_can.txt |   43 ++++++++=
-+++++++++
->  1 file changed, 43 insertions(+)
->=20
-> Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_ca=
-n.txt
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- /dev/null
-> +++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_can.t=
-xt
-> @@ -0,0 +1,43 @@
-> +Renesas R-Car CAN controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A=
-7778 SoC.
-> +	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 So=
-C.
-> +	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 So=
-C.
-> +	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 So=
-C.
-> +- reg: physical base address and size of the R-Car CAN register map.
-> +- interrupts: interrupt specifier for the sole interrupt.
-> +- clocks: phandles and clock specifiers for 3 CAN clock inputs.
-> +- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk"=
-=2E
-> +- pinctrl-0: pin control group to be used for this controller.
-> +- pinctrl-names: must be "default".
-> +
-> +Optional properties:
-> +- renesas,can-clock-select: R-Car CAN Clock Source Select. Valid value=
-s are:
-> +			    <0x0> (default) : Peripheral clock (clkp1)
-> +			    <0x1> : Peripheral clock (clkp2)
-> +			    <0x3> : Externally input clock
-> +
-> +Example
-> +-------
-> +
-> +SoC common .dtsi file:
-> +
-> +	can0: can@e6e80000 {
-> +		compatible =3D "renesas,can-r8a7791";
-> +		reg =3D <0 0xe6e80000 0 0x1000>;
-> +		interrupts =3D <0 186 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks =3D <&mstp9_clks R8A7791_CLK_RCAN0>,
-> +		       	 <&cpg_clocks R8A7791_CLK_RCAN>, <&can_clk>;
-> +		clock-names =3D "clkp1", "clkp2", "can_clk";
-> +		status =3D "disabled";
-> +	};
-> +
-> +Board specific .dts file:
-> +
-> +&can0 {
-> +	pinctrl-0 =3D <&can0_pins>;
-> +	pinctrl-names =3D "default";
-> +	status =3D "okay";
-> +};
->=20
-
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---FsXowED51Aco8VL12W78o92IgaqntontE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlPatc8ACgkQjTAFq1RaXHOcowCgl/LMlK7JEu0EsxGWyxQ6X6nQ
-GcQAnRa1j7v8IAd0fiBZeQkuGHVht3H9
-=9LoU
------END PGP SIGNATURE-----
-
---FsXowED51Aco8VL12W78o92IgaqntontE--
+diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b/Documentation/devicetree/dynamic-resolution-notes.txt
+new file mode 100644
+index 0000000..0b396c4
+--- /dev/null
++++ b/Documentation/devicetree/dynamic-resolution-notes.txt
+@@ -0,0 +1,25 @@
++Device Tree Dynamic Resolver Notes
++----------------------------------
++
++This document describes the implementation of the in-kernel
++Device Tree resolver, residing in drivers/of/resolver.c and is a
++companion document to Documentation/devicetree/dt-object-internal.txt[1]
++
++How the resolver works
++----------------------
++
++The resolver is given as an input an arbitrary tree compiled with the
++proper dtc option and having a /plugin/ tag. This generates the
++appropriate __fixups__ & __local_fixups__ nodes as described in [1].
++
++In sequence the resolver works by the following steps:
++
++1. Get the maximum device tree phandle value from the live tree + 1.
++2. Adjust all the local phandles of the tree to resolve by that amount.
++3. Using the __local__fixups__ node information adjust all local references
++   by the same amount.
++4. For each property in the __fixups__ node locate the node it references
++   in the live tree. This is the label used to tag the node.
++5. Retrieve the phandle of the target of the fixup.
++5. For each fixup in the property locate the node:property:offset location
++   and replace it with the phandle value.
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 2dcb054..0236a4e 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -78,4 +78,10 @@ config OF_RESERVED_MEM
+ 	help
+ 	  Helpers to allow for reservation of memory regions
+ 
++config OF_RESOLVE
++	bool
++	depends on OF && !SPARC
++	select OF_DYNAMIC
++	select OF_DEVICE
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index 9a68cc9..35a148a 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
++obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ 
+ CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+ CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+new file mode 100644
+index 0000000..18da5ca
+--- /dev/null
++++ b/drivers/of/resolver.c
+@@ -0,0 +1,403 @@
++/*
++ * Functions for dealing with DT resolution
++ *
++ * Copyright (C) 2012 Pantelis Antoniou <panto@antoniou-consulting.com>
++ * Copyright (C) 2012 Texas Instruments Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/string.h>
++#include <linux/ctype.h>
++#include <linux/errno.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++
++/**
++ * Find a node with the give full name by recursively following any of
++ * the child node links.
++ */
++static struct device_node *__of_find_node_by_full_name(struct device_node *node,
++		const char *full_name)
++{
++	struct device_node *child, *found;
++
++	if (node == NULL)
++		return NULL;
++
++	/* check */
++	if (of_node_cmp(node->full_name, full_name) == 0)
++		return node;
++
++	for_each_child_of_node(node, child) {
++		found = __of_find_node_by_full_name(child, full_name);
++		if (found != NULL)
++			return found;
++	}
++
++	return NULL;
++}
++
++/*
++ * Find live tree's maximum phandle value.
++ */
++static phandle of_get_tree_max_phandle(void)
++{
++	struct device_node *node;
++	phandle phandle;
++	unsigned long flags;
++
++	/* now search recursively */
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++	phandle = 0;
++	for_each_of_allnodes(node) {
++		if (node->phandle != OF_PHANDLE_ILLEGAL &&
++				node->phandle > phandle)
++			phandle = node->phandle;
++	}
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	return phandle;
++}
++
++/*
++ * Adjust a subtree's phandle values by a given delta.
++ * Makes sure not to just adjust the device node's phandle value,
++ * but modify the phandle properties values as well.
++ */
++static void __of_adjust_tree_phandles(struct device_node *node,
++		int phandle_delta)
++{
++	struct device_node *child;
++	struct property *prop;
++	phandle phandle;
++
++	/* first adjust the node's phandle direct value */
++	if (node->phandle != 0 && node->phandle != OF_PHANDLE_ILLEGAL)
++		node->phandle += phandle_delta;
++
++	/* now adjust phandle & linux,phandle values */
++	for_each_property_of_node(node, prop) {
++
++		/* only look for these two */
++		if (of_prop_cmp(prop->name, "phandle") != 0 &&
++		    of_prop_cmp(prop->name, "linux,phandle") != 0)
++			continue;
++
++		/* must be big enough */
++		if (prop->length < 4)
++			continue;
++
++		/* read phandle value */
++		phandle = be32_to_cpup(prop->value);
++		if (phandle == OF_PHANDLE_ILLEGAL)	/* unresolved */
++			continue;
++
++		/* adjust */
++		*(uint32_t *)prop->value = cpu_to_be32(node->phandle);
++	}
++
++	/* now do the children recursively */
++	for_each_child_of_node(node, child)
++		__of_adjust_tree_phandles(child, phandle_delta);
++}
++
++/*
++ * Adjust the local phandle references by the given phandle delta.
++ * Assumes the existances of a __local_fixups__ node at the root
++ * of the tree. Does not take any devtree locks so make sure you
++ * call this on a tree which is at the detached state.
++ */
++static int __of_adjust_tree_phandle_references(struct device_node *node,
++		int phandle_delta)
++{
++	phandle phandle;
++	struct device_node *refnode, *child;
++	struct property *rprop, *sprop;
++	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
++	int offset, propcurlen;
++	int err;
++
++	/* locate the symbols & fixups nodes on resolve */
++	for_each_child_of_node(node, child)
++		if (of_node_cmp(child->name, "__local_fixups__") == 0)
++			break;
++
++	/* no local fixups */
++	if (!child)
++		return 0;
++
++	/* find the local fixups property */
++	for_each_property_of_node(child, rprop) {
++
++		/* skip properties added automatically */
++		if (of_prop_cmp(rprop->name, "name") == 0)
++			continue;
++
++		/* make a copy */
++		propval = kmalloc(rprop->length, GFP_KERNEL);
++		if (!propval) {
++			pr_err("%s: Could not copy value of '%s'\n",
++					__func__, rprop->name);
++			return -ENOMEM;
++		}
++		memcpy(propval, rprop->value, rprop->length);
++
++		propend = propval + rprop->length;
++		for (propcur = propval; propcur < propend;
++				propcur += propcurlen + 1) {
++
++			propcurlen = strlen(propcur);
++
++			nodestr = propcur;
++			s = strchr(propcur, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (1)\n",
++					__func__, propcur);
++				err = -EINVAL;
++				goto err_fail;
++			}
++			*s++ = '\0';
++
++			propstr = s;
++			s = strchr(s, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (2)\n",
++					__func__, (char *)rprop->value);
++				err = -EINVAL;
++				goto err_fail;
++			}
++
++			*s++ = '\0';
++			err = kstrtoint(s, 10, &offset);
++			if (err != 0) {
++				pr_err("%s: Could get offset '%s'\n",
++					__func__, (char *)rprop->value);
++				goto err_fail;
++			}
++
++			/* look into the resolve node for the full path */
++			refnode = __of_find_node_by_full_name(node, nodestr);
++			if (!refnode) {
++				pr_warn("%s: Could not find refnode '%s'\n",
++					__func__, (char *)rprop->value);
++				continue;
++			}
++
++			/* now find the property */
++			for_each_property_of_node(refnode, sprop) {
++				if (of_prop_cmp(sprop->name, propstr) == 0)
++					break;
++			}
++
++			if (!sprop) {
++				pr_err("%s: Could not find property '%s'\n",
++					__func__, (char *)rprop->value);
++				err = -ENOENT;
++				goto err_fail;
++			}
++
++			phandle = be32_to_cpup(sprop->value + offset);
++			*(__be32 *)(sprop->value + offset) =
++				cpu_to_be32(phandle + phandle_delta);
++		}
++
++		kfree(propval);
++		propval = NULL;
++	}
++
++	return 0;
++
++err_fail:
++	kfree(propval);
++	return err;
++}
++
++/**
++ * of_resolve	- Resolve the given node against the live tree.
++ *
++ * @resolve:	Node to resolve
++ *
++ * Perform dynamic Device Tree resolution against the live tree
++ * to the given node to resolve. This depends on the live tree
++ * having a __symbols__ node, and the resolve node the __fixups__ &
++ * __local_fixups__ nodes (if needed).
++ * The result of the operation is a resolve node that it's contents
++ * are fit to be inserted or operate upon the live tree.
++ * Returns 0 on success or a negative error value on error.
++ */
++int of_resolve(struct device_node *resolve)
++{
++	struct device_node *child, *refnode;
++	struct device_node *root_sym, *resolve_sym, *resolve_fix;
++	struct property *rprop, *sprop;
++	const char *refpath;
++	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
++	int offset, propcurlen;
++	phandle phandle, phandle_delta;
++	int err;
++
++	/* the resolve node must exist, and be detached */
++	if (!resolve || !of_node_check_flag(resolve, OF_DETACHED))
++		return -EINVAL;
++
++	/* first we need to adjust the phandles */
++	phandle_delta = of_get_tree_max_phandle() + 1;
++	__of_adjust_tree_phandles(resolve, phandle_delta);
++	err = __of_adjust_tree_phandle_references(resolve, phandle_delta);
++	if (err != 0)
++		return err;
++
++	root_sym = NULL;
++	resolve_sym = NULL;
++	resolve_fix = NULL;
++
++	/* this may fail (if no fixups are required) */
++	root_sym = of_find_node_by_path("/__symbols__");
++
++	/* locate the symbols & fixups nodes on resolve */
++	for_each_child_of_node(resolve, child) {
++
++		if (!resolve_sym &&
++				of_node_cmp(child->name, "__symbols__") == 0)
++			resolve_sym = child;
++
++		if (!resolve_fix &&
++				of_node_cmp(child->name, "__fixups__") == 0)
++			resolve_fix = child;
++
++		/* both found, don't bother anymore */
++		if (resolve_sym && resolve_fix)
++			break;
++	}
++
++	/* we do allow for the case where no fixups are needed */
++	if (!resolve_fix) {
++		err = 0;	/* no error */
++		goto out;
++	}
++
++	/* we need to fixup, but no root symbols... */
++	if (!root_sym) {
++		err = -EINVAL;
++		goto out;
++	}
++
++	for_each_property_of_node(resolve_fix, rprop) {
++
++		/* skip properties added automatically */
++		if (of_prop_cmp(rprop->name, "name") == 0)
++			continue;
++
++		err = of_property_read_string(root_sym,
++				rprop->name, &refpath);
++		if (err != 0) {
++			pr_err("%s: Could not find symbol '%s'\n",
++					__func__, rprop->name);
++			goto out;
++		}
++
++		refnode = of_find_node_by_path(refpath);
++		if (!refnode) {
++			pr_err("%s: Could not find node by path '%s'\n",
++					__func__, refpath);
++			err = -ENOENT;
++			goto out;
++		}
++
++		phandle = refnode->phandle;
++		of_node_put(refnode);
++
++		pr_debug("%s: %s phandle is 0x%08x\n",
++				__func__, rprop->name, phandle);
++
++		/* make a copy */
++		propval = kmalloc(rprop->length, GFP_KERNEL);
++		if (!propval) {
++			pr_err("%s: Could not copy value of '%s'\n",
++					__func__, rprop->name);
++			err = -ENOMEM;
++			goto out;
++		}
++
++		memcpy(propval, rprop->value, rprop->length);
++
++		propend = propval + rprop->length;
++		for (propcur = propval; propcur < propend;
++				propcur += propcurlen + 1) {
++			propcurlen = strlen(propcur);
++
++			nodestr = propcur;
++			s = strchr(propcur, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (1)\n",
++					__func__, (char *)rprop->value);
++				err = -EINVAL;
++				goto err_fail_free;
++			}
++			*s++ = '\0';
++
++			propstr = s;
++			s = strchr(s, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (2)\n",
++					__func__, (char *)rprop->value);
++				err = -EINVAL;
++				goto err_fail_free;
++			}
++
++			*s++ = '\0';
++			err = kstrtoint(s, 10, &offset);
++			if (err != 0) {
++				pr_err("%s: Could get offset '%s'\n",
++					__func__, (char *)rprop->value);
++				goto err_fail_free;
++			}
++
++			/* look into the resolve node for the full path */
++			refnode = __of_find_node_by_full_name(resolve,
++					nodestr);
++			if (!refnode) {
++				pr_err("%s: Could not find refnode '%s'\n",
++					__func__, (char *)rprop->value);
++				err = -ENOENT;
++				goto err_fail_free;
++			}
++
++			/* now find the property */
++			for_each_property_of_node(refnode, sprop) {
++				if (of_prop_cmp(sprop->name, propstr) == 0)
++					break;
++			}
++
++			if (!sprop) {
++				pr_err("%s: Could not find property '%s'\n",
++					__func__, (char *)rprop->value);
++				err = -ENOENT;
++				goto err_fail_free;
++			}
++
++			*(__be32 *)(sprop->value + offset) =
++				cpu_to_be32(phandle);
++		}
++
++		kfree(propval);
++		propval = NULL;
++	}
++
++err_fail_free:
++	kfree(propval);
++
++out:
++	/* NULL is handled by of_node_put as NOP */
++	of_node_put(root_sym);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(of_resolve);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index fa81b42..e9be31c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -903,4 +903,20 @@ static inline int of_transaction_update_property(struct of_transaction *oft,
+ }
+ #endif
+ 
++/* illegal phandle value (set when unresolved) */
++#define OF_PHANDLE_ILLEGAL	0xdeadbeef
++
++#ifdef CONFIG_OF_RESOLVE
++
++int of_resolve(struct device_node *resolve);
++
++#else
++
++static inline int of_resolve(struct device_node *resolve)
++{
++	return -ENOTSUPP;
++}
++
++#endif
++
+ #endif /* _LINUX_OF_H */
+-- 
+1.7.12
