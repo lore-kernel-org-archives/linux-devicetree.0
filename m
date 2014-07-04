@@ -1,30 +1,42 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] iommu/fsl_pamu: Remove unnecessary null test before
-	kfree
-Date: Fri, 4 Jul 2014 13:09:08 +0200
-Message-ID: <20140704110907.GG13434@8bytes.org>
-References: <1404028886-5060-1-git-send-email-fabf@skynet.be>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: samsung: Add machine driver for
+ odroidx2
+Date: Fri, 04 Jul 2014 13:10:14 +0200
+Message-ID: <53B68B96.9010708@metafoo.de>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com> <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com> <20140522185334.GT12304@sirena.org.uk> <53B68A32.8000203@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404028886-5060-1-git-send-email-fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53B68A32.8000203@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 29, 2014 at 10:01:26AM +0200, Fabian Frederick wrote:
-> Fix checkpatch warning:
-> WARNING: kfree(NULL) is safe this check is probably not required
+On 07/04/2014 01:04 PM, Sylwester Nawrocki wrote:
+> On 22/05/14 20:53, Mark Brown wrote:
+>>> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
+>>>> +					| SND_SOC_DAIFMT_NB_NF
+>>>> +					| SND_SOC_DAIFMT_CBM_CFM);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
+>>>> +					| SND_SOC_DAIFMT_NB_NF
+>>>> +					| SND_SOC_DAIFMT_CBM_CFM);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>
+>> These are constant, set these in the dai_link.
+>
+> set_fmt also sets master/slave mode of the I2S DAI, after I moved
+> this into the cpu_dai link data structure after suspend/resume cycle
+> the I2S IP block is not being properly re-configured. Should the
+> format setting be added in resume_post callback, or is there any
+> other preferred way ? Similarly the syclk settings are being lost
+> over suspend/resume cycle and nothing restores them.
 
-Applied, thanks.
+The I2S driver should save and restore it's register during suspend/resume.
+
+- Lars
