@@ -1,62 +1,41 @@
-From: Priyanka Jain <Priyanka.Jain@freescale.com>
-Subject: RE: [PATCH] devicetree/binding/powerpc/fsl: Add binding for CPLD
-Date: Fri, 4 Jul 2014 04:14:52 +0000
-Message-ID: <8a5f7147eb7e477ebf5ac5b38b6c456c@BLUPR03MB135.namprd03.prod.outlook.com>
-References: <1404382185-2967-1-git-send-email-Priyanka.Jain@freescale.com>
- <1404410878.21434.70.camel@snotra.buserror.net>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Fri, 4 Jul 2014 09:51:39 +0530
+Message-ID: <CAKohpomNv_xvcmx03pb8nj=3O33Qt-2Dj2B1q3U46mv5EBtUjA@mail.gmail.com>
+References: <cover.1404231535.git.viresh.kumar@linaro.org>
+	<CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
+	<53B4B0B3.9080000@codeaurora.org>
+	<CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
+	<20140703221609.11380.6884@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1404410878.21434.70.camel@snotra.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140703221609.11380.6884@quantum>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, linux-arm-msm@vger.kernel.org, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
-MjENCj4gU2VudDogVGh1cnNkYXksIEp1bHkgMDMsIDIwMTQgMTE6MzggUE0NCj4gVG86IEphaW4g
-UHJpeWFua2EtQjMyMTY3DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhw
-cGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gZGV2aWNldHJl
-ZS9iaW5kaW5nL3Bvd2VycGMvZnNsOiBBZGQgYmluZGluZyBmb3IgQ1BMRA0KPiANCj4gT24gVGh1
-LCAyMDE0LTA3LTAzIGF0IDE1OjM5ICswNTMwLCBQcml5YW5rYSBKYWluIHdyb3RlOg0KPiA+IFNv
-bWUgRnJlZXNjYWxlIGJvYXJkcyBsaWtlIFQxMDQwUkRCIGhhdmUgb24gYm9hcmQgQ1BMRCBjb25u
-ZWN0ZWQgb24NCj4gPiB0aGUgSUZDIGJ1cy4gQWRkIGJpbmRpbmcgZm9yIHRoaXMgaW4gYm9hcmQu
-dHh0IGZpbGUNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFByaXlhbmthIEphaW4gPFByaXlhbmth
-LkphaW5AZnJlZXNjYWxlLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcG93ZXJwYy9mc2wvYm9hcmQudHh0ICAgICAgfCAgIDE5DQo+ICsrKysrKysrKysrKysrKysr
-KysNCj4gPiAgMSBmaWxlcyBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygt
-KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wb3dlcnBjL2ZzbC9ib2FyZC50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wb3dlcnBjL2ZzbC9ib2FyZC50eHQNCj4gPiBpbmRleCA3MDBkZWM0Li5mMzVmMjk1
-IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
-cnBjL2ZzbC9ib2FyZC50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcG93ZXJwYy9mc2wvYm9hcmQudHh0DQo+ID4gQEAgLTg0LDMgKzg0LDIyIEBAIEV4YW1w
-bGU6DQo+ID4gIAkJY29tcGF0aWJsZSA9ICJmc2wsYnNjOTEzMnFkcy1mcGdhIiwgImZzbCxmcGdh
-LXFpeGlzLWkyYyI7DQo+ID4gIAkJcmVnID0gPDB4NjY+Ow0KPiA+ICAJfTsNCj4gPiArDQo+ID4g
-KyogRnJlZXNjYWxlIG9uLWJvYXJkIENQTEQNCj4gPiArDQo+ID4gK1NvbWUgRnJlZXNjYWxlIGJv
-YXJkcyBsaWtlIFQxMDQwUkRCIGhhdmUgb24gYm9hcmQgQ1BMRCBjb25uZWN0ZWQgb24NCj4gPiAr
-dGhlIElGQyBidXMuDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNv
-bXBhdGlibGU6IFNob3VsZCBiZSBhIGJvYXJkLXNwZWNpZmljIHN0cmluZyBsaWtlICJmc2wsPGJv
-YXJkPi0NCj4gY3BsZCINCj4gPiArICBFeGFtcGxlOg0KPiA+ICsJImZzbCxUMTA0MFJEQi1jcGxk
-IiwgImZzbCxUMTA0MlJEQi1jcGxkIiwgImZzbCxUMTA0MlJEQl9QSS1jcGxkIg0KPiA+ICstIHJl
-ZzogU2hvdWxkIGNvbnRhaW4gdGhlIGNoaXAgc2VsZWN0LCBhZGRyZXNzIG9mZnNldCBhbmQgbGVu
-Z3RoIG9mDQo+ID4gK3RoZSBDUExEDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsJY3BsZEAz
-LDAgew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0g
-PDE+Ow0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLFQxMDQwUkRCLWNwbGQiOw0KPiA+ICsJCXJl
-ZyA9IDwzIDAgMHgzMDA+Ow0KPiA+ICsJfTsNCj4gDQo+IFBsZWFzZSBrZWVwIHRoZSBib2FyZCBu
-YW1lIGluIGxvd2VyY2FzZSBsaWtlIHRoZSByZXN0Lg0KPiANCj4gLVNjb3R0DQo+IA0KW0phaW4g
-UHJpeWFua2EtQjMyMTY3XVRoYW5rcyBmb3IgdGhlIGlucHV0cy4gIEkgd2lsbCBjb3JyZWN0IHRo
-aXMNCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
-dXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRw
-czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On 4 July 2014 03:46, Mike Turquette <mturquette@linaro.org> wrote:
+> Sorry for being dense, but I still do not get why trying to dynamically
+> discover a shared rate-changeable clock is a better approach than simply
+> describing the hardware in DT?
+>
+> Is adding a property to the CPU binding that describes how the CPUs in a
+> cluster expect to use a clock somehow a non-starter? It is certainly a
+> win for readability when staring at DT and trying to understand how DVFS
+> on that CPU is meant to work (as opposed to hiding that knowledge behind
+> a tree walk).
+
+Yeah, having something like what you suggested from DT is the perfect
+solution to get over this. The only reason why I am not touching that here
+is to not delay other patches just because of that.
+
+There are separate threads going on for that and probably somebody
+else was trying to push for that.
+
+That's it, nothing more. I would definitely like to use those bindings instead
+ of the crazy routines we are trying here, once that is finalized :)
+
+--
+viresh
