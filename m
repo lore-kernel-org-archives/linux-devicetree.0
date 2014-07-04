@@ -1,66 +1,56 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCHv2 4/5] ARM: dts: rockchip: unuse the slot-node and deprecated the supports-highspeed for dw-mmc
-Date: Fri, 04 Jul 2014 13:19:49 +0200
-Message-ID: <1641373.ldKZaK4qer@diego>
-References: <1404128960-27225-1-git-send-email-jh80.chung@samsung.com> <1404128960-27225-5-git-send-email-jh80.chung@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: samsung: Add machine driver for
+ odroidx2
+Date: Fri, 04 Jul 2014 13:24:36 +0200
+Message-ID: <53B68EF4.1090101@samsung.com>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+ <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
+ <20140522185334.GT12304@sirena.org.uk> <53B68A32.8000203@samsung.com>
+ <53B68B96.9010708@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1404128960-27225-5-git-send-email-jh80.chung@samsung.com>
+In-reply-to: <53B68B96.9010708@metafoo.de>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 30. Juni 2014, 20:49:18 schrieb Jaehoon Chung:
-> dw-mmc controller can support multiple slots.
-> But, there are no use-cases anywhere. So we don't need to support the
-> slot-node for dw-mmc controller.
-> And "supports-highspeed" property in dw-mmc is deprecated.
-> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+On 04/07/14 13:10, Lars-Peter Clausen wrote:
+> On 07/04/2014 01:04 PM, Sylwester Nawrocki wrote:
+>> On 22/05/14 20:53, Mark Brown wrote:
+>>>> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
+>>>>> +					| SND_SOC_DAIFMT_NB_NF
+>>>>> +					| SND_SOC_DAIFMT_CBM_CFM);
+>>>>> +	if (ret < 0)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
+>>>>> +					| SND_SOC_DAIFMT_NB_NF
+>>>>> +					| SND_SOC_DAIFMT_CBM_CFM);
+>>>>> +	if (ret < 0)
+>>>>> +		return ret;
+>>>
+>>> These are constant, set these in the dai_link.
+>>
+>> set_fmt also sets master/slave mode of the I2S DAI, after I moved
+>> this into the cpu_dai link data structure after suspend/resume cycle
+>> the I2S IP block is not being properly re-configured. Should the
+>> format setting be added in resume_post callback, or is there any
+>> other preferred way ? Similarly the syclk settings are being lost
+>> over suspend/resume cycle and nothing restores them.
 > 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Reviewed-by: Tushar Behera <trblinux@gmail.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> The I2S driver should save and restore it's register during suspend/resume.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+OK, thanks. I checked the I2S driver does it, but only when dai->active
+flags is set [1]. However, during system resume this flag is not set
+(in situation where playback or capture wasn't active right before
+system suspend). Is the dai->active test wrong in that driver then ?
+I'm not sure if it could just be removed.
 
-> ---
->  arch/arm/boot/dts/rk3066a-bqcurie2.dts |   16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-> b/arch/arm/boot/dts/rk3066a-bqcurie2.dts index afb3273..ecea889 100644
-> --- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-> +++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-> @@ -59,12 +59,8 @@
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4>;
->  			vmmc-supply = <&vcc_sd0>;
-> -
-> -			slot@0 {
-> -				reg = <0>;
-> -				bus-width = <4>;
-> -				disable-wp;
-> -			};
-> +			bus-width = <4>;
-> +			disable-wp;
->  		};
-> 
->  		dwmmc@10218000 { /* wifi */
-> @@ -74,12 +70,8 @@
-> 
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus4>;
-> -
-> -			slot@0 {
-> -				reg = <0>;
-> -				bus-width = <4>;
-> -				disable-wp;
-> -			};
-> +			bus-width = <4>;
-> +			disable-wp;
->  		};
-> 
->  		gpio-keys {
+[1] http://lxr.free-electrons.com/source/sound/soc/samsung/i2s.c#L913
+
+--
+Regards,
+Sylwester
