@@ -1,96 +1,56 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/6] mailbox/omap: add support for parsing dt devices
-Date: Fri, 4 Jul 2014 01:23:54 -0700
-Message-ID: <20140704082354.GD28884@atomide.com>
-References: <1403660878-56350-1-git-send-email-s-anna@ti.com>
- <1403660878-56350-3-git-send-email-s-anna@ti.com>
- <20140628170709.GB23634@xo-6d-61-c0.localdomain>
- <53B18999.2020506@ti.com>
- <20140630185942.GA5410@amd.pavel.ucw.cz>
- <53B1BBA8.5090507@ti.com>
- <20140630203225.GA3893@amd.pavel.ucw.cz>
- <20140704064547.GZ28884@atomide.com>
- <20140704080556.GA16274@amd.pavel.ucw.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140704080556.GA16274-tWAi6jLit6GreWDznjuHag@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Tushar Behera <tushar.b@samsung.com>
+Subject: [PATCH 1/2] ASoC: samsung: Update sound-card name for Snow
+Date: Fri,  4 Jul 2014 14:22:59 +0530
+Message-ID: <1404463980-25027-1-git-send-email-tushar.b@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, tiwai@suse.de, perex@perex.cz, broonie@kernel.org, lgirdwood@gmail.com, galak@codeaurora.org, kgene.kim@samsung.com, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, trblinux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [140704 01:07]:
-> Hi!
-> 
-> > > > >>>> The non-DT support has to be maintained for now to not break
-> > > > >>>> OMAP3 legacy boot, and the legacy-style code will be cleaned
-> > > > >>>> up once OMAP3 is also converted to DT-boot only.
-> > > > >>>
-> > > > >>>> @@ -587,24 +606,157 @@ static int omap_mbox_unregister(struct omap_mbox_device *mdev)
-> > > > >>>>  	return 0;
-> > > > >>>>  }
-> > > > >>>>  
-> > > > >>>> +static const struct omap_mbox_device_data omap2_data = {
-> > > > >>>> +	.num_users	= 4,
-> > > > >>>> +	.num_fifos	= 6,
-> > > > >>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
-> > > > >>>> +};
-> > > > >>>> +
-> > > > >>>> +static const struct omap_mbox_device_data omap3_data = {
-> > > > >>>> +	.num_users	= 2,
-> > > > >>>> +	.num_fifos	= 2,
-> > > > >>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
-> > > > >>>> +};
-> > > > >>>> +
-> > > > >>>> +static const struct omap_mbox_device_data am335x_data = {
-> > > > >>>> +	.num_users	= 4,
-> > > > >>>> +	.num_fifos	= 8,
-> > > > >>>> +	.intr_type	= MBOX_INTR_CFG_TYPE2,
-> > > > >>>> +};
-> > > > >>>
-> 
-> > > Aha, ok, then the intr_type should be derived from
-> > > compatible-string. Or rather... you should have three
-> > > compatible-strings for the three possibilities? (And then subtype,
-> > > currently unused, in case there are more hw differences).
-> > 
-> > The compatible string can and should be separate for each revision
-> > unless they are the same exacat hardware revision.
-> 
-> ACK.
-> 
-> > > > two are HW IP design parameters, so in general putting them in DT isn't
-> > > > completely a bad idea, but I will wait to see if there are any further
-> > > > comments on this from Tony or DT maintainers before I make changes.
-> > > 
-> > > Ok, right... I'd vote for putting them into DT.
-> > 
-> > I would avoid adding custom DT properties where possible and let the
-> > driver just initialize the right data based on the compatible flag.
-> 
-> If these are HW IP design parameters, we can expect to see many
-> different combinations. Yet we know ahead of time how to handle
-> different parameters HW people select.
-> 
-> Thus IMO we should do it in the device tree.
+Snow sound-card driver supports multiple boards with different
+audio codecs. Updating the sound card name per board basis would provide
+some more information to the end-user.
 
-Oh you mean from supporting new hardware with just .dts changes?
->From that point of view it makes sense to have them as DT properties,
-so I'm fine with that.
+Signed-off-by: Tushar Behera <tushar.b@samsung.com>
+---
+ Documentation/devicetree/bindings/sound/snow.txt |    4 ++++
+ sound/soc/samsung/snow.c                         |    3 +++
+ 2 files changed, 7 insertions(+)
 
-Let's just try to use something that's generic like fifosize. No idea
-how the property for num_fifos should be handled though as that
-implies some knowledge in the driver which num_users have fifos?
-
-So unless that can be described clearly in a DT property as well,
-the binding might be still unusable for new hardware :)
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/snow.txt b/Documentation/devicetree/bindings/sound/snow.txt
+index e0b7a82..6df74f1 100644
+--- a/Documentation/devicetree/bindings/sound/snow.txt
++++ b/Documentation/devicetree/bindings/sound/snow.txt
+@@ -8,11 +8,15 @@ Required properties:
+ - samsung,i2s-controller: The phandle of the Samsung I2S controller
+ - samsung,audio-codec: The phandle of the audio codec
+ 
++Optional:
++- samsung,model: The name of the sound-card
++
+ Example:
+ 
+ sound {
+ 		compatible = "google,snow-audio-max98095";
+ 
++		samsung,model = "Snow-I2S-MAX98095";
+ 		samsung,i2s-controller = <&i2s0>;
+ 		samsung,audio-codec = <&max98095>;
+ };
+diff --git a/sound/soc/samsung/snow.c b/sound/soc/samsung/snow.c
+index 8bbd348..0acf5d0 100644
+--- a/sound/soc/samsung/snow.c
++++ b/sound/soc/samsung/snow.c
+@@ -92,6 +92,9 @@ static int snow_probe(struct platform_device *pdev)
+ 
+ 	card->dev = &pdev->dev;
+ 
++	/* Update card-name if provided through DT, else use default name */
++	snd_soc_of_parse_card_name(card, "samsung,model");
++
+ 	ret = devm_snd_soc_register_card(&pdev->dev, card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+-- 
+1.7.9.5
