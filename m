@@ -1,42 +1,34 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: samsung: Add machine driver for
- odroidx2
-Date: Fri, 04 Jul 2014 13:10:14 +0200
-Message-ID: <53B68B96.9010708@metafoo.de>
-References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com> <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com> <20140522185334.GT12304@sirena.org.uk> <53B68A32.8000203@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53B68A32.8000203@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3]  Add ST dwc3 glue layer driver.
+Date: Fri,  4 Jul 2014 12:13:49 +0100
+Message-ID: <1404472432-24764-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/2014 01:04 PM, Sylwester Nawrocki wrote:
-> On 22/05/14 20:53, Mark Brown wrote:
->>> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
->>>> +					| SND_SOC_DAIFMT_NB_NF
->>>> +					| SND_SOC_DAIFMT_CBM_CFM);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
->>>> +					| SND_SOC_DAIFMT_NB_NF
->>>> +					| SND_SOC_DAIFMT_CBM_CFM);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>
->> These are constant, set these in the dai_link.
->
-> set_fmt also sets master/slave mode of the I2S DAI, after I moved
-> this into the cpu_dai link data structure after suspend/resume cycle
-> the I2S IP block is not being properly re-configured. Should the
-> format setting be added in resume_post callback, or is there any
-> other preferred way ? Similarly the syclk settings are being lost
-> over suspend/resume cycle and nothing restores them.
+This series adds support for the ST glue logic to manage the DWC3 HC
+on STiH407 SoC family chipsets.
 
-The I2S driver should save and restore it's register during suspend/resume.
+Peter Griffin (3):
+  usb: dwc3: add ST dwc3 glue layer to manage dwc3 HC
+  ARM: dts: sti: Add st-dwc3 devicetree bindings documentation
+  MAINTAINERS: Add dwc3-st.c file to ARCH/STI architecture
 
-- Lars
+ Documentation/devicetree/bindings/usb/dwc3-st.txt |  58 ++++
+ MAINTAINERS                                       |   1 +
+ drivers/usb/dwc3/Kconfig                          |   9 +
+ drivers/usb/dwc3/Makefile                         |   1 +
+ drivers/usb/dwc3/dwc3-st.c                        | 325 ++++++++++++++++++++++
+ 5 files changed, 394 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-st.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
