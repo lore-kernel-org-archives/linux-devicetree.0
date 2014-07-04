@@ -1,111 +1,58 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ASoC: dt-bindings: add rockchip i2s bindings
-Date: Fri, 4 Jul 2014 17:55:31 +0100
-Message-ID: <20140704165531.GD7106@leverpostej>
-References: <1404203860-30712-2-git-send-email-xjq@rock-chips.com>
- <1404458796-6818-1-git-send-email-xjq@rock-chips.com>
+Subject: Re: [PATCH v2 1/3] dmaengine: mpc512x: add device tree binding
+ document
+Date: Fri, 4 Jul 2014 18:04:44 +0100
+Message-ID: <20140704170444.GE7106@leverpostej>
+References: <1403088492-15241-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1403088492-15241-2-git-send-email-a13xp0p0v88@gmail.com>
+ <20140618133730.GB11895@leverpostej>
+ <CAF0T0X4=fynr+ou+LK58DwpFnz5rgPiqadykKXf-bsp7N0uaeA@mail.gmail.com>
+ <CAF0T0X5LPRtm6_Q5i0ncpA3NTWckYUwqXgBxGn5ydPMq40VHBQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1404458796-6818-1-git-send-email-xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAF0T0X5LPRtm6_Q5i0ncpA3NTWckYUwqXgBxGn5ydPMq40VHBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, kfx@rock-chips
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 04, 2014 at 08:26:36AM +0100, jianqun wrote:
-> From: Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Alexander,
+
+Apologies for the late reply. DT-related email is somewhat a firehose
+and unfortunately I lose track of things.
+
+On Thu, Jun 19, 2014 at 02:59:19PM +0100, Alexander Popov wrote:
+> 2014-06-18 18:56 GMT+04:00 Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > 2014-06-18 17:37 GMT+04:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+> >> On Wed, Jun 18, 2014 at 11:48:10AM +0100, Alexander Popov wrote:
+> >>> Introduce a device tree binding document for the MPC512x DMA controller
+> >>> +Optional properties:
+> >>> +- #dma-cells: the length of the DMA specifier, must be <1>.
+> >>> +     Each channel of this DMA controller has a peripheral request line,
+> >>> +     the assignment is fixed in hardware. This one cell
+> >>> +     in dmas property of a client device represents the channel number.
+> >>
+> >> Surely this is required to be able to refer to DMA channels on the
+> >> device?
+> >
+> > Excuse me, I didn't understand your question.
+> > Do you inquire about the reason of making #dma-cells an optional property?
+> > It's optional because device tree based lookup support is made
+> > optional (part 3/3).
 > 
-> Add devicetree bindings for i2s controller found on
-> rk3066, rk3188 and rk3288 processors from rockchip.
-> 
-> Signed-off-by: Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> Changes since v1:
-> - modify the description of clock-names property, adviced by Mark Rutland.
-> - modify the example to fit for rk3288.
-> 
->  .../devicetree/bindings/sound/rockchip-i2s.txt     |   36 ++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-> new file mode 100644
-> index 0000000..9fc577d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-> @@ -0,0 +1,36 @@
-> +* Rockchip I2S controller
-> +
-> +The I2S bus (Inter-IC sound bus) is a serial link for digital
-> +audio data transfer between devices in the system.
-> +
-> +Required properties:
-> +
-> +- compatible: should be one of the followings
-> +   - "rockchip,rk3066-i2s": for rk3066
-> +   - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
-> +   - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: The interrupt number to the cpu. The interrupt specifier format
-> +  depends on the interrupt controller.
+> Mark, did I answer your question?
+> Should I fix anything in this patch series?
 
-Just state _which_ interrupt this is from the view of the device.
+I would move it under required properties even if we happen to not use
+it in certain edge cases.
 
-> +- #address-cells: should be 1.
-> +- #size-cells: should be 0.
-> +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-> +	Documentation/devicetree/bindings/dma/dma.txt
-> +- dma-names: DMA request names should include "tx" and "rx" if present.
-
-Just say:
-
-- dma-names: should include "tx" and "rx"
-
-If we need more DMAs or descriptions thereof, expand into a bulleted
-list.
-
-> +- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
-> +- clock-names: Shall be "i2s_hclk" for I2S bus and "i2s_clk" for master clock
-
-This was easier to read as a bulleted list than inline:
-
-- clock-names: should include:
-  - "i2s_hclk" for the I2S bus clock
-  - "i2s_clk" for the master clock
-
-> +
-> +Example, for rk3288 I2S controller:
-> +
-> +i2s0: i2s@ff890000 {
-> +	compatible = "rockchip,rk3066-i2s", "rockchip,rk3288-i2s";
-
-This is the wrong way around per the documentation of the compatible
-string.
+Moving forwards everything should be DT-driven, so it'll be necessary.
 
 Thanks,
 Mark.
-
-> +	reg = <0xff890000 0x10000>;
-> +	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	dmas = <&pdma1 0>, <&pdma1 1>;
-> +	dma-names = "rx", "tx";
-> +	clock-names = "i2s_hclk", "i2s_clk";
-> +	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
-> +};
-> -- 
-> 1.7.9.5
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
