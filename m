@@ -1,104 +1,94 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
- CPU frequency
-Date: Fri, 4 Jul 2014 11:22:33 +0200
-Message-ID: <CAKfTPtBPR9QA9h4bF3EkCZufpF+X84N7JzjU88CptR1RtiNrdg@mail.gmail.com>
-References: <20140630102934.GV32514@n2100.arm.linux.org.uk>
- <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
- <20140630124919.GC28647@lukather> <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
- <20140630140146.GD28647@lukather> <CAKfTPtAu+mSVO8dvg_Z6w_nYWndap+FY5VGKeg-0pae_4JqR=A@mail.gmail.com>
- <20140630145847.GE28647@lukather> <CAKfTPtDvQJ5i=t8FN0gLQex0yAC4NNgewTnGKdiCeGk7nQwZYg@mail.gmail.com>
- <20140703071016.GB31996@lukather> <CAKfTPtBonwH0PoEkKazUS9bPaR631Vu7p7qZ0AF1whmXq_53wg@mail.gmail.com>
- <20140704080255.GO31996@lukather>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: at_xdmac: add bindings documentation
+Date: Fri, 4 Jul 2014 11:45:09 +0200
+Message-ID: <20140704094509.GH2386@ldesroches-Latitude-E6320>
+References: <1404459370-3540-1-git-send-email-ludovic.desroches@atmel.com>
+ <1404459370-3540-3-git-send-email-ludovic.desroches@atmel.com>
+ <20140704085834.GC31812@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140704080255.GO31996@lukather>
+Content-Disposition: inline
+In-Reply-To: <20140704085834.GC31812@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org" <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 July 2014 10:02, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Jul 03, 2014 at 09:51:27AM +0200, Vincent Guittot wrote:
->> On 3 July 2014 09:10, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Mon, Jun 30, 2014 at 05:06:16PM +0200, Vincent Guittot wrote:
->> >> On 30 June 2014 16:58, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> > On Mon, Jun 30, 2014 at 04:48:35PM +0200, Vincent Guittot wrote:
->> >> >> On 30 June 2014 16:01, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> >> > On Mon, Jun 30, 2014 at 03:27:21PM +0200, Vincent Guittot wrote:
->> >> >> >> >> >> -             rate = of_get_property(cn, "clock-frequency", &len);
->> >> >> >> >> >> -             if (!rate || len != 4) {
->> >> >> >> >> >> -                     pr_err("%s missing clock-frequency property\n",
->> >> >> >> >> >> -                             cn->full_name);
->> >> >> >> >> >> +             clk = of_clk_get(cn, 0);
->> >> >> >> >> >> +             if (!IS_ERR(clk))
->> >> >> >> >> >> +                     rate = clk_get_rate(clk);
->> >> >> >> >>
->> >> >> >> >> We need the max frequency as it will be used to weight the different
->> >> >> >> >> CPUs capacity. How do you ensure that the current clock rate is the
->> >> >> >> >> max one ?
->> >> >> >> >
->> >> >> >> > Hmm, the clock-frequency attribute in the ePAPR is defined at the
->> >> >> >> > current CPU frequency, not the max one.
->> >> >> >>
->> >> >> >> What means current frequency in device tree when DVFS is involved ?
->> >> >> >
->> >> >> > The ePAPR states that clock-frequency is supposed to be "the current
->> >> >> > clock speed of the CPU in Hertz". It's exactly what my patch add.
->> >> >> >
->> >> >> > Now, you're right, DVFS would be an issue here with clock-frequency,
->> >> >> > but this patch actually makes it easier to deal with, since you only
->> >> >> > get a reference to a clock, and you can get its rate at any given
->> >> >> > time.
->> >> >>
->> >> >> and what about using clk_round_rate(clk, ULONG_MAX) ?
->> >> >
->> >> > Well, the clock itself might generate a frequency higher that what the
->> >> > CPU can run at, so I'm not sure it's a valid assumption.
->> >>
->> >> yes, you're right
->> >>
->> >> >
->> >> >> We will not be dependent of when we parse DT
->> >> >
->> >> > You lost me there. clk_round_rate and clk_get_rate are available at
->> >> > the same time in the boot process, aren't they?
->> >>
->> >> yes, but  clk_round_rate(clk, ULONG_MAX) will return the max frequency
->> >> and not the current one. But as you mentioned, it doesn't ensure that
->> >> it's a possible frequency for the core
->> >
->> > Is this an Acked-by ?
->>
->>  I still think that using the current rate with clk_get_rate is not a
->> good solution.
->
-> Well, it's just as good as using clock-frequency, really. If you want
-> the CPU max frequency, it's not the right property (plus, since the
-> changed behaviour is not documented in Linux anywhere, the only
-> reference we have is the ePAPR on this).
->
->> Could you give us more details about why you nee to use current clock ?
->
-> Honestly, I just want to remove that big warning at boot on the
-> A7-based SoCs we have :)
+On Fri, Jul 04, 2014 at 09:58:34AM +0100, Mark Rutland wrote:
+> On Fri, Jul 04, 2014 at 08:36:10AM +0100, Ludovic Desroches wrote:
+> > Add bindings documentation for the new Atmel DMA controller (XDMAC)
+> > introduced with SAMA5D4.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/dma/atmel-xdma.txt         |   39 ++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > new file mode 100644
+> > index 0000000..1e09fda
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > @@ -0,0 +1,39 @@
+> > +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> > +
+> > +Required properties:
+> > +- compatible: Should be "atmel,<chip>-dma".
+> > +- reg: Should contain DMA registers location and length.
+> > +- interrupts: Should contain DMA interrupt.
+> > +- #dma-cells: Must be <2>, used to represent the number of integer cells in
+> > +the dmas property of client devices.
+> 
+> Could you please move the description of the two cells in the
+> dma-specifier here? It makes it far easier to read the binding.
 
-so Why not changing the log message ? It's clearly not an error to not
-have clock-frequency
+Of course, I'll do it for next version.
 
->
->> AFAICT, your patch only makes sense for HMP system which don't have
->> DVFS, is it your case ?
->
-> Nope, it's just plain simple SMP.
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+> 
+> Cheers,
+> Mark.
+> 
+> > +
+> > +Example:
+> > +
+> > +dma1: dma-controller@f0004000 {
+> > +	compatible = "atmel,sama5d4-dma";
+> > +	reg = <0xf0004000 0x200>;
+> > +	interrupts = <50 4 0>;
+> > +	#dma-cells = <2>;
+> > +};
+> > +
+> > +DMA clients connected to the Atmel XDMA controller must use the format
+> > +described in the dma.txt file, using a three-cell specifier for each channel:
+> > +a phandle plus two integer cells.
+> > +The two cells in order are:
+> > +
+> > +1. A phandle pointing to the DMA controller.
+> > +2. The memory interface (16 most significant bits), the peripheral interface
+> > +(16 less significant bits).
+> > +3. Channel configuration register. Configurable fields are:
+> > +  - bit 30-24: PERID, peripheral identifier.
+> > +
+> > +Example:
+> > +
+> > +i2c2: i2c@f8024000 {
+> > +	compatible = "atmel,at91sam9x5-i2c";
+> > +	reg = <0xf8024000 0x4000>;
+> > +	interrupts = <34 4 6>;
+> > +	dmas = <&dma0 0x00000001 0x06000000>,
+> > +	       <&dma0 0x00000001 0x07000000>;
+> > +	dma-names = "tx", "rx";
+> > +};
+> > -- 
+> > 1.7.9.5
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
