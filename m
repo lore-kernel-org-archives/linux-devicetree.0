@@ -1,130 +1,220 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 4 Jul 2014 15:57:52 +0100
-Message-ID: <20140704145752.GJ6501@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com>
- <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
- <1396862058.3671.40.camel@pasglop>
- <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
- <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
+Date: Fri,  4 Jul 2014 17:29:17 +0200
+Message-ID: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 11:44:51PM +0100, Bjorn Helgaas wrote:
-> On Mon, Apr 7, 2014 at 4:07 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt wr=
-ote:
-> >> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
-> >> >
-> >> > *My* strategy is to get rid of pci_domain_nr(). I don't see why =
-we need
-> >> > to have arch specific way of providing the number, specially aft=
-er looking
-> >> > at the existing implementations that return a value from a varia=
-ble that
-> >> > is never touched or incremented. My guess is that pci_domain_nr(=
-) was
-> >> > created to work around the fact that there was no domain_nr main=
-tainance in
-> >> > the generic code.
-> >>
-> >> Well, there was no generic host bridge structure. There is one now=
-, it should
-> >> go there.
-> >
-> > Exactly! Hence my patch. After it gets accepted I will go through a=
-rchitectures
-> > and remove their version of pci_domain_nr().
->=20
-> Currently the arch has to supply pci_domain_nr() because that's the
-> only way for the generic code to learn the domain.  After you add
-> pci_create_root_bus_in_domain(), the arch can supply the domain that
-> way, and we won't need the arch-specific pci_domain_nr().  Right?
-> That makes more sense to me; thanks for the explanation.
->=20
-> Let me try to explain my concern about the
-> pci_create_root_bus_in_domain() interface.  We currently have these
-> interfaces:
->=20
->   pci_scan_root_bus()
->   pci_scan_bus()
->   pci_scan_bus_parented()
->   pci_create_root_bus()
->=20
-> pci_scan_root_bus() is a higher-level interface than
-> pci_create_root_bus(), so I'm trying to migrate toward it because it
-> lets us remove a little code from the arch, e.g., pci_scan_child_bus(=
-)
-> and pci_bus_add_devices().
->=20
-> I think we can only remove the arch-specific pci_domain_nr() if that
-> arch uses pci_create_root_bus_in_domain().  When we convert an arch
-> from using scan_bus interfaces to using
-> pci_create_root_bus_in_domain(), we will have to move the rest of the
-> scan_bus code (pci_scan_child_bus(), pci_bus_add_devices()) back into
-> the arch code.
->=20
-> One alternative is to add an _in_domain() variant of each of these
-> interfaces, but that doesn't seem very convenient either.  My idea of
-> passing in a structure would also require adding variants, so there's
-> not really an advantage there, but I am thinking of the next
-> unification effort, e.g., for NUMA node info.  I don't really want to
-> have to change all the _in_domain() interfaces to also take yet
-> another parameter for the node number.
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Bjorn,
+This commit introduces a generic device tree binding for IOMMU devices.
+Only a very minimal subset is described here, but it is enough to cover
+the requirements of both the Exynos System MMU and Tegra SMMU as
+discussed here:
 
-I'm coming around to your way of thinking and I want to suggest a strat=
-egy
-for adding the domain number into the PCI framework.
+    https://lkml.org/lkml/2014/4/27/346
 
-My understanding is that when pci_host_bridge structure was introduced
-you were trying to keep the APIs unchanged and hence the creation of a
-bridge was hidden inside the pci_create_root_bus() function.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v4:
+- clarify that disabling an IOMMU DT node may not disable translation
+- be more explicit that examples are only examples
+- add multi-ID master example
 
-If we want to store the domain_nr information in the host bridge struct=
-ure,
-together with a pointer to sysdata, then we need to break up the creati=
-on
-of the pci_host_bridge from the creation of a root bus. At that moment,
-pci_scan_root_bus() will need to be changed to accept a pci_host_bridge
-pointer, while pci_scan_bus() and pci_scan_bus_parented() will create
-the host bridge in the body of their function.
+Changes in v3:
+- use #iommu-cells instead of #address-cells/#size-cells
+- drop optional iommu-names property
 
-Did I understood correctly this time your intentions? Do you agree with
-this plan?
+Changes in v2:
+- add notes about "dma-ranges" property (drop note from commit message)
+- document priorities of "iommus" property vs. "dma-ranges" property
+- drop #iommu-cells in favour of #address-cells and #size-cells
+- remove multiple-master device example
 
-Best regards,
-Liviu
+ Documentation/devicetree/bindings/iommu/iommu.txt | 172 ++++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
 
-
->=20
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
+new file mode 100644
+index 000000000000..464a81eaaf61
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+@@ -0,0 +1,172 @@
++This document describes the generic device tree binding for IOMMUs and their
++master(s).
++
++
++IOMMU device node:
++==================
++
++An IOMMU can provide the following services:
++
++* Remap address space to allow devices to access physical memory ranges that
++  they otherwise wouldn't be capable of accessing.
++
++  Example: 32-bit DMA to 64-bit physical addresses
++
++* Implement scatter-gather at page level granularity so that the device does
++  not have to.
++
++* Provide system protection against "rogue" DMA by forcing all accesses to go
++  through the IOMMU and faulting when encountering accesses to unmapped
++  address regions.
++
++* Provide address space isolation between multiple contexts.
++
++  Example: Virtualization
++
++Device nodes compatible with this binding represent hardware with some of the
++above capabilities.
++
++IOMMUs can be single-master or multiple-master. Single-master IOMMU devices
++typically have a fixed association to the master device, whereas multiple-
++master IOMMU devices can translate accesses from more than one master.
++
++The device tree node of the IOMMU device's parent bus must contain a valid
++"dma-ranges" property that describes how the physical address space of the
++IOMMU maps to memory. An empty "dma-ranges" property means that there is a
++1:1 mapping from IOMMU to memory.
++
++Required properties:
++--------------------
++- #iommu-cells: The number of cells in an IOMMU specifier needed to encode an
++  address.
++
++The meaning of the IOMMU specifier is defined by the device tree binding of
++the specific IOMMU. Below are a few examples of typical use-cases:
++
++- #iommu-cells = <0>: Single master IOMMU devices are not configurable and
++  therefore no additional information needs to be encoded in the specifier.
++  This may also apply to multiple master IOMMU devices that do not allow the
++  association of masters to be configured. Note that an IOMMU can by design
++  be multi-master yet only expose a single master in a given configuration.
++  In such cases the number of cells will usually be 1 as in the next case.
++- #iommu-cells = <1>: Multiple master IOMMU devices may need to be configured
++  in order to enable translation for a given master. In such cases the single
++  address cell corresponds to the master device's ID. In some cases more than
++  one cell can be required to represent a single master ID.
++- #iommu-cells = <4>: Some IOMMU devices allow the DMA window for masters to
++  be configured. The first cell of the address in this may contain the master
++  device's ID for example, while the second cell could contain the start of
++  the DMA window for the given device. The length of the DMA window is given
++  by the third and fourth cells.
++
++Note that these are merely examples and real-world use-cases may use different
++definitions to represent their individual needs. Always refer to the specific
++IOMMU binding for the exact meaning of the cells that make up the specifier.
++
++
++IOMMU master node:
++==================
++
++Devices that access memory through an IOMMU are called masters. A device can
++have multiple master interfaces (to one or more IOMMU devices).
++
++Required properties:
++--------------------
++- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
++  master interfaces of the device. One entry in the list describes one master
++  interface of the device.
++
++When an "iommus" property is specified in a device tree node, the IOMMU will
++be used for address translation. If a "dma-ranges" property exists in the
++device's parent node it will be ignored. An exception to this rule is if the
++referenced IOMMU is disabled, in which case the "dma-ranges" property of the
++parent shall take effect. Note that merely disabling a device tree node does
++not guarantee that the IOMMU is really disabled since the hardware may not
++have a means to turn off translation.
++
++
++Notes:
++======
++
++One possible extension to the above is to use an "iommus" property along with
++a "dma-ranges" property in a bus device node (such as PCI host bridges). This
++can be useful to describe how children on the bus relate to the IOMMU if they
++are not explicitly listed in the device tree (e.g. PCI devices). However, the
++requirements of that use-case haven't been fully determined yet. Implementing
++this is therefore not recommended without further discussion and extension of
++this binding.
++
++
++Examples:
++=========
++
++Single-master IOMMU:
++--------------------
++
++	iommu {
++		#iommu-cells = <0>;
++	};
++
++	master {
++		iommus = <&/iommu>;
++	};
++
++Multiple-master IOMMU with fixed associations:
++----------------------------------------------
++
++	/* multiple-master IOMMU */
++	iommu {
++		/*
++		 * Masters are statically associated with this IOMMU and
++		 * address translation is always enabled.
++		 */
++		#iommu-cells = <0>;
++	};
++
++	/* static association with IOMMU */
++	master@1 {
++		reg = <1>;
++		iommus = <&/iommu>;
++	};
++
++	/* static association with IOMMU */
++	master@2 {
++		reg = <2>;
++		iommus = <&/iommu>;
++	};
++
++Multiple-master IOMMU:
++----------------------
++
++	iommu {
++		/* the specifier represents the ID of the master */
++		#iommu-cells = <1>;
++	};
++
++	master@1 {
++		/* device has master ID 42 in the IOMMU */
++		iommus = <&/iommu 42>;
++	};
++
++	master@2 {
++		/* device has master IDs 23 and 24 in the IOMMU */
++		iommus = <&/iommu 23>, <&/iommu 24>;
++	};
++
++Multiple-master IOMMU with configurable DMA window:
++---------------------------------------------------
++
++	/ {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		iommu {
++			/* master ID, address and length of DMA window */
++			#iommu-cells = <4>;
++		};
++
++		master {
++			/* master ID 42, 4 GiB DMA window starting at 0 */
++			iommus = <&/iommu  42  0  0x1 0x0>;
++		};
++	};
+-- 
+2.0.1
