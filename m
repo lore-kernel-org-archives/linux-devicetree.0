@@ -1,193 +1,148 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v2 5/5] devicetree: mfd: max14577: Add device tree bindings
- document
-Date: Fri, 04 Jul 2014 09:58:29 +0200
-Message-ID: <1404460709-17178-6-git-send-email-k.kozlowski@samsung.com>
-References: <1404460709-17178-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1404460709-17178-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
+ CPU frequency
+Date: Fri, 4 Jul 2014 10:02:55 +0200
+Message-ID: <20140704080255.GO31996@lukather>
+References: <20140630102934.GV32514@n2100.arm.linux.org.uk>
+ <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
+ <20140630124919.GC28647@lukather>
+ <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
+ <20140630140146.GD28647@lukather>
+ <CAKfTPtAu+mSVO8dvg_Z6w_nYWndap+FY5VGKeg-0pae_4JqR=A@mail.gmail.com>
+ <20140630145847.GE28647@lukather>
+ <CAKfTPtDvQJ5i=t8FN0gLQex0yAC4NNgewTnGKdiCeGk7nQwZYg@mail.gmail.com>
+ <20140703071016.GB31996@lukather>
+ <CAKfTPtBonwH0PoEkKazUS9bPaR631Vu7p7qZ0AF1whmXq_53wg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s9kDAZ2EyO0AcRYa"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBonwH0PoEkKazUS9bPaR631Vu7p7qZ0AF1whmXq_53wg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add document describing device tree bindings for MAX14577 MFD
-drivers: MFD core, extcon, regulator and charger.
 
-Both MAX14577 and MAX77836 chipsets are documented.
+--s9kDAZ2EyO0AcRYa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- Documentation/devicetree/bindings/mfd/max14577.txt | 152 +++++++++++++++++++++
- 1 file changed, 152 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+On Thu, Jul 03, 2014 at 09:51:27AM +0200, Vincent Guittot wrote:
+> On 3 July 2014 09:10, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wr=
+ote:
+> > On Mon, Jun 30, 2014 at 05:06:16PM +0200, Vincent Guittot wrote:
+> >> On 30 June 2014 16:58, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+> wrote:
+> >> > On Mon, Jun 30, 2014 at 04:48:35PM +0200, Vincent Guittot wrote:
+> >> >> On 30 June 2014 16:01, Maxime Ripard <maxime.ripard@free-electrons.=
+com> wrote:
+> >> >> > On Mon, Jun 30, 2014 at 03:27:21PM +0200, Vincent Guittot wrote:
+> >> >> >> >> >> -             rate =3D of_get_property(cn, "clock-frequenc=
+y", &len);
+> >> >> >> >> >> -             if (!rate || len !=3D 4) {
+> >> >> >> >> >> -                     pr_err("%s missing clock-frequency p=
+roperty\n",
+> >> >> >> >> >> -                             cn->full_name);
+> >> >> >> >> >> +             clk =3D of_clk_get(cn, 0);
+> >> >> >> >> >> +             if (!IS_ERR(clk))
+> >> >> >> >> >> +                     rate =3D clk_get_rate(clk);
+> >> >> >> >>
+> >> >> >> >> We need the max frequency as it will be used to weight the di=
+fferent
+> >> >> >> >> CPUs capacity. How do you ensure that the current clock rate =
+is the
+> >> >> >> >> max one ?
+> >> >> >> >
+> >> >> >> > Hmm, the clock-frequency attribute in the ePAPR is defined at =
+the
+> >> >> >> > current CPU frequency, not the max one.
+> >> >> >>
+> >> >> >> What means current frequency in device tree when DVFS is involve=
+d ?
+> >> >> >
+> >> >> > The ePAPR states that clock-frequency is supposed to be "the curr=
+ent
+> >> >> > clock speed of the CPU in Hertz". It's exactly what my patch add.
+> >> >> >
+> >> >> > Now, you're right, DVFS would be an issue here with clock-frequen=
+cy,
+> >> >> > but this patch actually makes it easier to deal with, since you o=
+nly
+> >> >> > get a reference to a clock, and you can get its rate at any given
+> >> >> > time.
+> >> >>
+> >> >> and what about using clk_round_rate(clk, ULONG_MAX) ?
+> >> >
+> >> > Well, the clock itself might generate a frequency higher that what t=
+he
+> >> > CPU can run at, so I'm not sure it's a valid assumption.
+> >>
+> >> yes, you're right
+> >>
+> >> >
+> >> >> We will not be dependent of when we parse DT
+> >> >
+> >> > You lost me there. clk_round_rate and clk_get_rate are available at
+> >> > the same time in the boot process, aren't they?
+> >>
+> >> yes, but  clk_round_rate(clk, ULONG_MAX) will return the max frequency
+> >> and not the current one. But as you mentioned, it doesn't ensure that
+> >> it's a possible frequency for the core
+> >
+> > Is this an Acked-by ?
+>=20
+>  I still think that using the current rate with clk_get_rate is not a
+> good solution.
 
-diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-new file mode 100644
-index 000000000000..b235250a7b41
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-@@ -0,0 +1,152 @@
-+Maxim MAX14577/77836 Multi-Function Device
-+
-+MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-+Battery Charger and SFOUT LDO output for powering USB devices. It is
-+interfaced to host controller using I2C.
-+
-+MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-+
-+
-+Required properties:
-+- compatible : Must be "maxim,max14577" or "maxim,max77836".
-+- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
-+- interrupts : IRQ line for the chip.
-+- interrupt-parent :  The parent interrupt controller.
-+
-+
-+Required nodes:
-+ - charger :
-+	Node for configuring the charger driver.
-+	Required properties:
-+		- compatible : "maxim,max14577-charger"
-+			or "maxim,max77836-charger"
-+		- maxim,fast-charge-timer : Timer in hours to trigger the
-+			INT3/MBCCHGERR interrupt; Valid values:
-+			- 5, 6 or 7 (hours),
-+			- 0 to disable.
-+		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
-+			Valid values:
-+			- for max14577: 90000 - 950000;
-+			- for max77836: 45000 - 475000;
-+		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
-+			Valid values:
-+			- for max14577: 50000 - 200000;
-+			- for max77836: 5000 - 100000;
-+		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
-+			In an overvoltage condition, INT asserts and charging
-+			stops. Valid values:
-+			- 6000000, 6500000, 7000000, 7500000;
-+		- maxim,constant-uvolt : Battery Constant Voltage in uV;
-+			Valid values:
-+			- 4000000 - 4280000 (step by 20000);
-+			- 4350000;
-+
-+
-+Optional nodes:
-+- max14577-muic/max77836-muic :
-+	Node used only by extcon consumers.
-+	Required properties:
-+		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
-+
-+- regulators :
-+	Required properties:
-+		- compatible : "maxim,max14577-regulator"
-+			or "maxim,max77836-regulator"
-+
-+	May contain a sub-node per regulator from the list below. Each
-+	sub-node should contain the constraints and initialization information
-+	for that regulator. See regulator.txt for a description of standard
-+	properties for these sub-nodes.
-+
-+	List of valid regulator names:
-+	- for max14577: CHARGER, SAFEOUT.
-+	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
-+
-+	The SAFEOUT is a fixed voltage regulator so there is no need to specify
-+	voltages for it.
-+
-+
-+Example:
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+max14577@25 {
-+	compatible = "maxim,max14577";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max14577-muic {
-+		compatible = "maxim,max14577-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max14577-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max14577-charger";
-+
-+		maxim,fast-charge-timer = <6>;
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <450000>;
-+		maxim,eoc-uamp = <50000>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
-+
-+
-+max77836@25 {
-+	compatible = "maxim,max77836";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max77836-muic {
-+		compatible = "maxim,max77836-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max77836-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+		LDO1 {
-+			regulator-name = "LDO1";
-+			regulator-min-microvolt = <2700000>;
-+			regulator-max-microvolt = <2700000>;
-+		};
-+		LDO2 {
-+			regulator-name = "LDO2";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3950000>;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max77836-charger";
-+
-+		maxim,fast-charge-timer = <6>;
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <225000>;
-+		maxim,eoc-uamp = <7500>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
--- 
-1.9.1
+Well, it's just as good as using clock-frequency, really. If you want
+the CPU max frequency, it's not the right property (plus, since the
+changed behaviour is not documented in Linux anywhere, the only
+reference we have is the ePAPR on this).
+
+> Could you give us more details about why you nee to use current clock ?
+
+Honestly, I just want to remove that big warning at boot on the
+A7-based SoCs we have :)
+
+> AFAICT, your patch only makes sense for HMP system which don't have
+> DVFS, is it your case ?
+
+Nope, it's just plain simple SMP.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--s9kDAZ2EyO0AcRYa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtl+vAAoJEBx+YmzsjxAgxgUP/1j6+84Adkox0ZBVZwtw1zZF
+xvKmmVOna829n927R4wuVO2GOklh/4za0ripviivv+ct4iLxuCU0Ng/FGf/QdbWB
+09ljPAy1VZWjUy3NXokj9dtsTN82xXPiPCEMtEaZnDJOltgXwZIl42xYanlqvxOV
+S/dHEwfp4h/iuTDULnUeMQUGyio6nTAjXH4EHVwS/RzcKdmH+VGxLuSvA7DaELEB
+oaOZqGIszSKG21yMs9cQ8yUfAWbV4QnMKGdlWK+YUpwj2OlqbMoxZjlckyBEwmin
+6XflwZYzIq1x2XqtRDO2H0FyktmZVV+HVZ3Nm8ywUDZN1k+fwD39Hggnz7wGNt4i
+JiRg2S1+dn+kk+5T7bhVTBFoLrZFBYbAezZrmLbPxAxTGDRZdbz/VkjUlJtd8Kto
+zrHdP7aRwK5Rt9aAaNSVETJx8YUoemEAw5u69YD4QWVK8EHmznadwfRFziUVvvAc
+BSM4o18tGEl4jBIXlgxo8KsGJBmcxFC2tYwuyQzfPGkX1iwEPYuR6UpLmMPaIA2H
+gyee5YHiC1zIo9cFe4bKbEGhH7P06Wq2WCINBD9E+7Fs3G6ulV1AB2LHp4r6yKde
+y3KXcOFEX8MjpLGt/LjpCz0ZK+a0cAbRdD34Tcyl4VMUDhYsxYtFb8K9HTxMfwa1
+Y3/rWXg6DTSRE9rYybNK
+=5Zf7
+-----END PGP SIGNATURE-----
+
+--s9kDAZ2EyO0AcRYa--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
