@@ -1,51 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] ASoC: samsung: Update sound-card name for Snow
-Date: Fri, 4 Jul 2014 20:32:11 +0100
-Message-ID: <20140704193211.GJ14896@sirena.org.uk>
-References: <1404463980-25027-1-git-send-email-tushar.b@samsung.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/4] dts: add devicetree bindings for pxa27x clocks
+Date: Fri, 04 Jul 2014 21:38:30 +0200
+Message-ID: <87d2dkoqx5.fsf@free.fr>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+	<1404066744-13416-3-git-send-email-robert.jarzmik@free.fr>
+	<CAN1soZys4k6g5RgPLbreopOxTwDJ+bfPOq8XPwsNpyt5+YURjg@mail.gmail.com>
+	<20140703220328.11380.22037@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9aCKuHbn5v2q3RVc"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404463980-25027-1-git-send-email-tushar.b@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.b@samsung.com>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, tiwai@suse.de, perex@perex.cz, lgirdwood@gmail.com, galak@codeaurora.org, kgene.kim@samsung.com, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, trblinux@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140703220328.11380.22037@quantum> (Mike Turquette's message of
+	"Thu, 03 Jul 2014 15:03:28 -0700")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
---9aCKuHbn5v2q3RVc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Quoting Haojian Zhuang (2014-07-02 23:14:33)
+>> Maybe defining these clocks in pxa27x clock driver is better.
+>
+> Agreed. After a long time trying to figure out the best DT binding for
+> clocks it seems that defining the per-clock data in DTS is not the best
+> way. The qcom msm and samsung exynos clock bindings and DTS data are
+> good examples.
 
-On Fri, Jul 04, 2014 at 02:22:59PM +0530, Tushar Behera wrote:
-> Snow sound-card driver supports multiple boards with different
-> audio codecs. Updating the sound card name per board basis would provide
-> some more information to the end-user.
+Ah, I see. Would have been a great comment in the former RFC patch serie, sic
+... Maybe a comment in the clock device-tree documentation would prevent others
+to do the same error ?
 
-Applied, thanks.
+Well, it will take me some time to transform the dts data into code, especially
+if I want to have some genericity to handle all PXA variants.
 
---9aCKuHbn5v2q3RVc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I'll work on it in the next days/week.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Cheers.
 
-iQIcBAEBAgAGBQJTtwE4AAoJELSic+t+oim9eBQP+wSTOTDTRhu+W6zH+JqKRs1z
-4k5RWU2uTnqSmdJQ3nP9NzbSg4r1RstICOwHY+SC39eTbTpG6J4aYyw0wUAgaQv/
-UnDeNqPFTiW9WMzJ01fIFlac8kiSONvB35si1uLf3NSEl3mLdOGd3HSub4sVrfE4
-VT156VXGg9oxDhWBWiqX/0ukV9xwW3x+TJ0raXTXGbB+AiQol2MU+bXxURs+v//y
-soVUPK1cTUApAU1KNVMOqzS7hIxa5Ijan6LafljJc4+Ef4nF0IN+rI1TF1ubHBDu
-QdMNrLKchEXRiGohqNhNjDLMby3lTLtnyDsrLhx/YeY836SGrgxh573rseQ47Dq/
-NnY8d5tnhgnv4y+8/BTgiEGJLwECEvMHL0EA0xPLWkPMSKUphhgtMqGACd+zljdV
-NsQjMTUWUtRYuO9+I9Nx0wjzWp5qZjtdFNHx5LeAiQz5urGoQN7kgyCw7KaWBAuo
-CF0+YULm1ifVl49i9DL3PuwmzKgPDKjdrESmQPs/KLJoZGDOAcmQhiKqAKjy8M/r
-adjnCzhTGlHanIpYYcihZlHW4sEiEnI1h37W9Wlwxvm0CL8julgLnPZWhm775RRj
-3ARGVrmw1RDMgV/zTur6RNBQotBtxWTBKm1kbMApCJw5hwbsINZJ/iEYAb+7RAuv
-R7vGX6KxRhf+fKpWxN8q
-=M42b
------END PGP SIGNATURE-----
-
---9aCKuHbn5v2q3RVc--
+-- 
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
