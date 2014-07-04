@@ -1,65 +1,100 @@
-From: pramod gurav <pramod.gurav.etc@gmail.com>
-Subject: Re: [PATCH v3 2/3] soc: qcom-rpm: Driver for the Qualcomm RPM
-Date: Fri, 4 Jul 2014 11:46:44 +0530
-Message-ID: <CAMf-jSkvfE8miYk_JtTkEUd3AE-ze9E-1c3ourgbEm_SOkAPKw@mail.gmail.com>
-References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1402944372-31901-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 4/5] ARM: imx: Add initial support for Freescale LS1021A
+Date: Fri, 4 Jul 2014 06:21:35 +0000
+Message-ID: <049e7a73d7e345b29bd83425af5995a6@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
+ <1404291772-2644-5-git-send-email-jingchang.lu@freescale.com>
+ <20140702112125.GE14665@leverpostej>
+ <cb01fef2c4d44711b04a321fddae33d4@BL2PR03MB467.namprd03.prod.outlook.com>
+ <20140703151200.GB22146@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1402944372-31901-3-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140703151200.GB22146@leverpostej>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On Tue, Jun 17, 2014 at 12:16 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
-> and 8064 based devices. The driver exposes resources that child drivers
-> can operate on; to implementing regulator, clock and bus frequency
-> drivers.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  drivers/soc/qcom/Kconfig     |  14 ++
->  drivers/soc/qcom/Makefile    |   1 +
->  drivers/soc/qcom/qcom_rpm.c  | 573 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/soc/qcom_rpm.h |  12 +
->  4 files changed, 600 insertions(+)
->  create mode 100644 drivers/soc/qcom/qcom_rpm.c
->  create mode 100644 include/linux/soc/qcom_rpm.h
->
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index 7bd2c94..a8c2a96 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -9,3 +9,17 @@ config QCOM_GSBI
->            functions for connecting the underlying serial UART, SPI, and I2C
->            devices to the output pins.
->
-> +config QCOM_RPM
-> +       tristate "Qualcomm Resource Power Manager (RPM)"
-> +       depends on ARCH_QCOM && OF
-> +       help
-> +         If you say yes to this option, support will be included for the
-> +         Resource Power Manager system found in the Qualcomm 8660, 8960 and
-> +         8064 based devices.
-> +
-> +         This is required to access many regulators, clocks and bus
-> +         frequencies controlled by the RPM on these devices.
-> +
-> +         Say M here if you want to include support for the Qualcomm RPM as a
-> +         module. This will build a module called "qcom_rpm".
-> +
-Adds extra line EOF here.
-
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index 4389012..e7706e8 100644
-> --- a/drivers/soc/qcom/Makefile
-
-
-br,
-Pramod
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogTWFyayBSdXRsYW5kIFttYWlsdG86
+bWFyay5ydXRsYW5kQGFybS5jb21dDQo+U2VudDogVGh1cnNkYXksIEp1bHkgMDMsIDIwMTQgMTE6
+MTIgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBHdW8gU2hhd24tUjY1MDczOyBz
+aGF3bi5ndW9AbGluYXJvLm9yZzsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggNC81
+XSBBUk06IGlteDogQWRkIGluaXRpYWwgc3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+TFMxMDIxQQ0K
+Pg0KPk9uIFRodSwgSnVsIDAzLCAyMDE0IGF0IDExOjE3OjEyQU0gKzAxMDAsIEppbmdjaGFuZyBM
+dSB3cm90ZToNCj4+ID4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4gPkZyb206IE1hcmsg
+UnV0bGFuZCBbbWFpbHRvOm1hcmsucnV0bGFuZEBhcm0uY29tXQ0KPj4gPlNlbnQ6IFdlZG5lc2Rh
+eSwgSnVseSAwMiwgMjAxNCA3OjIxIFBNDQo+PiA+VG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj4+
+ID5DYzogc2hhd24uZ3VvQGxpbmFyby5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsNCj4+ID5kZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgSmluZ2NoYW5nLUIz
+NTA4Mw0KPj4gPlN1YmplY3Q6IFJlOiBbUEFUQ0ggNC81XSBBUk06IGlteDogQWRkIGluaXRpYWwg
+c3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+PiA+TFMxMDIxQQ0KPj4gPg0KPj4gPk9uIFdlZCwgSnVs
+IDAyLCAyMDE0IGF0IDEwOjAyOjUxQU0gKzAxMDAsIEppbmdjaGFuZyBMdSB3cm90ZToNCj4+ID4+
+IEZyb206IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZyZWVzY2FsZS5jb20+DQo+PiA+Pg0KPj4gPj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtaW14L21hY2gtbHMxMDIxYS5jDQo+PiA+PiBiL2Fy
+Y2gvYXJtL21hY2gtaW14L21hY2gtbHMxMDIxYS5jDQo+PiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KPj4gPj4gaW5kZXggMDAwMDAwMC4uZDFhOWJiOQ0KPj4gPj4gLS0tIC9kZXYvbnVsbA0KPj4g
+Pj4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+ID4+IEBAIC0wLDAg
+KzEsNDkgQEANCj4+ID4+ICsvKg0KPj4gPj4gKyAqIENvcHlyaWdodCAyMDEzLTIwMTQgRnJlZXNj
+YWxlIFNlbWljb25kdWN0b3IsIEluYy4NCj4+ID4+ICsgKg0KPj4gPj4gKyAqIFRoaXMgcHJvZ3Jh
+bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3INCj4+ID4+
+ICttb2RpZnkNCj4+ID4+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFs
+IFB1YmxpYyBMaWNlbnNlIGFzDQo+PiA+PiArcHVibGlzaGVkIGJ5DQo+PiA+PiArICogdGhlIEZy
+ZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwN
+Cj4+ID4+ICtvcg0KPj4gPj4gKyAqIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24u
+DQo+PiA+PiArICovDQo+PiA+PiArDQo+PiA+PiArI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3Jt
+Lmg+DQo+PiA+PiArI2luY2x1ZGUgPGFzbS9tYWNoL2FyY2guaD4NCj4+ID4+ICsNCj4+ID4+ICsj
+aW5jbHVkZSAiY29tbW9uLmgiDQo+PiA+PiArDQo+PiA+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBv
+Zl9kZXZpY2VfaWQgb2ZfbHMxMDIxYV9tYXRjaF90YWJsZVtdID0gew0KPj4gPj4gKwl7DQo+PiA+
+PiArCQkuY29tcGF0aWJsZSA9CSJzaW1wbGUtYnVzIiwNCj4+ID4+ICsJfSwNCj4+ID4+ICsJew0K
+Pj4gPj4gKwkJLmNvbXBhdGlibGUgICAgID0gImZzbCxpZmMiLA0KPj4gPj4gKwl9LA0KPj4gPj4g
+Kwl7DQo+PiA+PiArCQkuY29tcGF0aWJsZQk9ICJmc2wsZnBnYS1xaXhpcyIsDQo+PiA+PiArCX0s
+DQo+PiA+PiArCXsNCj4+ID4+ICsJCS5jb21wYXRpYmxlCT0gImZzbCxxZSIsDQo+PiA+PiArCX0s
+DQo+PiA+PiArCXt9DQo+PiA+PiArfTsNCj4+ID4NCj4+ID5BcmUgYW55IG9mIHRoc2Ugbm90IGFs
+d2F5cy1vbiAob3IgZGVmYXVsdC1vbikgTU1JTyBidXNzZXM/DQo+PiA+DQo+PiA+SXMgdGhlcmUg
+YW55IHJlYXNvbiBmb3Igbm90IGdpdmluZyB0aGVtIHRoZWlyIG93biBkcml2ZXJzPw0KPj4gPg0K
+Pj4gTm9ybWFsbHkgdGhlc2UgYXJlIGFsd2F5cy1vbi4gVGhlIGNoaWxkIG5vZGVzIGFyZSBoYW5k
+bGVkIGJ5IGRpZmZlcmVudA0KPj4gZHJpdmVycywgc28gdG8gbWFrZSB0aGUgZGV2aWNlcyBiZWlu
+ZyBhZGRlZCBieSB0aGUgb2Ygc3lzdGVtLCB0aGV5IGFyZQ0KPmNsYWltZWQgaGVyZS4NCj4+IFRo
+YW5rcy4NCj4NCj5JZiB0aGVzZSBhcmUgYWx3YXlzLW9uIE1NSU8gYnVzc2VzLCBpcyB0aGVyZSBh
+bnkgcmVhc29uIHRoZXNlIGNhbid0IGhhdmUNCj4ic2ltcGxlLWJ1cyIgYXMgYSBmYWxsYmFjayBp
+biB0aGVpciBjb21wYXRpYmxlIGxpc3RzIGluIHRoZSBEVD8gVGhleSB3b3VsZA0KPnNlZW1kIHRv
+IGJlIGNvbXBhdGlibGUgd2l0aCBpdCBnaXZlbiB0aGV5IGFyZSBpbiB0aGUgdGFibGUgYWJvdmUu
+Li4NCj4NCj5UaGF0IHdheSB3ZSBkb24ndCBuZWVkIHRoZSB0YWJsZSBhdCBhbGwsIGFuZCB3ZSBj
+YW4gYWx3YXlzIGFkZCBkcml2ZXJzIGZvcg0KPnRoZW0gbGF0ZXIgaWYgd2UgbmVlZCB0aGVtLi4u
+DQpZZXMsIGlmIHRoZXkgY2FuIHdvcmsgd2VsbCB3aXRoIHRoZSBkZWZhdWx0ICJzaW1wbGUtYnVz
+IiwgSSB3aWxsIGNoYW5nZSB0byBpdCwNCkkgd2lsbCB0cnkgdGhpcy4gVGhhbmtzLg0KDQo+DQo+
+PiA+PiArDQo+PiA+PiArc3RhdGljIHZvaWQgX19pbml0IGxzMTAyMWFfaW5pdF9tYWNoaW5lKHZv
+aWQpIHsNCj4+ID4+ICsJbXhjX2FyY2hfcmVzZXRfaW5pdF9kdCgpOw0KPj4gPg0KPj4gPlRoaXMg
+bG9va3MgdG8gb25seSBiZSB1c2VkIHRvIHNldCB1cCBhIHdhdGNoZG9nIHRpbWVyLiBJcyB0aGVy
+ZSBhbnkNCj4+ID5yZWFzb24gdGhpcyBsb2dpYyBjYW4ndCBiZSBtb3ZlZCB0byB0aGUgd2F0Y2hk
+b2cgdGltZXIgZHJpdmVyPw0KPj4gPg0KPj4gPj4gKw0KPj4gPj4gK0RUX01BQ0hJTkVfU1RBUlQo
+TFMxMDIxQSwgIkZyZWVzY2FsZSBMUzEwMjFBIikgI2lmZGVmDQo+Q09ORklHX1pPTkVfRE1BDQo+
+PiA+PiArCS5kbWFfem9uZV9zaXplCT0gU1pfMTI4TSwNCj4+ID4+ICsjZW5kaWYNCj4+ID4+ICsJ
+LmluaXRfbWFjaGluZSAgID0gbHMxMDIxYV9pbml0X21hY2hpbmUsDQo+PiA+PiArCS5kdF9jb21w
+YXQJPSBsczEwMjFhX2R0X2NvbXBhdCwNCj4+ID4+ICsJLnJlc3RhcnQJPSBteGNfcmVzdGFydCwN
+Cj4+ID4NCj4+ID5BRkFJQ1QsIHRoYXQganN1dCB1c2VzIHRoZSBXRFQgZm9yIHJlc3RhcnQuIFdo
+eSBjYW4ndCB0aGUgd2F0Y2hkb2cNCj4+ID5kcml2ZXIgcmVnaXN0ZXIgaXRzZWxmIGFzIGEgcmVz
+dGFydCBkZXZpY2U/DQo+PiA+DQo+PiA+VGhhdCB3b3VsZCBicmluZyB1cyBjbG9zZSB0byBhbiBl
+bXB0eSBtYWNoaW5lIGRlc2NyaXB0b3IsIGFuZCBlbmFibGUNCj4+ID5yZXVzZSBvZiB0aGUgV0RU
+IGFuZCB0aG9zZSBidXNzZXMuDQo+PiA+DQo+PiA+VGhhbmtzLA0KPj4gPk1hcmsuDQo+PiBZZXMs
+IHdlIHVzZSB0aGUgd2F0Y2hkb2cgdGltZXIgZm9yIHJlc3RhcnQsIGp1c3QgYXMgaS5NWCBhbmQg
+VnlicmlkLA0KPj4gdGhlIFdEVCBhcyBhIGNvbW1vbiBkcml2ZXIgaXQgaXMgc3RpbGwgd29yayBm
+b3Igd2F0Y2hkb2cuIFRoYW5rcy4NCj4NCj5UaGF0IGRvZXNuJ3QgYW5zd2VyIHRoZSBxdWVzdGlv
+biBvZiB3aHkgdGhlIHJlc3RhcnQgY29kZSAoYW5kIHJlZ2lzdHJhdGlvbg0KPnRoZXJlb2YpIGNh
+bid0IGxpdmUgaW4gdGhlIFdEVCBkcml2ZXIuDQo+DQo+VGhhbmtzLA0KPk1hcmsuDQpTZXZlcmFs
+IGkuTVggU29DcyBoYXZlIHVzZWQgdGhpcyBteGNfcmVzdGFydCBjdXJyZW50bHksIGFuZCB0aGUg
+d2F0Y2hkb2cgZHJpdmVyIGlzDQpzaGFyZWQgYmV0d2VlbiB0aGVtLCBpZiBoZXJlIG1vdmUgaXQg
+dG8gdGhlIGRyaXZlciBsYXllciwgYWxsIG90aGVycyBuZWVkcyBjaGFuZ2VzDQphY2NvcmRpbmds
+eS4gU28gSSB0aGluayBpZiB0aGF0IGlzIHByZWZlcnJlZCwgd2UgY2FuIG1vdmUgaXQgdG9nZXRo
+ZXIgc29tZSB0aW1lcyBsYXRlci4NCkFuZCBCVFcsIHdoYXQncyB0aGUgcHJlZmVycmVkIHJlc3Rh
+cnQgcmVnaXN0ZXIgbWFubmVyIGluIHRoZSBkcml2ZXIsIGp1c3QgYXNzaWduIHRvDQp0aGUgYXJt
+X3BtX3Jlc3RhcnQ/IFRoYW5rcy4NCg0KDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQoN
+Cg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
