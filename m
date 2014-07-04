@@ -1,189 +1,60 @@
-From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Subject: [PATCH v2 2/4] ARM: tegra: Add resets & has-utmi-pad-registers flag
- to all USB PHYs
-Date: Fri,  4 Jul 2014 04:09:37 +0300
-Message-ID: <1404436179-10745-3-git-send-email-ttynkkynen@nvidia.com>
-References: <1404436179-10745-1-git-send-email-ttynkkynen@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404436179-10745-1-git-send-email-ttynkkynen@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+Subject: [PATCH] drivers: video: fbdev: atmel_lcdfb.c: Add ability to inverted backlight PWM.
+Date: Thu,  3 Jul 2014 21:26:36 -0500
+Message-ID: <1404440796-11090-1-git-send-email-mwelling@ieee.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new properties to all of the Tegra PHYs that are now required
-according to the binding.
+The code has a variable to change the polarity of the PWM backlight control but
+it was not being initialized. This patch adds a devicetree entry to set the
+variable if required.
 
-In order to stay compatible with old device trees, the USB drivers
-will still function without these reset properties but with the old,
-potentially buggy behaviour.
-
-Signed-off-by: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Signed-off-by: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
 ---
-v2 changes: new patch, didn't exist in v1
- arch/arm/boot/dts/tegra114.dtsi |    5 +++++
- arch/arm/boot/dts/tegra124.dtsi |    7 +++++++
- arch/arm/boot/dts/tegra20.dtsi  |    7 +++++++
- arch/arm/boot/dts/tegra30.dtsi  |    7 +++++++
- 4 files changed, 26 insertions(+)
+ .../devicetree/bindings/video/atmel,lcdc.txt       |    1 +
+ drivers/video/fbdev/atmel_lcdfb.c                  |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-index 335a1d8..80b8edd 100644
---- a/arch/arm/boot/dts/tegra114.dtsi
-+++ b/arch/arm/boot/dts/tegra114.dtsi
-@@ -672,6 +672,8 @@
- 			 <&tegra_car TEGRA114_CLK_PLL_U>,
- 			 <&tegra_car TEGRA114_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 22>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <0>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-@@ -682,6 +684,7 @@
- 		nvidia,hssquelch-level = <2>;
- 		nvidia,hsdiscon-level = <5>;
- 		nvidia,xcvr-hsslew = <12>;
-+		nvidia,has-utmi-pad-registers;
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+index 1ec175e..b75af94 100644
+--- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
++++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+@@ -46,6 +46,7 @@ Required properties (as per of_videomode_helper):
  
-@@ -705,6 +708,8 @@
- 			 <&tegra_car TEGRA114_CLK_PLL_U>,
- 			 <&tegra_car TEGRA114_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 59>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <0>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index d675186..5b14d79 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -643,6 +643,8 @@
- 			 <&tegra_car TEGRA124_CLK_PLL_U>,
- 			 <&tegra_car TEGRA124_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 22>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <0>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-@@ -653,6 +655,7 @@
- 		nvidia,hssquelch-level = <2>;
- 		nvidia,hsdiscon-level = <5>;
- 		nvidia,xcvr-hsslew = <12>;
-+		nvidia,has-utmi-pad-registers;
- 		status = "disabled";
- 	};
+ Optional properties (as per of_videomode_helper):
+  - atmel,lcdcon-backlight: enable backlight
++ - atmel,lcdcon-backlight-inverted: invert backlight PWM polarity
+  - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
+  - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
  
-@@ -677,6 +680,8 @@
- 			 <&tegra_car TEGRA124_CLK_PLL_U>,
- 			 <&tegra_car TEGRA124_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 58>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <0>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-@@ -711,6 +716,8 @@
- 			 <&tegra_car TEGRA124_CLK_PLL_U>,
- 			 <&tegra_car TEGRA124_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 59>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <0>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 243d84c..1908f69 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -645,6 +645,8 @@
- 			 <&tegra_car TEGRA20_CLK_CLK_M>,
- 			 <&tegra_car TEGRA20_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "timer", "utmi-pads";
-+		resets = <&tegra_car 22>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,has-legacy-mode;
- 		nvidia,hssync-start-delay = <9>;
- 		nvidia,idle-wait-delay = <17>;
-@@ -653,6 +655,7 @@
- 		nvidia,xcvr-setup = <9>;
- 		nvidia,xcvr-lsfslew = <1>;
- 		nvidia,xcvr-lsrslew = <1>;
-+		nvidia,has-utmi-pad-registers;
- 		status = "disabled";
- 	};
+diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
+index d36e830..92640d4 100644
+--- a/drivers/video/fbdev/atmel_lcdfb.c
++++ b/drivers/video/fbdev/atmel_lcdfb.c
+@@ -290,7 +290,7 @@ static void init_contrast(struct atmel_lcdfb_info *sinfo)
  
-@@ -676,6 +679,8 @@
- 			 <&tegra_car TEGRA20_CLK_PLL_U>,
- 			 <&tegra_car TEGRA20_CLK_CDEV2>;
- 		clock-names = "reg", "pll_u", "ulpi-link";
-+		resets = <&tegra_car 58>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		status = "disabled";
- 	};
+ 	/* contrast pwm can be 'inverted' */
+ 	if (pdata->lcdcon_pol_negative)
+-			contrast_ctr &= ~(ATMEL_LCDC_POL_POSITIVE);
++		contrast_ctr &= ~(ATMEL_LCDC_POL_POSITIVE);
  
-@@ -700,6 +705,8 @@
- 			 <&tegra_car TEGRA20_CLK_CLK_M>,
- 			 <&tegra_car TEGRA20_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "timer", "utmi-pads";
-+		resets = <&tegra_car 59>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <9>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 0b1ede9..6b35c29 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -790,6 +790,8 @@
- 			 <&tegra_car TEGRA30_CLK_PLL_U>,
- 			 <&tegra_car TEGRA30_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 22>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <9>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-@@ -801,6 +803,7 @@
- 		nvidia,xcvr-hsslew = <32>;
- 		nvidia,hssquelch-level = <2>;
- 		nvidia,hsdiscon-level = <5>;
-+		nvidia,has-utmi-pad-registers;
- 		status = "disabled";
- 	};
+ 	/* have some default contrast/backlight settings */
+ 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, contrast_ctr);
+@@ -1097,6 +1097,7 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
+ 	pdata->lcd_wiring_mode = ret;
  
-@@ -824,6 +827,8 @@
- 			 <&tegra_car TEGRA30_CLK_PLL_U>,
- 			 <&tegra_car TEGRA30_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 58>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <9>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
-@@ -858,6 +863,8 @@
- 			 <&tegra_car TEGRA30_CLK_PLL_U>,
- 			 <&tegra_car TEGRA30_CLK_USBD>;
- 		clock-names = "reg", "pll_u", "utmi-pads";
-+		resets = <&tegra_car 59>, <&tegra_car 22>;
-+		reset-names = "usb", "utmi-pads";
- 		nvidia,hssync-start-delay = <0>;
- 		nvidia,idle-wait-delay = <17>;
- 		nvidia,elastic-limit = <16>;
+ 	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
++	pdata->lcdcon_pol_negative = of_property_read_bool(display_np, "atmel,lcdcon-backlight-inverted");
+ 
+ 	timings = of_get_display_timings(display_np);
+ 	if (!timings) {
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
