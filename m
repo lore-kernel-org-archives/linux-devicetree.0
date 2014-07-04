@@ -1,187 +1,72 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 5/6] devicetree: mfd: max14577: Add device tree bindings
- document
-Date: Fri, 04 Jul 2014 12:12:44 +0200
-Message-ID: <1404468765-10818-6-git-send-email-k.kozlowski@samsung.com>
-References: <1404468765-10818-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1404468765-10818-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 5/5] ARM: imx: Add Freescale LS1021A SMP support
+Date: Fri, 4 Jul 2014 10:16:59 +0000
+Message-ID: <69cc715ea3d54e64a04c3765b02f9ff8@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
+ <1404291772-2644-6-git-send-email-jingchang.lu@freescale.com>
+ <20140702113058.GF14665@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140702113058.GF14665@leverpostej>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add document describing device tree bindings for MAX14577 MFD
-drivers: MFD core, extcon, regulator and charger.
-
-Both MAX14577 and MAX77836 chipsets are documented.
-
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- Documentation/devicetree/bindings/mfd/max14577.txt | 146 +++++++++++++++++++++
- 1 file changed, 146 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-new file mode 100644
-index 000000000000..236264c10b92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-@@ -0,0 +1,146 @@
-+Maxim MAX14577/77836 Multi-Function Device
-+
-+MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-+Battery Charger and SFOUT LDO output for powering USB devices. It is
-+interfaced to host controller using I2C.
-+
-+MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-+
-+
-+Required properties:
-+- compatible : Must be "maxim,max14577" or "maxim,max77836".
-+- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
-+- interrupts : IRQ line for the chip.
-+- interrupt-parent :  The parent interrupt controller.
-+
-+
-+Required nodes:
-+ - charger :
-+	Node for configuring the charger driver.
-+	Required properties:
-+		- compatible : "maxim,max14577-charger"
-+			or "maxim,max77836-charger"
-+		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
-+			Valid values:
-+			- for max14577: 90000 - 950000;
-+			- for max77836: 45000 - 475000;
-+		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
-+			Valid values:
-+			- for max14577: 50000 - 200000;
-+			- for max77836: 5000 - 100000;
-+		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
-+			In an overvoltage condition, INT asserts and charging
-+			stops. Valid values:
-+			- 6000000, 6500000, 7000000, 7500000;
-+		- maxim,constant-uvolt : Battery Constant Voltage in uV;
-+			Valid values:
-+			- 4000000 - 4280000 (step by 20000);
-+			- 4350000;
-+
-+
-+Optional nodes:
-+- max14577-muic/max77836-muic :
-+	Node used only by extcon consumers.
-+	Required properties:
-+		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
-+
-+- regulators :
-+	Required properties:
-+		- compatible : "maxim,max14577-regulator"
-+			or "maxim,max77836-regulator"
-+
-+	May contain a sub-node per regulator from the list below. Each
-+	sub-node should contain the constraints and initialization information
-+	for that regulator. See regulator.txt for a description of standard
-+	properties for these sub-nodes.
-+
-+	List of valid regulator names:
-+	- for max14577: CHARGER, SAFEOUT.
-+	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
-+
-+	The SAFEOUT is a fixed voltage regulator so there is no need to specify
-+	voltages for it.
-+
-+
-+Example:
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+max14577@25 {
-+	compatible = "maxim,max14577";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max14577-muic {
-+		compatible = "maxim,max14577-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max14577-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max14577-charger";
-+
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <450000>;
-+		maxim,eoc-uamp = <50000>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
-+
-+
-+max77836@25 {
-+	compatible = "maxim,max77836";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max77836-muic {
-+		compatible = "maxim,max77836-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max77836-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+		LDO1 {
-+			regulator-name = "LDO1";
-+			regulator-min-microvolt = <2700000>;
-+			regulator-max-microvolt = <2700000>;
-+		};
-+		LDO2 {
-+			regulator-name = "LDO2";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3950000>;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max77836-charger";
-+
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <225000>;
-+		maxim,eoc-uamp = <7500>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
--- 
-1.9.1
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IE1hcmsgUnV0bGFuZCBbbWFp
+bHRvOm1hcmsucnV0bGFuZEBhcm0uY29tXQ0KPlNlbnQ6IFdlZG5lc2RheSwgSnVseSAwMiwgMjAx
+NCA3OjMxIFBNDQo+VG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj5DYzogc2hhd24uZ3VvQGxpbmFy
+by5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj5kZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPlN1YmplY3Q6IFJlOiBbUEFU
+Q0ggNS81XSBBUk06IGlteDogQWRkIEZyZWVzY2FsZSBMUzEwMjFBIFNNUCBzdXBwb3J0DQo+DQo+
+T24gV2VkLCBKdWwgMDIsIDIwMTQgYXQgMTA6MDI6NTJBTSArMDEwMCwgSmluZ2NoYW5nIEx1IHdy
+b3RlOg0KPj4gRnJvbTogSmluZ2NoYW5nIEx1IDxiMzUwODNAZnJlZXNjYWxlLmNvbT4NCj4+DQo+
+PiBGcmVlc2NhbGUgTFMxMDIxQSBTb0MgZGVwbG95cyB0d28gY29ydGV4LUE3IHByb2Nlc3NvcnMs
+IHRoaXMgYWRkcw0KPj4gYnJpbmctdXAgc3VwcG9ydCBmb3IgdGhlIHNlY29uZGFyeSBjb3JlLg0K
+Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZyZWVzY2FsZS5jb20+
+DQo+PiAtLS0NCj4+ICBhcmNoL2FybS9tYWNoLWlteC9jb21tb24uaCAgICAgICB8ICAyICsrDQo+
+PiAgYXJjaC9hcm0vbWFjaC1pbXgvaGVhZHNtcC5TICAgICAgfCAxMSArKysrKysrKysrDQo+PiAg
+YXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMgfCAgMSArDQo+PiAgYXJjaC9hcm0vbWFj
+aC1pbXgvcGxhdHNtcC5jICAgICAgfCA0NA0KPisrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysNCj4+ICA0IGZpbGVzIGNoYW5nZWQsIDU4IGluc2VydGlvbnMoKykNCj4NCj5b
+Li4uXQ0KPg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtaW14L2hlYWRzbXAuUyBiL2Fy
+Y2gvYXJtL21hY2gtaW14L2hlYWRzbXAuUw0KPj4gaW5kZXggZGU1MDQ3Yy4uZmRkOTNkOSAxMDA2
+NDQNCj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtaW14L2hlYWRzbXAuUw0KPj4gKysrIGIvYXJjaC9h
+cm0vbWFjaC1pbXgvaGVhZHNtcC5TDQo+PiBAQCAtMjksMyArMjksMTQgQEAgRU5UUlkodjdfc2Vj
+b25kYXJ5X3N0YXJ0dXApDQo+PiAgCXNldF9kaWFnX3JlZw0KPj4gIAliCXNlY29uZGFyeV9zdGFy
+dHVwDQo+PiAgRU5EUFJPQyh2N19zZWNvbmRhcnlfc3RhcnR1cCkNCj4+ICsNCj4+ICtFTlRSWShs
+czEwMjFhX3NlY29uZGFyeV9zdGFydHVwKQ0KPj4gKwkvKiBzZXQgQ05URlJFUSBvZiBzZWNvbmRh
+cnkgY29yZSAqLw0KPj4gKwlsZHIJcjAsID0xMjUwMDAwMA0KPj4gKwltY3IgCXAxNSwgMCwgcjAs
+IGMxNCwgYzAsIDANCj4+ICsJLyogZGlzYWJsZSBQaHlzaWNhbCBhbmQgVmlydHVyYWwgVGltZXIg
+Ki8NCj4+ICsJbW92CXIwLCAjMHgwDQo+PiArCW1jcglwMTUsIDAsIHIwLCBjMTQsIGMyLCAxDQo+
+PiArCW1jcglwMTUsIDAsIHIwLCBjMTQsIGMzLCAxDQo+PiArCWIJc2Vjb25kYXJ5X3N0YXJ0dXAN
+Cj4NCj5VcnJnaC4uLg0KPg0KPldoYXQgYWJvdXQgQ05UVk9GRj8gVGhhdCdzIGJlZW4gYSBzb3Vy
+Y2Ugb2YgcHJvYmxlbXMgZWxzZXdoZXJlLg0KPg0KPklzIHRoZSBib290IENQVSBzZXQgdXAgY29y
+cmVjdGx5Pw0KPg0KPklzIHRoYXQgZnJlcXVlbmN5IGFsd2F5cyBnb2luZyB0byBiZSBjb3JyZWN0
+Pw0KPg0KV2UgdXNlIDEyLjVNaHogYXMgdGhlIGNvdW50ZXIgY2xvY2ssIGFuZCBXZSBoYXZlIGZv
+dW5kIHRoZSB2aXJ0dWFsIGNvdW50ZXIgb2Zmc2V0IGlzc3VlLg0KV2UgY3VycmVudGx5IHVzZSB0
+aGUgcGh5c2ljYWwgY291bnRlciBhcyBhIHdvcmthcm91bmQgZm9yIHRoaXMsIHdlIGFyZSBhbHNv
+IHdvcmtpbmcgb24NCnRvIGNsZWFyIHRoZSBDTlRWT0ZGIGluIHUtYm9vdCwgd2hlbiBpdCBpcyBm
+aW5pc2hlZCwgdGhlIHZpcnR1YWwgY291bnRlciB3b3VsZCBiZSBzeW5jDQphbmQgd29yayB3ZWxs
+Lg0KVGhhbmtzLg0KDQo+Wy4uLl0NCj4NCj4+ICtzdGF0aWMgdm9pZCBfX2luaXQgbHMxMDIxYV9z
+bXBfaW5pdF9jcHVzKHZvaWQpIHsNCj4+ICsJaW50IGksIG5jb3JlczsNCj4+ICsJLyogZ2V0IG51
+bWJlciBvZiBjb3JlcyBmcm9tIENQMTUgTDIgY29udHJvbGxlciByZWdpc3RlcihMMkNUTFIpKi8N
+Cj4+ICsJYXNtIHZvbGF0aWxlICgibXJjIHAxNSwgMSwgJTAsIGM5LCBjMCwgMiIgOiAiPXIiIChu
+Y29yZXMpKTsNCj4+ICsNCj4+ICsJbmNvcmVzID0gKChuY29yZXMgPj4gMjQpICYgMHgzKSArIDE7
+DQo+PiArCWZvciAoaSA9IG5jb3JlczsgaSA8IE5SX0NQVVM7IGkrKykNCj4+ICsJCXNldF9jcHVf
+cG9zc2libGUoaSwgZmFsc2UpOw0KPj4gK30NCj4NCj5OQUsuDQo+DQo+VGhpcyBpbmZvcm1hdGlv
+biBpcyBfYWxyZWFkeV8gaW4gdGhlIERULiBUaGlzIGFkZHMgbW9yZSBjb2RlIHRvIGRvDQo+cmVk
+dW5kYW50IHdvcmssIGFuZCBpdCdzIGJyb2tlbi4NCj4NCj5UaGUgcGh5c2ljYWw8LT5sb2dpY2Fs
+IENQVSBJRCBtYXBwaW5nIGlzIGFyYml0cmFyeSwgc28geW91IHNldCBhcmJpdHJhcnkNCj5DUFVz
+IGFzIGJlaW5nIG9ubGluZSBkZXNwaXRlIHRoaXMgbm90IG5lY2Vzc2FyaWx5IGJlaW5nIHRoZSBj
+YXNlLg0KPg0KPkdldCByaWQgb2YgdGhpcywgYW5kIHJlbHkgb24gdGhlIERUIGJlaW5nIGNvcnJl
+Y3QuIFRoZXJlO3Mgbm8gcmVhc29uIGl0DQo+c2hvdWxkbid0IGJlIGZvciBhIG5ldyBwbGF0Zm9y
+bS4NCj4NCj5UaGFua3MsDQo+TWFyay4NCkkgd2lsbCByZW1vdmUgdGhpcy4gVGhhbmtzLg0KDQoN
+Cg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5nDQoNCg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
