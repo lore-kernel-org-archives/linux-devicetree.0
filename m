@@ -1,314 +1,78 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v6 17/23] mfd: max77686: Add Maxim 77802 PMIC support
-Date: Fri, 04 Jul 2014 13:35:56 +0200
-Message-ID: <53B6919C.7050502@collabora.co.uk>
-References: <1404467722-26687-1-git-send-email-javier.martinez@collabora.co.uk> <1404467722-26687-18-git-send-email-javier.martinez@collabora.co.uk> <1404473434.14069.10.camel@AMDC1943>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [GIT PULL] STiH407 reset controller support
+Date: Fri, 4 Jul 2014 13:39:21 +0200
+Message-ID: <53B69269.2000609@st.com>
+References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>	 <1404317194.4109.13.camel@paszta.hi.pengutronix.de>	 <20140702165924.GB17665@lee--X1> <53B50EFD.2070007@st.com>	 <1404379248.18039.31.camel@paszta.hi.pengutronix.de>	 <20140703094001.GB32208@lee--X1> <1404394341.18039.35.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1404473434.14069.10.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404394341.18039.35.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi Philipp,
 
-On 07/04/2014 01:30 PM, Krzysztof Kozlowski wrote:
-> On pi=C4=85, 2014-07-04 at 11:55 +0200, Javier Martinez Canillas wrot=
-e:
->> Maxim MAX77802 is a power management chip that contains 10 high
->> efficiency Buck regulators, 32 Low-dropout (LDO) regulators used
->> to power up application processors and peripherals, a 2-channel
->> 32kHz clock outputs, a Real-Time-Clock (RTC) and a I2C interface
->> to program the individual regulators, clocks outputs and the RTC.
->>=20
->> This patch adds support for MAX77802 to the MAX77686 driver and is
->> based on a driver added to the Chrome OS kernel 3.8 by Simon Glass.
->>=20
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.c=
-o.uk>
->> ---
->>=20
->>     NOTE: I didn't carry previous {Review,Acked,Tested}-by tags sinc=
-e
->>     this patch extending MAX77686 is quite different than the old on=
-e
->>     adding a new mfd driver. So review and test is highly appreciate=
-d.
->>=20
->>     Changes since v5:
->>      - Extend the 77686 driver to support 77802 instead of adding a =
-new driver.
->>        Suggested by Lee Jones.
->>=20
->>     Changes since v4:
->>      - Use consistent expressions when checking for NULL values.
->>        Suggested by Krzysztof Kozlowski.
->>      - Remove unused defines. Suggested by Krzysztof Kozlowski.
->>      - Explain why IRQ is disabled on suspend. Suggested by Krzyszto=
-f Kozlowski.
->>=20
->>     Changes since v3:
->>      - Remove unnecessary OOM error message since the mm subsystem a=
-lready logs it.
->>=20
->>     Changes since v2:
->>      - Split the DT binding docs in a separate patch and improve the=
- documentation.
->>        Suggested by Mark Brown.
->>      - Add all the devices in the MFD driver instead of doing in sep=
-arate patches.
->>        Suggested by Mark Brown.
->>=20
->>     Changes since v1:
->>      - Convert max77{686,802} to regmap irq API and get rid of max77=
-{686,802}-irq.c
->>        Suggested by Krzysztof Kozlowski.
->>      - Don't protect max77802 mfd_cells using Kconfig options since =
-mfd core omits
->>        devices that don't match. Suggested by Lee Jones.
->>      - Change mfd driver to be tristate instead of boolean. Suggeste=
-d by Mark Brown.
->>      - Change binding "voltage-regulators" property to "regulators" =
-to be consistent
->>        with other PMIC drivers. Suggested by Mark Brown.
->>      - Use regulators node names instead of the deprecated "regulato=
-r-compatible"
->>        property. Suggested by Mark Brown.
->>      - Use the new descriptor-based GPIO interface instead of the de=
-precated
->> ---
->>  drivers/mfd/Kconfig                  |   6 +-
->>  drivers/mfd/max77686.c               | 187 ++++++++++++++++++++++++=
-++-----
->>  include/linux/mfd/max77686-private.h | 208 ++++++++++++++++++++++++=
-++++++++++-
->>  include/linux/mfd/max77686.h         |  60 +++++++++-
->>  4 files changed, 428 insertions(+), 33 deletions(-)
->>=20
->=20
-> Three comments below, after fixing:
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->=20
-> (...)
->=20
->> @@ -55,6 +123,17 @@ static struct regmap_config max77686_rtc_regmap_=
-config =3D {
->>  	.val_bits =3D 8,
->>  };
->> =20
->> +static struct regmap_config max77802_regmap_config =3D {
->> +	.reg_bits =3D 8,
->> +	.val_bits =3D 8,
->> +	.writeable_reg =3D max77802_is_accessible_reg,
->> +	.readable_reg =3D max77802_is_accessible_reg,
->> +	.precious_reg =3D max77802_is_precious_reg,
->> +	.volatile_reg =3D max77802_is_volatile_reg,
->> +	.name =3D "max77802-pmic",
->> +	.cache_type =3D REGCACHE_RBTREE,
->> +};
->> +
->>  static const struct regmap_irq max77686_irqs[] =3D {
->>  	/* INT1 interrupts */
->>  	{ .reg_offset =3D 0, .mask =3D MAX77686_INT1_PWRONF_MSK, },
->> @@ -98,9 +177,34 @@ static const struct regmap_irq_chip max77686_rtc=
-_irq_chip =3D {
->>  	.num_irqs		=3D ARRAY_SIZE(max77686_rtc_irqs),
->>  };
->> =20
->> +static const struct regmap_irq_chip max77802_irq_chip =3D {
->> +	.name			=3D "max77802-pmic",
->> +	.status_base		=3D MAX77802_REG_INT1,
->> +	.mask_base		=3D MAX77802_REG_INT1MSK,
->> +	.num_regs		=3D 2,
->> +	.irqs			=3D max77686_irqs, /* same masks than 77686 */
->=20
-> "same masks as 77686"
->
+On 07/03/2014 03:32 PM, Philipp Zabel wrote:
+> Hi Maxime,
+> 
+> Am Donnerstag, den 03.07.2014, 10:40 +0100 schrieb Lee Jones:
+>> On Thu, 03 Jul 2014, Philipp Zabel wrote:
+>>> Patch 4 depends on patch 1 for the header. My tree is still empty, how
+>>> about I take the first two, and you merge that branch and then take 3
+>>> and 4 on top?
+>>
+>> That approach sounds reasonable.  Once you've applied the patches can
+>> you tag the branch and provide Maxime with a pull-request please
+>> Philipp?
+> 
+> The following changes since commit
+> 7171511eaec5bf23fb06078f59784a3a0626b38f:
+> 
+>    Linux 3.16-rc1 (2014-06-15 17:45:28 -1000)
+> 
+> are available in the git repository at:
+> 
+>    git://git.pengutronix.de/git/pza/linux.git tags/reset-for-sti-3.17
+> 
+> for you to fetch changes up to d29d2a38d1c1b21730487e991183ffe7e16e1ef5:
+> 
+>    reset: sti: Document sti-picophyreset controllers bindings.
+> (2014-07-03 14:58:22 +0200)
+> 
+> ----------------------------------------------------------------
+> STiH407 reset controller support
+> 
+> ----------------------------------------------------------------
+> Peter Griffin (2):
+>        reset: stih407: Add softreset, powerdown and picophy controllers
+>        reset: sti: Document sti-picophyreset controllers bindings.
+> 
+>   .../bindings/reset/st,sti-picophyreset.txt         |  42 ++++++
+>   drivers/reset/sti/Kconfig                          |   4 +
+>   drivers/reset/sti/Makefile                         |   1 +
+>   drivers/reset/sti/reset-stih407.c                  | 158
+> +++++++++++++++++++++
+>   .../dt-bindings/reset-controller/stih407-resets.h  |  61 ++++++++
+>   5 files changed, 266 insertions(+)
+>   create mode 100644
+> Documentation/devicetree/bindings/reset/st,sti-picophyreset.txt
+>   create mode 100644 drivers/reset/sti/reset-stih407.c
+>   create mode 100644
+> include/dt-bindings/reset-controller/stih407-resets.h
 
-Ok
+Merged into sti-dt-for-v3.17-1.
 
->> +	.num_irqs		=3D ARRAY_SIZE(max77686_irqs),
->> +};
->> +
->> +static const struct regmap_irq_chip max77802_rtc_irq_chip =3D {
->> +	.name			=3D "max77802-rtc",
->> +	.status_base		=3D MAX77802_RTC_INT,
->> +	.mask_base		=3D MAX77802_RTC_INTM,
->> +	.num_regs		=3D 1,
->> +	.irqs			=3D max77686_rtc_irqs, /* same masks than 77686 */
->=20
-> Ditto
->=20
+Thanks for you help!
+Maxime
 
-Ok
-
->> +	.num_irqs		=3D ARRAY_SIZE(max77686_rtc_irqs),
->> +};
->> +
->>  static const struct of_device_id max77686_pmic_dt_match[] =3D {
->> -	{.compatible =3D "maxim,max77686", .data =3D NULL},
->> -	{},
->> +	{
->> +		.compatible =3D "maxim,max77686",
->> +		.data =3D (void *)TYPE_MAX77686,
->> +	},
->> +	{
->> +		.compatible =3D "maxim,max77802",
->> +		.data =3D (void *)TYPE_MAX77802,
->> +	},
->> +	{ },
->>  };
->> =20
->>  static void max77686_dt_parse_dvs_gpio(struct device *dev)
->> @@ -236,6 +340,12 @@ static int max77686_i2c_probe(struct i2c_client=
- *i2c,
->>  	struct max77686_platform_data *pdata =3D dev_get_platdata(&i2c->de=
-v);
->>  	unsigned int data;
->>  	int ret =3D 0;
->> +	const struct regmap_config *config;
->> +	const struct regmap_irq_chip *irq_chip;
->> +	const struct regmap_irq_chip *rtc_irq_chip;
->> +	struct regmap **rtc_regmap;
->> +	const struct mfd_cell *cells;
->> +	int n_devs;
->> =20
->>  	if (IS_ENABLED(CONFIG_OF) && i2c->dev.of_node && !pdata)
->>  		pdata =3D max77686_i2c_parse_dt_pdata(&i2c->dev);
->> @@ -258,56 +368,77 @@ static int max77686_i2c_probe(struct i2c_clien=
-t *i2c,
->>  	max77686->wakeup =3D pdata->wakeup;
->>  	max77686->irq =3D i2c->irq;
->> =20
->> -	max77686->regmap =3D devm_regmap_init_i2c(i2c, &max77686_regmap_co=
-nfig);
->> +	if (max77686->type =3D=3D TYPE_MAX77686) {
->> +		config =3D &max77686_regmap_config;
->> +		irq_chip =3D &max77686_irq_chip;
->> +		rtc_irq_chip =3D &max77686_rtc_irq_chip;
->> +		rtc_regmap =3D &max77686->rtc_regmap;
->> +		cells =3D  max77686_devs;
->> +		n_devs =3D ARRAY_SIZE(max77686_devs);
->> +	} else {
->> +		config =3D &max77802_regmap_config;
->> +		irq_chip =3D &max77802_irq_chip;
->> +		rtc_irq_chip =3D &max77802_rtc_irq_chip;
->> +		rtc_regmap =3D &max77686->regmap;
->> +		cells =3D  max77802_devs;
->> +		n_devs =3D ARRAY_SIZE(max77802_devs);
->> +	}
->> +
->> +	max77686->regmap =3D devm_regmap_init_i2c(i2c, config);
->>  	if (IS_ERR(max77686->regmap)) {
->>  		ret =3D PTR_ERR(max77686->regmap);
->>  		dev_err(max77686->dev, "Failed to allocate register map: %d\n",
->> -				ret);
->> +			ret);
->>  		return ret;
->>  	}
->> =20
->>  	ret =3D regmap_read(max77686->regmap, MAX77686_REG_DEVICE_ID, &dat=
-a);
->>  	if (ret < 0) {
->>  		dev_err(max77686->dev,
->> -			"device not found on this channel (this is not an error)\n");
->> -		return -ENODEV;
->> -	}
->> -
->> -	max77686->rtc =3D i2c_new_dummy(i2c->adapter, I2C_ADDR_RTC);
->> -	if (!max77686->rtc) {
->> -		dev_err(max77686->dev, "Failed to allocate I2C device for RTC\n")=
-;
->> +			"device not found on this channel\n");
->>  		return -ENODEV;
->>  	}
->> -	i2c_set_clientdata(max77686->rtc, max77686);
->> =20
->> -	max77686->rtc_regmap =3D devm_regmap_init_i2c(max77686->rtc,
->> -						    &max77686_rtc_regmap_config);
->> -	if (IS_ERR(max77686->rtc_regmap)) {
->> -		ret =3D PTR_ERR(max77686->rtc_regmap);
->> -		dev_err(max77686->dev, "failed to allocate RTC regmap: %d\n",
->> -			ret);
->> -		goto err_unregister_i2c;
->> +	if (max77686->type =3D=3D TYPE_MAX77686) {
->> +		max77686->rtc =3D i2c_new_dummy(i2c->adapter, I2C_ADDR_RTC);
->> +		if (!max77686->rtc) {
->> +			dev_err(max77686->dev,
->> +				"Failed to allocate I2C device for RTC\n");
->> +			return -ENODEV;
->> +		}
->> +		i2c_set_clientdata(max77686->rtc, max77686);
->> +
->> +		max77686->rtc_regmap =3D
->> +			devm_regmap_init_i2c(max77686->rtc,
->> +					     &max77686_rtc_regmap_config);
->> +		if (IS_ERR(max77686->rtc_regmap)) {
->> +			ret =3D PTR_ERR(max77686->rtc_regmap);
->> +			dev_err(max77686->dev,
->> +				"failed to allocate RTC regmap: %d\n",
->> +				ret);
->> +			goto err_unregister_i2c;
->> +		}
->>  	}
->> =20
->>  	ret =3D regmap_add_irq_chip(max77686->regmap, max77686->irq,
->>  				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
->> -				  IRQF_SHARED, 0, &max77686_irq_chip,
->> +				  IRQF_SHARED, 0, irq_chip,
->>  				  &max77686->irq_data);
->>  	if (ret) {
->>  		dev_err(&i2c->dev, "failed to add PMIC irq chip: %d\n", ret);
->>  		goto err_unregister_i2c;
->>  	}
->> -	ret =3D regmap_add_irq_chip(max77686->rtc_regmap, max77686->irq,
->> +
->> +	ret =3D regmap_add_irq_chip(*rtc_regmap, max77686->irq,
->>  				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
->> -				  IRQF_SHARED, 0, &max77686_rtc_irq_chip,
->> +				  IRQF_SHARED, 0, rtc_irq_chip,
->>  				  &max77686->rtc_irq_data);
->>  	if (ret) {
->>  		dev_err(&i2c->dev, "failed to add RTC irq chip: %d\n", ret);
->>  		goto err_del_irqc;
->>  	}
->> =20
->> -	ret =3D mfd_add_devices(max77686->dev, -1, max77686_devs,
->> -			      ARRAY_SIZE(max77686_devs), NULL, 0, NULL);
->> +	ret =3D mfd_add_devices(max77686->dev, -1, cells, n_devs, NULL, 0,=
- NULL);
->>  	if (ret < 0) {
->>  		dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
->>  		goto err_del_rtc_irqc;
->> @@ -320,7 +451,8 @@ err_del_rtc_irqc:
->>  err_del_irqc:
->>  	regmap_del_irq_chip(max77686->irq, max77686->irq_data);
->>  err_unregister_i2c:
->> -	i2c_unregister_device(max77686->rtc);
->> +	if (max77686->type =3D=3D TYPE_MAX77686)
->> +		i2c_unregister_device(max77686->rtc);
->> =20
->>  	return ret;
->>  }
->> @@ -341,6 +473,7 @@ static int max77686_i2c_remove(struct i2c_client=
- *i2c)
->=20
-> In remove() you should unregister dummy RTC I2C device only on MAX776=
-86
-> (77802 does not add it).
->
-
-Yes, I added the check to the probe()'s error path but forgot about the=
- remove()
-function. Thanks a lot for pointing this out.
-
-> Best regards,
-> Krzysztof
->=20
->=20
-
-Best regards,
-Javier
+> 
+> regards
+> Philipp
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
