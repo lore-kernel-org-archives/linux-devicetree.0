@@ -1,86 +1,187 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
- basic clocks
-Date: Fri, 4 Jul 2014 12:07:47 +0200
-Message-ID: <20140704100747.GD13487@lukather>
-References: <1403798144-32188-1-git-send-email-wens@csie.org>
- <20140702223552.7440.60829@quantum>
- <CAGb2v67ceT8X-zmB7ULPg6Kqd8PRpmo0x_Vu9iF4s_6euXg_FQ@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7H23GOQKGQEMZ4ZAJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67ceT8X-zmB7ULPg6Kqd8PRpmo0x_Vu9iF4s_6euXg_FQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v3 5/6] devicetree: mfd: max14577: Add device tree bindings
+ document
+Date: Fri, 04 Jul 2014 12:12:44 +0200
+Message-ID: <1404468765-10818-6-git-send-email-k.kozlowski@samsung.com>
+References: <1404468765-10818-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1404468765-10818-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add document describing device tree bindings for MAX14577 MFD
+drivers: MFD core, extcon, regulator and charger.
 
---kvUQC+jR9YzypDnK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Both MAX14577 and MAX77836 chipsets are documented.
 
-On Thu, Jul 03, 2014 at 03:37:36PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Jul 3, 2014 at 6:35 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
-ote:
-> > Quoting Chen-Yu Tsai (2014-06-26 08:55:38)
-> >> Hi everyone,
-> >>
-> >> This is v4 of the sun8i clock series, which adds basic clock
-> >> support for the A23 SoC. It is based on my initial sun8i bring
-> >> up series [1]. This series was split up from the original A23
-> >> series [2]. Yet to come are more clocks, reset controllers,
-> >> prcm, pinctrl, and mmc.
-> >
-> > Hello Chen-Yu,
-> >
-> > This series looks good to me.
->=20
-> Thanks. Assuming no one else raises any issues, I consider this
-> series merged. I'll send the next sun8i series later today.
->=20
-> The remaining series still have some clock patches, so thanks
-> in advance.
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+---
+ Documentation/devicetree/bindings/mfd/max14577.txt | 146 +++++++++++++++++++++
+ 1 file changed, 146 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
 
-I just merged it all in sunxi/dt-for-3.17 and sunxi/clocks-for-3.17.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---kvUQC+jR9YzypDnK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTtnzzAAoJEBx+YmzsjxAg7AgQALxfGqF80RCk3v3dmgCOn4uR
-gL1BoiGcY9m8DAHnVrScF9m6kvaAwaNiODMvmq0MJvBTTsPXrk7cnfMqP+BmEGr7
-9bybzWMkHj2meSMwE8B6TnC1FjSBUT1xuXlE+uuwuGsJhbme/yajgQoifPwyvrTB
-L2+GQMfICKij3K76ihLR6aqONwIJuNGNt+J/R62zgUmqMsUY/ZA0o1BHraVY5ZCN
-tlCqm61YQEVWhI3hKWb9hvfdzBOHM5FHVOaVTkLgZKvuGfKnGd5jqZvlNAT/S6vP
-EfOyjkDz16Xm+w06B/cLvJVthRwxOobiurtZToL+YE/rcvsAqW6Vko4OlYtQv1xq
-wN0cfDWln3f5dYlK9C4vHEaq32EbNrdF9fTQKBoOXXg4CEFNwfPAy5lEGzjqhOOd
-k2S+i20dO3Vv2dFQb7IH4DzUJ+U4wt3FBkPdvsTKOV6odeK/7d1PiZ6CtxRs+rMH
-kSUihm/IXOEEjAUTf/XzAYGznQv9K1a1aeJ/eqTuYOBVrsYiY292Zir0CN3fL3Tl
-wpnQXQvRWOYCKyw6ySsFQ35QRM5kXM1r5s9IpppK6Q/X7zXCEw6RuecJC4Qls1L9
-K13+tpJoBccaD35GYPpBw5YL7Ct6oJJtq2M9CN2vgn7DR57A7lMDaUtSjKvy+PwC
-TFQjyVs7C3lNYLO1Erf2
-=5BNR
------END PGP SIGNATURE-----
-
---kvUQC+jR9YzypDnK--
+diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+new file mode 100644
+index 000000000000..236264c10b92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+@@ -0,0 +1,146 @@
++Maxim MAX14577/77836 Multi-Function Device
++
++MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
++Battery Charger and SFOUT LDO output for powering USB devices. It is
++interfaced to host controller using I2C.
++
++MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
++
++
++Required properties:
++- compatible : Must be "maxim,max14577" or "maxim,max77836".
++- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
++- interrupts : IRQ line for the chip.
++- interrupt-parent :  The parent interrupt controller.
++
++
++Required nodes:
++ - charger :
++	Node for configuring the charger driver.
++	Required properties:
++		- compatible : "maxim,max14577-charger"
++			or "maxim,max77836-charger"
++		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
++			Valid values:
++			- for max14577: 90000 - 950000;
++			- for max77836: 45000 - 475000;
++		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
++			Valid values:
++			- for max14577: 50000 - 200000;
++			- for max77836: 5000 - 100000;
++		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
++			In an overvoltage condition, INT asserts and charging
++			stops. Valid values:
++			- 6000000, 6500000, 7000000, 7500000;
++		- maxim,constant-uvolt : Battery Constant Voltage in uV;
++			Valid values:
++			- 4000000 - 4280000 (step by 20000);
++			- 4350000;
++
++
++Optional nodes:
++- max14577-muic/max77836-muic :
++	Node used only by extcon consumers.
++	Required properties:
++		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
++
++- regulators :
++	Required properties:
++		- compatible : "maxim,max14577-regulator"
++			or "maxim,max77836-regulator"
++
++	May contain a sub-node per regulator from the list below. Each
++	sub-node should contain the constraints and initialization information
++	for that regulator. See regulator.txt for a description of standard
++	properties for these sub-nodes.
++
++	List of valid regulator names:
++	- for max14577: CHARGER, SAFEOUT.
++	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
++
++	The SAFEOUT is a fixed voltage regulator so there is no need to specify
++	voltages for it.
++
++
++Example:
++
++#include <dt-bindings/interrupt-controller/irq.h>
++
++max14577@25 {
++	compatible = "maxim,max14577";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max14577-muic {
++		compatible = "maxim,max14577-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max14577-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max14577-charger";
++
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <450000>;
++		maxim,eoc-uamp = <50000>;
++		maxim,ovp-uvolt = <6500000>;
++	};
++};
++
++
++max77836@25 {
++	compatible = "maxim,max77836";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max77836-muic {
++		compatible = "maxim,max77836-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max77836-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++		LDO1 {
++			regulator-name = "LDO1";
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
++		LDO2 {
++			regulator-name = "LDO2";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <3950000>;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max77836-charger";
++
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <225000>;
++		maxim,eoc-uamp = <7500>;
++		maxim,ovp-uvolt = <6500000>;
++	};
++};
+-- 
+1.9.1
