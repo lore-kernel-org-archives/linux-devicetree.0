@@ -1,157 +1,105 @@
-From: Emil Goode <emilgoode@gmail.com>
-Subject: Re: [PATCH v3] i2c: busses: i2c-pxa.c:  Fix for possible null
- pointer dereferenc
-Date: Fri, 4 Jul 2014 11:10:00 +0200
-Message-ID: <20140704091000.GA4738@lianli>
-References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
+ CPU frequency
+Date: Fri, 4 Jul 2014 11:22:33 +0200
+Message-ID: <CAKfTPtBPR9QA9h4bF3EkCZufpF+X84N7JzjU88CptR1RtiNrdg@mail.gmail.com>
+References: <20140630102934.GV32514@n2100.arm.linux.org.uk>
+ <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
+ <20140630124919.GC28647@lukather> <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
+ <20140630140146.GD28647@lukather> <CAKfTPtAu+mSVO8dvg_Z6w_nYWndap+FY5VGKeg-0pae_4JqR=A@mail.gmail.com>
+ <20140630145847.GE28647@lukather> <CAKfTPtDvQJ5i=t8FN0gLQex0yAC4NNgewTnGKdiCeGk7nQwZYg@mail.gmail.com>
+ <20140703071016.GB31996@lukather> <CAKfTPtBonwH0PoEkKazUS9bPaR631Vu7p7qZ0AF1whmXq_53wg@mail.gmail.com>
+ <20140704080255.GO31996@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Leilei Shang <shangll@marvell.com>, Peter Korsgaard <peter@korsgaard.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140704080255.GO31996@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rickard,
-
-Since this is a probe function there is also no need to release the devm_*
-resources in the i2c_pxa_remove function, this leads to double free.
-
-Also I have a few nit-pick comments below.
-
-On Thu, Jul 03, 2014 at 10:19:16PM +0200, Rickard Strandqvist wrote:
-> Fix for possible null pointer dereferenc, and there is a risk for memory leak if something unexpected happens and the function returns.
-> It now use Managed Device Resource instead.
-> 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-> ---
->  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
->  1 file changed, 16 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> index be671f7..2edb633 100644
-> --- a/drivers/i2c/busses/i2c-pxa.c
-> +++ b/drivers/i2c/busses/i2c-pxa.c
-> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  	struct resource *res = NULL;
->  	int ret, irq;
->  
-> -	i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
-> +	i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
->  	if (!i2c) {
->  		ret = -ENOMEM;
-> -		goto emalloc;
-> +		goto err_nothing_to_release;
-
-Perhaps its a good idea to return directly here, then the label
-err_nothing_to_release can be removed.
-
->  	}
->  
->  	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
-> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  	if (ret > 0)
->  		ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
->  	if (ret < 0)
-> -		goto eclk;
-> +		goto err_nothing_to_release;
-
-Same here.
-
->  
->  	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
->  	irq = platform_get_irq(dev, 0);
->  	if (res == NULL || irq < 0) {
->  		ret = -ENODEV;
-> -		goto eclk;
-> +		goto err_nothing_to_release;
-
-Same here.
-
->  	}
->  
-> -	if (!request_mem_region(res->start, resource_size(res), res->name)) {
-> +	if (!devm_request_mem_region(&dev->dev, res->start,
-> +				resource_size(res), res->name)) {
->  		ret = -ENOMEM;
-> -		goto eclk;
-> +		goto emalloc;
-
-We could also return directly here since the release_mem_region call should
-be removed, as mentioned in Jingoos reply.
-
->  	}
->  
->  	i2c->adap.owner   = THIS_MODULE;
-> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  
->  	strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
->  
-> -	i2c->clk = clk_get(&dev->dev, NULL);
-> +	i2c->clk = devm_clk_get(&dev->dev, NULL);
->  	if (IS_ERR(i2c->clk)) {
->  		ret = PTR_ERR(i2c->clk);
-> -		goto eclk;
-> +		goto emalloc;
-
-Same here.
-
->  	}
->  
-> -	i2c->reg_base = ioremap(res->start, resource_size(res));
-> -	if (!i2c->reg_base) {
-> +	i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
-> +	if (IS_ERR(i2c->reg_base)) {
->  		ret = -EIO;
-> -		goto eremap;
-> +		goto emalloc;
-
-Same here.
-
->  	}
->  
->  	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
-> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  		i2c->adap.algo = &i2c_pxa_pio_algorithm;
->  	} else {
->  		i2c->adap.algo = &i2c_pxa_algorithm;
-> -		ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
-> -				  dev_name(&dev->dev), i2c);
-> +		ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
-> +				 IRQF_SHARED, dev_name(&dev->dev), i2c);
->  		if (ret)
-> -			goto ereqirq;
-> +			goto emalloc;
-
-Same here.
-
->  	}
->  
->  	i2c_pxa_reset(i2c);
-> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  eadapt:
->  	if (!i2c->use_pio)
->  		free_irq(irq, i2c);
-
-The free_irq() call should also be removed since devm_request_irq() was used.
-
-> -ereqirq:
-> -	clk_disable_unprepare(i2c->clk);
-> -	iounmap(i2c->reg_base);
-> -eremap:
-> -	clk_put(i2c->clk);
-> -eclk:
-> -	kfree(i2c);
->  emalloc:
->  	release_mem_region(res->start, resource_size(res));
-> +err_nothing_to_release:
->  	return ret;
->  }
+On 4 July 2014 10:02, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Jul 03, 2014 at 09:51:27AM +0200, Vincent Guittot wrote:
+>> On 3 July 2014 09:10, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Mon, Jun 30, 2014 at 05:06:16PM +0200, Vincent Guittot wrote:
+>> >> On 30 June 2014 16:58, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> > On Mon, Jun 30, 2014 at 04:48:35PM +0200, Vincent Guittot wrote:
+>> >> >> On 30 June 2014 16:01, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> >> > On Mon, Jun 30, 2014 at 03:27:21PM +0200, Vincent Guittot wrote:
+>> >> >> >> >> >> -             rate = of_get_property(cn, "clock-frequency", &len);
+>> >> >> >> >> >> -             if (!rate || len != 4) {
+>> >> >> >> >> >> -                     pr_err("%s missing clock-frequency property\n",
+>> >> >> >> >> >> -                             cn->full_name);
+>> >> >> >> >> >> +             clk = of_clk_get(cn, 0);
+>> >> >> >> >> >> +             if (!IS_ERR(clk))
+>> >> >> >> >> >> +                     rate = clk_get_rate(clk);
+>> >> >> >> >>
+>> >> >> >> >> We need the max frequency as it will be used to weight the different
+>> >> >> >> >> CPUs capacity. How do you ensure that the current clock rate is the
+>> >> >> >> >> max one ?
+>> >> >> >> >
+>> >> >> >> > Hmm, the clock-frequency attribute in the ePAPR is defined at the
+>> >> >> >> > current CPU frequency, not the max one.
+>> >> >> >>
+>> >> >> >> What means current frequency in device tree when DVFS is involved ?
+>> >> >> >
+>> >> >> > The ePAPR states that clock-frequency is supposed to be "the current
+>> >> >> > clock speed of the CPU in Hertz". It's exactly what my patch add.
+>> >> >> >
+>> >> >> > Now, you're right, DVFS would be an issue here with clock-frequency,
+>> >> >> > but this patch actually makes it easier to deal with, since you only
+>> >> >> > get a reference to a clock, and you can get its rate at any given
+>> >> >> > time.
+>> >> >>
+>> >> >> and what about using clk_round_rate(clk, ULONG_MAX) ?
+>> >> >
+>> >> > Well, the clock itself might generate a frequency higher that what the
+>> >> > CPU can run at, so I'm not sure it's a valid assumption.
+>> >>
+>> >> yes, you're right
+>> >>
+>> >> >
+>> >> >> We will not be dependent of when we parse DT
+>> >> >
+>> >> > You lost me there. clk_round_rate and clk_get_rate are available at
+>> >> > the same time in the boot process, aren't they?
+>> >>
+>> >> yes, but  clk_round_rate(clk, ULONG_MAX) will return the max frequency
+>> >> and not the current one. But as you mentioned, it doesn't ensure that
+>> >> it's a possible frequency for the core
+>> >
+>> > Is this an Acked-by ?
+>>
+>>  I still think that using the current rate with clk_get_rate is not a
+>> good solution.
 >
+> Well, it's just as good as using clock-frequency, really. If you want
+> the CPU max frequency, it's not the right property (plus, since the
+> changed behaviour is not documented in Linux anywhere, the only
+> reference we have is the ePAPR on this).
+>
+>> Could you give us more details about why you nee to use current clock ?
+>
+> Honestly, I just want to remove that big warning at boot on the
+> A7-based SoCs we have :)
 
-Best regards,
+so Why not changing the log message ? It's clearly not an error to not
+have clock-frequency
 
-Emil Goode
+>
+>> AFAICT, your patch only makes sense for HMP system which don't have
+>> DVFS, is it your case ?
+>
+> Nope, it's just plain simple SMP.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
