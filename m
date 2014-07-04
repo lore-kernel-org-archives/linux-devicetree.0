@@ -1,45 +1,92 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC v4 2/2] backlight: device tree: add new tps611xx backlight
- binding
-Date: Fri, 4 Jul 2014 17:31:19 +0100
-Message-ID: <20140704163119.GB7106@leverpostej>
-References: <1404367277-12003-1-git-send-email-gshark.jeong@gmail.com>
- <1404367277-12003-3-git-send-email-gshark.jeong@gmail.com>
- <20140703090447.GC29837@leverpostej>
- <CAPqQCJUYqgireOiqK9DLpSAkw_4DdmKD+G7bXxVxf=bb0nTj6Q@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] usb: doc: udc-xilinx: Add devicetree bindings
+Date: Fri, 4 Jul 2014 17:40:28 +0100
+Message-ID: <20140704164028.GC7106@leverpostej>
+References: <b0dfcba4-7319-4687-a455-bfcddf61b7d1@BN1AFFO11FD028.protection.gbl>
+ <CALHRZup3_eFiw8iSJJmxy0dHDeHLnb2fAfRtKPTW1UQ2U+cEig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPqQCJUYqgireOiqK9DLpSAkw_4DdmKD+G7bXxVxf=bb0nTj6Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Jeong <gshark.jeong@gmail.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Daniel Jeong <daniel.jeong@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+In-Reply-To: <CALHRZup3_eFiw8iSJJmxy0dHDeHLnb2fAfRtKPTW1UQ2U+cEig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->     > +- rfa-enable: enable request for acknowledge.
->     > + =C2=A0If RFA is enabled, the data byte includes the RFA bit a=
-nd device will
->     wait
->     > + =C2=A0and check acknowledge from device.
->=20
->     You didn't answer my question as to why this should be in the DT.
->=20
->=20
-> According to the RFA enable, the easy scale pin works differently.
-> This value should be set before the first data transfer.
+On Tue, Jun 24, 2014 at 07:44:10AM +0100, sundeep subbaraya wrote:
+> Ping
+> 
+> Thanks,
+> Sundeep.B.S.
+> 
+> On Tue, Jun 10, 2014 at 5:34 PM,  <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> > From: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> >
+> > Add devicetree bindings for Xilinx axi udc driver.
+> >
+> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Changes for v3:
+> >         - None
+> > Changes for v2:
+> >         - replaced xlnx,include-dma with xlnx,has-builtin-dma
+> >
+> >  .../devicetree/bindings/usb/udc-xilinx.txt         |   20 ++++++++++++++++++++
+> >  1 files changed, 20 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > new file mode 100644
+> > index 0000000..7c24fac
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > @@ -0,0 +1,20 @@
+> > +Xilinx AXI USB2 device controller
+> > +
+> > +Required properties:
+> > +- compatible           : Should be "xlnx,axi-usb2-device-4.00.a"
 
-Sure, things works differently if this is set. That I understood.
+That's an interesting name. What's the product name? Is the a manual?
 
-What I haven't heard is a rationale as to why this configuration option
-shuold be in the DT.
+> > +- reg                  : Physical base address and size of the Axi USB2
+> > +                         device registers map.
+> > +- interrupts           : Property with a value describing the interrupt
+> > +                         number.
 
-Can I enable this on all implementations, or not?
+Describe what this logically is. Everyone knows that this is a property
+with a value, and everyone knows that an interrupts property describes
+interrupts.
 
-When would I enable this and when would I not?
+The ket point is _which_ interrupts this describes.
 
-The property reads like a switch to turn a feature on, rather than the
-description of the presence of a feature.
+> > +- interrupt-parent     : Must be core interrupt controller
 
+This isn't strictly necessary anyway.
+
+> > +- xlnx,include-dma     : if DMA is included
+
+You appear to have forgotten to fix this name, judging by the changelog
+and example.
+
+> > +
+> > +Example:
+> > +               axi-usb2-device@42e00000 {
+> > +                        compatible = "xlnx,axi-usb2-device-4.00.a";
+> > +                        interrupt-parent = <0x1>;
+
+Huh? Who writes a raw phandle value?
+
+> > +                        interrupts = <0x0 0x39 0x1>;
+> > +                        reg = <0x42e00000 0x10000>;
+> > +                        xlnx,has-builtin-dma;
+
+As mentioned above, this conflicts with the binding documentation.
+Please ensure the example is aligned with the documentation.
+
+Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
