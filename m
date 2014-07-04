@@ -1,75 +1,193 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: at_xdmac: add bindings documentation
-Date: Fri, 4 Jul 2014 09:36:10 +0200
-Message-ID: <1404459370-3540-3-git-send-email-ludovic.desroches@atmel.com>
-References: <1404459370-3540-1-git-send-email-ludovic.desroches@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404459370-3540-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 5/5] devicetree: mfd: max14577: Add device tree bindings
+ document
+Date: Fri, 04 Jul 2014 09:58:29 +0200
+Message-ID: <1404460709-17178-6-git-send-email-k.kozlowski@samsung.com>
+References: <1404460709-17178-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1404460709-17178-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for the new Atmel DMA controller (XDMAC)
-introduced with SAMA5D4.
+Add document describing device tree bindings for MAX14577 MFD
+drivers: MFD core, extcon, regulator and charger.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Both MAX14577 and MAX77836 chipsets are documented.
+
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 ---
- .../devicetree/bindings/dma/atmel-xdma.txt         |   39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+ Documentation/devicetree/bindings/mfd/max14577.txt | 152 +++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
 
-diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
 new file mode 100644
-index 0000000..1e09fda
+index 000000000000..b235250a7b41
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-@@ -0,0 +1,39 @@
-+* Atmel Extensible Direct Memory Access Controller (XDMAC)
++++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+@@ -0,0 +1,152 @@
++Maxim MAX14577/77836 Multi-Function Device
++
++MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
++Battery Charger and SFOUT LDO output for powering USB devices. It is
++interfaced to host controller using I2C.
++
++MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
++
 +
 +Required properties:
-+- compatible: Should be "atmel,<chip>-dma".
-+- reg: Should contain DMA registers location and length.
-+- interrupts: Should contain DMA interrupt.
-+- #dma-cells: Must be <2>, used to represent the number of integer cells in
-+the dmas property of client devices.
++- compatible : Must be "maxim,max14577" or "maxim,max77836".
++- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
++- interrupts : IRQ line for the chip.
++- interrupt-parent :  The parent interrupt controller.
++
++
++Required nodes:
++ - charger :
++	Node for configuring the charger driver.
++	Required properties:
++		- compatible : "maxim,max14577-charger"
++			or "maxim,max77836-charger"
++		- maxim,fast-charge-timer : Timer in hours to trigger the
++			INT3/MBCCHGERR interrupt; Valid values:
++			- 5, 6 or 7 (hours),
++			- 0 to disable.
++		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
++			Valid values:
++			- for max14577: 90000 - 950000;
++			- for max77836: 45000 - 475000;
++		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
++			Valid values:
++			- for max14577: 50000 - 200000;
++			- for max77836: 5000 - 100000;
++		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
++			In an overvoltage condition, INT asserts and charging
++			stops. Valid values:
++			- 6000000, 6500000, 7000000, 7500000;
++		- maxim,constant-uvolt : Battery Constant Voltage in uV;
++			Valid values:
++			- 4000000 - 4280000 (step by 20000);
++			- 4350000;
++
++
++Optional nodes:
++- max14577-muic/max77836-muic :
++	Node used only by extcon consumers.
++	Required properties:
++		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
++
++- regulators :
++	Required properties:
++		- compatible : "maxim,max14577-regulator"
++			or "maxim,max77836-regulator"
++
++	May contain a sub-node per regulator from the list below. Each
++	sub-node should contain the constraints and initialization information
++	for that regulator. See regulator.txt for a description of standard
++	properties for these sub-nodes.
++
++	List of valid regulator names:
++	- for max14577: CHARGER, SAFEOUT.
++	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
++
++	The SAFEOUT is a fixed voltage regulator so there is no need to specify
++	voltages for it.
++
 +
 +Example:
 +
-+dma1: dma-controller@f0004000 {
-+	compatible = "atmel,sama5d4-dma";
-+	reg = <0xf0004000 0x200>;
-+	interrupts = <50 4 0>;
-+	#dma-cells = <2>;
++#include <dt-bindings/interrupt-controller/irq.h>
++
++max14577@25 {
++	compatible = "maxim,max14577";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max14577-muic {
++		compatible = "maxim,max14577-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max14577-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max14577-charger";
++
++		maxim,fast-charge-timer = <6>;
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <450000>;
++		maxim,eoc-uamp = <50000>;
++		maxim,ovp-uvolt = <6500000>;
++	};
 +};
 +
-+DMA clients connected to the Atmel XDMA controller must use the format
-+described in the dma.txt file, using a three-cell specifier for each channel:
-+a phandle plus two integer cells.
-+The two cells in order are:
 +
-+1. A phandle pointing to the DMA controller.
-+2. The memory interface (16 most significant bits), the peripheral interface
-+(16 less significant bits).
-+3. Channel configuration register. Configurable fields are:
-+  - bit 30-24: PERID, peripheral identifier.
++max77836@25 {
++	compatible = "maxim,max77836";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
 +
-+Example:
++	muic: max77836-muic {
++		compatible = "maxim,max77836-muic";
++	};
 +
-+i2c2: i2c@f8024000 {
-+	compatible = "atmel,at91sam9x5-i2c";
-+	reg = <0xf8024000 0x4000>;
-+	interrupts = <34 4 6>;
-+	dmas = <&dma0 0x00000001 0x06000000>,
-+	       <&dma0 0x00000001 0x07000000>;
-+	dma-names = "tx", "rx";
++	regulators {
++		compatible = "maxim,max77836-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++		LDO1 {
++			regulator-name = "LDO1";
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
++		LDO2 {
++			regulator-name = "LDO2";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <3950000>;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max77836-charger";
++
++		maxim,fast-charge-timer = <6>;
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <225000>;
++		maxim,eoc-uamp = <7500>;
++		maxim,ovp-uvolt = <6500000>;
++	};
 +};
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
