@@ -1,95 +1,208 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: at_xdmac: add bindings documentation
-Date: Fri, 4 Jul 2014 11:45:09 +0200
-Message-ID: <20140704094509.GH2386@ldesroches-Latitude-E6320>
-References: <1404459370-3540-1-git-send-email-ludovic.desroches@atmel.com>
- <1404459370-3540-3-git-send-email-ludovic.desroches@atmel.com>
- <20140704085834.GC31812@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140704085834.GC31812@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org" <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 3/8] clk: mvebu: extend clk-cpu for dynamic frequency scaling
+Date: Fri,  4 Jul 2014 11:44:58 +0200
+Message-ID: <1404467103-29644-4-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1404467103-29644-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1404467103-29644-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 04, 2014 at 09:58:34AM +0100, Mark Rutland wrote:
-> On Fri, Jul 04, 2014 at 08:36:10AM +0100, Ludovic Desroches wrote:
-> > Add bindings documentation for the new Atmel DMA controller (XDMAC)
-> > introduced with SAMA5D4.
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/dma/atmel-xdma.txt         |   39 ++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> > new file mode 100644
-> > index 0000000..1e09fda
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> > @@ -0,0 +1,39 @@
-> > +* Atmel Extensible Direct Memory Access Controller (XDMAC)
-> > +
-> > +Required properties:
-> > +- compatible: Should be "atmel,<chip>-dma".
-> > +- reg: Should contain DMA registers location and length.
-> > +- interrupts: Should contain DMA interrupt.
-> > +- #dma-cells: Must be <2>, used to represent the number of integer cells in
-> > +the dmas property of client devices.
-> 
-> Could you please move the description of the two cells in the
-> dma-specifier here? It makes it far easier to read the binding.
+This commit extends the existing clk-cpu driver used on Marvell Armada
+XP platforms to support the dynamic frequency scaling of the CPU
+clock. Non-dynamic frequency change was already supported (and used
+before secondary CPUs are started), but the dynamic frequency change
+requires a completely different procedure.
 
-Of course, I'll do it for next version.
+In order to achieve this, the clk_cpu_set_rate() function is reworked
+to handle two separate cases:
 
-> 
-> Cheers,
-> Mark.
-> 
-> > +
-> > +Example:
-> > +
-> > +dma1: dma-controller@f0004000 {
-> > +	compatible = "atmel,sama5d4-dma";
-> > +	reg = <0xf0004000 0x200>;
-> > +	interrupts = <50 4 0>;
-> > +	#dma-cells = <2>;
-> > +};
-> > +
-> > +DMA clients connected to the Atmel XDMA controller must use the format
-> > +described in the dma.txt file, using a three-cell specifier for each channel:
-> > +a phandle plus two integer cells.
-> > +The two cells in order are:
-> > +
-> > +1. A phandle pointing to the DMA controller.
-> > +2. The memory interface (16 most significant bits), the peripheral interface
-> > +(16 less significant bits).
-> > +3. Channel configuration register. Configurable fields are:
-> > +  - bit 30-24: PERID, peripheral identifier.
-> > +
-> > +Example:
-> > +
-> > +i2c2: i2c@f8024000 {
-> > +	compatible = "atmel,at91sam9x5-i2c";
-> > +	reg = <0xf8024000 0x4000>;
-> > +	interrupts = <34 4 6>;
-> > +	dmas = <&dma0 0x00000001 0x06000000>,
-> > +	       <&dma0 0x00000001 0x07000000>;
-> > +	dma-names = "tx", "rx";
-> > +};
-> > -- 
-> > 1.7.9.5
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ - The case where the clock is enabled, which is the new dynamic
+   frequency change code, implemented in clk_cpu_on_set_rate(). This
+   part will be used for cpufreq activities.
+
+ - The case where the clock is disabled, which is the existing
+   frequency change code, moved in clk_cpu_off_set_rate(). This part
+   is already used to set the clock frequency of the secondary CPUs
+   before starting them.
+
+In order to implement the dynamic frequency change function, we need
+to access the PMU DFS registers, which are outside the currently
+mapped "Clock Complex" registers, so a new area of registers is now
+mapped. This affects the Device Tree binding, but we are careful to do
+it in a backward-compatible way (by allowing the second pair of
+registers to be non-existent, and in this case, ensuring
+clk_cpu_on_set_rate() returns an error).
+
+Note that technically speaking, the clk_cpu_on_set_rate() does not do
+the entire procedure needed to change the frequency dynamically, as it
+involves touching a number of PMSU registers. This is done through a
+clock notifier registered by the PMSU driver in followup commits.
+
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |  5 +-
+ drivers/clk/mvebu/clk-cpu.c                        | 79 ++++++++++++++++++++--
+ 2 files changed, 77 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+index feb8301..99c2146 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+@@ -3,14 +3,15 @@ Device Tree Clock bindings for cpu clock of Marvell EBU platforms
+ Required properties:
+ - compatible : shall be one of the following:
+ 	"marvell,armada-xp-cpu-clock" - cpu clocks for Armada XP
+-- reg : Address and length of the clock complex register set
++- reg : Address and length of the clock complex register set, followed
++        by address and length of the PMU DFS registers
+ - #clock-cells : should be set to 1.
+ - clocks : shall be the input parent clock phandle for the clock.
+ 
+ cpuclk: clock-complex@d0018700 {
+ 	#clock-cells = <1>;
+ 	compatible = "marvell,armada-xp-cpu-clock";
+-	reg = <0xd0018700 0xA0>;
++	reg = <0xd0018700 0xA0>, <0x1c054 0x10>;
+ 	clocks = <&coreclk 1>;
+ }
+ 
+diff --git a/drivers/clk/mvebu/clk-cpu.c b/drivers/clk/mvebu/clk-cpu.c
+index 8ebf757..b931e72 100644
+--- a/drivers/clk/mvebu/clk-cpu.c
++++ b/drivers/clk/mvebu/clk-cpu.c
+@@ -16,10 +16,18 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/delay.h>
++#include <asm/smp_plat.h>
+ 
+-#define SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET    0x0
+-#define SYS_CTRL_CLK_DIVIDER_VALUE_OFFSET   0xC
+-#define SYS_CTRL_CLK_DIVIDER_MASK	    0x3F
++#define SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET               0x0
++#define   SYS_CTRL_CLK_DIVIDER_CTRL_RESET_ALL          0xff
++#define   SYS_CTRL_CLK_DIVIDER_CTRL_RESET_SHIFT        8
++#define SYS_CTRL_CLK_DIVIDER_CTRL2_OFFSET              0x8
++#define   SYS_CTRL_CLK_DIVIDER_CTRL2_NBCLK_RATIO_SHIFT 16
++#define SYS_CTRL_CLK_DIVIDER_VALUE_OFFSET              0xC
++#define SYS_CTRL_CLK_DIVIDER_MASK                      0x3F
++
++#define PMU_DFS_RATIO_SHIFT 16
++#define PMU_DFS_RATIO_MASK  0x3F
+ 
+ #define MAX_CPU	    4
+ struct cpu_clk {
+@@ -28,6 +36,7 @@ struct cpu_clk {
+ 	const char *clk_name;
+ 	const char *parent_name;
+ 	void __iomem *reg_base;
++	void __iomem *pmu_dfs;
+ };
+ 
+ static struct clk **clks;
+@@ -62,8 +71,9 @@ static long clk_cpu_round_rate(struct clk_hw *hwclk, unsigned long rate,
+ 	return *parent_rate / div;
+ }
+ 
+-static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
+-			    unsigned long parent_rate)
++static int clk_cpu_off_set_rate(struct clk_hw *hwclk, unsigned long rate,
++				unsigned long parent_rate)
++
+ {
+ 	struct cpu_clk *cpuclk = to_cpu_clk(hwclk);
+ 	u32 reg, div;
+@@ -95,6 +105,58 @@ static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
+ 	return 0;
+ }
+ 
++static int clk_cpu_on_set_rate(struct clk_hw *hwclk, unsigned long rate,
++			       unsigned long parent_rate)
++{
++	u32 reg;
++	unsigned long fabric_div, target_div, cur_rate;
++	struct cpu_clk *cpuclk = to_cpu_clk(hwclk);
++
++	/*
++	 * PMU DFS registers are not mapped, Device Tree does not
++	 * describes them. We cannot change the frequency dynamically.
++	 */
++	if (!cpuclk->pmu_dfs)
++		return -ENODEV;
++
++	cur_rate = __clk_get_rate(hwclk->clk);
++
++	reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL2_OFFSET);
++	fabric_div = (reg >> SYS_CTRL_CLK_DIVIDER_CTRL2_NBCLK_RATIO_SHIFT) &
++		SYS_CTRL_CLK_DIVIDER_MASK;
++
++	/* Frequency is going up */
++	if (rate == 2 * cur_rate)
++		target_div = fabric_div / 2;
++	/* Frequency is going down */
++	else
++		target_div = fabric_div;
++
++	if (target_div == 0)
++		target_div = 1;
++
++	reg = readl(cpuclk->pmu_dfs);
++	reg &= ~(PMU_DFS_RATIO_MASK << PMU_DFS_RATIO_SHIFT);
++	reg |= (target_div << PMU_DFS_RATIO_SHIFT);
++	writel(reg, cpuclk->pmu_dfs);
++
++	reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
++	reg |= (SYS_CTRL_CLK_DIVIDER_CTRL_RESET_ALL <<
++		SYS_CTRL_CLK_DIVIDER_CTRL_RESET_SHIFT);
++	writel(reg, cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
++
++	return 0;
++}
++
++static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
++			    unsigned long parent_rate)
++{
++	if (__clk_is_enabled(hwclk->clk))
++		return clk_cpu_on_set_rate(hwclk, rate, parent_rate);
++	else
++		return clk_cpu_off_set_rate(hwclk, rate, parent_rate);
++}
++
+ static const struct clk_ops cpu_ops = {
+ 	.recalc_rate = clk_cpu_recalc_rate,
+ 	.round_rate = clk_cpu_round_rate,
+@@ -105,6 +167,7 @@ static void __init of_cpu_clk_setup(struct device_node *node)
+ {
+ 	struct cpu_clk *cpuclk;
+ 	void __iomem *clock_complex_base = of_iomap(node, 0);
++	void __iomem *pmu_dfs_base = of_iomap(node, 1);
+ 	int ncpus = 0;
+ 	struct device_node *dn;
+ 
+@@ -114,6 +177,10 @@ static void __init of_cpu_clk_setup(struct device_node *node)
+ 		return;
+ 	}
+ 
++	if (pmu_dfs_base == NULL)
++		pr_warn("%s: pmu-dfs base register not set, dynamic frequency scaling not available\n",
++			__func__);
++
+ 	for_each_node_by_type(dn, "cpu")
+ 		ncpus++;
+ 
+@@ -146,6 +213,8 @@ static void __init of_cpu_clk_setup(struct device_node *node)
+ 		cpuclk[cpu].clk_name = clk_name;
+ 		cpuclk[cpu].cpu = cpu;
+ 		cpuclk[cpu].reg_base = clock_complex_base;
++		if (pmu_dfs_base)
++			cpuclk[cpu].pmu_dfs = pmu_dfs_base + 4 * cpu;
+ 		cpuclk[cpu].hw.init = &init;
+ 
+ 		init.name = cpuclk[cpu].clk_name;
+-- 
+2.0.0
+
