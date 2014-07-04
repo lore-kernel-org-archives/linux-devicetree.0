@@ -1,83 +1,189 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v2 REBASED 00/10] Generic earlyconsole for ARC UART Driver
-Date: Fri, 4 Jul 2014 12:35:57 +0530
-Message-ID: <53B65255.9000303@synopsys.com>
-References: <1403598315-1429-1-git-send-email-vgupta@synopsys.com> <CAL_JsqJF-a3K+dUHpwgSLNrwZTHLp2uj44bZaNboVpTtc8a-RA@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 05/18] power: reset: Add AT91 reset driver
+Date: Fri, 4 Jul 2014 09:14:43 +0200
+Message-ID: <20140704091443.545d1e08@bbrezillon>
+References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
+	<1404396906-25194-8-git-send-email-maxime.ripard@free-electrons.com>
+	<F9547E0F-AB97-47E6-BA09-135EE4E1BC73@jcrosoft.com>
+	<20140703145957.GH31996@lukather>
+	<B425B925-B75E-4761-8CE6-9B12C5AC0469@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJF-a3K+dUHpwgSLNrwZTHLp2uj44bZaNboVpTtc8a-RA@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Francois.Bedard@synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <B425B925-B75E-4761-8CE6-9B12C5AC0469-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Nicolas FERRE <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+On Fri, 4 Jul 2014 11:08:20 +0800
+Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
 
-On Wednesday 25 June 2014 02:35 AM, Rob Herring wrote:
-> On Tue, Jun 24, 2014 at 3:25 AM, Vineet Gupta
-> <Vineet.Gupta1@synopsys.com> wrote:
->> Hi,
->>
->> This is slightly modified repost of series posted last week
->> http://www.spinics.net/lists/linux-serial/msg12884.html
->>
->> This series switches ARC UART from custom earlyprintk support to generic
->> earlycon (many thanks to Rob for doing that). And also build on Grant's recent
->> work for using DT stdout-path as default console.
->>
->> The motivation is to get rid of the early platform code, which in turn
->> would help consolidate the init code across several ARC platforms.
->>
->> First 3 patches are general cleanup/refactoring, not necesarily related to
->> earlycon.
-> 
-> Other than my comment on patch 6:
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+>=20
+> On Jul 3, 2014, at 10:59 PM, Maxime Ripard <maxime.ripard@free-electr=
+ons.com> wrote:
+>=20
+> > On Thu, Jul 03, 2014 at 10:39:08PM +0800, Jean-Christophe PLAGNIOL-=
+VILLARD wrote:
+> >>> +++ b/drivers/power/reset/at91-reset.c
+> >>> @@ -0,0 +1,202 @@
+> >>> +/*
+> >>> + * Atmel AT91 SAM9 SoCs reset code
+> >>> + *
+> >>> + * Copyright (C) 2014 Maxime Ripard
+> >>> + *
+> >>> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >>=20
+> >> you can not own the copyright as it=E2=80=99s basically a copy of =
+other
+> >> people code
+> >=20
+> > The previous names are missing, right.
+> >=20
+> >>> + *
+> >>> + * This file is licensed under the terms of the GNU General Publ=
+ic
+> >>> + * License version 2.  This program is licensed "as is" without =
+any
+> >>> + * warranty of any kind, whether express or implied.
+> >>> + */
+> >>> +
+> >>> +#include <linux/io.h>
+> >>> +#include <linux/module.h>
+> >>> +#include <linux/of_address.h>
+> >>> +#include <linux/platform_device.h>
+> >>> +#include <linux/reboot.h>
+> >>> +
+> >>> +#include <asm/system_misc.h>
+> >>> +
+> >>> +#include <mach/at91sam9_ddrsdr.h>
+> >>> +#include <mach/at91sam9_sdramc.h>
+> >>> +
+> >>> +#define AT91_RSTC_CR	0x00		/* Reset Controller Control Register =
+*/
+> >>> +#define	AT91_RSTC_PROCRST	BIT(0)		/* Processor Reset */
+> >>> +#define	AT91_RSTC_PERRST	BIT(2)		/* Peripheral Reset */
+> >>> +#define	AT91_RSTC_EXTRST	BIT(3)		/* External Reset */
+> >>> +#define	AT91_RSTC_KEY		(0xa5 << 24)	/* KEY Password */
+> >>> +
+> >>> +#define AT91_RSTC_SR	0x04		/* Reset Controller Status Register *=
+/
+> >>> +#define	AT91_RSTC_URSTS		BIT(0)		/* User Reset Status */
+> >>> +#define	AT91_RSTC_RSTTYP	GENMASK(10, 8)	/* Reset Type */
+> >>> +#define	AT91_RSTC_NRSTL		BIT(16)		/* NRST Pin Level */
+> >>> +#define	AT91_RSTC_SRCMP		BIT(17)		/* Software Reset Command in P=
+rogress */
+> >>> +
+> >>> +#define AT91_RSTC_MR	0x08		/* Reset Controller Mode Register */
+> >>> +#define	AT91_RSTC_URSTEN	BIT(0)		/* User Reset Enable */
+> >>> +#define	AT91_RSTC_URSTIEN	BIT(4)		/* User Reset Interrupt Enable=
+ */
+> >>> +#define	AT91_RSTC_ERSTL		GENMASK(11, 8)	/* External Reset Length=
+ */
+> >>> +
+> >>> +enum reset_type {
+> >>> +	RESET_TYPE_GENERAL	=3D 0,
+> >>> +	RESET_TYPE_WAKEUP	=3D 1,
+> >>> +	RESET_TYPE_WATCHDOG	=3D 2,
+> >>> +	RESET_TYPE_SOFTWARE	=3D 3,
+> >>> +	RESET_TYPE_USER		=3D 4,
+> >>> +};
+> >>> +
+> >>> +static void __iomem *at91_ramc_base[2], *at91_rstc_base;
+> >>> +
+> >>> +static void at91sam9_restart(enum reboot_mode mode, const char *=
+cmd)
+> >>> +{
+> >>> +	asm volatile(
+> >>> +		".balign 32\n\t"
+> >>> +
+> >>> +		"str	%2, [%0, #" __stringify(AT91_SDRAMC_TR) "]\n\t"
+> >>> +		"str	%3, [%0, #" __stringify(AT91_SDRAMC_LPR) "]\n\t"
+> >>> +		"str	%4, [%1, #" __stringify(AT91_RSTC_CR) "]\n\t"
+> >>> +
+> >>> +		"b	.\n\t"
+> >>> +		:
+> >>> +		: "r" (at91_ramc_base[0]),
+> >>> +		  "r" (at91_rstc_base),
+> >>> +		  "r" (1),
+> >>> +		  "r" (AT91_SDRAMC_LPCB_POWER_DOWN),
+> >>> +		  "r" (AT91_RSTC_KEY | AT91_RSTC_PERRST | AT91_RSTC_PROCRST));
+> >>> +}
+> >>> +
+> >>> +static void at91sam9g45_restart(enum reboot_mode mode, const cha=
+r *cmd)
+> >>> +{
+> >>> +	asm volatile(
+> >>> +		"cmp	%1, #0\n\t"
+> >>> +		"beq	1f\n\t"
+> >>> +
+> >>> +		"ldr	r0, [%1]\n\t"
+> >>> +		"cmp	r0, #0\n\t"
+> >>> +
+> >>> +		".balign 32\n\t"
+> >>> +
+> >>> +		"1:	str	%3, [%0, #" __stringify(AT91_DDRSDRC_RTR) "]\n\t"
+> >>> +		"	str	%4, [%0, #" __stringify(AT91_DDRSDRC_RTR) "]\n\t"
+> >>> +		"	strne	%3, [%1, #" __stringify(AT91_DDRSDRC_RTR) "]\n\t"
+> >>> +		"	strne	%4, [%1, #" __stringify(AT91_DDRSDRC_RTR) "]\n\t"
+> >>> +		"	str	%5, [%2, #" __stringify(AT91_RSTC_CR) "]\n\t"
+> >>> +
+> >>> +		"	b	.\n\t"
+> >>> +		:
+> >>> +		: "r" (at91_ramc_base[0]),
+> >>> +		  "r" (at91_ramc_base[1]),
+> >>> +		  "r" (at91_rstc_base),
+> >>> +		  "r" (1),
+> >>> +		  "r" (AT91_DDRSDRC_LPCB_POWER_DOWN),
+> >>> +		  "r" (AT91_RSTC_KEY | AT91_RSTC_PERRST | AT91_RSTC_PROCRST)
+> >>> +		: "r0");
+> >>> +}
+> >>> +
+> >> move this to an assembly file more easy to read than a C code
+> >=20
+> > Nope. It's a pain to pass variable to an external assembly file, an=
+d
+> > this makes the use of global variable pretty much mandatory, which =
+is
+> > definitely not great.
+>=20
+> Not at all I did for the PM slow clock code just write a function and=
+ pas it as a parameter
+> you have 3
+>=20
+> so basically you have to use the current and just pass at91_ramc_base=
+[0], at91_ramc_base[1]
+> and at91_rstc_base
+> it=E2=80=99s 3 lignes of modification, if you have at91_ramc_base and=
+ at91_ramc_base same
+>=20
 
-Is something else needed for this to me merged in tty-next for 3.17.
-I've had only 1 minor comment from Rob, and my reply to him never reached completion.
+Yes, retrieving function parameters from assembly code is not that
+complicated (the first 4 pointer values are accessible through r0-r3),
+but then you'll have to store your assembly file somewhere.
 
-Thx,
--Vineet
+Subsystem directories (drivers/xxx) are supposed to be architecture
+agnostics, and I'm not sure subsystem maintainers will accept these
+assembly files in their directory.
+ITOH, leaving these assembly files in arch/arm/mach-at91 will just
+spread the code over linux src tree and will definitely not help other
+people find out the relationship between these files.
 
-> 
->>
->> v2 <- v1
->> --------
->> * Rebased on linux-next: 20140623
->> * Patch 9 split into 9 and 10 for driver/platform changes
->> * Patch 10 also uses the DT stdout-path so no need for console=
->>
->>
->> Thx,
->> -Vineet
->>
->>
->> Vineet Gupta (10):
->>   serial/arc: use uart_console_write() helper
->>   serial/arc: Refactor by referencing to uart_port where possible
->>   serial/arc: Remove the workaround for legacy ISS
->>   serial/arc: Use generic earlycon infrastructure
->>   serial/arc: remove earlyprintk support and switch to earlycon
->>   serial/arc: remove last remanants of platform data
->>   serial/arc: inline the probe helper
->>   ARC: [arcfpga] RIP early uart platform device stuff
->>   serial/arc: Enable DT based earlycon
->>   ARC: [arcfpga] stdout-path now suffices for earlycon/console
->>
->>  arch/arc/boot/dts/angel4.dts     |   3 +-
->>  arch/arc/plat-arcfpga/Kconfig    |   7 -
->>  arch/arc/plat-arcfpga/platform.c |  97 +-----------
->>  drivers/tty/serial/Kconfig       |   1 +
->>  drivers/tty/serial/arc_uart.c    | 329 ++++++++++++++-------------------------
->>  5 files changed, 123 insertions(+), 314 deletions(-)
->>
->> --
->> 1.8.3.2
->>
-> 
-> 
+Regarding the readability concern, I think some comments could help
+understanding what's being done here.
 
+Best Regards,
+
+Boris
+
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
