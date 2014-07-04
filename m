@@ -1,71 +1,35 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 5/5] ARM: imx: Add Freescale LS1021A SMP support
-Date: Fri, 4 Jul 2014 10:16:59 +0000
-Message-ID: <69cc715ea3d54e64a04c3765b02f9ff8@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
- <1404291772-2644-6-git-send-email-jingchang.lu@freescale.com>
- <20140702113058.GF14665@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
+Date: Fri,  4 Jul 2014 12:43:23 +0200
+Message-ID: <1404470603-30394-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140702113058.GF14665@leverpostej>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IE1hcmsgUnV0bGFuZCBbbWFp
-bHRvOm1hcmsucnV0bGFuZEBhcm0uY29tXQ0KPlNlbnQ6IFdlZG5lc2RheSwgSnVseSAwMiwgMjAx
-NCA3OjMxIFBNDQo+VG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj5DYzogc2hhd24uZ3VvQGxpbmFy
-by5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj5kZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPlN1YmplY3Q6IFJlOiBbUEFU
-Q0ggNS81XSBBUk06IGlteDogQWRkIEZyZWVzY2FsZSBMUzEwMjFBIFNNUCBzdXBwb3J0DQo+DQo+
-T24gV2VkLCBKdWwgMDIsIDIwMTQgYXQgMTA6MDI6NTJBTSArMDEwMCwgSmluZ2NoYW5nIEx1IHdy
-b3RlOg0KPj4gRnJvbTogSmluZ2NoYW5nIEx1IDxiMzUwODNAZnJlZXNjYWxlLmNvbT4NCj4+DQo+
-PiBGcmVlc2NhbGUgTFMxMDIxQSBTb0MgZGVwbG95cyB0d28gY29ydGV4LUE3IHByb2Nlc3NvcnMs
-IHRoaXMgYWRkcw0KPj4gYnJpbmctdXAgc3VwcG9ydCBmb3IgdGhlIHNlY29uZGFyeSBjb3JlLg0K
-Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZyZWVzY2FsZS5jb20+
-DQo+PiAtLS0NCj4+ICBhcmNoL2FybS9tYWNoLWlteC9jb21tb24uaCAgICAgICB8ICAyICsrDQo+
-PiAgYXJjaC9hcm0vbWFjaC1pbXgvaGVhZHNtcC5TICAgICAgfCAxMSArKysrKysrKysrDQo+PiAg
-YXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMgfCAgMSArDQo+PiAgYXJjaC9hcm0vbWFj
-aC1pbXgvcGxhdHNtcC5jICAgICAgfCA0NA0KPisrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysNCj4+ICA0IGZpbGVzIGNoYW5nZWQsIDU4IGluc2VydGlvbnMoKykNCj4NCj5b
-Li4uXQ0KPg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtaW14L2hlYWRzbXAuUyBiL2Fy
-Y2gvYXJtL21hY2gtaW14L2hlYWRzbXAuUw0KPj4gaW5kZXggZGU1MDQ3Yy4uZmRkOTNkOSAxMDA2
-NDQNCj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtaW14L2hlYWRzbXAuUw0KPj4gKysrIGIvYXJjaC9h
-cm0vbWFjaC1pbXgvaGVhZHNtcC5TDQo+PiBAQCAtMjksMyArMjksMTQgQEAgRU5UUlkodjdfc2Vj
-b25kYXJ5X3N0YXJ0dXApDQo+PiAgCXNldF9kaWFnX3JlZw0KPj4gIAliCXNlY29uZGFyeV9zdGFy
-dHVwDQo+PiAgRU5EUFJPQyh2N19zZWNvbmRhcnlfc3RhcnR1cCkNCj4+ICsNCj4+ICtFTlRSWShs
-czEwMjFhX3NlY29uZGFyeV9zdGFydHVwKQ0KPj4gKwkvKiBzZXQgQ05URlJFUSBvZiBzZWNvbmRh
-cnkgY29yZSAqLw0KPj4gKwlsZHIJcjAsID0xMjUwMDAwMA0KPj4gKwltY3IgCXAxNSwgMCwgcjAs
-IGMxNCwgYzAsIDANCj4+ICsJLyogZGlzYWJsZSBQaHlzaWNhbCBhbmQgVmlydHVyYWwgVGltZXIg
-Ki8NCj4+ICsJbW92CXIwLCAjMHgwDQo+PiArCW1jcglwMTUsIDAsIHIwLCBjMTQsIGMyLCAxDQo+
-PiArCW1jcglwMTUsIDAsIHIwLCBjMTQsIGMzLCAxDQo+PiArCWIJc2Vjb25kYXJ5X3N0YXJ0dXAN
-Cj4NCj5VcnJnaC4uLg0KPg0KPldoYXQgYWJvdXQgQ05UVk9GRj8gVGhhdCdzIGJlZW4gYSBzb3Vy
-Y2Ugb2YgcHJvYmxlbXMgZWxzZXdoZXJlLg0KPg0KPklzIHRoZSBib290IENQVSBzZXQgdXAgY29y
-cmVjdGx5Pw0KPg0KPklzIHRoYXQgZnJlcXVlbmN5IGFsd2F5cyBnb2luZyB0byBiZSBjb3JyZWN0
-Pw0KPg0KV2UgdXNlIDEyLjVNaHogYXMgdGhlIGNvdW50ZXIgY2xvY2ssIGFuZCBXZSBoYXZlIGZv
-dW5kIHRoZSB2aXJ0dWFsIGNvdW50ZXIgb2Zmc2V0IGlzc3VlLg0KV2UgY3VycmVudGx5IHVzZSB0
-aGUgcGh5c2ljYWwgY291bnRlciBhcyBhIHdvcmthcm91bmQgZm9yIHRoaXMsIHdlIGFyZSBhbHNv
-IHdvcmtpbmcgb24NCnRvIGNsZWFyIHRoZSBDTlRWT0ZGIGluIHUtYm9vdCwgd2hlbiBpdCBpcyBm
-aW5pc2hlZCwgdGhlIHZpcnR1YWwgY291bnRlciB3b3VsZCBiZSBzeW5jDQphbmQgd29yayB3ZWxs
-Lg0KVGhhbmtzLg0KDQo+Wy4uLl0NCj4NCj4+ICtzdGF0aWMgdm9pZCBfX2luaXQgbHMxMDIxYV9z
-bXBfaW5pdF9jcHVzKHZvaWQpIHsNCj4+ICsJaW50IGksIG5jb3JlczsNCj4+ICsJLyogZ2V0IG51
-bWJlciBvZiBjb3JlcyBmcm9tIENQMTUgTDIgY29udHJvbGxlciByZWdpc3RlcihMMkNUTFIpKi8N
-Cj4+ICsJYXNtIHZvbGF0aWxlICgibXJjIHAxNSwgMSwgJTAsIGM5LCBjMCwgMiIgOiAiPXIiIChu
-Y29yZXMpKTsNCj4+ICsNCj4+ICsJbmNvcmVzID0gKChuY29yZXMgPj4gMjQpICYgMHgzKSArIDE7
-DQo+PiArCWZvciAoaSA9IG5jb3JlczsgaSA8IE5SX0NQVVM7IGkrKykNCj4+ICsJCXNldF9jcHVf
-cG9zc2libGUoaSwgZmFsc2UpOw0KPj4gK30NCj4NCj5OQUsuDQo+DQo+VGhpcyBpbmZvcm1hdGlv
-biBpcyBfYWxyZWFkeV8gaW4gdGhlIERULiBUaGlzIGFkZHMgbW9yZSBjb2RlIHRvIGRvDQo+cmVk
-dW5kYW50IHdvcmssIGFuZCBpdCdzIGJyb2tlbi4NCj4NCj5UaGUgcGh5c2ljYWw8LT5sb2dpY2Fs
-IENQVSBJRCBtYXBwaW5nIGlzIGFyYml0cmFyeSwgc28geW91IHNldCBhcmJpdHJhcnkNCj5DUFVz
-IGFzIGJlaW5nIG9ubGluZSBkZXNwaXRlIHRoaXMgbm90IG5lY2Vzc2FyaWx5IGJlaW5nIHRoZSBj
-YXNlLg0KPg0KPkdldCByaWQgb2YgdGhpcywgYW5kIHJlbHkgb24gdGhlIERUIGJlaW5nIGNvcnJl
-Y3QuIFRoZXJlO3Mgbm8gcmVhc29uIGl0DQo+c2hvdWxkbid0IGJlIGZvciBhIG5ldyBwbGF0Zm9y
-bS4NCj4NCj5UaGFua3MsDQo+TWFyay4NCkkgd2lsbCByZW1vdmUgdGhpcy4gVGhhbmtzLg0KDQoN
-Cg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5nDQoNCg0KDQo=
+Add Dialog Semiconductor Plc to the list of device tree vendor prefixes.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 9ab11e0..be47d1a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -38,6 +38,7 @@ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+ davicom	DAVICOM Semiconductor, Inc.
+ denx	Denx Software Engineering
+ digi	Digi International Inc.
++dlgnf	Dialog Semiconductor Plc
+ dlink	D-Link Corporation
+ dmo	Data Modul AG
+ ebv	EBV Elektronik
+-- 
+2.0.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
