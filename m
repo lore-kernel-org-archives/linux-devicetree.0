@@ -1,117 +1,96 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RESEND PATCH 5/5] devicetree: mfd: max14577: Add device tree
- bindings document
-Date: Fri, 04 Jul 2014 10:13:17 +0200
-Message-ID: <1404461597.21830.2.camel@AMDC1943>
-References: <1404198121-22989-1-git-send-email-k.kozlowski@samsung.com>
- <1404198121-22989-6-git-send-email-k.kozlowski@samsung.com>
- <20140703113236.GA28504@leverpostej> <1404387874.21377.8.camel@AMDC1943>
- <20140704080702.GA31812@leverpostej>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] mailbox/omap: add support for parsing dt devices
+Date: Fri, 4 Jul 2014 01:23:54 -0700
+Message-ID: <20140704082354.GD28884@atomide.com>
+References: <1403660878-56350-1-git-send-email-s-anna@ti.com>
+ <1403660878-56350-3-git-send-email-s-anna@ti.com>
+ <20140628170709.GB23634@xo-6d-61-c0.localdomain>
+ <53B18999.2020506@ti.com>
+ <20140630185942.GA5410@amd.pavel.ucw.cz>
+ <53B1BBA8.5090507@ti.com>
+ <20140630203225.GA3893@amd.pavel.ucw.cz>
+ <20140704064547.GZ28884@atomide.com>
+ <20140704080556.GA16274@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140704080702.GA31812@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <20140704080556.GA16274-tWAi6jLit6GreWDznjuHag@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On pi=C4=85, 2014-07-04 at 09:07 +0100, Mark Rutland wrote:
-> On Thu, Jul 03, 2014 at 12:44:34PM +0100, Krzysztof Kozlowski wrote:
-> > On czw, 2014-07-03 at 12:32 +0100, Mark Rutland wrote:
-> > > Hi,
-> > >=20
-> > > On Tue, Jul 01, 2014 at 08:02:00AM +0100, Krzysztof Kozlowski wro=
-te:
-> > > > Add document describing device tree bindings for MAX14577 MFD
-> > > > drivers: MFD core, extcon, regulator and charger.
-> > > >=20
-> > > > Both MAX14577 and MAX77836 chipsets are documented.
-> > > >=20
-> > > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > > > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > > > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > > > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > > > Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/mfd/max14577.txt | 152 +++++=
-++++++++++++++++
-> > > >  1 file changed, 152 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/max14=
-577.txt
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt=
- b/Documentation/devicetree/bindings/mfd/max14577.txt
-> > > > new file mode 100644
-> > > > index 000000000000..b235250a7b41
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> > > > @@ -0,0 +1,152 @@
-> > > > +Maxim MAX14577/77836 Multi-Function Device
-> > > > +
-> > > > +MAX14577 is a Multi-Function Device with Micro-USB Interface C=
-ircuit, Li+
-> > > > +Battery Charger and SFOUT LDO output for powering USB devices.=
- It is
-> > > > +interfaced to host controller using I2C.
-> > > > +
-> > > > +MAX77836 additionally contains PMIC (with two LDO regulators) =
-and Fuel Gauge.
-> > > > +
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible : Must be "maxim,max14577" or "maxim,max77836".
-> > > > +- reg : I2C slave address for the max14577 chip (0x25 for max1=
-4577/max77836)
-> > > > +- interrupts : IRQ line for the chip.
-> > > > +- interrupt-parent :  The parent interrupt controller.
-> > > > +
-> > > > +
-> > > > +Required nodes:
-> > > > + - charger :
-> > > > +	Node for configuring the charger driver.
-> > > > +	Required properties:
-> > > > +		- compatible : "maxim,max14577-charger"
-> > > > +			or "maxim,max77836-charger"
-> > > > +		- maxim,fast-charge-timer : Timer in hours to trigger the
-> > > > +			INT3/MBCCHGERR interrupt; Valid values:
-> > > > +			- 5, 6 or 7 (hours),
-> > > > +			- 0 to disable.
-> > >=20
-> > > I'm not sure I follow what this is any why it should be in the DT=
-=2E
-> > >=20
-> > > Could you explain what this is used for?
-> >=20
-> > Hi,
-> >=20
-> > These are settings for max14577 battery charger. Actually this
-> > particular setting does not look like board-specific but other (lik=
-e
-> > battery voltage) do.
-> >=20
-> > The timer above is used by device to stop charging and to trigger
-> > interrupt.
->=20
-> Ok. What I don't get is why this should be in the DT, it sounds like =
-a
-> configuration option that would better be set at run time.
+* Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [140704 01:07]:
+> Hi!
+> 
+> > > > >>>> The non-DT support has to be maintained for now to not break
+> > > > >>>> OMAP3 legacy boot, and the legacy-style code will be cleaned
+> > > > >>>> up once OMAP3 is also converted to DT-boot only.
+> > > > >>>
+> > > > >>>> @@ -587,24 +606,157 @@ static int omap_mbox_unregister(struct omap_mbox_device *mdev)
+> > > > >>>>  	return 0;
+> > > > >>>>  }
+> > > > >>>>  
+> > > > >>>> +static const struct omap_mbox_device_data omap2_data = {
+> > > > >>>> +	.num_users	= 4,
+> > > > >>>> +	.num_fifos	= 6,
+> > > > >>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+> > > > >>>> +};
+> > > > >>>> +
+> > > > >>>> +static const struct omap_mbox_device_data omap3_data = {
+> > > > >>>> +	.num_users	= 2,
+> > > > >>>> +	.num_fifos	= 2,
+> > > > >>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+> > > > >>>> +};
+> > > > >>>> +
+> > > > >>>> +static const struct omap_mbox_device_data am335x_data = {
+> > > > >>>> +	.num_users	= 4,
+> > > > >>>> +	.num_fifos	= 8,
+> > > > >>>> +	.intr_type	= MBOX_INTR_CFG_TYPE2,
+> > > > >>>> +};
+> > > > >>>
+> 
+> > > Aha, ok, then the intr_type should be derived from
+> > > compatible-string. Or rather... you should have three
+> > > compatible-strings for the three possibilities? (And then subtype,
+> > > currently unused, in case there are more hw differences).
+> > 
+> > The compatible string can and should be separate for each revision
+> > unless they are the same exacat hardware revision.
+> 
+> ACK.
+> 
+> > > > two are HW IP design parameters, so in general putting them in DT isn't
+> > > > completely a bad idea, but I will wait to see if there are any further
+> > > > comments on this from Tony or DT maintainers before I make changes.
+> > > 
+> > > Ok, right... I'd vote for putting them into DT.
+> > 
+> > I would avoid adding custom DT properties where possible and let the
+> > driver just initialize the right data based on the compatible flag.
+> 
+> If these are HW IP design parameters, we can expect to see many
+> different combinations. Yet we know ahead of time how to handle
+> different parameters HW people select.
+> 
+> Thus IMO we should do it in the device tree.
 
-I understand. I'll add this as sysfs entry and re-spin with version 3 o=
-f
-patchset.
+Oh you mean from supporting new hardware with just .dts changes?
+>From that point of view it makes sense to have them as DT properties,
+so I'm fine with that.
 
-Best regards,
-Krzysztof
+Let's just try to use something that's generic like fifosize. No idea
+how the property for num_fifos should be handled though as that
+implies some knowledge in the driver which num_users have fifos?
 
+So unless that can be described clearly in a DT property as well,
+the binding might be still unusable for new hardware :)
+
+Regards,
+
+Tony
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
