@@ -1,220 +1,153 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Fri,  4 Jul 2014 17:29:17 +0200
-Message-ID: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of/platform: Fix of_platform_device_destroy iteration of devices
+Date: Fri,  4 Jul 2014 17:15:33 +0100
+Message-ID: <1404490533-7817-1-git-send-email-grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+of_platform_destroy does not work properly, since the tree
+population test was iterating on all devices having as its parent
+the given platform device.
 
-This commit introduces a generic device tree binding for IOMMU devices.
-Only a very minimal subset is described here, but it is enough to cover
-the requirements of both the Exynos System MMU and Tegra SMMU as
-discussed here:
+The check was intended to check whether any other platform or amba
+devices created by of_platform_populate were still populated, but
+instead checked for every kind of device. This is wrong, since platform
+devices typically create a subsystem regular device and set themselves
+as parents.
 
-    https://lkml.org/lkml/2014/4/27/346
+Instead, go ahead and call the unregister functions for any devices
+created with of_platform_populate. The driver core will take care of
+unbinding drivers, and drivers are responsible for getting rid of any
+child devices that weren't created by of_platform_populate.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
-Changes in v4:
-- clarify that disabling an IOMMU DT node may not disable translation
-- be more explicit that examples are only examples
-- add multi-ID master example
+ drivers/of/platform.c       | 32 +++++++++-----------------------
+ include/linux/of.h          |  1 +
+ include/linux/of_platform.h |  7 ++-----
+ 3 files changed, 12 insertions(+), 28 deletions(-)
 
-Changes in v3:
-- use #iommu-cells instead of #address-cells/#size-cells
-- drop optional iommu-names property
-
-Changes in v2:
-- add notes about "dma-ranges" property (drop note from commit message)
-- document priorities of "iommus" property vs. "dma-ranges" property
-- drop #iommu-cells in favour of #address-cells and #size-cells
-- remove multiple-master device example
-
- Documentation/devicetree/bindings/iommu/iommu.txt | 172 ++++++++++++++++++++++
- 1 file changed, 172 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
-
-diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-new file mode 100644
-index 000000000000..464a81eaaf61
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-@@ -0,0 +1,172 @@
-+This document describes the generic device tree binding for IOMMUs and their
-+master(s).
-+
-+
-+IOMMU device node:
-+==================
-+
-+An IOMMU can provide the following services:
-+
-+* Remap address space to allow devices to access physical memory ranges that
-+  they otherwise wouldn't be capable of accessing.
-+
-+  Example: 32-bit DMA to 64-bit physical addresses
-+
-+* Implement scatter-gather at page level granularity so that the device does
-+  not have to.
-+
-+* Provide system protection against "rogue" DMA by forcing all accesses to go
-+  through the IOMMU and faulting when encountering accesses to unmapped
-+  address regions.
-+
-+* Provide address space isolation between multiple contexts.
-+
-+  Example: Virtualization
-+
-+Device nodes compatible with this binding represent hardware with some of the
-+above capabilities.
-+
-+IOMMUs can be single-master or multiple-master. Single-master IOMMU devices
-+typically have a fixed association to the master device, whereas multiple-
-+master IOMMU devices can translate accesses from more than one master.
-+
-+The device tree node of the IOMMU device's parent bus must contain a valid
-+"dma-ranges" property that describes how the physical address space of the
-+IOMMU maps to memory. An empty "dma-ranges" property means that there is a
-+1:1 mapping from IOMMU to memory.
-+
-+Required properties:
-+--------------------
-+- #iommu-cells: The number of cells in an IOMMU specifier needed to encode an
-+  address.
-+
-+The meaning of the IOMMU specifier is defined by the device tree binding of
-+the specific IOMMU. Below are a few examples of typical use-cases:
-+
-+- #iommu-cells = <0>: Single master IOMMU devices are not configurable and
-+  therefore no additional information needs to be encoded in the specifier.
-+  This may also apply to multiple master IOMMU devices that do not allow the
-+  association of masters to be configured. Note that an IOMMU can by design
-+  be multi-master yet only expose a single master in a given configuration.
-+  In such cases the number of cells will usually be 1 as in the next case.
-+- #iommu-cells = <1>: Multiple master IOMMU devices may need to be configured
-+  in order to enable translation for a given master. In such cases the single
-+  address cell corresponds to the master device's ID. In some cases more than
-+  one cell can be required to represent a single master ID.
-+- #iommu-cells = <4>: Some IOMMU devices allow the DMA window for masters to
-+  be configured. The first cell of the address in this may contain the master
-+  device's ID for example, while the second cell could contain the start of
-+  the DMA window for the given device. The length of the DMA window is given
-+  by the third and fourth cells.
-+
-+Note that these are merely examples and real-world use-cases may use different
-+definitions to represent their individual needs. Always refer to the specific
-+IOMMU binding for the exact meaning of the cells that make up the specifier.
-+
-+
-+IOMMU master node:
-+==================
-+
-+Devices that access memory through an IOMMU are called masters. A device can
-+have multiple master interfaces (to one or more IOMMU devices).
-+
-+Required properties:
-+--------------------
-+- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
-+  master interfaces of the device. One entry in the list describes one master
-+  interface of the device.
-+
-+When an "iommus" property is specified in a device tree node, the IOMMU will
-+be used for address translation. If a "dma-ranges" property exists in the
-+device's parent node it will be ignored. An exception to this rule is if the
-+referenced IOMMU is disabled, in which case the "dma-ranges" property of the
-+parent shall take effect. Note that merely disabling a device tree node does
-+not guarantee that the IOMMU is really disabled since the hardware may not
-+have a means to turn off translation.
-+
-+
-+Notes:
-+======
-+
-+One possible extension to the above is to use an "iommus" property along with
-+a "dma-ranges" property in a bus device node (such as PCI host bridges). This
-+can be useful to describe how children on the bus relate to the IOMMU if they
-+are not explicitly listed in the device tree (e.g. PCI devices). However, the
-+requirements of that use-case haven't been fully determined yet. Implementing
-+this is therefore not recommended without further discussion and extension of
-+this binding.
-+
-+
-+Examples:
-+=========
-+
-+Single-master IOMMU:
-+--------------------
-+
-+	iommu {
-+		#iommu-cells = <0>;
-+	};
-+
-+	master {
-+		iommus = <&/iommu>;
-+	};
-+
-+Multiple-master IOMMU with fixed associations:
-+----------------------------------------------
-+
-+	/* multiple-master IOMMU */
-+	iommu {
-+		/*
-+		 * Masters are statically associated with this IOMMU and
-+		 * address translation is always enabled.
-+		 */
-+		#iommu-cells = <0>;
-+	};
-+
-+	/* static association with IOMMU */
-+	master@1 {
-+		reg = <1>;
-+		iommus = <&/iommu>;
-+	};
-+
-+	/* static association with IOMMU */
-+	master@2 {
-+		reg = <2>;
-+		iommus = <&/iommu>;
-+	};
-+
-+Multiple-master IOMMU:
-+----------------------
-+
-+	iommu {
-+		/* the specifier represents the ID of the master */
-+		#iommu-cells = <1>;
-+	};
-+
-+	master@1 {
-+		/* device has master ID 42 in the IOMMU */
-+		iommus = <&/iommu 42>;
-+	};
-+
-+	master@2 {
-+		/* device has master IDs 23 and 24 in the IOMMU */
-+		iommus = <&/iommu 23>, <&/iommu 24>;
-+	};
-+
-+Multiple-master IOMMU with configurable DMA window:
-+---------------------------------------------------
-+
-+	/ {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		iommu {
-+			/* master ID, address and length of DMA window */
-+			#iommu-cells = <4>;
-+		};
-+
-+		master {
-+			/* master ID 42, 4 GiB DMA window starting at 0 */
-+			iommus = <&/iommu  42  0  0x1 0x0>;
-+		};
-+	};
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 500436f9be7f..0197725e033a 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -422,6 +422,7 @@ static int of_platform_bus_create(struct device_node *bus,
+ 			break;
+ 		}
+ 	}
++	of_node_set_flag(bus, OF_POPULATED_BUS);
+ 	return rc;
+ }
+ 
+@@ -508,19 +509,13 @@ EXPORT_SYMBOL_GPL(of_platform_populate);
+ 
+ static int of_platform_device_destroy(struct device *dev, void *data)
+ {
+-	bool *children_left = data;
+-
+ 	/* Do not touch devices not populated from the device tree */
+-	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED)) {
+-		*children_left = true;
++	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED))
+ 		return 0;
+-	}
+ 
+-	/* Recurse, but don't touch this device if it has any children left */
+-	if (of_platform_depopulate(dev) != 0) {
+-		*children_left = true;
+-		return 0;
+-	}
++	/* Recurse for any nodes that were treated as busses */
++	if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
++		device_for_each_child(dev, NULL, of_platform_device_destroy);
+ 
+ 	if (dev->bus == &platform_bus_type)
+ 		platform_device_unregister(to_platform_device(dev));
+@@ -528,19 +523,15 @@ static int of_platform_device_destroy(struct device *dev, void *data)
+ 	else if (dev->bus == &amba_bustype)
+ 		amba_device_unregister(to_amba_device(dev));
+ #endif
+-	else {
+-		*children_left = true;
+-		return 0;
+-	}
+ 
+ 	of_node_clear_flag(dev->of_node, OF_POPULATED);
+-
++	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+ 	return 0;
+ }
+ 
+ /**
+  * of_platform_depopulate() - Remove devices populated from device tree
+- * @parent: device which childred will be removed
++ * @parent: device which children will be removed
+  *
+  * Complementary to of_platform_populate(), this function removes children
+  * of the given device (and, recurrently, their children) that have been
+@@ -550,14 +541,9 @@ static int of_platform_device_destroy(struct device *dev, void *data)
+  * Returns 0 when all children devices have been removed or
+  * -EBUSY when some children remained.
+  */
+-int of_platform_depopulate(struct device *parent)
++void of_platform_depopulate(struct device *parent)
+ {
+-	bool children_left = false;
+-
+-	device_for_each_child(parent, &children_left,
+-			      of_platform_device_destroy);
+-
+-	return children_left ? -EBUSY : 0;
++	device_for_each_child(parent, NULL, of_platform_device_destroy);
+ }
+ EXPORT_SYMBOL_GPL(of_platform_depopulate);
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 196b34c1ef4e..abf829a1f150 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -204,6 +204,7 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+ #define OF_DETACHED	2 /* node has been detached from the device tree */
+ #define OF_POPULATED	3 /* device already created for the node */
++#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
+ 
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index d96e1badbee0..c2b0627a2317 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -72,7 +72,7 @@ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+ 				const struct of_dev_auxdata *lookup,
+ 				struct device *parent);
+-extern int of_platform_depopulate(struct device *parent);
++extern void of_platform_depopulate(struct device *parent);
+ #else
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+@@ -81,10 +81,7 @@ static inline int of_platform_populate(struct device_node *root,
+ {
+ 	return -ENODEV;
+ }
+-static inline int of_platform_depopulate(struct device *parent)
+-{
+-	return -ENODEV;
+-}
++static inline void of_platform_depopulate(struct device *parent) { }
+ #endif
+ 
+ #endif	/* _LINUX_OF_PLATFORM_H */
 -- 
-2.0.1
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
