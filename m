@@ -1,75 +1,42 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers: video: fbdev: atmel_lcdfb.c: Add ability to
- inverted backlight PWM.
-Date: Fri, 4 Jul 2014 15:28:52 +0200
-Message-ID: <53B6AC14.3090403@atmel.com>
-References: <1404440796-11090-1-git-send-email-mwelling@ieee.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 2/7] pwm: add support for atmel-hlcdc-pwm device
+Date: Fri, 4 Jul 2014 15:31:16 +0200
+Message-ID: <20140704153116.5fab1e1b@bbrezillon>
+References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1402329860-27520-3-git-send-email-boris.brezillon@free-electrons.com>
+	<539D6328.4020505@traphandler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404440796-11090-1-git-send-email-mwelling-EkmVulN54Sk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <539D6328.4020505@traphandler.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: jjhiblot@traphandler.com
+Cc: Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/2014 04:26, Michael Welling :
-> The code has a variable to change the polarity of the PWM backlight control but
-> it was not being initialized. This patch adds a devicetree entry to set the
-> variable if required.
-> 
-> Signed-off-by: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
-
-Seems good
+On Sun, 15 Jun 2014 11:11:04 +0200
+Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
 
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >  
+> > +config PWM_ATMEL_HLCDC_PWM
+> > +	tristate "Atmel HLCDC PWM support"
+> > +	depends on MFD_ATMEL_HLCDC
+> I'd personnaly prefer a 'select' instead of 'depends on' here. Or maybe
+> the MFD driver should enabled y defaut for platforms supporting the hlcdc.
 
+After taking a closer look at other drivers, it seems most of sub
+drivers "depends on" the MFD driver, so, unless other people complain
+about that, I'll keep this definition.
 
-> ---
->  .../devicetree/bindings/video/atmel,lcdc.txt       |    1 +
->  drivers/video/fbdev/atmel_lcdfb.c                  |    3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> index 1ec175e..b75af94 100644
-> --- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> +++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> @@ -46,6 +46,7 @@ Required properties (as per of_videomode_helper):
->  
->  Optional properties (as per of_videomode_helper):
->   - atmel,lcdcon-backlight: enable backlight
-> + - atmel,lcdcon-backlight-inverted: invert backlight PWM polarity
->   - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
->   - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
->  
-> diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
-> index d36e830..92640d4 100644
-> --- a/drivers/video/fbdev/atmel_lcdfb.c
-> +++ b/drivers/video/fbdev/atmel_lcdfb.c
-> @@ -290,7 +290,7 @@ static void init_contrast(struct atmel_lcdfb_info *sinfo)
->  
->  	/* contrast pwm can be 'inverted' */
->  	if (pdata->lcdcon_pol_negative)
-> -			contrast_ctr &= ~(ATMEL_LCDC_POL_POSITIVE);
-> +		contrast_ctr &= ~(ATMEL_LCDC_POL_POSITIVE);
->  
->  	/* have some default contrast/backlight settings */
->  	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, contrast_ctr);
-> @@ -1097,6 +1097,7 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
->  	pdata->lcd_wiring_mode = ret;
->  
->  	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
-> +	pdata->lcdcon_pol_negative = of_property_read_bool(display_np, "atmel,lcdcon-backlight-inverted");
->  
->  	timings = of_get_display_timings(display_np);
->  	if (!timings) {
-> 
+Lee, any opinion on this point ?
 
+Best Regards,
+
+Boris
 
 -- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
