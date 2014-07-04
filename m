@@ -1,116 +1,86 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v6 14/23] regmap: Add regmap_reg_copy function
-Date: Fri,  4 Jul 2014 11:55:13 +0200
-Message-ID: <1404467722-26687-15-git-send-email-javier.martinez@collabora.co.uk>
-References: <1404467722-26687-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
+ basic clocks
+Date: Fri, 4 Jul 2014 12:07:47 +0200
+Message-ID: <20140704100747.GD13487@lukather>
+References: <1403798144-32188-1-git-send-email-wens@csie.org>
+ <20140702223552.7440.60829@quantum>
+ <CAGb2v67ceT8X-zmB7ULPg6Kqd8PRpmo0x_Vu9iF4s_6euXg_FQ@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404467722-26687-1-git-send-email-javier.martinez@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>, Tushar Behera <trblinux@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7H23GOQKGQEMZ4ZAJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67ceT8X-zmB7ULPg6Kqd8PRpmo0x_Vu9iF4s_6euXg_FQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some device drivers using the register map API need to copy the
-value from one register to another. Even though it can be done
-with a combination of regmap_read() and regmap_write(), it is
-better to have a function to avoid code duplication and also it
-sanity check and do it atomically by holding the regmap lock.
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
+--kvUQC+jR9YzypDnK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes since v5: None
+On Thu, Jul 03, 2014 at 03:37:36PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Jul 3, 2014 at 6:35 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
+ote:
+> > Quoting Chen-Yu Tsai (2014-06-26 08:55:38)
+> >> Hi everyone,
+> >>
+> >> This is v4 of the sun8i clock series, which adds basic clock
+> >> support for the A23 SoC. It is based on my initial sun8i bring
+> >> up series [1]. This series was split up from the original A23
+> >> series [2]. Yet to come are more clocks, reset controllers,
+> >> prcm, pinctrl, and mmc.
+> >
+> > Hello Chen-Yu,
+> >
+> > This series looks good to me.
+>=20
+> Thanks. Assuming no one else raises any issues, I consider this
+> series merged. I'll send the next sun8i series later today.
+>=20
+> The remaining series still have some clock patches, so thanks
+> in advance.
 
-Changes since v4: None
+I just merged it all in sunxi/dt-for-3.17 and sunxi/clocks-for-3.17.
 
-Changes since v3: None
----
- drivers/base/regmap/regmap.c | 34 ++++++++++++++++++++++++++++++++++
- include/linux/regmap.h       |  9 +++++++++
- 2 files changed, 43 insertions(+)
+Thanks!
+Maxime
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 74d8c06..a2e0b04 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -2555,6 +2555,40 @@ int regmap_parse_val(struct regmap *map, const void *buf,
- }
- EXPORT_SYMBOL_GPL(regmap_parse_val);
- 
-+/**
-+ * regmap_reg_copy(): Copy a value from a single register to another one
-+ *
-+ * @map: Register map to operate on
-+ * @dest: Register to copy the value to
-+ * @src: Register to copy the value from
-+ *
-+ * A value of zero will be returned on success, a negative errno will
-+ * be returned in error cases.
-+ */
-+int regmap_reg_copy(struct regmap *map, unsigned int dest, unsigned int src)
-+{
-+	int val;
-+	int ret = 0;
-+
-+	if (dest == src)
-+		return ret;
-+
-+	if (dest % map->reg_stride ||
-+	    src % map->reg_stride)
-+		return -EINVAL;
-+
-+	map->lock(map->lock_arg);
-+
-+	ret = _regmap_read(map, src, &val);
-+	if (!ret)
-+		ret = _regmap_write(map, dest, val);
-+
-+	map->unlock(map->lock_arg);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(regmap_reg_copy);
-+
- static int __init regmap_initcall(void)
- {
- 	regmap_debugfs_initcall();
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 7b0e4b4..116c22b 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -445,6 +445,8 @@ int regmap_register_patch(struct regmap *map, const struct reg_default *regs,
- int regmap_parse_val(struct regmap *map, const void *buf,
- 				unsigned int *val);
- 
-+int regmap_reg_copy(struct regmap *map, unsigned int dest, unsigned int src);
-+
- static inline bool regmap_reg_in_range(unsigned int reg,
- 				       const struct regmap_range *range)
- {
-@@ -723,6 +725,13 @@ static inline int regmap_parse_val(struct regmap *map, const void *buf,
- 	return -EINVAL;
- }
- 
-+static inline int regmap_reg_copy(struct regmap *map, unsigned int dest,
-+				  unsigned int src)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
- static inline struct regmap *dev_get_regmap(struct device *dev,
- 					    const char *name)
- {
--- 
-2.0.0.rc2
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--kvUQC+jR9YzypDnK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtnzzAAoJEBx+YmzsjxAg7AgQALxfGqF80RCk3v3dmgCOn4uR
+gL1BoiGcY9m8DAHnVrScF9m6kvaAwaNiODMvmq0MJvBTTsPXrk7cnfMqP+BmEGr7
+9bybzWMkHj2meSMwE8B6TnC1FjSBUT1xuXlE+uuwuGsJhbme/yajgQoifPwyvrTB
+L2+GQMfICKij3K76ihLR6aqONwIJuNGNt+J/R62zgUmqMsUY/ZA0o1BHraVY5ZCN
+tlCqm61YQEVWhI3hKWb9hvfdzBOHM5FHVOaVTkLgZKvuGfKnGd5jqZvlNAT/S6vP
+EfOyjkDz16Xm+w06B/cLvJVthRwxOobiurtZToL+YE/rcvsAqW6Vko4OlYtQv1xq
+wN0cfDWln3f5dYlK9C4vHEaq32EbNrdF9fTQKBoOXXg4CEFNwfPAy5lEGzjqhOOd
+k2S+i20dO3Vv2dFQb7IH4DzUJ+U4wt3FBkPdvsTKOV6odeK/7d1PiZ6CtxRs+rMH
+kSUihm/IXOEEjAUTf/XzAYGznQv9K1a1aeJ/eqTuYOBVrsYiY292Zir0CN3fL3Tl
+wpnQXQvRWOYCKyw6ySsFQ35QRM5kXM1r5s9IpppK6Q/X7zXCEw6RuecJC4Qls1L9
+K13+tpJoBccaD35GYPpBw5YL7Ct6oJJtq2M9CN2vgn7DR57A7lMDaUtSjKvy+PwC
+TFQjyVs7C3lNYLO1Erf2
+=5BNR
+-----END PGP SIGNATURE-----
+
+--kvUQC+jR9YzypDnK--
