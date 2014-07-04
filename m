@@ -1,59 +1,173 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dmaengine: mpc512x: add device tree binding
- document
-Date: Fri, 4 Jul 2014 18:04:44 +0100
-Message-ID: <20140704170444.GE7106@leverpostej>
-References: <1403088492-15241-1-git-send-email-a13xp0p0v88@gmail.com>
- <1403088492-15241-2-git-send-email-a13xp0p0v88@gmail.com>
- <20140618133730.GB11895@leverpostej>
- <CAF0T0X4=fynr+ou+LK58DwpFnz5rgPiqadykKXf-bsp7N0uaeA@mail.gmail.com>
- <CAF0T0X5LPRtm6_Q5i0ncpA3NTWckYUwqXgBxGn5ydPMq40VHBQ@mail.gmail.com>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH v3] i2c: busses: i2c-pxa.c: Fix for possible null pointer dereferenc
+Date: Fri, 4 Jul 2014 19:07:48 +0200
+Message-ID: <CAFo99gYU6v_ohZa6rSfHwUhk6Lw1dCtVWOQsLk3tZ_GRyqExbg@mail.gmail.com>
+References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<20140704091000.GA4738@lianli>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF0T0X5LPRtm6_Q5i0ncpA3NTWckYUwqXgBxGn5ydPMq40VHBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140704091000.GA4738@lianli>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emil Goode <emilgoode@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Leilei Shang <shangll@marvell.com>, Peter Korsgaard <peter@korsgaard.com>, linux-i2c@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+2014-07-04 11:10 GMT+02:00 Emil Goode <emilgoode@gmail.com>:
+> Hello Rickard,
+>
+> Since this is a probe function there is also no need to release the devm_*
+> resources in the i2c_pxa_remove function, this leads to double free.
+>
+> Also I have a few nit-pick comments below.
+>
+> On Thu, Jul 03, 2014 at 10:19:16PM +0200, Rickard Strandqvist wrote:
+>> Fix for possible null pointer dereferenc, and there is a risk for memory leak if something unexpected happens and the function returns.
+>> It now use Managed Device Resource instead.
+>>
+>> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+>> ---
+>>  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
+>>  1 file changed, 16 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+>> index be671f7..2edb633 100644
+>> --- a/drivers/i2c/busses/i2c-pxa.c
+>> +++ b/drivers/i2c/busses/i2c-pxa.c
+>> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>       struct resource *res = NULL;
+>>       int ret, irq;
+>>
+>> -     i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
+>> +     i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
+>>       if (!i2c) {
+>>               ret = -ENOMEM;
+>> -             goto emalloc;
+>> +             goto err_nothing_to_release;
+>
+> Perhaps its a good idea to return directly here, then the label
+> err_nothing_to_release can be removed.
+>
+>>       }
+>>
+>>       /* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+>> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>       if (ret > 0)
+>>               ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
+>>       if (ret < 0)
+>> -             goto eclk;
+>> +             goto err_nothing_to_release;
+>
+> Same here.
+>
+>>
+>>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>>       irq = platform_get_irq(dev, 0);
+>>       if (res == NULL || irq < 0) {
+>>               ret = -ENODEV;
+>> -             goto eclk;
+>> +             goto err_nothing_to_release;
+>
+> Same here.
+>
+>>       }
+>>
+>> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
+>> +     if (!devm_request_mem_region(&dev->dev, res->start,
+>> +                             resource_size(res), res->name)) {
+>>               ret = -ENOMEM;
+>> -             goto eclk;
+>> +             goto emalloc;
+>
+> We could also return directly here since the release_mem_region call should
+> be removed, as mentioned in Jingoos reply.
+>
+>>       }
+>>
+>>       i2c->adap.owner   = THIS_MODULE;
+>> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>
+>>       strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
+>>
+>> -     i2c->clk = clk_get(&dev->dev, NULL);
+>> +     i2c->clk = devm_clk_get(&dev->dev, NULL);
+>>       if (IS_ERR(i2c->clk)) {
+>>               ret = PTR_ERR(i2c->clk);
+>> -             goto eclk;
+>> +             goto emalloc;
+>
+> Same here.
+>
+>>       }
+>>
+>> -     i2c->reg_base = ioremap(res->start, resource_size(res));
+>> -     if (!i2c->reg_base) {
+>> +     i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
+>> +     if (IS_ERR(i2c->reg_base)) {
+>>               ret = -EIO;
+>> -             goto eremap;
+>> +             goto emalloc;
+>
+> Same here.
+>
+>>       }
+>>
+>>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+>> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
+>>       } else {
+>>               i2c->adap.algo = &i2c_pxa_algorithm;
+>> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
+>> -                               dev_name(&dev->dev), i2c);
+>> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
+>> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
+>>               if (ret)
+>> -                     goto ereqirq;
+>> +                     goto emalloc;
+>
+> Same here.
+>
+>>       }
+>>
+>>       i2c_pxa_reset(i2c);
+>> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>  eadapt:
+>>       if (!i2c->use_pio)
+>>               free_irq(irq, i2c);
+>
+> The free_irq() call should also be removed since devm_request_irq() was used.
+>
+>> -ereqirq:
+>> -     clk_disable_unprepare(i2c->clk);
+>> -     iounmap(i2c->reg_base);
+>> -eremap:
+>> -     clk_put(i2c->clk);
+>> -eclk:
+>> -     kfree(i2c);
+>>  emalloc:
+>>       release_mem_region(res->start, resource_size(res));
+>> +err_nothing_to_release:
+>>       return ret;
+>>  }
+>>
+>
+> Best regards,
+>
+> Emil Goode
 
-Apologies for the late reply. DT-related email is somewhat a firehose
-and unfortunately I lose track of things.
+Hi All!
 
-On Thu, Jun 19, 2014 at 02:59:19PM +0100, Alexander Popov wrote:
-> 2014-06-18 18:56 GMT+04:00 Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> > 2014-06-18 17:37 GMT+04:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> >> On Wed, Jun 18, 2014 at 11:48:10AM +0100, Alexander Popov wrote:
-> >>> Introduce a device tree binding document for the MPC512x DMA controller
-> >>> +Optional properties:
-> >>> +- #dma-cells: the length of the DMA specifier, must be <1>.
-> >>> +     Each channel of this DMA controller has a peripheral request line,
-> >>> +     the assignment is fixed in hardware. This one cell
-> >>> +     in dmas property of a client device represents the channel number.
-> >>
-> >> Surely this is required to be able to refer to DMA channels on the
-> >> device?
-> >
-> > Excuse me, I didn't understand your question.
-> > Do you inquire about the reason of making #dma-cells an optional property?
-> > It's optional because device tree based lookup support is made
-> > optional (part 3/3).
-> 
-> Mark, did I answer your question?
-> Should I fix anything in this patch series?
+Ok, so there is literally nothing to do release anymore.
+A good system Devres, I understand you want everyone to use it.
 
-I would move it under required properties even if we happen to not use
-it in certain edge cases.
+I also think it is also better to return directly then.
+But who decides, Wolfram?
 
-Moving forwards everything should be DT-driven, so it'll be necessary.
+Would appreciate if I did not have to do more than one patch more.
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And thanks Jingoo for spelling, etc.
+
+
+Kind regards
+Rickard Strandqvist
