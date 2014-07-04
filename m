@@ -1,36 +1,92 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
-Date: Fri,  4 Jul 2014 12:43:23 +0200
-Message-ID: <1404470603-30394-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v6 02/23] mfd: max77686: Add power management support
+Date: Fri, 04 Jul 2014 12:51:12 +0200
+Message-ID: <1404471072.14069.0.camel@AMDC1943>
+References: <1404467722-26687-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1404467722-26687-3-git-send-email-javier.martinez@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1404467722-26687-3-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Dialog Semiconductor Plc to the list of device tree vendor prefixes.
+On pi=C4=85, 2014-07-04 at 11:55 +0200, Javier Martinez Canillas wrote:
+> The driver doesn't have PM operations defined so add a suspend
+> and resume function handlers to allow the PMIC IRQ to wakeup
+> the system when it is put into a sleep state.
+>=20
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
+=2Euk>
+> ---
+>  drivers/mfd/max77686.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 9ab11e0..be47d1a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -38,6 +38,7 @@ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
- denx	Denx Software Engineering
- digi	Digi International Inc.
-+dlgnf	Dialog Semiconductor Plc
- dlink	D-Link Corporation
- dmo	Data Modul AG
- ebv	EBV Elektronik
--- 
-2.0.0
+Best regards,
+Krzysztof
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
+> index 3cb41d0..a38e9ee 100644
+> --- a/drivers/mfd/max77686.c
+> +++ b/drivers/mfd/max77686.c
+> @@ -240,10 +240,50 @@ static const struct i2c_device_id max77686_i2c_=
+id[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, max77686_i2c_id);
+> =20
+> +#ifdef CONFIG_PM_SLEEP
+> +static int max77686_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *i2c =3D container_of(dev, struct i2c_client, dev=
+);
+> +	struct max77686_dev *max77686 =3D i2c_get_clientdata(i2c);
+> +
+> +	if (device_may_wakeup(dev))
+> +		enable_irq_wake(max77686->irq);
+> +
+> +	/*
+> +	 * IRQ must be disabled during suspend because if it happens
+> +	 * while suspended it will be handled before resuming I2C.
+> +	 *
+> +	 * When device is woken up from suspend (e.g. by RTC wake alarm),
+> +	 * an interrupt occurs before resuming I2C bus controller.
+> +	 * Interrupt handler tries to read registers but this read
+> +	 * will fail because I2C is still suspended.
+> +	 */
+> +	disable_irq(max77686->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int max77686_resume(struct device *dev)
+> +{
+> +	struct i2c_client *i2c =3D container_of(dev, struct i2c_client, dev=
+);
+> +	struct max77686_dev *max77686 =3D i2c_get_clientdata(i2c);
+> +
+> +	if (device_may_wakeup(dev))
+> +		disable_irq_wake(max77686->irq);
+> +
+> +	enable_irq(max77686->irq);
+> +
+> +	return 0;
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +static SIMPLE_DEV_PM_OPS(max77686_pm, max77686_suspend, max77686_res=
+ume);
+> +
+>  static struct i2c_driver max77686_i2c_driver =3D {
+>  	.driver =3D {
+>  		   .name =3D "max77686",
+>  		   .owner =3D THIS_MODULE,
+> +		   .pm =3D &max77686_pm,
+>  		   .of_match_table =3D of_match_ptr(max77686_pmic_dt_match),
+>  	},
+>  	.probe =3D max77686_i2c_probe,
