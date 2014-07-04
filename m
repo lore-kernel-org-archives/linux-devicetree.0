@@ -1,59 +1,81 @@
-From: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
-Subject: [PATCH] drivers: video: fbdev: atmel_lcdfb.c: Add ability to inverted backlight PWM.
-Date: Thu,  3 Jul 2014 21:26:36 -0500
-Message-ID: <1404440796-11090-1-git-send-email-mwelling@ieee.org>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] Migrate PXA27x platforms to clock framework
+Date: Fri, 4 Jul 2014 10:39:34 +0800
+Message-ID: <CAN1soZwtuyWQhuLO4pK6aB51ibGjAHZN3+VDyAFMfU3gBfxdxg@mail.gmail.com>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+	<7034630.fvV46PN35C@wuerfel>
+	<877g3yp7ie.fsf@free.fr>
+	<CAN1soZyu192Y7z-HJHo+3_bddFcf=H0udgJSWez1=Lmrb5wVfg@mail.gmail.com>
+	<87lhsanl7q.fsf@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87lhsanl7q.fsf-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The code has a variable to change the polarity of the PWM backlight control but
-it was not being initialized. This patch adds a devicetree entry to set the
-variable if required.
+On Fri, Jul 4, 2014 at 6:14 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
+>>> Haojian, are you ok with that ? And BTW, does a combined kernel for PXA
+>>> platforms even exists (mixing pxa3xx and pxa2xx for example) ?
+>>>
+>>
+>> It's acceptable to me that different silicons are queued in different stages.
+>> I only request that it won't break the compiler building & bootup.
+> OK.
+>
+>>
+>> But I think that the pxa clock driver may be shared among all PXA silicons
+>> except for the clock table. What's your opinion?
+> I don't think so because of the core clocks.
+> These ones are specific to each pxa, and so their computation is :
+>  - pxa25x plays with CCCR and specific L, M and N2 multiplication tables
+>  - pxa27x plays with CCCR and specific L, M and N2 multiplication tables
+>  - pxa3xx plays with ASCR, MEMCLKCFG, and AC97 div
+>
+> I don't see very well how a clock table could describe that. Do you have
+> something specific in mind ?
+>
 
-Signed-off-by: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
----
- .../devicetree/bindings/video/atmel,lcdc.txt       |    1 +
- drivers/video/fbdev/atmel_lcdfb.c                  |    3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+As I remember, those registers bits are encoded. So we can define a clock mux
+that connected to those fixed clock dividers. Then the clock gate is
+the child of
+the clock mux.
 
-diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-index 1ec175e..b75af94 100644
---- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-+++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-@@ -46,6 +46,7 @@ Required properties (as per of_videomode_helper):
- 
- Optional properties (as per of_videomode_helper):
-  - atmel,lcdcon-backlight: enable backlight
-+ - atmel,lcdcon-backlight-inverted: invert backlight PWM polarity
-  - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
-  - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
- 
-diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
-index d36e830..92640d4 100644
---- a/drivers/video/fbdev/atmel_lcdfb.c
-+++ b/drivers/video/fbdev/atmel_lcdfb.c
-@@ -290,7 +290,7 @@ static void init_contrast(struct atmel_lcdfb_info *sinfo)
- 
- 	/* contrast pwm can be 'inverted' */
- 	if (pdata->lcdcon_pol_negative)
--			contrast_ctr &= ~(ATMEL_LCDC_POL_POSITIVE);
-+		contrast_ctr &= ~(ATMEL_LCDC_POL_POSITIVE);
- 
- 	/* have some default contrast/backlight settings */
- 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, contrast_ctr);
-@@ -1097,6 +1097,7 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
- 	pdata->lcd_wiring_mode = ret;
- 
- 	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
-+	pdata->lcdcon_pol_negative = of_property_read_bool(display_np, "atmel,lcdcon-backlight-inverted");
- 
- 	timings = of_get_display_timings(display_np);
- 	if (!timings) {
--- 
-1.7.9.5
+In DTS file, peripheral device node could specify a clock rate. In
+peripheral device
+driver, it could also change the clock rate by clk_set_rate().
 
+>>>> Also (for my understanding) when you say that you plan to do
+>>>> pxa25x and pxa3xx next, does that include pxa26x and pxa93x?
+>>> I don't have the Technical Reference Manuals for these ones so the answer is
+>>> no. And Google wasn't a great friend at providing them.
+>>>
+>>
+>> Converting them into new clock driver may not rely on the reference manual.
+> Actually I went through the code and :
+>  - pxa26x is only a superset of pxa25x with one more clock : pxa26x-gpio
+>  - pxa93x is the same clock set as pxa3xx, right ?
+> So if I convert pxa25x, pxa27x and pxa3xx I'll cover everything, right ?
+>
+>>>> I assume it does as they are apparently minor revisions of the
+>>>> former, but it's not completely clear from your description.
+>>> My description doesn't mention them, as I have no information about them, nor
+>>> any hardware to test on.
+>>>
+>>
+>> We can request others to help testing in the mailing list.
+> That's exactly what will enable pxa25x and pxa3xx. I have them converted in my
+> tree, but I don't want to mix these patches in as I can't test them, and testing
+> brings in bigger delays.
+
+Delay shouldn't be the block issue.
+
+Regards
+Haojian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
