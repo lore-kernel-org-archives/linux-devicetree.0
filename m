@@ -1,122 +1,37 @@
-From: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] mmc: dw_mmc: add support for RK3288.
-Date: Sat,  5 Jul 2014 20:59:34 +0800
-Message-ID: <1404565174-2923-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lintao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, chenfen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH v2 0/4] regulator: act8865: add support for act8846
+Date: Sat,  5 Jul 2014 15:20:52 +0200
+Message-ID: <1404566456-9121-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Wenyou Yang <wenyou.yang@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch focuses on clock setting for RK3288 mmc controller.
+This patchset adds support for the Active-Semi act8846 PMU [1] to the
+existing driver for act8865.
 
-In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
-and if DDR 8bit mode, CLKDIV register must be set 1.
+A dts which enables the act8846 on Radxa Rock is available at [2].
 
-Signed-off-by: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  4 +-
- drivers/mmc/host/dw_mmc-pltfm.c                    | 50 +++++++++++++++++++++-
- 2 files changed, 51 insertions(+), 3 deletions(-)
+Changes since v1:
+  - rebased on current regulator tree
+  - reworded message of patch "set correct number of regulators in pdata"
+  - added Wenyou Yang's Tested-by
 
-diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-index c559f3f..e3f95cd 100644
---- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-@@ -10,7 +10,9 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
- Required Properties:
- 
- * compatible: should be
--	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
-+	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
-+							before RK3288
-+	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
- 
- Example:
- 
-diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-index d4a47a9..15d796e 100644
---- a/drivers/mmc/host/dw_mmc-pltfm.c
-+++ b/drivers/mmc/host/dw_mmc-pltfm.c
-@@ -21,17 +21,61 @@
- #include <linux/mmc/mmc.h>
- #include <linux/mmc/dw_mmc.h>
- #include <linux/of.h>
-+#include <linux/clk.h>
- 
- #include "dw_mmc.h"
- #include "dw_mmc-pltfm.h"
- 
-+#define RK3288_CLKGEN_DIV	2
-+
- static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
- {
- 	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
- }
- 
--static const struct dw_mci_drv_data rockchip_drv_data = {
-+static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-+{
-+	host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-+
-+	return 0;
-+}
-+
-+static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-+{
-+	int ret;
-+	unsigned int cclkin;
-+
-+	/*
-+	 * cclkin: source clock of mmc controller.
-+	 * bus_hz: card interface clock generated by CLKGEN.
-+	 * bus_hz = cclkin / RK3288_CLKGEN_DIV;
-+	 * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
-+	 *
-+	 * Note: div can only be 0 or 1
-+	 *       if DDR50 8bit mode, div must be set 1
-+	 */
-+	if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
-+	    (ios->timing == MMC_TIMING_UHS_DDR50 ||
-+	     ios->timing == MMC_TIMING_MMC_DDR52))
-+		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
-+	else
-+		cclkin = ios->clock * RK3288_CLKGEN_DIV;
-+
-+	ret = clk_set_rate(host->ciu_clk, cclkin);
-+	if (ret)
-+		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-+
-+	host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-+}
-+
-+static const struct dw_mci_drv_data rk2928_drv_data = {
-+	.prepare_command	= dw_mci_pltfm_prepare_command,
-+};
-+
-+static const struct dw_mci_drv_data rk3288_drv_data = {
- 	.prepare_command	= dw_mci_pltfm_prepare_command,
-+	.set_ios	= dw_mci_rk3288_set_ios,
-+	.setup_clock	= dw_mci_rk3288_setup_clock,
- };
- 
- static const struct dw_mci_drv_data socfpga_drv_data = {
-@@ -95,7 +139,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
- static const struct of_device_id dw_mci_pltfm_match[] = {
- 	{ .compatible = "snps,dw-mshc", },
- 	{ .compatible = "rockchip,rk2928-dw-mshc",
--		.data = &rockchip_drv_data },
-+		.data = &rk2928_drv_data },
-+	{ .compatible = "rockchip,rk3288-dw-mshc",
-+		.data = &rk3288_drv_data },
- 	{ .compatible = "altr,socfpga-dw-mshc",
- 		.data = &socfpga_drv_data },
- 	{},
+[1] http://www.active-semi.com/products/power-management-units/act88xx/
+[2] https://github.com/bengal/linux/tree/act88xx-regulator
+
+Beniamino Galvani (4):
+  regulator: act8865: set correct number of regulators in pdata
+  regulator: act8865: prepare support for other act88xx devices
+  regulator: act8865: add support for act8846
+  regulator: act8865: add act8846 to DT binding documentation
+
+ .../bindings/regulator/act8865-regulator.txt       |    7 +-
+ drivers/regulator/act8865-regulator.c              |  282 +++++++++++---------
+ include/linux/regulator/act8865.h                  |   23 +-
+ 3 files changed, 181 insertions(+), 131 deletions(-)
+
 -- 
-1.8.3.2
+1.7.10.4
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
