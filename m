@@ -1,78 +1,120 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH] video: fbdev: omap2: dss: dsi.c:  Cleaning up variable that is never used
-Date: Sat,  5 Jul 2014 14:38:40 +0200
-Message-ID: <1404563921-20941-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] mmc: dw_mmc: add support for RK3288.
+Date: Sat,  5 Jul 2014 20:59:34 +0800
+Message-ID: <1404565174-2923-1-git-send-email-addy.ke@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Rickard Strandqvist <rickard.strandqvist-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sathya Prakash M R <sathyap-l0cyMroinI0@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lintao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, chenfen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rickard Strandqvist <rickard.strandqvist-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+This patch focuses on clock setting for RK3288 mmc controller.
 
-Variable ar assigned a value that is never used.
-I have also removed all the code that thereby serves no purpose.
+In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
+and if DDR 8bit mode, CLKDIV register must be set 1.
 
-This was found using a static code analysis program called cppcheck
-
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Signed-off-by: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- drivers/video/fbdev/omap2/dss/dsi.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  4 +-
+ drivers/mmc/host/dw_mmc-pltfm.c                    | 50 +++++++++++++++++++++-
+ 2 files changed, 51 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/omap2/dss/dsi.c b/drivers/video/fbdev/omap2/dss/dsi.c
-index 4755a34..32d2ba6 100644
---- a/drivers/video/fbdev/omap2/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/dss/dsi.c
-@@ -1207,13 +1207,12 @@ static inline void dsi_enable_pll_clock(struct platform_device *dsidev,
+diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+index c559f3f..e3f95cd 100644
+--- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+@@ -10,7 +10,9 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
+ Required Properties:
  
- static void _dsi_print_reset_status(struct platform_device *dsidev)
+ * compatible: should be
+-	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
++	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
++							before RK3288
++	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
+ 
+ Example:
+ 
+diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+index d4a47a9..15d796e 100644
+--- a/drivers/mmc/host/dw_mmc-pltfm.c
++++ b/drivers/mmc/host/dw_mmc-pltfm.c
+@@ -21,17 +21,61 @@
+ #include <linux/mmc/mmc.h>
+ #include <linux/mmc/dw_mmc.h>
+ #include <linux/of.h>
++#include <linux/clk.h>
+ 
+ #include "dw_mmc.h"
+ #include "dw_mmc-pltfm.h"
+ 
++#define RK3288_CLKGEN_DIV	2
++
+ static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
  {
--	u32 l;
- 	int b0, b1, b2;
+ 	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
+ }
  
- 	/* A dummy read using the SCP interface to any DSIPHY register is
- 	 * required after DSIPHY reset to complete the reset of the DSI complex
- 	 * I/O. */
--	l = dsi_read_reg(dsidev, DSI_DSIPHY_CFG5);
-+	dsi_read_reg(dsidev, DSI_DSIPHY_CFG5);
+-static const struct dw_mci_drv_data rockchip_drv_data = {
++static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
++{
++	host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
++
++	return 0;
++}
++
++static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
++{
++	int ret;
++	unsigned int cclkin;
++
++	/*
++	 * cclkin: source clock of mmc controller.
++	 * bus_hz: card interface clock generated by CLKGEN.
++	 * bus_hz = cclkin / RK3288_CLKGEN_DIV;
++	 * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
++	 *
++	 * Note: div can only be 0 or 1
++	 *       if DDR50 8bit mode, div must be set 1
++	 */
++	if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
++	    (ios->timing == MMC_TIMING_UHS_DDR50 ||
++	     ios->timing == MMC_TIMING_MMC_DDR52))
++		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
++	else
++		cclkin = ios->clock * RK3288_CLKGEN_DIV;
++
++	ret = clk_set_rate(host->ciu_clk, cclkin);
++	if (ret)
++		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
++
++	host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
++}
++
++static const struct dw_mci_drv_data rk2928_drv_data = {
++	.prepare_command	= dw_mci_pltfm_prepare_command,
++};
++
++static const struct dw_mci_drv_data rk3288_drv_data = {
+ 	.prepare_command	= dw_mci_pltfm_prepare_command,
++	.set_ios	= dw_mci_rk3288_set_ios,
++	.setup_clock	= dw_mci_rk3288_setup_clock,
+ };
  
- 	if (dss_has_feature(FEAT_DSI_REVERSE_TXCLKESC)) {
- 		b0 = 28;
-@@ -3902,7 +3901,7 @@ static int dsi_proto_config(struct platform_device *dsidev)
- static void dsi_proto_timings(struct platform_device *dsidev)
- {
- 	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
--	unsigned tlpx, tclk_zero, tclk_prepare, tclk_trail;
-+	unsigned tlpx, tclk_zero, tclk_prepare;
- 	unsigned tclk_pre, tclk_post;
- 	unsigned ths_prepare, ths_prepare_ths_zero, ths_zero;
- 	unsigned ths_trail, ths_exit;
-@@ -3921,7 +3920,7 @@ static void dsi_proto_timings(struct platform_device *dsidev)
- 
- 	r = dsi_read_reg(dsidev, DSI_DSIPHY_CFG1);
- 	tlpx = FLD_GET(r, 20, 16) * 2;
--	tclk_trail = FLD_GET(r, 15, 8);
-+	FLD_GET(r, 15, 8);
- 	tclk_zero = FLD_GET(r, 7, 0);
- 
- 	r = dsi_read_reg(dsidev, DSI_DSIPHY_CFG2);
-@@ -4669,12 +4668,11 @@ static void print_dsi_dispc_vm(const char *str,
- 	unsigned long byteclk = t->hsclk / 4;
- 	unsigned long pck;
- 	u64 dsi_tput;
--	int dsi_hact, dsi_htot;
-+	int dsi_hact;
- 
- 	dsi_tput = (u64)byteclk * t->ndl * 8;
- 	pck = (u32)div64_u64(dsi_tput, t->bitspp);
- 	dsi_hact = DIV_ROUND_UP(DIV_ROUND_UP(t->hact * t->bitspp, 8) + 6, t->ndl);
--	dsi_htot = t->hss + t->hsa + t->hse + t->hbp + dsi_hact + t->hfp;
- 
- 	vm.pixelclock = pck;
- 	vm.hsw = div64_u64((u64)(t->hsa + t->hse) * pck, byteclk);
+ static const struct dw_mci_drv_data socfpga_drv_data = {
+@@ -95,7 +139,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
+ static const struct of_device_id dw_mci_pltfm_match[] = {
+ 	{ .compatible = "snps,dw-mshc", },
+ 	{ .compatible = "rockchip,rk2928-dw-mshc",
+-		.data = &rockchip_drv_data },
++		.data = &rk2928_drv_data },
++	{ .compatible = "rockchip,rk3288-dw-mshc",
++		.data = &rk3288_drv_data },
+ 	{ .compatible = "altr,socfpga-dw-mshc",
+ 		.data = &socfpga_drv_data },
+ 	{},
 -- 
-1.7.10.4
+1.8.3.2
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
