@@ -1,51 +1,78 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH RFC 15/15] ARM: dts: dove: add DT LCD controllers
-Date: Sat, 05 Jul 2014 11:39:08 +0100
-Message-ID: <E1X3NN6-0000Ag-PK@rmk-PC.arm.linux.org.uk>
-References: <20140705103724.GN21766@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140705103724.GN21766-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: jianqun <xjq@rock-chips.com>
+Subject: [PATCH v3 1/2] ASoC: dt-bindings: add rockchip i2s bindings
+Date: Sat,  5 Jul 2014 19:10:38 +0800
+Message-ID: <1404558638-1739-1-git-send-email-xjq@rock-chips.com>
+References: <1404458796-6818-1-git-send-email-xjq@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404458796-6818-1-git-send-email-xjq@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, zhangqing@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, kfx@rock-chips.com, Jianqun Xu <xjq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the DT fragment for the Marvell Dove LCD controllers.
+From: Jianqun Xu <xjq@rock-chips.com>
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Add devicetree bindings for i2s controller found on
+rk3066, rk3188 and rk3288 processors from rockchip.
+
+Signed-off-by: Jianqun Xu <xjq@rock-chips.com>
 ---
- arch/arm/boot/dts/dove.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+changes since v2:
+- change the description of dma-names, adviced by Mark
+- change the description of interrupts, adviced by Mark
+- list clock-names to be easy to read, adviced by Mark
+- modify compatible for rk3288 example, adviced by Mark and Heiko
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 3b891dd20993..a5441d5482a6 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -630,6 +630,20 @@
- 				reg = <0xe8400 0x0c>;
- 				ngpios = <8>;
- 			};
+changes since v1:
+- modify the description of clock-names property, adviced by Mark Rutland.
+- modify the example to fit for rk3288.
+
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |   37 ++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+new file mode 100644
+index 0000000..6c55fcf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+@@ -0,0 +1,37 @@
++* Rockchip I2S controller
 +
-+			lcd1: lcd-controller@810000 {
-+				compatible = "marvell,dove-lcd";
-+				reg = <0x810000 0x1000>;
-+				interrupts = <46>;
-+				status = "disabled";
-+			};
++The I2S bus (Inter-IC sound bus) is a serial link for digital
++audio data transfer between devices in the system.
 +
-+			lcd0: lcd-controller@820000 {
-+				compatible = "marvell,dove-lcd";
-+				reg = <0x820000 0x1000>;
-+				interrupts = <47>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
++Required properties:
++
++- compatible: should be one of the followings
++   - "rockchip,rk3066-i2s": for rk3066
++   - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
++   - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: should contain the I2S interrupt.
++- #address-cells: should be 1.
++- #size-cells: should be 0.
++- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
++	Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: should include "tx" and "rx".
++- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
++- clock-names: should contain followings:
++   - "i2s_hclk": clock for I2S BUS
++   - "i2s_clk" : clock for I2S controller
++
++Example for rk3288 I2S controller:
++
++i2s@ff890000 {
++	compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
++	reg = <0xff890000 0x10000>;
++	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	dmas = <&pdma1 0>, <&pdma1 1>;
++	dma-names = "rx", "tx";
++	clock-names = "i2s_hclk", "i2s_clk";
++	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
++};
 -- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
