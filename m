@@ -1,43 +1,81 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO resources.
-Date: Sat, 05 Jul 2014 22:46:09 +0200
-Message-ID: <6122131.ozzYjjjRQi@wuerfel>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <1404240214-9804-5-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqJNfB_jynFQK0Ov6A3wqk6LF3abUFEUjhmzipak26sU5w@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 REBASED 06/10] serial/arc: remove last remanants of
+ platform data
+Date: Sat, 5 Jul 2014 15:54:12 -0500
+Message-ID: <CAL_Jsq+pnW-USUDAwnVD5cX3kujmysz6687tKVpdSFXw78Ms0w@mail.gmail.com>
+References: <1403598315-1429-1-git-send-email-vgupta@synopsys.com>
+ <1403598315-1429-7-git-send-email-vgupta@synopsys.com> <CAL_JsqLpLKs0+u2a0VvgYW_0bGDpQCOEJSqKDqpYTO=KuO6uhg@mail.gmail.com>
+ <C2D7FE5348E1B147BCA15975FBA230751A6B9CE5@IN01WEMBXA.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJNfB_jynFQK0Ov6A3wqk6LF3abUFEUjhmzipak26sU5w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robherring2@gmail.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA230751A6B9CE5@IN01WEMBXA.internal.synopsys.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "Francois.Bedard@synopsys.com" <Francois.Bedard@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 05 July 2014 14:25:52 Rob Herring wrote:
-> On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > The ranges property for a host bridge controller in DT describes
-> > the mapping between the PCI bus address and the CPU physical address.
-> > The resources framework however expects that the IO resources start
-> > at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
-> > The conversion from pci ranges to resources failed to take that into account.
-> 
-> I don't think this change is right. There are 2 resources: the PCI bus
-> addresses and cpu addresses. This function deals with the cpu
-> addresses. Returning pci addresses for i/o and cpu addresses for
-> memory is going to be error prone. We probably need both cpu and pci
-> resources exposed to host controllers.
-> 
-> Making the new function only deal with i/o bus resources and naming it
-> of_pci_range_to_io_resource would be better.
+On Tue, Jun 24, 2014 at 11:38 PM, Vineet Gupta
+<Vineet.Gupta1@synopsys.com> wrote:
+> On Wednesday 25 June 2014 02:31 AM, Rob Herring wrote:
+>> On Tue, Jun 24, 2014 at 3:25 AM, Vineet Gupta
+>> <Vineet.Gupta1@synopsys.com> wrote:
+>>> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+>>> ---
+>>>  drivers/tty/serial/arc_uart.c | 22 ++++++----------------
+>>>  1 file changed, 6 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/tty/serial/arc_uart.c b/drivers/tty/serial/arc_uart.c
+>>> index 2ffaf099691a..dc3d5db37dc4 100644
+>>> --- a/drivers/tty/serial/arc_uart.c
+>>> +++ b/drivers/tty/serial/arc_uart.c
+>>
+>>> @@ -518,21 +516,13 @@ arc_uart_init_one(struct platform_device *pdev, int dev_id)
+>>>         }
+>>>         uart->baud = val;
+>>>
+>>> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> -       if (!res)
+>>> -               return -ENODEV;
+>>> -
+>>> -       res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>>> -       if (!res2)
+>>> -               return -ENODEV;
+>>> -
+>>> -       port->mapbase = res->start;
+>>> -       port->membase = ioremap_nocache(res->start, resource_size(res));
+>>> +       port->membase = of_iomap(np, 0);
+>> ioremap is preferred over of_iomap as it is not OF specific.
+>
+> I could, but much of the driver assumes OF to be selected already (of_property...)
+>
+>>  Perhaps
+>> use devm_request_and_ioremap instead.
+>
+> devm_request_and_ioremap has been flag day removed in favour of
+> devm_ioremap_resource().
+> However even then it would require me to retain the prior platform_get_resource()
+> call.
+> IMHO, of_iomap is must more concise.
 
-I think you are correct that this change by itself is will break existing
-drivers that rely on the current behavior of of_pci_range_to_resource,
-but there is also something wrong with the existing implementation:
+Perhaps, but it is preferred to limit the OF specific parts of
+drivers. It is maybe not important for this driver, but in cases where
+there is a need to support multiple bindings such as DT and ACPI it is
+important.
 
-of_pci_range_to_resource() at the moment returns a the address in
-cpu address space (i.e. IORESOURCE_MEM) but sets the res->flags
-value to IORESOURCE_IO, which means it doesn't fit into the resource
-tree. Liviu's version gets that part right, and it would be nice
-to fix that eventually, however we do it here.
+>>>         if (!port->membase)
+>>>                 /* No point of dev_err since UART itself is hosed here */
+>>>                 return -ENXIO;
+>>>
+>>> -       port->irq = res2->start;
+>>> +       port->irq = irq_of_parse_and_map(np, 0);
+>>> +
+>> platform_get_irq should be used here.
+>
+> And this again is for reducing OF dependency or is it something else.
 
-	Arnd
+We may eventually stop populating the irqs in resources for DT. The
+irqs are now translated at probe time to deal with probe ordering
+issues.
+
+Rob
