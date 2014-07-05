@@ -1,52 +1,61 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 1/4] clocksource: move PXA timer to clocksource framework
-Date: Sat,  5 Jul 2014 13:12:58 +0200
-Message-ID: <1404558781-9537-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Robert Jarzmik <robert.jarzmik@free.fr>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v2 4/4] arm: pxa: add non device-tree timer link to clocksource
+Date: Sat,  5 Jul 2014 13:13:01 +0200
+Message-ID: <1404558781-9537-4-git-send-email-robert.jarzmik@free.fr>
+References: <1404558781-9537-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404558781-9537-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move time.c from arch/arm/mach-pxa/time.c to
-drivers/clocksource/pxa_timer.c.
+As clocksource pxa_timer was moved to clocksource framework, the
+pxa_timer initialization needs to be a bit amended, to pass the
+necessary informations to clocksource, ie :
+ - the timer interrupt (mach specific)
+ - the timer registers base (ditto)
+ - the timer clockrate
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 ---
- arch/arm/mach-pxa/Makefile                                  | 2 +-
- drivers/clocksource/Makefile                                | 1 +
- arch/arm/mach-pxa/time.c => drivers/clocksource/pxa_timer.c | 0
- 3 files changed, 2 insertions(+), 1 deletion(-)
- rename arch/arm/mach-pxa/time.c => drivers/clocksource/pxa_timer.c (100%)
+ arch/arm/mach-pxa/generic.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/mach-pxa/Makefile b/arch/arm/mach-pxa/Makefile
-index 648867a..2fe1824 100644
---- a/arch/arm/mach-pxa/Makefile
-+++ b/arch/arm/mach-pxa/Makefile
-@@ -4,7 +4,7 @@
+diff --git a/arch/arm/mach-pxa/generic.c b/arch/arm/mach-pxa/generic.c
+index 4225417..2dcded5 100644
+--- a/arch/arm/mach-pxa/generic.c
++++ b/arch/arm/mach-pxa/generic.c
+@@ -25,6 +25,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/mach-types.h>
  
- # Common support (must be linked before board specific support)
- obj-y				+= clock.o devices.o generic.o irq.o \
--				   time.o reset.o
-+				   reset.o
- obj-$(CONFIG_PM)		+= pm.o sleep.o standby.o
++#include <mach/irqs.h>
+ #include <mach/reset.h>
+ #include <mach/smemc.h>
+ #include <mach/pxa3xx-regs.h>
+@@ -57,6 +58,17 @@ unsigned long get_clock_tick_rate(void)
+ EXPORT_SYMBOL(get_clock_tick_rate);
  
- # Generic drivers that other drivers may depend upon
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 800b130..fc61ef8 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835_timer.o
- obj-$(CONFIG_ARCH_MARCO)	+= timer-marco.o
- obj-$(CONFIG_ARCH_MOXART)	+= moxart_timer.o
- obj-$(CONFIG_ARCH_MXS)		+= mxs_timer.o
-+obj-$(CONFIG_ARCH_PXA)		+= pxa_timer.o
- obj-$(CONFIG_ARCH_PRIMA2)	+= timer-prima2.o
- obj-$(CONFIG_ARCH_U300)		+= timer-u300.o
- obj-$(CONFIG_SUN4I_TIMER)	+= sun4i_timer.o
-diff --git a/arch/arm/mach-pxa/time.c b/drivers/clocksource/pxa_timer.c
-similarity index 100%
-rename from arch/arm/mach-pxa/time.c
-rename to drivers/clocksource/pxa_timer.c
+ /*
++ * For non device-tree builds, keep legacy timer init
++ */
++extern void pxa_timer_nodt_init(int irq, void __iomem *base,
++			   unsigned long clock_tick_rate);
++void pxa_timer_init(void)
++{
++	pxa_timer_nodt_init(IRQ_OST0, io_p2v(0x40a00000),
++			    get_clock_tick_rate());
++}
++
++/*
+  * Get the clock frequency as reflected by CCCR and the turbo flag.
+  * We assume these values have been applied via a fcs.
+  * If info is not 0 we also display the current settings.
 -- 
 2.0.0.rc2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
