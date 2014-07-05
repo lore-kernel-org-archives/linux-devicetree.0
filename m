@@ -1,37 +1,91 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/4] pinctrl: Add NVIDIA Tegra XUSB pad controller support
-Date: Sat, 5 Jul 2014 01:04:10 +0200
-Message-ID: <CACRpkdZvO-RZZKDtbFY6Uv5Td2NJ828xj0sVbTh2=ehx7Ha6fA@mail.gmail.com>
-References: <1402398708-10722-1-git-send-email-thierry.reding@gmail.com>
-	<1402398708-10722-2-git-send-email-thierry.reding@gmail.com>
-	<539A0FE9.1080802@wwwdotorg.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v9 3/3] dt-bindings: add mtk-timer bindings
+Date: Sat, 5 Jul 2014 02:28:24 +0200
+Message-ID: <CABuKBeLv+wC9Fe=P40pBvU+R3KrEUyTWj2Gs3tg2qjjm2HONsA@mail.gmail.com>
+References: <1403264929-21325-1-git-send-email-matthias.bgg@gmail.com>
+ <1403264929-21325-4-git-send-email-matthias.bgg@gmail.com>
+ <20140620123602.GK30188@leverpostej>
+ <CABuKBeKknz7OEyffKOGK=yk7ZH7fj7Jf9fgPhw2VGbTC-p21qw@mail.gmail.com>
+ <5b2c6b68-6177-47f4-937a-077b4f3c89a4@BN1AFFO11FD048.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <539A0FE9.1080802@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Bresticker <abrestic@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5b2c6b68-6177-47f4-937a-077b4f3c89a4@BN1AFFO11FD048.protection.gbl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "arnd@arndb.de" <arnd@arndb.de>, ijc+devicet
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 12, 2014 at 10:39 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 06/10/2014 05:11 AM, Thierry Reding wrote:
-
-> Aside from the issue Andrew pointed out, this series looks good to me.
-> I'll apply once that one issue is fixed.
->
-> Linus,
->
-> Patch 2 (pinctrl driver) depends on patch 1 (binding header), and there
-> are other patches that will also depend on the binding header in patch
-> 1. I guess I should apply patch 1 in a topic branch and send you a pull
-> request which you can merge before applying patch 2. Does that sound OK
-> to you?
-
-Bah I've got some mess in my mailbox.
-
-Please proceed as this Stephen, I trust your pull request will
-be fine.
-
-Yours,
-Linus Walleij
+MjAxNC0wNy0wMSAyMDowMCBHTVQrMDI6MDAgU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmtt
+YW5uQHhpbGlueC5jb20+Ogo+IE9uIFR1ZSwgMjAxNC0wNy0wMSBhdCAwNzo0NlBNICswMjAwLCBN
+YXR0aGlhcyBCcnVnZ2VyIHdyb3RlOgo+PiAyMDE0LTA2LTIwIDE0OjM2IEdNVCswMjowMCBNYXJr
+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjoKPj4gPiBPbiBGcmksIEp1biAyMCwgMjAx
+NCBhdCAxMjo0ODo0OVBNICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOgo+PiA+PiBBZGQg
+YmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgR2VuZXJhbCBQb3Jwb3NlIFRpbWVyIGRyaXZl
+ciBvZgo+PiA+PiB0aGUgTWVkaWF0ZWsgU29Dcy4KPj4gPj4KPj4gPj4gU2lnbmVkLW9mZi1ieTog
+TWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4KPj4gPj4gQWNrZWQtYnk6
+IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tPgo+PiA+PiBBY2tl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4gPj4gLS0tCj4+ID4+ICAuLi4v
+YmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dCAgICAgICAgICB8ICAgMTggKysr
+KysrKysrKysrKysrKysrCj4+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+
+PiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4+ID4+Cj4+ID4+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVy
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxt
+dGstdGltZXIudHh0Cj4+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+ID4+IGluZGV4IDAwMDAw
+MDAuLjEwYjdlMDkKPj4gPj4gLS0tIC9kZXYvbnVsbAo+PiA+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dAo+PiA+PiBA
+QCAtMCwwICsxLDE4IEBACj4+ID4+ICtNZWRpYXRlayBNVDY1NzcsIE1UNjU3MiBhbmQgTVQ2NTg5
+IFRpbWVycwo+PiA+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+
+ID4+ICsKPj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ID4+ICstIGNvbXBhdGlibGU6IFNo
+b3VsZCBiZSAibWVkaWF0ZWssbXQ2NTc3LXRpbWVyIgo+PiA+PiArLSByZWc6IFNob3VsZCBjb250
+YWluIGxvY2F0aW9uIGFuZCBsZW5ndGggZm9yIHRpbWVycyByZWdpc3Rlci4KPj4gPj4gKy0gY2xv
+Y2tzOiBDbG9ja3MgZHJpdmluZyB0aGUgdGltZXIgaGFyZHdhcmUuIFRoaXMgbGlzdCBzaG91bGQg
+aW5jbHVkZSB0d28KPj4gPj4gKyAgICAgY2xvY2tzLiBUaGUgb3JkZXIgaXMgc3lzdGVtIGNsb2Nr
+IGFuZCBhcyBzZWNvbmQgY2xvY2sgdGhlIFJUQyBjbG9jay4KPj4gPj4gKwo+PiA+PiArRXhhbXBs
+ZXM6Cj4+ID4+ICsKPj4gPj4gKyAgICAgdGltZXJAMTAwMDgwMDAgewo+PiA+PiArICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTc3LXRpbWVyIjsKPj4gPj4gKyAgICAgICAg
+ICAgICByZWcgPSA8MHgxMDAwODAwMCAweDgwPjsKPj4gPj4gKyAgICAgICAgICAgICBpbnRlcnJ1
+cHRzID0gPEdJQ19TUEkgMTEzIElSUV9UWVBFX0xFVkVMX0xPVz47Cj4+ID4+ICsgICAgICAgICAg
+ICAgY2xvY2tzID0gPCZzeXN0ZW1fY2xrPiwgPCZydGNfY2xrPjsKPj4gPj4gKyAgICAgICAgICAg
+ICBjbG9jay1uYW1lcyA9ICJzeXN0ZW0tY2xrIiwgInJ0Yy1jbGsiOwo+PiA+Cj4+ID4gVGhlc2Ug
+bmFtZXMgc2hvdWxkIGJlIG1lbnRpb25lZCBhYm92ZSwgb3IgcmVtb3ZlZC4KPj4KPj4gSSBhZGRl
+ZCB0aGUgY2xvY2stbmFtZXMgdG8gbWFrZSBpdCB0aGUgY2xvY2sgb3JkZXIgY2xlYXJlciwgYXMg
+aXQgaXMKPj4gZG9uZSBpbiB0aGUgYXJtIHNwLDgwNCBbMV0uCj4+IEJ1dCBJIHRoaW5rIGl0IGlz
+IGNsZWFyIGVub3VnaCB0aHJvdWdoIHRoZSBwaGFuZGxlIG5hbWVzIGFuZCB0aGUKPj4gZGVzY3Jp
+cHRpb24gb2YgdGhlIGNsb2NrcyBwcm9wZXJ0eS4KPj4gU28gSSB3aWxsIGRlbGV0ZSB0aGUgY2xv
+Y2stbmFtZXMgaW4gdGhlIHYxMCByb3VuZC4KPgo+IEkgdGhpbmsgSSBvcmlnaW5hbGx5IGFkdm9j
+YXRlZCBmb3IgYWRkaW5nIHRob3NlIG5hbWVzLiBBbmQgbXkgYXJndW1lbnQKPiB3YXMgdGhhdCB0
+aGUgbmFtZXMgaW4gdGhlIGR0cyBhcmUgcHJvYmFibHkgbm90IGNsZWFybHkgaWRlbnRpZnlpbmcg
+dGhlCj4gdGltZXIgSVAncyBjbG9jayBpbnB1dHMgc2luY2UgdGhleSByZWZlciB0byBTT0MgbmFt
+ZXMgZm9yIHRoZSBjbG9ja3MuIFdlCj4gaGFkIHRoaXMgYXJndW1lbnQgZm9yIGEgd2hpbGUgbm93
+IGFuZCBpdCBkb2Vzbid0IHNlZW0gdG8gZ2V0IGJldHRlcgo+IHRoYW4gdGhpcy4gQnV0IHRvIGV4
+cGxhaW4gd2h5IEkgdHJ5IHRvIGdldCBJUCB2cy4gU09DIGNsb2NrIG5hbWVzIGluCj4gaGVyZSBp
+cywgdGhhdCBJIGhhZCBzdWNoIGEgY2FzZSB3aXRoIFp5bnEncyBFdGhlcm5ldCBjb3JlLiBUaGF0
+IElQIGhhcwo+IHF1aXRlIGEgZmV3IGNsb2NrIGlucHV0cyBhbmQgbHVja2lseSB0aGUgbWFpbmxp
+bmUgZHJpdmVyIGZvciB0aGF0IElQCj4gdXNlZCB0aGUgcHJvcGVyIG5hbWVzIGZyb20gdGhlIElQ
+IGRhdGEgc2hlZXQgZm9yIHRoZSBjbG9ja3MgaW5zdGVhZAo+IG9mIHRoZSBTT0MgbmFtZXMuIFRo
+YXQgbWFkZSBpdCByZWxhdGl2ZWx5IGVhc3kgdG8gbWF0Y2ggdGhpbmdzIHdpdGggdGhlCj4gWnlu
+cSBpbnRlZ3JhdGlvbiBvZiB0aGF0IElQLiBIYWQgdGhhdCBkcml2ZXIgdXNlZCBTT0MgY2xvY2sg
+bmFtZXMsCj4gdGhpbmdzIHdvdWxkIGhhdmUgYmVlbiBtb3JlIGRpZmZpY3VsdC4KClPDtnJlbiwg
+SSBnZXQgdGhlIHBvaW50LiBUaGUgcHJvYmxlbSBpcywgdGhhdCB3ZSBkb24ndCBoYXZlIGFueQpk
+b2N1bWVudGF0aW9uIG90aGVyIHRoZW4gdGhlIFNvQyBkYXRhc2hlZXQgZm9yIHRoZSB0aW1lci4K
+QW55d2F5IHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSBkb2VzIG5vdCBoZWxwIHVzIGluIHRoaXMg
+YXQgYWxsLiBBcyBJCmFscmVhZHkgbWVudGlvbmVkLCB0aGUgY2xvY2stbmFtZXMgcHJvcGVydHkg
+d2FzIHRvIGlsbHVzdHJhdGUgdGhlCmNsb2NrIG9yZGVyLCBidXQgYXMgSSB0aGluaywgd2l0aCB0
+aGUgY29tbWVudCBmb3IgdGhlIGNsb2NrcyBwcm9wZXJ0eSwKdGhlIG9yZGVyIGlzIGNsZWFyIGVu
+b3VnaC4KClNoYWxsIEkgZGVsZXRlIHlvdXIgYWNrLCB3aGVuIEkgcmVzZW5kIHRoZSBwYXRjaCB3
+aXRob3V0IHRoZQpjbG9jay1uYW1lcyBwcm9wZXJ0eT8KClJlZ2FyZHMsCk1hdHRoaWFzCgo+Cj4g
+ICAgICAgICBTw7ZyZW4KCgoKLS0gCm1vdHpibG9nLndvcmRwcmVzcy5jb20KCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
