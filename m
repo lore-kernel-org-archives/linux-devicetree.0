@@ -1,59 +1,33 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/3] dra7: Add PCIe support
-Date: Sat, 5 Jul 2014 11:32:00 -0600
-Message-ID: <20140705173200.GA26618@google.com>
-References: <1403719007-9352-1-git-send-email-kishon@ti.com>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH v2 2/4] regulator: act8865: prepare support for other
+ act88xx devices
+Date: Sat, 5 Jul 2014 19:48:55 +0200
+Message-ID: <20140705174852.GA11822@gmail.com>
+References: <1404566456-9121-1-git-send-email-b.galvani@gmail.com>
+ <1404566456-9121-3-git-send-email-b.galvani@gmail.com>
+ <CAFRkauDR5A=oE0BPHfsyfw6giPsDX4CpYcgDnYQfeGO2nCWbuw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1403719007-9352-1-git-send-email-kishon@ti.com>
+In-Reply-To: <CAFRkauDR5A=oE0BPHfsyfw6giPsDX4CpYcgDnYQfeGO2nCWbuw@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, Pratyush Anand <pratyush.anand@gmail.com>
+To: Axel Lin <axel.lin@ingics.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 11:26:44PM +0530, Kishon Vijay Abraham I wrote:
-> [1] is split into separate series in order for individual subsystem
-> Maintainers to pick up the patches. This series handles the PCIe
-> support for DRA7.
+On Sat, Jul 05, 2014 at 11:41:26PM +0800, Axel Lin wrote:
+> 2014-07-05 21:20 GMT+08:00 Beniamino Galvani <b.galvani@gmail.com>:
+> > This patch prepares support for other devices in the act88xx family of
+> > PMUs manufactured by Active-Semi.
+> >
+> > http://www.active-semi.com/products/power-management-units/act88xx/
+> >
+> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> > Tested-by: Wenyou Yang <wenyou.yang@atmel.com>
 > 
-> Rebased to 3.16-rc2.
-> 
-> [1] -> https://lkml.org/lkml/2014/5/29/258
-> 
-> Kishon Vijay Abraham I (3):
->   PCI: designware: Configuration space should be specified in 'reg'
->   PCI: designware: use untranslated address while programming ATU
->   PCI: host: pcie-dra7xx: add support for pcie-dra7xx controller
+> For this serial, Reviewed-by: Axel Lin <axel.lin@ingics.com>
 
-Mohit, I see your ack for [1/3], but not for [2/3]; are you OK with that,
-too?
+Thanks!
 
-Pratyush, you had some questions about [2/3]; are you happy with that one?
-
-[3/3] adds the devicetree binding; I'd like somebody to check that out.
-
-Also, there's no MAINTAINERS update for pci-dra7xx.c.  Kishon, can you
-include an update for that?
-
-Kishon, can you collect the acks and post a v2 series with those and the
-MAINTAINERS update?
-
-Bjorn
-
-> 
->  .../devicetree/bindings/pci/designware-pcie.txt    |    4 +
->  Documentation/devicetree/bindings/pci/ti-pci.txt   |   59 +++
->  drivers/pci/host/Kconfig                           |   10 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pci-dra7xx.c                      |  458 ++++++++++++++++++++
->  drivers/pci/host/pcie-designware.c                 |   66 ++-
->  drivers/pci/host/pcie-designware.h                 |    4 +
->  7 files changed, 589 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
->  create mode 100644 drivers/pci/host/pci-dra7xx.c
-> 
-> -- 
-> 1.7.9.5
-> 
+Beniamino
