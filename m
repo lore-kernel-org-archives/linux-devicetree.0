@@ -1,49 +1,205 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH] video: fbdev: mxsfb.c:  Cleaning up variable that is never used
-Date: Sat,  5 Jul 2014 14:33:50 +0200
-Message-ID: <1404563630-20521-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Rickard Strandqvist <rickard.strandqvist-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH v3] i2c: busses: i2c-pxa.c: Fix for possible null pointer dereferenc
+Date: Sat, 5 Jul 2014 14:34:33 +0200
+Message-ID: <CAFo99ga3K7JBLCRTQGLYNGT4aX1N9azfjfosvFzoUViMcdMhmQ@mail.gmail.com>
+References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<20140704091000.GA4738@lianli>
+	<CAFo99gYU6v_ohZa6rSfHwUhk6Lw1dCtVWOQsLk3tZ_GRyqExbg@mail.gmail.com>
+	<20140704172457.GA3404@lianli>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140704172457.GA3404@lianli>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emil Goode <emilgoode@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Leilei Shang <shangll@marvell.com>, Peter Korsgaard <peter@korsgaard.com>, linux-i2c@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rickard Strandqvist <rickard.strandqvist-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+2014-07-04 19:24 GMT+02:00 Emil Goode <emilgoode@gmail.com>:
+> Hello,
+>
+> I noticed one more thing.
+>
+> On Fri, Jul 04, 2014 at 07:07:48PM +0200, Rickard Strandqvist wrote:
+>> 2014-07-04 11:10 GMT+02:00 Emil Goode <emilgoode@gmail.com>:
+>> > Hello Rickard,
+>> >
+>> > Since this is a probe function there is also no need to release the devm_*
+>> > resources in the i2c_pxa_remove function, this leads to double free.
+>> >
+>> > Also I have a few nit-pick comments below.
+>> >
+>> > On Thu, Jul 03, 2014 at 10:19:16PM +0200, Rickard Strandqvist wrote:
+>> >> Fix for possible null pointer dereferenc, and there is a risk for memory leak if something unexpected happens and the function returns.
+>> >> It now use Managed Device Resource instead.
+>> >>
+>> >> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+>> >> ---
+>> >>  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
+>> >>  1 file changed, 16 insertions(+), 21 deletions(-)
+>> >>
+>> >> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+>> >> index be671f7..2edb633 100644
+>> >> --- a/drivers/i2c/busses/i2c-pxa.c
+>> >> +++ b/drivers/i2c/busses/i2c-pxa.c
+>> >> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>> >>       struct resource *res = NULL;
+>> >>       int ret, irq;
+>> >>
+>> >> -     i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
+>> >> +     i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
+>> >>       if (!i2c) {
+>> >>               ret = -ENOMEM;
+>> >> -             goto emalloc;
+>> >> +             goto err_nothing_to_release;
+>> >
+>> > Perhaps its a good idea to return directly here, then the label
+>> > err_nothing_to_release can be removed.
+>> >
+>> >>       }
+>> >>
+>> >>       /* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+>> >> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>> >>       if (ret > 0)
+>> >>               ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
+>> >>       if (ret < 0)
+>> >> -             goto eclk;
+>> >> +             goto err_nothing_to_release;
+>> >
+>> > Same here.
+>> >
+>> >>
+>> >>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>> >>       irq = platform_get_irq(dev, 0);
+>> >>       if (res == NULL || irq < 0) {
+>> >>               ret = -ENODEV;
+>> >> -             goto eclk;
+>> >> +             goto err_nothing_to_release;
+>> >
+>> > Same here.
+>> >
+>> >>       }
+>> >>
+>> >> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
+>> >> +     if (!devm_request_mem_region(&dev->dev, res->start,
+>> >> +                             resource_size(res), res->name)) {
+>> >>               ret = -ENOMEM;
+>> >> -             goto eclk;
+>> >> +             goto emalloc;
+>> >
+>> > We could also return directly here since the release_mem_region call should
+>> > be removed, as mentioned in Jingoos reply.
+>> >
+>> >>       }
+>> >>
+>> >>       i2c->adap.owner   = THIS_MODULE;
+>> >> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>> >>
+>> >>       strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
+>> >>
+>> >> -     i2c->clk = clk_get(&dev->dev, NULL);
+>> >> +     i2c->clk = devm_clk_get(&dev->dev, NULL);
+>> >>       if (IS_ERR(i2c->clk)) {
+>> >>               ret = PTR_ERR(i2c->clk);
+>> >> -             goto eclk;
+>> >> +             goto emalloc;
+>> >
+>> > Same here.
+>> >
+>> >>       }
+>> >>
+>> >> -     i2c->reg_base = ioremap(res->start, resource_size(res));
+>> >> -     if (!i2c->reg_base) {
+>> >> +     i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
+>> >> +     if (IS_ERR(i2c->reg_base)) {
+>> >>               ret = -EIO;
+>> >> -             goto eremap;
+>> >> +             goto emalloc;
+>> >
+>> > Same here.
+>> >
+>> >>       }
+>> >>
+>> >>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+>> >> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>> >>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
+>> >>       } else {
+>> >>               i2c->adap.algo = &i2c_pxa_algorithm;
+>> >> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
+>> >> -                               dev_name(&dev->dev), i2c);
+>> >> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
+>> >> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
+>> >>               if (ret)
+>> >> -                     goto ereqirq;
+>> >> +                     goto emalloc;
+>> >
+>> > Same here.
+>> >
+>> >>       }
+>> >>
+>> >>       i2c_pxa_reset(i2c);
+>> >> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>> >>  eadapt:
+>> >>       if (!i2c->use_pio)
+>> >>               free_irq(irq, i2c);
+>> >
+>> > The free_irq() call should also be removed since devm_request_irq() was used.
+>> >
+>> >> -ereqirq:
+>> >> -     clk_disable_unprepare(i2c->clk);
+>
+> I think we should keep the clk_disable_unprepare() call.
+>
+>> >> -     iounmap(i2c->reg_base);
+>> >> -eremap:
+>> >> -     clk_put(i2c->clk);
+>> >> -eclk:
+>> >> -     kfree(i2c);
+>> >>  emalloc:
+>> >>       release_mem_region(res->start, resource_size(res));
+>> >> +err_nothing_to_release:
+>> >>       return ret;
+>> >>  }
+>> >>
+>> >
+>> > Best regards,
+>> >
+>> > Emil Goode
+>>
+>> Hi All!
+>>
+>> Ok, so there is literally nothing to do release anymore.
+>> A good system Devres, I understand you want everyone to use it.
+>>
+>> I also think it is also better to return directly then.
+>> But who decides, Wolfram?
+>
+> Yes, Wolfram is the maintainer.
+>
+> Personally I would do the devm_* convertion in a second patch.
 
-Variable ar assigned a value that is never used.
-I have also removed all the code that thereby serves no purpose.
+Hi
 
-This was found using a static code analysis program called cppcheck
+Ok then, Wolfram!
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
----
- drivers/video/fbdev/mxsfb.c |    2 --
- 1 file changed, 2 deletions(-)
+Keep only:
 
-diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
-index accf48a2..d0a55c6 100644
---- a/drivers/video/fbdev/mxsfb.c
-+++ b/drivers/video/fbdev/mxsfb.c
-@@ -594,7 +594,6 @@ static int mxsfb_restore_mode(struct mxsfb_info *host,
- 			struct fb_videomode *vmode)
- {
- 	struct fb_info *fb_info = &host->fb_info;
--	unsigned line_count;
- 	unsigned period;
- 	unsigned long pa, fbsize;
- 	int bits_per_pixel, ofs;
-@@ -672,7 +671,6 @@ static int mxsfb_restore_mode(struct mxsfb_info *host,
- 		writel(fb_info->fix.smem_start, host->base + host->devdata->next_buf);
- 	}
- 
--	line_count = fb_info->fix.smem_len / fb_info->fix.line_length;
- 	fb_info->fix.ypanstep = 1;
- 
- 	clk_prepare_enable(host->clk);
--- 
-1.7.10.4
+ereqirq:
+     clk_disable_unprepare(i2c->clk);
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And let everyone else just return?
+
+
+And Emil, as I said before, it would in that case the first patch just be:
+ emalloc:
+-       release_mem_region(res->start, resource_size(res));
++       if(res)
++               release_mem_region(res->start, resource_size(res));
+
+It is rather pointless to add something in a patch, to remove it in the next.
+
+
+
+Kind regards
+Rickard Strandqvist
