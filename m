@@ -1,64 +1,66 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: [PATCH RFC 00/15] Armada DRM updates
-Date: Sat, 5 Jul 2014 11:37:24 +0100
-Message-ID: <20140705103724.GN21766@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH RFC 12/15] dt-bindings: add Marvell Dove LCD controller
+ documentation
+Date: Sat, 05 Jul 2014 11:38:53 +0100
+Message-ID: <E1X3NMr-0000AU-Ez@rmk-PC.arm.linux.org.uk>
+References: <20140705103724.GN21766@n2100.arm.linux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140705103724.GN21766-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series updates the Armada DRM driver to be more DT friendly
-by converting it to the component helper.  This is an incomplete
-conversion as we also need to convert the TDA998x as well, hence it
-currently retains the existing method of initialisation using the slave
-encoder mechanism.  The old mechanism will be removed once the
-conversion is complete.
+Add the Marvell Dove LCD controller DT binding documentation.  The
+clock names used here are intentionally taken from the specification
+for the Dove SoC.
 
-This series includes the component updates (patches 1-3 which have been
-recently merged into Greg's driver tree, patch 9 which is scheduled to
-be merged) and the recently posted DRM OF helper for encoders (patch 8).
-Hence patches 1-3 and 9 are only included for reference purposes.
-Please direct comments for patch 8 to the previously posted RFC for
-that single patch.
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ .../bindings/drm/armada/marvell,dove-lcd.txt       | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/armada/marvell,dove-lcd.txt
 
-The general idea here is to permit each CRTC device to exist as a
-separate device node in DT (as it should be) with all the appropriate
-properties such as base address, interrupt and pixel clocks.
-
-The encoders (which may be off-SoC) will be specified separately in DT,
-and the connectivity specified via the DT's graph bindings.
-
-The diffstat below is for the entire series, which includes the
-component helpre updates and the DRM OF helper.
-
- .../bindings/drm/armada/marvell,dove-lcd.txt       |  30 +++
- arch/arm/boot/dts/dove.dtsi                        |  14 ++
- drivers/base/component.c                           | 192 +++++++++++++----
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/armada/armada_510.c                |  23 +-
- drivers/gpu/drm/armada/armada_crtc.c               | 188 +++++++++++++++--
- drivers/gpu/drm/armada/armada_crtc.h               |   9 +-
- drivers/gpu/drm/armada/armada_drm.h                |  13 +-
- drivers/gpu/drm/armada/armada_drv.c                | 233 ++++++++++++++-------
- drivers/gpu/drm/drm_of.c                           |  65 ++++++
- include/drm/drm_crtc.h                             |   2 +
- include/drm/drm_of.h                               |  18 ++
- include/linux/component.h                          |   7 +
- 13 files changed, 642 insertions(+), 153 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/drm/armada/marvell,dove-lcd.txt b/Documentation/devicetree/bindings/drm/armada/marvell,dove-lcd.txt
+new file mode 100644
+index 000000000000..46525ea3e646
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/armada/marvell,dove-lcd.txt
+@@ -0,0 +1,30 @@
++Device Tree bindings for Armada DRM CRTC driver
++
++Required properties:
++ - compatible: value should be "marvell,dove-lcd".
++ - reg: base address and size of the LCD controller
++ - interrupts: single interrupt number for the LCD controller
++ - port: video output port with endpoints, as described by graph.txt
++
++Optional properties:
++
++ - clocks: as described by clock-bindings.txt
++ - clock-names: as described by clock-bindings.txt
++	"axiclk" - axi bus clock for pixel clock
++	"plldivider" - pll divider clock for pixel clock
++	"ext_ref_clk0" - external clock 0 for pixel clock
++	"ext_ref_clk1" - external clock 1 for pixel clock
++
++Note: all clocks are optional but at least one must be specified.
++Further clocks may be added in the future according to requirements of
++different SoCs.
++
++Example:
++
++	lcd0: lcd-controller@820000 {
++		compatible = "marvell,dove-lcd";
++		reg = <0x820000 0x1000>;
++		interrupts = <47>;
++		clocks = <&si5351 0>;
++		clock-names = "ext_ref_clk_1";
++	};
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
