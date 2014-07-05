@@ -1,11 +1,11 @@
 From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] video: fbdev: aty: radeon_base.c:  Cleaning up variable that is never used
-Date: Sat,  5 Jul 2014 14:17:21 +0200
-Message-ID: <1404562641-19081-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] video: fbdev: mb862xx: mb862xxfbdrv.c:  Cleaning up variable that is never used
+Date: Sat,  5 Jul 2014 14:29:57 +0200
+Message-ID: <1404563397-20188-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rickard Strandqvist <rickard.strandqvist@sonymobile.com>, Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Clark <robdclark@gmail.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rickard Strandqvist <rickard.strandqvist@sonymobile.com>, Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Anatolij Gustschin <agust@denx.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rickard Strandqvist <rickard.strandqvist@sonymobile.com>
@@ -17,43 +17,36 @@ This was found using a static code analysis program called cppcheck
 
 Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
 ---
- drivers/video/fbdev/aty/radeon_base.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/video/fbdev/mb862xx/mb862xxfbdrv.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
-index 26d80a4..aee65ba 100644
---- a/drivers/video/fbdev/aty/radeon_base.c
-+++ b/drivers/video/fbdev/aty/radeon_base.c
-@@ -1532,14 +1532,14 @@ static int radeonfb_set_par(struct fb_info *info)
- 	struct fb_var_screeninfo *mode = &info->var;
- 	struct radeon_regs *newmode;
- 	int hTotal, vTotal, hSyncStart, hSyncEnd,
--	    hSyncPol, vSyncStart, vSyncEnd, vSyncPol, cSync;
-+	    vSyncStart, vSyncEnd;
- 	u8 hsync_adj_tab[] = {0, 0x12, 9, 9, 6, 5};
- 	u8 hsync_fudge_fp[] = {2, 2, 0, 0, 5, 5};
- 	u32 sync, h_sync_pol, v_sync_pol, dotClock, pixClock;
- 	int i, freq;
- 	int format = 0;
- 	int nopllcalc = 0;
--	int hsync_start, hsync_fudge, bytpp, hsync_wid, vsync_wid;
-+	int hsync_start, hsync_fudge, hsync_wid, vsync_wid;
- 	int primary_mon = PRIMARY_MONITOR(rinfo);
- 	int depth = var_to_depth(mode);
- 	int use_rmx = 0;
-@@ -1612,13 +1612,7 @@ static int radeonfb_set_par(struct fb_info *info)
- 	else if (vsync_wid > 0x1f)	/* max */
- 		vsync_wid = 0x1f;
+diff --git a/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c b/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
+index 0cd4c33..24be945 100644
+--- a/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
++++ b/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
+@@ -273,7 +273,6 @@ static int mb862xxfb_set_par(struct fb_info *fbi)
+ static int mb862xxfb_pan(struct fb_var_screeninfo *var,
+ 			 struct fb_info *info)
+ {
+-	struct mb862xxfb_par *par = info->par;
+ 	unsigned long reg;
  
--	hSyncPol = mode->sync & FB_SYNC_HOR_HIGH_ACT ? 0 : 1;
--	vSyncPol = mode->sync & FB_SYNC_VERT_HIGH_ACT ? 0 : 1;
--
--	cSync = mode->sync & FB_SYNC_COMP_HIGH_ACT ? (1 << 4) : 0;
--
- 	format = radeon_get_dstbpp(depth);
--	bytpp = mode->bits_per_pixel >> 3;
+ 	reg = pack(var->yoffset, var->xoffset);
+@@ -286,7 +285,6 @@ static int mb862xxfb_pan(struct fb_var_screeninfo *var,
  
- 	if ((primary_mon == MT_DFP) || (primary_mon == MT_LCD))
- 		hsync_fudge = hsync_fudge_fp[format-1];
+ static int mb862xxfb_blank(int mode, struct fb_info *fbi)
+ {
+-	struct mb862xxfb_par  *par = fbi->par;
+ 	unsigned long reg;
+ 
+ 	dev_dbg(fbi->dev, "blank mode=%d\n", mode);
+@@ -548,7 +546,6 @@ static ssize_t mb862xxfb_show_dispregs(struct device *dev,
+ 				       struct device_attribute *attr, char *buf)
+ {
+ 	struct fb_info *fbi = dev_get_drvdata(dev);
+-	struct mb862xxfb_par *par = fbi->par;
+ 	char *ptr = buf;
+ 	unsigned int reg;
+ 
 -- 
 1.7.10.4
