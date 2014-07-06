@@ -1,11 +1,11 @@
 From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] video: fbdev: mxsfb.c:  Cleaning up variable that is never used
-Date: Sun,  6 Jul 2014 20:44:32 +0200
-Message-ID: <1404672272-19231-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] video: fbdev: omap2: dss: dsi.c:  Cleaning up variable that is never used
+Date: Sun,  6 Jul 2014 20:49:42 +0200
+Message-ID: <1404672582-19651-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Jingoo Han <jg1.han@samsung.com>, Fabio Estevam <fabio.estevam@freescale.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Marek Vasut <marex@denx.de>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Archit Taneja <archit@ti.com>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jg1.han@samsung.com>, Sathya Prakash M R <sathyap@ti.com>, Joe Perches <joe@perches.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Variable ar assigned a value that is never used.
@@ -15,28 +15,59 @@ This was found using a static code analysis program called cppcheck
 
 Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
 ---
- drivers/video/fbdev/mxsfb.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/video/fbdev/omap2/dss/dsi.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
-index accf48a2..d0a55c6 100644
---- a/drivers/video/fbdev/mxsfb.c
-+++ b/drivers/video/fbdev/mxsfb.c
-@@ -594,7 +594,6 @@ static int mxsfb_restore_mode(struct mxsfb_info *host,
- 			struct fb_videomode *vmode)
+diff --git a/drivers/video/fbdev/omap2/dss/dsi.c b/drivers/video/fbdev/omap2/dss/dsi.c
+index 4755a34..32d2ba6 100644
+--- a/drivers/video/fbdev/omap2/dss/dsi.c
++++ b/drivers/video/fbdev/omap2/dss/dsi.c
+@@ -1207,13 +1207,12 @@ static inline void dsi_enable_pll_clock(struct platform_device *dsidev,
+ 
+ static void _dsi_print_reset_status(struct platform_device *dsidev)
  {
- 	struct fb_info *fb_info = &host->fb_info;
--	unsigned line_count;
- 	unsigned period;
- 	unsigned long pa, fbsize;
- 	int bits_per_pixel, ofs;
-@@ -672,7 +671,6 @@ static int mxsfb_restore_mode(struct mxsfb_info *host,
- 		writel(fb_info->fix.smem_start, host->base + host->devdata->next_buf);
- 	}
+-	u32 l;
+ 	int b0, b1, b2;
  
--	line_count = fb_info->fix.smem_len / fb_info->fix.line_length;
- 	fb_info->fix.ypanstep = 1;
+ 	/* A dummy read using the SCP interface to any DSIPHY register is
+ 	 * required after DSIPHY reset to complete the reset of the DSI complex
+ 	 * I/O. */
+-	l = dsi_read_reg(dsidev, DSI_DSIPHY_CFG5);
++	dsi_read_reg(dsidev, DSI_DSIPHY_CFG5);
  
- 	clk_prepare_enable(host->clk);
+ 	if (dss_has_feature(FEAT_DSI_REVERSE_TXCLKESC)) {
+ 		b0 = 28;
+@@ -3902,7 +3901,7 @@ static int dsi_proto_config(struct platform_device *dsidev)
+ static void dsi_proto_timings(struct platform_device *dsidev)
+ {
+ 	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
+-	unsigned tlpx, tclk_zero, tclk_prepare, tclk_trail;
++	unsigned tlpx, tclk_zero, tclk_prepare;
+ 	unsigned tclk_pre, tclk_post;
+ 	unsigned ths_prepare, ths_prepare_ths_zero, ths_zero;
+ 	unsigned ths_trail, ths_exit;
+@@ -3921,7 +3920,7 @@ static void dsi_proto_timings(struct platform_device *dsidev)
+ 
+ 	r = dsi_read_reg(dsidev, DSI_DSIPHY_CFG1);
+ 	tlpx = FLD_GET(r, 20, 16) * 2;
+-	tclk_trail = FLD_GET(r, 15, 8);
++	FLD_GET(r, 15, 8);
+ 	tclk_zero = FLD_GET(r, 7, 0);
+ 
+ 	r = dsi_read_reg(dsidev, DSI_DSIPHY_CFG2);
+@@ -4669,12 +4668,11 @@ static void print_dsi_dispc_vm(const char *str,
+ 	unsigned long byteclk = t->hsclk / 4;
+ 	unsigned long pck;
+ 	u64 dsi_tput;
+-	int dsi_hact, dsi_htot;
++	int dsi_hact;
+ 
+ 	dsi_tput = (u64)byteclk * t->ndl * 8;
+ 	pck = (u32)div64_u64(dsi_tput, t->bitspp);
+ 	dsi_hact = DIV_ROUND_UP(DIV_ROUND_UP(t->hact * t->bitspp, 8) + 6, t->ndl);
+-	dsi_htot = t->hss + t->hsa + t->hse + t->hbp + dsi_hact + t->hfp;
+ 
+ 	vm.pixelclock = pck;
+ 	vm.hsw = div64_u64((u64)(t->hsa + t->hse) * pck, byteclk);
 -- 
 1.7.10.4
