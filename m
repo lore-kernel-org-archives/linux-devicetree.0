@@ -1,62 +1,31 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v6] ARM: shmobile: genmai reference dts: Add RSPI node
-Date: Sun, 6 Jul 2014 16:30:15 +0200
-Message-ID: <20140706143014.GG3750@verge.net.au>
-References: <1404388965-4853-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v2 0/2] Add R8A7791/Henninger board CAN DT support
+Date: Sun, 6 Jul 2014 16:33:27 +0200
+Message-ID: <20140706143327.GJ3750@verge.net.au>
+References: <201407032337.03509.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404388965-4853-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <201407032337.03509.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 03, 2014 at 02:02:45PM +0200, Geert Uytterhoeven wrote:
-> Add SPI device for RSPI on Genmai.
+On Thu, Jul 03, 2014 at 11:37:02PM +0400, Sergei Shtylyov wrote:
+> Hello.
 > 
-> On this board, only rspi4 is in use. Its bus contains a single device
-> (a wm8978 audio codec), for which no bindings are defined yet.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-v3.16-rc3-20140701' tag. Here we add the CAN device tree support
+> for the R8A7791-based Henninger board. It depends on the PFC CAN support and
+> R-Car CAN device tree support patches posted recently in order to work.
 
-Thanks, I will queue this up.
+Thanks, please repost these patches once the bindings have been merged.
 
-> ---
-> v6:
->   - Rebased on top of renesas-devel-v3.16-rc3-20140701,
->   - Dropped pinctrl settings, as the pinctrl driver is not yet integrated.
-> v5:
->   - Rebased on top of renesas-devel-v3.14-rc1-20140204
-> v4:
->   - No changes
-> v3:
->   - No changes
-> v2:
->   - Use generic "codec" instead of specific "wm8978" node name.
-> ---
->  arch/arm/boot/dts/r7s72100-genmai.dts |   10 ++++++++++
->  1 file changed, 10 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-> index 56849b55e1c2..20705467f4c9 100644
-> --- a/arch/arm/boot/dts/r7s72100-genmai.dts
-> +++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-> @@ -57,3 +57,13 @@
->  &scif2 {
->  	status = "okay";
->  };
-> +
-> +&spi4 {
-> +	status = "okay";
-> +
-> +	codec: codec@0 {
-> +		compatible = "wlf,wm8978";
-> +		reg = <0>;
-> +		spi-max-frequency = <5000000>;
-> +	};
-> +};
-> -- 
-> 1.7.9.5
+> [1/2] ARM: shmobile: r8a7791: add CAN DT support
+> [2/2] ARM: shmobile: henninger: add CAN0 DT support
+> 
+> WBR, Sergei
 > 
