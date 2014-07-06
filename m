@@ -1,56 +1,30 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] bug fix for devicetree memory parsing
-Date: Sun, 6 Jul 2014 12:24:42 -0700
-Message-ID: <CA+55aFwd7sKSKu0+pfSOUGUQrbVuCO_ZBAXds=uGYx5=yfV=VA@mail.gmail.com>
-References: <CACxGe6vFHADzsE7_69B+jjT3kwX_3kOdUBzjtSVEYETwR7HY3Q@mail.gmail.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] video: fbdev: mxsfb.c:  Cleaning up variable that is never used
+Date: Sun, 6 Jul 2014 23:06:59 +0200
+Message-ID: <201407062306.59317.marex@denx.de>
+References: <1404672272-19231-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vFHADzsE7_69B+jjT3kwX_3kOdUBzjtSVEYETwR7HY3Q@mail.gmail.com>
+In-Reply-To: <1404672272-19231-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@linaro.org>, Laura Abbott <lauraa@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lothar =?iso-8859-1?q?Wa=DFmann?= <LW@karo-electronics.de>, Jingoo Han <jg1.han@samsung.com>, Fabio Estevam <fabio.estevam@freescale.com>, Julia Lawall <Julia.Lawall@lip6.fr>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 6, 2014 at 2:37 AM, Grant Likely <grant.likely@linaro.org> wrote:
->
-> Can you pull this bug fix into your tree please?
+On Sunday, July 06, 2014 at 08:44:32 PM, Rickard Strandqvist wrote:
+> Variable ar assigned a value that is never used.
+> I have also removed all the code that thereby serves no purpose.
+> 
+> This was found using a static code analysis program called cppcheck
+> 
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
 
-I took it, but I think both your explanation and the patch itself is
-actually crap. It may fix the issue, but it's seriously confused.
+Makes perfect sense.
 
-Your explanation says that it's a 32-bit platform issue. No it's not.
-Most 32-bit configurations still have a 64-bit phys_addr_t (ie
-PAE/LPAE etc).
+Acked-by: Marek Vasut <marex@denx.de>
 
-And the code is crap, because it uses ULONG_MAX etc in ways that
-simply make no f*cking sense. And why does it care about sizeof?
-
-Why does the code not just do something like
-
-  #define MAX_PHYS_ADDR ((phys_addr_t) ~0)
-
-and then do
-
-  if (base > MAX_PHYS_ADDR || base + size > MAX_PHYS_ADDR)
-    ...
-
-and be done with it? All those sizeof tests are completely pointless.
-If it turns out that phys_addr_t is the same size as u64, then the
-tests will never be true, and the compiler will happily optimize them
-away.
-
-So I think this fixes a problem, but it's all ugly as hell. I ended up
-pulling it because I'm lazy and don't have a machine to test a proper
-fix on anyway, but I hope this can get cleaned up. And more
-importantly, I hope maintainers will spend a bit more time thinking
-about things like this. It's not just that the code is unnecessarily
-complex, it's WRONG. Comparing things to "ULONG_MAX" makes absolutely
-zero sense, since "ULONG_MAX" has nothing to do with anything. It's
-just stupid and misleading, and it just so happens to work by random
-luck because it so *happens* that phys_addr_t is smaller than "u64"
-only when ULONG_MAX happens to be the same size. But even that is not
-guaranteed (ie some stupid broken architecture might have a 32-bit
-physical address space despite having a 64-bit "long")
-
-                Linus
+Best regards,
+Marek Vasut
