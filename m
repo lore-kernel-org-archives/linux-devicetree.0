@@ -1,11 +1,11 @@
 From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] video: fbdev: mb862xx: mb862xxfbdrv.c:  Cleaning up variable that is never used
-Date: Sun,  6 Jul 2014 20:40:24 +0200
-Message-ID: <1404672024-18891-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] video: fbdev: mxsfb.c:  Cleaning up variable that is never used
+Date: Sun,  6 Jul 2014 20:44:32 +0200
+Message-ID: <1404672272-19231-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Anatolij Gustschin <agust@denx.de>, Sachin Kamat <sachin.kamat@linaro.org>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Jingoo Han <jg1.han@samsung.com>, Fabio Estevam <fabio.estevam@freescale.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Marek Vasut <marex@denx.de>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Variable ar assigned a value that is never used.
@@ -15,36 +15,28 @@ This was found using a static code analysis program called cppcheck
 
 Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
 ---
- drivers/video/fbdev/mb862xx/mb862xxfbdrv.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/video/fbdev/mxsfb.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c b/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
-index 0cd4c33..24be945 100644
---- a/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
-+++ b/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
-@@ -273,7 +273,6 @@ static int mb862xxfb_set_par(struct fb_info *fbi)
- static int mb862xxfb_pan(struct fb_var_screeninfo *var,
- 			 struct fb_info *info)
+diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
+index accf48a2..d0a55c6 100644
+--- a/drivers/video/fbdev/mxsfb.c
++++ b/drivers/video/fbdev/mxsfb.c
+@@ -594,7 +594,6 @@ static int mxsfb_restore_mode(struct mxsfb_info *host,
+ 			struct fb_videomode *vmode)
  {
--	struct mb862xxfb_par *par = info->par;
- 	unsigned long reg;
+ 	struct fb_info *fb_info = &host->fb_info;
+-	unsigned line_count;
+ 	unsigned period;
+ 	unsigned long pa, fbsize;
+ 	int bits_per_pixel, ofs;
+@@ -672,7 +671,6 @@ static int mxsfb_restore_mode(struct mxsfb_info *host,
+ 		writel(fb_info->fix.smem_start, host->base + host->devdata->next_buf);
+ 	}
  
- 	reg = pack(var->yoffset, var->xoffset);
-@@ -286,7 +285,6 @@ static int mb862xxfb_pan(struct fb_var_screeninfo *var,
+-	line_count = fb_info->fix.smem_len / fb_info->fix.line_length;
+ 	fb_info->fix.ypanstep = 1;
  
- static int mb862xxfb_blank(int mode, struct fb_info *fbi)
- {
--	struct mb862xxfb_par  *par = fbi->par;
- 	unsigned long reg;
- 
- 	dev_dbg(fbi->dev, "blank mode=%d\n", mode);
-@@ -548,7 +546,6 @@ static ssize_t mb862xxfb_show_dispregs(struct device *dev,
- 				       struct device_attribute *attr, char *buf)
- {
- 	struct fb_info *fbi = dev_get_drvdata(dev);
--	struct mb862xxfb_par *par = fbi->par;
- 	char *ptr = buf;
- 	unsigned int reg;
- 
+ 	clk_prepare_enable(host->clk);
 -- 
 1.7.10.4
