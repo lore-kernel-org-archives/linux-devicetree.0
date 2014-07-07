@@ -1,54 +1,56 @@
-From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] devicetree/bindings/powerpc/fsl: Add binding for board
-Date: Mon, 7 Jul 2014 14:06:34 +0530
-Message-ID: <1404722194-8103-1-git-send-email-Priyanka.Jain@freescale.com>
+From: Andre Heider <a.heider@gmail.com>
+Subject: Re: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
+Date: Mon, 7 Jul 2014 10:48:24 +0200
+Message-ID: <20140707084824.GA83417@localhost>
+References: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>
+Cc: Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/powerpc/fsl/board.txt      |   17 ++++++++++++++++-
- 1 files changed, 16 insertions(+), 1 deletions(-)
+On Sun, Jun 29, 2014 at 06:21:34PM +0200, Andre Heider wrote:
+> Hi,
+> 
+> this series adds PRUv2 support to uio_pruss through devicetree, makes the
+> device usable on am33xx and enables it on beaglebone black.
+> Inspired by old patches from Matt Porter found in a downstream tree.
+> 
+> To archieve that this series:
+> * adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
+> * adds devicetree support to uio_pruss (patch 7 and 9)
+> * adds the device to the am33xx dtsi and boneblack dts (patch 12 and 13)
+> 
+> Bits and pieces:
+> * some cleanup (patch 1-4)
+> * take care of a fact that SRAM on am33xx is not exposed through UIO (patch 8)
+> * add runtime pm support to enable clocks (patch 10)
+> * allow the driver to be compiled on SOC_AM33XX (patch 11)
+> 
+> This is only tested on beaglebone black (as that's the only hardware of the
+> PRUSS enabled families I have) with some basic GPIO and IRQ tests.
+> 
+> Notes:
+> * I just got this hardware and I don't know if this UIO PRUSS business is
+>   desired. Looking at the userspace driver I'd guess not so much ;), but this
+>   interface is there for older generations anyway, and this small series lets
+>   me use the device.
+> * is the hardreset thing I did there the right thing to do? I think the
+>   proper way would be a reset controller (which apparently doesn't yet exist
+>   for this SoC?) and let the driver deassert/assert on probe/remove?
+> * the platform device path has a clk_enable() / clk_put() calls. Are those
+>   now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
+>   calls?
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-index f35f295..7800729 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-@@ -1,8 +1,23 @@
- Freescale Reference Board Bindings
- 
--This document describes device tree bindings for various devices that
-+This document describes device tree bindings for board and  various devices that
- exist on some Freescale reference boards.
- 
-+* Board node
-+Required properties:
-+
-+ - model : Should be "fsl,<board>"
-+ - compatible : Should be "fsl,<board>"
-+	example: "fsl,T1040RDB", "fsl,T1042RDB", "fsl,T1042RDB_PI"
-+		 "fsl,T1040QDS", "fsl,T1042QDS"
-+
-+Example:
-+
-+/ {
-+	model = "fsl,T1040RDB";
-+	compatible = "fsl,T1040RDB";
-+};
-+
- * Board Control and Status (BCSR)
- 
- Required properties:
--- 
-1.7.4.1
+@OMAP guys: any comments? The series depends on patch 5 and 6; both touch
+common hwmod code.
 
+I noticed that AM437x now comes with 4 PRUSS cores, maybe you had something
+different in mind on how to expose these?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks in advance,
+Andre
