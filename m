@@ -1,82 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
-Date: Mon, 7 Jul 2014 16:51:56 +0200
-Message-ID: <CACRpkdb1M3-hrSKLKWz21LCJ1sMvsq5E-aqkpmVhy0NwOS5HhA@mail.gmail.com>
-References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
-	<5cc8b89b-20ff-4fa9-92dd-bb2f6d3512d8@BY2FFO11FD030.protection.gbl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5cc8b89b-20ff-4fa9-92dd-bb2f6d3512d8@BY2FFO11FD030.protection.gbl>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Harini Katakam <harini.katakam@xilinx.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harinik@xilinx.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 02/11] mfd: add documentation for atmel-hlcdc DT bindings
+Date: Mon,  7 Jul 2014 16:51:02 +0200
+Message-ID: <1404744671-1629-3-git-send-email-boris.brezillon@free-electrons.com>
+References: <1404744671-1629-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1404744671-1629-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
+Cc: Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 5:36 PM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
+The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
+family or sama5d3 family) exposes 2 subdevices:
+- a display controller (controlled by a DRM driver)
+- a PWM chip
 
-> I did some of the changes for this v2 and a few things are not clear =
-to
-> me.
->
-> The first is, how is userspace supposed to find the correct offset fo=
-r a
-> GPIO pin.
+This patch adds documentation for atmel-hlcdc DT bindings.
 
-The sysfs interface to GPIO is *NOT* *GOOD* this is universally
-agreed upon.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+---
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt        | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
 
-This needs someone to step in and provide a replacement, my preferred
-mechanism would be a /dev/gpiochip0/... hierarchy using char devices.
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+new file mode 100644
+index 0000000..294048a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+@@ -0,0 +1,40 @@
++Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver
++
++Required properties:
++ - compatible: value should be one of the following:
++   "atmel,sama5d3-hlcdc"
++ - reg: base address and size of the HLCDC device registers.
++ - clock-names: the name of the 3 clocks requested by the HLCDC device.
++   Should contain "periph_clk", "sys_clk" and "slow_clk".
++ - clocks: should contain the 3 clocks requested by the HLCDC device.
++
++The HLCDC IP exposes two subdevices:
++ - a PWM chip: see Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
++ - a Display Controller: see Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
++
++Example:
++
++	hlcdc: hlcdc@f0030000 {
++		compatible = "atmel,sama5d3-hlcdc";
++		reg = <0xf0030000 0x2000>;
++		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
++		clock-names = "periph_clk","sys_clk", "slow_clk";
++
++		hlcdc-display-controller {
++			compatible = "atmel,hlcdc-dc";
++			interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
++			pinctrl-names = "default", "rgb-444", "rgb-565", "rgb-666", "rgb-888";
++			pinctrl-0 = <&pinctrl_lcd_base>;
++			pinctrl-1 = <&pinctrl_lcd_base &pinctrl_lcd_rgb444>;
++			pinctrl-2 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
++			pinctrl-3 = <&pinctrl_lcd_base &pinctrl_lcd_rgb666>;
++			pinctrl-4 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
++		};
++
++		hlcdc_pwm: hlcdc-pwm {
++			compatible = "atmel,hlcdc-pwm";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_lcd_pwm>;
++			#pwm-cells = <3>;
++		};
++	};
+-- 
+1.8.3.2
 
-> E.g. let's say GPIO 10 of this SOC-internal GPIO controller is
-> something I want to control. So, I'd export GPIO (chip-base + 10). Bu=
-t
-> this chip-base seems pretty variable. v1 of this patch had it hardcod=
-ed
-> to 0, which resulted in a predictable offset, but apparently was utte=
-rly
-> wrong. Now I see an offset of 138 for this chip when using my config.
-> And when I use multi_v7_defconfig the offset is somewhere in the 800s=
-,
-> IIRC. The best I found was the 'label' in the gpiochip's sysfs entry,
-> but documentation says that is not necessarily unique, and parsing la=
-bes
-> seems sub-optimal too.
-
-You see. It is badly designed and needs to be rewritten.
-
-It was merged into the kernel at a time when the GPIO subsystem
-was unmaintained, sadly.
-
-> The second issue is a stack trace (below) I see when triggering
-> interrupts (e.g. echo rising > edge; and then pushing the connected
-> button). Looking at the stack trace, I don't see an obvious error (I
-> think I pretty much copied the IRQ registration from the gpio-pl061.c
-> driver you mentioned). Is this an issue in this driver or the core co=
-de?
-
-Probably.
-
-Using GPIOs for IRQs in userspace is an even worse idea than using
-GPIOs from userspace in general :-D
-
-But before you add any hairy code in userspace, please have a look
-at Documentation/gpio/sysfs.txt:
-
-"Note that standard kernel drivers exist for common "LEDs and Buttons"
- GPIO tasks:  "leds-gpio" and "gpio_keys", respectively. Use those
- instead of talking directly to the GPIOs; they integrate with kernel
- frameworks better than your userspace code could."
-
-So: what is the usecase for these GPIOs?
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
