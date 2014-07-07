@@ -1,34 +1,96 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: pinctrl-single.c: Cleaning up values that are
- never used
-Date: Mon, 7 Jul 2014 17:50:12 +0200
-Message-ID: <CACRpkdbt1mJ7tn_-WhmySfpPFHPLFYsmHV8mMgspWzem_=v9ZQ@mail.gmail.com>
-References: <1403790181-11506-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v9 3/3] dt-bindings: add mtk-timer bindings
+Date: Mon, 7 Jul 2014 08:49:59 -0700
+Message-ID: <19e012cf-de2f-4bf9-bac3-3b3df051f117@BY2FFO11FD048.protection.gbl>
+References: <1403264929-21325-1-git-send-email-matthias.bgg@gmail.com>
+ <1403264929-21325-4-git-send-email-matthias.bgg@gmail.com>
+ <20140620123602.GK30188@leverpostej>
+ <CABuKBeKknz7OEyffKOGK=yk7ZH7fj7Jf9fgPhw2VGbTC-p21qw@mail.gmail.com>
+ <5b2c6b68-6177-47f4-937a-077b4f3c89a4@BN1AFFO11FD048.protection.gbl>
+ <CABuKBeLv+wC9Fe=P40pBvU+R3KrEUyTWj2Gs3tg2qjjm2HONsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403790181-11506-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, ext Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CABuKBeLv+wC9Fe=P40pBvU+R3KrEUyTWj2Gs3tg2qjjm2HONsA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "arnd@arndb.de" <arnd@arndb.de>, ijc+devicet
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 3:43 PM, Rickard Strandqvist
-<rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org> wrote:
-
-> Remove variable that are never used
->
-> This was found using a static code analysis program called cppcheck.
->
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-
-Makes sense.
-
-Patch applied unless Tony or Haojian has some better error handling cooking.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCAyMDE0LTA3LTA1IGF0IDAyOjI4QU0gKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3Jv
+dGU6Cj4gMjAxNC0wNy0wMSAyMDowMCBHTVQrMDI6MDAgU8O2cmVuIEJyaW5rbWFubiA8c29yZW4u
+YnJpbmttYW5uQHhpbGlueC5jb20+Ogo+ID4gT24gVHVlLCAyMDE0LTA3LTAxIGF0IDA3OjQ2UE0g
+KzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6Cj4gPj4gMjAxNC0wNi0yMCAxNDozNiBHTVQr
+MDI6MDAgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT46Cj4gPj4gPiBPbiBGcmks
+IEp1biAyMCwgMjAxNCBhdCAxMjo0ODo0OVBNICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Ogo+ID4+ID4+IEFkZCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBHZW5lcmFsIFBvcnBv
+c2UgVGltZXIgZHJpdmVyIG9mCj4gPj4gPj4gdGhlIE1lZGlhdGVrIFNvQ3MuCj4gPj4gPj4KPiA+
+PiA+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwu
+Y29tPgo+ID4+ID4+IEFja2VkLWJ5OiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5A
+eGlsaW54LmNvbT4KPiA+PiA+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz4KPiA+PiA+PiAtLS0KPiA+PiA+PiAgLi4uL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10
+aW1lci50eHQgICAgICAgICAgfCAgIDE4ICsrKysrKysrKysrKysrKysrKwo+ID4+ID4+ICAxIGZp
+bGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+ID4+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1l
+ci50eHQKPiA+PiA+Pgo+ID4+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4gPj4gPj4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiA+PiBpbmRleCAwMDAwMDAwLi4xMGI3ZTA5Cj4gPj4g
+Pj4gLS0tIC9kZXYvbnVsbAo+ID4+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4gPj4gPj4gQEAgLTAsMCArMSwx
+OCBAQAo+ID4+ID4+ICtNZWRpYXRlayBNVDY1NzcsIE1UNjU3MiBhbmQgTVQ2NTg5IFRpbWVycwo+
+ID4+ID4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+PiA+PiAr
+Cj4gPj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gPj4gKy0gY29tcGF0aWJsZTogU2hv
+dWxkIGJlICJtZWRpYXRlayxtdDY1NzctdGltZXIiCj4gPj4gPj4gKy0gcmVnOiBTaG91bGQgY29u
+dGFpbiBsb2NhdGlvbiBhbmQgbGVuZ3RoIGZvciB0aW1lcnMgcmVnaXN0ZXIuCj4gPj4gPj4gKy0g
+Y2xvY2tzOiBDbG9ja3MgZHJpdmluZyB0aGUgdGltZXIgaGFyZHdhcmUuIFRoaXMgbGlzdCBzaG91
+bGQgaW5jbHVkZSB0d28KPiA+PiA+PiArICAgICBjbG9ja3MuIFRoZSBvcmRlciBpcyBzeXN0ZW0g
+Y2xvY2sgYW5kIGFzIHNlY29uZCBjbG9jayB0aGUgUlRDIGNsb2NrLgo+ID4+ID4+ICsKPiA+PiA+
+PiArRXhhbXBsZXM6Cj4gPj4gPj4gKwo+ID4+ID4+ICsgICAgIHRpbWVyQDEwMDA4MDAwIHsKPiA+
+PiA+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTc3LXRpbWVyIjsK
+PiA+PiA+PiArICAgICAgICAgICAgIHJlZyA9IDwweDEwMDA4MDAwIDB4ODA+Owo+ID4+ID4+ICsg
+ICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExMyBJUlFfVFlQRV9MRVZFTF9MT1c+
+Owo+ID4+ID4+ICsgICAgICAgICAgICAgY2xvY2tzID0gPCZzeXN0ZW1fY2xrPiwgPCZydGNfY2xr
+PjsKPiA+PiA+PiArICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gInN5c3RlbS1jbGsiLCAicnRj
+LWNsayI7Cj4gPj4gPgo+ID4+ID4gVGhlc2UgbmFtZXMgc2hvdWxkIGJlIG1lbnRpb25lZCBhYm92
+ZSwgb3IgcmVtb3ZlZC4KPiA+Pgo+ID4+IEkgYWRkZWQgdGhlIGNsb2NrLW5hbWVzIHRvIG1ha2Ug
+aXQgdGhlIGNsb2NrIG9yZGVyIGNsZWFyZXIsIGFzIGl0IGlzCj4gPj4gZG9uZSBpbiB0aGUgYXJt
+IHNwLDgwNCBbMV0uCj4gPj4gQnV0IEkgdGhpbmsgaXQgaXMgY2xlYXIgZW5vdWdoIHRocm91Z2gg
+dGhlIHBoYW5kbGUgbmFtZXMgYW5kIHRoZQo+ID4+IGRlc2NyaXB0aW9uIG9mIHRoZSBjbG9ja3Mg
+cHJvcGVydHkuCj4gPj4gU28gSSB3aWxsIGRlbGV0ZSB0aGUgY2xvY2stbmFtZXMgaW4gdGhlIHYx
+MCByb3VuZC4KPiA+Cj4gPiBJIHRoaW5rIEkgb3JpZ2luYWxseSBhZHZvY2F0ZWQgZm9yIGFkZGlu
+ZyB0aG9zZSBuYW1lcy4gQW5kIG15IGFyZ3VtZW50Cj4gPiB3YXMgdGhhdCB0aGUgbmFtZXMgaW4g
+dGhlIGR0cyBhcmUgcHJvYmFibHkgbm90IGNsZWFybHkgaWRlbnRpZnlpbmcgdGhlCj4gPiB0aW1l
+ciBJUCdzIGNsb2NrIGlucHV0cyBzaW5jZSB0aGV5IHJlZmVyIHRvIFNPQyBuYW1lcyBmb3IgdGhl
+IGNsb2Nrcy4gV2UKPiA+IGhhZCB0aGlzIGFyZ3VtZW50IGZvciBhIHdoaWxlIG5vdyBhbmQgaXQg
+ZG9lc24ndCBzZWVtIHRvIGdldCBiZXR0ZXIKPiA+IHRoYW4gdGhpcy4gQnV0IHRvIGV4cGxhaW4g
+d2h5IEkgdHJ5IHRvIGdldCBJUCB2cy4gU09DIGNsb2NrIG5hbWVzIGluCj4gPiBoZXJlIGlzLCB0
+aGF0IEkgaGFkIHN1Y2ggYSBjYXNlIHdpdGggWnlucSdzIEV0aGVybmV0IGNvcmUuIFRoYXQgSVAg
+aGFzCj4gPiBxdWl0ZSBhIGZldyBjbG9jayBpbnB1dHMgYW5kIGx1Y2tpbHkgdGhlIG1haW5saW5l
+IGRyaXZlciBmb3IgdGhhdCBJUAo+ID4gdXNlZCB0aGUgcHJvcGVyIG5hbWVzIGZyb20gdGhlIElQ
+IGRhdGEgc2hlZXQgZm9yIHRoZSBjbG9ja3MgaW5zdGVhZAo+ID4gb2YgdGhlIFNPQyBuYW1lcy4g
+VGhhdCBtYWRlIGl0IHJlbGF0aXZlbHkgZWFzeSB0byBtYXRjaCB0aGluZ3Mgd2l0aCB0aGUKPiA+
+IFp5bnEgaW50ZWdyYXRpb24gb2YgdGhhdCBJUC4gSGFkIHRoYXQgZHJpdmVyIHVzZWQgU09DIGNs
+b2NrIG5hbWVzLAo+ID4gdGhpbmdzIHdvdWxkIGhhdmUgYmVlbiBtb3JlIGRpZmZpY3VsdC4KPiAK
+PiBTw7ZyZW4sIEkgZ2V0IHRoZSBwb2ludC4gVGhlIHByb2JsZW0gaXMsIHRoYXQgd2UgZG9uJ3Qg
+aGF2ZSBhbnkKPiBkb2N1bWVudGF0aW9uIG90aGVyIHRoZW4gdGhlIFNvQyBkYXRhc2hlZXQgZm9y
+IHRoZSB0aW1lci4KPiBBbnl3YXkgdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5IGRvZXMgbm90IGhl
+bHAgdXMgaW4gdGhpcyBhdCBhbGwuIEFzIEkKPiBhbHJlYWR5IG1lbnRpb25lZCwgdGhlIGNsb2Nr
+LW5hbWVzIHByb3BlcnR5IHdhcyB0byBpbGx1c3RyYXRlIHRoZQo+IGNsb2NrIG9yZGVyLCBidXQg
+YXMgSSB0aGluaywgd2l0aCB0aGUgY29tbWVudCBmb3IgdGhlIGNsb2NrcyBwcm9wZXJ0eSwKPiB0
+aGUgb3JkZXIgaXMgY2xlYXIgZW5vdWdoLgo+IAo+IFNoYWxsIEkgZGVsZXRlIHlvdXIgYWNrLCB3
+aGVuIEkgcmVzZW5kIHRoZSBwYXRjaCB3aXRob3V0IHRoZQo+IGNsb2NrLW5hbWVzIHByb3BlcnR5
+PwoKTm8sIGl0J3MgZmluZS4KCglTw7ZyZW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
