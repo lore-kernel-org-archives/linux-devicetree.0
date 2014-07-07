@@ -1,20 +1,20 @@
-Return-Path: <grant.likely@secretlab.ca>
-Return-Path: <grant.likely@secretlab.ca>
-Sender: Grant Likely <glikely@secretlab.ca>
-From: Grant Likely <grant.likely@secretlab.ca>
+Return-Path: <alexander.sverdlin@nsn.com>
+Message-ID: <53BA4698.6080204@nsn.com>
+Date: Mon, 07 Jul 2014 09:04:56 +0200
+From: Alexander Sverdlin <alexander.sverdlin@nsn.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH 3/5] OF: Utility helper functions for dynamic nodes
-In-Reply-To: 
- <1404493129-8914-4-git-send-email-pantelis.antoniou@konsulko.com>
-References: 
-	<1404493129-8914-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1404493129-8914-4-git-send-email-pantelis.antoniou@konsulko.com>
-Date: Mon, 07 Jul 2014 14:13:12 +0100
-Message-Id: <20140707131312.81D4CC409D5@trevor.secretlab.ca>
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+References: <1404493129-8914-1-git-send-email-pantelis.antoniou@konsulko.com> <1404493129-8914-4-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1404493129-8914-4-git-send-email-pantelis.antoniou@konsulko.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To: ext Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri,  4 Jul 2014 19:58:47 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+Hi!
+
+On 04/07/14 18:58, ext Pantelis Antoniou wrote:
 > Introduce helper functions for working with the live DT tree,
 > all of them related to dynamically adding/removing nodes and
 > properties.
@@ -25,6 +25,9 @@ On Fri,  4 Jul 2014 19:58:47 +0300, Pantelis Antoniou <pantelis.antoniou@konsulk
 > Bug fix about prop->len == 0 by Ionut Nicu <ioan.nicu.ext@nsn.com>
 > 
 > Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nsn.com>
+
 > ---
 >  drivers/of/dynamic.c    | 124 ++++++++++++++++++++++++++++++++++++++++++++++++
 >  drivers/of/of_private.h |  14 ++++++
@@ -199,11 +202,6 @@ On Fri,  4 Jul 2014 19:58:47 +0300, Pantelis Antoniou <pantelis.antoniou@konsulk
 > +#define OF_ALLOCFULL	7 /* full_name was kmalloc-ed */
 > +#define OF_ALLOCVALUE	8 /* value was kmalloc-ed */
 > +
-
-We talked about this. Drop all the fine grained alloc tracking.
-
-g.
-
 > +#define OF_NODE_ALLOCALL \
 > +	((1 << OF_ALLOCNAME) | (1 << OF_ALLOCTYPE) | (1 << OF_ALLOCFULL))
 > +#define OF_PROP_ALLOCALL \
@@ -211,6 +209,8 @@ g.
 >  
 >  #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
 >  #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
-> -- 
-> 1.7.12
 > 
+
+-- 
+Best regards,
+Alexander Sverdlin.
