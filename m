@@ -1,153 +1,196 @@
-From: punnaiah choudary kalluri <punnaia@xilinx.com>
-Subject: Re: [PATCH RFC v3 2/2] memory: pl353: Add driver for arm pl353 static
- memory controller
-Date: Mon, 7 Jul 2014 22:15:38 +0530
-Message-ID: <CAGnW=BaU6iS6BNa_MQNAK_Sck-Cv=Z3iL87gMENPQOq2otMjKg@mail.gmail.com>
-References: <1403838162-18756-1-git-send-email-punnaia@xilinx.com>
- <4e814a4c-64f9-4dc0-abbb-0f8e87d94a94@BY2FFO11FD003.protection.gbl>
- <4355153.EcMz3bZZ97@wuerfel>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 2/5] PCI: designware: refactor MSI code to work with
+ v3.65 dw hardware
+Date: Mon, 7 Jul 2014 12:53:16 -0400
+Message-ID: <53BAD07C.2010302@ti.com>
+References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com> <1404164720-11066-3-git-send-email-m-karicheri2@ti.com> <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4291@EAPEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <4355153.EcMz3bZZ97@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "joern@logfs.org" <joern@logfs.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "acourbot@nvidia.com" <acourbot@nvidia.com>"Gupta, Pekon" <p>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4291@EAPEX1MAIL1.st.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Pratyush ANAND <pratyush.anand@st.com>, Richard Zhu <r65037@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 3, 2014 at 4:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 27 June 2014 08:32:42 Punnaiah Choudary Kalluri wrote:
+On 07/07/2014 12:17 AM, Mohit KUMAR DCG wrote:
+> Hello Murali,
 >
->> +/**
->> + * struct pl353_smc_data - Private smc driver structure
->> + * @devclk:          Pointer to the peripheral clock
->> + * @aperclk:         Pointer to the APER clock
->> + */
->> +struct pl353_smc_data {
->> +     struct clk              *memclk;
->> +     struct clk              *aclk;
->> +};
+>> -----Original Message-----
+>> From: Murali Karicheri [mailto:m-karicheri2@ti.com]
+>> Sent: Tuesday, July 01, 2014 3:15 AM
+>> To: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org
+>> Cc: Murali Karicheri; Santosh Shilimkar; Russell King; Grant Likely; Rob Herring;
+>> Mohit KUMAR DCG; Jingoo Han; Bjorn Helgaas; Pratyush ANAND; Richard
+>> Zhu; Kishon Vijay Abraham I; Marek Vasut; Arnd Bergmann; Pawel Moll;
+>> Mark Rutland; Ian Campbell; Kumar Gala; Randy Dunlap
+>> Subject: [PATCH v3 2/5] PCI: designware: refactor MSI code to work with
+>> v3.65 dw hardware
+>>
+>> Keystone PCI controller is based on v3.65 version of the DW PCI h/w that
+>> implements MSI controller registers in application space compared to the
+>> newer version. This requires updates to the DW core API to support the PCI
+>> controller driver based on this old DW hardware. Add msi_irq_set()/clear()
+>> API functions to allow Set/Clear MSI IRQ enable bit in the application register.
+>> Also the old h/w uses MSI_IRQ register in application register space to raise
+>> MSI IRQ to the RC from EP. Current code uses the standard mechanism as
+>> per PCI spec. So add another API get_msi_data() to get the address of this
+>> register so that common code can be re-used on old h/w.
+>>
+>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>>
+>> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
+>> CC: Russell King<linux@arm.linux.org.uk>
+>> CC: Grant Likely<grant.likely@linaro.org>
+>> CC: Rob Herring<robh+dt@kernel.org>
+>> CC: Mohit Kumar<mohit.kumar@st.com>
+>> CC: Jingoo Han<jg1.han@samsung.com>
+>> CC: Bjorn Helgaas<bhelgaas@google.com>
+>> CC: Pratyush Anand<pratyush.anand@st.com>
+>> CC: Richard Zhu<r65037@freescale.com>
+>> CC: Kishon Vijay Abraham I<kishon@ti.com>
+>> CC: Marek Vasut<marex@denx.de>
+>> CC: Arnd Bergmann<arnd@arndb.de>
+>> CC: Pawel Moll<pawel.moll@arm.com>
+>> CC: Mark Rutland<mark.rutland@arm.com>
+>> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
+>> CC: Kumar Gala<galak@codeaurora.org>
+>> CC: Randy Dunlap<rdunlap@infradead.org>
+>> CC: Grant Likely<grant.likely@linaro.org>
+>> ---
+>>   drivers/pci/host/pcie-designware.c |   50 ++++++++++++++++++++++++++-
+>> ---------
+>>   drivers/pci/host/pcie-designware.h |    3 +++
+>>   2 files changed, 39 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
+>> designware.c
+>> index d8f3af7..905941c 100644
+>> --- a/drivers/pci/host/pcie-designware.c
+>> +++ b/drivers/pci/host/pcie-designware.c
+>> @@ -217,27 +217,47 @@ static int find_valid_pos0(struct pcie_port *pp, int
+>> msgvec, int pos, int *pos0)
+>>   	return 0;
+>>   }
+>>
+>> +static void dw_pcie_msi_clear_irq(struct pcie_port *pp, int irq) {
+>> +	unsigned int res, bit, val;
 >> +
->> +/* SMC virtual register base */
->> +static void __iomem *pl353_smc_base;
->
-> Drivers should not assume that there is only a single instance of the
-> hardware in the system. Please remove this global variable and
-> change the code to pass around a pointer to a structure containing
-> it.
-
-Since, the pl353 nand driver has dependency with this driver for configuring the
-bus width,operational parameters and ecc specific settings.
-So, i didnt find any mechanism for passing this instance from other driver other
-than exporting this instance.
-http://lists.infradead.org/pipermail/linux-mtd/2014-April/053432.html
-
-Please suggest the better option if you want it to be not global.
-
->> +/**
->> + * pl353_smc_set_buswidth - Set memory buswidth
->> + * @bw:      Memory buswidth (8 | 16)
->> + * Return: 0 on success or negative errno.
->> + */
->> +int pl353_smc_set_buswidth(unsigned int bw)
->> +{
+>> +	res = (irq / 32) * 12;
+>> +	bit = irq % 32;
+>> +	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4,&val);
+>> +	val&= ~(1<<  bit);
+>> +	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val); }
 >> +
->> +     if (bw != PL353_SMC_MEM_WIDTH_8  && bw != PL353_SMC_MEM_WIDTH_16)
->> +             return -EINVAL;
+>>   static void clear_irq_range(struct pcie_port *pp, unsigned int irq_base,
+>>   			    unsigned int nvec, unsigned int pos)  {
+>> -	unsigned int i, res, bit, val;
+>> +	unsigned int i;
+>>
+>>   	for (i = 0; i<  nvec; i++) {
+>>   		irq_set_msi_desc_off(irq_base, i, NULL);
+>>   		clear_bit(pos + i, pp->msi_irq_in_use);
+>>   		/* Disable corresponding interrupt on MSI controller */
+>> -		res = ((pos + i) / 32) * 12;
+>> -		bit = (pos + i) % 32;
+>> -		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
+>> 4,&val);
+>> -		val&= ~(1<<  bit);
+>> -		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
+>> 4, val);
+>> +		if (pp->ops->msi_clear_irq)
+>> +			pp->ops->msi_clear_irq(pp, pos + i);
+>> +		else
+>> +			dw_pcie_msi_clear_irq(pp, pos + i);
+>>   	}
+>>   }
+>>
+>> +static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq) {
+>> +	unsigned int res, bit, val;
 >> +
->> +     writel(bw, pl353_smc_base + PL353_SMC_SET_OPMODE_OFFS);
->> +     writel(PL353_SMC_DC_UPT_NAND_REGS, pl353_smc_base +
->> +            PL353_SMC_DIRECT_CMD_OFFS);
+>> +	res = (irq / 32) * 12;
+>> +	bit = irq % 32;
+>> +	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4,&val);
+>> +	val |= 1<<  bit;
+>> +	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val); }
 >> +
->> +     return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(pl353_smc_set_buswidth);
+>>   static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)  {
+>> -	int res, bit, irq, pos0, pos1, i;
+>> -	u32 val;
+>> +	int irq, pos0, pos1, i;
+>>   	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
+>>
+>>   	if (!pp) {
+>> @@ -281,11 +301,10 @@ static int assign_irq(int no_irqs, struct msi_desc
+>> *desc, int *pos)
+>>   		}
+>>   		set_bit(pos0 + i, pp->msi_irq_in_use);
+>>   		/*Enable corresponding interrupt in MSI interrupt controller
+>> */
+>> -		res = ((pos0 + i) / 32) * 12;
+>> -		bit = (pos0 + i) % 32;
+>> -		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
+>> 4,&val);
+>> -		val |= 1<<  bit;
+>> -		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
+>> 4, val);
+>> +		if (pp->ops->msi_set_irq)
+>> +			pp->ops->msi_set_irq(pp, pos0 + i);
+>> +		else
+>> +			dw_pcie_msi_set_irq(pp, pos0 + i);
+>>   	}
+>>
+>>   	*pos = pos0;
+>> @@ -353,7 +372,10 @@ static int dw_msi_setup_irq(struct msi_chip *chip,
+>> struct pci_dev *pdev,
+>>   	 */
+>>   	desc->msi_attrib.multiple = msgvec;
+>>
+>> -	msg.address_lo = virt_to_phys((void *)pp->msi_data);
+>> +	if (pp->ops->get_msi_data)
+>> +		msg.address_lo = pp->ops->get_msi_data(pp);
+>> +	else
+>> +		msg.address_lo = virt_to_phys((void *)pp->msi_data);
+>>   	msg.address_hi = 0x0;
+>>   	msg.data = pos;
+>>   	write_msi_msg(irq,&msg);
+>> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-
+>> designware.h
+>> index 8121901..387f69e 100644
+>> --- a/drivers/pci/host/pcie-designware.h
+>> +++ b/drivers/pci/host/pcie-designware.h
+>> @@ -67,6 +67,9 @@ struct pcie_host_ops {
+>>   			unsigned int devfn, int where, int size, u32 val);
+>>   	int (*link_up)(struct pcie_port *pp);
+>>   	void (*host_init)(struct pcie_port *pp);
+>> +	void (*msi_set_irq)(struct pcie_port *pp, int irq);
+>> +	void (*msi_clear_irq)(struct pcie_port *pp, int irq);
+>> +	u32 (*get_msi_data)(struct pcie_port *pp);
+>>   };
+>>
+>>   int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val);
 >
-> Why is this an exported interface? Wouldn't that setting just be
-> determined from DT when the device is probed?
-
-Nand driver rely on auto bus width detection mechanism for identifying
-the bus width using onfi parameter page settings. So, once the driver
-finds the bus width, updates accordingly using this API
-
+> - Now MSI specific dw code can be shared b/w old Synopsys controller (ver<  3.70)
+> and newer controller that standardize the MSI settings inside design ware core itself.
 >
->> +/**
->> + * pl353_smc_get_nand_int_status_raw - Get NAND interrupt status bit
->> + * Return: the raw_int_status1 bit from the memc_status register
->> + */
->> +int pl353_smc_get_nand_int_status_raw(void)
->> +{
->> +     u32 reg;
->> +
->> +     reg = readl(pl353_smc_base + PL353_SMC_MEMC_STATUS_OFFS);
->> +     reg >>= PL353_SMC_MEMC_STATUS_RAW_INT_1_SHIFT;
->> +     reg &= 1;
->> +
->> +     return reg;
->> +}
->> +EXPORT_SYMBOL_GPL(pl353_smc_get_nand_int_status_raw);
->> +
->> +/**
->> + * pl353_smc_clr_nand_int - Clear NAND interrupt
->> + */
->> +void pl353_smc_clr_nand_int(void)
->> +{
->> +     writel(PL353_SMC_CFG_CLR_INT_CLR_1,
->> +             pl353_smc_base + PL353_SMC_CFG_CLR_OFFS);
->> +}
->> +EXPORT_SYMBOL_GPL(pl353_smc_clr_nand_int);
+> Jingoo,
 >
-> Why aren't these just part of the NAND driver?
-
-As mentioned, SMC supports two interfaces and most of the register contains
-the control/status bits for both the interfaces. so, the smc driver
-provides relevant
-APIs for controlling the nand and nor/sram interfaces. The current
-version of the
-driver supports nand interface but the future versions include
-nor/sram interface.
-
+> Pls let us know if you have any concern or comment over this.
 >
->> +     pl353_smc_set_cycles(t_rc, t_wc, t_rea, t_wp, t_clr, t_ar, t_rr);
->> +     writel(PL353_SMC_CFG_CLR_INT_CLR_1,
->> +             pl353_smc_base + PL353_SMC_CFG_CLR_OFFS);
->> +     writel(PL353_SMC_DC_UPT_NAND_REGS, pl353_smc_base +
->> +            PL353_SMC_DIRECT_CMD_OFFS);
->> +     /* Wait till the ECC operation is complete */
->> +     do {
->> +             if (pl353_smc_ecc_is_busy_noirq())
->> +                     cpu_relax();
->> +             else
->> +                     break;
->> +     } while (!time_after_eq(jiffies, timeout));
+> Acked-by: Mohit Kumar<mohit.kumar@st.com>
 >
-> This blocks the CPU for up to a second (the timeout value). Since you are
-> not in atomic context, you can instead sleep here, e.g. using msleep(1)
-> or some other appropriate timeout.
+> Regards
+> Mohit
 >
-> What is the expected average duration of the loop?
-
-The expected duration of the loop depends on the given timing parameters.
-In the worst case it should not be more than 2-3 milli seconds and in the best
-case it should be 2-3 micro seconds. I agree your point to use msleep rather
-than the busy wait using cpu_relax. I will fix this in next version.
-
-Please provide your inputs for my above answers.
-
-Thanks for the review
-Punnaiah
+>> --
+>> 1.7.9.5
 >
->         Arnd
+Mohit,
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Thanks.
+
+Jingoo, could you provide your response or Ack?
+
+Thanks
