@@ -1,131 +1,56 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v10 1/7] of: Provide function to request and map memory
-Date: Mon,  7 Jul 2014 17:13:02 +0200
-Message-ID: <1404745988-32558-2-git-send-email-matthias.bgg@gmail.com>
+Subject: [PATCH v10 3/7] dt-bindings: add mtk-timer bindings
+Date: Mon,  7 Jul 2014 17:13:04 +0200
+Message-ID: <1404745988-32558-4-git-send-email-matthias.bgg@gmail.com>
 References: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, ak@linux.intel.com, hpa@linux.intel.com, akpm@linux-foundation.org, u.kleine-koenig@pengutronix.de, gregkh@linuxfoundation.org, fabf@skynet.be, rostedt@goodmis.org
 List-Id: devicetree@vger.kernel.org
 
-A call to of_iomap does not request the memory region.
-This patch adds the function of_io_request_and_map which requests
-the memory region before mapping it.
+Add binding documentation for the General Porpose Timer driver of
+the Mediatek SoCs.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Rob Herring <robh@kernel.org>
+Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c       |   36 ++++++++++++++++++++++++++++++++++++
- include/linux/io.h         |    2 ++
- include/linux/of_address.h |   11 +++++++++++
- lib/devres.c               |    2 --
- 4 files changed, 49 insertions(+), 2 deletions(-)
+ .../bindings/timer/mediatek,mtk-timer.txt          |   17 ++++++++++++=
++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mt=
+k-timer.txt
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 5edfcb0..e371825 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -702,6 +702,42 @@ void __iomem *of_iomap(struct device_node *np, int index)
- }
- EXPORT_SYMBOL(of_iomap);
- 
-+/*
-+ * of_io_request_and_map - Requests a resource and maps the memory mapped IO
-+ *			   for a given device_node
-+ * @device:	the device whose io range will be mapped
-+ * @index:	index of the io range
-+ * @name:	name of the resource
-+ *
-+ * Returns a pointer to the requested and mapped memory or an ERR_PTR() encoded
-+ * error code on failure. Usage example:
-+ *
-+ *	base = of_io_request_and_map(node, 0, "foo");
-+ *	if (IS_ERR(base))
-+ *		return PTR_ERR(base);
-+ */
-+void __iomem *of_io_request_and_map(struct device_node *np, int index,
-+					char *name)
-+{
-+	struct resource res;
-+	void __iomem *mem;
+diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer=
+=2Etxt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+new file mode 100644
+index 0000000..7c4408f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+@@ -0,0 +1,17 @@
++Mediatek MT6577, MT6572 and MT6589 Timers
++---------------------------------------
 +
-+	if (of_address_to_resource(np, index, &res))
-+		return IOMEM_ERR_PTR(-EINVAL);
++Required properties:
++- compatible: Should be "mediatek,mt6577-timer"
++- reg: Should contain location and length for timers register.
++- clocks: Clocks driving the timer hardware. This list should include =
+two
++	clocks. The order is system clock and as second clock the RTC clock.
 +
-+	if (!request_mem_region(res.start, resource_size(&res), name))
-+		return IOMEM_ERR_PTR(-EBUSY);
++Examples:
 +
-+	mem = ioremap(res.start, resource_size(&res));
-+	if (!mem) {
-+		release_mem_region(res.start, resource_size(&res));
-+		return IOMEM_ERR_PTR(-ENOMEM);
-+	}
-+
-+	return mem;
-+}
-+EXPORT_SYMBOL(of_io_request_and_map);
-+
- /**
-  * of_dma_get_range - Get DMA range info
-  * @np:		device node to get DMA range info
-diff --git a/include/linux/io.h b/include/linux/io.h
-index b76e6e5..d5fc9b8 100644
---- a/include/linux/io.h
-+++ b/include/linux/io.h
-@@ -58,6 +58,8 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
- }
- #endif
- 
-+#define IOMEM_ERR_PTR(err) (__force void __iomem *)ERR_PTR(err)
-+
- void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
- 			    unsigned long size);
- void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index c13b878..fb7b722 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -109,7 +109,12 @@ static inline bool of_dma_is_coherent(struct device_node *np)
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- void __iomem *of_iomap(struct device_node *node, int index);
-+void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, char *name);
- #else
-+
-+#include <linux/io.h>
-+
- static inline int of_address_to_resource(struct device_node *dev, int index,
- 					 struct resource *r)
- {
-@@ -120,6 +125,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
- {
- 	return NULL;
- }
-+
-+static inline void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, char *name)
-+{
-+	return IOMEM_ERR_PTR(-EINVAL);
-+}
- #endif
- 
- #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
-diff --git a/lib/devres.c b/lib/devres.c
-index f562bf6..bb63248 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -86,8 +86,6 @@ void devm_iounmap(struct device *dev, void __iomem *addr)
- }
- EXPORT_SYMBOL(devm_iounmap);
- 
--#define IOMEM_ERR_PTR(err) (__force void __iomem *)ERR_PTR(err)
--
- /**
-  * devm_ioremap_resource() - check, request region, and ioremap resource
-  * @dev: generic device to handle the resource for
--- 
++	timer@10008000 {
++		compatible =3D "mediatek,mt6577-timer";
++		reg =3D <0x10008000 0x80>;
++		interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&system_clk>, <&rtc_clk>;
++	};
+--=20
 1.7.9.5
+
