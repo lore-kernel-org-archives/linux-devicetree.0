@@ -1,57 +1,79 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
-Date: Mon, 7 Jul 2014 14:44:25 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B24C95@SW-EX-MBX02.diasemi.com>
-References: <1404470603-30394-1-git-send-email-p.zabel@pengutronix.de>
-	 <6ED8E3B22081A4459DAC7699F3695FB7D0B238B5@SW-EX-MBX02.diasemi.com>
- <1404720416.3567.2.camel@paszta.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404720416.3567.2.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 04/11] pwm: add DT bindings documentation for atmel-hlcdc-pwm driver
+Date: Mon,  7 Jul 2014 16:51:04 +0200
+Message-ID: <1404744671-1629-5-git-send-email-boris.brezillon@free-electrons.com>
+References: <1404744671-1629-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1404744671-1629-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
+Cc: Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwNCg0KT24gMDcgSnVseSAyMDE0IEAgMDk6MDcgUGhpbGlwcCBaYWJlbCB3cm90
-ZToNCg0KPkhpIFN0ZXZlLA0KPkFtIEZyZWl0YWcsIGRlbiAwNC4wNy4yMDE0LCAxMjo1MiArMDAw
-MCBzY2hyaWViIE9wZW5zb3VyY2UgW1N0ZXZlDQo+VHdpc3NdOg0KPj4gPlN1YmplY3Q6IFtQQVRD
-SF0gb2Y6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBEaWFsb2cgU2VtaWNvbmR1Y3RvciBQbGMNCj4+
-ID5BZGQgRGlhbG9nIFNlbWljb25kdWN0b3IgUGxjIHRvIHRoZSBsaXN0IG9mIGRldmljZSB0cmVl
-IHZlbmRvciBwcmVmaXhlcy4NCj4+ID5TaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnph
-YmVsQHBlbmd1dHJvbml4LmRlPg0KPj4gPi0tLQ0KPj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKw0KPj4gPiAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykNCj4+ID5kaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4+ID5iL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+PiA+aW5kZXggOWFiMTFlMC4u
-YmU0N2QxYSAxMDA2NDQNCj4+ID4tLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPj4gPisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+PiA+QEAgLTM4LDYgKzM4LDcgQEAgZGFs
-bGFzCU1heGltIEludGVncmF0ZWQgUHJvZHVjdHMgKGZvcm1lcmx5IERhbGxhcw0KPj4gPlNlbWlj
-b25kdWN0b3IpDQo+PiA+IGRhdmljb20JREFWSUNPTSBTZW1pY29uZHVjdG9yLCBJbmMuDQo+PiA+
-IGRlbngJRGVueCBTb2Z0d2FyZSBFbmdpbmVlcmluZw0KPj4gPiBkaWdpCURpZ2kgSW50ZXJuYXRp
-b25hbCBJbmMuDQo+PiA+K2RsZ25mCURpYWxvZyBTZW1pY29uZHVjdG9yIFBsYw0KPj4NCj4+IFRo
-aXMgZGlzY3Vzc2lvbiBoYXMgYmVlbiBpbiBwcm9ncmVzcyBmb3IgYSB3aGlsZSBub3cuDQo+PiBU
-aGVyZSBhcmUgYWxyZWFkeSBwZW5kaW5nIGNoYW5nZXMgZm9yIHRoZSB2ZW5kb3IgcHJlZml4IERp
-YWxvZyBTZW1pY29uZHVjdG9yLg0KPj4NCj4+IFBsZWFzZSBzZWUgdGhlIGNvbnZlcnNhdGlvbnMg
-aGVyZSB3aXRoIFJvYiBIZXJyaW5nOg0KPj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQvNi8x
-MS8yNjINCj4+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzYvMTEvMTk5DQo+DQo+VGhhbmsg
-eW91LCBJIGhhdmVuJ3Qgc2VlbiB0aG9zZS4gU28gaXMgaXQgZ29pbmcgdG8gYmUgJ2RsZycgdGhl
-bj8NCj5JcyB0aGlzIGFscmVhZHkgcXVldWVkIHNvbWV3aGVyZT8gSXQgZG9lc24ndCBzZWVtIHRv
-IGhhdmUgbWFkZSBpdA0KPmludG8gbGludXgtbmV4dCB5ZXQuDQoNCkEgcGF0Y2ggd2FzIHNlbnQg
-Zm9yIERpYWxvZyBEQTkxNTAgYnV0IGl0IGhhcyBub3QgeWV0IG1hZGUgaXQgaW50byBsaW51eC1u
-ZXh0Og0KJ2RsZycgaXMgb3VyIGNob3NlbiBwcmVmaXggYW5kIHRoaXMgaXMgbW9zdCBjb21tb25s
-eSB1c2VkIHRocm91Z2hvdXQNCnRoZSBrZXJuZWwuIEFsc28gUm9iIEhlcnJpbmcgaGFzIGFncmVl
-ZCB3aXRoIHRoaXMgZGVjaXNpb24gd2hlbiByZXZpZXdpbmcNCnRoZSBwcmV2aW91cyBhdHRlbXB0
-ZWQgc3VibWlzc2lvbi4gDQoNCkhvd2V2ZXIsIEkgd2lsbCBwdXQgdG9nZXRoZXIgYSBwYXRjaCBz
-ZXQgdGhhdCB1c2VzICdkbGcnIGFuZCAnbWFyayB0aGUgb3RoZXJzDQpkZXByZWNhdGVkJyBhcyBy
-ZXF1ZXN0ZWQuIEkgd2lsbCBzZW5kIHRoaXMgYXMgYSAicmVxdWVzdCBmb3IgY29tbWVudCIgdG8N
-CnRoZSBtYWludGFpbmVycyBhbmQgaG9wZWZ1bGx5IHNvcnQgb3V0IHRoaXMgbWlzbWF0Y2guDQoN
-ClJlZ2FyZHMsDQpTdGV2ZQ0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The HLCDC IP available in some Atmel SoCs (i.e. sam9x5i.e. at91sam9n12,
+at91sam9x5 family or sama5d3 family) provide a PWM device.
+
+The DT bindings used for this PWM device is following the default 3 cells
+bindings described in Documentation/devicetree/bindings/pwm/pwm.txt.
+
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+---
+ .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+
+diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+new file mode 100644
+index 0000000..d5fff47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+@@ -0,0 +1,46 @@
++Device-Tree bindings for Atmel's HLCDC (High LCD Controller) PWM driver
++
++The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
++See Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt for more details.
++
++Required properties:
++ - compatible: value should be one of the following:
++   "atmel,hlcdc-pwm"
++ - pinctr-names: the pin control state names. Should contain "default".
++ - pinctrl-0: should contain the pinctrl states described by pinctrl
++   default.
++ - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
++   bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
++   The first cell encodes the PWM id (0 is the only acceptable value here,
++   because the chip only provide one PWM).
++   The second cell encodes the PWM period in nanoseconds.
++   The third cell encodes the PWM flags (the only supported flag is
++   PWM_POLARITY_INVERTED)
++
++Example:
++
++	hlcdc: hlcdc@f0030000 {
++		compatible = "atmel,sama5d3-hlcdc";
++		reg = <0xf0030000 0x2000>;
++		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
++		clock-names = "periph_clk","sys_clk", "slow_clk";
++		status = "disabled";
++
++		hlcdc-display-controller {
++			compatible = "atmel,hlcdc-dc";
++			interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
++			pinctrl-names = "default", "rgb-444", "rgb-565", "rgb-666", "rgb-888";
++			pinctrl-0 = <&pinctrl_lcd_base>;
++			pinctrl-1 = <&pinctrl_lcd_base &pinctrl_lcd_rgb444>;
++			pinctrl-2 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
++			pinctrl-3 = <&pinctrl_lcd_base &pinctrl_lcd_rgb666>;
++			pinctrl-4 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
++		};
++
++		hlcdc_pwm: hlcdc-pwm {
++			compatible = "atmel,hlcdc-pwm";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_lcd_pwm>;
++			#pwm-cells = <3>;
++		};
++	};
+-- 
+1.8.3.2
+
