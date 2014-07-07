@@ -1,38 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4 0/3] Add R8A7791/Koelsch/Henninger board PCI DT support
-Date: Tue, 08 Jul 2014 01:21:50 +0400
-Message-ID: <53BB0F6E.5080600@cogentembedded.com>
-References: <201406242207.32790.sergei.shtylyov@cogentembedded.com> <9076479.78BOG4SjZ9@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO resources.
+Date: Mon, 7 Jul 2014 23:22:00 +0200
+Message-ID: <201407072322.00990.arnd@arndb.de>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <6122131.ozzYjjjRQi@wuerfel> <20140707111133.GP6501@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <9076479.78BOG4SjZ9@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, horms@verge.net.au
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, magnus.damm@gmail.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140707111133.GP6501@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robherring2@gmail.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Monday 07 July 2014, Liviu Dudau wrote:
+> On Sat, Jul 05, 2014 at 09:46:09PM +0100, Arnd Bergmann wrote:
+> > On Saturday 05 July 2014 14:25:52 Rob Herring wrote:
+> > > On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> > > > The ranges property for a host bridge controller in DT describes
+> > > > the mapping between the PCI bus address and the CPU physical address.
+> > > > The resources framework however expects that the IO resources start
+> > > > at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
+> > > > The conversion from pci ranges to resources failed to take that into account.
+> > > 
+> > > I don't think this change is right. There are 2 resources: the PCI bus
+> > > addresses and cpu addresses. This function deals with the cpu
+> > > addresses. Returning pci addresses for i/o and cpu addresses for
+> > > memory is going to be error prone. We probably need both cpu and pci
+> > > resources exposed to host controllers.
+> > > 
+> > > Making the new function only deal with i/o bus resources and naming it
+> > > of_pci_range_to_io_resource would be better.
+> > 
+> > I think you are correct that this change by itself is will break existing
+> > drivers that rely on the current behavior of of_pci_range_to_resource,
+> > but there is also something wrong with the existing implementation:
+> 
+> Either I'm very confused or I've managed to confuse everyone else. The I/O
+> resources described using CPU addresses *are* using "pseudo" port based
+> addresses (or at least that is my understanding and my reading of the code).
+> Can you point me to a function that is expecting the IO resource to have
+> the start address at the physical address of the mapped space?
 
-On 06/24/2014 10:22 PM, Arnd Bergmann wrote:
+pci_v3_preinit() in arch/arm/mach-integrator/pci_v3.c for instance takes
+the resource returned by of_pci_range_to_resource and programs the
+start and size into hardware registers that expect a physical address
+as far as I can tell.
 
->>     Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
->> 'renesas-devel-v3.16-rc2-20140623' tag. Here we add PCI USB device tree support
->> for the R8A7791-based Koelsch and Henninger boards. As the 'pci-rcar-gen2'
->> driver device tree support has been merged for 3.16, this patchset can now be
->> merged too...
+> I was trying to fix exactly this issue, that you cannot use the resource
+> structure returned by this function in any call that is expecting an IO
+> resource.
 
->> [1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
->> [2/3] ARM: shmobile: koelsch: enable internal PCI
->> [3/3] ARM: shmobile: henninger: enable internal PCI
+I looked at the other drivers briefly, and I think you indeed fix the Tegra
+driver with this but break the integrator driver as mentioned above.
+The other callers of of_pci_range_to_resource() are apparently not
+impacted as they recalculate the values they get.
 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-    Simon, what's up with this series? You've merged analogous series for 
-R8A7790 but not this one. You followed up to an older version of it, asking me 
-to re-post when the driver patch gets merged but it already had been merged 
-already (and this version posted), and I got no reply from you then...
-
-WBR, Sergei
-
+	Arnd
