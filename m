@@ -1,51 +1,79 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
-Date: Tue, 08 Jul 2014 08:34:18 +0900
-Message-ID: <53BB2E7A.5080204@samsung.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>	<CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>	<7hpphwlgn0.fsf@paris.lan>	<CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>	<7h8uojk61a.fsf@paris.lan>	<53ACE724.7090606@gmail.com>	<CAGa+x86COQz+cYtrXWrP-sjFGz-gi2tf6GEvLiKYoQwg1zMivQ@mail.gmail.com> <CAGa+x87LHiYGb03=GRcZisK1=TyakW1htd1E2vOQ6ijZKw8syg@mail.gmail.com> <53B2A2A5.4070203@gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: nand: stm_nand_bch: add new driver
+Date: Mon, 7 Jul 2014 16:52:22 -0700
+Message-ID: <20140707235222.GC7537@ld-irv-0074>
+References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
+ <20140703002237.GM3599@ld-irv-0074>
+ <20140703100522.756f9715@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53B2A2A5.4070203@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tushar Behera <trblinux@gmail.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140703100522.756f9715@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Gupta, Pekon\"" <pekon-l0cyMroinI0@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/14 20:59, Tushar Behera wrote:
-> On 06/27/2014 08:18 PM, Kevin Hilman wrote:
->> On Fri, Jun 27, 2014 at 7:18 AM, Kevin Hilman<khilman@linaro.org>  wrote:
->>> On Thu, Jun 26, 2014 at 8:38 PM, Tushar Behera<trblinux@gmail.com>  wrote:
->>>
->>>> Would you please provide me the environment setting of your u-boot?
->>>> U-boot environment on my board has been over-written, I would like to
->>>> set it same as yours and try to reproduce the issue at my end. With only
->>>> 'sound init', I don't seem to hit this issue anymore.
->>>
->>> Attached is a full boot log using v3.16-rc2 with my patch adding
->>> CLK_IGNORE_UNUSED to mau_epll and Doug's aclk66_peric patch.  In the
->>> boot log, you'll see the output of 'printenv' inside u-boot where the
->>> environment is dumped.
->>
->> Oops, I sent you a boot log for the octa board.  Here's the one for
->> peach-pi with the same kernel (built with upstream exynos_defconfig)
->>
->> Kevin
->>
->
-> The u-boot version is a little different on my Peach-Pi as compared to
-> the market release version. Not sure if that is making any difference.
->
-> Peach # version
->
-> U-Boot 2013.04 (Feb 13 2014 - 16:35:03) for Peach
-> armv7a-cros-linux-gnueabi-gcc.real (4.8.1_cos_gg_feea904_4.8.1-r66)
-> 4.8.x-google 20130905 (prerelease)
-> GNU ld (binutils-2.22_cos_gg_2) 2.22
->
+Hi Boris,
 
-Note that I've applied this only from this series so I'm not sure how 
-much the problem can be solved...any updates for 1/3 and 3/3?
+On Thu, Jul 03, 2014 at 10:05:22AM +0200, Boris BREZILLON wrote:
+> On Wed, 2 Jul 2014 17:22:37 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Wed, May 28, 2014 at 10:20:05AM +0100, Lee Jones wrote:
+> > > +
+> > > +	nand_timing0: nand-timing {
+> > > +		sig-setup	= <10>;
+> > > +		sig-hold	= <10>;
+> > > +		CE-deassert	= <0>;
+> > > +		WE-to-RBn	= <100>;
+> > > +		wr-on		= <10>;
+> > > +		wr-off		= <30>;
+> > > +		rd-on		= <10>;
+> > > +		rd-off		= <30>;
+> > > +		chip-delay	= <30>;		/* delay in us */
+> > > +	};
+> > 
+> > You didn't document any of this node. And I don't think we want to
+> > specify every single timing parameter in DT; it may make sense to use
+> > Boris Brezillon's approach (I note this further down, in the driver
+> > code) for mapping non-ONFI NAND timings into a compatible ONFI timing
+> > mode. This will greatly simplify the bindings needed, since it's
+> > standardized and auto-detectable in many cases.
+> 
+> 
+> AFAIR, the NAND timing representation for non-ONFI chips question was
+> left unanswered:
+> 
+> https://lkml.org/lkml/2014/5/20/581
+> 
+> I can definitely respin my NAND timings series, but I'd like to be sure
+> this is how you want it done before doing so.
 
-- Kukjin
+Can we start by supporting ONFI-only (or ONFI-only, plus entries in
+nand_flash_ids[]), and have nand_base provide the translation so drivers
+can retrieve the info? Then we can begin supporting new drivers like
+Lee's, and worry about the DT question separately.
+
+BTW, Lee: you're completely missing the definitions for
+'struct nand_sdr_timings' in this patch, so it doesn't compile.
+
+> Just as a reminder, you and Jason thought NAND timings for non-ONFI
+> chips could be auto detected thanks to READID informations (by storing
+> some sort of "NANDID <-> timings" association table).
+
+Yes, thanks for the reminder. I knew there was more than one reason I
+was wary of Lee's patch (first, that it was duplication of another patch
+set; and second, than I'm not sure it belongs in DT at all).
+
+I think we should attempt to solve this without any need for DT
+bindings, as most other parameters are auto-detectable in some sense
+(even if we have to store some NANDID <-> timings tables). I think going
+forward, we can expect that new NAND will use a JEDEC or ONFI spec, and
+that we shouldn't have to scale nand_flash_ids[] to include too many
+flash chip timings.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
