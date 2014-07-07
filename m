@@ -1,157 +1,116 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
-Date: Mon, 7 Jul 2014 13:22:26 +0200
-Message-ID: <CABxcv=mw0ma3MQPsR5sGU7UcORehyyhqOtQ_SUwCNr4kpsK-7g@mail.gmail.com>
-References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
-	<20140702165651.GK410@sirena.org.uk>
-	<CAHfPSqAXs=5VLLEV-XVw5YJo=-9QFn9KA8oG_A0CfNykcVwnCQ@mail.gmail.com>
-	<20140707073244.GC30458@sirena.org.uk>
-	<CAHfPSqAf3z9otNJivw5W7oKdRbU085+AWxCMAh8ORh=GkiNiXw@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V2] ARM: dts: OMAP5: Add device nodes for ABB
+Date: Mon, 7 Jul 2014 04:32:21 -0700
+Message-ID: <20140707113220.GQ28884@atomide.com>
+References: <1402017072-12599-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAHfPSqAf3z9otNJivw5W7oKdRbU085+AWxCMAh8ORh=GkiNiXw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402017072-12599-1-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Naveen and Mark,
+* Nishanth Menon <nm@ti.com> [140605 18:12]:
+> From: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
+> 
+> Add ABB device nodes for OMAP5 family of devices. Data is based on
+> final production OMAP543x Technical Reference Manual revision Z (April 2013).
+> Final production Data Manual for OMAP5432 SWPS050F(APRIL 2014).
+> 
+> [nm@ti.com: co-developer and updates to latest documentation]
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Andrii.Tseglytskyi <andrii.tseglytskyi@ti.com>
+> ---
+> Original patch (v1): https://patchwork.kernel.org/patch/3555191/
+> 
+> Rest of the series was accepted, however, I had to drop this
+> previously to ensure that the data we introduce is compatible with
+> production samples and existing pre-production samples on various
+> OMAP5uEVMs already in circulation.
 
-On Mon, Jul 7, 2014 at 10:31 AM, Naveen Krishna Ch
-<naveenkrishna.ch@gmail.com> wrote:
-> Hello Mark,
->
-> On 7 July 2014 13:02, Mark Brown <broonie@kernel.org> wrote:
->> On Mon, Jul 07, 2014 at 11:51:38AM +0530, Naveen Krishna Ch wrote:
->>> On 2 July 2014 22:26, Mark Brown <broonie@kernel.org> wrote:
->>> > On Fri, Jun 13, 2014 at 09:29:50AM +0530, Naveen Krishna Chatradhi wrote:
->>
->>> >> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
->>> >> considering the time with no compliants about the breakage.
->>
->>> > I'm not clear what the breakage is?  Some boards are broken but what's
->>> > the driver issue?
->>
->>> ToT was broken for few boards
->>> exynos4412-trats2.dts, exynos4210-smdkv310.dts and exynos5250-smdk5250.dts
->>
->>> With some DTS changes SPI works well, spi-s3c64xx.c driver had no issues.
->>
+Is this OK to queue for v3.17 or do we need it for the -rc cycle?
 
-Correct me if I'm wrong but I think that the driver does have issues
-since the commit mentioned (3146bee) broke DT backward compatibility.
+Regards,
 
->> No, you're not answering my question - to repeat, what is the breakage?
->
-
-As far as I understand, the breakage is that any DTS that followed the
-DT binding documented in
-Documentation/devicetree/bindings/spi/spi-samsung.txt is not working
-with the current driver. So is not that some boards are broken, is
-that the driver is broken and it has been broken for more than a year
-(the commit date is Jun 21 2013).
-
-> The Documentation/devicetree/bindings/spi/spi-samsung.txt
-> describes "cs-gpio" as a controller specific property.
->
-> The dts entries for SPI in exynos4412-trats2.dts, exynos4210-smdkv310.dts
-> and exynos5250-smdk5250.dts boards have the "cs-gpio" property defined
-> under controller-data node, which is inside the SPI device node
-> &spi_1 {
->   controller-data {
->     cs-gpio = <>;
->   };
-> };
->
-> But, _probe() of spi-s3c64xx.c driver looks for "cs-gpio" in the SPI
-> device node and
-> sets a flag "sdd->cs_gpio = false" (If the property is not available)
-> &spi_1 {
->   cs-gpio = <>;
-> };
->
-> the sdd->cs_gpio flag is checked before actually getting the gpios
-> from the controller-data node
->        if (sdd->cs_gpio)
->                 cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
->
-
-I think that if changing the binding is not possible, at least we
-should document this new "cs-gpio" property that is looked in the top
-level SPI node after commit 3146bee and also revert the default in
-order to allow DTs using the old binding to keep working.
-
-By default not having the "cs-gpio" property in the SPI dev node
-should mean that the "cs-gpio" property in the controller-data node
-should be used to signal the chip-select and having the "cs-gpio"
-property in the SPI node should mean that the native chip select
-should be used instead of a GPIO. That preserves the old DT binding
-semantic while making the GPIO to be optional.
-
-Of course in that case the property name does not make too much sense,
-so probably should be changed to "cs-native" or something like that.
-But I still don't understand why this is needed in the first place
-since according to Documentation/devicetree/bindings/spi/spi-bus.txt
-you can use the cs-gpios property to specify that a native chip-select
-will be used instead of a GPIO by doing:
-
-cs-gpios = <&gpio1 0 0> <0>
-
-cs0 : &gpio1 0 0
-cs1 : native
-
-> Hence, SPI was failing on those boards.
->
-> 1. As the SPI core and several drivers were changed to work with
->     DT property "cs-gpios" (plural) defined under SPI node.
-> 2. Since the commit 3146beec21b64f4551fcf0ac148381d54dc41b1b
->     "spi: s3c64xx: Added provision for dedicated cs pin"
->     Dated:   Fri Jun 21 11:26:12 2013 +0530
->
-> For the above 2 reasons, It was decided to drop the backward compatibility
-> of using "cs-gpio"(singular) in controller-data.
-> Instead, start supporting "cs-gpios"(plural) in the SPI node.
->
-
-Right, since the DT binding has been broken for a year and because is
-not consistent with the bindings used by all other SPI drivers, many
-agreed that it was one of the exceptional cases where the DT binding
-can be rethought and changed to use the generic "cs-gpios" property
-already supported by SPI core. It breaks backward compatibility that's
-true but the DT binding has been broken anyways and nobody noticed
-before.
-
-The other option is what I said above, fixing the DT binding
-compatibility breakage while keeping the custom binding for this SPI
-driver.
-
->>
->>> > Also I'd need to check but are you sure that GPIO 0 is not valid?
->>
->>> gpio_is_valid() returns true for
->>> "number >= 0 && number < ARCH_NR_GPIOS"
->>
->> Right, so this means that any board that is using the internal chip
->> select with zero as default in their platform data is broken by this
->> change.
->
-
-I think this problem could be present in other SPI drivers as well? So
-maybe the right fix for this is to convert the SPI core gpio handling
-to use the new descriptor-based gpio API instead of the integer-base
-one?
-
-> using gpio_is_valid() to "sdd->cs_gpio" flag every where to check for the
-> validity was a review comment.
-> Which seems to fail for internal chip select with zero.
->
-> I can submit another version with"sdd->cs_gpio" flag for this purpose.
->
-> --
-> Thanks & Regards,
-> (: Nav :)
-> --
-
-Best regards,
-Javier
+Tony
+ 
+>  arch/arm/boot/dts/omap5.dtsi |   60 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index a4ed549..8eee6fb 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -985,6 +985,66 @@
+>  				dma-names = "audio_tx";
+>  			};
+>  		};
+> +
+> +		abb_mpu: regulator-abb-mpu {
+> +			compatible = "ti,abb-v2";
+> +			regulator-name = "abb_mpu";
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			clocks = <&sys_clkin>;
+> +			ti,settling-time = <50>;
+> +			ti,clock-cycles = <16>;
+> +
+> +			reg = <0x4ae07cdc 0x8>, <0x4ae06014 0x4>,
+> +			      <0x4a0021c4 0x8>, <0x4ae0c318 0x4>;
+> +			reg-names = "base-address", "int-address",
+> +				    "efuse-address", "ldo-address";
+> +			ti,tranxdone-status-mask = <0x80>;
+> +			/* LDOVBBMPU_MUX_CTRL */
+> +			ti,ldovbb-override-mask = <0x400>;
+> +			/* LDOVBBMPU_VSET_OUT */
+> +			ti,ldovbb-vset-mask = <0x1F>;
+> +
+> +			/*
+> +			 * NOTE: only FBB mode used but actual vset will
+> +			 * determine final biasing
+> +			 */
+> +			ti,abb_info = <
+> +			/*uV		ABB	efuse	rbb_m fbb_m	vset_m*/
+> +			1060000		0	0x0	0 0x02000000 0x01F00000
+> +			1250000		0	0x4	0 0x02000000 0x01F00000
+> +			>;
+> +		};
+> +
+> +		abb_mm: regulator-abb-mm {
+> +			compatible = "ti,abb-v2";
+> +			regulator-name = "abb_mm";
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			clocks = <&sys_clkin>;
+> +			ti,settling-time = <50>;
+> +			ti,clock-cycles = <16>;
+> +
+> +			reg = <0x4ae07ce4 0x8>, <0x4ae06010 0x4>,
+> +			      <0x4a0021a4 0x8>, <0x4ae0c314 0x4>;
+> +			reg-names = "base-address", "int-address",
+> +				    "efuse-address", "ldo-address";
+> +			ti,tranxdone-status-mask = <0x80000000>;
+> +			/* LDOVBBMM_MUX_CTRL */
+> +			ti,ldovbb-override-mask = <0x400>;
+> +			/* LDOVBBMM_VSET_OUT */
+> +			ti,ldovbb-vset-mask = <0x1F>;
+> +
+> +			/*
+> +			 * NOTE: only FBB mode used but actual vset will
+> +			 * determine final biasing
+> +			 */
+> +			ti,abb_info = <
+> +			/*uV		ABB	efuse	rbb_m fbb_m	vset_m*/
+> +			1025000		0	0x0	0 0x02000000 0x01F00000
+> +			1120000		0	0x4	0 0x02000000 0x01F00000
+> +			>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 1.7.9.5
+> 
