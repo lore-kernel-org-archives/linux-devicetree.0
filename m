@@ -1,337 +1,99 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Mon,  7 Jul 2014 12:16:09 +0200
-Message-ID: <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 8/9] ARM: sun8i: Add PRCM clock and reset
+ controller nodes to the DTSI
+Date: Mon, 7 Jul 2014 18:19:18 +0800
+Message-ID: <CAGb2v66w8JtA5J3bS0dNsQtYhSnf0nz=Sj871ctwQrKo-Hh6qA@mail.gmail.com>
+References: <1404399349-20237-1-git-send-email-wens@csie.org>
+ <1404399349-20237-9-git-send-email-wens@csie.org> <20140707085858.GG16262@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBO7I5GOQKGQEPXZVGLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140707085858.GG16262@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current implementation of the libahci does not allow to use multipl=
-e
-PHYs. This patch adds the support of multiple PHYs by the libahci while
-keeping the old bindings valid for device tree compatibility.
+Hi,
 
-This introduce a new way of defining SATA ports in the device tree, wit=
-h
-one port per sub-node. This as the advantage of allowing a per port
-configuration. Because some ports may be accessible but disabled in the
-device tree, the default port_map is computed automatically when using
-this.
+On Mon, Jul 7, 2014 at 4:58 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Chen-Yu,
+>
+> It looks mostly fine but...
+>
+> On Thu, Jul 03, 2014 at 10:55:48PM +0800, Chen-Yu Tsai wrote:
+>> With sun8i PRCM support available, we can add the PRCM clock and
+>> reset controller nodes to the DTSI. Also update R_UART's clock
+>> phandle and add it's reset control phandle.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-a23.dtsi | 48 +++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 47 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
+>> index 79c4083..e10c708 100644
+>> --- a/arch/arm/boot/dts/sun8i-a23.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-a23.dtsi
+>> @@ -262,13 +262,59 @@
+>>                       interrupts = <1 9 0xf04>;
+>>               };
+>>
+>> +             prcm@01f01400 {
+>> +                     compatible = "allwinner,sun8i-a23-prcm";
+>> +                     reg = <0x01f01400 0x200>;
+>> +
+>> +                     ar100: ar100_clk {
+>> +                             compatible = "fixed-factor-clock";
+>> +                             #clock-cells = <0>;
+>> +                             clock-div = <1>;
+>> +                             clock-mult = <1>;
+>> +                             clocks = <&osc24M>;
+>> +                             clock-output-names = "ar100";
+>> +                     };
+>> +
+>> +                     ahb0: ahb0_clk {
+>> +                             compatible = "fixed-factor-clock";
+>> +                             #clock-cells = <0>;
+>> +                             clock-div = <1>;
+>> +                             clock-mult = <1>;
+>> +                             clocks = <&ar100>;
+>> +                             clock-output-names = "ahb0";
+>> +                     };
+>> +
+>> +                     apb0: apb0_clk {
+>> +                             compatible = "allwinner,sun8i-a23-apb0-clk";
+>> +                             #clock-cells = <0>;
+>> +                             clocks = <&ahb0>;
+>> +                             clock-output-names = "apb0";
+>> +                     };
+>> +
+>> +                     apb0_gates: apb0_gates_clk {
+>> +                             compatible = "allwinner,sun8i-a23-apb0-gates-clk";
+>> +                             #clock-cells = <1>;
+>> +                             clocks = <&apb0>;
+>> +                             clock-indices = <0>, <2>, <3>, <4>, <6>;
+>
+> I realise you're just using the A31 code, but it's actually the only
+> clock so far that uses clock-indices, while all the other clocks
+> relies on a bitmask.
+>
+> I'd prefer to remain consistent and use a bitmask here as well (that
+> would also mean removing the clock-indices related code in the A31
+> driver)
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- drivers/ata/ahci.h             |   3 +-
- drivers/ata/libahci.c          |   7 ++
- drivers/ata/libahci_platform.c | 170 ++++++++++++++++++++++++++++++++-=
---------
- 3 files changed, 144 insertions(+), 36 deletions(-)
+Sure. Do you prefer a separate driver for sun8i-a23-apb0-gates as well?
+If so, then the mfd driver needs to be updated with the new driver name
+as well. I'll then do a separate patch to remove the cllock-indices code
+from the A31 driver.
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 05882e4445a6..e5bdbf827ca8 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -330,7 +330,8 @@ struct ahci_host_priv {
- 	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
- 	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
- 	struct regulator	*target_pwr;	/* Optional */
--	struct phy		*phy;		/* If platform uses phy */
-+	struct phy		**phys;		/* If platform uses phys */
-+	unsigned		nphys;		/* Number of phys */
- 	void			*plat_data;	/* Other platform data */
- 	/*
- 	 * Optional ahci_start_engine override, if not set this gets set to t=
-he
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 40ea583d3610..0bdee8330dcf 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -482,6 +482,13 @@ void ahci_save_initial_config(struct device *dev,
- 		port_map &=3D mask_port_map;
- 	}
-=20
-+	/*
-+	 * If port_map was filled automatically when finding port sub-nodes,
-+	 * make sure we get the right set here.
-+	 */
-+	if (hpriv->port_map)
-+		port_map &=3D hpriv->port_map;
-+
- 	/* cross check port_map and cap.n_ports */
- 	if (port_map) {
- 		int map_ports =3D 0;
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platf=
-orm.c
-index 3a5b4ed25a4f..cd2bc50ba913 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -39,6 +39,61 @@ static struct scsi_host_template ahci_platform_sht =3D=
- {
- };
-=20
- /**
-+ * ahci_platform_enable_phys - Enable PHYs
-+ * @hpriv: host private area to store config values
-+ *
-+ * This function enables all the PHYs found in hpriv->phys, if any.
-+ * If a PHY fails to be enabled, it disables all the PHYs already
-+ * enabled in reverse order and returns an error.
-+ *
-+ * RETURNS:
-+ * 0 on success otherwise a negative error code
-+ */
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
-+{
-+	int i, rc =3D 0;
-+
-+	for (i =3D 0; i < hpriv->nphys; i++) {
-+		rc =3D phy_init(hpriv->phys[i]);
-+		if (rc)
-+			goto disable_phys;
-+
-+		rc =3D phy_power_on(hpriv->phys[i]);
-+		if (rc) {
-+			phy_exit(hpriv->phys[i]);
-+			goto disable_phys;
-+		}
-+	}
-+
-+	return 0;
-+
-+disable_phys:
-+	while (--i >=3D 0) {
-+		phy_power_off(hpriv->phys[i]);
-+		phy_exit(hpriv->phys[i]);
-+	}
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
-+
-+/**
-+ * ahci_platform_disable_phys - Enable PHYs
-+ * @hpriv: host private area to store config values
-+ *
-+ * This function disables all PHYs found in hpriv->phys.
-+ */
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < hpriv->nphys; i++) {
-+		phy_power_off(hpriv->phys[i]);
-+		phy_exit(hpriv->phys[i]);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(ahci_platform_disable_phys);
-+
-+/**
-  * ahci_platform_enable_clks - Enable platform clocks
-  * @hpriv: host private area to store config values
-  *
-@@ -92,7 +147,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_disable_clks);
-  * following order:
-  * 1) Regulator
-  * 2) Clocks (through ahci_platform_enable_clks)
-- * 3) Phy
-+ * 3) Phys
-  *
-  * If resource enabling fails at any point the previous enabled resour=
-ces
-  * are disabled in reverse order.
-@@ -114,17 +169,9 @@ int ahci_platform_enable_resources(struct ahci_hos=
-t_priv *hpriv)
- 	if (rc)
- 		goto disable_regulator;
-=20
--	if (hpriv->phy) {
--		rc =3D phy_init(hpriv->phy);
--		if (rc)
--			goto disable_clks;
--
--		rc =3D phy_power_on(hpriv->phy);
--		if (rc) {
--			phy_exit(hpriv->phy);
--			goto disable_clks;
--		}
--	}
-+	rc =3D ahci_platform_enable_phys(hpriv);
-+	if (rc)
-+		goto disable_clks;
-=20
- 	return 0;
-=20
-@@ -144,16 +191,13 @@ EXPORT_SYMBOL_GPL(ahci_platform_enable_resources)=
-;
-  *
-  * This function disables all ahci_platform managed resources in the
-  * following order:
-- * 1) Phy
-+ * 1) Phys
-  * 2) Clocks (through ahci_platform_disable_clks)
-  * 3) Regulator
-  */
- void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
- {
--	if (hpriv->phy) {
--		phy_power_off(hpriv->phy);
--		phy_exit(hpriv->phy);
--	}
-+	ahci_platform_disable_phys(hpriv);
-=20
- 	ahci_platform_disable_clks(hpriv);
-=20
-@@ -187,7 +231,7 @@ static void ahci_platform_put_resources(struct devi=
-ce *dev, void *res)
-  * 2) regulator for controlling the targets power (optional)
-  * 3) 0 - AHCI_MAX_CLKS clocks, as specified in the devs devicetree no=
-de,
-  *    or for non devicetree enabled platforms a single clock
-- *	4) phy (optional)
-+ *	4) phys (optional)
-  *
-  * RETURNS:
-  * The allocated ahci_host_priv on success, otherwise an ERR_PTR value
-@@ -197,7 +241,8 @@ struct ahci_host_priv *ahci_platform_get_resources(=
-struct platform_device *pdev)
- 	struct device *dev =3D &pdev->dev;
- 	struct ahci_host_priv *hpriv;
- 	struct clk *clk;
--	int i, rc =3D -ENOMEM;
-+	struct device_node *child;
-+	int i, nports, rc =3D -ENOMEM;
-=20
- 	if (!devres_open_group(dev, NULL, GFP_KERNEL))
- 		return ERR_PTR(-ENOMEM);
-@@ -246,22 +291,77 @@ struct ahci_host_priv *ahci_platform_get_resource=
-s(struct platform_device *pdev)
- 		hpriv->clks[i] =3D clk;
- 	}
-=20
--	hpriv->phy =3D devm_phy_get(dev, "sata-phy");
--	if (IS_ERR(hpriv->phy)) {
--		rc =3D PTR_ERR(hpriv->phy);
--		switch (rc) {
--		case -ENODEV:
--		case -ENOSYS:
--			/* continue normally */
--			hpriv->phy =3D NULL;
--			break;
-+	nports =3D of_get_child_count(dev->of_node);
-=20
--		case -EPROBE_DEFER:
-+	if (nports) {
-+		hpriv->phys =3D devm_kzalloc(dev, nports * sizeof(*hpriv->phys),
-+					   GFP_KERNEL);
-+		if (!hpriv->phys) {
-+			rc =3D -ENOMEM;
- 			goto err_out;
-+		}
-=20
--		default:
--			dev_err(dev, "couldn't get sata-phy\n");
--			goto err_out;
-+		for_each_child_of_node(dev->of_node, child) {
-+			u32 port;
-+
-+			if (!of_device_is_available(child))
-+				continue;
-+
-+			if (of_property_read_u32(child, "reg", &port)) {
-+				rc =3D -EINVAL;
-+				goto err_out;
-+			}
-+
-+			hpriv->port_map |=3D BIT(port);
-+
-+			hpriv->phys[hpriv->nphys] =3D devm_of_phy_get(dev, child,
-+								    NULL);
-+			if (IS_ERR(hpriv->phys[hpriv->nphys])) {
-+				rc =3D PTR_ERR(hpriv->phys[hpriv->nphys]);
-+				dev_err(dev,
-+					"couldn't get PHY in node %s: %d\n",
-+					child->name, rc);
-+				goto err_out;
-+			}
-+
-+			hpriv->nphys++;
-+		}
-+
-+		if (!hpriv->nphys) {
-+			dev_warn(dev, "No port enabled\n");
-+			return ERR_PTR(-ENODEV);
-+		}
-+	} else {
-+		/*
-+		 * If no sub-node was found, keep this for device tree
-+		 * compatibility
-+		 */
-+		struct phy *phy =3D devm_phy_get(dev, "sata-phy");
-+		if (!IS_ERR(phy)) {
-+			hpriv->phys =3D devm_kzalloc(dev, sizeof(*hpriv->phys),
-+						   GFP_KERNEL);
-+			if (!hpriv->phys) {
-+				rc =3D -ENOMEM;
-+				goto err_out;
-+			}
-+
-+			hpriv->phys[0] =3D phy;
-+			hpriv->nphys =3D 1;
-+		} else {
-+			rc =3D PTR_ERR(phy);
-+			switch (rc) {
-+			case -ENODEV:
-+			case -ENOSYS:
-+				/* continue normally */
-+				break;
-+
-+			case -EPROBE_DEFER:
-+				goto err_out;
-+
-+			default:
-+				dev_err(dev, "couldn't get sata-phy\n");
-+				goto err_out;
-+			}
- 		}
- 	}
-=20
-@@ -288,7 +388,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_get_resources);
-  * @mask_port_map: param passed to ahci_save_initial_config
-  *
-  * This function does all the usual steps needed to bring up an
-- * ahci-platform host, note any necessary resources (ie clks, phy, etc=
-=2E)
-+ * ahci-platform host, note any necessary resources (ie clks, phys, et=
-c.)
-  * must be initialized / enabled before calling this.
-  *
-  * RETURNS:
-@@ -394,7 +494,7 @@ static void ahci_host_stop(struct ata_host *host)
-  * @dev: device pointer for the host
-  *
-  * This function does all the usual steps needed to suspend an
-- * ahci-platform host, note any necessary resources (ie clks, phy, etc=
-=2E)
-+ * ahci-platform host, note any necessary resources (ie clks, phys, et=
-c.)
-  * must be disabled after calling this.
-  *
-  * RETURNS:
-@@ -431,7 +531,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
-  * @dev: device pointer for the host
-  *
-  * This function does all the usual steps needed to resume an ahci-pla=
-tform
-- * host, note any necessary resources (ie clks, phy, etc.)  must be
-+ * host, note any necessary resources (ie clks, phys, etc.)  must be
-  * initialized / enabled before calling this.
-  *
-  * RETURNS:
---=20
-1.9.1
+
+Cheers
+ChenYu
