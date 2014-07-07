@@ -1,44 +1,56 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2 2/2] devicetree: Add Zynq GPIO devicetree bindings
- documentation
-Date: Mon, 7 Jul 2014 10:35:02 -0700
-Message-ID: <30b61880-97a0-4e94-a71e-d738f0416d9d@BN1BFFO11FD056.protection.gbl>
-References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
- <1403091577-10232-2-git-send-email-harinik@xilinx.com>
- <CACRpkdYZ8gQ_-z3Ue3WZZ4FiV8dhw_BZez2-PLpeiBTs-UnNFQ@mail.gmail.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
+Date: Mon, 7 Jul 2014 17:50:09 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1407071733500.28318@utopia.booyaka.com>
+References: <1404058907-21112-1-git-send-email-a.heider@gmail.com> <20140707084824.GA83417@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYZ8gQ_-z3Ue3WZZ4FiV8dhw_BZez2-PLpeiBTs-UnNFQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Harini Katakam <harinik@xilinx.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harini.katakam@xilinx.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140707084824.GA83417@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Andre Heider <a.heider@gmail.com>
+Cc: linux-omap@vger.kernel.org, =?ISO-8859-15?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-07-07 at 04:53PM +0200, Linus Walleij wrote:
-> On Wed, Jun 18, 2014 at 1:39 PM, Harini Katakam <harinik@xilinx.com> =
-wrote:
->=20
-> > From: Harini Katakam <harini.katakam@xilinx.com>
-> >
-> > Add gpio-zynq bindings documentation.
-> >
-> > Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > ---
-> >
-> > v2 changes:
-> > Improve description.
-> (...)
-> > +- #gpio-cells          : Should be two. First cell is used to ment=
-ion
-> > +                         pin number.
->=20
-> Don't call this "pin number", call it "GPIO line number".
-It's also not mentioning the second cell at all. I'll take the part fro=
-m
-gpio-msm to document this property and replace 'pin' with 'GPIO line'.
+On Mon, 7 Jul 2014, Andre Heider wrote:
 
-	S=C3=B6ren
+> On Sun, Jun 29, 2014 at 06:21:34PM +0200, Andre Heider wrote:
+> > 
+> > this series adds PRUv2 support to uio_pruss through devicetree, makes the
+> > device usable on am33xx and enables it on beaglebone black.
+> > Inspired by old patches from Matt Porter found in a downstream tree.
+> > 
+> > To archieve that this series:
+> > * adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
+
+...
+
+> > * is the hardreset thing I did there the right thing to do? I think the
+> >   proper way would be a reset controller (which apparently doesn't yet exist
+> >   for this SoC?) and let the driver deassert/assert on probe/remove?
+> > * the platform device path has a clk_enable() / clk_put() calls. Are those
+> >   now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
+> >   calls?
+
+Probably you only need pm_runtime_{get,put}_*() calls, unless you're 
+changing clock parents or rates in your driver code.
+
+> @OMAP guys: any comments? The series depends on patch 5 and 6; both touch
+> common hwmod code.
+
+I'd suggest splitting the series into three independent pieces if 
+possible:
+
+1. UIO code, for the UIO maintainer(s)
+2. DT pieces for Tony
+3. hwmod pieces for me
+
+That way they can be cleanly merged by the respective maintainers.
+
+As far as the hwmod piece goes, I'd be willing to merge your code as a 
+temporary workaround for the issue, and marking it as such; but I'd be 
+concerned about power management-related interactions (i.e., does the 
+PRUSS need to be reset upon return from deep idle states, etc.)
+
+
+- Paul
