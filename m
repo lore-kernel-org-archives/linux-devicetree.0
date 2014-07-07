@@ -1,56 +1,227 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
-Date: Mon, 07 Jul 2014 10:06:56 +0200
-Message-ID: <1404720416.3567.2.camel@paszta.hi.pengutronix.de>
-References: <1404470603-30394-1-git-send-email-p.zabel@pengutronix.de>
-	 <6ED8E3B22081A4459DAC7699F3695FB7D0B238B5@SW-EX-MBX02.diasemi.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Mon, 7 Jul 2014 10:08:36 +0200
+Message-ID: <20140707080836.GD30458@sirena.org.uk>
+References: <1404404675-5948-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B238B5-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404404675-5948-1-git-send-email-dmurphy@ti.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
 
-Am Freitag, den 04.07.2014, 12:52 +0000 schrieb Opensource [Steve
-Twiss]:
-> >Subject: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
-> >Add Dialog Semiconductor Plc to the list of device tree vendor prefixes.
-> >Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >---
-> > Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > 1 file changed, 1 insertion(+)
-> >diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >index 9ab11e0..be47d1a 100644
-> >--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >@@ -38,6 +38,7 @@ dallas	Maxim Integrated Products (formerly Dallas
-> >Semiconductor)
-> > davicom	DAVICOM Semiconductor, Inc.
-> > denx	Denx Software Engineering
-> > digi	Digi International Inc.
-> >+dlgnf	Dialog Semiconductor Plc
-> 
-> This discussion has been in progress for a while now.
-> There are already pending changes for the vendor prefix Dialog Semiconductor.
-> 
-> Please see the conversations here with Rob Herring:
-> https://lkml.org/lkml/2014/6/11/262
-> https://lkml.org/lkml/2014/6/11/199
+--/unnNtmY43mpUSKx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you, I haven't seen those. So is it going to be 'dlg' then?
-Is this already queued somewhere? It doesn't seem to have made it
-into linux-next yet.
+On Thu, Jul 03, 2014 at 11:24:35AM -0500, Dan Murphy wrote:
 
-regards
-Philipp
+> +static int tas2552_power(struct tas2552_data *data, u8 power)
+> +{
+> +	int	ret = 0;
+> +
+> +	mutex_lock(&data->mutex);
+> +
+> +	if (power) {
+> +		if (data->enable_gpio)
+> +			gpiod_set_value(data->enable_gpio, 1);
+> +
+> +		data->power_state = 1;
+> +	} else {
+> +		if (data->enable_gpio)
+> +			gpiod_set_value(data->enable_gpio, 0);
+> +
+> +		data->power_state = 0;
+> +	}
+> +
+> +	mutex_unlock(&data->mutex);
+> +	return ret;
+> +}
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't understand this function.  It appears to be the only place where
+either power_state or mutex is used so it's just adding some wrapping
+around setting the GPIO value which doesn't seem like it's doing much.
+Why are we tracking power_state?
+
+> +static void tas2552_sw_shutdown(struct tas2552_data *tas_data, int sw_shutdown)
+> +{
+> +	u8 cfg1_reg = 0x0;
+> +
+> +	if (sw_shutdown)
+> +		cfg1_reg |= TAS2552_SWS_MASK;
+> +	else
+> +		cfg1_reg &= ~TAS2552_SWS_MASK;
+> +
+> +	snd_soc_update_bits(tas_data->codec, TAS2552_CFG_1,
+> +						 TAS2552_SWS_MASK, cfg1_reg);
+
+Given that you're using _update_bits() clearing the bits in a register
+that was just initialised to zero doesn't make a huge amount of sense.
+
+> +	default:
+> +		dev_vdbg(codec->dev, "Substream sample rate is not found\n");
+> +		return -EINVAL;
+> +	}
+
+Better to print the rate.
+
+> +	pm_runtime_get_sync(codec->dev);
+> +
+> +	snd_soc_update_bits(codec, TAS2552_CFG_3, TAS2552_WCLK_MASK, wclk_reg);
+> +
+> +	pm_runtime_put(codec->dev);
+
+This seems really strange - why is the device being powered up to just
+set a bit and then potentially powered down immediately?  I'd expect to
+just update the cache if the device is not active.  You're also not
+checking that the power up worked.
+
+> +
+> +static int tas2552_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+> +{
+> +	u8 serial_format;
+> +	u8 serial_control_mask = 0x00;
+
+> +	if (fmt & SND_SOC_DAIFMT_FORMAT_MASK)
+> +		serial_control_mask |= TAS2552_DATA_FORMAT_MASK;
+
+> +	if (serial_control_mask) {
+> +		pm_runtime_get_sync(codec->dev);
+> +
+> +		snd_soc_update_bits(codec, TAS2552_SER_CTRL_1, serial_control_mask,
+> +							serial_format);
+> +
+> +		pm_runtime_put(codec->dev);
+> +	}
+
+This seems broken - if the format mask ever gets set then it won't be
+cleared since we only do an update_bits() if the bit is being set.  Why
+isn't the driver just doing an _update_bits()?
+
+The comments about runtime PM also apply, they applies throughout the
+driver.
+
+> +static int tas2552_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
+> +				  unsigned int freq, int dir)
+> +{
+> +	struct snd_soc_codec *codec = dai->codec;
+> +
+> +	/* Fill in the PLL control registers for J & D
+> +	 * PLL_CLK = (.5 * freq * J.D) / 2^p
+> +	 * Need to fill in J and D here based on incoming freq
+> +	 */
+> +	pm_runtime_get_sync(codec->dev);
+> +
+> +	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE, 0);
+> +
+> +	snd_soc_write(codec, TAS2552_PLL_CTRL_1, 0x10);
+> +	snd_soc_write(codec, TAS2552_PLL_CTRL_2, 0x00);
+> +	snd_soc_write(codec, TAS2552_PLL_CTRL_3, 0x00);
+> +
+> +	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE,
+> +						TAS2552_PLL_ENABLE);
+> +
+> +	pm_runtime_put(codec->dev);
+
+This makes no sense at all - please look at what other drivers are doing
+with set_sysclk().  It should be used to get information about how the
+device is clocked.
+
+> +static int tas2552_startup(struct snd_pcm_substream *substream,
+> +			   struct snd_soc_dai *dai)
+> +{
+> +	struct snd_soc_codec *codec = dai->codec;
+> +
+> +	pm_runtime_get_sync(codec->dev);
+> +
+> +	/* Turn on Class D amplifier */
+> +	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN_MASK,
+> +						TAS2552_CLASSD_EN);
+
+This should be done using DAPM.
+
+> +static int tas2552_codec_probe(struct snd_soc_codec *codec)
+> +{
+> +	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
+> +	int ret;
+
+> +
+> +	tas2552_power(tas2552, 1);
+> +	tas2552_sw_shutdown(tas2552, 0);
+> +
+> +	pm_runtime_set_active(codec->dev);
+> +	pm_runtime_set_autosuspend_delay(codec->dev, 1000);
+> +	pm_runtime_use_autosuspend(codec->dev);
+> +	pm_runtime_enable(codec->dev);
+> +	pm_runtime_mark_last_busy(codec->dev);
+> +	pm_runtime_put_sync_autosuspend(codec->dev);
+
+This should all be done at the device level probe.
+
+> +	/* 0dB gain */
+> +	snd_soc_write(codec, TAS2552_PGA_GAIN, 0x10);
+
+Use the hardware default, your default might not be sensible for some
+other user.
+
+> +	/**
+> +	 * Data sheet indicates to write 0x0c to 0x0d during init but no
+> +	 * additional information is given to what it means.
+> +	 */
+> +	snd_soc_write(codec, TAS2552_LIMIT_LVL_CTRL, 0x0c);
+> +	/**
+> +	 * Data sheet indicates to write 0x20 to 0x0e during init but no
+> +	 * additional information is given to what it means.
+> +	 */
+> +
+> +	snd_soc_write(codec, TAS2552_LIMIT_RATE_HYS, 0x20);
+
+Use a regmap patch for these.
+
+> +static int tas2552_suspend(struct snd_soc_codec *codec)
+> +{
+> +	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
+> +	int ret;
+> +
+> +	pm_runtime_put(codec->dev);
+
+This won't work.  Let the frameworks worry about this, or check if the
+device is already runtime suspended and then call your runtime suspend
+operation directly.
+
+> +static const struct i2c_device_id tas2552_id[] = {
+> +	{ "tas2552-codec", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, tas2552_id);
+
+No -codec, look at what other drivers do.
+
+--/unnNtmY43mpUSKx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTulWBAAoJELSic+t+oim9/rcQAI4TREK1Q6jCMPrFIAHM/qYM
+I2FlA0RUV9jkOswmv9f5snOTAEnFtdcXXAcErPNRUxJ8VkVvlKNHc+ys8SFnO5Jq
+yEFkWz75e4lMS/IJDBBlZsJdYUmAfZJWl6RQSygRAdLsVRxkCIJrxDoxRA8j7eLx
+kgDgv16GH0K32zp3wxnAiLnCzGjsKh7osoh6kNiNJUPHVP5wsa/dJhTHr6sohfus
+x3JG7kewAgvQFeXb7dBMyNhn4J4CEaFabGz2v4LWcRPGpwMGjwL4BYsMibjAgbmc
+8NmcCZP9wsLkaVEdgj9F3pPpQXiXQ6Nnbsm9uShZ4PJLYTy9OP1OGokNtmoXMjy3
+a/dEEHuSaEsRVFW5yAhzy/kxoTQxeYTlHt25TCbFiBn98VYtMItfVPbpk9fmmY95
++EIv+c2j1z6Ab+vI9CpbIDc8pgXcFaaLCiyl2Ya1EMZc0sAyOYgFseHrdW+gSTb2
+f125c6qbat5Ok97BzfI1Ob3rxyKuZ5LkUBdd5jjS27q4/5cypQGdyxeg1eyEKhJq
+pghgApdVm6gZYh2CDJEh1KruTwS48IbF/4moDEYGuXSAeRgSNIhk/DDM3G4SusS2
+PV+hz+lRyuHQ3i4tzhnl+W3xW3k6b27dg5qmn+pvbQLWGuXZcqMtYns0DaaJlzNp
+vmLfi2Hr6GZ7UWyP0NSc
+=XjkJ
+-----END PGP SIGNATURE-----
+
+--/unnNtmY43mpUSKx--
