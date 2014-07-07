@@ -1,76 +1,157 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 0/9] Support for creating generic PCI host bridges
- from DT
-Date: Mon, 7 Jul 2014 12:12:52 +0100
-Message-ID: <20140707111252.GQ6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
+Date: Mon, 7 Jul 2014 13:22:26 +0200
+Message-ID: <CABxcv=mw0ma3MQPsR5sGU7UcORehyyhqOtQ_SUwCNr4kpsK-7g@mail.gmail.com>
+References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
+	<20140702165651.GK410@sirena.org.uk>
+	<CAHfPSqAXs=5VLLEV-XVw5YJo=-9QFn9KA8oG_A0CfNykcVwnCQ@mail.gmail.com>
+	<20140707073244.GC30458@sirena.org.uk>
+	<CAHfPSqAf3z9otNJivw5W7oKdRbU085+AWxCMAh8ORh=GkiNiXw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAHfPSqAf3z9otNJivw5W7oKdRbU085+AWxCMAh8ORh=GkiNiXw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 06, 2014 at 04:23:43PM +0100, Rob Herring wrote:
-> On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > This is my resurected attempt at adding support for generic PCI hos=
-t
-> > bridge controllers that make use of device tree information to
-> > configure themselves. I've tagged it as v8 although the patches
-> > have now been reshuffled in order to ease adoption so referring to
-> > the older versions might be a bit of a hoop jumping exercise.
-> >
-> > Changes from v7:
-> >   - Reordered the patches so that fixes and non-controversial patch=
-es
-> >     from v7 can be accepted more easily. If agreed I can split the
-> >     series again into patches that can be upstreamed easily and one=
-s
-> >     that still need discussion.
-> >   - Moved the of_create_host_bridge() function to drivers/of/of_pci=
-=2Ec
-> >     to better reflect its target use.
-> >   - Added the function to remap the bus I/O resources that used to =
-be
-> >     provided in my arm64 patch series and (re)named it pci_remap_io=
-space()
-> >   - Removed error code checking from parsing and mapping of IRQ fro=
-m DT
-> >     in recognition that some PCI devices will not have legacy IRQ m=
-appings.
-> >
-> > v7 thread here with all the historic information: https://lkml.org/=
-lkml/2014/3/14/279
->=20
-> Can you publish a branch for this series please.
+Hello Naveen and Mark,
 
-Do you want a branch that has the series as publised (+the one obvious =
-miss
-on the header include) or a branch that has the comments rolled in, but=
- is
-is not published yet as I'm waiting on answers from Bjorn regarding dom=
-ain
-number handling?
+On Mon, Jul 7, 2014 at 10:31 AM, Naveen Krishna Ch
+<naveenkrishna.ch@gmail.com> wrote:
+> Hello Mark,
+>
+> On 7 July 2014 13:02, Mark Brown <broonie@kernel.org> wrote:
+>> On Mon, Jul 07, 2014 at 11:51:38AM +0530, Naveen Krishna Ch wrote:
+>>> On 2 July 2014 22:26, Mark Brown <broonie@kernel.org> wrote:
+>>> > On Fri, Jun 13, 2014 at 09:29:50AM +0530, Naveen Krishna Chatradhi wrote:
+>>
+>>> >> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
+>>> >> considering the time with no compliants about the breakage.
+>>
+>>> > I'm not clear what the breakage is?  Some boards are broken but what's
+>>> > the driver issue?
+>>
+>>> ToT was broken for few boards
+>>> exynos4412-trats2.dts, exynos4210-smdkv310.dts and exynos5250-smdk5250.dts
+>>
+>>> With some DTS changes SPI works well, spi-s3c64xx.c driver had no issues.
+>>
+
+Correct me if I'm wrong but I think that the driver does have issues
+since the commit mentioned (3146bee) broke DT backward compatibility.
+
+>> No, you're not answering my question - to repeat, what is the breakage?
+>
+
+As far as I understand, the breakage is that any DTS that followed the
+DT binding documented in
+Documentation/devicetree/bindings/spi/spi-samsung.txt is not working
+with the current driver. So is not that some boards are broken, is
+that the driver is broken and it has been broken for more than a year
+(the commit date is Jun 21 2013).
+
+> The Documentation/devicetree/bindings/spi/spi-samsung.txt
+> describes "cs-gpio" as a controller specific property.
+>
+> The dts entries for SPI in exynos4412-trats2.dts, exynos4210-smdkv310.dts
+> and exynos5250-smdk5250.dts boards have the "cs-gpio" property defined
+> under controller-data node, which is inside the SPI device node
+> &spi_1 {
+>   controller-data {
+>     cs-gpio = <>;
+>   };
+> };
+>
+> But, _probe() of spi-s3c64xx.c driver looks for "cs-gpio" in the SPI
+> device node and
+> sets a flag "sdd->cs_gpio = false" (If the property is not available)
+> &spi_1 {
+>   cs-gpio = <>;
+> };
+>
+> the sdd->cs_gpio flag is checked before actually getting the gpios
+> from the controller-data node
+>        if (sdd->cs_gpio)
+>                 cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
+>
+
+I think that if changing the binding is not possible, at least we
+should document this new "cs-gpio" property that is looked in the top
+level SPI node after commit 3146bee and also revert the default in
+order to allow DTs using the old binding to keep working.
+
+By default not having the "cs-gpio" property in the SPI dev node
+should mean that the "cs-gpio" property in the controller-data node
+should be used to signal the chip-select and having the "cs-gpio"
+property in the SPI node should mean that the native chip select
+should be used instead of a GPIO. That preserves the old DT binding
+semantic while making the GPIO to be optional.
+
+Of course in that case the property name does not make too much sense,
+so probably should be changed to "cs-native" or something like that.
+But I still don't understand why this is needed in the first place
+since according to Documentation/devicetree/bindings/spi/spi-bus.txt
+you can use the cs-gpios property to specify that a native chip-select
+will be used instead of a GPIO by doing:
+
+cs-gpios = <&gpio1 0 0> <0>
+
+cs0 : &gpio1 0 0
+cs1 : native
+
+> Hence, SPI was failing on those boards.
+>
+> 1. As the SPI core and several drivers were changed to work with
+>     DT property "cs-gpios" (plural) defined under SPI node.
+> 2. Since the commit 3146beec21b64f4551fcf0ac148381d54dc41b1b
+>     "spi: s3c64xx: Added provision for dedicated cs pin"
+>     Dated:   Fri Jun 21 11:26:12 2013 +0530
+>
+> For the above 2 reasons, It was decided to drop the backward compatibility
+> of using "cs-gpio"(singular) in controller-data.
+> Instead, start supporting "cs-gpios"(plural) in the SPI node.
+>
+
+Right, since the DT binding has been broken for a year and because is
+not consistent with the bindings used by all other SPI drivers, many
+agreed that it was one of the exceptional cases where the DT binding
+can be rethought and changed to use the generic "cs-gpios" property
+already supported by SPI core. It breaks backward compatibility that's
+true but the DT binding has been broken anyways and nobody noticed
+before.
+
+The other option is what I said above, fixing the DT binding
+compatibility breakage while keeping the custom binding for this SPI
+driver.
+
+>>
+>>> > Also I'd need to check but are you sure that GPIO 0 is not valid?
+>>
+>>> gpio_is_valid() returns true for
+>>> "number >= 0 && number < ARCH_NR_GPIOS"
+>>
+>> Right, so this means that any board that is using the internal chip
+>> select with zero as default in their platform data is broken by this
+>> change.
+>
+
+I think this problem could be present in other SPI drivers as well? So
+maybe the right fix for this is to convert the SPI core gpio handling
+to use the new descriptor-based gpio API instead of the integer-base
+one?
+
+> using gpio_is_valid() to "sdd->cs_gpio" flag every where to check for the
+> validity was a review comment.
+> Which seems to fail for internal chip select with zero.
+>
+> I can submit another version with"sdd->cs_gpio" flag for this purpose.
+>
+> --
+> Thanks & Regards,
+> (: Nav :)
+> --
 
 Best regards,
-Liviu
-
->=20
-> Rob
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Javier
