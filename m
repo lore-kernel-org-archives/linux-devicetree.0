@@ -1,37 +1,68 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 2/3] iio: st_sensors: add device tree bindings
-Date: Mon, 07 Jul 2014 13:25:37 +0100
-Message-ID: <53BA91C1.10808@kernel.org>
-References: <1404726486-2610-1-git-send-email-linus.walleij@linaro.org> <CACRpkdY+xa6TAOcyEb6ZO37RmshsjmB4WgPD59UPn=WEBnR7nQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
+ specific reset
+Date: Mon, 7 Jul 2014 14:38:37 +0200
+Message-ID: <CACRpkdYkbdbkO7Jff-mQy1ybiq=HV9fJfgGG8QezvX2iJXoUcQ@mail.gmail.com>
+References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdY+xa6TAOcyEb6ZO37RmshsjmB4WgPD59UPn=WEBnR7nQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Houcheng Lin <houcheng@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/14 10:52, Linus Walleij wrote:
-> On Mon, Jul 7, 2014 at 11:48 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> This adds some basic, simple device tree bindings to the STMicro
->> MEMS sensor drivers.
->>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> I'd like an indication of if we can merge this thing as I can then merge the
-> corresponding device tree changes for Ux500 to the ARM SoC tree.
-It's been a while.
-No one has commented.
-This is pretty obviously good.
+On Wed, Jun 18, 2014 at 3:37 PM, Houcheng Lin <houcheng@gmail.com> wrote:
 
-Applied to the togreg branch of iio.git - initially pushed out as testing.
+(...)
+> +static DEFINE_MUTEX(deferred_reset_mutex);
+> +static LIST_HEAD(deferred_reset_list);
+> +
+> +struct defer_reset_private {
+> +       struct list_head lnode;
+> +       struct device_node *node;  /* defer_reset device */
 
-Thanks
+Isn't it better if you get the gpio descriptor(s) in probe() and store that
+inside defer_reset_private instead of storing the device_node?
 
-Jonathan
+struct gpio_desc *gpiod;
+
+(Then you need not include <linux/of_gpio.h>)
+
+> +};
+
+
+> +static int gdr_issue_reset_line(
+> +       struct device_node *of_node, int index, int val)
+> +{
+> +       enum of_gpio_flags flags = 0;
+> +       struct gpio_desc *gpiod;
+> +       gpiod = of_get_named_gpiod_flags(of_node, "reset-gpios", index, &flags);
+> +       if (IS_ERR(gpiod))
+> +               return -PTR_ERR(gpiod);
+> +       gdr_issue_reset_gpio(gpiod, val, flags);
+
+So here just use the gpiod from the private struct instead
+of looking it up in the last minute.
+
+> +static int gdr_probe(struct platform_device *pdev_gdr)
+> +{
+> +       struct list_head *pos, *n;
+> +
+> +       pr_debug("gpio defer reset probe\n");
+> +
+> +       mutex_lock(&deferred_reset_mutex);
+> +       list_for_each_safe(pos, n, &deferred_reset_list) {
+> +               struct defer_reset_private *pdata;
+> +               struct platform_device *pdev;
+> +               pdata = list_entry(pos, struct defer_reset_private, lnode);
+> +               pdev = of_find_device_by_node(pdata->node->parent);
+
+So in this iteration I would get the gpio descriptor for each one using
+something like:
+
+pdata->gpiod = gpiod_get_index(&pdev->dev, ...);
+
+Yours,
+Linus Walleij
