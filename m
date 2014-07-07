@@ -1,57 +1,33 @@
-From: Feng Kan <fkan@apm.com>
-Subject: Re: [PATCH V5 2/3] Documentation: gpio: Add APM X-Gene SoC GPIO
- controller DTS binding
-Date: Mon, 7 Jul 2014 11:52:52 -0700
-Message-ID: <CAL85gmD017shZfHGvewyH5FO9vsSFSNGo=vTL68sosvuvODa_A@mail.gmail.com>
-References: <1403823587-23404-1-git-send-email-fkan@apm.com>
-	<1403823587-23404-3-git-send-email-fkan@apm.com>
-	<20140630125339.GA21390@leverpostej>
-	<CACRpkdZ18SsRBBbngSVyxR0GFkC0kLD4OHm9RJmgZDLXbqvOBQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip support
+Date: Mon, 7 Jul 2014 13:27:20 -0700
+Message-ID: <CAD=FV=VwJM9ReuZAEPc+1hv_GaF5r497bFDZR59ukE++sRYaNw@mail.gmail.com>
+References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
+	<53B4E7D6.6000204@suse.de>
+	<CAEC9eQPee1CYQa01V93pTwwNbAZ=h5wVznQ-_PGoWmxSZV3Tbg@mail.gmail.com>
+	<53B6A6F0.1070108@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ18SsRBBbngSVyxR0GFkC0kLD4OHm9RJmgZDLXbqvOBQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "patches@apm.com" <patches@apm.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53B6A6F0.1070108@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, InKi Dae <inki.dae@samsung.com>, Sean Paul <seanpaul@google.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Thierry Reding <thierry.reding@gmail.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 4, 2014 at 2:28 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Jun 30, 2014 at 2:53 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> On Thu, Jun 26, 2014 at 11:59:46PM +0100, Feng Kan wrote:
->
->>> +- #gpio-cells: Should be two.
->>> +     - first cell is the pin number
->>> +     - second cell is used to specify optional parameters (unused)
->>
->> Why is there an unused cell?
->>
->> Why not just make this a single cell if the binding defines no valid
->> parameters?
->
-> I don't get this either. The only reason would be that this cell
-> should contain flags (such as open collector) the code for using
-> it being inplemented later.
+Andreas,
 
-Yes, open drain configuration and mux via pinctrl was something I
-planned for later.
-There was another reason for this as well, part of the gpio code I read
-was confusing me. So I look through the other gpio documentations and
-found an example that did this as well.
-
-int of_gpio_simple_xlate(struct gpio_chip *gc,
-                         const struct of_phandle_args *gpiospec, u32 *flags)
-{
-        /*
-         * We're discouraging gpio_cells < 2, since that way you'll have to
-         * write your own xlate function (that will have to retrive the GPIO
-         * number and the flags from a single gpio cell -- this is possible,
-         * but not recommended).
-         */
-
-Thanks, and please advise me on what to do next.
+On Fri, Jul 4, 2014 at 6:06 AM, Andreas F=C3=A4rber <afaerber@suse.de> =
+wrote:
+>> Doug can help you in adding changes required for tps65090.
 >
-> If the controller is too primitive to use such flags it should be onecell.
->
-> Yours,
-> Linus Walleij
+> Hm, Doug had pointed out an issue with tps65090 in my v1, so I droppe=
+d
+> it: https://patchwork.kernel.org/patch/4397321/
+
+tps65090 on Spring is nowhere near obvious due to the EC commands that
+were available during the Spring timeframe.  See
+http://crbug.com/391797 for some details.
+
+-Doug
