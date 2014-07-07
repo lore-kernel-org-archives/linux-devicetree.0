@@ -1,68 +1,217 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 08/18] AT91: soc: Introduce register_devices callback
-Date: Mon,  7 Jul 2014 16:25:21 +0200
-Message-ID: <1404743131-24569-9-git-send-email-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 12/18] power: reset: Add AT91 poweroff driver
+Date: Mon,  7 Jul 2014 16:25:25 +0200
+Message-ID: <1404743131-24569-13-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404743131-24569-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
+Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Some core devices should be registered by the SoC itself rather than by every
-board using this SoC. Introduce a register_devices callback that should be
-called during the init_machine in order to do that.
+Add a driver to handle the shutdown of the Atmel SoCs. This code used to be
+(and still is) in arch/arm/mach-at91. We didn't remove it yet so that we can
+convert all the boards to using this driver, before removing it entirely in a
+separate patch.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/mach-at91/generic.h | 2 ++
- arch/arm/mach-at91/setup.c   | 5 +++++
- arch/arm/mach-at91/soc.h     | 1 +
- 3 files changed, 8 insertions(+)
+ drivers/power/reset/Kconfig         |   7 ++
+ drivers/power/reset/Makefile        |   1 +
+ drivers/power/reset/at91-poweroff.c | 156 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 164 insertions(+)
+ create mode 100644 drivers/power/reset/at91-poweroff.c
 
-diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
-index 631fa3b8c16d..4c2c96195a50 100644
---- a/arch/arm/mach-at91/generic.h
-+++ b/arch/arm/mach-at91/generic.h
-@@ -37,6 +37,8 @@ extern int  __init at91_aic5_of_init(struct device_node *node,
- extern void __init at91_sysirq_mask_rtc(u32 rtc_base);
- extern void __init at91_sysirq_mask_rtt(u32 rtt_base);
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index b3fef01d7cbb..f9d53af50ec0 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -14,6 +14,13 @@ config POWER_RESET_AS3722
+ 	help
+ 	  This driver supports turning off board via a ams AS3722 power-off.
  
-+ /* Devices */
-+extern void __init at91_register_devices(void);
- 
-  /* Timer */
- extern void at91rm9200_ioremap_st(u32 addr);
-diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index 71003e40f01c..fe0601e0a3c0 100644
---- a/arch/arm/mach-at91/setup.c
-+++ b/arch/arm/mach-at91/setup.c
-@@ -508,3 +508,8 @@ void __init at91_initialize(unsigned long main_clock)
- 
- 	pinctrl_provide_dummies();
- }
++config POWER_RESET_AT91_POWEROFF
++	bool "Atmel AT91 poweroff driver"
++	default SOC_AT91SAM9 || SOC_SAMA5
++	help
++	  This driver supports poweroff for Atmel AT91SAM9 and SAMA5
++	  SoCs
 +
-+void __init at91_register_devices(void)
+ config POWER_RESET_AT91_RESET
+ 	bool "Atmel AT91 reset driver"
+ 	default SOC_AT91SAM9 || SOC_SAMA5
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 1599214b91d9..8bf941bac3da 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_POWER_RESET_AS3722) += as3722-poweroff.o
++obj-$(CONFIG_POWER_RESET_AT91_POWEROFF) += at91-poweroff.o
+ obj-$(CONFIG_POWER_RESET_AT91_RESET) += at91-reset.o
+ obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
+ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+diff --git a/drivers/power/reset/at91-poweroff.c b/drivers/power/reset/at91-poweroff.c
+new file mode 100644
+index 000000000000..40bf42d146f1
+--- /dev/null
++++ b/drivers/power/reset/at91-poweroff.c
+@@ -0,0 +1,156 @@
++/*
++ * Atmel AT91 SAM9 SoCs reset code
++ *
++ * Copyright (C) 2007 Atmel Corporation.
++ * Copyright (C) 2011 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
++ * Copyright (C) 2014 Free Electrons
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/printk.h>
++
++#define AT91_SHDW_CR	0x00		/* Shut Down Control Register */
++#define AT91_SHDW_SHDW		BIT(0)			/* Shut Down command */
++#define AT91_SHDW_KEY		(0xa5 << 24)		/* KEY Password */
++
++#define AT91_SHDW_MR	0x04		/* Shut Down Mode Register */
++#define AT91_SHDW_WKMODE0	GENMASK(2, 0)		/* Wake-up 0 Mode Selection */
++#define AT91_SHDW_CPTWK0_MAX	0xf			/* Maximum Counter On Wake Up 0 */
++#define AT91_SHDW_CPTWK0	(AT91_SHDW_CPTWK0_MAX << 4) /* Counter On Wake Up 0 */
++#define AT91_SHDW_CPTWK0_(x)	((x) << 4)
++#define AT91_SHDW_RTTWKEN	BIT(16)			/* Real Time Timer Wake-up Enable */
++#define AT91_SHDW_RTCWKEN	BIT(17)			/* Real Time Clock Wake-up Enable */
++
++#define AT91_SHDW_SR	0x08		/* Shut Down Status Register */
++#define AT91_SHDW_WAKEUP0	BIT(0)			/* Wake-up 0 Status */
++#define AT91_SHDW_RTTWK		BIT(16)			/* Real-time Timer Wake-up */
++#define AT91_SHDW_RTCWK		BIT(17)			/* Real-time Clock Wake-up [SAM9RL] */
++
++enum wakeup_type {
++	AT91_SHDW_WKMODE0_NONE		= 0,
++	AT91_SHDW_WKMODE0_HIGH		= 1,
++	AT91_SHDW_WKMODE0_LOW		= 2,
++	AT91_SHDW_WKMODE0_ANYLEVEL	= 3,
++};
++
++static const char *shdwc_wakeup_modes[] = {
++	[AT91_SHDW_WKMODE0_NONE]	= "none",
++	[AT91_SHDW_WKMODE0_HIGH]	= "high",
++	[AT91_SHDW_WKMODE0_LOW]		= "low",
++	[AT91_SHDW_WKMODE0_ANYLEVEL]	= "any",
++};
++
++static void __iomem *at91_shdwc_base;
++
++static void __init at91_wakeup_status(void)
 +{
-+	at91_boot_soc.register_devices();
++	u32 reg = readl(at91_shdwc_base);
++	char *reason = "unknown";
++
++	/* Simple power-on, just bail out */
++	if (!reg)
++		return;
++
++	if (reg & AT91_SHDW_RTTWK)
++		reason = "RTT";
++	else if (reg & AT91_SHDW_RTCWK)
++		reason = "RTC";
++
++	pr_info("AT91: Wake-Up source: %s\n", reason);
 +}
-diff --git a/arch/arm/mach-at91/soc.h b/arch/arm/mach-at91/soc.h
-index a1e1482c6da8..ab983f2cc7dd 100644
---- a/arch/arm/mach-at91/soc.h
-+++ b/arch/arm/mach-at91/soc.h
-@@ -11,6 +11,7 @@ struct at91_init_soc {
- 	void (*map_io)(void);
- 	void (*ioremap_registers)(void);
- 	void (*register_clocks)(void);
-+	void (*register_devices)(void);
- 	void (*init)(void);
- };
- 
++
++static void at91_poweroff(void)
++{
++	writel(AT91_SHDW_KEY | AT91_SHDW_SHDW, at91_shdwc_base + AT91_SHDW_CR);
++}
++
++const enum wakeup_type at91_poweroff_get_wakeup_mode(struct device_node *np)
++{
++	const char *pm;
++	int err, i;
++
++	err = of_property_read_string(np, "atmel,wakeup-mode", &pm);
++	if (err < 0)
++		return AT91_SHDW_WKMODE0_ANYLEVEL;
++
++	for (i = 0; i < ARRAY_SIZE(shdwc_wakeup_modes); i++)
++		if (!strcasecmp(pm, shdwc_wakeup_modes[i]))
++			return i;
++
++	return -ENODEV;
++}
++
++static void at91_poweroff_dt_set_wakeup_mode(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	enum wakeup_type wakeup_mode;
++	u32 mode = 0, tmp;
++
++	wakeup_mode = at91_poweroff_get_wakeup_mode(np);
++	if (wakeup_mode < 0) {
++		dev_warn(&pdev->dev, "shdwc unknown wakeup mode\n");
++		return;
++	}
++
++	if (!of_property_read_u32(np, "atmel,wakeup-counter", &tmp)) {
++		if (tmp > AT91_SHDW_CPTWK0_MAX) {
++			dev_warn(&pdev->dev,
++				 "shdwc wakeup counter 0x%x > 0x%x reduce it to 0x%x\n",
++				 tmp, AT91_SHDW_CPTWK0_MAX, AT91_SHDW_CPTWK0_MAX);
++			tmp = AT91_SHDW_CPTWK0_MAX;
++		}
++		mode |= AT91_SHDW_CPTWK0_(tmp);
++	}
++
++	if (of_property_read_bool(np, "atmel,wakeup-rtc-timer"))
++			mode |= AT91_SHDW_RTCWKEN;
++
++	if (of_property_read_bool(np, "atmel,wakeup-rtt-timer"))
++			mode |= AT91_SHDW_RTTWKEN;
++
++	writel(wakeup_mode | mode, at91_shdwc_base + AT91_SHDW_MR);
++}
++
++static int at91_poweroff_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	at91_shdwc_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(at91_shdwc_base)) {
++		dev_err(&pdev->dev, "Could not map reset controller address\n");
++		return PTR_ERR(at91_shdwc_base);
++	}
++
++	at91_wakeup_status();
++
++	if (pdev->dev.of_node)
++		at91_poweroff_dt_set_wakeup_mode(pdev);
++
++	pm_power_off = at91_poweroff;
++
++	return 0;
++}
++
++static struct of_device_id at91_poweroff_of_match[] = {
++	{ .compatible = "atmel,at91sam9260-shdwc", },
++	{ .compatible = "atmel,at91sam9rl-shdwc", },
++	{ .compatible = "atmel,at91sam9x5-shdwc", },
++	{ /*sentinel*/ }
++};
++
++static struct platform_driver at91_poweroff_driver = {
++	.probe = at91_poweroff_probe,
++	.driver = {
++		.name = "at91-poweroff",
++		.of_match_table = at91_poweroff_of_match,
++	},
++};
++module_platform_driver(at91_poweroff_driver);
 -- 
 2.0.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
