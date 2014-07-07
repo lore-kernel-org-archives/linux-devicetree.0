@@ -1,56 +1,103 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
-Date: Mon, 7 Jul 2014 17:50:09 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1407071733500.28318@utopia.booyaka.com>
-References: <1404058907-21112-1-git-send-email-a.heider@gmail.com> <20140707084824.GA83417@localhost>
+From: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt: bindings: add bindings for
+ Broadcom bcm43xx sdio devices
+Date: Mon, 7 Jul 2014 14:23:02 -0400
+Message-ID: <20140707182302.GA29650@tuxdriver.com>
+References: <1404051421-24377-1-git-send-email-hdegoede@redhat.com>
+ <1404051421-24377-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140707084824.GA83417@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Andre Heider <a.heider@gmail.com>
-Cc: linux-omap@vger.kernel.org, =?ISO-8859-15?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCJ6RRU764FRBNGO5OOQKGQESIYKPZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1404051421-24377-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Jul 2014, Andre Heider wrote:
+Any word from the devicetree folks?
 
-> On Sun, Jun 29, 2014 at 06:21:34PM +0200, Andre Heider wrote:
-> > 
-> > this series adds PRUv2 support to uio_pruss through devicetree, makes the
-> > device usable on am33xx and enables it on beaglebone black.
-> > Inspired by old patches from Matt Porter found in a downstream tree.
-> > 
-> > To archieve that this series:
-> > * adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
+On Sun, Jun 29, 2014 at 04:16:58PM +0200, Hans de Goede wrote:
+> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> The Broadcom bcm43xx sdio devices are fullmac devices that may be
+> integrated in ARM platforms. Currently, the brcmfmac driver for
+> these devices support use of platform data. This patch specifies
+> the bindings that allow this platform data to be expressed in the
+> devicetree.
+> 
+> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no consensus
+>  on how to handle this yet]
+> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> new file mode 100644
+> index 0000000..5dbf169
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> @@ -0,0 +1,41 @@
+> +Broadcom BCM43xx Fullmac wireless SDIO devices
+> +
+> +This node provides properties for controlling the Broadcom wireless device. The
+> +node is expected to be specified as a child node to the SDIO controller that
+> +connects the device to the system.
+> +
+> +Required properties:
+> +
+> + - compatible : Should be "brcm,bcm4329-fmac".
+> +
+> +Optional properties:
+> + - brcm,drive-strength : drive strength used for SDIO pins on device in mA
+> +	(default = 6).
+> + - interrupt-parent : the phandle for the interrupt controller to which the
+> +	device interrupts are connected.
+> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+> +	When not specified the device will use in-band SDIO interrupts.
+> + - interrupt-names : name of the out-of-band interrupt, which must be set
+> +	to "host-wake".
+> +
+> +Example:
+> +
+> +mmc3: mmc@01c12000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc3_pins_a>;
+> +	vmmc-supply = <&reg_vmmc3>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	status = "okay";
+> +
+> +	brcmf: bcrmf@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <10 8>; /* PH10 / EINT10 */
+> +		interrupt-names = "host-wake";
+> +	};
+> +};
+> -- 
+> 2.0.0
+> 
+> 
 
-...
-
-> > * is the hardreset thing I did there the right thing to do? I think the
-> >   proper way would be a reset controller (which apparently doesn't yet exist
-> >   for this SoC?) and let the driver deassert/assert on probe/remove?
-> > * the platform device path has a clk_enable() / clk_put() calls. Are those
-> >   now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
-> >   calls?
-
-Probably you only need pm_runtime_{get,put}_*() calls, unless you're 
-changing clock parents or rates in your driver code.
-
-> @OMAP guys: any comments? The series depends on patch 5 and 6; both touch
-> common hwmod code.
-
-I'd suggest splitting the series into three independent pieces if 
-possible:
-
-1. UIO code, for the UIO maintainer(s)
-2. DT pieces for Tony
-3. hwmod pieces for me
-
-That way they can be cleanly merged by the respective maintainers.
-
-As far as the hwmod piece goes, I'd be willing to merge your code as a 
-temporary workaround for the issue, and marking it as such; but I'd be 
-concerned about power management-related interactions (i.e., does the 
-PRUSS need to be reset upon return from deep idle states, etc.)
-
-
-- Paul
+-- 
+John W. Linville		Someday the world will need a hero, and you
+linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org			might be all we have.  Be ready.
