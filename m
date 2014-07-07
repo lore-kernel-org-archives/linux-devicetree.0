@@ -1,41 +1,37 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for Innolux Corporation
-Date: Mon,  7 Jul 2014 14:04:32 +0200
-Message-ID: <1404734672-14671-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 2/3] iio: st_sensors: add device tree bindings
+Date: Mon, 07 Jul 2014 13:25:37 +0100
+Message-ID: <53BA91C1.10808@kernel.org>
+References: <1404726486-2610-1-git-send-email-linus.walleij@linaro.org> <CACRpkdY+xa6TAOcyEb6ZO37RmshsjmB4WgPD59UPn=WEBnR7nQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdY+xa6TAOcyEb6ZO37RmshsjmB4WgPD59UPn=WEBnR7nQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 07/07/14 10:52, Linus Walleij wrote:
+> On Mon, Jul 7, 2014 at 11:48 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> This adds some basic, simple device tree bindings to the STMicro
+>> MEMS sensor drivers.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> I'd like an indication of if we can merge this thing as I can then merge the
+> corresponding device tree changes for Ux500 to the ARM SoC tree.
+It's been a while.
+No one has commented.
+This is pretty obviously good.
 
-According to Wikipedia, Innolux started out in 2003 as InnoLux Display
-Corporation and merged with Chi Mei Optoelectronics in 2006. It went by
-the name of Chimei Innolux Corporation for a while and changed its name
-back to Innolux Corporation in late 2012.
+Applied to the togreg branch of iio.git - initially pushed out as testing.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Thanks
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 4c4883e05df7..c9adab8eb2dc 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -63,6 +63,7 @@ ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
- iom	Iomega Corporation
- img	Imagination Technologies Ltd.
-+innolux	Innolux Corporation
- intel	Intel Corporation
- intercontrol	Inter Control Group
- isee	ISEE 2007 S.L.
--- 
-2.0.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
