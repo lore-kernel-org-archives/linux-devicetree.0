@@ -1,125 +1,67 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v3 1/5] PCI: designware: add rd[wr]_other_conf API
-Date: Mon, 7 Jul 2014 12:53:48 -0400
-Message-ID: <53BAD09C.8010505@ti.com>
-References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com> <1404164720-11066-2-git-send-email-m-karicheri2@ti.com> <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4282@EAPEX1MAIL1.st.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] mmc: core: Add DT bindings for card detect debounce time
+Date: Mon, 7 Jul 2014 09:59:46 -0700
+Message-ID: <CAKdAkRSNU+1YHp+gsnwaTBb+ui7W9ZUBW4OBQFwDQ5Px-WEr2g@mail.gmail.com>
+References: <1399649837-27286-1-git-send-email-balajitk@ti.com>
+	<CAPDyKFoZ=zjKg5bUMnK_X2XOatT=XSAnBDpYqu0Q2VOkM7hOOA@mail.gmail.com>
+	<CAAVeFu+CW0DSbqc6k145APao2r907sAyMw0+W=hQXxO6LoQx-g@mail.gmail.com>
+	<CACRpkda7s_AgPx4a6qu2=FGhfoPyJiZBCJDbd9iWL5qE3DPtXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4282@EAPEX1MAIL1.st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Pratyush ANAND <pratyush.anand@st.com>, Richard Zhu <r65037@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda7s_AgPx4a6qu2=FGhfoPyJiZBCJDbd9iWL5qE3DPtXQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Balaji T K <balajitk@ti.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/2014 12:11 AM, Mohit KUMAR DCG wrote:
-> Hello Murali,
+On Mon, Jul 7, 2014 at 8:12 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Sat, Jun 21, 2014 at 9:22 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
 >
->> -----Original Message-----
->> From: Murali Karicheri [mailto:m-karicheri2@ti.com]
->> Sent: Tuesday, July 01, 2014 3:15 AM
->> To: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
->> devicetree@vger.kernel.org
->> Cc: Murali Karicheri; Santosh Shilimkar; Russell King; Grant Likely; Rob Herring;
->> Mohit KUMAR DCG; Jingoo Han; Bjorn Helgaas; Pratyush ANAND; Richard
->> Zhu; Kishon Vijay Abraham I; Marek Vasut; Arnd Bergmann; Pawel Moll;
->> Mark Rutland; Ian Campbell; Kumar Gala; Randy Dunlap
->> Subject: [PATCH v3 1/5] PCI: designware: add rd[wr]_other_conf API
+>>> I have added Linus Walleij and Alexandre Courbot, the maintainers of
+>>> gpio. Let's see if they can point us in a direction.
 >>
->> v3.65 version of the designware h/w, requires application space registers to
->> be configured to access the remote EP config space.
->> To support this, add rd[wr]_other_conf API in the pcie_host_opts
->>
->> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>
->> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
->> CC: Russell King<linux@arm.linux.org.uk>
->> CC: Grant Likely<grant.likely@linaro.org>
->> CC: Rob Herring<robh+dt@kernel.org>
->> CC: Mohit Kumar<mohit.kumar@st.com>
->> CC: Jingoo Han<jg1.han@samsung.com>
->> CC: Bjorn Helgaas<bhelgaas@google.com>
->> CC: Pratyush Anand<pratyush.anand@st.com>
->> CC: Richard Zhu<r65037@freescale.com>
->> CC: Kishon Vijay Abraham I<kishon@ti.com>
->> CC: Marek Vasut<marex@denx.de>
->> CC: Arnd Bergmann<arnd@arndb.de>
->> CC: Pawel Moll<pawel.moll@arm.com>
->> CC: Mark Rutland<mark.rutland@arm.com>
->> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
->> CC: Kumar Gala<galak@codeaurora.org>
->> CC: Randy Dunlap<rdunlap@infradead.org>
->> CC: Grant Likely<grant.likely@linaro.org>
->> ---
->>   drivers/pci/host/pcie-designware.c |   12 ++++++++++--
->>   drivers/pci/host/pcie-designware.h |    4 ++++
->>   2 files changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
->> designware.c
->> index 1eaf4df..d8f3af7 100644
->> --- a/drivers/pci/host/pcie-designware.c
->> +++ b/drivers/pci/host/pcie-designware.c
->> @@ -656,7 +656,11 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32
->> devfn, int where,
->>   	}
->>
->>   	if (bus->number != pp->root_bus_nr)
->> -		ret = dw_pcie_rd_other_conf(pp, bus, devfn,
->> +		if (pp->ops->rd_other_conf)
->> +			ret = pp->ops->rd_other_conf(pp, bus, devfn,
->> +						where, size, val);
->> +		else
->> +			ret = dw_pcie_rd_other_conf(pp, bus, devfn,
->>   						where, size, val);
->>   	else
->>   		ret = dw_pcie_rd_own_conf(pp, where, size, val); @@ -
->> 679,7 +683,11 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32
->> devfn,
->>   		return PCIBIOS_DEVICE_NOT_FOUND;
->>
->>   	if (bus->number != pp->root_bus_nr)
->> -		ret = dw_pcie_wr_other_conf(pp, bus, devfn,
->> +		if (pp->ops->wr_other_conf)
->> +			ret = pp->ops->wr_other_conf(pp, bus, devfn,
->> +						where, size, val);
->> +		else
->> +			ret = dw_pcie_wr_other_conf(pp, bus, devfn,
->>   						where, size, val);
->>   	else
->>   		ret = dw_pcie_wr_own_conf(pp, where, size, val); diff --git
->> a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
->> index 77f592f..8121901 100644
->> --- a/drivers/pci/host/pcie-designware.h
->> +++ b/drivers/pci/host/pcie-designware.h
->> @@ -61,6 +61,10 @@ struct pcie_host_ops {
->>   			u32 val, void __iomem *dbi_base);
->>   	int (*rd_own_conf)(struct pcie_port *pp, int where, int size, u32
->> *val);
->>   	int (*wr_own_conf)(struct pcie_port *pp, int where, int size, u32
->> val);
->> +	int (*rd_other_conf)(struct pcie_port *pp, struct pci_bus *bus,
->> +			unsigned int devfn, int where, int size, u32 *val);
->> +	int (*wr_other_conf)(struct pcie_port *pp, struct pci_bus *bus,
->> +			unsigned int devfn, int where, int size, u32 val);
->>   	int (*link_up)(struct pcie_port *pp);
->>   	void (*host_init)(struct pcie_port *pp);  };
+>> I agree it would be nice if the debounce value could be handled by the
+>> GPIO framework.
 >
-> - Now it looks good to me.
+> I agree too.
 >
-> Acked-by: Mohit Kumar<mohit.kumar@st.com>
+>> I just wonder what would be the correct way of doing
+>> it? Contrary to ACTIVE_LOW and other flags which can be specified with
+>> the GPIO phandle, debounce is a numeric value. Maybe using a different
+>> property, e.g.:
+>>
+>> cd-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
+>> cd-gpios-debounce = <10>;
+>>
+>> When looking up a GPIO through gpiod_get(), the GPIO framework could
+>> then check for -debounce property and set the debounce time
+>> accordingly. At first sight I'd say that would work and could be used
+>> for MMC and all other subsystems that need something similar.
 >
-> Regards
-> Mohit
->> --
->> 1.7.9.5
+> Yes, but we also need to write generic debounce handling into
+> the gpiolib, so it doesn't matter if the GPIO driver can or cannot
+> handle this itself. Some hardware has the capability to debounce
+> lines in *hardware*.
 >
-Mohit,
+> Right now a call to gpiod_set_debounce() will fail unless the
+> hardware has a debounce option.
+>
+> What we should really do is make gpiod_set_debounce() always
+> work, put the debounce value into the gpio_desc, and move some
+> logic similar to what exists in drivers/input/keyboard/gpio_keys.c
+> into the gpiolib, then get rid of any local implementations like
+> in gpio_keys.
+>
+> Then we can rely on the gpiolib handling this at all times, and also
+> to get the debounce config from DT.
+>
+> Dmitry, opinions on this?
+
+I am always happy to hear when common functionality is moved into
+appropriate layer.
 
 Thanks.
 
-Jingoo, could you provide your response or Ack?
-
-Thanks
-Murali
+-- 
+Dmitry
