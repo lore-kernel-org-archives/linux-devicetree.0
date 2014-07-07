@@ -1,85 +1,73 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v6 1/2] libahci: Export some of the libahci functions.
-Date: Mon,  7 Jul 2014 22:33:04 +0530
-Message-ID: <1404752585-915-2-git-send-email-stripathi@apm.com>
-References: <1404752585-915-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1404752585-915-1-git-send-email-stripathi@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Mon, 7 Jul 2014 10:33:38 -0700
+Message-ID: <eded8c93-3961-4153-9c0d-8bb427fd8230@BL2FFO11FD050.protection.gbl>
+References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
+ <CACRpkdbc=NDmmjLi_FKvXaQ7H6gY+xHWso=Vi=tgubME4JUfyg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbc=NDmmjLi_FKvXaQ7H6gY+xHWso=Vi=tgubME4JUfyg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Harini Katakam <harinik@xilinx.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harini.katakam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch exports the function ahci_qc_issue and ahci_start_fis_rx.
-The subsequent patches will make use of them.
+On Mon, 2014-07-07 at 04:45PM +0200, Linus Walleij wrote:
+> On Wed, Jun 18, 2014 at 1:39 PM, Harini Katakam <harinik@xilinx.com> =
+wrote:
+>=20
+> > From: Harini Katakam <harini.katakam@xilinx.com>
+> >
+> > Add support for GPIO controller used by Xilinx Zynq.
+> >
+> > Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > ---
+> >
+> > v2 changes:
+> >  - convert to pm_runtime_force_(suspend|resume)
+> >  - add pm_runtime_set_active in probe()
+> >  - also (un)prepare clocks when they are dis-/enabled
+> >  - add some missing calls to pm_runtime_get()
+> >  - use pm_runtime_put() instead of sync variant
+> >  - remove gpio chip in driver remove()
+> >  - remove redundant type casts
+> >  - directly use IO helpers
+> >  - use BIT macro to set/clear bits
+> >  - migrate to GPIOLIB_IRQCHIP
+>=20
+> This is a great improvement! Only small stuff remains.
+>=20
+> > +#include <linux/bitops.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/gpio.h>
+>=20
+> This should be:
+> #include <linux/gpio/driver.h>
+>=20
+> If that doesn't work ... why?
+Works just fine.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci.h    | 2 ++
- drivers/ata/libahci.c | 7 ++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+>=20
+> > +/**
+> > + * struct zynq_gpio - gpio device private data structure
+> > + * @chip:      instance of the gpio_chip
+> > + * @base_addr: base address of the GPIO device
+> > + * @irq:       irq associated with the controller
+> > + * @clk:       clock resource for this controller
+> > + */
+> > +struct zynq_gpio {
+> > +       struct gpio_chip chip;
+> > +       void __iomem *base_addr;
+> > +       int irq;
+>=20
+> Why is irq kept around in this struct? It looks like it could just
+> be a local variable in probe()?
+You're right.
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index af63c75..f4a9299 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -370,7 +370,9 @@ int ahci_do_softreset(struct ata_link *link, unsigned int *class,
- 		      int pmp, unsigned long deadline,
- 		      int (*check_ready)(struct ata_link *link));
+I think that were both part of the legacy in this driver.
 
-+unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
- int ahci_stop_engine(struct ata_port *ap);
-+void ahci_start_fis_rx(struct ata_port *ap);
- void ahci_start_engine(struct ata_port *ap);
- int ahci_check_ready(struct ata_link *link);
- int ahci_kick_engine(struct ata_port *ap);
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index b986145..e6dd89a 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -68,7 +68,6 @@ static ssize_t ahci_transmit_led_message(struct ata_port *ap, u32 state,
-
- static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val);
- static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
--static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
- static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
- static int ahci_port_start(struct ata_port *ap);
- static void ahci_port_stop(struct ata_port *ap);
-@@ -615,7 +614,7 @@ int ahci_stop_engine(struct ata_port *ap)
- }
- EXPORT_SYMBOL_GPL(ahci_stop_engine);
-
--static void ahci_start_fis_rx(struct ata_port *ap)
-+void ahci_start_fis_rx(struct ata_port *ap)
- {
- 	void __iomem *port_mmio = ahci_port_base(ap);
- 	struct ahci_host_priv *hpriv = ap->host->private_data;
-@@ -641,6 +640,7 @@ static void ahci_start_fis_rx(struct ata_port *ap)
- 	/* flush */
- 	readl(port_mmio + PORT_CMD);
- }
-+EXPORT_SYMBOL_GPL(ahci_start_fis_rx);
-
- static int ahci_stop_fis_rx(struct ata_port *ap)
- {
-@@ -1940,7 +1940,7 @@ irqreturn_t ahci_interrupt(int irq, void *dev_instance)
- }
- EXPORT_SYMBOL_GPL(ahci_interrupt);
-
--static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
-+unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
- {
- 	struct ata_port *ap = qc->ap;
- 	void __iomem *port_mmio = ahci_port_base(ap);
-@@ -1969,6 +1969,7 @@ static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
-
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(ahci_qc_issue);
-
- static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc)
- {
---
-1.8.2.1
-
+	S=C3=B6ren
