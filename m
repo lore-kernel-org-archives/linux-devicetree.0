@@ -1,60 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO resources.
-Date: Mon, 7 Jul 2014 23:22:00 +0200
-Message-ID: <201407072322.00990.arnd@arndb.de>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <6122131.ozzYjjjRQi@wuerfel> <20140707111133.GP6501@e106497-lin.cambridge.arm.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] devicetree/bindings: Add binding for micron n25q512a
+ memory
+Date: Mon, 7 Jul 2014 16:25:54 -0500
+Message-ID: <1404768354.21434.191.camel@snotra.buserror.net>
+References: <1404382376-3115-1-git-send-email-Priyanka.Jain@freescale.com>
+	 <1404425400.21434.89.camel@snotra.buserror.net>
+	 <b7e1d3bf1675492585121d9e7950f05a@BLUPR03MB135.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140707111133.GP6501@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robherring2@gmail.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b7e1d3bf1675492585121d9e7950f05a-GeMU99GfrruZBIYY9rwZPeO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jain Priyanka-B32167 <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 July 2014, Liviu Dudau wrote:
-> On Sat, Jul 05, 2014 at 09:46:09PM +0100, Arnd Bergmann wrote:
-> > On Saturday 05 July 2014 14:25:52 Rob Herring wrote:
-> > > On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > > > The ranges property for a host bridge controller in DT describes
-> > > > the mapping between the PCI bus address and the CPU physical address.
-> > > > The resources framework however expects that the IO resources start
-> > > > at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
-> > > > The conversion from pci ranges to resources failed to take that into account.
-> > > 
-> > > I don't think this change is right. There are 2 resources: the PCI bus
-> > > addresses and cpu addresses. This function deals with the cpu
-> > > addresses. Returning pci addresses for i/o and cpu addresses for
-> > > memory is going to be error prone. We probably need both cpu and pci
-> > > resources exposed to host controllers.
-> > > 
-> > > Making the new function only deal with i/o bus resources and naming it
-> > > of_pci_range_to_io_resource would be better.
-> > 
-> > I think you are correct that this change by itself is will break existing
-> > drivers that rely on the current behavior of of_pci_range_to_resource,
-> > but there is also something wrong with the existing implementation:
+On Thu, 2014-07-03 at 23:08 -0500, Jain Priyanka-B32167 wrote:
 > 
-> Either I'm very confused or I've managed to confuse everyone else. The I/O
-> resources described using CPU addresses *are* using "pseudo" port based
-> addresses (or at least that is my understanding and my reading of the code).
-> Can you point me to a function that is expecting the IO resource to have
-> the start address at the physical address of the mapped space?
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Friday, July 04, 2014 3:40 AM
+> > To: Jain Priyanka-B32167
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
+> > spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Subject: Re: [PATCH] devicetree/bindings: Add binding for micron n25q512a
+> > memory
+> > 
+> > On Thu, 2014-07-03 at 15:42 +0530, Priyanka Jain wrote:
+> > > -Micron n25q512a memory is supported by m25p80 driver.
+> > >  Add compatible field required to support n25q512a in m25p80.txt -Add
+> > > micron to the vendor-prefixes.txt file
+> > >
+> > > Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/mtd/m25p80.txt   |    1 +
+> > >  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+> > >  2 files changed, 2 insertions(+), 0 deletions(-)
+> > 
+> > Why did you send this to the ppc list but not the spi or mtd lists?
+> > 
+> [Jain Priyanka-B32167] Sorry, I missed that
+> > I'm having a hard time following the flow of how these SPI devices get
+> > bound -- is the compatible involved at all?  I don't see this string
+> > (with vendor prefix included) in the driver.  I do see a table that
+> > contains what looks like device IDs.  If the device can report its id,
+> > shouldn't we rely on that rather than device tree compatible?
+> > 
+> > -Scott
+> [Jain Priyanka-B32167]
+> Spi driver has a check to device name corresponding to device-id and compare to what is passed in dts string.
 
-pci_v3_preinit() in arch/arm/mach-integrator/pci_v3.c for instance takes
-the resource returned by of_pci_range_to_resource and programs the
-start and size into hardware registers that expect a physical address
-as far as I can tell.
+Please go into more detail.  I don't see where the string
+"micron,n25q512a" appears in the current kernel.  I do see "n25q512a",
+but how does that compare successfully with the version of the string
+that has a vendor compatible?
 
-> I was trying to fix exactly this issue, that you cannot use the resource
-> structure returned by this function in any call that is expecting an IO
-> resource.
+Again, is there a device ID that can be read at runtime?  Is there a
+compatible string that represents a common programming interface?
 
-I looked at the other drivers briefly, and I think you indeed fix the Tegra
-driver with this but break the integrator driver as mentioned above.
-The other callers of of_pci_range_to_resource() are apparently not
-impacted as they recalculate the values they get.
+> New checkpatch script search for exact string match in binding folder. So, I have added this in example.
 
-	Arnd
+That check has a lot of false positives when it comes to compatible
+strings for specific chips that don't need to be specifically mentioned
+in a more generic binding.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
