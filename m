@@ -1,60 +1,75 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V5 2/3] Documentation: gpio: Add APM X-Gene SoC GPIO
- controller DTS binding
-Date: Mon, 7 Jul 2014 23:26:18 +0200
-Message-ID: <CACRpkdbt+sj_Htjrj4+hm6KHJfONpTSQyz25Hepkx5kugaO3AA@mail.gmail.com>
-References: <1403823587-23404-1-git-send-email-fkan@apm.com>
-	<1403823587-23404-3-git-send-email-fkan@apm.com>
-	<20140630125339.GA21390@leverpostej>
-	<CACRpkdZ18SsRBBbngSVyxR0GFkC0kLD4OHm9RJmgZDLXbqvOBQ@mail.gmail.com>
-	<CAL85gmD017shZfHGvewyH5FO9vsSFSNGo=vTL68sosvuvODa_A@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH][v2] devicetree/binding/powerpc/fsl: Add binding for CPLD
+Date: Mon, 7 Jul 2014 16:29:29 -0500
+Message-ID: <1404768569.21434.195.camel@snotra.buserror.net>
+References: <1404448395-6513-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL85gmD017shZfHGvewyH5FO9vsSFSNGo=vTL68sosvuvODa_A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>, Anton Vorontsov <anton@enomsg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "patches@apm.com" <patches@apm.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404448395-6513-1-git-send-email-Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 7, 2014 at 8:52 PM, Feng Kan <fkan@apm.com> wrote:
-> On Fri, Jul 4, 2014 at 2:28 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+On Fri, 2014-07-04 at 10:03 +0530, Priyanka Jain wrote:
+> Some Freescale boards like T1040RDB have on board CPLD connected on
+> the IFC bus. Add binding for this in board.txt file
+> 
+> Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes for v2:
+>  convert board name to lower-case based on Scott's suggestions
+> 
+>  .../devicetree/bindings/powerpc/fsl/board.txt      |   19 +++++++++++++++++++
+>  1 files changed, 19 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> index 700dec4..f35f295 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> @@ -84,3 +84,22 @@ Example:
+>  		compatible = "fsl,bsc9132qds-fpga", "fsl,fpga-qixis-i2c";
+>  		reg = <0x66>;
+>  	};
+> +
+> +* Freescale on-board CPLD
+> +
+> +Some Freescale boards like T1040RDB have on board CPLD connected on
+> +the IFC bus.
+> +
+> +Required properties:
+> +- compatible: Should be a board-specific string like "fsl,<board>-cpld"
+> +  Example:
+> +	"fsl,t1040rdb-cpld", "fsl,t1042rdb-cpld", "fsl,t1042rdb_pi-cpld"
+> +- reg: Should contain the chip select, address offset and length of the CPLD
 
->> I don't get this either. The only reason would be that this cell
->> should contain flags (such as open collector) the code for using
->> it being inplemented later.
->
-> Yes, open drain configuration and mux via pinctrl was something I
-> planned for later.
+We don't say "chip select, address offset and length" anywhere else in
+this document.  The reg format expected by the parent node should be
+documented in the binding for the parent node (e.g. you could find the
+node with a different reg format if for some reason it's not under a
+localbus node, such as may happen in certain virtualization
+scenarios).  
 
-OK but pinctrl is something else. There is also the GPIO
-OD configuration, as it modifies the behaviour of how to set
-GPIO lines.
+All you need to say here is that there is one reg region, which
+describes the CPLD registers.
 
-(Yes I know the frameworks maybe ought to talk to each other
-for such things....)
 
-So if you plan to do this, add it to the bindings even if you're not
-adding the code for handling it right now.
+> +Example:
+> +	cpld@3,0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
 
-> There was another reason for this as well, part of the gpio code I read
-> was confusing me. So I look through the other gpio documentations and
-> found an example that did this as well.
->
-> int of_gpio_simple_xlate(struct gpio_chip *gc,
->                          const struct of_phandle_args *gpiospec, u32 *flags)
-> {
->         /*
->          * We're discouraging gpio_cells < 2, since that way you'll have to
->          * write your own xlate function (that will have to retrive the GPIO
->          * number and the flags from a single gpio cell -- this is possible,
->          * but not recommended).
->          */
+Why do you need #address-cells/#size-cells?
 
-Hm yeah that's right.
+If you do need them, where is ranges and/or a description of what the
+child reg format is?
 
-This check was added by Anton in 2008. Anton why did we discourage
-onecell GPIOs?
+-Scott
 
-Yours,
-Linus Walleij
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
