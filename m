@@ -1,69 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
-Date: Mon, 7 Jul 2014 16:45:28 +0200
-Message-ID: <CACRpkdbc=NDmmjLi_FKvXaQ7H6gY+xHWso=Vi=tgubME4JUfyg@mail.gmail.com>
-References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
+Date: Mon, 7 Jul 2014 14:44:25 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B24C95@SW-EX-MBX02.diasemi.com>
+References: <1404470603-30394-1-git-send-email-p.zabel@pengutronix.de>
+	 <6ED8E3B22081A4459DAC7699F3695FB7D0B238B5@SW-EX-MBX02.diasemi.com>
+ <1404720416.3567.2.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harini.katakam@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404720416.3567.2.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 1:39 PM, Harini Katakam <harinik@xilinx.com> wrote:
-
-> From: Harini Katakam <harini.katakam@xilinx.com>
->
-> Add support for GPIO controller used by Xilinx Zynq.
->
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> ---
->
-> v2 changes:
->  - convert to pm_runtime_force_(suspend|resume)
->  - add pm_runtime_set_active in probe()
->  - also (un)prepare clocks when they are dis-/enabled
->  - add some missing calls to pm_runtime_get()
->  - use pm_runtime_put() instead of sync variant
->  - remove gpio chip in driver remove()
->  - remove redundant type casts
->  - directly use IO helpers
->  - use BIT macro to set/clear bits
->  - migrate to GPIOLIB_IRQCHIP
-
-This is a great improvement! Only small stuff remains.
-
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio.h>
-
-This should be:
-#include <linux/gpio/driver.h>
-
-If that doesn't work ... why?
-
-> +/**
-> + * struct zynq_gpio - gpio device private data structure
-> + * @chip:      instance of the gpio_chip
-> + * @base_addr: base address of the GPIO device
-> + * @irq:       irq associated with the controller
-> + * @clk:       clock resource for this controller
-> + */
-> +struct zynq_gpio {
-> +       struct gpio_chip chip;
-> +       void __iomem *base_addr;
-> +       int irq;
-
-Why is irq kept around in this struct? It looks like it could just
-be a local variable in probe()?
-
-> +       struct clk *clk;
-> +};
-
-Apart from that this nitpicking the driver looks very nice.
-
-Yours,
-Linus Walleij
+SGkgUGhpbGlwcCwNCg0KT24gMDcgSnVseSAyMDE0IEAgMDk6MDcgUGhpbGlwcCBaYWJlbCB3cm90
+ZToNCg0KPkhpIFN0ZXZlLA0KPkFtIEZyZWl0YWcsIGRlbiAwNC4wNy4yMDE0LCAxMjo1MiArMDAw
+MCBzY2hyaWViIE9wZW5zb3VyY2UgW1N0ZXZlDQo+VHdpc3NdOg0KPj4gPlN1YmplY3Q6IFtQQVRD
+SF0gb2Y6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBEaWFsb2cgU2VtaWNvbmR1Y3RvciBQbGMNCj4+
+ID5BZGQgRGlhbG9nIFNlbWljb25kdWN0b3IgUGxjIHRvIHRoZSBsaXN0IG9mIGRldmljZSB0cmVl
+IHZlbmRvciBwcmVmaXhlcy4NCj4+ID5TaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnph
+YmVsQHBlbmd1dHJvbml4LmRlPg0KPj4gPi0tLQ0KPj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKw0KPj4gPiAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKykNCj4+ID5kaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4+ID5iL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+PiA+aW5kZXggOWFiMTFlMC4u
+YmU0N2QxYSAxMDA2NDQNCj4+ID4tLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPj4gPisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+PiA+QEAgLTM4LDYgKzM4LDcgQEAgZGFs
+bGFzCU1heGltIEludGVncmF0ZWQgUHJvZHVjdHMgKGZvcm1lcmx5IERhbGxhcw0KPj4gPlNlbWlj
+b25kdWN0b3IpDQo+PiA+IGRhdmljb20JREFWSUNPTSBTZW1pY29uZHVjdG9yLCBJbmMuDQo+PiA+
+IGRlbngJRGVueCBTb2Z0d2FyZSBFbmdpbmVlcmluZw0KPj4gPiBkaWdpCURpZ2kgSW50ZXJuYXRp
+b25hbCBJbmMuDQo+PiA+K2RsZ25mCURpYWxvZyBTZW1pY29uZHVjdG9yIFBsYw0KPj4NCj4+IFRo
+aXMgZGlzY3Vzc2lvbiBoYXMgYmVlbiBpbiBwcm9ncmVzcyBmb3IgYSB3aGlsZSBub3cuDQo+PiBU
+aGVyZSBhcmUgYWxyZWFkeSBwZW5kaW5nIGNoYW5nZXMgZm9yIHRoZSB2ZW5kb3IgcHJlZml4IERp
+YWxvZyBTZW1pY29uZHVjdG9yLg0KPj4NCj4+IFBsZWFzZSBzZWUgdGhlIGNvbnZlcnNhdGlvbnMg
+aGVyZSB3aXRoIFJvYiBIZXJyaW5nOg0KPj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQvNi8x
+MS8yNjINCj4+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzYvMTEvMTk5DQo+DQo+VGhhbmsg
+eW91LCBJIGhhdmVuJ3Qgc2VlbiB0aG9zZS4gU28gaXMgaXQgZ29pbmcgdG8gYmUgJ2RsZycgdGhl
+bj8NCj5JcyB0aGlzIGFscmVhZHkgcXVldWVkIHNvbWV3aGVyZT8gSXQgZG9lc24ndCBzZWVtIHRv
+IGhhdmUgbWFkZSBpdA0KPmludG8gbGludXgtbmV4dCB5ZXQuDQoNCkEgcGF0Y2ggd2FzIHNlbnQg
+Zm9yIERpYWxvZyBEQTkxNTAgYnV0IGl0IGhhcyBub3QgeWV0IG1hZGUgaXQgaW50byBsaW51eC1u
+ZXh0Og0KJ2RsZycgaXMgb3VyIGNob3NlbiBwcmVmaXggYW5kIHRoaXMgaXMgbW9zdCBjb21tb25s
+eSB1c2VkIHRocm91Z2hvdXQNCnRoZSBrZXJuZWwuIEFsc28gUm9iIEhlcnJpbmcgaGFzIGFncmVl
+ZCB3aXRoIHRoaXMgZGVjaXNpb24gd2hlbiByZXZpZXdpbmcNCnRoZSBwcmV2aW91cyBhdHRlbXB0
+ZWQgc3VibWlzc2lvbi4gDQoNCkhvd2V2ZXIsIEkgd2lsbCBwdXQgdG9nZXRoZXIgYSBwYXRjaCBz
+ZXQgdGhhdCB1c2VzICdkbGcnIGFuZCAnbWFyayB0aGUgb3RoZXJzDQpkZXByZWNhdGVkJyBhcyBy
+ZXF1ZXN0ZWQuIEkgd2lsbCBzZW5kIHRoaXMgYXMgYSAicmVxdWVzdCBmb3IgY29tbWVudCIgdG8N
+CnRoZSBtYWludGFpbmVycyBhbmQgaG9wZWZ1bGx5IHNvcnQgb3V0IHRoaXMgbWlzbWF0Y2guDQoN
+ClJlZ2FyZHMsDQpTdGV2ZQ0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
