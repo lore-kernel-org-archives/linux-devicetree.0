@@ -1,49 +1,58 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add dwc3-st.c file to ARCH/STI
- architecture
-Date: Mon, 7 Jul 2014 11:51:49 +0100
-Message-ID: <20140707105149.GE6407@lee--X1>
-References: <1404541530-27856-1-git-send-email-peter.griffin@linaro.org>
- <1404541530-27856-4-git-send-email-peter.griffin@linaro.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCHv2 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
+ to host's quirk
+Date: Mon, 07 Jul 2014 20:00:14 +0900
+Message-ID: <53BA7DBE.8020200@samsung.com>
+References: <1404128960-27225-1-git-send-email-jh80.chung@samsung.com>
+ <1404128960-27225-6-git-send-email-jh80.chung@samsung.com>
+ <000d01cf99c4$920eb1b0$b62c1510$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404541530-27856-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <000d01cf99c4$920eb1b0$b62c1510$%jun@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>, 'linux-mmc' <linux-mmc@vger.kernel.org>
+Cc: 'Chris Ball' <chris@printf.net>, 'Ulf Hansson' <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, 'Mark Rutland' <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 05 Jul 2014, Peter Griffin wrote:
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+Hi, Seungwon.
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 07/07/2014 06:19 PM, Seungwon Jeon wrote:
+> Sorry for late review.
+Never mind. :)
+> If you're in progress for next, please consider it.
+> 
+> On Mon, June 30, 2014, Jaehoon Chung wrote:
+>> Replaced the "disable-wp" into host's quirks.
+>> (Because the slot-node is removed at dt-file.)
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>>  drivers/mmc/host/dw_mmc.c |   13 ++++++-------
+>>  1 file changed, 6 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 1ac227c..6c5d696 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -994,10 +994,11 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
+>>  {
+>>  	int read_only;
+>>  	struct dw_mci_slot *slot = mmc_priv(mmc);
+>> +	struct dw_mci_board *brd = slot->host->pdata;
+>>  	int gpio_ro = mmc_gpio_get_ro(mmc);
+>>
+>>  	/* Use platform get_ro function, else try on board write protect */
+>> -	if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
+> It would be better to use host->quirks instead of brd->quirks
+> It's finally updated with host->pdata->quirks on probing.
+It's reasonable, i will fix it and resend.
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 702ca10..269ad3b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1325,6 +1325,7 @@ F:	drivers/pinctrl/pinctrl-st.c
->  F:	drivers/media/rc/st_rc.c
->  F:	drivers/i2c/busses/i2c-st.c
->  F:	drivers/tty/serial/st-asc.c
-> +F:	drivers/usb/dwc3/dwc3-st.c
-> =20
->  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
->  M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Jaehoon Chung
+> 
+> Thanks,
+> Seungwon Jeon
+> 
+> 
