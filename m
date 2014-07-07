@@ -1,42 +1,41 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v2 3/4] USB: EHCI: tegra: Fix probe order issue leading
- to broken USB
-Date: Mon, 7 Jul 2014 10:16:09 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1407071015470.871-100000@iolanthe.rowland.org>
-References: <1404436179-10745-4-git-send-email-ttynkkynen@nvidia.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2] ARM: dts: OMAP5: Add device nodes for ABB
+Date: Mon, 7 Jul 2014 09:23:23 -0500
+Message-ID: <CAGo_u6peyH=VScObgLJxX5kS2J77y5WMsE0O71W4GPDpKaMV=g@mail.gmail.com>
+References: <1402017072-12599-1-git-send-email-nm@ti.com>
+	<20140707113220.GQ28884@atomide.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404436179-10745-4-git-send-email-ttynkkynen@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140707113220.GQ28884@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: dt list <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 4 Jul 2014, Tuomas Tynkkynen wrote:
+On Mon, Jul 7, 2014 at 6:32 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Nishanth Menon <nm@ti.com> [140605 18:12]:
+>> From: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
+>>
+>> Add ABB device nodes for OMAP5 family of devices. Data is based on
+>> final production OMAP543x Technical Reference Manual revision Z (April 2013).
+>> Final production Data Manual for OMAP5432 SWPS050F(APRIL 2014).
+>>
+>> [nm@ti.com: co-developer and updates to latest documentation]
+>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>> Signed-off-by: Andrii.Tseglytskyi <andrii.tseglytskyi@ti.com>
+>> ---
+>> Original patch (v1): https://patchwork.kernel.org/patch/3555191/
+>>
+>> Rest of the series was accepted, however, I had to drop this
+>> previously to ensure that the data we introduce is compatible with
+>> production samples and existing pre-production samples on various
+>> OMAP5uEVMs already in circulation.
+>
+> Is this OK to queue for v3.17 or do we need it for the -rc cycle?
+>
 
-> The Tegra USB complex has a particularly annoying misdesign: some of the
-> UTMI pad configuration registers are global for all the 3 USB controllers
-> on the chip, but those registers are located in the first controller's
-> register space and will be cleared when the reset to the first
-> controller is asserted. Currently, this means that if the 1st controller
-> were to finish probing after the 2nd or 3rd controller, USB would not
-> work at all.
-> 
-> Fix this situation by always resetting the 1st controller before doing
-> any other setup to any of the controllers, and then never ever reset the
-> first controller again. As the UTMI registers are related to the PHY,
-> the PHY driver should probably reset the Tegra controllers instead,
-> but since old device trees only have reset phandles in the EHCI nodes,
-> do it here, which means a bit of device tree groveling. Those old DTs
-> also won't get the reset fix from this commit, so we'll dev_warn() them,
-> but the driver will still keep probing successfully.
-> 
-> Signed-off-by: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-> ---
-> v2 changes: assume we can find the usb1 reset from the PHY DT node,
->             don't fail if it's not found but just issue a warning
->  drivers/usb/host/ehci-tegra.c |   62 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 59 insertions(+), 3 deletions(-)
+.17 should be fine Tony. Thanks for following up.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Regards,
+Nishanth Menon
