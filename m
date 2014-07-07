@@ -1,39 +1,57 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 09/18] AT91: Call at91_register_devices in the board files
-Date: Mon, 7 Jul 2014 20:42:39 +0200
-Message-ID: <20140707184239.GI9558@ns203013.ovh.net>
-References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
- <1404396906-25194-15-git-send-email-maxime.ripard@free-electrons.com>
- <D103F102-4B04-4CC6-8F20-58CEB0EC8E36@jcrosoft.com>
- <20140703145222.GE31996@lukather>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH V5 2/3] Documentation: gpio: Add APM X-Gene SoC GPIO
+ controller DTS binding
+Date: Mon, 7 Jul 2014 11:52:52 -0700
+Message-ID: <CAL85gmD017shZfHGvewyH5FO9vsSFSNGo=vTL68sosvuvODa_A@mail.gmail.com>
+References: <1403823587-23404-1-git-send-email-fkan@apm.com>
+	<1403823587-23404-3-git-send-email-fkan@apm.com>
+	<20140630125339.GA21390@leverpostej>
+	<CACRpkdZ18SsRBBbngSVyxR0GFkC0kLD4OHm9RJmgZDLXbqvOBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140703145222.GE31996@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, dbaryshkov@gmail.com, Nicolas FERRE <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, dwmw2@infradead.org, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ18SsRBBbngSVyxR0GFkC0kLD4OHm9RJmgZDLXbqvOBQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "patches@apm.com" <patches@apm.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16:52 Thu 03 Jul     , Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Jul 03, 2014 at 10:29:58PM +0800, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > no do this at SoC level
-> 
-> Since it has to be done at init_machine, I don't see any other easy
-> way to do this at the SoC level.
-> 
-> What is your suggestion?
+On Fri, Jul 4, 2014 at 2:28 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Jun 30, 2014 at 2:53 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> On Thu, Jun 26, 2014 at 11:59:46PM +0100, Feng Kan wrote:
+>
+>>> +- #gpio-cells: Should be two.
+>>> +     - first cell is the pin number
+>>> +     - second cell is used to specify optional parameters (unused)
+>>
+>> Why is there an unused cell?
+>>
+>> Why not just make this a single cell if the binding defines no valid
+>> parameters?
+>
+> I don't get this either. The only reason would be that this cell
+> should contain flags (such as open collector) the code for using
+> it being inplemented later.
 
-do it earlier as there is not driver it will not change anything
+Yes, open drain configuration and mux via pinctrl was something I
+planned for later.
+There was another reason for this as well, part of the gpio code I read
+was confusing me. So I look through the other gpio documentations and
+found an example that did this as well.
+
+int of_gpio_simple_xlate(struct gpio_chip *gc,
+                         const struct of_phandle_args *gpiospec, u32 *flags)
+{
+        /*
+         * We're discouraging gpio_cells < 2, since that way you'll have to
+         * write your own xlate function (that will have to retrive the GPIO
+         * number and the flags from a single gpio cell -- this is possible,
+         * but not recommended).
+         */
+
+Thanks, and please advise me on what to do next.
+>
+> If the controller is too primitive to use such flags it should be onecell.
+>
+> Yours,
+> Linus Walleij
