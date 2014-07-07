@@ -1,91 +1,68 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO
- resources.
-Date: Mon, 7 Jul 2014 12:11:33 +0100
-Message-ID: <20140707111133.GP6501@e106497-lin.cambridge.arm.com>
+Subject: Re: [PATCH v8 0/9] Support for creating generic PCI host bridges
+ from DT
+Date: Mon, 7 Jul 2014 12:12:52 +0100
+Message-ID: <20140707111252.GQ6501@e106497-lin.cambridge.arm.com>
 References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-5-git-send-email-Liviu.Dudau@arm.com>
- <CAL_JsqJNfB_jynFQK0Ov6A3wqk6LF3abUFEUjhmzipak26sU5w@mail.gmail.com>
- <6122131.ozzYjjjRQi@wuerfel>
+ <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <6122131.ozzYjjjRQi@wuerfel>
+In-Reply-To: <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
 Content-Disposition: inline
 Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robherring2@gmail.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 05, 2014 at 09:46:09PM +0100, Arnd Bergmann wrote:
-> On Saturday 05 July 2014 14:25:52 Rob Herring wrote:
-> > On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> w=
-rote:
-> > > The ranges property for a host bridge controller in DT describes
-> > > the mapping between the PCI bus address and the CPU physical addr=
-ess.
-> > > The resources framework however expects that the IO resources sta=
-rt
-> > > at a pseudo "port" address 0 (zero) and have a maximum size of IO=
-_SPACE_LIMIT.
-> > > The conversion from pci ranges to resources failed to take that i=
-nto account.
-> >=20
-> > I don't think this change is right. There are 2 resources: the PCI =
-bus
-> > addresses and cpu addresses. This function deals with the cpu
-> > addresses. Returning pci addresses for i/o and cpu addresses for
-> > memory is going to be error prone. We probably need both cpu and pc=
-i
-> > resources exposed to host controllers.
-> >=20
-> > Making the new function only deal with i/o bus resources and naming=
- it
-> > of_pci_range_to_io_resource would be better.
->=20
-> I think you are correct that this change by itself is will break exis=
-ting
-> drivers that rely on the current behavior of of_pci_range_to_resource=
-,
-> but there is also something wrong with the existing implementation:
-
-Either I'm very confused or I've managed to confuse everyone else. The =
-I/O
-resources described using CPU addresses *are* using "pseudo" port based
-addresses (or at least that is my understanding and my reading of the c=
-ode).
-Can you point me to a function that is expecting the IO resource to hav=
-e
-the start address at the physical address of the mapped space?
-
-I was trying to fix exactly this issue, that you cannot use the resourc=
-e
-structure returned by this function in any call that is expecting an IO
-resource.
-
-Rob, you can try this function with two host bridges. Patch [3/9] chang=
+On Sun, Jul 06, 2014 at 04:23:43PM +0100, Rob Herring wrote:
+> On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > This is my resurected attempt at adding support for generic PCI hos=
+t
+> > bridge controllers that make use of device tree information to
+> > configure themselves. I've tagged it as v8 although the patches
+> > have now been reshuffled in order to ease adoption so referring to
+> > the older versions might be a bit of a hoop jumping exercise.
+> >
+> > Changes from v7:
+> >   - Reordered the patches so that fixes and non-controversial patch=
 es
-pci_address_to_pio() to calculate the offset of the range based on alre=
-ady
-registed ranges, so the first host bridge will have it's IO resources
-starting from zero, but the second host bridge will have .start offsete=
-d
-by the size of the IO space of the first bridge. That is not a PCI bus
-address AFAICT.
+> >     from v7 can be accepted more easily. If agreed I can split the
+> >     series again into patches that can be upstreamed easily and one=
+s
+> >     that still need discussion.
+> >   - Moved the of_create_host_bridge() function to drivers/of/of_pci=
+=2Ec
+> >     to better reflect its target use.
+> >   - Added the function to remap the bus I/O resources that used to =
+be
+> >     provided in my arm64 patch series and (re)named it pci_remap_io=
+space()
+> >   - Removed error code checking from parsing and mapping of IRQ fro=
+m DT
+> >     in recognition that some PCI devices will not have legacy IRQ m=
+appings.
+> >
+> > v7 thread here with all the historic information: https://lkml.org/=
+lkml/2014/3/14/279
+>=20
+> Can you publish a branch for this series please.
+
+Do you want a branch that has the series as publised (+the one obvious =
+miss
+on the header include) or a branch that has the comments rolled in, but=
+ is
+is not published yet as I'm waiting on answers from Bjorn regarding dom=
+ain
+number handling?
 
 Best regards,
 Liviu
 
 >=20
-> of_pci_range_to_resource() at the moment returns a the address in
-> cpu address space (i.e. IORESOURCE_MEM) but sets the res->flags
-> value to IORESOURCE_IO, which means it doesn't fit into the resource
-> tree. Liviu's version gets that part right, and it would be nice
-> to fix that eventually, however we do it here.
->=20
-> 	Arnd
->=20
+> Rob
 >=20
 
 --=20
