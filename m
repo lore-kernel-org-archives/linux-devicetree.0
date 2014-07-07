@@ -1,53 +1,83 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] spi: add driver for Rockchip RK3xxx SoCs integrated SPI
-Date: Mon, 07 Jul 2014 09:26:52 +0200
-Message-ID: <2620380.GejlhFPJDO@diego>
-References: <1403582852-9751-1-git-send-email-addy.ke@rock-chips.com> <5578791.jcBVzrGadW@diego> <20140707072140.GB30458@sirena.org.uk>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCHv2 2/5] ARM: dts: exynos: unuse the slot-node and deprecated
+ the supports-highspeed for dw-mmc
+Date: Mon, 07 Jul 2014 16:29:36 +0900
+Message-ID: <000c01cf99b5$34ccc8c0$9e665a40$%jun@samsung.com>
+References: <1404128960-27225-1-git-send-email-jh80.chung@samsung.com>
+ <1404128960-27225-3-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140707072140.GB30458-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1404128960-27225-3-git-send-email-jh80.chung@samsung.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Jaehoon Chung' <jh80.chung@samsung.com>, 'linux-mmc' <linux-mmc@vger.kernel.org>
+Cc: 'Chris Ball' <chris@printf.net>, 'Ulf Hansson' <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, 'Mark Rutland' <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 7. Juli 2014, 08:21:40 schrieb Mark Brown:
-> On Mon, Jul 07, 2014 at 09:08:41AM +0200, Heiko St=FCbner wrote:
-> > Am Montag, 7. Juli 2014, 09:42:52 schrieb addy ke:
-> > > > Your DT binding defined some additional compatible strings, ple=
-ase add
-> > > > those to the driver.
-> >=20
-> > citing Mark Rutland (one of the dt maintainers):
-> >=20
-> > --
-> >=20
-> >   That's why I said in addition to the common one. I'd only expect =
-the
-> >  =20
-> >   driver to look for "rockchip,rk3066-spi", but a DTB could have:
-> >         compatible =3D "rockchip,rk3188-spi", "rockchip,rk3066-spi"=
-;
-> >  =20
-> >   Seeding the DTBs with the extra strings early makes it more likel=
-y that
-> >   we can rely on them later. If we don't happen to need them they o=
-nly
-> >   clutter some DTBs.
-> >=20
-> > --
-> >=20
-> > so it looks like the driver is doing the right thing right now
->=20
-> The driver will work but it's better to list the strings that are
-> supported explicitly if only to document that there's nothing specifi=
-c
-> Linux should be doing for them.
+Hi Jaehoon,
 
-ok, makes sense :-)
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please check one thing below.
+
+On Mon, June 30, 2014, Jaehoon Chung wrote:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Reviewed-by: Tushar Behera <trblinux@gmail.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+
+> diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-
+> octa.dts
+> index 434fd9d..5f37b81 100644
+> --- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> +++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> @@ -50,7 +50,6 @@
+>  	mmc@12200000 {
+>  		status = "okay";
+>  		broken-cd;
+> -		supports-highspeed;
+>  		card-detect-delay = <200>;
+>  		samsung,dw-mshc-ciu-div = <3>;
+>  		samsung,dw-mshc-sdr-timing = <0 4>;
+> @@ -58,16 +57,12 @@
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>  		vmmc-supply = <&ldo10_reg>;
+> -
+> -		slot@0 {
+> -			reg = <0>;
+> -			bus-width = <8>;
+> -		};
+> +		bus-width = <8>;
+> +		cap-mmc-highspeed;
+>  	};
+> 
+>  	mmc@12220000 {
+>  		status = "okay";
+> -		supports-highspeed;
+>  		card-detect-delay = <200>;
+>  		samsung,dw-mshc-ciu-div = <3>;
+>  		samsung,dw-mshc-sdr-timing = <2 3>;
+> @@ -75,11 +70,8 @@
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+>  		vmmc-supply = <&ldo10_reg>;
+> -
+> -		slot@0 {
+> -			reg = <0>;
+> -			bus-width = <4>;
+> -		};
+> +		bus-width = <8>;
+<4> is correct?
+
+> +		cap-mmc-highspeed;
+
+Thanks,
+Seungwon Jeon
+
