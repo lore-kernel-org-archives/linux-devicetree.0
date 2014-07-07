@@ -1,151 +1,69 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 17/18] AT91: Remove rstc and shdwnc global base addresses
-Date: Mon,  7 Jul 2014 16:25:30 +0200
-Message-ID: <1404743131-24569-18-git-send-email-maxime.ripard@free-electrons.com>
-References: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Mon, 7 Jul 2014 16:45:28 +0200
+Message-ID: <CACRpkdbc=NDmmjLi_FKvXaQ7H6gY+xHWso=Vi=tgubME4JUfyg@mail.gmail.com>
+References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Harini Katakam <harinik@xilinx.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harini.katakam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that there's no user left for the global variables holding the reset and
-shutdown controllers base address, we can remove these variables and their
-associated mapping function.
+On Wed, Jun 18, 2014 at 1:39 PM, Harini Katakam <harinik@xilinx.com> wrote:
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/mach-at91/at91sam9260.c |  2 --
- arch/arm/mach-at91/at91sam9261.c |  2 --
- arch/arm/mach-at91/at91sam9263.c |  2 --
- arch/arm/mach-at91/at91sam9g45.c |  2 --
- arch/arm/mach-at91/at91sam9rl.c  |  2 --
- arch/arm/mach-at91/generic.h     |  6 ------
- arch/arm/mach-at91/setup.c       | 18 ------------------
- 7 files changed, 34 deletions(-)
+> From: Harini Katakam <harini.katakam@xilinx.com>
+>
+> Add support for GPIO controller used by Xilinx Zynq.
+>
+> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+>
+> v2 changes:
+>  - convert to pm_runtime_force_(suspend|resume)
+>  - add pm_runtime_set_active in probe()
+>  - also (un)prepare clocks when they are dis-/enabled
+>  - add some missing calls to pm_runtime_get()
+>  - use pm_runtime_put() instead of sync variant
+>  - remove gpio chip in driver remove()
+>  - remove redundant type casts
+>  - directly use IO helpers
+>  - use BIT macro to set/clear bits
+>  - migrate to GPIOLIB_IRQCHIP
 
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index f387e831e894..60a0d37a8134 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -339,8 +339,6 @@ static void __init at91sam9260_map_io(void)
- 
- static void __init at91sam9260_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9260_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9260_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9260_BASE_SDRAMC, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9260_BASE_PIT);
- 	at91sam9_ioremap_smc(0, AT91SAM9260_BASE_SMC);
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index 5e8ac0d271b8..80cae8728316 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -302,8 +302,6 @@ static void __init at91sam9261_map_io(void)
- 
- static void __init at91sam9261_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9261_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9261_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9261_BASE_SDRAMC, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9261_BASE_PIT);
- 	at91sam9_ioremap_smc(0, AT91SAM9261_BASE_SMC);
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index 772485c9e47c..7d4403ed0596 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -317,8 +317,6 @@ static void __init at91sam9263_map_io(void)
- 
- static void __init at91sam9263_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9263_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9263_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9263_BASE_SDRAMC0, 512);
- 	at91_ioremap_ramc(1, AT91SAM9263_BASE_SDRAMC1, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9263_BASE_PIT);
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index d986cc757cfb..c615f1d3d39c 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -367,8 +367,6 @@ static void __init at91sam9g45_map_io(void)
- 
- static void __init at91sam9g45_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9G45_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9G45_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9G45_BASE_DDRSDRC1, 512);
- 	at91_ioremap_ramc(1, AT91SAM9G45_BASE_DDRSDRC0, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9G45_BASE_PIT);
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index 1fba256502f7..79b5bb793692 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -311,8 +311,6 @@ static void __init at91sam9rl_map_io(void)
- 
- static void __init at91sam9rl_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9RL_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9RL_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9RL_BASE_SDRAMC, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9RL_BASE_PIT);
- 	at91sam9_ioremap_smc(0, AT91SAM9RL_BASE_SMC);
-diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
-index 5d5e55237c41..f42b0490ad98 100644
---- a/arch/arm/mach-at91/generic.h
-+++ b/arch/arm/mach-at91/generic.h
-@@ -64,12 +64,6 @@ extern void at91_irq_resume(void);
- /* idle */
- extern void at91sam9_idle(void);
- 
--/* reset */
--extern void at91_ioremap_rstc(u32 base_addr);
--
--/* shutdown */
--extern void at91_ioremap_shdwc(u32 base_addr);
--
- /* Matrix */
- extern void at91_ioremap_matrix(u32 base_addr);
- 
-diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index cdd717a4fa30..eb2b922a4adb 100644
---- a/arch/arm/mach-at91/setup.c
-+++ b/arch/arm/mach-at91/setup.c
-@@ -319,24 +319,6 @@ void __init at91_map_io(void)
- 		at91_boot_soc.map_io();
- }
- 
--void __iomem *at91_shdwc_base = NULL;
--
--void __init at91_ioremap_shdwc(u32 base_addr)
--{
--	at91_shdwc_base = ioremap(base_addr, 16);
--	if (!at91_shdwc_base)
--		panic(pr_fmt("Impossible to ioremap at91_shdwc_base\n"));
--}
--
--void __iomem *at91_rstc_base;
--
--void __init at91_ioremap_rstc(u32 base_addr)
--{
--	at91_rstc_base = ioremap(base_addr, 16);
--	if (!at91_rstc_base)
--		panic(pr_fmt("Impossible to ioremap at91_rstc_base\n"));
--}
--
- void __iomem *at91_matrix_base;
- EXPORT_SYMBOL_GPL(at91_matrix_base);
- 
--- 
-2.0.1
+This is a great improvement! Only small stuff remains.
+
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/gpio.h>
+
+This should be:
+#include <linux/gpio/driver.h>
+
+If that doesn't work ... why?
+
+> +/**
+> + * struct zynq_gpio - gpio device private data structure
+> + * @chip:      instance of the gpio_chip
+> + * @base_addr: base address of the GPIO device
+> + * @irq:       irq associated with the controller
+> + * @clk:       clock resource for this controller
+> + */
+> +struct zynq_gpio {
+> +       struct gpio_chip chip;
+> +       void __iomem *base_addr;
+> +       int irq;
+
+Why is irq kept around in this struct? It looks like it could just
+be a local variable in probe()?
+
+> +       struct clk *clk;
+> +};
+
+Apart from that this nitpicking the driver looks very nice.
+
+Yours,
+Linus Walleij
