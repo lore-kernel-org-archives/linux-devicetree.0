@@ -1,82 +1,51 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 4/4] drivers: dma-contiguous: add initialization from
- device tree
-Date: Mon, 07 Jul 2014 12:36:40 +0200
-Message-ID: <53BA7838.7000706@samsung.com>
-References: <1404298132-6050-1-git-send-email-m.szyprowski@samsung.com>
- <1404298132-6050-5-git-send-email-m.szyprowski@samsung.com>
- <00b501cf974c$2db1a800$8914f800$@lge.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/6] pinctrl: rockchip: support rk3288
+Date: Mon, 7 Jul 2014 12:41:01 +0200
+Message-ID: <CACRpkdaG-FrfQOB0FHeev1D0L8rrOW2-4jW4KufJMb4NneVeHQ@mail.gmail.com>
+References: <1887108.ECBDVhibgn@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <00b501cf974c$2db1a800$8914f800$@lge.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Michal Nazarewicz' <mina86@mina86.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Sascha Hauer' <s.hauer@pengutronix.de>, 'Laura Abbott' <lauraa@codeaurora.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Olof Johansson' <olof@lixom.net>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Ian Campbell' <ian.campbell@citrix.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Nishanth Peethambaran' <nishanth.p@gmail.com>, 'Marc' <marc.ceeeee@gmail.com>, 'Josh Cartwright' <joshc@codeaurora.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'Paul Mackerras' <paulus@samba.org>, 'Jon Medhurst' <tixy@linaro.org>, 'Aneesh
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1887108.ECBDVhibgn@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, Jun 16, 2014 at 1:35 AM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
 
-On 2014-07-04 07:52, Joonsoo Kim wrote:
->> -----Original Message-----
->> From: Marek Szyprowski [mailto:m.szyprowski@samsung.com]
->> Sent: Wednesday, July 02, 2014 7:49 PM
->>
->> Subject: [PATCH 4/4] drivers: dma-contiguous: add initialization from
->> device tree
->>
->> Add a code to create CMA region from reserved memory and add support for
->> handling 'shared-dma-pool' reserved-memory device tree nodes.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>   drivers/base/dma-contiguous.c | 67
->> +++++++++++++++++++++++++++++++++++++++++
->>   include/linux/cma.h           |  3 ++
->>   mm/cma.c                      | 69
-> ++++++++++++++++++++++++++++++++-----------
->>   3 files changed, 122 insertions(+), 17 deletions(-)
->>
-
-...
-
->> +/**
->>    * cma_declare_contiguous() - reserve custom contiguous area
->>    * @base: Base address of the reserved area optional, use 0 for any
->>    * @size: Size of the reserved area (in bytes),
->> @@ -162,18 +210,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
->>   			phys_addr_t alignment, unsigned int order_per_bit,
->>   			bool fixed, struct cma **res_cma)
->>   {
->> -	struct cma *cma;
->> -	int ret = 0;
->> +	int ret;
->>
->>   	pr_debug("%s(size %lx, base %08lx, limit %08lx alignment %08lx)\n",
->>   		__func__, (unsigned long)size, (unsigned long)base,
->>   		(unsigned long)limit, (unsigned long)alignment);
->>
->> -	if (cma_area_count == ARRAY_SIZE(cma_areas)) {
->> -		pr_err("Not enough slots for CMA reserved regions!\n");
->> -		return -ENOSPC;
->> -	}
->> -
-> Hello, Marek.
+> This series adds support for the rk3288 SoC.
 >
-> After this change, if we have not enough cma_areas, memory will leak.
-> I think that we need separate function to check constraint and this
-> function should be called before reserving memory in
-> cma_declare_contiguous().
+> The first patch generalizes the gpio-only handling of the rk3188 into=
+ a
+> general quirk-handling making it possible to deprecate the special ba=
+nk
+> compatible and also to add quirks of later SoCs.
+>
+> Patches 2 to 5 enable the driver to handle the quirks of rk3288 and
+> patch 6 then simply adds the description of the rk3288 banks.
+>
+> Tested on a rk3288-evb and on a rk3188-radxarock with both the
+> deprecated and new regular notation for bank0.
+>
+> Heiko Stuebner (6):
+>   pinctrl: rockchip: generalize bank-quirks
+>   pinctrl: rockchip: precalculate iomux offsets
+>   pinctrl: rockchip: add support for 4bit wide iomux settings
+>   pinctrl: rockchip: enable iomuxes from pmu space
+>   pinctrl: rockchip: support unrouted iomuxes per bank
+>   pinctrl: rockchip: add support for rk3288 pin-controller
 
-Well, I will leave this check to avoid memory leak then.
+Excellent and nice broken-down patch series Heiko!
 
-> BTW, this mail doesn't appear in LKML. What happens? :)
+All patches applied for v3.17.
 
-I have no idea, I will send second version then.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
