@@ -1,48 +1,55 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v10 6/7] dt-bindings: add documentation for Mediatek SoC
-Date: Mon,  7 Jul 2014 17:13:07 +0200
-Message-ID: <1404745988-32558-7-git-send-email-matthias.bgg@gmail.com>
-References: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Mon, 7 Jul 2014 18:23:09 +0300
+Message-ID: <20140707152309.GH4939@tarshish>
+References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
+ <5cc8b89b-20ff-4fa9-92dd-bb2f6d3512d8@BY2FFO11FD030.protection.gbl>
+ <CACRpkdb1M3-hrSKLKWz21LCJ1sMvsq5E-aqkpmVhy0NwOS5HhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, gregory.clement@free-electrons.com, thierry.reding@gmail.com, heiko.stuebner@bq.com, ak@linux.intel.com, linux@arm.linux.org.uk, arnd@arndb.de, daniel.lezcano@linaro.org, shawn.guo@freescale.com, u.kleine-koenig@pengutronix.de, grant.likely@linaro.org, florian.vaussard@epfl.ch, sebastian.hesselbarth@gmail.com, anders.berg@lsi.com, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, rostedt@goodmis.org, fabf@skynet.be, robh+dt@kernel.org, matthias.bgg@gmail.com, tglx@linutronix.de, akpm@linux-foundation.org, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, sboyd@codeaurora.org, silvio.fricke@gmail.com, galak@codeaurora.org, olof@lixom.net, maxime
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb1M3-hrSKLKWz21LCJ1sMvsq5E-aqkpmVhy0NwOS5HhA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Harini Katakam <harinik@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Harini Katakam <harinikatakamlinux@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Harini Katakam <harini.katakam@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a DT binding documentation for the MT6589 SoC from Mediatek.
+Hi Linux,
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/mediatek.txt |    8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
+On Mon, Jul 07, 2014 at 04:51:56PM +0200, Linus Walleij wrote:
+> On Wed, Jun 18, 2014 at 5:36 PM, S=F6ren Brinkmann <soren.brinkmann@x=
+ilinx.com> wrote:
+> > The first is, how is userspace supposed to find the correct offset =
+for a
+> > GPIO pin.
+>=20
+> The sysfs interface to GPIO is *NOT* *GOOD* this is universally
+> agreed upon.
+>=20
+> This needs someone to step in and provide a replacement, my preferred
+> mechanism would be a /dev/gpiochip0/... hierarchy using char devices.
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-new file mode 100644
-index 0000000..d6ac71f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -0,0 +1,8 @@
-+Mediatek MT6589 Platforms Device Tree Bindings
-+
-+Boards with a SoC of the Mediatek MT6589 shall have the following property:
-+
-+Required root node property:
-+
-+compatible: must contain "mediatek,mt6589"
-+
--- 
-1.7.9.5
+I really like the ability to control GPIOs from shell, both interactive=
+ly and=20
+scripted. I find it useful for quick hardware level debugging, and for =
+boot=20
+time scripting (mainly in initramfs). Do you intend to preserve this=20
+capability in the future? Will I need a special utility (or Busybox app=
+let) to=20
+do this with char device ioctl?
+
+baruch
+
+--=20
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Sy=
+stems
+=3D}------------------------------------------------ooO--U--Ooo--------=
+----{=3D
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
