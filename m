@@ -1,73 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the
- driver
-Date: Mon, 7 Jul 2014 08:32:44 +0100
-Message-ID: <20140707073244.GC30458@sirena.org.uk>
-References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
- <20140702165651.GK410@sirena.org.uk>
- <CAHfPSqAXs=5VLLEV-XVw5YJo=-9QFn9KA8oG_A0CfNykcVwnCQ@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
+Date: Mon, 07 Jul 2014 10:06:56 +0200
+Message-ID: <1404720416.3567.2.camel@paszta.hi.pengutronix.de>
+References: <1404470603-30394-1-git-send-email-p.zabel@pengutronix.de>
+	 <6ED8E3B22081A4459DAC7699F3695FB7D0B238B5@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHfPSqAXs=5VLLEV-XVw5YJo=-9QFn9KA8oG_A0CfNykcVwnCQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B238B5-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Steve,
 
---ALfTUftag+2gvp1h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am Freitag, den 04.07.2014, 12:52 +0000 schrieb Opensource [Steve
+Twiss]:
+> >Subject: [PATCH] of: Add vendor prefix for Dialog Semiconductor Plc
+> >Add Dialog Semiconductor Plc to the list of device tree vendor prefixes.
+> >Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >---
+> > Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> > 1 file changed, 1 insertion(+)
+> >diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >index 9ab11e0..be47d1a 100644
+> >--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >@@ -38,6 +38,7 @@ dallas	Maxim Integrated Products (formerly Dallas
+> >Semiconductor)
+> > davicom	DAVICOM Semiconductor, Inc.
+> > denx	Denx Software Engineering
+> > digi	Digi International Inc.
+> >+dlgnf	Dialog Semiconductor Plc
+> 
+> This discussion has been in progress for a while now.
+> There are already pending changes for the vendor prefix Dialog Semiconductor.
+> 
+> Please see the conversations here with Rob Herring:
+> https://lkml.org/lkml/2014/6/11/262
+> https://lkml.org/lkml/2014/6/11/199
 
-On Mon, Jul 07, 2014 at 11:51:38AM +0530, Naveen Krishna Ch wrote:
-> On 2 July 2014 22:26, Mark Brown <broonie@kernel.org> wrote:
-> > On Fri, Jun 13, 2014 at 09:29:50AM +0530, Naveen Krishna Chatradhi wrote:
+Thank you, I haven't seen those. So is it going to be 'dlg' then?
+Is this already queued somewhere? It doesn't seem to have made it
+into linux-next yet.
 
-> >> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
-> >> considering the time with no compliants about the breakage.
+regards
+Philipp
 
-> > I'm not clear what the breakage is?  Some boards are broken but what's
-> > the driver issue?
-
-> ToT was broken for few boards
-> exynos4412-trats2.dts, exynos4210-smdkv310.dts and exynos5250-smdk5250.dts
-
-> With some DTS changes SPI works well, spi-s3c64xx.c driver had no issues.
-
-No, you're not answering my question - to repeat, what is the breakage?
-
-> > Also I'd need to check but are you sure that GPIO 0 is not valid?
-
-> gpio_is_valid() returns true for
-> "number >= 0 && number < ARCH_NR_GPIOS"
-
-Right, so this means that any board that is using the internal chip
-select with zero as default in their platform data is broken by this
-change.
-
---ALfTUftag+2gvp1h
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTuk0ZAAoJELSic+t+oim9BU8P/0ztbsHLuzJvzfRJ05gHhzUC
-D9zgd4RBt+F/b49VT0iIOG7I4RuftFfHnq9xAWtjMlWyp3vnJmfP9O355jQIual0
-1s/SElXqzMR5s+dIxbsUBOitvtasCKVOpad3nCGIuFvVceHyHn/xk5+g7TMGRy1X
-+WeTDtdd5LDrzLmVHG7Ihimtxhd5kT7RnB153ydbxhyK+lZx1sbYZrRd1122Rr0P
-g8oBQ3BoVv47gqe9iZ0XfJmB1ksrKsYOOt4zcT+eVeWIs85mWYegT2EET2r/MhAi
-rtd5Zg1fZ6xI1eBU8PlQx6X61zcATVqS6tsfEykhc2eLAO72WKThLzQprM0i6Q5d
-VROw53vY2Dck2gNkTMMsgxIUeQfdjTr2iGr3fs8M8M05h4ZDb3O11EoaN8sqAFz8
-pAhgTA0l/k5zJ0rXQhI845qDLOJThN52tPvkHDHFSpHL5wBlQAw4dbdymB9yavwB
-7JYmaexAJ6kd3IJu/hRWIQ+ie9NFAg7i0qDlZRM9mXZO005gWbgbwWi4zs99CxT+
-EWjjkoY29oWwDHeVITlaioHMB0qjHYPim60eeR/sHF1eNc+0q5BYWntskNyELH8s
-qBP2WQBDGAiAHmsqOh6DjtpyS0xzkNXNjyVcwJBDOWcnIEWNqlmfpN/7Dd4/XgnN
-WceO6bTxLlgFz7dOB5pq
-=Qbl5
------END PGP SIGNATURE-----
-
---ALfTUftag+2gvp1h--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
