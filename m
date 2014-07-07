@@ -1,49 +1,171 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 05/18] AT91: SAMA5D3: DT: Add shutdown controller
-Date: Mon,  7 Jul 2014 16:25:18 +0200
-Message-ID: <1404743131-24569-6-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 14/18] AT91: Register the poweroff driver
+Date: Mon,  7 Jul 2014 16:25:27 +0200
+Message-ID: <1404743131-24569-15-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The SAMA5D3 has a shutdown controller identical to the sam9x5 SoC family.
-Declare it in the DT.
+Register the poweroff driver in the old-style SoC definition so that the driver
+is loaded and provide a shutdown hook.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sama5d3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-at91/at91sam9260.c | 15 +++++++++++++++
+ arch/arm/mach-at91/at91sam9261.c | 15 +++++++++++++++
+ arch/arm/mach-at91/at91sam9263.c | 15 +++++++++++++++
+ arch/arm/mach-at91/at91sam9g45.c | 15 +++++++++++++++
+ arch/arm/mach-at91/at91sam9rl.c  | 15 +++++++++++++++
+ 5 files changed, 75 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index e0b15a6e8897..8bcf1c442c96 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1178,6 +1178,11 @@
- 				reg = <0xfffffe00 0x10>;
- 			};
+diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
+index feed552c2b5d..f387e831e894 100644
+--- a/arch/arm/mach-at91/at91sam9260.c
++++ b/arch/arm/mach-at91/at91sam9260.c
+@@ -377,9 +377,24 @@ static struct platform_device rstc_device = {
+ 	.num_resources  = ARRAY_SIZE(rstc_resources),
+ };
  
-+			shutdown-controller@fffffe10 {
-+				compatible = "atmel,at91sam9x5-shdwc";
-+				reg = <0xfffffe10 0x10>;
-+			};
++static struct resource shdwc_resources[] = {
++	[0] = {
++		.start  = AT91SAM9260_BASE_SHDWC,
++		.end    = AT91SAM9260_BASE_SHDWC + SZ_16 - 1,
++		.flags  = IORESOURCE_MEM,
++	},
++};
 +
- 			pit: timer@fffffe30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe30 0xf>;
++static struct platform_device shdwc_device = {
++	.name           = "at91-poweroff",
++	.resource       = shdwc_resources,
++	.num_resources  = ARRAY_SIZE(shdwc_resources),
++};
++
+ static void __init at91sam9260_register_devices(void)
+ {
+ 	platform_device_register(&rstc_device);
++	platform_device_register(&shdwc_device);
+ }
+ 
+ /* --------------------------------------------------------------------
+diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
+index 43db1bdf885d..5e8ac0d271b8 100644
+--- a/arch/arm/mach-at91/at91sam9261.c
++++ b/arch/arm/mach-at91/at91sam9261.c
+@@ -340,9 +340,24 @@ static struct platform_device rstc_device = {
+ 	.num_resources  = ARRAY_SIZE(rstc_resources),
+ };
+ 
++static struct resource shdwc_resources[] = {
++	[0] = {
++		.start  = AT91SAM9261_BASE_SHDWC,
++		.end    = AT91SAM9261_BASE_SHDWC + SZ_16 - 1,
++		.flags  = IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device shdwc_device = {
++	.name           = "at91-poweroff",
++	.resource       = shdwc_resources,
++	.num_resources  = ARRAY_SIZE(shdwc_resources),
++};
++
+ static void __init at91sam9261_register_devices(void)
+ {
+ 	platform_device_register(&rstc_device);
++	platform_device_register(&shdwc_device);
+ }
+ 
+ /* --------------------------------------------------------------------
+diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
+index 94c0ac997b7f..772485c9e47c 100644
+--- a/arch/arm/mach-at91/at91sam9263.c
++++ b/arch/arm/mach-at91/at91sam9263.c
+@@ -358,9 +358,24 @@ static struct platform_device rstc_device = {
+ 	.num_resources  = ARRAY_SIZE(rstc_resources),
+ };
+ 
++static struct resource shdwc_resources[] = {
++	[0] = {
++		.start  = AT91SAM9263_BASE_SHDWC,
++		.end    = AT91SAM9263_BASE_SHDWC + SZ_16 - 1,
++		.flags  = IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device shdwc_device = {
++	.name           = "at91-poweroff",
++	.resource       = shdwc_resources,
++	.num_resources  = ARRAY_SIZE(shdwc_resources),
++};
++
+ static void __init at91sam9263_register_devices(void)
+ {
+ 	platform_device_register(&rstc_device);
++	platform_device_register(&shdwc_device);
+ }
+ 
+ /* --------------------------------------------------------------------
+diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
+index c896b28564ef..d986cc757cfb 100644
+--- a/arch/arm/mach-at91/at91sam9g45.c
++++ b/arch/arm/mach-at91/at91sam9g45.c
+@@ -412,9 +412,24 @@ static struct platform_device rstc_device = {
+ 	.num_resources  = ARRAY_SIZE(rstc_resources),
+ };
+ 
++static struct resource shdwc_resources[] = {
++	[0] = {
++		.start  = AT91SAM9G45_BASE_SHDWC,
++		.end    = AT91SAM9G45_BASE_SHDWC + SZ_16 - 1,
++		.flags  = IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device shdwc_device = {
++	.name           = "at91-poweroff",
++	.resource       = shdwc_resources,
++	.num_resources  = ARRAY_SIZE(shdwc_resources),
++};
++
+ static void __init at91sam9g45_register_devices(void)
+ {
+ 	platform_device_register(&rstc_device);
++	platform_device_register(&shdwc_device);
+ }
+ 
+ /* --------------------------------------------------------------------
+diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
+index 75dbaa10aa26..1fba256502f7 100644
+--- a/arch/arm/mach-at91/at91sam9rl.c
++++ b/arch/arm/mach-at91/at91sam9rl.c
+@@ -350,9 +350,24 @@ static struct platform_device rstc_device = {
+ 	.num_resources  = ARRAY_SIZE(rstc_resources),
+ };
+ 
++static struct resource shdwc_resources[] = {
++	[0] = {
++		.start  = AT91SAM9RL_BASE_SHDWC,
++		.end    = AT91SAM9RL_BASE_SHDWC + SZ_16 - 1,
++		.flags  = IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device shdwc_device = {
++	.name           = "at91-poweroff",
++	.resource       = shdwc_resources,
++	.num_resources  = ARRAY_SIZE(shdwc_resources),
++};
++
+ static void __init at91sam9rl_register_devices(void)
+ {
+ 	platform_device_register(&rstc_device);
++	platform_device_register(&shdwc_device);
+ }
+ 
+ /* --------------------------------------------------------------------
 -- 
 2.0.1
