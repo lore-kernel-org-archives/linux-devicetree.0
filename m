@@ -1,56 +1,70 @@
-From: Andre Heider <a.heider@gmail.com>
-Subject: Re: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
-Date: Mon, 7 Jul 2014 10:48:24 +0200
-Message-ID: <20140707084824.GA83417@localhost>
-References: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] clk: sunxi: Add A23 APB0 divider
+ clock support
+Date: Mon, 7 Jul 2014 10:47:00 +0200
+Message-ID: <20140707084700.GD16262@lukather>
+References: <1404399349-20237-1-git-send-email-wens@csie.org>
+ <1404399349-20237-2-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2Z2K0IlrPCVsbNpk"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPV65GOQKGQEOUTC76Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>
-Cc: Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1404399349-20237-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 29, 2014 at 06:21:34PM +0200, Andre Heider wrote:
-> Hi,
-> 
-> this series adds PRUv2 support to uio_pruss through devicetree, makes the
-> device usable on am33xx and enables it on beaglebone black.
-> Inspired by old patches from Matt Porter found in a downstream tree.
-> 
-> To archieve that this series:
-> * adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
-> * adds devicetree support to uio_pruss (patch 7 and 9)
-> * adds the device to the am33xx dtsi and boneblack dts (patch 12 and 13)
-> 
-> Bits and pieces:
-> * some cleanup (patch 1-4)
-> * take care of a fact that SRAM on am33xx is not exposed through UIO (patch 8)
-> * add runtime pm support to enable clocks (patch 10)
-> * allow the driver to be compiled on SOC_AM33XX (patch 11)
-> 
-> This is only tested on beaglebone black (as that's the only hardware of the
-> PRUSS enabled families I have) with some basic GPIO and IRQ tests.
-> 
-> Notes:
-> * I just got this hardware and I don't know if this UIO PRUSS business is
->   desired. Looking at the userspace driver I'd guess not so much ;), but this
->   interface is there for older generations anyway, and this small series lets
->   me use the device.
-> * is the hardreset thing I did there the right thing to do? I think the
->   proper way would be a reset controller (which apparently doesn't yet exist
->   for this SoC?) and let the driver deassert/assert on probe/remove?
-> * the platform device path has a clk_enable() / clk_put() calls. Are those
->   now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
->   calls?
 
-@OMAP guys: any comments? The series depends on patch 5 and 6; both touch
-common hwmod code.
+--2Z2K0IlrPCVsbNpk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I noticed that AM437x now comes with 4 PRUSS cores, maybe you had something
-different in mind on how to expose these?
+On Thu, Jul 03, 2014 at 10:55:41PM +0800, Chen-Yu Tsai wrote:
+> The A23 has an almost identical PRCM clock tree. The difference in
+> the APB0 clock is the smallest divisor is 1, instead of 2.
+>=20
+> This patch adds a separate sun8i-a23-apb0-clk driver to support it.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Thanks in advance,
-Andre
+Just applied, thanks!
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--2Z2K0IlrPCVsbNpk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTul6EAAoJEBx+YmzsjxAg7BkP/Ryw4VVKsXOnPCEuo2gN5ux/
+Glp3BY3abD7KQRSbSQZnZF1UwcAbnwWtopM/54G2xuTD1xuczitgHPppwKATsZV6
+XNksLoWtAdWsv6QZHMJuKV13kCy+3FtqHJs24pmt3mNAa863j06bBd0oCmbUGu7M
+oAjGWvqiR+/SPnCs4D9R0odoNPepsnFO4sVDxvNnXHOwIP0ubp5HjHC2EKFSGDKm
+7EtDjU2AB56VLerwfpJc0KDWP0P/vEtFmc7jBgOatkVArgWhQxjzt2v2Mb/Gy3ra
+wxKlh08ghmBE70HMoSp7sh9OE4B/qwFHonDOcwn3iy4TebIWjU0mxWnaazWqtn9n
+bqT9cX2LFm3L77Rx6JrmSzlJehyAe3ir0ovup+fY9M0MPWPM/IVDGrgbouM07C0L
+YbjcQ7IW5sB1VFVZ7MN2GrMnJwGDLHl5dW5Gb3fs+kD5V1lyx5TJ80ILlwOZyKAj
+60OEahyJqdQ2yv4wpUGEOkBpBsYV5IJpanzxyVqxpXBfpUxRfx/+6DJpb+ns5aE2
+dl9VBmg/4S/WmBxVisAaN9tw/Z9VprxVnEL9nFLdBXKj8LgSqrnH+920ZYXjSIdW
+TVBWUcDMgd6J2/Bn6O6iJlHAs3ugmQh2N3S81CbyAPY9YTCZNM9utOXCPRBUbFF6
+HEaZXk9GGc1pKG9o0kB5
+=s84I
+-----END PGP SIGNATURE-----
+
+--2Z2K0IlrPCVsbNpk--
