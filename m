@@ -1,75 +1,112 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
-Date: Mon, 7 Jul 2014 11:51:38 +0530
-Message-ID: <CAHfPSqAXs=5VLLEV-XVw5YJo=-9QFn9KA8oG_A0CfNykcVwnCQ@mail.gmail.com>
-References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com> <20140702165651.GK410@sirena.org.uk>
+From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] usb: doc: udc-xilinx: Add devicetree bindings
+Date: Mon, 7 Jul 2014 11:55:15 +0530
+Message-ID: <CALHRZupsas7=7NB8PHUub7nB3_Z++yJO0z9RYTU49tx87vSApA@mail.gmail.com>
+References: <b0dfcba4-7319-4687-a455-bfcddf61b7d1@BN1AFFO11FD028.protection.gbl>
+	<CALHRZup3_eFiw8iSJJmxy0dHDeHLnb2fAfRtKPTW1UQ2U+cEig@mail.gmail.com>
+	<20140704164028.GC7106@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140702165651.GK410@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140704164028.GC7106@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hi,
 
-Thanks for the review.
-
-On 2 July 2014 22:26, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Jun 13, 2014 at 09:29:50AM +0530, Naveen Krishna Chatradhi wrote:
+On Fri, Jul 4, 2014 at 10:10 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Jun 24, 2014 at 07:44:10AM +0100, sundeep subbaraya wrote:
+>> Ping
+>>
+>> Thanks,
+>> Sundeep.B.S.
+>>
+>> On Tue, Jun 10, 2014 at 5:34 PM,  <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>> > From: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> >
+>> > Add devicetree bindings for Xilinx axi udc driver.
+>> >
+>> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> > ---
+>> > Changes for v3:
+>> >         - None
+>> > Changes for v2:
+>> >         - replaced xlnx,include-dma with xlnx,has-builtin-dma
+>> >
+>> >  .../devicetree/bindings/usb/udc-xilinx.txt         |   20 ++++++++++++++++++++
+>> >  1 files changed, 20 insertions(+), 0 deletions(-)
+>> >  create mode 100644 Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> > new file mode 100644
+>> > index 0000000..7c24fac
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> > @@ -0,0 +1,20 @@
+>> > +Xilinx AXI USB2 device controller
+>> > +
+>> > +Required properties:
+>> > +- compatible           : Should be "xlnx,axi-usb2-device-4.00.a"
 >
->> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
->> considering the time with no compliants about the breakage.
->
-> I'm not clear what the breakage is?  Some boards are broken but what's
-> the driver issue?
+> That's an interesting name. What's the product name? Is the a manual?
 
-ToT was broken for few boards
-exynos4412-trats2.dts, exynos4210-smdkv310.dts and exynos5250-smdk5250.dts
+Here is the manual for the IP :
 
-With some DTS changes SPI works well, spi-s3c64xx.c driver had no issues.
+http://www.xilinx.com/support/documentation/ip_documentation/axi_usb2_device/v5_0/pg137-axi-usb2-device.pdf
 
->
->>       if (!spi_get_ctldata(spi)) {
->>               /* Request gpio only if cs line is asserted by gpio pins */
->> -             if (sdd->cs_gpio) {
->> -                     err = gpio_request_one(cs->line, GPIOF_OUT_INIT_HIGH,
->> -                                     dev_name(&spi->dev));
->> +             if (gpio_is_valid(spi->cs_gpio)) {
->> +                     err = gpio_request_one(spi->cs_gpio,
->> +                                             GPIOF_OUT_INIT_HIGH,
->> +                                             dev_name(&spi->dev));
->>                       if (err) {
->>                               dev_err(&spi->dev,
->>                                       "Failed to get /CS gpio [%d]: %d\n",
->> -                                     cs->line, err);
->> +                                     spi->cs_gpio, err);
->>                               goto err_gpio_req;
->>                       }
->> -
->> -                     spi->cs_gpio = cs->line;
->> +             } else {
->> +                     dev_err(&spi->dev, "chip select gpio is invalid\n");
->> +                     return -EINVAL;
->>               }
->
-> This appears to be making it mandatory to specify a GPIO when previously
-> it was not mandatory which I believe breaks some SoCs - the native chip
-> select has to be used on some devices as there is no pinmux option to
-> make it a GPIO (this was why the native chip select support was added).
-
-I read the commit "3146beec21b64f4551fcf0ac148381d54dc41b1b"
-"spi: s3c64xx: Added provision for dedicated cs pin"
-
-I understand "cs_gpio" shouldn't be mandatory. Will remove the else part.
+This driver works with PLB IP version that's why maybe make more sense
+to use skip axi from compatible string and use just
+xlnx,usb2-device-4.00.a.
 
 >
-> Also I'd need to check but are you sure that GPIO 0 is not valid?
+>> > +- reg                  : Physical base address and size of the Axi USB2
+>> > +                         device registers map.
+>> > +- interrupts           : Property with a value describing the interrupt
+>> > +                         number.
+>
+> Describe what this logically is. Everyone knows that this is a property
+> with a value, and everyone knows that an interrupts property describes
+> interrupts.
+>
+> The ket point is _which_ interrupts this describes.
 
-gpio_is_valid() returns true for
-"number >= 0 && number < ARCH_NR_GPIOS"
+Ok
 
--- 
-Shine bright,
-(: Nav :)
+>
+>> > +- interrupt-parent     : Must be core interrupt controller
+>
+> This isn't strictly necessary anyway.
+>
+>> > +- xlnx,include-dma     : if DMA is included
+>
+> You appear to have forgotten to fix this name, judging by the changelog
+> and example.
+>
+>> > +
+>> > +Example:
+>> > +               axi-usb2-device@42e00000 {
+>> > +                        compatible = "xlnx,axi-usb2-device-4.00.a";
+>> > +                        interrupt-parent = <0x1>;
+>
+> Huh? Who writes a raw phandle value?
+>
+>> > +                        interrupts = <0x0 0x39 0x1>;
+>> > +                        reg = <0x42e00000 0x10000>;
+>> > +                        xlnx,has-builtin-dma;
+>
+> As mentioned above, this conflicts with the binding documentation.
+> Please ensure the example is aligned with the documentation.
+
+Thank you for pointing this i sent an old one, will fix this.
+
+Sundeep.B.S.
+
+>
+> Thanks,
+> Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
