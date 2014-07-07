@@ -1,33 +1,38 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip support
-Date: Mon, 7 Jul 2014 13:46:42 -0700
-Message-ID: <CAD=FV=UH=sgZKFxH35qfBb-XJGJ9ctSSdVRhTEkt6zk0f+R4mA@mail.gmail.com>
-References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
-	<53B4E7D6.6000204@suse.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 0/3] Add R8A7791/Koelsch/Henninger board PCI DT support
+Date: Tue, 08 Jul 2014 01:21:50 +0400
+Message-ID: <53BB0F6E.5080600@cogentembedded.com>
+References: <201406242207.32790.sergei.shtylyov@cogentembedded.com> <9076479.78BOG4SjZ9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53B4E7D6.6000204@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, inki.dae@samsung.com, Sean Paul <seanpaul@google.com>, Ajay kumar <ajaynumb@gmail.com>, Rob Clark <robdclark@gmail.com>, daniel.vetter@ffwll.ch, Thierry Reding <thierry.reding@gmail.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <9076479.78BOG4SjZ9@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, horms@verge.net.au
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-On Wed, Jul 2, 2014 at 10:19 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
- wrote:
-> With these 10 patches applied on top of my dt on top of kgene's tree,
-> the last U-Boot screen stays visible for ~50 seconds, then the screen
-> goes blank, and I can ssh in some time later.
-> If I comment out the dp-controller node again, it takes long for the
-> kernel boot to graphically proceed but works okay then.
-> In both cases there's a gap of ~2900 seconds visible in dmesg.
+On 06/24/2014 10:22 PM, Arnd Bergmann wrote:
 
-I would have imagined that this was fixed by (1d80415 clocksource:
-exynos_mct: Don't reset the counter during boot and resume).
+>>     Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+>> 'renesas-devel-v3.16-rc2-20140623' tag. Here we add PCI USB device tree support
+>> for the R8A7791-based Koelsch and Henninger boards. As the 'pci-rcar-gen2'
+>> driver device tree support has been merged for 3.16, this patchset can now be
+>> merged too...
 
-=2E..that should also fix a long delay at bootup (delay was based on ho=
-w
-much time you spent in U-Boot).
+>> [1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
+>> [2/3] ARM: shmobile: koelsch: enable internal PCI
+>> [3/3] ARM: shmobile: henninger: enable internal PCI
+
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+    Simon, what's up with this series? You've merged analogous series for 
+R8A7790 but not this one. You followed up to an older version of it, asking me 
+to re-post when the driver patch gets merged but it already had been merged 
+already (and this version posted), and I got no reply from you then...
+
+WBR, Sergei
+
