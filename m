@@ -1,41 +1,39 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2] ARM: dts: OMAP5: Add device nodes for ABB
-Date: Mon, 7 Jul 2014 09:23:23 -0500
-Message-ID: <CAGo_u6peyH=VScObgLJxX5kS2J77y5WMsE0O71W4GPDpKaMV=g@mail.gmail.com>
-References: <1402017072-12599-1-git-send-email-nm@ti.com>
-	<20140707113220.GQ28884@atomide.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] pinctrl: Add NVIDIA Tegra XUSB pad controller support
+Date: Mon, 7 Jul 2014 16:26:36 +0200
+Message-ID: <CACRpkdae+LSfhEN9KZDeGYxcK8OkmqtHBb=uUxgBrpJmEWnaug@mail.gmail.com>
+References: <1403177830-28595-1-git-send-email-thierry.reding@gmail.com>
+	<1403177830-28595-2-git-send-email-thierry.reding@gmail.com>
+	<53B18A87.7040305@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140707113220.GQ28884@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: dt list <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53B18A87.7040305-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 7, 2014 at 6:32 AM, Tony Lindgren <tony@atomide.com> wrote:
-> * Nishanth Menon <nm@ti.com> [140605 18:12]:
->> From: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
+On Mon, Jun 30, 2014 at 6:04 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 06/19/2014 05:37 AM, Thierry Reding wrote:
+>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >>
->> Add ABB device nodes for OMAP5 family of devices. Data is based on
->> final production OMAP543x Technical Reference Manual revision Z (April 2013).
->> Final production Data Manual for OMAP5432 SWPS050F(APRIL 2014).
+>> The XUSB pad controller found on NVIDIA Tegra SoCs provides several pads
+>> that lanes can be assigned to in order to support a variety of interface
+>> options: USB 2.0, USB 3.0, PCIe and SATA.
 >>
->> [nm@ti.com: co-developer and updates to latest documentation]
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> Signed-off-by: Andrii.Tseglytskyi <andrii.tseglytskyi@ti.com>
->> ---
->> Original patch (v1): https://patchwork.kernel.org/patch/3555191/
->>
->> Rest of the series was accepted, however, I had to drop this
->> previously to ensure that the data we introduce is compatible with
->> production samples and existing pre-production samples on various
->> OMAP5uEVMs already in circulation.
+>> In addition to the pin controller used to assign lanes to pads two PHYs
+>> are exposed to allow the bricks for PCIe and SATA to be powered up and
+>> down by PCIe and SATA drivers.
 >
-> Is this OK to queue for v3.17 or do we need it for the -rc cycle?
->
+> Linus, does the driver look OK? I'm hoping for an ack from you so that I
+> can take this series through the Tegra tree to resolve some
+> dependencies; we have various other drivers that depend on this series.
 
-.17 should be fine Tony. Thanks for following up.
+Sure thing, if it looks OK to you, by all means apply it yo your tree.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Regards,
-Nishanth Menon
+(Also goes for the DT bindings FWIW)
+
+Yours,
+Linus Walleij
