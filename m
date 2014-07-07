@@ -1,62 +1,63 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: qcom: Add PM8941 and PM8841 pinctrl nodes
-Date: Mon,  7 Jul 2014 18:11:33 +0300
-Message-ID: <1404745893-6379-5-git-send-email-iivanov@mm-sol.com>
-References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404745893-6379-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] mmc: core: Add DT bindings for card detect debounce time
+Date: Mon, 7 Jul 2014 17:12:47 +0200
+Message-ID: <CACRpkda7s_AgPx4a6qu2=FGhfoPyJiZBCJDbd9iWL5qE3DPtXQ@mail.gmail.com>
+References: <1399649837-27286-1-git-send-email-balajitk@ti.com>
+	<CAPDyKFoZ=zjKg5bUMnK_X2XOatT=XSAnBDpYqu0Q2VOkM7hOOA@mail.gmail.com>
+	<CAAVeFu+CW0DSbqc6k145APao2r907sAyMw0+W=hQXxO6LoQx-g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFu+CW0DSbqc6k145APao2r907sAyMw0+W=hQXxO6LoQx-g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Balaji T K <balajitk@ti.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+On Sat, Jun 21, 2014 at 9:22 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
 
-Add nodes for PM8941 and PM8841 GPIO and MPP subfunctions.
+>> I have added Linus Walleij and Alexandre Courbot, the maintainers of
+>> gpio. Let's see if they can point us in a direction.
+>
+> I agree it would be nice if the debounce value could be handled by the
+> GPIO framework.
 
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+I agree too.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index c7ae7ba..7daca4b 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -267,6 +267,14 @@
- 					reg-names = "rtc", "alarm";
- 					interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
- 				};
-+
-+				pm8941_pinctrl: pins@a000 {
-+					compatible = "qcom,pm8941-pinctrl";
-+					reg = <0xa000>, <0xc000>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					label = "pm8941-pinctrl";
-+				};
- 			};
- 
- 			usid1: pm8941@1 {
-@@ -281,6 +289,14 @@
- 				reg = <0x4 SPMI_USID>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+
-+				pm8841_pinctrl: pins@a000 {
-+					compatible = "qcom,pm8841-pinctrl";
-+					reg = <0xa000>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					label = "pm8841-pinctrl";
-+				};
- 			};
- 
- 			usid5: pm8841@5 {
--- 
-1.8.3.2
+> I just wonder what would be the correct way of doing
+> it? Contrary to ACTIVE_LOW and other flags which can be specified with
+> the GPIO phandle, debounce is a numeric value. Maybe using a different
+> property, e.g.:
+>
+> cd-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
+> cd-gpios-debounce = <10>;
+>
+> When looking up a GPIO through gpiod_get(), the GPIO framework could
+> then check for -debounce property and set the debounce time
+> accordingly. At first sight I'd say that would work and could be used
+> for MMC and all other subsystems that need something similar.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, but we also need to write generic debounce handling into
+the gpiolib, so it doesn't matter if the GPIO driver can or cannot
+handle this itself. Some hardware has the capability to debounce
+lines in *hardware*.
+
+Right now a call to gpiod_set_debounce() will fail unless the
+hardware has a debounce option.
+
+What we should really do is make gpiod_set_debounce() always
+work, put the debounce value into the gpio_desc, and move some
+logic similar to what exists in drivers/input/keyboard/gpio_keys.c
+into the gpiolib, then get rid of any local implementations like
+in gpio_keys.
+
+Then we can rely on the gpiolib handling this at all times, and also
+to get the debounce config from DT.
+
+Dmitry, opinions on this?
+
+Anyone up for implementing the timer in gpiolib and moving the
+keyboard driver over to using the gpiolib debounce set?
+
+Yours,
+Linus Walleij
