@@ -1,67 +1,60 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 05/18] power: reset: Add AT91 reset driver
-Date: Tue, 8 Jul 2014 10:08:14 +0200
-Message-ID: <20140708080814.GL13423@lukather>
+Subject: Re: [PATCH 09/18] AT91: Call at91_register_devices in the board files
+Date: Tue, 8 Jul 2014 10:06:36 +0200
+Message-ID: <20140708080636.GK13423@lukather>
 References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
- <1404396906-25194-8-git-send-email-maxime.ripard@free-electrons.com>
- <F9547E0F-AB97-47E6-BA09-135EE4E1BC73@jcrosoft.com>
- <20140703145957.GH31996@lukather>
- <B425B925-B75E-4761-8CE6-9B12C5AC0469@jcrosoft.com>
- <20140704091443.545d1e08@bbrezillon>
- <20140704090645.GB13487@lukather>
- <20140707184001.GH9558@ns203013.ovh.net>
+ <1404396906-25194-15-git-send-email-maxime.ripard@free-electrons.com>
+ <D103F102-4B04-4CC6-8F20-58CEB0EC8E36@jcrosoft.com>
+ <20140703145222.GE31996@lukather>
+ <20140707184239.GI9558@ns203013.ovh.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Pz0BBB9QxoYXlT+x"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140707184001.GH9558@ns203013.ovh.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1173836386557349783=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140707184239.GI9558@ns203013.ovh.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, dbaryshkov@gmail.com, Nicolas FERRE <nicolas.ferre@atmel.com>, Linux Kernel list <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas@free-electrons.com>, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, dwmw2@infradead.org, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, dbaryshkov@gmail.com, Nicolas FERRE <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas@free-electrons.com>, Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, dwmw2@infradead.org, linux@maxim.org.za, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---Pz0BBB9QxoYXlT+x
-Content-Type: text/plain; charset=utf-8
+--===============1173836386557349783==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iSeZnk6FyAS3EJ1y"
+Content-Disposition: inline
+
+
+--iSeZnk6FyAS3EJ1y
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 07, 2014 at 08:40:01PM +0200, Jean-Christophe PLAGNIOL-VILLARD =
+On Mon, Jul 07, 2014 at 08:42:39PM +0200, Jean-Christophe PLAGNIOL-VILLARD =
 wrote:
-> > > > >> move this to an assembly file more easy to read than a C code
-> > > > >=20
-> > > > > Nope. It's a pain to pass variable to an external assembly file, =
-and
-> > > > > this makes the use of global variable pretty much mandatory, whic=
-h is
-> > > > > definitely not great.
-> > > >=20
-> > > > Not at all I did for the PM slow clock code just write a function a=
-nd pas it as a parameter
-> > > > you have 3
-> > > >=20
-> > > > so basically you have to use the current and just pass at91_ramc_ba=
-se[0], at91_ramc_base[1]
-> > > > and at91_rstc_base
-> > > > it=E2=80=99s 3 lignes of modification, if you have at91_ramc_base a=
-nd at91_ramc_base same
-> > > >=20
-> > >=20
-> > > Yes, retrieving function parameters from assembly code is not that
-> > > complicated (the first 4 pointer values are accessible through r0-r3),
-> > > but then you'll have to store your assembly file somewhere.
+> On 16:52 Thu 03 Jul     , Maxime Ripard wrote:
+> > Hi,
 > >=20
-> > Like I was saying, there's a strong preference for the inline
-> > assembly...
+> > On Thu, Jul 03, 2014 at 10:29:58PM +0800, Jean-Christophe PLAGNIOL-VILL=
+ARD wrote:
+> > > no do this at SoC level
+> >=20
+> > Since it has to be done at init_machine, I don't see any other easy
+> > way to do this at the SoC level.
+> >=20
+> > What is your suggestion?
 >=20
-> inline is horrible to read and maintain NACK
->=20
-> keep it in an assembly file it's so easy to read and follow
->=20
-> and you just have to move the file existing to the driver/power
+> do it earlier as there is not driver it will not change anything
 
-Well, the whole rest of the kernel community feels otherwise.
+My question remains. When should I do so?
+
+at91_initialize is too early to register any devices.
 
 Maxime
 
@@ -70,26 +63,40 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---Pz0BBB9QxoYXlT+x
+--iSeZnk6FyAS3EJ1y
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTu6buAAoJEBx+YmzsjxAgNwQP/1iLQ1rYI1+kyi6ZeWV4+ry9
-L1Occiv7/KyggCZ6kQ2QcApITn4j6iPkTH1hxXKJl0WeYuLFJn1Cy95SUj5VlOgE
-2JrUudQmU4XpyOYrKXSmXs0S6VBODfY9uaElxnKRJXeaFLQkB34h9dM7sCzGCTUo
-5Lm2jAAUVZD67HausPj2cF7UqNdyd10yyISZ/ztP1U14nKhIOCzrMJqlhouRKzm8
-zaLefg4fgmoFnW6KFAbEk4ZqKKtG6B5jTOgl7W3p/iM8ZjWZwp/StlW7cw7sTnsA
-8mb5V+XgMAzr0ayURObN6qyT4lUO14GRvnq9Er2fIFi+wTKAmANOc4kwmbgtwu+S
-r6ZPatgIkyUt4rJDSheXi7taaTqpI7JdEL5pKU8vFn7aAhusc085nVhnsoq6AhfV
-Ds6sU3a8xrtA7XoJtSKEdHTEvUtXNWlLZg99Ba5MIV0XCTl4c/CvshjcbfrpB4Si
-Ri4G3b4ZboBND9cNyFmdLhpNVJgDEDJBxVU1//dDLBK+8qzfn+wZM777/Nd8dy0V
-v0s4v/dW5oVZJBQABIVt1g91dPgfbjjejL28YA4drk88tm7UuApM88aqzM8z5Ag9
-CV2Ywp/LImyh1vH4dLIepqTaIlDuj3t2jTMOKrkozST47gRk29F2mOJCkQg+upob
-ehKqtiA0mFgq806e7XQq
-=0ofP
+iQIcBAEBAgAGBQJTu6aMAAoJEBx+YmzsjxAgXd8P/3/sIr09/dBiiK9YXylAr1Rc
+N4FXt3EYOlWoHJfHYELtKyWS8+SCFZD4MWaKwGhSPA5VZB5LlDnrLNE0HrvmvFgC
+k0HIb8Qlt0A0tU7WbArMsyYtspRdDTJIxZFp2wxiu8PwazqouDMG29PHpYYbaHw9
+JvUKpBh/xCnSL2wAq10UPillTbUuxuFpd8CdFiYmq+/LoFhypDp8q29bBKAvZ0ud
+qymON7Xqop0IqGJpL6xFOD/y1qCvuGbYWSHfzNhotPfp5dnrOa1MEnOF6QdPTKS8
+4vaLV9umV7o9val0cno1dFrhsH1N1qo52WG07Hm7+fwpMtcgGkNvIToZurwGFheb
+yt2sYJx0knVYUAMPa4ome1n2Z8FJgDpBR/4jR+IVfnqU96ArylqsdWW4ZLm95SQL
+QSrtPZrvhaPSxdugx0Zdvj4QD/sqpijrpBbYACIwHrjWUHU0S9AhY/T24yd7V5t0
+9Cz/73gKGDTfJvIfMvSJ/q2BBMK6Gdtcg7TK5iaMP8cElmdj4NdS0EGaZiYzUB2i
+SdFUIthbZA8QzWD5jAgKirZgr4ZZJkQH0B02eVKmFMp5h4ciefTpB3PM2TnZAWlP
+BIrJ9lppmvGC9uhLlBjREe5W2FIiFvkNSU7Wz6+E49uv2HW+F8+m7/2momn0//M9
+FdDuQ01C59znuiHS+L8h
+=+BdI
 -----END PGP SIGNATURE-----
 
---Pz0BBB9QxoYXlT+x--
+--iSeZnk6FyAS3EJ1y--
+
+
+--===============1173836386557349783==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1173836386557349783==--
