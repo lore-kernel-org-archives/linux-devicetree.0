@@ -1,75 +1,94 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Tue, 8 Jul 2014 17:40:10 -0400
-Message-ID: <20140708214010.GI4979@htj.dyndns.org>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
- <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
- <20140708134000.GC4979@htj.dyndns.org>
- <20140708170353.GA16148@kwain>
- <20140708171817.GH4979@htj.dyndns.org>
- <20140708174900.GC16148@kwain>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v1 6/9] usb: xhci: Add NVIDIA Tegra XHCI host-controller driver
+Date: Tue, 8 Jul 2014 14:52:10 -0700
+Message-ID: <CAL1qeaHT8Yz7kRY3Qm5i+bYCF4D5BT=BVZ6BMfQufyaQFkt0mw@mail.gmail.com>
+References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>
+	<1403072180-4944-7-git-send-email-abrestic@chromium.org>
+	<CAODwPW-HSY3RoBi9VEhHSJ98drTsdche-2=mKfAViXWaUa3X1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140708174900.GC16148@kwain>
-Sender: linux-ide-owner@vger.kernel.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAODwPW-HSY3RoBi9VEhHSJ98drTsdche-2=mKfAViXWaUa3X1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey,
+On Fri, Jun 20, 2014 at 9:58 AM, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> +static const struct hc_driver tegra_xhci_hc_driver = {
+>> +       .description =          "tegra-xhci-hcd",
+>> +       .product_desc =         "Tegra xHCI Host Controller",
+>> +       .hcd_priv_size =        sizeof(struct xhci_hcd *),
+>> +
+>> +       /*
+>> +        * generic hardware linkage
+>> +        */
+>> +       .irq =                  xhci_irq,
+>> +       .flags =                HCD_MEMORY | HCD_USB3 | HCD_SHARED,
+>> +
+>> +       /*
+>> +        * basic lifecycle operations
+>> +        */
+>> +       .reset =                tegra_xhci_setup,
+>> +       .start =                xhci_run,
+>> +       .stop =                 xhci_stop,
+>> +       .shutdown =             xhci_shutdown,
+>> +
+>> +       /*
+>> +        * managing i/o requests and associated device resources
+>> +        */
+>> +       .urb_enqueue =          xhci_urb_enqueue,
+>> +       .urb_dequeue =          xhci_urb_dequeue,
+>> +       .alloc_dev =            xhci_alloc_dev,
+>> +       .free_dev =             xhci_free_dev,
+>> +       .alloc_streams =        xhci_alloc_streams,
+>> +       .free_streams =         xhci_free_streams,
+>> +       .add_endpoint =         xhci_add_endpoint,
+>> +       .drop_endpoint =        xhci_drop_endpoint,
+>> +       .endpoint_reset =       xhci_endpoint_reset,
+>> +       .check_bandwidth =      xhci_check_bandwidth,
+>> +       .reset_bandwidth =      xhci_reset_bandwidth,
+>> +       .address_device =       xhci_address_device,
+>> +       .enable_device =        xhci_enable_device,
+>> +       .update_hub_device =    xhci_update_hub_device,
+>> +       .reset_device =         xhci_discover_or_reset_device,
+>> +
+>> +       /*
+>> +        * scheduling support
+>> +        */
+>> +       .get_frame_number =     xhci_get_frame,
+>> +
+>> +       /* Root hub support */
+>> +       .hub_control =          xhci_hub_control,
+>> +       .hub_status_data =      xhci_hub_status_data,
+>> +       .bus_suspend =          xhci_bus_suspend,
+>> +       .bus_resume =           xhci_bus_resume,
+>> +};
+>
+> I know I missed the first round of discussion where this was
+> suggested, but I don't think it's a good idea to pull the whole
+> hc_driver structure out into every platform implementation. It will
+> lead to duplication, then to future additions only being applied to
+> some of the implementations and everything getting out of sync. This
+> is already a problem with the PCI/plat split (e.g. the LPM functions
+> were only added to xhci-pci even though they should apply to both).
+> Also, if I'm not mistaken this code would fail to compile as a module
+> (you are referencing lots of symbols that are internal to the xhci-hcd
+> module).
 
-On Tue, Jul 08, 2014 at 07:49:00PM +0200, Antoine T=E9nart wrote:
-> > So, yeah, it's being used both as input and output and we also have
-> > the arguments which affect port_map, right?  It does seem confusing=
-=2E
->=20
-> I do see priv->port_map as being automatically set and then restricte=
-d
-> if needed by the port_map input here. I don't see how that's confusin=
-g.
-> The only modification is we restrict the port_map parameter to the se=
-t
-> of available ports. The port_map argument affected priv->port_map bef=
-ore
-> this patch.
+You're right Julius, this won't build as a module without a few EXPORT_SYMBOLs.
 
-It is confusing.  If you wanna pass around available ports in hpriv,
-please add a separate field and replace the arguments to
-save_initial_config().
+> I think at the very least you should add a function
+> "xhci_default_driver(struct hc_driver *driver)" to xhci-plat.c (or
+> even better to xhci.c and use it for PCI as well) that initializes all
+> function pointers to the default (internal) symbols, and can then be
+> overridden afterwards.
 
-> > Well, so does clk.  Let's say clk is more restricted and phy can be
-> > one or more per port and thus needs to be dynamic.  If so, shouldn'=
-t
-> > we at least have some correlation between phys and ports?  It bothe=
-rs
-> > me that now libahci is carrying random number of resources that it =
-has
-> > no idea how to associate with the ports it manages.  What if later =
-we
-> > want to involve phy driver in power managing unoccupied ports?
->=20
-> I see. This is a first (working) attempt to have a one node per port.=
- I
-> agree that would be nice to have a correlation between ports and PHYs=
-=2E
-> This can definitively be added when needed without changing the dt
-> bindings as only the internal representation changes. This would also
-> require to get all phys from the port nodes, which is again internal
-> stuff.
->=20
-> Don't you think we can go by steps, and have a following up series fo=
-r
-> this when needed (like in a power managing series for unoccupied port=
-s)?
-
-I don't know.  It isn't exactly difficult to make it per-port, is it?
-We already have ahci_port_priv and wouldn't the code actually be
-simpler that way?
-
-Thanks.
-
---=20
-tejun
+Currently all XHCI host drivers (PCI, platform, MVEBU) will be built
+into the xhci-hcd module.  I could append the Tegra driver to that
+module or introduce a xhci_init_driver() like EHCI does as Julius
+suggests.  USB folks, do you have a preference?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
