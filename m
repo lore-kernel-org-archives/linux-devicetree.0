@@ -1,42 +1,46 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v9 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Tue, 08 Jul 2014 15:00:52 +0200
-Message-ID: <53BBEB84.50904@gmail.com>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com> <1404728173-20263-2-git-send-email-antoine.tenart@free-electrons.com> <53BBE419.8080107@ti.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53BBE419.8080107@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, tj@kernel.org
-Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH 2/3] ARM: dts: exynos3250 add MFC codec device node
+Date: Tue, 08 Jul 2014 15:04:13 +0200
+Message-ID: <1404824654-5907-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: k.debski@samsung.com, jtp.park@samsung.com, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2014 02:29 PM, Kishon Vijay Abraham I wrote:
-> On Monday 07 July 2014 03:46 PM, Antoine T=C3=A9nart wrote:
->> The Berlin SoC has a two SATA ports. Add a PHY driver to handle them=
-=2E
->>
->> The mode selection can let us think this PHY can be configured to fi=
-t
->> other purposes. But there are reasons to think the SATA mode will be
->> the only one usable: the PHY registers are only accessible indirectl=
-y
->> through two registers in the SATA range, the PHY seems to be integra=
-ted
->> and no information tells us the contrary. For these reasons, make th=
-e
->> driver a SATA PHY driver.
->
-> Thanks for doing multiple revisions of this. Looks good to be merged =
-for me now.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+---
+ arch/arm/boot/dts/exynos3250.dtsi |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I'd like to see some Acked-by from Tejun on the AHCI patches first, but
-if he agrees, should I prepare a stable branch for each of us to pull
-their patches from?
-
-AFAIKS, that would be 1+2 for you, 3-5 for Tejun, and the DT crap 6+7
-for me.
-
-Sebastian
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 351871a..01bf5fa 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -283,6 +283,17 @@
+ 			status = "disabled";
+ 		};
+ 
++		codec@13400000 {
++			compatible = "samsung,mfc-v7";
++			reg = <0x13400000 0x10000>;
++			interrupts = <0 102 0>;
++			clock-names = "mfc", "sclk-mfc";
++			clocks = <&cmu CLK_MFC>, <&cmu CLK_SCLK_MFC>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			samsung,power-domain = <&pd_mfc>;
++		};
++
+ 		serial_0: serial@13800000 {
+ 			compatible = "samsung,exynos4210-uart";
+ 			reg = <0x13800000 0x100>;
+-- 
+1.7.9.5
