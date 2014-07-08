@@ -1,77 +1,53 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [GIT PULL] SPEAr1310 PCIe patches rebased on 3.16-rc3
-Date: Tue, 8 Jul 2014 14:23:56 +0530
-Message-ID: <CAOh2x=nLawh_X0M2ESDvxKNhhVUjE9yKEvfin3WTkNs8Kv5eUg@mail.gmail.com>
-References: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E46A4@EAPEX1MAIL1.st.com>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add dwc3-st.c file to ARCH/STI architecture
+Date: Tue, 8 Jul 2014 11:01:12 +0200
+Message-ID: <53BBB358.3040801@st.com>
+References: <1404541530-27856-1-git-send-email-peter.griffin@linaro.org> <1404541530-27856-4-git-send-email-peter.griffin@linaro.org> <53BBA075.9040204@st.com> <20140708075332.GM6407@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E46A4@EAPEX1MAIL1.st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "arm@kernel.org" <arm@kernel.org>, "Arnd Bergmann (arnd@arndb.de)" <arnd@arndb.de>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, "'Kishon Vijay Abraham I' (kishon@ti.com)" <kishon@ti.com>, Pratyush ANAND <pratyush.anand@st.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Nicholson <mark@nicholnet.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140708075332.GM6407@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mohit,
 
-On Tue, Jul 8, 2014 at 12:36 PM, Mohit KUMAR DCG <Mohit.KUMAR@st.com> wrote:
-> Hello Arnd,
+
+On 07/08/2014 09:53 AM, Lee Jones wrote:
+> On Tue, 08 Jul 2014, Maxime Coquelin wrote:
+>> On 07/05/2014 08:25 AM, Peter Griffin wrote:
+>>> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 >
-> Pls find SPEAr1310 pcie patches to be merged through arm-soc tree.
-> These patches are rebased on the top of 3-16-rc3.
+> Maxime,
+>    Once Acked by Felipe, I think this should go in via your tree to
+> avoid conflicts with other ARM/STI ARCHITECTURE additions.
+
+Ok
+
 >
-> git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git
-> spear/pcie-support-v8
-
-You actually sent this request before Arnd's reply :).
-
-This is what he asked for:
-
-"Please also include a description of the overall series and the
-reasons why we decided
-to merge it through arm-soc in the pull request email. Thanks!"
-
-Also this is not how we send pull requests, please see this:
-http://git-scm.com/docs/git-request-pull
-
-Let me know if you need some help.
-
-Also, build-bot reported a warning with your patches and I have
-fixed it now:
-
->> WARNING: drivers/built-in.o(.data+0x334): Section mismatch in reference from the variable spear1310_miphy_driver to the function .init.text:spear1310_miphy_probe()
-
-diff --git a/drivers/phy/phy-spear1310-miphy.c
-b/drivers/phy/phy-spear1310-miphy.c
-index 6136634..dc0b97a 100644
---- a/drivers/phy/phy-spear1310-miphy.c
-+++ b/drivers/phy/phy-spear1310-miphy.c
-@@ -205,7 +205,7 @@ static struct phy *spear1310_miphy_xlate(struct device *dev,
-        return priv->phy;
- }
-
--static int __init spear1310_miphy_probe(struct platform_device *pdev)
-+static int spear1310_miphy_probe(struct platform_device *pdev)
- {
-        struct device *dev = &pdev->dev;
-        struct spear1310_miphy_priv *priv;
-diff --git a/drivers/phy/phy-spear1340-miphy.c
-b/drivers/phy/phy-spear1340-miphy.c
-index cbaf284..e06e944 100644
---- a/drivers/phy/phy-spear1340-miphy.c
-+++ b/drivers/phy/phy-spear1340-miphy.c
-@@ -235,7 +235,7 @@ static struct phy *spear1340_miphy_xlate(struct device *dev,
-        return priv->phy;
- }
-
--static int __init spear1340_miphy_probe(struct platform_device *pdev)
-+static int spear1340_miphy_probe(struct platform_device *pdev)
- {
-        struct device *dev = &pdev->dev;
-        struct spear1340_miphy_priv *priv;
-
-Please let me know if I screwed up. Else send pull request from
-this branch again.
-
+>>> ---
+>>>   MAINTAINERS | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 702ca10..269ad3b 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -1325,6 +1325,7 @@ F:	drivers/pinctrl/pinctrl-st.c
+>>>   F:	drivers/media/rc/st_rc.c
+>>>   F:	drivers/i2c/busses/i2c-st.c
+>>>   F:	drivers/tty/serial/st-asc.c
+>>> +F:	drivers/usb/dwc3/dwc3-st.c
+>>>
+>>>   ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+>>>   M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+>>>
+>
 --
-viresh
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
