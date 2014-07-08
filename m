@@ -1,212 +1,726 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Tue, 8 Jul 2014 11:46:56 +0100
-Message-ID: <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
- <20140708005954.GC22939@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140708005954.GC22939@google.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Harini Katakam <harinik@xilinx.com>
+Subject: [PATCH v3 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Tue,  8 Jul 2014 16:32:35 +0530
+Message-ID: <1404817356-21568-1-git-send-email-harinik@xilinx.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Cc: michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, harinikatakamlinux@gmail.com, Harini Katakam <harini.katakam@xilinx.com>, Harini Katakam <harinik@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 01:59:54AM +0100, Bjorn Helgaas wrote:
-> On Tue, Jul 01, 2014 at 07:43:31PM +0100, Liviu Dudau wrote:
-> > Make it easier to discover the domain number of a bus by storing
-> > the number in pci_host_bridge for the root bus. Several architectur=
-es
-> > have their own way of storing this information, so it makes sense
-> > to try to unify the code. While at this, add a new function that
-> > creates a root bus in a given domain and make pci_create_root_bus()
-> > a wrapper around this function.
->=20
-> "While at this" is always a good clue that maybe something should be
-> split into a separate patch :)  This is a very good example, since it
-> adds a new interface that deserves its own changelog.
+From: Harini Katakam <harini.katakam@xilinx.com>
 
-Yes, I'm coming to the same conclusion. :)
+Add support for GPIO controller used by Xilinx Zynq.
 
->=20
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  drivers/pci/probe.c | 41 +++++++++++++++++++++++++++++++++--------
-> >  include/linux/pci.h |  4 ++++
-> >  2 files changed, 37 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 2c92662..abf5e82 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1748,8 +1748,9 @@ void __weak pcibios_remove_bus(struct pci_bus=
- *bus)
-> >  {
-> >  }
-> > =20
-> > -struct pci_bus *pci_create_root_bus(struct device *parent, int bus=
-,
-> > -		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-> > +struct pci_bus *pci_create_root_bus_in_domain(struct device *paren=
-t,
-> > +		int domain, int bus, struct pci_ops *ops, void *sysdata,
-> > +		struct list_head *resources)
->=20
-> I don't think we should do it this way; this makes it possible to hav=
-e a
-> host bridge where "bridge->domain_nr !=3D pci_domain_nr(bridge->bus)"=
-=2E
->=20
-> I wonder if it would help to make a weak pci_domain_nr() function tha=
-t
-> returns "bridge->domain_nr".  Then each arch could individually drop =
-its
-> pci_domain_nr() definition as it was converted, e.g., something like =
-this:
->=20
->   - Convert every arch pci_domain_nr() from a #define to a non-inline
->     function
->   - Add bridge.domain_nr, initialized from pci_domain_nr()
->   - Add a weak generic pci_domain_nr() that returns bridge.domain_nr
->   - Add a way to create a host bridge in a specified domain, so we ca=
-n
->     initialize bridge.domain_nr without using pci_domain_nr()
->   - Convert each arch to use the new creation mechanism and drop its
->     pci_domain_nr() implementation
+Signed-off-by: Harini Katakam <harinik@xilinx.com>
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
 
-I will try to propose a patch implementing this.
+v3 changes:
+ - Use linux/gpio/driver.h instead of linux/gpio.h
+ - Make irq a local variable in probe
 
-Best regards,
-Liviu
+v2 changes:
+ - convert to pm_runtime_force_(suspend|resume)
+ - add pm_runtime_set_active in probe()
+ - also (un)prepare clocks when they are dis-/enabled
+ - add some missing calls to pm_runtime_get()
+ - use pm_runtime_put() instead of sync variant
+ - remove gpio chip in driver remove()
+ - remove redundant type casts
+ - directly use IO helpers
+ - use BIT macro to set/clear bits
+ - migrate to GPIOLIB_IRQCHIP
 
->=20
-> >  {
-> >  	int error;
-> >  	struct pci_host_bridge *bridge;
-> > @@ -1762,27 +1763,31 @@ struct pci_bus *pci_create_root_bus(struct =
-device *parent, int bus,
-> > =20
-> >  	bridge =3D pci_alloc_host_bridge();
-> >  	if (!bridge)
-> > -		return NULL;
-> > +		return ERR_PTR(-ENOMEM);
-> > =20
-> >  	bridge->dev.parent =3D parent;
-> >  	bridge->dev.release =3D pci_release_host_bridge_dev;
-> > +	bridge->domain_nr =3D domain;
-> > =20
-> >  	b =3D pci_alloc_bus();
-> > -	if (!b)
-> > +	if (!b) {
-> > +		error =3D -ENOMEM;
-> >  		goto err_out;
-> > +	}
-> > =20
-> >  	b->sysdata =3D sysdata;
-> >  	b->ops =3D ops;
-> >  	b->number =3D b->busn_res.start =3D bus;
-> > -	b2 =3D pci_find_bus(pci_domain_nr(b), bus);
-> > +	b2 =3D pci_find_bus(bridge->domain_nr, bus);
-> >  	if (b2) {
-> >  		/* If we already got to this bus through a different bridge, ign=
-ore it */
-> >  		dev_dbg(&b2->dev, "bus already known\n");
-> > +		error =3D -EEXIST;
-> >  		goto err_bus_out;
-> >  	}
-> > =20
-> >  	bridge->bus =3D b;
-> > -	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus)=
-;
-> > +	dev_set_name(&bridge->dev, "pci%04x:%02x", bridge->domain_nr, bus=
-);
-> >  	error =3D pcibios_root_bridge_prepare(bridge);
-> >  	if (error)
-> >  		goto err_out;
-> > @@ -1801,7 +1806,7 @@ struct pci_bus *pci_create_root_bus(struct de=
-vice *parent, int bus,
-> > =20
-> >  	b->dev.class =3D &pcibus_class;
-> >  	b->dev.parent =3D b->bridge;
-> > -	dev_set_name(&b->dev, "%04x:%02x", pci_domain_nr(b), bus);
-> > +	dev_set_name(&b->dev, "%04x:%02x", bridge->domain_nr, bus);
-> >  	error =3D device_register(&b->dev);
-> >  	if (error)
-> >  		goto class_dev_reg_err;
-> > @@ -1851,7 +1856,27 @@ err_bus_out:
-> >  	kfree(b);
-> >  err_out:
-> >  	kfree(bridge);
-> > -	return NULL;
-> > +	return ERR_PTR(error);
-> > +}
-> > +
-> > +struct pci_bus *pci_create_root_bus(struct device *parent, int bus=
-,
-> > +		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-> > +{
-> > +	int domain_nr;
-> > +	struct pci_bus *b =3D pci_alloc_bus();
-> > +	if (!b)
-> > +		return NULL;
-> > +
-> > +	b->sysdata =3D sysdata;
-> > +	domain_nr =3D pci_domain_nr(b);
-> > +	kfree(b);
-> > +
-> > +	b =3D pci_create_root_bus_in_domain(parent, domain_nr, bus,
-> > +				ops, sysdata, resources);
-> > +	if (IS_ERR(b))
-> > +		return NULL;
-> > +
-> > +	return b;
-> >  }
-> > =20
-> >  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_ma=
-x)
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 466bcd1..7e7b939 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -401,6 +401,7 @@ struct pci_host_bridge_window {
-> >  struct pci_host_bridge {
-> >  	struct device dev;
-> >  	struct pci_bus *bus;		/* root bus */
-> > +	int domain_nr;
-> >  	struct list_head windows;	/* pci_host_bridge_windows */
-> >  	void (*release_fn)(struct pci_host_bridge *);
-> >  	void *release_data;
-> > @@ -769,6 +770,9 @@ struct pci_bus *pci_scan_bus(int bus, struct pc=
-i_ops *ops, void *sysdata);
-> >  struct pci_bus *pci_create_root_bus(struct device *parent, int bus=
-,
-> >  				    struct pci_ops *ops, void *sysdata,
-> >  				    struct list_head *resources);
-> > +struct pci_bus *pci_create_root_bus_in_domain(struct device *paren=
-t,
-> > +			int domain, int bus, struct pci_ops *ops,
-> > +			void *sysdata, struct list_head *resources);
-> >  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax=
-);
-> >  int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
-> >  void pci_bus_release_busn_res(struct pci_bus *b);
-> > --=20
-> > 2.0.0
-> >=20
->=20
+---
+ drivers/gpio/Kconfig     |    7 +
+ drivers/gpio/Makefile    |    1 +
+ drivers/gpio/gpio-zynq.c |  649 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 657 insertions(+)
+ create mode 100644 drivers/gpio/gpio-zynq.c
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 4a1b511..bdeef02 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -340,6 +340,13 @@ config GPIO_XILINX
+ 	help
+ 	  Say yes here to support the Xilinx FPGA GPIO device
+ 
++config GPIO_ZYNQ
++	tristate "Xilinx Zynq GPIO support"
++	depends on ARCH_ZYNQ
++	select GPIOLIB_IRQCHIP
++	help
++	  Say yes here to support Xilinx Zynq GPIO controller.
++
+ config GPIO_XTENSA
+ 	bool "Xtensa GPIO32 support"
+ 	depends on XTENSA
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index d10f6a9..033fd7c 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -101,3 +101,4 @@ obj-$(CONFIG_GPIO_WM8994)	+= gpio-wm8994.o
+ obj-$(CONFIG_GPIO_XILINX)	+= gpio-xilinx.o
+ obj-$(CONFIG_GPIO_XTENSA)	+= gpio-xtensa.o
+ obj-$(CONFIG_GPIO_ZEVIO)	+= gpio-zevio.o
++obj-$(CONFIG_GPIO_ZYNQ)		+= gpio-zynq.o
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+new file mode 100644
+index 0000000..c0c53fd
+--- /dev/null
++++ b/drivers/gpio/gpio-zynq.c
+@@ -0,0 +1,649 @@
++/*
++ * Xilinx Zynq GPIO device driver
++ *
++ * Copyright (C) 2009 - 2014 Xilinx, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it under
++ * the terms of the GNU General Public License as published by the Free Software
++ * Foundation; either version 2 of the License, or (at your option) any later
++ * version.
++ */
++
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/gpio/driver.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++#define DRIVER_NAME "zynq-gpio"
++
++/* Maximum banks */
++#define ZYNQ_GPIO_MAX_BANK	4
++
++#define ZYNQ_GPIO_BANK0_NGPIO	32
++#define ZYNQ_GPIO_BANK1_NGPIO	22
++#define ZYNQ_GPIO_BANK2_NGPIO	32
++#define ZYNQ_GPIO_BANK3_NGPIO	32
++
++#define ZYNQ_GPIO_NR_GPIOS	(ZYNQ_GPIO_BANK0_NGPIO + \
++				 ZYNQ_GPIO_BANK1_NGPIO + \
++				 ZYNQ_GPIO_BANK2_NGPIO + \
++				 ZYNQ_GPIO_BANK3_NGPIO)
++
++#define ZYNQ_GPIO_BANK0_PIN_MIN	0
++#define ZYNQ_GPIO_BANK0_PIN_MAX	(ZYNQ_GPIO_BANK0_PIN_MIN + \
++					ZYNQ_GPIO_BANK0_NGPIO - 1)
++#define ZYNQ_GPIO_BANK1_PIN_MIN	(ZYNQ_GPIO_BANK0_PIN_MAX + 1)
++#define ZYNQ_GPIO_BANK1_PIN_MAX	(ZYNQ_GPIO_BANK1_PIN_MIN + \
++					ZYNQ_GPIO_BANK1_NGPIO - 1)
++#define ZYNQ_GPIO_BANK2_PIN_MIN	(ZYNQ_GPIO_BANK1_PIN_MAX + 1)
++#define ZYNQ_GPIO_BANK2_PIN_MAX	(ZYNQ_GPIO_BANK2_PIN_MIN + \
++					ZYNQ_GPIO_BANK2_NGPIO - 1)
++#define ZYNQ_GPIO_BANK3_PIN_MIN	(ZYNQ_GPIO_BANK2_PIN_MAX + 1)
++#define ZYNQ_GPIO_BANK3_PIN_MAX	(ZYNQ_GPIO_BANK3_PIN_MIN + \
++					ZYNQ_GPIO_BANK3_NGPIO - 1)
++
++
++/* Register offsets for the GPIO device */
++/* LSW Mask & Data -WO */
++#define ZYNQ_GPIO_DATA_LSW_OFFSET(BANK)	(0x000 + (8 * BANK))
++/* MSW Mask & Data -WO */
++#define ZYNQ_GPIO_DATA_MSW_OFFSET(BANK)	(0x004 + (8 * BANK))
++/* Data Register-RW */
++#define ZYNQ_GPIO_DATA_RO_OFFSET(BANK)	(0x060 + (4 * BANK))
++/* Direction mode reg-RW */
++#define ZYNQ_GPIO_DIRM_OFFSET(BANK)	(0x204 + (0x40 * BANK))
++/* Output enable reg-RW */
++#define ZYNQ_GPIO_OUTEN_OFFSET(BANK)	(0x208 + (0x40 * BANK))
++/* Interrupt mask reg-RO */
++#define ZYNQ_GPIO_INTMASK_OFFSET(BANK)	(0x20C + (0x40 * BANK))
++/* Interrupt enable reg-WO */
++#define ZYNQ_GPIO_INTEN_OFFSET(BANK)	(0x210 + (0x40 * BANK))
++/* Interrupt disable reg-WO */
++#define ZYNQ_GPIO_INTDIS_OFFSET(BANK)	(0x214 + (0x40 * BANK))
++/* Interrupt status reg-RO */
++#define ZYNQ_GPIO_INTSTS_OFFSET(BANK)	(0x218 + (0x40 * BANK))
++/* Interrupt type reg-RW */
++#define ZYNQ_GPIO_INTTYPE_OFFSET(BANK)	(0x21C + (0x40 * BANK))
++/* Interrupt polarity reg-RW */
++#define ZYNQ_GPIO_INTPOL_OFFSET(BANK)	(0x220 + (0x40 * BANK))
++/* Interrupt on any, reg-RW */
++#define ZYNQ_GPIO_INTANY_OFFSET(BANK)	(0x224 + (0x40 * BANK))
++
++/* Disable all interrupts mask */
++#define ZYNQ_GPIO_IXR_DISABLE_ALL	0xFFFFFFFF
++
++/* Mid pin number of a bank */
++#define ZYNQ_GPIO_MID_PIN_NUM 16
++
++/* GPIO upper 16 bit mask */
++#define ZYNQ_GPIO_UPPER_MASK 0xFFFF0000
++
++/**
++ * struct zynq_gpio - gpio device private data structure
++ * @chip:	instance of the gpio_chip
++ * @base_addr:	base address of the GPIO device
++ * @clk:	clock resource for this controller
++ */
++struct zynq_gpio {
++	struct gpio_chip chip;
++	void __iomem *base_addr;
++	struct clk *clk;
++};
++
++/**
++ * zynq_gpio_get_bank_pin - Get the bank number and pin number within that bank
++ * for a given pin in the GPIO device
++ * @pin_num:	gpio pin number within the device
++ * @bank_num:	an output parameter used to return the bank number of the gpio
++ *		pin
++ * @bank_pin_num: an output parameter used to return pin number within a bank
++ *		  for the given gpio pin
++ *
++ * Returns the bank number and pin offset within the bank.
++ */
++static inline void zynq_gpio_get_bank_pin(unsigned int pin_num,
++					  unsigned int *bank_num,
++					  unsigned int *bank_pin_num)
++{
++	switch (pin_num) {
++	case ZYNQ_GPIO_BANK0_PIN_MIN ... ZYNQ_GPIO_BANK0_PIN_MAX:
++		*bank_num = 0;
++		*bank_pin_num = pin_num;
++		break;
++	case ZYNQ_GPIO_BANK1_PIN_MIN ... ZYNQ_GPIO_BANK1_PIN_MAX:
++		*bank_num = 1;
++		*bank_pin_num = pin_num - ZYNQ_GPIO_BANK1_PIN_MIN;
++		break;
++	case ZYNQ_GPIO_BANK2_PIN_MIN ... ZYNQ_GPIO_BANK2_PIN_MAX:
++		*bank_num = 2;
++		*bank_pin_num = pin_num - ZYNQ_GPIO_BANK2_PIN_MIN;
++		break;
++	case ZYNQ_GPIO_BANK3_PIN_MIN ... ZYNQ_GPIO_BANK3_PIN_MAX:
++		*bank_num = 3;
++		*bank_pin_num = pin_num - ZYNQ_GPIO_BANK3_PIN_MIN;
++		break;
++	default:
++		WARN(true, "invalid GPIO pin number: %u", pin_num);
++		*bank_num = 0;
++		*bank_pin_num = 0;
++		break;
++	}
++}
++
++/**
++ * zynq_gpio_get_value - Get the state of the specified pin of GPIO device
++ * @chip:	gpio_chip instance to be worked on
++ * @pin:	gpio pin number within the device
++ *
++ * This function reads the state of the specified pin of the GPIO device.
++ *
++ * Return: 0 if the pin is low, 1 if pin is high.
++ */
++static int zynq_gpio_get_value(struct gpio_chip *chip, unsigned int pin)
++{
++	u32 data;
++	unsigned int bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = container_of(chip, struct zynq_gpio, chip);
++
++	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num);
++
++	data = readl_relaxed(gpio->base_addr +
++			     ZYNQ_GPIO_DATA_RO_OFFSET(bank_num));
++
++	return (data >> bank_pin_num) & 1;
++}
++
++/**
++ * zynq_gpio_set_value - Modify the state of the pin with specified value
++ * @chip:	gpio_chip instance to be worked on
++ * @pin:	gpio pin number within the device
++ * @state:	value used to modify the state of the specified pin
++ *
++ * This function calculates the register offset (i.e to lower 16 bits or
++ * upper 16 bits) based on the given pin number and sets the state of a
++ * gpio pin to the specified value. The state is either 0 or non-zero.
++ */
++static void zynq_gpio_set_value(struct gpio_chip *chip, unsigned int pin,
++				int state)
++{
++	unsigned int reg_offset, bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = container_of(chip, struct zynq_gpio, chip);
++
++	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num);
++
++	if (bank_pin_num >= ZYNQ_GPIO_MID_PIN_NUM) {
++		/* only 16 data bits in bit maskable reg */
++		bank_pin_num -= ZYNQ_GPIO_MID_PIN_NUM;
++		reg_offset = ZYNQ_GPIO_DATA_MSW_OFFSET(bank_num);
++	} else {
++		reg_offset = ZYNQ_GPIO_DATA_LSW_OFFSET(bank_num);
++	}
++
++	/*
++	 * get the 32 bit value to be written to the mask/data register where
++	 * the upper 16 bits is the mask and lower 16 bits is the data
++	 */
++	state = !!state;
++	state = ~(1 << (bank_pin_num + ZYNQ_GPIO_MID_PIN_NUM)) &
++		((state << bank_pin_num) | ZYNQ_GPIO_UPPER_MASK);
++
++	writel_relaxed(state, gpio->base_addr + reg_offset);
++}
++
++/**
++ * zynq_gpio_dir_in - Set the direction of the specified GPIO pin as input
++ * @chip:	gpio_chip instance to be worked on
++ * @pin:	gpio pin number within the device
++ *
++ * This function uses the read-modify-write sequence to set the direction of
++ * the gpio pin as input.
++ *
++ * Return: 0 always
++ */
++static int zynq_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
++{
++	u32 reg;
++	unsigned int bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = container_of(chip, struct zynq_gpio, chip);
++
++	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num);
++
++	/* bank 0 pins 7 and 8 are special and cannot be used as inputs */
++	if (bank_num == 0 && (bank_pin_num == 7 || bank_pin_num == 8))
++		return -EINVAL;
++
++	/* clear the bit in direction mode reg to set the pin as input */
++	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++	reg &= ~BIT(bank_pin_num);
++	writel_relaxed(reg, gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++
++	return 0;
++}
++
++/**
++ * zynq_gpio_dir_out - Set the direction of the specified GPIO pin as output
++ * @chip:	gpio_chip instance to be worked on
++ * @pin:	gpio pin number within the device
++ * @state:	value to be written to specified pin
++ *
++ * This function sets the direction of specified GPIO pin as output, configures
++ * the Output Enable register for the pin and uses zynq_gpio_set to set
++ * the state of the pin to the value specified.
++ *
++ * Return: 0 always
++ */
++static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
++			     int state)
++{
++	u32 reg;
++	unsigned int bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = container_of(chip, struct zynq_gpio, chip);
++
++	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num);
++
++	/* set the GPIO pin as output */
++	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++	reg |= BIT(bank_pin_num);
++	writel_relaxed(reg, gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++
++	/* configure the output enable reg for the pin */
++	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_OUTEN_OFFSET(bank_num));
++	reg |= BIT(bank_pin_num);
++	writel_relaxed(reg, gpio->base_addr + ZYNQ_GPIO_OUTEN_OFFSET(bank_num));
++
++	/* set the state of the pin */
++	zynq_gpio_set_value(chip, pin, state);
++	return 0;
++}
++
++/**
++ * zynq_gpio_irq_mask - Disable the interrupts for a gpio pin
++ * @irq_data:	per irq and chip data passed down to chip functions
++ *
++ * This function calculates gpio pin number from irq number and sets the
++ * bit in the Interrupt Disable register of the corresponding bank to disable
++ * interrupts for that pin.
++ */
++static void zynq_gpio_irq_mask(struct irq_data *irq_data)
++{
++	unsigned int device_pin_num, bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = irq_data_get_irq_chip_data(irq_data);
++
++	device_pin_num = irq_data->hwirq;
++	zynq_gpio_get_bank_pin(device_pin_num, &bank_num, &bank_pin_num);
++	writel_relaxed(BIT(bank_pin_num),
++		       gpio->base_addr + ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
++}
++
++/**
++ * zynq_gpio_irq_unmask - Enable the interrupts for a gpio pin
++ * @irq_data:	irq data containing irq number of gpio pin for the interrupt
++ *		to enable
++ *
++ * This function calculates the gpio pin number from irq number and sets the
++ * bit in the Interrupt Enable register of the corresponding bank to enable
++ * interrupts for that pin.
++ */
++static void zynq_gpio_irq_unmask(struct irq_data *irq_data)
++{
++	unsigned int device_pin_num, bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = irq_data_get_irq_chip_data(irq_data);
++
++	device_pin_num = irq_data->hwirq;
++	zynq_gpio_get_bank_pin(device_pin_num, &bank_num, &bank_pin_num);
++	writel_relaxed(BIT(bank_pin_num),
++		       gpio->base_addr + ZYNQ_GPIO_INTEN_OFFSET(bank_num));
++}
++
++/**
++ * zynq_gpio_set_irq_type - Set the irq type for a gpio pin
++ * @irq_data:	irq data containing irq number of gpio pin
++ * @type:	interrupt type that is to be set for the gpio pin
++ *
++ * This function gets the gpio pin number and its bank from the gpio pin number
++ * and configures the INT_TYPE, INT_POLARITY and INT_ANY registers.
++ *
++ * Return: 0, negative error otherwise.
++ * TYPE-EDGE_RISING,  INT_TYPE - 1, INT_POLARITY - 1,  INT_ANY - 0;
++ * TYPE-EDGE_FALLING, INT_TYPE - 1, INT_POLARITY - 0,  INT_ANY - 0;
++ * TYPE-EDGE_BOTH,    INT_TYPE - 1, INT_POLARITY - NA, INT_ANY - 1;
++ * TYPE-LEVEL_HIGH,   INT_TYPE - 0, INT_POLARITY - 1,  INT_ANY - NA;
++ * TYPE-LEVEL_LOW,    INT_TYPE - 0, INT_POLARITY - 0,  INT_ANY - NA
++ */
++static int zynq_gpio_set_irq_type(struct irq_data *irq_data, unsigned int type)
++{
++	u32 int_type, int_pol, int_any;
++	unsigned int device_pin_num, bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = irq_data_get_irq_chip_data(irq_data);
++
++	device_pin_num = irq_data->hwirq;
++	zynq_gpio_get_bank_pin(device_pin_num, &bank_num, &bank_pin_num);
++
++	int_type = readl_relaxed(gpio->base_addr +
++				 ZYNQ_GPIO_INTTYPE_OFFSET(bank_num));
++	int_pol = readl_relaxed(gpio->base_addr +
++				ZYNQ_GPIO_INTPOL_OFFSET(bank_num));
++	int_any = readl_relaxed(gpio->base_addr +
++				ZYNQ_GPIO_INTANY_OFFSET(bank_num));
++
++	/*
++	 * based on the type requested, configure the INT_TYPE, INT_POLARITY
++	 * and INT_ANY registers
++	 */
++	switch (type) {
++	case IRQ_TYPE_EDGE_RISING:
++		int_type |= BIT(bank_pin_num);
++		int_pol |= BIT(bank_pin_num);
++		int_any &= ~BIT(bank_pin_num);
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		int_type |= BIT(bank_pin_num);
++		int_pol &= ~BIT(bank_pin_num);
++		int_any &= ~BIT(bank_pin_num);
++		break;
++	case IRQ_TYPE_EDGE_BOTH:
++		int_type |= BIT(bank_pin_num);
++		int_any |= BIT(bank_pin_num);
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		int_type &= ~BIT(bank_pin_num);
++		int_pol |= BIT(bank_pin_num);
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		int_type &= ~BIT(bank_pin_num);
++		int_pol &= ~BIT(bank_pin_num);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	writel_relaxed(int_type,
++		       gpio->base_addr + ZYNQ_GPIO_INTTYPE_OFFSET(bank_num));
++	writel_relaxed(int_pol,
++		       gpio->base_addr + ZYNQ_GPIO_INTPOL_OFFSET(bank_num));
++	writel_relaxed(int_any,
++		       gpio->base_addr + ZYNQ_GPIO_INTANY_OFFSET(bank_num));
++	return 0;
++}
++
++static int zynq_gpio_set_wake(struct irq_data *data, unsigned int on)
++{
++	if (on)
++		zynq_gpio_irq_unmask(data);
++	else
++		zynq_gpio_irq_mask(data);
++
++	return 0;
++}
++
++/* irq chip descriptor */
++static struct irq_chip zynq_gpio_irqchip = {
++	.name		= DRIVER_NAME,
++	.irq_mask	= zynq_gpio_irq_mask,
++	.irq_unmask	= zynq_gpio_irq_unmask,
++	.irq_set_type	= zynq_gpio_set_irq_type,
++	.irq_set_wake	= zynq_gpio_set_wake,
++};
++
++/**
++ * zynq_gpio_irqhandler - IRQ handler for the gpio banks of a gpio device
++ * @irq:	irq number of the gpio bank where interrupt has occurred
++ * @desc:	irq descriptor instance of the 'irq'
++ *
++ * This function reads the Interrupt Status Register of each bank to get the
++ * gpio pin number which has triggered an interrupt. It then acks the triggered
++ * interrupt and calls the pin specific handler set by the higher layer
++ * application for that pin.
++ * Note: A bug is reported if no handler is set for the gpio pin.
++ */
++static void zynq_gpio_irqhandler(unsigned int irq, struct irq_desc *desc)
++{
++	u32 int_sts, int_enb;
++	unsigned int bank_num;
++	struct zynq_gpio *gpio = irq_get_handler_data(irq);
++	struct irq_chip *irqchip = irq_desc_get_chip(desc);
++
++	chained_irq_enter(irqchip, desc);
++
++	for (bank_num = 0; bank_num < ZYNQ_GPIO_MAX_BANK; bank_num++) {
++		int_sts = readl_relaxed(gpio->base_addr +
++					ZYNQ_GPIO_INTSTS_OFFSET(bank_num));
++		int_enb = readl_relaxed(gpio->base_addr +
++					ZYNQ_GPIO_INTMASK_OFFSET(bank_num));
++		int_sts &= ~int_enb;
++		if (int_sts) {
++			int offset;
++			unsigned long pending = int_sts;
++
++			for_each_set_bit(offset, &pending, 32) {
++				unsigned int gpio_irq =
++					irq_find_mapping(gpio->chip.irqdomain,
++							offset);
++				generic_handle_irq(gpio_irq);
++			}
++
++			/* clear IRQ in HW */
++			writel_relaxed(int_sts, gpio->base_addr +
++					ZYNQ_GPIO_INTSTS_OFFSET(bank_num));
++		}
++	}
++
++	chained_irq_exit(irqchip, desc);
++}
++
++static int __maybe_unused zynq_gpio_suspend(struct device *dev)
++{
++	if (!device_may_wakeup(dev))
++		return pm_runtime_force_suspend(dev);
++
++	return 0;
++}
++
++static int __maybe_unused zynq_gpio_resume(struct device *dev)
++{
++	if (!device_may_wakeup(dev))
++		return pm_runtime_force_resume(dev);
++
++	return 0;
++}
++
++static int __maybe_unused zynq_gpio_runtime_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct zynq_gpio *gpio = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(gpio->clk);
++
++	return 0;
++}
++
++static int __maybe_unused zynq_gpio_runtime_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct zynq_gpio *gpio = platform_get_drvdata(pdev);
++
++	return clk_prepare_enable(gpio->clk);
++}
++
++static int zynq_gpio_request(struct gpio_chip *chip, unsigned offset)
++{
++	int ret;
++
++	ret = pm_runtime_get_sync(chip->dev);
++
++	/*
++	 * If the device is already active pm_runtime_get() will return 1 on
++	 * success, but gpio_request still needs to return 0.
++	 */
++	return ret < 0 ? ret : 0;
++}
++
++static void zynq_gpio_free(struct gpio_chip *chip, unsigned offset)
++{
++	pm_runtime_put(chip->dev);
++}
++
++static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
++	SET_PM_RUNTIME_PM_OPS(zynq_gpio_runtime_suspend,
++			zynq_gpio_runtime_resume, NULL)
++};
++
++/**
++ * zynq_gpio_probe - Initialization method for a zynq_gpio device
++ * @pdev:	platform device instance
++ *
++ * This function allocates memory resources for the gpio device and registers
++ * all the banks of the device. It will also set up interrupts for the gpio
++ * pins.
++ * Note: Interrupts are disabled for all the banks during initialization.
++ *
++ * Return: 0 on success, negative error otherwise.
++ */
++static int zynq_gpio_probe(struct platform_device *pdev)
++{
++	int ret, bank_num, irq;
++	struct zynq_gpio *gpio;
++	struct gpio_chip *chip;
++	struct resource *res;
++
++	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, gpio);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	gpio->base_addr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(gpio->base_addr))
++		return PTR_ERR(gpio->base_addr);
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(&pdev->dev, "invalid IRQ\n");
++		return irq;
++	}
++
++	/* configure the gpio chip */
++	chip = &gpio->chip;
++	chip->label = "zynq_gpio";
++	chip->owner = THIS_MODULE;
++	chip->dev = &pdev->dev;
++	chip->get = zynq_gpio_get_value;
++	chip->set = zynq_gpio_set_value;
++	chip->request = zynq_gpio_request;
++	chip->free = zynq_gpio_free;
++	chip->direction_input = zynq_gpio_dir_in;
++	chip->direction_output = zynq_gpio_dir_out;
++	chip->base = -1;
++	chip->ngpio = ZYNQ_GPIO_NR_GPIOS;
++
++	/* Enable GPIO clock */
++	gpio->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(gpio->clk)) {
++		dev_err(&pdev->dev, "input clock not found.\n");
++		return PTR_ERR(gpio->clk);
++	}
++	ret = clk_prepare_enable(gpio->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "Unable to enable clock.\n");
++		return ret;
++	}
++
++	/* report a bug if gpio chip registration fails */
++	ret = gpiochip_add(chip);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to add gpio chip\n");
++		goto err_disable_clk;
++	}
++
++	/* disable interrupts for all banks */
++	for (bank_num = 0; bank_num < ZYNQ_GPIO_MAX_BANK; bank_num++)
++		writel_relaxed(ZYNQ_GPIO_IXR_DISABLE_ALL, gpio->base_addr +
++			       ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
++
++	ret = gpiochip_irqchip_add(chip, &zynq_gpio_irqchip, 0,
++				   handle_simple_irq, IRQ_TYPE_NONE);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to add irq chip\n");
++		goto err_rm_gpiochip;
++	}
++
++	gpiochip_set_chained_irqchip(chip, &zynq_gpio_irqchip, irq,
++				     zynq_gpio_irqhandler);
++
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++
++	device_set_wakeup_capable(&pdev->dev, 1);
++
++	return 0;
++
++err_rm_gpiochip:
++	if (gpiochip_remove(chip))
++		dev_err(&pdev->dev, "Failed to remove gpio chip\n");
++err_disable_clk:
++	clk_disable_unprepare(gpio->clk);
++
++	return ret;
++}
++
++/**
++ * zynq_gpio_remove - Driver removal function
++ * @pdev:	platform device instance
++ *
++ * Return: 0 always
++ */
++static int zynq_gpio_remove(struct platform_device *pdev)
++{
++	int ret;
++	struct zynq_gpio *gpio = platform_get_drvdata(pdev);
++
++	pm_runtime_get_sync(&pdev->dev);
++
++	ret = gpiochip_remove(&gpio->chip);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to remove gpio chip\n");
++		return ret;
++	}
++	clk_disable_unprepare(gpio->clk);
++	device_set_wakeup_capable(&pdev->dev, 0);
++	return 0;
++}
++
++static struct of_device_id zynq_gpio_of_match[] = {
++	{ .compatible = "xlnx,zynq-gpio-1.0", },
++	{ /* end of table */ }
++};
++MODULE_DEVICE_TABLE(of, zynq_gpio_of_match);
++
++static struct platform_driver zynq_gpio_driver = {
++	.driver	= {
++		.name = DRIVER_NAME,
++		.owner = THIS_MODULE,
++		.pm = &zynq_gpio_dev_pm_ops,
++		.of_match_table = zynq_gpio_of_match,
++	},
++	.probe = zynq_gpio_probe,
++	.remove = zynq_gpio_remove,
++};
++
++/**
++ * zynq_gpio_init - Initial driver registration call
++ *
++ * Return: value from platform_driver_register
++ */
++static int __init zynq_gpio_init(void)
++{
++	return platform_driver_register(&zynq_gpio_driver);
++}
++postcore_initcall(zynq_gpio_init);
++
++MODULE_AUTHOR("Xilinx Inc.");
++MODULE_DESCRIPTION("Zynq GPIO driver");
++MODULE_LICENSE("GPL");
+-- 
+1.7.9.5
+
