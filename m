@@ -1,233 +1,245 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 2/3] PCI: designware: use untranslated address while
- programming ATU
-Date: Tue, 08 Jul 2014 22:17:20 +0900
-Message-ID: <001201cf9aae$f2e080a0$d8a181e0$%han@samsung.com>
-References: <1403719007-9352-1-git-send-email-kishon@ti.com>
- <1403719007-9352-3-git-send-email-kishon@ti.com> <53BBE492.4070904@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 3/5] PCI: designware: refactor host init code to re-use
+ on keystone PCI
+Date: Tue, 8 Jul 2014 09:20:49 -0400
+Message-ID: <53BBF031.5080105@ti.com>
+References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com> <1404164720-11066-4-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <53BBE492.4070904@ti.com>
-Content-language: ko
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Kishon Vijay Abraham I' <kishon@ti.com>, mohit.kumar@st.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404164720-11066-4-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Pratyush Anand <pratyush.anand@st.com>, Richard Zhu <r65037@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 08, 2014 9:31 PM, Kishon Vijay Abraham I wrote:
-> 
-> Hi Mohit, Jingoo,
-> 
-> On Wednesday 25 June 2014 11:26 PM, Kishon Vijay Abraham I wrote:
-> > In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
-> > address. So whenever the cpu issues a read/write request, the 4 most
-> > significant bits are used by L3 to determine the target controller.
-> > For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
-> > the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
-> > the outbound translation window the *base* should be programmed as 0x000_0000.
-> > Whenever we try to write to say 0x2000_0000, it will be translated to whatever
-> > we have programmed in the translation window with base as 0x000_0000.
-> >
-> > This is needed when the dt node is modelled something like below
-> > axi {
-> > 	compatible = "simple-bus";
-> > 	#size-cells = <1>;
-> > 	#address-cells = <1>;
-> > 	ranges = <0x0        0x20000000 0x10000000 // 28-bit bus
-> > 		  0x51000000 0x51000000 0x3000>;
-> > 	pcie@51000000 {
-> > 		reg = <0x1000 0x2000>, <0x51002000 0x14c>, <0x51000000 0x2000>;
-> > 		reg-names = "config", "ti_conf", "rc_dbics";
-> > 		#address-cells = <3>;
-> > 		#size-cells = <2>;
-> > 		ranges = <0x81000000 0 0          0x03000 0 0x00010000
-> > 			  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-> > 	};
-> > };
-> >
-> > Here the CPU address for configuration space is 0x20013000 and the controller
-> > address for configuration space is 0x13000. The controller address should be
-> > used while programming the ATU (in order for translation to happen properly in
-> > DRA7xx).
-> 
-> Are you okay with this patch? Can you give your Reviewed-by/Acked-by?
+Mohit, Jingoo,
 
-Sorry, I cannot understand fully what this patch does. :-(
-However, I have some questions as below.
+Thanks for the Ack for 1/5 and 2/5 of this series.
 
-1. io_mod_addr
-The 'io_mod_addr' variable is not used. Then, how about removing
-'io_mod_addr' from this patch?
+Could you also review 3/5 and 4/5 of this series and provide your Ack or 
+comments at the earliest.
 
-2. ranges
-In the case of Exynos PCIe, there is no limitation such as 28bit for
-access. Then, when there is no 'ranges' property in DT file, is there
-no side effect? I mean the compatibility with other SoC's PCIe drivers.
+Thanks and regards,
 
-3. _addr post fix
+Murali
 
-How about renaming 'cfg0_mod_addr', 'mem_mod_addr' as below?
-
- 	u64			cfg0_base;
-+	u64			cfg0_mod_base;
- 	void __iomem		*va_cfg0_base;
- 	u64			cfg1_base;
-+	u64			cfg1_mod_base;
- 	void __iomem		*va_cfg1_base;
- 	u64			io_base;
-+	u64			io_mod_base;
- 	u64			mem_base;
-+	u64			mem_mod_base;
-
-
-Best regards,
-Jingoo Han
-
-> 
-> Cheers
-> Kishon
-> >
-> > Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Mohit Kumar <mohit.kumar@st.com>
-> > Cc: Jingoo Han <jg1.han@samsung.com>
-> > Cc: Marek Vasut <marex@denx.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > ---
-> >  drivers/pci/host/pcie-designware.c |   49 ++++++++++++++++++++++++++++--------
-> >  drivers/pci/host/pcie-designware.h |    4 +++
-> >  2 files changed, 42 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> > index 0b7b455..11aba6d 100644
-> > --- a/drivers/pci/host/pcie-designware.c
-> > +++ b/drivers/pci/host/pcie-designware.c
-> > @@ -401,8 +401,15 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  	struct of_pci_range range;
-> >  	struct of_pci_range_parser parser;
-> >  	struct resource *cfg_res;
-> > -	u32 val;
-> > -	int i;
-> > +	u32 val, na, ns;
-> > +	const __be32 *addrp;
-> > +	int i, index;
-> > +
-> > +	/* Find the address cell size and the number of cells in order to get
-> > +	 * the untranslated address.
-> > +	 */
-> > +	of_property_read_u32(np, "#address-cells", &na);
-> > +	ns = of_n_size_cells(np);
-> >
-> >  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> >  	if (cfg_res) {
-> > @@ -410,6 +417,12 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  		pp->config.cfg1_size = resource_size(cfg_res)/2;
-> >  		pp->cfg0_base = cfg_res->start;
-> >  		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
-> > +
-> > +		/* Find the untranslated configuration space address */
-> > +		index = of_property_match_string(np, "reg-names", "config");
-> > +		addrp = of_get_address(np, index, false, false);
-> > +		pp->cfg0_mod_addr = of_read_number(addrp, ns);
-> > +		pp->cfg1_mod_addr = pp->cfg0_mod_addr + pp->config.cfg0_size;
-> >  	} else {
-> >  		dev_err(pp->dev, "missing *config* reg space\n");
-> >  	}
-> > @@ -435,12 +448,20 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  			pp->config.io_size = resource_size(&pp->io);
-> >  			pp->config.io_bus_addr = range.pci_addr;
-> >  			pp->io_base = range.cpu_addr;
-> > +
-> > +			/* Find the untranslated IO space address */
-> > +			pp->io_mod_addr = of_read_number(parser.range -
-> > +							 parser.np + na, ns);
-> >  		}
-> >  		if (restype == IORESOURCE_MEM) {
-> >  			of_pci_range_to_resource(&range, np, &pp->mem);
-> >  			pp->mem.name = "MEM";
-> >  			pp->config.mem_size = resource_size(&pp->mem);
-> >  			pp->config.mem_bus_addr = range.pci_addr;
-> > +
-> > +			/* Find the untranslated MEM space address */
-> > +			pp->mem_mod_addr = of_read_number(parser.range -
-> > +							  parser.np + na, ns);
-> >  		}
-> >  		if (restype == 0) {
-> >  			of_pci_range_to_resource(&range, np, &pp->cfg);
-> > @@ -448,6 +469,12 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
-> >  			pp->cfg0_base = pp->cfg.start;
-> >  			pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
-> > +
-> > +			/* Find the untranslated configuration space address */
-> > +			pp->cfg0_mod_addr = of_read_number(parser.range -
-> > +							   parser.np + na, ns);
-> > +			pp->cfg1_mod_addr = pp->cfg0_mod_addr +
-> > +					    pp->config.cfg0_size;
-> >  		}
-> >  	}
-> >
-> > @@ -522,9 +549,9 @@ static void dw_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
-> >  	/* Program viewport 0 : OUTBOUND : CFG0 */
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX0,
-> >  			  PCIE_ATU_VIEWPORT);
-> > -	dw_pcie_writel_rc(pp, pp->cfg0_base, PCIE_ATU_LOWER_BASE);
-> > -	dw_pcie_writel_rc(pp, (pp->cfg0_base >> 32), PCIE_ATU_UPPER_BASE);
-> > -	dw_pcie_writel_rc(pp, pp->cfg0_base + pp->config.cfg0_size - 1,
-> > +	dw_pcie_writel_rc(pp, pp->cfg0_mod_addr, PCIE_ATU_LOWER_BASE);
-> > +	dw_pcie_writel_rc(pp, (pp->cfg0_mod_addr >> 32), PCIE_ATU_UPPER_BASE);
-> > +	dw_pcie_writel_rc(pp, pp->cfg0_mod_addr + pp->config.cfg0_size - 1,
-> >  			  PCIE_ATU_LIMIT);
-> >  	dw_pcie_writel_rc(pp, busdev, PCIE_ATU_LOWER_TARGET);
-> >  	dw_pcie_writel_rc(pp, 0, PCIE_ATU_UPPER_TARGET);
-> > @@ -538,9 +565,9 @@ static void dw_pcie_prog_viewport_cfg1(struct pcie_port *pp, u32 busdev)
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX1,
-> >  			  PCIE_ATU_VIEWPORT);
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_TYPE_CFG1, PCIE_ATU_CR1);
-> > -	dw_pcie_writel_rc(pp, pp->cfg1_base, PCIE_ATU_LOWER_BASE);
-> > -	dw_pcie_writel_rc(pp, (pp->cfg1_base >> 32), PCIE_ATU_UPPER_BASE);
-> > -	dw_pcie_writel_rc(pp, pp->cfg1_base + pp->config.cfg1_size - 1,
-> > +	dw_pcie_writel_rc(pp, pp->cfg1_mod_addr, PCIE_ATU_LOWER_BASE);
-> > +	dw_pcie_writel_rc(pp, (pp->cfg1_mod_addr >> 32), PCIE_ATU_UPPER_BASE);
-> > +	dw_pcie_writel_rc(pp, pp->cfg1_mod_addr + pp->config.cfg1_size - 1,
-> >  			  PCIE_ATU_LIMIT);
-> >  	dw_pcie_writel_rc(pp, busdev, PCIE_ATU_LOWER_TARGET);
-> >  	dw_pcie_writel_rc(pp, 0, PCIE_ATU_UPPER_TARGET);
-> > @@ -553,9 +580,9 @@ static void dw_pcie_prog_viewport_mem_outbound(struct pcie_port *pp)
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX0,
-> >  			  PCIE_ATU_VIEWPORT);
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_TYPE_MEM, PCIE_ATU_CR1);
-> > -	dw_pcie_writel_rc(pp, pp->mem_base, PCIE_ATU_LOWER_BASE);
-> > -	dw_pcie_writel_rc(pp, (pp->mem_base >> 32), PCIE_ATU_UPPER_BASE);
-> > -	dw_pcie_writel_rc(pp, pp->mem_base + pp->config.mem_size - 1,
-> > +	dw_pcie_writel_rc(pp, pp->mem_mod_addr, PCIE_ATU_LOWER_BASE);
-> > +	dw_pcie_writel_rc(pp, (pp->mem_mod_addr >> 32), PCIE_ATU_UPPER_BASE);
-> > +	dw_pcie_writel_rc(pp, pp->mem_mod_addr + pp->config.mem_size - 1,
-> >  			  PCIE_ATU_LIMIT);
-> >  	dw_pcie_writel_rc(pp, pp->config.mem_bus_addr, PCIE_ATU_LOWER_TARGET);
-> >  	dw_pcie_writel_rc(pp, upper_32_bits(pp->config.mem_bus_addr),
-> > diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-> > index 77f592f..13828f8 100644
-> > --- a/drivers/pci/host/pcie-designware.h
-> > +++ b/drivers/pci/host/pcie-designware.h
-> > @@ -36,11 +36,15 @@ struct pcie_port {
-> >  	u8			root_bus_nr;
-> >  	void __iomem		*dbi_base;
-> >  	u64			cfg0_base;
-> > +	u64			cfg0_mod_addr;
-> >  	void __iomem		*va_cfg0_base;
-> >  	u64			cfg1_base;
-> > +	u64			cfg1_mod_addr;
-> >  	void __iomem		*va_cfg1_base;
-> >  	u64			io_base;
-> > +	u64			io_mod_addr;
-> >  	u64			mem_base;
-> > +	u64			mem_mod_addr;
-> >  	struct resource		cfg;
-> >  	struct resource		io;
-> >  	struct resource		mem;
-> >
-
+On 06/30/2014 05:45 PM, Murali Karicheri wrote:
+> This patch refactor the host controller init code to support Keystone
+> PCI controller.
+>
+> Current DW PCI host controller init code has code specific to newer
+> DW hw such as ATU port resource parse and ioremap. Conditionally
+> execute this code if DW h/w is not v3.65. Keystone PCI controller
+> is based on v3.65 DW PCI h/w and it has MSI controller implemented
+> in application space and requires different controller initialization
+> code. So factor out the MSI host init code to a separate function.
+>
+> Rename dw_pcie_host_init() to dw_pcie_common_host_init() that takes an
+> additional arg, ptr to hw_pci structure. This allows to re-use the code
+> for Keystone PCI that can now provide it's own pci hw ops and msi irq
+> ops.  dw_pcie_host_init() is now a wrapper function that calls
+> dw_pcie_common_host_init() for pci common initialization.
+>
+> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>
+> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
+> CC: Russell King<linux@arm.linux.org.uk>
+> CC: Grant Likely<grant.likely@linaro.org>
+> CC: Rob Herring<robh+dt@kernel.org>
+> CC: Mohit Kumar<mohit.kumar@st.com>
+> CC: Jingoo Han<jg1.han@samsung.com>
+> CC: Bjorn Helgaas<bhelgaas@google.com>
+> CC: Pratyush Anand<pratyush.anand@st.com>
+> CC: Richard Zhu<r65037@freescale.com>
+> CC: Kishon Vijay Abraham I<kishon@ti.com>
+> CC: Marek Vasut<marex@denx.de>
+> CC: Arnd Bergmann<arnd@arndb.de>
+> CC: Pawel Moll<pawel.moll@arm.com>
+> CC: Mark Rutland<mark.rutland@arm.com>
+> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala<galak@codeaurora.org>
+> CC: Randy Dunlap<rdunlap@infradead.org>
+> CC: Grant Likely<grant.likely@linaro.org>
+> ---
+>   drivers/pci/host/pcie-designware.c |  105 +++++++++++++++++++++++++-----------
+>   drivers/pci/host/pcie-designware.h |    3 +-
+>   2 files changed, 75 insertions(+), 33 deletions(-)
+>
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 905941c..c11e4de 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -415,19 +415,24 @@ static const struct irq_domain_ops msi_domain_ops = {
+>   	.map = dw_pcie_msi_map,
+>   };
+>
+> -int __init dw_pcie_host_init(struct pcie_port *pp)
+> +static int __init dw_pcie_common_host_init(struct pcie_port *pp,
+> +					   struct hw_pci *hw)
+>   {
+>   	struct device_node *np = pp->dev->of_node;
+>   	struct of_pci_range range;
+>   	struct of_pci_range_parser parser;
+> +	struct hw_pci *pci_hw = hw;
+>   	u32 val;
+> -	int i;
+>
+>   	if (of_pci_range_parser_init(&parser, np)) {
+>   		dev_err(pp->dev, "missing ranges property\n");
+>   		return -EINVAL;
+>   	}
+>
+> +	/* Default to dw_pci if no hw ops provided */
+> +	if (!pci_hw)
+> +		pci_hw =&dw_pci;
+> +
+>   	/* Get the I/O and memory ranges from DT */
+>   	for_each_of_pci_range(&parser,&range) {
+>   		unsigned long restype = range.flags&  IORESOURCE_TYPE_BITS;
+> @@ -467,21 +472,24 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>   		}
+>   	}
+>
+> -	pp->cfg0_base = pp->cfg.start;
+> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>   	pp->mem_base = pp->mem.start;
+> -
+> -	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> -					pp->config.cfg0_size);
+> -	if (!pp->va_cfg0_base) {
+> -		dev_err(pp->dev, "error with ioremap in function\n");
+> -		return -ENOMEM;
+> -	}
+> -	pp->va_cfg1_base = devm_ioremap(pp->dev, pp->cfg1_base,
+> -					pp->config.cfg1_size);
+> -	if (!pp->va_cfg1_base) {
+> -		dev_err(pp->dev, "error with ioremap\n");
+> -		return -ENOMEM;
+> +	if (!pp->version&  DW_HW_V3_65) {
+> +		/* Default is with ATU port. */
+> +		pp->cfg0_base = pp->cfg.start;
+> +		pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+> +
+> +		pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> +						pp->config.cfg0_size);
+> +		if (!pp->va_cfg0_base) {
+> +			dev_err(pp->dev, "error with ioremap in function\n");
+> +			return -ENOMEM;
+> +		}
+> +		pp->va_cfg1_base = devm_ioremap(pp->dev, pp->cfg1_base,
+> +						pp->config.cfg1_size);
+> +		if (!pp->va_cfg1_base) {
+> +			dev_err(pp->dev, "error with ioremap\n");
+> +			return -ENOMEM;
+> +		}
+>   	}
+>
+>   	if (of_property_read_u32(np, "num-lanes",&pp->lanes)) {
+> @@ -489,19 +497,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>   		return -EINVAL;
+>   	}
+>
+> -	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> -		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+> -					MAX_MSI_IRQS,&msi_domain_ops,
+> -					&dw_pcie_msi_chip);
+> -		if (!pp->irq_domain) {
+> -			dev_err(pp->dev, "irq domain init failed\n");
+> -			return -ENXIO;
+> -		}
+> -
+> -		for (i = 0; i<  MAX_MSI_IRQS; i++)
+> -			irq_create_mapping(pp->irq_domain, i);
+> -	}
+> -
+>   	if (pp->ops->host_init)
+>   		pp->ops->host_init(pp);
+>
+> @@ -514,10 +509,10 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>   	val |= PORT_LOGIC_SPEED_CHANGE;
+>   	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+>
+> -	dw_pci.nr_controllers = 1;
+> -	dw_pci.private_data = (void **)&pp;
+> +	pci_hw->nr_controllers = 1;
+> +	pci_hw->private_data = (void **)&pp;
+>
+> -	pci_common_init_dev(pp->dev,&dw_pci);
+> +	pci_common_init_dev(pp->dev, pci_hw);
+>   	pci_assign_unassigned_resources();
+>   #ifdef CONFIG_PCI_DOMAINS
+>   	dw_pci.domain++;
+> @@ -526,6 +521,52 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>   	return 0;
+>   }
+>
+> +/*
+> + * dw_pcie_msi_host_init() - Function to initialize msi host controller
+> + * @pp: ptr to pcie port
+> + * @msi_irqc_np: device node ptr to msi irq controller
+> + * @irq_msi_ops: ptr to MSI irq_domain_ops struct
+> + *
+> + * Function register irq domain for msi irq controller and create mappings
+> + * for MSI irqs.
+> + */
+> +static int dw_pcie_msi_host_init(struct pcie_port *pp,
+> +				 struct device_node *msi_irqc_np,
+> +				 const struct irq_domain_ops *msi_irq_ops)
+> +{
+> +	const struct irq_domain_ops *msi_irq_domain_ops = msi_irq_ops;
+> +	int i;
+> +
+> +	/* Default to  msi_domain_ops if no msi irq domain ops provided */
+> +	if (!msi_irq_domain_ops)
+> +		msi_irq_domain_ops =&msi_domain_ops;
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		pp->irq_domain = irq_domain_add_linear(msi_irqc_np,
+> +					MAX_MSI_IRQS, msi_irq_domain_ops,
+> +					&dw_pcie_msi_chip);
+> +		if (!pp->irq_domain) {
+> +			dev_err(pp->dev, "irq domain init failed\n");
+> +			return -ENXIO;
+> +		}
+> +
+> +		for (i = 0; i<  MAX_MSI_IRQS; i++)
+> +			irq_create_mapping(pp->irq_domain, i);
+> +	}
+> +	return 0;
+> +}
+> +
+> +int __init dw_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	int ret;
+> +
+> +	ret = dw_pcie_msi_host_init(pp, pp->dev->of_node, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return dw_pcie_common_host_init(pp, NULL);
+> +}
+> +
+>   static void dw_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
+>   {
+>   	/* Program viewport 0 : OUTBOUND : CFG0 */
+> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+> index 387f69e..db0260f 100644
+> --- a/drivers/pci/host/pcie-designware.h
+> +++ b/drivers/pci/host/pcie-designware.h
+> @@ -51,6 +51,8 @@ struct pcie_port {
+>   	int			msi_irq;
+>   	struct irq_domain	*irq_domain;
+>   	unsigned long		msi_data;
+> +#define DW_HW_V3_65		BIT(0)
+> +	u32			version;
+>   	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+>   };
+>
+> @@ -79,5 +81,4 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>   int dw_pcie_link_up(struct pcie_port *pp);
+>   void dw_pcie_setup_rc(struct pcie_port *pp);
+>   int dw_pcie_host_init(struct pcie_port *pp);
+> -
+>   #endif /* _PCIE_DESIGNWARE_H */
