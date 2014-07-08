@@ -1,36 +1,40 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 3/3] arm: dts: dra7: fixup qspi entry
-Date: Tue,  8 Jul 2014 20:40:52 +0200
-Message-ID: <1404844852-19980-3-git-send-email-bigeasy@linutronix.de>
-References: <1404844852-19980-1-git-send-email-bigeasy@linutronix.de>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1404844852-19980-1-git-send-email-bigeasy@linutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for pci_host_bridge.
+Date: Tue, 8 Jul 2014 12:41:50 -0600
+Message-ID: <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com> <20140708005954.GC22939@google.com>
+ <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The core complains that the number 343 is too large. The older code has
-here 124. This avoids the warning, the driver hasn't been tested.
+On Tue, Jul 8, 2014 at 4:46 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Tue, Jul 08, 2014 at 01:59:54AM +0100, Bjorn Helgaas wrote:
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- arch/arm/boot/dts/dra7.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> I wonder if it would help to make a weak pci_domain_nr() function that
+>> returns "bridge->domain_nr".  Then each arch could individually drop its
+>> pci_domain_nr() definition as it was converted, e.g., something like this:
+>>
+>>   - Convert every arch pci_domain_nr() from a #define to a non-inline
+>>     function
+>>   - Add bridge.domain_nr, initialized from pci_domain_nr()
+>>   - Add a weak generic pci_domain_nr() that returns bridge.domain_nr
+>>   - Add a way to create a host bridge in a specified domain, so we can
+>>     initialize bridge.domain_nr without using pci_domain_nr()
+>>   - Convert each arch to use the new creation mechanism and drop its
+>>     pci_domain_nr() implementation
+>
+> I will try to propose a patch implementing this.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index daf7d36..1529bca 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -821,7 +821,7 @@
- 			clocks = <&qspi_gfclk_div>;
- 			clock-names = "fck";
- 			num-cs = <4>;
--			interrupts = <0 343 0x4>;
-+			interrupts = <0 124 0x4>;
- 			status = "disabled";
- 		};
- 
--- 
-2.0.1
+I think this is more of an extra credit, cleanup sort of thing.  I
+don't think it advances your primary goal of (I think) getting arm64
+PCI support in.  So my advice is to not worry about unifying domain
+handling until later.
 
+Bjorn
