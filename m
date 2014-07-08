@@ -1,264 +1,82 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v3 3/5] PCI: designware: refactor host init code to re-use
- on keystone PCI
-Date: Tue, 08 Jul 2014 22:31:27 +0900
-Message-ID: <001301cf9ab0$ebb8c470$c32a4d50$%han@samsung.com>
-References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
- <1404164720-11066-4-git-send-email-m-karicheri2@ti.com>
- <53BBF031.5080105@ti.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v5] powerpc/powernv: hwmon driver for power, fan rpm,
+ voltage and temperature
+Date: Tue, 08 Jul 2014 06:34:43 -0700
+Message-ID: <53BBF373.6020703@roeck-us.net>
+References: <20140708090315.3866.15604.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <53BBF031.5080105@ti.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Murali Karicheri' <m-karicheri2@ti.com>, 'Mohit Kumar' <mohit.kumar@st.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, 'Russell King' <linux@arm.linux.org.uk>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Richard Zhu' <r65037@freescale.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140708090315.3866.15604.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, sbhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 08, 2014 10:21 PM, Murali Karicheri wrote:
-> 
-> Mohit, Jingoo,
-> 
-> Thanks for the Ack for 1/5 and 2/5 of this series.
-> 
-> Could you also review 3/5 and 4/5 of this series and provide your Ack or
-> comments at the earliest.
+On 07/08/2014 02:08 AM, Neelesh Gupta wrote:
+> This patch adds basic kernel support for reading power values, fan
+> speed rpm, voltage and temperature data on powernv platforms which
+> will be exported to user space through sysfs interface.
+>
+> Test results:
+> -------------
+> [root@tul163p1 ~]# sensors
+> ibmpowernv-isa-0000
+> Adapter: ISA adapter
+> fan1:        5465 RPM  (min =3D    0 RPM)
+> fan2:        5152 RPM  (min =3D    0 RPM)
+> fan3:        5521 RPM  (min =3D    0 RPM)
+> fan4:        4891 RPM  (min =3D    0 RPM)
+> fan5:           0 RPM  (min =3D    0 RPM)
+> fan6:           0 RPM  (min =3D    0 RPM)
+> fan7:        7480 RPM  (min =3D    0 RPM)
+> fan8:        7944 RPM  (min =3D    0 RPM)
+> temp1:        +39.0=C2=B0C  (high =3D  +0.0=C2=B0C)
+> power1:      190.00 W
+>
+> [root@tul163p1 ~]# ls /sys/devices/platform/
+> alarmtimer  ibmpowernv.0  power  rtc-generic  serial8250  uevent
+> [root@tul163p1 ~]# ls /sys/devices/platform/ibmpowernv.0/hwmon/hwmon0=
+/
+> device	    fan2_min	fan4_min    fan6_min	fan8_min   power
+> fan1_fault  fan3_fault	fan5_fault  fan7_fault	in1_fault  power1_input
+> fan1_input  fan3_input	fan5_input  fan7_input	in2_fault  subsystem
+> fan1_min    fan3_min	fan5_min    fan7_min	in3_fault  temp1_input
+> fan2_fault  fan4_fault	fan6_fault  fan8_fault	in4_fault  temp1_max
+> fan2_input  fan4_input	fan6_input  fan8_input	name	   uevent
+> [root@tul163p1 ~]# ls /sys/class/hwmon/hwmon0/
+> device	    fan2_min	fan4_min    fan6_min	fan8_min   power
+> fan1_fault  fan3_fault	fan5_fault  fan7_fault	in1_fault  power1_input
+> fan1_input  fan3_input	fan5_input  fan7_input	in2_fault  subsystem
+> fan1_min    fan3_min	fan5_min    fan7_min	in3_fault  temp1_input
+> fan2_fault  fan4_fault	fan6_fault  fan8_fault	in4_fault  temp1_max
+> fan2_input  fan4_input	fan6_input  fan8_input	name	   uevent
+> [root@tul163p1 ~]#
+>
+> Signed-off-by: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
-Sorry, I cannot review 3/5 and 4/5.
+Applied to -next, with a minor cleanup.
 
-For a few years, I have done mainline work without any payment,
-as other hobbyists have done. It means that it is very hard to
-spend reviewing the patch from mailing list. Currently, I am up to
-my neck in work. In the case of 3/5 and 4/5 of your patchset,
-it requires me to spend a lot of time.
+Thanks for your patience,
 
-I will go the extra miles to review all patches including your
-patches. But, I am not sure that I can do it. Thank you.
+Guenter
 
-Best regards,
-Jingoo Han
-> 
-> Thanks and regards,
-> 
-> Murali
-> 
-> On 06/30/2014 05:45 PM, Murali Karicheri wrote:
-> > This patch refactor the host controller init code to support Keystone
-> > PCI controller.
-> >
-> > Current DW PCI host controller init code has code specific to newer
-> > DW hw such as ATU port resource parse and ioremap. Conditionally
-> > execute this code if DW h/w is not v3.65. Keystone PCI controller
-> > is based on v3.65 DW PCI h/w and it has MSI controller implemented
-> > in application space and requires different controller initialization
-> > code. So factor out the MSI host init code to a separate function.
-> >
-> > Rename dw_pcie_host_init() to dw_pcie_common_host_init() that takes an
-> > additional arg, ptr to hw_pci structure. This allows to re-use the code
-> > for Keystone PCI that can now provide it's own pci hw ops and msi irq
-> > ops.  dw_pcie_host_init() is now a wrapper function that calls
-> > dw_pcie_common_host_init() for pci common initialization.
-> >
-> > Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
-> >
-> > CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
-> > CC: Russell King<linux@arm.linux.org.uk>
-> > CC: Grant Likely<grant.likely@linaro.org>
-> > CC: Rob Herring<robh+dt@kernel.org>
-> > CC: Mohit Kumar<mohit.kumar@st.com>
-> > CC: Jingoo Han<jg1.han@samsung.com>
-> > CC: Bjorn Helgaas<bhelgaas@google.com>
-> > CC: Pratyush Anand<pratyush.anand@st.com>
-> > CC: Richard Zhu<r65037@freescale.com>
-> > CC: Kishon Vijay Abraham I<kishon@ti.com>
-> > CC: Marek Vasut<marex@denx.de>
-> > CC: Arnd Bergmann<arnd@arndb.de>
-> > CC: Pawel Moll<pawel.moll@arm.com>
-> > CC: Mark Rutland<mark.rutland@arm.com>
-> > CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
-> > CC: Kumar Gala<galak@codeaurora.org>
-> > CC: Randy Dunlap<rdunlap@infradead.org>
-> > CC: Grant Likely<grant.likely@linaro.org>
-> > ---
-> >   drivers/pci/host/pcie-designware.c |  105 +++++++++++++++++++++++++-----------
-> >   drivers/pci/host/pcie-designware.h |    3 +-
-> >   2 files changed, 75 insertions(+), 33 deletions(-)
-> >
-> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> > index 905941c..c11e4de 100644
-> > --- a/drivers/pci/host/pcie-designware.c
-> > +++ b/drivers/pci/host/pcie-designware.c
-> > @@ -415,19 +415,24 @@ static const struct irq_domain_ops msi_domain_ops = {
-> >   	.map = dw_pcie_msi_map,
-> >   };
-> >
-> > -int __init dw_pcie_host_init(struct pcie_port *pp)
-> > +static int __init dw_pcie_common_host_init(struct pcie_port *pp,
-> > +					   struct hw_pci *hw)
-> >   {
-> >   	struct device_node *np = pp->dev->of_node;
-> >   	struct of_pci_range range;
-> >   	struct of_pci_range_parser parser;
-> > +	struct hw_pci *pci_hw = hw;
-> >   	u32 val;
-> > -	int i;
-> >
-> >   	if (of_pci_range_parser_init(&parser, np)) {
-> >   		dev_err(pp->dev, "missing ranges property\n");
-> >   		return -EINVAL;
-> >   	}
-> >
-> > +	/* Default to dw_pci if no hw ops provided */
-> > +	if (!pci_hw)
-> > +		pci_hw =&dw_pci;
-> > +
-> >   	/* Get the I/O and memory ranges from DT */
-> >   	for_each_of_pci_range(&parser,&range) {
-> >   		unsigned long restype = range.flags&  IORESOURCE_TYPE_BITS;
-> > @@ -467,21 +472,24 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >   		}
-> >   	}
-> >
-> > -	pp->cfg0_base = pp->cfg.start;
-> > -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
-> >   	pp->mem_base = pp->mem.start;
-> > -
-> > -	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
-> > -					pp->config.cfg0_size);
-> > -	if (!pp->va_cfg0_base) {
-> > -		dev_err(pp->dev, "error with ioremap in function\n");
-> > -		return -ENOMEM;
-> > -	}
-> > -	pp->va_cfg1_base = devm_ioremap(pp->dev, pp->cfg1_base,
-> > -					pp->config.cfg1_size);
-> > -	if (!pp->va_cfg1_base) {
-> > -		dev_err(pp->dev, "error with ioremap\n");
-> > -		return -ENOMEM;
-> > +	if (!pp->version&  DW_HW_V3_65) {
-> > +		/* Default is with ATU port. */
-> > +		pp->cfg0_base = pp->cfg.start;
-> > +		pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
-> > +
-> > +		pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
-> > +						pp->config.cfg0_size);
-> > +		if (!pp->va_cfg0_base) {
-> > +			dev_err(pp->dev, "error with ioremap in function\n");
-> > +			return -ENOMEM;
-> > +		}
-> > +		pp->va_cfg1_base = devm_ioremap(pp->dev, pp->cfg1_base,
-> > +						pp->config.cfg1_size);
-> > +		if (!pp->va_cfg1_base) {
-> > +			dev_err(pp->dev, "error with ioremap\n");
-> > +			return -ENOMEM;
-> > +		}
-> >   	}
-> >
-> >   	if (of_property_read_u32(np, "num-lanes",&pp->lanes)) {
-> > @@ -489,19 +497,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >   		return -EINVAL;
-> >   	}
-> >
-> > -	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > -		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
-> > -					MAX_MSI_IRQS,&msi_domain_ops,
-> > -					&dw_pcie_msi_chip);
-> > -		if (!pp->irq_domain) {
-> > -			dev_err(pp->dev, "irq domain init failed\n");
-> > -			return -ENXIO;
-> > -		}
-> > -
-> > -		for (i = 0; i<  MAX_MSI_IRQS; i++)
-> > -			irq_create_mapping(pp->irq_domain, i);
-> > -	}
-> > -
-> >   	if (pp->ops->host_init)
-> >   		pp->ops->host_init(pp);
-> >
-> > @@ -514,10 +509,10 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >   	val |= PORT_LOGIC_SPEED_CHANGE;
-> >   	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
-> >
-> > -	dw_pci.nr_controllers = 1;
-> > -	dw_pci.private_data = (void **)&pp;
-> > +	pci_hw->nr_controllers = 1;
-> > +	pci_hw->private_data = (void **)&pp;
-> >
-> > -	pci_common_init_dev(pp->dev,&dw_pci);
-> > +	pci_common_init_dev(pp->dev, pci_hw);
-> >   	pci_assign_unassigned_resources();
-> >   #ifdef CONFIG_PCI_DOMAINS
-> >   	dw_pci.domain++;
-> > @@ -526,6 +521,52 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >   	return 0;
-> >   }
-> >
-> > +/*
-> > + * dw_pcie_msi_host_init() - Function to initialize msi host controller
-> > + * @pp: ptr to pcie port
-> > + * @msi_irqc_np: device node ptr to msi irq controller
-> > + * @irq_msi_ops: ptr to MSI irq_domain_ops struct
-> > + *
-> > + * Function register irq domain for msi irq controller and create mappings
-> > + * for MSI irqs.
-> > + */
-> > +static int dw_pcie_msi_host_init(struct pcie_port *pp,
-> > +				 struct device_node *msi_irqc_np,
-> > +				 const struct irq_domain_ops *msi_irq_ops)
-> > +{
-> > +	const struct irq_domain_ops *msi_irq_domain_ops = msi_irq_ops;
-> > +	int i;
-> > +
-> > +	/* Default to  msi_domain_ops if no msi irq domain ops provided */
-> > +	if (!msi_irq_domain_ops)
-> > +		msi_irq_domain_ops =&msi_domain_ops;
-> > +
-> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +		pp->irq_domain = irq_domain_add_linear(msi_irqc_np,
-> > +					MAX_MSI_IRQS, msi_irq_domain_ops,
-> > +					&dw_pcie_msi_chip);
-> > +		if (!pp->irq_domain) {
-> > +			dev_err(pp->dev, "irq domain init failed\n");
-> > +			return -ENXIO;
-> > +		}
-> > +
-> > +		for (i = 0; i<  MAX_MSI_IRQS; i++)
-> > +			irq_create_mapping(pp->irq_domain, i);
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > +int __init dw_pcie_host_init(struct pcie_port *pp)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = dw_pcie_msi_host_init(pp, pp->dev->of_node, NULL);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return dw_pcie_common_host_init(pp, NULL);
-> > +}
-> > +
-> >   static void dw_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
-> >   {
-> >   	/* Program viewport 0 : OUTBOUND : CFG0 */
-> > diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-> > index 387f69e..db0260f 100644
-> > --- a/drivers/pci/host/pcie-designware.h
-> > +++ b/drivers/pci/host/pcie-designware.h
-> > @@ -51,6 +51,8 @@ struct pcie_port {
-> >   	int			msi_irq;
-> >   	struct irq_domain	*irq_domain;
-> >   	unsigned long		msi_data;
-> > +#define DW_HW_V3_65		BIT(0)
-> > +	u32			version;
-> >   	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
-> >   };
-> >
-> > @@ -79,5 +81,4 @@ void dw_pcie_msi_init(struct pcie_port *pp);
-> >   int dw_pcie_link_up(struct pcie_port *pp);
-> >   void dw_pcie_setup_rc(struct pcie_port *pp);
-> >   int dw_pcie_host_init(struct pcie_port *pp);
-> > -
-> >   #endif /* _PCIE_DESIGNWARE_H */
+
+> diff --git a/Documentation/hwmon/ibmpowernv b/Documentation/hwmon/ibm=
+powernv
+> new file mode 100644
+> index 0000000..644245a
+> --- /dev/null
+> +++ b/Documentation/hwmon/ibmpowernv
+> @@ -0,0 +1,41 @@
+> +Kernel Driver IBMPOWENV
+
+s/IBMPOWENV/IBMPOWERNV/
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
