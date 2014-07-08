@@ -1,70 +1,32 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: a case for a common efuse API?
-Date: Tue, 08 Jul 2014 13:00:23 -0700
-Message-ID: <53BC4DD7.20906@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: a case for a common efuse API?
+Date: Tue, 8 Jul 2014 13:26:34 -0700
+Message-ID: <CAOesGMipEeB9SxF7dsmwEXi6+_vJvaikFO5yUsqr6fxp8pTv1w@mail.gmail.com>
+References: <53BC4DD7.20906@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <53BC4DD7.20906@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jul 8, 2014 at 1:00 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
 
-On MSM chips we have some efuses (called qfprom) where we store things
-like calibration data, speed bins, etc. We need to read out data from
-the efuses in various drivers like the cpufreq, thermal, etc. This
-essentially boils down to a bunch of readls on the efuse from a handful
-of different drivers. In devicetree this looks a little odd because
-these drivers end up having an extra reg property (or two) that points
-to a register in the efuse and some length, i.e you see this:
+> I added Tegra folks because I see that on Tegra this hardware is exposed
+> via an SoC specific API, tegra_fuse_readl(), and an associated driver in
+> drivers/misc/fuse/tegra/. Unfortunately I don't see any users of the API
+> outside of the speedo code in the same directory and the sysfs bin
+> attribute that may or may not be in use by some userspace code.
 
-	thermal-sensor@34000 {
-		compatible = "sensor";
-		reg = <0x34000 0x1000>, <0x10018 0xc>;
-		reg-names = "sensor", "efuse_calib";
-	}
+Note that I also turned down the pull request that houses the code
+under drivers/misc.
 
-
-I imagine in DT we want something more like this:
-
-	efuse: efuse@10000 {
-		compatible = "efuse";
-		reg = <0x10000 0x1000>;
-	}
-
-	thermal-sensor@34000 {
-		compatible = "sensor";
-		reg = <0x34000 0x1000>;
-		efuse = <&efuse 0x18>;
-	}
+This is the type of stuff we've been talking about needing a home for
+somewhere, and drivers/soc was one of the ones mentioned for that. I
+really don't like adding dependencies on a random driver from platform
+code, for example.
 
 
-Where we can point to the efuse and give an address offset. From code we
-could then call some efuse_read() function to read the sensor's
-calibration data.
-
-It's been suggested that we use syscon for this, but I wonder if that is
-the right thing to do. With a syscon you're usually writing some
-registers that got lumped together with other registers that aren't
-directly related to your driver. It doesn't seem like syscon is made for
-reading fuses or other things like eeproms. Maybe I'm wrong though.
-
-Using syscon would probably work if we could add a way to point to
-offsets within the syscon node (the 0x18 part in the example). In my
-specific use-case the calibration data may have different offsets
-depending on which SoC the hardware is instantiated in so we could also
-make syscon work if the compatible field for the sensor node indicates
-which SoC it is.
-
-I added Tegra folks because I see that on Tegra this hardware is exposed
-via an SoC specific API, tegra_fuse_readl(), and an associated driver in
-drivers/misc/fuse/tegra/. Unfortunately I don't see any users of the API
-outside of the speedo code in the same directory and the sysfs bin
-attribute that may or may not be in use by some userspace code.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-Olof
