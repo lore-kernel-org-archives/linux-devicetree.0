@@ -1,128 +1,91 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v2 1/1] can: m_can: add Bosch M_CAN controller support
-Date: Tue, 08 Jul 2014 12:41:41 +0200
-Message-ID: <53BBCAE5.7040404@pengutronix.de>
-References: <1404474812-16855-1-git-send-email-b29396@freescale.com> <53B69C55.8010901@pengutronix.de> <20140707071040.GA18505@shlinux1.ap.freescale.net> <53BA7543.70901@pengutronix.de> <20140708103009.GA21754@shlinux1.ap.freescale.net>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 2/9] pci: Export find_pci_host_bridge() function.
+Date: Tue, 8 Jul 2014 11:42:48 +0100
+Message-ID: <20140708104248.GB6501@e106497-lin.cambridge.arm.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-3-git-send-email-Liviu.Dudau@arm.com>
+ <20140707232749.GA22939@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="UCHoFrhDcuJdhrwOPfmvl2U67a26lcpfO"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20140708103009.GA21754@shlinux1.ap.freescale.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140707232749.GA22939-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---UCHoFrhDcuJdhrwOPfmvl2U67a26lcpfO
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 08, 2014 at 12:27:49AM +0100, Bjorn Helgaas wrote:
+> On Tue, Jul 01, 2014 at 07:43:27PM +0100, Liviu Dudau wrote:
+> > This is a useful function and we should make it visible outside the
+> > generic PCI code. Export it as a GPL symbol.
+> >=20
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> > Tested-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+> > ---
+> >  drivers/pci/host-bridge.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> > index 0e5f3c9..36c669e 100644
+> > --- a/drivers/pci/host-bridge.c
+> > +++ b/drivers/pci/host-bridge.c
+> > @@ -16,12 +16,13 @@ static struct pci_bus *find_pci_root_bus(struct=
+ pci_bus *bus)
+> >  	return bus;
+> >  }
+> > =20
+> > -static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus=
+ *bus)
+> > +struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+> >  {
+> >  	struct pci_bus *root_bus =3D find_pci_root_bus(bus);
+> > =20
+> >  	return to_pci_host_bridge(root_bus->bridge);
+> >  }
+> > +EXPORT_SYMBOL_GPL(find_pci_host_bridge);
+>=20
+> There's nothing in this series that uses find_pci_host_bridge(), so=20
+> how about we just wait until we have something that needs it?
+>=20
+> Also, if/when we export this, I'd prefer a name that starts with "pci=
+_"
+> as most of the other interfaces do.
 
-On 07/08/2014 12:30 PM, Dong Aisheng wrote:
->> Regarding the mram and the offsets:
->>
->>> 	fifo_addr =3D priv->mram_base + priv->rxf0_off + fgi * RXF0_ELEMENT_=
-SIZE;
->>> 	fifo_addr =3D priv->mram_base + priv->mram_off + priv->txb_off;
->>
->> Why is rxf0_off used without the mram_off and txb_off with the mram_of=
-f?
->> Can you please test your driver with a mram offset !=3D in your DT.
->>
->> If I understand the code in m_can_of_parse_mram() correctly the
->> individual *_off are already offsets to the *mram_base, so mram_off
->> should not be used within the driver.
->=20
-> Good catch!
-> You're right! I aslo found this recently!
-> txb_off already includes the mram_off so should not plus mram_off again=
-=2E
-> The former test did not find it because it's still not exceed the 16K r=
-am
-> size for m_can0. But m_can1 has such issue.
->=20
->> I even think mram_off should be removed from the priv.
->=20
-> Right, i also think so.
->=20
-> It is used for debug information formerly that we need mram_off
-> to calculate each element address in the fifo.
->=20
-> By removing mram_off, i'm going to change the debug information to:
-> dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 %x %d =
-rxf1 %x %d rxb %x %d txe %x %d txb %x %d\n",
-> 	priv->mram_base, priv->sidf_off, priv->sidf_elems,
-> 	priv->xidf_off, priv->xidf_elems, priv->rxf0_off,
-> 	priv->rxf0_elems, priv->rxf1_off, priv->rxf1_elems,
-> 	priv->rxb_off, priv->rxb_elems, priv->txe_off,
-> 	priv->txe_elems, priv->txb_off, priv->txb_elems);
->=20
-> The annoying thing is the line has to be a much bigger one to avoid
-> checkpatch warning of "WARNING: quoted string split across lines".
->=20
-> What's your suggestion for such issue?
-> Keeping the big line or split into two lines and leave checkpatch warni=
-ng there?
+Understood.
 
-The idea behind the warning is, that you can grep for error messages
-better, as normal grep wouldn't find an error string which spans two
-lines. So make it a long line.
+I was using the function in the other patch series that adds PCIe suppo=
+rt to arm64
+in order to provide a pci_domain_nr() implementation. But I might not n=
+eed it
+in the end if I go ahead with separating pci_host_bridge creation from =
+bus
+creation.
 
->> Do the *_off and *_elems fit into a u8 or u16? If
->> so it makes sense to convert the priv accordingly.
->>
->=20
-> Yes, *_off fit into u16 since MRAM has a maximum of 4352 words(17K).
-> And *_elems fit into u8 since the max number is 128.
-> I will change them accordingly.
->=20
->> What about putting the offset and the number of elements into a struct=
+Best regards,
+Liviu
 
->> and make use an array for rxf{0,1}?
->>
 >=20
-> You mean something like below?
-> struct mram_cfg {
-> 	u16 off;
-> 	u8  elements;
-> };
+> >  void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
+> >  				 void (*release_fn)(struct pci_host_bridge *),
+> > --=20
+> > 2.0.0
+> >=20
 >=20
-> struct m_can_priv {
-> 	........
->=20
->         struct mram_cfg sidf;
->         struct mram_cfg xidf;
->         struct mram_cfg rxf0;
->         struct mram_cfg rxf1;
-
-struct mram_cfg rxf[2];
-
-> 	......
->         struct mram_cfg txb;
-> };
-
-Marc
 
 --=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 
-
---UCHoFrhDcuJdhrwOPfmvl2U67a26lcpfO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlO7yuUACgkQjTAFq1RaXHOA6QCghfzpdimUOFm0C59x3mWizPvb
-euUAoJcoaeZUuhGRHPsLOxOKfb/PP7Gj
-=tKj1
------END PGP SIGNATURE-----
-
---UCHoFrhDcuJdhrwOPfmvl2U67a26lcpfO--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
