@@ -1,58 +1,223 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 6/7] regulator: tps65218: Add get_voltage ops for
- dcdc5 and dcdc6
-Date: Tue, 8 Jul 2014 16:11:26 +0200
-Message-ID: <20140708141126.GW30458@sirena.org.uk>
-References: <1404814597-4404-1-git-send-email-j-keerthy@ti.com>
- <1404814597-4404-7-git-send-email-j-keerthy@ti.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display Controller
+ support
+Date: Tue, 8 Jul 2014 16:37:31 +0200
+Message-ID: <20140708163731.6693a883@bbrezillon>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
+ <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
+ <20140708092348.4ecdbb8f@bbrezillon>
+ <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MjBORTcaENZKFEO1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404814597-4404-7-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 8 Jul 2014 08:49:41 -0400
+Rob Clark <robdclark@gmail.com> wrote:
 
---MjBORTcaENZKFEO1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Jul 8, 2014 at 3:23 AM, Boris BREZILLON
+> <boris.brezillon@free-electrons.com> wrote:
+> > Hello Rob,
+> >
+> > On Mon, 7 Jul 2014 23:45:54 -0400
+> > Rob Clark <robdclark@gmail.com> wrote:
+> >
+> >> On Mon, Jul 7, 2014 at 12:42 PM, Boris BREZILLON
+> >> <boris.brezillon@free-electrons.com> wrote:
+> >> > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
+> >> > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
+> >> > controller device.
+> >> >
+> >> > This display controller supports at least one primary plane and might
+> >> > provide several overlays and an hardware cursor depending on the IP
+> >> > version.
+> >> >
+> >> > At the moment, this driver only implements an RGB connector to interface
+> >> > with LCD panels, but support for other kind of external devices (like DRM
+> >> > bridges) might be added later.
+> >> >
+> >> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> >> > ---
+> >> >  drivers/gpu/drm/Kconfig                         |   2 +
+> >> >  drivers/gpu/drm/Makefile                        |   1 +
+> >> >  drivers/gpu/drm/atmel-hlcdc/Kconfig             |  11 +
+> >> >  drivers/gpu/drm/atmel-hlcdc/Makefile            |   7 +
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  | 469 +++++++++++++++
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 474 +++++++++++++++
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    | 210 +++++++
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c | 706 +++++++++++++++++++++++
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h | 422 ++++++++++++++
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c | 351 ++++++++++++
+> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 729 ++++++++++++++++++++++++
+> >> >  11 files changed, 3382 insertions(+)
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c
+> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+> >> >
+> >> > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> >> > index d1cc2f6..df6f0c1 100644
+> >> > --- a/drivers/gpu/drm/Kconfig
+> >> > +++ b/drivers/gpu/drm/Kconfig
+> >> > @@ -182,6 +182,8 @@ source "drivers/gpu/drm/cirrus/Kconfig"
+> >
+> > [...]
+> >
+> >> > +
+> >> > +/**
+> >> > + * Atmel HLCDC Plane properties.
+> >> > + *
+> >> > + * This structure stores plane property definitions.
+> >> > + *
+> >> > + * @alpha: alpha blending (or transparency) property
+> >> > + * @csc: YUV to RGB conversion factors property
+> >> > + */
+> >> > +struct atmel_hlcdc_plane_properties {
+> >> > +       struct drm_property *alpha;
+> >> > +       struct drm_property *csc;
+> >>
+> >> appears like csc is not used yet, so I suppose you can drop it for
+> >> now..  when you do add it, don't forget to update drm.tmp.  But for
+> >> now it at least makes review easier when the driver doesn't add new
+> >> userspace interfaces :-)
+> >
+> >
+> > Sure, I guess this is a leftover from another patch I made to add Color
+> > Space Conversion configuration.
+> >
+> > I'll remove it for the next version.
+> >
+> >>
+> >> > +};
+> >> > +
+> >> > +/**
+> >> > + * Atmel HLCDC Plane.
+> >> > + *
+> >> > + * @base: base DRM plane structure
+> >> > + * @layer: HLCDC layer structure
+> >> > + * @properties: pointer to the property definitions structure
+> >> > + * @alpha: current alpha blending (or transparency) status
+> >> > + */
+> >> > +struct atmel_hlcdc_plane {
+> >> > +       struct drm_plane base;
+> >> > +       struct atmel_hlcdc_layer layer;
+> >> > +       struct atmel_hlcdc_plane_properties *properties;
+> >> > +};
+> >> > +
+> >> > +static inline struct atmel_hlcdc_plane *
+> >> > +drm_plane_to_atmel_hlcdc_plane(struct drm_plane *p)
+> >> > +{
+> >> > +       return container_of(p, struct atmel_hlcdc_plane, base);
+> >> > +}
+> >> > +
+> >> > +static inline struct atmel_hlcdc_plane *
+> >> > +atmel_hlcdc_layer_to_plane(struct atmel_hlcdc_layer *l)
+> >> > +{
+> >> > +       return container_of(l, struct atmel_hlcdc_plane, layer);
+> >> > +}
+> >> > +
+> >> > +/**
+> >> > + * Atmel HLCDC Plane update request structure.
+> >> > + *
+> >> > + * @crtc_x: x position of the plane relative to the CRTC
+> >> > + * @crtc_y: y position of the plane relative to the CRTC
+> >> > + * @crtc_w: visible width of the plane
+> >> > + * @crtc_h: visible height of the plane
+> >> > + * @src_x: x buffer position
+> >> > + * @src_y: y buffer position
+> >> > + * @src_w: buffer width
+> >> > + * @src_h: buffer height
+> >> > + * @pixel_format: pixel format
+> >> > + * @gems: GEM object object containing image buffers
+> >> > + * @offsets: offsets to apply to the GEM buffers
+> >> > + * @pitches: line size in bytes
+> >> > + * @crtc: crtc to display on
+> >> > + * @finished: finished callback
+> >> > + * @finished_data: data passed to the finished callback
+> >> > + * @bpp: bytes per pixel deduced from pixel_format
+> >> > + * @xstride: value to add to the pixel pointer between each line
+> >> > + * @pstride: value to add to the pixel pointer between each pixel
+> >> > + * @nplanes: number of planes (deduced from pixel_format)
+> >> > + */
+> >> > +struct atmel_hlcdc_plane_update_req {
+> >> > +       int crtc_x;
+> >> > +       int crtc_y;
+> >> > +       unsigned int crtc_w;
+> >> > +       unsigned int crtc_h;
+> >> > +       uint32_t src_x;
+> >> > +       uint32_t src_y;
+> >> > +       uint32_t src_w;
+> >> > +       uint32_t src_h;
+> >> > +       uint32_t pixel_format;
+> >> > +       struct drm_gem_cma_object *gems[ATMEL_HLCDC_MAX_PLANES];
+> >> > +       unsigned int offsets[ATMEL_HLCDC_MAX_PLANES];
+> >> > +       unsigned int pitches[ATMEL_HLCDC_MAX_PLANES];
+> >>
+> >> tbh, I've only looked closely, but I don't completely follow all the
+> >> layering here..  I wonder if we'd be better off just moving 'struct
+> >> drm_fb_cma' to header file so you could get the gem objects / pixel
+> >> fmt / width / height directly from the fb object (and then you can
+> >> reference count things at the fb level, rather than at the individual
+> >> gem obj level, too)
+> >>
+> >
+> > Actually, the HW cursor is a drm_plane too, and in this case I cannot
+> > retrieve a drm_fb_cma object, but just a single GEM object (see
+> > atmel_hlcdc_crtc_cursor_set function in atmel_hlcdc_crtc.c).
+> 
+> oh, right..  well maybe for the cursor case it would be possible to
+> wrap up the gem bo with an internally created fb?  Not sure if that
+> ends up simplifying things or not, so it is definitely your call.  But
+> at least my experience with other drivers (that did not use a plane as
+> a cursor internally) was that I could simplify things after fb gained
+> refcnt'ing.
 
-On Tue, Jul 08, 2014 at 03:46:36PM +0530, Keerthy wrote:
+Unless I'm missing something, I'd say moving to fb objects instead of
+GEM objects won't simplify the code much (I'm already refcnt'ing GEM
+objects when launching a DMA transfer for a plane update).
 
-> +static int tps65218_pmic_dcdc56_get_voltage(struct regulator_dev *dev)
-> +{
-> +	struct tps65218 *tps = rdev_get_drvdata(dev);
-> +	unsigned int rid = rdev_get_id(dev);
-> +
-> +	return tps->info[rid]->min_uV;
-> +}
+The only benefit I can see is consistency with other drivers (which in
+fact is a good point).
+Indeed atmel_hlcdc_plane_update_req redefines some fields which are
+already availables in drm_fb_cma or drm_framebuffer:
 
-Set fixed_uV in the descriptor.
+- gems (called objs in drm_fb_cma)
+- pixel_format
+- pitches (offsets must be redefined because it is modified in
+  atmel_hlcdc_plane_prepare_update_req)
 
---MjBORTcaENZKFEO1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Anyway, I'll give it a try.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Thanks for your review.
 
-iQIcBAEBAgAGBQJTu/wGAAoJELSic+t+oim9lqIP/RqV+TTMDUxAlFijepWYUBq1
-TzJtD2peZymC74ESIFKsaM5YKMqbD4PJ8Kp7gfICOCh1ribTLc6y2QRKh1kczhxt
-ISzYV1x6WOGFTVx77YziShJ/w4idKHkJ80aWpRtZ9lx32UQO770u0/CSwkQf/aMd
-oBXqBu7PHlbJJUBUcy3Z04N2UQVWe6QjvdEg9CYFNxykVUuLGK3n9/DLJobe7zTM
-13Kdl+ivyAO4nmgzCJW3c1DdhxNZu8GuOZ32yERMMp6T9vQAW1gw3OKPzBEcCWKw
-TLuFup7RfPcDq7Xc1QmBCsVFxJyvt/hzQe1QPcoSuNI/qta9rtyW6Hep9z42OSz4
-koCR44Xuu6UabApwy3pjf3G6NOwJH3hmCZmKSGPVP8CHXaSnmxAvXs00NNqhq3g6
-3nnQA9os+VT+kKYO9XbpOkRP60+hr5q4QD3cSgCLytM+9fIsSYlJV6/XWgQfL9KB
-glN6tqbh5lxIh6qwKQWSw9+6CmMhwGNF4XeMJ0jIfqixnqGrTKD5d9dkFZhCLr2i
-j2r/653OC72TiNNrduOXH4ugNAJuKaI9fqEFeED4g3seYg5Ejj8G6fnOmKy/kXbz
-Pq5uPNJeEFutr0V9ibWCHrdxG5ATje9BmneCZOBTAFgCWpxpnTjn//OaMBGqlgkB
-LkVgtSwRqQWzX9GFkW3J
-=83JU
------END PGP SIGNATURE-----
+In the meantime, I realized I hadn't subscribed to the dri-devel
+ML, which might explain why I didn't get any reviews from DRM
+maintainers/developers so far :-).
 
---MjBORTcaENZKFEO1--
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
