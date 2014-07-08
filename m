@@ -1,143 +1,65 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH v2 1/1] can: m_can: add Bosch M_CAN controller support
-Date: Tue, 8 Jul 2014 19:18:41 +0800
-Message-ID: <20140708111840.GD21754@shlinux1.ap.freescale.net>
-References: <1404474812-16855-1-git-send-email-b29396@freescale.com>
- <53B69C55.8010901@pengutronix.de>
- <20140707071040.GA18505@shlinux1.ap.freescale.net>
- <53BA7543.70901@pengutronix.de>
- <20140708103009.GA21754@shlinux1.ap.freescale.net>
- <53BBCAE5.7040404@pengutronix.de>
- <20140708110820.GC21754@shlinux1.ap.freescale.net>
- <53BBD3F2.5010806@pengutronix.de>
+From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: socfpga: Update socfpga_defconfig
+Date: Tue, 8 Jul 2014 13:26:13 +0200
+Message-ID: <20140708112613.GB8100@amd.pavel.ucw.cz>
+References: <1403483462-21082-1-git-send-email-vbridgers2013@gmail.com>
+ <1403483462-21082-2-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-can-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53BBD3F2.5010806@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1403483462-21082-2-git-send-email-vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 01:20:18PM +0200, Marc Kleine-Budde wrote:
-> On 07/08/2014 01:08 PM, Dong Aisheng wrote:
-> > On Tue, Jul 08, 2014 at 12:41:41PM +0200, Marc Kleine-Budde wrote:
-> >> On 07/08/2014 12:30 PM, Dong Aisheng wrote:
-> >>>> Regarding the mram and the offsets:
-> >>>>
-> >>>>> 	fifo_addr = priv->mram_base + priv->rxf0_off + fgi * RXF0_ELEMENT_SIZE;
-> >>>>> 	fifo_addr = priv->mram_base + priv->mram_off + priv->txb_off;
-> >>>>
-> >>>> Why is rxf0_off used without the mram_off and txb_off with the mram_off?
-> >>>> Can you please test your driver with a mram offset != in your DT.
-> >>>>
-> >>>> If I understand the code in m_can_of_parse_mram() correctly the
-> >>>> individual *_off are already offsets to the *mram_base, so mram_off
-> >>>> should not be used within the driver.
-> >>>
-> >>> Good catch!
-> >>> You're right! I aslo found this recently!
-> >>> txb_off already includes the mram_off so should not plus mram_off again.
-> >>> The former test did not find it because it's still not exceed the 16K ram
-> >>> size for m_can0. But m_can1 has such issue.
-> >>>
-> >>>> I even think mram_off should be removed from the priv.
-> >>>
-> >>> Right, i also think so.
-> >>>
-> >>> It is used for debug information formerly that we need mram_off
-> >>> to calculate each element address in the fifo.
-> >>>
-> >>> By removing mram_off, i'm going to change the debug information to:
-> >>> dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 %x %d rxf1 %x %d rxb %x %d txe %x %d txb %x %d\n",
-> >>> 	priv->mram_base, priv->sidf_off, priv->sidf_elems,
-> >>> 	priv->xidf_off, priv->xidf_elems, priv->rxf0_off,
-> >>> 	priv->rxf0_elems, priv->rxf1_off, priv->rxf1_elems,
-> >>> 	priv->rxb_off, priv->rxb_elems, priv->txe_off,
-> >>> 	priv->txe_elems, priv->txb_off, priv->txb_elems);
-> >>>
-> >>> The annoying thing is the line has to be a much bigger one to avoid
-> >>> checkpatch warning of "WARNING: quoted string split across lines".
-> >>>
-> >>> What's your suggestion for such issue?
-> >>> Keeping the big line or split into two lines and leave checkpatch warning there?
-> >>
-> >> The idea behind the warning is, that you can grep for error messages
-> >> better, as normal grep wouldn't find an error string which spans two
-> >> lines. So make it a long line.
-> >>
-> >>>> Do the *_off and *_elems fit into a u8 or u16? If
-> >>>> so it makes sense to convert the priv accordingly.
-> >>>>
-> >>>
-> >>> Yes, *_off fit into u16 since MRAM has a maximum of 4352 words(17K).
-> >>> And *_elems fit into u8 since the max number is 128.
-> >>> I will change them accordingly.
-> >>>
-> >>>> What about putting the offset and the number of elements into a struct
-> >>>> and make use an array for rxf{0,1}?
-> >>>>
-> >>>
-> >>> You mean something like below?
-> >>> struct mram_cfg {
-> >>> 	u16 off;
-> >>> 	u8  elements;
-> >>> };
-> >>>
-> >>> struct m_can_priv {
-> >>> 	........
-> >>>
-> >>>         struct mram_cfg sidf;
-> >>>         struct mram_cfg xidf;
-> >>>         struct mram_cfg rxf0;
-> >>>         struct mram_cfg rxf1;
-> >>
-> >> struct mram_cfg rxf[2];
-> >>
-> > 
-> > It does not help too much and a bit strange for only make
-> > rxf0/rxf1 into array,
-> > 
-> > How about making them all:
-> > enum m_can_mram_cfg {
-> > 	SIDF = 0,
-> > 	XIDF,
-> > 	RXF0,
-> > 	RXF1,
-> > 	RXB,
-> > 	TXE,
-> > 	TXB,
-> > 	CFG_NUM,
-> > };
-> > 
-> > struct m_can_priv {
-> > 	........
-> > 	struct mram_cfg mcfg[CFG_NUM];
-> > };
-> > 
-> > Then in code:
-> > 
-> > priv->cfg[SIDF].off = 
-> > priv->cfg[SIDF].elements = 
-> > 
-> > But it could make code become much longer...
+On Sun 2014-06-22 19:31:01, Vince Bridgers wrote:
+> CONFIG_PM=y
+> CONFIG_SUSPEND=y
+> CONFIG_MMC_UNSAFE_RESUME=y
+> CONFIG_DWMAC_SOCFPGA=y
+> CONFIG_USB=y
+> CONFIG_USB_DWC2=y
+> CONFIG_USB_DWC2_HOST=y
+> CONFIG_USB_DWC2_PLATFORM=y
+> CONFIG_FHANDLE=y
+> CONFIG_I2C=y
+> CONFIG_I2C_DESIGNWARE_CORE=y
+> CONFIG_I2C_DESIGNWARE_PLATFORM=y
+> CONFIG_I2C_CHARDEV=y
+> CONFIG_CAN=y
+> CONFIG_CAN_RAW=y
+> CONFIG_CAN_BCM=y
+> CONFIG_CAN_GW=y
+> CONFIG_CAN_DEV=y
+> CONFIG_CAN_CALC_BITTIMING=y
+> CONFIG_CAN_C_CAN=y
+> CONFIG_CAN_C_CAN_PLATFORM=y
+> CONFIG_WATCHDOG=y
+> CONFIG_DW_WATCHDOG=y
+> CONFIG_GPIOLIB=y
+> CONFIG_GPIO_SYSFS=y
+> CONFIG_GPIO_DWAPB=y
+> CONFIG_PPS=y
+> CONFIG_NETWORK_PHY_TIMESTAMPING=y
+> CONFIG_PTP_1588_CLOCK=y
+> CONFIG_VLAN_8021Q=y
+> CONFIG_VLAN_8021Q_GVRP=y
+> CONFIG_GARP=y
+> CONFIG_IPV6=y
+> CONFIG_HOTPLUG=y
 > 
-> I like the idea, but can you add a common prefix to the enums. Though
-> makes the code even longer :)
-> 
+> Signed-off-by: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-Okay, got it. :-)
+Acked-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
 
-Regards
-Dong Aisheng
-> Marc
-> 
-> -- 
-> Pengutronix e.K.                  | Marc Kleine-Budde           |
-> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-> 
-
-
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
