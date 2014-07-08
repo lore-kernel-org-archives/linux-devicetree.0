@@ -1,70 +1,169 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: a case for a common efuse API?
-Date: Tue, 8 Jul 2014 14:59:15 -0700
-Message-ID: <CAJAp7OhUE4LmLtu5AMui_0ws-K_H__07VN=g2Frr0JCMn+Q5Gg@mail.gmail.com>
-References: <53BC4DD7.20906@codeaurora.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v8 8/9] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Tue, 8 Jul 2014 23:27:38 +0100
+Message-ID: <20140708222738.GA4980@e106497-lin.cambridge.arm.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-9-git-send-email-Liviu.Dudau@arm.com>
+ <20140708010103.GD22939@google.com>
+ <20140708102940.GZ6501@e106497-lin.cambridge.arm.com>
+ <20140708213305.GB4555@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <53BC4DD7.20906@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140708213305.GB4555@google.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 8, 2014 at 1:00 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> Hi,
->
-> On MSM chips we have some efuses (called qfprom) where we store things
-> like calibration data, speed bins, etc. We need to read out data from
-> the efuses in various drivers like the cpufreq, thermal, etc. This
-> essentially boils down to a bunch of readls on the efuse from a handful
-> of different drivers. In devicetree this looks a little odd because
-> these drivers end up having an extra reg property (or two) that points
-> to a register in the efuse and some length, i.e you see this:
+On Tue, Jul 08, 2014 at 10:33:05PM +0100, Bjorn Helgaas wrote:
+> On Tue, Jul 08, 2014 at 11:29:40AM +0100, Liviu Dudau wrote:
+> > On Tue, Jul 08, 2014 at 02:01:04AM +0100, Bjorn Helgaas wrote:
+> > > On Tue, Jul 01, 2014 at 07:43:33PM +0100, Liviu Dudau wrote:
+> > > > ...
+> > > > +     for_each_of_pci_range(&parser, &range) {
+> > > > +             /* Read next ranges element */
+> > > > +             pr_debug("pci_space: 0x%08x pci_addr:0x%016llx cp=
+u_addr:0x%016llx size:0x%016llx\n",
+> > > > +                     range.pci_space, range.pci_addr, range.cp=
+u_addr, range.size);
+> > >=20
+> > > If you're not trying to match other printk formats, you could try=
+ to match
+> > > the %pR format used elsewhere, e.g., "%#010llx-%#010llx" with
+> > > range.cpu_addr, range.cpu_addr + range.size - 1.
+> >=20
+> > Yes, not a big fan of the ugly output it generates, but the output =
+matches closely the ranges
+> > definition in the device tree file so it is easy to validate that y=
+ou are parsing the right
+> > entry. I am happy to change it to shorten the cpu range message.
+>=20
+> If it already matches other device tree stuff, that's perfect.  I'm n=
+ot
+> familiar with that.
+>=20
+> > > > +int __weak pcibios_fixup_bridge_ranges(struct list_head *resou=
+rces)
+> > > > +{
+> > > > +     return 0;
+> > > > +}
+> > >=20
+> > > I'd wait to add this until there's a platform that needs to imple=
+ment it.
+> > > Splitting it out will make this patch that much smaller and easie=
+r to
+> > > understand.
+> >=20
+> > I need this as this is the default implementation (i.e. do nothing)=
+=2E Otherwise the
+> > link phase will give errors.=20
+>=20
+> I meant that you could remove the default implementation *and* the ca=
+ll of
+> it, since it currently does nothing.
 
-Not only does it look odd, but it limits the possible use to devices on the
-mmio bus.
+True. But it looks like converting Will's pci-host-generic.c driver wil=
+l make use of this.
 
-[...]
-> It's been suggested that we use syscon for this, but I wonder if that is
-> the right thing to do. With a syscon you're usually writing some
-> registers that got lumped together with other registers that aren't
-> directly related to your driver. It doesn't seem like syscon is made for
-> reading fuses or other things like eeproms. Maybe I'm wrong though.
->
+>=20
+> > > > diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> > > > index dde3a4a..71e36d0 100644
+> > > > --- a/include/linux/of_pci.h
+> > > > +++ b/include/linux/of_pci.h
+> > > > @@ -15,6 +15,9 @@ struct device_node *of_pci_find_child_device(=
+struct device_node *parent,
+> > > >  int of_pci_get_devfn(struct device_node *np);
+> > > >  int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slo=
+t, u8 pin);
+> > > >  int of_pci_parse_bus_range(struct device_node *node, struct re=
+source *res);
+> > > > +struct pci_host_bridge *of_create_pci_host_bridge(struct devic=
+e *parent,
+> > > > +                                     struct pci_ops *ops, void=
+ *host_data);
+> > > > +
+> > > >  #else
+> > > >  static inline int of_irq_parse_pci(const struct pci_dev *pdev,=
+ struct of_phandle_args *out_irq)
+> > > >  {
+> > > > @@ -43,6 +46,13 @@ of_pci_parse_bus_range(struct device_node *n=
+ode, struct resource *res)
+> > > >  {
+> > > >       return -EINVAL;
+> > > >  }
+> > > > +
+> > > > +static inline struct pci_host_bridge *
+> > > > +of_create_pci_host_bridge(struct device *parent, struct pci_op=
+s *ops,
+> > > > +                     void *host_data)
+> > > > +{
+> > > > +     return NULL;
+> > > > +}
+> > > >  #endif
+> > > >
+> > > >  #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > > index 7e7b939..556dc5f 100644
+> > > > --- a/include/linux/pci.h
+> > > > +++ b/include/linux/pci.h
+> > > > @@ -402,6 +402,7 @@ struct pci_host_bridge {
+> > > >       struct device dev;
+> > > >       struct pci_bus *bus;            /* root bus */
+> > > >       int domain_nr;
+> > > > +     resource_size_t io_base;        /* physical address for t=
+he start of I/O area */
+> > >=20
+> > > I don't see where this is used yet.
+> >=20
+> > It's used in pci_host_bridge_of_get_ranges() (earlier in this patch=
+).
+>=20
+> of_create_pci_host_bridge() fills in bridge->io_base, but I don't see
+> anything that ever *reads* bridge->io_base.
 
-I've been thinking further about this since we discussed it; and I agree with
-you that this probably wasn't in the original plans for syscon.
+Ah, understood. It is used by the host bridge drivers to set their ATR =
+registers to the
+correct CPU address values.
 
-But looking at the qfprom hardware, we have a span of 32 bit registers that's
-supposed to be accessed from various drivers. All these registers are the same
-size, so abstracting them with a mmio-regmap makes sense. All we need is a way
-for drivers to get a handle to this regmap.
+>=20
+> > > As far as I know, there's nothing that prevents a host bridge fro=
+m having
+> > > several I/O port apertures (or several memory-mapped I/O port spa=
+ces).
+> >=20
+> > The pci_register_io_range() will give different offsets for each ap=
+perture.
+> > I just need to make sure I don't overwrite io_base when parsing mul=
+tiple IO
+> > ranges.
+>=20
+> Let's continue this in the other thread where I'm trying to understan=
+d the
+> I/O apertures.  Obviously I'm still missing something if you can inde=
+ed
+> have multiple I/O apertures per bridge (because then only one of them=
+ can
+> start at I/O address 0 on PCI).
 
-This was exactly what I implemented and then I realized that I had only created
-a copy of syscon (although readonly) and given it a different name.
+Sure.
 
+Thanks,
+Liviu
 
-A potential addition to this would be to expose a (preferrably separate) api to
-fuse things, for factory use. But looking at the qfprom this is done by writing
-to different parts of the register space, so we could simply add a factory fuse
-driver on the side - once one is desired.
+>=20
+> Bjorn
+>=20
 
-> Using syscon would probably work if we could add a way to point to
-> offsets within the syscon node (the 0x18 part in the example). In my
-> specific use-case the calibration data may have different offsets
-> depending on which SoC the hardware is instantiated in so we could also
-> make syscon work if the compatible field for the sensor node indicates
-> which SoC it is.
->
-
-I'm not sure if other users of syscon would find a use for an xlate, if not
-then we could just have that as a separate property that lists the reg offsets
-within the syscon.
-
-Maybe there's some benefits of common naming of said property so we could put
-some common accessor functions somewhere?
-
-Regards,
-Bjorn
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
