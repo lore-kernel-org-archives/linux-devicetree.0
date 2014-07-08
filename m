@@ -1,65 +1,58 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH][v2]devicetree/binding/powerpc/fsl: Add binding for CPLD
-Date: Tue, 8 Jul 2014 09:06:58 -0500
-Message-ID: <1404828418.21434.278.camel@snotra.buserror.net>
-References: <1404796006-3254-1-git-send-email-Priyanka.Jain@freescale.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 6/7] regulator: tps65218: Add get_voltage ops for
+ dcdc5 and dcdc6
+Date: Tue, 8 Jul 2014 16:11:26 +0200
+Message-ID: <20140708141126.GW30458@sirena.org.uk>
+References: <1404814597-4404-1-git-send-email-j-keerthy@ti.com>
+ <1404814597-4404-7-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404796006-3254-1-git-send-email-Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MjBORTcaENZKFEO1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404814597-4404-7-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-07-08 at 10:36 +0530, Priyanka Jain wrote:
-> Some Freescale boards like T1040RDB have on board CPLD connected on
-> the IFC bus. Add binding for this in board.txt file
-> 
-> Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> Changes for v2: Incorporated Scott's comments
 
-Isn't this v3?
+--MjBORTcaENZKFEO1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  .../devicetree/bindings/powerpc/fsl/board.txt      |   16 ++++++++++++++++
->  1 files changed, 16 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-> index 700dec4..67ef6a4 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-> @@ -84,3 +84,19 @@ Example:
->  		compatible = "fsl,bsc9132qds-fpga", "fsl,fpga-qixis-i2c";
->  		reg = <0x66>;
->  	};
+On Tue, Jul 08, 2014 at 03:46:36PM +0530, Keerthy wrote:
+
+> +static int tps65218_pmic_dcdc56_get_voltage(struct regulator_dev *dev)
+> +{
+> +	struct tps65218 *tps = rdev_get_drvdata(dev);
+> +	unsigned int rid = rdev_get_id(dev);
 > +
-> +* Freescale on-board CPLD
-> +
-> +Some Freescale boards like T1040RDB have on board CPLD connected.
+> +	return tps->info[rid]->min_uV;
+> +}
 
-s/have on board/have an on board/
+Set fixed_uV in the descriptor.
 
-> +
-> +Required properties:
-> +- compatible: Should be a board-specific string like "fsl,<board>-cpld"
-> +  Example:
-> +	"fsl,T1040RDB-cpld", "fsl,T1042RDB-cpld", "fsl,T1042RDB_PI-cpld"
-> +- reg: should describe CPLD registers
-> +
-> +Example:
-> +	cpld@3,0 {
-> +		compatible = "fsl,T1040RDB-cpld";
-> +		reg = <3 0 0x300>;
-> +	};
+--MjBORTcaENZKFEO1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Again, please keep the board name lowercase.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
--Scott
+iQIcBAEBAgAGBQJTu/wGAAoJELSic+t+oim9lqIP/RqV+TTMDUxAlFijepWYUBq1
+TzJtD2peZymC74ESIFKsaM5YKMqbD4PJ8Kp7gfICOCh1ribTLc6y2QRKh1kczhxt
+ISzYV1x6WOGFTVx77YziShJ/w4idKHkJ80aWpRtZ9lx32UQO770u0/CSwkQf/aMd
+oBXqBu7PHlbJJUBUcy3Z04N2UQVWe6QjvdEg9CYFNxykVUuLGK3n9/DLJobe7zTM
+13Kdl+ivyAO4nmgzCJW3c1DdhxNZu8GuOZ32yERMMp6T9vQAW1gw3OKPzBEcCWKw
+TLuFup7RfPcDq7Xc1QmBCsVFxJyvt/hzQe1QPcoSuNI/qta9rtyW6Hep9z42OSz4
+koCR44Xuu6UabApwy3pjf3G6NOwJH3hmCZmKSGPVP8CHXaSnmxAvXs00NNqhq3g6
+3nnQA9os+VT+kKYO9XbpOkRP60+hr5q4QD3cSgCLytM+9fIsSYlJV6/XWgQfL9KB
+glN6tqbh5lxIh6qwKQWSw9+6CmMhwGNF4XeMJ0jIfqixnqGrTKD5d9dkFZhCLr2i
+j2r/653OC72TiNNrduOXH4ugNAJuKaI9fqEFeED4g3seYg5Ejj8G6fnOmKy/kXbz
+Pq5uPNJeEFutr0V9ibWCHrdxG5ATje9BmneCZOBTAFgCWpxpnTjn//OaMBGqlgkB
+LkVgtSwRqQWzX9GFkW3J
+=83JU
+-----END PGP SIGNATURE-----
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--MjBORTcaENZKFEO1--
