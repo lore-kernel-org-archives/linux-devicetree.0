@@ -1,157 +1,170 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO
- resources.
-Date: Tue, 8 Jul 2014 11:03:32 +0100
-Message-ID: <20140708100332.GW6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <6122131.ozzYjjjRQi@wuerfel>
- <20140707111133.GP6501@e106497-lin.cambridge.arm.com>
- <201407072322.00990.arnd@arndb.de>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Tue, 8 Jul 2014 11:21:21 +0100
+Message-ID: <20140708102121.GY6501@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+ <20140405000007.GD15806@google.com>
+ <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
+ <1396862058.3671.40.camel@pasglop>
+ <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
+ <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
+ <20140704145752.GJ6501@e106497-lin.cambridge.arm.com>
+ <20140708011136.GE22939@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201407072322.00990.arnd@arndb.de>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140708011136.GE22939@google.com>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robherring2@gmail.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 07, 2014 at 10:22:00PM +0100, Arnd Bergmann wrote:
-> On Monday 07 July 2014, Liviu Dudau wrote:
-> > On Sat, Jul 05, 2014 at 09:46:09PM +0100, Arnd Bergmann wrote:
-> > > On Saturday 05 July 2014 14:25:52 Rob Herring wrote:
-> > > > On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.co=
-m> wrote:
-> > > > > The ranges property for a host bridge controller in DT descri=
-bes
-> > > > > the mapping between the PCI bus address and the CPU physical =
-address.
-> > > > > The resources framework however expects that the IO resources=
- start
-> > > > > at a pseudo "port" address 0 (zero) and have a maximum size o=
-f IO_SPACE_LIMIT.
-> > > > > The conversion from pci ranges to resources failed to take th=
-at into account.
-> > > >=20
-> > > > I don't think this change is right. There are 2 resources: the =
-PCI bus
-> > > > addresses and cpu addresses. This function deals with the cpu
-> > > > addresses. Returning pci addresses for i/o and cpu addresses fo=
-r
-> > > > memory is going to be error prone. We probably need both cpu an=
-d pci
-> > > > resources exposed to host controllers.
-> > > >=20
-> > > > Making the new function only deal with i/o bus resources and na=
-ming it
-> > > > of_pci_range_to_io_resource would be better.
-> > >=20
-> > > I think you are correct that this change by itself is will break =
-existing
-> > > drivers that rely on the current behavior of of_pci_range_to_reso=
-urce,
-> > > but there is also something wrong with the existing implementatio=
-n:
-> >=20
-> > Either I'm very confused or I've managed to confuse everyone else. =
-The I/O
-> > resources described using CPU addresses *are* using "pseudo" port b=
-ased
-> > addresses (or at least that is my understanding and my reading of t=
-he code).
-> > Can you point me to a function that is expecting the IO resource to=
- have
-> > the start address at the physical address of the mapped space?
+On Tue, Jul 08, 2014 at 02:11:36AM +0100, Bjorn Helgaas wrote:
+> On Fri, Jul 4, 2014 at 8:57 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > On Mon, Apr 07, 2014 at 11:44:51PM +0100, Bjorn Helgaas wrote:
+> >> On Mon, Apr 7, 2014 at 4:07 AM, Liviu Dudau <Liviu.Dudau@arm.com> =
+wrote:
+> >> > On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt=
+ wrote:
+> >> >> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
+> >> >> >
+> >> >> > *My* strategy is to get rid of pci_domain_nr(). I don't see w=
+hy we need
+> >> >> > to have arch specific way of providing the number, specially =
+after looking
+> >> >> > at the existing implementations that return a value from a va=
+riable that
+> >> >> > is never touched or incremented. My guess is that pci_domain_=
+nr() was
+> >> >> > created to work around the fact that there was no domain_nr m=
+aintainance in
+> >> >> > the generic code.
+> >> >>
+> >> >> Well, there was no generic host bridge structure. There is one =
+now, it should
+> >> >> go there.
+> >> >
+> >> > Exactly! Hence my patch. After it gets accepted I will go throug=
+h architectures
+> >> > and remove their version of pci_domain_nr().
+> >>
+> >> Currently the arch has to supply pci_domain_nr() because that's th=
+e
+> >> only way for the generic code to learn the domain.  After you add
+> >> pci_create_root_bus_in_domain(), the arch can supply the domain th=
+at
+> >> way, and we won't need the arch-specific pci_domain_nr().  Right?
+> >> That makes more sense to me; thanks for the explanation.
+> >>
+> >> Let me try to explain my concern about the
+> >> pci_create_root_bus_in_domain() interface.  We currently have thes=
+e
+> >> interfaces:
+> >>
+> >>   pci_scan_root_bus()
+> >>   pci_scan_bus()
+> >>   pci_scan_bus_parented()
+> >>   pci_create_root_bus()
+> >>
+> >> pci_scan_root_bus() is a higher-level interface than
+> >> pci_create_root_bus(), so I'm trying to migrate toward it because =
+it
+> >> lets us remove a little code from the arch, e.g., pci_scan_child_b=
+us()
+> >> and pci_bus_add_devices().
+> >>
+> >> I think we can only remove the arch-specific pci_domain_nr() if th=
+at
+> >> arch uses pci_create_root_bus_in_domain().  When we convert an arc=
+h
+> >> from using scan_bus interfaces to using
+> >> pci_create_root_bus_in_domain(), we will have to move the rest of =
+the
+> >> scan_bus code (pci_scan_child_bus(), pci_bus_add_devices()) back i=
+nto
+> >> the arch code.
+> >>
+> >> One alternative is to add an _in_domain() variant of each of these
+> >> interfaces, but that doesn't seem very convenient either.  My idea=
+ of
+> >> passing in a structure would also require adding variants, so ther=
+e's
+> >> not really an advantage there, but I am thinking of the next
+> >> unification effort, e.g., for NUMA node info.  I don't really want=
+ to
+> >> have to change all the _in_domain() interfaces to also take yet
+> >> another parameter for the node number.
+> >
+> > ...
+> > My understanding is that when pci_host_bridge structure was introdu=
+ced
+> > you were trying to keep the APIs unchanged and hence the creation o=
+f a
+> > bridge was hidden inside the pci_create_root_bus() function.
 >=20
-> pci_v3_preinit() in arch/arm/mach-integrator/pci_v3.c for instance ta=
-kes
-> the resource returned by of_pci_range_to_resource and programs the
-> start and size into hardware registers that expect a physical address
-> as far as I can tell.
+> You mean pci_alloc_host_bridge()?  Right; ideally I would have used
+> pci_scan_root_bus() everywhere and gotten rid of pci_create_root_bus(=
+).
+> The outline of pci_scan_root_bus() is:
 >=20
-> > I was trying to fix exactly this issue, that you cannot use the res=
+>     pci_create_root_bus()
+>     pci_scan_child_bus()
+>     pci_bus_add_devices()
+>=20
+> The problem was that several arches do interesting things scattered a=
+mong
+> that core.  The ACPI host bridge driver used on x86 and ia64 does res=
 ource
-> > structure returned by this function in any call that is expecting a=
-n IO
-> > resource.
+> allocation before pci_bus_add_devices(), as does parisc.  Probably al=
+l
+> arches should do this, but they don't.
 >=20
-> I looked at the other drivers briefly, and I think you indeed fix the=
- Tegra
-> driver with this but break the integrator driver as mentioned above.
-> The other callers of of_pci_range_to_resource() are apparently not
-> impacted as they recalculate the values they get.
+> And powerpc and sparc use of_scan_bus() or something similar instead =
+of
+> pci_scan_child_bus().  They probably *could* provide config space acc=
+essors
+> that talk to OF and would allow pci_scan_child_bus() to work.  But th=
+at
+> seemed like too much work at the time.
+>=20
+> > If we want to store the domain_nr information in the host bridge st=
+ructure,
+> > together with a pointer to sysdata, then we need to break up the cr=
+eation
+> > of the pci_host_bridge from the creation of a root bus. At that mom=
+ent,
+> > pci_scan_root_bus() will need to be changed to accept a pci_host_br=
+idge
+> > pointer, while pci_scan_bus() and pci_scan_bus_parented() will crea=
+te
+> > the host bridge in the body of their function.
+>=20
+> It's hard to change an existing interface like pci_scan_root_bus() be=
+cause
+> it's called from so many places and you have to change them all at on=
+ce.
+> Then if something goes wrong, the revert makes a mess for everybody. =
+ But
+> I think it makes sense to add a new interface that does what you want=
+=2E
 
-I would argue that integrator version is having broken assumptions. If =
-it would
-try to allocate that IO range or request the resource as returned curre=
-ntly by
-of_pci_range_to_resource (without my patch) it would fail. I know becau=
-se I did
-the same thing in my host bridge driver and it failed miserably. That's=
- why I
-tried to patch it.
-
-I will lay out my argument here and people can tell me if I am wrong:
-
-PCI IO resources (even if they are memory mapped on certain architectur=
-es) need
-to emulate the x86 world "port" concept. Why do I think this? Because o=
-f this
-structure at the beginning of kernel/resource.c:
-
-struct resource ioport_resource =3D {
-	.name	=3D "PCI IO",
-	.start	=3D 0,
-	.end	=3D IO_SPACE_LIMIT,
-	.flags	=3D IORESOURCE_IO,
-};
-EXPORT_SYMBOL(ioport_resource);
-
-The other resource that people seem to confuse it with is the next one =
-in that
-file:
-
-struct resource iomem_resource =3D {
-	.name	=3D "PCI mem",
-	.start	=3D 0,
-	.end	=3D -1,
-	.flags	=3D IORESOURCE_MEM,
-};
-EXPORT_SYMBOL(iomem_resource);
-
-Now, there are architecture that override the .start and .end values, b=
-ut arm
-is not one of those, and mach-integrator doesn't change it either. So o=
-ne can
-play with the ioport_resource values to move the "port" window wherever=
- he/she
-wants, but it doesn't change the "port access" way of addressing it.
-
-If the IO space is memory mapped, then we use the port number, the io_o=
-ffset
-and the PCI_IOBASE to get to the virtual address that, when accessed, w=
-ill
-generate the correct addresses on the bus, based on what the host bridg=
-e has
-been configured.
-
-This is the current level of my understanding of PCI IO.
-
-Now, I believe Rob has switched entirely to using my series in some tes=
-t that
-he has run and he hasn't encountered any issues, as long as one remembe=
-rs in
-the host bridge driver to add the io_base offset to the .start resource=
-=2E If
-not then I need to patch pci_v3.c.
+OK, I understand your concern. It does sort of return us back to the in=
+itial
+discussion, where you were arguing against adding a new set of function=
+s
+for every existing function, but it makes sense from transition point o=
+f view.
 
 Best regards,
 Liviu
 
 >=20
-> 	Arnd
+> Bjorn
 >=20
 
 --=20
