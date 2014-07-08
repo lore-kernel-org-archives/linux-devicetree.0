@@ -1,97 +1,87 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 6/7] regulator: tps65218: Add get_voltage ops for
- dcdc5 and dcdc6
-Date: Tue, 8 Jul 2014 08:39:12 -0500
-Message-ID: <20140708133912.GH25811@saruman.home>
-References: <1404814597-4404-1-git-send-email-j-keerthy@ti.com>
- <1404814597-4404-7-git-send-email-j-keerthy@ti.com>
-Reply-To: <balbi@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
+Date: Tue, 8 Jul 2014 09:40:00 -0400
+Message-ID: <20140708134000.GC4979@htj.dyndns.org>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3ecMC0kzqsE2ddMN"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404814597-4404-7-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com, broonie@kernel.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
---3ecMC0kzqsE2ddMN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(Cc'ing Hans.)
 
-On Tue, Jul 08, 2014 at 03:46:36PM +0530, Keerthy wrote:
-> Add get_voltage ops for dcdc5 and dcdc6. Both dcdc5 and 6 are fixed regul=
-ators
-> and hence return min_uV (or max_uV).
->=20
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-
-Reviewed-by: Felipe Balbi <balbi@ti.com>
-
-> ---
->  drivers/regulator/tps65218-regulator.c |    9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/t=
-ps65218-regulator.c
-> index 9effe48..700c652 100644
-> --- a/drivers/regulator/tps65218-regulator.c
-> +++ b/drivers/regulator/tps65218-regulator.c
-> @@ -151,6 +151,14 @@ static int tps65218_pmic_disable(struct regulator_de=
-v *dev)
->  				   dev->desc->enable_mask, TPS65218_PROTECT_L1);
->  }
+On Mon, Jul 07, 2014 at 12:16:09PM +0200, Antoine T=E9nart wrote:
+> @@ -482,6 +482,13 @@ void ahci_save_initial_config(struct device *dev=
+,
+>  		port_map &=3D mask_port_map;
+>  	}
 > =20
-> +static int tps65218_pmic_dcdc56_get_voltage(struct regulator_dev *dev)
+> +	/*
+> +	 * If port_map was filled automatically when finding port sub-nodes=
+,
+> +	 * make sure we get the right set here.
+> +	 */
+> +	if (hpriv->port_map)
+> +		port_map &=3D hpriv->port_map;
+> +
+
+So, hpriv->port is both input and output?  This is messy and can lead
+to confusing failures and there now are multiple ways to modify
+port_map.  If carrying this information through ahci_host_priv is
+necessary, let's remove the direct params and introduce new input
+fields to the struct.
+
+>  /**
+> + * ahci_platform_enable_phys - Enable PHYs
+> + * @hpriv: host private area to store config values
+> + *
+> + * This function enables all the PHYs found in hpriv->phys, if any.
+> + * If a PHY fails to be enabled, it disables all the PHYs already
+> + * enabled in reverse order and returns an error.
+> + *
+> + * RETURNS:
+> + * 0 on success otherwise a negative error code
+> + */
+> +int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
 > +{
-> +	struct tps65218 *tps =3D rdev_get_drvdata(dev);
-> +	unsigned int rid =3D rdev_get_id(dev);
+> +	int i, rc =3D 0;
 > +
-> +	return tps->info[rid]->min_uV;
+> +	for (i =3D 0; i < hpriv->nphys; i++) {
+> +		rc =3D phy_init(hpriv->phys[i]);
+> +		if (rc)
+> +			goto disable_phys;
+> +
+> +		rc =3D phy_power_on(hpriv->phys[i]);
+> +		if (rc) {
+> +			phy_exit(hpriv->phys[i]);
+> +			goto disable_phys;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +disable_phys:
+> +	while (--i >=3D 0) {
+> +		phy_power_off(hpriv->phys[i]);
+> +		phy_exit(hpriv->phys[i]);
+> +	}
+> +	return rc;
 > +}
-> +
->  /* Operations permitted on DCDC1, DCDC2 */
->  static struct regulator_ops tps65218_dcdc12_ops =3D {
->  	.is_enabled		=3D regulator_is_enabled_regmap,
-> @@ -179,6 +187,7 @@ static struct regulator_ops tps65218_dcdc56_pmic_ops =
-=3D {
->  	.is_enabled		=3D regulator_is_enabled_regmap,
->  	.enable			=3D tps65218_pmic_enable,
->  	.disable		=3D tps65218_pmic_disable,
-> +	.get_voltage		=3D tps65218_pmic_dcdc56_get_voltage,
->  };
-> =20
->  static const struct regulator_desc regulators[] =3D {
-> --=20
-> 1.7.9.5
->=20
+> +EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
+
+Do we need to make hpriv->phys[] dynamically allocated?  We already
+have hpriv->clks[AHCI_MAX_CLKS] and it's unlikely that we're gonna
+need more than several phys per host.  Let's go with a simpler fixed
+array.
+
+Thanks.
 
 --=20
-balbi
-
---3ecMC0kzqsE2ddMN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTu/SAAAoJEIaOsuA1yqREUeoP/iDIo5ifmVx0iAgw93HQDAsg
-18fDBGYwHDUDnn2zmuMoRk28ozSzJBx8w6PdN3FQ0h3gWX6thA3yPT+HrMOUAr3t
-T0/oFxNk6zmqy60/q9mbK0p0y+QE2fu3qEDX70FjPWyOqsUg4GhNtZ+bc1O+GjN9
-LEjlrhZNHr6XOZnKIniRvEsaHgnytuv5XJg5deHHkuvFAgOCUIeRzJW1g1FabotQ
-E2kxCsoziz2yeBBY/mzr/acimBclIWlq6Yk2x1OLataGOQVL3wrPRySBZnM0rHik
-fq3PTusTP5+7LKLKqak2ISWEz/ynhvj5QY2l+IM/VIg/ulrwXvSiZdk+Bz3dt3o0
-bf9OUAOL1KsWROmy9bsX8lP7shLpFBXAwUzKKV8uaALINuh97ckADceJNFgkKp0A
-6ivUYr5/2LakiF5Ge36TyA9Qt8JEB+JayiePgTXn5nwNO8NpzUgl/dqvOE//wxsW
-DuGJmJnRRYakPHS87m55vca7nmr8qxI2uKw7zfWDCIbOFYfXgKqtwSsl7atncXrY
-cnmifoB0Zr5rd9dKcMSZ8P8J1T79ZFbiZr6nSIXWiO6vJ5yT8wSl6tHDrZm4Mhhb
-f4K1spwT+jr+HWgFRVkCF2aYJFJTVzU1UbgyMoGDN64syRAnRYP3aOeCM434BzqG
-U3j+glVT0gyynRODJBXg
-=U0kp
------END PGP SIGNATURE-----
-
---3ecMC0kzqsE2ddMN--
+tejun
