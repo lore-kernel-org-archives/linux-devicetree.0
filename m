@@ -1,39 +1,87 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv5 03/15] hwspinlock/core: maintain a list of registered
- hwspinlock banks
-Date: Tue, 8 Jul 2014 10:22:38 -0500
-Message-ID: <53BC0CBE.4060608@ti.com>
-References: <1398904476-26200-1-git-send-email-s-anna@ti.com> <1398904476-26200-4-git-send-email-s-anna@ti.com> <CAK=WgbakGbTaYz+4K24aT3vyRkDYwPKCm6XrcJvH667NMMfTTA@mail.gmail.com> <53B47621.6090307@ti.com> <CAK=WgbYtJ7TGqvjG3VAPPD5tVXx9-jEJU3iKEStUMxOvD1v=LQ@mail.gmail.com> <53B592CE.2010001@ti.com> <CAK=WgbaahqdmWRDMKtRhco4y5B-WBFYDHYs2cLM7NL=QhnhK2Q@mail.gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
+Date: Tue, 08 Jul 2014 17:34:39 +0200
+Message-ID: <53BC0F8F.4010106@samsung.com>
+References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
+ <CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
+ <53A12EA3.5010007@samsung.com>
+ <CAPdUM4OK+ATMMRM67dV5JeeTGMu=XA7Gvi7Uif+Hypf3iP+6jg@mail.gmail.com>
+ <CAPdUM4MToVJC5KRS1DUDmYEdUx2PGBE0G1v7p-SGgqpw7SPOhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK=WgbaahqdmWRDMKtRhco4y5B-WBFYDHYs2cLM7NL=QhnhK2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAPdUM4MToVJC5KRS1DUDmYEdUx2PGBE0G1v7p-SGgqpw7SPOhw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+Hi Rahul,
 
-On 07/04/2014 12:01 AM, Ohad Ben-Cohen wrote:
-> Hi Suman,
+On 07.07.2014 15:37, Rahul Sharma wrote:
+> Hi Andrej, Inki,
 > 
-> On Thu, Jul 3, 2014 at 8:28 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> OK, but we would still require this function to lookup the registered
->> device from the controller-phandle to retrieve the base_id.
+> On 18 June 2014 12:06, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+>> Hi Andrej,
+>>
+>> On 18 June 2014 11:46, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>> On 06/17/2014 07:49 AM, Rahul Sharma wrote:
+>>>> Hi All,
+>>>>
+>>>> Please review this patch.
+>>>>
+>>>> Regards,
+>>>> Rahul Sharma
+>>>>
+>>>> On 9 June 2014 16:58, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+>>>>> Display domain is removed due to instability issues. Explaining
+>>>>> the problem below:
+>>>>>
+>>>>> exynos_init_late triggers the pm_genpd_poweroff_unused which
+>>>>> powers off the unused power domains. This call hits before
+>>>>> the trigger to deferred probes.
+>>>>>
+>>>>> DRM DP Panel defers the probe due to supply get failure. By the
+>>>>> time, deferred probe is scheduled again, Display Power Domain is
+>>>>> powered off by pm_genpd_poweroff_unused.
+>>>>>
+>>>>> FIMD and DP drivers are accessing registers during Probe and Bind
+>>>>> callbacks. If display domain is enabled/disabled around register
+>>>>> accesses, display domain gets unstable and we are getting Power
+>>>>> Domain Disable fail notification. Increasing the Timeout also
+>>>>> didn't help.
+>>>
+>>> As I understand the problem is that fimd and dp drivers access hw
+>>> registers without enabling power domain. So the proper solution is to
+>>> fix these drivers.
+>>
+>> That is also a problem but I fixed those accesses in my local kernel before
+>> hitting this issue. If we do register accesses in FIMD/DP probe/bind we
+>> observes "Prefetch abort" exception. But here the problem is that 'DP
+>> domain disable' starts failing if we enable/disable multiple times.
+>>
+>>>
+>>> Btw. there are already patches removing hw access from probe/bind of
+>>> fimd. I guess removing also hw access from dp probe/bind could be a good
+>>> solution.
+>>
+>> Please let me know the links for posted patches. I will test with those patches.
 > 
-> Can we retrieve the base_id from the parent DT node itself?
+> Is there any update on this? Please share the patches which fixes the
+> above issue or avoid the above scenario of multiple PM Domain enable/disable.
+> I will test them for exynos5 based boards. Otherwise we should get this change
+> merged else display will remain broken for exynos5 based boards.
 
-Yeah, it is possible using the of_hwspin_lock_get_base_id function added
-in Patch8, once we convert the phandle to a device node. The platform
-implementations would be using this function during the registration
-phase to register the base id, and we have to do the DT parse/lookup
-again in the core.
+Andrzej is on holidays right now, so he won't be able to reply in this
+thread until he's back. Here are two patches I was able to find on the
+related MLs that might be fixing the cause of your issues:
 
-regards
-Suman
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[PATCH] drm/exynos: remove hardware overlays disable from fimd probe
+(https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31629.html)
+
+[PATCH] drm/exynos: fimd: Keep power enabled during fimd_bind
+(https://lkml.org/lkml/2014/7/4/188)
+
+Best regards,
+Tomasz
