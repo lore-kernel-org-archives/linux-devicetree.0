@@ -1,30 +1,109 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-Date: Tue, 8 Jul 2014 11:08:21 +0530
-Message-ID: <CAOh2x=naoa8a1v7Pk+Qv-Fha34ezp6OqBXVwsh_p=guCZgXFrA@mail.gmail.com>
-References: <cover.1397555158.git.mohit.kumar@st.com>
-	<2CC2A0A4A178534D93D5159BF3BCB6619B94997E2B@EAPEX1MAIL1.st.com>
-	<20140522113119.GA2646@pratyush-vbox>
-	<8677743.Bty96DiF3F@amdc1032>
-	<2CC2A0A4A178534D93D5159BF3BCB661A17A3E45ED@EAPEX1MAIL1.st.com>
-	<CAOh2x=nGuFNa2vgFv+3j3B6WoHb2EXg+K47Vh4OUFUHS9a7peg@mail.gmail.com>
-	<2CC2A0A4A178534D93D5159BF3BCB661A17A3E4639@EAPEX1MAIL1.st.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v3 1/4] dt: bindings: add bindings for
+ Broadcom bcm43xx sdio devices
+Date: Tue, 08 Jul 2014 08:55:10 +0200
+Message-ID: <53BB95CE.1010502@redhat.com>
+References: <1404051421-24377-1-git-send-email-hdegoede@redhat.com> <1404051421-24377-2-git-send-email-hdegoede@redhat.com> <20140707182302.GA29650@tuxdriver.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4639-8vAmw3ZAcdzhJTuQ9jeba9BPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, "Arnd Bergmann (arnd-r2nGTMty4D4@public.gmane.org)" <arnd-r2nGTMty4D4@public.gmane.org>, "'Bjorn Helgaas' (bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org)" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Nicholson <mark-5iakeXVP1y7by3iVrkZq2A@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBVVL52OQKGQEA6255KQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140707182302.GA29650-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 8, 2014 at 10:54 AM, Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org> wrote:
-> Pls find attached patches to push through your repo.  These are rebased over the top
->  of 3.16-rc3.
+Hi,
 
-git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git
-spear/pcie-support-v8
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 07/07/2014 08:23 PM, John W. Linville wrote:
+> Any word from the devicetree folks?
+
+We changed the compatible string from brcm,bcm43xx-fmac to brcm,bcm4329-fmac
+at their request, that is the only feedback we've gotten from them AFAIK.
+
+Regards,
+
+Hans
+
+> 
+> On Sun, Jun 29, 2014 at 04:16:58PM +0200, Hans de Goede wrote:
+>> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>> The Broadcom bcm43xx sdio devices are fullmac devices that may be
+>> integrated in ARM platforms. Currently, the brcmfmac driver for
+>> these devices support use of platform data. This patch specifies
+>> the bindings that allow this platform data to be expressed in the
+>> devicetree.
+>>
+>> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no consensus
+>>  on how to handle this yet]
+>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 41 ++++++++++++++++++++++
+>>  1 file changed, 41 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> new file mode 100644
+>> index 0000000..5dbf169
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> @@ -0,0 +1,41 @@
+>> +Broadcom BCM43xx Fullmac wireless SDIO devices
+>> +
+>> +This node provides properties for controlling the Broadcom wireless device. The
+>> +node is expected to be specified as a child node to the SDIO controller that
+>> +connects the device to the system.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible : Should be "brcm,bcm4329-fmac".
+>> +
+>> +Optional properties:
+>> + - brcm,drive-strength : drive strength used for SDIO pins on device in mA
+>> +	(default = 6).
+>> + - interrupt-parent : the phandle for the interrupt controller to which the
+>> +	device interrupts are connected.
+>> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+>> +	When not specified the device will use in-band SDIO interrupts.
+>> + - interrupt-names : name of the out-of-band interrupt, which must be set
+>> +	to "host-wake".
+>> +
+>> +Example:
+>> +
+>> +mmc3: mmc@01c12000 {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&mmc3_pins_a>;
+>> +	vmmc-supply = <&reg_vmmc3>;
+>> +	bus-width = <4>;
+>> +	non-removable;
+>> +	status = "okay";
+>> +
+>> +	brcmf: bcrmf@1 {
+>> +		reg = <1>;
+>> +		compatible = "brcm,bcm4329-fmac";
+>> +		interrupt-parent = <&pio>;
+>> +		interrupts = <10 8>; /* PH10 / EINT10 */
+>> +		interrupt-names = "host-wake";
+>> +	};
+>> +};
+>> -- 
+>> 2.0.0
+>>
+>>
+> 
