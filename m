@@ -1,82 +1,77 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 0/3] Deterministic UART numbering on Samsung SoCs
-Date: Tue, 08 Jul 2014 10:40:38 +0200
-Message-ID: <53BBAE86.6090500@gmail.com>
-References: <1403781875-5425-1-git-send-email-t.figa@samsung.com>	<20140626113939.GP32514@n2100.arm.linux.org.uk>	<53AC0BCC.1010608@samsung.com> <CAD8Lp45MvDLsxehayx8uuGt3w3O0vGskiFjb1vdvtOyOv2nG2w@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [GIT PULL] SPEAr1310 PCIe patches rebased on 3.16-rc3
+Date: Tue, 8 Jul 2014 14:23:56 +0530
+Message-ID: <CAOh2x=nLawh_X0M2ESDvxKNhhVUjE9yKEvfin3WTkNs8Kv5eUg@mail.gmail.com>
+References: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E46A4@EAPEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp45MvDLsxehayx8uuGt3w3O0vGskiFjb1vdvtOyOv2nG2w@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>, Tomasz Figa <t.figa@samsung.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E46A4@EAPEX1MAIL1.st.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Cc: "arm@kernel.org" <arm@kernel.org>, "Arnd Bergmann (arnd@arndb.de)" <arnd@arndb.de>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, "'Kishon Vijay Abraham I' (kishon@ti.com)" <kishon@ti.com>, Pratyush ANAND <pratyush.anand@st.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Nicholson <mark@nicholnet.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08.07.2014 10:32, Daniel Drake wrote:
-> Hi,
-> 
-> How can we move forward here?
+Hi Mohit,
 
-Greg, Jiri, what do you think?
+On Tue, Jul 8, 2014 at 12:36 PM, Mohit KUMAR DCG <Mohit.KUMAR@st.com> wrote:
+> Hello Arnd,
+>
+> Pls find SPEAr1310 pcie patches to be merged through arm-soc tree.
+> These patches are rebased on the top of 3-16-rc3.
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git
+> spear/pcie-support-v8
 
-> 
-> On Thu, Jun 26, 2014 at 1:02 PM, Tomasz Figa <t.figa@samsung.com> wrote:
->> - basically Samsung UART already has its own namespace (ttySAC) and the
->> order inside it is well-defined - instance ID shall be the hardware
->> instance number as specified by documentation. The ports vary in certain
->> aspects and the ID is important knowledge of the driver. The problem
->> here was broken implementation of assigning IDs based on probe order,
->> which worked only because on all Exynos platforms all ports have been
->> always registered (which we want to change now and keep unused ones
->> "disabled" in DT),
-> 
-> Yes, the kernel help text documents this quite well:
-> 
-> config SERIAL_SAMSUNG
->     tristate "Samsung SoC serial support"
->     depends on PLAT_SAMSUNG
->     select SERIAL_CORE
->     help
->       Support for the on-chip UARTs on the Samsung S3C24XX series CPUs,
->       providing /dev/ttySAC0, 1 and 2 (note, some machines may not
->       provide all of these ports, depending on how the serial port
->       pins are configured.
-> 
->> - we already have a lot of userspace depending on the aforementioned
->> ttySAC namespace and proper ordering of instances there. While I believe
->> the proper solution as of today would be to go back to standard ttyS
->> namespace and make userspace use a smarter way of identifying the
->> instances (e.g. by path or id, as you suggested), I don't think this
->> will make anyone's life easier with current assumptions,
-> 
-> I like the sound of going to the standard ttyS notation and only
-> providing ports for ones that exist, but is this userspace-visible
-> naming change OK? You could argue that userspace that relies on fixed
-> device paths is a bit broken, but that argument would be a bit cloudy
-> given the kernel documentation for the ttySAC devices above.
+You actually sent this request before Arnd's reply :).
 
-I'd say such argument would be completely invalid as this is most likely
-almost all of the userspace for Samsung SoCs and, in addition to this,
-quite a lot of firmware which pass console=ttySACx through command line.
+This is what he asked for:
 
-> 
->> - correct me if I'm wrong, but I don't think the
->> /dev/serial/by-{path,id} would be handled in kernel's console= parameter.
-> 
-> That's right, that problem is left to the user, but at least we'd be
-> consistent with other SoCs (and open to generic solutions to that
-> inconvenience).
+"Please also include a description of the overall series and the
+reasons why we decided
+to merge it through arm-soc in the pull request email. Thanks!"
 
-And so the point of this series is to make this no longer be left to the
-user, making hardware UART 2 always UART 2 (which is supposed to be the
-current behavior, but not always due to broken implementation) which is
-completely orthogonal to raised issues.
+Also this is not how we send pull requests, please see this:
+http://git-scm.com/docs/git-request-pull
 
-Regardless of whether we stick to ttySAC or move back to ttyS, we still
-need a deterministic way to assign the ID (even for internal driver
-purposes) and that's why this series adds parsing of aliases. No user
-visible behavior should be changed by this series.
+Let me know if you need some help.
 
-Best regards,
-Tomasz
+Also, build-bot reported a warning with your patches and I have
+fixed it now:
+
+>> WARNING: drivers/built-in.o(.data+0x334): Section mismatch in reference from the variable spear1310_miphy_driver to the function .init.text:spear1310_miphy_probe()
+
+diff --git a/drivers/phy/phy-spear1310-miphy.c
+b/drivers/phy/phy-spear1310-miphy.c
+index 6136634..dc0b97a 100644
+--- a/drivers/phy/phy-spear1310-miphy.c
++++ b/drivers/phy/phy-spear1310-miphy.c
+@@ -205,7 +205,7 @@ static struct phy *spear1310_miphy_xlate(struct device *dev,
+        return priv->phy;
+ }
+
+-static int __init spear1310_miphy_probe(struct platform_device *pdev)
++static int spear1310_miphy_probe(struct platform_device *pdev)
+ {
+        struct device *dev = &pdev->dev;
+        struct spear1310_miphy_priv *priv;
+diff --git a/drivers/phy/phy-spear1340-miphy.c
+b/drivers/phy/phy-spear1340-miphy.c
+index cbaf284..e06e944 100644
+--- a/drivers/phy/phy-spear1340-miphy.c
++++ b/drivers/phy/phy-spear1340-miphy.c
+@@ -235,7 +235,7 @@ static struct phy *spear1340_miphy_xlate(struct device *dev,
+        return priv->phy;
+ }
+
+-static int __init spear1340_miphy_probe(struct platform_device *pdev)
++static int spear1340_miphy_probe(struct platform_device *pdev)
+ {
+        struct device *dev = &pdev->dev;
+        struct spear1340_miphy_priv *priv;
+
+Please let me know if I screwed up. Else send pull request from
+this branch again.
+
+--
+viresh
