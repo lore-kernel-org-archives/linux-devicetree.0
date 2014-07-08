@@ -1,274 +1,70 @@
-From: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: Restructure imx6qdl-wandboard.dtsi for new rev C1 board.
-Date: Tue,  8 Jul 2014 12:48:16 -0600
-Message-ID: <1404845297-13751-1-git-send-email-george.joseph@fairview5.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: a case for a common efuse API?
+Date: Tue, 08 Jul 2014 13:00:23 -0700
+Message-ID: <53BC4DD7.20906@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The rev C1 Wandboard uses the Broadcom 4330 for WiFi and Bluetooth instead of
-the 4329.  This changes the PADS assigned for the control lines.  Another
-side effect of the change is that on the rev C1 board, usdhc driver can't
-detect the chip presence correctly so usdhc2 now needs its 'non-removeable'
-property removed.
+Hi,
 
-So that rev B1 and earlier can continue to work, this patch splits the
-board-specific definitions from imx6qdl-wandboard.dtsi into
-imx6qdl-wandboard-revb1.dtsi and imx6qdl-wandboard-revc1.dtsi.  The new files
-include the original base imx6qdl-wandboard.dtsi which retains the common
-definitions.
+On MSM chips we have some efuses (called qfprom) where we store things
+like calibration data, speed bins, etc. We need to read out data from
+the efuses in various drivers like the cpufreq, thermal, etc. This
+essentially boils down to a bunch of readls on the efuse from a handful
+of different drivers. In devicetree this looks a little odd because
+these drivers end up having an extra reg property (or two) that points
+to a register in the efuse and some length, i.e you see this:
 
-The existing imx6dl-wandboard.dts includes imx6qdl-wandboard-revc1.dtsi and
-imx6dl-wandboard-revb1.dts (new) includes imx6qdl-wandboard-revb1.dtsi.
-This makes the rev C1 board the new default.  The same pattern is used for
-imx6q-wandboard.dts.
+	thermal-sensor@34000 {
+		compatible = "sensor";
+		reg = <0x34000 0x1000>, <0x10018 0xc>;
+		reg-names = "sensor", "efuse_calib";
+	}
 
-So, from U-Boot on a WB-Quad you use imxq-wandboard-revb1.dtb for the older B1
-board and imxq-wandboard.dtb for the current rev C1 board.
 
-Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl-wandboard-revb1.dts   | 22 ++++++++++++++
- arch/arm/boot/dts/imx6dl-wandboard.dts         |  2 +-
- arch/arm/boot/dts/imx6q-wandboard-revb1.dts    | 26 ++++++++++++++++
- arch/arm/boot/dts/imx6q-wandboard.dts          |  2 +-
- arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi | 42 ++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi | 41 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi       | 21 -------------
- 7 files changed, 133 insertions(+), 23 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
- create mode 100644 arch/arm/boot/dts/imx6q-wandboard-revb1.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi
- create mode 100644 arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi
+I imagine in DT we want something more like this:
 
-diff --git a/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts b/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
-new file mode 100644
-index 0000000..f607d4f
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright 2013 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-wandboard-revb1.dtsi"
-+
-+/ {
-+	model = "Wandboard i.MX6 Dual Lite Board";
-+	compatible = "wand,imx6dl-wandboard", "fsl,imx6dl";
-+
-+	memory {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6dl-wandboard.dts b/arch/arm/boot/dts/imx6dl-wandboard.dts
-index e672891..bbb6167 100644
---- a/arch/arm/boot/dts/imx6dl-wandboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-wandboard.dts
-@@ -10,7 +10,7 @@
-  */
- /dts-v1/;
- #include "imx6dl.dtsi"
--#include "imx6qdl-wandboard.dtsi"
-+#include "imx6qdl-wandboard-revc1.dtsi"
- 
- / {
- 	model = "Wandboard i.MX6 Dual Lite Board";
-diff --git a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
-new file mode 100644
-index 0000000..20bf3c2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright 2013 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include "imx6qdl-wandboard-revb1.dtsi"
-+
-+/ {
-+	model = "Wandboard i.MX6 Quad Board";
-+	compatible = "wand,imx6q-wandboard", "fsl,imx6q";
-+
-+	memory {
-+		reg = <0x10000000 0x80000000>;
-+	};
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-wandboard.dts b/arch/arm/boot/dts/imx6q-wandboard.dts
-index 36be17f..4a8a6ee 100644
---- a/arch/arm/boot/dts/imx6q-wandboard.dts
-+++ b/arch/arm/boot/dts/imx6q-wandboard.dts
-@@ -10,7 +10,7 @@
-  */
- /dts-v1/;
- #include "imx6q.dtsi"
--#include "imx6qdl-wandboard.dtsi"
-+#include "imx6qdl-wandboard-revc1.dtsi"
- 
- / {
- 	model = "Wandboard i.MX6 Quad Board";
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi
-new file mode 100644
-index 0000000..ef7fa62
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright 2013 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include "imx6qdl-wandboard.dtsi"
-+
-+&iomuxc {
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	imx6qdl-wandboard {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0		/* GPIO_0_CLKO */
-+				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* uSDHC1 CD */
-+				MX6QDL_PAD_EIM_DA9__GPIO3_IO09		0x80000000	/* uSDHC3 CD */
-+				MX6QDL_PAD_EIM_EB1__GPIO2_IO29		0x0f0b0		/* WL_REF_ON */
-+				MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x0f0b0		/* WL_RST_N */
-+				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x000b0		/* WL_REG_ON */
-+				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x80000000	/* WL_HOST_WAKE */
-+				MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x80000000	/* WL_WAKE */
-+				MX6QDL_PAD_EIM_D29__GPIO3_IO29		0x80000000	/* RGMII_nRST */
-+				MX6QDL_PAD_EIM_DA13__GPIO3_IO13		0x80000000	/* BT_ON */
-+				MX6QDL_PAD_EIM_DA14__GPIO3_IO14		0x80000000	/* BT_WAKE */
-+				MX6QDL_PAD_EIM_DA15__GPIO3_IO15		0x80000000	/* BT_HOST_WAKE */				
-+			>;
-+		};
-+	};
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	non-removable;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi
-new file mode 100644
-index 0000000..8d893a7
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * Copyright 2013 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include "imx6qdl-wandboard.dtsi"
-+
-+&iomuxc {
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	imx6qdl-wandboard {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0		/* GPIO_0_CLKO */
-+				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* uSDHC1 CD */
-+				MX6QDL_PAD_EIM_DA9__GPIO3_IO09		0x80000000	/* uSDHC3 CD */
-+				MX6QDL_PAD_CSI0_DAT14__GPIO6_IO00	0x0f0b0		/* WIFI_ON (reset, active low) */
-+				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x000b0		/* WL_REG_ON (unused) */
-+				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x80000000	/* WL_HOST_WAKE, input */
-+				MX6QDL_PAD_CSI0_DAT13__GPIO5_IO31	0x0f0b0		/* GPIO5_IO31 (Wifi Power Enable) */
-+				MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x80000000	/* WL_WAKE (unused) */
-+				MX6QDL_PAD_CSI0_VSYNC__GPIO5_IO21	0x80000000	/* BT_ON */
-+				MX6QDL_PAD_CSI0_DAT12__GPIO5_IO30	0x80000000	/* BT_WAKE */
-+				MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20	0x80000000	/* BT_HOST_WAKE */
-+				MX6QDL_PAD_EIM_D29__GPIO3_IO29		0x80000000	/* RGMII_nRST */
-+			>;
-+		};
-+	};
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-index bdfdf89..2aa9fbf 100644
---- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-@@ -79,22 +79,8 @@
- 
- &iomuxc {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_hog>;
- 
- 	imx6qdl-wandboard {
--		pinctrl_hog: hoggrp {
--			fsl,pins = <
--				MX6QDL_PAD_GPIO_0__CCM_CLKO1 	 0x130b0
--				MX6QDL_PAD_GPIO_2__GPIO1_IO02	 0x80000000
--				MX6QDL_PAD_EIM_DA9__GPIO3_IO09	 0x80000000
--				MX6QDL_PAD_EIM_EB1__GPIO2_IO29   0x80000000 /* WL_REF_ON */
--				MX6QDL_PAD_EIM_A25__GPIO5_IO02   0x80000000 /* WL_RST_N */
--				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26 0x80000000 /* WL_REG_ON */
--				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000 /* WL_HOST_WAKE */
--				MX6QDL_PAD_ENET_TXD0__GPIO1_IO30 0x80000000 /* WL_WAKE */
--				MX6QDL_PAD_EIM_D29__GPIO3_IO29   0x80000000
--			>;
--		};
- 
- 		pinctrl_audmux: audmuxgrp {
- 			fsl,pins = <
-@@ -250,13 +236,6 @@
- 	status = "okay";
- };
- 
--&usdhc2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usdhc2>;
--	non-removable;
--	status = "okay";
--};
--
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
+	efuse: efuse@10000 {
+		compatible = "efuse";
+		reg = <0x10000 0x1000>;
+	}
+
+	thermal-sensor@34000 {
+		compatible = "sensor";
+		reg = <0x34000 0x1000>;
+		efuse = <&efuse 0x18>;
+	}
+
+
+Where we can point to the efuse and give an address offset. From code we
+could then call some efuse_read() function to read the sensor's
+calibration data.
+
+It's been suggested that we use syscon for this, but I wonder if that is
+the right thing to do. With a syscon you're usually writing some
+registers that got lumped together with other registers that aren't
+directly related to your driver. It doesn't seem like syscon is made for
+reading fuses or other things like eeproms. Maybe I'm wrong though.
+
+Using syscon would probably work if we could add a way to point to
+offsets within the syscon node (the 0x18 part in the example). In my
+specific use-case the calibration data may have different offsets
+depending on which SoC the hardware is instantiated in so we could also
+make syscon work if the compatible field for the sensor node indicates
+which SoC it is.
+
+I added Tegra folks because I see that on Tegra this hardware is exposed
+via an SoC specific API, tegra_fuse_readl(), and an associated driver in
+drivers/misc/fuse/tegra/. Unfortunately I don't see any users of the API
+outside of the speedo code in the same directory and the sysfs bin
+attribute that may or may not be in use by some userspace code.
+
 -- 
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
