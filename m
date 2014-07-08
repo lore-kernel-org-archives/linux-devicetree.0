@@ -1,54 +1,120 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v9 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Tue, 8 Jul 2014 18:43:26 +0530
-Message-ID: <53BBEE76.7090100@ti.com>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com> <1404728173-20263-2-git-send-email-antoine.tenart@free-electrons.com> <53BBE419.8080107@ti.com> <53BBEB84.50904@gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [Re-send PATCH 1/1] arm: dra7xx: Add hwmod data for MDIO and CPSW
+Date: Tue, 8 Jul 2014 18:46:39 +0530
+Message-ID: <1404825399-10330-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53BBEB84.50904@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, tj@kernel.org
-Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Adding hwmod data for CPSW and MDIO which is present in DRA7xx SoC
 
-On Tuesday 08 July 2014 06:30 PM, Sebastian Hesselbarth wrote:
-> On 07/08/2014 02:29 PM, Kishon Vijay Abraham I wrote:
->> On Monday 07 July 2014 03:46 PM, Antoine T=C3=A9nart wrote:
->>> The Berlin SoC has a two SATA ports. Add a PHY driver to handle the=
-m.
->>>
->>> The mode selection can let us think this PHY can be configured to f=
-it
->>> other purposes. But there are reasons to think the SATA mode will b=
-e
->>> the only one usable: the PHY registers are only accessible indirect=
-ly
->>> through two registers in the SATA range, the PHY seems to be integr=
-ated
->>> and no information tells us the contrary. For these reasons, make t=
-he
->>> driver a SATA PHY driver.
->>
->> Thanks for doing multiple revisions of this. Looks good to be merged=
- for me now.
->=20
-> I'd like to see some Acked-by from Tejun on the AHCI patches first, b=
-ut
-> if he agrees, should I prepare a stable branch for each of us to pull
-> their patches from?
+Cc: Rajendra Nayak <rnayak@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Paul Walmsley <paul@pwsan.com>
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+---
 
-I don't think that's needed. As long as there are no build breaks, each=
- of us
-should be able to take it independently.
->=20
-> AFAIKS, that would be 1+2 for you, 3-5 for Tejun, and the DT crap 6+7
-> for me.
+This patch was already send twice on 2013-10-18 and 2014-05-13. Adding
+more people in Cc to review the patch.
 
-right, I'll take 1 and 2 in my tree.
+---
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 65 +++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-Cheers
-Kishon
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+index 20b4398..45b5113 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -273,6 +273,56 @@ static struct omap_hwmod dra7xx_ctrl_module_wkup_hwmod = {
+ };
+ 
+ /*
++ * 'gmac' class
++ * cpsw/gmac sub system
++ */
++static struct omap_hwmod_class_sysconfig dra7xx_gmac_sysc = {
++	.rev_offs	= 0x0,
++	.sysc_offs	= 0x8,
++	.syss_offs	= 0x4,
++	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
++			   SYSS_HAS_RESET_STATUS),
++	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
++			   MSTANDBY_NO),
++	.sysc_fields	= &omap_hwmod_sysc_type3,
++};
++
++static struct omap_hwmod_class dra7xx_gmac_hwmod_class = {
++	.name		= "gmac",
++	.sysc		= &dra7xx_gmac_sysc,
++};
++
++static struct omap_hwmod dra7xx_gmac_hwmod = {
++	.name		= "gmac",
++	.class		= &dra7xx_gmac_hwmod_class,
++	.clkdm_name	= "gmac_clkdm",
++	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY),
++	.main_clk	= "dpll_gmac_ck",
++	.mpu_rt_idx	= 1,
++	.prcm		= {
++		.omap4	= {
++			.clkctrl_offs	= DRA7XX_CM_GMAC_GMAC_CLKCTRL_OFFSET,
++			.context_offs	= DRA7XX_RM_GMAC_GMAC_CONTEXT_OFFSET,
++			.modulemode	= MODULEMODE_SWCTRL,
++		},
++	},
++};
++
++/*
++ * 'mdio' class
++ */
++static struct omap_hwmod_class dra7xx_mdio_hwmod_class = {
++	.name		= "davinci_mdio",
++};
++
++static struct omap_hwmod dra7xx_mdio_hwmod = {
++	.name		= "davinci_mdio",
++	.class		= &dra7xx_mdio_hwmod_class,
++	.clkdm_name	= "gmac_clkdm",
++	.main_clk	= "dpll_gmac_ck",
++};
++
++/*
+  * 'dcan' class
+  *
+  */
+@@ -1999,6 +2049,19 @@ static struct omap_hwmod_ocp_if dra7xx_l4_wkup__ctrl_module_wkup = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
++static struct omap_hwmod_ocp_if dra7xx_l4_per2__cpgmac0 = {
++	.master		= &dra7xx_l4_per2_hwmod,
++	.slave		= &dra7xx_gmac_hwmod,
++	.clk		= "dpll_gmac_ck",
++	.user		= OCP_USER_MPU,
++};
++
++static struct omap_hwmod_ocp_if dra7xx_gmac__mdio = {
++	.master		= &dra7xx_gmac_hwmod,
++	.slave		= &dra7xx_mdio_hwmod,
++	.user		= OCP_USER_MPU,
++};
++
+ /* l4_wkup -> dcan1 */
+ static struct omap_hwmod_ocp_if dra7xx_l4_wkup__dcan1 = {
+ 	.master		= &dra7xx_l4_wkup_hwmod,
+@@ -2642,6 +2705,8 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+ 	&dra7xx_l4_wkup__ctrl_module_wkup,
+ 	&dra7xx_l4_wkup__dcan1,
+ 	&dra7xx_l4_per2__dcan2,
++	&dra7xx_l4_per2__cpgmac0,
++	&dra7xx_gmac__mdio,
+ 	&dra7xx_l4_cfg__dma_system,
+ 	&dra7xx_l3_main_1__dss,
+ 	&dra7xx_l3_main_1__dispc,
+-- 
+2.0.0.390.gcb682f8
