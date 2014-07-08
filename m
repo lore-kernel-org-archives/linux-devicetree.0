@@ -1,113 +1,43 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Mon, 7 Jul 2014 19:11:36 -0600
-Message-ID: <20140708011136.GE22939@google.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com>
- <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
- <1396862058.3671.40.camel@pasglop>
- <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
- <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
- <20140704145752.GJ6501@e106497-lin.cambridge.arm.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH 0/3] Qualcomm pm8xxx gpio driver
+Date: Mon, 7 Jul 2014 18:26:22 -0700
+Message-ID: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140704145752.GJ6501@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 4, 2014 at 8:57 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Mon, Apr 07, 2014 at 11:44:51PM +0100, Bjorn Helgaas wrote:
->> On Mon, Apr 7, 2014 at 4:07 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->> > On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt wrote:
->> >> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
->> >> >
->> >> > *My* strategy is to get rid of pci_domain_nr(). I don't see why we need
->> >> > to have arch specific way of providing the number, specially after looking
->> >> > at the existing implementations that return a value from a variable that
->> >> > is never touched or incremented. My guess is that pci_domain_nr() was
->> >> > created to work around the fact that there was no domain_nr maintainance in
->> >> > the generic code.
->> >>
->> >> Well, there was no generic host bridge structure. There is one now, it should
->> >> go there.
->> >
->> > Exactly! Hence my patch. After it gets accepted I will go through architectures
->> > and remove their version of pci_domain_nr().
->>
->> Currently the arch has to supply pci_domain_nr() because that's the
->> only way for the generic code to learn the domain.  After you add
->> pci_create_root_bus_in_domain(), the arch can supply the domain that
->> way, and we won't need the arch-specific pci_domain_nr().  Right?
->> That makes more sense to me; thanks for the explanation.
->>
->> Let me try to explain my concern about the
->> pci_create_root_bus_in_domain() interface.  We currently have these
->> interfaces:
->>
->>   pci_scan_root_bus()
->>   pci_scan_bus()
->>   pci_scan_bus_parented()
->>   pci_create_root_bus()
->>
->> pci_scan_root_bus() is a higher-level interface than
->> pci_create_root_bus(), so I'm trying to migrate toward it because it
->> lets us remove a little code from the arch, e.g., pci_scan_child_bus()
->> and pci_bus_add_devices().
->>
->> I think we can only remove the arch-specific pci_domain_nr() if that
->> arch uses pci_create_root_bus_in_domain().  When we convert an arch
->> from using scan_bus interfaces to using
->> pci_create_root_bus_in_domain(), we will have to move the rest of the
->> scan_bus code (pci_scan_child_bus(), pci_bus_add_devices()) back into
->> the arch code.
->>
->> One alternative is to add an _in_domain() variant of each of these
->> interfaces, but that doesn't seem very convenient either.  My idea of
->> passing in a structure would also require adding variants, so there's
->> not really an advantage there, but I am thinking of the next
->> unification effort, e.g., for NUMA node info.  I don't really want to
->> have to change all the _in_domain() interfaces to also take yet
->> another parameter for the node number.
->
-> ...
-> My understanding is that when pci_host_bridge structure was introduced
-> you were trying to keep the APIs unchanged and hence the creation of a
-> bridge was hidden inside the pci_create_root_bus() function.
+This is device tree bindings as well as a driver for the gpio blocks found in
+Qualcomm pm8018, pm8038, pm8058, pm8917 and pm8921 pmic chips.
 
-You mean pci_alloc_host_bridge()?  Right; ideally I would have used
-pci_scan_root_bus() everywhere and gotten rid of pci_create_root_bus().
-The outline of pci_scan_root_bus() is:
+The first patch extends the pm8921-core to expose a function to read out the
+"RT status" of an interrupt pin. This is the way input many input values are
+exposed in these set of pmics.
 
-    pci_create_root_bus()
-    pci_scan_child_bus()
-    pci_bus_add_devices()
+Bjorn Andersson (3):
+  mfd: pm8921: Expose pm8xxx_read_irq_status
+  pinctrl: Device tree bindings for Qualcomm pm8xxx gpio block
+  pinctrl: Introduce pinctrl driver for Qualcomm pm8xxx
 
-The problem was that several arches do interesting things scattered among
-that core.  The ACPI host bridge driver used on x86 and ia64 does resource
-allocation before pci_bus_add_devices(), as does parisc.  Probably all
-arches should do this, but they don't.
+ .../bindings/pinctrl/qcom,pm8xxx-gpio.txt          |  230 ++++++
+ drivers/mfd/pm8921-core.c                          |   36 +
+ drivers/pinctrl/Kconfig                            |   11 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinctrl-pm8xxx-gpio.c              |  795 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h     |   34 +
+ include/linux/mfd/pm8921-core.h                    |   32 +
+ 7 files changed, 1139 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pm8xxx-gpio.txt
+ create mode 100644 drivers/pinctrl/pinctrl-pm8xxx-gpio.c
+ create mode 100644 include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h
+ create mode 100644 include/linux/mfd/pm8921-core.h
 
-And powerpc and sparc use of_scan_bus() or something similar instead of
-pci_scan_child_bus().  They probably *could* provide config space accessors
-that talk to OF and would allow pci_scan_child_bus() to work.  But that
-seemed like too much work at the time.
+-- 
+1.7.9.5
 
-> If we want to store the domain_nr information in the host bridge structure,
-> together with a pointer to sysdata, then we need to break up the creation
-> of the pci_host_bridge from the creation of a root bus. At that moment,
-> pci_scan_root_bus() will need to be changed to accept a pci_host_bridge
-> pointer, while pci_scan_bus() and pci_scan_bus_parented() will create
-> the host bridge in the body of their function.
-
-It's hard to change an existing interface like pci_scan_root_bus() because
-it's called from so many places and you have to change them all at once.
-Then if something goes wrong, the revert makes a mess for everybody.  But
-I think it makes sense to add a new interface that does what you want.
-
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
