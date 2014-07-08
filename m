@@ -1,223 +1,445 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display Controller
- support
-Date: Tue, 8 Jul 2014 16:37:31 +0200
-Message-ID: <20140708163731.6693a883@bbrezillon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
- <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
- <20140708092348.4ecdbb8f@bbrezillon>
- <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: add initial Rex Pro board support
+Date: Tue,  8 Jul 2014 09:49:22 -0500
+Message-ID: <1404830963-18274-1-git-send-email-robertcnelson@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Jul 2014 08:49:41 -0400
-Rob Clark <robdclark@gmail.com> wrote:
+Add initial Rex Pro i.mx6q board support. Ethernet, UART, USB, I2C, SPI, HDMI,
+Audio, and SDHC cards are working.  Currently no mainline u-boot, so boot with
+cat zImage imx6q-rex-pro.dtb > zImage.dtb, then using mkimage create uImage
 
-> On Tue, Jul 8, 2014 at 3:23 AM, Boris BREZILLON
-> <boris.brezillon@free-electrons.com> wrote:
-> > Hello Rob,
-> >
-> > On Mon, 7 Jul 2014 23:45:54 -0400
-> > Rob Clark <robdclark@gmail.com> wrote:
-> >
-> >> On Mon, Jul 7, 2014 at 12:42 PM, Boris BREZILLON
-> >> <boris.brezillon@free-electrons.com> wrote:
-> >> > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
-> >> > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> >> > controller device.
-> >> >
-> >> > This display controller supports at least one primary plane and might
-> >> > provide several overlays and an hardware cursor depending on the IP
-> >> > version.
-> >> >
-> >> > At the moment, this driver only implements an RGB connector to interface
-> >> > with LCD panels, but support for other kind of external devices (like DRM
-> >> > bridges) might be added later.
-> >> >
-> >> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> >> > ---
-> >> >  drivers/gpu/drm/Kconfig                         |   2 +
-> >> >  drivers/gpu/drm/Makefile                        |   1 +
-> >> >  drivers/gpu/drm/atmel-hlcdc/Kconfig             |  11 +
-> >> >  drivers/gpu/drm/atmel-hlcdc/Makefile            |   7 +
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  | 469 +++++++++++++++
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 474 +++++++++++++++
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    | 210 +++++++
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c | 706 +++++++++++++++++++++++
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h | 422 ++++++++++++++
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c | 351 ++++++++++++
-> >> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 729 ++++++++++++++++++++++++
-> >> >  11 files changed, 3382 insertions(+)
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c
-> >> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> >> >
-> >> > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> >> > index d1cc2f6..df6f0c1 100644
-> >> > --- a/drivers/gpu/drm/Kconfig
-> >> > +++ b/drivers/gpu/drm/Kconfig
-> >> > @@ -182,6 +182,8 @@ source "drivers/gpu/drm/cirrus/Kconfig"
-> >
-> > [...]
-> >
-> >> > +
-> >> > +/**
-> >> > + * Atmel HLCDC Plane properties.
-> >> > + *
-> >> > + * This structure stores plane property definitions.
-> >> > + *
-> >> > + * @alpha: alpha blending (or transparency) property
-> >> > + * @csc: YUV to RGB conversion factors property
-> >> > + */
-> >> > +struct atmel_hlcdc_plane_properties {
-> >> > +       struct drm_property *alpha;
-> >> > +       struct drm_property *csc;
-> >>
-> >> appears like csc is not used yet, so I suppose you can drop it for
-> >> now..  when you do add it, don't forget to update drm.tmp.  But for
-> >> now it at least makes review easier when the driver doesn't add new
-> >> userspace interfaces :-)
-> >
-> >
-> > Sure, I guess this is a leftover from another patch I made to add Color
-> > Space Conversion configuration.
-> >
-> > I'll remove it for the next version.
-> >
-> >>
-> >> > +};
-> >> > +
-> >> > +/**
-> >> > + * Atmel HLCDC Plane.
-> >> > + *
-> >> > + * @base: base DRM plane structure
-> >> > + * @layer: HLCDC layer structure
-> >> > + * @properties: pointer to the property definitions structure
-> >> > + * @alpha: current alpha blending (or transparency) status
-> >> > + */
-> >> > +struct atmel_hlcdc_plane {
-> >> > +       struct drm_plane base;
-> >> > +       struct atmel_hlcdc_layer layer;
-> >> > +       struct atmel_hlcdc_plane_properties *properties;
-> >> > +};
-> >> > +
-> >> > +static inline struct atmel_hlcdc_plane *
-> >> > +drm_plane_to_atmel_hlcdc_plane(struct drm_plane *p)
-> >> > +{
-> >> > +       return container_of(p, struct atmel_hlcdc_plane, base);
-> >> > +}
-> >> > +
-> >> > +static inline struct atmel_hlcdc_plane *
-> >> > +atmel_hlcdc_layer_to_plane(struct atmel_hlcdc_layer *l)
-> >> > +{
-> >> > +       return container_of(l, struct atmel_hlcdc_plane, layer);
-> >> > +}
-> >> > +
-> >> > +/**
-> >> > + * Atmel HLCDC Plane update request structure.
-> >> > + *
-> >> > + * @crtc_x: x position of the plane relative to the CRTC
-> >> > + * @crtc_y: y position of the plane relative to the CRTC
-> >> > + * @crtc_w: visible width of the plane
-> >> > + * @crtc_h: visible height of the plane
-> >> > + * @src_x: x buffer position
-> >> > + * @src_y: y buffer position
-> >> > + * @src_w: buffer width
-> >> > + * @src_h: buffer height
-> >> > + * @pixel_format: pixel format
-> >> > + * @gems: GEM object object containing image buffers
-> >> > + * @offsets: offsets to apply to the GEM buffers
-> >> > + * @pitches: line size in bytes
-> >> > + * @crtc: crtc to display on
-> >> > + * @finished: finished callback
-> >> > + * @finished_data: data passed to the finished callback
-> >> > + * @bpp: bytes per pixel deduced from pixel_format
-> >> > + * @xstride: value to add to the pixel pointer between each line
-> >> > + * @pstride: value to add to the pixel pointer between each pixel
-> >> > + * @nplanes: number of planes (deduced from pixel_format)
-> >> > + */
-> >> > +struct atmel_hlcdc_plane_update_req {
-> >> > +       int crtc_x;
-> >> > +       int crtc_y;
-> >> > +       unsigned int crtc_w;
-> >> > +       unsigned int crtc_h;
-> >> > +       uint32_t src_x;
-> >> > +       uint32_t src_y;
-> >> > +       uint32_t src_w;
-> >> > +       uint32_t src_h;
-> >> > +       uint32_t pixel_format;
-> >> > +       struct drm_gem_cma_object *gems[ATMEL_HLCDC_MAX_PLANES];
-> >> > +       unsigned int offsets[ATMEL_HLCDC_MAX_PLANES];
-> >> > +       unsigned int pitches[ATMEL_HLCDC_MAX_PLANES];
-> >>
-> >> tbh, I've only looked closely, but I don't completely follow all the
-> >> layering here..  I wonder if we'd be better off just moving 'struct
-> >> drm_fb_cma' to header file so you could get the gem objects / pixel
-> >> fmt / width / height directly from the fb object (and then you can
-> >> reference count things at the fb level, rather than at the individual
-> >> gem obj level, too)
-> >>
-> >
-> > Actually, the HW cursor is a drm_plane too, and in this case I cannot
-> > retrieve a drm_fb_cma object, but just a single GEM object (see
-> > atmel_hlcdc_crtc_cursor_set function in atmel_hlcdc_crtc.c).
-> 
-> oh, right..  well maybe for the cursor case it would be possible to
-> wrap up the gem bo with an internally created fb?  Not sure if that
-> ends up simplifying things or not, so it is definitely your call.  But
-> at least my experience with other drivers (that did not use a plane as
-> a cursor internally) was that I could simplify things after fb gained
-> refcnt'ing.
+Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile          |   1 +
+ arch/arm/boot/dts/imx6q-rex-pro.dts |  34 ++++
+ arch/arm/boot/dts/imx6qdl-rex.dtsi  | 357 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 392 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-rex-pro.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-rex.dtsi
 
-Unless I'm missing something, I'd say moving to fb objects instead of
-GEM objects won't simplify the code much (I'm already refcnt'ing GEM
-objects when launching a DMA transfer for a plane update).
-
-The only benefit I can see is consistency with other drivers (which in
-fact is a good point).
-Indeed atmel_hlcdc_plane_update_req redefines some fields which are
-already availables in drm_fb_cma or drm_framebuffer:
-
-- gems (called objs in drm_fb_cma)
-- pixel_format
-- pitches (offsets must be redefined because it is modified in
-  atmel_hlcdc_plane_prepare_update_req)
-
-Anyway, I'll give it a try.
-
-Thanks for your review.
-
-In the meantime, I realized I hadn't subscribed to the dri-devel
-ML, which might explain why I didn't get any reviews from DRM
-maintainers/developers so far :-).
-
-Best Regards,
-
-Boris
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b9e7adc..fb79bf5 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -220,6 +220,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6q-gw54xx.dtb \
+ 	imx6q-nitrogen6x.dtb \
+ 	imx6q-phytec-pbab01.dtb \
++	imx6q-rex-pro.dtb \
+ 	imx6q-sabreauto.dtb \
+ 	imx6q-sabrelite.dtb \
+ 	imx6q-sabresd.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-rex-pro.dts b/arch/arm/boot/dts/imx6q-rex-pro.dts
+new file mode 100644
+index 0000000..3c2852b
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-rex-pro.dts
+@@ -0,0 +1,34 @@
++/*
++ * Copyright 2014 FEDEVEL, Inc.
++ *
++ * Author: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-rex.dtsi"
++
++/ {
++	model = "Rex Pro i.MX6 Quad Board";
++	compatible = "rex,imx6q-rex-pro", "fsl,imx6q";
++
++	memory {
++		reg = <0x10000000 0x80000000>;
++	};
++};
++
++&ecspi3 {
++	flash: m25p80@0 {
++		compatible = "sst,sst25vf032b";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
++};
++
++&sata {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+new file mode 100644
+index 0000000..df7bcf8
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+@@ -0,0 +1,357 @@
++/*
++ * Copyright 2014 FEDEVEL, Inc.
++ *
++ * Author: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_3p3v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		reg_usbh1_vbus: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usbh1>;
++			regulator-name = "usbh1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++
++		reg_usb_otg_vbus: regulator@2 {
++			compatible = "regulator-fixed";
++			reg = <2>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usbotg>;
++			regulator-name = "usb_otg_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_led>;
++
++		led0: usr {
++			label = "usr";
++			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	sound {
++		compatible = "fsl,imx6-rex-sgtl5000",
++			     "fsl,imx-audio-sgtl5000";
++		model = "imx6-rex-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&codec>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++		mux-int-port = <1>;
++		mux-ext-port = <3>;
++	};
++};
++
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++};
++
++&ecspi2 {
++	fsl,spi-num-chipselects = <1>;
++	cs-gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi2>;
++	status = "okay";
++};
++
++&ecspi3 {
++	fsl,spi-num-chipselects = <1>;
++	cs-gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3>;
++	status = "okay";
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii";
++	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c2>;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks 201>;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_3p3v>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	eeprom@57 {
++		compatible = "at,24c02";
++		reg = <0x57>;
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	imx6qdl-rex {
++		pinctrl_hog: hoggrp {
++			fsl,pins = <
++				/* SGTL5000 sys_mclk */
++				MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x030b0
++			>;
++		};
++
++		pinctrl_audmux: audmuxgrp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
++				MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
++				MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
++				MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
++			>;
++		};
++
++		pinctrl_ecspi2: ecspi2grp {
++			fsl,pins = <
++				MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
++				MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
++				MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
++				/* CS */
++				MX6QDL_PAD_DISP0_DAT5__GPIO4_IO26	0x000b1
++			>;
++		};
++
++		pinctrl_ecspi3: ecspi3grp {
++			fsl,pins = <
++				MX6QDL_PAD_DISP0_DAT17__ECSPI2_MISO	0x100b1
++				MX6QDL_PAD_DISP0_DAT16__ECSPI2_MOSI	0x100b1
++				MX6QDL_PAD_DISP0_DAT19__ECSPI2_SCLK	0x100b1
++				/* CS */
++				MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x000b1
++			>;
++		};
++
++		pinctrl_enet: enetgrp {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
++				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
++				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
++				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
++				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
++				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
++				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++				/* Phy reset */
++				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x000b0
++			>;
++		};
++
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
++				MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c3: i2c3grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D17__I2C3_SCL		0x4001b8b1
++				MX6QDL_PAD_EIM_D18__I2C3_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_led: ledgrp {
++			fsl,pins = <
++				/* user led */
++				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000
++			>;
++		};
++
++		pinctrl_uart1: uart1grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
++				MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
++				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_usbh1: usbh1grp {
++			fsl,pins = <
++				/* power enable, high active */
++				MX6QDL_PAD_EIM_D31__GPIO3_IO31		0x10b0
++			>;
++		};
++
++		pinctrl_usbotg: usbotggrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++				MX6QDL_PAD_EIM_D21__USB_OTG_OC		0x1b0b0
++				/* power enable, high active */
++				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x10b0
++			>;
++		};
++
++		pinctrl_usdhc2: usdhc2grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
++				MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
++				MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
++				MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
++				MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
++				MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
++				/* CD */
++				MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x1b0b0
++				/* WP */
++				MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x1f0b0
++			>;
++		};
++
++		pinctrl_usdhc3: usdhc3grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
++				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
++				/* CD */
++				MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x1b0b0
++				/* WP */
++				MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x1f0b0
++			>;
++		};
++	};
++};
++
++&ssi1 {
++	fsl,mode = "i2s-slave";
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usbh1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbh1>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	bus-width = <4>;
++	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	bus-width = <4>;
++	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
