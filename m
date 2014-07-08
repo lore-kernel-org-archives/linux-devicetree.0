@@ -1,38 +1,90 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: Questions About a Semi-Soft irqchip Device
-Date: Tue, 8 Jul 2014 10:56:39 -0400
-Message-ID: <20140708145639.GD13433@titan.lakedaemon.net>
-References: <CAJgR-Bi2HX+aYVabaFLyu9QAnAS4RmQ7DvBtDHOawkfi08zycA@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: keystone: fix netcp's clocks definitions
+Date: Tue, 8 Jul 2014 18:43:04 +0300
+Message-ID: <1404834184-5411-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJgR-Bi2HX+aYVabaFLyu9QAnAS4RmQ7DvBtDHOawkfi08zycA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Loeliger <loeliger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jon,
+The clocks tree for Keystone 2 NTCP devices should be
+defined as following:
+[refclk] - board dependent
+ |- <papllclk> - PLL clock
+    |- <paclk13> - fixed factor clock div=3 mul=1
+       |- <clkpa> - gated clock
+       |- <clkcpgmac> - gated clock
+       |- <clksa> - gated clock
 
-On Tue, Jul 08, 2014 at 09:02:14AM -0500, Jon Loeliger wrote:
-> My IP block provides software-assignable interrupts.  That
-> is, I have a large pool of interrupt sources, and a large pool
-> of interrupt bits in the controller, but they are not physically
-> tied together. Instead they are assigned by some driver as it
-> initializes and allocates resources.  This, I think, means that
-> I can not describe the interrupt  bindings in the DTS file.
+Hence, update Keystone 2 DT to follow HW specification.
 
-Please take a look at the crossbar driver.  It's had quite a bit of
-cleanup this cycle, so you may way to look at
+Signed-off-by: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/k2e-clocks.dtsi      |    2 +-
+ arch/arm/boot/dts/k2hk-clocks.dtsi     |    2 +-
+ arch/arm/boot/dts/k2l-clocks.dtsi      |    2 +-
+ arch/arm/boot/dts/keystone-clocks.dtsi |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-  git://git.infradead.org/users/jcooper/linux.git irqchip/crossbar
+diff --git a/arch/arm/boot/dts/k2e-clocks.dtsi b/arch/arm/boot/dts/k2e-clocks.dtsi
+index 90774d6..598afe9 100644
+--- a/arch/arm/boot/dts/k2e-clocks.dtsi
++++ b/arch/arm/boot/dts/k2e-clocks.dtsi
+@@ -22,7 +22,7 @@ clocks {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,pll-clock";
+ 		clocks = <&refclkpass>;
+-		clock-output-names = "pa-pll-clk";
++		clock-output-names = "papllclk";
+ 		reg = <0x02620358 4>;
+ 		reg-names = "control";
+ 	};
+diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/k2hk-clocks.dtsi
+index 96e6536..d5adee3 100644
+--- a/arch/arm/boot/dts/k2hk-clocks.dtsi
++++ b/arch/arm/boot/dts/k2hk-clocks.dtsi
+@@ -31,7 +31,7 @@ clocks {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,pll-clock";
+ 		clocks = <&refclkpass>;
+-		clock-output-names = "pa-pll-clk";
++		clock-output-names = "papllclk";
+ 		reg = <0x02620358 4>;
+ 		reg-names = "control";
+ 	};
+diff --git a/arch/arm/boot/dts/k2l-clocks.dtsi b/arch/arm/boot/dts/k2l-clocks.dtsi
+index f584b80..eb1e3e2 100644
+--- a/arch/arm/boot/dts/k2l-clocks.dtsi
++++ b/arch/arm/boot/dts/k2l-clocks.dtsi
+@@ -31,7 +31,7 @@ clocks {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,pll-clock";
+ 		clocks = <&refclksys>;
+-		clock-output-names = "pa-pll-clk";
++		clock-output-names = "papllclk";
+ 		reg = <0x02620358 4>;
+ 		reg-names = "control";
+ 	};
+diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
+index 93f82c7..0c334b2 100644
+--- a/arch/arm/boot/dts/keystone-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-clocks.dtsi
+@@ -215,7 +215,7 @@ clocks {
+ 	clkpa: clkpa {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+-		clocks = <&chipclk16>;
++		clocks = <&paclk13>;
+ 		clock-output-names = "pa";
+ 		reg = <0x0235001c 0xb00>, <0x02350008 0x400>;
+ 		reg-names = "control", "domain";
+-- 
+1.7.9.5
 
-It sounds very similar.
-
-thx,
-
-Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
