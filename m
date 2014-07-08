@@ -1,85 +1,91 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Tue, 8 Jul 2014 23:48:47 +0100
-Message-ID: <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
- <20140708005954.GC22939@google.com>
- <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
- <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH V5 2/3] Documentation: gpio: Add APM X-Gene SoC GPIO
+ controller DTS binding
+Date: Tue, 8 Jul 2014 15:54:55 -0700
+Message-ID: <CAL85gmDug-RHV+6gttLkDg+rM5PPHGew9KuX4SNbk9V3qE01=g@mail.gmail.com>
+References: <1403823587-23404-1-git-send-email-fkan@apm.com>
+	<1403823587-23404-3-git-send-email-fkan@apm.com>
+	<20140630125339.GA21390@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20140630125339.GA21390@leverpostej>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "patches@apm.com" <patches@apm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "gnurou@gmail.com" <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 07:41:50PM +0100, Bjorn Helgaas wrote:
-> On Tue, Jul 8, 2014 at 4:46 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > On Tue, Jul 08, 2014 at 01:59:54AM +0100, Bjorn Helgaas wrote:
->=20
-> >> I wonder if it would help to make a weak pci_domain_nr() function =
-that
-> >> returns "bridge->domain_nr".  Then each arch could individually dr=
-op its
-> >> pci_domain_nr() definition as it was converted, e.g., something li=
-ke this:
-> >>
-> >>   - Convert every arch pci_domain_nr() from a #define to a non-inl=
-ine
-> >>     function
-> >>   - Add bridge.domain_nr, initialized from pci_domain_nr()
-> >>   - Add a weak generic pci_domain_nr() that returns bridge.domain_=
-nr
-> >>   - Add a way to create a host bridge in a specified domain, so we=
- can
-> >>     initialize bridge.domain_nr without using pci_domain_nr()
-> >>   - Convert each arch to use the new creation mechanism and drop i=
-ts
-> >>     pci_domain_nr() implementation
-> >
-> > I will try to propose a patch implementing this.
->=20
-> I think this is more of an extra credit, cleanup sort of thing.  I
-> don't think it advances your primary goal of (I think) getting arm64
-> PCI support in.  So my advice is to not worry about unifying domain
-> handling until later.
+On Mon, Jun 30, 2014 at 5:53 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Jun 26, 2014 at 11:59:46PM +0100, Feng Kan wrote:
+>> Documentation for APM X-Gene SoC GPIO controller DTS binding.
+>>
+>> Signed-off-by: Feng Kan <fkan@apm.com>
+>> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-xgene.txt          | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+>> new file mode 100644
+>> index 0000000..bd5fd85
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+>> @@ -0,0 +1,20 @@
+>> +APM X-Gene SoC GPIO controller bindings
+>> +
+>> +This is a gpio controller that is part of the flash controller.
+>> +This gpio controller controls a total of 48 gpios.
+>> +
+>> +Required properties:
+>> +- compatible: "apm,xgene-gpio" for X-Gene GPIO controller
+>> +- reg: Physical base address and size of the controller's registers
+>
+> There is just the one bank?
 
-Getting arm64 supported *is* my main goal. But like you have stated in =
-your
-review of v7, you wanted to see another architecture converted as a gua=
-rantee
-of "genericity" (for lack of a better word) for my patches. The one arc=
-hitecture
-I've set my eyes on is microblaze, and that one uses pci_scan_root_bus(=
-)
-rather than pci_create_root_bus() so I don't have any opportunity to pa=
-ss the
-domain number or any additional info (like the sysdata pointer that we =
-were
-talking about) to the pci_host_bridge structure unless I do this cleanu=
-p.
+Internally there are three banks. Due to the fact the address space is
+meshed, It was agreed that we turn this into one simple node.
 
-Best regards,
-Liviu
+>
+>> +- #gpio-cells: Should be two.
+>> +     - first cell is the pin number
+>> +     - second cell is used to specify optional parameters (unused)
+>
+> Why is there an unused cell?
+>
+> Why not just make this a single cell if the binding defines no valid
+> parameters?
+I will update documentation to indicate second cell is used for active low and
+active high setting since that is the behavior of the default of_xlate
+function. All it is
+seems to be doing is flipping the value of the gpio. I initially did
+this because I
+did not want to use additional attributes and followed the example
+documentation of
+number of other gpio driver.
+>
+>> +- gpio-controller: Marks the device node as a GPIO controller.
+>
+> No interrupts?
 
-
->=20
-> Bjorn
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Yes, no interrupts in this block.
+>
+> Thanks,
+> Mark.
+>
+>> +
+>> +Example:
+>> +     gpio0: gpio0@1701c000 {
+>> +             compatible = "apm,xgene-gpio";
+>> +             reg = <0x0 0x1701c000 0x0 0x40>;
+>> +             gpio-controller;
+>> +             #gpio-cells = <2>;
+>> +     };
+>> --
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
