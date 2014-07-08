@@ -1,65 +1,138 @@
-From: Harini Katakam <harinik@xilinx.com>
-Subject: [PATCH v3 2/2] devicetree: Add Zynq GPIO devicetree bindings documentation
-Date: Tue,  8 Jul 2014 16:32:36 +0530
-Message-ID: <1404817356-21568-2-git-send-email-harinik@xilinx.com>
-References: <1404817356-21568-1-git-send-email-harinik@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404817356-21568-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
-Cc: michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, harinikatakamlinux@gmail.com, Harini Katakam <harini.katakam@xilinx.com>, Harini Katakam <harinik@xilinx.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH v2 1/1] can: m_can: add Bosch M_CAN controller support
+Date: Tue, 8 Jul 2014 19:08:21 +0800
+Message-ID: <20140708110820.GC21754@shlinux1.ap.freescale.net>
+References: <1404474812-16855-1-git-send-email-b29396@freescale.com>
+ <53B69C55.8010901@pengutronix.de>
+ <20140707071040.GA18505@shlinux1.ap.freescale.net>
+ <53BA7543.70901@pengutronix.de>
+ <20140708103009.GA21754@shlinux1.ap.freescale.net>
+ <53BBCAE5.7040404@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53BBCAE5.7040404@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+On Tue, Jul 08, 2014 at 12:41:41PM +0200, Marc Kleine-Budde wrote:
+> On 07/08/2014 12:30 PM, Dong Aisheng wrote:
+> >> Regarding the mram and the offsets:
+> >>
+> >>> 	fifo_addr = priv->mram_base + priv->rxf0_off + fgi * RXF0_ELEMENT_SIZE;
+> >>> 	fifo_addr = priv->mram_base + priv->mram_off + priv->txb_off;
+> >>
+> >> Why is rxf0_off used without the mram_off and txb_off with the mram_off?
+> >> Can you please test your driver with a mram offset != in your DT.
+> >>
+> >> If I understand the code in m_can_of_parse_mram() correctly the
+> >> individual *_off are already offsets to the *mram_base, so mram_off
+> >> should not be used within the driver.
+> > 
+> > Good catch!
+> > You're right! I aslo found this recently!
+> > txb_off already includes the mram_off so should not plus mram_off again.
+> > The former test did not find it because it's still not exceed the 16K ram
+> > size for m_can0. But m_can1 has such issue.
+> > 
+> >> I even think mram_off should be removed from the priv.
+> > 
+> > Right, i also think so.
+> > 
+> > It is used for debug information formerly that we need mram_off
+> > to calculate each element address in the fifo.
+> > 
+> > By removing mram_off, i'm going to change the debug information to:
+> > dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 %x %d rxf1 %x %d rxb %x %d txe %x %d txb %x %d\n",
+> > 	priv->mram_base, priv->sidf_off, priv->sidf_elems,
+> > 	priv->xidf_off, priv->xidf_elems, priv->rxf0_off,
+> > 	priv->rxf0_elems, priv->rxf1_off, priv->rxf1_elems,
+> > 	priv->rxb_off, priv->rxb_elems, priv->txe_off,
+> > 	priv->txe_elems, priv->txb_off, priv->txb_elems);
+> > 
+> > The annoying thing is the line has to be a much bigger one to avoid
+> > checkpatch warning of "WARNING: quoted string split across lines".
+> > 
+> > What's your suggestion for such issue?
+> > Keeping the big line or split into two lines and leave checkpatch warning there?
+> 
+> The idea behind the warning is, that you can grep for error messages
+> better, as normal grep wouldn't find an error string which spans two
+> lines. So make it a long line.
+> 
+> >> Do the *_off and *_elems fit into a u8 or u16? If
+> >> so it makes sense to convert the priv accordingly.
+> >>
+> > 
+> > Yes, *_off fit into u16 since MRAM has a maximum of 4352 words(17K).
+> > And *_elems fit into u8 since the max number is 128.
+> > I will change them accordingly.
+> > 
+> >> What about putting the offset and the number of elements into a struct
+> >> and make use an array for rxf{0,1}?
+> >>
+> > 
+> > You mean something like below?
+> > struct mram_cfg {
+> > 	u16 off;
+> > 	u8  elements;
+> > };
+> > 
+> > struct m_can_priv {
+> > 	........
+> > 
+> >         struct mram_cfg sidf;
+> >         struct mram_cfg xidf;
+> >         struct mram_cfg rxf0;
+> >         struct mram_cfg rxf1;
+> 
+> struct mram_cfg rxf[2];
+> 
 
-Add gpio-zynq bindings documentation.
+It does not help too much and a bit strange for only make
+rxf0/rxf1 into array,
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
+How about making them all:
+enum m_can_mram_cfg {
+	SIDF = 0,
+	XIDF,
+	RXF0,
+	RXF1,
+	RXB,
+	TXE,
+	TXB,
+	CFG_NUM,
+};
 
-v3 changes:
-Change description of #gpio-cells - use 'gpio-line' instead of 'pin'
+struct m_can_priv {
+	........
+	struct mram_cfg mcfg[CFG_NUM];
+};
 
-v2 changes:
-Improve description.
+Then in code:
 
----
- .../devicetree/bindings/gpio/gpio-zynq.txt         |   26 ++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-zynq.txt
+priv->cfg[SIDF].off = 
+priv->cfg[SIDF].elements = 
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-new file mode 100644
-index 0000000..986371a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-@@ -0,0 +1,26 @@
-+Xilinx Zynq GPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+- compatible		: Should be "xlnx,zynq-gpio-1.0"
-+- clocks		: Clock specifier (see clock bindings for details)
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+- interrupt-parent	: Must be core interrupt controller
-+- reg			: Address and length of the register set for the device
-+
-+Example:
-+	gpio@e000a000 {
-+		#gpio-cells = <2>;
-+		compatible = "xlnx,zynq-gpio-1.0";
-+		clocks = <&clkc 42>;
-+		gpio-controller;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 20 4>;
-+		reg = <0xe000a000 0x1000>;
-+	};
--- 
-1.7.9.5
+But it could make code become much longer...
+
+Regards
+Dong Aisheng
+
+> > 	......
+> >         struct mram_cfg txb;
+> > };
+> 
+> Marc
+> 
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
+
+
