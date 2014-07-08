@@ -1,19 +1,38 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Subject: [GIT PULL] SPEAr1310 PCIe patches rebased on 3.16-rc3
-Date: Tue, 8 Jul 2014 15:06:11 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E46A4@EAPEX1MAIL1.st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] of: Use proper types for checking memory overflow
+Date: Tue, 8 Jul 2014 09:15:27 +0200
+Message-ID: <CAMuHMdX0Bab6XZsujiNcCfaPLGn7-hDdcoJFYUB1UO+HNPUFww@mail.gmail.com>
+References: <1404780343-32188-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "arm@kernel.org" <arm@kernel.org>, "Arnd Bergmann (arnd@arndb.de)" <arnd@arndb.de>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, "'Kishon Vijay Abraham I' (kishon@ti.com)" <kishon@ti.com>, Pratyush ANAND <pratyush.anand@st.com>
-Cc: spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Nicholson <mark@nicholnet.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404780343-32188-1-git-send-email-lauraa@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laura Abbott <lauraa@codeaurora.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@linaro.org>, Nicolas Pitre <nico@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQXJuZCwNCg0KUGxzIGZpbmQgU1BFQXIxMzEwIHBjaWUgcGF0Y2hlcyB0byBiZSBtZXJn
-ZWQgdGhyb3VnaCBhcm0tc29jIHRyZWUuIA0KVGhlc2UgcGF0Y2hlcyBhcmUgcmViYXNlZCBvbiB0
-aGUgdG9wIG9mIDMtMTYtcmMzLg0KDQpnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvdmlyZXNoay9saW51eC5naXQNCnNwZWFyL3BjaWUtc3VwcG9ydC12OA0KDQpU
-aGFua3MNCk1vaGl0DQoNCg0KDQoNCg==
+On Tue, Jul 8, 2014 at 2:45 AM, Laura Abbott <lauraa@codeaurora.org> wrote:
+> Commit a67a6ed15513541579d38bcbd127e7be170710e5
+> (of: Check for phys_addr_t overflows in early_init_dt_add_memory_arch)
+> corrected early_init_dt_add_memory_arch to account for overflows
+> but did so in an unclean way using ULONG_MAX. There is no
+> guarantee that sizeof(unsigned long) == sizeof(phys_addr_t).
+> Check against phys_addr_t instead.
+
+Thanks!
+
+> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
