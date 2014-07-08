@@ -1,87 +1,92 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Tue, 8 Jul 2014 09:40:00 -0400
-Message-ID: <20140708134000.GC4979@htj.dyndns.org>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
- <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 4/7] ARM: dts: AM437x: Fix i2c nodes indentation
+Date: Tue, 8 Jul 2014 08:38:37 -0500
+Message-ID: <20140708133837.GF25811@saruman.home>
+References: <1404814597-4404-1-git-send-email-j-keerthy@ti.com>
+ <1404814597-4404-5-git-send-email-j-keerthy@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
+In-Reply-To: <1404814597-4404-5-git-send-email-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(Cc'ing Hans.)
+--1Y7d0dPL928TPQbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 07, 2014 at 12:16:09PM +0200, Antoine T=E9nart wrote:
-> @@ -482,6 +482,13 @@ void ahci_save_initial_config(struct device *dev=
-,
->  		port_map &=3D mask_port_map;
->  	}
+On Tue, Jul 08, 2014 at 03:46:34PM +0530, Keerthy wrote:
+> Fix i2c nodes indentation.
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+
+Reviewed-by: Felipe Balbi <balbi@ti.com>
+
+> ---
+>  arch/arm/boot/dts/am437x-gp-evm.dts |   13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am43=
+7x-gp-evm.dts
+> index 003766c..85ca430 100644
+> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+> @@ -257,16 +257,15 @@
+>  };
 > =20
-> +	/*
-> +	 * If port_map was filled automatically when finding port sub-nodes=
-,
-> +	 * make sure we get the right set here.
-> +	 */
-> +	if (hpriv->port_map)
-> +		port_map &=3D hpriv->port_map;
-> +
-
-So, hpriv->port is both input and output?  This is messy and can lead
-to confusing failures and there now are multiple ways to modify
-port_map.  If carrying this information through ahci_host_priv is
-necessary, let's remove the direct params and introduce new input
-fields to the struct.
-
->  /**
-> + * ahci_platform_enable_phys - Enable PHYs
-> + * @hpriv: host private area to store config values
-> + *
-> + * This function enables all the PHYs found in hpriv->phys, if any.
-> + * If a PHY fails to be enabled, it disables all the PHYs already
-> + * enabled in reverse order and returns an error.
-> + *
-> + * RETURNS:
-> + * 0 on success otherwise a negative error code
-> + */
-> +int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
-> +{
-> +	int i, rc =3D 0;
-> +
-> +	for (i =3D 0; i < hpriv->nphys; i++) {
-> +		rc =3D phy_init(hpriv->phys[i]);
-> +		if (rc)
-> +			goto disable_phys;
-> +
-> +		rc =3D phy_power_on(hpriv->phys[i]);
-> +		if (rc) {
-> +			phy_exit(hpriv->phys[i]);
-> +			goto disable_phys;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_phys:
-> +	while (--i >=3D 0) {
-> +		phy_power_off(hpriv->phys[i]);
-> +		phy_exit(hpriv->phys[i]);
-> +	}
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
-
-Do we need to make hpriv->phys[] dynamically allocated?  We already
-have hpriv->clks[AHCI_MAX_CLKS] and it's unlikely that we're gonna
-need more than several phys per host.  Let's go with a simpler fixed
-array.
-
-Thanks.
+>  &i2c0 {
+> -        status =3D "okay";
+> -        pinctrl-names =3D "default";
+> -        pinctrl-0 =3D <&i2c0_pins>;
+> +	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c0_pins>;
+>  };
+> =20
+>  &i2c1 {
+> -        status =3D "okay";
+> -        pinctrl-names =3D "default";
+> -        pinctrl-0 =3D <&i2c1_pins>;
+> -
+> +	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c1_pins>;
+>  	pixcir_ts@5c {
+>  		compatible =3D "pixcir,pixcir_tangoc";
+>  		pinctrl-names =3D "default";
+> --=20
+> 1.7.9.5
+>=20
 
 --=20
-tejun
+balbi
+
+--1Y7d0dPL928TPQbc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTu/RdAAoJEIaOsuA1yqRECTsP/2Lyn3PYaINT9bj7C6GKzsAy
+oBbf9bop2uOHTN/zsRRly1nKvCk2mjv7ljXbYX4a+iQ2z1bIKHMtbpF1HDqZUKKV
+OznZNIdPwpMdDm1vVk/c/MuBsczmYqfZ3LlxR+BNW3xi5kMQAsdcvDQk8MkCsOZs
+hd4RUtaeTMcCTPwZtyDpvGsbvf1rOwavncqKl5qDCDrNLLdZvS25ctjqYPMzaOlx
+E1TW/r3YAKSkiCkx/KiTVpamGXi9mWdMSzVEH2QLbCmzF0jjwf7qSC/amOL3/kAC
+DtJSBjPu3gBesAG5k/NAXWz4ltybHnHAWFIcFbcgQyXyWX09mrnSPPwdIT6ROeDR
+64E1hpKx1h0lUTe7sLccJMiOqerecHVIx5+VV0lZMqTZJ9JJa2nBpqFsuCr6f/HY
+0Usa49jsGiG4gqBdT53hWHWsg/DQ1jKBDHOfndMcBNT/2vcS9y+Q+YKdykcS3Y9I
+Nt9BP/hFypBpNHAVaPFlPawnS0WqQMJ24pbSFEf8LurISIPHX2c5NPuk4RvCiZsS
+v+LnNm4CdQJ7Dnl+177h/sDvMYiHB/8iYOBCleqYdVkTiMwTNg4MIGj5xahxMvIM
+fo5LSsP+NM1IY3kCExCuNU6DXSQV2G9G0Oe5sGcLAZ+N8w5KTmE/1zSY8xYSPi13
+BDxXrc8iLlx25E//XtCR
+=lLrm
+-----END PGP SIGNATURE-----
+
+--1Y7d0dPL928TPQbc--
