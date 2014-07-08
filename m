@@ -1,82 +1,167 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v5] powerpc/powernv: hwmon driver for power, fan rpm,
- voltage and temperature
-Date: Tue, 08 Jul 2014 06:34:43 -0700
-Message-ID: <53BBF373.6020703@roeck-us.net>
-References: <20140708090315.3866.15604.stgit@localhost.localdomain>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 1/7] mfd: Add DT bindings for tps65218 PMIC
+Date: Tue, 8 Jul 2014 08:37:13 -0500
+Message-ID: <20140708133713.GC25811@saruman.home>
+References: <1404814597-4404-1-git-send-email-j-keerthy@ti.com>
+ <1404814597-4404-2-git-send-email-j-keerthy@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140708090315.3866.15604.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, sbhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404814597-4404-2-git-send-email-j-keerthy@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2014 02:08 AM, Neelesh Gupta wrote:
-> This patch adds basic kernel support for reading power values, fan
-> speed rpm, voltage and temperature data on powernv platforms which
-> will be exported to user space through sysfs interface.
->
-> Test results:
-> -------------
-> [root@tul163p1 ~]# sensors
-> ibmpowernv-isa-0000
-> Adapter: ISA adapter
-> fan1:        5465 RPM  (min =3D    0 RPM)
-> fan2:        5152 RPM  (min =3D    0 RPM)
-> fan3:        5521 RPM  (min =3D    0 RPM)
-> fan4:        4891 RPM  (min =3D    0 RPM)
-> fan5:           0 RPM  (min =3D    0 RPM)
-> fan6:           0 RPM  (min =3D    0 RPM)
-> fan7:        7480 RPM  (min =3D    0 RPM)
-> fan8:        7944 RPM  (min =3D    0 RPM)
-> temp1:        +39.0=C2=B0C  (high =3D  +0.0=C2=B0C)
-> power1:      190.00 W
->
-> [root@tul163p1 ~]# ls /sys/devices/platform/
-> alarmtimer  ibmpowernv.0  power  rtc-generic  serial8250  uevent
-> [root@tul163p1 ~]# ls /sys/devices/platform/ibmpowernv.0/hwmon/hwmon0=
-/
-> device	    fan2_min	fan4_min    fan6_min	fan8_min   power
-> fan1_fault  fan3_fault	fan5_fault  fan7_fault	in1_fault  power1_input
-> fan1_input  fan3_input	fan5_input  fan7_input	in2_fault  subsystem
-> fan1_min    fan3_min	fan5_min    fan7_min	in3_fault  temp1_input
-> fan2_fault  fan4_fault	fan6_fault  fan8_fault	in4_fault  temp1_max
-> fan2_input  fan4_input	fan6_input  fan8_input	name	   uevent
-> [root@tul163p1 ~]# ls /sys/class/hwmon/hwmon0/
-> device	    fan2_min	fan4_min    fan6_min	fan8_min   power
-> fan1_fault  fan3_fault	fan5_fault  fan7_fault	in1_fault  power1_input
-> fan1_input  fan3_input	fan5_input  fan7_input	in2_fault  subsystem
-> fan1_min    fan3_min	fan5_min    fan7_min	in3_fault  temp1_input
-> fan2_fault  fan4_fault	fan6_fault  fan8_fault	in4_fault  temp1_max
-> fan2_input  fan4_input	fan6_input  fan8_input	name	   uevent
-> [root@tul163p1 ~]#
->
-> Signed-off-by: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+--DSayHWYpDlRfCAAQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied to -next, with a minor cleanup.
+On Tue, Jul 08, 2014 at 03:46:31PM +0530, Keerthy wrote:
+> Add DT bindings for tps65218 PMIC
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
 
-Thanks for your patience,
+Reviewed-by: Felipe Balbi <balbi@ti.com>
 
-Guenter
-
-
-> diff --git a/Documentation/hwmon/ibmpowernv b/Documentation/hwmon/ibm=
-powernv
+> ---
+>=20
+> Changes in V2:
+>   * Added dcdc3, dcdc5, dcdc6 compatible properties.
+>=20
+>  Documentation/devicetree/bindings/mfd/tps65218.txt |   89 ++++++++++++++=
+++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65218.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65218.txt b/Documen=
+tation/devicetree/bindings/mfd/tps65218.txt
 > new file mode 100644
-> index 0000000..644245a
+> index 0000000..01ac973
 > --- /dev/null
-> +++ b/Documentation/hwmon/ibmpowernv
-> @@ -0,0 +1,41 @@
-> +Kernel Driver IBMPOWENV
+> +++ b/Documentation/devicetree/bindings/mfd/tps65218.txt
+> @@ -0,0 +1,89 @@
+> +Texas Instruments TPS65218 family
+> +
+> +The TPS65218 are Integrated Power Management Chips.
+> +
+> +Required properties:
+> +- compatible : Must be "ti,tps65218";
+> +  For Integrated power-management used in AM437x based boards
+> +- interrupts : This i2c device has an IRQ line connected to the main SoC
+> +- interrupt-controller : Since the tps65218 supports several interrupts
+> +  internally, it is considered as an interrupt controller cascaded to the
+> +  SoC one.
+> +- #interrupt-cells =3D <2>;
+> +- interrupt-parent : The parent interrupt controller which is gic.
+> +
+> +Optional node:
+> +- TPS65218 PMIC has a number of child nodes. Mainly the regularors and S=
+MPSs.
+> +
+> +Example:
+> +/*
+> + * Integrated Power Management Chip
+> + */
+> +tps65218: tps65218@24 {
+> +	reg =3D <0x24>;
+> +	compatible =3D "ti,tps65218";
+> +	interrupts =3D <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
+> +	interrupt-parent =3D <&gic>;
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <2>;
+> +
+> +	dcdc1: regulator-dcdc1 {
+> +		compatible =3D "ti,tps65218-dcdc1";
+> +		/* VDD_CORE voltage limits min of OPP50 and max of OPP100 */
+> +		regulator-name =3D "vdd_core";
+> +		regulator-min-microvolt =3D <912000>;
+> +		regulator-max-microvolt =3D <1144000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	dcdc2: regulator-dcdc2 {
+> +		compatible =3D "ti,tps65218-dcdc2";
+> +		/* VDD_MPU voltage limits min of OPP50 and max of OPP_NITRO */
+> +		regulator-name =3D "vdd_mpu";
+> +		regulator-min-microvolt =3D <912000>;
+> +		regulator-max-microvolt =3D <1378000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	dcdc3: regulator-dcdc3 {
+> +		compatible =3D "ti,tps65218-dcdc3";
+> +		regulator-name =3D "vdcdc3";
+> +		regulator-min-microvolt =3D <1350000>;
+> +		regulator-max-microvolt =3D <1350000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	dcdc4: regulator-dcdc4 {
+> +		compatible =3D "ti,tps65218-dcdc4";
+> +		regulator-name =3D "v3_3d";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	dcdc5: regulator-dcdc5 {
+> +		compatible =3D "ti,tps65218-dcdc5";
+> +		regulator-name =3D "v1_0bat";
+> +		regulator-min-microvolt =3D <1000000>;
+> +		regulator-max-microvolt =3D <1000000>;
+> +	};
+> +
+> +	dcdc6: regulator-dcdc6 {
+> +		compatible =3D "ti,tps65218-dcdc6";
+> +		regulator-name =3D "v1_8vat";
+> +		regulator-min-microvolt =3D <1800000>;
+> +		regulator-max-microvolt =3D <1800000>;
+> +	};
+> +
+> +	ldo1: regulator-ldo1 {
+> +		compatible =3D "ti,tps65218-ldo1";
+> +		regulator-min-microvolt =3D <1800000>;
+> +		regulator-max-microvolt =3D <1800000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +};
+> --=20
+> 1.7.9.5
+>=20
 
-s/IBMPOWENV/IBMPOWERNV/
+--=20
+balbi
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--DSayHWYpDlRfCAAQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTu/QJAAoJEIaOsuA1yqRERooQALZrkXHBAaS1F18oTbvuneev
+fjUCr2WolNpa8YMy/as8TRUmdbb6Hl8x3T6LxnhzE2afdQmInMkRK9Xh75fcnDwI
+jcErcjE9lhYsOFWo9wvSWSEbBosGkPWWwAfspGLMpJcjWxUgU8eawpQqPSDu++eH
+Frka171Sbf6p7qi6bfa7MG/LVxUyOdrRTQENhi9W2hO4yaTU/F5hX+D4kz9QO1HV
+YTGJl6cjrtOqdHv9gvsDEokErsI0vl+J6kJoX298FsZ3LqbnhkdbaCTS2bgjaBLu
+vm+ytEKHF45MbWyXUbgzg5sPjZenzVmLhcfHBCdJ3VKYQzL5NMlZUzdW7I8pDK9k
+P6CJ/IuvMXZH9fWbb60wPsYb+Kyk0odXS4sosUmaoY90WfIIMutOpOT/75R5pWcS
+/SbtAt5WIkVobut25qYhp9I7/5Cl/1///Us3o31kIKYIXJxHK3xCytSxrdvdx720
++ChgyjRfAO4hq6DBRC8BnQNAgTAGHNDkl7AbzCLR8U3F01u2iYU3WE57FbwN2HT1
+Ut6vYBIdEStgXgh0xLAPniMB4WuJkSoUFfpvKZ3l5flI3XU3nEtji9F+VaWXNZrx
+o+phbxaSOOoP+VBazN6wbTwoaiuRxgdZBa9xgPvl/9mgGb5eU3gnn24oUKBbGQA1
+G9YRQgDtplboZ/+9sg+c
+=/SHQ
+-----END PGP SIGNATURE-----
+
+--DSayHWYpDlRfCAAQ--
