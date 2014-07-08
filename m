@@ -1,130 +1,42 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 1/3] PCI: designware: Configuration space should be
- specified in 'reg'
-Date: Tue, 08 Jul 2014 21:50:51 +0900
-Message-ID: <001001cf9aab$3fb008a0$bf1019e0$%han@samsung.com>
-References: <1403719007-9352-1-git-send-email-kishon@ti.com>
- <1403719007-9352-2-git-send-email-kishon@ti.com>
- <2CC2A0A4A178534D93D5159BF3BCB6619C5F94EFC8@EAPEX1MAIL1.st.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v9 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Tue, 08 Jul 2014 15:00:52 +0200
+Message-ID: <53BBEB84.50904@gmail.com>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com> <1404728173-20263-2-git-send-email-antoine.tenart@free-electrons.com> <53BBE419.8080107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <2CC2A0A4A178534D93D5159BF3BCB6619C5F94EFC8@EAPEX1MAIL1.st.com>
-Content-language: ko
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Mohit KUMAR DCG' <Mohit.KUMAR@st.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53BBE419.8080107@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, tj@kernel.org
+Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 26, 2014 2:56 PM, Mohit KUMAR DCG wrote:
-> On Wednesday, June 25, 2014 11:27 PM, Kishon Vijay Abraham I wrote:
-> >
-> > The configuration address space has so far been specified in *ranges*,
-> > however it should be specified in *reg* making it a platform MEM resource.
-> > Hence used 'platform_get_resource_*' API to get configuration address
-> > space in the designware driver.
-> >
-> > Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Mohit Kumar <mohit.kumar@st.com>
-> > Cc: Jingoo Han <jg1.han@samsung.com>
-> > Cc: Marek Vasut <marex@denx.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > ---
-> >  .../devicetree/bindings/pci/designware-pcie.txt    |    4 ++++
-> >  drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
-> >  2 files changed, 19 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > index d0d15ee..ed0d9b9 100644
-> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > @@ -2,6 +2,10 @@
-> >
-> >  Required properties:
-> >  - compatible: should contain "snps,dw-pcie" to identify the core.
-> > +- reg: Should contain the configuration address space.
-> > +- reg-names: Must be "config" for the PCIe configuration space.
-> > +    (The old way of getting the configuration address space from "ranges"
-> > +    is deprecated and should be avoided.)
-> >  - #address-cells: set to <3>
-> >  - #size-cells: set to <2>
-> >  - device_type: set to "pci"
-> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
-> > designware.c
-> > index 1eaf4df..0b7b455 100644
-> > --- a/drivers/pci/host/pcie-designware.c
-> > +++ b/drivers/pci/host/pcie-designware.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/of_pci.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/pci_regs.h>
-> > +#include <linux/platform_device.h>
-> >  #include <linux/types.h>
-> >
-> >  #include "pcie-designware.h"
-> > @@ -396,11 +397,23 @@ static const struct irq_domain_ops
-> > msi_domain_ops = {  int __init dw_pcie_host_init(struct pcie_port *pp)  {
-> >  	struct device_node *np = pp->dev->of_node;
-> > +	struct platform_device *pdev = to_platform_device(pp->dev);
-> >  	struct of_pci_range range;
-> >  	struct of_pci_range_parser parser;
-> > +	struct resource *cfg_res;
-> >  	u32 val;
-> >  	int i;
-> >
-> > +	cfg_res = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM, "config");
-> > +	if (cfg_res) {
-> > +		pp->config.cfg0_size = resource_size(cfg_res)/2;
-> > +		pp->config.cfg1_size = resource_size(cfg_res)/2;
-> > +		pp->cfg0_base = cfg_res->start;
-> > +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
-> > +	} else {
-> > +		dev_err(pp->dev, "missing *config* reg space\n");
-> 
-> - so this message will remind other platform to comply and specify configuration space
->  in *reg* property.
-> 
-> > +	}
-> > +
-> >  	if (of_pci_range_parser_init(&parser, np)) {
-> >  		dev_err(pp->dev, "missing ranges property\n");
-> >  		return -EINVAL;
-> > @@ -433,6 +446,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  			of_pci_range_to_resource(&range, np, &pp->cfg);
-> >  			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
-> >  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
-> > +			pp->cfg0_base = pp->cfg.start;
-> > +			pp->cfg1_base = pp->cfg.start + pp-
-> > >config.cfg0_size;
-> >  		}
-> >  	}
-> >
-> > @@ -445,8 +460,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >  		}
-> >  	}
-> >
-> > -	pp->cfg0_base = pp->cfg.start;
-> > -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
-> >  	pp->mem_base = pp->mem.start;
-> >
-> >  	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
-> 
-> Reviewed and Acked-by: Mohit Kumar <mohit.kumar@st.com>
+On 07/08/2014 02:29 PM, Kishon Vijay Abraham I wrote:
+> On Monday 07 July 2014 03:46 PM, Antoine T=C3=A9nart wrote:
+>> The Berlin SoC has a two SATA ports. Add a PHY driver to handle them=
+=2E
+>>
+>> The mode selection can let us think this PHY can be configured to fi=
+t
+>> other purposes. But there are reasons to think the SATA mode will be
+>> the only one usable: the PHY registers are only accessible indirectl=
+y
+>> through two registers in the SATA range, the PHY seems to be integra=
+ted
+>> and no information tells us the contrary. For these reasons, make th=
+e
+>> driver a SATA PHY driver.
+>
+> Thanks for doing multiple revisions of this. Looks good to be merged =
+for me now.
 
-Acked-by: Jingoo Han <jg1.han@samsung.com>
+I'd like to see some Acked-by from Tejun on the AHCI patches first, but
+if he agrees, should I prepare a stable branch for each of us to pull
+their patches from?
 
-Best regards,
-Jingoo Han
+AFAIKS, that would be 1+2 for you, 3-5 for Tejun, and the DT crap 6+7
+for me.
 
-> 
-> Regards
-> Mohit
-> 
-> > --
-> > 1.7.9.5
-
+Sebastian
