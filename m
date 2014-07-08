@@ -1,71 +1,126 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCHv7 3/3] edac: altera: Add EDAC support for Altera SoC
- SDRAM Controller.
-Date: Tue, 8 Jul 2014 14:04:32 +0200
-Message-ID: <20140708120432.GB8628@amd.pavel.ucw.cz>
-References: <1403730927-16163-1-git-send-email-tthayer@altera.com>
- <1403730927-16163-4-git-send-email-tthayer@altera.com>
- <20140708113109.GC8100@amd.pavel.ucw.cz>
- <20140708114227.GB27659@pd.tnic>
- <20140708115205.GA8628@amd.pavel.ucw.cz>
- <20140708115458.GC27659@pd.tnic>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v3 1/5] PCI: designware: add rd[wr]_other_conf API
+Date: Tue, 08 Jul 2014 21:17:13 +0900
+Message-ID: <000d01cf9aa6$8cdee420$a69cac60$%han@samsung.com>
+References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
+ <1404164720-11066-2-git-send-email-m-karicheri2@ti.com>
+ <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4282@EAPEX1MAIL1.st.com>
+ <53BAD09C.8010505@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140708115458.GC27659@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: tthayer@altera.com, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <53BAD09C.8010505@ti.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Murali Karicheri' <m-karicheri2@ti.com>, 'Mohit KUMAR DCG' <Mohit.KUMAR@st.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, 'Russell King' <linux@arm.linux.org.uk>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Pratyush ANAND' <pratyush.anand@st.com>, 'Richard Zhu' <r65037@freescale.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2014-07-08 13:54:58, Borislav Petkov wrote:
-> On Tue, Jul 08, 2014 at 01:52:05PM +0200, Pavel Machek wrote:
-> > I'm not joking. Try to understand and verify the code above. You
-> > can't. The "descriptive macro names" are useless; all the code does is
-> > split register in pieces. With the numbers it would be  very obvious.
+On Tuesday, July 08, 2014 1:54 AM, Murali Karicheri wrote:
+> On 07/07/2014 12:11 AM, Mohit KUMAR DCG wrote:
+> > On Tuesday, July 01, 2014 3:15 AM, Murali Karicheri wrote:
+> >>
+> >> v3.65 version of the designware h/w, requires application space registers to
+> >> be configured to access the remote EP config space.
+> >> To support this, add rd[wr]_other_conf API in the pcie_host_opts
+> >>
+> >> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+> >>
+> >> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
+> >> CC: Russell King<linux@arm.linux.org.uk>
+> >> CC: Grant Likely<grant.likely@linaro.org>
+> >> CC: Rob Herring<robh+dt@kernel.org>
+> >> CC: Mohit Kumar<mohit.kumar@st.com>
+> >> CC: Jingoo Han<jg1.han@samsung.com>
+> >> CC: Bjorn Helgaas<bhelgaas@google.com>
+> >> CC: Pratyush Anand<pratyush.anand@st.com>
+> >> CC: Richard Zhu<r65037@freescale.com>
+> >> CC: Kishon Vijay Abraham I<kishon@ti.com>
+> >> CC: Marek Vasut<marex@denx.de>
+> >> CC: Arnd Bergmann<arnd@arndb.de>
+> >> CC: Pawel Moll<pawel.moll@arm.com>
+> >> CC: Mark Rutland<mark.rutland@arm.com>
+> >> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
+> >> CC: Kumar Gala<galak@codeaurora.org>
+> >> CC: Randy Dunlap<rdunlap@infradead.org>
+> >> CC: Grant Likely<grant.likely@linaro.org>
+> >> ---
+> >>   drivers/pci/host/pcie-designware.c |   12 ++++++++++--
+> >>   drivers/pci/host/pcie-designware.h |    4 ++++
+> >>   2 files changed, 14 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
+> >> designware.c
+> >> index 1eaf4df..d8f3af7 100644
+> >> --- a/drivers/pci/host/pcie-designware.c
+> >> +++ b/drivers/pci/host/pcie-designware.c
+> >> @@ -656,7 +656,11 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32
+> >> devfn, int where,
+> >>   	}
+> >>
+> >>   	if (bus->number != pp->root_bus_nr)
+> >> -		ret = dw_pcie_rd_other_conf(pp, bus, devfn,
+> >> +		if (pp->ops->rd_other_conf)
+> >> +			ret = pp->ops->rd_other_conf(pp, bus, devfn,
+> >> +						where, size, val);
+> >> +		else
+> >> +			ret = dw_pcie_rd_other_conf(pp, bus, devfn,
+> >>   						where, size, val);
+> >>   	else
+> >>   		ret = dw_pcie_rd_own_conf(pp, where, size, val); @@ -
+> >> 679,7 +683,11 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32
+> >> devfn,
+> >>   		return PCIBIOS_DEVICE_NOT_FOUND;
+> >>
+> >>   	if (bus->number != pp->root_bus_nr)
+> >> -		ret = dw_pcie_wr_other_conf(pp, bus, devfn,
+> >> +		if (pp->ops->wr_other_conf)
+> >> +			ret = pp->ops->wr_other_conf(pp, bus, devfn,
+> >> +						where, size, val);
+> >> +		else
+> >> +			ret = dw_pcie_wr_other_conf(pp, bus, devfn,
+> >>   						where, size, val);
+> >>   	else
+> >>   		ret = dw_pcie_wr_own_conf(pp, where, size, val); diff --git
+> >> a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+> >> index 77f592f..8121901 100644
+> >> --- a/drivers/pci/host/pcie-designware.h
+> >> +++ b/drivers/pci/host/pcie-designware.h
+> >> @@ -61,6 +61,10 @@ struct pcie_host_ops {
+> >>   			u32 val, void __iomem *dbi_base);
+> >>   	int (*rd_own_conf)(struct pcie_port *pp, int where, int size, u32
+> >> *val);
+> >>   	int (*wr_own_conf)(struct pcie_port *pp, int where, int size, u32
+> >> val);
+> >> +	int (*rd_other_conf)(struct pcie_port *pp, struct pci_bus *bus,
+> >> +			unsigned int devfn, int where, int size, u32 *val);
+> >> +	int (*wr_other_conf)(struct pcie_port *pp, struct pci_bus *bus,
+> >> +			unsigned int devfn, int where, int size, u32 val);
+> >>   	int (*link_up)(struct pcie_port *pp);
+> >>   	void (*host_init)(struct pcie_port *pp);  };
+> >
+> > - Now it looks good to me.
+> >
+> > Acked-by: Mohit Kumar<mohit.kumar@st.com>
+> >
+> > Regards
+> > Mohit
+> >> --
+> >> 1.7.9.5
+> >
+> Mohit,
 > 
-> No, you need to fix the names not switch to naked numbers.
+> Thanks.
+> 
+> Jingoo, could you provide your response or Ack?
 
-Hiding numbers that are used just once into defines to put them out of
-sight does not really help readability.
+Acked-by: Jingoo Han <jg1.han@samsung.com>
 
-Compare:
+Best regards,
+Jingoo Han
 
-+#define DRAMADDRW_COLBIT_MASK	0x001F
-+#define DRAMADDRW_COLBIT_LSB	0
-+#define DRAMADDRW_ROWBIT_MASK	0x02E0
-+#define DRAMADDRW_ROWBIT_LSB	5
-+#define DRAMADDRW_BANKBIT_MASK	0x1C00
-+#define DRAMADDRW_BANKBIT_LSB	10
-+#define DRAMADDRW_CSBIT_MASK	0xE000
-+#define DRAMADDRW_CSBIT_LSB	13
-
-(Insert few screens of code so that you have to scroll or split
-window).
-
-What information do the define names have? None, I already know how
-hardware registers work.
-
-+	col = (read_reg & DRAMADDRW_COLBIT_MASK) >>
-+	     DRAMADDRW_COLBIT_LSB;
-+	row = (read_reg & DRAMADDRW_ROWBIT_MASK) >>
-+	     	 DRAMADDRW_ROWBIT_LSB;
-+	bank = (read_reg & DRAMADDRW_BANKBIT_MASK) >>
-+		      DRAMADDRW_BANKBIT_LSB;
-+	cs = (read_reg & DRAMADDRW_CSBIT_MASK) >>
-+		      	 DRAMADDRW_CSBIT_LSB;
-
-Instead, we could have:
-
-	 col = read_reg & 0x001F;
-	 row = (read_reg & 0x02E0) >> 5;
-	 bank = (read_reg & 0x1C00) >> 10;
-	 cs = (read_reg & 0xE000) >> 13;
-
-All information is preserved, code is shorter and easier to understand.
-
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
+> Thanks
+> Murali
+> --
