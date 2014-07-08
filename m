@@ -1,202 +1,135 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display Controller
- support
-Date: Tue, 8 Jul 2014 08:49:41 -0400
-Message-ID: <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
- <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
- <20140708092348.4ecdbb8f@bbrezillon>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add Keystone PCIe controller driver
+Date: Tue, 8 Jul 2014 08:49:00 -0400
+Message-ID: <53BBE8BC.2090302@ti.com>
+References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com> <20140705182332.GB28871@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140708092348.4ecdbb8f@bbrezillon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140705182332.GB28871-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 8, 2014 at 3:23 AM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
-> Hello Rob,
->
-> On Mon, 7 Jul 2014 23:45:54 -0400
-> Rob Clark <robdclark@gmail.com> wrote:
->
->> On Mon, Jul 7, 2014 at 12:42 PM, Boris BREZILLON
->> <boris.brezillon@free-electrons.com> wrote:
->> > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
->> > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
->> > controller device.
->> >
->> > This display controller supports at least one primary plane and might
->> > provide several overlays and an hardware cursor depending on the IP
->> > version.
->> >
->> > At the moment, this driver only implements an RGB connector to interface
->> > with LCD panels, but support for other kind of external devices (like DRM
->> > bridges) might be added later.
->> >
->> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> > ---
->> >  drivers/gpu/drm/Kconfig                         |   2 +
->> >  drivers/gpu/drm/Makefile                        |   1 +
->> >  drivers/gpu/drm/atmel-hlcdc/Kconfig             |  11 +
->> >  drivers/gpu/drm/atmel-hlcdc/Makefile            |   7 +
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  | 469 +++++++++++++++
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 474 +++++++++++++++
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    | 210 +++++++
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c | 706 +++++++++++++++++++++++
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h | 422 ++++++++++++++
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c | 351 ++++++++++++
->> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 729 ++++++++++++++++++++++++
->> >  11 files changed, 3382 insertions(+)
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c
->> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
->> >
->> > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
->> > index d1cc2f6..df6f0c1 100644
->> > --- a/drivers/gpu/drm/Kconfig
->> > +++ b/drivers/gpu/drm/Kconfig
->> > @@ -182,6 +182,8 @@ source "drivers/gpu/drm/cirrus/Kconfig"
->
-> [...]
->
->> > +
->> > +/**
->> > + * Atmel HLCDC Plane properties.
->> > + *
->> > + * This structure stores plane property definitions.
->> > + *
->> > + * @alpha: alpha blending (or transparency) property
->> > + * @csc: YUV to RGB conversion factors property
->> > + */
->> > +struct atmel_hlcdc_plane_properties {
->> > +       struct drm_property *alpha;
->> > +       struct drm_property *csc;
+On 07/05/2014 02:23 PM, Bjorn Helgaas wrote:
+> On Mon, Jun 30, 2014 at 05:45:15PM -0400, Murali Karicheri wrote:
+>> This patch add PCIe controller driver for Keystone SoCs. This
+>> is based on v2 of the series posted to the mailing list.
+>> Keystone PCI controller is based on version 3.65 of the DW
+>> hardware. This driver re-uses some of the DW core driver
+>> functions and required modification in some to support
+>> the old DW h/w based Keystone driver.
 >>
->> appears like csc is not used yet, so I suppose you can drop it for
->> now..  when you do add it, don't forget to update drm.tmp.  But for
->> now it at least makes review easier when the driver doesn't add new
->> userspace interfaces :-)
+>> Please review and let me know if you have any comments.
 >
+> I'm waiting for acks from Mohit or Jingoo for the designware changes.
 >
-> Sure, I guess this is a leftover from another patch I made to add Color
-> Space Conversion configuration.
->
-> I'll remove it for the next version.
->
->>
->> > +};
->> > +
->> > +/**
->> > + * Atmel HLCDC Plane.
->> > + *
->> > + * @base: base DRM plane structure
->> > + * @layer: HLCDC layer structure
->> > + * @properties: pointer to the property definitions structure
->> > + * @alpha: current alpha blending (or transparency) status
->> > + */
->> > +struct atmel_hlcdc_plane {
->> > +       struct drm_plane base;
->> > +       struct atmel_hlcdc_layer layer;
->> > +       struct atmel_hlcdc_plane_properties *properties;
->> > +};
->> > +
->> > +static inline struct atmel_hlcdc_plane *
->> > +drm_plane_to_atmel_hlcdc_plane(struct drm_plane *p)
->> > +{
->> > +       return container_of(p, struct atmel_hlcdc_plane, base);
->> > +}
->> > +
->> > +static inline struct atmel_hlcdc_plane *
->> > +atmel_hlcdc_layer_to_plane(struct atmel_hlcdc_layer *l)
->> > +{
->> > +       return container_of(l, struct atmel_hlcdc_plane, layer);
->> > +}
->> > +
->> > +/**
->> > + * Atmel HLCDC Plane update request structure.
->> > + *
->> > + * @crtc_x: x position of the plane relative to the CRTC
->> > + * @crtc_y: y position of the plane relative to the CRTC
->> > + * @crtc_w: visible width of the plane
->> > + * @crtc_h: visible height of the plane
->> > + * @src_x: x buffer position
->> > + * @src_y: y buffer position
->> > + * @src_w: buffer width
->> > + * @src_h: buffer height
->> > + * @pixel_format: pixel format
->> > + * @gems: GEM object object containing image buffers
->> > + * @offsets: offsets to apply to the GEM buffers
->> > + * @pitches: line size in bytes
->> > + * @crtc: crtc to display on
->> > + * @finished: finished callback
->> > + * @finished_data: data passed to the finished callback
->> > + * @bpp: bytes per pixel deduced from pixel_format
->> > + * @xstride: value to add to the pixel pointer between each line
->> > + * @pstride: value to add to the pixel pointer between each pixel
->> > + * @nplanes: number of planes (deduced from pixel_format)
->> > + */
->> > +struct atmel_hlcdc_plane_update_req {
->> > +       int crtc_x;
->> > +       int crtc_y;
->> > +       unsigned int crtc_w;
->> > +       unsigned int crtc_h;
->> > +       uint32_t src_x;
->> > +       uint32_t src_y;
->> > +       uint32_t src_w;
->> > +       uint32_t src_h;
->> > +       uint32_t pixel_format;
->> > +       struct drm_gem_cma_object *gems[ATMEL_HLCDC_MAX_PLANES];
->> > +       unsigned int offsets[ATMEL_HLCDC_MAX_PLANES];
->> > +       unsigned int pitches[ATMEL_HLCDC_MAX_PLANES];
->>
->> tbh, I've only looked closely, but I don't completely follow all the
->> layering here..  I wonder if we'd be better off just moving 'struct
->> drm_fb_cma' to header file so you could get the gem objects / pixel
->> fmt / width / height directly from the fb object (and then you can
->> reference count things at the fb level, rather than at the individual
->> gem obj level, too)
->>
->
-> Actually, the HW cursor is a drm_plane too, and in this case I cannot
-> retrieve a drm_fb_cma object, but just a single GEM object (see
-> atmel_hlcdc_crtc_cursor_set function in atmel_hlcdc_crtc.c).
+Bjorn,
 
-oh, right..  well maybe for the cursor case it would be possible to
-wrap up the gem bo with an internally created fb?  Not sure if that
-ends up simplifying things or not, so it is definitely your call.  But
-at least my experience with other drivers (that did not use a plane as
-a cursor internally) was that I could simplify things after fb gained
-refcnt'ing.
+Thanks for your email.
 
-BR,
--R
+So far I got Ack for 1/5 and 2/5. I will ping them today for 3/5 and 4/5.
 
-> Let me know if you see a better solution.
+> I'd also like an ack from the devicetree folks for the Keystone binding.
 >
-> Best Regards,
+Ok
+> And I think we need a MAINTAINERS update for drivers/pci/host/\*keystone\*
+I will address your comments against 5/5 and discuss them if any and 
+make the above update for v4 and send the patch set to the list.
+
+Thanks and regards,
+
+Murali
 >
-> Boris
->
-> --
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+>> CC: Santosh Shilimkar<santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+>> CC: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> CC: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> CC: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> CC: Mohit Kumar<mohit.kumar-qxv4g6HH51o@public.gmane.org>
+>> CC: Jingoo Han<jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> CC: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> CC: Pratyush Anand<pratyush.anand-qxv4g6HH51o@public.gmane.org>
+>> CC: Richard Zhu<r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> CC: Kishon Vijay Abraham I<kishon-l0cyMroinI0@public.gmane.org>
+>> CC: Marek Vasut<marex-ynQEQJNshbs@public.gmane.org>
+>> CC: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
+>> CC: Pawel Moll<pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> CC: Mark Rutland<mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> CC: Ian Campbell<ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> CC: Kumar Gala<galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> CC: Randy Dunlap<rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+>> CC: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Changelog:
+>>
+>> v3
+>>   - DW application register handling code is now part of
+>>     Keystone PCI driver. RFC had this code part of Keystone
+>>     PCI driver, then V1 moved this to a separate file to
+>>     re-use on other platforms that uses this version of the
+>>     DW h/w. Then based on comments against v2, this is moved
+>>     back to Keystone driver.
+>>   - Keystone SerDes phy driver is removed from this series so that
+>>     this can be merged independent of that patch
+>>   - added msi_set_irq()/clear_irq() API's to support Keystone
+>>
+>> V2
+>>   - Split the designware pcie enhancement patch to multiple
+>>     patches based on functionality added
+>>   - Remove the quirk code and add a patch to fix mps/mrss
+>>     tuning for ARM. Use kernel command line parameter
+>>     pci=pcie_bus_perf to work with Keystone PCI Controller.
+>>     Following patch addressed this.
+>>       [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
+>>   - Add documentation for device tree bindings
+>>   - Add separate interrupt controller nodes for MSI and Legacy
+>>     IRQs and use irq map for legacy IRQ
+>>   - Use compatibility to identify v3.65 version of the DW hardware
+>>     and use it to customize the designware common code.
+>>   - Use reg property for configuration space instead of range
+>>   - Other minor updates based on code inspection.
+>>
+>> V1
+>>   - Add an interrupt controller node for Legacy irq chip and use
+>>     interrupt map/map-mask property to map legacy IRQs A/B/C/D
+>>   - Add a Phy driver to replace the original serdes driver
+>>   - Move common application register handling code to a separate
+>>     file to allow re-use across other platforms that use older
+>>     DW PCIe h/w
+>>   - PCI quirk for maximum read request size. Check and override only
+>>     if the maximum is higher than what controller can handle.
+>>   - Converted to a module platform driver.
+>>
+>> Murali Karicheri (5):
+>>    PCI: designware: add rd[wr]_other_conf API
+>>    PCI: designware: refactor MSI code to work with v3.65 dw hardware
+>>    PCI: designware: refactor host init code to re-use on keystone PCI
+>>    PCI: designware: enhance dw core driver to support Keystone PCI host
+>>      controller
+>>    PCI: add PCI controller for Keystone PCIe h/w
+>>
+>>   .../devicetree/bindings/pci/designware-pcie.txt    |    2 +
+>>   .../devicetree/bindings/pci/pci-keystone.txt       |   69 +++
+>>   drivers/pci/host/Kconfig                           |    5 +
+>>   drivers/pci/host/Makefile                          |    1 +
+>>   drivers/pci/host/pci-keystone-dw.c                 |  523 ++++++++++++++++++++
+>>   drivers/pci/host/pci-keystone.c                    |  381 ++++++++++++++
+>>   drivers/pci/host/pci-keystone.h                    |   56 +++
+>>   drivers/pci/host/pcie-designware.c                 |  206 ++++++--
+>>   drivers/pci/host/pcie-designware.h                 |   17 +-
+>>   9 files changed, 1207 insertions(+), 53 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/pci-keystone.txt
+>>   create mode 100644 drivers/pci/host/pci-keystone-dw.c
+>>   create mode 100644 drivers/pci/host/pci-keystone.c
+>>   create mode 100644 drivers/pci/host/pci-keystone.h
+>>
+>> --
+>> 1.7.9.5
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
