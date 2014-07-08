@@ -1,39 +1,32 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Tue, 8 Jul 2014 10:20:33 +0530
-Message-ID: <CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
-	<CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
-	<53B4B0B3.9080000@codeaurora.org>
-	<CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
-	<20140703221609.11380.6884@quantum>
-	<CAKohpomNv_xvcmx03pb8nj=3O33Qt-2Dj2B1q3U46mv5EBtUjA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpomNv_xvcmx03pb8nj=3O33Qt-2Dj2B1q3U46mv5EBtUjA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [RESEND PATCHv2 0/3] Power-domain clk handling
+Date: Tue,  8 Jul 2014 10:24:31 +0530
+Message-ID: <1404795274-27307-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, shaik.ameer@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 4 July 2014 09:51, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> Yeah, having something like what you suggested from DT is the perfect
-> solution to get over this. The only reason why I am not touching that here
-> is to not delay other patches just because of that.
->
-> There are separate threads going on for that and probably somebody
-> else was trying to push for that.
->
-> That's it, nothing more. I would definitely like to use those bindings instead
->  of the crazy routines we are trying here, once that is finalized :)
+This patch series for clock handling in power domain is
+re-send for merging after rebasing onto latest linux-samsung.git,
+for-next branch.
+Original series and discussion can be found here:
+https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31550.html
 
-Do we have some kind of agreement for this temporary solution? Anyways
-I will kick the other thread again to resolve the bindings soon.
+Arun Kumar K (2):
+  clk: exynos5420: Add IDs for clocks used in PD mfc
+  ARM: dts: Add clock property for mfc_pd in 5420
 
-@Stephen: Do you still want find_rate_changer() stuff in this series only
-and or this can go into 3.17 without anymore changes and lets finalize
-the bindings Mike suggested and then update this code?
+Prathyush K (1):
+  ARM: EXYNOS: Add support for clock handling in power domain
 
---
-viresh
+ .../bindings/arm/exynos/power_domain.txt           |   20 +++++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |    3 +
+ arch/arm/mach-exynos/pm_domains.c                  |   61 +++++++++++++++++++-
+ drivers/clk/samsung/clk-exynos5420.c               |    6 +-
+ include/dt-bindings/clock/exynos5420.h             |    2 +
+ 5 files changed, 89 insertions(+), 3 deletions(-)
+
+-- 
+1.7.9.5
