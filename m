@@ -1,42 +1,64 @@
-From: Jon Loeliger <loeliger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Questions About a Semi-Soft irqchip Device
-Date: Tue, 8 Jul 2014 09:02:14 -0500
-Message-ID: <CAJgR-Bi2HX+aYVabaFLyu9QAnAS4RmQ7DvBtDHOawkfi08zycA@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH][v2]devicetree/binding/powerpc/fsl: Add binding for CPLD
+Date: Tue, 8 Jul 2014 09:06:58 -0500
+Message-ID: <1404828418.21434.278.camel@snotra.buserror.net>
+References: <1404796006-3254-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404796006-3254-1-git-send-email-Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Folks,
+On Tue, 2014-07-08 at 10:36 +0530, Priyanka Jain wrote:
+> Some Freescale boards like T1040RDB have on board CPLD connected on
+> the IFC bus. Add binding for this in board.txt file
+> 
+> Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes for v2: Incorporated Scott's comments
 
-I have a few questions about an interrupt controller IP block
-that I would like to support in an ARM SoC port.
+Isn't this v3?
 
-My IP block provides software-assignable interrupts.  That
-is, I have a large pool of interrupt sources, and a large pool
-of interrupt bits in the controller, but they are not physically
-tied together. Instead they are assigned by some driver as it
-initializes and allocates resources.  This, I think, means that
-I can not describe the interrupt  bindings in the DTS file.
+>  .../devicetree/bindings/powerpc/fsl/board.txt      |   16 ++++++++++++++++
+>  1 files changed, 16 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> index 700dec4..67ef6a4 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
+> @@ -84,3 +84,19 @@ Example:
+>  		compatible = "fsl,bsc9132qds-fpga", "fsl,fpga-qixis-i2c";
+>  		reg = <0x66>;
+>  	};
+> +
+> +* Freescale on-board CPLD
+> +
+> +Some Freescale boards like T1040RDB have on board CPLD connected.
 
-So, my first question is:  Should I still write an irqchip device
-for this IP block and represent it in the device tree, even
-though I will not be able to use it as the referee of an
-interrupt = < ... > binding?  I think I should primarily because
-other drivers will still need to set up IRQ handling through
-this device.
+s/have on board/have an on board/
 
-Another question:  This device has a muti-32-bit-word
-bit-field representation for the interrupt lines.  It has a
-parallel array of words for clearing the interrupt.  Is there
-an existing irqchip that I can directly leverage that fits
-that description?
+> +
+> +Required properties:
+> +- compatible: Should be a board-specific string like "fsl,<board>-cpld"
+> +  Example:
+> +	"fsl,T1040RDB-cpld", "fsl,T1042RDB-cpld", "fsl,T1042RDB_PI-cpld"
+> +- reg: should describe CPLD registers
+> +
+> +Example:
+> +	cpld@3,0 {
+> +		compatible = "fsl,T1040RDB-cpld";
+> +		reg = <3 0 0x300>;
+> +	};
 
-Thank you,
-jdl
+Again, please keep the board name lowercase.
+
+-Scott
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
