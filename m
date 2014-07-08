@@ -1,60 +1,84 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: document Rockchip saradc
-Date: Wed, 09 Jul 2014 01:26:46 +0200
-Message-ID: <3591595.sBj6Zqo42A@diego>
-References: <2959154.xc8BQActsn@diego>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH 1/3] mfd: pm8921: Expose pm8xxx_read_irq_status
+Date: Tue, 8 Jul 2014 16:43:50 -0700
+Message-ID: <CAJAp7Ogy3=tZvMAUojbf5sy8EMmQOT+imA3=TRVcGXXA_y7CtA@mail.gmail.com>
+References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1404782785-1824-2-git-send-email-bjorn.andersson@sonymobile.com>
+	<53BC7CBD.2060901@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2959154.xc8BQActsn@diego>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?B?ZWRkaWUo6JSh5p6rKQ==?= <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53BC7CBD.2060901@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This add the necessary binding documentation for the saradc found in all recent
-processors from Rockchip.
+On Tue, Jul 8, 2014 at 4:20 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 07/07/14 18:26, Bjorn Andersson wrote:
+>> @@ -65,6 +66,41 @@ struct pm_irq_chip {
+>>       u8                      config[0];
+>>  };
+>>
+>> +int pm8xxx_read_irq_status(int irq)
+>> +{
+>> +     struct irq_data *d = irq_get_irq_data(irq);
+>> +     struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
+>> +     unsigned int pmirq = irqd_to_hwirq(d);
+>> +     unsigned int bits;
+>> +     int irq_bit;
+>> +     u8 block;
+>> +     int rc;
+>> +
+>> +     if (!chip) {
+>> +             pr_err("Failed to resolve pm_irq_chip\n");
+>> +             return -EINVAL;
+>> +     }
+>
+> Is this actually necessary? Presumably the driver wouldn't have even
+> probed unless there was a pmic to begin with.
+>
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- .../bindings/iio/adc/rockchip-saradc.txt           | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+I had a bug in the calling driver, passing the wrong irq down to this
+function. But now that I think more about it I should probably check
+for "d" being non-NULL. On the other hand, that will still just catch
+a minor set of bugs as both of those will in most cases produce
+"valid" pointers.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-new file mode 100644
-index 0000000..603ac9c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-@@ -0,0 +1,28 @@
-+Rockhip Successive Approximation Register (SAR) A/D Converter bindings
-+
-+Required properties:
-+- compatible: Should be "rockchip,saradc"
-+- reg: physical base address of the controller and length of memory mapped
-+       region.
-+- interrupts: The interrupt number to the cpu. The interrupt specifier format
-+              depends on the interrupt controller.
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk" for
-+               the peripheral clock.
-+- vref-supply: The regulator supply ADC refrence voltage.
-+- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-+
-+Optional properties :
-+- clock-frequency : converter frequency in Hz. If omitted, 1MHz is used.
-+
-+Example:
-+	saradc: saradc@2006c000 {
-+		compatible = "rockchip,saradc";
-+		reg = <0x2006c000 0x100>;
-+		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-+		clock-names = "saradc", "apb_pclk";
-+		#io-channel-cells = <1>;
-+		vref-supply = <&vcc18>;
-+		clock-frequency = <1000000>;
-+	};
--- 
-1.9.0
+Maybe it's okay to just trust the caller to pass a valid irq? Or do
+you have any other suggestion of sanity checking the input value?
+Preferably without also passing the pm_irq_chip pointer.
+
+[...]
+> Sad, the header file came back. I guess there isn't a way to put the
+> pinctrl driver inside the core mfd driver? Then we wouldn't need to
+> expose an "irq read line" function.
+>
+
+I continued my search and this needs to be accessed by gpio, mpp, adc,
+charger, bms and usb(?). So we have to expose it in some form.
+
+> Actually Abhijeet proposed such an API in 2011 but it didn't go
+> anywhere[1]. If we had that API we should be able to call
+> read_irq_line() from the pinctrl driver whenever we want to get the
+> state of the gpio, plus the API is generic. We're going to need that API
+> anyway for things like USB insertion detection so it might make sense to
+> add it sooner rather than later.
+>
+> [1]
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2011-April/048319.html
+
+>From what I can see of this thread it was exposed as a way for drivers
+to be able to query if an interrupt handler was called on raising or
+falling edge. And based on the locking limitations of the
+implementation we couldn't have used it anyways.
+
+Our use case is different in that we're at any point in time
+interested in reading out the status of the irq line, as the only way
+of getting that status.
+
+It might be a long shot, but let's spin a patch for our purpose and
+run it by Tomas again.
+
+Regards,
+Bjorn
