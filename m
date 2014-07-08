@@ -1,84 +1,161 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 1/3] mfd: pm8921: Expose pm8xxx_read_irq_status
-Date: Tue, 8 Jul 2014 16:43:50 -0700
-Message-ID: <CAJAp7Ogy3=tZvMAUojbf5sy8EMmQOT+imA3=TRVcGXXA_y7CtA@mail.gmail.com>
-References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1404782785-1824-2-git-send-email-bjorn.andersson@sonymobile.com>
-	<53BC7CBD.2060901@codeaurora.org>
+From: Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display
+ Controller support
+Date: Tue, 8 Jul 2014 16:51:24 -0700
+Message-ID: <20140708235124.GM31728@intel.com>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
+ <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
+ <20140708092348.4ecdbb8f@bbrezillon>
+ <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
+ <20140708163731.6693a883@bbrezillon>
+ <CAF6AEGuOYQbZ_Mgv+Y7oQO4kKmOEF=gwi0YcBXERE80nS2QL+g@mail.gmail.com>
+ <20140708190820.2a94723f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53BC7CBD.2060901@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140708190820.2a94723f@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 8, 2014 at 4:20 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 07/07/14 18:26, Bjorn Andersson wrote:
->> @@ -65,6 +66,41 @@ struct pm_irq_chip {
->>       u8                      config[0];
->>  };
->>
->> +int pm8xxx_read_irq_status(int irq)
->> +{
->> +     struct irq_data *d = irq_get_irq_data(irq);
->> +     struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
->> +     unsigned int pmirq = irqd_to_hwirq(d);
->> +     unsigned int bits;
->> +     int irq_bit;
->> +     u8 block;
->> +     int rc;
->> +
->> +     if (!chip) {
->> +             pr_err("Failed to resolve pm_irq_chip\n");
->> +             return -EINVAL;
->> +     }
->
-> Is this actually necessary? Presumably the driver wouldn't have even
-> probed unless there was a pmic to begin with.
->
+On Tue, Jul 08, 2014 at 07:08:20PM +0200, Boris BREZILLON wrote:
+> On Tue, 8 Jul 2014 11:41:32 -0400
+> Rob Clark <robdclark@gmail.com> wrote:
+> 
+> > On Tue, Jul 8, 2014 at 10:37 AM, Boris BREZILLON
+> > <boris.brezillon@free-electrons.com> wrote:
+> > > On Tue, 8 Jul 2014 08:49:41 -0400
+> > > Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > >> On Tue, Jul 8, 2014 at 3:23 AM, Boris BREZILLON
+> > >> <boris.brezillon@free-electrons.com> wrote:
+> > >> > Hello Rob,
+> > >> >
+> > >> > On Mon, 7 Jul 2014 23:45:54 -0400
+> > >> > Rob Clark <robdclark@gmail.com> wrote:
+> > >> >
+> > >> >> On Mon, Jul 7, 2014 at 12:42 PM, Boris BREZILLON
+> > >> >> <boris.brezillon@free-electrons.com> wrote:
+...
+> > >> >> > +/**
+> > >> >> > + * Atmel HLCDC Plane update request structure.
+> > >> >> > + *
+> > >> >> > + * @crtc_x: x position of the plane relative to the CRTC
+> > >> >> > + * @crtc_y: y position of the plane relative to the CRTC
+> > >> >> > + * @crtc_w: visible width of the plane
+> > >> >> > + * @crtc_h: visible height of the plane
+> > >> >> > + * @src_x: x buffer position
+> > >> >> > + * @src_y: y buffer position
+> > >> >> > + * @src_w: buffer width
+> > >> >> > + * @src_h: buffer height
+> > >> >> > + * @pixel_format: pixel format
+> > >> >> > + * @gems: GEM object object containing image buffers
+> > >> >> > + * @offsets: offsets to apply to the GEM buffers
+> > >> >> > + * @pitches: line size in bytes
+> > >> >> > + * @crtc: crtc to display on
+> > >> >> > + * @finished: finished callback
+> > >> >> > + * @finished_data: data passed to the finished callback
+> > >> >> > + * @bpp: bytes per pixel deduced from pixel_format
+> > >> >> > + * @xstride: value to add to the pixel pointer between each line
+> > >> >> > + * @pstride: value to add to the pixel pointer between each pixel
+> > >> >> > + * @nplanes: number of planes (deduced from pixel_format)
+> > >> >> > + */
+> > >> >> > +struct atmel_hlcdc_plane_update_req {
+> > >> >> > +       int crtc_x;
+> > >> >> > +       int crtc_y;
+> > >> >> > +       unsigned int crtc_w;
+> > >> >> > +       unsigned int crtc_h;
+> > >> >> > +       uint32_t src_x;
+> > >> >> > +       uint32_t src_y;
+> > >> >> > +       uint32_t src_w;
+> > >> >> > +       uint32_t src_h;
+> > >> >> > +       uint32_t pixel_format;
+> > >> >> > +       struct drm_gem_cma_object *gems[ATMEL_HLCDC_MAX_PLANES];
+> > >> >> > +       unsigned int offsets[ATMEL_HLCDC_MAX_PLANES];
+> > >> >> > +       unsigned int pitches[ATMEL_HLCDC_MAX_PLANES];
+> > >> >>
+> > >> >> tbh, I've only looked closely, but I don't completely follow all the
+> > >> >> layering here..  I wonder if we'd be better off just moving 'struct
+> > >> >> drm_fb_cma' to header file so you could get the gem objects / pixel
+> > >> >> fmt / width / height directly from the fb object (and then you can
+> > >> >> reference count things at the fb level, rather than at the individual
+> > >> >> gem obj level, too)
+> > >> >>
+> > >> >
+> > >> > Actually, the HW cursor is a drm_plane too, and in this case I cannot
+> > >> > retrieve a drm_fb_cma object, but just a single GEM object (see
+> > >> > atmel_hlcdc_crtc_cursor_set function in atmel_hlcdc_crtc.c).
+> > >>
+> > >> oh, right..  well maybe for the cursor case it would be possible to
+> > >> wrap up the gem bo with an internally created fb?  Not sure if that
+> > >> ends up simplifying things or not, so it is definitely your call.  But
+> > >> at least my experience with other drivers (that did not use a plane as
+> > >> a cursor internally) was that I could simplify things after fb gained
+> > >> refcnt'ing.
+> > >
+> > > Unless I'm missing something, I'd say moving to fb objects instead of
+> > > GEM objects won't simplify the code much (I'm already refcnt'ing GEM
+> > > objects when launching a DMA transfer for a plane update).
+> > 
+> > yeah, mostly just saves you a bit of bookkeeping.  Ie. ref/unref one
+> > thing instead of loop over N objects, etc.  Nothing earth-shattering.
+> > 
+> 
+> Okay, my bad, this is definitely simpler with fb objects (I made use of
+> drm_fb_cma_create to create an fb object when cursor_set is called)
+> than it was when using GEM objects.
+> 
+> I might even be able to simplify the layer update mechanism with this
+> approach.
+> 
+> Thanks for the advice.
+> 
+> Best Regards,
+> 
+> Boris
 
-I had a bug in the calling driver, passing the wrong irq down to this
-function. But now that I think more about it I should probably check
-for "d" being non-NULL. On the other hand, that will still just catch
-a minor set of bugs as both of those will in most cases produce
-"valid" pointers.
+Hi Boris.
 
-Maybe it's okay to just trust the caller to pass a valid irq? Or do
-you have any other suggestion of sanity checking the input value?
-Preferably without also passing the pm_irq_chip pointer.
+I haven't really looked at any of your driver in depth, but from a quick
+glance it looks like you're registering a cursor drm_plane (i.e., making
+use of the new universal plane infrastructure), but you're also
+providing an implementation of the legacy cursor ioctls (cursor_set and
+cursor_move).  There's some patches working their way through the
+pipeline that should make this unnecessary and hopefully simplify your
+life a bit:
 
-[...]
-> Sad, the header file came back. I guess there isn't a way to put the
-> pinctrl driver inside the core mfd driver? Then we wouldn't need to
-> expose an "irq read line" function.
->
+        http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=c394c2b08e247c32ef292b75fd8b34312465f8ae
+        http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=b36552b32aa9c69e83a3a20bda56379fb9e52435
+        http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=161d0dc1dccb17ff7a38f462c7c0d4ef8bcc5662
+        http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=fc1d3e44ef7c1db93384150fdbf8948dcf949f15
 
-I continued my search and this needs to be accessed by gpio, mpp, adc,
-charger, bms and usb(?). So we have to expose it in some form.
+The third patch there is the one that's really important for your work.
+When a driver provides a cursor plane via the universal plane interface,
+cursor_set and cursor_move are automatically implemented for you by
+drm_mode_cursor_universal() in drivers/gpu/drm/drm_crtc.c and your
+legacy handlers will never get called.  drm_mode_cursor_universal() will
+take care of wrapping the bo's into a drm_framebuffer for you.
 
-> Actually Abhijeet proposed such an API in 2011 but it didn't go
-> anywhere[1]. If we had that API we should be able to call
-> read_irq_line() from the pinctrl driver whenever we want to get the
-> state of the gpio, plus the API is generic. We're going to need that API
-> anyway for things like USB insertion detection so it might make sense to
-> add it sooner rather than later.
->
-> [1]
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2011-April/048319.html
+When I added the universal cursor stuff, I wanted to make sure that as
+soon as a driver starts supporting universal planes it can stop
+supporting the legacy ioctls directly; otherwise handling refcounting
+when userspace switches back and forth between calling legacy ioctl's
+and calling setplane() on a cursor plane would be a nightmare.
 
->From what I can see of this thread it was exposed as a way for drivers
-to be able to query if an interrupt handler was called on raising or
-falling edge. And based on the locking limitations of the
-implementation we couldn't have used it anyways.
+I think those patches are only available in drm-intel-nightly at the
+moment and haven't moved on to drm-next and such yet, since i915 is the
+only driver that currently has patches to make use of cursors via the
+univeral plane interface (probably landing for kernel 3.17).
 
-Our use case is different in that we're at any point in time
-interested in reading out the status of the irq line, as the only way
-of getting that status.
 
-It might be a long shot, but let's spin a patch for our purpose and
-run it by Tomas again.
+Matt
 
-Regards,
-Bjorn
+-- 
+Matt Roper
+Graphics Software Engineer
+IoTG Platform Enabling & Development
+Intel Corporation
+(916) 356-2795
