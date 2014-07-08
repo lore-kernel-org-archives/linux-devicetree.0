@@ -1,76 +1,167 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 8/9] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Tue, 8 Jul 2014 16:37:37 -0600
-Message-ID: <20140708223737.GA19512@google.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v8 3/9] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Tue, 8 Jul 2014 23:45:29 +0100
+Message-ID: <20140708224529.GB4980@e106497-lin.cambridge.arm.com>
 References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-9-git-send-email-Liviu.Dudau@arm.com>
- <20140708010103.GD22939@google.com>
- <20140708102940.GZ6501@e106497-lin.cambridge.arm.com>
- <20140708213305.GB4555@google.com>
- <20140708222738.GA4980@e106497-lin.cambridge.arm.com>
+ <1404240214-9804-4-git-send-email-Liviu.Dudau@arm.com>
+ <20140708001418.GB22939@google.com>
+ <201407080900.44882.arnd@arndb.de>
+ <20140708212951.GA4555@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140708212951.GA4555@google.com>
 Content-Disposition: inline
-In-Reply-To: <20140708222738.GA4980-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 11:27:38PM +0100, Liviu Dudau wrote:
-> On Tue, Jul 08, 2014 at 10:33:05PM +0100, Bjorn Helgaas wrote:
-> > On Tue, Jul 08, 2014 at 11:29:40AM +0100, Liviu Dudau wrote:
-> > > On Tue, Jul 08, 2014 at 02:01:04AM +0100, Bjorn Helgaas wrote:
-> > > > On Tue, Jul 01, 2014 at 07:43:33PM +0100, Liviu Dudau wrote:
-> > > > > ...
-> > > > > +int __weak pcibios_fixup_bridge_ranges(struct list_head *resources)
-> > > > > +{
-> > > > > +     return 0;
-> > > > > +}
-> > > > 
-> > > > I'd wait to add this until there's a platform that needs to implement it.
-> > > > Splitting it out will make this patch that much smaller and easier to
-> > > > understand.
-> > > 
-> > > I need this as this is the default implementation (i.e. do nothing). Otherwise the
-> > > link phase will give errors. 
-> > 
-> > I meant that you could remove the default implementation *and* the call of
-> > it, since it currently does nothing.
-> 
-> True. But it looks like converting Will's pci-host-generic.c driver will make use of this.
+On Tue, Jul 08, 2014 at 10:29:51PM +0100, Bjorn Helgaas wrote:
+> On Tue, Jul 8, 2014 at 1:00 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tuesday 08 July 2014, Bjorn Helgaas wrote:
+> >> On Tue, Jul 01, 2014 at 07:43:28PM +0100, Liviu Dudau wrote:
+> >> > +static LIST_HEAD(io_range_list);
+> >> > +
+> >> > +/*
+> >> > + * Record the PCI IO range (expressed as CPU physical address +=
+ size).
+> >> > + * Return a negative value if an error has occured, zero otherw=
+ise
+> >> > + */
+> >> > +int __weak pci_register_io_range(phys_addr_t addr, resource_siz=
+e_t size)
+> >>
+> >> I don't understand the interface here.  What's the mapping from CP=
+U
+> >> physical address to bus I/O port?  For example, I have the followi=
+ng
+> >> machine in mind:
+> >>
+> >>   HWP0002:00: PCI Root Bridge (domain 0000 [bus 00-1b])
+> >>   HWP0002:00: memory-mapped IO port space [mem 0xf8010000000-0xf80=
+10000fff]
+> >>   HWP0002:00: host bridge window [io  0x0000-0x0fff]
+> >>
+> >>   HWP0002:09: PCI Root Bridge (domain 0001 [bus 00-1b])
+> >>   HWP0002:09: memory-mapped IO port space [mem 0xf8110000000-0xf81=
+10000fff]
+> >>   HWP0002:09: host bridge window [io  0x1000000-0x1000fff] (PCI ad=
+dress [0x0-0xfff])
+> >>
+> >> The CPU physical memory [mem 0xf8010000000-0xf8010000fff] is trans=
+lated by
+> >> the bridge to I/O ports 0x0000-0x0fff on PCI bus 0000:00.  Drivers=
+ use,
+> >> e.g., "inb(0)" to access it.
+> >>
+> >> Similarly, [mem 0xf8110000000-0xf8110000fff] is translated by the =
+second
+> >> bridge to I/O ports 0x0000-0x0fff on PCI bus 0001:00.  Drivers use
+> >> "inb(0x1000000)" to access it.
+> >
+> > I guess you are thinking of the IA64 model here where you keep the =
+virtual
+> > I/O port numbers in a per-bus lookup table that gets accessed for e=
+ach
+> > inb() call. I've thought about this some more, and I believe there =
+are good
+> > reasons for sticking with the model used on arm32 and powerpc for t=
+he
+> > generic OF implementation.
+> >
+> > The idea is that there is a single virtual memory range for all I/O=
+ port
+> > mappings and we use the MMU to do the translation rather than compu=
+ting
+> > it manually in the inb() implemnetation. The main advantage is that=
+ all
+> > functions used in device drivers to (potentially) access I/O ports
+> > become trivial this way, which helps for code size and in some case=
+s
+> > (e.g. SoC-internal registers with a low latency) it may even be per=
+formance
+> > relevant.
+>=20
+> My example is from ia64, but I'm not advocating for the lookup table.
+> The point is that the hardware works similarly (at least for dense ia=
+64
+> I/O port spaces) in terms of mapping CPU physical addresses to PCI I/=
+O
+> space.
+>=20
+> I think my confusion is because your pci_register_io_range() and
+> pci_addess_to_pci() implementations assume that every io_range starts=
+ at
+> I/O port 0 on PCI (correct me if I'm wrong).  I suspect that's why yo=
+u
+> don't save the I/O port number in struct io_range.
+>=20
+> Maybe that assumption is guaranteed by OF, but it doesn't hold for AC=
+PI;
+> ACPI can describe several I/O port apertures for a single bridge, eac=
+h
+> associated with a different CPU physical memory region.
 
-I think we should move this part of the patch to the conversion of
-that driver.  That will keep related changes grouped together, which 
-makes them easier to review and easier to backport, e.g., to distro
-kernels.
+That is actually a good catch, I've completely missed the fact that
+io_range->pci_addr could be non-zero.
 
-> > > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > > > index 7e7b939..556dc5f 100644
-> > > > > --- a/include/linux/pci.h
-> > > > > +++ b/include/linux/pci.h
-> > > > > @@ -402,6 +402,7 @@ struct pci_host_bridge {
-> > > > >       struct device dev;
-> > > > >       struct pci_bus *bus;            /* root bus */
-> > > > >       int domain_nr;
-> > > > > +     resource_size_t io_base;        /* physical address for the start of I/O area */
-> > > > 
-> > > > I don't see where this is used yet.
-> > > 
-> > > It's used in pci_host_bridge_of_get_ranges() (earlier in this patch).
-> > 
-> > of_create_pci_host_bridge() fills in bridge->io_base, but I don't see
-> > anything that ever *reads* bridge->io_base.
-> 
-> Ah, understood. It is used by the host bridge drivers to set their ATR registers to the
-> correct CPU address values.
+>=20
+> If my speculation here is correct, a comment to the effect that each
+> io_range corresponds to a PCI I/O space range that starts at 0 might =
+be
+> enough.
+>=20
+> If you did add a PCI I/O port number argument to pci_register_io_rang=
+e(),
+> we might be able to make an ACPI-based implementation of it.  But I g=
+uess
+> that could be done if/when anybody ever wants to do that.
 
-Same applies here.
+No, I think you are right, the PCI I/O port number needs to be recorded=
+=2E I
+need to add that to pci_register_io_range().
 
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> >> Here's what these look like in /proc/iomem and /proc/ioports (note=
+ that
+> >> there are two resource structs for each memory-mapped IO port spac=
+e: one
+> >> IORESOURCE_MEM for the memory-mapped area (used only by the host b=
+ridge
+> >> driver), and one IORESOURCE_IO for the I/O port space (this become=
+s the
+> >> parent of a region used by a regular device driver):
+> >>
+> >>   /proc/iomem:
+> >>     PCI Bus 0000:00 I/O Ports 00000000-00000fff
+> >>     PCI Bus 0001:00 I/O Ports 01000000-01000fff
+>=20
+> Oops, I forgot the actual physical memory addresses here, but you got
+> the idea anyway.  It should have been something like this:
+>=20
+>   /proc/iomem:
+>     f8010000000-f8010000fff PCI Bus 0000:00 I/O Ports 00000000-00000f=
+ff
+>     f8110000000-f8110000fff PCI Bus 0001:00 I/O Ports 01000000-01000f=
+ff
+>=20
+> Bjorn
+>=20
+
+Thanks for being thorough with your review.
+
+Best regards,
+Liviu
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
