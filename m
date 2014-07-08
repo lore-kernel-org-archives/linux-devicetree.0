@@ -1,196 +1,213 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v3 2/5] PCI: designware: refactor MSI code to work with
- v3.65 dw hardware
-Date: Tue, 08 Jul 2014 21:20:30 +0900
-Message-ID: <000e01cf9aa7$02425030$06c6f090$%han@samsung.com>
-References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
- <1404164720-11066-3-git-send-email-m-karicheri2@ti.com>
- <2CC2A0A4A178534D93D5159BF3BCB661A17A3E4291@EAPEX1MAIL1.st.com>
- <53BAD07C.2010302@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
+Date: Tue, 8 Jul 2014 17:50:52 +0530
+Message-ID: <53BBE224.7020502@ti.com>
+References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <538F05BC.7000800@ti.com> <538F95A7.8010409@cogentembedded.com> <5396E160.7000707@ti.com> <53AB4A48.5030805@cogentembedded.com> <53B2B37F.6080300@ti.com> <53B71439.8040709@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <53BAD07C.2010302@ti.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Murali Karicheri' <m-karicheri2@ti.com>, 'Mohit KUMAR DCG' <Mohit.KUMAR@st.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, 'Russell King' <linux@arm.linux.org.uk>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Pratyush ANAND' <pratyush.anand@st.com>, 'Richard Zhu' <r65037@freescale.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53B71439.8040709@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
+Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 08, 2014 1:53 AM, Murali Karicheri wrote:
-> On 07/07/2014 12:17 AM, Mohit KUMAR DCG wrote:
-> > On Tuesday, July 01, 2014 3:15 AM, Murali Karicheri wrote:
-> >>
-> >> Keystone PCI controller is based on v3.65 version of the DW PCI h/w that
-> >> implements MSI controller registers in application space compared to the
-> >> newer version. This requires updates to the DW core API to support the PCI
-> >> controller driver based on this old DW hardware. Add msi_irq_set()/clear()
-> >> API functions to allow Set/Clear MSI IRQ enable bit in the application register.
-> >> Also the old h/w uses MSI_IRQ register in application register space to raise
-> >> MSI IRQ to the RC from EP. Current code uses the standard mechanism as
-> >> per PCI spec. So add another API get_msi_data() to get the address of this
-> >> register so that common code can be re-used on old h/w.
-> >>
-> >> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
-> >>
-> >> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
-> >> CC: Russell King<linux@arm.linux.org.uk>
-> >> CC: Grant Likely<grant.likely@linaro.org>
-> >> CC: Rob Herring<robh+dt@kernel.org>
-> >> CC: Mohit Kumar<mohit.kumar@st.com>
-> >> CC: Jingoo Han<jg1.han@samsung.com>
-> >> CC: Bjorn Helgaas<bhelgaas@google.com>
-> >> CC: Pratyush Anand<pratyush.anand@st.com>
-> >> CC: Richard Zhu<r65037@freescale.com>
-> >> CC: Kishon Vijay Abraham I<kishon@ti.com>
-> >> CC: Marek Vasut<marex@denx.de>
-> >> CC: Arnd Bergmann<arnd@arndb.de>
-> >> CC: Pawel Moll<pawel.moll@arm.com>
-> >> CC: Mark Rutland<mark.rutland@arm.com>
-> >> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
-> >> CC: Kumar Gala<galak@codeaurora.org>
-> >> CC: Randy Dunlap<rdunlap@infradead.org>
-> >> CC: Grant Likely<grant.likely@linaro.org>
-> >> ---
-> >>   drivers/pci/host/pcie-designware.c |   50 ++++++++++++++++++++++++++-
-> >> ---------
-> >>   drivers/pci/host/pcie-designware.h |    3 +++
-> >>   2 files changed, 39 insertions(+), 14 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
-> >> designware.c
-> >> index d8f3af7..905941c 100644
-> >> --- a/drivers/pci/host/pcie-designware.c
-> >> +++ b/drivers/pci/host/pcie-designware.c
-> >> @@ -217,27 +217,47 @@ static int find_valid_pos0(struct pcie_port *pp, int
-> >> msgvec, int pos, int *pos0)
-> >>   	return 0;
-> >>   }
-> >>
-> >> +static void dw_pcie_msi_clear_irq(struct pcie_port *pp, int irq) {
-> >> +	unsigned int res, bit, val;
-> >> +
-> >> +	res = (irq / 32) * 12;
-> >> +	bit = irq % 32;
-> >> +	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4,&val);
-> >> +	val&= ~(1<<  bit);
-> >> +	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val); }
-> >> +
-> >>   static void clear_irq_range(struct pcie_port *pp, unsigned int irq_base,
-> >>   			    unsigned int nvec, unsigned int pos)  {
-> >> -	unsigned int i, res, bit, val;
-> >> +	unsigned int i;
-> >>
-> >>   	for (i = 0; i<  nvec; i++) {
-> >>   		irq_set_msi_desc_off(irq_base, i, NULL);
-> >>   		clear_bit(pos + i, pp->msi_irq_in_use);
-> >>   		/* Disable corresponding interrupt on MSI controller */
-> >> -		res = ((pos + i) / 32) * 12;
-> >> -		bit = (pos + i) % 32;
-> >> -		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-> >> 4,&val);
-> >> -		val&= ~(1<<  bit);
-> >> -		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-> >> 4, val);
-> >> +		if (pp->ops->msi_clear_irq)
-> >> +			pp->ops->msi_clear_irq(pp, pos + i);
-> >> +		else
-> >> +			dw_pcie_msi_clear_irq(pp, pos + i);
-> >>   	}
-> >>   }
-> >>
-> >> +static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq) {
-> >> +	unsigned int res, bit, val;
-> >> +
-> >> +	res = (irq / 32) * 12;
-> >> +	bit = irq % 32;
-> >> +	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4,&val);
-> >> +	val |= 1<<  bit;
-> >> +	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val); }
-> >> +
-> >>   static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)  {
-> >> -	int res, bit, irq, pos0, pos1, i;
-> >> -	u32 val;
-> >> +	int irq, pos0, pos1, i;
-> >>   	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
-> >>
-> >>   	if (!pp) {
-> >> @@ -281,11 +301,10 @@ static int assign_irq(int no_irqs, struct msi_desc
-> >> *desc, int *pos)
-> >>   		}
-> >>   		set_bit(pos0 + i, pp->msi_irq_in_use);
-> >>   		/*Enable corresponding interrupt in MSI interrupt controller
-> >> */
-> >> -		res = ((pos0 + i) / 32) * 12;
-> >> -		bit = (pos0 + i) % 32;
-> >> -		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-> >> 4,&val);
-> >> -		val |= 1<<  bit;
-> >> -		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-> >> 4, val);
-> >> +		if (pp->ops->msi_set_irq)
-> >> +			pp->ops->msi_set_irq(pp, pos0 + i);
-> >> +		else
-> >> +			dw_pcie_msi_set_irq(pp, pos0 + i);
-> >>   	}
-> >>
-> >>   	*pos = pos0;
-> >> @@ -353,7 +372,10 @@ static int dw_msi_setup_irq(struct msi_chip *chip,
-> >> struct pci_dev *pdev,
-> >>   	 */
-> >>   	desc->msi_attrib.multiple = msgvec;
-> >>
-> >> -	msg.address_lo = virt_to_phys((void *)pp->msi_data);
-> >> +	if (pp->ops->get_msi_data)
-> >> +		msg.address_lo = pp->ops->get_msi_data(pp);
-> >> +	else
-> >> +		msg.address_lo = virt_to_phys((void *)pp->msi_data);
-> >>   	msg.address_hi = 0x0;
-> >>   	msg.data = pos;
-> >>   	write_msi_msg(irq,&msg);
-> >> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-
-> >> designware.h
-> >> index 8121901..387f69e 100644
-> >> --- a/drivers/pci/host/pcie-designware.h
-> >> +++ b/drivers/pci/host/pcie-designware.h
-> >> @@ -67,6 +67,9 @@ struct pcie_host_ops {
-> >>   			unsigned int devfn, int where, int size, u32 val);
-> >>   	int (*link_up)(struct pcie_port *pp);
-> >>   	void (*host_init)(struct pcie_port *pp);
-> >> +	void (*msi_set_irq)(struct pcie_port *pp, int irq);
-> >> +	void (*msi_clear_irq)(struct pcie_port *pp, int irq);
-> >> +	u32 (*get_msi_data)(struct pcie_port *pp);
-> >>   };
-> >>
-> >>   int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val);
-> >
-> > - Now MSI specific dw code can be shared b/w old Synopsys controller (ver<  3.70)
-> > and newer controller that standardize the MSI settings inside design ware core itself.
-> >
-> > Jingoo,
-> >
-> > Pls let us know if you have any concern or comment over this.
-> >
-> > Acked-by: Mohit Kumar<mohit.kumar@st.com>
-> >
-> > Regards
-> > Mohit
-> >
-> >> --
-> >> 1.7.9.5
-> >
-> Mohit,
-> 
-> Thanks.
-> 
-> Jingoo, could you provide your response or Ack?
+Hi,
 
-Acked-by: Jingoo Han <jg1.han@samsung.com>
-
-Best regards,
-Jingoo Han
-
+On Saturday 05 July 2014 02:23 AM, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Thanks
-> --
+> On 07/01/2014 05:11 PM, Kishon Vijay Abraham I wrote:
+> 
+>>>>>>> This PHY, though formally being a part of Renesas USBHS controller,
+>>>>>>> contains
+>>>>>>> the
+>>>>>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
+>>>>>>> them
+>>>>>>> channels) to the different USB controllers: channel 0 can be connected to
+>>>>>>> either
+>>>>>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
+>>>>>>> EHCI/OHCI
+>>>>>>> or xHCI controllers.
+> 
+>> .
+>> .
+>> <snip>
+>> .
+>> .
+> 
+>>>>>> IIUC, channel 0 can be configured for either EHCI/OHCI or HS-USB but
+>>>>>> can't be
+>>>>>> used for both.  And channel 1 can be configured for either PCI EHCI/OHCI or
+>>>>>> xHCI. right?
+> 
+>>>>>      Yes. However that depends on the driver load order: if e.g. xHCI
+>>>>> driver is
+>>>>> loaded later than PCI USB drivers,
+>>>>> it will override the channel routing.
+> 
+>>>> So will the PCI USB drivers will be notified of that?
+> 
+>>>     Unfortunately, no. But this is also the case with the other multi-PHY
+>>> drivers...
+> 
+>> IIRC, in the case of other existing multi-phy drivers, all the PHYs can
+>> co-exist without actually overriding anything that was configured previously.
+> 
+>    'phy-exynos-mipi-video' driver looked somewhat suspicious in this respect (I
+> didn't understand why they used "#phy-cells" of 1, having 2 channels with two
+> PHYs each) but upon further scrutiny it appears that the PHYs on one channel
+> function quite independently...
+> 
+> [...]
+> 
+>>>>>> So ideally only two sub-nodes should be created for channel '0' and channel
+>>>>>> '1'.
+> 
+>>>>>      Hm, but I need to perform a special PHY power up sequence for the
+>>>>> USBHS PHY
+>>>>> itself (corresponding to channel #0, selector #1).
+> 
+>>>>>> You can configure a channel to a particular mode by passing the mode in
+>>>>>> PHY specifier
+> 
+>>>>>      I already have "#phy-cells" prop equal to 2.
+> 
+>>>>>> (The channel should be configured to a particualr mode in xlate).
+> 
+>>>>>      I have even considered using the of_xlate() method at first but then
+>>>>> abandoned that idea for the phy_init() method...
+> 
+>>>> If you want to configure the PHY to a particular mode, xlate should be the
+>>>> best
+>>>> place.
+> 
+>>>     I tried to move the code there from the init() method but then I realized
+>>> that I need to prepare/enable the USBHS clock before writing to the UGCTRL2
+>>> register and there's no place I can disable/unprepare this clock if I do the
+> 
+>    Unless I prepare/enable the clock when probing, and undo it on removal, that
+> is.
+> 
+>>> channel routing in the xlate() method. So no, I don't agree here.
+> 
+>> enabling clock from init() seems correct to me. We need a better way to avoid
+>> overriding the PHY to a particular mode.
+> 
+>    In fact, in my case such override may be rather desirable.
+
+Don't understand how overriding is desirable. Won't it affect the first
+controller that got the PHY?
+> 
+> [...]
+>> .
+>> .
+>> <snip>
+>> .
+>> .
+>>
+>>>>>>> +struct rcar_gen2_phy_driver {
+>>>>>>> +    void __iomem *base;
+>>>>>>> +    struct clk *clk;
+>>>>>>> +    spinlock_t lock;
+>>>>>>> +    struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
+> 
+>>>>>> This can be created dynamically based on the number of sub-nodes. In this
+>>>>>> case
+> 
+>>>     Did you mean that I'll need to use linked list here instead of an array?
+> 
+>> Nope. I meant something like below.
+> 
+>> struct rcar_gen2_phy_driver {
+>>     .
+>>     .
+>>     struct rcar_gen2_phy **phys;
+>> }
+>>
+>> probe()
+>> {
+>>     <snip>
+>>     int i = 0, channel_count;
+>>     struct rcar_gen2_phy **phys;
+>>     channel_count = of_get_child_count(np);
+> 
+>    Didn't know of such function...
+> 
+>>     phys = kzalloc(sizeof(*phys) * channel_count, GFP_KERNEL);
+> 
+>    Rather kcalloc().
+> 
+>>     for_each_child_of_node(dev->of_node, np) {
+>>         struct rcar_gen2_phy *phy;
+>>         .
+>>         .
+>>         phy = kzalloc(sizeof(*phy), GFP_KERNEL);
+>>         .
+>>         .
+>>         phy->phy = devm_phy_create(dev, &rcar_gen2_phy_ops, NULL);
+>>         phys[i++] = phy;
+>>     }
+>>     drv->phys = phys;
+>>     <snip>
+>> }
+> 
+>> Then you can access 'phys' just like how you access an array.
+> 
+>    Aren't you over-engineering things? I'd rather have just an array of 'struct
+> rcar_gen2_phy' dynamically allocated at once, instead of an array of pointers
+> to struct rcar_gen2_phy' and then PHYs allocated piecemeal...
+
+yeah.. that can be done.
+> 
+>    Anyway, this means that I'll have to do linear search for the needed PHY in
+> the xlate() method, just like it would have been with a linked list.
+
+indeed. Unless we directly pass the index in the phy specifier (from dt). But I
+would prefer linear search instead.
+> Complication. :-)
+> 
+> [...]
+> 
+>>>>>> it'll be only rcar_gen2_phy phys[2], one for each channel.
+>>>>>> By this we need not hard code NUM_USB_CHANNELS.
+> 
+>>>>>      I don't quite understand what's up with hard-coding it -- this
+>>>>> constant is
+>>>>> dictated by the UGCTRL2 register layout anyway.
+> 
+>>>> right but you don't want to change the driver a whole lot when they change the
+>>>> no of channels in the next version
+> 
+>>>     They have already done so: R8A7790 has 3 USB channels, R8A7791 has only 2.
+>>> However, the number of controllable channels didn't change.
+> 
+>> right.. that's where I'd like to have status = "disabled" for that channel in
+>> your dt node.
+> 
+>    I disagree here. First, channel #1 is not controllable anyway, so of no
+> interest to us. Anyway, if more controllable channel appear, may point is that
+> should be a matter of introducing and properly handling a new "compatible"
+> property, not just adding/removing subnodes.
+
+That will lead to broken dt data. I think we have to do both.
+> 
+>>>> or they use a slightly modified version of
+>>>> this IP in a different SoC. And finding the number of channels dynamically is
+>>>> not complicated anyway IMO.
+> 
+>>>     Sorry, but what you're saying here just doesn't make sense to me. I'd need
+>>> to modify the driver for the different number of the controllable channels in
+>>> any case since the UGCTRL2 masks/values have to be hard coded in the driver as
+>>> you said. If they were read from the device tree, that would have made sense
+>>> but you seem to be against that...
+> 
+>> R8A7790 has 3 USB channels and R8A7791 has only 2. So what should be the
+>> NUM_CHANNELS in this driver?
+> 
+>    Two; we have only two controllable channels in any case.
+
+NAK.
+
+-Kishon
