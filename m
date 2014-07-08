@@ -1,65 +1,75 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Tue, 8 Jul 2014 13:18:17 -0400
-Message-ID: <20140708171817.GH4979@htj.dyndns.org>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
- <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
- <20140708134000.GC4979@htj.dyndns.org>
- <20140708170353.GA16148@kwain>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v8 0/9] Support for creating generic PCI host bridges
+ from DT
+Date: Tue, 8 Jul 2014 18:18:28 +0100
+Message-ID: <20140708171828.GM6501@e106497-lin.cambridge.arm.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
 Content-Disposition: inline
-In-Reply-To: <20140708170353.GA16148@kwain>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Tue, Jul 08, 2014 at 07:03:53PM +0200, Antoine T=E9nart wrote:
-> > So, hpriv->port is both input and output?  This is messy and can le=
-ad
-> > to confusing failures and there now are multiple ways to modify
-> > port_map.  If carrying this information through ahci_host_priv is
-> > necessary, let's remove the direct params and introduce new input
-> > fields to the struct.
+On Sun, Jul 06, 2014 at 04:23:43PM +0100, Rob Herring wrote:
+> On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > This is my resurected attempt at adding support for generic PCI hos=
+t
+> > bridge controllers that make use of device tree information to
+> > configure themselves. I've tagged it as v8 although the patches
+> > have now been reshuffled in order to ease adoption so referring to
+> > the older versions might be a bit of a hoop jumping exercise.
+> >
+> > Changes from v7:
+> >   - Reordered the patches so that fixes and non-controversial patch=
+es
+> >     from v7 can be accepted more easily. If agreed I can split the
+> >     series again into patches that can be upstreamed easily and one=
+s
+> >     that still need discussion.
+> >   - Moved the of_create_host_bridge() function to drivers/of/of_pci=
+=2Ec
+> >     to better reflect its target use.
+> >   - Added the function to remap the bus I/O resources that used to =
+be
+> >     provided in my arm64 patch series and (re)named it pci_remap_io=
+space()
+> >   - Removed error code checking from parsing and mapping of IRQ fro=
+m DT
+> >     in recognition that some PCI devices will not have legacy IRQ m=
+appings.
+> >
+> > v7 thread here with all the historic information: https://lkml.org/=
+lkml/2014/3/14/279
 >=20
-> We just use hpriv->port_map to check port_map is valid and describes
-> available ports there.
+> Can you publish a branch for this series please.
 >=20
-> hpriv->port_map is filed by the generic ahci_platform_get_resources()
-> function when using the new bindings and not by the drivers. port_map=
- is
-> the input from the drivers.
-
-So, yeah, it's being used both as input and output and we also have
-the arguments which affect port_map, right?  It does seem confusing.
-
-> Well, a had a review a week ago about in the PHY driver saying I shou=
-ld
-> avoid using fixed sized arrays... And it was in a driver were we know
-> the maximum number of PHY available.
+> Rob
 >=20
-> I think in this case were the number of PHYs depends on the h/w, we s=
-hould
-> use a dynamically allocated array.
 
-Well, so does clk.  Let's say clk is more restricted and phy can be
-one or more per port and thus needs to be dynamic.  If so, shouldn't
-we at least have some correlation between phys and ports?  It bothers
-me that now libahci is carrying random number of resources that it has
-no idea how to associate with the ports it manages.  What if later we
-want to involve phy driver in power managing unoccupied ports?
+Hi Rob,
 
-Thanks.
+I have pushed a brach that matches my v8 patchset +1 obvious missing he=
+ader include
+here: http://www.linux-arm.org/git?p=3Dlinux-ld.git;a=3Dshortlog;h=3Dre=
+fs/heads/for-upstream/pci_v8
+
+Best regards,
+Liviu
+
 
 --=20
-tejun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
