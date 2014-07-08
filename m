@@ -1,113 +1,89 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 01/18] power: reset: Add if statement isntead of multiple
- depends on
-Date: Tue, 8 Jul 2014 19:33:24 +0200
-Message-ID: <53BC2B64.8070502@atmel.com>
-References: <1404743131-24569-1-git-send-email-maxime.ripard@free-electrons.com> <1404743131-24569-2-git-send-email-maxime.ripard@free-electrons.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
+Date: Tue, 8 Jul 2014 19:49:00 +0200
+Message-ID: <20140708174900.GC16148@kwain>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
+ <20140708134000.GC4979@htj.dyndns.org>
+ <20140708170353.GA16148@kwain>
+ <20140708171817.GH4979@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404743131-24569-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140708171817.GH4979@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Nit-pik: In subject: s/isntead/instead/
+On Tue, Jul 08, 2014 at 01:18:17PM -0400, Tejun Heo wrote:
+> Hello,
+>=20
+> On Tue, Jul 08, 2014 at 07:03:53PM +0200, Antoine T=E9nart wrote:
+> > > So, hpriv->port is both input and output?  This is messy and can =
+lead
+> > > to confusing failures and there now are multiple ways to modify
+> > > port_map.  If carrying this information through ahci_host_priv is
+> > > necessary, let's remove the direct params and introduce new input
+> > > fields to the struct.
+> >=20
+> > We just use hpriv->port_map to check port_map is valid and describe=
+s
+> > available ports there.
+> >=20
+> > hpriv->port_map is filed by the generic ahci_platform_get_resources=
+()
+> > function when using the new bindings and not by the drivers. port_m=
+ap is
+> > the input from the drivers.
+>=20
+> So, yeah, it's being used both as input and output and we also have
+> the arguments which affect port_map, right?  It does seem confusing.
 
-On 07/07/2014 16:25, Maxime Ripard :
-> All the config option so far are depending on the POWER_RESET symbol
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/power/reset/Kconfig | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index bdcf5173e377..19d546c5edfa 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -6,15 +6,17 @@ menuconfig POWER_RESET
->  
->  	  Say Y here to enable board reset and power off
->  
-> +if POWER_RESET
-> +
->  config POWER_RESET_AS3722
->  	bool "ams AS3722 power-off driver"
-> -	depends on MFD_AS3722 && POWER_RESET
-> +	depends on MFD_AS3722
->  	help
->  	  This driver supports turning off board via a ams AS3722 power-off.
->  
->  config POWER_RESET_AXXIA
->  	bool "LSI Axxia reset driver"
-> -	depends on POWER_RESET && ARCH_AXXIA
-> +	depends on ARCH_AXXIA
->  	help
->  	  This driver supports restart for Axxia SoC.
->  
-> @@ -22,7 +24,7 @@ config POWER_RESET_AXXIA
->  
->  config POWER_RESET_GPIO
->  	bool "GPIO power-off driver"
-> -	depends on OF_GPIO && POWER_RESET
-> +	depends on OF_GPIO
->  	help
->  	  This driver supports turning off your board via a GPIO line.
->  	  If your board needs a GPIO high/low to power down, say Y and
-> @@ -30,13 +32,13 @@ config POWER_RESET_GPIO
->  
->  config POWER_RESET_MSM
->  	bool "Qualcomm MSM power-off driver"
-> -	depends on POWER_RESET && ARCH_QCOM
-> +	depends on ARCH_QCOM
->  	help
->  	  Power off and restart support for Qualcomm boards.
->  
->  config POWER_RESET_QNAP
->  	bool "QNAP power-off driver"
-> -	depends on OF_GPIO && POWER_RESET && PLAT_ORION
-> +	depends on OF_GPIO && PLAT_ORION
->  	help
->  	  This driver supports turning off QNAP NAS devices by sending
->  	  commands to the microcontroller which controls the main power.
-> @@ -54,14 +56,13 @@ config POWER_RESET_RESTART
->  config POWER_RESET_SUN6I
->  	bool "Allwinner A31 SoC reset driver"
->  	depends on ARCH_SUNXI
-> -	depends on POWER_RESET
->  	help
->  	  Reboot support for the Allwinner A31 SoCs.
->  
->  config POWER_RESET_VEXPRESS
->  	bool "ARM Versatile Express power-off and reset driver"
->  	depends on ARM || ARM64
-> -	depends on POWER_RESET && VEXPRESS_CONFIG
-> +	depends on VEXPRESS_CONFIG
->  	help
->  	  Power off and reset support for the ARM Ltd. Versatile
->  	  Express boards.
-> @@ -69,7 +70,6 @@ config POWER_RESET_VEXPRESS
->  config POWER_RESET_XGENE
->  	bool "APM SoC X-Gene reset driver"
->  	depends on ARM64
-> -	depends on POWER_RESET
->  	help
->  	  Reboot support for the APM SoC X-Gene Eval boards.
->  
-> @@ -80,3 +80,4 @@ config POWER_RESET_KEYSTONE
->  	help
->  	  Reboot support for the KEYSTONE SoCs.
->  
-> +endif
-> 
+I do see priv->port_map as being automatically set and then restricted
+if needed by the port_map input here. I don't see how that's confusing.
+The only modification is we restrict the port_map parameter to the set
+of available ports. The port_map argument affected priv->port_map befor=
+e
+this patch.
+
+>=20
+> > Well, a had a review a week ago about in the PHY driver saying I sh=
+ould
+> > avoid using fixed sized arrays... And it was in a driver were we kn=
+ow
+> > the maximum number of PHY available.
+> >=20
+> > I think in this case were the number of PHYs depends on the h/w, we=
+ should
+> > use a dynamically allocated array.
+>=20
+> Well, so does clk.  Let's say clk is more restricted and phy can be
+> one or more per port and thus needs to be dynamic.  If so, shouldn't
+> we at least have some correlation between phys and ports?  It bothers
+> me that now libahci is carrying random number of resources that it ha=
+s
+> no idea how to associate with the ports it manages.  What if later we
+> want to involve phy driver in power managing unoccupied ports?
+
+I see. This is a first (working) attempt to have a one node per port. I
+agree that would be nice to have a correlation between ports and PHYs.
+This can definitively be added when needed without changing the dt
+bindings as only the internal representation changes. This would also
+require to get all phys from the port nodes, which is again internal
+stuff.
+
+Don't you think we can go by steps, and have a following up series for
+this when needed (like in a power managing series for unoccupied ports)=
+?
 
 
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
