@@ -1,135 +1,130 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Add Keystone PCIe controller driver
-Date: Tue, 8 Jul 2014 08:49:00 -0400
-Message-ID: <53BBE8BC.2090302@ti.com>
-References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com> <20140705182332.GB28871@google.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 1/3] PCI: designware: Configuration space should be
+ specified in 'reg'
+Date: Tue, 08 Jul 2014 21:50:51 +0900
+Message-ID: <001001cf9aab$3fb008a0$bf1019e0$%han@samsung.com>
+References: <1403719007-9352-1-git-send-email-kishon@ti.com>
+ <1403719007-9352-2-git-send-email-kishon@ti.com>
+ <2CC2A0A4A178534D93D5159BF3BCB6619C5F94EFC8@EAPEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140705182332.GB28871-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <2CC2A0A4A178534D93D5159BF3BCB6619C5F94EFC8@EAPEX1MAIL1.st.com>
+Content-language: ko
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Mohit KUMAR DCG' <Mohit.KUMAR@st.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2014 02:23 PM, Bjorn Helgaas wrote:
-> On Mon, Jun 30, 2014 at 05:45:15PM -0400, Murali Karicheri wrote:
->> This patch add PCIe controller driver for Keystone SoCs. This
->> is based on v2 of the series posted to the mailing list.
->> Keystone PCI controller is based on version 3.65 of the DW
->> hardware. This driver re-uses some of the DW core driver
->> functions and required modification in some to support
->> the old DW h/w based Keystone driver.
->>
->> Please review and let me know if you have any comments.
->
-> I'm waiting for acks from Mohit or Jingoo for the designware changes.
->
-Bjorn,
+On Thursday, June 26, 2014 2:56 PM, Mohit KUMAR DCG wrote:
+> On Wednesday, June 25, 2014 11:27 PM, Kishon Vijay Abraham I wrote:
+> >
+> > The configuration address space has so far been specified in *ranges*,
+> > however it should be specified in *reg* making it a platform MEM resource.
+> > Hence used 'platform_get_resource_*' API to get configuration address
+> > space in the designware driver.
+> >
+> > Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Mohit Kumar <mohit.kumar@st.com>
+> > Cc: Jingoo Han <jg1.han@samsung.com>
+> > Cc: Marek Vasut <marex@denx.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  .../devicetree/bindings/pci/designware-pcie.txt    |    4 ++++
+> >  drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+> >  2 files changed, 19 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > index d0d15ee..ed0d9b9 100644
+> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > @@ -2,6 +2,10 @@
+> >
+> >  Required properties:
+> >  - compatible: should contain "snps,dw-pcie" to identify the core.
+> > +- reg: Should contain the configuration address space.
+> > +- reg-names: Must be "config" for the PCIe configuration space.
+> > +    (The old way of getting the configuration address space from "ranges"
+> > +    is deprecated and should be avoided.)
+> >  - #address-cells: set to <3>
+> >  - #size-cells: set to <2>
+> >  - device_type: set to "pci"
+> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
+> > designware.c
+> > index 1eaf4df..0b7b455 100644
+> > --- a/drivers/pci/host/pcie-designware.c
+> > +++ b/drivers/pci/host/pcie-designware.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/of_pci.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/pci_regs.h>
+> > +#include <linux/platform_device.h>
+> >  #include <linux/types.h>
+> >
+> >  #include "pcie-designware.h"
+> > @@ -396,11 +397,23 @@ static const struct irq_domain_ops
+> > msi_domain_ops = {  int __init dw_pcie_host_init(struct pcie_port *pp)  {
+> >  	struct device_node *np = pp->dev->of_node;
+> > +	struct platform_device *pdev = to_platform_device(pp->dev);
+> >  	struct of_pci_range range;
+> >  	struct of_pci_range_parser parser;
+> > +	struct resource *cfg_res;
+> >  	u32 val;
+> >  	int i;
+> >
+> > +	cfg_res = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM, "config");
+> > +	if (cfg_res) {
+> > +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+> > +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+> > +		pp->cfg0_base = cfg_res->start;
+> > +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+> > +	} else {
+> > +		dev_err(pp->dev, "missing *config* reg space\n");
+> 
+> - so this message will remind other platform to comply and specify configuration space
+>  in *reg* property.
+> 
+> > +	}
+> > +
+> >  	if (of_pci_range_parser_init(&parser, np)) {
+> >  		dev_err(pp->dev, "missing ranges property\n");
+> >  		return -EINVAL;
+> > @@ -433,6 +446,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >  			of_pci_range_to_resource(&range, np, &pp->cfg);
+> >  			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+> >  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+> > +			pp->cfg0_base = pp->cfg.start;
+> > +			pp->cfg1_base = pp->cfg.start + pp-
+> > >config.cfg0_size;
+> >  		}
+> >  	}
+> >
+> > @@ -445,8 +460,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >  		}
+> >  	}
+> >
+> > -	pp->cfg0_base = pp->cfg.start;
+> > -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+> >  	pp->mem_base = pp->mem.start;
+> >
+> >  	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> 
+> Reviewed and Acked-by: Mohit Kumar <mohit.kumar@st.com>
 
-Thanks for your email.
+Acked-by: Jingoo Han <jg1.han@samsung.com>
 
-So far I got Ack for 1/5 and 2/5. I will ping them today for 3/5 and 4/5.
+Best regards,
+Jingoo Han
 
-> I'd also like an ack from the devicetree folks for the Keystone binding.
->
-Ok
-> And I think we need a MAINTAINERS update for drivers/pci/host/\*keystone\*
-I will address your comments against 5/5 and discuss them if any and 
-make the above update for v4 and send the patch set to the list.
+> 
+> Regards
+> Mohit
+> 
+> > --
+> > 1.7.9.5
 
-Thanks and regards,
-
-Murali
->
->> CC: Santosh Shilimkar<santosh.shilimkar-l0cyMroinI0@public.gmane.org>
->> CC: Russell King<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> CC: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> CC: Rob Herring<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> CC: Mohit Kumar<mohit.kumar-qxv4g6HH51o@public.gmane.org>
->> CC: Jingoo Han<jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> CC: Bjorn Helgaas<bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> CC: Pratyush Anand<pratyush.anand-qxv4g6HH51o@public.gmane.org>
->> CC: Richard Zhu<r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> CC: Kishon Vijay Abraham I<kishon-l0cyMroinI0@public.gmane.org>
->> CC: Marek Vasut<marex-ynQEQJNshbs@public.gmane.org>
->> CC: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
->> CC: Pawel Moll<pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> CC: Mark Rutland<mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> CC: Ian Campbell<ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> CC: Kumar Gala<galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> CC: Randy Dunlap<rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->> CC: Grant Likely<grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> Changelog:
->>
->> v3
->>   - DW application register handling code is now part of
->>     Keystone PCI driver. RFC had this code part of Keystone
->>     PCI driver, then V1 moved this to a separate file to
->>     re-use on other platforms that uses this version of the
->>     DW h/w. Then based on comments against v2, this is moved
->>     back to Keystone driver.
->>   - Keystone SerDes phy driver is removed from this series so that
->>     this can be merged independent of that patch
->>   - added msi_set_irq()/clear_irq() API's to support Keystone
->>
->> V2
->>   - Split the designware pcie enhancement patch to multiple
->>     patches based on functionality added
->>   - Remove the quirk code and add a patch to fix mps/mrss
->>     tuning for ARM. Use kernel command line parameter
->>     pci=pcie_bus_perf to work with Keystone PCI Controller.
->>     Following patch addressed this.
->>       [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
->>   - Add documentation for device tree bindings
->>   - Add separate interrupt controller nodes for MSI and Legacy
->>     IRQs and use irq map for legacy IRQ
->>   - Use compatibility to identify v3.65 version of the DW hardware
->>     and use it to customize the designware common code.
->>   - Use reg property for configuration space instead of range
->>   - Other minor updates based on code inspection.
->>
->> V1
->>   - Add an interrupt controller node for Legacy irq chip and use
->>     interrupt map/map-mask property to map legacy IRQs A/B/C/D
->>   - Add a Phy driver to replace the original serdes driver
->>   - Move common application register handling code to a separate
->>     file to allow re-use across other platforms that use older
->>     DW PCIe h/w
->>   - PCI quirk for maximum read request size. Check and override only
->>     if the maximum is higher than what controller can handle.
->>   - Converted to a module platform driver.
->>
->> Murali Karicheri (5):
->>    PCI: designware: add rd[wr]_other_conf API
->>    PCI: designware: refactor MSI code to work with v3.65 dw hardware
->>    PCI: designware: refactor host init code to re-use on keystone PCI
->>    PCI: designware: enhance dw core driver to support Keystone PCI host
->>      controller
->>    PCI: add PCI controller for Keystone PCIe h/w
->>
->>   .../devicetree/bindings/pci/designware-pcie.txt    |    2 +
->>   .../devicetree/bindings/pci/pci-keystone.txt       |   69 +++
->>   drivers/pci/host/Kconfig                           |    5 +
->>   drivers/pci/host/Makefile                          |    1 +
->>   drivers/pci/host/pci-keystone-dw.c                 |  523 ++++++++++++++++++++
->>   drivers/pci/host/pci-keystone.c                    |  381 ++++++++++++++
->>   drivers/pci/host/pci-keystone.h                    |   56 +++
->>   drivers/pci/host/pcie-designware.c                 |  206 ++++++--
->>   drivers/pci/host/pcie-designware.h                 |   17 +-
->>   9 files changed, 1207 insertions(+), 53 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/pci/pci-keystone.txt
->>   create mode 100644 drivers/pci/host/pci-keystone-dw.c
->>   create mode 100644 drivers/pci/host/pci-keystone.c
->>   create mode 100644 drivers/pci/host/pci-keystone.h
->>
->> --
->> 1.7.9.5
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
