@@ -1,59 +1,39 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] spi: add driver for Rockchip RK3xxx SoCs
- integrated SPI
-Date: Tue, 8 Jul 2014 16:56:05 +0200
-Message-ID: <20140708145605.GZ30458@sirena.org.uk>
-References: <1404176639-3315-1-git-send-email-addy.ke@rock-chips.com>
- <1404784397-5157-1-git-send-email-addy.ke@rock-chips.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv5 03/15] hwspinlock/core: maintain a list of registered
+ hwspinlock banks
+Date: Tue, 8 Jul 2014 10:22:38 -0500
+Message-ID: <53BC0CBE.4060608@ti.com>
+References: <1398904476-26200-1-git-send-email-s-anna@ti.com> <1398904476-26200-4-git-send-email-s-anna@ti.com> <CAK=WgbakGbTaYz+4K24aT3vyRkDYwPKCm6XrcJvH667NMMfTTA@mail.gmail.com> <53B47621.6090307@ti.com> <CAK=WgbYtJ7TGqvjG3VAPPD5tVXx9-jEJU3iKEStUMxOvD1v=LQ@mail.gmail.com> <53B592CE.2010001@ti.com> <CAK=WgbaahqdmWRDMKtRhco4y5B-WBFYDHYs2cLM7NL=QhnhK2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="D+UG5SQJKkIYNVx0"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404784397-5157-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK=WgbaahqdmWRDMKtRhco4y5B-WBFYDHYs2cLM7NL=QhnhK2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ohad,
 
---D+UG5SQJKkIYNVx0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 07/04/2014 12:01 AM, Ohad Ben-Cohen wrote:
+> Hi Suman,
+> 
+> On Thu, Jul 3, 2014 at 8:28 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+>> OK, but we would still require this function to lookup the registered
+>> device from the controller-phandle to retrieve the base_id.
+> 
+> Can we retrieve the base_id from the parent DT node itself?
 
-On Tue, Jul 08, 2014 at 09:53:17AM +0800, Addy Ke wrote:
-> In order to facilitate understanding, rockchip SPI controller IP design
-> looks similar in its registers to designware. But IC implementation
-> is different from designware, So we need a dedicated driver for Rockchip
-> RK3XXX SoCs integrated SPI. The main differences:
+Yeah, it is possible using the of_hwspin_lock_get_base_id function added
+in Patch8, once we convert the phandle to a device node. The platform
+implementations would be using this function during the registration
+phase to register the base id, and we have to do the DT parse/lookup
+again in the core.
 
-This driver is already applied, please send updates as incremental
-patches against the current code not as a completely new patch.
-
---D+UG5SQJKkIYNVx0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTvAaCAAoJELSic+t+oim9DcwP/jSXromLc5Pc7peD3nrv4ONE
-ny6alpVNbvS4X6OcSbXYv+NYghvxgTL85qqQZ314l6N0CA9DpFkJTD40iv3cnuwd
-w0vWjMtZXZk3Mhv94HOi35OLNZdBTIBkYnjpmVy1zwhrAozYfuR9Ta3KhiufJdCF
-FjOE06L/qAPCvhkBy3p4fpFuaZiT9vqSCtY6iSss2BK6iZQfjD+wZg0xGXLEJCJp
-9KwdT96Q6oOJA+Rki+y24A3cDqRi3OKMZ44ioSxf0IB4fUsX+2KPGuiOhESV9mz6
-NDSEoL5kJei461si1brY3zcvbh2AxDReBTXpjGecc0kvU1jQE2+CYzoywmGpDFN2
-0wtKNwgO3qM9o1hMkWrhrM+rZ76EdGi8AmXGf4e6umSw8z6x0GPkZEHfVCzfcpd+
-w+Ajs4/pV9W/AcYzy+AsFiQ6Rb2GiZk/9qanSrfG1bv1NaEcGbcU8xVk5BTiuy1y
-17pV+fRESb6fZ/LEadoqN3qDMFbbNxhvZzk0Vl7G9hziRmN9rEsxkuw6ZsNhBZI6
-bUKsmaGnVtnV4QKeFCwhsbA3FWWCeEPJ9cjyJvApLoA6cUjTbdRf1F+ufWNg5VeC
-fN5O+Jy7F7MQuIZcZuGnH1+7/AYr82oPRed56CiuwNRCPjT16fYU94FffOUZrqXn
-mZ8ricoRpkUBDmMLonsV
-=7chh
------END PGP SIGNATURE-----
-
---D+UG5SQJKkIYNVx0--
+regards
+Suman
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
