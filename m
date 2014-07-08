@@ -1,198 +1,52 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Subject: RE: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-Date: Tue, 8 Jul 2014 11:51:59 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E45ED@EAPEX1MAIL1.st.com>
-References: <cover.1397555158.git.mohit.kumar@st.com>
- <2CC2A0A4A178534D93D5159BF3BCB6619B94997E2B@EAPEX1MAIL1.st.com>
- <20140522113119.GA2646@pratyush-vbox> <8677743.Bty96DiF3F@amdc1032>
+From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] devicetree/bindings/powerpc/fsl: Add binding for board
+Date: Tue, 8 Jul 2014 03:56:56 +0000
+Message-ID: <5e950276b79a48e5bc3b65007f7fc208@BLUPR03MB135.namprd03.prod.outlook.com>
+References: <1404722194-8103-1-git-send-email-Priyanka.Jain@freescale.com>
+ <1404768624.21434.196.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8677743.Bty96DiF3F@amdc1032>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404768624.21434.196.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
 Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pratyush ANAND <pratyush.anand@st.com>
-Cc: "Arnd Bergmann (arnd@arndb.de)" <arnd@arndb.de>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mark Nicholson <mark@nicholnet.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Bartlomiej,
-
-> -----Original Message-----
-> From: Bartlomiej Zolnierkiewicz [mailto:b.zolnierkie@samsung.com]
-> Sent: Monday, July 07, 2014 9:01 PM
-> To: Pratyush ANAND
-> Cc: Arnd Bergmann (arnd@arndb.de); 'Bjorn Helgaas'
-> (bhelgaas@google.com); Mohit KUMAR DCG; spear-devel; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> pci@vger.kernel.org; Mark Nicholson
-> Subject: Re: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-> 
-> 
-> Hi Arnd,
-> 
-> Any update on status of this patchset?  Is it OK for it to go through arm-soc
-> tree or should it be splitted into separate parts which would go through
-> pci/phy/arm-soc trees?
-
-- These patches are rebased over 3-16-rc3 to go through arm-soc tree.
-Somehow we are having 'sync' issue in providing web link for spear public
-repository with these patches. 
-
-It will be resolve soon, and I will provide the link.
-
-> 
-> [ The patchset applies fine to next-20140707 after fixing trivial
->   reject in drivers/pci/host/Makefile in patch #8.  To make it build
->   the following line from patch #8 needs to be dropped:
-> 
->   +       spin_lock_init(&pp->conf_lock);
-
-- yes, I have already considered this while rebasing.
-
-Thanks
-Mohit
-
-> ]
-> 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
-> On Thursday, May 22, 2014 05:01:19 PM Pratyush Anand wrote:
-> > Hi Arnd/Bjorn,
-> >
-> > On Mon, May 19, 2014 at 07:55:12PM +0800, Mohit KUMAR wrote:
-> > > Hello Arnd,
-> > >
-> > > > -----Original Message-----
-> > > > From: Mohit KUMAR DCG
-> > > > Sent: Tuesday, April 15, 2014 5:20 PM
-> > > > To: spear-devel; linux-kernel@vger.kernel.org;
-> > > > devicetree@vger.kernel.org; linux-pci@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org
-> > > > Cc: Mohit KUMAR DCG
-> > > > Subject: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-> > > >
-> > > > Patch# 1 and 2: Improvement and fixes for SPEAr13xx support.
-> > > > Patch# 3,4 and 6: Add DT bindings for spear1310/40-miphy, misc and
-> > > > pcie node Patch# 5: Add spear1310/40-miphy driver and support for
-> > > > spear1310/40 miphy wrapper.
-> > > > Patch# 7-9: Add SPEAr13xx PCIe driver and dt support.
-> > > >
-> > > > These pathes are tested with linux-3.15 tag of arm-soc tree.
-> > > > Tested with SPEAr1310 evaluation board with:
-> > > > 	- INTEL PRO 100/100 EP card
-> > > > 	- USB xhci gen2 card
-> > > >  	- Above cards connected through LeCROY PTC switch
-> > > >
-> > > > Modifications for SATA are tested with SPEAr1340-evb board
-> > > >
-> > >
-> > > I think 3.16 windows is about to close, are you planning to merge this
-> series?
-> > > Pls let me know if something pending on our part.
-> >
-> > If you could let us know the status of this patch series inclusion.
-> >
-> > Regards
-> > Pratyush
-> >
-> > >
-> > > Regards
-> > > Mohit
-> > >
-> > > > Changes since v7:
-> > > > - Rebase over for-linus-3.15 tag of arm-soc tree so that complete
-> > > > patch series can be applied cleanly.
-> > > > - Incorporated few comments on comment style and superfluous
-> > > > comments Changes since v6:
-> > > > - Split miphy driver for SPEAr1310 and SPEAr1340
-> > > > - Some cleanup and incorporated other minor comments Changes since
-> v5:
-> > > > - Split DT bindings for misc, miphy-40lp and pcie node into
-> > > > sepearte patches
-> > > > - Merge config options PCIE_SPEAR13XX and PCI_MSI into defconfig
-> > > > patch
-> > > > - Incorporated other minor comments Changes since v4:
-> > > > - Uses per device function pointers passed from .data field to
-> > > >   the of_device_id instead of of_device_is_compatible.
-> > > > - Incorporated other minor comments from v4
-> > > >
-> > > > Changes since v3:
-> > > > - Phy driver renamed to phy-miphy40lp
-> > > > - ahci phy hook patch used as suggested by Arnd
-> > > > - Incorporated other minor comments from v3
-> > > >
-> > > > Changes since v2:
-> > > > - Incorporated comments to move SPEAr13xx PCIe and SATA phy
-> > > > specific routines to
-> > > >   the phy framework
-> > > > - Modify ahci driver to include phy hooks
-> > > > - phy-core driver modifications for subsys_initcall()
-> > > >
-> > > > Changes since v1:
-> > > > - Few patches of the series are already accepted and applied to
-> mainline e.g.
-> > > >  pcie designware driver improvements,fixes for IO translation bug,
-> > > > PCIe dw driver maintainer. So dropped these from v2.
-> > > > - Incorporated comment to move the common/reset PCIe code to the
-> > > > seperate driver
-> > > > - PCIe and SATA share common PHY configuration registers, so move
-> > > > SATA platform code to the system config driver Fourth patch is
-> > > > improves pcie designware driver and fixes the IO translation bug.
-> > > > IO translation bug fix leads to the working of PCIe EP devices connected
-> to RC through switch.
-> > > >
-> > > > Mohit Kumar (1):
-> > > >   SPEAr13xx: defconfig: Update
-> > > >
-> > > > Pratyush Anand (8):
-> > > >   clk: SPEAr13XX: Fix pcie clock name
-> > > >   SPEAr13XX: Fix static mapping table
-> > > >   phy: SPEAr1310/40-miphy: Add binding information
-> > > >   SPEAr: misc: Add binding information
-> > > >   phy: SPEAr1310/40-miphy: Add phy driver for PCIe and SATA
-> > > >   SPEAr13XX: Add binding information for PCIe controller
-> > > >   SPEAr13XX: dts: Add PCIe node information
-> > > >   pcie: SPEAr13xx: Add designware wrapper support
-> > > >
-> > > >  .../devicetree/bindings/arm/spear-misc.txt         |    9 +
-> > > >  .../devicetree/bindings/pci/spear13xx-pcie.txt     |   14 +
-> > > >  .../devicetree/bindings/phy/st-spear1310-miphy.txt |   12 +
-> > > >  .../devicetree/bindings/phy/st-spear1340-miphy.txt |   11 +
-> > > >  MAINTAINERS                                        |    6 +
-> > > >  arch/arm/boot/dts/spear1310-evb.dts                |    4 +
-> > > >  arch/arm/boot/dts/spear1310.dtsi                   |   93 +++++-
-> > > >  arch/arm/boot/dts/spear1340-evb.dts                |    4 +
-> > > >  arch/arm/boot/dts/spear1340.dtsi                   |   30 ++-
-> > > >  arch/arm/boot/dts/spear13xx.dtsi                   |    9 +-
-> > > >  arch/arm/configs/spear13xx_defconfig               |   16 +
-> > > >  arch/arm/mach-spear/Kconfig                        |    4 +
-> > > >  arch/arm/mach-spear/include/mach/spear.h           |    4 +-
-> > > >  arch/arm/mach-spear/spear1340.c                    |  127 +------
-> > > >  arch/arm/mach-spear/spear13xx.c                    |    2 +-
-> > > >  drivers/clk/spear/spear1310_clock.c                |    6 +-
-> > > >  drivers/clk/spear/spear1340_clock.c                |    2 +-
-> > > >  drivers/pci/host/Kconfig                           |    8 +
-> > > >  drivers/pci/host/Makefile                          |    1 +
-> > > >  drivers/pci/host/pcie-spear13xx.c                  |  407
-> ++++++++++++++++++++
-> > > >  drivers/phy/Kconfig                                |   12 +
-> > > >  drivers/phy/Makefile                               |    2 +
-> > > >  drivers/phy/phy-spear1310-miphy.c                  |  274 +++++++++++++
-> > > >  drivers/phy/phy-spear1340-miphy.c                  |  300 ++++++++++++++
-> > > >  24 files changed, 1218 insertions(+), 139 deletions(-)  create
-> > > > mode 100644 Documentation/devicetree/bindings/arm/spear-misc.txt
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/pci/spear13xx-
-> > > > pcie.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/phy/st-
-> > > > spear1310-miphy.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/phy/st-
-> > > > spear1340-miphy.txt
-> > > >  create mode 100644 drivers/pci/host/pcie-spear13xx.c  create mode
-> > > > 100644 drivers/phy/phy-spear1310-miphy.c  create mode 100644
-> > > > drivers/phy/phy- spear1340-miphy.c
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
+MjENCj4gU2VudDogVHVlc2RheSwgSnVseSAwOCwgMjAxNCAzOjAwIEFNDQo+IFRvOiBKYWluIFBy
+aXlhbmthLUIzMjE2Nw0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBj
+LWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGRldmljZXRyZWUv
+YmluZGluZ3MvcG93ZXJwYy9mc2w6IEFkZCBiaW5kaW5nIGZvcg0KPiBib2FyZA0KPiANCj4gT24g
+TW9uLCAyMDE0LTA3LTA3IGF0IDE0OjA2ICswNTMwLCBQcml5YW5rYSBKYWluIHdyb3RlOg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IFByaXlhbmthIEphaW4gPFByaXlhbmthLkphaW5AZnJlZXNjYWxlLmNv
+bT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvYm9h
+cmQudHh0ICAgICAgfCAgIDE3DQo+ICsrKysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZXMgY2hh
+bmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvYm9hcmQu
+dHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wv
+Ym9hcmQudHh0DQo+ID4gaW5kZXggZjM1ZjI5NS4uNzgwMDcyOSAxMDA2NDQNCj4gPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvYm9hcmQudHh0DQo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2Jv
+YXJkLnR4dA0KPiA+IEBAIC0xLDggKzEsMjMgQEANCj4gPiAgRnJlZXNjYWxlIFJlZmVyZW5jZSBC
+b2FyZCBCaW5kaW5ncw0KPiA+DQo+ID4gLVRoaXMgZG9jdW1lbnQgZGVzY3JpYmVzIGRldmljZSB0
+cmVlIGJpbmRpbmdzIGZvciB2YXJpb3VzIGRldmljZXMgdGhhdA0KPiA+ICtUaGlzIGRvY3VtZW50
+IGRlc2NyaWJlcyBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgYm9hcmQgYW5kICB2YXJpb3VzDQo+
+ID4gK2RldmljZXMgdGhhdA0KPiA+ICBleGlzdCBvbiBzb21lIEZyZWVzY2FsZSByZWZlcmVuY2Ug
+Ym9hcmRzLg0KPiA+DQo+ID4gKyogQm9hcmQgbm9kZQ0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
+Og0KPiA+ICsNCj4gPiArIC0gbW9kZWwgOiBTaG91bGQgYmUgImZzbCw8Ym9hcmQ+Ig0KPiA+ICsg
+LSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsPGJvYXJkPiINCj4gPiArCWV4YW1wbGU6ICJm
+c2wsVDEwNDBSREIiLCAiZnNsLFQxMDQyUkRCIiwgImZzbCxUMTA0MlJEQl9QSSINCj4gPiArCQkg
+ImZzbCxUMTA0MFFEUyIsICJmc2wsVDEwNDJRRFMiDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+
+ICsNCj4gPiArLyB7DQo+ID4gKwltb2RlbCA9ICJmc2wsVDEwNDBSREIiOw0KPiA+ICsJY29tcGF0
+aWJsZSA9ICJmc2wsVDEwNDBSREIiOw0KPiA+ICt9Ow0KPiANCj4gV2UgcmVhbGx5IGRvbid0IG5l
+ZWQgdG8gZG8gdGhpcyBmb3IgZXZlcnkgYm9hcmQganVzdCB0byBzYXRpc2Z5DQo+IGNoZWNrcGF0
+Y2guDQo+IA0KPiAtU2NvdHQNCj4gDQpbSmFpbiBQcml5YW5rYS1CMzIxNjddIElzIGl0IE9LIHRv
+IHN1Ym1pdCBhIHBhdGNoIHdpdGggYm9hcmQgY2hlY2twYXRjaCB3YXJuaW5nIGZvciB0aGlzIGNh
+c2UgPw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
