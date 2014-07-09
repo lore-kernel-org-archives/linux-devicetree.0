@@ -1,143 +1,105 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V3 1/7] drm/exynos: Support DP CLKCON register in FIMD driver
-Date: Wed, 9 Jul 2014 11:51:39 +0530
-Message-ID: <CAEC9eQMD5HApf-Z7GhRnscg+FbfTw0gj_KGVMPH0-jcP6C8JXw@mail.gmail.com>
-References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
-	<1403863946-15492-2-git-send-email-ajaykumar.rs@samsung.com>
-	<53AD53E4.2020706@samsung.com>
-	<CAEC9eQMXEEq_VBiZY+BHUuVWvbi7q4MkbbQ-XkcigtZBdgwO9w@mail.gmail.com>
-	<53AD6734.9080909@samsung.com>
-	<CAEC9eQPY+W_Wni7PLtWkHr0QrHW+G8x_+XWapV5tDiKebn=zpA@mail.gmail.com>
-	<00a501cf9400$9d396950$d7ac3bf0$%han@samsung.com>
-	<53B0F634.7090200@samsung.com>
-	<CAAQKjZPCWhqY=adpg+9wWOxBEhLpuguEZaRuGv4GCxyyGatjcg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 3/9] pci: Introduce pci_register_io_range() helper function.
+Date: Wed, 9 Jul 2014 08:20:49 +0200
+Message-ID: <201407090820.49418.arnd@arndb.de>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <201407080900.44882.arnd@arndb.de> <20140708212951.GA4555@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZPCWhqY=adpg+9wWOxBEhLpuguEZaRuGv4GCxyyGatjcg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Jingoo Han <jg1.han@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140708212951.GA4555@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-ping
+On Tuesday 08 July 2014, Bjorn Helgaas wrote:
+> On Tue, Jul 8, 2014 at 1:00 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tuesday 08 July 2014, Bjorn Helgaas wrote:
+> >> On Tue, Jul 01, 2014 at 07:43:28PM +0100, Liviu Dudau wrote:
+> >> > +static LIST_HEAD(io_range_list);
+> >> > +
+> >> > +/*
+> >> > + * Record the PCI IO range (expressed as CPU physical address + size).
+> >> > + * Return a negative value if an error has occured, zero otherwise
+> >> > + */
+> >> > +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+> >>
+> >> I don't understand the interface here.  What's the mapping from CPU
+> >> physical address to bus I/O port?  For example, I have the following
+> >> machine in mind:
+> >>
+> >>   HWP0002:00: PCI Root Bridge (domain 0000 [bus 00-1b])
+> >>   HWP0002:00: memory-mapped IO port space [mem 0xf8010000000-0xf8010000fff]
+> >>   HWP0002:00: host bridge window [io  0x0000-0x0fff]
+> >>
+> >>   HWP0002:09: PCI Root Bridge (domain 0001 [bus 00-1b])
+> >>   HWP0002:09: memory-mapped IO port space [mem 0xf8110000000-0xf8110000fff]
+> >>   HWP0002:09: host bridge window [io  0x1000000-0x1000fff] (PCI address [0x0-0xfff])
+> >>
+> >> The CPU physical memory [mem 0xf8010000000-0xf8010000fff] is translated by
+> >> the bridge to I/O ports 0x0000-0x0fff on PCI bus 0000:00.  Drivers use,
+> >> e.g., "inb(0)" to access it.
+> >>
+> >> Similarly, [mem 0xf8110000000-0xf8110000fff] is translated by the second
+> >> bridge to I/O ports 0x0000-0x0fff on PCI bus 0001:00.  Drivers use
+> >> "inb(0x1000000)" to access it.
+> >
+> > I guess you are thinking of the IA64 model here where you keep the virtual
+> > I/O port numbers in a per-bus lookup table that gets accessed for each
+> > inb() call. I've thought about this some more, and I believe there are good
+> > reasons for sticking with the model used on arm32 and powerpc for the
+> > generic OF implementation.
+> >
+> > The idea is that there is a single virtual memory range for all I/O port
+> > mappings and we use the MMU to do the translation rather than computing
+> > it manually in the inb() implemnetation. The main advantage is that all
+> > functions used in device drivers to (potentially) access I/O ports
+> > become trivial this way, which helps for code size and in some cases
+> > (e.g. SoC-internal registers with a low latency) it may even be performance
+> > relevant.
+> 
+> My example is from ia64, but I'm not advocating for the lookup table.
+> The point is that the hardware works similarly (at least for dense ia64
+> I/O port spaces) in terms of mapping CPU physical addresses to PCI I/O
+> space.
+> 
+> I think my confusion is because your pci_register_io_range() and
+> pci_addess_to_pci() implementations assume that every io_range starts at
+> I/O port 0 on PCI (correct me if I'm wrong).  I suspect that's why you
+> don't save the I/O port number in struct io_range.
 
-On Mon, Jun 30, 2014 at 9:39 PM, Inki Dae <inki.dae@samsung.com> wrote:
-> 2014-06-30 14:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
->> On 06/30/2014 03:14 AM, Jingoo Han wrote:
->>> On Friday, June 27, 2014 10:03 PM, Ajay kumar wrote:
->>>> On Fri, Jun 27, 2014 at 6:14 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>> On 06/27/2014 01:48 PM, Ajay kumar wrote:
->>>>>> On Fri, Jun 27, 2014 at 4:52 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>>>> +CC DT
->>>>>>>
->>>>>>> On 06/27/2014 12:12 PM, Ajay Kumar wrote:
->>>>>>>> Add the missing setting for DP CLKCON register.
->>>>>>>>
->>>>>>>> This register is present on Exynos5 based FIMD controllers,
->>>>>>>> and needs to be set if we are using DP.
->>>>>>>>
->>>>>>>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->>>>>>>> ---
->>>>>>>>  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
->>>>>>>>  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   23 ++++++++++++++++++++
->>>>>>>>  include/video/samsung_fimd.h                       |    4 ++++
->>>>>>>>  3 files changed, 28 insertions(+)
->>> [.....]
->>>
->>>>>>>>  static const struct of_device_id fimd_driver_dt_match[] = {
->>>>>>>> @@ -331,6 +341,10 @@ static void fimd_commit(struct exynos_drm_manager *mgr)
->>>>>>>>       if (clkdiv > 1)
->>>>>>>>               val |= VIDCON0_CLKVAL_F(clkdiv - 1) | VIDCON0_CLKDIR;
->>>>>>>>
->>>>>>>> +     if (ctx->driver_data->has_dp_clkcon &&
->>>>>>>> +             ctx->exynos_fimd_output_type == EXYNOS_FIMD_OUTPUT_DP)
->>>>>>>> +             writel(DP_CLK_ENABLE, ctx->regs + DP_CLKCON);
->>>>>>>> +
->>>>>>>>       writel(val, ctx->regs + VIDCON0);
->>>>> New code should not split VIDCON0 related code.It should be moved few
->>>>> lines above or few lines below.
->>>> Ok, for better readability.
->>>>
->>>>> Anyway this code should be rather placed in power related functions of
->>>>> dp encoder, as it enables dp. The only question
->>>>> is if DP_CLKCON update can be performed after VIDCON0 update. If yes the
->>>>> solution of the whole problem
->>>> I will check this.
->>>>
->>>>> seems to be simple:
->>>>> - fimd should provide function fimd_set_dp_clk_gate or sth similar,
->>>>> - this function should be called in exynos_dp_poweron/exynos_dp_poweroff.
->>>>> I hope I have not missed anything this time.
->>>> But, it won't look good to export a FIMD function which sets a FIMD register,
->>>> and call it in DP driver!
->>>> What does Inki/Jingoo have to say about this?
->>> I agree with Ajay Kumar's opinion.
->>> It doesn't look good to export the function to set FIMD register
->>> and call it by DP driver.
->>
->> DP_CLKCON HW register shows clearly there is direct hardware dependency
->> between DP and FIMD.
->> Reflecting this dependency in drivers is just a consequence of HW design.
->
-> Right, and I cannot understand why mDNIe and DP clock enable bit
-> exists in FIMD ip. :(
->
->> Moreover the register gates also clock for MDNIE, this solution can be
->> used there as well.
->>
->> Anyway the most important is that we should avoid adding DT bindings for
->> things we can evaluate in drivers.
->>
->
-> It wouldn't be best way only to avoid adding DT binding. DT binding
-> could be good way to handle complicated hardware pipelines if needed.
-> Of course, if driver can handle it simply, it would be better to avoid
-> adding DT binding. However, Exynos SoC are complicated.
->
-> Exynos SoC have more IPs to should be considered; SMIES, mDNIe and MIE
-> as image enhancement devices, and eDP, MIPI-DSI, and DPI (FIMD
-> connected to panel directly) as Display bus devices and parallel panel
-> device. And image enhancement device and Display bus device can be
-> used together.
->
-> FIMD -------- Panel
-> FIMD -------- Display bus device -------- Panel
-> FIMD -------- image enhancement device -------- Panel
-> FIMD -------- image enhancement device -------- FIMD-Lite -------- Panel
-> FIMD -------- image enhancement device -------- Display bus device
-> -------- Panel
-> FIMD -------- image enhancement device -------- FIMD-Lite --------
-> Display bus device -------- Panel
->
-> And Display bus devices and parallel device couldn't be switched in
-> runtime since kernel has been booted. However, image enhancement
-> devices can be enabled or disabled in runtime so the output path of
-> FIMD can be changed to another path dynamically - actually, I had
-> handled such scenarios. So if Exynos drm driver should be considered
-> for above all cases, it'd make Eyxnos drm driver too complicated.
->
-> If DT people and other SoC maintainers give us your opinions, it would
-> be helpful for us. I will look into other SoC how they are handling
-> similar cases.
->
-> Thanks,
-> Inki Dae
->
->> Regards
->> Andrzej
->>
->>>
->>> Best regards,
->>> Jingoo Han
->>>> Regards,
->>>> Ajay
->>>>
->>> [....]
->>>
->>>
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+I think you are just misreading the code, but I agree it's hard to
+understand and I made the same mistake in my initial reply to the
+first version.
+
+pci_register_io_range and pci_address_to_pci only worry about the mapping
+between CPU physical and Linux I/O address, they do not care which PCI
+port numbers are behind that. The mapping between PCI port numbers and
+Linux port numbers is done correctly in patch 8/9 in the
+pci_host_bridge_of_get_ranges() function.
+
+> Maybe that assumption is guaranteed by OF, but it doesn't hold for ACPI;
+> ACPI can describe several I/O port apertures for a single bridge, each
+> associated with a different CPU physical memory region.
+
+DT can have the same, although the common case is that each PCI host
+bridge has 64KB of I/O ports starting at address 0. Most driver writers
+get it wrong for the case where it starts at a different address, so
+I really want to have a generic implementation that gets it right.
+
+> If my speculation here is correct, a comment to the effect that each
+> io_range corresponds to a PCI I/O space range that starts at 0 might be
+> enough.
+> 
+> If you did add a PCI I/O port number argument to pci_register_io_range(),
+> we might be able to make an ACPI-based implementation of it.  But I guess
+> that could be done if/when anybody ever wants to do that.
+
+I think we shoulnd't worry about it before we actually need it. As far as
+I understand, the only user of that code (unless someone wants to convert
+ia64) would be ARM64 with ACPI, but that uses the SBSA hardware model that
+recommends having no I/O space at all.
+
+ 	Arnd
