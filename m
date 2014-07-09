@@ -1,39 +1,36 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Wed, 9 Jul 2014 17:24:46 +0200
-Message-ID: <20140709152446.GN3113@piout.net>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
- <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
- <20140708134000.GC4979@htj.dyndns.org>
- <20140708170353.GA16148@kwain>
- <20140708171817.GH4979@htj.dyndns.org>
- <20140708174900.GC16148@kwain>
- <20140708214010.GI4979@htj.dyndns.org>
- <20140709082331.GA4510@kwain>
- <20140709135910.GA11193@htj.dyndns.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [RFC PATCH v2 2/5] dt: qcom: msm8974: add qpnp-spmi device nodes
+Date: Wed, 09 Jul 2014 18:28:19 +0300
+Message-ID: <53BD5F93.6030205@mm-sol.com>
+References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com> <1404393243-7324-3-git-send-email-svarbanov@mm-sol.com> <20140709141026.GB2635@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140709135910.GA11193@htj.dyndns.org>
+In-Reply-To: <20140709141026.GB2635@lee--X1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 09/07/2014 at 09:59:10 -0400, Tejun Heo wrote :
-> Heh, I get that but, at the same time, this is the point where you're
-> most motivated to actually work on it.  :)
+On 07/09/2014 05:10 PM, Lee Jones wrote:
+> On Thu, 03 Jul 2014, Stanimir Varbanov wrote:
 > 
+>> From: Ivan T. Ivanov <iivanov@mm-sol.com>
+>>
+>> The qpnp-spmi device nodes are childrens of spmi pmic arbiter.
+>> msm8974 SoC using two pmic chips pm8941 and pm8841. Every chip
+>> has two spmi-qpnp bus id's.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>> ---
+>>  arch/arm/boot/dts/qcom-msm8974.dtsi |   45 +++++++++++++++++++++++++++++++++++
+>>  1 files changed, 45 insertions(+), 0 deletions(-)
+> 
+> Subject should start with 'ARM: ' for all of your arch/arm patches.
 
-Or, starting that kind of review after 9 revisions, especially so close
-to the end of the development cycle is discouraging enough and will
-probably be used as an example of why we still have so many evil vendor
-trees.
+Sure, will correct the subject, thanks.
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+regards,
+Stan
