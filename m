@@ -1,101 +1,71 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v3 4/7] ARM: dts: AM43x: Add TPS65218 device tree nodes
-Date: Wed, 9 Jul 2014 11:06:30 +0530
-Message-ID: <1404884193-20580-5-git-send-email-j-keerthy@ti.com>
-References: <1404884193-20580-1-git-send-email-j-keerthy@ti.com>
+From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Subject: [GIT PULL] ARM: SPEAr1310 PCIe updates
+Date: Wed, 9 Jul 2014 13:48:03 +0800
+Message-ID: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48F2@EAPEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404884193-20580-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com, broonie@kernel.org, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: "olof@lixom.net" <olof@lixom.net>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pratyush ANAND <pratyush.anand@st.com>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mark Nicholson <mark@nicholnet.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add TPS65218 device tree nodes. i2c clock frequency setting
-also added as part of tps65218 nodes addition. As i2c clock
-enabling is required.
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Reviewed-by: Felipe Balbi <balbi@ti.com>
----
-
-Changes from V1:
-  * Added dcdc3, dcdc5, dcdc6 nodes.
-  * dcdc4 is not added because of a potential PMIC bug under investigation.
-
- arch/arm/boot/dts/am43x-epos-evm.dts |   59 ++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 90098f9..f1ee7495 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -327,6 +327,65 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
-+	clock-frequency = <400000>;
-+
-+	tps65218: tps65218@24 {
-+		reg = <0x24>;
-+		compatible = "ti,tps65218";
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		dcdc1: regulator-dcdc1 {
-+			compatible = "ti,tps65218-dcdc1";
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <912000>;
-+			regulator-max-microvolt = <1144000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc2: regulator-dcdc2 {
-+			compatible = "ti,tps65218-dcdc2";
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <912000>;
-+			regulator-max-microvolt = <1378000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc3: regulator-dcdc3 {
-+			compatible = "ti,tps65218-dcdc3";
-+			regulator-name = "vdcdc3";
-+			regulator-min-microvolt = <1350000>;
-+			regulator-max-microvolt = <1350000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc5: regulator-dcdc5 {
-+			compatible = "ti,tps65218-dcdc5";
-+			regulator-name = "v1_0bat";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+
-+		dcdc6: regulator-dcdc6 {
-+			compatible = "ti,tps65218-dcdc6";
-+			regulator-name = "v1_8bat";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		ldo1: regulator-ldo1 {
-+			compatible = "ti,tps65218-ldo1";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+	};
- 
- 	at24@50 {
- 		compatible = "at24,24c256";
--- 
-1.7.9.5
+SGVsbG8gT2xvZiwNCg0KUGxlYXNlIHB1bGwgUENJZSB1cGRhdGVzIGZvciBTVCdzIFNQRUFyMTMx
+MCBTb0MuDQoNCkxhc3QgdmVyc2lvbiBvZiBwb3N0ZWQgVjggcGF0Y2hlcyBoYXZlIGJlZW4gQWNr
+ZWQtYnkgcmVzcGVjdGl2ZSBtYWludGFpbmVycy4NCmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0
+LzQvMTUvMjYwDQoNCkFwYXJ0IGZyb20gYXJjaC9hcm0vIGNoYW5nZXMsIGl0IGFsc28gY29udGFp
+bnMgcGF0Y2hlcyBmb3IgZHJpdmVycy97cGNpfHBoeX0uDQpCam9ybiBhZHZpc2VkIHRvIGdldCBj
+b21wbGV0ZSBzZXJpZXMgdmlhIGFybS1zb2MgdHJlZS4NCmh0dHA6Ly93d3cuc3Bpbmljcy5uZXQv
+bGlzdHMvbGludXgtcGNpL21zZzMwMjcxLmh0bWwNCg0KIFJlZ2FyZHMNCiBNb2hpdA0KDQpUaGUg
+Zm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0IDRjODM0NDUyYWFkMDE1MzFkYjk0OTQxNGY5
+NGY4MTdhODYzNDhkNTk6DQogIExpbnVzIFRvcnZhbGRzICgxKToNCiAgICAgICAgTGludXggMy4x
+Ni1yYzMNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgZ2l0IHJlcG9zaXRvcnkgYXQ6DQoNCiAgaHR0
+cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdmlyZXNoay9saW51
+eC5naXQgc3BlYXIvcGNpZS1zdXBwb3J0LXY4DQoNCk1vaGl0IEt1bWFyICgxKToNCiAgICAgIFNQ
+RUFyMTN4eDogZGVmY29uZmlnOiBVcGRhdGUNCg0KUHJhdHl1c2ggQW5hbmQgKDgpOg0KICAgICAg
+Y2xrOiBTUEVBcjEzWFg6IEZpeCBwY2llIGNsb2NrIG5hbWUNCiAgICAgIFNQRUFyMTNYWDogRml4
+IHN0YXRpYyBtYXBwaW5nIHRhYmxlDQogICAgICBwaHk6IFNQRUFyMTMxMC80MC1taXBoeTogQWRk
+IGJpbmRpbmcgaW5mb3JtYXRpb24NCiAgICAgIFNQRUFyOiBtaXNjOiBBZGQgYmluZGluZyBpbmZv
+cm1hdGlvbg0KICAgICAgcGh5OiBTUEVBcjEzMTAvNDAtbWlwaHk6IEFkZCBwaHkgZHJpdmVyIGZv
+ciBQQ0llIGFuZCBTQVRBDQogICAgICBTUEVBcjEzWFg6IEFkZCBiaW5kaW5nIGluZm9ybWF0aW9u
+IGZvciBQQ0llIGNvbnRyb2xsZXINCiAgICAgIFNQRUFyMTNYWDogZHRzOiBBZGQgUENJZSBub2Rl
+IGluZm9ybWF0aW9uDQogICAgICBwY2llOiBTUEVBcjEzeHg6IEFkZCBkZXNpZ253YXJlIHdyYXBw
+ZXIgc3VwcG9ydA0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NwZWFyLW1pc2MudHh0
+ICAgICAgICAgfCAgICA5ICsNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvc3BlYXIxM3h4
+LXBjaWUudHh0ICAgICB8ICAgMTQgKw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9zdC1z
+cGVhcjEzMTAtbWlwaHkudHh0IHwgICAxMiArDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
+L3N0LXNwZWFyMTM0MC1taXBoeS50eHQgfCAgIDExICsNCiBNQUlOVEFJTkVSUyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDYgKw0KIGFyY2gvYXJtL2Jvb3QvZHRz
+L3NwZWFyMTMxMC1ldmIuZHRzICAgICAgICAgICAgICAgIHwgICAgNCArDQogYXJjaC9hcm0vYm9v
+dC9kdHMvc3BlYXIxMzEwLmR0c2kgICAgICAgICAgICAgICAgICAgfCAgIDkzICsrKysrLQ0KIGFy
+Y2gvYXJtL2Jvb3QvZHRzL3NwZWFyMTM0MC1ldmIuZHRzICAgICAgICAgICAgICAgIHwgICAgNCAr
+DQogYXJjaC9hcm0vYm9vdC9kdHMvc3BlYXIxMzQwLmR0c2kgICAgICAgICAgICAgICAgICAgfCAg
+IDMwICsrLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL3NwZWFyMTN4eC5kdHNpICAgICAgICAgICAgICAg
+ICAgIHwgICAgOSArLQ0KIGFyY2gvYXJtL2NvbmZpZ3Mvc3BlYXIxM3h4X2RlZmNvbmZpZyAgICAg
+ICAgICAgICAgIHwgICAxNiArDQogYXJjaC9hcm0vbWFjaC1zcGVhci9LY29uZmlnICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgICA0ICsNCiBhcmNoL2FybS9tYWNoLXNwZWFyL2luY2x1ZGUvbWFj
+aC9zcGVhci5oICAgICAgICAgICB8ICAgIDQgKy0NCiBhcmNoL2FybS9tYWNoLXNwZWFyL3NwZWFy
+MTM0MC5jICAgICAgICAgICAgICAgICAgICB8ICAxMjcgKy0tLS0tLQ0KIGFyY2gvYXJtL21hY2gt
+c3BlYXIvc3BlYXIxM3h4LmMgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQ0KIGRyaXZlcnMv
+Y2xrL3NwZWFyL3NwZWFyMTMxMF9jbG9jay5jICAgICAgICAgICAgICAgIHwgICAgNiArLQ0KIGRy
+aXZlcnMvY2xrL3NwZWFyL3NwZWFyMTM0MF9jbG9jay5jICAgICAgICAgICAgICAgIHwgICAgMiAr
+LQ0KIGRyaXZlcnMvcGNpL2hvc3QvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICAgOCArDQogZHJpdmVycy9wY2kvaG9zdC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgICAxICsNCiBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtc3BlYXIxM3h4LmMgICAgICAgICAg
+ICAgICAgICB8ICA0MDYgKysrKysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL3BoeS9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KIGRyaXZlcnMvcGh5L01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArDQogZHJpdmVycy9w
+aHkvcGh5LXNwZWFyMTMxMC1taXBoeS5jICAgICAgICAgICAgICAgICAgfCAgMjc0ICsrKysrKysr
+KysrKysNCiBkcml2ZXJzL3BoeS9waHktc3BlYXIxMzQwLW1pcGh5LmMgICAgICAgICAgICAgICAg
+ICB8ICAzMDAgKysrKysrKysrKysrKysrDQogMjQgZmlsZXMgY2hhbmdlZCwgMTIxNyBpbnNlcnRp
+b25zKCspLCAxMzkgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3BlYXItbWlzYy50eHQNCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9zcGVhcjEzeHgtcGNp
+ZS50eHQNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BoeS9zdC1zcGVhcjEzMTAtbWlwaHkudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvc3Qtc3BlYXIxMzQwLW1pcGh5LnR4dA0K
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtc3BlYXIxM3h4LmMNCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkvcGh5LXNwZWFyMTMxMC1taXBoeS5jDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGh5L3BoeS1zcGVhcjEzNDAtbWlwaHkuYw0K
