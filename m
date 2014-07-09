@@ -1,29 +1,73 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH 0/3] Deterministic UART numbering on Samsung SoCs
-Date: Wed, 9 Jul 2014 14:23:33 +0100
-Message-ID: <20140709142333.503a9e39@alan.etchedpixels.co.uk>
-References: <1403781875-5425-1-git-send-email-t.figa@samsung.com>
-	<20140626113939.GP32514@n2100.arm.linux.org.uk>
-	<53AC0BCC.1010608@samsung.com>
-	<CAD8Lp45MvDLsxehayx8uuGt3w3O0vGskiFjb1vdvtOyOv2nG2w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp45MvDLsxehayx8uuGt3w3O0vGskiFjb1vdvtOyOv2nG2w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 10/17] ARM: mvebu: add CA9 MPcore SoC Controller node
+Date: Wed,  9 Jul 2014 15:40:14 +0200
+Message-ID: <1404913221-17343-11-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1404913221-17343-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1404913221-17343-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> I like the sound of going to the standard ttyS notation and only
-> providing ports for ones that exist, but is this userspace-visible
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-ttyS is 8250 compatible UARTS.
+The CA9 MPcore SoC Control block is a set of registers that allows to
+configure certain internal aspects of the core blocks of the SoC
+(Cortex-A9, L2 cache controller, etc.). In most cases, the default
+values are fine so they aren't many reasons to touch those registers,
+but there is one exception: to support cpuidle on Armada 38x, we need
+to modify the value of the CA9 MPcore Reset Control register.
 
-If the Samsung is not an 8250 compatible UART then it doesn't belong as
-ttyS from the kernel perspective.
+Therefore, this commit adds a new Device Tree binding for this
+hardware block, and uses this new binding for the Armada 38x Device
+Tree file.
 
-How your udev handles it is up to you.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt | 14 ++++++++++++++
+ arch/arm/boot/dts/armada-38x.dtsi                          |  5 +++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
 
-Alan
+diff --git a/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+new file mode 100644
+index 0000000..8781073
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+@@ -0,0 +1,14 @@
++Marvell Armada 38x CA9 MPcore SoC Controller
++============================================
++
++Required properties:
++
++- compatible: Should be "marvell,armada-380-mpcore-soc-ctrl".
++
++- reg: should be the register base and length as documented in the
++  datasheet for the CA9 MPcore SoC Control registers
++
++mpcore-soc-ctrl@20d20 {
++	compatible = "marvell,armada-380-mpcore-soc-ctrl";
++	reg = <0x20d20 0x6c>;
++};
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 689fa1a..242d0ec 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -286,6 +286,11 @@
+ 				reg = <0x20800 0x10>;
+ 			};
+ 
++			mpcore-soc-ctrl@20d20 {
++				compatible = "marvell,armada-380-mpcore-soc-ctrl";
++				reg = <0x20d20 0x6c>;
++			};
++
+ 			coherency-fabric@21010 {
+ 				compatible = "marvell,armada-380-coherency-fabric";
+ 				reg = <0x21010 0x1c>;
+-- 
+2.0.0
+
