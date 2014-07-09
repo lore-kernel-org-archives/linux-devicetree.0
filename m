@@ -1,67 +1,36 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] tty: serial: msm_serial.c:  Cleaning up uninitialized
- variables
-Date: Wed, 09 Jul 2014 11:02:00 -0700
-Message-ID: <53BD8398.6020507@codeaurora.org>
-References: <1404665232-14311-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [RFC PATCH v2 3/5] rtc: add qpnp rtc driver
+Date: Wed, 09 Jul 2014 11:07:29 -0700
+Message-ID: <53BD84E1.4030602@codeaurora.org>
+References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com> <1404393243-7324-4-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1404665232-14311-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1404393243-7324-4-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/14 09:47, Rickard Strandqvist wrote:
-> Set reasonable initial value of some variables, in case
-> they do not get set to something otherwise.
-> And I've also added a plausibility control of the values.
+On 07/03/14 06:14, Stanimir Varbanov wrote:
+> A 32bits RTC is housed inside PMIC. The RTC driver uses QPNP
+> SPMI interface to communicate with the PMIC RTC module.
 >
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-> ---
+> The RTC device is divided into two sub-peripherals:
+>  - RTC read-write peripheral having basic RTC registers
+>  - alarm peripheral for controlling alarm
+>
+> These two RTC peripherals are childrens of QPNP SPMI bus. They
+> use regmap to read/write to its registers into PMIC.
+>
 
-This patch doesn't look right...
+What happened to using Josh's patch for rtc-pm8xxx.c[1]? That seems
+easier than adding an entire new driver for almost the same hardware.
 
-> @@ -930,17 +930,21 @@ static int __init msm_console_setup(struct console *co, char *options)
->  
->  	msm_init_clock(port);
->  
-> -	if (options)
-> +	if (options) {
->  		uart_parse_options(options, &baud, &parity, &bits, &flow);
-> +		if (baud < 300 || baud > 115200)
-> +			baud = 115200;
-> +		if (NULL == strchr("noeNOE", parity))
-> +			parity = 'n';
-> +		if (bits != 7)
-> +			bits = 8;
-> +		if (flow != 'r')
-> +			flow = 'n';
-> +	}
->  
-> -	bits = 8;
-> -	parity = 'n';
-> -	flow = 'n';
->  	msm_write(port, UART_MR2_BITS_PER_CHAR_8 | UART_MR2_STOP_BIT_LEN_ONE,
->  		  UART_MR2);	/* 8N1 */
->  
-
-because this code is overriding whatever is parsed from
-uart_parse_options() on purpose. The hardware is configured for 8 bits,
-no parity, no flow control with this msm_write() statement. Maybe we
-should extend the code to configure the parity and flow control bits
-instead.
-
-> -	if (baud < 300 || baud > 115200)
-> -		baud = 115200;
->  	msm_set_baud_rate(port, baud);
->  
->  	msm_reset(port);
-
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-October/207665.html
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
-
