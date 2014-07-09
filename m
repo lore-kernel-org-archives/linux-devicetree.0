@@ -1,79 +1,116 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 2/2] net: davinci_mdio: allow to create phys from dt
-Date: Wed, 9 Jul 2014 16:10:51 +0300
-Message-ID: <1404911451-9921-3-git-send-email-grygorii.strashko@ti.com>
-References: <1404911451-9921-1-git-send-email-grygorii.strashko@ti.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 10/13] [RFC] ARM: dts: Add shmobile platform device tree
+ bindings documentation
+Date: Wed,  9 Jul 2014 14:23:40 +0200
+Message-ID: <1404908623-909-11-git-send-email-geert+renesas@glider.be>
+References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404911451-9921-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, santosh.shilimkar@ti.com, netdev@vger.kernel.org
-Cc: prabhakar.csengg@gmail.com, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to create PHYs from DT in case
-if they are explicitly defined. The of_mdiobus_register() is
-used for such purposes.
+Add Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
+Documentation, listing supported SoCs and boards.
 
-For backward compatibility, call  of_mdiobus_register() only in case
-if at least one PHY's child is defined in DT, otherwise rollback to
-mdiobus_register().
+This allows to use checkpatch to validate DTSes referring to Renesas
+shmobile SoCs, and boards containing those SoCs.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/net/ethernet/ti/davinci_mdio.c |   18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/shmobile.txt | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/shmobile.txt
 
-diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-index 735dc53..22d3dab 100644
---- a/drivers/net/ethernet/ti/davinci_mdio.c
-+++ b/drivers/net/ethernet/ti/davinci_mdio.c
-@@ -38,6 +38,7 @@
- #include <linux/davinci_emac.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_mdio.h>
- #include <linux/pinctrl/consumer.h>
- 
- /*
-@@ -95,6 +96,7 @@ struct davinci_mdio_data {
- 	struct mii_bus	*bus;
- 	bool		suspended;
- 	unsigned long	access_time; /* jiffies */
-+	bool		skip_scan;
- };
- 
- static void __davinci_mdio_reset(struct davinci_mdio_data *data)
-@@ -144,6 +146,9 @@ static int davinci_mdio_reset(struct mii_bus *bus)
- 	dev_info(data->dev, "davinci mdio revision %d.%d\n",
- 		 (ver >> 8) & 0xff, ver & 0xff);
- 
-+	if (data->skip_scan)
-+		return 0;
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+new file mode 100644
+index 000000000000..baa25c92597d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -0,0 +1,71 @@
++Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
++--------------------------------------------------------------------
 +
- 	/* get phy mask from the alive register */
- 	phy_mask = __raw_readl(&data->regs->alive);
- 	if (phy_mask) {
-@@ -369,8 +374,17 @@ static int davinci_mdio_probe(struct platform_device *pdev)
- 		goto bail_out;
- 	}
- 
--	/* register the mii bus */
--	ret = mdiobus_register(data->bus);
-+	/* register the mii bus
-+	 * Create PHYs from DT only in case if PHY child nodes are explicitly
-+	 * defined to support backward compatibility with DTs which assume that
-+	 * Davinci MDIO will always scan the bus for PHYs detection.
-+	 */
-+	if (dev->of_node && of_get_child_count(dev->of_node)) {
-+		data->skip_scan = true;
-+		ret = of_mdiobus_register(data->bus, dev->of_node);
-+	} else {
-+		ret = mdiobus_register(data->bus);
-+	}
- 	if (ret)
- 		goto bail_out;
- 
++SoCs:
++
++  - Emma Mobile EV2
++    compatible = "renesas,emev2"
++  - RZ/A1H (R7S72100)
++    compatible = "renesas,r7s72100"
++  - R-Mobile APE6 (R8A73A40)
++    compatible = "renesas,r8a73a4"
++  - R-Mobile A1 (R8A77400)
++    compatible = "renesas,r8a7740"
++  - R-Car M1A (R8A77781)
++    compatible = "renesas,r8a7778"
++  - R-Car H1 (R8A77790)
++    compatible = "renesas,r8a7779"
++  - R-Car H2 (R8A77900)
++    compatible = "renesas,r8a7790"
++  - R-Car M2-W (R8A77910)
++    compatible = "renesas,r8a7791"
++  - R-Car V2H (R8A77920)
++    compatible = "renesas,r8a7792"
++  - R-Car M2-N (R8A77930)
++    compatible = "renesas,r8a7793"
++  - R-Car E2 (R8A77940)
++    compatible = "renesas,r8a7794"
++  - SH-Mobile AP4 (R8A73720/SH7372)
++    compatible = "renesas,sh7372"
++  - SH-Mobile AG5 (R8A73A00/SH73A0)
++    compatible = "renesas,sh73a0"
++
++
++Boards:
++
++  - Alt
++    compatible = "renesas,alt", "renesas,r8a7794"
++  - APE6-EVM
++    compatible = "renesas,ape6evm", "renesas,r8a73a4"
++  - APE6-EVM - Reference Device Tree Implementation
++    compatible = "renesas,ape6evm-reference", "renesas,r8a73a4"
++  - Atmark Techno Armadillo-800 EVA
++    compatible = "renesas,armadillo800eva"
++  - Atmark Techno Armadillo-800 EVA - Reference Device Tree Implementation
++    compatible = "renesas,armadillo800eva-reference", "renesas,r8a7740"
++  - BOCK-W
++    compatible = "renesas,bockw", "renesas,r8a7778"
++  - BOCK-W - Reference Device Tree Implementation
++    compatible = "renesas,bockw-reference", "renesas,r8a7778"
++  - Genmai (RTK772100BC00000BR)
++    compatible = "renesas,genmai", "renesas,r7s72100"
++  - Henninger
++    compatible = "renesas,henninger", "renesas,r8a7791"
++  - Koelsch (RTP0RC7791SEB00010S)
++    compatible = "renesas,koelsch", "renesas,r8a7791"
++  - EMEV2 KZM9D
++    compatible = "renesas,kzm9d", "renesas,emev2"
++  - KZM-A9-GT
++    compatible = "renesas,kzm9g", "renesas,sh73a0"
++  - KZM-A9-GT - Reference Device Tree Implementation
++    compatible = "renesas,kzm9g-reference", "renesas,sh73a0"
++  - Lager (RTP0RC7790SEB00010S)
++    compatible = "renesas,lager", "renesas,r8a7790"
++  - Mackerel (R0P7372LC0016RL, AP4 EVM 2nd)
++    compatible = "renesas,mackerel"
++  - Marzen
++    compatible = "renesas,marzen", "renesas,r8a7779"
++
++Note: Reference Device Tree Implementations are temporary implementations
++      to ease the migration from platform devices to Device Tree, and are
++      intended to be removed in the future.
 -- 
-1.7.9.5
+1.9.1
