@@ -1,92 +1,98 @@
-From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Subject: [PATCH] ARM: tegra: Fix typoed ams,ext-control properties
-Date: Wed, 9 Jul 2014 21:53:17 +0300
-Message-ID: <1404931997-7118-1-git-send-email-ttynkkynen@nvidia.com>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv7 2/3] devicetree: Addition of the Altera SDRAM EDAC.
+Date: Wed, 9 Jul 2014 15:07:46 -0500
+Message-ID: <CAF03EBdBMphBLkGj4=_kGADF4iq_uUpyBbRJ7O63OvSHcR5hSw@mail.gmail.com>
+References: <1403730927-16163-1-git-send-email-tthayer@altera.com>
+	<1403730927-16163-3-git-send-email-tthayer@altera.com>
+	<20140626094507.GM15240@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140626094507.GM15240@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "tthayer@altera.com" <tthayer@altera.com>, "robherring2@gmail.com" <robherring2@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@altera.com" <dinguyen@altera.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "bp@alien8.de" <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The property for enabling external rail control on the AS3722 is
-ams,ext-control, not ams,external-control. Since the external rail
-control property was previously being ignored, LP1 suspend on these
-boards wasn't actually turning the CPU rail off at all.
+On Thu, Jun 26, 2014 at 4:45 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Wed, Jun 25, 2014 at 10:15:26PM +0100, tthayer@altera.com wrote:
+>> From: Thor Thayer <tthayer@altera.com>
+>>
+>> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@altera.com>
+>> ---
+>> v2: Changes to SoC EDAC source code.
+>>
+>> v3: Fix typo in device tree documentation.
+>>
+>> v4,v5: No changes - bump version for consistency.
+>>
+>> v6: Assign ECC registers in SDRAM controller to EDAC
+>>
+>> v7: Fix SDRAM EDAC base address.
+>> ---
+>>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
+>>  arch/arm/boot/dts/socfpga.dtsi                     |    6 ++++++
+>>  2 files changed, 21 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>> new file mode 100644
+>> index 0000000..d68e033
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>> @@ -0,0 +1,15 @@
+>> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
+>> +
+>> +Required properties:
+>> +- compatible : should contain "altr,sdram-edac";
+>> +- reg : should contain the ECC register range in sdram
+>> +        controller (address and length).
+>> +- interrupts : Should contain the SDRAM ECC IRQ in the
+>> +     appropriate format for the IRQ controller.
+>> +
+>> +Example:
+>> +     sdramedac@ffc2502c {
+>> +             compatible = "altr,sdram-edac";
+>> +             reg = <0xffc2502c 0x28>;
+>> +             interrupts = <0 39 4>;
+>> +     };
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index 310292e..da0785d 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -687,6 +687,12 @@
+>>                       reg = <0xffc25000 0x4>;
+>>               };
+>>
+>> +             sdramedac@ffc2502c {
+>> +                     compatible = "altr,sdram-edac";
+>> +                     reg = <0xffc2502c 0x28>;
+>> +                     interrupts = <0 39 4>;
+>> +             };
+>
+> I'm not sure I understand this. The ECC register existing within the
+> SDRAM controller, which we have a binding for. Why do we need a separate
+> binding for a subset of registers within an IP block?
+>
+> Why can we not have a single binding for the entire SDRAM controlelr and
+> decompse that within Linux as it makes sense for the appropriate
+> subsystyems?
+>
+> Leaking Linux design into bindings is a bad idea; it makes it harder to
+> change things.
+>
+> Mark.
 
-Signed-off-by: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
----
-So here's a dilemma, either change the existing DTs, change the
-binding + driver, or make the driver recognize both properties.
-I chose the first one since the old behaviour was broken in the
-first place and the old DTs stay as buggy as they were before.
+Hi Mark,
 
- arch/arm/boot/dts/tegra124-jetson-tk1.dts | 6 +++---
- arch/arm/boot/dts/tegra124-venice2.dts    | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+How would we decompose this within Linux. MFD? Is there an example
+that I can look at?
 
-diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-index 16082c0..89a772d 100644
---- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-+++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-@@ -1461,7 +1461,7 @@
- 					regulator-max-microamp = <3500000>;
- 					regulator-always-on;
- 					regulator-boot-on;
--					ams,external-control = <2>;
-+					ams,ext-control = <2>;
- 				};
- 
- 				sd1 {
-@@ -1472,7 +1472,7 @@
- 					regulator-max-microamp = <2500000>;
- 					regulator-always-on;
- 					regulator-boot-on;
--					ams,external-control = <1>;
-+					ams,ext-control = <1>;
- 				};
- 
- 				vdd_1v35_lp0: sd2 {
-@@ -1521,7 +1521,7 @@
- 					regulator-max-microvolt = <1050000>;
- 					regulator-boot-on;
- 					regulator-always-on;
--					ams,external-control = <1>;
-+					ams,ext-control = <1>;
- 				};
- 
- 				ldo1 {
-diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-index f1a5bac..70ad91d 100644
---- a/arch/arm/boot/dts/tegra124-venice2.dts
-+++ b/arch/arm/boot/dts/tegra124-venice2.dts
-@@ -682,7 +682,7 @@
- 					regulator-max-microamp = <3500000>;
- 					regulator-always-on;
- 					regulator-boot-on;
--					ams,external-control = <2>;
-+					ams,ext-control = <2>;
- 				};
- 
- 				sd1 {
-@@ -693,7 +693,7 @@
- 					regulator-max-microamp = <2500000>;
- 					regulator-always-on;
- 					regulator-boot-on;
--					ams,external-control = <1>;
-+					ams,ext-control = <1>;
- 				};
- 
- 				vdd_1v35_lp0: sd2 {
-@@ -742,7 +742,7 @@
- 					regulator-max-microvolt = <1050000>;
- 					regulator-boot-on;
- 					regulator-always-on;
--					ams,external-control = <1>;
-+					ams,ext-control = <1>;
- 				};
- 
- 				ldo1 {
--- 
-1.8.1.5
+We originally used syscon for the entire sdram controller register
+block but we got dinged on it.
+
+Thanks for your help.
+
+Thor
