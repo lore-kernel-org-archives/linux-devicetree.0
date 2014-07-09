@@ -1,57 +1,79 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: Re: [PATCHv2 0/8] devfreq: exynos4: Support dt and use common
- ppmu driver
-Date: Wed, 09 Jul 2014 15:06:28 +0200
-Message-ID: <53BD3E54.3030205@collabora.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com> <5323432E.5060005@samsung.com> <532656B1.2010907@samsung.com>
+From: Andre Heider <a.heider@gmail.com>
+Subject: Re: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
+Date: Wed, 9 Jul 2014 15:19:14 +0200
+Message-ID: <20140709131914.GA93342@localhost>
+References: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
+ <20140707084824.GA83417@localhost>
+ <alpine.DEB.2.02.1407071733500.28318@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
-	format=flowed
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <532656B1.2010907@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Thierry Reding <treding@nvidia.com>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1407071733500.28318@utopia.booyaka.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: linux-omap@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2014 02:58 AM, Chanwoo Choi wrote:
-> Hi Tomasz,
->
-> On 03/15/2014 02:58 AM, Tomasz Figa wrote:
->>
->> However, this driver, even after applying your series, is still far
->> from a state that would allow it to be enabled. The most important
->> issue is direct access to CMU registers, based on static mapping,
->> which is not allowed on multiplatform kernels and
->> multiplatform-awareness for drivers is currently a must.
->>
->> To allow this driver to be enabled, it needs to be converted to use
->> common clock framework functions to configure all clocks, e.g.
->> clk_set_rate(), clk_set_parent(), etc., without accessing CMU
->> registers directly.
->>
->> Of course as long as the driver is effectively unusable, to keep
->> development, we can proceed with refactoring it step-by-step and
->> your series would be basically the first step, after addressing the
->> review comments.
->>
->
-> I agree your opinion. When setting frequency of memory bus, this
-> driver access directly to CMU registers. I know it should be modified
-> by using common clk framework as your comment.
->
-> I'll send patch set about using common clk framework instead of CMU
-> register based on static mapping after finished the review and apply
-> of this patch set as next step.
+On Mon, Jul 07, 2014 at 05:50:09PM +0000, Paul Walmsley wrote:
+> On Mon, 7 Jul 2014, Andre Heider wrote:
+> 
+> > On Sun, Jun 29, 2014 at 06:21:34PM +0200, Andre Heider wrote:
+> > > 
+> > > this series adds PRUv2 support to uio_pruss through devicetree, makes the
+> > > device usable on am33xx and enables it on beaglebone black.
+> > > Inspired by old patches from Matt Porter found in a downstream tree.
+> > > 
+> > > To archieve that this series:
+> > > * adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
+> 
+> ...
+> 
+> > > * is the hardreset thing I did there the right thing to do? I think the
+> > >   proper way would be a reset controller (which apparently doesn't yet exist
+> > >   for this SoC?) and let the driver deassert/assert on probe/remove?
+> > > * the platform device path has a clk_enable() / clk_put() calls. Are those
+> > >   now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
+> > >   calls?
+> 
+> Probably you only need pm_runtime_{get,put}_*() calls, unless you're 
+> changing clock parents or rates in your driver code.
 
-Hi Chanwoo,
+No, the driver doesn't do that. So I can clean that up, nice.
 
-any news on this?
+> 
+> > @OMAP guys: any comments? The series depends on patch 5 and 6; both touch
+> > common hwmod code.
+> 
+> I'd suggest splitting the series into three independent pieces if 
+> possible:
+> 
+> 1. UIO code, for the UIO maintainer(s)
+> 2. DT pieces for Tony
+> 3. hwmod pieces for me
+> 
+> That way they can be cleanly merged by the respective maintainers.
+> 
+> As far as the hwmod piece goes, I'd be willing to merge your code as a 
+> temporary workaround for the issue, and marking it as such; but I'd be 
+> concerned about power management-related interactions (i.e., does the 
+> PRUSS need to be reset upon return from deep idle states, etc.)
 
-I would love to test this devfreq driver with the clk_set_floor_rate API 
-I'm adding to the common clk framework.
+Alright, thanks Paul.
 
-Regards,
+About the deep idle states... I'm not sure, I couldn't find any explicit
+wording about it in the am335x technical reference manual nor in in the
+boneblack system reference manual.
 
-Tomeu
+According to the TRM the PRUSS lies in the PD_PER power domain, which is
+powered down for the "Deepsleep0" power mode. So I *guess* the PRUSS also
+needs to be taken out of hard reset when waking up from such a state.
+
+But there's no upstream support for these power modes on am33xx anyway,
+and I'd assume that HWMOD_INIT_DEASSERT_HARD_RESET gets removed or
+replaced once that lands. Which is probably what you meant by "temporary".
+FWIW, I'd be willing to look into that when the time comes and PRUSS gets
+left behind.
+
+Thanks,
+Andre
