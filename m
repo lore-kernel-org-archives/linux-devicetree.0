@@ -1,57 +1,36 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Wed, 09 Jul 2014 16:02:58 +0200
-Message-ID: <53BD4B92.7030601@redhat.com>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com> <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com> <20140708134000.GC4979@htj.dyndns.org> <20140708170353.GA16148@kwain> <20140708171817.GH4979@htj.dyndns.org> <20140708174900.GC16148@kwain> <20140708214010.GI4979@htj.dyndns.org> <20140709082331.GA4510@kwain> <20140709135910.GA11193@htj.dyndns.org>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v1 6/9] usb: xhci: Add NVIDIA Tegra XHCI host-controller
+ driver
+Date: Wed, 9 Jul 2014 10:08:05 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1407091001150.873-100000@iolanthe.rowland.org>
+References: <CAL1qeaHT8Yz7kRY3Qm5i+bYCF4D5BT=BVZ6BMfQufyaQFkt0mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140709135910.GA11193@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaHT8Yz7kRY3Qm5i+bYCF4D5BT=BVZ6BMfQufyaQFkt0mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 8 Jul 2014, Andrew Bresticker wrote:
 
-On 07/09/2014 03:59 PM, Tejun Heo wrote:
-> Hello,
->=20
-> On Wed, Jul 09, 2014 at 10:23:31AM +0200, Antoine T=E9nart wrote:
->>> It is confusing.  If you wanna pass around available ports in hpriv=
-,
->>> please add a separate field and replace the arguments to
->>> save_initial_config().
->>
->> I don't get it. Which argument should I replace in
->> save_initial_config()? The change is we compute hpriv->port_map.
->> I don't see which arguments we can add or replace.
->=20
-> The @force_port_map and @mask_port_map of ahci_save_initial_config().
-> We end up with three params from two places modifying port_map and on=
-e
-> of those is in/out parameter, so ummm, no.  If you wanna add port
-> masking to @hpriv, please do it by moving @force_port_map and
-> @mask_port_map into @hpriv instead.
->=20
-> Sure, the proposed change is small but the end result is messy.
->=20
->> I had a quick look on this, and it does not seems to be that simple.=
- The
->> ahci_port_priv is stored inside the ata_port struct and not accessib=
-le
->> (as of now) from the ahci_host_priv one. The ahci_port_priv is
->> initialized at the end of ahci_platform_init_host(), far after we ne=
-ed
->> it. This requires quite a lot of changes. Or is there another way?
->=20
-> Yeah, it'd probably need separating out port resource handling, so
-> that the order is get_resources, host_alloc, get_port_resources and
-> then init and activate.  Hans, what do you think?
+> > I think at the very least you should add a function
+> > "xhci_default_driver(struct hc_driver *driver)" to xhci-plat.c (or
+> > even better to xhci.c and use it for PCI as well) that initializes all
+> > function pointers to the default (internal) symbols, and can then be
+> > overridden afterwards.
+> 
+> Currently all XHCI host drivers (PCI, platform, MVEBU) will be built
+> into the xhci-hcd module.  I could append the Tegra driver to that
+> module or introduce a xhci_init_driver() like EHCI does as Julius
+> suggests.  USB folks, do you have a preference?
 
-The order (and function names) you're suggesting here sound good to me.
+As the EHCI maintainer, I naturally approve of Julius's suggestion.  
 
-Regards,
+Alan Stern
 
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
