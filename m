@@ -1,247 +1,129 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 01/10] mmc: sdhci-st: Intial support for ST SDHCI controller
-Date: Wed,  9 Jul 2014 16:07:32 +0100
-Message-ID: <1404918461-25390-2-git-send-email-peter.griffin@linaro.org>
-References: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 2/6] mailbox/omap: add support for parsing dt devices
+Date: Wed, 9 Jul 2014 10:15:52 -0500
+Message-ID: <53BD5CA8.1080504@ti.com>
+References: <1403660878-56350-3-git-send-email-s-anna@ti.com> <20140628170709.GB23634@xo-6d-61-c0.localdomain> <53B18999.2020506@ti.com> <20140630185942.GA5410@amd.pavel.ucw.cz> <53B1BBA8.5090507@ti.com> <20140630203225.GA3893@amd.pavel.ucw.cz> <20140704064547.GZ28884@atomide.com> <20140704080556.GA16274@amd.pavel.ucw.cz> <20140704082354.GD28884@atomide.com> <53BC3081.9010402@ti.com> <20140709082906.GG28884@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <20140709082906.GG28884@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, chris@printf.net, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, peppe.cavallaro@st.com
+To: Tony Lindgren <tony@atomide.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This platform driver adds initial support for the SDHCI host controller
-found on STMicroelectronics SoCs.
+On 07/09/2014 03:29 AM, Tony Lindgren wrote:
+> * Suman Anna <s-anna@ti.com> [140708 10:57]:
+>> Hi Tony, Pavel,
+>>
+>> On 07/04/2014 03:23 AM, Tony Lindgren wrote:
+>>> * Pavel Machek <pavel@ucw.cz> [140704 01:07]:
+>>>> Hi!
+>>>>
+>>>>>>>>>>> The non-DT support has to be maintained for now to not break
+>>>>>>>>>>> OMAP3 legacy boot, and the legacy-style code will be cleaned
+>>>>>>>>>>> up once OMAP3 is also converted to DT-boot only.
+>>>>>>>>>>
+>>>>>>>>>>> @@ -587,24 +606,157 @@ static int omap_mbox_unregister(struct omap_mbox_device *mdev)
+>>>>>>>>>>>  	return 0;
+>>>>>>>>>>>  }
+>>>>>>>>>>>  
+>>>>>>>>>>> +static const struct omap_mbox_device_data omap2_data = {
+>>>>>>>>>>> +	.num_users	= 4,
+>>>>>>>>>>> +	.num_fifos	= 6,
+>>>>>>>>>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+>>>>>>>>>>> +};
+>>>>>>>>>>> +
+>>>>>>>>>>> +static const struct omap_mbox_device_data omap3_data = {
+>>>>>>>>>>> +	.num_users	= 2,
+>>>>>>>>>>> +	.num_fifos	= 2,
+>>>>>>>>>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+>>>>>>>>>>> +};
+>>>>>>>>>>> +
+>>>>>>>>>>> +static const struct omap_mbox_device_data am335x_data = {
+>>>>>>>>>>> +	.num_users	= 4,
+>>>>>>>>>>> +	.num_fifos	= 8,
+>>>>>>>>>>> +	.intr_type	= MBOX_INTR_CFG_TYPE2,
+>>>>>>>>>>> +};
+>>>>>>>>>>
+>>>>
+>>>>>> Aha, ok, then the intr_type should be derived from
+>>>>>> compatible-string. Or rather... you should have three
+>>>>>> compatible-strings for the three possibilities? (And then subtype,
+>>>>>> currently unused, in case there are more hw differences).
+>>>>>
+>>>>> The compatible string can and should be separate for each revision
+>>>>> unless they are the same exacat hardware revision.
+>>>>
+>>>> ACK.
+>>
+>> I checked the revision register from all SoCs. OMAP2 and OMAP3 have
+>> different revisions compared to OMAP4+. All of OMAP4, OMAP5, DRA7,
+>> AM335x and AM437x have the same version, but with different num-fifos
+>> and num-users.  So, I can switch back to using omap4-mailbox for all of
+>> these SoCs only if we encode the num-fifos and num-users in DT.
+>>
+>>>>
+>>>>>>> two are HW IP design parameters, so in general putting them in DT isn't
+>>>>>>> completely a bad idea, but I will wait to see if there are any further
+>>>>>>> comments on this from Tony or DT maintainers before I make changes.
+>>>>>>
+>>>>>> Ok, right... I'd vote for putting them into DT.
+>>>>>
+>>>>> I would avoid adding custom DT properties where possible and let the
+>>>>> driver just initialize the right data based on the compatible flag.
+>>>>
+>>>> If these are HW IP design parameters, we can expect to see many
+>>>> different combinations. Yet we know ahead of time how to handle
+>>>> different parameters HW people select.
+>>
+>> That's right, the above OMAP4+ SoCs already demonstrate this behavior.
+>>
+>>>>
+>>>> Thus IMO we should do it in the device tree.
+>>>
+>>> Oh you mean from supporting new hardware with just .dts changes?
+>>> From that point of view it makes sense to have them as DT properties,
+>>> so I'm fine with that.
+>>>
+>>> Let's just try to use something that's generic like fifosize. No idea
+>>> how the property for num_fifos should be handled though as that
+>>> implies some knowledge in the driver which num_users have fifos?
+>>
+>> The fifos are not per num_users, but rather the total number of fifos
+>> within the IP block. The num_users will be the number of targets the IP
+>> block can interrupt. I tried looking for generic properties, but there
+>> weren't any that seem to fit the description. If you want generic names,
+>> I can use num-fifos and num-users, otherwise will stick to the
+>> names defined in the previous series.
+> 
+> OK since we already have some .dts entries with ti,mbox-num-fifos and
+> ti,mbox-num-users I'd use those for now. Adding parsing for a generic
+> property can be done later on.
 
-It has been tested on STiH41x b2020 platforms currently.
+Alright, will stick to the existing properties.
 
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
----
- drivers/mmc/host/Kconfig    |  12 +++
- drivers/mmc/host/Makefile   |   1 +
- drivers/mmc/host/sdhci-st.c | 176 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 189 insertions(+)
- create mode 100644 drivers/mmc/host/sdhci-st.c
+> 
+>>> So unless that can be described clearly in a DT property as well,
+>>> the binding might be still unusable for new hardware :)
+>>>
+>>
+>> I don't expect the OMAP mailbox IP to change much in the future. There
+>> is a FIFO depth parameter as well, but that's constant in all the
+>> current versions, and even if they change it, I can already use the
+>> generic property for that.
+> 
+> OK
+>  
+>> Tony,
+>> Depending on the agreement here, I may have to respin the OMAP
+>> mailbox DT/hwmod cleanup series [1]
+> 
+> OK let me know.
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index a565254..6615b79 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -290,6 +290,18 @@ config MMC_MOXART
- 	  be found on some embedded hardware such as UC-7112-LX.
- 	  If you have a controller with this interface, say Y here.
- 
-+config MMC_SDHCI_ST
-+	tristate "SDHCI support on STMicroelectronics SoC"
-+	depends on ARCH_STI
-+	depends on MMC_SDHCI_PLTFM
-+	select MMC_SDHCI_IO_ACCESSORS
-+	help
-+	  This selects the Secure Digital Host Controller Interface in
-+	  STMicroelectronics SoCs.
-+
-+	  If you have a controller with this interface, say Y or M here.
-+	  If unsure, say N.
-+
- config MMC_OMAP
- 	tristate "TI OMAP Multimedia Card Interface support"
- 	depends on ARCH_OMAP
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 7f81ddf..f211eed 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
- obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
- obj-$(CONFIG_MMC_SDHCI_BCM2835)		+= sdhci-bcm2835.o
- obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
-+obj-$(CONFIG_MMC_SDHCI_ST)		+= sdhci-st.o
- 
- ifeq ($(CONFIG_CB710_DEBUG),y)
- 	CFLAGS-cb710-mmc	+= -DDEBUG
-diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
-new file mode 100644
-index 0000000..328f348
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-st.c
-@@ -0,0 +1,176 @@
-+/*
-+ * Support for SDHCI on STMicroelectronics SoCs
-+ *
-+ * Copyright (C) 2014 STMicroelectronics Ltd
-+ * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-+ * Contributors: Peter Griffin <peter.griffin@linaro.org>
-+ *
-+ * Based on sdhci-cns3xxx.c
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/mmc/host.h>
-+
-+#include "sdhci-pltfm.h"
-+
-+static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
-+{
-+	u32 ret;
-+
-+	switch (reg) {
-+	case SDHCI_CAPABILITIES:
-+		ret = readl_relaxed(host->ioaddr + reg);
-+		/* Support 3.3V and 1.8V */
-+		ret &= ~SDHCI_CAN_VDD_300;
-+		break;
-+	default:
-+		ret = readl_relaxed(host->ioaddr + reg);
-+	}
-+	return ret;
-+}
-+
-+static const struct sdhci_ops sdhci_st_ops = {
-+	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-+	.set_clock = sdhci_set_clock,
-+	.set_bus_width = sdhci_set_bus_width,
-+	.read_l = sdhci_st_readl,
-+	.reset = sdhci_reset,
-+};
-+
-+static const struct sdhci_pltfm_data sdhci_st_pdata = {
-+	.ops = &sdhci_st_ops,
-+	.quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
-+	    SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-+};
-+
-+
-+static int sdhci_st_probe(struct platform_device *pdev)
-+{
-+	struct sdhci_host *host;
-+	struct sdhci_pltfm_host *pltfm_host;
-+	struct clk *clk;
-+	int ret = 0;
-+	u16 host_version;
-+
-+	clk =  devm_clk_get(&pdev->dev, "mmc");
-+	if (IS_ERR(clk)) {
-+		dev_err(&pdev->dev, "Peripheral clk not found\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	host = sdhci_pltfm_init(pdev, &sdhci_st_pdata, 0);
-+	if (IS_ERR(host)) {
-+		dev_err(&pdev->dev, "Failed sdhci_pltfm_init\n");
-+		return PTR_ERR(host);
-+	}
-+
-+	ret = mmc_of_parse(host->mmc);
-+
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed mmc_of_parse\n");
-+		return ret;
-+	}
-+
-+	clk_prepare_enable(clk);
-+
-+	pltfm_host = sdhci_priv(host);
-+	pltfm_host->clk = clk;
-+
-+	ret = sdhci_add_host(host);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed sdhci_add_host\n");
-+		goto err_out;
-+	}
-+
-+	platform_set_drvdata(pdev, host);
-+
-+	host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
-+
-+	dev_info(&pdev->dev, "SDHCI ST Initialised: Host Version: 0x%x Vendor Version 0x%x\n",
-+		((host_version & SDHCI_SPEC_VER_MASK) >> SDHCI_SPEC_VER_SHIFT),
-+		((host_version & SDHCI_VENDOR_VER_MASK) >>
-+		SDHCI_VENDOR_VER_SHIFT));
-+
-+	return 0;
-+
-+err_out:
-+	clk_disable_unprepare(clk);
-+	sdhci_pltfm_free(pdev);
-+
-+	return ret;
-+}
-+
-+static int sdhci_st_remove(struct platform_device *pdev)
-+{
-+	struct sdhci_host *host = platform_get_drvdata(pdev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+
-+	clk_disable_unprepare(pltfm_host->clk);
-+
-+	return sdhci_pltfm_unregister(pdev);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int sdhci_st_suspend(struct device *dev)
-+{
-+	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	int ret = sdhci_suspend_host(host);
-+
-+	if (ret)
-+		goto out;
-+
-+	clk_disable_unprepare(pltfm_host->clk);
-+out:
-+	return ret;
-+}
-+
-+static int sdhci_st_resume(struct device *dev)
-+{
-+	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+
-+	clk_prepare_enable(pltfm_host->clk);
-+
-+	return sdhci_resume_host(host);
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(sdhci_st_pmops, sdhci_st_suspend, sdhci_st_resume);
-+
-+static const struct of_device_id st_sdhci_match[] = {
-+	{ .compatible = "st,sdhci" },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, st_sdhci_match);
-+
-+static struct platform_driver sdhci_st_driver = {
-+	.probe = sdhci_st_probe,
-+	.remove = sdhci_st_remove,
-+	.driver = {
-+		   .name = "sdhci-st",
-+		   .pm = &sdhci_st_pmops,
-+		   .of_match_table = of_match_ptr(st_sdhci_match),
-+		  },
-+};
-+
-+module_platform_driver(sdhci_st_driver);
-+
-+MODULE_DESCRIPTION("SDHCI driver for STMicroelectronics SoCs");
-+MODULE_AUTHOR("Giuseppe Cavallaro <peppe.cavallaro@st.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:st-sdhci");
--- 
-1.9.1
+I will refresh both this series and the mailbox DT/hwmod cleanup with
+these changes, and post the patches tomorrow.
+
+regards
+Suman
