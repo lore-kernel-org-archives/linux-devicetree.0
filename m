@@ -1,116 +1,87 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 10/13] [RFC] ARM: dts: Add shmobile platform device tree
- bindings documentation
-Date: Wed,  9 Jul 2014 14:23:40 +0200
-Message-ID: <1404908623-909-11-git-send-email-geert+renesas@glider.be>
-References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 1/2] net: davinci_mdio: reuse for keystone2 arch
+Date: Wed, 9 Jul 2014 16:10:50 +0300
+Message-ID: <1404911451-9921-2-git-send-email-grygorii.strashko@ti.com>
+References: <1404911451-9921-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404911451-9921-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, santosh.shilimkar@ti.com, netdev@vger.kernel.org
+Cc: prabhakar.csengg@gmail.com, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
-Documentation, listing supported SoCs and boards.
+The similar MDIO HW blocks is used by keystone 2 SoCs as
+in Davinci SoCs:
+- one in Gigabit Ethernet (GbE) Switch Subsystem
+  See http://www.ti.com/lit/ug/sprugv9d/sprugv9d.pdf
+- one in 10 Gigabit Ethernet Subsystem
+  See http://www.ti.com/lit/ug/spruhj5/spruhj5.pdf
 
-This allows to use checkpatch to validate DTSes referring to Renesas
-shmobile SoCs, and boards containing those SoCs.
+Hence, reuse Davinci MDIO driver for Keystone 2 and
+enable TI networking for Keystone 2 devices
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/shmobile.txt
+ .../devicetree/bindings/net/davinci-mdio.txt       |    8 ++++----
+ drivers/net/ethernet/ti/Kconfig                    |    4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-new file mode 100644
-index 000000000000..baa25c92597d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -0,0 +1,71 @@
-+Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
-+--------------------------------------------------------------------
-+
-+SoCs:
-+
-+  - Emma Mobile EV2
-+    compatible = "renesas,emev2"
-+  - RZ/A1H (R7S72100)
-+    compatible = "renesas,r7s72100"
-+  - R-Mobile APE6 (R8A73A40)
-+    compatible = "renesas,r8a73a4"
-+  - R-Mobile A1 (R8A77400)
-+    compatible = "renesas,r8a7740"
-+  - R-Car M1A (R8A77781)
-+    compatible = "renesas,r8a7778"
-+  - R-Car H1 (R8A77790)
-+    compatible = "renesas,r8a7779"
-+  - R-Car H2 (R8A77900)
-+    compatible = "renesas,r8a7790"
-+  - R-Car M2-W (R8A77910)
-+    compatible = "renesas,r8a7791"
-+  - R-Car V2H (R8A77920)
-+    compatible = "renesas,r8a7792"
-+  - R-Car M2-N (R8A77930)
-+    compatible = "renesas,r8a7793"
-+  - R-Car E2 (R8A77940)
-+    compatible = "renesas,r8a7794"
-+  - SH-Mobile AP4 (R8A73720/SH7372)
-+    compatible = "renesas,sh7372"
-+  - SH-Mobile AG5 (R8A73A00/SH73A0)
-+    compatible = "renesas,sh73a0"
-+
-+
-+Boards:
-+
-+  - Alt
-+    compatible = "renesas,alt", "renesas,r8a7794"
-+  - APE6-EVM
-+    compatible = "renesas,ape6evm", "renesas,r8a73a4"
-+  - APE6-EVM - Reference Device Tree Implementation
-+    compatible = "renesas,ape6evm-reference", "renesas,r8a73a4"
-+  - Atmark Techno Armadillo-800 EVA
-+    compatible = "renesas,armadillo800eva"
-+  - Atmark Techno Armadillo-800 EVA - Reference Device Tree Implementation
-+    compatible = "renesas,armadillo800eva-reference", "renesas,r8a7740"
-+  - BOCK-W
-+    compatible = "renesas,bockw", "renesas,r8a7778"
-+  - BOCK-W - Reference Device Tree Implementation
-+    compatible = "renesas,bockw-reference", "renesas,r8a7778"
-+  - Genmai (RTK772100BC00000BR)
-+    compatible = "renesas,genmai", "renesas,r7s72100"
-+  - Henninger
-+    compatible = "renesas,henninger", "renesas,r8a7791"
-+  - Koelsch (RTP0RC7791SEB00010S)
-+    compatible = "renesas,koelsch", "renesas,r8a7791"
-+  - EMEV2 KZM9D
-+    compatible = "renesas,kzm9d", "renesas,emev2"
-+  - KZM-A9-GT
-+    compatible = "renesas,kzm9g", "renesas,sh73a0"
-+  - KZM-A9-GT - Reference Device Tree Implementation
-+    compatible = "renesas,kzm9g-reference", "renesas,sh73a0"
-+  - Lager (RTP0RC7790SEB00010S)
-+    compatible = "renesas,lager", "renesas,r8a7790"
-+  - Mackerel (R0P7372LC0016RL, AP4 EVM 2nd)
-+    compatible = "renesas,mackerel"
-+  - Marzen
-+    compatible = "renesas,marzen", "renesas,r8a7779"
-+
-+Note: Reference Device Tree Implementations are temporary implementations
-+      to ease the migration from platform devices to Device Tree, and are
-+      intended to be removed in the future.
+diff --git a/Documentation/devicetree/bindings/net/davinci-mdio.txt b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+index 72efaaf..d2e68e7 100644
+--- a/Documentation/devicetree/bindings/net/davinci-mdio.txt
++++ b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+@@ -1,8 +1,8 @@
+-TI SoC Davinci MDIO Controller Device Tree Bindings
++TI SoC Davinci/Keystone2 MDIO Controller Device Tree Bindings
+ ---------------------------------------------------
+ 
+ Required properties:
+-- compatible		: Should be "ti,davinci_mdio"
++- compatible		: Should be "ti,davinci_mdio" or "ti,keystone-mdio"
+ - reg			: physical base address and size of the davinci mdio
+ 			  registers map
+ - bus_freq		: Mdio Bus frequency
+@@ -19,7 +19,7 @@ file.
+ Examples:
+ 
+ 	mdio: davinci_mdio@4A101000 {
+-		compatible = "ti,cpsw";
++		compatible = "ti,davinci_mdio";
+ 		reg = <0x4A101000 0x1000>;
+ 		bus_freq = <1000000>;
+ 	};
+@@ -27,7 +27,7 @@ Examples:
+ (or)
+ 
+ 	mdio: davinci_mdio@4A101000 {
+-		compatible = "ti,cpsw";
++		compatible = "ti,davinci_mdio";
+ 		ti,hwmods = "davinci_mdio";
+ 		bus_freq = <1000000>;
+ 	};
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 53150c2..1769700 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -5,7 +5,7 @@
+ config NET_VENDOR_TI
+ 	bool "Texas Instruments (TI) devices"
+ 	default y
+-	depends on PCI || EISA || AR7 || (ARM && (ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX))
++	depends on PCI || EISA || AR7 || (ARM && (ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX || ARCH_KEYSTONE))
+ 	---help---
+ 	  If you have a network (Ethernet) card belonging to this class, say Y
+ 	  and read the Ethernet-HOWTO, available from
+@@ -32,7 +32,7 @@ config TI_DAVINCI_EMAC
+ 
+ config TI_DAVINCI_MDIO
+ 	tristate "TI DaVinci MDIO Support"
+-	depends on ARM && ( ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX )
++	depends on ARM && ( ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX || ARCH_KEYSTONE )
+ 	select PHYLIB
+ 	---help---
+ 	  This driver supports TI's DaVinci MDIO module.
 -- 
-1.9.1
+1.7.9.5
