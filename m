@@ -1,84 +1,56 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: Re: [PATCH v8 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
-Date: Wed, 9 Jul 2014 15:39:45 -0700
-Message-ID: <CAKh23Fmxv887dje8r5xF7sQwPumCm15ZWxL7cdpRSZJeBh1FjQ@mail.gmail.com>
-References: <1403306296-26198-1-git-send-email-isubramanian@apm.com>
-	<1403306296-26198-5-git-send-email-isubramanian@apm.com>
-	<CALdTtnvHt5mYMC3619E4F3KK0jPOw7mCpKE6bTn0Um6fdZ4rbw@mail.gmail.com>
-	<20140625230450.GO32514@n2100.arm.linux.org.uk>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 0/4 V3] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Wed, 9 Jul 2014 18:05:00 -0500
+Message-ID: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140625230450.GO32514@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Dann Frazier <dann.frazier@canonical.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, netdev <netdev@vger.kernel.org>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Keyur Chudgar <kchudgar@apm.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ravi Patel <rapatel@apm.com>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 4:04 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Tue, Jun 24, 2014 at 10:29:48PM -0600, Dann Frazier wrote:
->> On Fri, Jun 20, 2014 at 5:18 PM, Iyappan Subramanian
->> <isubramanian@apm.com> wrote:
->> > +       ring->desc_addr = dma_zalloc_coherent(dev, size, &ring->dma,
->> > +                                             GFP_KERNEL);
->>
->> Iyappan,
->> When testing this driver on a 3.16-rc2 base, I'm finding that
->> desc_addr gets assigned to NULL here, which results in an oops later
->> on (see below).
->
-> Note that on failure here...
->
->> > +       if (!ring->desc_addr)
->> > +               goto err;
->
-> we jump to 'err'.
->
->> > +err:
->> > +       dma_free_coherent(dev, size, ring->desc_addr, ring->dma);
->
-> which then tries to call dma_free_coherent on a NULL pointer, and
-> possibly undefined ring->dma value.  That's not a nice thing to do,
-> and will probably lead to problems.  I know that none of the ARM
-> flavours of this function will handle this gracefully, and neither
-> does x86's version either.  So this is very probably illegal.
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-I will fix this.
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400.
 
->
->> > +static int xgene_enet_create_desc_rings(struct net_device *ndev)
->> > +{
->> > +       struct xgene_enet_pdata *pdata = netdev_priv(ndev);
->> > +       struct device *dev = &pdata->pdev->dev;
->> > +       struct xgene_enet_desc_ring *rx_ring, *tx_ring, *cp_ring;
->> > +       struct xgene_enet_desc_ring *buf_pool = NULL;
->> > +       u8 cpu_bufnum = 0, eth_bufnum = 0;
->> > +       u8 bp_bufnum = 0x20;
->> > +       u16 ring_id, ring_num = 0;
->> > +       int ret;
->> > +
->> > +       /* allocate rx descriptor ring */
->> > +       ring_id = xgene_enet_get_ring_id(RING_OWNER_CPU, cpu_bufnum++);
->> > +       rx_ring = xgene_enet_create_desc_ring(ndev, ring_num++,
->> > +                                             RING_CFGSIZE_16KB, ring_id);
->> > +       if (IS_ERR_OR_NULL(rx_ring)) {
->> > +               ret = PTR_ERR(rx_ring);
->> > +               goto err;
->> > +       }
->>
->> Here we test for IS_ERR_OR_NULL. In the oops I'm hitting, rx_ring is
->> NULL here - but PTR_ERR() apparently returns 0 in that case. So this
->> function ends up returning no error.
->
-> Yes, IS_ERR_OR_NULL is evil for this very reason and should be avoided
-> where possible.  There were discussions a while back about removing it,
-> or at least deprecating it because it causes more bugs (exactly of this
-> type) than it solves.
+This depends on and has been tested with the V7 of"Add support for PCI in AArch64"
+(https://lkml.org/lkml/2014/3/14/320).
 
-Thanks for pointing it out.  I will redesign IS_ERR_OR_NULL usage.
+Changes in V3:
+    * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/gic
+      (per Jason Cooper request)
+    * Misc fix/clean up per Mark Rutland comments
+    * Minor Clean up in the driver/irqchip/irq-gic-v2m.c: alloc_msi_irqs()
+    * Patch 4 is new to the series:
+        * Add ARM64-specific version arch_setup_msi_irqs() to allow support
+          for Multiple MSI.
+        * Add support for Multiple MSI for GICv2m.
 
->
-> --
-> FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-> improving, and getting towards what was expected from it.
+Suravee Suthikulpanit (4):
+  irqchip: gic: Add binding probe for ARM GIC400
+  irqchip: gic: Restructuring ARM GIC code
+  irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+  irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+
+ Documentation/devicetree/bindings/arm/gic.txt |  20 +-
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/msi.h                  |  15 ++
+ arch/arm64/kernel/Makefile                    |   1 +
+ arch/arm64/kernel/msi.c                       |  57 +++++
+ drivers/irqchip/Kconfig                       |   7 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-v2m.c                 | 331 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v2m.h                 |  13 +
+ drivers/irqchip/irq-gic.c                     |  90 ++++---
+ drivers/irqchip/irq-gic.h                     |  67 ++++++
+ 11 files changed, 562 insertions(+), 41 deletions(-)
+ create mode 100644 arch/arm64/include/asm/msi.h
+ create mode 100644 arch/arm64/kernel/msi.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.h
+ create mode 100644 drivers/irqchip/irq-gic.h
+
+-- 
+1.9.0
