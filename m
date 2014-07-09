@@ -1,84 +1,76 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] PCI: designware: use untranslated address while programming
- ATU
-Date: Wed, 9 Jul 2014 15:08:21 +0530
-Message-ID: <53BD0D8D.9000108@ti.com>
-References: <1403719007-9352-1-git-send-email-kishon@ti.com> <1403719007-9352-3-git-send-email-kishon@ti.com> <53BBE492.4070904@ti.com> <001201cf9aae$f2e080a0$d8a181e0$%han@samsung.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH 1/3] arm: dra7xx: Add hwmod data for MDIO and CPSW
+Date: Wed, 9 Jul 2014 15:08:49 +0530
+Message-ID: <53BD0DA9.5080403@ti.com>
+References: <1404844852-19980-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <001201cf9aae$f2e080a0$d8a181e0$%han@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, mohit.kumar@st.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1404844852-19980-1-git-send-email-bigeasy@linutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-omap@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-arm-kernel@lists.infradead.org, Praveen Rao <prao@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jingoo,
+On Wednesday 09 July 2014 12:10 AM, Sebastian Andrzej Siewior wrote:
+> Adding hwmod data for CPSW and MDIO which is present in DRA7xx SoC
+>
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> Signed-off-by: Praveen Rao <prao@ti.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 96 +++++++++++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> index 20b4398..0fa2c66 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> @@ -1845,6 +1845,85 @@ static struct omap_hwmod dra7xx_vcp2_hwmod = {
+>  };
+>  
+>  /*
+> + * 'gmac' class
+> + * cpsw/gmac sub system
+> + */
+> +static struct omap_hwmod_class_sysconfig dra7xx_gmac_sysc = {
+> +	.rev_offs	= 0x0,
+> +	.sysc_offs	= 0x8,
+> +	.syss_offs	= 0x4,
+> +	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
+> +			SYSS_HAS_RESET_STATUS),
+> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
+> +			MSTANDBY_NO),
+> +	.sysc_fields	= &omap_hwmod_sysc_type3,
+> +};
+> +
+> +static struct omap_hwmod_class dra7xx_gmac_hwmod_class = {
+> +	.name	= "gmac",
+> +	.sysc	= &dra7xx_gmac_sysc,
+> +};
+> +
+> +static struct omap_hwmod_irq_info dra7xx_gmac_irqs[] = {
+> +	{ .name = "c0_rx_thresh_pend", .irq = 50 + DRA7XX_IRQ_GIC_START, },
+> +	{ .name = "c0_rx_pend", .irq = 51 + DRA7XX_IRQ_GIC_START, },
+> +	{ .name = "c0_tx_pend", .irq = 52 + DRA7XX_IRQ_GIC_START, },
+> +	{ .name = "c0_misc_pend", .irq = 53 + DRA7XX_IRQ_GIC_START, },
+> +	{ .irq = -1 },
+> +};
 
-On Tuesday 08 July 2014 06:47 PM, Jingoo Han wrote:
-> On Tuesday, July 08, 2014 9:31 PM, Kishon Vijay Abraham I wrote:
->>
->> Hi Mohit, Jingoo,
->>
->> On Wednesday 25 June 2014 11:26 PM, Kishon Vijay Abraham I wrote:
->>> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
->>> address. So whenever the cpu issues a read/write request, the 4 most
->>> significant bits are used by L3 to determine the target controller.
->>> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
->>> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
->>> the outbound translation window the *base* should be programmed as 0x000_0000.
->>> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
->>> we have programmed in the translation window with base as 0x000_0000.
->>>
->>> This is needed when the dt node is modelled something like below
->>> axi {
->>> 	compatible = "simple-bus";
->>> 	#size-cells = <1>;
->>> 	#address-cells = <1>;
->>> 	ranges = <0x0        0x20000000 0x10000000 // 28-bit bus
->>> 		  0x51000000 0x51000000 0x3000>;
->>> 	pcie@51000000 {
->>> 		reg = <0x1000 0x2000>, <0x51002000 0x14c>, <0x51000000 0x2000>;
->>> 		reg-names = "config", "ti_conf", "rc_dbics";
->>> 		#address-cells = <3>;
->>> 		#size-cells = <2>;
->>> 		ranges = <0x81000000 0 0          0x03000 0 0x00010000
->>> 			  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
->>> 	};
->>> };
->>>
->>> Here the CPU address for configuration space is 0x20013000 and the controller
->>> address for configuration space is 0x13000. The controller address should be
->>> used while programming the ATU (in order for translation to happen properly in
->>> DRA7xx).
->>
->> Are you okay with this patch? Can you give your Reviewed-by/Acked-by?
-> 
-> Sorry, I cannot understand fully what this patch does. :-(
-> However, I have some questions as below.
-> 
-> 1. io_mod_addr
-> The 'io_mod_addr' variable is not used. Then, how about removing
-> 'io_mod_addr' from this patch?
+This is not proper, NAK
 
-Actually I missed using it in io_outbound(). Will fix it.
-> 
-> 2. ranges
-> In the case of Exynos PCIe, there is no limitation such as 28bit for
-> access. Then, when there is no 'ranges' property in DT file, is there
-> no side effect? I mean the compatibility with other SoC's PCIe drivers.
+Hwmod is already posted
+http://www.spinics.net/lists/linux-omap/msg99039.html
+and waiting for Acks and tested-by
 
-It shouldn't break anything. The ranges is used to resolve cpu address while
-adding resources to the device. So in other SoCs it'll use use the parent
-'ranges' which is usually ocp/simple-bus to resolve cpu address. In my case it
-has to use the axi ranges. So other SoCs shouldn't be impacted.
-> 
-> 3. _addr post fix
-> 
-> How about renaming 'cfg0_mod_addr', 'mem_mod_addr' as below?
-
-sure.
-
-Thanks
-Kishon
+Regards
+Mugunthan V N
