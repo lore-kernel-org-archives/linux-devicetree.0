@@ -1,88 +1,105 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH 0/6] thermal: sti: Add new Thermal driver
-Date: Wed, 9 Jul 2014 14:46:46 +0100
-Message-ID: <20140709134646.GB479@lee--X1>
-References: <1401980819-19962-1-git-send-email-lee.jones@linaro.org>
- <20140624092309.GD13803@lee--X1>
- <20140709120823.GA32573@lee--X1>
- <1404911964.28592.4.camel@rzhang1-toshiba>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v3 0/5] Add Keystone PCIe controller driver
+Date: Wed, 9 Jul 2014 09:52:24 -0400
+Message-ID: <53BD4918.2040807@ti.com>
+References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404911964.28592.4.camel@rzhang1-toshiba>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ajitpal.singh@st.com, edubezval@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Pratyush Anand <pratyush.anand@st.com>, Richard Zhu <r65037@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 09 Jul 2014, Zhang Rui wrote:
+On Monday 30 June 2014 05:45 PM, Murali Karicheri wrote:
+> This patch add PCIe controller driver for Keystone SoCs. This
+> is based on v2 of the series posted to the mailing list.
+> Keystone PCI controller is based on version 3.65 of the DW
+> hardware. This driver re-uses some of the DW core driver
+> functions and required modification in some to support
+> the old DW h/w based Keystone driver.
+> 
+> Please review and let me know if you have any comments.
+> 
+> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> CC: Russell King <linux@arm.linux.org.uk>
+> CC: Grant Likely <grant.likely@linaro.org>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mohit Kumar <mohit.kumar@st.com>
+> CC: Jingoo Han <jg1.han@samsung.com>
+> CC: Bjorn Helgaas <bhelgaas@google.com>
+> CC: Pratyush Anand <pratyush.anand@st.com>
+> CC: Richard Zhu <r65037@freescale.com>
+> CC: Kishon Vijay Abraham I <kishon@ti.com>
+> CC: Marek Vasut <marex@denx.de>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Pawel Moll <pawel.moll@arm.com>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala <galak@codeaurora.org>
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> CC: Grant Likely <grant.likely@linaro.org> 
+> 
+> Changelog:
+> 
+> v3
+>  - DW application register handling code is now part of
+>    Keystone PCI driver. RFC had this code part of Keystone
+>    PCI driver, then V1 moved this to a separate file to
+>    re-use on other platforms that uses this version of the
+>    DW h/w. Then based on comments against v2, this is moved
+>    back to Keystone driver.
+>  - Keystone SerDes phy driver is removed from this series so that
+>    this can be merged independent of that patch
+>  - added msi_set_irq()/clear_irq() API's to support Keystone
+> 
+> V2
+>  - Split the designware pcie enhancement patch to multiple
+>    patches based on functionality added
+>  - Remove the quirk code and add a patch to fix mps/mrss
+>    tuning for ARM. Use kernel command line parameter
+>    pci=pcie_bus_perf to work with Keystone PCI Controller.
+>    Following patch addressed this.
+>      [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
+>  - Add documentation for device tree bindings
+>  - Add separate interrupt controller nodes for MSI and Legacy
+>    IRQs and use irq map for legacy IRQ
+>  - Use compatibility to identify v3.65 version of the DW hardware
+>    and use it to customize the designware common code.
+>  - Use reg property for configuration space instead of range
+>  - Other minor updates based on code inspection. 
+> 
+> V1
+>  - Add an interrupt controller node for Legacy irq chip and use
+>    interrupt map/map-mask property to map legacy IRQs A/B/C/D
+>  - Add a Phy driver to replace the original serdes driver
+>  - Move common application register handling code to a separate
+>    file to allow re-use across other platforms that use older
+>    DW PCIe h/w
+>  - PCI quirk for maximum read request size. Check and override only
+>    if the maximum is higher than what controller can handle.
+>  - Converted to a module platform driver.
+> 
+> Murali Karicheri (5):
+>   PCI: designware: add rd[wr]_other_conf API
+>   PCI: designware: refactor MSI code to work with v3.65 dw hardware
+>   PCI: designware: refactor host init code to re-use on keystone PCI
+>   PCI: designware: enhance dw core driver to support Keystone PCI host
+>     controller
+>   PCI: add PCI controller for Keystone PCIe h/w
+> 
+I haven't given review remarks on public list but had few internal
+review discussions with you. So just in case you need some
+additional review/ack tags, feel free to include mine.
 
-> On Wed, 2014-07-09 at 13:08 +0100, Lee Jones wrote:
-> > On Tue, 24 Jun 2014, Lee Jones wrote:
-> >=20
-> > > > I'm re-sending this set, as one of the maintainers' email addre=
-sses
-> > > > is incorrect in the MAINTAINERS file.
-> > > >=20
-> > > > This patchset adds full support for 2 types of Thermal Controll=
-ers
-> > > > produced by STMicroelectronics.  One is a more traditional memo=
-ry
-> > > > mapped variant, the other is controlled solely by system config=
-uration
-> > > > registers.
-> > >=20
-> > > Any thing from the Thermal guys? Has this set fallen through the =
-gaps?
-> >=20
-> > Anything at all?  It's been well over a month now.
-> >=20
-> Well, for the soc thermal drivers, I'd prefer to take them via Eduard=
-o,
-> but as we didn't get any feedback from Eduardo, I will take them.
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 
-Thanks Rui.
+Once the driver changes gets merged by Bjorn, I can they
+merge the DTS related changes via my tree.
 
-So have you taken all 4 "thermal: sti: *" patches?
+Thanks for all the work Murali !!
 
-The ARM ones should go through Maxime.
-
-> > > >  Documentation/devicetree/bindings/thermal/st-thermal.txt |  42=
- ++++++++++++++++
-> > > >  arch/arm/boot/dts/stih416.dtsi                           |  18=
- +++++++
-> > > >  arch/arm/configs/multi_v7_defconfig                      |   2=
- +
-> > > >  drivers/thermal/Kconfig                                  |   5=
- ++
-> > > >  drivers/thermal/Makefile                                 |   1=
- +
-> > > >  drivers/thermal/st/Kconfig                               |  12=
- +++++
-> > > >  drivers/thermal/st/Makefile                              |   3=
- ++
-> > > >  drivers/thermal/st/st_thermal.c                          | 313=
- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++++++++++++
-> > > > ++++++++++++++++++++++++++++
-> > > >  drivers/thermal/st/st_thermal.h                          | 104=
- ++++++++++++++++++++++++++++++++++++++
-> > > >  drivers/thermal/st/st_thermal_memmap.c                   | 209=
- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
-> > > >  drivers/thermal/st/st_thermal_syscfg.c                   | 179=
- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  11 files changed, 888 insertions(+)
-> > > >=20
-> > >=20
-> >=20
->=20
->=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Regards,
+Santosh
