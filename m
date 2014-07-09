@@ -1,53 +1,92 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v7 18/24] mfd: max77686: Add Maxim 77802 PMIC support
-Date: Wed, 09 Jul 2014 20:43:47 +0200
-Message-ID: <53BD8D63.1080005@collabora.co.uk>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk> <1404505467-26526-19-git-send-email-javier.martinez@collabora.co.uk> <20140709153146.GJ2635@lee--X1>
+From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Subject: [PATCH] ARM: tegra: Fix typoed ams,ext-control properties
+Date: Wed, 9 Jul 2014 21:53:17 +0300
+Message-ID: <1404931997-7118-1-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140709153146.GJ2635@lee--X1>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
+The property for enabling external rail control on the AS3722 is
+ams,ext-control, not ams,external-control. Since the external rail
+control property was previously being ignored, LP1 suspend on these
+boards wasn't actually turning the CPU rail off at all.
 
-On 07/09/2014 05:31 PM, Lee Jones wrote:
-> On Fri, 04 Jul 2014, Javier Martinez Canillas wrote:
->> Maxim MAX77802 is a power management chip that contains 10 high
->> efficiency Buck regulators, 32 Low-dropout (LDO) regulators used
->> to power up application processors and peripherals, a 2-channel
->> 32kHz clock outputs, a Real-Time-Clock (RTC) and a I2C interface
->> to program the individual regulators, clocks outputs and the RTC.
->> 
->> This patch adds support for MAX77802 to the MAX77686 driver and is
->> based on a driver added to the Chrome OS kernel 3.8 by Simon Glass.
->> 
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
-> 
-> [...]
-> 
->>  static const struct i2c_device_id max77686_i2c_id[] = {
->>  	{ "max77686", TYPE_MAX77686 },
->> +	{ "max77802", TYPE_MAX77802 },
->>  	{ }
-> 
-> There's no point in filling this in.  Just empty it completely.
-> 
+Signed-off-by: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+---
+So here's a dilemma, either change the existing DTs, change the
+binding + driver, or make the driver recognize both properties.
+I chose the first one since the old behaviour was broken in the
+first place and the old DTs stay as buggy as they were before.
 
-Ok, I won't fill this
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts | 6 +++---
+ arch/arm/boot/dts/tegra124-venice2.dts    | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-> Once you've done that, resubmit the patchset with my:
-> 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> 
-
-Thanks a lot.
-
-Best regards,
-Javier
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+index 16082c0..89a772d 100644
+--- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+@@ -1461,7 +1461,7 @@
+ 					regulator-max-microamp = <3500000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+-					ams,external-control = <2>;
++					ams,ext-control = <2>;
+ 				};
+ 
+ 				sd1 {
+@@ -1472,7 +1472,7 @@
+ 					regulator-max-microamp = <2500000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+-					ams,external-control = <1>;
++					ams,ext-control = <1>;
+ 				};
+ 
+ 				vdd_1v35_lp0: sd2 {
+@@ -1521,7 +1521,7 @@
+ 					regulator-max-microvolt = <1050000>;
+ 					regulator-boot-on;
+ 					regulator-always-on;
+-					ams,external-control = <1>;
++					ams,ext-control = <1>;
+ 				};
+ 
+ 				ldo1 {
+diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
+index f1a5bac..70ad91d 100644
+--- a/arch/arm/boot/dts/tegra124-venice2.dts
++++ b/arch/arm/boot/dts/tegra124-venice2.dts
+@@ -682,7 +682,7 @@
+ 					regulator-max-microamp = <3500000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+-					ams,external-control = <2>;
++					ams,ext-control = <2>;
+ 				};
+ 
+ 				sd1 {
+@@ -693,7 +693,7 @@
+ 					regulator-max-microamp = <2500000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+-					ams,external-control = <1>;
++					ams,ext-control = <1>;
+ 				};
+ 
+ 				vdd_1v35_lp0: sd2 {
+@@ -742,7 +742,7 @@
+ 					regulator-max-microvolt = <1050000>;
+ 					regulator-boot-on;
+ 					regulator-always-on;
+-					ams,external-control = <1>;
++					ams,ext-control = <1>;
+ 				};
+ 
+ 				ldo1 {
+-- 
+1.8.1.5
