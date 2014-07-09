@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 12/13] [RFC] thermal: rcar: Add binding docs for new R-Car Gen2 SoCs
-Date: Wed,  9 Jul 2014 14:23:42 +0200
-Message-ID: <1404908623-909-13-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 08/13] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific thermal compatible property
+Date: Wed,  9 Jul 2014 14:23:38 +0200
+Message-ID: <1404908623-909-9-git-send-email-geert+renesas@glider.be>
 References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
@@ -10,32 +10,26 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-  - r8a7792 (R-Car V2H)
-  - r8a7793 (R-Car M2-N)
-  - r8a7794 (R-Car E2)
-
-r8a7791 is now called "R-Car M2-W".
+The thermal node used the generic compatible property only.
+Add the SoC-specific one, to make it future proof.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a73a4.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 0ef00be44b01..43404b197933 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -7,7 +7,10 @@ Required properties:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile AP6)
- 			    - "renesas,thermal-r8a7779" (R-Car H1)
- 			    - "renesas,thermal-r8a7790" (R-Car H2)
--			    - "renesas,thermal-r8a7791" (R-Car M2)
-+			    - "renesas,thermal-r8a7791" (R-Car M2-W)
-+			    - "renesas,thermal-r8a7792" (R-Car V2H)
-+			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-+			    - "renesas,thermal-r8a7794" (R-Car E2)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
- 			  if it has "interrupts".
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index f3bd3d4603d7..59145b267862 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -165,7 +165,7 @@
+ 	};
+ 
+ 	thermal@e61f0000 {
+-		compatible = "renesas,rcar-thermal";
++		compatible = "renesas,thermal-r8a73a4", "renesas,rcar-thermal";
+ 		reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>,
+ 			 <0 0xe61f0200 0 0x38>, <0 0xe61f0300 0 0x38>;
+ 		interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 1.9.1
