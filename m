@@ -1,390 +1,244 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 1/2] iio: adc: add driver for Rockchip saradc
-Date: Wed, 09 Jul 2014 10:44:06 +0200
-Message-ID: <2482306.yDb91TH59G@diego>
-References: <2959154.xc8BQActsn@diego>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
+ gpio block
+Date: Wed, 9 Jul 2014 10:53:35 +0200
+Message-ID: <CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com>
+References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2959154.xc8BQActsn@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?B?ZWRkaWUo6JSh5p6rKQ==?= <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The ADC is a 3-channel signal-ended 10-bit Successive Approximation
-Register (SAR) A/D Converter. It uses the supply and ground as its reference
-and converts the analog input signal into 10-bit binary digital codes.
+On Tue, Jul 8, 2014 at 3:26 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-changes since v1:
-- address comments from Peter Meerwald
+> This introduced the device tree bindings for the gpio block found in
+> pm8018, pm8038, pm8058, pm8917 and pm8921 pmics from Qualcomm.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+(...)
+> +- interrupts:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: Must contain an array of encoded interrupt specifiers for
+> +                   each available gpio
 
- drivers/iio/adc/Kconfig           |  10 ++
- drivers/iio/adc/Makefile          |   1 +
- drivers/iio/adc/rockchip_saradc.c | 313 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 324 insertions(+)
- create mode 100644 drivers/iio/adc/rockchip_saradc.c
+So each GPIO has its own interrupt line looped back from the PMIC
+and into some other SoC or so handling the actual interrupt?
+This seems expensive? (Albeit efficient and fast.)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index a80d236..5d36bdb 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -187,6 +187,16 @@ config NAU7802
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called nau7802.
- 
-+config ROCKCHIP_SARADC
-+	tristate "Rockchip SARADC driver"
-+	depends on ARCH_ROCKCHIP || (OF && COMPILE_TEST)
-+	help
-+	  Say yes here to build support for the SARADC found in SoCs from
-+	  Rockchip.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called rockchip_saradc.
-+
- config TI_ADC081C
- 	tristate "Texas Instruments ADC081C021/027"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 9d60f2d..8e2932d 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_MCP320X) += mcp320x.o
- obj-$(CONFIG_MCP3422) += mcp3422.o
- obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
- obj-$(CONFIG_NAU7802) += nau7802.o
-+obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
- obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
- obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
- obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
-diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-new file mode 100644
-index 0000000..3f0164c
---- /dev/null
-+++ b/drivers/iio/adc/rockchip_saradc.c
-@@ -0,0 +1,313 @@
-+/*
-+ * Rockchip Successive Approximation Register (SAR) A/D Converter
-+ * Copyright (C) 2014 ROCKCHIP, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/clk.h>
-+#include <linux/completion.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/iio/iio.h>
-+
-+#define SARADC_DATA			0x00
-+#define SARADC_DATA_MASK		0x3ff
-+
-+#define SARADC_STAS			0x04
-+#define SARADC_STAS_BUSY		BIT(0)
-+
-+#define SARADC_CTRL			0x08
-+#define SARADC_CTRL_IRQ_STATUS		BIT(6)
-+#define SARADC_CTRL_IRQ_ENABLE		BIT(5)
-+#define SARADC_CTRL_POWER_CTRL		BIT(3)
-+#define SARADC_CTRL_CHN_MASK		0x7
-+
-+#define SARADC_DLY_PU_SOC		0x0c
-+#define SARADC_DLY_PU_SOC_MASK		0x3f
-+
-+#define SARADC_BITS			10
-+#define SARADC_TIMEOUT			msecs_to_jiffies(100)
-+
-+struct rockchip_saradc {
-+	void __iomem		*regs;
-+	struct clk		*pclk;
-+	struct clk		*clk;
-+	struct completion	completion;
-+	struct regulator	*vref;
-+	int			vref_mv;
-+	u16			last_val;
-+};
-+
-+static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan,
-+				    int *val, int *val2, long mask)
-+{
-+	struct rockchip_saradc *info = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&indio_dev->mlock);
-+
-+		/* Select the channel to be used and trigger conversion */
-+		writel_relaxed(0x08, info->regs + SARADC_DLY_PU_SOC);
-+		writel(SARADC_CTRL_POWER_CTRL
-+				| (chan->channel & SARADC_CTRL_CHN_MASK)
-+				| SARADC_CTRL_IRQ_ENABLE,
-+		       info->regs + SARADC_CTRL);
-+
-+		if (!wait_for_completion_timeout(&info->completion,
-+						 SARADC_TIMEOUT)) {
-+			writel_relaxed(0, info->regs + SARADC_CTRL);
-+			mutex_unlock(&indio_dev->mlock);
-+			return -ETIMEDOUT;
-+		}
-+
-+		*val = info->last_val;
-+		mutex_unlock(&indio_dev->mlock);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = info->vref_mv;
-+		*val2 = SARADC_BITS;
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
-+{
-+	struct rockchip_saradc *info = (struct rockchip_saradc *)dev_id;
-+
-+	/* Read value */
-+	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
-+	info->last_val &= SARADC_DATA_MASK;
-+
-+	/* clear irq & power down adc */
-+	writel_relaxed(0, info->regs + SARADC_CTRL);
-+
-+	complete(&info->completion);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct iio_info rockchip_saradc_iio_info = {
-+	.read_raw = rockchip_saradc_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+#define ADC_CHANNEL(_index, _id) {			\
-+	.type = IIO_VOLTAGE,				\
-+	.indexed = 1,					\
-+	.channel = _index,				\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
-+	.datasheet_name = _id,				\
-+}
-+
-+static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
-+	ADC_CHANNEL(0, "adc0"),
-+	ADC_CHANNEL(1, "adc1"),
-+	ADC_CHANNEL(2, "adc2"),
-+};
-+
-+static int rockchip_saradc_probe(struct platform_device *pdev)
-+{
-+	struct rockchip_saradc *info = NULL;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct iio_dev *indio_dev = NULL;
-+	struct resource	*mem;
-+	int ret = -ENODEV;
-+	int irq;
-+	u32 rate;
-+
-+	if (!np)
-+		return ret;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-+	if (!indio_dev) {
-+		dev_err(&pdev->dev, "failed allocating iio device\n");
-+		return -ENOMEM;
-+	}
-+	info = iio_priv(indio_dev);
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	info->regs = devm_request_and_ioremap(&pdev->dev, mem);
-+	if (!info->regs)
-+		return -ENOMEM;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "no irq resource?\n");
-+		return irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, irq, rockchip_saradc_isr,
-+			       0, dev_name(&pdev->dev), info);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed requesting irq %d\n", irq);
-+		return ret;
-+	}
-+
-+	init_completion(&info->completion);
-+
-+	info->pclk = devm_clk_get(&pdev->dev, "apb_pclk");
-+	if (IS_ERR(info->pclk)) {
-+		dev_err(&pdev->dev, "failed to get pclk\n");
-+		return PTR_ERR(info->pclk);
-+	}
-+
-+	info->clk = devm_clk_get(&pdev->dev, "saradc");
-+	if (IS_ERR(info->clk)) {
-+		dev_err(&pdev->dev, "failed to get adc clock\n");
-+		return PTR_ERR(info->clk);
-+	}
-+
-+	info->vref = devm_regulator_get(&pdev->dev, "vref");
-+	if (IS_ERR(info->vref)) {
-+		dev_err(&pdev->dev, "failed to get regulator, %ld\n",
-+			PTR_ERR(info->vref));
-+		return PTR_ERR(info->vref);
-+	}
-+
-+	/* use a default of 1MHz for the converter clock */
-+	if (of_property_read_u32(np, "clock-frequency", &rate))
-+		rate = 1000000;
-+
-+	ret = clk_set_rate(info->clk, rate);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regulator_enable(info->vref);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable vref regulator\n");
-+		return ret;
-+	}
-+
-+	ret = regulator_get_voltage(info->vref);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get regulator voltage\n");
-+		goto err_reg_voltage;
-+	}
-+	info->vref_mv = ret / 1000;
-+
-+	ret = clk_prepare_enable(info->pclk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable pclk\n");
-+		goto err_reg_voltage;
-+	}
-+
-+	ret = clk_prepare_enable(info->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable converter clock\n");
-+		goto err_pclk;
-+	}
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	indio_dev->name = dev_name(&pdev->dev);
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->dev.of_node = pdev->dev.of_node;
-+	indio_dev->info = &rockchip_saradc_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	indio_dev->channels = rockchip_saradc_iio_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels);
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto err_clk;
-+
-+	return 0;
-+
-+err_clk:
-+	clk_disable_unprepare(info->clk);
-+err_pclk:
-+	clk_disable_unprepare(info->pclk);
-+err_reg_voltage:
-+	regulator_disable(info->vref);
-+	return ret;
-+}
-+
-+static int rockchip_saradc_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct rockchip_saradc *info = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	clk_disable_unprepare(info->clk);
-+	clk_disable_unprepare(info->pclk);
-+	regulator_disable(info->vref);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int rockchip_saradc_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct rockchip_saradc *info = iio_priv(indio_dev);
-+
-+	clk_disable_unprepare(info->clk);
-+	clk_disable_unprepare(info->pclk);
-+	regulator_disable(info->vref);
-+
-+	return 0;
-+}
-+
-+static int rockchip_saradc_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct rockchip_saradc *info = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = regulator_enable(info->vref);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(info->pclk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(info->clk);
-+	if (ret)
-+		return ret;
-+
-+	return ret;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
-+			 rockchip_saradc_suspend, rockchip_saradc_resume);
-+
-+static const struct of_device_id rockchip_saradc_match[] = {
-+	{ .compatible = "rockchip,saradc" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-+
-+static struct platform_driver rockchip_saradc_driver = {
-+	.probe		= rockchip_saradc_probe,
-+	.remove		= rockchip_saradc_remove,
-+	.driver		= {
-+		.name	= "rockchip-saradc",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = rockchip_saradc_match,
-+		.pm	= &rockchip_saradc_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(rockchip_saradc_driver);
--- 
-1.9.0
+(...)
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices, including the meaning of the
+> +phrase "pin configuration node".
+> +
+> +The pin configuration nodes act as a container for an abitrary number of
+> +subnodes. Each of these subnodes represents some desired configuration for a
+> +pin or a list of pins. This configuration can include the
+> +mux function to select on those pin(s), and various pin configuration
+> +parameters, s listed below.
+
+*is* listed below?
+
+> +The following generic properties as defined in pinctrl-bindings.txt are valid
+> +to specify in a pin configuration subnode:
+> +
+> +- pins:
+> +       Usage: required
+> +       Value type: <string-array>
+> +       Definition: List of gpio pins affected by the properties specified in
+> +                   this subnode.  Valid pins are:
+> +                       gpio1-gpio6 for pm8018
+> +                       gpio1-gpio12 for pm8038
+> +                       gpio1-gpio40 for pm8058
+> +                       gpio1-gpio38 for pm8917
+> +                       gpio1-gpio44 for pm8921
+
+I usually name pins with CAPITAL LETTERS so would be
+"GPIO1", "GPIO2" etc, lowercase may be confusing as these are
+names not functions or groups.
+
+> +- function:
+> +       Usage: optional
+> +       Value type: <string>
+> +       Definition: Specify the alternative function to be configured for the
+> +                   specified pins.  Valid values are:
+> +                       "normal",
+> +                       "paired",
+> +                       "func1",
+> +                       "func2",
+> +                       "dtest1",
+> +                       "dtest2",
+> +                       "dtest3",
+> +                       "dtest4"
+
+These are a bit ambigous, why doesn't the driver present functions that
+are more specific than "func1", "func2"? Or "dtest1"?
+
+I guess the following just redefines or extends the generic pinconf
+bindings (which is fully OK).
+
+> +- bias-disable:
+> +       Usage: optional
+> +       Value type: <none>
+
+Isn't the type simply bool?
+
+> +- bias-pull-down:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool?
+
+> +- bias-pull-up:
+> +       Usage: optional
+> +       Value type: <u32> (optional)
+> +       Definition: The specified pins should be configued as pull up. An
+> +                   optional argument can be used to configure the strength.
+> +                   Valid values are; as defined in
+> +                   <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> +                   1: 30uA                     (PM8XXX_GPIO_PULL_UP_30)
+> +                   2: 1.5uA                    (PM8XXX_GPIO_PULL_UP_1P5)
+> +                   3: 31.5uA                   (PM8XXX_GPIO_PULL_UP_31P5)
+> +                   4: 1.5uA + 30uA boost       (PM8XXX_GPIO_PULL_UP_1P5_30)
+
+Hm, I don't know of the internal kernel API or so, but I'm thinking that
+for the DT bindings, this definition should be generic in
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+and put in SI units like uA.
+
+So I would prefer:
+
+bias-pull-up = <30>;
+
+for 30 uA. Maybe we want nA even? I'm uncertain about the proper granularity
+here :-/
+
+Magic enumerators 1,2,3,4 doesn't seem so good, that seems more like it's
+trying to match the magic value that is to be poked into a register or
+something like that.
+
+> +- bias-high-impedance:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool
+
+> +- input-enable:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool
+
+> +- output-high:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool
+
+> +- output-low:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool
+
+> +- power-source:
+> +       Usage: optional
+> +       Value type: <u32>
+> +       Definition: Selects the power source for the specified pins. Valid
+> +                   power sources are, as defined in
+> +                   <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> +                       0: bb (PM8XXX_GPIO_VIN_BB)
+> +                               valid for pm8038, pm8058, pm8917, pm8921
+> +                       1: ldo2 (PM8XXX_GPIO_VIN_L2)
+> +                               valid for pm8018, pm8038, pm8917,pm8921
+> +                       2: ldo3 (PM8XXX_GPIO_VIN_L3)
+> +                               valid for pm8038, pm8058, pm8917, pm8921
+> +                       3: ldo4 (PM8XXX_GPIO_VIN_L4)
+> +                               valid for pm8018, pm8917, pm8921
+> +                       4: ldo5 (PM8XXX_GPIO_VIN_L5)
+> +                               valid for pm8018, pm8058
+> +                       5: ldo6 (PM8XXX_GPIO_VIN_L6)
+> +                               valid for pm8018, pm8058
+> +                       6: ldo7 (PM8XXX_GPIO_VIN_L7)
+> +                               valid for pm8058
+> +                       7: ldo8 (PM8XXX_GPIO_VIN_L8)
+> +                               valid for pm8018
+> +                       8: ldo11 (PM8XXX_GPIO_VIN_L11)
+> +                               valid for pm8038
+> +                       9: ldo14 (PM8XXX_GPIO_VIN_L14)
+> +                               valid for pm8018
+> +                       10: ldo15 (PM8XXX_GPIO_VIN_L15)
+> +                               valid for pm8038, pm8917, pm8921
+> +                       11: ldo17 (PM8XXX_GPIO_VIN_L17)
+> +                               valid for pm8038, pm8917, pm8921
+> +                       12: smps3 (PM8XXX_GPIO_VIN_S3)
+> +                               valid for pm8018, pm8058
+> +                       13: smps4 (PM8XXX_GPIO_VIN_S4)
+> +                               valid for pm8921
+> +                       14: vph (PM8XXX_GPIO_VIN_VPH)
+> +                               valid for pm8018, pm8038, pm8058, pm8917 pm8921
+
+These are more apropriate to have in custom format selectors
+I think, so this is OK.
+
+> +- drive-strength:
+> +       Usage: optional
+> +       Value type: <u32>
+> +       Definition: Selects the drive strength for the specified pins. Value
+> +                   drive strengths are:
+> +                       0: no   (PM8XXX_GPIO_STRENGTH_NO)
+> +                       1: high (PM8XXX_GPIO_STRENGTH_HIGH)
+> +                       2: medium       (PM8XXX_GPIO_STRENGTH_MED)
+> +                       3: low  (PM8XXX_GPIO_STRENGTH_LOW)
+
+I would really prefer to have these in mA, because the genric pinconf
+bindings say they should be! SI units are so much more understandable.
+
+> +- drive-push-pull:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool
+
+> +- drive-open-drain:
+> +       Usage: optional
+> +       Value type: <none>
+
+bool
+
+> +Example:
+> +
+> +       pm8921_gpio: gpio@150 {
+> +               compatible = "qcom,pm8921-gpio";
+> +               reg = <0x150>;
+> +               interrupts = <192 1>, <193 1>, <194 1>,
+> +                            <195 1>, <196 1>, <197 1>,
+> +                            <198 1>, <199 1>, <200 1>,
+> +                            <201 1>, <202 1>, <203 1>,
+> +                            <204 1>, <205 1>, <206 1>,
+> +                            <207 1>, <208 1>, <209 1>,
+> +                            <210 1>, <211 1>, <212 1>,
+> +                            <213 1>, <214 1>, <215 1>,
+> +                            <216 1>, <217 1>, <218 1>,
+> +                            <219 1>, <220 1>, <221 1>,
+> +                            <222 1>, <223 1>, <224 1>,
+> +                            <225 1>, <226 1>, <227 1>,
+> +                            <228 1>, <229 1>, <230 1>,
+> +                            <231 1>, <232 1>, <233 1>,
+> +                            <234 1>, <235 1>;
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So this looks a bit weird. But if I just get to understand the hardware
+I guess it won't anymore.
+
+So there is an interrupt parent to which the IRQ lines from the PMIC
+are routed back through external lines to IRQ offsets 192 thru 235?
+
+Yours,
+Linus Walleij
