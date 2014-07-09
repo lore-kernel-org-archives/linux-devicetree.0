@@ -1,61 +1,36 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 03/13] irqchip: renesas-irqc: Add DT binding documentation
-Date: Wed,  9 Jul 2014 14:23:33 +0200
-Message-ID: <1404908623-909-4-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 06/13] sh-pfc: Add renesas,pfc-r8a7791 to binding documentation
+Date: Wed,  9 Jul 2014 14:23:36 +0200
+Message-ID: <1404908623-909-7-git-send-email-geert+renesas@glider.be>
 References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-The renesas-irqc driver supports DT, but the DT binding documentation was
-missing.
+The driver already supports the r8a7791 SoC, and "renesas,pfc-r8a7791"
+is already in use.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../bindings/interrupt-controller/renesas,irqc.txt | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+ Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-new file mode 100644
-index 000000000000..f819e2a5907c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -0,0 +1,30 @@
-+DT bindings for the R-Mobile/R-Car interrupt controller
-+
-+Required properties:
-+
-+- compatible: has to be "renesas,irqc-<soctype>", "renesas,irqc" as fallback.
-+  Examples with soctypes are:
-+    - "renesas,irqc-r8a73a4" (R-Mobile AP6)
-+    - "renesas,irqc-r8a7790" (R-Car H2)
-+    - "renesas,irqc-r8a7791" (R-Car M2)
-+- #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-+  interrupts.txt in this directory
-+
-+Optional properties:
-+
-+- any properties, listed in interrupts.txt, and any standard resource allocation
-+  properties
-+
-+Example:
-+
-+	irqc0: interrupt-controller@e61c0000 {
-+		compatible = "renesas,irqc-r8a7790", "renesas,irqc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0 0xe61c0000 0 0x200>;
-+		interrupts = <0 0 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 1 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 2 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 3 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+index 35d2e1f186f0..daef6fad6a5f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -15,6 +15,7 @@ Required Properties:
+     - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
+     - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
+     - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
++    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2) compatible pin-controller.
+     - "renesas,pfc-sh7372": for SH7372 (SH-Mobile AP4) compatible pin-controller.
+     - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
+ 
 -- 
 1.9.1
-
