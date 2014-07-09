@@ -1,161 +1,188 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO
- resources.
-Date: Wed, 9 Jul 2014 10:27:16 +0100
-Message-ID: <20140709092716.GS6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <201407072322.00990.arnd@arndb.de>
- <20140708100332.GW6501@e106497-lin.cambridge.arm.com>
- <201407091031.50402.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201407091031.50402.arnd@arndb.de>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robherring2@gmail.com>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] wlcore: add basic device-tree support
+Date: Wed,  9 Jul 2014 12:31:45 +0300
+Message-ID: <1404898305-15588-1-git-send-email-eliad@wizery.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 09:31:50AM +0100, Arnd Bergmann wrote:
-> On Tuesday 08 July 2014, Liviu Dudau wrote:
-> > On Mon, Jul 07, 2014 at 10:22:00PM +0100, Arnd Bergmann wrote:
-> > >=20
-> > > I looked at the other drivers briefly, and I think you indeed fix=
- the Tegra
-> > > driver with this but break the integrator driver as mentioned abo=
-ve.
-> > > The other callers of of_pci_range_to_resource() are apparently no=
-t
-> > > impacted as they recalculate the values they get.
-> >=20
-> > I would argue that integrator version is having broken assumptions.=
- If it would
-> > try to allocate that IO range or request the resource as returned c=
-urrently by
-> > of_pci_range_to_resource (without my patch) it would fail. I know b=
-ecause I did
-> > the same thing in my host bridge driver and it failed miserably. Th=
-at's why I
-> > tried to patch it.
->=20
-> The integrator code was just introduced and the reason for how it doe=
-s things
-> is the way that of_pci_range_to_resource() works today. We tried to c=
-ope with
-> it and not change the existing behavior in order to not break any oth=
-er drivers.
->=20
-> It's certainly not fair to call the integrator version broken, it jus=
-t works
-> around the common code having a quirky interface. We should probably =
-have
-> done of_pci_range_to_resource better than it is today (I would have a=
-rgued
-> for it to return an IORESOURCE_MEM with the CPU address), but it took=
- long
-> enough to get that merged and I was sick of arguing about it.
+When running with device-tree, we no longer have a board file
+that can set up the platform data for wlcore.
+Allow this data to be passed from DT.
 
-Understood. That is why I have carefully worded my email as not to diss=
- anyone.
-I didn't say the code is broken, I've said it has broken assumptions.
+For now, parse only the irq used. Other (optional) properties
+can be added later on.
 
->=20
-> > If the IO space is memory mapped, then we use the port number, the =
-io_offset
-> > and the PCI_IOBASE to get to the virtual address that, when accesse=
-d, will
-> > generate the correct addresses on the bus, based on what the host b=
-ridge has
-> > been configured.
-> >=20
-> > This is the current level of my understanding of PCI IO.
->=20
-> Your understanding is absolutely correct, and that's great because ve=
-ry few
-> people get that right. What I think we're really arguing about is wha=
-t the
-> of_pci_range_to_resource is supposed to return. As you and Bjorn both=
- pointed
-> out earlier, there are in fact two resources associated with the I/O =
-window
-> and the flaw in the current implementation is that of_pci_range_to_re=
-source
-> returns the numeric values for the IORESOURCE_MEM resource, but sets =
-the
-> type to IORESOURCE_IO, which is offset from that by PCI_IOBASE.
->=20
-> You try to fix that by making it return the correct IORESOURCE_IO res=
-ource,
-> which is a reasonable approach but you must not break drivers that re=
-ly
-> on the broken resource while doing that.
+Signed-off-by: Ido Yariv <ido-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/net/wireless/ti,wlcore.txt | 31 ++++++++++
+ drivers/net/wireless/ti/wlcore/sdio.c              | 67 ++++++++++++++++++++--
+ 2 files changed, 92 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
 
-Or I need to fix the existing drivers that rely on the old behaviour.
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+new file mode 100644
+index 0000000..df9af48
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+@@ -0,0 +1,31 @@
++TI Wilink (wlcore) SDIO devices
++
++This node provides properties for controlling the wilink wireless device. The
++node is expected to be specified as a child node to the SDIO controller that
++connects the device to the system.
++
++Required properties:
++
++ - compatible : Should be "ti,wlcore".
++ - interrupt-parent : the phandle for the interrupt controller to which the
++	device interrupts are connected.
++ - interrupts : specifies attributes for the out-of-band interrupt.
++
++Example:
++
++&mmc3 {
++	status = "okay";
++	vmmc-supply = <&wlan_en_reg>;
++	bus-width = <4>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	wlcore: wlcore@0 {
++		compatible = "ti,wlcore";
++		reg = <2>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <19 IRQ_TYPE_NONE>;
++	};
++};
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index d3dd7bf..8e1e1a6 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -34,6 +34,8 @@
+ #include <linux/wl12xx.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/printk.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
+ 
+ #include "wlcore.h"
+ #include "wl12xx_80211.h"
+@@ -214,6 +216,56 @@ static struct wl1271_if_operations sdio_ops = {
+ 	.set_block_size = wl1271_sdio_set_block_size,
+ };
+ 
++#ifdef CONFIG_OF
++static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct wl12xx_platform_data *pdata;
++
++	if (!np || !of_device_is_compatible(np, "ti,wlcore")) {
++		dev_err(dev, "No platform data set\n");
++		return NULL;
++	}
++
++	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		dev_err(dev, "Can't allocate platform data\n");
++		return NULL;
++	}
++
++	pdata->irq = irq_of_parse_and_map(np, 0);
++	if (!pdata->irq) {
++		dev_err(dev, "No irq in platform data\n");
++		kfree(pdata);
++		return NULL;
++	}
++
++	return pdata;
++}
++#else
++static struct wl12xx_platform_data *wlcore_probe_of(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
++static struct wl12xx_platform_data *
++wlcore_get_platform_data(struct device *dev)
++{
++	struct wl12xx_platform_data *pdata;
++
++	pdata = wl12xx_get_platform_data();
++	if (!IS_ERR(pdata))
++		return kmemdup(pdata, sizeof(*pdata), GFP_KERNEL);
++
++	return wlcore_probe_of(dev);
++}
++
++static void wlcore_del_platform_data(struct wl12xx_platform_data *pdata)
++{
++	kfree(pdata);
++}
++
+ static int wl1271_probe(struct sdio_func *func,
+ 				  const struct sdio_device_id *id)
+ {
+@@ -245,12 +297,9 @@ static int wl1271_probe(struct sdio_func *func,
+ 	/* Use block mode for transferring over one block size of data */
+ 	func->card->quirks |= MMC_QUIRK_BLKSZ_FOR_BYTE_MODE;
+ 
+-	pdev_data.pdata = wl12xx_get_platform_data();
+-	if (IS_ERR(pdev_data.pdata)) {
+-		ret = PTR_ERR(pdev_data.pdata);
+-		dev_err(glue->dev, "missing wlan platform data: %d\n", ret);
++	pdev_data.pdata = wlcore_get_platform_data(&func->dev);
++	if (!pdev_data.pdata)
+ 		goto out_free_glue;
+-	}
+ 
+ 	/* if sdio can keep power while host is suspended, enable wow */
+ 	mmcflags = sdio_get_host_pm_caps(func);
+@@ -279,7 +328,7 @@ static int wl1271_probe(struct sdio_func *func,
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device");
+ 		ret = -ENOMEM;
+-		goto out_free_glue;
++		goto out_free_pdata;
+ 	}
+ 
+ 	glue->core->dev.parent = &func->dev;
+@@ -313,6 +362,9 @@ static int wl1271_probe(struct sdio_func *func,
+ out_dev_put:
+ 	platform_device_put(glue->core);
+ 
++out_free_pdata:
++	wlcore_del_platform_data(pdev_data.pdata);
++
+ out_free_glue:
+ 	kfree(glue);
+ 
+@@ -323,11 +375,14 @@ out:
+ static void wl1271_remove(struct sdio_func *func)
+ {
+ 	struct wl12xx_sdio_glue *glue = sdio_get_drvdata(func);
++	struct wlcore_platdev_data *pdev_data = glue->core->dev.platform_data;
++	struct wl12xx_platform_data *pdata = pdev_data->pdata;
+ 
+ 	/* Undo decrement done above in wl1271_probe */
+ 	pm_runtime_get_noresume(&func->dev);
+ 
+ 	platform_device_unregister(glue->core);
++	wlcore_del_platform_data(pdata);
+ 	kfree(glue);
+ }
+ 
+-- 
+1.8.5.2.229.g4448466.dirty
 
->=20
-> The approach that I would have picked is to return the IORESOURCE_MEM
-> resource associated with the I/O window and pick a (basically random)
-> IORESOURCE_IO resource struct based on what hasn't been used and then
-> compute the appropriate io_offset from that. This approach of course
-> would also have required fixing up all drivers relying on the current
-> behavior.
->=20
-> To be clear, I'm fine with you (and Bjorn if he cares) picking the
-> approach you like here, either one of these works fine as long as the
-> host drivers use the interface in the way it is defined.
-
-OK. Thanks for that. It does look like either way some existing code ne=
-eds
-fixing, so I will have a look at that. Unless Bjorn votes for making a =
-new
-version of pci_range_to_resource().
-
->=20
-> > Now, I believe Rob has switched entirely to using my series in some=
- test that
-> > he has run and he hasn't encountered any issues, as long as one rem=
-embers in
-> > the host bridge driver to add the io_base offset to the .start reso=
-urce. If
-> > not then I need to patch pci_v3.c.
->=20
-> The crazy part of all these discussions is that basically nobody ever=
- uses
-> I/O port access, so it's very hard to test and we don't even notice w=
-hen
-> we get it wrong, but we end up spending most of the time for PCI host=
- controller
-> reviews trying to get these right.
->=20
-> I'm very thankful that you are doing this work to get it moved into c=
-ommon
-> code so hopefully this is the last time we ever have to worry about i=
-t because
-> all future drivers will be able to use the common implemnetation.
-
-Ahh, we humans! We always hope for the best! :)
-
-My only chance of succeeding is if I make it a no brainer for people to=
- use the
-code. At the moment the interface for host bridge drivers is not too ba=
-d, but
-it looks like the internals are still hard to comprehend.
-
-Best regards,
-Liviu
-
->=20
-> 	Arnd
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
