@@ -1,139 +1,139 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
-Date: Wed, 9 Jul 2014 10:23:31 +0200
-Message-ID: <20140709082331.GA4510@kwain>
-References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
- <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
- <20140708134000.GC4979@htj.dyndns.org>
- <20140708170353.GA16148@kwain>
- <20140708171817.GH4979@htj.dyndns.org>
- <20140708174900.GC16148@kwain>
- <20140708214010.GI4979@htj.dyndns.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] mailbox/omap: add support for parsing dt devices
+Date: Wed, 9 Jul 2014 01:29:07 -0700
+Message-ID: <20140709082906.GG28884@atomide.com>
+References: <1403660878-56350-3-git-send-email-s-anna@ti.com>
+ <20140628170709.GB23634@xo-6d-61-c0.localdomain>
+ <53B18999.2020506@ti.com>
+ <20140630185942.GA5410@amd.pavel.ucw.cz>
+ <53B1BBA8.5090507@ti.com>
+ <20140630203225.GA3893@amd.pavel.ucw.cz>
+ <20140704064547.GZ28884@atomide.com>
+ <20140704080556.GA16274@amd.pavel.ucw.cz>
+ <20140704082354.GD28884@atomide.com>
+ <53BC3081.9010402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140708214010.GI4979@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <53BC3081.9010402-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
+* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140708 10:57]:
+> Hi Tony, Pavel,
+> 
+> On 07/04/2014 03:23 AM, Tony Lindgren wrote:
+> > * Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [140704 01:07]:
+> >> Hi!
+> >>
+> >>>>>>>>> The non-DT support has to be maintained for now to not break
+> >>>>>>>>> OMAP3 legacy boot, and the legacy-style code will be cleaned
+> >>>>>>>>> up once OMAP3 is also converted to DT-boot only.
+> >>>>>>>>
+> >>>>>>>>> @@ -587,24 +606,157 @@ static int omap_mbox_unregister(struct omap_mbox_device *mdev)
+> >>>>>>>>>  	return 0;
+> >>>>>>>>>  }
+> >>>>>>>>>  
+> >>>>>>>>> +static const struct omap_mbox_device_data omap2_data = {
+> >>>>>>>>> +	.num_users	= 4,
+> >>>>>>>>> +	.num_fifos	= 6,
+> >>>>>>>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+> >>>>>>>>> +};
+> >>>>>>>>> +
+> >>>>>>>>> +static const struct omap_mbox_device_data omap3_data = {
+> >>>>>>>>> +	.num_users	= 2,
+> >>>>>>>>> +	.num_fifos	= 2,
+> >>>>>>>>> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+> >>>>>>>>> +};
+> >>>>>>>>> +
+> >>>>>>>>> +static const struct omap_mbox_device_data am335x_data = {
+> >>>>>>>>> +	.num_users	= 4,
+> >>>>>>>>> +	.num_fifos	= 8,
+> >>>>>>>>> +	.intr_type	= MBOX_INTR_CFG_TYPE2,
+> >>>>>>>>> +};
+> >>>>>>>>
+> >>
+> >>>> Aha, ok, then the intr_type should be derived from
+> >>>> compatible-string. Or rather... you should have three
+> >>>> compatible-strings for the three possibilities? (And then subtype,
+> >>>> currently unused, in case there are more hw differences).
+> >>>
+> >>> The compatible string can and should be separate for each revision
+> >>> unless they are the same exacat hardware revision.
+> >>
+> >> ACK.
+> 
+> I checked the revision register from all SoCs. OMAP2 and OMAP3 have
+> different revisions compared to OMAP4+. All of OMAP4, OMAP5, DRA7,
+> AM335x and AM437x have the same version, but with different num-fifos
+> and num-users.  So, I can switch back to using omap4-mailbox for all of
+> these SoCs only if we encode the num-fifos and num-users in DT.
+> 
+> >>
+> >>>>> two are HW IP design parameters, so in general putting them in DT isn't
+> >>>>> completely a bad idea, but I will wait to see if there are any further
+> >>>>> comments on this from Tony or DT maintainers before I make changes.
+> >>>>
+> >>>> Ok, right... I'd vote for putting them into DT.
+> >>>
+> >>> I would avoid adding custom DT properties where possible and let the
+> >>> driver just initialize the right data based on the compatible flag.
+> >>
+> >> If these are HW IP design parameters, we can expect to see many
+> >> different combinations. Yet we know ahead of time how to handle
+> >> different parameters HW people select.
+> 
+> That's right, the above OMAP4+ SoCs already demonstrate this behavior.
+> 
+> >>
+> >> Thus IMO we should do it in the device tree.
+> > 
+> > Oh you mean from supporting new hardware with just .dts changes?
+> > From that point of view it makes sense to have them as DT properties,
+> > so I'm fine with that.
+> > 
+> > Let's just try to use something that's generic like fifosize. No idea
+> > how the property for num_fifos should be handled though as that
+> > implies some knowledge in the driver which num_users have fifos?
+> 
+> The fifos are not per num_users, but rather the total number of fifos
+> within the IP block. The num_users will be the number of targets the IP
+> block can interrupt. I tried looking for generic properties, but there
+> weren't any that seem to fit the description. If you want generic names,
+> I can use num-fifos and num-users, otherwise will stick to the
+> names defined in the previous series.
 
-On Tue, Jul 08, 2014 at 05:40:10PM -0400, Tejun Heo wrote:
-> Hey,
->=20
-> On Tue, Jul 08, 2014 at 07:49:00PM +0200, Antoine T=E9nart wrote:
-> > > So, yeah, it's being used both as input and output and we also ha=
-ve
-> > > the arguments which affect port_map, right?  It does seem confusi=
-ng.
-> >=20
-> > I do see priv->port_map as being automatically set and then restric=
-ted
-> > if needed by the port_map input here. I don't see how that's confus=
-ing.
-> > The only modification is we restrict the port_map parameter to the =
-set
-> > of available ports. The port_map argument affected priv->port_map b=
-efore
-> > this patch.
->=20
-> It is confusing.  If you wanna pass around available ports in hpriv,
-> please add a separate field and replace the arguments to
-> save_initial_config().
+OK since we already have some .dts entries with ti,mbox-num-fifos and
+ti,mbox-num-users I'd use those for now. Adding parsing for a generic
+property can be done later on.
 
-I don't get it. Which argument should I replace in
-save_initial_config()? The change is we compute hpriv->port_map.
-I don't see which arguments we can add or replace.
+> > So unless that can be described clearly in a DT property as well,
+> > the binding might be still unusable for new hardware :)
+> > 
+> 
+> I don't expect the OMAP mailbox IP to change much in the future. There
+> is a FIFO depth parameter as well, but that's constant in all the
+> current versions, and even if they change it, I can already use the
+> generic property for that.
 
-If that's more clear, the modification here is equivalent to (when usin=
-g
-the new bindings):
+OK
+ 
+> Tony,
+> Depending on the agreement here, I may have to respin the OMAP
+> mailbox DT/hwmod cleanup series [1]
 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 40ea583d3610..f9d3cfd5d1bd 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -513,7 +513,7 @@ void ahci_save_initial_config(struct device *dev,
-        /* record values to use during operation */
-        hpriv->cap =3D cap;
-        hpriv->cap2 =3D cap2;
--       hpriv->port_map =3D port_map;
-+       hpriv->port_map &=3D port_map;
-=20
-        if (!hpriv->start_engine)
-                hpriv->start_engine =3D ahci_start_engine;
+OK let me know.
 
-It just use the argument port_map on the real set of ports. If that's
-still not clear, I can add a separate field. But the field will store
-the exact same information as hpriv->port_map. We will have something
-like:
+Regards,
 
-if (hpriv->available_port_map)
-	hpriv->port_map &=3D hpriv->available_port_map;
-
-> > > Well, so does clk.  Let's say clk is more restricted and phy can =
-be
-> > > one or more per port and thus needs to be dynamic.  If so, should=
-n't
-> > > we at least have some correlation between phys and ports?  It bot=
-hers
-> > > me that now libahci is carrying random number of resources that i=
-t has
-> > > no idea how to associate with the ports it manages.  What if late=
-r we
-> > > want to involve phy driver in power managing unoccupied ports?
-> >=20
-> > I see. This is a first (working) attempt to have a one node per por=
-t. I
-> > agree that would be nice to have a correlation between ports and PH=
-Ys.
-> > This can definitively be added when needed without changing the dt
-> > bindings as only the internal representation changes. This would al=
-so
-> > require to get all phys from the port nodes, which is again interna=
-l
-> > stuff.
-> >=20
-> > Don't you think we can go by steps, and have a following up series =
-for
-> > this when needed (like in a power managing series for unoccupied po=
-rts)?
->=20
-> I don't know.  It isn't exactly difficult to make it per-port, is it?
-> We already have ahci_port_priv and wouldn't the code actually be
-> simpler that way?
-
-I had a quick look on this, and it does not seems to be that simple. Th=
-e
-ahci_port_priv is stored inside the ata_port struct and not accessible
-(as of now) from the ahci_host_priv one. The ahci_port_priv is
-initialized at the end of ahci_platform_init_host(), far after we need
-it. This requires quite a lot of changes. Or is there another way?
-
-To be honest, we are now at v9 and it's been quite a long time since v1=
-=2E
-I'd really like it to be merged in 3.17. As I see it, this patch keeps
-the same logic as what was in place before, only with more PHYs.
-
-Don't take me wrong, I really think this is a good idea to have a
-per-port PHY information. But this is a refactoring not clearly related
-to this series as the logic is not changed. This definitively can be th=
-e
-subject of a dedicated series, especially if I got it right and the
-required modifications are not that obvious.
-
-What do you think?
-
-Thanks,
-
-Antoine
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Tony
+ 
+> [1] http://marc.info/?l=linux-omap&m=140365833121612&w=2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
