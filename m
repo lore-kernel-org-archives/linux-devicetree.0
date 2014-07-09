@@ -1,75 +1,109 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display Controller
- support
-Date: Wed, 9 Jul 2014 16:02:51 +0200
-Message-ID: <20140709140251.GU17271@phenom.ffwll.local>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
- <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
- <20140708092348.4ecdbb8f@bbrezillon>
- <CAF6AEGuUz7Td-9Hh31rYpn_Zros=ozK_ttv9FadHot6qAuaq1Q@mail.gmail.com>
- <20140708163731.6693a883@bbrezillon>
- <CAF6AEGuOYQbZ_Mgv+Y7oQO4kKmOEF=gwi0YcBXERE80nS2QL+g@mail.gmail.com>
- <20140708190820.2a94723f@bbrezillon>
- <20140708235124.GM31728@intel.com>
- <20140709091424.167b8f16@bbrezillon>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
+Date: Wed, 9 Jul 2014 07:02:48 -0700
+Message-ID: <CAJAp7Og0Cr3oY=XpT4NzKUWykxkRTq1ZRDyamW6tgohfBs3dmg@mail.gmail.com>
+References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
+	<CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
+	<1404904380.16296.17.camel@iivanov-dev>
+	<CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140709091424.167b8f16@bbrezillon>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Matt Roper <matthew.d.roper@intel.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tim Niemeyer <tim.niemeyer@corscience.de>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 09:14:24AM +0200, Boris BREZILLON wrote:
-> Hi Matt,
-> 
-> On Tue, 8 Jul 2014 16:51:24 -0700
-> Matt Roper <matthew.d.roper@intel.com> wrote:
-> 
-> > Hi Boris.
-> > 
-> > I haven't really looked at any of your driver in depth, but from a quick
-> > glance it looks like you're registering a cursor drm_plane (i.e., making
-> > use of the new universal plane infrastructure), but you're also
-> > providing an implementation of the legacy cursor ioctls (cursor_set and
-> > cursor_move).  There's some patches working their way through the
-> > pipeline that should make this unnecessary and hopefully simplify your
-> > life a bit:
-> > 
-> >         http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=c394c2b08e247c32ef292b75fd8b34312465f8ae
-> >         http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=b36552b32aa9c69e83a3a20bda56379fb9e52435
-> >         http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=161d0dc1dccb17ff7a38f462c7c0d4ef8bcc5662
-> >         http://cgit.freedesktop.org/drm-intel/commit/?h=drm-intel-nightly&id=fc1d3e44ef7c1db93384150fdbf8948dcf949f15
-> > 
-> > The third patch there is the one that's really important for your work.
-> > When a driver provides a cursor plane via the universal plane interface,
-> > cursor_set and cursor_move are automatically implemented for you by
-> > drm_mode_cursor_universal() in drivers/gpu/drm/drm_crtc.c and your
-> > legacy handlers will never get called.  drm_mode_cursor_universal() will
-> > take care of wrapping the bo's into a drm_framebuffer for you.
-> > 
-> > When I added the universal cursor stuff, I wanted to make sure that as
-> > soon as a driver starts supporting universal planes it can stop
-> > supporting the legacy ioctls directly; otherwise handling refcounting
-> > when userspace switches back and forth between calling legacy ioctl's
-> > and calling setplane() on a cursor plane would be a nightmare.
-> > 
-> > I think those patches are only available in drm-intel-nightly at the
-> > moment and haven't moved on to drm-next and such yet, since i915 is the
-> > only driver that currently has patches to make use of cursors via the
-> > univeral plane interface (probably landing for kernel 3.17).
-> 
-> That's great news. I knew there were some work in progress on this
-> topic, but didn't know it was planned for 3.17. 
-> 
-> I'll move to this solution.
+On Wed, Jul 9, 2014 at 4:43 AM, Linus Walleij <linus.walleij@linaro.org=
+> wrote:
+> On Wed, Jul 9, 2014 at 1:13 PM, Ivan T. Ivanov <iivanov@mm-sol.com> w=
+rote:
+>> On Wed, 2014-07-09 at 11:43 +0200, Linus Walleij wrote:
+>>> On Mon, Jul 7, 2014 at 5:11 PM, Ivan T. Ivanov <iivanov@mm-sol.com>=
+ wrote:
+>>> Oh, I just spent some 45 minutes reviewing an 8xxx pinctrl driver f=
+rom
+>>> Bj=C3=B6rn Andersson
+>>> that *seems* to be doing exactly the same thing.
+>>>
 
-As of today those patches have landed in Dave's drm-next branch.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Sorry for not getting comments out on Ivan's patches before you got her=
+e.
+
+>>> Now I have two drivers from people outside Qualcomm :-)
+>>>
+
+:)
+
+>>> Some of my review comments on Bj=C3=B6rn's driver (like using SI un=
+its with the pin
+>>> config) are actually adressed in this patch set. The idea to split =
+in subdrivers
+>>> per-ASIC may be good? I don't really know.
+>>>
+>>> Can you two guys *PLEASE* join efforts and combine your drivers int=
+o one?
+>>
+
+The drivers can't be merged; the hardware is more or less identical,
+but the register map is completely different.
+
+However, the device tree bindings are a different thing; as the
+properties used to describe the hardware doesn't relate to how we
+communicate with it I think we should be able to (and therefor should)
+use the same documentation for the two (rather 7) chips.
+
+>> Not sure. Bj=C3=B6rn patches cover older PMIC chips, if not mistaken=
+, mine
+>> cover PMIC's used with APQ8074 and onward [1]. Main difference is
+>> the bus which connects them to SoC, interrupts handling, runtime
+>> pin type detection and register map.
+>
+
+Correct Ivan; we do however share the same issues related to how to do
+interrupt handling, units for properties and how to split/reuse
+between gpio and mpp. Also we have solved the pins vs groups vs
+functions slightly different, that should all be aligned I think.
+
+> Oh OK... then atleast there is something wrong with the naming of
+> Bj=C3=B6rns patches as they are 8xxx and your chips are also named
+> 8xxx ...
+>
+
+So, the pm8xxx series of drivers refer to pm8018, pm8038, pm8058,
+pm8917 and pm8921 which are used in platforms in 8660, 8960 and 8064
+(among others).
+The driver that Ivan posted is for the pm8841 and pm8941; these are
+using spmi instead of ssbi which gives a larger addressing space and
+allows for a less dense register map, so all the plumbing in those
+drivers will be different.
+The suggestion is to call the "new gen stuff" qpnp instead, but to me
+that's just a setup for hitting the same problem in a few years...
+
+Nontheless, the hardware guys have painted us into a corner where
+pm8xxx refer to a series of very similar pmics and pm8x41 is not one
+of those.
+
+> Anyway I will create a patch to move the current msm driver down
+> to a folder named "qcom" and we can atleast collect these drivers
+> in a single place since the chipsets are related, OK?
+>
+
++1
+
+> Then I guess even if the chips are totally unrelated it'd be interest=
+ing
+> to have you two guys cross-review each other's drivers so the behavio=
+ur
+> is consistent across qualcomm platforms.
+>
+
+I hope we can meet somewhere in between, so that we and other
+developers will be able to recognize the common element and structures
+later on. Again, sorry for not finding the time to preempt you on
+that.
+
+Regards,
+Bjorn
