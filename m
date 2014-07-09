@@ -1,53 +1,49 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] mtd: nand: add ONFI timing mode to
- nand_timings converter
-Date: Wed, 9 Jul 2014 10:25:55 -0700
-Message-ID: <20140709172555.GI7537@ld-irv-0074>
-References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
- <1394647664-8258-3-git-send-email-b.brezillon.dev@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Wed, 09 Jul 2014 10:41:35 -0700
+Message-ID: <53BD7ECF.8010408@codeaurora.org>
+References: <cover.1404231535.git.viresh.kumar@linaro.org> <CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com> <53B4B0B3.9080000@codeaurora.org> <CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com> <20140703221609.11380.6884@quantum> <CAKohpomNv_xvcmx03pb8nj=3O33Qt-2Dj2B1q3U46mv5EBtUjA@mail.gmail.com> <CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBK7W6WOQKGQESJ5QYKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394647664-8258-3-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On 07/07/14 21:50, Viresh Kumar wrote:
+> On 4 July 2014 09:51, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> Yeah, having something like what you suggested from DT is the perfect
+>> solution to get over this. The only reason why I am not touching that here
+>> is to not delay other patches just because of that.
+>>
+>> There are separate threads going on for that and probably somebody
+>> else was trying to push for that.
+>>
+>> That's it, nothing more. I would definitely like to use those bindings instead
+>>  of the crazy routines we are trying here, once that is finalized :)
+> Do we have some kind of agreement for this temporary solution? Anyways
+> I will kick the other thread again to resolve the bindings soon.
+>
+> @Stephen: Do you still want find_rate_changer() stuff in this series only
+> and or this can go into 3.17 without anymore changes and lets finalize
+> the bindings Mike suggested and then update this code?
+>
+>
 
-Since I think you were planning on revisiting this soon, I have one more
-comment:
+Finding the rate change is not necessary for me. I don't imagine my code
+will be getting into 3.17 anyway though so I'm no in a rush to merge
+anything immediately.
 
-On Wed, Mar 12, 2014 at 07:07:37PM +0100, Boris BREZILLON wrote:
-> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-> index c970ce7..0b8a822 100644
-> --- a/drivers/mtd/nand/Makefile
-> +++ b/drivers/mtd/nand/Makefile
-> @@ -2,7 +2,7 @@
->  # linux/drivers/nand/Makefile
->  #
->  
-> -obj-$(CONFIG_MTD_NAND)			+= nand.o
-> +obj-$(CONFIG_MTD_NAND)			+= nand.o nand_timings.o
+I still prefer the common clock framework API. If we go ahead with the
+find_rate_changer() stuff we've pretty well insulated this driver from
+any DTisms, which is nice. The only thing left would be
+transition-latency and voltage-tolerance, but those are already optional
+so you really don't need to even run on a DT enabled platform to use
+this code.
 
-This is not the right place, as it will generate a new module
-'nand_timings' (nand_timings.ko, if CONFIG_MTD_NAND=m). You probably
-want to just add nand_timings.o to the 'nand-objs' list at the bottom of
-the Makefile, like this:
-
-	nand-objs := nand_base.o nand_bbt.o nand_timings.o
-
->  obj-$(CONFIG_MTD_NAND_ECC)		+= nand_ecc.o
->  obj-$(CONFIG_MTD_NAND_BCH)		+= nand_bch.o
->  obj-$(CONFIG_MTD_NAND_IDS)		+= nand_ids.o nand_hynix.o
-
-Thanks,
-Brian
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
