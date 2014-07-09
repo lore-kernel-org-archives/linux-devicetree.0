@@ -1,94 +1,79 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] w1: ds2482: add support for ds2482-101 sleep pin
-Date: Wed,  9 Jul 2014 15:58:17 +0200
-Message-ID: <1404914297-3108-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Evgeniy Polyakov <zbr-i6C2adt8DTjR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
+Date: Wed, 9 Jul 2014 09:59:10 -0400
+Message-ID: <20140709135910.GA11193@htj.dyndns.org>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
+ <20140708134000.GC4979@htj.dyndns.org>
+ <20140708170353.GA16148@kwain>
+ <20140708171817.GH4979@htj.dyndns.org>
+ <20140708174900.GC16148@kwain>
+ <20140708214010.GI4979@htj.dyndns.org>
+ <20140709082331.GA4510@kwain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140709082331.GA4510@kwain>
+Sender: linux-ide-owner@vger.kernel.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-The ds2482-101 version of the chip has an active-low sleep pin. Add this as a
-gpio to the probe function and describe the DT binding accordingly.
-If the pin wouldn't be added and pulled high, the device would not be able to
-be probed.
+Hello,
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/w1/ds2482.txt | 18 ++++++++++++++++++
- drivers/w1/masters/ds2482.c                     |  9 +++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/w1/ds2482.txt
+On Wed, Jul 09, 2014 at 10:23:31AM +0200, Antoine T=E9nart wrote:
+> > It is confusing.  If you wanna pass around available ports in hpriv=
+,
+> > please add a separate field and replace the arguments to
+> > save_initial_config().
+>=20
+> I don't get it. Which argument should I replace in
+> save_initial_config()? The change is we compute hpriv->port_map.
+> I don't see which arguments we can add or replace.
 
-diff --git a/Documentation/devicetree/bindings/w1/ds2482.txt b/Documentation/devicetree/bindings/w1/ds2482.txt
-new file mode 100644
-index 0000000..e065207
---- /dev/null
-+++ b/Documentation/devicetree/bindings/w1/ds2482.txt
-@@ -0,0 +1,18 @@
-+ds2482 devicetree bindings
-+
-+Required properties:
-+
-+ - compatible: "dallas,ds2482"
-+
-+Optional properties:
-+
-+ - sleep-gpios: if specified, the ds2482 has a low-active sleep-pin (ds2482-101).
-+
-+Example:
-+
-+	1wire@18 {
-+		compatible = "dallas,ds2482";
-+		reg = <0x18>;
-+		sleep-gpios = <&gpio4 2 0>;
-+	};
-+
-diff --git a/drivers/w1/masters/ds2482.c b/drivers/w1/masters/ds2482.c
-index e033491..b6b6024 100644
---- a/drivers/w1/masters/ds2482.c
-+++ b/drivers/w1/masters/ds2482.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <asm/delay.h>
- 
- #include "../w1.h"
-@@ -128,6 +129,7 @@ struct ds2482_data {
- 	u8			channel;
- 	u8			read_prt;	/* see DS2482_PTR_CODE_xxx */
- 	u8			reg_config;
-+	struct gpio_desc	*slpz_gpio;
- };
- 
- 
-@@ -449,6 +451,7 @@ static int ds2482_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
- 	struct ds2482_data *data;
-+	struct gpio_desc *gpio;
- 	int err = -ENODEV;
- 	int temp1;
- 	int idx;
-@@ -466,6 +469,12 @@ static int ds2482_probe(struct i2c_client *client,
- 	data->client = client;
- 	i2c_set_clientdata(client, data);
- 
-+	gpio = devm_gpiod_get(&client->dev, "sleep");
-+	if (!IS_ERR(gpio)) {
-+		data->slpz_gpio = gpio;
-+		gpiod_direction_output(data->slpz_gpio, 1);
-+	}
-+
- 	/* Reset the device (sets the read_ptr to status) */
- 	if (ds2482_send_cmd(data, DS2482_CMD_RESET) < 0) {
- 		dev_warn(&client->dev, "DS2482 reset failed.\n");
--- 
-2.0.0
+The @force_port_map and @mask_port_map of ahci_save_initial_config().
+We end up with three params from two places modifying port_map and one
+of those is in/out parameter, so ummm, no.  If you wanna add port
+masking to @hpriv, please do it by moving @force_port_map and
+@mask_port_map into @hpriv instead.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, the proposed change is small but the end result is messy.
+
+> I had a quick look on this, and it does not seems to be that simple. =
+The
+> ahci_port_priv is stored inside the ata_port struct and not accessibl=
+e
+> (as of now) from the ahci_host_priv one. The ahci_port_priv is
+> initialized at the end of ahci_platform_init_host(), far after we nee=
+d
+> it. This requires quite a lot of changes. Or is there another way?
+
+Yeah, it'd probably need separating out port resource handling, so
+that the order is get_resources, host_alloc, get_port_resources and
+then init and activate.  Hans, what do you think?
+
+> To be honest, we are now at v9 and it's been quite a long time since =
+v1.
+> I'd really like it to be merged in 3.17. As I see it, this patch keep=
+s
+> the same logic as what was in place before, only with more PHYs.
+>=20
+> Don't take me wrong, I really think this is a good idea to have a
+> per-port PHY information. But this is a refactoring not clearly relat=
+ed
+> to this series as the logic is not changed. This definitively can be =
+the
+> subject of a dedicated series, especially if I got it right and the
+> required modifications are not that obvious.
+
+Heh, I get that but, at the same time, this is the point where you're
+most motivated to actually work on it.  :)
+
+Let's see how much work it's gonna be.
+
+Thanks.
+
+--=20
+tejun
