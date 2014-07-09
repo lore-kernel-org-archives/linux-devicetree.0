@@ -1,186 +1,60 @@
-From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: =?UTF-8?q?=5BPATCH=202/2=5D=20powerpc/fsl-booke=3A=20Add=20initial=20T1042RDB=5FPI=20board=20support?=
-Date: Wed, 9 Jul 2014 09:54:11 +0530
-Message-ID: <1404879851-2914-1-git-send-email-Priyanka.Jain@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [RESEND PATCHv2 0/2] regulator: of: Add support for pasing regulator
+ suspend state
+Date: Wed, 09 Jul 2014 13:48:09 +0900
+Message-ID: <1404881291-7949-1-git-send-email-cw00.choi@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T1042RDB_PI is Freescale Reference Design Board supporting the T1042
-QorIQ Power Architecture=E2=84=A2 processor. T1042 is a reduced persona=
-lity
-of T1040 SoC without Integrated 8-port Gigabit. The board is designed
-with low power features targeted for Printing Image Market.
+The regulators would set different state/mode according to the kind of suspend
+state. So regulation_constraints structure has already regulator suspend state filed.
+This patch parse regulator suspend state from devicetree file.
 
-T1042RDB_PI is  similar to T1040RDB board with few differences like
-it has video interface, supports T1042 personality only
+For example:
 
-T1042RDB_PI board Overview
------------------------
-- SERDES Connections, 8 lanes supporting:
-    	- PCI
-    	- SATA 2.0
-- DDR Controller
-    	- Supports rates of up to 1600 MHz data-rate
-    	- Supports one DDR3LP UDIMM
--IFC/Local Bus
-    	- NAND flash: 1GB 8-bit NAND flash
-    	- NOR: 128MB 16-bit NOR Flash
-- Ethernet
-    	- Two on-board RGMII 10/100/1G ethernet ports.
-    	- PHY #0 remains powered up during deep-sleep
-- CPLD
-- Clocks
-    	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
-    	- SERDES clocks
-- Power Supplies
-- USB
-    	- Supports two USB 2.0 ports with integrated PHYs
-    	- Two type A ports with 5V@1.5A per port.
-- SDHC
-    	- SDHC/SDXC connector
-- SPI
-    	- On-board 64MB SPI flash
-- I2C
-    	- Device connected: EEPROM, thermal monitor, VID controller, RTC
-- Other IO
-    	- Two Serial ports
-    	- ProfiBus port
+	ldoX_reg: LDOx {
+		regulator-name = "VAP_XXX_1.2V";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+		regulator-always-on;
 
-Add support for T1042RDB_PI board:
-    -add device tree
-    -Add entry in corenet_generic.c, as it is similar to other corenet =
-platforms
+		regulator-initial-state = <3>;	/* PM_SUSPEND_MEM */
+		regulator-state-standby {
+			regulator-volt = <1200000>;
+		};
 
-Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/powerpc/boot/dts/t1042rdb_pi.dts         |   52 +++++++++++++++++=
-++++++++
- arch/powerpc/boot/dts/t104xrdb.dtsi           |    3 +-
- arch/powerpc/platforms/85xx/corenet_generic.c |    1 +
- 3 files changed, 55 insertions(+), 1 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/t1042rdb_pi.dts
+		regulator-state-mem {
+			regulator-volt = <1200000>;
+			regulator-off-in-suspend;
+		};
 
-diff --git a/arch/powerpc/boot/dts/t1042rdb_pi.dts b/arch/powerpc/boot/=
-dts/t1042rdb_pi.dts
-new file mode 100644
-index 0000000..f5293a9
---- /dev/null
-+++ b/arch/powerpc/boot/dts/t1042rdb_pi.dts
-@@ -0,0 +1,52 @@
-+/*
-+ * T1042RDB_PI Device Tree Source
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions =
-are met:
-+ *     * Redistributions of source code must retain the above copyrigh=
-t
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyr=
-ight
-+ *	 notice, this list of conditions and the following disclaimer in th=
-e
-+ *	 documentation and/or other materials provided with the distributio=
-n.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote produc=
-ts
-+ *	 derived from this software without specific prior written permissi=
-on.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of =
-the
-+ * GNU General Public License ("GPL") as published by the Free Softwar=
-e
-+ * Foundation, either version 2 of that License or (at your option) an=
-y
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
-Y
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
-MPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
-ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
- ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
-DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
-SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
-USED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
-OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
-SE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/include/ "fsl/t104xsi-pre.dtsi"
-+/include/ "t104xrdb.dtsi"
-+
-+/ {
-+	model =3D "fsl,T1042RDB_PI";
-+	compatible =3D "fsl,T1042RDB_PI";
-+	soc: soc@ffe000000 {
-+		i2c@118000 {
-+			rtc@68 {
-+				compatible =3D "dallas,ds1337";
-+				reg =3D <0x68>;
-+				interrupts =3D <0x2 0x1 0 0>;
-+			};
-+		};
-+	};
-+};
-+
-+/include/ "fsl/t1042si-post.dtsi"
-diff --git a/arch/powerpc/boot/dts/t104xrdb.dtsi b/arch/powerpc/boot/dt=
-s/t104xrdb.dtsi
-index 9aaefa5..e7e765f 100644
---- a/arch/powerpc/boot/dts/t104xrdb.dtsi
-+++ b/arch/powerpc/boot/dts/t104xrdb.dtsi
-@@ -57,7 +57,8 @@
- 		};
-=20
- 		cpld@3,0 {
--			compatible =3D "fsl,t1040rdb-cpld","fsl,t1042rdb-cpld";
-+			compatible =3D "fsl,t1040rdb-cpld","fsl,t1042rdb-cpld",
-+					"fsl,t1042rdb_pi-cpld";
- 			reg =3D <3 0 0x300>;
- 		};
- 	};
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/power=
-pc/platforms/85xx/corenet_generic.c
-index c268f89..100e80d 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -130,6 +130,7 @@ static const char * const boards[] __initconst =3D =
-{
- 	"fsl,T1042QDS",
- 	"fsl,T1040RDB",
- 	"fsl,T1042RDB",
-+	"fsl,T1042RDB_PI",
- 	"keymile,kmcoge4",
- 	NULL
- };
---=20
-1.7.4.1
+		regulator-state-disk {
+			regulator-volt = <1200000>;
+			regulator-on-in-suspend;
+		};
+	};
 
+Changes from v1:
+- Check whether regulator-initial-state and regulator-mode is correct or not
+- Add more detailed description about regulator-initial-state, regulator-mode
+  and regulator-state-[standby/mem/disk] for devicetree bindings
+- Modify example of regulator suspend state in bindings documentation
+
+Chanwoo Choi (2):
+  regulator: of: Add support for parsing regulator_state for suspend state
+  dt-bindings: regulator: Add regulator suspend state for PM state
+
+ .../devicetree/bindings/regulator/regulator.txt    | 32 +++++++++
+ drivers/regulator/of_regulator.c                   | 76 +++++++++++++++++++++-
+ 2 files changed, 106 insertions(+), 2 deletions(-)
+
+-- 
+1.8.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
