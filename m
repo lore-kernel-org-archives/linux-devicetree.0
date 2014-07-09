@@ -1,95 +1,214 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v5 05/14] drm/exynos: dsi: add pass TE host ops to support
- LCD I80 interface
-Date: Thu, 10 Jul 2014 01:03:33 +0900
-Message-ID: <53BD67D5.8030900@samsung.com>
-References: <1404779987-5337-1-git-send-email-yj44.cho@samsung.com>
- <1404779987-5337-6-git-send-email-yj44.cho@samsung.com>
- <20140709152207.GA17359@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140709152207.GA17359@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH/RFC v4 12/20] DT: Add documentation for LED Class Flash Manger
+Date: Wed, 09 Jul 2014 18:03:36 +0200
+Message-ID: <1404921824-22781-14-git-send-email-j.anaszewski@samsung.com>
+References: <1404921824-22781-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1404921824-22781-1-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNOuFhCAwN+yblCAxMOydvCAwMDoyMiwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24g
-VHVlLCBKdWwgMDgsIDIwMTQgYXQgMDk6Mzk6MzhBTSArMDkwMCwgWW91bmdKdW4gQ2hvIHdyb3Rl
-Ogo+PiBUbyBzdXBwb3J0IExDRCBJODAgaW50ZXJmYWNlLCB0aGUgRFNJIGhvc3QgY2FsbHMgdGhp
-cyBmdW5jdGlvbgo+PiB0byBub3RpZnkgdGhlIHBhbmVsIHRlYXJpbmcgZWZmZWN0IHN5bmNocm9u
-aXphdGlvbiBzaWduYWwgdG8KPj4gdGhlIENSVEMgZGV2aWNlIG1hbmFnZXIgdG8gdHJpZ2dlciB0
-byB0cmFuc2ZlciB2aWRlbyBpbWFnZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWW91bmdKdW4gQ2hv
-IDx5ajQ0LmNob0BzYW1zdW5nLmNvbT4KPj4gQWNrZWQtYnk6IElua2kgRGFlIDxpbmtpLmRhZUBz
-YW1zdW5nLmNvbT4KPj4gQWNrZWQtYnk6IEt5dW5nbWluIFBhcmsgPGt5dW5nbWluLnBhcmtAc2Ft
-c3VuZy5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rz
-aS5jIHwgMTEgKysrKysrKysrKysKPj4gIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICAg
-ICAgICAgICB8ICA3ICsrKysrKysKPj4gIDIgZmlsZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygr
-KQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rz
-aS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCj4+IGluZGV4IGRh
-ZDU0M2EuLjc2ZTM0Y2EgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5
-bm9zX2RybV9kc2kuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1f
-ZHNpLmMKPj4gQEAgLTI0LDYgKzI0LDcgQEAKPj4gICNpbmNsdWRlIDx2aWRlby9taXBpX2Rpc3Bs
-YXkuaD4KPj4gICNpbmNsdWRlIDx2aWRlby92aWRlb21vZGUuaD4KPj4gIAo+PiArI2luY2x1ZGUg
-ImV4eW5vc19kcm1fY3J0Yy5oIgo+PiAgI2luY2x1ZGUgImV4eW5vc19kcm1fZHJ2LmgiCj4+ICAK
-Pj4gIC8qIHJldHVybnMgdHJ1ZSBpZmYgYm90aCBhcmd1bWVudHMgbG9naWNhbGx5IGRpZmZlcnMg
-Ki8KPj4gQEAgLTEwNDEsMTAgKzEwNDIsMjAgQEAgc3RhdGljIHNzaXplX3QgZXh5bm9zX2RzaV9o
-b3N0X3RyYW5zZmVyKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+PiAgCXJldHVybiAocmV0
-IDwgMCkgPyByZXQgOiB4ZmVyLnJ4X2RvbmU7Cj4+ICB9Cj4+ICAKPj4gK3N0YXRpYyB2b2lkIGV4
-eW5vc19kc2lfaG9zdF9wYXNzX3RlKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0KQo+PiArewo+
-PiArCXN0cnVjdCBleHlub3NfZHNpICpkc2kgPSBob3N0X3RvX2RzaShob3N0KTsKPj4gKwlzdHJ1
-Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIgPSBkc2ktPmVuY29kZXI7Cj4+ICsKPj4gKwlpZiAoZHNp
-LT5zdGF0ZSAmIERTSU1fU1RBVEVfRU5BQkxFRCkKPj4gKwkJZXh5bm9zX2RybV9jcnRjX3RlX2hh
-bmRsZXIoZW5jb2Rlci0+Y3J0Yyk7Cj4+ICt9Cj4+ICsKPj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-bWlwaV9kc2lfaG9zdF9vcHMgZXh5bm9zX2RzaV9vcHMgPSB7Cj4+ICAJLmF0dGFjaCA9IGV4eW5v
-c19kc2lfaG9zdF9hdHRhY2gsCj4+ICAJLmRldGFjaCA9IGV4eW5vc19kc2lfaG9zdF9kZXRhY2gs
-Cj4+ICAJLnRyYW5zZmVyID0gZXh5bm9zX2RzaV9ob3N0X3RyYW5zZmVyLAo+PiArCS5wYXNzX3Rl
-ID0gZXh5bm9zX2RzaV9ob3N0X3Bhc3NfdGUsCj4+ICB9Owo+PiAgCj4+ICBzdGF0aWMgaW50IGV4
-eW5vc19kc2lfcG93ZXJvbihzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpKQo+PiBkaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmggYi9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+
-PiBpbmRleCA5NDRmMzNmLi4zZjIxYmVhIDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2RybS9kcm1f
-bWlwaV9kc2kuaAo+PiArKysgYi9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+PiBAQCAtNDks
-NiArNDksMTIgQEAgc3RydWN0IG1pcGlfZHNpX21zZyB7Cj4+ICAgKiBAZGV0YWNoOiBkZXRhY2gg
-RFNJIGRldmljZSBmcm9tIERTSSBob3N0Cj4+ICAgKiBAdHJhbnNmZXI6IHNlbmQgYW5kL29yIHJl
-Y2VpdmUgRFNJIHBhY2tldCwgcmV0dXJuIG51bWJlciBvZiByZWNlaXZlZCBieXRlcywKPj4gICAq
-IAkgICAgICBvciBlcnJvcgo+PiArICogQHBhc3NfdGU6IGNhbGwgdGhlIGNydGMgdGVfaGFuZGxl
-cigpIGNhbGxiYWNrIGZyb20gRFNJIGhvc3QuCj4+ICsgKgkgICAgIFRoZSBwYW5lbCBnZW5lcmF0
-ZXMgdGVhcmluZyBlZmZlY3Qgc3luY2hyb25pemF0aW9uIHNpZ25hbCBiZXR3ZWVuCj4+ICsgKgkg
-ICAgIE1DVSBhbmQgRkIgdG8gZGlzcGxheSB2aWRlbyBpbWFnZXMuIEFuZCB0aGUgZGlzcGxheSBj
-b250cm9sbGVyCj4+ICsgKgkgICAgIHNob3VsZCB0cmlnZ2VyIHRvIHRyYW5zZmVyIHZpZGVvIGlt
-YWdlIGF0IHRoaXMgc2lnbmFsLiBTbyB0aGUgcGFuZWwKPj4gKyAqCSAgICAgcmVjZWl2ZXMgdGhl
-IFRFIElSUSwgdGhlbiBjYWxscyB0aGlzIGZ1bmN0aW9uIHRvIG5vdGlmeSBpdCB0byB0aGUKPj4g
-KyAqCSAgICAgZGlzcGxheSBjb250cm9sbGVyLgo+PiAgICovCj4+ICBzdHJ1Y3QgbWlwaV9kc2lf
-aG9zdF9vcHMgewo+PiAgCWludCAoKmF0dGFjaCkoc3RydWN0IG1pcGlfZHNpX2hvc3QgKmhvc3Qs
-Cj4+IEBAIC01Nyw2ICs2Myw3IEBAIHN0cnVjdCBtaXBpX2RzaV9ob3N0X29wcyB7Cj4+ICAJCSAg
-ICAgIHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaSk7Cj4+ICAJc3NpemVfdCAoKnRyYW5zZmVy
-KShzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAqaG9zdCwKPj4gIAkJCSAgICBzdHJ1Y3QgbWlwaV9kc2lf
-bXNnICptc2cpOwo+PiArCXZvaWQgKCpwYXNzX3RlKShzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAqaG9z
-dCk7Cj4gCj4gSSd2ZSBvYmplY3RlZCB0byB0aGlzIHBhcnRpY3VsYXIgY2hhbmdlIGJlZm9yZSBh
-bmQgdGhhdCBvYmplY3Rpb24gc3RpbGwKPiBzdGFuZHMuIEkgZG9uJ3Qgc2VlIGhvdyB0aGlzIGlz
-IHJlbGF0ZWQgdG8gRFNJLiBJdCBzZWVtcyBsaWtlIGFuCj4gaW1wbGVtZW50YXRpb24gZGV0YWls
-IG9mIHRoaXMgcGFydGljdWxhciBzZXR1cCBhbmQgSSB0aGluayBpdCBzaG91bGQgYmUKPiBoYW5k
-bGVkIGRpZmZlcmVudGx5ICh3aXRoaW4gdGhlIEV4eW5vcyBEU0kgY29udHJvbGxlciBpbXBsZW1l
-bnRhdGlvbgo+IHBvc3NpYmx5KS4KCkkgdGhvdWdodCB3ZSBoYWQgZW5vdWdoIHJldmlldyBidXQg
-eWVzLCAgSSBtaXNzZWQgaXQuIEl0IHNlZW1zIGJldHRlciB0bwpoYW5kbGUgcGFzc190ZSBjYWxs
-YmFjayB3aXRoaW4gRXh5bm9zIHNpZGUgYXMgb2Ygbm93LiBUaGF0IGNvdWxkIGNhdXNlCmNvbnRy
-b3ZlcnN5LiBIb3dldmVyLCB0aGUgb2J2aW91cyBvbmUgaXMgdGhhdCB0ZSBzaWduYWwgc2hvdWxk
-IGJlCm5vdGlmaWVkIHRvIGRpc3BsYXkgY29udHJvbGxlciBkcml2ZXIgc29tZWhvdyBidXQgdGhl
-cmUgaXMgbm8gYSBnb29kIHdheQpmb3IgaXQuIEFueXdheSwgZ290IGl0LiAgUmV2ZXJ0ZWQuCgpU
-aGFua3MsCklua2kgRGFlCgo+IAo+IExhdXJlbnQgYWxzbyBhc2tlZCB5b3UgdG8gc3BsaXQgdGhp
-cyB1cCBpbnRvIHR3byBwYXRjaGVzLCBvbmUgZm9yIHRoZQo+IGNvcmUgcGFydCwgdGhlIG90aGVy
-IGZvciB0aGUgRXh5bm9zIGRyaXZlciBwYXJ0cywgeWV0IHRoaXMgcGF0Y2gKPiBjb250YWlucyBi
-b3RoIGNoYW5nZXMuCj4gCj4gVGhpZXJyeQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+This patch documents LED Class Flash Manager
+related bindings.
+
+Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../bindings/leds/leds-flash-manager.txt           |  171 ++++++++++++++++++++
+ 1 file changed, 171 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-flash-manager.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-flash-manager.txt b/Documentation/devicetree/bindings/leds/leds-flash-manager.txt
+new file mode 100644
+index 0000000..2d78208
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-flash-manager.txt
+@@ -0,0 +1,171 @@
++* LED Flash Manager
++
++Flash manager is a part of LED Flash Class. It maintains
++all the flash led devices which have their external strobe
++signals routed through mulitplexing devices.
++The multiplexers are aggregated in the standalone 'flash_muxes'
++node in the form of subnodes and the flash led devices refer
++to those nodes' labels.
++
++
++flash_muxes node
++----------------
++
++muxN subnode
++------------
++
++There must be at least one muxN subnode, where N is the identifier
++of the node, present in the flash_muxes node. One muxN node
++represents one multiplexer.
++
++Required properties (mutually exclusive):
++- gpios		: specifies the gpio pins used to set the states
++		  of mux selectors, LSB first
++- mux-async	: phandle to the node of the multiplexing device
++
++
++
++flash led device node
++---------------------
++
++Following subnodes must be added to the LED Flash Class device
++tree node described in Documentation/devicetree/bindings/leds/common.txt.
++
++
++gate-software-strobe subnode
++----------------------------
++
++The node defines configuration of multiplexers that needs
++to be applied to route software strobe signal to the flash
++led device.
++
++Required properties:
++- mux		: phandle to the muxN node defined
++		  in the flash_muxes node
++- mux-line-id	: mux line identifier
++
++Optional subnodes:
++- gate-software-strobe : if there are many multiplexers to configure,
++			 they can be recursively nested.
++
++
++gate-external-strobeN subnode
++-----------------------------
++
++The node defines configuration of multiplexers that needs
++to be applied to route external strobe signal to the flash
++led device. A flash led device can have many external strobe
++signal sources.
++
++Required properties:
++- mux			: phandle to the muxN node defined
++			  in the flash_muxes node
++- mux-line-id		: mux line identifier
++Optional properties:
++- strobe-provider	: phandle to the device providing the
++			  strobe signal. It is expected only
++			  on the first level node. The referenced
++			  node is expected to have 'compatible'
++			  property, as providers are labelled
++			  with it in the LED subsystem
++
++Optional subnodes:
++- gate-external-strobeN	: if there are many multiplexers to configure,
++			  they can be recursively nested.
++
++
++Example:
++
++Following board configuration is assumed in this example and
++
++    ---------- ----------
++    | FLASH1 | | FLASH2 |
++    ---------- ----------
++           \(0)   /(1)
++          ----------
++          |  MUX1  |
++          ----------
++              |
++          ----------
++          |  MUX2  |
++          ----------
++           /(0)   \(1)
++      ----------  --------------------
++      |  MUX3  |  | SOC FLASHEN GPIO |
++      ----------  --------------------
++       /(0)   \(1)
++----------- -----------
++| SENSOR1 | | SENSOR2 |
++----------- -----------
++
++FLASH1 : max77693-flash
++FLASH2 : some other flash led device
++SENSOR1: s5c73m3_spi
++SENSOR2: s5k6a3
++
++
++dummy_mux: led_mux {
++	compatible = "led-async-mux";
++};
++
++flash_muxes {
++	flash_mux1: mux1 {
++                gpios = <&gpj1 1 0>, <&gpj1 2 0>;
++	};
++
++	flash_mux2: mux2 {
++		mux-async = <&dummy_mux>;
++	};
++
++	flash_mux3: mux3 {
++                gpios = <&gpl1 1 0>, <&gpl1 2 0>;
++	};
++};
++
++max77693-flash {
++	compatible = "maxim,max77693-flash";
++
++	//other device specific properties here
++
++	gate-software-strobe {
++		mux = <&flash_mux1>;
++		mux-line-id = <0>;
++
++		gate-software-strobe {
++			mux = <&flash_mux2>;
++			mux-line-id = <1>;
++		};
++	};
++
++	gate-external-strobe1 {
++		strobe-provider = <&s5c73m3_spi>;
++		mux = <&flash_mux1>;
++		mux-line-id = <0>;
++
++		gate-external-strobe1 {
++			mux = <&flash_mux2>;
++			mux-line-id = <0>;
++
++			gate-external-strobe1 {
++				mux = <&flash_mux3>;
++				mux-line-id = <0>;
++			};
++		};
++	};
++
++	gate-external-strobe2 {
++		strobe-provider = <&s5k6a3>;
++		mux = <&flash_mux1>;
++		mux-line-id = <0>;
++
++		gate-external-strobe2 {
++			mux = <&flash_mux2>;
++			mux-line-id = <0>;
++
++			gate-external-strobe2 {
++				mux = <&flash_mux3>;
++				mux-line-id = <1>;
++			};
++		};
++	};
++};
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
