@@ -1,315 +1,390 @@
-Return-Path: <andy.green@linaro.org>
-MIME-Version: 1.0
-In-Reply-To: <18609483.Jzi9Hxcq2r@wuerfel>
-References: <1405233107-4762-1-git-send-email-mollie.wu@linaro.org>
-	<18609483.Jzi9Hxcq2r@wuerfel>
-Date: Mon, 14 Jul 2014 22:00:25 +0800
-Message-ID: <CAAfg0W4=UEPLWT87cogiaxwGUkXXqGHoWrOauGG4u9_WnaXiMA@mail.gmail.com>
-Subject: Re: [PATCH 6/8] net: ethernet driver: Fujitsu OGMA
-From: Andy Green <andy.green@linaro.org>
-Content-Type: multipart/alternative; boundary=001a11c2e0a87c7f6404fe27b659
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: mark.rutland@arm.com, David Miller <davem@davemloft.net>, robh+dt@kernel.org, Mollie Wu <mollie.wu@linaro.org>, linux@arm.linux.org.uk, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, stephen@networkplumber.org, romieu@fr.zoreil.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, olof@lixom.net, jaswinder.singh@linaro.org, f.fainelli@gmail.com, patches@linaro.org, pawel.moll@arm.com, devicetree@vger.kernel.org
+Return-Path: <grant.likely@secretlab.ca>
+Return-Path: <grant.likely@secretlab.ca>
+Sender: Grant Likely <glikely@secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/5] OF: Export a number of __of_* methods
+In-Reply-To: <243A6BBE-DD88-4651-80B2-5686BF6794BD@konsulko.com>
+References: 
+	<1404493129-8914-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1404493129-8914-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140707131134.825FBC409D5@trevor.secretlab.ca>
+	<243A6BBE-DD88-4651-80B2-5686BF6794BD@konsulko.com>
+Date: Wed, 09 Jul 2014 19:58:33 +0100
+Message-Id: <20140709185833.7CF59C40EC7@trevor.secretlab.ca>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a11c2e0a87c7f6404fe27b659
-Content-Type: text/plain; charset=UTF-8
+On Mon, 7 Jul 2014 16:17:58 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> Hi Grant,
+> 
+> On Jul 7, 2014, at 4:11 PM, Grant Likely wrote:
+> 
+> > On Fri,  4 Jul 2014 19:58:46 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> >> As part of moving to transactional DT, a number of methods are
+> >> reworked and exported.
+> >> 
+> >> The methods exported are:
+> >> __of_add_property, __of_remove_property, __of_update_property, __of_attach_node,
+> >> __of_detach_node
+> > 
+> > 
+> > ??? The description doesn't match the patch. Nothing is getting
+> > exported, and the commit message should really say why and how the
+> > methods are being reworked.
+> > 
+> 
+> Err, are they not exported out of their file scope?
 
-On 14 Jul 2014 21:51, "Arnd Bergmann" <arnd@arndb.de> wrote:
->
-> On Sunday 13 July 2014 14:31:47 Mollie Wu wrote:
-> > +
-> > +Example:
-> > +     eth0: f_taiki {
-> > +                compatible = "fujitsu,ogma";
-> > +             reg = <0 0x31600000 0x10000>, <0 0x31618000 0x4000>, <0
-0x3161c000 0x4000>;
-> > +             interrupts = <0 163 0x4>;
-> > +             clocks = <&clk_alw_0_8>;
-> > +             phy-mode = "rgmii";
-> > +             max-speed = <1000>;
-> > +             max-frame-size = <9000>;
-> > +             local-mac-address = [ a4 17 31 00 00 ed ];
-> > +             phy-handle = <&ethphy0>;
-> > +
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +
-> > +             ethphy0: ethernet-phy@1 {
-> > +                     device_type = "ethernet-phy";
-> > +                     compatible = "ethernet-phy-ieee802.3-c22";
-> > +                     reg = <1>;
-> > +             };
-> > +     };
->
-> The name of the device should be "ethernet" rather than "f_taiki".
+Talking about exporting typically means EXPORT_SYMBOL(). Hence my
+question.
 
-OK.
-
-> For the compatible string, it would be good to have a version number
-included.
-> If you cannot find out the version of the ogma hardware, add the
-identifier for
-> the soc it is used in, e.g.
->
->         compatible = "fujitsu,mb86s73-ogma", "fujitsu,ogma";
->
-> The driver only needs to match the generic string, but it's better
-> to be prepared for the case where we have to support slightly different
-> variants.
-
-Yes it's a good idea, thanks.
-
-> > +static inline void ogma_writel(struct ogma_priv *priv, u32 reg_addr,
-u32 val)
-> > +{
-> > +     writel(val, priv->ioaddr + (reg_addr << 2));
-> > +}
-> > +
-> > +static inline u32 ogma_readl(struct ogma_priv *priv, u32 reg_addr)
-> > +{
-> > +     return readl(priv->ioaddr + (reg_addr << 2));
-> > +}
-> for best performance, it may be better to use readl_relaxed() by default
-> and only use the nonrelaxed accesses in the cases where you have to
-> synchronize with DMA transfers.
-
-OK.
-
-> > +
-> > +#define TIMEOUT_SPINS_MAC 1000000
-> > +
-> > +static u32 ogma_clk_type(u32 freq)
-> > +{
-> > +     if (freq < 35 * OGMA_CLK_MHZ)
-> > +             return OGMA_GMAC_GAR_REG_CR_25_35_MHZ;
-> > +     if (freq < 60 * OGMA_CLK_MHZ)
-> > +             return OGMA_GMAC_GAR_REG_CR_35_60_MHZ;
-> > +     if (freq < 100 * OGMA_CLK_MHZ)
-> > +             return OGMA_GMAC_GAR_REG_CR_60_100_MHZ;
-> > +     if (freq < 150 * OGMA_CLK_MHZ)
-> > +             return OGMA_GMAC_GAR_REG_CR_100_150_MHZ;
-> > +     if (freq < 250 * OGMA_CLK_MHZ)
-> > +             return OGMA_GMAC_GAR_REG_CR_150_250_MHZ;
-> > +
-> > +     return OGMA_GMAC_GAR_REG_CR_250_300_MHZ;
-> > +}
-> > +
-> > +static int ogma_wait_while_busy(struct ogma_priv *priv, u32 addr, u32
-mask)
-> > +{
-> > +     u32 timeout = TIMEOUT_SPINS_MAC;
-> > +
-> > +     while (--timeout && ogma_readl(priv, addr) & mask)
-> > +             ;
-> > +     if (!timeout) {
-> > +             netdev_WARN(priv->net_device, "%s: timeout\n", __func__);
-> > +             return -ETIMEDOUT;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
->
-> The callers of this function seem to all be from non-atomic context, so it
-> would be good to occasionally msleep() here, either after each try, or
-> after initially spinning for as long as it takes to succeed most of the
-> time.
-
-OK.  Normally it should complete quickly, so the initial spin idea sounds
-like the way.
-
-> > +
-> > +static void ogma_napi_tx_processing(struct napi_struct *napi_p)
-> > +{
-> > +     struct ogma_priv *priv = container_of(napi_p, struct ogma_priv,
-napi);
-> > +
-> > +     ogma_ring_irq_clr(priv, OGMA_RING_TX, OGMA_IRQ_EMPTY);
-> > +     ogma_clean_tx_desc_ring(priv);
-> > +
-> > +     if (netif_queue_stopped(priv->net_device) &&
-> > +         ogma_get_tx_avail_num(priv) >=
-OGMA_NETDEV_TX_PKT_SCAT_NUM_MAX)
-> > +             netif_wake_queue(priv->net_device);
-> > +}
->
-> You should probably call netdev_tx_completed_queue() here and
-> netdev_tx_sent_queue() when sending the frame. See
-http://lwn.net/Articles/454390/
-> for a description of the API.
-
-OK... thanks a lot for the review, I will fix these and send the rest
-version in a few days.
-
--Andy
-
->         Arnd
->
-
---001a11c2e0a87c7f6404fe27b659
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<p dir=3D"ltr"><br>
-On 14 Jul 2014 21:51, &quot;Arnd Bergmann&quot; &lt;<a href=3D"mailto:arnd@=
-arndb.de">arnd@arndb.de</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On Sunday 13 July 2014 14:31:47 Mollie Wu wrote:<br>
-&gt; &gt; +<br>
-&gt; &gt; +Example:<br>
-&gt; &gt; + =C2=A0 =C2=A0 eth0: f_taiki {<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatib=
-le =3D &quot;fujitsu,ogma&quot;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0 0x31600=
-000 0x10000&gt;, &lt;0 0x31618000 0x4000&gt;, &lt;0 0x3161c000 0x4000&gt;;<=
-br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 interrupts =3D &lt;0 =
-163 0x4&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 clocks =3D &lt;&amp;c=
-lk_alw_0_8&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 phy-mode =3D &quot;rg=
-mii&quot;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 max-speed =3D &lt;100=
-0&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 max-frame-size =3D &l=
-t;9000&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 local-mac-address =3D=
- [ a4 17 31 00 00 ed ];<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 phy-handle =3D &lt;&a=
-mp;ethphy0&gt;;<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 #address-cells =3D &l=
-t;1&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 #size-cells =3D &lt;0=
-&gt;;<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ethphy0: ethernet-phy=
-@1 {<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 device_type =3D &quot;ethernet-phy&quot;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 compatible =3D &quot;ethernet-phy-ieee802.3-c22&quot;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 reg =3D &lt;1&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
-&gt; &gt; + =C2=A0 =C2=A0 };<br>
-&gt;<br>
-&gt; The name of the device should be &quot;ethernet&quot; rather than &quo=
-t;f_taiki&quot;.</p>
-<p dir=3D"ltr">OK.</p>
-<p dir=3D"ltr">&gt; For the compatible string, it would be good to have a v=
-ersion number included.<br>
-&gt; If you cannot find out the version of the ogma hardware, add the ident=
-ifier for<br>
-&gt; the soc it is used in, e.g.<br>
-&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D &quot;fujitsu,mb86s73-ogma&=
-quot;, &quot;fujitsu,ogma&quot;;<br>
-&gt;<br>
-&gt; The driver only needs to match the generic string, but it&#39;s better=
-<br>
-&gt; to be prepared for the case where we have to support slightly differen=
-t<br>
-&gt; variants.</p>
-<p dir=3D"ltr">Yes it&#39;s a good idea, thanks.</p>
-<p dir=3D"ltr">&gt; &gt; +static inline void ogma_writel(struct ogma_priv *=
-priv, u32 reg_addr, u32 val)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + =C2=A0 =C2=A0 writel(val, priv-&gt;ioaddr + (reg_addr &lt;&lt; =
-2));<br>
-&gt; &gt; +}<br>
-&gt; &gt; +<br>
-&gt; &gt; +static inline u32 ogma_readl(struct ogma_priv *priv, u32 reg_add=
-r)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + =C2=A0 =C2=A0 return readl(priv-&gt;ioaddr + (reg_addr &lt;&lt;=
- 2));<br>
-&gt; &gt; +}<br>
-&gt; for best performance, it may be better to use readl_relaxed() by defau=
-lt<br>
-&gt; and only use the nonrelaxed accesses in the cases where you have to<br=
->
-&gt; synchronize with DMA transfers.</p>
-<p dir=3D"ltr">OK.</p>
-<p dir=3D"ltr">&gt; &gt; +<br>
-&gt; &gt; +#define TIMEOUT_SPINS_MAC 1000000<br>
-&gt; &gt; +<br>
-&gt; &gt; +static u32 ogma_clk_type(u32 freq)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (freq &lt; 35 * OGMA_CLK_MHZ)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return OGMA_GMAC_GAR_=
-REG_CR_25_35_MHZ;<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (freq &lt; 60 * OGMA_CLK_MHZ)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return OGMA_GMAC_GAR_=
-REG_CR_35_60_MHZ;<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (freq &lt; 100 * OGMA_CLK_MHZ)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return OGMA_GMAC_GAR_=
-REG_CR_60_100_MHZ;<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (freq &lt; 150 * OGMA_CLK_MHZ)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return OGMA_GMAC_GAR_=
-REG_CR_100_150_MHZ;<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (freq &lt; 250 * OGMA_CLK_MHZ)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return OGMA_GMAC_GAR_=
-REG_CR_150_250_MHZ;<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 return OGMA_GMAC_GAR_REG_CR_250_300_MHZ;<br>
-&gt; &gt; +}<br>
-&gt; &gt; +<br>
-&gt; &gt; +static int ogma_wait_while_busy(struct ogma_priv *priv, u32 addr=
-, u32 mask)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + =C2=A0 =C2=A0 u32 timeout =3D TIMEOUT_SPINS_MAC;<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 while (--timeout &amp;&amp; ogma_readl(priv, addr=
-) &amp; mask)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ;<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (!timeout) {<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 netdev_WARN(priv-&gt;=
-net_device, &quot;%s: timeout\n&quot;, __func__);<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ETIMEDOUT;<br=
->
-&gt; &gt; + =C2=A0 =C2=A0 }<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 return 0;<br>
-&gt; &gt; +}<br>
-&gt;<br>
-&gt; The callers of this function seem to all be from non-atomic context, s=
-o it<br>
-&gt; would be good to occasionally msleep() here, either after each try, or=
-<br>
-&gt; after initially spinning for as long as it takes to succeed most of th=
-e<br>
-&gt; time.</p>
-<p dir=3D"ltr">OK.=C2=A0 Normally it should complete quickly, so the initia=
-l spin idea sounds like the way.</p>
-<p dir=3D"ltr">&gt; &gt; +<br>
-&gt; &gt; +static void ogma_napi_tx_processing(struct napi_struct *napi_p)<=
-br>
-&gt; &gt; +{<br>
-&gt; &gt; + =C2=A0 =C2=A0 struct ogma_priv *priv =3D container_of(napi_p, s=
-truct ogma_priv, napi);<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 ogma_ring_irq_clr(priv, OGMA_RING_TX, OGMA_IRQ_EM=
-PTY);<br>
-&gt; &gt; + =C2=A0 =C2=A0 ogma_clean_tx_desc_ring(priv);<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 if (netif_queue_stopped(priv-&gt;net_device) &amp=
-;&amp;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 ogma_get_tx_avail_num(priv) &gt;=3D=
- OGMA_NETDEV_TX_PKT_SCAT_NUM_MAX)<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 netif_wake_queue(priv=
--&gt;net_device);<br>
-&gt; &gt; +}<br>
-&gt;<br>
-&gt; You should probably call netdev_tx_completed_queue() here and<br>
-&gt; netdev_tx_sent_queue() when sending the frame. See <a href=3D"http://l=
-wn.net/Articles/454390/">http://lwn.net/Articles/454390/</a><br>
-&gt; for a description of the API.</p>
-<p dir=3D"ltr">OK... thanks a lot for the review, I will fix these and send=
- the rest version in a few days.</p>
-<p dir=3D"ltr">-Andy</p>
-<p dir=3D"ltr">&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 Arnd<br>
-&gt;<br>
-</p>
-
---001a11c2e0a87c7f6404fe27b659--
+> static int foo -> int foo?
+> 
+> The _post methods are 'exported' in the same manner.
+> 
+> The explanation is included in the next patch in the series, copying verbatim:
+> 
+> > As part of transactional DT support there needs to be a clearer
+> > definition of how each dynamic tree change method works.
+> > 
+> > Let's take for example the of_add_property method. There are
+> > discrete steps taken in sequence.
+> > 
+> > 1. The OF_RECONFIG_ADD_PROPERTY notifier will be fired.
+> > 2. The devtree lock will be taken.
+> > 3. Insertion of the property in the live tree.
+> > 4. The devtree lock will be released.
+> > 5. The property will be inserted in the sysfs tree.
+> > 
+> > For each of the of_attach_node, of_detach_node, of_add_property,
+> > of_remove_property and of_update_property methods we export (and
+> > introduce if not available), their counterparts of
+> > __of_attach_node, __of_attach_node_post, __of_detach_node,
+> > __of_detach_node_post, __of_add_property, __of_add_property_post,
+> > __of_remove_property, __of_remove_property_post, __of_update_property
+> > and __of_update_property post.
+> > 
+> > So each of the tree modification methods is following the same
+> > pattern, i.e. for method foo we have:
+> > 
+> > Firing of the notifer, lock, __foo, unlock, __foo_post
+> > 
+> > This breakdown is required when we introduce transaction.
+> 
+> Regards
+> 
+> -- Pantelis
+> 
+> > g.
+> > 
+> >> 
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> >> ---
+> >> drivers/of/base.c       | 97 +++++++++++++++++++++++++++++--------------------
+> >> drivers/of/dynamic.c    | 71 +++++++++++++++++++-----------------
+> >> drivers/of/of_private.h |  8 ++++
+> >> 3 files changed, 102 insertions(+), 74 deletions(-)
+> >> 
+> >> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> >> index be0ec37..0d50318 100644
+> >> --- a/drivers/of/base.c
+> >> +++ b/drivers/of/base.c
+> >> @@ -1659,7 +1659,7 @@ EXPORT_SYMBOL(of_count_phandle_with_args);
+> >> /**
+> >>  * __of_add_property - Add a property to a node without lock operations
+> >>  */
+> >> -static int __of_add_property(struct device_node *np, struct property *prop)
+> >> +int __of_add_property(struct device_node *np, struct property *prop)
+> >> {
+> >> 	struct property **next;
+> >> 
+> >> @@ -1701,6 +1701,25 @@ int of_add_property(struct device_node *np, struct property *prop)
+> >> 	return rc;
+> >> }
+> >> 
+> >> +int __of_remove_property(struct device_node *np, struct property *prop)
+> >> +{
+> >> +	struct property **next;
+> >> +
+> >> +	for (next = &np->properties; *next; next = &(*next)->next) {
+> >> +		if (*next == prop)
+> >> +			break;
+> >> +	}
+> >> +	if (*next == NULL)
+> >> +		return -ENODEV;
+> >> +
+> >> +	/* found the node */
+> >> +	*next = prop->next;
+> >> +	prop->next = np->deadprops;
+> >> +	np->deadprops = prop;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> /**
+> >>  * of_remove_property - Remove a property from a node.
+> >>  *
+> >> @@ -1711,9 +1730,7 @@ int of_add_property(struct device_node *np, struct property *prop)
+> >>  */
+> >> int of_remove_property(struct device_node *np, struct property *prop)
+> >> {
+> >> -	struct property **next;
+> >> 	unsigned long flags;
+> >> -	int found = 0;
+> >> 	int rc;
+> >> 
+> >> 	rc = of_property_notify(OF_RECONFIG_REMOVE_PROPERTY, np, prop);
+> >> @@ -1721,22 +1738,11 @@ int of_remove_property(struct device_node *np, struct property *prop)
+> >> 		return rc;
+> >> 
+> >> 	raw_spin_lock_irqsave(&devtree_lock, flags);
+> >> -	next = &np->properties;
+> >> -	while (*next) {
+> >> -		if (*next == prop) {
+> >> -			/* found the node */
+> >> -			*next = prop->next;
+> >> -			prop->next = np->deadprops;
+> >> -			np->deadprops = prop;
+> >> -			found = 1;
+> >> -			break;
+> >> -		}
+> >> -		next = &(*next)->next;
+> >> -	}
+> >> +	rc = __of_remove_property(np, prop);
+> >> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> 
+> >> -	if (!found)
+> >> -		return -ENODEV;
+> >> +	if (rc)
+> >> +		return rc;
+> >> 
+> >> 	/* at early boot, bail hear and defer setup to of_init() */
+> >> 	if (!of_kset)
+> >> @@ -1747,6 +1753,32 @@ int of_remove_property(struct device_node *np, struct property *prop)
+> >> 	return 0;
+> >> }
+> >> 
+> >> +int __of_update_property(struct device_node *np, struct property *newprop,
+> >> +		struct property **oldpropp)
+> >> +{
+> >> +	struct property **next, *oldprop;
+> >> +
+> >> +	for (next = &np->properties; *next; next = &(*next)->next) {
+> >> +		if (of_prop_cmp((*next)->name, newprop->name) == 0)
+> >> +			break;
+> >> +	}
+> >> +	*oldpropp = oldprop = *next;
+> >> +
+> >> +	if (oldprop) {
+> >> +		/* replace the node */
+> >> +		newprop->next = oldprop->next;
+> >> +		*next = newprop;
+> >> +		oldprop->next = np->deadprops;
+> >> +		np->deadprops = oldprop;
+> >> +	} else {
+> >> +		/* new node */
+> >> +		newprop->next = NULL;
+> >> +		*next = newprop;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> /*
+> >>  * of_update_property - Update a property in a node, if the property does
+> >>  * not exist, add it.
+> >> @@ -1756,36 +1788,21 @@ int of_remove_property(struct device_node *np, struct property *prop)
+> >>  * Instead we just move the property to the "dead properties" list,
+> >>  * and add the new property to the property list
+> >>  */
+> >> -int of_update_property(struct device_node *np, struct property *newprop)
+> >> +int of_update_property(struct device_node *np, struct property *prop)
+> >> {
+> >> -	struct property **next, *oldprop;
+> >> +	struct property *oldprop;
+> >> 	unsigned long flags;
+> >> 	int rc;
+> >> 
+> >> -	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+> >> +	if (!prop->name)
+> >> +		return -EINVAL;
+> >> +
+> >> +	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, prop);
+> >> 	if (rc)
+> >> 		return rc;
+> >> 
+> >> -	if (!newprop->name)
+> >> -		return -EINVAL;
+> >> -
+> >> 	raw_spin_lock_irqsave(&devtree_lock, flags);
+> >> -	next = &np->properties;
+> >> -	oldprop = __of_find_property(np, newprop->name, NULL);
+> >> -	if (!oldprop) {
+> >> -		/* add the new node */
+> >> -		rc = __of_add_property(np, newprop);
+> >> -	} else while (*next) {
+> >> -		/* replace the node */
+> >> -		if (*next == oldprop) {
+> >> -			newprop->next = oldprop->next;
+> >> -			*next = newprop;
+> >> -			oldprop->next = np->deadprops;
+> >> -			np->deadprops = oldprop;
+> >> -			break;
+> >> -		}
+> >> -		next = &(*next)->next;
+> >> -	}
+> >> +	rc = __of_update_property(np, prop, &oldprop);
+> >> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> 	if (rc)
+> >> 		return rc;
+> >> @@ -1797,7 +1814,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+> >> 	/* Update the sysfs attribute */
+> >> 	if (oldprop)
+> >> 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> >> -	__of_add_property_sysfs(np, newprop);
+> >> +	__of_add_property_sysfs(np, prop);
+> >> 
+> >> 	return 0;
+> >> }
+> >> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> >> index 0e8457c..eb1126f 100644
+> >> --- a/drivers/of/dynamic.c
+> >> +++ b/drivers/of/dynamic.c
+> >> @@ -95,8 +95,17 @@ int of_property_notify(int action, struct device_node *np,
+> >> 	return of_reconfig_notify(action, &pr);
+> >> }
+> >> 
+> >> +void __of_attach_node(struct device_node *np)
+> >> +{
+> >> +	np->sibling = np->parent->child;
+> >> +	np->allnext = np->parent->allnext;
+> >> +	np->parent->allnext = np;
+> >> +	np->parent->child = np;
+> >> +	of_node_clear_flag(np, OF_DETACHED);
+> >> +}
+> >> +
+> >> /**
+> >> - * of_attach_node() - Plug a device node into the tree and global list.
+> >> + * of_attach_node - Plug a device node into the tree and global list.
+> >>  */
+> >> int of_attach_node(struct device_node *np)
+> >> {
+> >> @@ -108,52 +117,29 @@ int of_attach_node(struct device_node *np)
+> >> 		return rc;
+> >> 
+> >> 	raw_spin_lock_irqsave(&devtree_lock, flags);
+> >> -	np->sibling = np->parent->child;
+> >> -	np->allnext = of_allnodes;
+> >> -	np->parent->child = np;
+> >> -	of_allnodes = np;
+> >> -	of_node_clear_flag(np, OF_DETACHED);
+> >> +	__of_attach_node(np);
+> >> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> 
+> >> 	of_node_add(np);
+> >> 	return 0;
+> >> }
+> >> 
+> >> -/**
+> >> - * of_detach_node() - "Unplug" a node from the device tree.
+> >> - *
+> >> - * The caller must hold a reference to the node.  The memory associated with
+> >> - * the node is not freed until its refcount goes to zero.
+> >> - */
+> >> -int of_detach_node(struct device_node *np)
+> >> +void __of_detach_node(struct device_node *np)
+> >> {
+> >> 	struct device_node *parent;
+> >> -	unsigned long flags;
+> >> -	int rc = 0;
+> >> -
+> >> -	rc = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
+> >> -	if (rc)
+> >> -		return rc;
+> >> +	struct device_node *prev;
+> >> +	struct device_node *prevsib;
+> >> 
+> >> -	raw_spin_lock_irqsave(&devtree_lock, flags);
+> >> -
+> >> -	if (of_node_check_flag(np, OF_DETACHED)) {
+> >> -		/* someone already detached it */
+> >> -		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> -		return rc;
+> >> -	}
+> >> +	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
+> >> +		return;
+> >> 
+> >> 	parent = np->parent;
+> >> -	if (!parent) {
+> >> -		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> -		return rc;
+> >> -	}
+> >> +	if (WARN_ON(!parent))
+> >> +		return;
+> >> 
+> >> 	if (of_allnodes == np)
+> >> 		of_allnodes = np->allnext;
+> >> 	else {
+> >> -		struct device_node *prev;
+> >> -
+> >> 		for (prev = of_allnodes;
+> >> 		     prev->allnext != np;
+> >> 		     prev = prev->allnext)
+> >> @@ -164,8 +150,6 @@ int of_detach_node(struct device_node *np)
+> >> 	if (parent->child == np)
+> >> 		parent->child = np->sibling;
+> >> 	else {
+> >> -		struct device_node *prevsib;
+> >> -
+> >> 		for (prevsib = np->parent->child;
+> >> 		     prevsib->sibling != np;
+> >> 		     prevsib = prevsib->sibling)
+> >> @@ -174,6 +158,25 @@ int of_detach_node(struct device_node *np)
+> >> 	}
+> >> 
+> >> 	of_node_set_flag(np, OF_DETACHED);
+> >> +}
+> >> +
+> >> +/**
+> >> + * of_detach_node - "Unplug" a node from the device tree.
+> >> + *
+> >> + * The caller must hold a reference to the node.  The memory associated with
+> >> + * the node is not freed until its refcount goes to zero.
+> >> + */
+> >> +int of_detach_node(struct device_node *np)
+> >> +{
+> >> +	unsigned long flags;
+> >> +	int rc = 0;
+> >> +
+> >> +	rc = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
+> >> +	if (rc)
+> >> +		return rc;
+> >> +
+> >> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> >> +	__of_detach_node(np);
+> >> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> 
+> >> 	of_node_remove(np);
+> >> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> >> index a541b81..b2c25b5 100644
+> >> --- a/drivers/of/of_private.h
+> >> +++ b/drivers/of/of_private.h
+> >> @@ -59,4 +59,12 @@ static inline int of_reconfig_notify(unsigned long action, void *p)
+> >> }
+> >> #endif /* CONFIG_OF_DYNAMIC */
+> >> 
+> >> +extern int __of_add_property(struct device_node *np, struct property *prop);
+> >> +extern int __of_remove_property(struct device_node *np, struct property *prop);
+> >> +extern int __of_update_property(struct device_node *np,
+> >> +		struct property *newprop, struct property **oldprop);
+> >> +
+> >> +extern void __of_attach_node(struct device_node *np);
+> >> +extern void __of_detach_node(struct device_node *np);
+> >> +
+> >> #endif /* _LINUX_OF_PRIVATE_H */
+> >> -- 
+> >> 1.7.12
+> >> 
+> > 
+> 
