@@ -1,209 +1,86 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv3 3/7] clk: mvebu: extend clk-cpu for dynamic frequency scaling
-Date: Wed,  9 Jul 2014 17:45:11 +0200
-Message-ID: <1404920715-19834-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 01/11] mfd: add atmel-hlcdc driver
+Date: Wed, 9 Jul 2014 16:48:03 +0100
+Message-ID: <20140709154803.GL2635@lee--X1>
+References: <1404744671-1629-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1404744671-1629-2-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404744671-1629-2-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit extends the existing clk-cpu driver used on Marvell Armada
-XP platforms to support the dynamic frequency scaling of the CPU
-clock. Non-dynamic frequency change was already supported (and used
-before secondary CPUs are started), but the dynamic frequency change
-requires a completely different procedure.
+On Mon, 07 Jul 2014, Boris BREZILLON wrote:
 
-In order to achieve this, the clk_cpu_set_rate() function is reworked
-to handle two separate cases:
+> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9=
+x5
+> family or sama5d3 family) exposes 2 subdevices:
+> - a display controller (controlled by a DRM driver)
+> - a PWM chip
+>=20
+> The MFD device provides a regmap and several clocks (those connected
+> to this hardware block) to its subdevices.
+>=20
+> This way concurrent accesses to the iomem range are handled by the re=
+gmap
+> framework, and each subdevice can safely access HLCDC registers.
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>  drivers/mfd/Kconfig             |  12 ++++
+>  drivers/mfd/Makefile            |   1 +
+>  drivers/mfd/atmel-hlcdc.c       | 119 ++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/atmel-hlcdc.h |  78 ++++++++++++++++++++++++++
+>  4 files changed, 210 insertions(+)
+>  create mode 100644 drivers/mfd/atmel-hlcdc.c
+>  create mode 100644 include/linux/mfd/atmel-hlcdc.h
 
- - The case where the clock is enabled, which is the new dynamic
-   frequency change code, implemented in clk_cpu_on_set_rate(). This
-   part will be used for cpufreq activities.
+[...]
 
- - The case where the clock is disabled, which is the existing
-   frequency change code, moved in clk_cpu_off_set_rate(). This part
-   is already used to set the clock frequency of the secondary CPUs
-   before starting them.
+> +static const struct mfd_cell atmel_hlcdc_cells[] =3D {
+> +	{
+> +		.name =3D "atmel-hlcdc-pwm",
+> +		.of_compatible =3D "atmel,hlcdc-pwm",
+> +	},
+> +	{
+> +		.name =3D "atmel-hlcdc-dc",
+> +		.of_compatible =3D "atmel,hlcdc-dc",
 
-In order to implement the dynamic frequency change function, we need
-to access the PMU DFS registers, which are outside the currently
-mapped "Clock Complex" registers, so a new area of registers is now
-mapped. This affects the Device Tree binding, but we are careful to do
-it in a backward-compatible way (by allowing the second pair of
-registers to be non-existent, and in this case, ensuring
-clk_cpu_on_set_rate() returns an error).
+'dc' is a little ambiguous.
 
-Note that technically speaking, the clk_cpu_on_set_rate() does not do
-the entire procedure needed to change the frequency dynamically, as it
-involves touching a number of PMSU registers. This is done through a
-clock notifier registered by the PMSU driver in followup commits.
+Would be more transparent if s/dc/disp or similar.
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |  5 +-
- drivers/clk/mvebu/clk-cpu.c                        | 80 ++++++++++++++++++++--
- 2 files changed, 78 insertions(+), 7 deletions(-)
+> +	},
+> +};
 
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
-index feb8301..99c2146 100644
---- a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
-@@ -3,14 +3,15 @@ Device Tree Clock bindings for cpu clock of Marvell EBU platforms
- Required properties:
- - compatible : shall be one of the following:
- 	"marvell,armada-xp-cpu-clock" - cpu clocks for Armada XP
--- reg : Address and length of the clock complex register set
-+- reg : Address and length of the clock complex register set, followed
-+        by address and length of the PMU DFS registers
- - #clock-cells : should be set to 1.
- - clocks : shall be the input parent clock phandle for the clock.
- 
- cpuclk: clock-complex@d0018700 {
- 	#clock-cells = <1>;
- 	compatible = "marvell,armada-xp-cpu-clock";
--	reg = <0xd0018700 0xA0>;
-+	reg = <0xd0018700 0xA0>, <0x1c054 0x10>;
- 	clocks = <&coreclk 1>;
- }
- 
-diff --git a/drivers/clk/mvebu/clk-cpu.c b/drivers/clk/mvebu/clk-cpu.c
-index 8ebf757..3821a88 100644
---- a/drivers/clk/mvebu/clk-cpu.c
-+++ b/drivers/clk/mvebu/clk-cpu.c
-@@ -16,10 +16,19 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/delay.h>
-+#include <linux/mvebu-pmsu.h>
-+#include <asm/smp_plat.h>
- 
--#define SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET    0x0
--#define SYS_CTRL_CLK_DIVIDER_VALUE_OFFSET   0xC
--#define SYS_CTRL_CLK_DIVIDER_MASK	    0x3F
-+#define SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET               0x0
-+#define   SYS_CTRL_CLK_DIVIDER_CTRL_RESET_ALL          0xff
-+#define   SYS_CTRL_CLK_DIVIDER_CTRL_RESET_SHIFT        8
-+#define SYS_CTRL_CLK_DIVIDER_CTRL2_OFFSET              0x8
-+#define   SYS_CTRL_CLK_DIVIDER_CTRL2_NBCLK_RATIO_SHIFT 16
-+#define SYS_CTRL_CLK_DIVIDER_VALUE_OFFSET              0xC
-+#define SYS_CTRL_CLK_DIVIDER_MASK                      0x3F
-+
-+#define PMU_DFS_RATIO_SHIFT 16
-+#define PMU_DFS_RATIO_MASK  0x3F
- 
- #define MAX_CPU	    4
- struct cpu_clk {
-@@ -28,6 +37,7 @@ struct cpu_clk {
- 	const char *clk_name;
- 	const char *parent_name;
- 	void __iomem *reg_base;
-+	void __iomem *pmu_dfs;
- };
- 
- static struct clk **clks;
-@@ -62,8 +72,9 @@ static long clk_cpu_round_rate(struct clk_hw *hwclk, unsigned long rate,
- 	return *parent_rate / div;
- }
- 
--static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
--			    unsigned long parent_rate)
-+static int clk_cpu_off_set_rate(struct clk_hw *hwclk, unsigned long rate,
-+				unsigned long parent_rate)
-+
- {
- 	struct cpu_clk *cpuclk = to_cpu_clk(hwclk);
- 	u32 reg, div;
-@@ -95,6 +106,58 @@ static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
- 	return 0;
- }
- 
-+static int clk_cpu_on_set_rate(struct clk_hw *hwclk, unsigned long rate,
-+			       unsigned long parent_rate)
-+{
-+	u32 reg;
-+	unsigned long fabric_div, target_div, cur_rate;
-+	struct cpu_clk *cpuclk = to_cpu_clk(hwclk);
-+
-+	/*
-+	 * PMU DFS registers are not mapped, Device Tree does not
-+	 * describes them. We cannot change the frequency dynamically.
-+	 */
-+	if (!cpuclk->pmu_dfs)
-+		return -ENODEV;
-+
-+	cur_rate = __clk_get_rate(hwclk->clk);
-+
-+	reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL2_OFFSET);
-+	fabric_div = (reg >> SYS_CTRL_CLK_DIVIDER_CTRL2_NBCLK_RATIO_SHIFT) &
-+		SYS_CTRL_CLK_DIVIDER_MASK;
-+
-+	/* Frequency is going up */
-+	if (rate == 2 * cur_rate)
-+		target_div = fabric_div / 2;
-+	/* Frequency is going down */
-+	else
-+		target_div = fabric_div;
-+
-+	if (target_div == 0)
-+		target_div = 1;
-+
-+	reg = readl(cpuclk->pmu_dfs);
-+	reg &= ~(PMU_DFS_RATIO_MASK << PMU_DFS_RATIO_SHIFT);
-+	reg |= (target_div << PMU_DFS_RATIO_SHIFT);
-+	writel(reg, cpuclk->pmu_dfs);
-+
-+	reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
-+	reg |= (SYS_CTRL_CLK_DIVIDER_CTRL_RESET_ALL <<
-+		SYS_CTRL_CLK_DIVIDER_CTRL_RESET_SHIFT);
-+	writel(reg, cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
-+
-+	return mvebu_pmsu_dfs_request(cpuclk->cpu);
-+}
-+
-+static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
-+			    unsigned long parent_rate)
-+{
-+	if (__clk_is_enabled(hwclk->clk))
-+		return clk_cpu_on_set_rate(hwclk, rate, parent_rate);
-+	else
-+		return clk_cpu_off_set_rate(hwclk, rate, parent_rate);
-+}
-+
- static const struct clk_ops cpu_ops = {
- 	.recalc_rate = clk_cpu_recalc_rate,
- 	.round_rate = clk_cpu_round_rate,
-@@ -105,6 +168,7 @@ static void __init of_cpu_clk_setup(struct device_node *node)
- {
- 	struct cpu_clk *cpuclk;
- 	void __iomem *clock_complex_base = of_iomap(node, 0);
-+	void __iomem *pmu_dfs_base = of_iomap(node, 1);
- 	int ncpus = 0;
- 	struct device_node *dn;
- 
-@@ -114,6 +178,10 @@ static void __init of_cpu_clk_setup(struct device_node *node)
- 		return;
- 	}
- 
-+	if (pmu_dfs_base == NULL)
-+		pr_warn("%s: pmu-dfs base register not set, dynamic frequency scaling not available\n",
-+			__func__);
-+
- 	for_each_node_by_type(dn, "cpu")
- 		ncpus++;
- 
-@@ -146,6 +214,8 @@ static void __init of_cpu_clk_setup(struct device_node *node)
- 		cpuclk[cpu].clk_name = clk_name;
- 		cpuclk[cpu].cpu = cpu;
- 		cpuclk[cpu].reg_base = clock_complex_base;
-+		if (pmu_dfs_base)
-+			cpuclk[cpu].pmu_dfs = pmu_dfs_base + 4 * cpu;
- 		cpuclk[cpu].hw.init = &init;
- 
- 		init.name = cpuclk[cpu].clk_name;
--- 
-2.0.0
+[...]
 
+> +static struct platform_driver atmel_hlcdc_driver =3D {
+> +	.probe =3D atmel_hlcdc_probe,
+> +	.remove =3D atmel_hlcdc_remove,
+> +	.driver =3D {
+> +		.name =3D "atmel-hlcdc",
+> +		.owner =3D THIS_MODULE,
+
+Remove this line, it's not required.
+
+> +		.of_match_table =3D atmel_hlcdc_match,
+> +	},
+> +};
+> +module_platform_driver(atmel_hlcdc_driver);
+
+Once those minor points are addressed, resubmit with my:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
