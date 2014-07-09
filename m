@@ -1,119 +1,65 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v2 2/2] extcon: gpio: Add dt support for the driver.
-Date: Wed, 9 Jul 2014 14:31:08 +0530
-Message-ID: <1404896468-15974-3-git-send-email-george.cherian@ti.com>
-References: <1404896468-15974-1-git-send-email-george.cherian@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] arm: dra7xx: Add hwmod data for MDIO and CPSW
+Date: Wed, 9 Jul 2014 02:08:51 -0700
+Message-ID: <20140709090851.GI28884@atomide.com>
+References: <1404844852-19980-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404896468-15974-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, myungjoo.ham@samsung.com, grant.likely@linaro.org, rdunlap@infradead.org, galak@codeaurora.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404844852-19980-1-git-send-email-bigeasy@linutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>, Praveen Rao <prao@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to extcon-gpio driver.
-Add devicetree binding documentation
+Hi,
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 ++++++++++++++++
- drivers/extcon/extcon-gpio.c                       | 28 ++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+Can you please check the comments below so we don't have to
+add duplicate data just to remove it later on.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 0000000..1c12957
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,21 @@
-+GPIO based EXTCON
-+
-+EXTCON GPIO
-+-----------
-+
-+Required Properties:
-+ - compatible: should be:
-+   * "ti,extcon-gpio"
-+ - gpios: specifies the gpio pin used.
-+ - debounce: Debounce time for GPIO IRQ in ms
-+ - irq-flags: IRQ flag to be used ( eg: IRQ_TYPE_EDGE_FALLING)
-+
-+
-+Eg:
-+
-+        extcon1: am43_usbid_extcon1 {
-+                compatible = "ti,extcon-gpio";
-+                gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
-+                debounce = <20>;
-+                irq-flags = <IRQ_TYPE_EDGE_FALLING>;
-+        };
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 6c268b4..e5e2cba 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -27,6 +27,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-@@ -83,12 +84,33 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
- 
- static int gpio_extcon_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct gpio_extcon_data *extcon_data;
- 	int ret;
- 
-+	if (np) {
-+		enum of_gpio_flags flags;
-+
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
-+
-+		pdata->gpio = of_get_gpio(np, 0);
-+		if (!gpio_is_valid(pdata->gpio))
-+			return -EPROBE_DEFER;
-+
-+		pdata->name = np->name;
-+		ret = of_get_gpio_flags(np, 0, &flags);
-+		pdata->gpio_active_low = flags & OF_GPIO_ACTIVE_LOW;
-+
-+		of_property_read_u32(np, "debounce", (u32 *)&pdata->debounce);
-+		of_property_read_u32(np, "irq-flags", (u32 *)&pdata->irq_flags);
-+	}
-+
- 	if (!pdata)
- 		return -EBUSY;
-+
- 	if (!pdata->irq_flags) {
- 		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
- 		return -EINVAL;
-@@ -177,6 +199,11 @@ static int gpio_extcon_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
- 
-+static struct of_device_id of_extcon_gpio_match_tbl[] = {
-+	{ .compatible = "ti,extcon-gpio", },
-+	{ /* end */ }
-+};
-+
- static struct platform_driver gpio_extcon_driver = {
- 	.probe		= gpio_extcon_probe,
- 	.remove		= gpio_extcon_remove,
-@@ -184,6 +211,7 @@ static struct platform_driver gpio_extcon_driver = {
- 		.name	= "extcon-gpio",
- 		.owner	= THIS_MODULE,
- 		.pm	= &gpio_extcon_pm_ops,
-+		.of_match_table = of_extcon_gpio_match_tbl,
- 	},
- };
- 
--- 
-1.8.3.1
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> [140708 11:43]:
+> +
+> +static struct omap_hwmod_irq_info dra7xx_gmac_irqs[] = {
+> +	{ .name = "c0_rx_thresh_pend", .irq = 50 + DRA7XX_IRQ_GIC_START, },
+> +	{ .name = "c0_rx_pend", .irq = 51 + DRA7XX_IRQ_GIC_START, },
+> +	{ .name = "c0_tx_pend", .irq = 52 + DRA7XX_IRQ_GIC_START, },
+> +	{ .name = "c0_misc_pend", .irq = 53 + DRA7XX_IRQ_GIC_START, },
+> +	{ .irq = -1 },
+> +};
+
+Why do we need the interrupts here? They should be coming
+from the .dts files? Is this numbering with or without
+the crossbar?
+
+> +static struct omap_hwmod_addr_space dra7xx_gmac_addr_space[] = {
+> +	/* cpsw ss */
+> +	{
+> +		.pa_start	= 0x48484000,
+> +		.pa_end	= 0x48484000 + SZ_2K - 1,
+> +	},
+> +	/* cpsw wr */
+> +	{
+> +		.pa_start	= 0x48485200,
+> +		.pa_end	= 0x48485200 + SZ_256 - 1,
+> +		.flags	= ADDR_TYPE_RT,
+> +	},
+> +	{ }
+> +};
+
+Also for the IO range, this should be coming from the .dts
+files now?
+
+> +static struct omap_hwmod_addr_space dra7xx_mdio_addr_space[] = {
+> +	{
+> +		.pa_start	= 0x48485000,
+> +		.pa_end		= 0x48485000 + SZ_256 - 1,
+> +	},
+> +	{ }
+> +};
+
+Here too?
+
+Regards,
+
+Tony
