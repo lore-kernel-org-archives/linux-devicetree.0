@@ -1,109 +1,57 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
-Date: Wed, 9 Jul 2014 07:02:48 -0700
-Message-ID: <CAJAp7Og0Cr3oY=XpT4NzKUWykxkRTq1ZRDyamW6tgohfBs3dmg@mail.gmail.com>
-References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
-	<CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
-	<1404904380.16296.17.camel@iivanov-dev>
-	<CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
+Date: Wed, 09 Jul 2014 16:02:58 +0200
+Message-ID: <53BD4B92.7030601@redhat.com>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com> <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com> <20140708134000.GC4979@htj.dyndns.org> <20140708170353.GA16148@kwain> <20140708171817.GH4979@htj.dyndns.org> <20140708174900.GC16148@kwain> <20140708214010.GI4979@htj.dyndns.org> <20140709082331.GA4510@kwain> <20140709135910.GA11193@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140709135910.GA11193@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 9, 2014 at 4:43 AM, Linus Walleij <linus.walleij@linaro.org=
-> wrote:
-> On Wed, Jul 9, 2014 at 1:13 PM, Ivan T. Ivanov <iivanov@mm-sol.com> w=
-rote:
->> On Wed, 2014-07-09 at 11:43 +0200, Linus Walleij wrote:
->>> On Mon, Jul 7, 2014 at 5:11 PM, Ivan T. Ivanov <iivanov@mm-sol.com>=
- wrote:
->>> Oh, I just spent some 45 minutes reviewing an 8xxx pinctrl driver f=
-rom
->>> Bj=C3=B6rn Andersson
->>> that *seems* to be doing exactly the same thing.
->>>
+Hi,
 
-Sorry for not getting comments out on Ivan's patches before you got her=
-e.
-
->>> Now I have two drivers from people outside Qualcomm :-)
->>>
-
-:)
-
->>> Some of my review comments on Bj=C3=B6rn's driver (like using SI un=
-its with the pin
->>> config) are actually adressed in this patch set. The idea to split =
-in subdrivers
->>> per-ASIC may be good? I don't really know.
->>>
->>> Can you two guys *PLEASE* join efforts and combine your drivers int=
-o one?
+On 07/09/2014 03:59 PM, Tejun Heo wrote:
+> Hello,
+>=20
+> On Wed, Jul 09, 2014 at 10:23:31AM +0200, Antoine T=E9nart wrote:
+>>> It is confusing.  If you wanna pass around available ports in hpriv=
+,
+>>> please add a separate field and replace the arguments to
+>>> save_initial_config().
 >>
+>> I don't get it. Which argument should I replace in
+>> save_initial_config()? The change is we compute hpriv->port_map.
+>> I don't see which arguments we can add or replace.
+>=20
+> The @force_port_map and @mask_port_map of ahci_save_initial_config().
+> We end up with three params from two places modifying port_map and on=
+e
+> of those is in/out parameter, so ummm, no.  If you wanna add port
+> masking to @hpriv, please do it by moving @force_port_map and
+> @mask_port_map into @hpriv instead.
+>=20
+> Sure, the proposed change is small but the end result is messy.
+>=20
+>> I had a quick look on this, and it does not seems to be that simple.=
+ The
+>> ahci_port_priv is stored inside the ata_port struct and not accessib=
+le
+>> (as of now) from the ahci_host_priv one. The ahci_port_priv is
+>> initialized at the end of ahci_platform_init_host(), far after we ne=
+ed
+>> it. This requires quite a lot of changes. Or is there another way?
+>=20
+> Yeah, it'd probably need separating out port resource handling, so
+> that the order is get_resources, host_alloc, get_port_resources and
+> then init and activate.  Hans, what do you think?
 
-The drivers can't be merged; the hardware is more or less identical,
-but the register map is completely different.
-
-However, the device tree bindings are a different thing; as the
-properties used to describe the hardware doesn't relate to how we
-communicate with it I think we should be able to (and therefor should)
-use the same documentation for the two (rather 7) chips.
-
->> Not sure. Bj=C3=B6rn patches cover older PMIC chips, if not mistaken=
-, mine
->> cover PMIC's used with APQ8074 and onward [1]. Main difference is
->> the bus which connects them to SoC, interrupts handling, runtime
->> pin type detection and register map.
->
-
-Correct Ivan; we do however share the same issues related to how to do
-interrupt handling, units for properties and how to split/reuse
-between gpio and mpp. Also we have solved the pins vs groups vs
-functions slightly different, that should all be aligned I think.
-
-> Oh OK... then atleast there is something wrong with the naming of
-> Bj=C3=B6rns patches as they are 8xxx and your chips are also named
-> 8xxx ...
->
-
-So, the pm8xxx series of drivers refer to pm8018, pm8038, pm8058,
-pm8917 and pm8921 which are used in platforms in 8660, 8960 and 8064
-(among others).
-The driver that Ivan posted is for the pm8841 and pm8941; these are
-using spmi instead of ssbi which gives a larger addressing space and
-allows for a less dense register map, so all the plumbing in those
-drivers will be different.
-The suggestion is to call the "new gen stuff" qpnp instead, but to me
-that's just a setup for hitting the same problem in a few years...
-
-Nontheless, the hardware guys have painted us into a corner where
-pm8xxx refer to a series of very similar pmics and pm8x41 is not one
-of those.
-
-> Anyway I will create a patch to move the current msm driver down
-> to a folder named "qcom" and we can atleast collect these drivers
-> in a single place since the chipsets are related, OK?
->
-
-+1
-
-> Then I guess even if the chips are totally unrelated it'd be interest=
-ing
-> to have you two guys cross-review each other's drivers so the behavio=
-ur
-> is consistent across qualcomm platforms.
->
-
-I hope we can meet somewhere in between, so that we and other
-developers will be able to recognize the common element and structures
-later on. Again, sorry for not finding the time to preempt you on
-that.
+The order (and function names) you're suggesting here sound good to me.
 
 Regards,
-Bjorn
+
+Hans
