@@ -1,51 +1,67 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH RESEND v7 2/3] ASoC: add es8328 codec driver
-Date: Wed, 9 Jul 2014 10:45:27 +0100
-Message-ID: <20140709094527.GA21251@opensource.wolfsonmicro.com>
-References: <1404353989-19580-1-git-send-email-xobs@kosagi.com> <1404353989-19580-3-git-send-email-xobs@kosagi.com>
+From: "Hans J. Koch" <hjk@hansjkoch.de>
+Subject: Re: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
+Date: Wed, 9 Jul 2014 12:16:00 +0200
+Message-ID: <20140709101600.GA2061@silverbox.local>
+References: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
+ <20140707084824.GA83417@localhost>
+ <alpine.DEB.2.02.1407071733500.28318@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1404353989-19580-3-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <alpine.DEB.2.02.1407071733500.28318@utopia.booyaka.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andre Heider <a.heider@gmail.com>, Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 03, 2014 at 10:19:48AM +0800, Sean Cross wrote:
-> Add a codec driver for the Everest ES8328.  It supports two separate audio
-> outputs and two separate audio inputs.
+On Mon, Jul 07, 2014 at 05:50:09PM +0000, Paul Walmsley wrote:
+> On Mon, 7 Jul 2014, Andre Heider wrote:
 > 
-> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-> ---
+> > On Sun, Jun 29, 2014 at 06:21:34PM +0200, Andre Heider wrote:
+> > > 
+> > > this series adds PRUv2 support to uio_pruss through devicetree, makes the
+> > > device usable on am33xx and enables it on beaglebone black.
+> > > Inspired by old patches from Matt Porter found in a downstream tree.
+> > > 
+> > > To archieve that this series:
+> > > * adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
+> 
+> ...
+> 
+> > > * is the hardreset thing I did there the right thing to do? I think the
+> > >   proper way would be a reset controller (which apparently doesn't yet exist
+> > >   for this SoC?) and let the driver deassert/assert on probe/remove?
+> > > * the platform device path has a clk_enable() / clk_put() calls. Are those
+> > >   now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
+> > >   calls?
+> 
+> Probably you only need pm_runtime_{get,put}_*() calls, unless you're 
+> changing clock parents or rates in your driver code.
+> 
+> > @OMAP guys: any comments? The series depends on patch 5 and 6; both touch
+> > common hwmod code.
+> 
+> I'd suggest splitting the series into three independent pieces if 
+> possible:
+> 
+> 1. UIO code, for the UIO maintainer(s)
+> 2. DT pieces for Tony
+> 3. hwmod pieces for me
+> 
+> That way they can be cleanly merged by the respective maintainers.
 
-<snip>
-
-> +
-> +static int es8328_codec_probe(struct snd_soc_codec *codec)
-> +{
-> +	struct es8328_priv *es8328;
-> +	int ret;
-> +	int i;
-> +
-> +	es8328 = snd_soc_codec_get_drvdata(codec);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(es8328->supplies); i++)
-> +		es8328->supplies[i].supply = supply_names[i];
-> +
-> +	ret = devm_regulator_bulk_get(codec->dev, ARRAY_SIZE(es8328->supplies),
-> +				es8328->supplies);
-
-Is it safe to use devm_ from the ASoC level probe here? I think
-there was a discussion recently that this can cause problems on
-driver unbinding.
-
-Otherwise this looks pretty good to me.
+I second that. At first sight, the UIO parts look OK to me, but please
+make it a new patch series.
 
 Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
