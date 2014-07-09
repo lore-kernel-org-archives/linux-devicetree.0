@@ -1,36 +1,40 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: a case for a common efuse API?
-Date: Wed, 9 Jul 2014 14:49:07 +0300
-Message-ID: <20140709114907.GI23218@tbergstrom-lnx.Nvidia.com>
-References: <53BC4DD7.20906@codeaurora.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] ARM: dts: AM43x: Add devcice tree nodes
+Date: Wed, 9 Jul 2014 04:51:07 -0700
+Message-ID: <20140709115106.GV28884@atomide.com>
+References: <1404884193-20580-1-git-send-email-j-keerthy@ti.com>
+ <20140709083114.GH28884@atomide.com>
+ <53BD208E.6000507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53BC4DD7.20906@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <53BD208E.6000507-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 10:00:23PM +0200, Stephen Boyd wrote:
+* Keerthy <a0393675-l0cyMroinI0@public.gmane.org> [140709 04:03]:
+> On Wednesday 09 July 2014 02:01 PM, Tony Lindgren wrote:
+> >* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [140708 22:40]:
+> >>The patch series adds the device tree nodes and the corresponding
+> >>documentation. The series also enabled tps65218 config options
+> >>in the omap2plus_defconfig.
+> >>
+> >>The series is boot tested on both AM43x-epos-evm and AM437x-gp-evm.
+> >Are the .dts changes safe to apply separately without breaking
+> >anything?
+> Tony,
 > 
-> I added Tegra folks because I see that on Tegra this hardware is exposed
-> via an SoC specific API, tegra_fuse_readl(), and an associated driver in
-> drivers/misc/fuse/tegra/. Unfortunately I don't see any users of the API
-> outside of the speedo code in the same directory and the sysfs bin
-> attribute that may or may not be in use by some userspace code.
-> 
+> Patch 1/7 had to be re-based on Mark's latest branch for tps65218.
+> Other patches can be taken as is. These patches are boot tested on
+> both am437x-gp-evm and am43x-epos-evm.
 
-The SATA driver by Mikko Perttunen uses it. The driver hasn't been merged
-though. There's some more upcoming work which makes use of it.
-I don't think we can standardize much of an API for this. The data is
-SoC specific, so the user will always need to have some SoC specific
-knowledge on how to use it. In some cases we need it very early (eg. to
-determine the correct Tegra20 revision). On Tegra20 we can't use the CPU
-to read the fuses due to a hw bug, we have to use DMA, which means the
-transaction becomes blocking and could fail due to lack of resources.
+OK thanks applying patches 4 - 7 into omap-for-v3.17/dt.
 
-Cheers,
-
-Peter.
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
