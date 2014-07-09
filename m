@@ -1,36 +1,50 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [RFC PATCH v2 2/5] dt: qcom: msm8974: add qpnp-spmi device nodes
-Date: Wed, 09 Jul 2014 18:28:19 +0300
-Message-ID: <53BD5F93.6030205@mm-sol.com>
-References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com> <1404393243-7324-3-git-send-email-svarbanov@mm-sol.com> <20140709141026.GB2635@lee--X1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 18/24] mfd: max77686: Add Maxim 77802 PMIC support
+Date: Wed, 9 Jul 2014 16:31:46 +0100
+Message-ID: <20140709153146.GJ2635@lee--X1>
+References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1404505467-26526-19-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140709141026.GB2635@lee--X1>
+Content-Disposition: inline
+In-Reply-To: <1404505467-26526-19-git-send-email-javier.martinez@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2014 05:10 PM, Lee Jones wrote:
-> On Thu, 03 Jul 2014, Stanimir Varbanov wrote:
-> 
->> From: Ivan T. Ivanov <iivanov@mm-sol.com>
->>
->> The qpnp-spmi device nodes are childrens of spmi pmic arbiter.
->> msm8974 SoC using two pmic chips pm8941 and pm8841. Every chip
->> has two spmi-qpnp bus id's.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->> ---
->>  arch/arm/boot/dts/qcom-msm8974.dtsi |   45 +++++++++++++++++++++++++++++++++++
->>  1 files changed, 45 insertions(+), 0 deletions(-)
-> 
-> Subject should start with 'ARM: ' for all of your arch/arm patches.
+On Fri, 04 Jul 2014, Javier Martinez Canillas wrote:
+> Maxim MAX77802 is a power management chip that contains 10 high
+> efficiency Buck regulators, 32 Low-dropout (LDO) regulators used
+> to power up application processors and peripherals, a 2-channel
+> 32kHz clock outputs, a Real-Time-Clock (RTC) and a I2C interface
+> to program the individual regulators, clocks outputs and the RTC.
+>=20
+> This patch adds support for MAX77802 to the MAX77686 driver and is
+> based on a driver added to the Chrome OS kernel 3.8 by Simon Glass.
+>=20
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
+=2Euk>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
 
-Sure, will correct the subject, thanks.
+[...]
 
--- 
-regards,
-Stan
+>  static const struct i2c_device_id max77686_i2c_id[] =3D {
+>  	{ "max77686", TYPE_MAX77686 },
+> +	{ "max77802", TYPE_MAX77802 },
+>  	{ }
+
+There's no point in filling this in.  Just empty it completely.
+
+Once you've done that, resubmit the patchset with my:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
