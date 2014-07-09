@@ -1,52 +1,53 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: nand: stm_nand_bch: add new driver
-Date: Wed, 9 Jul 2014 10:22:29 -0700
-Message-ID: <20140709172229.GH7537@ld-irv-0074>
-References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
- <20140703002237.GM3599@ld-irv-0074>
- <20140703100522.756f9715@bbrezillon>
- <20140707235222.GC7537@ld-irv-0074>
- <20140708095855.29c2fb87@bbrezillon>
+Subject: Re: [PATCH v3 2/9] mtd: nand: add ONFI timing mode to
+ nand_timings converter
+Date: Wed, 9 Jul 2014 10:25:55 -0700
+Message-ID: <20140709172555.GI7537@ld-irv-0074>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1394647664-8258-3-git-send-email-b.brezillon.dev@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBK7W6WOQKGQESJ5QYKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394647664-8258-3-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140708095855.29c2fb87@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Gupta, Pekon\"" <pekon-l0cyMroinI0@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Boris,
 
-On Tue, Jul 08, 2014 at 09:58:55AM +0200, Boris BREZILLON wrote:
-> On Mon, 7 Jul 2014 16:52:22 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Thu, Jul 03, 2014 at 10:05:22AM +0200, Boris BREZILLON wrote:
-> > > On Wed, 2 Jul 2014 17:22:37 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > 
-> > > AFAIR, the NAND timing representation for non-ONFI chips question was
-> > > left unanswered:
-> > > 
-> > > https://lkml.org/lkml/2014/5/20/581
-> > > 
-> > > I can definitely respin my NAND timings series, but I'd like to be sure
-> > > this is how you want it done before doing so.
-> > 
-> > Can we start by supporting ONFI-only (or ONFI-only, plus entries in
-> > nand_flash_ids[]), and have nand_base provide the translation so drivers
-> > can retrieve the info? Then we can begin supporting new drivers like
-> > Lee's, and worry about the DT question separately.
-> 
-> So, basically, I just send a new series with patch 1 and 2 from my sunxi
-> NAND series [1] (including the fixes you suggested, of course), right ?
-> 
-> [1] http://thread.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/7977
+Since I think you were planning on revisiting this soon, I have one more
+comment:
 
-Yes, please send 1 and 2 on their own. I think that would be a good
-start for supporting these drivers.
+On Wed, Mar 12, 2014 at 07:07:37PM +0100, Boris BREZILLON wrote:
+> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+> index c970ce7..0b8a822 100644
+> --- a/drivers/mtd/nand/Makefile
+> +++ b/drivers/mtd/nand/Makefile
+> @@ -2,7 +2,7 @@
+>  # linux/drivers/nand/Makefile
+>  #
+>  
+> -obj-$(CONFIG_MTD_NAND)			+= nand.o
+> +obj-$(CONFIG_MTD_NAND)			+= nand.o nand_timings.o
 
+This is not the right place, as it will generate a new module
+'nand_timings' (nand_timings.ko, if CONFIG_MTD_NAND=m). You probably
+want to just add nand_timings.o to the 'nand-objs' list at the bottom of
+the Makefile, like this:
+
+	nand-objs := nand_base.o nand_bbt.o nand_timings.o
+
+>  obj-$(CONFIG_MTD_NAND_ECC)		+= nand_ecc.o
+>  obj-$(CONFIG_MTD_NAND_BCH)		+= nand_bch.o
+>  obj-$(CONFIG_MTD_NAND_IDS)		+= nand_ids.o nand_hynix.o
+
+Thanks,
 Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
