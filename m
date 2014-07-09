@@ -1,34 +1,69 @@
-From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/2] Add devicetree support for extcon-gpio
-Date: Wed, 9 Jul 2014 14:31:06 +0530
-Message-ID: <1404896468-15974-1-git-send-email-george.cherian@ti.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH v2 1/2] extcon: gpio: Minor cleanups
+Date: Wed, 9 Jul 2014 14:31:07 +0530
+Message-ID: <1404896468-15974-2-git-send-email-george.cherian@ti.com>
+References: <1404896468-15974-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404896468-15974-1-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cw00.choi@samsung.com, myungjoo.ham@samsung.com, grant.likely@linaro.org, rdunlap@infradead.org, galak@codeaurora.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, linux@roeck-us.net
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This serires adds devicetree support for extcon-gpio driver.
+Minor Cleanups
+ - Order the include files in alphabetical order.
+ - Fix description of state_off in extcon_gpio.h
+ - Add a descrition for check_on_resume in extcon_gpio.h
 
-Patch 1 - Addreses minor cleanups
-Patch 2 - Adds devicetree support for esxtcon-gpio driver.
+Signed-off-by: George Cherian <george.cherian@ti.com>
+---
+ drivers/extcon/extcon-gpio.c       | 10 +++++-----
+ include/linux/extcon/extcon-gpio.h |  4 +++-
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-George Cherian (2):
-  extcon: gpio: Minor cleanups
-  extcon: gpio: Add dt support for the driver.
-
- .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 ++++++++++++
- drivers/extcon/extcon-gpio.c                       | 38 +++++++++++++++++++---
- include/linux/extcon/extcon-gpio.h                 |  4 ++-
- 3 files changed, 57 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-
+diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+index 645b283..6c268b4 100644
+--- a/drivers/extcon/extcon-gpio.c
++++ b/drivers/extcon/extcon-gpio.c
+@@ -20,16 +20,16 @@
+  *
+ */
+ 
+-#include <linux/module.h>
+-#include <linux/kernel.h>
++#include <linux/extcon.h>
++#include <linux/extcon/extcon-gpio.h>
++#include <linux/gpio.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+-#include <linux/gpio.h>
+-#include <linux/extcon.h>
+-#include <linux/extcon/extcon-gpio.h>
+ 
+ struct gpio_extcon_data {
+ 	struct extcon_dev *edev;
+diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
+index 8900fdf..0b17ad4 100644
+--- a/include/linux/extcon/extcon-gpio.h
++++ b/include/linux/extcon/extcon-gpio.h
+@@ -34,8 +34,10 @@
+  * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
+  * @state_on:		print_state is overriden with state_on if attached.
+  *			If NULL, default method of extcon class is used.
+- * @state_off:		print_state is overriden with state_on if detached.
++ * @state_off:		print_state is overriden with state_off if detached.
+  *			If NUll, default method of extcon class is used.
++ * @check_on_resume:	Boolean describing whether to check the state of gpio
++ *			while resuming from sleep.
+  *
+  * Note that in order for state_on or state_off to be valid, both state_on
+  * and state_off should be not NULL. If at least one of them is NULL,
 -- 
 1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
