@@ -1,45 +1,108 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v3 01/10] mmc: sdhci-st: Intial support for ST SDHCI
- controller
-Date: Wed, 9 Jul 2014 13:59:34 +0100
-Message-ID: <20140709125934.GA18634@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
- <1401899424-1365-2-git-send-email-peter.griffin@linaro.org>
- <CAPDyKFoFNaFpDTVvMF3fbkrgYwUY1_hcbic89JyJzezFDRtN_w@mail.gmail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
+Date: Wed, 9 Jul 2014 15:03:55 +0200
+Message-ID: <CABxcv=mcKNY8TO3Ay+GRs3ha45ptw_w_tig0L8g_syMQdbUmhw@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>
+	<CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>
+	<7hpphwlgn0.fsf@paris.lan>
+	<CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>
+	<7h8uojk61a.fsf@paris.lan>
+	<53ACE724.7090606@gmail.com>
+	<CAGa+x86COQz+cYtrXWrP-sjFGz-gi2tf6GEvLiKYoQwg1zMivQ@mail.gmail.com>
+	<CAGa+x87LHiYGb03=GRcZisK1=TyakW1htd1E2vOQ6ijZKw8syg@mail.gmail.com>
+	<53B2A2A5.4070203@gmail.com>
+	<53BB2E7A.5080204@samsung.com>
+	<53BB5EBD.5030607@gmail.com>
+	<CABxcv=ka5UxZ8E3+F4cR4vcY1m3AfX=g7HiaNYqmyQjHfSVqtw@mail.gmail.com>
+	<53BD3157.7030804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoFNaFpDTVvMF3fbkrgYwUY1_hcbic89JyJzezFDRtN_w@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Ball <chris@printf.net>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, kernel@stlinux.com, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53BD3157.7030804-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hello Tushar,
 
-On Wed, 09 Jul 2014, Ulf Hansson wrote:
+On Wed, Jul 9, 2014 at 2:11 PM, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 07/09/2014 03:44 PM, Javier Martinez Canillas wrote:
+>> Hello Tushar,
+>>
+>> On Tue, Jul 8, 2014 at 5:00 AM, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>
+>>>>> The u-boot version is a little different on my Peach-Pi as compared to
+>>>>> the market release version. Not sure if that is making any difference.
+>>>>>
+>>>>> Peach # version
+>>>>>
+>>>>> U-Boot 2013.04 (Feb 13 2014 - 16:35:03) for Peach
+>>>>> armv7a-cros-linux-gnueabi-gcc.real (4.8.1_cos_gg_feea904_4.8.1-r66)
+>>>>> 4.8.x-google 20130905 (prerelease)
+>>>>> GNU ld (binutils-2.22_cos_gg_2) 2.22
+>>>>>
+>>>>
+>>
+>> I'm using the same U-Boot version than Kevin (U-Boot 2013.04-gb98ed09)
+>> and on my setup using chained nv-uboot I also need patch 1/3 along
+>> with 2/3 to fix the issue.
+>>
+>>>> Note that I've applied this only from this series so I'm not sure how
+>>>> much the problem can be solved...any updates for 1/3 and 3/3?
+>>>>
+>>>> - Kukjin
+>>>
+>>> Thanks for applying 2/3. I am working on 1/3 to see if we are following
+>>> the right approach to fix Kevin's issue (unfortunately, I am not hitting
+>>> the bug on my board ATM). 3/3 has already been merged through a
+>>> different patchset.
+>>>
+>>
+>> I'm sending as an attachment my complete boot log when booting today's
+>> next (20140709) until it hangs and my u-boot env vars. I hope that
+>> helps.
+>>
+>
+> Would you please check the behaviour after enabling following config
+> options?
+>
+> diff --git a/arch/arm/configs/exynos_defconfig
+> b/arch/arm/configs/exynos_defconfig
+> index e07a227..d6056ab 100644
+> --- a/arch/arm/configs/exynos_defconfig
+> +++ b/arch/arm/configs/exynos_defconfig
+> @@ -93,6 +93,11 @@ CONFIG_FRAMEBUFFER_CONSOLE=y
+>  CONFIG_FONTS=y
+>  CONFIG_FONT_7x14=y
+>  CONFIG_LOGO=y
+> +CONFIG_SOUND=y
+> +CONFIG_SND=y
+> +CONFIG_SND_SOC=y
+> +CONFIG_SND_SOC_SAMSUNG=y
+> +CONFIG_SND_SOC_SNOW=y
+>  CONFIG_USB=y
+>  CONFIG_USB_EHCI_HCD=y
+>  CONFIG_USB_EHCI_EXYNOS=y
+> @@ -109,6 +114,8 @@ CONFIG_MMC_DW_IDMAC=y
+>  CONFIG_MMC_DW_EXYNOS=y
+>  CONFIG_RTC_CLASS=y
+>  CONFIG_RTC_DRV_S3C=y
+> +CONFIG_DMADEVICES=y
+> +CONFIG_PL330_DMA=y
+>  CONFIG_COMMON_CLK_MAX77686=y
+>  CONFIG_EXT2_FS=y
+>  CONFIG_EXT3_FS=y
+>
+>
 
-> On 4 June 2014 18:30, Peter Griffin <peter.griffin@linaro.org> wrote:
-> > This platform driver adds initial support for the SDHCI host controller
-> > found on STMicroelectronics SoCs.
-> >
-> > It has been tested on STiH41x b2020 platforms currently.
-> >
-> > Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
-> 
-> Thanks! Applied for next.
+With those Kconfig options enabled the kernel does not hang anymore so
+patch 1/3 is not needed in that case.
 
-Can you drop this patch for the moment?
-
-I was just rebasing the series for Maxime, and noticed this patch needs a few 
-fixups to cope with Russell Kings recent changes in sdhci.c.
-
-regards,
-
-Peter.
-
-
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
