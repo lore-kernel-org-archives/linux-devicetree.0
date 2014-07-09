@@ -1,76 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
-Date: Wed, 9 Jul 2014 13:43:58 +0200
-Message-ID: <CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
-References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
-	<CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
-	<1404904380.16296.17.camel@iivanov-dev>
+From: Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] wlcore: add basic device-tree support
+Date: Wed, 9 Jul 2014 14:45:33 +0300
+Message-ID: <CAB3XZEeC8AeAw03Va6WZ_WHwy6YABkSjg0BMdf=6gGu1UyncSA@mail.gmail.com>
+References: <1404898305-15588-1-git-send-email-eliad@wizery.com>
+	<CAGm1_kvTYiDZDuFrB9X1ZOCxrhPC_NE_UzzY8PoBpdZHrQgv_A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404904380.16296.17.camel@iivanov-dev>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGm1_kvTYiDZDuFrB9X1ZOCxrhPC_NE_UzzY8PoBpdZHrQgv_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 9, 2014 at 1:13 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wro=
-te:
-> On Wed, 2014-07-09 at 11:43 +0200, Linus Walleij wrote:
->> On Mon, Jul 7, 2014 at 5:11 PM, Ivan T. Ivanov <iivanov@mm-sol.com> =
-wrote:
+On Wed, Jul 9, 2014 at 2:00 PM, Yegor Yefremov
+<yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> On Wed, Jul 9, 2014 at 11:31 AM, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
+>> When running with device-tree, we no longer have a board file
+>> that can set up the platform data for wlcore.
+>> Allow this data to be passed from DT.
 >>
->> > This set of patches adds pin control drivers for Multi-purpose
->> > pin (MPP) and General-purpose pin (GPIO) controllers found
->> > in Qualcomm PMIC chips.
->> >
->> > MPP's are enhanced GPIO's with analog circuits, which support
->> > following functions in addition to digital input/output: analog
->> > input/output and current sinks.
->> >
->> > PMIC PM8941 have 8 MPP's and 36 GPIO's. PMIC PM8841 have 4 MPP's.
->> >
->> > Ivan T. Ivanov (4):
->> >   pinctrl: qpnp: Qualcomm PMIC pin controller driver
->> >   pinctrl: qcom: Add documentation for pinctrl-qpnp binding
->> >   pinctrl: qcom: Add PM8941 and PM8941 pinctrl drivers
->> >   ARM: dts: qcom: Add PM8941 and PM8841 pinctrl nodes
->>
->> Oh, I just spent some 45 minutes reviewing an 8xxx pinctrl driver fr=
-om
->> Bj=C3=B6rn Andersson
->> that *seems* to be doing exactly the same thing.
->>
->> Now I have two drivers from people outside Qualcomm :-)
->>
->> Some of my review comments on Bj=C3=B6rn's driver (like using SI uni=
-ts with the pin
->> config) are actually adressed in this patch set. The idea to split i=
-n subdrivers
->> per-ASIC may be good? I don't really know.
->>
->> Can you two guys *PLEASE* join efforts and combine your drivers into=
- one?
+>> For now, parse only the irq used. Other (optional) properties
+>> can be added later on.
 >
-> Not sure. Bj=C3=B6rn patches cover older PMIC chips, if not mistaken,=
- mine
-> cover PMIC's used with APQ8074 and onward [1]. Main difference is
-> the bus which connects them to SoC, interrupts handling, runtime
-> pin type detection and register map.
+> What about adding support for "mac-address"
+> (Documentation/devicetree/bindings/net/ethernet.txt) node or will it
+> be automatically available?
+>
+the mac address is currently either read from the device itself or
+from the nvs (calibration) file.
+i guess additional support for such dt properties can be added later
+on, if needed.
 
-Oh OK... then atleast there is something wrong with the naming of
-Bj=C3=B6rns patches as they are 8xxx and your chips are also named
-8xxx ...
-
-Anyway I will create a patch to move the current msm driver down
-to a folder named "qcom" and we can atleast collect these drivers
-in a single place since the chipsets are related, OK?
-
-Then I guess even if the chips are totally unrelated it'd be interestin=
-g
-to have you two guys cross-review each other's drivers so the behaviour
-is consistent across qualcomm platforms.
-
-Yours,
-Linus Walleij
+Eliad.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
