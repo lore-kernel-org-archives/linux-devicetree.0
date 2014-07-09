@@ -1,47 +1,34 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 18/24] mfd: max77686: Add Maxim 77802 PMIC support
-Date: Wed, 9 Jul 2014 16:31:46 +0100
-Message-ID: <20140709153146.GJ2635@lee--X1>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
- <1404505467-26526-19-git-send-email-javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH] Doc: mfd: as3722: Add details of optional missing
+ property
+Date: Wed, 9 Jul 2014 16:34:10 +0100
+Message-ID: <20140709153410.GK2635@lee--X1>
+References: <1402297417-9338-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404505467-26526-19-git-send-email-javier.martinez@collabora.co.uk>
+In-Reply-To: <1402297417-9338-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, swarren@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 04 Jul 2014, Javier Martinez Canillas wrote:
-> Maxim MAX77802 is a power management chip that contains 10 high
-> efficiency Buck regulators, 32 Low-dropout (LDO) regulators used
-> to power up application processors and peripherals, a 2-channel
-> 32kHz clock outputs, a Real-Time-Clock (RTC) and a I2C interface
-> to program the individual regulators, clocks outputs and the RTC.
+On Mon, 09 Jun 2014, Laxman Dewangan wrote:
+
+> Add details of following properties which are used on driver but
+> not documented on DT binding document.
+> - ams,enable-internal-int-pullup
+> - ams,enable-internal-i2c-pullup
 >=20
-> This patch adds support for MAX77802 to the MAX77686 driver and is
-> based on a driver added to the Chrome OS kernel 3.8 by Simon Glass.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reported-by: Lee Jones <lee.jones@linaro.org>
 > ---
+>  Documentation/devicetree/bindings/mfd/as3722.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-[...]
-
->  static const struct i2c_device_id max77686_i2c_id[] =3D {
->  	{ "max77686", TYPE_MAX77686 },
-> +	{ "max77802", TYPE_MAX77802 },
->  	{ }
-
-There's no point in filling this in.  Just empty it completely.
-
-Once you've done that, resubmit the patchset with my:
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Applied with Linus' Ack, thanks.
 
 --=20
 Lee Jones
