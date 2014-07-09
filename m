@@ -1,71 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/6] pinctrl: samsung: Allow grouping multiple
- pinmux/pinconf nodes
-Date: Wed, 9 Jul 2014 09:32:30 +0200
-Message-ID: <CACRpkdYG7kc+rUHSMoiZCwDAhzWsbBze3djgiWQna0AG6oTwfw@mail.gmail.com>
-References: <1404315664-3174-1-git-send-email-t.figa@samsung.com>
-	<1404315664-3174-6-git-send-email-t.figa@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: add rockchip i2s bindings
+Date: Wed, 9 Jul 2014 09:40:00 +0200
+Message-ID: <20140709074000.GC30458@sirena.org.uk>
+References: <1404458796-6818-1-git-send-email-xjq@rock-chips.com>
+ <1404558638-1739-1-git-send-email-xjq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1404315664-3174-6-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SLk8PSyqxe/ugcCT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404558638-1739-1-git-send-email-xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 2, 2014 at 5:41 PM, Tomasz Figa <t.figa@samsung.com> wrote:
 
-> One of remaining limitations of current pinctrl-samsung driver was
-> the inability to parse multiple pinmux/pinconf group nodes grouped
-> inside a single device tree node. It made defining groups of pins for
-> single purpose, but with different parameters very inconvenient.
->
-> This patch implements Tegra-like support for grouping multiple pinctrl
-> groups inside one device tree node, by completely changing the way
-> pin groups and functions are parsed from device tree. The code creating
-> pinctrl maps from DT nodes has been borrowed from pinctrl-tegra, while
-> the initial creation of groups and functions has been completely
-> rewritten with following assumptions:
->  - each group consists of just one pin and does not depend on data
->    from device tree,
->  - each function is represented by a device tree child node of the
->    pin controller, which in turn can contain multiple child nodes
->    for pins that need to have different configuration values.
->
-> Device Tree bindings are fully backwards compatible. New functionality
-> can be used by defining a new pinctrl group consisting of several child
-> nodes, as on following example:
->
->         sd4_bus8: sd4-bus-width8 {
->                 part-1 {
->                         samsung,pins = "gpk0-3", "gpk0-4",
->                                         "gpk0-5", "gpk0-6";
->                         samsung,pin-function = <3>;
->                         samsung,pin-pud = <3>;
->                         samsung,pin-drv = <3>;
->                 };
->                 part-2 {
->                         samsung,pins = "gpk1-3", "gpk1-4",
->                                         "gpk1-5", "gpk1-6";
->                         samsung,pin-function = <4>;
->                         samsung,pin-pud = <4>;
->                         samsung,pin-drv = <3>;
->                 };
->         };
->
-> Tested on Exynos4210-Trats board and a custom Exynos4212-based one.
->
-> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
+--SLk8PSyqxe/ugcCT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied.
+On Sat, Jul 05, 2014 at 07:10:38PM +0800, jianqun wrote:
+> From: Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>=20
+> Add devicetree bindings for i2s controller found on
+> rk3066, rk3188 and rk3288 processors from rockchip.
 
-(This decision is mainly based on trust, I got lost in the patch :-)
+Applied both, thanks.
 
-Yours,
-Linus Walleij
+--SLk8PSyqxe/ugcCT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTvPHHAAoJELSic+t+oim9U5AP/i0QrCPu2XrqOJE8bfgZ3ht8
+CHL1VnPn0glFK/Ub5znyqeEDG+OBKNO1a4CKxBbF8ZpAi+dQhxtAwN4xlhp4glVr
+vmOlb6ddAVB2CP8QrwEgkmzp9GrTg5JWLZwgPa2KEU2QNpI9n/ZE2h6oyQMrLIk/
+uHWeAQhZ07Y/vM2nhTAAl2yc1UnhdoNkeE4GmOLaFxdks0ssSOlffzRjblVU7qaH
+FDijYQU/HG6BZLo1xFCRKIxgC2SVYXqOXjrbSCk1Dvd/DYLDDX5jyPjQ486yU0iO
+Wqq8QtZF727mSHWBFfxh/DZ32W3GpehDymb2a5eTUYzy/SW7CT4okFqm7t+QtQXn
+PgKC7P81e7hIHMP1O0O7HTEG5eXE5XSaxsLXiHcy/oooJUp7eh3mpe00oQc9hKiB
+nLZPUHGMfU9nJfLXsSxDk+QANjy5HQwesdJPcxQd3osunVqqLs0TL8Knq4f1uKIR
+jaU+T/E5SldTQVfW0SksmiNtHJGDm+Syb56LOppcHnri0ulJjR18VgVp7S7ZmEW6
+eAyyAFpT834gHmrLuVbe44lPazGaq6fabzUU0mmi30/1K1A/Lcsi8JVupvtS6y+b
+K92BwwQQkF9+Irqf9rQzZ295qnErDeHVbBAkc8ZAX52aVHTEDV9juyP5hVRnvhrD
+eTM2IedQ1ZDrQzug194v
+=gObV
+-----END PGP SIGNATURE-----
+
+--SLk8PSyqxe/ugcCT--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
