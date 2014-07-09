@@ -1,65 +1,51 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH V2 2/2] ARM: dts: DRA7: Add node for RTC
-Date: Wed, 9 Jul 2014 14:05:32 +0530
-Message-ID: <1404894932-26677-3-git-send-email-lokeshvutla@ti.com>
-References: <alpine.DEB.2.02.1407060031120.23762@utopia.booyaka.com>
- <1404894932-26677-1-git-send-email-lokeshvutla@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V3 1/2] doc: dt bindings: Document Odroid X2/U3 audio
+ subsystem bindings
+Date: Wed, 9 Jul 2014 10:34:39 +0200
+Message-ID: <20140709083439.GK30458@sirena.org.uk>
+References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1404894932-26677-1-git-send-email-lokeshvutla@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: paul@pwsan.com, linux-omap@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, rnayak@ti.com, tony@atomide.com, devicetree@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, nsekhar@ti.com, lokeshvutla@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Sh9dYexoRflRb0jn"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add node for RTC.
-And also making RTC regulator always-on, as RTC should be powered
-always.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-[nm@ti.com: update with rtc crossbar number]
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-This patch depends on the crossbar dt patch series by Sricharan:
-https://www.mail-archive.com/linux-omap@vger.kernel.org/msg106910.html
+--Sh9dYexoRflRb0jn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- arch/arm/boot/dts/dra7-evm.dts |    1 +
- arch/arm/boot/dts/dra7.dtsi    |    9 +++++++++
- 2 files changed, 10 insertions(+)
+On Fri, Jul 04, 2014 at 03:13:44PM +0200, Sylwester Nawrocki wrote:
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 4adc280..bca6d4a 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -249,6 +249,7 @@
- 					regulator-min-microvolt = <1050000>;
- 					regulator-max-microvolt = <1050000>;
- 					regulator-boot-on;
-+					regulator-always-on;
- 				};
- 
- 				ldoln_reg: ldoln {
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 55a6cd4..46779197 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -828,6 +828,15 @@
- 			ti,hwmods = "sata";
- 		};
- 
-+		rtcss@48838000 {
-+			compatible = "ti,am3352-rtc";
-+			reg = <0x48838000 0x100>;
-+			interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "rtcss";
-+			clocks = <&sys_32k_ck>;
-+		};
-+
- 		omap_control_usb2phy1: control-phy@4a002300 {
- 			compatible = "ti,control-phy-usb2";
- 			reg = <0x4a002300 0x4>;
--- 
-1.7.9.5
+Applied both, thanks.  Please use subject lines consistent with the
+subsystem style.
 
+--Sh9dYexoRflRb0jn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTvP6cAAoJELSic+t+oim9Th0QAIlB9eTRxhofFpvPUw5lNIXJ
+S9hvZLb8EaUKgg49HN7Yvv5Z1ZMgUZdPmsrOItN49e/YpKhGvKL7oyH5BaYjjUwM
+zqDkTH16pit4m2TOrXdZ9f7i1ffOwt1i1gmQPzBiLKXwkn2Z9gMASIzvxb4VFbVr
+FVK3VLmt1FJ1Vf9chwn0awSaBCOMA883hyZOA/JOeF+vJ2yTEK+TI/o4PpnUKBWg
+1SyJZnfU9b4nhIfc2/9thcXbYXKhe/g8NaOwvFcGYAgai9LRTP+DP+tCLhHIalfK
+knoMbu2/IgwdjZEuxbrs8ygaiOnd+z8iVbioj3BUpvEma7CLJ/LCPyQStborY0RD
+bbwOg9tKU8rOENK38YvPPf5LKe+MAZB36ATsODwSM/u4UNDsPAFaiGo32dtGQ/oV
+W+V5Uy4VJpP6goJvu/napBIuoQHFsuLvHvcfBADrYRFCsEfiRp7FKKUeLY8GY4oZ
+glAg1Q29JzSh+QptcKGUOJdIYw6olwcix7gVydptD9Q38JKX+kuLDRFJkKXQj1ca
+TKc8ytGcQdWXwByZ6XwWXcTQkQDm/wedsJTNFyVTTcrnMYnG8DjrPXjctv3Jasxq
+7viSS0seIS8O+NqM9OvVgldju5/sxmuYOjdEeuiZeocgAODhhRe3Yd4jLNetUDM+
+uvNx9EFgdobfUlAlZnvJ
+=ZDst
+-----END PGP SIGNATURE-----
+
+--Sh9dYexoRflRb0jn--
