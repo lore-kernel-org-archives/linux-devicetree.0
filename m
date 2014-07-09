@@ -1,39 +1,88 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 9 Jul 2014 14:40:50 +0100
-Message-ID: <20140709134050.GN9485@arm.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH 0/6] thermal: sti: Add new Thermal driver
+Date: Wed, 9 Jul 2014 14:46:46 +0100
+Message-ID: <20140709134646.GB479@lee--X1>
+References: <1401980819-19962-1-git-send-email-lee.jones@linaro.org>
+ <20140624092309.GD13803@lee--X1>
+ <20140709120823.GA32573@lee--X1>
+ <1404911964.28592.4.camel@rzhang1-toshiba>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404487757-18829-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
+In-Reply-To: <1404911964.28592.4.camel@rzhang1-toshiba>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ajitpal.singh@st.com, edubezval@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 04, 2014 at 04:29:17PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> This commit introduces a generic device tree binding for IOMMU devices.
-> Only a very minimal subset is described here, but it is enough to cover
-> the requirements of both the Exynos System MMU and Tegra SMMU as
-> discussed here:
-> 
->     https://lkml.org/lkml/2014/4/27/346
-> 
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, 09 Jul 2014, Zhang Rui wrote:
 
-  Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> On Wed, 2014-07-09 at 13:08 +0100, Lee Jones wrote:
+> > On Tue, 24 Jun 2014, Lee Jones wrote:
+> >=20
+> > > > I'm re-sending this set, as one of the maintainers' email addre=
+sses
+> > > > is incorrect in the MAINTAINERS file.
+> > > >=20
+> > > > This patchset adds full support for 2 types of Thermal Controll=
+ers
+> > > > produced by STMicroelectronics.  One is a more traditional memo=
+ry
+> > > > mapped variant, the other is controlled solely by system config=
+uration
+> > > > registers.
+> > >=20
+> > > Any thing from the Thermal guys? Has this set fallen through the =
+gaps?
+> >=20
+> > Anything at all?  It's been well over a month now.
+> >=20
+> Well, for the soc thermal drivers, I'd prefer to take them via Eduard=
+o,
+> but as we didn't get any feedback from Eduardo, I will take them.
 
-I would like to move the ARM SMMU driver over to this for 3.18, if possible.
-One use-case there is the ability to describe groups of masters behind a
-multi-master IOMMU but which must be part of the same domain (i.e. an
-iommu_group). This is useful for presenting devices to a guest with a
-virtual SMMU, where the physical devices share a stage-2 context.
+Thanks Rui.
 
-With your binding, does this simply mean determining the set of master IDs
-in the group, then describing the complete set for each master?
+So have you taken all 4 "thermal: sti: *" patches?
 
-Will
+The ARM ones should go through Maxime.
+
+> > > >  Documentation/devicetree/bindings/thermal/st-thermal.txt |  42=
+ ++++++++++++++++
+> > > >  arch/arm/boot/dts/stih416.dtsi                           |  18=
+ +++++++
+> > > >  arch/arm/configs/multi_v7_defconfig                      |   2=
+ +
+> > > >  drivers/thermal/Kconfig                                  |   5=
+ ++
+> > > >  drivers/thermal/Makefile                                 |   1=
+ +
+> > > >  drivers/thermal/st/Kconfig                               |  12=
+ +++++
+> > > >  drivers/thermal/st/Makefile                              |   3=
+ ++
+> > > >  drivers/thermal/st/st_thermal.c                          | 313=
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++++++++++++
+> > > > ++++++++++++++++++++++++++++
+> > > >  drivers/thermal/st/st_thermal.h                          | 104=
+ ++++++++++++++++++++++++++++++++++++++
+> > > >  drivers/thermal/st/st_thermal_memmap.c                   | 209=
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+> > > >  drivers/thermal/st/st_thermal_syscfg.c                   | 179=
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  11 files changed, 888 insertions(+)
+> > > >=20
+> > >=20
+> >=20
+>=20
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
