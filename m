@@ -1,52 +1,45 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 06/13] sh-pfc: Add renesas,pfc-r8a7791 to binding documentation
-Date: Wed, 09 Jul 2014 14:52:53 +0200
-Message-ID: <1464234.X5dXn6zpnc@avalon>
-References: <1404908623-909-1-git-send-email-geert+renesas@glider.be> <1404908623-909-7-git-send-email-geert+renesas@glider.be>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v3 01/10] mmc: sdhci-st: Intial support for ST SDHCI
+ controller
+Date: Wed, 9 Jul 2014 13:59:34 +0100
+Message-ID: <20140709125934.GA18634@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
+ <1401899424-1365-2-git-send-email-peter.griffin@linaro.org>
+ <CAPDyKFoFNaFpDTVvMF3fbkrgYwUY1_hcbic89JyJzezFDRtN_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404908623-909-7-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoFNaFpDTVvMF3fbkrgYwUY1_hcbic89JyJzezFDRtN_w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Ball <chris@printf.net>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, kernel@stlinux.com, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Ulf,
 
-Thank you for the patch.
+On Wed, 09 Jul 2014, Ulf Hansson wrote:
 
-On Wednesday 09 July 2014 14:23:36 Geert Uytterhoeven wrote:
-> The driver already supports the r8a7791 SoC, and "renesas,pfc-r8a7791"
-> is already in use.
+> On 4 June 2014 18:30, Peter Griffin <peter.griffin@linaro.org> wrote:
+> > This platform driver adds initial support for the SDHCI host controller
+> > found on STMicroelectronics SoCs.
+> >
+> > It has been tested on STiH41x b2020 platforms currently.
+> >
+> > Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Thanks! Applied for next.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Can you drop this patch for the moment?
 
-> ---
->  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt index
-> 35d2e1f186f0..daef6fad6a5f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> @@ -15,6 +15,7 @@ Required Properties:
->      - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible
-> pin-controller. - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible
-> pin-controller. - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible
-> pin-controller. +    - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2)
-> compatible pin-controller. - "renesas,pfc-sh7372": for SH7372 (SH-Mobile
-> AP4) compatible pin-controller. - "renesas,pfc-sh73a0": for SH73A0
-> (SH-Mobile AG5) compatible pin-controller.
+I was just rebasing the series for Maxime, and noticed this patch needs a few 
+fixups to cope with Russell Kings recent changes in sdhci.c.
 
--- 
-Regards,
+regards,
 
-Laurent Pinchart
+Peter.
+
+
