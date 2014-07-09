@@ -1,28 +1,76 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [Patch v2] omap: Add devicetree for Gumstix Pepper board
-Date: Wed, 9 Jul 2014 04:37:29 -0700
-Message-ID: <20140709113729.GT28884@atomide.com>
-References: <CAK8F28kEi7TfnOCXk1S8bX8PpE_fQLHBFALg5GmtEk6iaTbf=Q@mail.gmail.com>
- <1402438920-3350-1-git-send-email-ashcharles@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
+Date: Wed, 9 Jul 2014 13:43:58 +0200
+Message-ID: <CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
+References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
+	<CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
+	<1404904380.16296.17.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402438920-3350-1-git-send-email-ashcharles@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ash Charles <ashcharles@gmail.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Florian Vaussard <florian.vaussard@epfl.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404904380.16296.17.camel@iivanov-dev>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Ash Charles <ashcharles@gmail.com> [140610 15:24]:
-> This adds the Gumstix Pepper[1] single-board computer based on the
-> TI AM335x processor. Schematics are available [2].
-> 
-> [1] https://store.gumstix.com/index.php/products/344/
-> [2] https://pubs.gumstix.com/boards/PEPPER/
+On Wed, Jul 9, 2014 at 1:13 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wro=
+te:
+> On Wed, 2014-07-09 at 11:43 +0200, Linus Walleij wrote:
+>> On Mon, Jul 7, 2014 at 5:11 PM, Ivan T. Ivanov <iivanov@mm-sol.com> =
+wrote:
+>>
+>> > This set of patches adds pin control drivers for Multi-purpose
+>> > pin (MPP) and General-purpose pin (GPIO) controllers found
+>> > in Qualcomm PMIC chips.
+>> >
+>> > MPP's are enhanced GPIO's with analog circuits, which support
+>> > following functions in addition to digital input/output: analog
+>> > input/output and current sinks.
+>> >
+>> > PMIC PM8941 have 8 MPP's and 36 GPIO's. PMIC PM8841 have 4 MPP's.
+>> >
+>> > Ivan T. Ivanov (4):
+>> >   pinctrl: qpnp: Qualcomm PMIC pin controller driver
+>> >   pinctrl: qcom: Add documentation for pinctrl-qpnp binding
+>> >   pinctrl: qcom: Add PM8941 and PM8941 pinctrl drivers
+>> >   ARM: dts: qcom: Add PM8941 and PM8841 pinctrl nodes
+>>
+>> Oh, I just spent some 45 minutes reviewing an 8xxx pinctrl driver fr=
+om
+>> Bj=C3=B6rn Andersson
+>> that *seems* to be doing exactly the same thing.
+>>
+>> Now I have two drivers from people outside Qualcomm :-)
+>>
+>> Some of my review comments on Bj=C3=B6rn's driver (like using SI uni=
+ts with the pin
+>> config) are actually adressed in this patch set. The idea to split i=
+n subdrivers
+>> per-ASIC may be good? I don't really know.
+>>
+>> Can you two guys *PLEASE* join efforts and combine your drivers into=
+ one?
+>
+> Not sure. Bj=C3=B6rn patches cover older PMIC chips, if not mistaken,=
+ mine
+> cover PMIC's used with APQ8074 and onward [1]. Main difference is
+> the bus which connects them to SoC, interrupts handling, runtime
+> pin type detection and register map.
 
-Applying into omap-for-v3.17/dt thanks.
+Oh OK... then atleast there is something wrong with the naming of
+Bj=C3=B6rns patches as they are 8xxx and your chips are also named
+8xxx ...
 
-Regards,
+Anyway I will create a patch to move the current msm driver down
+to a folder named "qcom" and we can atleast collect these drivers
+in a single place since the chipsets are related, OK?
 
-Tony
+Then I guess even if the chips are totally unrelated it'd be interestin=
+g
+to have you two guys cross-review each other's drivers so the behaviour
+is consistent across qualcomm platforms.
+
+Yours,
+Linus Walleij
