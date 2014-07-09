@@ -1,70 +1,52 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [alsa-devel] [PATCH V3 2/2] ASoC: samsung: Add machine driver for
- Odroid X2/U3
-Date: Wed, 09 Jul 2014 19:20:05 +0200
-Message-ID: <53BD79C5.3060604@samsung.com>
-References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
- <1404479625-25385-2-git-send-email-s.nawrocki@samsung.com>
- <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: nand: stm_nand_bch: add new driver
+Date: Wed, 9 Jul 2014 10:22:29 -0700
+Message-ID: <20140709172229.GH7537@ld-irv-0074>
+References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
+ <20140703002237.GM3599@ld-irv-0074>
+ <20140703100522.756f9715@bbrezillon>
+ <20140707235222.GC7537@ld-irv-0074>
+ <20140708095855.29c2fb87@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Chen Zhen <zhen1.chen@samsung.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140708095855.29c2fb87@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Gupta, Pekon\"" <pekon-l0cyMroinI0@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Boris,
 
-On 08/07/14 11:15, Daniel Drake wrote:
-> On Fri, Jul 4, 2014 at 2:13 PM, Sylwester Nawrocki
-> <s.nawrocki@samsung.com> wrote:
->> This patch adds the sound subsystem driver for Odroid-X2 and
->> Odroid-U3 boards. The codec works in I2S master mode; there
->> are two separate audio routing paths defined, as there are
->> differences in the signal routing between the X2 and U3 boards,
->> i.e. U3 uses single jack for headphones and microphone.
->>
->> Signed-off-by: Chen Zhen <zhen1.chen@samsung.com>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+On Tue, Jul 08, 2014 at 09:58:55AM +0200, Boris BREZILLON wrote:
+> On Mon, 7 Jul 2014 16:52:22 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Thu, Jul 03, 2014 at 10:05:22AM +0200, Boris BREZILLON wrote:
+> > > On Wed, 2 Jul 2014 17:22:37 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > 
+> > > AFAIR, the NAND timing representation for non-ONFI chips question was
+> > > left unanswered:
+> > > 
+> > > https://lkml.org/lkml/2014/5/20/581
+> > > 
+> > > I can definitely respin my NAND timings series, but I'd like to be sure
+> > > this is how you want it done before doing so.
+> > 
+> > Can we start by supporting ONFI-only (or ONFI-only, plus entries in
+> > nand_flash_ids[]), and have nand_base provide the translation so drivers
+> > can retrieve the info? Then we can begin supporting new drivers like
+> > Lee's, and worry about the DT question separately.
 > 
-> Testing on ODROID-U2, v3 is not quite working for me, but v2 of the
-> patch was fine.
-> I boot up, run:
-> # speaker-test -c 2 -t wav
+> So, basically, I just send a new series with patch 1 and 2 from my sunxi
+> NAND series [1] (including the fixes you suggested, of course), right ?
 > 
-> As soon as I hear the word "front" I press ctrl+c and then run the
-> command again.
-> Now the command hangs with no audible output.
-> 
-> Any ideas? Let me know if you have trouble reproducing.
+> [1] http://thread.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/7977
 
-Thanks the feedback, we have also noticed this issue.
-It sounds like a bug in the Samsung I2S driver, which sets the
-CDCLK pin to input mode in the i2s_shutdown callback and never
-restores it. AFAICS this setting should not be lost after a call
-to struct soc_snd_dai_ops::shutdown().
-I'm going will prepare a proper patch soon, until then you could
-try and see if this fixes the problem for you:
+Yes, please send 1 and 2 on their own. I think that would be a good
+start for supporting these drivers.
 
----8<---
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index d80121e..42c4f3e 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -724,10 +724,6 @@ static void i2s_shutdown(struct snd_pcm_substream *substream,
-
-        spin_unlock_irqrestore(&lock, flags);
-
--       /* Gate CDCLK by default */
--       if (!is_opened(other))
--               i2s_set_sysclk(dai, SAMSUNG_I2S_CDCLK,
--                               0, SND_SOC_CLOCK_IN);
- }
---->8---
-
+Brian
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
