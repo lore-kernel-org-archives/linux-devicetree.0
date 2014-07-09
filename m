@@ -1,64 +1,49 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v2] pinctrl: msm: Add msm8960 definitions
-Date: Tue, 8 Jul 2014 20:50:38 -0700
-Message-ID: <CAJAp7OieWraVQ35hDJ6HQ1ycSkZ1ShKvkkuuRxKUEmti5ethhA@mail.gmail.com>
-References: <1403633766-25796-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<53AA151E.9090701@suse.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V8 1/6] power: reset: Add generic SYSCON register mapped
+ reset
+Date: Tue, 08 Jul 2014 20:54:20 -0700
+Message-ID: <53BCBCEC.7010306@roeck-us.net>
+References: <1404872153-3594-1-git-send-email-fkan@apm.com> <1404872153-3594-2-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <53AA151E.9090701@suse.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404872153-3594-2-git-send-email-fkan@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Feng Kan <fkan@apm.com>, dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 5:17 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
- wrote:
-> Am 24.06.2014 20:16, schrieb Bjorn Andersson:
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-=
-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pi=
-nctrl.txt
->> new file mode 100644
->> index 0000000..6e79eea
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl=
-=2Etxt
-> [...]
->> +Example:
->> +
->> +     msmgpio: pinctrl@800000 {
->> +             compatible =3D "qcom,msm8960-pinctrl";
->> +             reg =3D <0x800000 0x4000>;
->> +
->> +             gpio-controller;
->> +             #gpio-cells =3D <2>;
->> +             interrupt-controller;
->> +             #interrupt-cells =3D <2>;
->> +                interrupts =3D <0 32 0x4>;
+On 07/08/2014 07:15 PM, Feng Kan wrote:
+> Add a generic SYSCON register mapped reset mechanism.
 >
-> This line seems space-indented while surrounding ones are tab-indente=
-d.
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>   drivers/power/reset/Kconfig         |  6 +++
+>   drivers/power/reset/Makefile        |  1 +
+>   drivers/power/reset/syscon-reboot.c | 91 +++++++++++++++++++++++++++++++++++++
+>   3 files changed, 98 insertions(+)
+>   create mode 100644 drivers/power/reset/syscon-reboot.c
 >
-
-Thanks, not only is it incorrectly indented, it's also a bad example
-as it's the wrong IRQ for msm8960...
-
->> +
->> +             pinctrl-names =3D "default";
->> +             pinctrl-0 =3D <&debug_uart>;
->> +
->> +             debug_uart: debug_uart {
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index bdcf517..5877b38 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -80,3 +80,9 @@ config POWER_RESET_KEYSTONE
+>   	help
+>   	  Reboot support for the KEYSTONE SoCs.
 >
-> While at it, might debug-uart be a better node name? That seems the
-> predominant convention and distinguishes from the label.
->
+> +config POWER_RESET_SYSCON
+> +	bool "Generic SYSCON regmap reset driver"
+> +	depends on ARM || ARM64 || COMPILE_TEST
 
-You're right and reference design does not use gsbi8 as uart, so I'll u=
-pdate it.
+As written, this driver is really not generic but very arm specific.
+I don't think COMPILE_TEST is a good idea either, since arm_pm_restart
+is only defined for the arm architecture. Did you try compiling allmodconfig
+or allyesconfig for, say, x86_64 with this patch applied ?
 
-Thanks for the review.
+I think this might benefit from using [1], which would make it really
+generic.
 
-Regards,
-Bjorn
+Guenter
+
+[1] http://www.spinics.net/lists/kernel/msg1780939.html
