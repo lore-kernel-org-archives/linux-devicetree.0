@@ -1,35 +1,30 @@
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 08/10] ARM: STi: DT: Enable second sdhci controller for
- stih416 b2020 boards.
-Date: Wed, 9 Jul 2014 14:17:00 +0200
-Message-ID: <CAPDyKFowJuRutrbDmVENb-joHOC_H9A6etBfJjSE7NuaqTUKCQ@mail.gmail.com>
-References: <1401898054-686-1-git-send-email-peter.griffin@linaro.org>
-	<1401898054-686-9-git-send-email-peter.griffin@linaro.org>
-	<CAPDyKFor1LqgAcJZc14iSY6D8RYm4w7sysRR3c2inSr4LVYt8w@mail.gmail.com>
-	<20140709103016.GA5042@griffinp-ThinkPad-X1-Carbon-2nd>
-	<53BD20C4.2070500@st.com>
+Subject: Re: [PATCH v3 01/10] mmc: sdhci-st: Intial support for ST SDHCI controller
+Date: Wed, 9 Jul 2014 14:18:39 +0200
+Message-ID: <CAPDyKFoFNaFpDTVvMF3fbkrgYwUY1_hcbic89JyJzezFDRtN_w@mail.gmail.com>
+References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
+	<1401899424-1365-2-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <53BD20C4.2070500@st.com>
+In-Reply-To: <1401899424-1365-2-git-send-email-peter.griffin@linaro.org>
 Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Coquelin <maxime.coquelin@st.com>, Peter Griffin <peter.griffin@linaro.org>
-Cc: Chris Ball <chris@printf.net>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Ball <chris@printf.net>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, kernel@stlinux.com, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9 July 2014 13:00, Maxime Coquelin <maxime.coquelin@st.com> wrote:
-> Hi Ulf, Peter,
+On 4 June 2014 18:30, Peter Griffin <peter.griffin@linaro.org> wrote:
+> This platform driver adds initial support for the SDHCI host controller
+> found on STMicroelectronics SoCs.
 >
->         I will queue the DT patches to my pull request for v3.17.
+> It has been tested on STiH41x b2020 platforms currently.
 >
->         Peter, I will need it to be rebased anyway.
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-Okay.
-
-I will apply patch1 and patch 2 for next.
-
-You can add my ack for patch 9 and 10, which I suggest to go though
-ARM SoC as well.
+Thanks! Applied for next.
 
 Kind regards
 Uffe
