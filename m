@@ -1,105 +1,94 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 0/5] Add Keystone PCIe controller driver
-Date: Wed, 9 Jul 2014 09:52:24 -0400
-Message-ID: <53BD4918.2040807@ti.com>
-References: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1404164720-11066-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Pratyush Anand <pratyush.anand@st.com>, Richard Zhu <r65037@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] w1: ds2482: add support for ds2482-101 sleep pin
+Date: Wed,  9 Jul 2014 15:58:17 +0200
+Message-ID: <1404914297-3108-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Evgeniy Polyakov <zbr-i6C2adt8DTjR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 30 June 2014 05:45 PM, Murali Karicheri wrote:
-> This patch add PCIe controller driver for Keystone SoCs. This
-> is based on v2 of the series posted to the mailing list.
-> Keystone PCI controller is based on version 3.65 of the DW
-> hardware. This driver re-uses some of the DW core driver
-> functions and required modification in some to support
-> the old DW h/w based Keystone driver.
-> 
-> Please review and let me know if you have any comments.
-> 
-> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> CC: Russell King <linux@arm.linux.org.uk>
-> CC: Grant Likely <grant.likely@linaro.org>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mohit Kumar <mohit.kumar@st.com>
-> CC: Jingoo Han <jg1.han@samsung.com>
-> CC: Bjorn Helgaas <bhelgaas@google.com>
-> CC: Pratyush Anand <pratyush.anand@st.com>
-> CC: Richard Zhu <r65037@freescale.com>
-> CC: Kishon Vijay Abraham I <kishon@ti.com>
-> CC: Marek Vasut <marex@denx.de>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Pawel Moll <pawel.moll@arm.com>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> CC: Kumar Gala <galak@codeaurora.org>
-> CC: Randy Dunlap <rdunlap@infradead.org>
-> CC: Grant Likely <grant.likely@linaro.org> 
-> 
-> Changelog:
-> 
-> v3
->  - DW application register handling code is now part of
->    Keystone PCI driver. RFC had this code part of Keystone
->    PCI driver, then V1 moved this to a separate file to
->    re-use on other platforms that uses this version of the
->    DW h/w. Then based on comments against v2, this is moved
->    back to Keystone driver.
->  - Keystone SerDes phy driver is removed from this series so that
->    this can be merged independent of that patch
->  - added msi_set_irq()/clear_irq() API's to support Keystone
-> 
-> V2
->  - Split the designware pcie enhancement patch to multiple
->    patches based on functionality added
->  - Remove the quirk code and add a patch to fix mps/mrss
->    tuning for ARM. Use kernel command line parameter
->    pci=pcie_bus_perf to work with Keystone PCI Controller.
->    Following patch addressed this.
->      [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
->  - Add documentation for device tree bindings
->  - Add separate interrupt controller nodes for MSI and Legacy
->    IRQs and use irq map for legacy IRQ
->  - Use compatibility to identify v3.65 version of the DW hardware
->    and use it to customize the designware common code.
->  - Use reg property for configuration space instead of range
->  - Other minor updates based on code inspection. 
-> 
-> V1
->  - Add an interrupt controller node for Legacy irq chip and use
->    interrupt map/map-mask property to map legacy IRQs A/B/C/D
->  - Add a Phy driver to replace the original serdes driver
->  - Move common application register handling code to a separate
->    file to allow re-use across other platforms that use older
->    DW PCIe h/w
->  - PCI quirk for maximum read request size. Check and override only
->    if the maximum is higher than what controller can handle.
->  - Converted to a module platform driver.
-> 
-> Murali Karicheri (5):
->   PCI: designware: add rd[wr]_other_conf API
->   PCI: designware: refactor MSI code to work with v3.65 dw hardware
->   PCI: designware: refactor host init code to re-use on keystone PCI
->   PCI: designware: enhance dw core driver to support Keystone PCI host
->     controller
->   PCI: add PCI controller for Keystone PCIe h/w
-> 
-I haven't given review remarks on public list but had few internal
-review discussions with you. So just in case you need some
-additional review/ack tags, feel free to include mine.
+The ds2482-101 version of the chip has an active-low sleep pin. Add this as a
+gpio to the probe function and describe the DT binding accordingly.
+If the pin wouldn't be added and pulled high, the device would not be able to
+be probed.
 
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/w1/ds2482.txt | 18 ++++++++++++++++++
+ drivers/w1/masters/ds2482.c                     |  9 +++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/w1/ds2482.txt
 
-Once the driver changes gets merged by Bjorn, I can they
-merge the DTS related changes via my tree.
+diff --git a/Documentation/devicetree/bindings/w1/ds2482.txt b/Documentation/devicetree/bindings/w1/ds2482.txt
+new file mode 100644
+index 0000000..e065207
+--- /dev/null
++++ b/Documentation/devicetree/bindings/w1/ds2482.txt
+@@ -0,0 +1,18 @@
++ds2482 devicetree bindings
++
++Required properties:
++
++ - compatible: "dallas,ds2482"
++
++Optional properties:
++
++ - sleep-gpios: if specified, the ds2482 has a low-active sleep-pin (ds2482-101).
++
++Example:
++
++	1wire@18 {
++		compatible = "dallas,ds2482";
++		reg = <0x18>;
++		sleep-gpios = <&gpio4 2 0>;
++	};
++
+diff --git a/drivers/w1/masters/ds2482.c b/drivers/w1/masters/ds2482.c
+index e033491..b6b6024 100644
+--- a/drivers/w1/masters/ds2482.c
++++ b/drivers/w1/masters/ds2482.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <asm/delay.h>
+ 
+ #include "../w1.h"
+@@ -128,6 +129,7 @@ struct ds2482_data {
+ 	u8			channel;
+ 	u8			read_prt;	/* see DS2482_PTR_CODE_xxx */
+ 	u8			reg_config;
++	struct gpio_desc	*slpz_gpio;
+ };
+ 
+ 
+@@ -449,6 +451,7 @@ static int ds2482_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+ 	struct ds2482_data *data;
++	struct gpio_desc *gpio;
+ 	int err = -ENODEV;
+ 	int temp1;
+ 	int idx;
+@@ -466,6 +469,12 @@ static int ds2482_probe(struct i2c_client *client,
+ 	data->client = client;
+ 	i2c_set_clientdata(client, data);
+ 
++	gpio = devm_gpiod_get(&client->dev, "sleep");
++	if (!IS_ERR(gpio)) {
++		data->slpz_gpio = gpio;
++		gpiod_direction_output(data->slpz_gpio, 1);
++	}
++
+ 	/* Reset the device (sets the read_ptr to status) */
+ 	if (ds2482_send_cmd(data, DS2482_CMD_RESET) < 0) {
+ 		dev_warn(&client->dev, "DS2482 reset failed.\n");
+-- 
+2.0.0
 
-Thanks for all the work Murali !!
-
-Regards,
-Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
