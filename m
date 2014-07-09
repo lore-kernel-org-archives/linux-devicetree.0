@@ -1,48 +1,37 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 02/13] irqchip: renesas-intc-irqpin: Document SoC-specific bindings
-Date: Wed,  9 Jul 2014 14:23:32 +0200
-Message-ID: <1404908623-909-3-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 04/13] mmc: tmio-mmc: Add renesas,sdhi-r8a7791 to binding documentation
+Date: Wed,  9 Jul 2014 14:23:34 +0200
+Message-ID: <1404908623-909-5-git-send-email-geert+renesas@glider.be>
 References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ian Molton <ian.molton@codethink.co.uk>, Chris Ball <chris@printf.net>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The documentation only mentioned the generic fallback compatible property.
-Add the missing SoC-specific compatible properties, which are already in
-use.
+The driver already supports the r8a7791 SoC, and "renesas,sdhi-r8a7791"
+is already in use.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Ian Molton <ian.molton@codethink.co.uk>
+Cc: Chris Ball <chris@printf.net>
+Cc: linux-mmc@vger.kernel.org
 ---
- .../bindings/interrupt-controller/renesas,intc-irqpin.txt         | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-index 1f8b0c507c26..c73acd060093 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-@@ -2,7 +2,13 @@ DT bindings for the R-/SH-Mobile irqpin controller
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+index 6a2a1160a70d..fa0f327cde01 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -18,6 +18,7 @@ Required properties:
+ 		"renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
+ 		"renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
+ 		"renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
++		"renesas,sdhi-r8a7791" - SDHI IP on R8A7791 SoC
  
- Required properties:
- 
--- compatible: has to be "renesas,intc-irqpin"
-+- compatible: has to be "renesas,intc-irqpin-<soctype>", "renesas,intc-irqpin"
-+  as fallback.
-+  Examples with soctypes are:
-+    - "renesas,intc-irqpin-r8a7740" (R-Mobile A1)
-+    - "renesas,intc-irqpin-r8a7778" (R-Car M1A)
-+    - "renesas,intc-irqpin-r8a7779" (R-Car H1)
-+    - "renesas,intc-irqpin-sh73a0" (SH-Mobile AG5)
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-   interrupts.txt in this directory
- 
+ Optional properties:
+ - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
