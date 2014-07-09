@@ -1,66 +1,33 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V8 1/6] power: reset: Add generic SYSCON register mapped
- reset
-Date: Wed, 9 Jul 2014 14:27:23 -0700
-Message-ID: <20140709212723.GA6737@roeck-us.net>
-References: <1404872153-3594-1-git-send-email-fkan@apm.com>
- <1404872153-3594-2-git-send-email-fkan@apm.com>
- <53BCBCEC.7010306@roeck-us.net>
- <CAL85gmB9wRXXrza3g0MBFWUi5w3_eCEhxdSd2FfmoB_SkGA8Ww@mail.gmail.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v3] pinctrl: msm: Add msm8960 definitions
+Date: Wed, 9 Jul 2014 15:12:22 -0700
+Message-ID: <CAJAp7Oj6SxUVAnW=Oy0zpb2Z8dnzdPcbS0qYiPY9HmYLUrFaYQ@mail.gmail.com>
+References: <1404881971-10341-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<CACRpkdbuTp1RuejHTtpcLFcgFryiyu=q3qFXGLvY0eXKiZ=+ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL85gmB9wRXXrza3g0MBFWUi5w3_eCEhxdSd2FfmoB_SkGA8Ww@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbuTp1RuejHTtpcLFcgFryiyu=q3qFXGLvY0eXKiZ=+ng@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Rutland <mark.rutland@arm.com>, Andreas Frber <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 02:15:44PM -0700, Feng Kan wrote:
-> On Tue, Jul 8, 2014 at 8:54 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> > On 07/08/2014 07:15 PM, Feng Kan wrote:
-> >>
-> >> Add a generic SYSCON register mapped reset mechanism.
-> >>
-> >> Signed-off-by: Feng Kan <fkan@apm.com>
-> >> ---
-> >>   drivers/power/reset/Kconfig         |  6 +++
-> >>   drivers/power/reset/Makefile        |  1 +
-> >>   drivers/power/reset/syscon-reboot.c | 91
-> >> +++++++++++++++++++++++++++++++++++++
-> >>   3 files changed, 98 insertions(+)
-> >>   create mode 100644 drivers/power/reset/syscon-reboot.c
-> >>
-> >> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> >> index bdcf517..5877b38 100644
-> >> --- a/drivers/power/reset/Kconfig
-> >> +++ b/drivers/power/reset/Kconfig
-> >> @@ -80,3 +80,9 @@ config POWER_RESET_KEYSTONE
-> >>         help
-> >>           Reboot support for the KEYSTONE SoCs.
-> >>
-> >> +config POWER_RESET_SYSCON
-> >> +       bool "Generic SYSCON regmap reset driver"
-> >> +       depends on ARM || ARM64 || COMPILE_TEST
-> >
-> >
-> > As written, this driver is really not generic but very arm specific.
-> > I don't think COMPILE_TEST is a good idea either, since arm_pm_restart
-> > is only defined for the arm architecture. Did you try compiling allmodconfig
-> > or allyesconfig for, say, x86_64 with this patch applied ?
-> >
-> > I think this might benefit from using [1], which would make it really
-> > generic.
-> >
-> > Guenter
-> >
-> > [1] http://www.spinics.net/lists/kernel/msg1780939.html
-> This is great, I will base off this list. Did it make it to a branch anywhere?
-> 
-Still in review. I hope it will make it into 3.17.
-Of course it might be useful if you (and others)
-help making the case for it.
+On Wed, Jul 9, 2014 at 4:47 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> This v3 version applied.
+>
 
-Thanks,
-Guenter
+Awesome, thanks!
+
+> BTW: does this cover the 8660 too or does that chip need a separate
+> subdriver? I'm told that the second digit in qualcomm numbers is
+> "just" about the modem version, but I guess that can affect the pinout.
+>
+
+Unfortunately that would make things too simple, but there's a lot of
+reuse between the two; one of those being that the TLMM block seems to
+be functionally the same, so one more pinout table and we should have
+that covered as well.
+
+Regards,
+Bjorn
