@@ -1,102 +1,75 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v5 00/14] drm/exynos: support LCD I80 interface display
-Date: Thu, 10 Jul 2014 00:07:08 +0900
-Message-ID: <53BD5A9C.3010001@samsung.com>
-References: <1404779987-5337-1-git-send-email-yj44.cho@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1404779987-5337-1-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v4 00/10] Add SDHCI support for ST Microelectronics SoCs
+Date: Wed,  9 Jul 2014 16:07:31 +0100
+Message-ID: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, chris@printf.net, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNOuFhCAwN+yblCAwOOydvCAwOTozOSwgWW91bmdKdW4gQ2hvIHdyb3RlOgo+IEhpLAo+
-IAo+IFRoaXMgc2VyaWVzIGFkZHMgTENEIEk4MCBpbnRlcmZhY2UgZGlzcGxheSBzdXBwb3J0IGZv
-ciBFeHlub3MgRFJNIGRyaXZlci4KPiBUaGUgRklNRChkaXNwbGF5IGNvbnRyb2xsZXIpIHNwZWNp
-ZmljYXRpb24gZGVzY3JpYmVzIGl0IGFzICJMQ0QgSTgwIGludGVyZmFjZSIKPiBhbmQgdGhlIERT
-SSBzcGVjaWZpY2F0aW9uIGRlc2NyaWJlcyBpdCBhcyAiQ29tbWFuZCBtb2RlIGludGVyZmFjZSIu
-Cj4gCj4gVGhpcyBpcyBiYXNlZCBvbiBleHlub3MtZHJtLW5leHQgYnJhbmNoLgoKVGhhbmtzIGZv
-ciBjb250cmlidXRpb25zLiBQaWNrZWQgdGhlbSB1cC4KClRoYW5rcywKSW5raSBEYWUKCj4gCj4g
-VGhlIHByZXZpb3VzIHBhdGNoZXMsCj4gUkZDOiBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3Rz
-L2RyaS1kZXZlbC9tc2c1ODg5OC5odG1sCj4gVjE6IGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlz
-dHMvZHJpLWRldmVsL21zZzU5MjkxLmh0bWwKPiBWMjogaHR0cDovL3d3dy5zcGluaWNzLm5ldC9s
-aXN0cy9kcmktZGV2ZWwvbXNnNTk4NjcuaHRtbAo+IFYzOiBodHRwOi8vd3d3LnNwaW5pY3MubmV0
-L2xpc3RzL2RyaS1kZXZlbC9tc2c2MDcwOC5odG1sCj4gVjQ6IGh0dHA6Ly93d3cuc3Bpbmljcy5u
-ZXQvbGlzdHMvZHJpLWRldmVsL21zZzYwOTQzLmh0bWwKPiAKPiBDaGFuZ2Vsb2cgdjI6Cj4gLSBG
-aXhlcyB0eXBvIGFuZCByZW1vdmVzIHVubmVjZXNzYXJ5IGVycm9yIGxvZyAoY29tbWVudGVkIGJ5
-IEFuZHJ6ZWogSGF6ZGEpCj4gLSBBZGRzIG1pc3NlZCBwZW5kbGlnX2ZsaXAgZmxhZyBjbGVhciBw
-b2ludHMgKGNvbW1lbnRlZCBieSBEYW5pZWwgS3VydHopCj4gCj4gQ2hhbmdlbG9nIHYzOgo+IC0g
-UmVtb3ZlcyBnZW5lcmljIGNvbW1hbmQgbW9kZSBhbmQgY29tbWFuZCBtb2RlIGRpc3BsYXkgdGlt
-aW5nIGludGVyZmFjZS4KPiAtIE1vdmVzIEk4MCBpbnRlcmZhY2UgdGltaW5ncyBmcm9tIHBhbmVs
-IERUIHRvIHRoZSBGSU1EKGRpc3BsYXkgY29udHJvbGxlcikgRFQuCj4gCj4gQ2hhbmdlbG9nIHY0
-Ogo+IC0gUmVtb3ZlcyBleHlub3M1IHN5c3JlZyhzeXNjb24pIERUIGJpbmRpbmdzIGFuZCBub2Rl
-IGZyb20gZHRzaSBiZWNhdXNlCj4gICBpdCB3YXMgYWxyZWFkeSB1cGRhdGVkIGJ5IGxpbnV4LXNh
-bXN1bmctc29jIChjb21tZW50ZWQgYnkgVml2ZWsgR2F1dGFtKQo+IAo+IENoYW5nZWxvZyB2NToK
-PiAtIEZpeGVzIEZJTUQgdmlkY29uMCByZWdpc3RlciByZWxldmFudCBjb2RlCj4gLSBGaXhlcyBw
-YW5lbCBnYW1tYSB0YWJsZSwgZGlzYWJsZSBzZXF1ZW5jZQo+IC0gU2xpdGVseSB1cGRhdGVzIGZv
-ciBjb2RlIGNsZWFudXAKPiAKPiBQYXRjaGVzIDEgYW5kIDIgZml4IHRyaXZpYWwgYnVncy4KPiAK
-PiBQYXRjaGVzIDMsIDQsIDUgYW5kIDYgaW1wbGVtZW50IEZJTUQoZGlzcGxheSBjb250cm9sbGVy
-KSBJODAgaW50ZXJmYWNlLgo+IFRoZSBNSVBJIERTSSBjb21tYW5kIG1vZGUgYmFzZWQgcGFuZWwg
-Z2VuZXJhdGVzIFRlYXJpbmcgRWZmZWN0IHN5bmNocm9uaXphdGlvbgo+IHNpZ25hbCBiZXR3ZWVu
-IE1DVSBhbmQgRkIgdG8gZGlzcGxheSB2aWRlbyBpbWFnZSwgYW5kIEZJTUQgc2hvdWxkIHRyaWdn
-ZXIgdG8KPiB0cmFuc2ZlciB2aWRlbyBpbWFnZSBhdCB0aGlzIHNpZ25hbC4KPiBTbyB0aGUgcGFu
-ZWwgc2hvdWxkIHJlY2VpdmUgdGhlIFRFIElSUSBhbmQgY2FsbCBURSBoYW5kbGVyIGNoYWlucyB0
-byBub3RpZnkKPiBpdCB0byB0aGUgRklNRC4KPiAKPiBQYXRjaGVzIDcgYW5kIDggaW1wbGVtZW50
-IHRvIHVzZSBFeHlub3M1NDEwIC8gNTQyMCAvIDU0NDAgU29DIERTSSBkcml2ZXIKPiB3aGljaCBp
-cyBkaWZmZXJlbnQgZnJvbSBwcmV2aW91cyBFeHlub3M0IFNvQ3MgZm9yIHNvbWUgcmVnaXN0ZXJz
-IGNvbnRyb2wuCj4gCj4gUGF0Y2hlcyA5IGFuZCAxMCBpbnRyb2R1Y2UgTUlQSSBEU0kgY29tbWFu
-ZCBtb2RlIGJhc2VkIFNhbXN1bmcgUzZFM0ZBMCBBTU9MRUQKPiA1LjciIExDRCBkcm0gcGFuZWwg
-ZHJpdmVyLgo+IAo+IFRoZSBvaHRlcnMgYWRkIERUIHByb3BlcnR5IG5vZGVzIHRvIHN1cHBvcnQg
-TUlQSSBEU0kgY29tbWFuZCBtb2RlLgo+IAo+IEkgd2VsY29tZSBhbnkgY29tbWVudHMuCj4gCj4g
-VGhhbmsgeW91Lgo+IEJlc3QgcmVnYXJkcyBZSgo+IAo+IFlvdW5nSnVuIENobyAoMTQpOgo+ICAg
-ZHJtL2V4eW5vczogZHNpOiBtb3ZlIHRoZSBFb1QgcGFja2V0cyBjb25maWd1cmF0aW9uIHBvaW50
-Cj4gICBkcm0vZXh5bm9zOiB1c2Ugd2FpdF9ldmVudF90aW1lb3V0KCkgZm9yIHNhZmV0eSB1c2Fn
-ZQo+ICAgQVJNOiBkdHM6IHNhbXN1bmctZmltZDogYWRkIExDRCBJODAgaW50ZXJmYWNlIHNwZWNp
-ZmljIHByb3BlcnRpZXMKPiAgIGRybS9leHlub3M6IGFkZCBURSBoYW5kbGVyIHRvIHN1cHBvcnQg
-TENEIEk4MCBpbnRlcmZhY2UKPiAgIGRybS9leHlub3M6IGRzaTogYWRkIHBhc3MgVEUgaG9zdCBv
-cHMgdG8gc3VwcG9ydCBMQ0QgSTgwIGludGVyZmFjZQo+ICAgZHJtL2V4eW5vczogZmltZDogc3Vw
-cG9ydCBMQ0QgSTgwIGludGVyZmFjZQo+ICAgQVJNOiBkdHM6IGV4eW5vc19kc2ltOiBhZGQgZXh5
-bm9zNTQxMCBjb21wYXRpYmxlIHRvIERUIGJpbmRpbmdzCj4gICBkcm0vZXh5bm9zOiBkc2k6IGFk
-ZCBkcml2ZXIgZGF0YSB0byBzdXBwb3J0IEV4eW5vczU0MTAvNTQyMC81NDQwIFNvQ3MKPiAgIEFS
-TTogZHRzOiBzNmUzZmEwOiBhZGQgRFQgYmluZGluZ3MKPiAgIGRybS9wYW5lbDogYWRkIFM2RTNG
-QTAgZHJpdmVyCj4gICBBUk06IGR0czogZXh5bm9zNDogYWRkIHN5c3RlbSByZWdpc3RlciBwcm9w
-ZXJ0eQo+ICAgQVJNOiBkdHM6IGV4eW5vczU6IGFkZCBzeXN0ZW0gcmVnaXN0ZXIgcHJvcGVydHkK
-PiAgIEFSTTogZHRzOiBleHlub3M1NDIwOiBhZGQgbWlwaS1waHkgbm9kZQo+ICAgQVJNOiBkdHM6
-IGV4eW5vczU0MjA6IGFkZCBkc2kgbm9kZQo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-YW5lbC9zYW1zdW5nLHM2ZTNmYTAudHh0ICB8ICA0NiArKwo+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy92aWRlby9leHlub3NfZHNpbS50eHQgICAgICB8ICAgNCArLQo+ICAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy92aWRlby9zYW1zdW5nLWZpbWQudHh0ICAgICB8ICAyOCArCj4gIGFyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczQuZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNS5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
-ICBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kgICAgICAgICAgICAgICAgICB8ICAy
-MCArCj4gIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2NydGMuYyAgICAg
-ICAgICAgfCAgMTUgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2NydGMu
-aCAgICAgICAgICAgfCAgIDcgKwo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1f
-ZHJ2LmggICAgICAgICAgICB8ICAgMyArCj4gIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9z
-X2RybV9kc2kuYyAgICAgICAgICAgIHwgMTgxICsrKysrKy0KPiAgZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHJtX2ZpbWQuYyAgICAgICAgICAgfCAyNzYgKysrKysrKystLQo+ICBkcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArCj4g
-IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgIHwgICAx
-ICsKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXM2ZTNmYTAuYyAgICAgICAgICAgICAg
-fCA1NjkgKysrKysrKysrKysrKysrKysrKysrCj4gIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5o
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsKPiAgaW5jbHVkZS92aWRlby9zYW1zdW5n
-X2ZpbWQuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgIDMgKy0KPiAgMTcgZmlsZXMgY2hhbmdl
-ZCwgMTA5OCBpbnNlcnRpb25zKCspLCA3MiBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9zYW1zdW5nLHM2ZTNm
-YTAudHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
-czZlM2ZhMC5jCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+This series adds a SDHCI platform driver for ST SoCs, along with
+the additional device tree bindings and configuration to enable
+the controller to work properly.
+
+Initially it supports the stih416 and stih415 SoCs, and has
+been tested on a stih416-b2020 board.
+
+regards,
+
+Peter.
+
+Changes since v1
+- Whitespace cleanups
+- Use readl_relaxed io accessor
+- Add update to MAINTAINERS
+- Remove reset controller code from platform driver
+- Remove #ifdef around sleep ops
+- Use sdhci_pltfm_clk_get_max_clock lib function
+- Pass bus-width etc through board device tree node
+- Remove unncessary header
+- Remove / change some debug messages
+- Remove final break from switch case
+
+Changes since v2
+- Update CC list with alkml and lkml lists
+
+Changes since v3
+- Rebased on v3.16-rc4
+- Use sdhci_set_bus_width lib function for set_bus_width
+- Remove sdhci_st_8bit_width function
+- Use sdhci_set_clock lib function for set_clock
+
+Peter Griffin (10):
+  mmc: sdhci-st: Intial support for ST SDHCI controller
+  mmc: sdhci-st: ST Microelectronics SDHCI binding documentation.
+  ARM: STi: DT: Add sdhci pins for stih416
+  ARM: STi: DT: Add sdhci controller for stih416
+  ARM: STi: DT: Add sdhci pin configuration for stih415
+  ARM: STi: DT: Add sdhci controller for stih415
+  ARM: STi: DT: Enable mmc0 for both stih415 and stih416 SoCs
+  ARM: STi: DT: Enable second sdhci controller for stih416 b2020 boards.
+  ARM: update multi_v7_defconfig for STI
+  MAINTAINERS: Add sdhci-st file to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/mmc/sdhci-st.txt |  33 ++++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/stih415-pinctrl.dtsi             |  21 +++
+ arch/arm/boot/dts/stih415.dtsi                     |  12 ++
+ arch/arm/boot/dts/stih416-b2020.dts                |   8 +
+ arch/arm/boot/dts/stih416-b2020e.dts               |   6 +
+ arch/arm/boot/dts/stih416-pinctrl.dtsi             |  39 +++++
+ arch/arm/boot/dts/stih416.dtsi                     |  24 +++
+ arch/arm/boot/dts/stih41x-b2020.dtsi               |   4 +
+ arch/arm/boot/dts/stih41x-b2020x.dtsi              |   4 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/mmc/host/Kconfig                           |  12 ++
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-st.c                        | 176 +++++++++++++++++++++
+ 14 files changed, 342 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-st.txt
+ create mode 100644 drivers/mmc/host/sdhci-st.c
+
+-- 
+1.9.1
+
