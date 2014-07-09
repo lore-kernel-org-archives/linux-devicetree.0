@@ -1,65 +1,119 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
-Date: Wed, 09 Jul 2014 14:13:00 +0300
-Message-ID: <1404904380.16296.17.camel@iivanov-dev>
-References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
-	 <CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
+From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
+Date: Wed, 9 Jul 2014 17:00:07 +0530
+Message-ID: <CAPdUM4NGXDz-bX=qqzC7LXRE5fCapdHGZeUZ29Xov=P7VZykgg@mail.gmail.com>
+References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
+	<CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
+	<53A12EA3.5010007@samsung.com>
+	<CAPdUM4OK+ATMMRM67dV5JeeTGMu=XA7Gvi7Uif+Hypf3iP+6jg@mail.gmail.com>
+	<CAPdUM4MToVJC5KRS1DUDmYEdUx2PGBE0G1v7p-SGgqpw7SPOhw@mail.gmail.com>
+	<53BC0F8F.4010106@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53BC0F8F.4010106-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,=20
+Hi Tomasz,
 
-On Wed, 2014-07-09 at 11:43 +0200, Linus Walleij wrote:
-> On Mon, Jul 7, 2014 at 5:11 PM, Ivan T. Ivanov <iivanov@mm-sol.com> w=
-rote:
->=20
-> > This set of patches adds pin control drivers for Multi-purpose
-> > pin (MPP) and General-purpose pin (GPIO) controllers found
-> > in Qualcomm PMIC chips.
-> >
-> > MPP's are enhanced GPIO's with analog circuits, which support
-> > following functions in addition to digital input/output: analog
-> > input/output and current sinks.
-> >
-> > PMIC PM8941 have 8 MPP's and 36 GPIO's. PMIC PM8841 have 4 MPP's.
-> >
-> > Ivan T. Ivanov (4):
-> >   pinctrl: qpnp: Qualcomm PMIC pin controller driver
-> >   pinctrl: qcom: Add documentation for pinctrl-qpnp binding
-> >   pinctrl: qcom: Add PM8941 and PM8941 pinctrl drivers
-> >   ARM: dts: qcom: Add PM8941 and PM8841 pinctrl nodes
->=20
-> Oh, I just spent some 45 minutes reviewing an 8xxx pinctrl driver fro=
-m
-> Bj=C3=B6rn Andersson
-> that *seems* to be doing exactly the same thing.
->=20
-> Now I have two drivers from people outside Qualcomm :-)
->=20
-> Some of my review comments on Bj=C3=B6rn's driver (like using SI unit=
-s with the pin
-> config) are actually adressed in this patch set. The idea to split in=
- subdrivers
-> per-ASIC may be good? I don't really know.
->=20
-> Can you two guys *PLEASE* join efforts and combine your drivers into =
-one?
+On 8 July 2014 21:04, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Rahul,
+>
+> On 07.07.2014 15:37, Rahul Sharma wrote:
+>> Hi Andrej, Inki,
+>>
+>> On 18 June 2014 12:06, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> Hi Andrej,
+>>>
+>>> On 18 June 2014 11:46, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>> On 06/17/2014 07:49 AM, Rahul Sharma wrote:
+>>>>> Hi All,
+>>>>>
+>>>>> Please review this patch.
+>>>>>
+>>>>> Regards,
+>>>>> Rahul Sharma
+>>>>>
+>>>>> On 9 June 2014 16:58, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>>> Display domain is removed due to instability issues. Explaining
+>>>>>> the problem below:
+>>>>>>
+>>>>>> exynos_init_late triggers the pm_genpd_poweroff_unused which
+>>>>>> powers off the unused power domains. This call hits before
+>>>>>> the trigger to deferred probes.
+>>>>>>
+>>>>>> DRM DP Panel defers the probe due to supply get failure. By the
+>>>>>> time, deferred probe is scheduled again, Display Power Domain is
+>>>>>> powered off by pm_genpd_poweroff_unused.
+>>>>>>
+>>>>>> FIMD and DP drivers are accessing registers during Probe and Bind
+>>>>>> callbacks. If display domain is enabled/disabled around register
+>>>>>> accesses, display domain gets unstable and we are getting Power
+>>>>>> Domain Disable fail notification. Increasing the Timeout also
+>>>>>> didn't help.
+>>>>
+>>>> As I understand the problem is that fimd and dp drivers access hw
+>>>> registers without enabling power domain. So the proper solution is to
+>>>> fix these drivers.
+>>>
+>>> That is also a problem but I fixed those accesses in my local kernel before
+>>> hitting this issue. If we do register accesses in FIMD/DP probe/bind we
+>>> observes "Prefetch abort" exception. But here the problem is that 'DP
+>>> domain disable' starts failing if we enable/disable multiple times.
+>>>
+>>>>
+>>>> Btw. there are already patches removing hw access from probe/bind of
+>>>> fimd. I guess removing also hw access from dp probe/bind could be a good
+>>>> solution.
+>>>
+>>> Please let me know the links for posted patches. I will test with those patches.
+>>
+>> Is there any update on this? Please share the patches which fixes the
+>> above issue or avoid the above scenario of multiple PM Domain enable/disable.
+>> I will test them for exynos5 based boards. Otherwise we should get this change
+>> merged else display will remain broken for exynos5 based boards.
+>
+> Andrzej is on holidays right now, so he won't be able to reply in this
+> thread until he's back. Here are two patches I was able to find on the
+> related MLs that might be fixing the cause of your issues:
 
-Not sure. Bj=C3=B6rn patches cover older PMIC chips, if not mistaken, m=
-ine
-cover PMIC's used with APQ8074 and onward [1]. Main difference is
-the bus which connects them to SoC, interrupts handling, runtime
-pin type detection and register map.=20
+Ok. thanks for the update.
+
+We should test with Ajay's patches which includes DP probe deferring
+based on availability of bridge chip. +
+
+few patches which cleanup register access in FIMD and DP probe/bind
+OR
+few patches to enable Display power domain and clocks just before the
+register access. As done in https://lkml.org/lkml/2014/7/4/188.
+
+Later solution results into display power domain enable failure in case of DRM
+probe defer.
+
+I am just curious if Andrej has some solution for the first approach which can
+be tested for defer probe and S2R scenarios.
 
 Regards,
-Ivan
+Rahul Sharma.
 
-[1] pm8019, pm8110, pm8226, pm8841, pm8916, pm8941, pm8994, pma8084,=20
-    pmd9635, pmd9635, pmi8962, pmi8994.
+>
+> [PATCH] drm/exynos: remove hardware overlays disable from fimd probe
+> (https://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg31629.html)
+>
+> [PATCH] drm/exynos: fimd: Keep power enabled during fimd_bind
+> (https://lkml.org/lkml/2014/7/4/188)
+>
+> Best regards,
+> Tomasz
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
