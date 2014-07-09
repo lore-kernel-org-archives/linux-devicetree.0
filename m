@@ -1,280 +1,247 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling
- (DVS) support
-Date: Wed, 9 Jul 2014 16:13:36 +0100
-Message-ID: <20140709151336.GI2635@lee--X1>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
- <1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v4 01/10] mmc: sdhci-st: Intial support for ST SDHCI controller
+Date: Wed,  9 Jul 2014 16:07:32 +0100
+Message-ID: <1404918461-25390-2-git-send-email-peter.griffin@linaro.org>
+References: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, chris@printf.net, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-I'd really like Linus Walleij to look over this if possible.
+This platform driver adds initial support for the SDHCI host controller
+found on STMicroelectronics SoCs.
 
-On Fri, 04 Jul 2014, Javier Martinez Canillas wrote:
-> Some regulators on the MAX77686 PMIC have Dynamic Voltage Scaling
-> (DVS) support that allows output voltage to change dynamically.
->=20
-> For MAX77686, these regulators are Buck regulators 2, 3 and 4.
->=20
-> Each Buck output voltage is selected using a set of external
-> inputs: DVS1-3 and SELB2-4.
->=20
-> DVS registers can be used to configure the output voltages for each
-> Buck regulator and which one is active is controled by DVSx lines.
->=20
-> SELBx lines are used to control if individual Buck lines are ON or OF=
-=46.
->=20
-> This patch adds support to configure the DVSx and SELBx lines
-> from DT and to setup and read the GPIO lines connected to them.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->=20
-> Changes since v6:
->  - Add a comment that max77686_read_gpios() function can sleep.
->    Sugggested by Krzysztof Kozlowski
-> ---
->  drivers/mfd/max77686.c       | 119 +++++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/max77686.h |  18 ++++---
->  2 files changed, 129 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
-> index 8650832..d193873 100644
-> --- a/drivers/mfd/max77686.c
-> +++ b/drivers/mfd/max77686.c
-> @@ -32,8 +32,10 @@
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/max77686.h>
->  #include <linux/mfd/max77686-private.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/err.h>
->  #include <linux/of.h>
-> +#include <linux/export.h>
-> =20
->  #define I2C_ADDR_RTC	(0x0C >> 1)
-> =20
-> @@ -101,9 +103,119 @@ static const struct of_device_id max77686_pmic_=
-dt_match[] =3D {
->  	{},
->  };
-> =20
-> +static void max77686_dt_parse_dvs_gpio(struct device *dev)
-> +{
-> +	struct max77686_platform_data *pd =3D dev_get_platdata(dev);
-> +	int i;
-> +
-> +	/*
-> +	 * NOTE: we don't consider GPIO errors fatal; board may have some l=
-ines
-> +	 * directly pulled high or low and thus doesn't specify them.
-> +	 */
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++)
-> +		pd->buck_gpio_dvs[i] =3D
-> +			devm_gpiod_get_index(dev, "max77686,pmic-buck-dvs", i);
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++)
-> +		pd->buck_gpio_selb[i] =3D
-> +			devm_gpiod_get_index(dev, "max77686,pmic-buck-selb", i);
-> +}
+It has been tested on STiH41x b2020 platforms currently.
 
-Not sure why you've pulled this out for parse_dt_pdata()?
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+---
+ drivers/mmc/host/Kconfig    |  12 +++
+ drivers/mmc/host/Makefile   |   1 +
+ drivers/mmc/host/sdhci-st.c | 176 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 189 insertions(+)
+ create mode 100644 drivers/mmc/host/sdhci-st.c
 
-> +/**
-> + * max77686_setup_gpios() - init DVS-related GPIOs
-> + * @dev: device whose platform data contains the dvs GPIOs informati=
-on
-> + *
-> + * This function claims / initalizations GPIOs related to DVS if the=
-y are
-
-s/initialzations/initialises
-
-> + * defined. This may have the effect of switching voltages if the
-
-s/if the/if
-
-> + * pdata->buck_default_idx does not match the boot time state of pin=
-s.
-> + */
-> +int max77686_setup_gpios(struct device *dev)
-> +{
-> +	struct max77686_platform_data *pd =3D dev_get_platdata(dev);
-> +	int buck_default_idx =3D pd->buck_default_idx;
-
-You're saving 4 characters once here.  Just use the variable in pd.
-
-> +	int ret;
-> +	int i;
-
-Don't you want some locking around this?
-
-> +	/* Set all SELB high to avoid glitching while DVS is changing */
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
-> +		struct gpio_desc *gpio =3D pd->buck_gpio_selb[i];
-> +
-> +		/* OK if some GPIOs aren't defined */
-> +		if (IS_ERR(gpio))
-> +			continue;
-> +
-> +		ret =3D gpiod_direction_output_raw(gpio, 1);
-> +		if (ret) {
-> +			dev_err(dev, "can't set gpio[%d] dir: %d\n", i, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/* Set our initial setting */
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++) {
-> +		struct gpio_desc *gpio =3D pd->buck_gpio_dvs[i];
-> +
-> +		/* OK if some GPIOs aren't defined */
-> +		if (IS_ERR(gpio))
-> +			continue;
-> +
-> +		/* If a GPIO is valid, set it */
-> +		gpiod_direction_output(gpio, (buck_default_idx >> i) & 1);
-> +		if (ret) {
-> +			dev_err(dev, "can't set gpio[%d]: dir %d\n", i, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/* Now set SELB low to take effect */
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
-> +		struct gpio_desc *gpio =3D pd->buck_gpio_selb[i];
-> +
-> +		if (!IS_ERR(gpio))
-> +			gpiod_set_value(gpio, 0);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(max77686_setup_gpios);
-> +
-> +/**
-> + * max77686_read_gpios() - read the current state of the dvs GPIOs
-> + * @pdata: platform data that contains the dvs GPIOs information
-> + *
-> + * We call this function at bootup to detect what slot the firmware =
-was
-> + * using for the DVS GPIOs.  That way we can properly preserve the f=
-irmware's
-> + * voltage settings
-> + *
-> + * This function can sleep so must not be called from atomic context=
-=2E
-> + */
-> +int max77686_read_gpios(struct max77686_platform_data *pdata)
-> +{
-> +	int buck_default_idx =3D pdata->buck_default_idx;
-
-Remove this, it adds very little.
-
-> +	int result =3D 0;
-> +	int i;
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(pdata->buck_gpio_dvs); i++) {
-> +		struct gpio_desc *gpio =3D pdata->buck_gpio_dvs[i];
-> +
-> +		/* OK if some GPIOs aren't defined; we'll use default */
-> +		if (IS_ERR(gpio)) {
-> +			result |=3D buck_default_idx & (1 << i);
-
-s/(1 << i)/BIT(i)/
-
-> +			continue;
-> +		}
-> +
-> +		if (gpiod_get_value_cansleep(gpio))
-> +			result |=3D 1 << i;
-
-Same here.
-
-> +	}
-> +
-> +	return result;
-> +}
-> +EXPORT_SYMBOL_GPL(max77686_read_gpios);
-> +
->  static struct max77686_platform_data *max77686_i2c_parse_dt_pdata(st=
-ruct device
->  								  *dev)
->  {
-> +	struct device_node *np =3D dev->of_node;
->  	struct max77686_platform_data *pd;
-> =20
->  	pd =3D devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-> @@ -111,6 +223,13 @@ static struct max77686_platform_data *max77686_i=
-2c_parse_dt_pdata(struct device
->  		return NULL;
-> =20
->  	dev->platform_data =3D pd;
-> +
-> +	/* Read default index and ignore errors, since default is 0 */
-> +	of_property_read_u32(np, "max77686,pmic-buck-default-dvs-idx",
-
-If it doesn't already have one, this needs a DT Ack and associated
-documentation.
-
-> +			     &pd->buck_default_idx);
-> +
-> +	max77686_dt_parse_dvs_gpio(dev);
-
-Bring code back into here and remove the call.
-
->  	return pd;
->  }
-> =20
-> diff --git a/include/linux/mfd/max77686.h b/include/linux/mfd/max7768=
-6.h
-> index 4cbcc13..46a736b 100644
-> --- a/include/linux/mfd/max77686.h
-> +++ b/include/linux/mfd/max77686.h
-> @@ -99,15 +99,17 @@ struct max77686_platform_data {
->  	struct max77686_opmode_data *opmode_data;
-> =20
->  	/*
-> -	 * GPIO-DVS feature is not enabled with the current version of
-> -	 * MAX77686 driver. Buck2/3/4_voltages[0] is used as the default
-> -	 * voltage at probe. DVS/SELB gpios are set as OUTPUT-LOW.
-> +	 * GPIO-DVS feature is not fully enabled with the current version o=
-f
-> +	 * MAX77686 driver, but the driver does support using a DVS index o=
-ther
-> +	 * than the default of 0.
->  	 */
-> -	int buck234_gpio_dvs[3]; /* GPIO of [0]DVS1, [1]DVS2, [2]DVS3 */
-> -	int buck234_gpio_selb[3]; /* [0]SELB2, [1]SELB3, [2]SELB4 */
-> -	unsigned int buck2_voltage[8]; /* buckx_voltage in uV */
-> -	unsigned int buck3_voltage[8];
-> -	unsigned int buck4_voltage[8];
-> +	struct gpio_desc *buck_gpio_dvs[3]; /* GPIO of [0]DVS1, [1]DVS2, [2=
-]DVS3 */
-> +	int buck_default_idx; /* Default value of DVS1, 2, 3 */
-> +
-> +	struct gpio_desc *buck_gpio_selb[3]; /* Buck regulators 2, 3, 4 */
->  };
-> =20
-> +extern int max77686_setup_gpios(struct device *dev);
-> +extern int max77686_read_gpios(struct max77686_platform_data *pdata)=
-;
-> +
->  #endif /* __LINUX_MFD_MAX77686_H */
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index a565254..6615b79 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -290,6 +290,18 @@ config MMC_MOXART
+ 	  be found on some embedded hardware such as UC-7112-LX.
+ 	  If you have a controller with this interface, say Y here.
+ 
++config MMC_SDHCI_ST
++	tristate "SDHCI support on STMicroelectronics SoC"
++	depends on ARCH_STI
++	depends on MMC_SDHCI_PLTFM
++	select MMC_SDHCI_IO_ACCESSORS
++	help
++	  This selects the Secure Digital Host Controller Interface in
++	  STMicroelectronics SoCs.
++
++	  If you have a controller with this interface, say Y or M here.
++	  If unsure, say N.
++
+ config MMC_OMAP
+ 	tristate "TI OMAP Multimedia Card Interface support"
+ 	depends on ARCH_OMAP
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index 7f81ddf..f211eed 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -68,6 +68,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
+ obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
+ obj-$(CONFIG_MMC_SDHCI_BCM2835)		+= sdhci-bcm2835.o
+ obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
++obj-$(CONFIG_MMC_SDHCI_ST)		+= sdhci-st.o
+ 
+ ifeq ($(CONFIG_CB710_DEBUG),y)
+ 	CFLAGS-cb710-mmc	+= -DDEBUG
+diff --git a/drivers/mmc/host/sdhci-st.c b/drivers/mmc/host/sdhci-st.c
+new file mode 100644
+index 0000000..328f348
+--- /dev/null
++++ b/drivers/mmc/host/sdhci-st.c
+@@ -0,0 +1,176 @@
++/*
++ * Support for SDHCI on STMicroelectronics SoCs
++ *
++ * Copyright (C) 2014 STMicroelectronics Ltd
++ * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
++ * Contributors: Peter Griffin <peter.griffin@linaro.org>
++ *
++ * Based on sdhci-cns3xxx.c
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/mmc/host.h>
++
++#include "sdhci-pltfm.h"
++
++static u32 sdhci_st_readl(struct sdhci_host *host, int reg)
++{
++	u32 ret;
++
++	switch (reg) {
++	case SDHCI_CAPABILITIES:
++		ret = readl_relaxed(host->ioaddr + reg);
++		/* Support 3.3V and 1.8V */
++		ret &= ~SDHCI_CAN_VDD_300;
++		break;
++	default:
++		ret = readl_relaxed(host->ioaddr + reg);
++	}
++	return ret;
++}
++
++static const struct sdhci_ops sdhci_st_ops = {
++	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
++	.set_clock = sdhci_set_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.read_l = sdhci_st_readl,
++	.reset = sdhci_reset,
++};
++
++static const struct sdhci_pltfm_data sdhci_st_pdata = {
++	.ops = &sdhci_st_ops,
++	.quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
++	    SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
++};
++
++
++static int sdhci_st_probe(struct platform_device *pdev)
++{
++	struct sdhci_host *host;
++	struct sdhci_pltfm_host *pltfm_host;
++	struct clk *clk;
++	int ret = 0;
++	u16 host_version;
++
++	clk =  devm_clk_get(&pdev->dev, "mmc");
++	if (IS_ERR(clk)) {
++		dev_err(&pdev->dev, "Peripheral clk not found\n");
++		return PTR_ERR(clk);
++	}
++
++	host = sdhci_pltfm_init(pdev, &sdhci_st_pdata, 0);
++	if (IS_ERR(host)) {
++		dev_err(&pdev->dev, "Failed sdhci_pltfm_init\n");
++		return PTR_ERR(host);
++	}
++
++	ret = mmc_of_parse(host->mmc);
++
++	if (ret) {
++		dev_err(&pdev->dev, "Failed mmc_of_parse\n");
++		return ret;
++	}
++
++	clk_prepare_enable(clk);
++
++	pltfm_host = sdhci_priv(host);
++	pltfm_host->clk = clk;
++
++	ret = sdhci_add_host(host);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed sdhci_add_host\n");
++		goto err_out;
++	}
++
++	platform_set_drvdata(pdev, host);
++
++	host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
++
++	dev_info(&pdev->dev, "SDHCI ST Initialised: Host Version: 0x%x Vendor Version 0x%x\n",
++		((host_version & SDHCI_SPEC_VER_MASK) >> SDHCI_SPEC_VER_SHIFT),
++		((host_version & SDHCI_VENDOR_VER_MASK) >>
++		SDHCI_VENDOR_VER_SHIFT));
++
++	return 0;
++
++err_out:
++	clk_disable_unprepare(clk);
++	sdhci_pltfm_free(pdev);
++
++	return ret;
++}
++
++static int sdhci_st_remove(struct platform_device *pdev)
++{
++	struct sdhci_host *host = platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++
++	clk_disable_unprepare(pltfm_host->clk);
++
++	return sdhci_pltfm_unregister(pdev);
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int sdhci_st_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	int ret = sdhci_suspend_host(host);
++
++	if (ret)
++		goto out;
++
++	clk_disable_unprepare(pltfm_host->clk);
++out:
++	return ret;
++}
++
++static int sdhci_st_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++
++	clk_prepare_enable(pltfm_host->clk);
++
++	return sdhci_resume_host(host);
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(sdhci_st_pmops, sdhci_st_suspend, sdhci_st_resume);
++
++static const struct of_device_id st_sdhci_match[] = {
++	{ .compatible = "st,sdhci" },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, st_sdhci_match);
++
++static struct platform_driver sdhci_st_driver = {
++	.probe = sdhci_st_probe,
++	.remove = sdhci_st_remove,
++	.driver = {
++		   .name = "sdhci-st",
++		   .pm = &sdhci_st_pmops,
++		   .of_match_table = of_match_ptr(st_sdhci_match),
++		  },
++};
++
++module_platform_driver(sdhci_st_driver);
++
++MODULE_DESCRIPTION("SDHCI driver for STMicroelectronics SoCs");
++MODULE_AUTHOR("Giuseppe Cavallaro <peppe.cavallaro@st.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:st-sdhci");
+-- 
+1.9.1
