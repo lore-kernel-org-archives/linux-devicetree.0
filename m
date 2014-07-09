@@ -1,73 +1,39 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv2 10/17] ARM: mvebu: add CA9 MPcore SoC Controller node
-Date: Wed,  9 Jul 2014 15:40:14 +0200
-Message-ID: <1404913221-17343-11-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1404913221-17343-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1404913221-17343-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
+Date: Wed, 9 Jul 2014 14:40:50 +0100
+Message-ID: <20140709134050.GN9485@arm.com>
+References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404487757-18829-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+On Fri, Jul 04, 2014 at 04:29:17PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> This commit introduces a generic device tree binding for IOMMU devices.
+> Only a very minimal subset is described here, but it is enough to cover
+> the requirements of both the Exynos System MMU and Tegra SMMU as
+> discussed here:
+> 
+>     https://lkml.org/lkml/2014/4/27/346
+> 
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The CA9 MPcore SoC Control block is a set of registers that allows to
-configure certain internal aspects of the core blocks of the SoC
-(Cortex-A9, L2 cache controller, etc.). In most cases, the default
-values are fine so they aren't many reasons to touch those registers,
-but there is one exception: to support cpuidle on Armada 38x, we need
-to modify the value of the CA9 MPcore Reset Control register.
+  Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
-Therefore, this commit adds a new Device Tree binding for this
-hardware block, and uses this new binding for the Armada 38x Device
-Tree file.
+I would like to move the ARM SMMU driver over to this for 3.18, if possible.
+One use-case there is the ability to describe groups of masters behind a
+multi-master IOMMU but which must be part of the same domain (i.e. an
+iommu_group). This is useful for presenting devices to a guest with a
+virtual SMMU, where the physical devices share a stage-2 context.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt | 14 ++++++++++++++
- arch/arm/boot/dts/armada-38x.dtsi                          |  5 +++++
- 2 files changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+With your binding, does this simply mean determining the set of master IDs
+in the group, then describing the complete set for each master?
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-new file mode 100644
-index 0000000..8781073
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-@@ -0,0 +1,14 @@
-+Marvell Armada 38x CA9 MPcore SoC Controller
-+============================================
-+
-+Required properties:
-+
-+- compatible: Should be "marvell,armada-380-mpcore-soc-ctrl".
-+
-+- reg: should be the register base and length as documented in the
-+  datasheet for the CA9 MPcore SoC Control registers
-+
-+mpcore-soc-ctrl@20d20 {
-+	compatible = "marvell,armada-380-mpcore-soc-ctrl";
-+	reg = <0x20d20 0x6c>;
-+};
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 689fa1a..242d0ec 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -286,6 +286,11 @@
- 				reg = <0x20800 0x10>;
- 			};
- 
-+			mpcore-soc-ctrl@20d20 {
-+				compatible = "marvell,armada-380-mpcore-soc-ctrl";
-+				reg = <0x20d20 0x6c>;
-+			};
-+
- 			coherency-fabric@21010 {
- 				compatible = "marvell,armada-380-coherency-fabric";
- 				reg = <0x21010 0x1c>;
--- 
-2.0.0
-
+Will
