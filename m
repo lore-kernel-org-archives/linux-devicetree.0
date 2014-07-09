@@ -1,75 +1,74 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [GIT PULL] ARM: SPEAr1310 PCIe updates
-Date: Wed, 9 Jul 2014 11:09:08 -0700
-Message-ID: <CAOesGMiu_azMYt3L5OgZSFRgrJQvXvkvSOtr0eLam22CQ5SwuA@mail.gmail.com>
-References: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48F2@EAPEX1MAIL1.st.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
+Date: Wed, 9 Jul 2014 19:10:48 +0100
+Message-ID: <20140709181048.GX9485@arm.com>
+References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
+ <20140709134050.GN9485@arm.com>
+ <20140709142125.GB3262@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48F2-8vAmw3ZAcdzhJTuQ9jeba9BPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, "'Bjorn Helgaas' (bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org)" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Nicholson <mark-5iakeXVP1y7by3iVrkZq2A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "FTPAdmin Kernel.org" <ftpadmin-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140709142125.GB3262@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Thierry,
 
+On Wed, Jul 09, 2014 at 03:21:27PM +0100, Thierry Reding wrote:
+> On Wed, Jul 09, 2014 at 02:40:50PM +0100, Will Deacon wrote:
+> > I would like to move the ARM SMMU driver over to this for 3.18, if possible.
+> > One use-case there is the ability to describe groups of masters behind a
+> > multi-master IOMMU but which must be part of the same domain (i.e. an
+> > iommu_group). This is useful for presenting devices to a guest with a
+> > virtual SMMU, where the physical devices share a stage-2 context.
+> > 
+> > With your binding, does this simply mean determining the set of master IDs
+> > in the group, then describing the complete set for each master?
+> 
+> I'm not sure I properly understand what you're trying to do, but I don't
+> think the binding is designed to cover that. Rather the goal was to
+> describe the IDs belonging to each master, so that an IOMMU can be
+> properly configured.
 
+This is directly related to that problem, see below.
 
-On Tue, Jul 8, 2014 at 10:48 PM, Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org> wrote:
-> Hello Olof,
->
-> Please pull PCIe updates for ST's SPEAr1310 SoC.
->
-> Last version of posted V8 patches have been Acked-by respective maintainers.
-> https://lkml.org/lkml/2014/4/15/260
->
-> Apart from arch/arm/ changes, it also contains patches for drivers/{pci|phy}.
-> Bjorn advised to get complete series via arm-soc tree.
-> http://www.spinics.net/lists/linux-pci/msg30271.html
->
->  Regards
->  Mohit
->
-> The following changes since commit 4c834452aad01531db949414f94f817a86348d59:
->   Linus Torvalds (1):
->         Linux 3.16-rc3
->
-> are available in the git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git spear/pcie-support-v8
->
-> Mohit Kumar (1):
->       SPEAr13xx: defconfig: Update
->
-> Pratyush Anand (8):
->       clk: SPEAr13XX: Fix pcie clock name
->       SPEAr13XX: Fix static mapping table
->       phy: SPEAr1310/40-miphy: Add binding information
->       SPEAr: misc: Add binding information
->       phy: SPEAr1310/40-miphy: Add phy driver for PCIe and SATA
->       SPEAr13XX: Add binding information for PCIe controller
->       SPEAr13XX: dts: Add PCIe node information
->       pcie: SPEAr13xx: Add designware wrapper support
+> Anything beyond that (e.g. logical grouping of masters) isn't directly
+> within the scope of the binding (it doesn't describe hardware but some
+> policy pertaining to some specific use-case).
 
-There are so many things wrong with this pull request.
+This *is* for hardware. I can use PCI as an example, but this could equally
+apply to other types of bus. If you have a bunch of PCI master devices
+sitting being a non-transparent bridge, they can end up sharing the same
+master device ID (requester ID). This means that there is no way in the
+IOMMU to initialise a translation for one of these devices without also
+affecting the others. We currently have iommu_groups to deal with this, but
+it *is* a property of the hardware and we absolutely need a way to describe
+it. I'm happy to add it later, but we need to think about it now to avoid
+merging something that can't easily be extended.
 
-* Why is this not coming from the spear maintainer that knows how to
-look at patches and deal with these things?
-* Why have you separated out the PCIe node info, but not the phy DTS
-updates in separate patches?
-* Why are you sending a pull request for a repo that is not yours?
-* Why is Viresh the git committer but hasn't signed off on the patches?
+For PCI, the topology is probable but even then, we need this information to
+describe the resulting master device ID emitted by the bridge for the
+upstream group. One way to do this with your binding would be to treat all
+of the upstream masters as having the same device ID.
 
-Are you sharing accounts on kernel.org? (Adding kernel.org admin on cc
-just in case).
+With virtualisation, we may want to assign a group of devices to a guest but
+without emulating the bridge. This would need something the device-tree to
+describe that they are grouped together.
 
-I'm not going to touch this pull request until the above has been
-sorted out and explained.
+> That said, the IOMMU driver that I prototyped for Tegra did some similar
+> grouping of devices, although in a much more restricted way. The goal of
+> that was to add a known set of devices into one group, "peripherals", so
+> that they could share one IOMMU domain. This was meant to separate them
+> from devices with more advanced needs (such as a GPU driver). Devices in
+> the "peripherals" group would be using the DMA mapping API integration
+> whereas other devices would have to explicitly allocate an IOMMU domain.
+> 
+> I'm not sure how much that helps for the use-case that you have in mind.
 
+That sounds more like a software decision, which I agree doesn't need to be
+described.
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
