@@ -1,64 +1,64 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 08/10] ARM: STi: DT: Enable second sdhci controller for stih416 b2020 boards.
-Date: Wed,  9 Jul 2014 16:07:39 +0100
-Message-ID: <1404918461-25390-9-git-send-email-peter.griffin@linaro.org>
-References: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404918461-25390-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for pci_host_bridge.
+Date: Wed, 9 Jul 2014 09:10:04 -0600
+Message-ID: <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com> <20140708005954.GC22939@google.com>
+ <20140708104655.GC6501@e106497-lin.cambridge.arm.com> <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
+ <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The second controller is only present on the stih416 SoC. Also
-mark this as non-removeable as its eMMC.
+On Tue, Jul 8, 2014 at 4:48 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Tue, Jul 08, 2014 at 07:41:50PM +0100, Bjorn Helgaas wrote:
+>> On Tue, Jul 8, 2014 at 4:46 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> > On Tue, Jul 08, 2014 at 01:59:54AM +0100, Bjorn Helgaas wrote:
+>>
+>> >> I wonder if it would help to make a weak pci_domain_nr() function that
+>> >> returns "bridge->domain_nr".  Then each arch could individually drop its
+>> >> pci_domain_nr() definition as it was converted, e.g., something like this:
+>> >>
+>> >>   - Convert every arch pci_domain_nr() from a #define to a non-inline
+>> >>     function
+>> >>   - Add bridge.domain_nr, initialized from pci_domain_nr()
+>> >>   - Add a weak generic pci_domain_nr() that returns bridge.domain_nr
+>> >>   - Add a way to create a host bridge in a specified domain, so we can
+>> >>     initialize bridge.domain_nr without using pci_domain_nr()
+>> >>   - Convert each arch to use the new creation mechanism and drop its
+>> >>     pci_domain_nr() implementation
+>> >
+>> > I will try to propose a patch implementing this.
+>>
+>> I think this is more of an extra credit, cleanup sort of thing.  I
+>> don't think it advances your primary goal of (I think) getting arm64
+>> PCI support in.  So my advice is to not worry about unifying domain
+>> handling until later.
+>
+> Getting arm64 supported *is* my main goal. But like you have stated in your
+> review of v7, you wanted to see another architecture converted as a guarantee
+> of "genericity" (for lack of a better word) for my patches. The one architecture
+> I've set my eyes on is microblaze, and that one uses pci_scan_root_bus()
+> rather than pci_create_root_bus() so I don't have any opportunity to pass the
+> domain number or any additional info (like the sysdata pointer that we were
+> talking about) to the pci_host_bridge structure unless I do this cleanup.
 
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
----
- arch/arm/boot/dts/stih416-b2020.dts  | 8 ++++++++
- arch/arm/boot/dts/stih416-b2020e.dts | 6 ++++++
- 2 files changed, 14 insertions(+)
+I think maybe I was too harsh about that, or maybe we had different
+ideas about what "conversion" involved.  My comment was in response to
+"pci: Introduce pci_register_io_range() helper function", and I don't
+remember why I was concerned about that; it's not even in drivers/pci,
+and it doesn't have an obvious connection to putting the domain number
+in struct pci_host_bridge.
 
-diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
-index 4e2df66..d42ff1d 100644
---- a/arch/arm/boot/dts/stih416-b2020.dts
-+++ b/arch/arm/boot/dts/stih416-b2020.dts
-@@ -12,4 +12,12 @@
- / {
- 	model = "STiH416 B2020";
- 	compatible = "st,stih416-b2020", "st,stih416";
-+
-+	soc {
-+		mmc1: sdhci@fe81f000 {
-+			status       = "okay";
-+			bus-width    = <8>;
-+			non-removable;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/stih416-b2020e.dts b/arch/arm/boot/dts/stih416-b2020e.dts
-index ba0fa2c..68dfdaf 100644
---- a/arch/arm/boot/dts/stih416-b2020e.dts
-+++ b/arch/arm/boot/dts/stih416-b2020e.dts
-@@ -31,5 +31,11 @@
- 		ethernet1: dwmac@fef08000 {
- 			snps,reset-gpio = <&PIO0 7>;
- 		};
-+
-+		mmc1: sdhci@fe81f000 {
-+			status       = "okay";
-+			bus-width    = <8>;
-+			non-removable;
-+		};
- 	};
- };
--- 
-1.9.1
+The thing I'm more concerned about is adding new PCI interfaces, e.g.,
+pci_create_root_bus_in_domain(), that are only used by one
+architecture.  Then it's hard to be sure that it's going to be useful
+for other arches.  If you can add arm64 using the existing PCI
+interfaces, I don't any problem with that.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
