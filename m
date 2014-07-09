@@ -1,50 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 8/9] pci: Add support for creating a generic host_bridge from device tree
-Date: Wed, 9 Jul 2014 08:47:40 +0200
-Message-ID: <201407090847.41303.arnd@arndb.de>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <20140708223737.GA19512@google.com> <20140708225755.GE4980@e106497-lin.cambridge.arm.com>
+From: Jerome FORISSIER <jerome.forissier@huawei.com>
+Subject: Re: [PATCH 1/3] mtd: hisilicon: add device tree node for nand controller
+Date: Wed, 9 Jul 2014 09:08:39 +0200
+Message-ID: <53BCEA77.2080004@huawei.com>
+References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com> <1404115409-20200-2-git-send-email-wangzhou.bry@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140708225755.GE4980@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1404115409-20200-2-git-send-email-wangzhou.bry@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Zhou Wang <wangzhou.bry@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: caizhiyong@huawei.com, wangzhou1@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 July 2014, Liviu Dudau wrote:
-> On Tue, Jul 08, 2014 at 11:37:37PM +0100, Bjorn Helgaas wrote:
-> > On Tue, Jul 08, 2014 at 11:27:38PM +0100, Liviu Dudau wrote:
-> > > > > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > > > > > index 7e7b939..556dc5f 100644
-> > > > > > > --- a/include/linux/pci.h
-> > > > > > > +++ b/include/linux/pci.h
-> > > > > > > @@ -402,6 +402,7 @@ struct pci_host_bridge {
-> > > > > > >       struct device dev;
-> > > > > > >       struct pci_bus *bus;            /* root bus */
-> > > > > > >       int domain_nr;
-> > > > > > > +     resource_size_t io_base;        /* physical address for the start of I/O area */
-> > > > > > 
-> > > > > > I don't see where this is used yet.
-> > > > > 
-> > > > > It's used in pci_host_bridge_of_get_ranges() (earlier in this patch).
-> > > > 
-> > > > of_create_pci_host_bridge() fills in bridge->io_base, but I don't see
-> > > > anything that ever reads bridge->io_base.
-> > > 
-> > > Ah, understood. It is used by the host bridge drivers to set their ATR registers to the
-> > > correct CPU address values.
+On 30-Jun-14 10:03, Zhou Wang wrote:
+> Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
+> ---
+>  arch/arm/boot/dts/hip04.dtsi |   31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+> index abb42ca..e63fc61 100644
+> --- a/arch/arm/boot/dts/hip04.dtsi
+> +++ b/arch/arm/boot/dts/hip04.dtsi
+> @@ -386,5 +386,36 @@
+>  				interrupts = <0 389 4>;
+>  			};
+>  		};
+> +
+> +		nand: nand@4020000 {
+> +			compatible = "hisilicon,504-nfc";
 
-Actually, as we just discovered with one of the pci_dw drivers, it may
-be the wrong number: what you program in the ATR registers is not
-necessarily the same as the address visible to the CPU. What you need
-instead is the address at the bus immediately above the PCI host bridge.
+In PATCH 2/3 and 3/3 you are using "hisilicon,nfc504".
 
-I think for now we can leave out this part from common code and add
-the infrastructure later. Host drivers can have their own loop
-around the ranges if they need to set up these registers. Ideally
-at least on arm64, they should be set up by the firmware already.
+> +			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
+> +			interrupts = <0 379 4>;
+> +			nand-bus-width = <8>;
+> +			nand-ecc-mode = "none";
+> +			hisi,nand-ecc-bits = <0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			partition@0 {
+> +				label = "nand_text";
+> +				reg = <0x00000000 0x00400000>;
+> +			};
+> +
+> +			partition@00400000 {
+> +				label = "nand_monitor";
+> +				reg = <0x00400000 0x00400000>;
+> +			};
+> +
+> +			partition@00800000 {
+> +				label = "nand_kernel";
+> +				reg = <0x00800000 0x00800000>;
+> +			};
+> +
+> +			partition@01000000 {
+> +				label = "nand_fs";
+> +				reg = <0x01000000 0x1f000000>;
+> +			};
+> +		};
+>  	};
+>  };
+> 
 
-	Arnd
+-- 
+Jerome
