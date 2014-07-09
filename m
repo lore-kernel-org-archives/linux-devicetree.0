@@ -1,47 +1,30 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 07/13] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific irqc compatible property
-Date: Wed,  9 Jul 2014 14:23:37 +0200
-Message-ID: <1404908623-909-8-git-send-email-geert+renesas@glider.be>
-References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/3] ARM: keystone: enable mdio support
+Date: Wed, 9 Jul 2014 16:14:17 +0300
+Message-ID: <1404911660-10047-1-git-send-email-grygorii.strashko@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404908623-909-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The interrupt controller used the generic compatible property only.
-Add the SoC-specific one, to make it future proof.
+Add DT definitions for Keystone 2 MDIO module and Ethernet PHYs for Keystone
+EVMK2HX evm. And enable MDIO support for Keystone 2 SoCs.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a73a4.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Grygorii Strashko (3):
+  ARM: dts: keystone: add mdio devices entries
+  ARM: dts: keystone-evm: add 1g ethernet phys nodes
+  ARM: keystone_defconfig: enable mdio and marvell eth phys
 
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 82c5ac825386..f3bd3d4603d7 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -51,7 +51,7 @@
- 	};
- 
- 	irqc0: interrupt-controller@e61c0000 {
--		compatible = "renesas,irqc";
-+		compatible = "renesas,irqc-r8a73a4", "renesas,irqc";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
- 		reg = <0 0xe61c0000 0 0x200>;
-@@ -90,7 +90,7 @@
- 	};
- 
- 	irqc1: interrupt-controller@e61c0200 {
--		compatible = "renesas,irqc";
-+		compatible = "renesas,irqc-r8a73a4", "renesas,irqc";
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
- 		reg = <0 0xe61c0200 0 0x200>;
+ arch/arm/boot/dts/k2hk-evm.dts      |   12 ++++++++++++
+ arch/arm/boot/dts/keystone.dtsi     |   11 +++++++++++
+ arch/arm/configs/keystone_defconfig |    2 ++
+ 3 files changed, 25 insertions(+)
+
 -- 
-1.9.1
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
