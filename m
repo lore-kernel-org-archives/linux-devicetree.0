@@ -1,55 +1,39 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 08/10] ARM: STi: DT: Enable second sdhci controller for
- stih416 b2020 boards.
-Date: Wed, 9 Jul 2014 12:09:36 +0200
-Message-ID: <CAPDyKFor1LqgAcJZc14iSY6D8RYm4w7sysRR3c2inSr4LVYt8w@mail.gmail.com>
-References: <1401898054-686-1-git-send-email-peter.griffin@linaro.org>
-	<1401898054-686-9-git-send-email-peter.griffin@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [Re-send PATCH 1/1] arm: dra7xx: Add hwmod data for MDIO and CPSW
+Date: Wed, 9 Jul 2014 03:11:16 -0700
+Message-ID: <20140709101116.GM28884@atomide.com>
+References: <1404825399-10330-1-git-send-email-mugunthanvnm@ti.com>
+ <20140709095552.GA25154@breakpoint.cc>
+ <20140709100147.GB25154@breakpoint.cc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1401898054-686-9-git-send-email-peter.griffin@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Chris Ball <chris@printf.net>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140709100147.GB25154-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Cc: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2014 18:07, Peter Griffin <peter.griffin@linaro.org> wrote:
-> The second controller is only present on the stih416 SoC. Also
-> mark this as non-removeable as its eMMC.
->
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
-> ---
->  arch/arm/boot/dts/stih416-b2020-revE.dts | 6 ++++++
->  arch/arm/boot/dts/stih416-b2020.dts      | 8 ++++++++
->  2 files changed, 14 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stih416-b2020-revE.dts b/arch/arm/boot/dts/stih416-b2020-revE.dts
-> index ba0fa2c..68dfdaf 100644
-> --- a/arch/arm/boot/dts/stih416-b2020-revE.dts
-> +++ b/arch/arm/boot/dts/stih416-b2020-revE.dts
-> @@ -31,5 +31,11 @@
->                 ethernet1: dwmac@fef08000 {
->                         snps,reset-gpio = <&PIO0 7>;
->                 };
-> +
-> +               mmc1: sdhci@fe81f000 {
-> +                       status       = "okay";
-> +                       bus-width    = <8>;
-> +                       non-removable;
-> +               };
->         };
+* Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org> [140709 03:03]:
+> On 2014-07-09 11:55:52 [+0200], Sebastian Andrzej Siewior wrote:
+> > On 2014-07-08 18:46:39 [+0530], Mugunthan V N wrote:
+> > > Adding hwmod data for CPSW and MDIO which is present in DRA7xx So=
+C
+> >=20
+> > I reverted my patch, applied this one and after boot I got:
+> Oh me dum dum. I had --dry-run=E2=80=A6
+>=20
+> Acked-by: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+>=20
+> This is basically what Tony hasked me to do: No IRQ numbers & iomem.
 
-Hi Peter,
+OK great thanks for testing :)
 
-I was trying to apply this patchset on my next branch, but the above
-file /arch/arm/boot/dts/stih416-b2020-revE.dts does not exist. And I
-don't see it in linux-next either.
-
-What tree/patch are this based upon?
-
-Kind regards
-Uffe
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
