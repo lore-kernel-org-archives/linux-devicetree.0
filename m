@@ -1,58 +1,97 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: add rockchip i2s bindings
-Date: Wed, 9 Jul 2014 09:40:00 +0200
-Message-ID: <20140709074000.GC30458@sirena.org.uk>
-References: <1404458796-6818-1-git-send-email-xjq@rock-chips.com>
- <1404558638-1739-1-git-send-email-xjq@rock-chips.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: a case for a common efuse API?
+Date: Wed, 09 Jul 2014 08:50:59 +0100
+Message-ID: <53BCF463.3000604@linaro.org>
+References: <53BC4DD7.20906@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SLk8PSyqxe/ugcCT"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404558638-1739-1-git-send-email-xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53BC4DD7.20906@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---SLk8PSyqxe/ugcCT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 05, 2014 at 07:10:38PM +0800, jianqun wrote:
-> From: Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->=20
-> Add devicetree bindings for i2s controller found on
-> rk3066, rk3188 and rk3288 processors from rockchip.
+On 08/07/14 21:00, Stephen Boyd wrote:
+> Hi,
+>
+> On MSM chips we have some efuses (called qfprom) where we store things
+> like calibration data, speed bins, etc. We need to read out data from
+> the efuses in various drivers like the cpufreq, thermal, etc. This
+> essentially boils down to a bunch of readls on the efuse from a handful
+> of different drivers. In devicetree this looks a little odd because
+> these drivers end up having an extra reg property (or two) that points
+> to a register in the efuse and some length, i.e you see this:
+>
+> 	thermal-sensor@34000 {
+> 		compatible = "sensor";
+> 		reg = <0x34000 0x1000>, <0x10018 0xc>;
+> 		reg-names = "sensor", "efuse_calib";
+> 	}
+>
+>
+> I imagine in DT we want something more like this:
+>
+> 	efuse: efuse@10000 {
+> 		compatible = "efuse";
+> 		reg = <0x10000 0x1000>;
+> 	}
+>
+> 	thermal-sensor@34000 {
+> 		compatible = "sensor";
+> 		reg = <0x34000 0x1000>;
+> 		efuse = <&efuse 0x18>;
+> 	}
+>
+>
+> Where we can point to the efuse and give an address offset. From code we
+> could then call some efuse_read() function to read the sensor's
+> calibration data.
+>
+> It's been suggested that we use syscon for this, but I wonder if that is
+> the right thing to do. With a syscon you're usually writing some
+> registers that got lumped together with other registers that aren't
+> directly related to your driver. It doesn't seem like syscon is made for
+> reading fuses or other things like eeproms. Maybe I'm wrong though.
+>
 
-Applied both, thanks.
+I remember there was a similar discussion some time last year about 
+this:  https://lkml.org/lkml/2013/7/5/361
 
---SLk8PSyqxe/ugcCT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> Using syscon would probably work if we could add a way to point to
+> offsets within the syscon node (the 0x18 part in the example). In my
+> specific use-case the calibration data may have different offsets
+> depending on which SoC the hardware is instantiated in so we could also
+> make syscon work if the compatible field for the sensor node indicates
+> which SoC it is.
 
-iQIcBAEBAgAGBQJTvPHHAAoJELSic+t+oim9U5AP/i0QrCPu2XrqOJE8bfgZ3ht8
-CHL1VnPn0glFK/Ub5znyqeEDG+OBKNO1a4CKxBbF8ZpAi+dQhxtAwN4xlhp4glVr
-vmOlb6ddAVB2CP8QrwEgkmzp9GrTg5JWLZwgPa2KEU2QNpI9n/ZE2h6oyQMrLIk/
-uHWeAQhZ07Y/vM2nhTAAl2yc1UnhdoNkeE4GmOLaFxdks0ssSOlffzRjblVU7qaH
-FDijYQU/HG6BZLo1xFCRKIxgC2SVYXqOXjrbSCk1Dvd/DYLDDX5jyPjQ486yU0iO
-Wqq8QtZF727mSHWBFfxh/DZ32W3GpehDymb2a5eTUYzy/SW7CT4okFqm7t+QtQXn
-PgKC7P81e7hIHMP1O0O7HTEG5eXE5XSaxsLXiHcy/oooJUp7eh3mpe00oQc9hKiB
-nLZPUHGMfU9nJfLXsSxDk+QANjy5HQwesdJPcxQd3osunVqqLs0TL8Knq4f1uKIR
-jaU+T/E5SldTQVfW0SksmiNtHJGDm+Syb56LOppcHnri0ulJjR18VgVp7S7ZmEW6
-eAyyAFpT834gHmrLuVbe44lPazGaq6fabzUU0mmi30/1K1A/Lcsi8JVupvtS6y+b
-K92BwwQQkF9+Irqf9rQzZ295qnErDeHVbBAkc8ZAX52aVHTEDV9juyP5hVRnvhrD
-eTM2IedQ1ZDrQzug194v
-=gObV
------END PGP SIGNATURE-----
+Something like this:
 
---SLk8PSyqxe/ugcCT--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	efuse: efuse@10000 {
+  		compatible = "efuse", "syscon";
+  		reg = <0x10000 0x1000>;
+  	}
+
+  	thermal-sensor@34000 {
+  		compatible = "sensor", "soc-xyz";
+  		reg = <0x34000 0x1000>;
+		syscon = <&efuse>;
+  	}
+
+sensor driver could add of_data for the soc-xyz which would contain soc 
+specific efuse offsets.
+
+
+--srini
+
+>
+> I added Tegra folks because I see that on Tegra this hardware is exposed
+> via an SoC specific API, tegra_fuse_readl(), and an associated driver in
+> drivers/misc/fuse/tegra/. Unfortunately I don't see any users of the API
+> outside of the speedo code in the same directory and the sysfs bin
+> attribute that may or may not be in use by some userspace code.
+>
