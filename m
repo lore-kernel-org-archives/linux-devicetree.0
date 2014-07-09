@@ -1,56 +1,80 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/3] mfd: pm8921: Expose pm8xxx_read_irq_status
-Date: Wed, 09 Jul 2014 10:24:29 +0300
-Message-ID: <1404890669.16296.5.camel@iivanov-dev>
-References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1404782785-1824-2-git-send-email-bjorn.andersson@sonymobile.com>
-	 <53BC7CBD.2060901@codeaurora.org>
-	 <CAJAp7Ogy3=tZvMAUojbf5sy8EMmQOT+imA3=TRVcGXXA_y7CtA@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv5 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
+ code clean
+Date: Wed, 09 Jul 2014 16:27:29 +0900
+Message-ID: <53BCEEE1.4010403@samsung.com>
+References: <1403843406-28229-1-git-send-email-cw00.choi@samsung.com>
+ <53AFFD69.8060702@kernel.org> <53B0C2AB.4030201@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7Ogy3=tZvMAUojbf5sy8EMmQOT+imA3=TRVcGXXA_y7CtA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <53B0C2AB.4030201-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-07-08 at 16:43 -0700, Bjorn Andersson wrote:
-> On Tue, Jul 8, 2014 at 4:20 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > On 07/07/14 18:26, Bjorn Andersson wrote:
+Dear Kukjin Kim,
 
-<snip>
+This patch modified Exynos3250 dtsi to support ADC with IIO.
+Could you please reivew this patchset about exynos3250.dtsi?
 
-> [...]
-> > Sad, the header file came back. I guess there isn't a way to put the
-> > pinctrl driver inside the core mfd driver? Then we wouldn't need to
-> > expose an "irq read line" function.
-> >
-> 
-> I continued my search and this needs to be accessed by gpio, mpp, adc,
-> charger, bms and usb(?). So we have to expose it in some form.
-> 
-> > Actually Abhijeet proposed such an API in 2011 but it didn't go
-> > anywhere[1]. If we had that API we should be able to call
-> > read_irq_line() from the pinctrl driver whenever we want to get the
-> > state of the gpio, plus the API is generic. We're going to need that API
-> > anyway for things like USB insertion detection so it might make sense to
-> > add it sooner rather than later.
-> >
-> > [1]
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2011-April/048319.html
-> 
-> From what I can see of this thread it was exposed as a way for drivers
-> to be able to query if an interrupt handler was called on raising or
-> falling edge. And based on the locking limitations of the
-> implementation we couldn't have used it anyways.
-> 
-> Our use case is different in that we're at any point in time
-> interested in reading out the status of the irq line, as the only way
-> of getting that status.
+Best Regards,
+Chanwoo Choi
 
-How about using extcon framework? 
-
-Regards,
-Ivan
+On 06/30/2014 10:51 AM, Chanwoo Choi wrote:
+> Dear Kukjin,
+> 
+> On 06/29/2014 08:50 PM, Jonathan Cameron wrote:
+>> On 27/06/14 05:30, Chanwoo Choi wrote:
+>>> Changes from v4:
+>>> - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
+>>>    and remove enum variable of ADC version
+>>> - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
+>>> - Add reviewed message by Naveen Krishna Chatradhi
+>>> - Add functions for ADC clock control
+>>>
+>>> Changes from v3:
+>>> - Add new 'exynos_adc_ops' structure to improve readability according to
+>>>   Tomasz Figa comment[1]
+>>>   [1] https://lkml.org/lkml/2014/4/16/238
+>>> - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
+>>> - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
+>>>
+>>> Changes from v2:
+>>> - Check return value of clock function to deal with error exception
+>>> - Fix minor coding style to improve readability
+>>>
+>>> Changes from v1:
+>>> - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
+>>> - Add a patch about DT binding documentation
+>>>
+>>> Chanwoo Choi (4):
+>>>    iio: adc: exynos_adc: Add exynos_adc_data structure to improve readability
+>>>    iio: adc: exynos_adc: Control special clock of ADC to support Exynos3250 ADC
+>>>    iio: devicetree: Add DT binding documentation for Exynos3250 ADC
+>>>    ARM: dts: Fix wrong compatible string for Exynos3250 ADC
+>>>
+>>>   .../devicetree/bindings/arm/samsung/exynos-adc.txt |  26 +-
+>>>   arch/arm/boot/dts/exynos3250.dtsi                  |   4 +-
+>>>   drivers/iio/adc/exynos_adc.c                       | 326 +++++++++++++++------
+>>>   3 files changed, 268 insertions(+), 88 deletions(-)
+>>>
+>> I am happy with this series, but given it touches some exynos bindings, I would
+>> like an ack from Kukjin Kim (or according to MAINTAINERS Ben Dooks) before taking it
+>> all through IIO.
+> 
+> Could you please review this patchset about exynos dtsi and bindings?
+> 
+> Best Regards,
+> Chanwoo Choi
+> 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
