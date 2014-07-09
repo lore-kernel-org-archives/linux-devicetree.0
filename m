@@ -1,96 +1,39 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 6/6] ARM: sun8i: Add PRCM clock and reset
- controller nodes to the DTSI
-Date: Wed,  9 Jul 2014 15:54:39 +0800
-Message-ID: <1404892479-12222-7-git-send-email-wens@csie.org>
-References: <1404892479-12222-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] mfd: pm8921: Expose pm8xxx_read_irq_status
+Date: Wed, 9 Jul 2014 09:59:02 +0200
+Message-ID: <CACRpkdaYRwSb2cd88KEjKHKN_3sRv5BvJTvNMmF3CZszu8c2HQ@mail.gmail.com>
+References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1404782785-1824-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBSPK6OOQKGQEUOYEJTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1404892479-12222-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1404782785-1824-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-With sun8i PRCM support available, we can add the PRCM clock and
-reset controller nodes to the DTSI. Also update R_UART's clock
-phandle and add it's reset control phandle.
+On Tue, Jul 8, 2014 at 3:26 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a23.dtsi | 47 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+> Most status bits, e.g. for GPIO and MPP input, is retrieved by reading
+> the interrupt status registers, so this needs to be exposed to clients.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-index 886776d..54ac0787 100644
---- a/arch/arm/boot/dts/sun8i-a23.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -285,13 +285,58 @@
- 			interrupts = <1 9 0xf04>;
- 		};
- 
-+		prcm@01f01400 {
-+			compatible = "allwinner,sun8i-a23-prcm";
-+			reg = <0x01f01400 0x200>;
-+
-+			ar100: ar100_clk {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <0>;
-+				clock-div = <1>;
-+				clock-mult = <1>;
-+				clocks = <&osc24M>;
-+				clock-output-names = "ar100";
-+			};
-+
-+			ahb0: ahb0_clk {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <0>;
-+				clock-div = <1>;
-+				clock-mult = <1>;
-+				clocks = <&ar100>;
-+				clock-output-names = "ahb0";
-+			};
-+
-+			apb0: apb0_clk {
-+				compatible = "allwinner,sun8i-a23-apb0-clk";
-+				#clock-cells = <0>;
-+				clocks = <&ahb0>;
-+				clock-output-names = "apb0";
-+			};
-+
-+			apb0_gates: apb0_gates_clk {
-+				compatible = "allwinner,sun8i-a23-apb0-gates-clk";
-+				#clock-cells = <1>;
-+				clocks = <&apb0>;
-+				clock-output-names = "apb0_pio", "apb0_timer",
-+						"apb0_rsb", "apb0_uart",
-+						"apb0_i2c";
-+			};
-+
-+			apb0_rst: apb0_rst {
-+				compatible = "allwinner,sun6i-a31-clock-reset";
-+				#reset-cells = <1>;
-+			};
-+		};
-+
- 		r_uart: serial@01f02800 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01f02800 0x400>;
- 			interrupts = <0 38 4>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&osc24M>;
-+			clocks = <&apb0_gates 4>;
-+			resets = <&apb0_rst 4>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.0.1
+Hm do you mean you read the input *values* from the interrupt status
+registers?
+
+What madness in that case.... :-)
+
+Anyway, since the driver is based on regmap, can't the children just
+get a regmap * somehow and then just go read the same register
+instead of having to add a special function for it?
+
+When I look at it it seems like it's doing regmap strangely or
+something, like it's one write then one read operation to get
+the register(s) and isn't that all supposed to be hidden behind
+regmap so you don't need the local lock chip->pm_irq_lock?
+
+Yours,
+Linus Walleij
