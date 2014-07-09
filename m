@@ -1,85 +1,35 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Subject: RE: [GIT PULL] ARM: SPEAr1310 PCIe updates
-Date: Wed, 9 Jul 2014 13:58:41 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48FE@EAPEX1MAIL1.st.com>
-References: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48F2@EAPEX1MAIL1.st.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip support
+Date: Wed, 9 Jul 2014 11:41:45 +0530
+Message-ID: <CAEC9eQO+j8iikztW4Q47xKRM71C6qGaCuBTdSW=odKG0kRsWBg@mail.gmail.com>
+References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
+	<53B4E7D6.6000204@suse.de>
+	<CAD=FV=UH=sgZKFxH35qfBb-XJGJ9ctSSdVRhTEkt6zk0f+R4mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48F2@EAPEX1MAIL1.st.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "arm@kernel.org" <arm@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pratyush ANAND <pratyush.anand@st.com>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mark Nicholson <mark@nicholnet.com>, Viresh Kumar <viresh.kumar@linaro.org>, "olof@lixom.net" <olof@lixom.net>, "Arnd Bergmann (arnd@arndb.de)" <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=UH=sgZKFxH35qfBb-XJGJ9ctSSdVRhTEkt6zk0f+R4mA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Thierry Reding <thierry.reding@gmail.com>, Rob Clark <robdclark@gmail.com>, InKi Dae <inki.dae@samsung.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Sean Paul <seanpaul@google.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-KyBhcm1Aa2VybmVsLm9yZw0KDQpTb3JyeSBmb3IgcHJldmlvdXMgbWFpbCBhZGRyZXNzZWQgdG8g
-T2xvZidzIHBlcnNvbmFsIGlkLg0KDQpUaGFua3MNCk1vaGl0DQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogTW9oaXQgS1VNQVIgRENHDQo+IFNlbnQ6IFdlZG5lc2RheSwg
-SnVseSAwOSwgMjAxNCAxMToxOCBBTQ0KPiBUbzogb2xvZkBsaXhvbS5uZXQNCj4gQ2M6IEJhcnRs
-b21pZWogWm9sbmllcmtpZXdpY3o7IFByYXR5dXNoIEFOQU5EOyAnQmpvcm4gSGVsZ2FhcycNCj4g
-KGJoZWxnYWFzQGdvb2dsZS5jb20pOyBzcGVhci1kZXZlbDsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtl
-cm5lbC5vcmc7IE1hcmsgTmljaG9sc29uOw0KPiBWaXJlc2ggS3VtYXINCj4gU3ViamVjdDogW0dJ
-VCBQVUxMXSBBUk06IFNQRUFyMTMxMCBQQ0llIHVwZGF0ZXMNCj4gDQo+IEhlbGxvIE9sb2YsDQo+
-IA0KPiBQbGVhc2UgcHVsbCBQQ0llIHVwZGF0ZXMgZm9yIFNUJ3MgU1BFQXIxMzEwIFNvQy4NCj4g
-DQo+IExhc3QgdmVyc2lvbiBvZiBwb3N0ZWQgVjggcGF0Y2hlcyBoYXZlIGJlZW4gQWNrZWQtYnkg
-cmVzcGVjdGl2ZQ0KPiBtYWludGFpbmVycy4NCj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQv
-NC8xNS8yNjANCj4gDQo+IEFwYXJ0IGZyb20gYXJjaC9hcm0vIGNoYW5nZXMsIGl0IGFsc28gY29u
-dGFpbnMgcGF0Y2hlcyBmb3IgZHJpdmVycy97cGNpfHBoeX0uDQo+IEJqb3JuIGFkdmlzZWQgdG8g
-Z2V0IGNvbXBsZXRlIHNlcmllcyB2aWEgYXJtLXNvYyB0cmVlLg0KPiBodHRwOi8vd3d3LnNwaW5p
-Y3MubmV0L2xpc3RzL2xpbnV4LXBjaS9tc2czMDI3MS5odG1sDQo+IA0KPiAgUmVnYXJkcw0KPiAg
-TW9oaXQNCj4gDQo+IFRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQNCj4gNGM4MzQ0
-NTJhYWQwMTUzMWRiOTQ5NDE0Zjk0ZjgxN2E4NjM0OGQ1OToNCj4gICBMaW51cyBUb3J2YWxkcyAo
-MSk6DQo+ICAgICAgICAgTGludXggMy4xNi1yYzMNCj4gDQo+IGFyZSBhdmFpbGFibGUgaW4gdGhl
-IGdpdCByZXBvc2l0b3J5IGF0Og0KPiANCj4gICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
-Y20vbGludXgva2VybmVsL2dpdC92aXJlc2hrL2xpbnV4LmdpdA0KPiBzcGVhci9wY2llLXN1cHBv
-cnQtdjgNCj4gDQo+IE1vaGl0IEt1bWFyICgxKToNCj4gICAgICAgU1BFQXIxM3h4OiBkZWZjb25m
-aWc6IFVwZGF0ZQ0KPiANCj4gUHJhdHl1c2ggQW5hbmQgKDgpOg0KPiAgICAgICBjbGs6IFNQRUFy
-MTNYWDogRml4IHBjaWUgY2xvY2sgbmFtZQ0KPiAgICAgICBTUEVBcjEzWFg6IEZpeCBzdGF0aWMg
-bWFwcGluZyB0YWJsZQ0KPiAgICAgICBwaHk6IFNQRUFyMTMxMC80MC1taXBoeTogQWRkIGJpbmRp
-bmcgaW5mb3JtYXRpb24NCj4gICAgICAgU1BFQXI6IG1pc2M6IEFkZCBiaW5kaW5nIGluZm9ybWF0
-aW9uDQo+ICAgICAgIHBoeTogU1BFQXIxMzEwLzQwLW1pcGh5OiBBZGQgcGh5IGRyaXZlciBmb3Ig
-UENJZSBhbmQgU0FUQQ0KPiAgICAgICBTUEVBcjEzWFg6IEFkZCBiaW5kaW5nIGluZm9ybWF0aW9u
-IGZvciBQQ0llIGNvbnRyb2xsZXINCj4gICAgICAgU1BFQXIxM1hYOiBkdHM6IEFkZCBQQ0llIG5v
-ZGUgaW5mb3JtYXRpb24NCj4gICAgICAgcGNpZTogU1BFQXIxM3h4OiBBZGQgZGVzaWdud2FyZSB3
-cmFwcGVyIHN1cHBvcnQNCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3BlYXIt
-bWlzYy50eHQgICAgICAgICB8ICAgIDkgKw0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
-L3NwZWFyMTN4eC1wY2llLnR4dCAgICAgfCAgIDE0ICsNCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BoeS9zdC1zcGVhcjEzMTAtbWlwaHkudHh0IHwgICAxMiArDQo+ICAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9waHkvc3Qtc3BlYXIxMzQwLW1pcGh5LnR4dCB8ICAgMTEgKw0KPiAgTUFJTlRB
-SU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA2ICsNCj4g
-IGFyY2gvYXJtL2Jvb3QvZHRzL3NwZWFyMTMxMC1ldmIuZHRzICAgICAgICAgICAgICAgIHwgICAg
-NCArDQo+ICBhcmNoL2FybS9ib290L2R0cy9zcGVhcjEzMTAuZHRzaSAgICAgICAgICAgICAgICAg
-ICB8ICAgOTMgKysrKystDQo+ICBhcmNoL2FybS9ib290L2R0cy9zcGVhcjEzNDAtZXZiLmR0cyAg
-ICAgICAgICAgICAgICB8ICAgIDQgKw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3BlYXIxMzQwLmR0
-c2kgICAgICAgICAgICAgICAgICAgfCAgIDMwICsrLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3Bl
-YXIxM3h4LmR0c2kgICAgICAgICAgICAgICAgICAgfCAgICA5ICstDQo+ICBhcmNoL2FybS9jb25m
-aWdzL3NwZWFyMTN4eF9kZWZjb25maWcgICAgICAgICAgICAgICB8ICAgMTYgKw0KPiAgYXJjaC9h
-cm0vbWFjaC1zcGVhci9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA0ICsNCj4g
-IGFyY2gvYXJtL21hY2gtc3BlYXIvaW5jbHVkZS9tYWNoL3NwZWFyLmggICAgICAgICAgIHwgICAg
-NCArLQ0KPiAgYXJjaC9hcm0vbWFjaC1zcGVhci9zcGVhcjEzNDAuYyAgICAgICAgICAgICAgICAg
-ICAgfCAgMTI3ICstLS0tLS0NCj4gIGFyY2gvYXJtL21hY2gtc3BlYXIvc3BlYXIxM3h4LmMgICAg
-ICAgICAgICAgICAgICAgIHwgICAgMiArLQ0KPiAgZHJpdmVycy9jbGsvc3BlYXIvc3BlYXIxMzEw
-X2Nsb2NrLmMgICAgICAgICAgICAgICAgfCAgICA2ICstDQo+ICBkcml2ZXJzL2Nsay9zcGVhci9z
-cGVhcjEzNDBfY2xvY2suYyAgICAgICAgICAgICAgICB8ICAgIDIgKy0NCj4gIGRyaXZlcnMvcGNp
-L2hvc3QvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArDQo+ICBkcml2
-ZXJzL3BjaS9ob3N0L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKw0K
-PiAgZHJpdmVycy9wY2kvaG9zdC9wY2llLXNwZWFyMTN4eC5jICAgICAgICAgICAgICAgICAgfCAg
-NDA2ICsrKysrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL3BoeS9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KPiAgZHJpdmVycy9waHkvTWFrZWZpbGUg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsNCj4gIGRyaXZlcnMvcGh5L3Bo
-eS1zcGVhcjEzMTAtbWlwaHkuYyAgICAgICAgICAgICAgICAgIHwgIDI3NCArKysrKysrKysrKysr
-DQo+ICBkcml2ZXJzL3BoeS9waHktc3BlYXIxMzQwLW1pcGh5LmMgICAgICAgICAgICAgICAgICB8
-ICAzMDAgKysrKysrKysrKysrKysrDQo+ICAyNCBmaWxlcyBjaGFuZ2VkLCAxMjE3IGluc2VydGlv
-bnMoKyksIDEzOSBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NwZWFyLW1pc2MudHh0DQo+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9zcGVhcjEzeHgt
-DQo+IHBjaWUudHh0DQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BoeS9zdC0NCj4gc3BlYXIxMzEwLW1pcGh5LnR4dA0KPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvc3QtDQo+IHNw
-ZWFyMTM0MC1taXBoeS50eHQNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9ob3N0
-L3BjaWUtc3BlYXIxM3h4LmMgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBkcml2ZXJzL3BoeS9waHkt
-c3BlYXIxMzEwLW1pcGh5LmMgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9waHktDQo+
-IHNwZWFyMTM0MC1taXBoeS5jDQo=
+Hi Daniel, Thierry and Rob,
+
+Currently, the following boards are working fine with the bridge chip series:
+- snow
+- spring
+- peach_pit
+- peach_pi
+And, I did change my original patchset based on your comments here:
+(1) [RFC V2 0/3] drm/bridge: panel and chaining
+        http://www.spinics.net/lists/linux-samsung-soc/msg30160.html
+(2) [RFC V3 0/3] drm/bridge: panel and chaining
+        http://www.spinics.net/lists/linux-samsung-soc/msg30507.html
+
+If you think this is not the right way of doing it, please come forward with
+more suggestions, or kindly ACK it.
+I am just wondering how long can I keep waiting for comments?
+
+Regards,
+Ajay
