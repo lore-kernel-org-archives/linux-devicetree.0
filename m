@@ -1,78 +1,131 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 3/9] pci: Introduce pci_register_io_range() helper
- function.
-Date: Wed, 9 Jul 2014 09:59:11 +0100
-Message-ID: <20140709085910.GP6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <20140708001418.GB22939@google.com>
- <20140708104050.GA6501@e106497-lin.cambridge.arm.com>
- <201407081614.18304.arnd@arndb.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2] arm: dra7xx: Add hwmod data for pcie1 and pcie2 subsystems
+Date: Wed, 9 Jul 2014 14:32:47 +0530
+Message-ID: <1404896567-32204-1-git-send-email-kishon@ti.com>
+References: <1403719366-9656-3-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201407081614.18304.arnd@arndb.de>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403719366-9656-3-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 03:14:17PM +0100, Arnd Bergmann wrote:
-> On Tuesday 08 July 2014, Liviu Dudau wrote:
-> > > Here's what these look like in /proc/iomem and /proc/ioports (not=
-e that
-> > > there are two resource structs for each memory-mapped IO port spa=
-ce: one
-> > > IORESOURCE_MEM for the memory-mapped area (used only by the host =
-bridge
-> > > driver), and one IORESOURCE_IO for the I/O port space (this becom=
-es the
-> > > parent of a region used by a regular device driver):
-> > >=20
-> > >   /proc/iomem:
-> > >     PCI Bus 0000:00 I/O Ports 00000000-00000fff
-> > >     PCI Bus 0001:00 I/O Ports 01000000-01000fff
-> > >=20
-> > >   /proc/ioports:
-> > >     00000000-00000fff : PCI Bus 0000:00
-> > >     01000000-01000fff : PCI Bus 0001:00
-> >=20
-> > OK, I have a question that might be ovbious to you but I have misse=
-d the answer
-> > so far: how does the IORESOURCE_MEM area gets created? Is it the ho=
-st bridge
-> > driver's job to do it? Is it something that the framework should do=
- when it
-> > notices that the IORESOURCE_IO is memory mapped?
->=20
-> The host bridge driver should either register the IORESOURCE_MEM reso=
-urce
-> itself from its probe or setup function, or it should get registered =
-behind
-> the covers in drivers using of_create_pci_host_bridge().
->=20
-> Your new pci_host_bridge_of_get_ranges already loops over all the=20
-> resources, so it would be a good place to put that.
+Added hwmod data for pcie1 and pcie2 subsystem present in DRA7xx SOC.
 
-OK, so it is not something that I've missed, just something that x86-64=
- does and
-my version doesn't yet.
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Paul Walmsley <paul@pwsan.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Changes from v1:
+* changed the clock domain to "pcie_clkdm"
+* Added PCIe as a slave port for l3_main.
 
-Thanks for confirming that.
+Boot log for dra7xx can be found at http://paste.ubuntu.com/7769402/
 
-Liviu
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c |   73 +++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
->=20
-> 	Arnd
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+index 6ff40a6..2f37ca8 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -1290,6 +1290,43 @@ static struct omap_hwmod dra7xx_ocp2scp3_hwmod = {
+ };
+ 
+ /*
++ * 'PCIE' class
++ *
++ */
++
++static struct omap_hwmod_class dra7xx_pcie_hwmod_class = {
++	.name	= "pcie",
++};
++
++/* pcie1 */
++static struct omap_hwmod dra7xx_pcie1_hwmod = {
++	.name		= "pcie1",
++	.class		= &dra7xx_pcie_hwmod_class,
++	.clkdm_name	= "pcie_clkdm",
++	.main_clk	= "l4_root_clk_div",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs	= DRA7XX_CM_PCIE_CLKSTCTRL_OFFSET,
++			.modulemode	= MODULEMODE_SWCTRL,
++		},
++	},
++};
++
++/* pcie2 */
++static struct omap_hwmod dra7xx_pcie2_hwmod = {
++	.name		= "pcie2",
++	.class		= &dra7xx_pcie_hwmod_class,
++	.clkdm_name	= "pcie_clkdm",
++	.main_clk	= "l4_root_clk_div",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = DRA7XX_CM_PCIE_CLKSTCTRL_OFFSET,
++			.modulemode   = MODULEMODE_SWCTRL,
++		},
++	},
++};
++
++/*
+  * 'PCIE PHY' class
+  *
+  */
+@@ -2448,6 +2485,38 @@ static struct omap_hwmod_ocp_if dra7xx_l4_cfg__ocp2scp1 = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
++/* l3_main_1 -> pcie1 */
++static struct omap_hwmod_ocp_if dra7xx_l3_main_1__pcie1 = {
++	.master		= &dra7xx_l3_main_1_hwmod,
++	.slave		= &dra7xx_pcie1_hwmod,
++	.clk		= "l3_iclk_div",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++/* l4_cfg -> pcie1 */
++static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie1 = {
++	.master		= &dra7xx_l4_cfg_hwmod,
++	.slave		= &dra7xx_pcie1_hwmod,
++	.clk		= "l4_root_clk_div",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++/* l3_main_1 -> pcie2 */
++static struct omap_hwmod_ocp_if dra7xx_l3_main_1__pcie2 = {
++	.master		= &dra7xx_l3_main_1_hwmod,
++	.slave		= &dra7xx_pcie2_hwmod,
++	.clk		= "l3_iclk_div",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++/* l4_cfg -> pcie2 */
++static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie2 = {
++	.master		= &dra7xx_l4_cfg_hwmod,
++	.slave		= &dra7xx_pcie2_hwmod,
++	.clk		= "l4_root_clk_div",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
+ /* l4_cfg -> pcie1 phy */
+ static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie1_phy = {
+ 	.master		= &dra7xx_l4_cfg_hwmod,
+@@ -2813,6 +2882,10 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+ 	&dra7xx_l4_cfg__mpu,
+ 	&dra7xx_l4_cfg__ocp2scp1,
+ 	&dra7xx_l4_cfg__ocp2scp3,
++	&dra7xx_l3_main_1__pcie1,
++	&dra7xx_l4_cfg__pcie1,
++	&dra7xx_l3_main_1__pcie2,
++	&dra7xx_l4_cfg__pcie2,
+ 	&dra7xx_l4_cfg__pcie1_phy,
+ 	&dra7xx_l4_cfg__pcie2_phy,
+ 	&dra7xx_l3_main_1__qspi,
+-- 
+1.7.9.5
