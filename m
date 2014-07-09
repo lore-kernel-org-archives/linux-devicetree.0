@@ -1,33 +1,63 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 02/10] mmc: sdhci-st: ST Microelectronics SDHCI binding documentation.
-Date: Wed, 9 Jul 2014 14:19:38 +0200
-Message-ID: <CAPDyKFptvLKZ2jyOgTcaXhR8gBXh7jWRWDeExDVcJi-gwreyXQ@mail.gmail.com>
-References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
-	<1401899424-1365-3-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401899424-1365-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 00/13] ARM: shmobile: DT bindings and DTS updates
+Date: Wed,  9 Jul 2014 14:23:30 +0200
+Message-ID: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2014 18:30, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patch adds the device tree binding documentation for the ST
-> SDHCI driver. It documents the differences between the core properties
-> described by mmc.txt and the properties used by the sdhci-st driver.
->
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+This patch series aims to improvide the shmobile DT bindings, DT binding
+documentation, and the actual device trees.
 
-Thanks! Applied for next.
+It reduces the number of checkpatch warnings about un-documented compatible
+strings in the DTSes by 50%.
 
-Kind regards
-Uffe
+The last 4 patches contain compatible strings for new R-Car Gen2 SoCs,
+which are not yet in active use, hence the RFC status.
+
+  [01/13] of: Add vendor prefix for Sitronix
+  [02/13] irqchip: renesas-intc-irqpin: Document SoC-specific bindings
+  [03/13] irqchip: renesas-irqc: Add DT binding documentation
+  [04/13] mmc: tmio-mmc: Add renesas,sdhi-r8a7791 to binding documentation
+  [05/13] thermal: rcar: Document SoC-specific bindings
+  [06/13] sh-pfc: Add renesas,pfc-r8a7791 to binding documentation
+  [07/13] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific irqc compatible
+          property
+  [08/13] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific thermal compatible
+	  property
+  [09/13] ARM: shmobile: r8a7779 dtsi: Add SoC-specific thermal compatible
+	  property
+  [10/13] [RFC] ARM: dts: Add shmobile platform device tree bindings
+	  documentation
+  [11/13] [RFC] mmc: tmio-mmc: Add support for SDHI on new R-Car Gen2 SoCs
+  [12/13] [RFC] thermal: rcar: Add binding docs for new R-Car Gen2 SoCs
+  [13/13] [RFC] irqchip: renesas-irqc: Add binding docs for new R-Car Gen2 SoCs
+
+ Documentation/devicetree/bindings/arm/shmobile.txt | 71 ++++++++++++++++++++++
+ .../interrupt-controller/renesas,intc-irqpin.txt   |  8 ++-
+ .../bindings/interrupt-controller/renesas,irqc.txt | 33 ++++++++++
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt |  4 ++
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |  1 +
+ .../devicetree/bindings/thermal/rcar-thermal.txt   | 21 +++++--
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/boot/dts/r8a73a4.dtsi                     |  6 +-
+ arch/arm/boot/dts/r8a7779.dtsi                     |  2 +-
+ drivers/mmc/host/sh_mobile_sdhi.c                  |  3 +
+ 10 files changed, 139 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/shmobile.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+
+Thanks for your comments!
+
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
