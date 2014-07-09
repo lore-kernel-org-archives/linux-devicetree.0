@@ -1,140 +1,139 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display Controller
- support
-Date: Wed, 9 Jul 2014 10:18:17 +0200
-Message-ID: <20140709101817.3ad39b2b@bbrezillon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
- <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
+Date: Wed, 9 Jul 2014 10:23:31 +0200
+Message-ID: <20140709082331.GA4510@kwain>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
+ <20140708134000.GC4979@htj.dyndns.org>
+ <20140708170353.GA16148@kwain>
+ <20140708171817.GH4979@htj.dyndns.org>
+ <20140708174900.GC16148@kwain>
+ <20140708214010.GI4979@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAF6AEGtttUFquRQrhFKtEKq+frAAmzp4AVtF5gixVkMmJNC68g@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140708214010.GI4979@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Jul 2014 23:45:54 -0400
-Rob Clark <robdclark@gmail.com> wrote:
+Hi Tejun,
 
-> On Mon, Jul 7, 2014 at 12:42 PM, Boris BREZILLON
-> <boris.brezillon@free-electrons.com> wrote:
-> > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
-> > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> > controller device.
-> >
-> > This display controller supports at least one primary plane and might
-> > provide several overlays and an hardware cursor depending on the IP
-> > version.
-> >
-> > At the moment, this driver only implements an RGB connector to interface
-> > with LCD panels, but support for other kind of external devices (like DRM
-> > bridges) might be added later.
-> >
-> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > ---
-> >  drivers/gpu/drm/Kconfig                         |   2 +
-> >  drivers/gpu/drm/Makefile                        |   1 +
-> >  drivers/gpu/drm/atmel-hlcdc/Kconfig             |  11 +
-> >  drivers/gpu/drm/atmel-hlcdc/Makefile            |   7 +
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  | 469 +++++++++++++++
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 474 +++++++++++++++
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    | 210 +++++++
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c | 706 +++++++++++++++++++++++
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h | 422 ++++++++++++++
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c | 351 ++++++++++++
-> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 729 ++++++++++++++++++++++++
-> >  11 files changed, 3382 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_panel.c
-> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> >
-> > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> > index d1cc2f6..df6f0c1 100644
-> > --- a/drivers/gpu/drm/Kconfig
-> > +++ b/drivers/gpu/drm/Kconfig
-> > @@ -182,6 +182,8 @@ source "drivers/gpu/drm/cirrus/Kconfig"
-> >
+On Tue, Jul 08, 2014 at 05:40:10PM -0400, Tejun Heo wrote:
+> Hey,
+>=20
+> On Tue, Jul 08, 2014 at 07:49:00PM +0200, Antoine T=E9nart wrote:
+> > > So, yeah, it's being used both as input and output and we also ha=
+ve
+> > > the arguments which affect port_map, right?  It does seem confusi=
+ng.
+> >=20
+> > I do see priv->port_map as being automatically set and then restric=
+ted
+> > if needed by the port_map input here. I don't see how that's confus=
+ing.
+> > The only modification is we restrict the port_map parameter to the =
+set
+> > of available ports. The port_map argument affected priv->port_map b=
+efore
+> > this patch.
+>=20
+> It is confusing.  If you wanna pass around available ports in hpriv,
+> please add a separate field and replace the arguments to
+> save_initial_config().
 
-[...]
+I don't get it. Which argument should I replace in
+save_initial_config()? The change is we compute hpriv->port_map.
+I don't see which arguments we can add or replace.
 
-> > +/**
-> > + * Atmel HLCDC Layer GEM flip garbage collector structure
-> > + *
-> > + * This structure is used to schedule GEM object release when we are in
-> > + * interrupt context (within atmel_hlcdc_layer_irq function).
-> > + *
-> > + *@list: GEM flip objects to release
-> > + *@list_lock: lock to access the GEM flip list
-> > + *@work: work queue scheduled when there are GEM flip to collect
-> > + *@finished: action to execute the GEM flip and all attached objects have been
-> > + *          released
-> > + *@finished_data: data passed to the finished callback
-> > + *@finished_lock: lock to access finished related fields
-> > + */
-> > +struct atmel_hlcdc_layer_gem_flip_gc {
-> > +       struct list_head list;
-> > +       spinlock_t list_lock;
-> > +       struct work_struct work;
-> > +};
-> 
-> 
-> Please have a look at drm_flip_work.. I think that should simplify
-> post-flip cleanup for you..
-> 
+If that's more clear, the modification here is equivalent to (when usin=
+g
+the new bindings):
 
-Now I remember why I didn't make use of drm_flip_work helpers:
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index 40ea583d3610..f9d3cfd5d1bd 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -513,7 +513,7 @@ void ahci_save_initial_config(struct device *dev,
+        /* record values to use during operation */
+        hpriv->cap =3D cap;
+        hpriv->cap2 =3D cap2;
+-       hpriv->port_map =3D port_map;
++       hpriv->port_map &=3D port_map;
+=20
+        if (!hpriv->start_engine)
+                hpriv->start_engine =3D ahci_start_engine;
 
-I have to specify a fifo size when initializing the
-drm_flip_work structure (drm_flip_work_init) and I don't know exactly
-what I should choose here.
+It just use the argument port_map on the real set of ports. If that's
+still not clear, I can add a separate field. But the field will store
+the exact same information as hpriv->port_map. We will have something
+like:
 
-You might have noticed that I'm queuing the unref work to be done within
-the irq handler (which means I'm in irq context), and, AFAIU,
-drm_flip_work_queue will execute the function if the FIFO is full
-(AFAIK calling drm_framebuffer_unreference in irq context is not safe).
+if (hpriv->available_port_map)
+	hpriv->port_map &=3D hpriv->available_port_map;
 
-This leaves the following solutions if I ever want to use drm_flip_work:
- - use a threaded irq. Meaning the next frame (or the pending plane
-   update) might take a bit longer to be displayed.
- - increase the fifo size, so that it's never entirely filled (relying
-   on the assumption that the flip work queue will be executed at least
-   as much as the plane update requests)
- - rely on the assumption that work_queue will be executed at least
-   once per fb flip. This is true for the primary plane because we're
-   using page_flip and only one page_flip can take place at a given
-   time, but AFAIK this is not true for plane updates.
+> > > Well, so does clk.  Let's say clk is more restricted and phy can =
+be
+> > > one or more per port and thus needs to be dynamic.  If so, should=
+n't
+> > > we at least have some correlation between phys and ports?  It bot=
+hers
+> > > me that now libahci is carrying random number of resources that i=
+t has
+> > > no idea how to associate with the ports it manages.  What if late=
+r we
+> > > want to involve phy driver in power managing unoccupied ports?
+> >=20
+> > I see. This is a first (working) attempt to have a one node per por=
+t. I
+> > agree that would be nice to have a correlation between ports and PH=
+Ys.
+> > This can definitively be added when needed without changing the dt
+> > bindings as only the internal representation changes. This would al=
+so
+> > require to get all phys from the port nodes, which is again interna=
+l
+> > stuff.
+> >=20
+> > Don't you think we can go by steps, and have a following up series =
+for
+> > this when needed (like in a power managing series for unoccupied po=
+rts)?
+>=20
+> I don't know.  It isn't exactly difficult to make it per-port, is it?
+> We already have ahci_port_priv and wouldn't the code actually be
+> simpler that way?
 
-My approach is to use a simple list instead of a kfifo to queue fb
-flip unref work, this way I don't have to bother about whether the fifo
-is full or not.
-ITOH, this means I might keep fb references longer than I would when
-using drm_flip_work, and potentially get out of resources if plane
-updates occurs more often than my unref work queue is called.
+I had a quick look on this, and it does not seems to be that simple. Th=
+e
+ahci_port_priv is stored inside the ata_port struct and not accessible
+(as of now) from the ahci_host_priv one. The ahci_port_priv is
+initialized at the end of ahci_platform_init_host(), far after we need
+it. This requires quite a lot of changes. Or is there another way?
 
-Please, let me know what's the preferred solution here.
+To be honest, we are now at v9 and it's been quite a long time since v1=
+=2E
+I'd really like it to be merged in 3.17. As I see it, this patch keeps
+the same logic as what was in place before, only with more PHYs.
 
-Best Regards,
+Don't take me wrong, I really think this is a good idea to have a
+per-port PHY information. But this is a refactoring not clearly related
+to this series as the logic is not changed. This definitively can be th=
+e
+subject of a dedicated series, especially if I got it right and the
+required modifications are not that obvious.
 
-Boris
+What do you think?
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
+Thanks,
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
