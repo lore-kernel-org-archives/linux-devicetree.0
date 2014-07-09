@@ -1,351 +1,70 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [lm-sensors] [PATCH] hwmon: pwm-fan: Add pwm-fan driver
-Date: Wed, 9 Jul 2014 09:58:17 -0700
-Message-ID: <20140709165817.GA24842@roeck-us.net>
-References: <1404917600-4430-1-git-send-email-k.debski@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [alsa-devel] [PATCH V3 2/2] ASoC: samsung: Add machine driver for
+ Odroid X2/U3
+Date: Wed, 09 Jul 2014 19:20:05 +0200
+Message-ID: <53BD79C5.3060604@samsung.com>
+References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
+ <1404479625-25385-2-git-send-email-s.nawrocki@samsung.com>
+ <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404917600-4430-1-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Daniel Drake <drake@endlessm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Chen Zhen <zhen1.chen@samsung.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 04:53:20PM +0200, Kamil Debski wrote:
-> The pwm-fan driver enables control of fans connected to PWM lines.
-> This driver uses the PWM framework, so it is compatible with all
-> PWM devices that provide drivers through the PWM framework.
+Hi,
+
+On 08/07/14 11:15, Daniel Drake wrote:
+> On Fri, Jul 4, 2014 at 2:13 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+>> This patch adds the sound subsystem driver for Odroid-X2 and
+>> Odroid-U3 boards. The codec works in I2S master mode; there
+>> are two separate audio routing paths defined, as there are
+>> differences in the signal routing between the X2 and U3 boards,
+>> i.e. U3 uses single jack for headphones and microphone.
+>>
+>> Signed-off-by: Chen Zhen <zhen1.chen@samsung.com>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > 
-> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/hwmon/pwm-fan.txt          |   12 ++
->  drivers/hwmon/Kconfig                              |    9 +
->  drivers/hwmon/Makefile                             |    1 +
->  drivers/hwmon/pwm-fan.c                            |  199 ++++++++++++++++++++
->  4 files changed, 221 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pwm-fan.txt
->  create mode 100644 drivers/hwmon/pwm-fan.c
-
-Documentation/hwmon/pwm-fan is missing.
-
+> Testing on ODROID-U2, v3 is not quite working for me, but v2 of the
+> patch was fine.
+> I boot up, run:
+> # speaker-test -c 2 -t wav
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> new file mode 100644
-> index 0000000..f534607
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> @@ -0,0 +1,12 @@
-> +Bindings for a fan connected to the PWM lines
-> +
-> +Required properties:
-> +- compatible: "pwm-fan"
-> +- pwms: the PWM that is used to control the PWM fan
-> +
-> +Example:
-> +	pwm-fan {
-> +		compatible = "pwm-fan";
-> +		status = "okay";
-> +		pwms = <&pwm 0 10000 0>;
-> +	};
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 08531a1..838ffb8 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1104,6 +1104,15 @@ config SENSORS_PCF8591
->  
->  source drivers/hwmon/pmbus/Kconfig
->  
-> +config SENSORS_PWM_FAN
-> +	tristate "PWM fan"
-> +	depends on PWM
-> +	help
-> +	  If you say yes here you get support for fans connected to PWM lines.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called pwm-fan.
-> +
->  config SENSORS_SHT15
->  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
->  	depends on GPIOLIB
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3dc0f02..3967ecf 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -120,6 +120,7 @@ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
->  obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
->  obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
->  obj-$(CONFIG_SENSORS_PCF8591)	+= pcf8591.o
-> +obj-$(CONFIG_SENSORS_PWM_FAN)	+= pwm-fan.o
->  obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
->  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
->  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> new file mode 100644
-> index 0000000..78fa627
-> --- /dev/null
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -0,0 +1,199 @@
-> +/*
-> + * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
-> + *
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> + *
-> + * Author: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-Please run the patch through checkpatch and ensure that all warnings and errors
-are fixed.
-
-> + */
-> +
-> +#include <linux/hwmon-sysfs.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-
-For new drivers, please list include files in alphabetic order.
-
-> +
-> +#define MAX_PWM 255
-> +
-> +struct pwm_fan_ctx {
-> +	struct device *hwmon;
-> +	struct mutex lock;
-> +	struct platform_device *pdev;
-> +	struct pwm_device *pwm;
-> +	unsigned int duty_cycle;
-> +	unsigned char pwm_value;
-> +};
-> +
-> +static ssize_t show_pwm_enable(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	/* For the sake of simplicity only mode 1 (PWM) is supported */
-> +	return sprintf(buf, "1\n");
-> +}
-> +
-> +static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
-> +		       const char *buf, size_t count)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +	unsigned long pwm, duty;
-> +
-> +	if (kstrtoul(buf, 10, &pwm) || pwm > MAX_PWM)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ctx->lock);
-> +
-> +	if (ctx->pwm_value == pwm)
-> +		goto exit_set_pwm;
-> +
-> +	duty =  DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MAX_PWM);
-
-Unnecessary double space.
-
-> +	if (pwm_config(ctx->pwm, duty, ctx->pwm->period))
-> +		goto exit_set_pwm;
-
-Please return the error code.
-
-> +
-> +	ctx->duty_cycle = duty;
-> +	ctx->pwm_value = pwm;
-> +
-> +
-Single empty line only please.
-
-> +exit_set_pwm:
-> +	mutex_unlock(&ctx->lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t show_pwm(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%d\n", ctx->pwm_value);
-
-pwm_value is unsigned, so please use %u.
-
-> +}
-> +
-> +
-Single empty line only please
-
-> +static SENSOR_DEVICE_ATTR(pwm1_enable, S_IRUGO | S_IWUSR,
-> +		   show_pwm_enable, NULL, 0);
-
-Is this attribute really needed ?
-
-> +static SENSOR_DEVICE_ATTR(pwm1, S_IRUGO | S_IWUSR,
-> +		   show_pwm, set_pwm, 0);
-> +
-> +static struct attribute *pwm_fan_attributes[] = {
-> +	&sensor_dev_attr_pwm1_enable.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group pwm_fan_group = {
-> +	.attrs = pwm_fan_attributes,
-> +};
-> +
-> +static const struct attribute_group *pwm_fan_groups[] = {
-> +	&pwm_fan_group,
-> +	NULL
-> +};
-
-Please use the ATTRIBUTE_GROUPS macro.
-
-> +
-> +static int pwm_fan_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_fan_ctx *ctx;
-> +
-> +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx) {
-> +		dev_err(&pdev->dev, "Not enough memory for PWM fan device\n");
-
-Unnecessary error message.
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ctx->pdev = pdev;
-> +	mutex_init(&ctx->lock);
-> +
-> +	ctx->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, 0);
-
-Last argument is a string pointer. Please use NULL.
-
-> +	if (IS_ERR(ctx->pwm)) {
-> +		dev_err(&pdev->dev, "Could not get PWM");
-> +		return -EINVAL;
-
-Return PTR_ERR(ctx->pwm).
-
-> +	}
-> +
-> +	dev_set_drvdata(&pdev->dev, ctx);
-> +	platform_set_drvdata(pdev, ctx);
-> +
-> +	/* Set duty cycle to maximum allowed */
-> +	ctx->duty_cycle = ctx->pwm->period - 1;
-> +	ctx->pwm_value = MAX_PWM;
-> +	pwm_config(ctx->pwm, ctx->duty_cycle, ctx->pwm->period);
-
-pwm_config() can return an error. Why not check it here ?
-
-> +
-> +	ctx->hwmon = hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
-> +		ctx, pwm_fan_groups);
-
-Why not devm_hwmon_device_register_with_groups ?
-
-> +
-> +	if (IS_ERR(ctx->hwmon)) {
-> +		dev_err(&pdev->dev, "Failed to register hwmon device");
-> +		return PTR_ERR(ctx->hwmon);
-> +	}
-> +
-> +	/* Enbale PWM output */
-> +	pwm_enable(ctx->pwm);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pwm_fan_remove(struct platform_device *pdev)
-> +{
-> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-> +
-> +	pwm_disable(ctx->pwm);
-
-Is this needed ? I don't see it used by the leds-pwm driver on cleanup.
-
-> +	hwmon_device_unregister(ctx->hwmon);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int pwm_fan_suspend(struct device *dev)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return pwm_config(ctx->pwm, 0, ctx->pwm->period);
-
-Wonder if this should be pwm_disable instead (and pwm_enable on resume).
-Any thoughts ?
-
-> +}
-> +
-> +static int pwm_fan_resume(struct device *dev)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return pwm_config(ctx->pwm, ctx->duty_cycle, ctx->pwm->period);
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend, pwm_fan_resume);
-> +#endif
-> +
-> +
-> +
-Single empty line only please
-
-> +static struct of_device_id of_pwm_fan_match[] = {
-> +	{ .compatible = "pwm-fan", },
-> +	{},
-> +};
-> +
-> +static struct platform_driver pwm_fan_driver = {
-> +	.probe		= pwm_fan_probe,
-> +	.remove		= pwm_fan_remove,
-> +	.driver	= {
-> +		.name		= "pwm-fan",
-> +#ifdef CONFIG_PM_SLEEP
-> +		.pm		= &pwm_fan_pm,
-> +#endif
-> +		.of_match_table	= of_match_ptr(of_pwm_fan_match),
-> +	},
-> +};
-> +
-> +module_platform_driver(pwm_fan_driver);
-> +
-> +MODULE_AUTHOR("Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-> +MODULE_ALIAS("platform:pwm-fan");
-> +MODULE_DESCRIPTION("PWM FAN driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 1.7.9.5
+> As soon as I hear the word "front" I press ctrl+c and then run the
+> command again.
+> Now the command hangs with no audible output.
 > 
-> 
-> _______________________________________________
-> lm-sensors mailing list
-> lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-> http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
-> 
+> Any ideas? Let me know if you have trouble reproducing.
+
+Thanks the feedback, we have also noticed this issue.
+It sounds like a bug in the Samsung I2S driver, which sets the
+CDCLK pin to input mode in the i2s_shutdown callback and never
+restores it. AFAICS this setting should not be lost after a call
+to struct soc_snd_dai_ops::shutdown().
+I'm going will prepare a proper patch soon, until then you could
+try and see if this fixes the problem for you:
+
+---8<---
+diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+index d80121e..42c4f3e 100644
+--- a/sound/soc/samsung/i2s.c
++++ b/sound/soc/samsung/i2s.c
+@@ -724,10 +724,6 @@ static void i2s_shutdown(struct snd_pcm_substream *substream,
+
+        spin_unlock_irqrestore(&lock, flags);
+
+-       /* Gate CDCLK by default */
+-       if (!is_opened(other))
+-               i2s_set_sysclk(dai, SAMSUNG_I2S_CDCLK,
+-                               0, SND_SOC_CLOCK_IN);
+ }
+--->8---
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
