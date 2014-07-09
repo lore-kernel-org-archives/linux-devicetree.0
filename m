@@ -1,37 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] Doc: mfd: as3722: Add details of optional missing
- property
-Date: Wed, 9 Jul 2014 16:34:10 +0100
-Message-ID: <20140709153410.GK2635@lee--X1>
-References: <1402297417-9338-1-git-send-email-ldewangan@nvidia.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v9 3/7] ata: libahci: allow to use multiple PHYs
+Date: Wed, 9 Jul 2014 11:42:32 -0400
+Message-ID: <20140709154232.GC11193@htj.dyndns.org>
+References: <1404728173-20263-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1404728173-20263-4-git-send-email-antoine.tenart@free-electrons.com>
+ <20140708134000.GC4979@htj.dyndns.org>
+ <20140708170353.GA16148@kwain>
+ <20140708171817.GH4979@htj.dyndns.org>
+ <20140708174900.GC16148@kwain>
+ <20140708214010.GI4979@htj.dyndns.org>
+ <20140709082331.GA4510@kwain>
+ <20140709135910.GA11193@htj.dyndns.org>
+ <20140709152446.GN3113@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1402297417-9338-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: robh+dt@kernel.org, swarren@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
+In-Reply-To: <20140709152446.GN3113@piout.net>
+Sender: linux-ide-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 09 Jun 2014, Laxman Dewangan wrote:
+On Wed, Jul 09, 2014 at 05:24:46PM +0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 09/07/2014 at 09:59:10 -0400, Tejun Heo wrote :
+> > Heh, I get that but, at the same time, this is the point where you're
+> > most motivated to actually work on it.  :)
+> > 
+> 
+> Or, starting that kind of review after 9 revisions, especially so close
+> to the end of the development cycle is discouraging enough and will
+> probably be used as an example of why we still have so many evil vendor
+> trees.
 
-> Add details of following properties which are used on driver but
-> not documented on DT binding document.
-> - ams,enable-internal-int-pullup
-> - ams,enable-internal-i2c-pullup
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Reported-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mfd/as3722.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+Yeap, that's my bad.  I should have paid more attention.  Sorry about
+that.  We still have quite a few weeks to go tho, so I don't think
+it's too unreasonable to at least look into it.  We're gonna have to
+do it anyway.
 
-Applied with Linus' Ack, thanks.
+Thanks.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+tejun
