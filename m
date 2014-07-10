@@ -1,29 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 06/13] sh-pfc: Add renesas,pfc-r8a7791 to binding documentation
-Date: Thu, 10 Jul 2014 11:25:00 +0200
-Message-ID: <CACRpkdahKzxttYMUgy0mXY_TtKdupPAi+52wc95JkET8+um2WQ@mail.gmail.com>
-References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
-	<1404908623-909-7-git-send-email-geert+renesas@glider.be>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
+Date: Thu, 10 Jul 2014 15:01:25 +0530
+Message-ID: <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
+References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
+	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
+	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1404908623-909-7-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Punnaiah
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 9, 2014 at 2:23 PM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+Hi Geert,
 
-> The driver already supports the r8a7791 SoC, and "renesas,pfc-r8a7791"
-> is already in use.
+On Thu, Jul 10, 2014 at 2:48 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Harini,
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> On Thu, Jul 10, 2014 at 10:50 AM, Harini Katakam <harinik@xilinx.com> wrote:
+>> +       master->flags = SPI_MASTER_QUAD_MODE;
+>
+> SPI_MASTER_QUAD_MODE is not one of the SPI_MASTER_* defines
+> in include/linux/spi/spi.h?
+>
 
-Patch applied with Laurent's ACK.
+I'm sorry about that. That flag is unused - will remove this statement.
 
-Yours,
-Linus Walleij
+>> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD |
+>> +                           SPI_TX_DUAL | SPI_TX_QUAD;
+>
+> Your driver advertises Dual/Quad SPI Transfer capabilities, but it doesn't
+> check spi_transfer.[tr]x_nbits? How can it determine when to enable Dual/Quad?
+>
+
+Here the driver is just giving information that the controller support it.
+The MTD layer enables dual/quad based on what the flash supports; quad
+being the first priority
+I understand that the spi core reads rx, tx-bus-width property and
+master support flags and
+performs the necessary checks.
+
+Regards,
+Harini
