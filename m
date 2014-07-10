@@ -1,41 +1,41 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] net: davinci_mdio: reuse for keystone2 arch
-Date: Thu, 10 Jul 2014 12:39:00 -0700 (PDT)
-Message-ID: <20140710.123900.1696373067218564684.davem@davemloft.net>
-References: <1404911451-9921-2-git-send-email-grygorii.strashko@ti.com>
-	<20140709.165232.539576872991411664.davem@davemloft.net>
-	<53BE8DF7.9090303@ti.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53BE8DF7.9090303-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grygorii.strashko-l0cyMroinI0@public.gmane.org
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 0/2] ARM: at91: remove phy fixup for sama5d3xek boards
+Date: Thu, 10 Jul 2014 21:59:52 +0200
+Message-ID: <1405022394-8311-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Date: Thu, 10 Jul 2014 15:58:31 +0300
+Hello,
 
-> Hi David,
-> 
-> On 07/10/2014 02:52 AM, David Miller wrote:
->> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->> Date: Wed, 9 Jul 2014 16:10:50 +0300
->> 
->>>   Required properties:
->>> -- compatible		: Should be "ti,davinci_mdio"
->>> +- compatible		: Should be "ti,davinci_mdio" or "ti,keystone-mdio"
->> 
->> Why the inconsistency in naming schemes?  I don't see any reason
->> to be different wrt. "_" vs. "-" in the name string.
->> 
-> 
-> Hm. Looks like the common way is to use "-", but I can rename it if you insist.
+This patch removes a board specific hook for sama5d3xek boards from the
+sama5d3 generic DT board file.
 
-I'm just saying, is there a strong reason to be inconsistent?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This hook (which register a phy fixup configuring board specific delays
+in the ksz9021 ethernet phy) is now replaced by the appropriate DT
+properties definitions in the sama5d3xcm.dtsi file.
+
+Best Regards,
+
+Boris
+
+Changes since v2:
+ - define 2 phy nodes to handle Ronetix and Embest HW designs
+
+Changes since v1:
+ - fix txc-skew-ps and rxc-skew-ps delays
+ - remove phy address info to handle Ronetix and Embest HW designs
+
+Boris BREZILLON (2):
+  ARM: at91/dt: describe rgmii ethernet phy connected to sama5d3xek
+    boards
+  ARM: at91: remove phy fixup for sama5d3xek boards
+
+ arch/arm/boot/dts/sama5d3xcm.dtsi   | 30 ++++++++++++++++++++++++++++++
+ arch/arm/mach-at91/board-dt-sama5.c | 22 ----------------------
+ 2 files changed, 30 insertions(+), 22 deletions(-)
+
+-- 
+1.8.3.2
