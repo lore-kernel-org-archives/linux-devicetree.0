@@ -1,98 +1,143 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS) support
-Date: Thu, 10 Jul 2014 11:46:20 +0200
-Message-ID: <CACRpkdYs93snBFYZMKN6kd==b9jZehnp1eHV5bHaBNsNRt62pQ@mail.gmail.com>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
-	<1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Thu, 10 Jul 2014 10:47:58 +0100
+Message-ID: <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
+ <20140708005954.GC22939@google.com>
+ <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
+ <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
+ <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
+ <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404505467-26526-9-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yadwinder Singh Brar <yadi.brar01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Jones <rob.jones-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 4, 2014 at 10:24 PM, Javier Martinez Canillas
-<javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+On Wed, Jul 09, 2014 at 04:10:04PM +0100, Bjorn Helgaas wrote:
+> On Tue, Jul 8, 2014 at 4:48 PM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > On Tue, Jul 08, 2014 at 07:41:50PM +0100, Bjorn Helgaas wrote:
+> >> On Tue, Jul 8, 2014 at 4:46 AM, Liviu Dudau <Liviu.Dudau@arm.com> =
+wrote:
+> >> > On Tue, Jul 08, 2014 at 01:59:54AM +0100, Bjorn Helgaas wrote:
+> >>
+> >> >> I wonder if it would help to make a weak pci_domain_nr() functi=
+on that
+> >> >> returns "bridge->domain_nr".  Then each arch could individually=
+ drop its
+> >> >> pci_domain_nr() definition as it was converted, e.g., something=
+ like this:
+> >> >>
+> >> >>   - Convert every arch pci_domain_nr() from a #define to a non-=
+inline
+> >> >>     function
+> >> >>   - Add bridge.domain_nr, initialized from pci_domain_nr()
+> >> >>   - Add a weak generic pci_domain_nr() that returns bridge.doma=
+in_nr
+> >> >>   - Add a way to create a host bridge in a specified domain, so=
+ we can
+> >> >>     initialize bridge.domain_nr without using pci_domain_nr()
+> >> >>   - Convert each arch to use the new creation mechanism and dro=
+p its
+> >> >>     pci_domain_nr() implementation
+> >> >
+> >> > I will try to propose a patch implementing this.
+> >>
+> >> I think this is more of an extra credit, cleanup sort of thing.  I
+> >> don't think it advances your primary goal of (I think) getting arm=
+64
+> >> PCI support in.  So my advice is to not worry about unifying domai=
+n
+> >> handling until later.
+> >
+> > Getting arm64 supported *is* my main goal. But like you have stated=
+ in your
+> > review of v7, you wanted to see another architecture converted as a=
+ guarantee
+> > of "genericity" (for lack of a better word) for my patches. The one=
+ architecture
+> > I've set my eyes on is microblaze, and that one uses pci_scan_root_=
+bus()
+> > rather than pci_create_root_bus() so I don't have any opportunity t=
+o pass the
+> > domain number or any additional info (like the sysdata pointer that=
+ we were
+> > talking about) to the pci_host_bridge structure unless I do this cl=
+eanup.
+>=20
+> I think maybe I was too harsh about that, or maybe we had different
+> ideas about what "conversion" involved.  My comment was in response t=
+o
+> "pci: Introduce pci_register_io_range() helper function", and I don't
+> remember why I was concerned about that; it's not even in drivers/pci=
+,
+> and it doesn't have an obvious connection to putting the domain numbe=
+r
+> in struct pci_host_bridge.
 
-> Some regulators on the MAX77686 PMIC have Dynamic Voltage Scaling
-> (DVS) support that allows output voltage to change dynamically.
->
-> For MAX77686, these regulators are Buck regulators 2, 3 and 4.
->
-> Each Buck output voltage is selected using a set of external
-> inputs: DVS1-3 and SELB2-4.
->
-> DVS registers can be used to configure the output voltages for each
-> Buck regulator and which one is active is controled by DVSx lines.
->
-> SELBx lines are used to control if individual Buck lines are ON or OFF.
->
-> This patch adds support to configure the DVSx and SELBx lines
-> from DT and to setup and read the GPIO lines connected to them.
->
-> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Well, to be honest I did move some of the code (as mentioned in the Cha=
+ngelog) from
+drivers/pci into drivers/of. It makes more sense to be in OF, as it mos=
+tly concerns
+architectures that use it.
 
-(...)
-> +#include <linux/gpio/consumer.h>
+>=20
+> The thing I'm more concerned about is adding new PCI interfaces, e.g.=
+,
+> pci_create_root_bus_in_domain(), that are only used by one
+> architecture.  Then it's hard to be sure that it's going to be useful
+> for other arches.  If you can add arm64 using the existing PCI
+> interfaces, I don't any problem with that.
 
-THANKS for using modern interfaces!
+(No blame here or reproaches, I'm just restating the situation:) I (mos=
+tly) did try
+that in my v7 series but it also got NAK-ed by Arnd and Catalin as it h=
+ad too much
+arm64 specific code in there.
 
-> +static void max77686_dt_parse_dvs_gpio(struct device *dev)
-> +{
-> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
-> +       int i;
-> +
-> +       /*
-> +        * NOTE: we don't consider GPIO errors fatal; board may have some lines
-> +        * directly pulled high or low and thus doesn't specify them.
-> +        */
-> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++)
-> +               pd->buck_gpio_dvs[i] =
-> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-dvs", i);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++)
-> +               pd->buck_gpio_selb[i] =
-> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-selb", i);
-> +}
+I don't see a way out of adding new PCI interfaces if we want to have s=
+upport in
+the PCI framework for unifying existing architectures. Of course, there=
+ is the painful
+alternative of changing the existing APIs and fixing arches in one go, =
+but like you've
+said is going to be messy. I don't think I (or the people and companies=
+ wanting PCIe
+on arm64) should cop out and pick a quick fix that adds sysdata structu=
+re into arm64
+just to avoid new APIs, as this is not going to help anyone in long ter=
+m. What I can
+do is to create a set of parallel APIs for pci_{scan,create}_root_bus()=
+ that take
+a pci_host_bridge pointer and start converting architectures one by one=
+ to that API
+while deprecating the existing one. That way we can add arm64 easily as=
+ it would be
+the first architecture to use new code without breaking things *and* we=
+ provide a
+migration path.
 
-Rob Jones has a patch cooking that adds gpio_get_array() so this thing
-merits also adding devm_gpiod_get_array() I think?
+Best regards,
+Liviu
 
-> +/**
-> + * max77686_setup_gpios() - init DVS-related GPIOs
-> + * @dev: device whose platform data contains the dvs GPIOs information
-> + *
-> + * This function claims / initalizations GPIOs related to DVS if they are
-> + * defined. This may have the effect of switching voltages if the
-> + * pdata->buck_default_idx does not match the boot time state of pins.
-> + */
-> +int max77686_setup_gpios(struct device *dev)
-> +{
-> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
-> +       int buck_default_idx = pd->buck_default_idx;
-> +       int ret;
-> +       int i;
-> +
-> +       /* Set all SELB high to avoid glitching while DVS is changing */
-> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
-> +               struct gpio_desc *gpio = pd->buck_gpio_selb[i];
-> +
-> +               /* OK if some GPIOs aren't defined */
-> +               if (IS_ERR(gpio))
-> +                       continue;
-> +
-> +               ret = gpiod_direction_output_raw(gpio, 1);
+>=20
+> Bjorn
+>=20
 
-Why does this have to be raw? Usually that is not to be used.
-
-Apart from this it looks OK.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
