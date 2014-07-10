@@ -1,38 +1,52 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [alsa-devel] [PATCH V3 2/2] ASoC: samsung: Add machine driver for
- Odroid X2/U3
-Date: Thu, 10 Jul 2014 18:15:59 +0200
-Message-ID: <53BEBC3F.6030205@samsung.com>
-References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
- <1404479625-25385-2-git-send-email-s.nawrocki@samsung.com>
- <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [lm-sensors] [PATCH] hwmon: pwm-fan: Add pwm-fan driver
+Date: Thu, 10 Jul 2014 09:17:13 -0700
+Message-ID: <53BEBC89.8080205@roeck-us.net>
+References: <1404917600-4430-1-git-send-email-k.debski@samsung.com> <20140709165817.GA24842@roeck-us.net> <107401cf9c52$1fe0a0e0$5fa1e2a0$%debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Chen Zhen <zhen1.chen@samsung.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <107401cf9c52$1fe0a0e0$5fa1e2a0$%debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Kamil,
 
-On 08/07/14 11:15, Daniel Drake wrote:
-> Testing on ODROID-U2, v3 is not quite working for me, but v2 of the
-> patch was fine.
-> I boot up, run:
-> # speaker-test -c 2 -t wav
-> 
-> As soon as I hear the word "front" I press ctrl+c and then run the
-> command again.
-> Now the command hangs with no audible output.
-> 
-> Any ideas? Let me know if you have trouble reproducing.
+On 07/10/2014 08:17 AM, Kamil Debski wrote:
+>
+>>
+>>> +	}
+>>> +
+>>> +	dev_set_drvdata(&pdev->dev, ctx);
+>>> +	platform_set_drvdata(pdev, ctx);
+>>> +
+>>> +	/* Set duty cycle to maximum allowed */
+>>> +	ctx->duty_cycle = ctx->pwm->period - 1;
+>>> +	ctx->pwm_value = MAX_PWM;
+>>> +	pwm_config(ctx->pwm, ctx->duty_cycle, ctx->pwm->period);
+>
+> Guenter, I have a question regarding this. I see that gpio-fan reads
+> the state of gpios and uses this as the initial setting.
+> Led-pwm on init sets the brightness to LED_OFF.
+>
+> What should be the default state after init? Should the fan be off or
+> at full power? I am thinking about adding an optional node to device
+> tree that could be used to set this. But the question remains - what
+> should be the default setting?
+>
 
-I just posted a patch addressing this, please let me know
-if there are any further issues.
+Trick question ... I can not really answer it. you can try the devicetree
+option, but be prepared to have it rejected - the usual argument is that
+dt shall only describe the HW but not its configuration.
 
--- 
-Thanks,
-Sylwester
+Ultimately, either way is fine with me.
+
+Guenter
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
