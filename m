@@ -1,64 +1,60 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V4 2/2] arm: dts: dra7: add crossbar device binding
-Date: Wed, 9 Jul 2014 23:19:49 -0700
-Message-ID: <20140710061949.GE28884@atomide.com>
-References: <1403767532-19290-1-git-send-email-r.sricharan@ti.com>
- <1403767532-19290-3-git-send-email-r.sricharan@ti.com>
- <20140626074417.GF28884@atomide.com>
- <53ABDA9A.8000108@ti.com>
- <20140626102650.GH28884@atomide.com>
- <20140709154417.GC28884@atomide.com>
- <53BE2B6D.1090602@ti.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V2] ARM: dts: Restructure imx6qdl-wandboard.dtsi for new
+ rev C1 board.
+Date: Thu, 10 Jul 2014 15:01:04 +0800
+Message-ID: <20140710070103.GA2542@dragon>
+References: <1404845297-13751-1-git-send-email-george.joseph@fairview5.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53BE2B6D.1090602@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Sricharan R <r.sricharan@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, joe@perches.com, Benoit Cousson <bcousson@baylibre.com>
+In-Reply-To: <1404845297-13751-1-git-send-email-george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [140709 23:00]:
-> Hi Tony,
-> On Wednesday 09 July 2014 09:14 PM, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [140626 03:28]:
-> >> * Sricharan R <r.sricharan@ti.com> [140626 01:36]:
-> >>> Hi Tony,
-> >>>
-> >>> On Thursday 26 June 2014 01:14 PM, Tony Lindgren wrote:
-> >>>> * Sricharan R <r.sricharan@ti.com> [140626 00:29]:
-> >>>>> From: R Sricharan <r.sricharan@ti.com>
-> >>>>>
-> >>>>> There is a IRQ crossbar device in the soc, which
-> >>>>> maps the irq requests from the peripherals to the
-> >>>>> mpu interrupt controller's inputs. The Peripheral irq
-> >>>>> requests are connected to only one crossbar
-> >>>>> input and the output of the crossbar is connected to only one
-> >>>>> controller's input line. The crossbar device is used to map
-> >>>>> a peripheral input to a free mpu's interrupt controller line.
-> >>>>>
-> >>>>> Here, adding a new crossbar device node and replacing all the peripheral
-> >>>>> interrupt numbers with its fixed crossbar input lines.
-> >>>>
-> >>>> I think these two patches need to be a single patch to avoid
-> >>>> breaking booting for git bisect inbetween these patches?
-> >>>   This does not cause booting issues. irq_desc gets allocated linearly,
-> >>>    but that does not create boot issues.
-> >>
-> >> OK
-> > 
-> > These are now applied on top of Jason's immutable irqchip branch
-> > and merged and pushed out into omap-for-v3.17/dt. Can you guys
-> > please test?
-> I have tested omap-for-v3.17/dt on DRA7 EVM. Crossbar is working fine.
-> Looks good to me.
+On Tue, Jul 08, 2014 at 12:48:16PM -0600, George Joseph wrote:
+> The rev C1 Wandboard uses the Broadcom 4330 for WiFi and Bluetooth instead of
+> the 4329.  This changes the PADS assigned for the control lines.  Another
+> side effect of the change is that on the rev C1 board, usdhc driver can't
+> detect the chip presence correctly so usdhc2 now needs its 'non-removeable'
+> property removed.
 > 
-> lokesh@a0131933lt:~/working/mainline/linux$ git describe 
-> v3.16-rc1-34-g6464099
+> So that rev B1 and earlier can continue to work, this patch splits the
+> board-specific definitions from imx6qdl-wandboard.dtsi into
+> imx6qdl-wandboard-revb1.dtsi and imx6qdl-wandboard-revc1.dtsi.  The new files
+> include the original base imx6qdl-wandboard.dtsi which retains the common
+> definitions.
 > 
-> Please find the logs here: http://paste.ubuntu.com/7773616/
+> The existing imx6dl-wandboard.dts includes imx6qdl-wandboard-revc1.dtsi and
+> imx6dl-wandboard-revb1.dts (new) includes imx6qdl-wandboard-revb1.dtsi.
+> This makes the rev C1 board the new default.  The same pattern is used for
+> imx6q-wandboard.dts.
+> 
+> So, from U-Boot on a WB-Quad you use imxq-wandboard-revb1.dtb for the older B1
+> board and imxq-wandboard.dtb for the current rev C1 board.
+> 
+> Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6dl-wandboard-revb1.dts   | 22 ++++++++++++++
+>  arch/arm/boot/dts/imx6dl-wandboard.dts         |  2 +-
+>  arch/arm/boot/dts/imx6q-wandboard-revb1.dts    | 26 ++++++++++++++++
+>  arch/arm/boot/dts/imx6q-wandboard.dts          |  2 +-
+>  arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi | 42 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi | 41 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6qdl-wandboard.dtsi       | 21 -------------
+>  7 files changed, 133 insertions(+), 23 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-wandboard-revb1.dts
 
-OK great thanks!
+These two should be added into arch/arm/boot/dts/Makefile as build
+target.
 
-Tony
+I fixed it up and applied the patch.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
