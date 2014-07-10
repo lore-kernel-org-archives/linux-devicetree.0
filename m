@@ -1,77 +1,123 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 1/2] ARM: at91/dt: describe rgmii ethernet phy connected to sama5d3xek boards
-Date: Thu, 10 Jul 2014 21:59:53 +0200
-Message-ID: <1405022394-8311-2-git-send-email-boris.brezillon@free-electrons.com>
-References: <1405022394-8311-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: Re: [PATCHv7 2/3] devicetree: Addition of the Altera SDRAM EDAC.
+Date: Thu, 10 Jul 2014 15:07:04 -0500
+Message-ID: <CANk1AXQ1Aw-8Et_XE9BSL42r_DGxLiwOdyjA7YxMJMw6Fc=YUg@mail.gmail.com>
+References: <1403730927-16163-1-git-send-email-tthayer@altera.com>
+	<1403730927-16163-3-git-send-email-tthayer@altera.com>
+	<20140626094507.GM15240@leverpostej>
+	<CAF03EBdBMphBLkGj4=_kGADF4iq_uUpyBbRJ7O63OvSHcR5hSw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405022394-8311-1-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <CAF03EBdBMphBLkGj4=_kGADF4iq_uUpyBbRJ7O63OvSHcR5hSw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+To: Thor Thayer <tthayer.linux@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "tthayer@altera.com" <tthayer@altera.com>, "robherring2@gmail.com" <robherring2@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@altera.com" <dinguyen@altera.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "bp@alien8.de" <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add ethernet-phy nodes and specify phy interrupt (connected to pin PB25)
-and board specific timing configs.
+On Wed, Jul 9, 2014 at 3:07 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+>
+> On Thu, Jun 26, 2014 at 4:45 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Wed, Jun 25, 2014 at 10:15:26PM +0100, tthayer@altera.com wrote:
+> >> From: Thor Thayer <tthayer@altera.com>
+> >>
+> >> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
+> >>
+> >> Signed-off-by: Thor Thayer <tthayer@altera.com>
+> >> ---
+> >> v2: Changes to SoC EDAC source code.
+> >>
+> >> v3: Fix typo in device tree documentation.
+> >>
+> >> v4,v5: No changes - bump version for consistency.
+> >>
+> >> v6: Assign ECC registers in SDRAM controller to EDAC
+> >>
+> >> v7: Fix SDRAM EDAC base address.
+> >> ---
+> >>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
+> >>  arch/arm/boot/dts/socfpga.dtsi                     |    6 ++++++
+> >>  2 files changed, 21 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+> >> new file mode 100644
+> >> index 0000000..d68e033
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+> >> @@ -0,0 +1,15 @@
+> >> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
+> >> +
+> >> +Required properties:
+> >> +- compatible : should contain "altr,sdram-edac";
+> >> +- reg : should contain the ECC register range in sdram
+> >> +        controller (address and length).
+> >> +- interrupts : Should contain the SDRAM ECC IRQ in the
+> >> +     appropriate format for the IRQ controller.
+> >> +
+> >> +Example:
+> >> +     sdramedac@ffc2502c {
+> >> +             compatible = "altr,sdram-edac";
+> >> +             reg = <0xffc2502c 0x28>;
+> >> +             interrupts = <0 39 4>;
+> >> +     };
+> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> >> index 310292e..da0785d 100644
+> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> >> @@ -687,6 +687,12 @@
+> >>                       reg = <0xffc25000 0x4>;
+> >>               };
+> >>
+> >> +             sdramedac@ffc2502c {
+> >> +                     compatible = "altr,sdram-edac";
+> >> +                     reg = <0xffc2502c 0x28>;
+> >> +                     interrupts = <0 39 4>;
+> >> +             };
+> >
+> > I'm not sure I understand this. The ECC register existing within the
+> > SDRAM controller, which we have a binding for. Why do we need a separate
+> > binding for a subset of registers within an IP block?
+> >
+> > Why can we not have a single binding for the entire SDRAM controlelr and
+> > decompse that within Linux as it makes sense for the appropriate
+> > subsystyems?
+> >
+> > Leaking Linux design into bindings is a bad idea; it makes it harder to
+> > change things.
+> >
+> > Mark.
+>
+> Hi Mark,
+>
+> How would we decompose this within Linux. MFD? Is there an example
+> that I can look at?
+>
+> We originally used syscon for the entire sdram controller register
+> block but we got dinged on it.
 
-Atmel has two different HW designs for its CPU modules: the first one
-(produced by Embest) is connecting PHYAD[0-2] pins to pull up resistors
-and the other one (produced by Ronetix) is connecting PHYAD0 to a pull up
-resistor and PHYAD[1-2] to pull down resistors.
-As a result, Ronetix design will have its PHY available at address 0x1 and
-Embest design at 0x7.
-By defining both phys we're letting the phy core detect the one actually
-available on the MDIO bus.
+I think it is good feedback that we don't want the devicetree to break
+up this register range (unless someone wants to argue that).
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
----
+The problem we need to solve here is that the sdram controller
+register range has registers that are needed for at least 3 different
+functions/drivers: edac, fpga bridges, and loe power mode (putting ddr
+in self-refresh).  We would not want to do that in one driver.
+Originally we had the whole sdram controller as 'syscon' and that was
+frowned upon.  I think someone suggested a MFD.  We can do that and
+will do that if that will move things forward.  But that would just be
+a mfd that ioremaps the range and provides read/write functions for
+other drivers to use (which starts looking very similar to syscon
+except that it adds more code to the kernel to do what syscon does).
+It seems like that's what syscon was for (looking at
+Documentation/devicetree/bindings/mfd/syscon.txt).
 
-Florian, I dropped your Reviewed-by tag because this patch has slightly
-changed.
+So can we have a consensus here on syscon or a very minimal mfd or
+some other clear way of moving forward?
 
+Alan
 
- arch/arm/boot/dts/sama5d3xcm.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-index b0b1331..755369e 100644
---- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-@@ -34,6 +34,36 @@
- 
- 			macb0: ethernet@f0028000 {
- 				phy-mode = "rgmii";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ethernet-phy@1 {
-+					reg = <0x1>;
-+					interrupt-parent = <&pioB>;
-+					interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+					txen-skew-ps = <800>;
-+					txc-skew-ps = <3000>;
-+					rxdv-skew-ps = <400>;
-+					rxc-skew-ps = <3000>;
-+					rxd0-skew-ps = <400>;
-+					rxd1-skew-ps = <400>;
-+					rxd2-skew-ps = <400>;
-+					rxd3-skew-ps = <400>;
-+				};
-+
-+				ethernet-phy@7 {
-+					reg = <0x7>;
-+					interrupt-parent = <&pioB>;
-+					interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+					txen-skew-ps = <800>;
-+					txc-skew-ps = <3000>;
-+					rxdv-skew-ps = <400>;
-+					rxc-skew-ps = <3000>;
-+					rxd0-skew-ps = <400>;
-+					rxd1-skew-ps = <400>;
-+					rxd2-skew-ps = <400>;
-+					rxd3-skew-ps = <400>;
-+				};
- 			};
- 
- 			pmc: pmc@fffffc00 {
--- 
-1.8.3.2
+>
+> Thanks for your help.
+>
+> Thor
