@@ -1,65 +1,75 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add dwc3-st.c file to ARCH/STI
- architecture
-Date: Thu, 10 Jul 2014 08:27:18 -0500
-Message-ID: <20140710132718.GH15340@saruman.home>
-References: <1404541530-27856-1-git-send-email-peter.griffin@linaro.org>
- <1404541530-27856-4-git-send-email-peter.griffin@linaro.org>
- <53BBA075.9040204@st.com>
- <20140708075332.GM6407@lee--X1>
-Reply-To: <balbi@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
+Date: Thu, 10 Jul 2014 16:39:18 +0300
+Message-ID: <1404999558.16296.31.camel@iivanov-dev>
+References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
+	 <CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
+	 <1404904380.16296.17.camel@iivanov-dev>
+	 <CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
+	 <CAJAp7Og0Cr3oY=XpT4NzKUWykxkRTq1ZRDyamW6tgohfBs3dmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U3BNvdZEnlJXqmh+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140708075332.GM6407@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Maxime Coquelin <maxime.coquelin@st.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7Og0Cr3oY=XpT4NzKUWykxkRTq1ZRDyamW6tgohfBs3dmg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---U3BNvdZEnlJXqmh+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2014-07-09 at 07:02 -0700, Bjorn Andersson wrote:
+> On Wed, Jul 9, 2014 at 4:43 AM, Linus Walleij <linus.walleij@linaro.o=
+rg> wrote:
+> > On Wed, Jul 9, 2014 at 1:13 PM, Ivan T. Ivanov <iivanov@mm-sol.com>=
+ wrote:
+> >> On Wed, 2014-07-09 at 11:43 +0200, Linus Walleij wrote:
+> >>> On Mon, Jul 7, 2014 at 5:11 PM, Ivan T. Ivanov <iivanov@mm-sol.co=
+m> wrote:
 
-On Tue, Jul 08, 2014 at 08:53:32AM +0100, Lee Jones wrote:
-> On Tue, 08 Jul 2014, Maxime Coquelin wrote:
-> > On 07/05/2014 08:25 AM, Peter Griffin wrote:
-> > >Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> >=20
-> > Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+<snip>
+
+> However, the device tree bindings are a different thing; as the
+> properties used to describe the hardware doesn't relate to how we
+> communicate with it I think we should be able to (and therefor should=
+)
+> use the same documentation for the two (rather 7) chips.
+
+Agreed.
+
 >=20
-> Maxime,
->   Once Acked by Felipe, I think this should go in via your tree to
-> avoid conflicts with other ARM/STI ARCHITECTURE additions.
+> >> Not sure. Bj=C3=B6rn patches cover older PMIC chips, if not mistak=
+en, mine
+> >> cover PMIC's used with APQ8074 and onward [1]. Main difference is
+> >> the bus which connects them to SoC, interrupts handling, runtime
+> >> pin type detection and register map.
+> >
+>=20
+> Correct Ivan; we do however share the same issues related to how to d=
+o
+> interrupt handling,=20
 
-there are still many unresolved comments on patches 1 and 2.
+Yep, but do we actually need to do interrupt handling in driver?
+Interrupts are handled by parent device. GPIO client drivers could=20
+use interrupt-controller registered by core driver?
 
---=20
-balbi
+> units for properties and how to split/reuse
+> between gpio and mpp. Also we have solved the pins vs groups vs
+> functions slightly different, that should all be aligned I think.
 
---U3BNvdZEnlJXqmh+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Sure.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+<snip>
 
-iQIcBAEBAgAGBQJTvpS2AAoJEIaOsuA1yqREjg4P/Anzg61IE9UUR90Jk6gwK1tM
-KmxiJwi1QHA5NzZKOp6ajVCyida1wneD09CKJx85Vkf+3Bu/PHG8rei3CbPUqNSl
-4DYa3rFP5oNO8SiGKqF+a6jbDOvt6WSA787G7o0Rol/t5zZYFqlXA9W7fMbZ39Xa
-zi389xpwt/46Nka2E5Ev2h5RPdA+Rkgf0thfXTWlfpvTpBtLrGbqOqhOPCtMx2kB
-P2W9TX6xOHSP+awiFwfC5aTq+sDrKh+4GGHXN+d7WnbwN3JoPk3UYhNOm2nNeZEG
-AyMBtTrbqHsj3vv26qhzkv0R8dTl44crCGk/QIoz+eyAaqjBFUPDdeFS3O195Vzu
-8AZiXvXWHVRA+1HhqbWEuBgs1yS8kLt5MIBBH7M7R7QRFWG9XD+E3B7QQ0L4wlNg
-FvPJZ8NPRWIdjY44uvnPHCiGxxRHY0EjS1jJwSAZ5+Oofgl+ir/VtrI3IURssmoD
-EyUHH/NC0plidTuEVBcBemiF6Zy//36Jt6eKfoPYUuXDbpSsOeP+T90KmhCa/IP2
-Fi7pi8BagyVrkEo7x2nRgEHGGzhM8qIcaKo7xYGalzbU0roGtkIEFQxIlxkIY1GK
-MdHSQYSyO3RzqkSccroxe0cwQjxHY1PIy38ec90uDtHSIGae9UPEurSxwnh5lG+z
-0uef/KJQvg/4ERVv/Jbk
-=u5zS
------END PGP SIGNATURE-----
+> > Then I guess even if the chips are totally unrelated it'd be intere=
+sting
+> > to have you two guys cross-review each other's drivers so the behav=
+iour
+> > is consistent across qualcomm platforms.
+> >
+>=20
+> I hope we can meet somewhere in between
 
---U3BNvdZEnlJXqmh+--
+Sure.
+
+Regards,
+Ivan
