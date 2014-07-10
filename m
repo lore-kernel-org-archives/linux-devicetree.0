@@ -1,108 +1,74 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v4 00/10] Add SDHCI support for ST Microelectronics SoCs
-Date: Thu, 10 Jul 2014 14:57:12 +0200
-Message-ID: <53BE8DA8.6@st.com>
-References: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>	<53BD64E4.5060504@st.com> <CAPDyKFqpqa-nA3i8Z4k3oBqgo7OpppxM5tSCSz-mhxyHRJtZTw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v7 2/3] ASoC: add es8328 codec driver
+Date: Thu, 10 Jul 2014 14:55:18 +0200
+Message-ID: <20140710125518.GG30458@sirena.org.uk>
+References: <1404353989-19580-1-git-send-email-xobs@kosagi.com>
+ <1404353989-19580-3-git-send-email-xobs@kosagi.com>
+ <20140709094527.GA21251@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqpqa-nA3i8Z4k3oBqgo7OpppxM5tSCSz-mhxyHRJtZTw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Ball <chris@printf.net>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="j6Ejlva3tMw3xXYi"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140709094527.GA21251-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--j6Ejlva3tMw3xXYi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 07/10/2014 02:51 PM, Ulf Hansson wrote:
-> On 9 July 2014 17:51, Maxime Coquelin <maxime.coquelin@st.com> wrote:
->>
->>
->> On 07/09/2014 05:07 PM, Peter Griffin wrote:
->>>
->>> This series adds a SDHCI platform driver for ST SoCs, along with
->>> the additional device tree bindings and configuration to enable
->>> the controller to work properly.
->>>
->>> Initially it supports the stih416 and stih415 SoCs, and has
->>> been tested on a stih416-b2020 board.
->>>
->>> regards,
->>>
->>> Peter.
->>>
->>> Changes since v1
->>> - Whitespace cleanups
->>> - Use readl_relaxed io accessor
->>> - Add update to MAINTAINERS
->>> - Remove reset controller code from platform driver
->>> - Remove #ifdef around sleep ops
->>> - Use sdhci_pltfm_clk_get_max_clock lib function
->>> - Pass bus-width etc through board device tree node
->>> - Remove unncessary header
->>> - Remove / change some debug messages
->>> - Remove final break from switch case
->>>
->>> Changes since v2
->>> - Update CC list with alkml and lkml lists
->>>
->>> Changes since v3
->>> - Rebased on v3.16-rc4
->>> - Use sdhci_set_bus_width lib function for set_bus_width
->>> - Remove sdhci_st_8bit_width function
->>> - Use sdhci_set_clock lib function for set_clock
->>>
->>> Peter Griffin (10):
->>>     mmc: sdhci-st: Intial support for ST SDHCI controller
->>>     mmc: sdhci-st: ST Microelectronics SDHCI binding documentation.
->>>     ARM: STi: DT: Add sdhci pins for stih416
->>>     ARM: STi: DT: Add sdhci controller for stih416
->>>     ARM: STi: DT: Add sdhci pin configuration for stih415
->>>     ARM: STi: DT: Add sdhci controller for stih415
->>>     ARM: STi: DT: Enable mmc0 for both stih415 and stih416 SoCs
->>>     ARM: STi: DT: Enable second sdhci controller for stih416 b2020 boards.
->>>     ARM: update multi_v7_defconfig for STI
->>>     MAINTAINERS: Add sdhci-st file to ARCH/STI architecture
->>>
->>>    Documentation/devicetree/bindings/mmc/sdhci-st.txt |  33 ++++
->>>    MAINTAINERS                                        |   1 +
->>>    arch/arm/boot/dts/stih415-pinctrl.dtsi             |  21 +++
->>>    arch/arm/boot/dts/stih415.dtsi                     |  12 ++
->>>    arch/arm/boot/dts/stih416-b2020.dts                |   8 +
->>>    arch/arm/boot/dts/stih416-b2020e.dts               |   6 +
->>>    arch/arm/boot/dts/stih416-pinctrl.dtsi             |  39 +++++
->>>    arch/arm/boot/dts/stih416.dtsi                     |  24 +++
->>>    arch/arm/boot/dts/stih41x-b2020.dtsi               |   4 +
->>>    arch/arm/boot/dts/stih41x-b2020x.dtsi              |   4 +
->>>    arch/arm/configs/multi_v7_defconfig                |   1 +
->>>    drivers/mmc/host/Kconfig                           |  12 ++
->>>    drivers/mmc/host/Makefile                          |   1 +
->>>    drivers/mmc/host/sdhci-st.c                        | 176
->>> +++++++++++++++++++++
->>>    14 files changed, 342 insertions(+)
->>>    create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-st.txt
->>>    create mode 100644 drivers/mmc/host/sdhci-st.c
->>>
->>
->> Thanks Peter.
->>
->> DT patches queued to git://git.stlinux.com/devel/kernel/linux-sti.git
->> sti-dt-for-v3.17-1
->
-> What about patch9 and 10? Did you take them as well?
->
-> You may add my ack for them, for whatever it's worth.
+On Wed, Jul 09, 2014 at 10:45:27AM +0100, Charles Keepax wrote:
+> On Thu, Jul 03, 2014 at 10:19:48AM +0800, Sean Cross wrote:
 
-Yes I will take them too.
+> > +static int es8328_codec_probe(struct snd_soc_codec *codec)
+> > +{
+> > +	struct es8328_priv *es8328;
+> > +	int ret;
+> > +	int i;
+> > +
+> > +	es8328 = snd_soc_codec_get_drvdata(codec);
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(es8328->supplies); i++)
+> > +		es8328->supplies[i].supply = supply_names[i];
+> > +
+> > +	ret = devm_regulator_bulk_get(codec->dev, ARRAY_SIZE(es8328->supplies),
+> > +				es8328->supplies);
 
-Regards,
-Maxime
+> Is it safe to use devm_ from the ASoC level probe here? I think
+> there was a discussion recently that this can cause problems on
+> driver unbinding.
 
->
-> Kind regards
-> Uffe
->
->>
->> Regards,
->> Maxime
+No, it's not and there's a much bigger problem here that we shouldn't be
+doing resource allocation in the ASoC level probe().
+
+--j6Ejlva3tMw3xXYi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTvo0rAAoJELSic+t+oim9c/YP/RcpnvP6BP/RlMb12WAyZczo
+ROORQCSf0amwSqFHb0vInmWLxAex+xgBwma6rN/8wjzhFVbH496Efuwq/Me5qw5y
+50RQAB6+hWtCwWAYQXOW/ZfiA/lBDo2s894SfjljF0CEZLhHnJMpM2K3OB+OqsJ6
+IMUafmfPj11YpPdfTsas8wSi8bH55HdaIPi02FVYQFR/l+i4McOo0cxR0gwjswz8
+H7JuvISyPDonr1HXL2mmr5nDMP84GDsM6AXzz69YZ+uLTv5byOq3fdgpnMItuvwh
+DaUmeM30A3P6ZaYNZYa+yfrZMzFhzSE6s7/SK37/x7EcJI/xPKqLRtmRJImn/KP2
+OtvqIOzzpyenV9YjRdpDdSnujFDw15YPc98tYztr4jFTFX1uzWeR3mQl0sslsP3T
+xI2gzGg5tos+KORfH6DwcpPMz5dOdyGIIT5WIE03uvjZUxpCHfOSdJo8Ul3f3u5M
+Sy3ZpXaJoSHlzzvNWCUBge/ECfndHkSCz+bBdpkAUZErJZ4RQNzvkuw2gTWDOGpV
+BKlEjji1KpIKLHG/kw6xR7pF7PAcoDAThrPppqWMfWyeEfHs/xn4thNmKKKRduKI
+lxnTbZJgS3Fe/pCBiFRbyk1xbgayvXWsn+GEuJX1QSMwhrE+7DVNWUJsf9ZD/103
+SY6zf1pJ6giO0evCFCzv
+=OAQ9
+-----END PGP SIGNATURE-----
+
+--j6Ejlva3tMw3xXYi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
