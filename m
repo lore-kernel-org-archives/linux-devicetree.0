@@ -1,57 +1,45 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
-Date: Thu, 10 Jul 2014 14:23:11 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1407101154070.1492-100000@iolanthe.rowland.org>
-References: <1405005486-26355-2-git-send-email-peter.griffin@linaro.org>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] ARM: at91: move aic driver to drivers/irqchips
+Date: Thu, 10 Jul 2014 20:34:20 +0200
+Message-ID: <20140710203420.64ab24df@bbrezillon>
+References: <1405012462-766-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405005486-26355-2-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Kernel development list <linux-kernel@vger.kernel.org>, maxime.coquelin@st.com, patrice.chotard@st.com, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, USB list <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, lee.jones@linaro.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405012462-766-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Jul 2014, Peter Griffin wrote:
+On Thu, 10 Jul 2014 19:14:15 +0200
+Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> This driver adds support for the USB HCD present in STi
-> SoC's from STMicroelectronics. It has been tested on the
-> stih416-b2020 board.
+> Hello,
+> 
+> This series moves the AIC driver to the irqchip directory and make use of
+> the generic chip framework whenever possible.
+> 
+> This driver only support DT boards (all legacy board files should be soon
+> replaced by their DT versions).
+> 
+> Since the last version AIC and AIC5 code have been split and common
+> functions have been moved to irq-atmel-aic-common.c.
+> I know there is not much code in this file and it could have been
+> duplicated in AIC and AIC5 drivers, but I'm planning to add more common
+> stuff soon (AIC irq fixups previously done in
+> arch/arm/mach-at91/sysirq_mask.c).
 
-This driver file, along with the Kconfig changes, belongs in the
-arch/platform-specific source directory.  Not in drivers/usb/host/.  
-It is, after all, a platform driver that registers two platform
-devices.
+This is what I was talking about:
 
-> +++ b/drivers/usb/host/Kconfig
-> @@ -753,6 +753,23 @@ config USB_HCD_SSB
->  
->  	  If unsure, say N.
->  
-> +config USB_HCD_ST
-> +	tristate "STMicroelectronics STi family HCD support"
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/271425.html
 
-Why does this need to be tristate?  Why not always build it into the 
-kernel?  Or at least make it boolean rather than tristate.
-
-> +	depends on ARCH_STI
-> +	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-> +	select USB_EHCI_HCD_PLATFORM if USB_EHCI_HCD
-> +	select MFD_SYSCON
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable support for the EHCI and OCHI host controller on ST
-
-s/OCHI/OHCI/
-
-> + 	  consumer electronics SoCs.
-> +
-> + 	  It converts the ST driver into two platform device drivers
-
-It converts the ST driver?  That doesn't sound right at all.  You could 
-eliminate this paragraph completely and nobody would miss it.
-
-> + 	  for EHCI and OHCI and provides bus configuration, clock and power
-> + 	  management for the combined hardware block.
-
-Alan Stern
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
