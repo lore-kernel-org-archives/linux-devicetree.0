@@ -1,123 +1,87 @@
 From: Alan Tull <delicious.quinoa@gmail.com>
-Subject: Re: [PATCHv7 2/3] devicetree: Addition of the Altera SDRAM EDAC.
-Date: Thu, 10 Jul 2014 15:07:04 -0500
-Message-ID: <CANk1AXQ1Aw-8Et_XE9BSL42r_DGxLiwOdyjA7YxMJMw6Fc=YUg@mail.gmail.com>
-References: <1403730927-16163-1-git-send-email-tthayer@altera.com>
-	<1403730927-16163-3-git-send-email-tthayer@altera.com>
-	<20140626094507.GM15240@leverpostej>
-	<CAF03EBdBMphBLkGj4=_kGADF4iq_uUpyBbRJ7O63OvSHcR5hSw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Thu, 10 Jul 2014 16:02:14 -0500
+Message-ID: <CANk1AXSi0UrU+yHMz+B_gN-k9=DuTDHPaERQfwU+NHvWsaWDpQ@mail.gmail.com>
+References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
+	<1396907649-20212-2-git-send-email-tthayer@altera.com>
+	<20140408133818.GB16054@pengutronix.de>
+	<1396967390.23349.15.camel@dinh-ubuntu>
+	<20140408143327.GC16054@pengutronix.de>
+	<CANk1AXR0bDENDV673M-AVXNWHmGuee5SGc+ZnPqdBdEBwJXQXQ@mail.gmail.com>
+	<CAL_JsqJRweynpCA7LMFU4wfa71XzjGC3b8H9XKJpogf5H93h_A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAF03EBdBMphBLkGj4=_kGADF4iq_uUpyBbRJ7O63OvSHcR5hSw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJRweynpCA7LMFU4wfa71XzjGC3b8H9XKJpogf5H93h_A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thor Thayer <tthayer.linux@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "tthayer@altera.com" <tthayer@altera.com>, "robherring2@gmail.com" <robherring2@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dinguyen@altera.com" <dinguyen@altera.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "bp@alien8.de" <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Thor Thayer <tthayer@altera.com>, Doug Thompson <dougthompson@xmission.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 9, 2014 at 3:07 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+On Tue, Apr 8, 2014 at 1:52 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Apr 8, 2014 at 11:02 AM, delicious quinoa
+> <delicious.quinoa@gmail.com> wrote:
+>> On Tue, Apr 8, 2014 at 9:33 AM, Steffen Trumtrar
+>> <s.trumtrar@pengutronix.de> wrote:
+>>> On Tue, Apr 08, 2014 at 09:29:50AM -0500, Thor Thayer wrote:
+>>>> On Tue, 2014-04-08 at 15:38 +0200, Steffen Trumtrar wrote:
+>>>> > Hi!
+>>>> >
+>>>> > On Mon, Apr 07, 2014 at 04:54:07PM -0500, tthayer@altera.com wrote:
+>>>> > > From: Thor Thayer <tthayer@altera.com>
+>>>> > >
+>>>> > > Addition of the Altera SDRAM controller bindings and device
+>>>> > > tree changes to the Altera SoC project.
+>>>> > >
+>>>> [snip]
+>>>> > > +
+>>>> > > +Required properties:
+>>>> > > +- compatible : "altr,sdr-ctl", "syscon";
+>>>> > > +                Note that syscon is invoked for this device to support the FPGA
+>>>> > > +         bridge driver, EDAC driver and other devices that share the
+>>>> > > +         registers.
+>>>> > > +- reg : Should contain 1 register ranges(address and length)
+>>>> >
+>>>> > I haven't really thought this through, but why would the FPGA bridge driver
+>>>> > access the sdram controller? For releasing the resets in fpgaportrst ? Or is
+>>>> > there more?
+>>>>
+>>>> Hi Steffan. No, not for resets. We need to enable the FPGA to SDRAM
+>>>> path. Our SDRAM controller allows FPGA master access to the SDRAM.
+>>>>
+>>>
+>>> Yes. But what you have to do to enable the path is let the FPGA port you use
+>>> out of reset. And that is it as far as I can see. The rest happens in the
+>>> bitstream. Or is there more to enable the path?
+>>> The FPGA2SDRAM bridge is the one I didn't use as of yet, so if I miss something
+>>> please elaborate.
+>>
+>> Hi Steffen,
+>>
+>> The sdram controller is used by two drivers.  That's why we want to
+>> specify "syscon" here.  The other driver is the FPGA bridge driver.
+>> Its functionality is very separate from what this driver is doing (we
+>> are not enabling the bridge in this driver; we are enabling the
+>> monitoring and resetting the interrupt bit of the EDAC).  We wanted to
+>> specify "syscon" her so that we don't have to have to change it for
+>> the other driver.
 >
-> On Thu, Jun 26, 2014 at 4:45 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, Jun 25, 2014 at 10:15:26PM +0100, tthayer@altera.com wrote:
-> >> From: Thor Thayer <tthayer@altera.com>
-> >>
-> >> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
-> >>
-> >> Signed-off-by: Thor Thayer <tthayer@altera.com>
-> >> ---
-> >> v2: Changes to SoC EDAC source code.
-> >>
-> >> v3: Fix typo in device tree documentation.
-> >>
-> >> v4,v5: No changes - bump version for consistency.
-> >>
-> >> v6: Assign ECC registers in SDRAM controller to EDAC
-> >>
-> >> v7: Fix SDRAM EDAC base address.
-> >> ---
-> >>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
-> >>  arch/arm/boot/dts/socfpga.dtsi                     |    6 ++++++
-> >>  2 files changed, 21 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-> >> new file mode 100644
-> >> index 0000000..d68e033
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-> >> @@ -0,0 +1,15 @@
-> >> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
-> >> +
-> >> +Required properties:
-> >> +- compatible : should contain "altr,sdram-edac";
-> >> +- reg : should contain the ECC register range in sdram
-> >> +        controller (address and length).
-> >> +- interrupts : Should contain the SDRAM ECC IRQ in the
-> >> +     appropriate format for the IRQ controller.
-> >> +
-> >> +Example:
-> >> +     sdramedac@ffc2502c {
-> >> +             compatible = "altr,sdram-edac";
-> >> +             reg = <0xffc2502c 0x28>;
-> >> +             interrupts = <0 39 4>;
-> >> +     };
-> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> >> index 310292e..da0785d 100644
-> >> --- a/arch/arm/boot/dts/socfpga.dtsi
-> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> >> @@ -687,6 +687,12 @@
-> >>                       reg = <0xffc25000 0x4>;
-> >>               };
-> >>
-> >> +             sdramedac@ffc2502c {
-> >> +                     compatible = "altr,sdram-edac";
-> >> +                     reg = <0xffc2502c 0x28>;
-> >> +                     interrupts = <0 39 4>;
-> >> +             };
-> >
-> > I'm not sure I understand this. The ECC register existing within the
-> > SDRAM controller, which we have a binding for. Why do we need a separate
-> > binding for a subset of registers within an IP block?
-> >
-> > Why can we not have a single binding for the entire SDRAM controlelr and
-> > decompse that within Linux as it makes sense for the appropriate
-> > subsystyems?
-> >
-> > Leaking Linux design into bindings is a bad idea; it makes it harder to
-> > change things.
-> >
-> > Mark.
->
-> Hi Mark,
->
-> How would we decompose this within Linux. MFD? Is there an example
-> that I can look at?
->
-> We originally used syscon for the entire sdram controller register
-> block but we got dinged on it.
+> But are there actually overlapping registers which are accessed by
+> both drivers and need the protection of regmap?
 
-I think it is good feedback that we don't want the devicetree to break
-up this register range (unless someone wants to argue that).
-
-The problem we need to solve here is that the sdram controller
-register range has registers that are needed for at least 3 different
-functions/drivers: edac, fpga bridges, and loe power mode (putting ddr
-in self-refresh).  We would not want to do that in one driver.
-Originally we had the whole sdram controller as 'syscon' and that was
-frowned upon.  I think someone suggested a MFD.  We can do that and
-will do that if that will move things forward.  But that would just be
-a mfd that ioremaps the range and provides read/write functions for
-other drivers to use (which starts looking very similar to syscon
-except that it adds more code to the kernel to do what syscon does).
-It seems like that's what syscon was for (looking at
-Documentation/devicetree/bindings/mfd/syscon.txt).
-
-So can we have a consensus here on syscon or a very minimal mfd or
-some other clear way of moving forward?
-
-Alan
+No overlapping registers here.  Just various registers that are used
+by: edac driver, fpga bridge, low power modes.  So no special
+protection needed.
 
 >
-> Thanks for your help.
+> Perhaps MFD is more appropriate than syscon?
 >
-> Thor
+> Rob
+
+A syscon will do fine here.  If we did a MFD, all it would be doing
+would be providing register access for this range of registers to a
+few drivers, so syscon does that without any trouble.
+
+Alan Tull
+aka
+delicious quinoa
