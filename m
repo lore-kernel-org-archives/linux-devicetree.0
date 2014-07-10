@@ -1,73 +1,98 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v4 1/7] genirq: generic chip: export irq_map_generic_chip
- function
-Date: Thu, 10 Jul 2014 19:14:16 +0200
-Message-ID: <1405012462-766-2-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 5/7] ARM: at91: enclose at91_aic_xx calls in IS_ENABLED(CONFIG_OLD_IRQ_AT91) blocks
+Date: Thu, 10 Jul 2014 19:14:20 +0200
+Message-ID: <1405012462-766-6-git-send-email-boris.brezillon@free-electrons.com>
 References: <1405012462-766-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1405012462-766-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Export the generic irq map function in order to provide irq_domain ops with
-generic mapping and specific of xlate function (needed by the new atmel
-AIC driver).
+Enclose at91_aic_xx calls in IS_ENABLED(CONFIG_OLD_IRQ_AT91) blocks in
+order to prepare migration to the new AIC driver.
+
+In the new AIC driver the suspend/resume functions are called by the
+generic irq framework and are no longer needed in the PM specific code.
+
+Moreover, the new AIC driver no longer exposes the at91_aic_base variable
+which is used by the at91_aic_read functions.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 ---
- include/linux/irq.h       | 2 ++
- kernel/irq/generic-chip.c | 5 +++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/mach-at91/pm.c    | 32 ++++++++++++++++++++------------
+ arch/arm/mach-at91/setup.c |  3 ++-
+ 2 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 0d998d8..62af592 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -771,6 +771,8 @@ void irq_gc_eoi(struct irq_data *d);
- int irq_gc_set_wake(struct irq_data *d, unsigned int on);
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index e955545..5920373 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -206,16 +206,19 @@ static int at91_pm_enter(suspend_state_t state)
+ 		at91_pinctrl_gpio_suspend();
+ 	else
+ 		at91_gpio_suspend();
+-	at91_irq_suspend();
  
- /* Setup functions for irq_chip_generic */
-+int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
-+			 irq_hw_number_t hw_irq);
- struct irq_chip_generic *
- irq_alloc_generic_chip(const char *name, int nr_ct, unsigned int irq_base,
- 		       void __iomem *reg_base, irq_flow_handler_t handler);
-diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index 452d6f2..cf80e7b 100644
---- a/kernel/irq/generic-chip.c
-+++ b/kernel/irq/generic-chip.c
-@@ -341,8 +341,8 @@ static struct lock_class_key irq_nested_lock_class;
- /*
-  * irq_map_generic_chip - Map a generic chip for an irq domain
-  */
--static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
--				irq_hw_number_t hw_irq)
-+int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
-+			 irq_hw_number_t hw_irq)
+-	pr_debug("AT91: PM - wake mask %08x, pm state %d\n",
+-			/* remember all the always-wake irqs */
+-			(at91_pmc_read(AT91_PMC_PCSR)
+-					| (1 << AT91_ID_FIQ)
+-					| (1 << AT91_ID_SYS)
+-					| (at91_get_extern_irq()))
+-				& at91_aic_read(AT91_AIC_IMR),
+-			state);
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91) && at91_aic_base) {
++		at91_irq_suspend();
++
++		pr_debug("AT91: PM - wake mask %08x, pm state %d\n",
++				/* remember all the always-wake irqs */
++				(at91_pmc_read(AT91_PMC_PCSR)
++						| (1 << AT91_ID_FIQ)
++						| (1 << AT91_ID_SYS)
++						| (at91_get_extern_irq()))
++					& at91_aic_read(AT91_AIC_IMR),
++				state);
++	}
+ 
+ 	switch (state) {
+ 		/*
+@@ -280,12 +283,17 @@ static int at91_pm_enter(suspend_state_t state)
+ 			goto error;
+ 	}
+ 
+-	pr_debug("AT91: PM - wakeup %08x\n",
+-			at91_aic_read(AT91_AIC_IPR) & at91_aic_read(AT91_AIC_IMR));
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91) && at91_aic_base)
++		pr_debug("AT91: PM - wakeup %08x\n",
++			 at91_aic_read(AT91_AIC_IPR) &
++			 at91_aic_read(AT91_AIC_IMR));
+ 
+ error:
+ 	target_state = PM_SUSPEND_ON;
+-	at91_irq_resume();
++
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91) && at91_aic_base)
++		at91_irq_resume();
++
+ 	if (of_have_populated_dt())
+ 		at91_pinctrl_gpio_resume();
+ 	else
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index f7a07a5..0bf893a 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -49,7 +49,8 @@ void __init at91_init_irq_default(void)
+ void __init at91_init_interrupts(unsigned int *priority)
  {
- 	struct irq_data *data = irq_get_irq_data(virq);
- 	struct irq_domain_chip_generic *dgc = d->gc;
-@@ -394,6 +394,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
- 	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(irq_map_generic_chip);
+ 	/* Initialize the AIC interrupt controller */
+-	at91_aic_init(priority, at91_boot_soc.extern_irq);
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91))
++		at91_aic_init(priority, at91_boot_soc.extern_irq);
  
- struct irq_domain_ops irq_generic_chip_ops = {
- 	.map	= irq_map_generic_chip,
+ 	/* Enable GPIO interrupts */
+ 	at91_gpio_irq_setup();
 -- 
 1.8.3.2
