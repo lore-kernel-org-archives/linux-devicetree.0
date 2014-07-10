@@ -1,87 +1,71 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Thu, 10 Jul 2014 13:25:53 +0200
-Message-ID: <CAMuHMdVcBBNQfA--vOqwsyypwdL4HGs7YuR-SkZPttxeMeRn5g@mail.gmail.com>
-References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
-	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
-	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
-	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
-	<CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
-	<CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCHv4 0/5] ARM: remove the sub-node and deprecated
+ supports-highspeed property for dwmmc.
+Date: Thu, 10 Jul 2014 20:27:46 +0900
+Message-ID: <001f01cf9c31$f91c0f50$eb542df0$%jun@samsung.com>
+References: <1404985718-12203-1-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1404985718-12203-1-git-send-email-jh80.chung@samsung.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Jaehoon Chung' <jh80.chung@samsung.com>, 'linux-mmc' <linux-mmc@vger.kernel.org>
+Cc: 'Chris Ball' <chris@printf.net>, 'Ulf Hansson' <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, 'Mark Rutland' <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Harini,
+On Thu, July 10, 2014, Jaehoon Chung wrote:
+> Since used the mmc_of_parse(), didn't parse the sub-node.
+> So we can remove the sub-node, because almost SoC used the only one card per a host.
+> And supports-highspeed can be replaced to "cap-mmc/sd-highspeed" property.
+> 
+> Changelog V4:
+> 	- Fix the checkpatch error.
+> Changelog V3:
+> 	- Fix the wrong bus-width value.
+> 	- Use the slot->host->quirks instead of brq->quirks.
+> 	- Add tested-by and reviewd-by.
+> Changelog V2:
+> 	- Add the "mmc: dw_mmc: replace "disable-wp" from slot's quirks to host's quirk"
+> 
+> Jaehoon Chung (5):
+>   mmc: dw_mmc: modify the dt-binding for removing slot-node and
+>     supports-highspeed
+>   ARM: dts: exynos: unuse the slot-node and deprecated the
+>     supports-highspeed for dw-mmc
+>   ARM: dts: socfpga: unuse the slot-node and deprecated the
+>     supports-highspeed for dw-mmc
+>   ARM: dts: rockchip: unuse the slot-node and deprecated the
+>     supports-highspeed for dw-mmc
+>   mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
+> 
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++---------
+>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+>  arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
+>  arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
+>  arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++----------
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   26 ++++++--------------
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++----------
+>  arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
+>  arch/arm/boot/dts/exynos5260-xyref5260.dts         |   18 ++++----------
+>  arch/arm/boot/dts/exynos5410-smdk5410.dts          |   18 ++++----------
+>  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++---------
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         |   16 +++---------
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++---------
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |   16 +++---------
+>  arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++---------
+>  arch/arm/boot/dts/socfpga_arria5.dtsi              |    9 +++----
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
+>  arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
+>  drivers/mmc/host/dw_mmc.c                          |   12 ++++-----
+>  21 files changed, 84 insertions(+), 204 deletions(-)
 
-On Thu, Jul 10, 2014 at 12:33 PM, Harini Katakam
-<harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jul 10, 2014 at 3:12 PM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Thu, Jul 10, 2014 at 11:31 AM, Harini Katakam
->> <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD |
->>>>> +                           SPI_TX_DUAL | SPI_TX_QUAD;
->>>>
->>>> Your driver advertises Dual/Quad SPI Transfer capabilities, but it doesn't
->>>> check spi_transfer.[tr]x_nbits? How can it determine when to enable Dual/Quad?
->>>
->>> Here the driver is just giving information that the controller support it.
->>> The MTD layer enables dual/quad based on what the flash supports; quad
->>> being the first priority
->>> I understand that the spi core reads rx, tx-bus-width property and
->>> master support flags and
->>> performs the necessary checks.
->>
->> That's correct: as long as the rx, tx-bus-width  properties do not indicate a
->> Dual or Quad wiring, it won't be used.
->>
->> However, based on schematics, someone may set the rx, tx-bus-width properties
->> to 4, which is correct, as DT describes the hardware. But this will fail to
->> work.
->> So I think it's safer not to announce Dual/Quad support in the driver until
->> the actual driver support is there.
->
-> OK. Correct me if I'm wrong but announcing this support in master->flags is
-> just to say the controller supports it - Like Punnaiah mentioned in the other
-> mail, nothing specific needs to be done from the controller driver to enable
-> dual/quad support. This is at the SOC/IP level.
-> I agree it might or might not be supported at board-level.
+Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
 
-IC. So this is not a generic SPI controller, but a controller meant for QSPI
-FLASHes? I.e. if you would connect a different device, the controller may
-unexpectedly use Dual or Quad mode if it sees a byte fly by that looks like
-a Quad SPI FLASH read command?
+Thanks,
+Seungwon Jeon
 
-> But that's based on the user's hardware. Should master->flags
-> really take this into consideration?
 
-You mean master->mode_bits?
-
-> BTW, I dint see master->mode_bits being used anywhere at the moment.
-
-It is used to match SPI controller and slave features, cfr. spi_setup() in
-drivers/spi/spi.c.
-
-If Dual/Quad is supported, the bits should be set. Else spi_setup() will
-clear the bits in the SPI slave's mode field, disabling Dual/Quad transfers.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
