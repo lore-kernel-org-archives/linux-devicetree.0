@@ -1,103 +1,192 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: a case for a common efuse API?
-Date: Thu, 10 Jul 2014 17:09:45 +0200
-Message-ID: <20140710150945.GF27469@lukather>
-References: <53BC4DD7.20906@codeaurora.org>
- <20140709083509.GQ13423@lukather>
- <53BDD0F3.7040906@codeaurora.org>
- <20140710142616.GD27469@lukather>
- <53BEB443.9000606@ti.com>
+From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] ARM: tegra: Add resets & has-utmi-pad-registers
+ flag to all USB PHYs
+Date: Thu, 10 Jul 2014 18:12:48 +0300
+Message-ID: <53BEAD70.5010504@nvidia.com>
+References: <1404436179-10745-1-git-send-email-ttynkkynen@nvidia.com> <1404436179-10745-3-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="l+goss899txtYvYf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53BEB443.9000606-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404436179-10745-3-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Thierry,
 
---l+goss899txtYvYf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since Stephen's on a vacation, I'd like to double-check with you that 
+the DT changes looks good. Greg has applied these to the USB tree today.
 
-On Thu, Jul 10, 2014 at 06:41:55PM +0300, Grygorii Strashko wrote:
-> On 07/10/2014 05:26 PM, Maxime Ripard wrote:
-> >On Wed, Jul 09, 2014 at 04:32:03PM -0700, Stephen Boyd wrote:
-> >>On 07/09/14 01:35, Maxime Ripard wrote:
-> >>>Hi Stephen,
-> >>>
-> >>>On Tue, Jul 08, 2014 at 01:00:23PM -0700, Stephen Boyd wrote:
-> >>>>Hi,
-> >>>>
-> >>>>On MSM chips we have some efuses (called qfprom) where we store things
-> >>>>like calibration data, speed bins, etc. We need to read out data from
-> >>>>the efuses in various drivers like the cpufreq, thermal, etc. This
-> >>>>essentially boils down to a bunch of readls on the efuse from a handf=
-ul
-> >>>>of different drivers. In devicetree this looks a little odd because
-> >>>>these drivers end up having an extra reg property (or two) that points
-> >>>>to a register in the efuse and some length, i.e you see this:
-> >>>>
-> >>>>	thermal-sensor@34000 {
-> >>>>		compatible =3D "sensor";
-> >>>>		reg =3D <0x34000 0x1000>, <0x10018 0xc>;
-> >>>>		reg-names =3D "sensor", "efuse_calib";
-> >>>>	}
-> >>>>
-> >>>>
-> >>>>I imagine in DT we want something more like this:
-> >>>>
-> >>>>	efuse: efuse@10000 {
-> >>>>		compatible =3D "efuse";
-> >>>>		reg =3D <0x10000 0x1000>;
-> >>>>	}
-> >>>>
-> >>>>	thermal-sensor@34000 {
-> >>>>		compatible =3D "sensor";
-> >>>>		reg =3D <0x34000 0x1000>;
-> >>>>		efuse =3D <&efuse 0x18>;
-> >>>>	}
->=20
-> Why don't use "syscon" framework for your needs? (mfd/syscon.c)
+Thanks,
+Tuomas
 
-Because syscon is restricted to MMIO, and not really meant to be used
-for this.
+On 04/07/14 04:09, Tuomas Tynkkynen wrote:
+> Add new properties to all of the Tegra PHYs that are now required
+> according to the binding.
+>
+> In order to stay compatible with old device trees, the USB drivers
+> will still function without these reset properties but with the old,
+> potentially buggy behaviour.
+>
+> Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2 changes: new patch, didn't exist in v1
+>   arch/arm/boot/dts/tegra114.dtsi |    5 +++++
+>   arch/arm/boot/dts/tegra124.dtsi |    7 +++++++
+>   arch/arm/boot/dts/tegra20.dtsi  |    7 +++++++
+>   arch/arm/boot/dts/tegra30.dtsi  |    7 +++++++
+>   4 files changed, 26 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+> index 335a1d8..80b8edd 100644
+> --- a/arch/arm/boot/dts/tegra114.dtsi
+> +++ b/arch/arm/boot/dts/tegra114.dtsi
+> @@ -672,6 +672,8 @@
+>   			 <&tegra_car TEGRA114_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA114_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 22>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <0>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> @@ -682,6 +684,7 @@
+>   		nvidia,hssquelch-level = <2>;
+>   		nvidia,hsdiscon-level = <5>;
+>   		nvidia,xcvr-hsslew = <12>;
+> +		nvidia,has-utmi-pad-registers;
+>   		status = "disabled";
+>   	};
+>
+> @@ -705,6 +708,8 @@
+>   			 <&tegra_car TEGRA114_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA114_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 59>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <0>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index d675186..5b14d79 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -643,6 +643,8 @@
+>   			 <&tegra_car TEGRA124_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA124_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 22>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <0>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> @@ -653,6 +655,7 @@
+>   		nvidia,hssquelch-level = <2>;
+>   		nvidia,hsdiscon-level = <5>;
+>   		nvidia,xcvr-hsslew = <12>;
+> +		nvidia,has-utmi-pad-registers;
+>   		status = "disabled";
+>   	};
+>
+> @@ -677,6 +680,8 @@
+>   			 <&tegra_car TEGRA124_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA124_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 58>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <0>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> @@ -711,6 +716,8 @@
+>   			 <&tegra_car TEGRA124_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA124_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 59>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <0>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 243d84c..1908f69 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -645,6 +645,8 @@
+>   			 <&tegra_car TEGRA20_CLK_CLK_M>,
+>   			 <&tegra_car TEGRA20_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "timer", "utmi-pads";
+> +		resets = <&tegra_car 22>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,has-legacy-mode;
+>   		nvidia,hssync-start-delay = <9>;
+>   		nvidia,idle-wait-delay = <17>;
+> @@ -653,6 +655,7 @@
+>   		nvidia,xcvr-setup = <9>;
+>   		nvidia,xcvr-lsfslew = <1>;
+>   		nvidia,xcvr-lsrslew = <1>;
+> +		nvidia,has-utmi-pad-registers;
+>   		status = "disabled";
+>   	};
+>
+> @@ -676,6 +679,8 @@
+>   			 <&tegra_car TEGRA20_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA20_CLK_CDEV2>;
+>   		clock-names = "reg", "pll_u", "ulpi-link";
+> +		resets = <&tegra_car 58>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		status = "disabled";
+>   	};
+>
+> @@ -700,6 +705,8 @@
+>   			 <&tegra_car TEGRA20_CLK_CLK_M>,
+>   			 <&tegra_car TEGRA20_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "timer", "utmi-pads";
+> +		resets = <&tegra_car 59>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <9>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index 0b1ede9..6b35c29 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -790,6 +790,8 @@
+>   			 <&tegra_car TEGRA30_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA30_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 22>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <9>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> @@ -801,6 +803,7 @@
+>   		nvidia,xcvr-hsslew = <32>;
+>   		nvidia,hssquelch-level = <2>;
+>   		nvidia,hsdiscon-level = <5>;
+> +		nvidia,has-utmi-pad-registers;
+>   		status = "disabled";
+>   	};
+>
+> @@ -824,6 +827,8 @@
+>   			 <&tegra_car TEGRA30_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA30_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 58>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <9>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+> @@ -858,6 +863,8 @@
+>   			 <&tegra_car TEGRA30_CLK_PLL_U>,
+>   			 <&tegra_car TEGRA30_CLK_USBD>;
+>   		clock-names = "reg", "pll_u", "utmi-pads";
+> +		resets = <&tegra_car 59>, <&tegra_car 22>;
+> +		reset-names = "usb", "utmi-pads";
+>   		nvidia,hssync-start-delay = <0>;
+>   		nvidia,idle-wait-delay = <17>;
+>   		nvidia,elastic-limit = <16>;
+>
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---l+goss899txtYvYf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTvqy5AAoJEBx+YmzsjxAg9FEP/AzTKdqhMRjA29BuXRb3H+w4
-faFCHslPItZ4KDb84Wy+UT3SI7DTTzg+oUFH4csXHUhm4xWEGcKstOQA/c3SULgC
-CBAnFlqLRdExiKticYxmtjnqI1K70DwnkjH/Lts9ICdHqaOhvwcs77C5dc46jsAs
-sKd15NAAvFTXidNwtU37iOR2ZY3DiWJfAcpSeUa1TtK+GzSMskTxX8Tnm0q97hFG
-MgHjDLCXsHbM2t1en5zCCAgJ5GXw9p3B2urweEvQW/bzc1ybTxp/mfvHLIvM93vF
-K9ie02+ErG3ML4K80Ts/OXbskNa2Q4GT7CPIleHC2Ic/urfsJrsWv7cJpCUXU29S
-wuPSHfGdbtfIgbsTpIrF/TzqKEFmcoLTqHdS2umhrweAg9l/lnLiL8Ffk56wbbD5
-oUlpwJtB8vKCEwTvbv82hJKHyq0bmgjiiD7md6XbsgjDhMtzVCziJOBndHozVbEM
-m7cm396lA9L38pRiBCYuPxwqnDO83McyZERtZDognUh3eH4aLCkqA1EQQxYBGyvG
-hiX6LqjSx1HvnvLtFMgq5GXDzfmk0fXnptxwm4TQgrUqWR6X2yHzyw2aN15FO0Bi
-mMuY13Fq1jyOKATZMxwIO9ZTNogWK5+vjLb2Ss/OrsEMPOEIDmXDBPc+i8MZs+OM
-pQTmDg/2NFF6CohLfrX7
-=BgiY
------END PGP SIGNATURE-----
-
---l+goss899txtYvYf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+nvpublic
