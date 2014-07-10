@@ -1,50 +1,43 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [RESEND PATCHv2 0/3] Power-domain clk handling
-Date: Thu, 10 Jul 2014 22:26:14 +0900
-Message-ID: <024101cf9c42$861966e0$924c34a0$@samsung.com>
-References: <1404795274-27307-1-git-send-email-arun.kk@samsung.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v3 0/7] ARM: dts: AM43x: Add devcice tree nodes
+Date: Thu, 10 Jul 2014 18:55:22 +0530
+Message-ID: <53BE9442.4070101@ti.com>
+References: <1404884193-20580-1-git-send-email-j-keerthy@ti.com> <20140709083114.GH28884@atomide.com> <53BD208E.6000507@ti.com> <20140709115106.GV28884@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1404795274-27307-1-git-send-email-arun.kk@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Arun Kumar K' <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: t.figa@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, shaik.ameer@samsung.com, arunkk.samsung@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140709115106.GV28884@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, broonie@kernel.org
+Cc: Keerthy <j-keerthy@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Arun Kumar K wrote:
-> 
-> This patch series for clock handling in power domain is
-> re-send for merging after rebasing onto latest linux-samsung.git,
-> for-next branch.
-> Original series and discussion can be found here:
-> https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31550.html
-> 
-> Arun Kumar K (2):
->   clk: exynos5420: Add IDs for clocks used in PD mfc
->   ARM: dts: Add clock property for mfc_pd in 5420
-> 
-> Prathyush K (1):
->   ARM: EXYNOS: Add support for clock handling in power domain
-> 
->  .../bindings/arm/exynos/power_domain.txt           |   20 +++++++
->  arch/arm/boot/dts/exynos5420.dtsi                  |    3 +
->  arch/arm/mach-exynos/pm_domains.c                  |   61 +++++++++++++++++++-
->  drivers/clk/samsung/clk-exynos5420.c               |    6 +-
->  include/dt-bindings/clock/exynos5420.h             |    2 +
->  5 files changed, 89 insertions(+), 3 deletions(-)
-> 
-> --
-> 1.7.9.5
+On Wednesday 09 July 2014 05:21 PM, Tony Lindgren wrote:
+> * Keerthy <a0393675@ti.com> [140709 04:03]:
+>> On Wednesday 09 July 2014 02:01 PM, Tony Lindgren wrote:
+>>> * Keerthy <j-keerthy@ti.com> [140708 22:40]:
+>>>> The patch series adds the device tree nodes and the corresponding
+>>>> documentation. The series also enabled tps65218 config options
+>>>> in the omap2plus_defconfig.
+>>>>
+>>>> The series is boot tested on both AM43x-epos-evm and AM437x-gp-evm.
+>>> Are the .dts changes safe to apply separately without breaking
+>>> anything?
+>> Tony,
+>>
+>> Patch 1/7 had to be re-based on Mark's latest branch for tps65218.
+>> Other patches can be taken as is. These patches are boot tested on
+>> both am437x-gp-evm and am43x-epos-evm.
+> OK thanks applying patches 4 - 7 into omap-for-v3.17/dt.
+>
+> Tony
 
-Yeah, this is required now because regarding clock registers are also powered
-down during pd-off on some exynos SoCs as you mentioned. Just note that you
-know the registers are moved into pd related register on latest exynos SoC's
-anyway. 
+Thanks Tony.
 
-OK, I will apply into fixes for 3.16.
+Mark,
 
-Thanks,
-Kukjin
+Could you please pull patch 2 and patch 3? The documentation is missing.
+
+Kind Regards,
+Keerthy
