@@ -1,52 +1,27 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH v2 3/3] DT: s5p-mfc: Document exynos3250 SoC related settings
-Date: Thu, 10 Jul 2014 10:58:11 +0200
-Message-ID: <1404982691-23472-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: arun.kk@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, b.zolnierkie@samsung.com, kyungmin.park@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Thu, 10 Jul 2014 11:12:57 +0200
+Message-ID: <CACRpkdbaah=y22UAuWXQN2kDddD-pa7JS52hXT6Bx9dUmbSyMw@mail.gmail.com>
+References: <1404817356-21568-1-git-send-email-harinik@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1404817356-21568-1-git-send-email-harinik@xilinx.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Harini Katakam <harinik@xilinx.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harini.katakam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/media/s5p-mfc.txt          |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+On Tue, Jul 8, 2014 at 1:02 PM, Harini Katakam <harinik@xilinx.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-index 3e3c5f3..ee9604b 100644
---- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
-+++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-@@ -10,16 +10,20 @@ Required properties:
-   - compatible : value should be either one among the following
- 	(a) "samsung,mfc-v5" for MFC v5 present in Exynos4 SoCs
- 	(b) "samsung,mfc-v6" for MFC v6 present in Exynos5 SoCs
--	(c) "samsung,mfc-v7" for MFC v7 present in Exynos5420 SoC
-+	(c) "samsung,mfc-v7" for MFC v7 present in Exynos3250 and Exynos5420 SoC
- 	(d) "samsung,mfc-v8" for MFC v8 present in Exynos5800 SoC
- 
-   - reg : Physical base address of the IP registers and length of memory
- 	  mapped region.
- 
-   - interrupts : MFC interrupt number to the CPU.
--  - clocks : from common clock binding: handle to mfc clock.
-+  - clocks : from common clock binding: handle to mfc clock and for
-+	     Exynos3250 SoC special clock gate should be defined
-+	     as the second element of the clocks array
-+
-   - clock-names : from common clock binding: must contain "mfc",
--		  corresponding to entry in the clocks property.
-+		  corresponding to entry in the clocks property and
-+		  additionally "sclk-mfc" entry for Exynos3250 SoC
- 
-   - samsung,mfc-r : Base address of the first memory bank used by MFC
- 		    for DMA contiguous memory allocation and its size.
--- 
-1.7.9.5
+> From: Harini Katakam <harini.katakam@xilinx.com>
+>
+> Add support for GPIO controller used by Xilinx Zynq.
+>
+> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+
+Patch applied! Thanks for your patient work on this Harini!
+
+Yours,
+Linus Walleij
