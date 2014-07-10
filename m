@@ -1,106 +1,109 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: a case for a common efuse API?
-Date: Thu, 10 Jul 2014 17:18:54 +0200
-Message-ID: <20140710151854.GR3113@piout.net>
-References: <53BC4DD7.20906@codeaurora.org>
- <20140709083509.GQ13423@lukather>
- <53BDD0F3.7040906@codeaurora.org>
- <20140710142616.GD27469@lukather>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH] hwmon: pwm-fan: Add pwm-fan driver
+Date: Thu, 10 Jul 2014 17:19:36 +0200
+Message-ID: <107501cf9c52$5cc21bb0$16465310$%debski@samsung.com>
+References: <1404917600-4430-1-git-send-email-k.debski@samsung.com>
+ <20140709174939.GE27655@distanz.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140710142616.GD27469@lukather>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140709174939.GE27655@distanz.ch>
+Content-language: pl
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Tobias Klauser' <tklauser@distanz.ch>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tobias,
 
-On 10/07/2014 at 16:26:16 +0200, Maxime Ripard wrote :
-> On Wed, Jul 09, 2014 at 04:32:03PM -0700, Stephen Boyd wrote:
-> > On 07/09/14 01:35, Maxime Ripard wrote:
-> > > Hi Stephen,
-> > >
-> > > On Tue, Jul 08, 2014 at 01:00:23PM -0700, Stephen Boyd wrote:
-> > >> Hi,
-> > >>
-> > >> On MSM chips we have some efuses (called qfprom) where we store things
-> > >> like calibration data, speed bins, etc. We need to read out data from
-> > >> the efuses in various drivers like the cpufreq, thermal, etc. This
-> > >> essentially boils down to a bunch of readls on the efuse from a handful
-> > >> of different drivers. In devicetree this looks a little odd because
-> > >> these drivers end up having an extra reg property (or two) that points
-> > >> to a register in the efuse and some length, i.e you see this:
-> > >>
-> > >> 	thermal-sensor@34000 {
-> > >> 		compatible = "sensor";
-> > >> 		reg = <0x34000 0x1000>, <0x10018 0xc>;
-> > >> 		reg-names = "sensor", "efuse_calib";
-> > >> 	}
-> > >>
-> > >>
-> > >> I imagine in DT we want something more like this:
-> > >>
-> > >> 	efuse: efuse@10000 {
-> > >> 		compatible = "efuse";
-> > >> 		reg = <0x10000 0x1000>;
-> > >> 	}
-> > >>
-> > >> 	thermal-sensor@34000 {
-> > >> 		compatible = "sensor";
-> > >> 		reg = <0x34000 0x1000>;
-> > >> 		efuse = <&efuse 0x18>;
-> > >> 	}
-> > > We have pretty much the same things in the Allwinner SoCs. We have an
-> > > efuse directly mapped into memory, with a few informations like a MAC
-> > > address, the SoC ID, the serial number, some RSA keys for the device,
-> > > etc.
-> > >
-> > > The thing is, some boards expose these informations in an external
-> > > EEPROM as well.
-> > >
-> > > I started working and went quite far to create an "eeprom" framework
-> > > to handle these cases, with a dt representation similar to what you
-> > > were exposing.
-> > >
-> > > https://github.com/mripard/linux/tree/eeprom-framework-at24
-> > >
-> > > It was working quite well, I was about to send it, but was told that I
-> > > should all be moved to MTD, and given up on it.
-> > 
-> > Did anything ever get merged? Or the whole thing was dropped?
-> 
-> Nope, I just never posted it. I could send it as an RFC though, and
-> see what are the feedbacks.
-> 
-> > That branch looks like what I want, assuming we could get an agreement
-> > on the binding. It looks like pretty much every SoC has this, and there
-> > isn't any API or binding for it that I've seen. The only thing I see is
-> > Documentation/devicetree/bindings/eeprom.txt and that doesn't cover the
-> > client aspect at all.
-> > 
-> > Taking a quick peek at the code, it might be better to change the read
-> > API to take a buffer and length, so that the caller doesn't need to free
-> > the data allocated by the eeprom layer. It also makes it symmetrical
-> > with the write API. We'd probably also need to make it work really early
-> > for SoC's like Tegra where we want to read the SoC revision early. So
-> > probably split off the device registration part to a later time to allow
-> > register() to be called early.
-> 
-> I guess that the kind of things we could discuss after posting these
-> patches, but yep, it looks reasonnable.
-> 
-> I'll try to get things a bit cleaner, and post them in the next days.
-> 
+Thank you for your review.
 
-Be aware that some SoCs are storing their OPPs there so this would be
-useful if that framework is available early enough to register those to
-cpufreq.
+> From: Tobias Klauser [mailto:tklauser@distanz.ch]
+> Sent: Wednesday, July 09, 2014 7:50 PM
+> 
+> On 2014-07-09 at 16:53:20 +0200, Kamil Debski <k.debski@samsung.com>
+> wrote:
+> > The pwm-fan driver enables control of fans connected to PWM lines.
+> > This driver uses the PWM framework, so it is compatible with all PWM
+> > devices that provide drivers through the PWM framework.
+> >
+> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > ---
+> >  .../devicetree/bindings/hwmon/pwm-fan.txt          |   12 ++
+> >  drivers/hwmon/Kconfig                              |    9 +
+> >  drivers/hwmon/Makefile                             |    1 +
+> >  drivers/hwmon/pwm-fan.c                            |  199
+> ++++++++++++++++++++
+> >  4 files changed, 221 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> >  create mode 100644 drivers/hwmon/pwm-fan.c
+> 
+> [...]
+> 
+> > diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c new
+> > file mode 100644 index 0000000..78fa627
+> > --- /dev/null
+> > +++ b/drivers/hwmon/pwm-fan.c
+> > @@ -0,0 +1,199 @@
+> 
+> [...]
+> 
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int pwm_fan_suspend(struct device *dev) {
+> > +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> > +
+> > +	return pwm_config(ctx->pwm, 0, ctx->pwm->period); }
+> > +
+> > +static int pwm_fan_resume(struct device *dev) {
+> > +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> > +
+> > +	return pwm_config(ctx->pwm, ctx->duty_cycle, ctx->pwm->period); }
+> > +
+> > +static SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend,
+> > +pwm_fan_resume);
+> 
+> If you move this out of #ifdef CONFIG_PM_SLEEP, you won't need the
+> #ifdef around driver.pm below [1]. SIMPLE_DEV_PM_OPS will just define
+> an empty struct dev_pm_os if CONFIG_PM_LSEEP is not defined.
 
+Thanks for this suggestion.
 
+> 
+> > +#endif
+> > +
+> > +
+> > +
+> > +static struct of_device_id of_pwm_fan_match[] = {
+> > +	{ .compatible = "pwm-fan", },
+> > +	{},
+> > +};
+> > +
+> > +static struct platform_driver pwm_fan_driver = {
+> > +	.probe		= pwm_fan_probe,
+> > +	.remove		= pwm_fan_remove,
+> > +	.driver	= {
+> > +		.name		= "pwm-fan",
+> > +#ifdef CONFIG_PM_SLEEP
+> > +		.pm		= &pwm_fan_pm,
+> > +#endif
+> 
+> [1] #ifdef CONFIG_PM_SLEEP not needed with the above change.
+> 
+> > +		.of_match_table	= of_match_ptr(of_pwm_fan_match),
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(pwm_fan_driver);
+> > +
+> > +MODULE_AUTHOR("Kamil Debski <k.debski@samsung.com>");
+> > +MODULE_ALIAS("platform:pwm-fan");
+> > +MODULE_DESCRIPTION("PWM FAN driver"); MODULE_LICENSE("GPL");
+> > --
+> > 1.7.9.5
+
+Best wishes,
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Kamil Debski
+Samsung R&D Institute Poland
