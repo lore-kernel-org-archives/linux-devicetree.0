@@ -1,59 +1,89 @@
-From: Seungwon Jeon <tgih.jun@samsung.com>
-Subject: RE: [PATCHv3 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
- to host's quirk
-Date: Thu, 10 Jul 2014 20:53:23 +0900
-Message-ID: <002101cf9c35$8da5b240$a8f116c0$%jun@samsung.com>
-References: <1404976119-10777-1-git-send-email-jh80.chung@samsung.com>
- <1404976119-10777-6-git-send-email-jh80.chung@samsung.com>
- <CAPDyKFoQ_ER7FAk_jCBURAa3_hVT25GXfQQfiDhMoYypdA=fHg@mail.gmail.com>
- <53BE5F9F.6070809@samsung.com>
- <CAPDyKFrLJJn=SGpjtCq+x88EetBQQBCqgef9z9+3oEVut4upTg@mail.gmail.com>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
+Date: Thu, 10 Jul 2014 17:25:19 +0530
+Message-ID: <CAFcVECLMNH9GM-ScWunoMrn9AEEZD-ZYP9yYmFsCWqOYVTGNcg@mail.gmail.com>
+References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
+	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
+	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
+	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
+	<CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
+	<CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
+	<CAMuHMdVcBBNQfA--vOqwsyypwdL4HGs7YuR-SkZPttxeMeRn5g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <CAPDyKFrLJJn=SGpjtCq+x88EetBQQBCqgef9z9+3oEVut4upTg@mail.gmail.com>
-Content-language: ko
-Sender: linux-mmc-owner@vger.kernel.org
-To: 'Ulf Hansson' <ulf.hansson@linaro.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>
-Cc: 'linux-mmc' <linux-mmc@vger.kernel.org>, 'Chris Ball' <chris@printf.net>, devicetree@vger.kernel.org, =?UTF-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>, dinguyen@altera.com, 'Mark Rutland' <mark.rutland@arm.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVcBBNQfA--vOqwsyypwdL4HGs7YuR-SkZPttxeMeRn5g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Punnaiah
 List-Id: devicetree@vger.kernel.org
 
-On Thu, July 10, 2014, Ulf Hansson wrote:
-> On 10 July 2014 11:40, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> > Hi, Ulf.
-> >
-> > On 07/10/2014 06:15 PM, Ulf Hansson wrote:
-> >> On 10 July 2014 09:08, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> >>> Replaced the "disable-wp" into host's quirks.
-> >>> (Because the slot-node is removed at dt-file.)
-> >>>
-> >>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> >>
-> >> Hi Jaehoon,
-> >>
-> >> I plan to carry these patches through my mmc tree and I will share
-> >> them through a PR from an immutable branch with the ARM SoC guys.
-> >> Please tell me if you have any concern with this set up.
-> 
-> Hmm, I having a second thought around this. Could I just apply the mmc
-> patches for my next branch instead of involving ARM SoC? In other
-> words, are there any decencies? If not, I might just apply patch 1 and
-> 5.
-> 
+Hi Geert,
 
-[PATCHv4 2/5] ARM: dts: exynos: unuse the slot-node and deprecated the supports-highspeed for dw-mmc
-[PATCHv4 4/5] ARM: dts: rockchip: unuse the slot-node and deprecated the supports-highspeed for dw-mmc
-[PATCHv4 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
+On Thu, Jul 10, 2014 at 4:55 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Harini,
+>
+> On Thu, Jul 10, 2014 at 12:33 PM, Harini Katakam
+> <harinikatakamlinux@gmail.com> wrote:
+>> On Thu, Jul 10, 2014 at 3:12 PM, Geert Uytterhoeven
+>> <geert@linux-m68k.org> wrote:
+>>> On Thu, Jul 10, 2014 at 11:31 AM, Harini Katakam
+>>> <harinikatakamlinux@gmail.com> wrote:
+>>>>>> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD |
+>>>>>> +                           SPI_TX_DUAL | SPI_TX_QUAD;
+>>>>>
+>>>>> Your driver advertises Dual/Quad SPI Transfer capabilities, but it doesn't
+>>>>> check spi_transfer.[tr]x_nbits? How can it determine when to enable Dual/Quad?
+>>>>
+>>>> Here the driver is just giving information that the controller support it.
+>>>> The MTD layer enables dual/quad based on what the flash supports; quad
+>>>> being the first priority
+>>>> I understand that the spi core reads rx, tx-bus-width property and
+>>>> master support flags and
+>>>> performs the necessary checks.
+>>>
+>>> That's correct: as long as the rx, tx-bus-width  properties do not indicate a
+>>> Dual or Quad wiring, it won't be used.
+>>>
+>>> However, based on schematics, someone may set the rx, tx-bus-width properties
+>>> to 4, which is correct, as DT describes the hardware. But this will fail to
+>>> work.
+>>> So I think it's safer not to announce Dual/Quad support in the driver until
+>>> the actual driver support is there.
+>>
+>> OK. Correct me if I'm wrong but announcing this support in master->flags is
+>> just to say the controller supports it - Like Punnaiah mentioned in the other
+>> mail, nothing specific needs to be done from the controller driver to enable
+>> dual/quad support. This is at the SOC/IP level.
+>> I agree it might or might not be supported at board-level.
+>
+> IC. So this is not a generic SPI controller, but a controller meant for QSPI
+> FLASHes? I.e. if you would connect a different device, the controller may
+> unexpectedly use Dual or Quad mode if it sees a byte fly by that looks like
+> a Quad SPI FLASH read command?
+>
 
-2nd and 4th are closely related 5th.
-I think it shall be picked together. How about taking whole patch?
-And I hope that it is applied for 3.16-rcX fix.
-(Also, 3rd patch is close to fix patch.)
+Yes. It would.
 
-Kukjin,
-Is it fine to be taken in Ulf's?
+>> But that's based on the user's hardware. Should master->flags
+>> really take this into consideration?
+>
+> You mean master->mode_bits?
 
-Thanks,
-Seungwon Jeon
+Yes, i mean mode_bits. That was typo.
 
+>
+>> BTW, I dint see master->mode_bits being used anywhere at the moment.
+>
+> It is used to match SPI controller and slave features, cfr. spi_setup() in
+> drivers/spi/spi.c.
+>
+> If Dual/Quad is supported, the bits should be set. Else spi_setup() will
+> clear the bits in the SPI slave's mode field, disabling Dual/Quad transfers.
+>
+
+OK.
+
+Regards,
+Harini
