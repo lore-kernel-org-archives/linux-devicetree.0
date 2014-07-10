@@ -1,44 +1,38 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 1/2 RESEND] mfd: arizona: Update DT binding to support LDO1 init_data
-Date: Thu, 10 Jul 2014 17:04:08 +0100
-Message-ID: <1405008249-4370-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [alsa-devel] [PATCH V3 2/2] ASoC: samsung: Add machine driver for
+ Odroid X2/U3
+Date: Thu, 10 Jul 2014 18:15:59 +0200
+Message-ID: <53BEBC3F.6030205@samsung.com>
+References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
+ <1404479625-25385-2-git-send-email-s.nawrocki@samsung.com>
+ <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Daniel Drake <drake@endlessm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Chen Zhen <zhen1.chen@samsung.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+Hi Daniel,
 
-Hi,
+On 08/07/14 11:15, Daniel Drake wrote:
+> Testing on ODROID-U2, v3 is not quite working for me, but v2 of the
+> patch was fine.
+> I boot up, run:
+> # speaker-test -c 2 -t wav
+> 
+> As soon as I hear the word "front" I press ctrl+c and then run the
+> command again.
+> Now the command hangs with no audible output.
+> 
+> Any ideas? Let me know if you have trouble reproducing.
 
-These seem to have got missed when the regualtor changes
-that accompanied them were merged.
+I just posted a patch addressing this, please let me know
+if there are any further issues.
 
-Thanks,
-Charles
-
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 36a0c3d..fd51988 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -42,6 +42,14 @@ Optional properties:
-     the chip default will be used.  If present exactly five values must
-     be specified.
- 
-+  - DCVDD-supply : Power supply, only needs to be specified if DCVDD is being
-+    externally supplied. As covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+Optional subnodes:
-+  - ldo1 : Initial data for the LDO1 regulator, as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt
-+
- Example:
- 
- codec: wm5102@1a {
 -- 
-1.7.2.5
+Thanks,
+Sylwester
