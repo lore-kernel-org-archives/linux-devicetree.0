@@ -1,77 +1,78 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 02/10] mmc: sdhci-st: ST Microelectronics SDHCI binding documentation.
-Date: Thu, 10 Jul 2014 09:13:05 +0200
-Message-ID: <CAPDyKFoP3EUAUs_zdnS2rMwZD=9Pbhym6Yzfh7aHyFHC0VGRXQ@mail.gmail.com>
-References: <1404918461-25390-1-git-send-email-peter.griffin@linaro.org>
-	<1404918461-25390-3-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1404918461-25390-3-git-send-email-peter.griffin@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Ball <chris@printf.net>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V9 5/7] ARM: SPEAr13xx: Add bindings and dt node for misc block
+Date: Thu, 10 Jul 2014 12:56:36 +0530
+Message-ID: <23080439ce6c96dbbe9f73e085fc4391c28cf785.1404976059.git.viresh.kumar@linaro.org>
+References: <cover.1404976058.git.viresh.kumar@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1404976058.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1404976058.git.viresh.kumar@linaro.org>
+References: <cover.1404976058.git.viresh.kumar@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: arnd@linaro.org, olof@lixom.net
+Cc: linux-arm-kernel@lists.infradead.org, spear-devel@list.st.com, b.zolnierkie@samsung.com, bhelgaas@google.com, mark@nicholnet.com, linux-pci@vger.kernel.org, Pratyush Anand <pratyush.anand@st.com>, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 July 2014 17:07, Peter Griffin <peter.griffin@linaro.org> wrote:
-> This patch adds the device tree binding documentation for the ST
-> SDHCI driver. It documents the differences between the core properties
-> described by mmc.txt and the properties used by the sdhci-st driver.
->
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+From: Pratyush Anand <pratyush.anand@st.com>
 
-Thanks! Applied for next.
+SPEAr SOCs have some miscellaneous registers which are used to configure
+peripheral.
 
-Kind regards
-Uffe
+This patch adds dt node and binding information for this block.
 
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-st.txt | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-st.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-st.txt b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-> new file mode 100644
-> index 0000000..7527db4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-> @@ -0,0 +1,33 @@
-> +* STMicroelectronics sdhci-st MMC/SD controller
-> +
-> +This file documents the differences between the core properties in
-> +Documentation/devicetree/bindings/mmc/mmc.txt and the properties
-> +used by the sdhci-st driver.
-> +
-> +Required properties:
-> +- compatible :  Must be "st,sdhci"
-> +- clock-names : Should be "mmc"
-> +                See: Documentation/devicetree/bindings/resource-names.txt
-> +- clocks :      Phandle of the clock used by the sdhci controler
-> +                See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Optional properties:
-> +- non-removable: non-removable slot
-> +                 See: Documentation/devicetree/bindings/mmc/mmc.txt
-> +- bus-width: Number of data lines
-> +                 See: Documentation/devicetree/bindings/mmc/mmc.txt
-> +
-> +Example:
-> +
-> +mmc0: sdhci@fe81e000 {
-> +       compatible      = "st,sdhci";
-> +       status          = "disabled";
-> +       reg             = <0xfe81e000 0x1000>;
-> +       interrupts      = <GIC_SPI 127 IRQ_TYPE_NONE>;
-> +       interrupt-names = "mmcirq";
-> +       pinctrl-names   = "default";
-> +       pinctrl-0       = <&pinctrl_mmc0>;
-> +       clock-names     = "mmc";
-> +       clocks          = <&clk_s_a1_ls 1>;
-> +       bus-width       = <8>
-> +};
-> --
-> 1.9.1
->
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+Cc: devicetree@vger.kernel.org
+[viresh: fixed logs/cclist]
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/spear-misc.txt | 9 +++++++++
+ arch/arm/boot/dts/spear13xx.dtsi                     | 5 +++++
+ arch/arm/mach-spear/Kconfig                          | 1 +
+ 3 files changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/spear-misc.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/spear-misc.txt b/Documentation/devicetree/bindings/arm/spear-misc.txt
+new file mode 100644
+index 0000000..cf64982
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/spear-misc.txt
+@@ -0,0 +1,9 @@
++SPEAr Misc configuration
++===========================
++SPEAr SOCs have some miscellaneous registers which are used to configure
++few properties of different peripheral controllers.
++
++misc node required properties:
++
++- compatible Should be	"st,spear1340-misc", "syscon".
++- reg: Address range of misc space upto 8K
+diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
+index 4382547..3a72508 100644
+--- a/arch/arm/boot/dts/spear13xx.dtsi
++++ b/arch/arm/boot/dts/spear13xx.dtsi
+@@ -220,6 +220,11 @@
+ 				  0xd8000000 0xd8000000 0x01000000
+ 				  0xe0000000 0xe0000000 0x10000000>;
+ 
++			misc: syscon@e0700000 {
++				compatible = "st,spear1340-misc", "syscon";
++				reg = <0xe0700000 0x1000>;
++			};
++
+ 			gpio0: gpio@e0600000 {
+ 				compatible = "arm,pl061", "arm,primecell";
+ 				reg = <0xe0600000 0x1000>;
+diff --git a/arch/arm/mach-spear/Kconfig b/arch/arm/mach-spear/Kconfig
+index 90df202..ba57677 100644
+--- a/arch/arm/mach-spear/Kconfig
++++ b/arch/arm/mach-spear/Kconfig
+@@ -19,6 +19,7 @@ config ARCH_SPEAR13XX
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select PINCTRL
++	select MFD_SYSCON
+ 	help
+ 	  Supports for ARM's SPEAR13XX family
+ 
+-- 
+2.0.0.rc2
