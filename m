@@ -1,74 +1,33 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] USB: PHY: tegra: Call tegra_usb_phy_close only on
- device removal
-Date: Thu, 10 Jul 2014 08:48:59 -0500
-Message-ID: <20140710134859.GM15340@saruman.home>
-References: <1404436179-10745-1-git-send-email-ttynkkynen@nvidia.com>
- <1404436179-10745-5-git-send-email-ttynkkynen@nvidia.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EOHJn1TVIJfeVXv2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404436179-10745-5-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v2 0/3] ata: Fixes related to APM X-Gene SATA host controller driver.
+Date: Thu, 10 Jul 2014 19:19:14 +0530
+Message-ID: <1405000156-321-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
---EOHJn1TVIJfeVXv2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch set contains a couple of fixes related to APM X-Gene SATA
+controller driver.
 
-Hi,
+v2 Change:
+  - Drop the Link down retry patch from this patch set.
 
-On Fri, Jul 04, 2014 at 04:09:39AM +0300, Tuomas Tynkkynen wrote:
-> tegra_usb_phy_close() is supposed to undo the effects of
-> tegra_usb_phy_init(). It is also currently added as the USB PHY shutdown
-> callback, which is wrong, since tegra_usb_phy_init() is only called
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
 
-you could just make tegra_usb_phy_init() be called as u_phy->init().
-That way you even delay enabling clocks and regulators to the point
-where they are more likely to be needed. Also, if EHCI is never loaded,
-you won't power up the PHY for no reason.
+Suman Tripathi (2):
+  ata: Fix the watermark threshold for the APM X-Gene SATA host
+    controller driver.
+  arm64: Fix the APM X-Gene SoC SATA PHY clock DTS node csr-mask of the
+    SATA Host Controller 1.
 
-> during probing wheras the shutdown callback can get called multiple
-> times. This then leads to warnings about unbalanced regulator_disable if
-> the EHCI driver is unbound and bound again at runtime.
->=20
-> Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+ arch/arm64/boot/dts/apm-storm.dtsi | 5 +----
+ drivers/ata/ahci_xgene.c           | 7 +++++++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-I suppose this has no dependencies with the rest of the series ?
-
---=20
-balbi
-
---EOHJn1TVIJfeVXv2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTvpnLAAoJEIaOsuA1yqREJxcP/A9JLCAOpspUWYp+jTJnY+kz
-f3UKdp/1M2Phrs7YWdjoJb+INYErWCCOqR8dBfoSXetU8ZVV/gVf8Tp958kaYXsn
-mIOeP9Tc/YSD+hTJvgTkFvuVh9dFtSpREJz/1Au5SKOsGPlW+sr9Oih9pvIvhzLB
-shnKeAb0i5XheYxkLbc18/RvoRj4u4u0yAXz4H0DTnbnzsfMgDxtJM2uYL2jddkP
-/7Hg7A8Esl2D+wWvUkxTiNdRlocCK8BQKqVD4qgiAGiqxI8RDe+8A3D4QqHwlr1Y
-AMKCdf1i+MdyrVNUETGOvHj59WkIUTeTLPZYV+Xv/NM3Cvq1SRD033ynCsKokjC5
-sjVSdh3fmsHtgu0g3aBg5pkuB5+7rX8QFeZLe2TRwzT745M7or3he2Jx47ZkCwBM
-BEhTyauaumRLxr16xdvJB0Cz98famlgMuCJRHOHjoQzFvhAvB+/Mt1vNL+/OGeCC
-pDI96a/P0CsLV5vUcMpuMinG2rIkdxeZuwCXO+1VaOt1BHi7IoKHylE+nYMb1wOd
-gxnwVfJVdYS19rXanV9SHulVW/Ylt8RJEy0KwWFZtXIBtOXu1E3MtaY3xUc38Qb2
-LZeKC+RzV42t7m4xMcNMQI/BD5RGfzSPWjjlEKuRnDjRMT00tV/FXDX7KwEfL05o
-qVztcGO41cC7px//u0uB
-=HY2Z
------END PGP SIGNATURE-----
-
---EOHJn1TVIJfeVXv2--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
+
