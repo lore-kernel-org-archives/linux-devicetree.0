@@ -1,44 +1,73 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Thu, 10 Jul 2014 18:09:55 +0530
-Message-ID: <CAFcVECJvvch9Li0WihqoWcGNMMDVXfrujLUq6wvca46FztYpzA@mail.gmail.com>
-References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
-	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
-	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
-	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
-	<CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
-	<CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
-	<20140710120120.GD30458@sirena.org.uk>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCHv3 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
+ to host's quirk
+Date: Thu, 10 Jul 2014 21:43:08 +0900
+Message-ID: <002301cf9c3c$80544190$80fcc4b0$%jun@samsung.com>
+References: <1404976119-10777-1-git-send-email-jh80.chung@samsung.com>
+ <1404976119-10777-6-git-send-email-jh80.chung@samsung.com>
+ <CAPDyKFoQ_ER7FAk_jCBURAa3_hVT25GXfQQfiDhMoYypdA=fHg@mail.gmail.com>
+ <53BE5F9F.6070809@samsung.com>
+ <CAPDyKFrLJJn=SGpjtCq+x88EetBQQBCqgef9z9+3oEVut4upTg@mail.gmail.com>
+ <002101cf9c35$8da5b240$a8f116c0$%jun@samsung.com>
+ <CAPDyKFo4gC8Mmbt+f88EMqGvPH9hqW4Fw9d05hq3YGB=iFgaXw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140710120120.GD30458@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Pun
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAPDyKFo4gC8Mmbt+f88EMqGvPH9hqW4Fw9d05hq3YGB=iFgaXw@mail.gmail.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Ulf Hansson' <ulf.hansson@linaro.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kukjin Kim' <kgene.kim@samsung.com>
+Cc: 'linux-mmc' <linux-mmc@vger.kernel.org>, 'Chris Ball' <chris@printf.net>, devicetree@vger.kernel.org, =?UTF-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>, dinguyen@altera.com, 'Mark Rutland' <mark.rutland@arm.com>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, July 10, 2014, Ulf Hansson wrote:
+> On 10 July 2014 13:53, Seungwon Jeon <tgih.jun@samsung.com> wrote:
+> > On Thu, July 10, 2014, Ulf Hansson wrote:
+> >> On 10 July 2014 11:40, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> >> > Hi, Ulf.
+> >> >
+> >> > On 07/10/2014 06:15 PM, Ulf Hansson wrote:
+> >> >> On 10 July 2014 09:08, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> >> >>> Replaced the "disable-wp" into host's quirks.
+> >> >>> (Because the slot-node is removed at dt-file.)
+> >> >>>
+> >> >>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> >> >>
+> >> >> Hi Jaehoon,
+> >> >>
+> >> >> I plan to carry these patches through my mmc tree and I will share
+> >> >> them through a PR from an immutable branch with the ARM SoC guys.
+> >> >> Please tell me if you have any concern with this set up.
+> >>
+> >> Hmm, I having a second thought around this. Could I just apply the mmc
+> >> patches for my next branch instead of involving ARM SoC? In other
+> >> words, are there any decencies? If not, I might just apply patch 1 and
+> >> 5.
+> >>
+> >
+> > [PATCHv4 2/5] ARM: dts: exynos: unuse the slot-node and deprecated the supports-highspeed for dw-mmc
+> > [PATCHv4 4/5] ARM: dts: rockchip: unuse the slot-node and deprecated the supports-highspeed for dw-
+> mmc
+> > [PATCHv4 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
+> >
+> > 2nd and 4th are closely related 5th.
+> > I think it shall be picked together. How about taking whole patch?
+> > And I hope that it is applied for 3.16-rcX fix.
+> > (Also, 3rd patch is close to fix patch.)
+> >
+> > Kukjin,
+> > Is it fine to be taken in Ulf's?
+> 
+> I tried applied the complete patchset for 3.16 rc4, but some of the
+> DTS patches fails. What are these patches based upon?
+I guess it's based on Ulf or Chris?
+It may need to be rebased for 3.16 rc4.
 
-On Thu, Jul 10, 2014 at 5:31 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Jul 10, 2014 at 04:03:19PM +0530, Harini Katakam wrote:
->
->> OK. Correct me if I'm wrong but announcing this support in master->flags is
->> just to say the controller supports it - Like Punnaiah mentioned in the other
->
-> No, it's broken to set this if there is no ability to use it.
->
->> mail, nothing specific needs to be done from the controller driver to enable
->> dual/quad support. This is at the SOC/IP level.
->
-> How does the client driver select the width to use for a transfer?
+> 
+> I wonder if it's not best to leave all these for Kukjin to handle
+> instead. You have my ack for all of the mmc patches!
 
-This controller is meant to be used only with flash devices.
-The flash devices' supported width will be reflected in a table in MTD layer.
-When selecting, priority is given to quad over dual and single in the MTD and
-it will send commands using the supported tx/rx bus width accordingly.
-About the supported bus width on board, tx-bus-width and rx-bus-width
-properties in dts will have the info; which I believe spi core uses.
+Thanks,
+Seungwon Jeon
 
-Regards,
-Harini
