@@ -1,89 +1,69 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Thu, 10 Jul 2014 17:25:19 +0530
-Message-ID: <CAFcVECLMNH9GM-ScWunoMrn9AEEZD-ZYP9yYmFsCWqOYVTGNcg@mail.gmail.com>
-References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
-	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
-	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
-	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
-	<CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
-	<CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
-	<CAMuHMdVcBBNQfA--vOqwsyypwdL4HGs7YuR-SkZPttxeMeRn5g@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: busses: i2c-pxa.c: Fix for possible null pointer
+ dereferenc
+Date: Thu, 10 Jul 2014 14:02:02 +0200
+Message-ID: <20140710120202.GG2728@katana>
+References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <20140704091000.GA4738@lianli>
+ <CAFo99gYU6v_ohZa6rSfHwUhk6Lw1dCtVWOQsLk3tZ_GRyqExbg@mail.gmail.com>
+ <20140704172457.GA3404@lianli>
+ <CAFo99ga3K7JBLCRTQGLYNGT4aX1N9azfjfosvFzoUViMcdMhmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVcBBNQfA--vOqwsyypwdL4HGs7YuR-SkZPttxeMeRn5g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Punnaiah
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4eRLI4hEmsdu6Npr"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFo99ga3K7JBLCRTQGLYNGT4aX1N9azfjfosvFzoUViMcdMhmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Cc: Emil Goode <emilgoode-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On Thu, Jul 10, 2014 at 4:55 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Harini,
->
-> On Thu, Jul 10, 2014 at 12:33 PM, Harini Katakam
-> <harinikatakamlinux@gmail.com> wrote:
->> On Thu, Jul 10, 2014 at 3:12 PM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->>> On Thu, Jul 10, 2014 at 11:31 AM, Harini Katakam
->>> <harinikatakamlinux@gmail.com> wrote:
->>>>>> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD |
->>>>>> +                           SPI_TX_DUAL | SPI_TX_QUAD;
->>>>>
->>>>> Your driver advertises Dual/Quad SPI Transfer capabilities, but it doesn't
->>>>> check spi_transfer.[tr]x_nbits? How can it determine when to enable Dual/Quad?
->>>>
->>>> Here the driver is just giving information that the controller support it.
->>>> The MTD layer enables dual/quad based on what the flash supports; quad
->>>> being the first priority
->>>> I understand that the spi core reads rx, tx-bus-width property and
->>>> master support flags and
->>>> performs the necessary checks.
->>>
->>> That's correct: as long as the rx, tx-bus-width  properties do not indicate a
->>> Dual or Quad wiring, it won't be used.
->>>
->>> However, based on schematics, someone may set the rx, tx-bus-width properties
->>> to 4, which is correct, as DT describes the hardware. But this will fail to
->>> work.
->>> So I think it's safer not to announce Dual/Quad support in the driver until
->>> the actual driver support is there.
->>
->> OK. Correct me if I'm wrong but announcing this support in master->flags is
->> just to say the controller supports it - Like Punnaiah mentioned in the other
->> mail, nothing specific needs to be done from the controller driver to enable
->> dual/quad support. This is at the SOC/IP level.
->> I agree it might or might not be supported at board-level.
->
-> IC. So this is not a generic SPI controller, but a controller meant for QSPI
-> FLASHes? I.e. if you would connect a different device, the controller may
-> unexpectedly use Dual or Quad mode if it sees a byte fly by that looks like
-> a Quad SPI FLASH read command?
->
+--4eRLI4hEmsdu6Npr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes. It would.
 
->> But that's based on the user's hardware. Should master->flags
->> really take this into consideration?
->
-> You mean master->mode_bits?
+> Ok then, Wolfram!
+>=20
+> Keep only:
+>=20
+> ereqirq:
+>      clk_disable_unprepare(i2c->clk);
+>=20
+> And let everyone else just return?
 
-Yes, i mean mode_bits. That was typo.
+I haven't looked at the details, but when you simply can return, do it.
 
->
->> BTW, I dint see master->mode_bits being used anywhere at the moment.
->
-> It is used to match SPI controller and slave features, cfr. spi_setup() in
-> drivers/spi/spi.c.
->
-> If Dual/Quad is supported, the bits should be set. Else spi_setup() will
-> clear the bits in the SPI slave's mode field, disabling Dual/Quad transfers.
->
+> It is rather pointless to add something in a patch, to remove it in the n=
+ext.
 
-OK.
+Yup, just say in the patch description that it fixes this bug.
 
-Regards,
-Harini
+
+--4eRLI4hEmsdu6Npr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTvoC5AAoJEBQN5MwUoCm2NaoQAKlG/uqlmQSce25X1XJSikIw
+UnjNPXrESPqvMfzpiodZLx5RBc1aWjpx2WbY3kq5ixlVIftPiPdvYZqaLVn0X0lN
+7fQZj/CbD2kRrdvxg+EdnLy5X9WNAISYr7V2HFwWCe7NuHj6+zLOyTAJnYjOapEC
+CJDNeV5WzK6Pvej7xgw3Fes95AgbsSdQOY5asRppxlXp14s+nG1zgM5LI5bxRXjs
+CXuKZVtTHtJMe+4rDrULwn/nhdFl4pjlOwV17HKnRmYQA364A6ARo9BXl8XrxmUE
+OW7pmaZemOZyiEyJIs83YVB+orP5jYBvYTyM+cGDxzroGi2tt8ITjkz5sQ6Z0R9S
+NJCDxJa3IxLhl7wP5cOD9q8tw994p6R1nkWLo90CMucGVEm7ybU2mNVMxhlK2T/+
+jENg0WihmdXiEhSDzCpgXcjV8SWIvcjhjd1Dy/ylDWRvBVyysaWmGuw5WAqDH1lA
+Cxhz9OGbVE2EzZGqrnfPy/3A+WegbDbfSMlmEWhBHFnCsmbgF0XcqongSdNgIan0
+bQC0f2zc29taIhfCDhWdydmJgbj9vpU9HXT3prw06Ux2YtiY18VQgydaOZOlgZ2D
+KnpIH6RVTNAaYBQoLbqVhBzSd9IJqSxk7Pg5UlEot/McZySysVg915Yczbh/AywW
+Q2C/GbmYihw+rNlksa0C
+=3mrD
+-----END PGP SIGNATURE-----
+
+--4eRLI4hEmsdu6Npr--
