@@ -1,55 +1,97 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Thu, 10 Jul 2014 09:44:44 +0000
-Message-ID: <bc4868b5-1b8a-44e1-af6a-595be5fd899b@BN1BFFO11FD058.protection.gbl>
-References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
-	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
-	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
- <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS) support
+Date: Thu, 10 Jul 2014 11:46:20 +0200
+Message-ID: <CACRpkdYs93snBFYZMKN6kd==b9jZehnp1eHV5bHaBNsNRt62pQ@mail.gmail.com>
+References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
+	<1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1404505467-26526-9-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yadwinder Singh Brar <yadi.brar01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Jones <rob.jones-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SEkgR3JlZXQsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEhhcmluaSBL
-YXRha2FtIFttYWlsdG86aGFyaW5pa2F0YWthbWxpbnV4QGdtYWlsLmNvbV0NCj5TZW50OiBUaHVy
-c2RheSwgSnVseSAxMCwgMjAxNCAzOjAxIFBNDQo+VG86IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPkNj
-OiBNYXJrIEJyb3duOyBHcmFudCBMaWtlbHk7IFJvYiBIZXJyaW5nOyBQYXdlbCBNb2xsOyBNYXJr
-IFJ1dGxhbmQ7IElhbg0KPkNhbXBiZWxsOyBLdW1hciBHYWxhOyBsaW51eC1zcGk7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IERhdmlkIFdvb2Rob3VzZTsNCj5CcmlhbiBOb3JyaXM7IE1h
-cmVrIFZhxaF1dDsgQXJ0ZW0gQml0eXV0c2tpeTsgR2VlcnQgVXl0dGVyaG9ldmVuOyBTYXNjaGEN
-Cj5IYXVlcjsgSmluZ29vIEhhbjsgU291cmF2IFBvZGRhcjsgTWljaGFsIFNpbWVrOyBQdW5uYWlh
-aCBDaG91ZGFyeSBLYWxsdXJpDQo+U3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggMS8yXSBzcGk6IEFk
-ZCBzdXBwb3J0IGZvciBaeW5xIFFTUEkgY29udHJvbGxlcg0KPg0KPkhpIEdlZXJ0LA0KPg0KPk9u
-IFRodSwgSnVsIDEwLCAyMDE0IGF0IDI6NDggUE0sIEdlZXJ0IFV5dHRlcmhvZXZlbg0KPjxnZWVy
-dEBsaW51eC1tNjhrLm9yZz4gd3JvdGU6DQo+PiBIaSBIYXJpbmksDQo+Pg0KPj4gT24gVGh1LCBK
-dWwgMTAsIDIwMTQgYXQgMTA6NTAgQU0sIEhhcmluaSBLYXRha2FtIDxoYXJpbmlrQHhpbGlueC5j
-b20+DQo+d3JvdGU6DQo+Pj4gKyAgICAgICBtYXN0ZXItPmZsYWdzID0gU1BJX01BU1RFUl9RVUFE
-X01PREU7DQo+Pg0KPj4gU1BJX01BU1RFUl9RVUFEX01PREUgaXMgbm90IG9uZSBvZiB0aGUgU1BJ
-X01BU1RFUl8qIGRlZmluZXMNCj4+IGluIGluY2x1ZGUvbGludXgvc3BpL3NwaS5oPw0KPj4NCj4N
-Cj5JJ20gc29ycnkgYWJvdXQgdGhhdC4gVGhhdCBmbGFnIGlzIHVudXNlZCAtIHdpbGwgcmVtb3Zl
-IHRoaXMgc3RhdGVtZW50Lg0KPg0KPj4+ICsgICAgICAgbWFzdGVyLT5tb2RlX2JpdHMgPSBTUElf
-Q1BPTCB8IFNQSV9DUEhBIHwgU1BJX1JYX0RVQUwgfA0KPlNQSV9SWF9RVUFEIHwNCj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgU1BJX1RYX0RVQUwgfCBTUElfVFhfUVVBRDsNCj4+DQo+
-PiBZb3VyIGRyaXZlciBhZHZlcnRpc2VzIER1YWwvUXVhZCBTUEkgVHJhbnNmZXIgY2FwYWJpbGl0
-aWVzLCBidXQgaXQgZG9lc24ndA0KPj4gY2hlY2sgc3BpX3RyYW5zZmVyLlt0cl14X25iaXRzPyBI
-b3cgY2FuIGl0IGRldGVybWluZSB3aGVuIHRvIGVuYWJsZQ0KPkR1YWwvUXVhZD8NCj4+DQo+DQo+
-SGVyZSB0aGUgZHJpdmVyIGlzIGp1c3QgZ2l2aW5nIGluZm9ybWF0aW9uIHRoYXQgdGhlIGNvbnRy
-b2xsZXIgc3VwcG9ydCBpdC4NCj5UaGUgTVREIGxheWVyIGVuYWJsZXMgZHVhbC9xdWFkIGJhc2Vk
-IG9uIHdoYXQgdGhlIGZsYXNoIHN1cHBvcnRzOyBxdWFkDQo+YmVpbmcgdGhlIGZpcnN0IHByaW9y
-aXR5DQo+SSB1bmRlcnN0YW5kIHRoYXQgdGhlIHNwaSBjb3JlIHJlYWRzIHJ4LCB0eC1idXMtd2lk
-dGggcHJvcGVydHkgYW5kDQo+bWFzdGVyIHN1cHBvcnQgZmxhZ3MgYW5kDQo+cGVyZm9ybXMgdGhl
-IG5lY2Vzc2FyeSBjaGVja3MuDQoNCkp1c3QgdG8gYWRkLCB0aGUgenlucSBxc3BpIGNvbnRyb2xs
-ZXIgd2lsbCBhdXRvbWF0aWNhbGx5IHNlbGVjdCB0aGUgSU8gbGluZXMgYmFzZWQNCk9uIHRoZSBm
-bGFzaCBjb21tYW5kLiANCg0KUmVnYXJkcywNClB1bm5haWFoDQoNCj4NCj5SZWdhcmRzLA0KPkhh
-cmluaQ0K
+On Fri, Jul 4, 2014 at 10:24 PM, Javier Martinez Canillas
+<javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+
+> Some regulators on the MAX77686 PMIC have Dynamic Voltage Scaling
+> (DVS) support that allows output voltage to change dynamically.
+>
+> For MAX77686, these regulators are Buck regulators 2, 3 and 4.
+>
+> Each Buck output voltage is selected using a set of external
+> inputs: DVS1-3 and SELB2-4.
+>
+> DVS registers can be used to configure the output voltages for each
+> Buck regulator and which one is active is controled by DVSx lines.
+>
+> SELBx lines are used to control if individual Buck lines are ON or OFF.
+>
+> This patch adds support to configure the DVSx and SELBx lines
+> from DT and to setup and read the GPIO lines connected to them.
+>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+(...)
+> +#include <linux/gpio/consumer.h>
+
+THANKS for using modern interfaces!
+
+> +static void max77686_dt_parse_dvs_gpio(struct device *dev)
+> +{
+> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
+> +       int i;
+> +
+> +       /*
+> +        * NOTE: we don't consider GPIO errors fatal; board may have some lines
+> +        * directly pulled high or low and thus doesn't specify them.
+> +        */
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++)
+> +               pd->buck_gpio_dvs[i] =
+> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-dvs", i);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++)
+> +               pd->buck_gpio_selb[i] =
+> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-selb", i);
+> +}
+
+Rob Jones has a patch cooking that adds gpio_get_array() so this thing
+merits also adding devm_gpiod_get_array() I think?
+
+> +/**
+> + * max77686_setup_gpios() - init DVS-related GPIOs
+> + * @dev: device whose platform data contains the dvs GPIOs information
+> + *
+> + * This function claims / initalizations GPIOs related to DVS if they are
+> + * defined. This may have the effect of switching voltages if the
+> + * pdata->buck_default_idx does not match the boot time state of pins.
+> + */
+> +int max77686_setup_gpios(struct device *dev)
+> +{
+> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
+> +       int buck_default_idx = pd->buck_default_idx;
+> +       int ret;
+> +       int i;
+> +
+> +       /* Set all SELB high to avoid glitching while DVS is changing */
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
+> +               struct gpio_desc *gpio = pd->buck_gpio_selb[i];
+> +
+> +               /* OK if some GPIOs aren't defined */
+> +               if (IS_ERR(gpio))
+> +                       continue;
+> +
+> +               ret = gpiod_direction_output_raw(gpio, 1);
+
+Why does this have to be raw? Usually that is not to be used.
+
+Apart from this it looks OK.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
