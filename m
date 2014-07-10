@@ -1,87 +1,82 @@
-From: Alan Tull <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
-Date: Thu, 10 Jul 2014 16:02:14 -0500
-Message-ID: <CANk1AXSi0UrU+yHMz+B_gN-k9=DuTDHPaERQfwU+NHvWsaWDpQ@mail.gmail.com>
-References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
-	<1396907649-20212-2-git-send-email-tthayer@altera.com>
-	<20140408133818.GB16054@pengutronix.de>
-	<1396967390.23349.15.camel@dinh-ubuntu>
-	<20140408143327.GC16054@pengutronix.de>
-	<CANk1AXR0bDENDV673M-AVXNWHmGuee5SGc+ZnPqdBdEBwJXQXQ@mail.gmail.com>
-	<CAL_JsqJRweynpCA7LMFU4wfa71XzjGC3b8H9XKJpogf5H93h_A@mail.gmail.com>
+From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Subject: [PATCH 00/13] Tegra124 CL-DVFS / DFLL clocksource, plus cpufreq
+Date: Fri, 11 Jul 2014 00:42:36 +0300
+Message-ID: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJRweynpCA7LMFU4wfa71XzjGC3b8H9XKJpogf5H93h_A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Thor Thayer <tthayer@altera.com>, Doug Thompson <dougthompson@xmission.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Tuomas Tynkkynen <ttynkkynen@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 8, 2014 at 1:52 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, Apr 8, 2014 at 11:02 AM, delicious quinoa
-> <delicious.quinoa@gmail.com> wrote:
->> On Tue, Apr 8, 2014 at 9:33 AM, Steffen Trumtrar
->> <s.trumtrar@pengutronix.de> wrote:
->>> On Tue, Apr 08, 2014 at 09:29:50AM -0500, Thor Thayer wrote:
->>>> On Tue, 2014-04-08 at 15:38 +0200, Steffen Trumtrar wrote:
->>>> > Hi!
->>>> >
->>>> > On Mon, Apr 07, 2014 at 04:54:07PM -0500, tthayer@altera.com wrote:
->>>> > > From: Thor Thayer <tthayer@altera.com>
->>>> > >
->>>> > > Addition of the Altera SDRAM controller bindings and device
->>>> > > tree changes to the Altera SoC project.
->>>> > >
->>>> [snip]
->>>> > > +
->>>> > > +Required properties:
->>>> > > +- compatible : "altr,sdr-ctl", "syscon";
->>>> > > +                Note that syscon is invoked for this device to support the FPGA
->>>> > > +         bridge driver, EDAC driver and other devices that share the
->>>> > > +         registers.
->>>> > > +- reg : Should contain 1 register ranges(address and length)
->>>> >
->>>> > I haven't really thought this through, but why would the FPGA bridge driver
->>>> > access the sdram controller? For releasing the resets in fpgaportrst ? Or is
->>>> > there more?
->>>>
->>>> Hi Steffan. No, not for resets. We need to enable the FPGA to SDRAM
->>>> path. Our SDRAM controller allows FPGA master access to the SDRAM.
->>>>
->>>
->>> Yes. But what you have to do to enable the path is let the FPGA port you use
->>> out of reset. And that is it as far as I can see. The rest happens in the
->>> bitstream. Or is there more to enable the path?
->>> The FPGA2SDRAM bridge is the one I didn't use as of yet, so if I miss something
->>> please elaborate.
->>
->> Hi Steffen,
->>
->> The sdram controller is used by two drivers.  That's why we want to
->> specify "syscon" here.  The other driver is the FPGA bridge driver.
->> Its functionality is very separate from what this driver is doing (we
->> are not enabling the bridge in this driver; we are enabling the
->> monitoring and resetting the interrupt bit of the EDAC).  We wanted to
->> specify "syscon" her so that we don't have to have to change it for
->> the other driver.
->
-> But are there actually overlapping registers which are accessed by
-> both drivers and need the protection of regmap?
+This series implements the DFLL/CL-DVFS clock source for the fast CPU
+cluster on Tegra124, and a cpufreq driver that uses the DFLL for
+clocking the CPU. Most of this is based on Paul Walmsley's public patch
+set from December 2013, which is available at
+http://comments.gmane.org/gmane.linux.ports.tegra/15273
 
-No overlapping registers here.  Just various registers that are used
-by: edac driver, fpga bridge, low power modes.  So no special
-protection needed.
+The DFLL clock hardware is a voltage-controlled oscillator plus
+control logic that compares the generated output clock with a
+51 MHz reference clock, and can make decisions to either lower
+or raise the DFLL voltage to keep the output rate close to the
+software-requested rate. The voltage changes are done by
+communicating with an off-chip PMIC via either I2C or PWM.
+As the DFLL oscillator is powered via the CPU rail, using
+the DFLL as the CPU clocksource also gives us dynamic CPU
+voltage scaling.
 
->
-> Perhaps MFD is more appropriate than syscon?
->
-> Rob
+This series has been tested on the Jetson TK1 (Rev C). Before attempting
+to port this to the Venice2, do note that there are two versions of the
+AS3722 with different voltage tables for the CPU rail (and that Venice2
+does not have active cooling).
 
-A syscon will do fine here.  If we did a MFD, all it would be doing
-would be providing register access for this range of registers to a
-few drivers, so syscon does that without any trouble.
+Thanks,
+Tuomas
 
-Alan Tull
-aka
-delicious quinoa
+Paul Walmsley (1):
+  clk: tegra: Add DFLL DVCO reset control for Tegra124
+
+Tuomas Tynkkynen (12):
+  clk: tegra: Add binding for the Tegra124 DFLL clocksource
+  clk: tegra: Add library for the DFLL clock source (open-loop mode)
+  clk: tegra: Add closed loop support for the DFLL
+  clk: tegra: Add functions for parsing CVB tables
+  clk: tegra: Add Tegra124 DFLL clocksource platform driver
+  clk: tegra: Save/restore CCLKG_BURST_POLICY on suspend
+  clk: tegra: Add the DFLL as a possible parent of the cclk_g clock
+  ARM: tegra: Add the DFLL to Tegra124 device tree
+  ARM: tegra: Enable the DFLL on the Jetson-TK1
+  cpufreq: tegra124: Add device tree bindings
+  cpufreq: Add cpufreq driver for Tegra124
+  ARM: tegra: Add entries for cpufreq on Tegra124
+
+ .../bindings/clock/nvidia,tegra124-dfll.txt        |   86 +
+ .../bindings/cpufreq/tegra124-cpufreq.txt          |   37 +
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   83 +-
+ arch/arm/boot/dts/tegra124.dtsi                    |   29 +
+ arch/arm/mach-tegra/Kconfig                        |    1 +
+ drivers/clk/tegra/Makefile                         |    3 +
+ drivers/clk/tegra/clk-dfll.c                       | 1759 ++++++++++++++++++++
+ drivers/clk/tegra/clk-dfll.h                       |   55 +
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |    4 +-
+ drivers/clk/tegra/clk-tegra124-dfll-fcpu.c         |  156 ++
+ drivers/clk/tegra/clk-tegra124.c                   |   61 +
+ drivers/clk/tegra/clk.h                            |    3 +
+ drivers/clk/tegra/cvb.c                            |  133 ++
+ drivers/clk/tegra/cvb.h                            |   67 +
+ drivers/cpufreq/Makefile                           |    1 +
+ drivers/cpufreq/tegra124-cpufreq.c                 |  221 +++
+ 16 files changed, 2697 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/tegra124-cpufreq.txt
+ create mode 100644 drivers/clk/tegra/clk-dfll.c
+ create mode 100644 drivers/clk/tegra/clk-dfll.h
+ create mode 100644 drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+ create mode 100644 drivers/clk/tegra/cvb.c
+ create mode 100644 drivers/clk/tegra/cvb.h
+ create mode 100644 drivers/cpufreq/tegra124-cpufreq.c
+
+-- 
+1.8.1.5
+
