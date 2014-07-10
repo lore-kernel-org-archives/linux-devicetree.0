@@ -1,60 +1,58 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: dts: Restructure imx6qdl-wandboard.dtsi for new
- rev C1 board.
-Date: Thu, 10 Jul 2014 15:01:04 +0800
-Message-ID: <20140710070103.GA2542@dragon>
-References: <1404845297-13751-1-git-send-email-george.joseph@fairview5.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404845297-13751-1-git-send-email-george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv3 0/5] ARM: remove the sub-node and deprecated
+ supports-highspeed property for dwmmc.
+Date: Thu, 10 Jul 2014 16:08:34 +0900
+Message-ID: <1404976119-10777-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 08, 2014 at 12:48:16PM -0600, George Joseph wrote:
-> The rev C1 Wandboard uses the Broadcom 4330 for WiFi and Bluetooth instead of
-> the 4329.  This changes the PADS assigned for the control lines.  Another
-> side effect of the change is that on the rev C1 board, usdhc driver can't
-> detect the chip presence correctly so usdhc2 now needs its 'non-removeable'
-> property removed.
-> 
-> So that rev B1 and earlier can continue to work, this patch splits the
-> board-specific definitions from imx6qdl-wandboard.dtsi into
-> imx6qdl-wandboard-revb1.dtsi and imx6qdl-wandboard-revc1.dtsi.  The new files
-> include the original base imx6qdl-wandboard.dtsi which retains the common
-> definitions.
-> 
-> The existing imx6dl-wandboard.dts includes imx6qdl-wandboard-revc1.dtsi and
-> imx6dl-wandboard-revb1.dts (new) includes imx6qdl-wandboard-revb1.dtsi.
-> This makes the rev C1 board the new default.  The same pattern is used for
-> imx6q-wandboard.dts.
-> 
-> So, from U-Boot on a WB-Quad you use imxq-wandboard-revb1.dtb for the older B1
-> board and imxq-wandboard.dtb for the current rev C1 board.
-> 
-> Signed-off-by: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6dl-wandboard-revb1.dts   | 22 ++++++++++++++
->  arch/arm/boot/dts/imx6dl-wandboard.dts         |  2 +-
->  arch/arm/boot/dts/imx6q-wandboard-revb1.dts    | 26 ++++++++++++++++
->  arch/arm/boot/dts/imx6q-wandboard.dts          |  2 +-
->  arch/arm/boot/dts/imx6qdl-wandboard-revb1.dtsi | 42 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi | 41 +++++++++++++++++++++++++
->  arch/arm/boot/dts/imx6qdl-wandboard.dtsi       | 21 -------------
->  7 files changed, 133 insertions(+), 23 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
->  create mode 100644 arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+Since used the mmc_of_parse(), didn't parse the sub-node.
+So we can remove the sub-node, because almost SoC used the only one card per a host.
+And supports-highspeed can be replaced to "cap-mmc/sd-highspeed" property.
 
-These two should be added into arch/arm/boot/dts/Makefile as build
-target.
+Changelog V3:
+	- Fix the wrong bus-width value.
+	- Use the slot->host->quirks instead of brq->quirks.
+	- Add tested-by and reviewd-by.
+Changelog V2:
+	- Add the "mmc: dw_mmc: replace "disable-wp" from slot's quirks to host's quirk"
 
-I fixed it up and applied the patch.
+Jaehoon Chung (5):
+  mmc: dw_mmc: modify the dt-binding for removing slot-node and
+    supports-highspeed
+  ARM: dts: exynos: unuse the slot-node and deprecated the
+    supports-highspeed for dw-mmc
+  ARM: dts: socfpga: unuse the slot-node and deprecated the
+    supports-highspeed for dw-mmc
+  ARM: dts: rockchip: unuse the slot-node and deprecated the
+    supports-highspeed for dw-mmc
+  mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++---------
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+ arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
+ arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++----------
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   26 ++++++--------------
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++----------
+ arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
+ arch/arm/boot/dts/exynos5260-xyref5260.dts         |   18 ++++----------
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |   18 ++++----------
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++---------
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |   16 +++---------
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++---------
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |   16 +++---------
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++---------
+ arch/arm/boot/dts/socfpga_arria5.dtsi              |    9 +++----
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
+ arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
+ drivers/mmc/host/dw_mmc.c                          |   12 ++++-----
+ 21 files changed, 84 insertions(+), 204 deletions(-)
+
+-- 
+1.7.9.5
