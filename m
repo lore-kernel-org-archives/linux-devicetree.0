@@ -1,177 +1,243 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
- gpio block
-Date: Thu, 10 Jul 2014 11:53:30 +0200
-Message-ID: <CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
-References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
-	<CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com>
-	<CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com>
+From: amit daniel kachhap <amit.daniel@samsung.com>
+Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS) support
+Date: Thu, 10 Jul 2014 15:29:54 +0530
+Message-ID: <CADGdYn6tyTBZOjZH8JBUVMJ1kh-tht=tkU4tA+oM=PbfTYkqGw@mail.gmail.com>
+References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
+	<1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Yadwinder Singh Brar <yadi.brar01@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, Tushar Behera <trblinux@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Andreas Farber <afaerber@suse.de>, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 9, 2014 at 11:18 PM, Bjorn Andersson <bjorn@kryo.se> wrote:
-> On Wed, Jul 9, 2014 at 1:53 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Tue, Jul 8, 2014 at 3:26 AM, Bjorn Andersson
->> <bjorn.andersson@sonymobile.com> wrote:
-
->>> +The following generic properties as defined in pinctrl-bindings.txt are valid
->>> +to specify in a pin configuration subnode:
->>> +
->>> +- pins:
->>> +       Usage: required
->>> +       Value type: <string-array>
->>> +       Definition: List of gpio pins affected by the properties specified in
->>> +                   this subnode.  Valid pins are:
->>> +                       gpio1-gpio6 for pm8018
->>> +                       gpio1-gpio12 for pm8038
->>> +                       gpio1-gpio40 for pm8058
->>> +                       gpio1-gpio38 for pm8917
->>> +                       gpio1-gpio44 for pm8921
->>
->> I usually name pins with CAPITAL LETTERS so would be
->> "GPIO1", "GPIO2" etc, lowercase may be confusing as these are
->> names not functions or groups.
+On Sat, Jul 5, 2014 at 1:54 AM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> Some regulators on the MAX77686 PMIC have Dynamic Voltage Scaling
+> (DVS) support that allows output voltage to change dynamically.
 >
-> I was hoping to be able to follow the pattern used in pinctrl-msm; can I say
-> something nice to have you agree on this? There's no difference between pins
-> and groups here.
-
-That's OK.
-
->>> +- function:
->>> +       Usage: optional
->>> +       Value type: <string>
->>> +       Definition: Specify the alternative function to be configured for the
->>> +                   specified pins.  Valid values are:
->>> +                       "normal",
->>> +                       "paired",
->>> +                       "func1",
->>> +                       "func2",
->>> +                       "dtest1",
->>> +                       "dtest2",
->>> +                       "dtest3",
->>> +                       "dtest4"
->>
->> These are a bit ambigous, why doesn't the driver present functions that
->> are more specific than "func1", "func2"? Or "dtest1"?
+> For MAX77686, these regulators are Buck regulators 2, 3 and 4.
 >
-> I agree, unfortunately I have only seen traces of the actual function matrix;
-> for pm8xxx I have no documentation and for pm8x41 they are only listed as
-> func[1-2] and dtest[1-4].
+> Each Buck output voltage is selected using a set of external
+> inputs: DVS1-3 and SELB2-4.
 >
-> Maybe if someone at Qualcomm could release such a list we could provide a
-> proper table instead.
-
-I guess Stephen Boyd can help us. (?)
-
->> Isn't the type simply bool?
->>
+> DVS registers can be used to configure the output voltages for each
+> Buck regulator and which one is active is controled by DVSx lines.
 >
-> No, the property is bool but the actual value is void. But looking an extra
-> time in the epapr I see that it's supposed to be "empty" - so will update.
-
-OK.
-
->>> +- bias-pull-up:
->>> +       Usage: optional
->>> +       Value type: <u32> (optional)
->>> +       Definition: The specified pins should be configued as pull up. An
->>> +                   optional argument can be used to configure the strength.
->>> +                   Valid values are; as defined in
->>> +                   <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
->>> +                   1: 30uA                     (PM8XXX_GPIO_PULL_UP_30)
->>> +                   2: 1.5uA                    (PM8XXX_GPIO_PULL_UP_1P5)
->>> +                   3: 31.5uA                   (PM8XXX_GPIO_PULL_UP_31P5)
->>> +                   4: 1.5uA + 30uA boost       (PM8XXX_GPIO_PULL_UP_1P5_30)
->>
->> Hm, I don't know of the internal kernel API or so, but I'm thinking that
->> for the DT bindings, this definition should be generic in
->> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> and put in SI units like uA.
+> SELBx lines are used to control if individual Buck lines are ON or OFF.
 >
-> Totally agree with you; and this is already specified in pinctrl-binding.txt as
-> being Ohm.
+> This patch adds support to configure the DVSx and SELBx lines
+> from DT and to setup and read the GPIO lines connected to them.
+
+The entire series looks nice. Few minor comments from my side. I guess
+still one more version in needed as per other ppls comment.
+You may add,
+Reviewed-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
+
 >
-> So I first did a spin with the strength as a separate property, but as that
-> because the only part that pinconf-generic didn't parse for me I merged it and
-> wanted your comment on it.
-
-Yeah. And thinking of it.... how can it be uA? It has to be Ohms... it's a pull
-up resistor thing after all. I suspect the uA value is just something like the
-maximum current drawn through the pullup given a certain voltage?
-
->> So I would prefer:
->>
->> bias-pull-up = <30>;
->>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
 >
-> Yeah, but that's the easy one ;)
+> Changes since v6:
+>  - Add a comment that max77686_read_gpios() function can sleep.
+>    Sugggested by Krzysztof Kozlowski
+> ---
+>  drivers/mfd/max77686.c       | 119 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max77686.h |  18 ++++---
+>  2 files changed, 129 insertions(+), 8 deletions(-)
 >
-> How do you say 1.5 or 31.5 and how do you differ that from 1.5 + 30 boot?
-
-It needs to be set using Ohms.
-
->> for 30 uA. Maybe we want nA even? I'm uncertain about the proper granularity
->> here :-/
->>
->> Magic enumerators 1,2,3,4 doesn't seem so good, that seems more like it's
->> trying to match the magic value that is to be poked into a register or
->> something like that.
+> diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
+> index 8650832..d193873 100644
+> --- a/drivers/mfd/max77686.c
+> +++ b/drivers/mfd/max77686.c
+> @@ -32,8 +32,10 @@
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/max77686.h>
+>  #include <linux/mfd/max77686-private.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> +#include <linux/export.h>
 >
-> The stuff going into the hardware is a value 0-3 for pull up; so these values
-> are "only" an enum with the additional benefit of saying "bias-pull-up;"
-> results in 30uA pull up which is the most commonly used form (hence being
-> optional).
-
-What is the nominal voltage of these pins? GIven that you can figure
-out the Ohms. And I suspect it to be something very close to N times
-the resistance of a depleted transistor in this technology.
-
->>> +- drive-strength:
->>> +       Usage: optional
->>> +       Value type: <u32>
->>> +       Definition: Selects the drive strength for the specified pins. Value
->>> +                   drive strengths are:
->>> +                       0: no   (PM8XXX_GPIO_STRENGTH_NO)
->>> +                       1: high (PM8XXX_GPIO_STRENGTH_HIGH)
->>> +                       2: medium       (PM8XXX_GPIO_STRENGTH_MED)
->>> +                       3: low  (PM8XXX_GPIO_STRENGTH_LOW)
->>
->> I would really prefer to have these in mA, because the genric pinconf
->> bindings say they should be! SI units are so much more understandable.
+>  #define I2C_ADDR_RTC   (0x0C >> 1)
 >
-> This is all the information to be found in the available documentation and
-> code. Maybe someone from Qualcomm can shed some light on it?
-
-Stephen?
-
->>> +                            <234 1>, <235 1>;
->>
->>
->> So this looks a bit weird. But if I just get to understand the hardware
->> I guess it won't anymore.
->>
->> So there is an interrupt parent to which the IRQ lines from the PMIC
->> are routed back through external lines to IRQ offsets 192 thru 235?
+> @@ -101,9 +103,119 @@ static const struct of_device_id max77686_pmic_dt_match[] = {
+>         {},
+>  };
 >
-> The pm8921-core exposes 256 interrupts, the listed 44 interrupts here are what
-> comes out of that.
-
-I get it. It makes sense to handle all IRQs in the core rather than spawning
-yet another irqchip for the pin control driver.
-
-> I was really reluctant to list all the interrupts, but I think it turned out
-> nicer than any of my other attempts; like only providing a base and then
-> relying on interrupts being consecutive.
-
-I agree.
-
-Yours,
-Linus Walleij
+> +static void max77686_dt_parse_dvs_gpio(struct device *dev)
+> +{
+> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
+> +       int i;
+> +
+> +       /*
+> +        * NOTE: we don't consider GPIO errors fatal; board may have some lines
+> +        * directly pulled high or low and thus doesn't specify them.
+> +        */
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++)
+> +               pd->buck_gpio_dvs[i] =
+> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-dvs", i);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++)
+> +               pd->buck_gpio_selb[i] =
+> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-selb", i);
+> +}
+> +
+> +/**
+> + * max77686_setup_gpios() - init DVS-related GPIOs
+> + * @dev: device whose platform data contains the dvs GPIOs information
+> + *
+> + * This function claims / initalizations GPIOs related to DVS if they are
+> + * defined. This may have the effect of switching voltages if the
+> + * pdata->buck_default_idx does not match the boot time state of pins.
+> + */
+> +int max77686_setup_gpios(struct device *dev)
+> +{
+> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
+> +       int buck_default_idx = pd->buck_default_idx;
+> +       int ret;
+> +       int i;
+> +
+> +       /* Set all SELB high to avoid glitching while DVS is changing */
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
+> +               struct gpio_desc *gpio = pd->buck_gpio_selb[i];
+> +
+> +               /* OK if some GPIOs aren't defined */
+> +               if (IS_ERR(gpio))
+> +                       continue;
+> +
+> +               ret = gpiod_direction_output_raw(gpio, 1);
+> +               if (ret) {
+> +                       dev_err(dev, "can't set gpio[%d] dir: %d\n", i, ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       /* Set our initial setting */
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++) {
+> +               struct gpio_desc *gpio = pd->buck_gpio_dvs[i];
+> +
+> +               /* OK if some GPIOs aren't defined */
+> +               if (IS_ERR(gpio))
+> +                       continue;
+> +
+> +               /* If a GPIO is valid, set it */
+> +               gpiod_direction_output(gpio, (buck_default_idx >> i) & 1);
+> +               if (ret) {
+> +                       dev_err(dev, "can't set gpio[%d]: dir %d\n", i, ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       /* Now set SELB low to take effect */
+> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
+> +               struct gpio_desc *gpio = pd->buck_gpio_selb[i];
+> +
+> +               if (!IS_ERR(gpio))
+> +                       gpiod_set_value(gpio, 0);
+> +       }
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(max77686_setup_gpios);
+> +
+> +/**
+> + * max77686_read_gpios() - read the current state of the dvs GPIOs
+> + * @pdata: platform data that contains the dvs GPIOs information
+> + *
+> + * We call this function at bootup to detect what slot the firmware was
+> + * using for the DVS GPIOs.  That way we can properly preserve the firmware's
+> + * voltage settings
+> + *
+> + * This function can sleep so must not be called from atomic context.
+> + */
+> +int max77686_read_gpios(struct max77686_platform_data *pdata)
+> +{
+> +       int buck_default_idx = pdata->buck_default_idx;
+> +       int result = 0;
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(pdata->buck_gpio_dvs); i++) {
+> +               struct gpio_desc *gpio = pdata->buck_gpio_dvs[i];
+> +
+> +               /* OK if some GPIOs aren't defined; we'll use default */
+> +               if (IS_ERR(gpio)) {
+> +                       result |= buck_default_idx & (1 << i);
+> +                       continue;
+> +               }
+> +
+> +               if (gpiod_get_value_cansleep(gpio))
+> +                       result |= 1 << i;
+> +       }
+> +
+> +       return result;
+> +}
+> +EXPORT_SYMBOL_GPL(max77686_read_gpios);
+> +
+>  static struct max77686_platform_data *max77686_i2c_parse_dt_pdata(struct device
+>                                                                   *dev)
+>  {
+> +       struct device_node *np = dev->of_node;
+>         struct max77686_platform_data *pd;
+>
+>         pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
+> @@ -111,6 +223,13 @@ static struct max77686_platform_data *max77686_i2c_parse_dt_pdata(struct device
+>                 return NULL;
+>
+>         dev->platform_data = pd;
+> +
+> +       /* Read default index and ignore errors, since default is 0 */
+> +       of_property_read_u32(np, "max77686,pmic-buck-default-dvs-idx",
+> +                            &pd->buck_default_idx);
+Any error checking code here. Say if pmic-buck-default-dvs-idx exceed 8?
+> +
+> +       max77686_dt_parse_dvs_gpio(dev);
+> +
+>         return pd;
+>  }
+>
+> diff --git a/include/linux/mfd/max77686.h b/include/linux/mfd/max77686.h
+> index 4cbcc13..46a736b 100644
+> --- a/include/linux/mfd/max77686.h
+> +++ b/include/linux/mfd/max77686.h
+> @@ -99,15 +99,17 @@ struct max77686_platform_data {
+>         struct max77686_opmode_data *opmode_data;
+>
+>         /*
+> -        * GPIO-DVS feature is not enabled with the current version of
+> -        * MAX77686 driver. Buck2/3/4_voltages[0] is used as the default
+> -        * voltage at probe. DVS/SELB gpios are set as OUTPUT-LOW.
+> +        * GPIO-DVS feature is not fully enabled with the current version of
+> +        * MAX77686 driver, but the driver does support using a DVS index other
+> +        * than the default of 0.
+>          */
+> -       int buck234_gpio_dvs[3]; /* GPIO of [0]DVS1, [1]DVS2, [2]DVS3 */
+> -       int buck234_gpio_selb[3]; /* [0]SELB2, [1]SELB3, [2]SELB4 */
+> -       unsigned int buck2_voltage[8]; /* buckx_voltage in uV */
+> -       unsigned int buck3_voltage[8];
+> -       unsigned int buck4_voltage[8];
+I think when DVS gpio is used all the 8 voltage levels are fetched
+from DT during booting and the registers are programmed accordingly.
+Any further set/get_voltage just changes the GPIO lines.
+Any reason why this method is not used?
+> +       struct gpio_desc *buck_gpio_dvs[3]; /* GPIO of [0]DVS1, [1]DVS2, [2]DVS3 */
+> +       int buck_default_idx; /* Default value of DVS1, 2, 3 */
+> +
+> +       struct gpio_desc *buck_gpio_selb[3]; /* Buck regulators 2, 3, 4 */
+>  };
+>
+> +extern int max77686_setup_gpios(struct device *dev);
+> +extern int max77686_read_gpios(struct max77686_platform_data *pdata);
+> +
+>  #endif /* __LINUX_MFD_MAX77686_H */
+> --
+> 2.0.0.rc2
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
