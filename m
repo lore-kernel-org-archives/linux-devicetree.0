@@ -1,165 +1,73 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v4 4/7] ARM: at91: introduce OLD_IRQ_AT91 Kconfig option
-Date: Thu, 10 Jul 2014 19:14:19 +0200
-Message-ID: <1405012462-766-5-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 1/7] genirq: generic chip: export irq_map_generic_chip
+ function
+Date: Thu, 10 Jul 2014 19:14:16 +0200
+Message-ID: <1405012462-766-2-git-send-email-boris.brezillon@free-electrons.com>
 References: <1405012462-766-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1405012462-766-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce the OLD_IRQ_AT91 Kconfig option to prepare migration to the
-new AIC driver.
-
-Select this option for all at91 SoCs and all available boards so that we
-can later move DT enabled boards to the new irq driver and keep the old
-implementation when legacy boards are selected.
+Export the generic irq map function in order to provide irq_domain ops with
+generic mapping and specific of xlate function (needed by the new atmel
+AIC driver).
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/arm/mach-at91/Kconfig        | 17 +++++++++--------
- arch/arm/mach-at91/Kconfig.non_dt |  6 ++++++
- arch/arm/mach-at91/Makefile       |  3 ++-
- 3 files changed, 17 insertions(+), 9 deletions(-)
+ include/linux/irq.h       | 2 ++
+ kernel/irq/generic-chip.c | 5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index 45b55e0..8e5ea10 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -28,6 +28,11 @@ config OLD_CLK_AT91
- 	bool
- 	default AT91_PMC_UNIT && AT91_USE_OLD_CLK
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 0d998d8..62af592 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -771,6 +771,8 @@ void irq_gc_eoi(struct irq_data *d);
+ int irq_gc_set_wake(struct irq_data *d, unsigned int on);
  
-+config OLD_IRQ_AT91
-+	bool
-+	select MULTI_IRQ_HANDLER
-+	select SPARSE_IRQ
-+
- config AT91_SAM9_ALT_RESET
- 	bool
- 	default !ARCH_AT91X40
-@@ -47,16 +52,12 @@ config SOC_AT91SAM9
- 	select AT91_SAM9_TIME
- 	select CPU_ARM926T
- 	select GENERIC_CLOCKEVENTS
--	select MULTI_IRQ_HANDLER
--	select SPARSE_IRQ
+ /* Setup functions for irq_chip_generic */
++int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
++			 irq_hw_number_t hw_irq);
+ struct irq_chip_generic *
+ irq_alloc_generic_chip(const char *name, int nr_ct, unsigned int irq_base,
+ 		       void __iomem *reg_base, irq_flow_handler_t handler);
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index 452d6f2..cf80e7b 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -341,8 +341,8 @@ static struct lock_class_key irq_nested_lock_class;
+ /*
+  * irq_map_generic_chip - Map a generic chip for an irq domain
+  */
+-static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+-				irq_hw_number_t hw_irq)
++int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
++			 irq_hw_number_t hw_irq)
+ {
+ 	struct irq_data *data = irq_get_irq_data(virq);
+ 	struct irq_domain_chip_generic *dgc = d->gc;
+@@ -394,6 +394,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(irq_map_generic_chip);
  
- config SOC_SAMA5
- 	bool
- 	select AT91_SAM9_TIME
- 	select CPU_V7
- 	select GENERIC_CLOCKEVENTS
--	select MULTI_IRQ_HANDLER
--	select SPARSE_IRQ
- 	select USE_OF
- 
- menu "Atmel AT91 System-on-Chip"
-@@ -70,8 +71,7 @@ config ARCH_AT91X40
- 	depends on !MMU
- 	select CPU_ARM7TDMI
- 	select ARCH_USES_GETTIMEOFFSET
--	select MULTI_IRQ_HANDLER
--	select SPARSE_IRQ
-+	select OLD_IRQ_AT91
- 
- 	help
- 	  Select this if you are using one of Atmel's AT91X40 SoC.
-@@ -111,8 +111,6 @@ config SOC_AT91RM9200
- 	select CPU_ARM920T
- 	select GENERIC_CLOCKEVENTS
- 	select HAVE_AT91_DBGU0
--	select MULTI_IRQ_HANDLER
--	select SPARSE_IRQ
- 	select AT91_USE_OLD_CLK
- 	select HAVE_AT91_USB_CLK
- 
-@@ -199,6 +197,7 @@ comment "Generic Board Type"
- config MACH_AT91RM9200_DT
- 	bool "Atmel AT91RM9200 Evaluation Kits with device-tree support"
- 	depends on SOC_AT91RM9200
-+	select OLD_IRQ_AT91
- 	select USE_OF
- 	help
- 	  Select this if you want to experiment device-tree with
-@@ -207,6 +206,7 @@ config MACH_AT91RM9200_DT
- config MACH_AT91SAM9_DT
- 	bool "Atmel AT91SAM Evaluation Kits with device-tree support"
- 	depends on SOC_AT91SAM9
-+	select OLD_IRQ_AT91
- 	select USE_OF
- 	help
- 	  Select this if you want to experiment device-tree with
-@@ -215,6 +215,7 @@ config MACH_AT91SAM9_DT
- config MACH_SAMA5_DT
- 	bool "Atmel SAMA5 Evaluation Kits with device-tree support"
- 	depends on SOC_SAMA5
-+	select OLD_IRQ_AT91
- 	select USE_OF
- 	select PHYLIB if NETDEVICES
- 	help
-diff --git a/arch/arm/mach-at91/Kconfig.non_dt b/arch/arm/mach-at91/Kconfig.non_dt
-index 44ace32..b774c3d 100644
---- a/arch/arm/mach-at91/Kconfig.non_dt
-+++ b/arch/arm/mach-at91/Kconfig.non_dt
-@@ -14,31 +14,37 @@ config ARCH_AT91RM9200
- 	bool "AT91RM9200"
- 	select SOC_AT91RM9200
- 	select AT91_USE_OLD_CLK
-+	select OLD_IRQ_AT91
- 
- config ARCH_AT91SAM9260
- 	bool "AT91SAM9260 or AT91SAM9XE or AT91SAM9G20"
- 	select SOC_AT91SAM9260
- 	select AT91_USE_OLD_CLK
-+	select OLD_IRQ_AT91
- 
- config ARCH_AT91SAM9261
- 	bool "AT91SAM9261 or AT91SAM9G10"
- 	select SOC_AT91SAM9261
- 	select AT91_USE_OLD_CLK
-+	select OLD_IRQ_AT91
- 
- config ARCH_AT91SAM9263
- 	bool "AT91SAM9263"
- 	select SOC_AT91SAM9263
- 	select AT91_USE_OLD_CLK
-+	select OLD_IRQ_AT91
- 
- config ARCH_AT91SAM9RL
- 	bool "AT91SAM9RL"
- 	select SOC_AT91SAM9RL
- 	select AT91_USE_OLD_CLK
-+	select OLD_IRQ_AT91
- 
- config ARCH_AT91SAM9G45
- 	bool "AT91SAM9G45"
- 	select SOC_AT91SAM9G45
- 	select AT91_USE_OLD_CLK
-+	select OLD_IRQ_AT91
- 
- endchoice
- 
-diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-index 78e9cec..d972fd6 100644
---- a/arch/arm/mach-at91/Makefile
-+++ b/arch/arm/mach-at91/Makefile
-@@ -2,11 +2,12 @@
- # Makefile for the linux kernel.
- #
- 
--obj-y		:= irq.o gpio.o setup.o sysirq_mask.o
-+obj-y		:= gpio.o setup.o sysirq_mask.o
- obj-m		:=
- obj-n		:=
- obj-		:=
- 
-+obj-$(CONFIG_OLD_IRQ_AT91)	+= irq.o
- obj-$(CONFIG_OLD_CLK_AT91)	+= clock.o
- obj-$(CONFIG_AT91_SAM9_ALT_RESET) += at91sam9_alt_reset.o
- obj-$(CONFIG_AT91_SAM9G45_RESET) += at91sam9g45_reset.o
+ struct irq_domain_ops irq_generic_chip_ops = {
+ 	.map	= irq_map_generic_chip,
 -- 
 1.8.3.2
