@@ -1,62 +1,46 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [RFC PATCH v2 3/5] rtc: add qpnp rtc driver
-Date: Thu, 10 Jul 2014 18:43:03 +0300
-Message-ID: <53BEB487.8030309@mm-sol.com>
-References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com> <1404393243-7324-4-git-send-email-svarbanov@mm-sol.com> <CAJAp7Ohis95K9Fw5ff7jfed5YFwRaMqHL-FToPqz7YU_Ux3zEg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7Ohis95K9Fw5ff7jfed5YFwRaMqHL-FToPqz7YU_Ux3zEg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 2/2 RESEND] mfd: arizona: Update DT binding to support MICVDD init_data
+Date: Thu, 10 Jul 2014 17:04:09 +0100
+Message-ID: <1405008249-4370-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1405008249-4370-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405008249-4370-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/2014 04:08 PM, Bjorn Andersson wrote:
-> On Thu, Jul 3, 2014 at 6:14 AM, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
-> [...]
->> +static const struct of_device_id qpnp_rtc_table[] = {
->> +       { .compatible = "qcom,qpnp-rtc", },
->> +       {}
->> +};
->> +MODULE_DEVICE_TABLE(of, rtc_qpnp_table);
-> 
-> We have had a lot of discussions related to how to name pm8x41
-> drivers; as they obviously fall under pm8xxx in most peoples eyes.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
 
-IMO the pm8xxx is misleading already.
-
-> 
-> As you guys have explained, QPNP is defining the split of address
-> space and how interrupts are layed out. To me this does however not
-> say anything related to the actual functionality; e.g. the rtc in this
-> case.
-> 
-> Are you by this patch saying that this is the one and only rtc
-> hardware that will ever be spun under the QPNP umbrella?
-> I would expect the naming to be more specific; and definitely the
-> compatible to be specific.
-> 
-> This concern goes for all the qpnp drivers.
-
-QPNP "umbrella" includes 11 PMIC chips according to downstream kernel at
-[1]. I think that every driver with qpnp in the name will support the
-appropriate sub-function IP on every pmic of that list.
-
-Of course the naming convention can be changed and for rtc we could say
-rtc-pm8941 in compatible string.
-
-compatible = "qcom,pm8941-rtc", "qcom,pma8084-rtc", "qcom,qpnp-rtc";
-
-I haven't strong opinion on the naming.
-
-Otherwise, I will do evaluate how difficult will be to merge "rtc-qpnp"
-and rtc-pm8xxx. Those rtc peripherals looks similar.
-
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index fd51988..5c7e723 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -42,13 +42,15 @@ Optional properties:
+     the chip default will be used.  If present exactly five values must
+     be specified.
+ 
+-  - DCVDD-supply : Power supply, only needs to be specified if DCVDD is being
+-    externally supplied. As covered in
++  - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
++    they are being externally supplied. As covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt
+ 
+ Optional subnodes:
+   - ldo1 : Initial data for the LDO1 regulator, as covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt
++  - micvdd : Initial data for the MICVDD regulator, as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt
+ 
+ Example:
+ 
 -- 
-regards,
-Stan
+1.7.2.5
 
-[1]
-https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/platform/msm/qpnp-revid.c?h=msm-3.10#n27
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
