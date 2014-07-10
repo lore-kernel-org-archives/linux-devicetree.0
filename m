@@ -1,36 +1,47 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [GIT PULL] ARM: SPEAr1310 PCIe updates
-Date: Thu, 10 Jul 2014 05:48:31 +0530
-Message-ID: <CAKohpon0KkW+GqTGriioXCRLet0wBzT-7=+_VUBczJtfgTgJqQ@mail.gmail.com>
-References: <2CC2A0A4A178534D93D5159BF3BCB661A17A3E48F2@EAPEX1MAIL1.st.com>
-	<CAOesGMiu_azMYt3L5OgZSFRgrJQvXvkvSOtr0eLam22CQ5SwuA@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 REBASED 00/10] Generic earlyconsole for ARC UART Driver
+Date: Wed, 9 Jul 2014 17:40:04 -0700
+Message-ID: <20140710004004.GB4950@kroah.com>
+References: <1403598315-1429-1-git-send-email-vgupta@synopsys.com>
+ <CAL_JsqJF-a3K+dUHpwgSLNrwZTHLp2uj44bZaNboVpTtc8a-RA@mail.gmail.com>
+ <53B65255.9000303@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMiu_azMYt3L5OgZSFRgrJQvXvkvSOtr0eLam22CQ5SwuA@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pratyush ANAND <pratyush.anand@st.com>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mark Nicholson <mark@nicholnet.com>, "FTPAdmin Kernel.org" <ftpadmin@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B65255.9000303@synopsys.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Francois.Bedard@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 9 July 2014 23:39, Olof Johansson <olof@lixom.net> wrote:
-> * Why are you sending a pull request for a repo that is not yours?
+On Fri, Jul 04, 2014 at 12:35:57PM +0530, Vineet Gupta wrote:
+> Hi Greg,
+> 
+> On Wednesday 25 June 2014 02:35 AM, Rob Herring wrote:
+> > On Tue, Jun 24, 2014 at 3:25 AM, Vineet Gupta
+> > <Vineet.Gupta1@synopsys.com> wrote:
+> >> Hi,
+> >>
+> >> This is slightly modified repost of series posted last week
+> >> http://www.spinics.net/lists/linux-serial/msg12884.html
+> >>
+> >> This series switches ARC UART from custom earlyprintk support to generic
+> >> earlycon (many thanks to Rob for doing that). And also build on Grant's recent
+> >> work for using DT stdout-path as default console.
+> >>
+> >> The motivation is to get rid of the early platform code, which in turn
+> >> would help consolidate the init code across several ARC platforms.
+> >>
+> >> First 3 patches are general cleanup/refactoring, not necesarily related to
+> >> earlycon.
+> > 
+> > Other than my comment on patch 6:
+> > 
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Is something else needed for this to me merged in tty-next for 3.17.
+> I've had only 1 minor comment from Rob, and my reply to him never reached completion.
 
-Because Mohit/Pratyush were facing some issues in pushing patches
-to the SPEAr public git repo. And so I tried to help them out publicly
-and nobody objected then:
+I'll look at these in a few days...
 
-https://lkml.org/lkml/2014/7/8/10
-
-> * Why is Viresh the git committer but hasn't signed off on the patches?
-
-I didn't sign-off because I haven't even looked closed at many of the
-patches around PCI and Acked whatever I could understand.
-
-But yeah, this committer thing is what I missed. Because of that I might
-be required to signoff it.
-
-> Are you sharing accounts on kernel.org? (Adding kernel.org admin on cc
-> just in case).
-
-Obviously not. I am alone the user of this account.
