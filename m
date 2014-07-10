@@ -1,78 +1,30 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCHv3 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
- to host's quirk
-Date: Thu, 10 Jul 2014 11:15:52 +0200
-Message-ID: <CAPDyKFoQ_ER7FAk_jCBURAa3_hVT25GXfQQfiDhMoYypdA=fHg@mail.gmail.com>
-References: <1404976119-10777-1-git-send-email-jh80.chung@samsung.com>
-	<1404976119-10777-6-git-send-email-jh80.chung@samsung.com>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Thu, 10 Jul 2014 14:47:29 +0530
+Message-ID: <CAFcVEC+vydShChhKvD6ugbUBfLwd7=XbujjrcVLx6r1xjjkK3g@mail.gmail.com>
+References: <1404817356-21568-1-git-send-email-harinik@xilinx.com>
+	<CACRpkdbaah=y22UAuWXQN2kDddD-pa7JS52hXT6Bx9dUmbSyMw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1404976119-10777-6-git-send-email-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbaah=y22UAuWXQN2kDddD-pa7JS52hXT6Bx9dUmbSyMw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harini.katakam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10 July 2014 09:08, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> Replaced the "disable-wp" into host's quirks.
-> (Because the slot-node is removed at dt-file.)
+On Thu, Jul 10, 2014 at 2:42 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Jul 8, 2014 at 1:02 PM, Harini Katakam <harinik@xilinx.com> wrote:
 >
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> From: Harini Katakam <harini.katakam@xilinx.com>
+>>
+>> Add support for GPIO controller used by Xilinx Zynq.
+>>
+>> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>
+> Patch applied! Thanks for your patient work on this Harini!
+>
 
-Hi Jaehoon,
-
-I plan to carry these patches through my mmc tree and I will share
-them through a PR from an immutable branch with the ARM SoC guys.
-Please tell me if you have any concern with this set up.
-
-Now, while I was applying this patch, I found it had checkpatch
-errors. Please run checkpatch and resend a new version.
-
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/dw_mmc.c |   12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 1ac227c..a3ccd07 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -997,7 +997,7 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
->         int gpio_ro = mmc_gpio_get_ro(mmc);
->
->         /* Use platform get_ro function, else try on board write protect */
-> -       if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
-> +       if (slot->host->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
->                 read_only = 0;
->         else if (!IS_ERR_VALUE(gpio_ro))
->                 read_only = gpio_ro;
-> @@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
->  static struct dw_mci_of_slot_quirks {
->         char *quirk;
->         int id;
-> -} of_slot_quirks[] = {
-> -       {
-> -               .quirk  = "disable-wp",
-> -               .id     = DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
-> -       },
-> -};
-> +} of_slot_quirks[] = {};
->
->  static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
->  {
-> @@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
->         {
->                 .quirk  = "broken-cd",
->                 .id     = DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
-> +       },{
-> +               .quirk  = "disable-wp",
-> +               .id     = DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
->         },
->  };
->
-> --
-> 1.7.9.5
->
+Thanks Linus.
+@Soren Thanks.
