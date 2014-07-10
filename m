@@ -1,33 +1,52 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 1/2] net: davinci_mdio: reuse for keystone2 arch
-Date: Thu, 10 Jul 2014 15:58:31 +0300
-Message-ID: <53BE8DF7.9090303@ti.com>
-References: <1404911451-9921-1-git-send-email-grygorii.strashko@ti.com>	<1404911451-9921-2-git-send-email-grygorii.strashko@ti.com> <20140709.165232.539576872991411664.davem@davemloft.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4] regulator: tps65218: Add fixed_uV fields for dcdc5
+ and dcdc6
+Date: Thu, 10 Jul 2014 14:12:10 +0200
+Message-ID: <20140710121210.GF30458@sirena.org.uk>
+References: <1404884193-20580-2-git-send-email-j-keerthy@ti.com>
+ <1404901379-30135-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140709.165232.539576872991411664.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: f.fainelli@gmail.com, santosh.shilimkar@ti.com, netdev@vger.kernel.org, prabhakar.csengg@gmail.com, nsekhar@ti.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l+LxDeyHMCBjwres"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404901379-30135-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
 
-On 07/10/2014 02:52 AM, David Miller wrote:
-> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> Date: Wed, 9 Jul 2014 16:10:50 +0300
-> 
->>   Required properties:
->> -- compatible		: Should be "ti,davinci_mdio"
->> +- compatible		: Should be "ti,davinci_mdio" or "ti,keystone-mdio"
-> 
-> Why the inconsistency in naming schemes?  I don't see any reason
-> to be different wrt. "_" vs. "-" in the name string.
-> 
+--l+LxDeyHMCBjwres
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hm. Looks like the common way is to use "-", but I can rename it if you insist.
+On Wed, Jul 09, 2014 at 03:52:59PM +0530, Keerthy wrote:
+> Add fixed_uV fields for dcdc5 and dcdc6.
 
-Regards,
--grygorii
+Applied, but don't bury new patches into the middle of old threads -
+it's a good way to get your patch ignored.
+
+--l+LxDeyHMCBjwres
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTvoMXAAoJELSic+t+oim91KgP/3UuZL9YYznaM1SFatPN0ACe
+VVEO2KuB72o+u+MVDYoMYE3n7GDOcousFUoT0yFKhjVvnvRIihaleoxZNiBIXyaw
+FKqVp0zSSHLKPt4HyE/MZ9t0E14aLhgZ1EE8OyiEfBce+cGxnBnl9X+EGn8cXaqO
+x8EEv86Ozvvq0YaaF6VSrhG2ZFtLUZFikrTqui/8IWFEkiwtQmKOaqADQbLlnxNC
+M+Exa1ofxBAufd47+JGtkpdYf4e5GESlmY7dJDg7QemEpno1AiLzUEYIrrR5a7ta
+EB+pKUDfdstjt9NkJJKmh9iQkfU0vD4lCtgDT53MzuMigdHKamuabwx7TquYSzOY
+4I59+ailTITVUzcYgkKjBvUIa6H1txww/Vbct/I+hNHeydw44yeko+JjIYEyZ2U+
+/5FlR0x3lA2uPCVrfRDDp8zieqVba5S3+VF1zdUXww36uOW9oF99cQbDPHfrCSsi
+P19EjBd6wPsl++AuDNaKKsmgR+evdWh4rpPTnO+o2bqRuhwDI8Oy1Siz9i1UDEYg
+8drw4abiykPHTjCFKeCeF/yGZYZfiuzlzHJcywwjLsSGtGGxOFFvfN3EqwRyZcu5
+5F7V/7RyrJKW1bGPBdoBiuSlpuB+3UCszEN7FnZ3mgsI8BeD/PCN8cVESra/+FVe
+tDfbpL+scmBHSLkcxRc4
+=2YNl
+-----END PGP SIGNATURE-----
+
+--l+LxDeyHMCBjwres--
