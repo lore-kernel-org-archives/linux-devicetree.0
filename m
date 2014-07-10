@@ -1,61 +1,40 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Thu, 10 Jul 2014 16:03:19 +0530
-Message-ID: <CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
-References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
-	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
-	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
-	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
-	<CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v1 6/9] usb: xhci: Add NVIDIA Tegra XHCI host-controller driver
+Date: Thu, 10 Jul 2014 12:40:56 +0200
+Message-ID: <201407101240.56828.arnd@arndb.de>
+References: <Pine.LNX.4.44L0.1407091001150.873-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Punnaiah
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1407091001150.873-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.o>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Wednesday 09 July 2014, Alan Stern wrote:
+> On Tue, 8 Jul 2014, Andrew Bresticker wrote:
+> 
+> > > I think at the very least you should add a function
+> > > "xhci_default_driver(struct hc_driver *driver)" to xhci-plat.c (or
+> > > even better to xhci.c and use it for PCI as well) that initializes all
+> > > function pointers to the default (internal) symbols, and can then be
+> > > overridden afterwards.
+> > 
+> > Currently all XHCI host drivers (PCI, platform, MVEBU) will be built
+> > into the xhci-hcd module.  I could append the Tegra driver to that
+> > module or introduce a xhci_init_driver() like EHCI does as Julius
+> > suggests.  USB folks, do you have a preference?
+> 
+> As the EHCI maintainer, I naturally approve of Julius's suggestion.  
 
-On Thu, Jul 10, 2014 at 3:12 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Harini,
->
-> On Thu, Jul 10, 2014 at 11:31 AM, Harini Katakam
-> <harinikatakamlinux@gmail.com> wrote:
->>>> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD |
->>>> +                           SPI_TX_DUAL | SPI_TX_QUAD;
->>>
->>> Your driver advertises Dual/Quad SPI Transfer capabilities, but it doesn't
->>> check spi_transfer.[tr]x_nbits? How can it determine when to enable Dual/Quad?
->>
->> Here the driver is just giving information that the controller support it.
->> The MTD layer enables dual/quad based on what the flash supports; quad
->> being the first priority
->> I understand that the spi core reads rx, tx-bus-width property and
->> master support flags and
->> performs the necessary checks.
->
-> That's correct: as long as the rx, tx-bus-width  properties do not indicate a
-> Dual or Quad wiring, it won't be used.
->
-> However, based on schematics, someone may set the rx, tx-bus-width properties
-> to 4, which is correct, as DT describes the hardware. But this will fail to
-> work.
-> So I think it's safer not to announce Dual/Quad support in the driver until
-> the actual driver support is there.
->
+I'm not a USB maintainer, but I also agree that's the best way forward,
+since it's similar to what all other similar drivers in the kernel do.
 
-OK. Correct me if I'm wrong but announcing this support in master->flags is
-just to say the controller supports it - Like Punnaiah mentioned in the other
-mail, nothing specific needs to be done from the controller driver to enable
-dual/quad support. This is at the SOC/IP level.
-I agree it might or might not be supported at board-level.
-But that's based on the user's hardware. Should master->flags
-really take this into consideration?
-
-BTW, I dint see master->mode_bits being used anywhere at the moment.
-
-Regards,
-Harini
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
