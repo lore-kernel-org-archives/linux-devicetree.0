@@ -1,65 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Thu, 10 Jul 2014 14:01:20 +0200
-Message-ID: <20140710120120.GD30458@sirena.org.uk>
-References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
- <1404982207-4707-2-git-send-email-harinik@xilinx.com>
- <CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
- <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
- <CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
- <CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCHv3 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
+ to host's quirk
+Date: Thu, 10 Jul 2014 14:10:48 +0200
+Message-ID: <CAPDyKFo4gC8Mmbt+f88EMqGvPH9hqW4Fw9d05hq3YGB=iFgaXw@mail.gmail.com>
+References: <1404976119-10777-1-git-send-email-jh80.chung@samsung.com>
+	<1404976119-10777-6-git-send-email-jh80.chung@samsung.com>
+	<CAPDyKFoQ_ER7FAk_jCBURAa3_hVT25GXfQQfiDhMoYypdA=fHg@mail.gmail.com>
+	<53BE5F9F.6070809@samsung.com>
+	<CAPDyKFrLJJn=SGpjtCq+x88EetBQQBCqgef9z9+3oEVut4upTg@mail.gmail.com>
+	<002101cf9c35$8da5b240$a8f116c0$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Lv0dYwq55yjFwMRW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek =?utf-8?B?VmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punna
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <002101cf9c35$8da5b240$a8f116c0$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10 July 2014 13:53, Seungwon Jeon <tgih.jun@samsung.com> wrote:
+> On Thu, July 10, 2014, Ulf Hansson wrote:
+>> On 10 July 2014 11:40, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>> > Hi, Ulf.
+>> >
+>> > On 07/10/2014 06:15 PM, Ulf Hansson wrote:
+>> >> On 10 July 2014 09:08, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>> >>> Replaced the "disable-wp" into host's quirks.
+>> >>> (Because the slot-node is removed at dt-file.)
+>> >>>
+>> >>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> >>
+>> >> Hi Jaehoon,
+>> >>
+>> >> I plan to carry these patches through my mmc tree and I will share
+>> >> them through a PR from an immutable branch with the ARM SoC guys.
+>> >> Please tell me if you have any concern with this set up.
+>>
+>> Hmm, I having a second thought around this. Could I just apply the mmc
+>> patches for my next branch instead of involving ARM SoC? In other
+>> words, are there any decencies? If not, I might just apply patch 1 and
+>> 5.
+>>
+>
+> [PATCHv4 2/5] ARM: dts: exynos: unuse the slot-node and deprecated the supports-highspeed for dw-mmc
+> [PATCHv4 4/5] ARM: dts: rockchip: unuse the slot-node and deprecated the supports-highspeed for dw-mmc
+> [PATCHv4 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
+>
+> 2nd and 4th are closely related 5th.
+> I think it shall be picked together. How about taking whole patch?
+> And I hope that it is applied for 3.16-rcX fix.
+> (Also, 3rd patch is close to fix patch.)
+>
+> Kukjin,
+> Is it fine to be taken in Ulf's?
 
---Lv0dYwq55yjFwMRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I tried applied the complete patchset for 3.16 rc4, but some of the
+DTS patches fails. What are these patches based upon?
 
-On Thu, Jul 10, 2014 at 04:03:19PM +0530, Harini Katakam wrote:
+I wonder if it's not best to leave all these for Kukjin to handle
+instead. You have my ack for all of the mmc patches!
 
-> OK. Correct me if I'm wrong but announcing this support in master->flags is
-> just to say the controller supports it - Like Punnaiah mentioned in the other
-
-No, it's broken to set this if there is no ability to use it.
-
-> mail, nothing specific needs to be done from the controller driver to enable
-> dual/quad support. This is at the SOC/IP level.
-
-How does the client driver select the width to use for a transfer?
-
---Lv0dYwq55yjFwMRW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTvoCHAAoJELSic+t+oim9RAkQAJz8R+eH3JIKhwdnVPZy39rq
-q9oQD1jIGzuw8raIxv2ip1S9dQA11AwHBVHKGsGhxW2vcBJ+WwLKxtLrS9mGVlTh
-71ER2yw4uglokBeqrBePhqUW3IPkx71YKlcde9UuB20+dlC0KLltqhY3RN7iNRKx
-s2CU7xRmPuQChTvJCd97/MalpWRr+L0f9A++X6PLiTMr+TAduyAnobbFlukqURcQ
-2UOGytJVKsNjsuSmI32ai/JPTWRekv/iakVG+IFmlXjQsAry4Zg/9LbclP157yv+
-Mtsrv+uNJ5IbXtJZpezH+ZkaIqVbgsOWBaGt1BEtjeHNWKSbSvQ77k1mI5azPQYo
-igA1JHAzoxoDLU4tPClF6xl7JqH1ua1MtHyWyMCTk1cJTwpHST9HhL1M1hBFfYuW
-e6uO9cz1xtBSTMgNXR9OLcaye83BGE9E/rJ/Ob2wJ4+ZoVnlfo12meD+/GLZch82
-HEb1qbWf1TIbCghnZ05aRJEXnYlrq1yrhskQIm+Fw+10F7muofUO30/EH9GpMNnn
-xobDOeuo/TZUuDfbyxU3nyYtiZZr3YtQz1/nfmjIkGTPl2nZPhOUzT2cPGr/ZQtU
-it32QdkylIs5WOkcDgxulKzSAw788Oac9QRExjOcfLIAK1B91GVj7tkr6PYxyo98
-fo78SIR/V4JxvUoy9VLY
-=z2by
------END PGP SIGNATURE-----
-
---Lv0dYwq55yjFwMRW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
