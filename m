@@ -1,92 +1,53 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCHv3 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
- to host's quirk
-Date: Thu, 10 Jul 2014 18:40:47 +0900
-Message-ID: <53BE5F9F.6070809@samsung.com>
-References: <1404976119-10777-1-git-send-email-jh80.chung@samsung.com>
- <1404976119-10777-6-git-send-email-jh80.chung@samsung.com>
- <CAPDyKFoQ_ER7FAk_jCBURAa3_hVT25GXfQQfiDhMoYypdA=fHg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
+Date: Thu, 10 Jul 2014 11:42:01 +0200
+Message-ID: <CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
+References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
+	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
+	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
+	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <CAPDyKFoQ_ER7FAk_jCBURAa3_hVT25GXfQQfiDhMoYypdA=fHg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harinikatakamlinux@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Punnaiah
 List-Id: devicetree@vger.kernel.org
 
-Hi, Ulf.
+Hi Harini,
 
-On 07/10/2014 06:15 PM, Ulf Hansson wrote:
-> On 10 July 2014 09:08, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->> Replaced the "disable-wp" into host's quirks.
->> (Because the slot-node is removed at dt-file.)
+On Thu, Jul 10, 2014 at 11:31 AM, Harini Katakam
+<harinikatakamlinux@gmail.com> wrote:
+>>> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD |
+>>> +                           SPI_TX_DUAL | SPI_TX_QUAD;
 >>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> 
-> Hi Jaehoon,
-> 
-> I plan to carry these patches through my mmc tree and I will share
-> them through a PR from an immutable branch with the ARM SoC guys.
-> Please tell me if you have any concern with this set up.
-> 
-> Now, while I was applying this patch, I found it had checkpatch
-> errors. Please run checkpatch and resend a new version.
+>> Your driver advertises Dual/Quad SPI Transfer capabilities, but it doesn't
+>> check spi_transfer.[tr]x_nbits? How can it determine when to enable Dual/Quad?
+>
+> Here the driver is just giving information that the controller support it.
+> The MTD layer enables dual/quad based on what the flash supports; quad
+> being the first priority
+> I understand that the spi core reads rx, tx-bus-width property and
+> master support flags and
+> performs the necessary checks.
 
-Sorry for not checking the patch. I will resend a new version.
-Thanks for pointing out.
+That's correct: as long as the rx, tx-bus-width  properties do not indicate a
+Dual or Quad wiring, it won't be used.
 
-Best Regards,
-Jaehoon Chung
+However, based on schematics, someone may set the rx, tx-bus-width properties
+to 4, which is correct, as DT describes the hardware. But this will fail to
+work.
+So I think it's safer not to announce Dual/Quad support in the driver until
+the actual driver support is there.
 
-> 
-> Kind regards
-> Uffe
-> 
->> ---
->>  drivers/mmc/host/dw_mmc.c |   12 +++++-------
->>  1 file changed, 5 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->> index 1ac227c..a3ccd07 100644
->> --- a/drivers/mmc/host/dw_mmc.c
->> +++ b/drivers/mmc/host/dw_mmc.c
->> @@ -997,7 +997,7 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
->>         int gpio_ro = mmc_gpio_get_ro(mmc);
->>
->>         /* Use platform get_ro function, else try on board write protect */
->> -       if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
->> +       if (slot->host->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
->>                 read_only = 0;
->>         else if (!IS_ERR_VALUE(gpio_ro))
->>                 read_only = gpio_ro;
->> @@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
->>  static struct dw_mci_of_slot_quirks {
->>         char *quirk;
->>         int id;
->> -} of_slot_quirks[] = {
->> -       {
->> -               .quirk  = "disable-wp",
->> -               .id     = DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
->> -       },
->> -};
->> +} of_slot_quirks[] = {};
->>
->>  static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
->>  {
->> @@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
->>         {
->>                 .quirk  = "broken-cd",
->>                 .id     = DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
->> +       },{
->> +               .quirk  = "disable-wp",
->> +               .id     = DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
->>         },
->>  };
->>
->> --
->> 1.7.9.5
->>
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
