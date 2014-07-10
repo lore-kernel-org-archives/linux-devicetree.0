@@ -1,118 +1,44 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 10 Jul 2014 13:38:24 +0100
-Message-ID: <20140710123824.GN2449@arm.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
- <20140709134050.GN9485@arm.com>
- <20140709142125.GB3262@ulmo>
- <20140709181048.GX9485@arm.com>
- <20140710094909.GA21583@ulmo>
- <20140710102334.GG2449@arm.com>
- <20140710105737.GD21583@ulmo>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
+Date: Thu, 10 Jul 2014 18:09:55 +0530
+Message-ID: <CAFcVECJvvch9Li0WihqoWcGNMMDVXfrujLUq6wvca46FztYpzA@mail.gmail.com>
+References: <1404982207-4707-1-git-send-email-harinik@xilinx.com>
+	<1404982207-4707-2-git-send-email-harinik@xilinx.com>
+	<CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
+	<CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
+	<CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
+	<CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
+	<20140710120120.GD30458@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140710105737.GD21583@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>, Cho KyongHo <pullip.cho@samsung.com>, Grant Grundler <grundler@chromium.org>, Dave P Martin <Dave.Martin@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Hiroshi Doyu <hdoyu@nvidia.com>, Olav Haugan <ohaugan@codeaurora.org>, Varun Sethi <varun.sethi@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kerne>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140710120120.GD30458@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, "michals@xilinx.com" <michals@xilinx.com>, Pun
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 10, 2014 at 11:57:38AM +0100, Thierry Reding wrote:
-> On Thu, Jul 10, 2014 at 11:23:34AM +0100, Will Deacon wrote:
-> > On Thu, Jul 10, 2014 at 10:49:10AM +0100, Thierry Reding wrote:
-> > > On Wed, Jul 09, 2014 at 07:10:48PM +0100, Will Deacon wrote:
-> > > > On Wed, Jul 09, 2014 at 03:21:27PM +0100, Thierry Reding wrote:
-> > > > > Anything beyond that (e.g. logical grouping of masters) isn't directly
-> > > > > within the scope of the binding (it doesn't describe hardware but some
-> > > > > policy pertaining to some specific use-case).
-> > > > 
-> > > > This *is* for hardware. I can use PCI as an example, but this could equally
-> > > > apply to other types of bus. If you have a bunch of PCI master devices
-> > > > sitting being a non-transparent bridge, they can end up sharing the same
-> > > > master device ID (requester ID). This means that there is no way in the
-> > > > IOMMU to initialise a translation for one of these devices without also
-> > > > affecting the others. We currently have iommu_groups to deal with this, but
-> > > > it *is* a property of the hardware and we absolutely need a way to describe
-> > > > it. I'm happy to add it later, but we need to think about it now to avoid
-> > > > merging something that can't easily be extended.
-> > > > 
-> > > > For PCI, the topology is probable but even then, we need this information to
-> > > > describe the resulting master device ID emitted by the bridge for the
-> > > > upstream group. One way to do this with your binding would be to treat all
-> > > > of the upstream masters as having the same device ID.
-> > > 
-> > > Yes, I think that makes most sense. After all from the IOMMU's point of
-> > > view requests from all devices behind the bridge will originate from the
-> > > same ID.
-> > > 
-> > > So technically it's not really correct to encode the master ID within
-> > > each of the devices, but rather they should be inheriting the ID from
-> > > the non-transparent bridge.
-> > 
-> > Indeed. Is that possible with your binding, or would we just duplicate the
-> > IDs between the masters?
-> 
-> No, the binding only describes direct relationships between the IOMMU
-> and masters. There's no way to translate them inbetween or inherit them.
+Hi Mark,
 
-[...]
+On Thu, Jul 10, 2014 at 5:31 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Jul 10, 2014 at 04:03:19PM +0530, Harini Katakam wrote:
+>
+>> OK. Correct me if I'm wrong but announcing this support in master->flags is
+>> just to say the controller supports it - Like Punnaiah mentioned in the other
+>
+> No, it's broken to set this if there is no ability to use it.
+>
+>> mail, nothing specific needs to be done from the controller driver to enable
+>> dual/quad support. This is at the SOC/IP level.
+>
+> How does the client driver select the width to use for a transfer?
 
-> ? That way some code could walk up the IOMMU tree to resolve this. Or
-> perhaps even easier:
-> 
-> 	iommu {
-> 		#iommu-cells = <1>;
-> 	};
-> 
-> 	bridge {
-> 		iommus = <&/iommu 42>;
-> 
-> 		device@0 {
-> 			...
-> 		};
-> 
-> 		device@1 {
-> 			...
-> 		};
-> 
-> 		...
-> 	};
+This controller is meant to be used only with flash devices.
+The flash devices' supported width will be reflected in a table in MTD layer.
+When selecting, priority is given to quad over dual and single in the MTD and
+it will send commands using the supported tx/rx bus width accordingly.
+About the supported bus width on board, tx-bus-width and rx-bus-width
+properties in dts will have the info; which I believe spi core uses.
 
-Yes, I like that. Good thinking!
-
-> And we could enhance the binding by defining that the iommus node is
-> inherited by devices on a bus, which by what you're saying would be the
-> sensible thing to do anyway.
-> 
-> In the second example above, the presence of an iommus property in the
-> bridge would indicate that it's non-transparent regarding IOMMU
-> translation and therefore the master ID should be inherited. Devices
-> could still override by providing their own iommus property, though I'd
-> be a little surprised if there ever was hardware like that.
-> 
-> > > > With virtualisation, we may want to assign a group of devices to a guest but
-> > > > without emulating the bridge. This would need something the device-tree to
-> > > > describe that they are grouped together.
-> > > 
-> > > But that's also a software decision, isn't it? Virtualization doesn't
-> > > have anything to do with the hardware description. Or am I missing
-> > > something? Of course I guess you could generate a DTB for the guest and
-> > > group device together, in which case you're pretty much free to do what
-> > > you want since you're essentially defining your own hardware.
-> > 
-> > If you're doing device passthrough and you want to allow the guest to
-> > program the IOMMU, I think that virtualisation is directly related to the
-> > hardware description, since the guest will be bound by physical properties
-> > of the system.
-> 
-> Evidently you know much better what the requirements are here and what
-> will actually be required. I guess we'll need to have more discussions
-> along with examples of use-cases.
-
-It's still early days for getting this stuff up and running on ARM, so I
-agree that we'll have to come back to it a few times once we've got concrete
-examples and code.
-
-Will
+Regards,
+Harini
