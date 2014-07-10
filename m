@@ -1,193 +1,252 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 05/14] drm/exynos: dsi: add pass TE host ops to
- support LCD I80 interface
-Date: Thu, 10 Jul 2014 09:38:27 +0200
-Message-ID: <20140710073826.GB17918@ulmo>
-References: <1404779987-5337-1-git-send-email-yj44.cho@samsung.com>
- <1404779987-5337-6-git-send-email-yj44.cho@samsung.com>
- <20140709152207.GA17359@ulmo> <53BDE6FF.1000600@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH v2 1/5] mfd: qpnp: add support for Qualcomm QPNP PMICs
+Date: Thu, 10 Jul 2014 09:36:54 +0100
+Message-ID: <20140710083654.GQ2635@lee--X1>
+References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com>
+ <1404393243-7324-2-git-send-email-svarbanov@mm-sol.com>
+ <20140709143426.GC2635@lee--X1>
+ <53BD5EC5.3080801@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1430772247=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53BDE6FF.1000600@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53BD5EC5.3080801@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 09 Jul 2014, Stanimir Varbanov wrote:
 
---===============1430772247==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
-Content-Disposition: inline
-
-
---bCsyhTFzCvuiizWE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 10, 2014 at 10:06:07AM +0900, YoungJun Cho wrote:
-> On 07/10/2014 12:22 AM, Thierry Reding wrote:
-> >On Tue, Jul 08, 2014 at 09:39:38AM +0900, YoungJun Cho wrote:
-> >>To support LCD I80 interface, the DSI host calls this function
-> >>to notify the panel tearing effect synchronization signal to
-> >>the CRTC device manager to trigger to transfer video image.
-> >>
-> >>Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> >>Acked-by: Inki Dae <inki.dae@samsung.com>
-> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>---
-> >>  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 11 +++++++++++
-> >>  include/drm/drm_mipi_dsi.h              |  7 +++++++
-> >>  2 files changed, 18 insertions(+)
-> >>
-> >>diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/=
-exynos/exynos_drm_dsi.c
-> >>index dad543a..76e34ca 100644
-> >>--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> >>+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> >>@@ -24,6 +24,7 @@
-> >>  #include <video/mipi_display.h>
-> >>  #include <video/videomode.h>
-> >>
-> >>+#include "exynos_drm_crtc.h"
-> >>  #include "exynos_drm_drv.h"
-> >>
-> >>  /* returns true iff both arguments logically differs */
-> >>@@ -1041,10 +1042,20 @@ static ssize_t exynos_dsi_host_transfer(struct =
-mipi_dsi_host *host,
-> >>  	return (ret < 0) ? ret : xfer.rx_done;
-> >>  }
-> >>
-> >>+static void exynos_dsi_host_pass_te(struct mipi_dsi_host *host)
-> >>+{
-> >>+	struct exynos_dsi *dsi =3D host_to_dsi(host);
-> >>+	struct drm_encoder *encoder =3D dsi->encoder;
-> >>+
-> >>+	if (dsi->state & DSIM_STATE_ENABLED)
-> >>+		exynos_drm_crtc_te_handler(encoder->crtc);
-> >>+}
-> >>+
-> >>  static const struct mipi_dsi_host_ops exynos_dsi_ops =3D {
-> >>  	.attach =3D exynos_dsi_host_attach,
-> >>  	.detach =3D exynos_dsi_host_detach,
-> >>  	.transfer =3D exynos_dsi_host_transfer,
-> >>+	.pass_te =3D exynos_dsi_host_pass_te,
-> >>  };
-> >>
-> >>  static int exynos_dsi_poweron(struct exynos_dsi *dsi)
-> >>diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-> >>index 944f33f..3f21bea 100644
-> >>--- a/include/drm/drm_mipi_dsi.h
-> >>+++ b/include/drm/drm_mipi_dsi.h
-> >>@@ -49,6 +49,12 @@ struct mipi_dsi_msg {
-> >>   * @detach: detach DSI device from DSI host
-> >>   * @transfer: send and/or receive DSI packet, return number of receiv=
-ed bytes,
-> >>   * 	      or error
-> >>+ * @pass_te: call the crtc te_handler() callback from DSI host.
-> >>+ *	     The panel generates tearing effect synchronization signal betw=
-een
-> >>+ *	     MCU and FB to display video images. And the display controller
-> >>+ *	     should trigger to transfer video image at this signal. So the =
-panel
-> >>+ *	     receives the TE IRQ, then calls this function to notify it to =
-the
-> >>+ *	     display controller.
-> >>   */
-> >>  struct mipi_dsi_host_ops {
-> >>  	int (*attach)(struct mipi_dsi_host *host,
-> >>@@ -57,6 +63,7 @@ struct mipi_dsi_host_ops {
-> >>  		      struct mipi_dsi_device *dsi);
-> >>  	ssize_t (*transfer)(struct mipi_dsi_host *host,
-> >>  			    struct mipi_dsi_msg *msg);
-> >>+	void (*pass_te)(struct mipi_dsi_host *host);
-> >
-> >I've objected to this particular change before and that objection still
-> >stands. I don't see how this is related to DSI. It seems like an
-> >implementation detail of this particular setup and I think it should be
-> >handled differently (within the Exynos DSI controller implementation
-> >possibly).
-> >
+> Hi Lee,
 >=20
-> Okay, I understand what you mean.
-> As you know, this function is called by panel TE interrupt handler, so it
-> could be accessed by panel.
-> Do you have any good idea for panel to access exynos_drm_dsi directly
-> without mipi_dis_host_ops?
+> Thanks for the comments.
+>=20
+> On 07/09/2014 05:34 PM, Lee Jones wrote:
+> > On Thu, 03 Jul 2014, Stanimir Varbanov wrote:
+> >> From: Josh Cartwright <joshc@codeaurora.org>
+> >>
+> >> The Qualcomm QPNP PMIC chips are components used with the
+> >> Snapdragon 800 series SoC family.  This driver exists
+> >> largely as a glue mfd component, it exists to be an owner
+> >> of an SPMI regmap for children devices described in
+> >> device tree.
+> >>
+> >> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> >> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >> ---
+> >>  drivers/mfd/Kconfig     |   15 ++++++
+> >>  drivers/mfd/Makefile    |    1 +
+> >>  drivers/mfd/qpnp-spmi.c |  129 ++++++++++++++++++++++++++++++++++=
++++++++++++++
+> >>  3 files changed, 145 insertions(+), 0 deletions(-)
+> >>  create mode 100644 drivers/mfd/qpnp-spmi.c
+> >>
+> >> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >> index ee8204c..258b733 100644
+> >> --- a/drivers/mfd/Kconfig
+> >> +++ b/drivers/mfd/Kconfig
+> >> @@ -524,6 +524,21 @@ config MFD_PM8921_CORE
+> >>  	  Say M here if you want to include support for PM8921 chip as a=
+ module.
+> >>  	  This will build a module called "pm8921-core".
+> >> =20
+> >> +config MFD_QPNP_SPMI
+> >> +	tristate "Qualcomm QPNP SPMI PMIC"
+> >> +	depends on ARCH_QCOM || COMPILE_TEST
+> >> +	depends on OF
+> >> +	select MFD_CORE
+> >> +	select REGMAP_SPMI
+> >> +	help
+> >> +	  This enables support for the Qualcomm QPNP SPMI PMICs.
+> >> +	  These PMICs are currently used with the Snapdragon 800 series =
+of
+> >> +	  SoCs.  Note, that this will only be useful paired with descrip=
+tions
+> >> +	  of the independent functions as children nodes in the device t=
+ree.
+> >=20
+> > It would be helpful if the expected types of child devices were
+> > mentioned here in the help section.
+>=20
+> They are many, but I could list the major ones.
+>=20
+> >=20
+> >> +	  Say M here if you want to include support for the QPNP SPMI PM=
+IC
+> >> +	  series as a module.  The module will be called "qpnp-spmi".
+> >> +
+> >>  config MFD_RDC321X
+> >>  	tristate "RDC R-321x southbridge"
+> >>  	select MFD_CORE
+> >> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> >> index 8afedba..31833d7 100644
+> >> --- a/drivers/mfd/Makefile
+> >> +++ b/drivers/mfd/Makefile
+> >> @@ -153,6 +153,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+=3D si476x-core=
+=2Eo
+> >>  obj-$(CONFIG_MFD_CS5535)	+=3D cs5535-mfd.o
+> >>  obj-$(CONFIG_MFD_OMAP_USB_HOST)	+=3D omap-usb-host.o omap-usb-tll=
+=2Eo
+> >>  obj-$(CONFIG_MFD_PM8921_CORE) 	+=3D pm8921-core.o ssbi.o
+> >> +obj-$(CONFIG_MFD_QPNP_SPMI)	+=3D qpnp-spmi.o
+> >>  obj-$(CONFIG_TPS65911_COMPARATOR)	+=3D tps65911-comparator.o
+> >>  obj-$(CONFIG_MFD_TPS65090)	+=3D tps65090.o
+> >>  obj-$(CONFIG_MFD_AAT2870_CORE)	+=3D aat2870-core.o
+> >> diff --git a/drivers/mfd/qpnp-spmi.c b/drivers/mfd/qpnp-spmi.c
+> >> new file mode 100644
+> >> index 0000000..efd7d3e
+> >> --- /dev/null
+> >> +++ b/drivers/mfd/qpnp-spmi.c
+> >> @@ -0,0 +1,129 @@
+> >> +/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> >> + *
+> >=20
+> > Non-standard multi-line comment.  First line should be blank.
+>=20
+> sure, will fix.
+>=20
+> >=20
+> >> + * This program is free software; you can redistribute it and/or =
+modify
+> >> + * it under the terms of the GNU General Public License version 2=
+ and
+> >> + * only version 2 as published by the Free Software Foundation.
+> >=20
+> > No author?
+> >=20
+> >> + * This program is distributed in the hope that it will be useful=
+,
+> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >> + * GNU General Public License for more details.
+> >> + */
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/spmi.h>
+> >> +#include <linux/regmap.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/mfd/core.h>
+> >> +
+> >> +#define QPNP_RESOURCE_SIZE	256
+> >> +
+> >> +static const struct regmap_config qpnp_regmap_config =3D {
+> >> +	.reg_bits	=3D 16,
+> >> +	.val_bits	=3D 8,
+> >> +	.max_register	=3D 0xffff,
+> >> +};
+> >> +
+> >> +static int qpnp_index_to_resource(struct device_node *np, int ind=
+ex,
+> >> +				  struct resource *res)
+> >> +{
+> >> +	const char *name =3D NULL;
+> >> +	const __be32 *addrp;
+> >> +	u64 addr;
+> >> +
+> >> +	addrp =3D of_get_address(np, index, NULL, NULL);
+> >> +	if (!addrp)
+> >> +		return -EINVAL;
+> >> +
+> >> +	addr =3D of_read_number(addrp, 1);
+> >> +	if (addr =3D=3D OF_BAD_ADDR)
+> >> +		return -EINVAL;
+> >> +
+> >> +	of_property_read_string_index(np, "reg-names", index, &name);
+> >> +
+> >> +	res->start =3D addr;
+> >> +	res->end =3D addr + QPNP_RESOURCE_SIZE - 1;
+> >> +	res->flags =3D IORESOURCE_REG;
+> >> +	res->name =3D name ? name : np->name;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int qpnp_add_device(struct spmi_device *root, struct devic=
+e_node *child)
+> >> +{
+> >> +	struct mfd_cell cell =3D {};
+> >> +	struct resource *res, *r;
+> >> +	int num_resources =3D 0;
+> >> +	const char *compat;
+> >> +	int ret, i;
+> >> +
+> >> +	compat =3D of_get_property(child, "compatible", NULL);
+> >> +	if (!compat)
+> >> +		return -ENODEV;
+> >> +
+> >> +	while (of_get_address(child, num_resources, NULL, NULL))
+> >> +		num_resources++;
+> >> +
+> >> +	if (!num_resources)
+> >> +		return -ENODEV;
+> >> +
+> >> +	res =3D kcalloc(num_resources, sizeof(*res), GFP_KERNEL);
+> >> +	if (!res)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	r =3D res;
+> >> +	for (i =3D 0; i < num_resources; i++, r++)
+> >> +		qpnp_index_to_resource(child, i, r);
+> >> +
+> >> +	cell.name =3D kasprintf(GFP_KERNEL, "%x.%04x.%s", root->usid,
+> >> +			      (u16)res[0].start, child->name);
+> >> +	cell.of_compatible =3D compat;
+> >> +	cell.num_resources =3D num_resources;
+> >> +	cell.resources =3D res;
+> >> +
+> >> +	ret =3D mfd_add_devices(&root->dev, PLATFORM_DEVID_NONE, &cell, =
+1,
+> >> +			      NULL, 0, NULL);
+> >> +
+> >> +	kfree(res);
+> >> +	kfree(cell.name);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int qpnp_probe(struct spmi_device *sdev)
+> >> +{
+> >> +	struct device_node *root =3D sdev->dev.of_node;
+> >> +	struct device_node *child;
+> >> +	struct regmap *regmap;
+> >> +
+> >> +	regmap =3D devm_regmap_init_spmi_ext(sdev, &qpnp_regmap_config);
+> >> +	if (IS_ERR(regmap))
+> >> +		return PTR_ERR(regmap);
+> >> +
+> >> +	for_each_available_child_of_node(root, child)
+> >> +		qpnp_add_device(sdev, child);
+> >=20
+> > This entire driver looks like a re-write of of_platform_populate().
+> >=20
+> > Why?
+>=20
+> of_platform_populate is not used because the PMIC function resources =
+are
+> non-translatable. You can see that the resources are of type
+> IORESOURCE_REG (qpnp_index_to_resource()) not IORESOURCE_MEM or _IO.
+>=20
+> The whole point of this mfd driver is to parse devicetree to prepare
+> resources for every child and create platform device for it through
+> mfd_add_devices(). Then the PMIC function driver got its resources an=
+d
+> use them as register addresses passed to regmap. These register acces=
+ses
+> hits the SPMI controller which is the physical interface between PMIC=
+'s
+> and SoC.
 
-I've gone through the DSI specification again and the only mention of
-the tearing effect is in section 8.12 "TE Signaling in DSI". That says
-the following:
+I can't help but think that if this is required, it should be part of
+the core OF code, rather than doing your own thing which looks
+frighteningly like existing framework functionality.
 
-	A Command Mode display module has its own timing controller and
-	local frame buffer for display refresh. In some cases the host
-	processor needs to be notified of timing events on the display
-	module, e.g. the start of vertical blanking or similar timing
-	information. In a traditional parallel-bus interface like DBI-2,
-	a dedicated signal wire labeled TE (Tearing Effect) is provided
-	to convey such timing information to the host processor. In a
-	DSI system, the same information, with reasonably low latency,
-	shall be transmitted from the display module to the host
-	processor when requested, using the bidirectional Data Lane.
+Either way, I'm going to need a DT Ack before I accept this.
 
-My interpretation of that is that a DSI peripheral doesn't have a
-dedicated TE signal. Now the panel that you want to support here seems
-to have one, so I'm wondering if maybe it isn't a DSI panel at all but
-rather DBI.
-
-The specification goes into further detail about how to perform the TE
-reporting in DSI. Essentially it consists of giving the peripheral
-control of the bus via a BTA and then waiting for the peripheral to
-report back with the TE event.
-
-It would really help if somebody could find a datasheet for the panel so
-that we don't have to keep guessing what the actual interface is and how
-it's supposed to work.
-
-Thierry
-
---bCsyhTFzCvuiizWE
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTvkLyAAoJEN0jrNd/PrOh498QAKhfUS2PIekWGlAv50Y1ctDZ
-vUYfcIKEHlBjBIhDFTI3DUZEhS6MRxpgnJ29eHBGED4yc0cWobtEWLvZhd94j3nh
-UjOqPXFrXHsIPoi2N0emcPR/Giiy25ofMUhnpSZ3sI1sNP7QTIo8fSNFLidaafRT
-4bOM4A0tS/yJ7MLF1cwHASicnIqCyNeg9ToblJLrLa+sAd5yZagXJiFSOKChc3tq
-ps9pwM3Nrq1bWNXfuKDcKZVoSLeQm5xlfZDKAS63heUXfm44yrInNVpWJH+Drtfv
-rmjfxwdxA41rLuZ1jTDR3GUGOoRzHadOFub0h1zvRmygHDbzKiOovFHRpjvx5Ad8
-vacRGLbTRallAOK3xHn6u78kVe1hDk1toEMZNfShqJ/jrFMAlM/S8dXyMlWdCqb2
-GoO7f1vzNRRBayaFKNaPga6xliyYjoi5hqwbQ1l07pvwxNhgdt18FAzm0uwihBcG
-HdT/UnGI5qBSkmwvXKIe5hmIuBn4YquZ6pTV1+HjwD6wwgmeP0W2ueLr2RMFwmf9
-fq3ZG89pscFxZ0OD2SC6SWfRYTj0FdGD+ZGsFtxoG6lJ2skFSQcWF73ycR9ZlKsY
-MHjSsiYDKQZhKrSCmcdFU1dcuA5N6NxKz4woJGV0anV/k78oquiiVQtoe6f/S1CZ
-xudd54ysmlnIEQepnBUr
-=3/sx
------END PGP SIGNATURE-----
-
---bCsyhTFzCvuiizWE--
-
---===============1430772247==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1430772247==--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
