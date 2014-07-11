@@ -1,41 +1,75 @@
-From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 4/4] spi/rockchip: add compatible strings for RK3188 and RK3288
-Date: Fri, 11 Jul 2014 10:09:19 +0800
-Message-ID: <1405044559-7009-1-git-send-email-addy.ke@rock-chips.com>
-References: <1405044389-6800-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405044389-6800-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-JkTZp4/KTbpWk0Htik3J/w@public.gmane.org>
+From: Zhou Wang <wangzhou.bry@gmail.com>
+Subject: Re: [PATCH 1/3] mtd: hisilicon: add device tree node for nand controller
+Date: Fri, 11 Jul 2014 10:40:20 +0800
+Message-ID: <53BF4E94.7030104@gmail.com>
+References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com> <1404115409-20200-2-git-send-email-wangzhou.bry@gmail.com> <53BCEA77.2080004@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53BCEA77.2080004@huawei.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jerome FORISSIER <jerome.forissier@huawei.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, caizhiyong@huawei.com, wangzhou1@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-From: Addy Ke <addy.ke-JkTZp4/KTbpWk0Htik3J/w@public.gmane.org>
+On 2014=E5=B9=B407=E6=9C=8809=E6=97=A5 15:08, Jerome FORISSIER wrote:
+> On 30-Jun-14 10:03, Zhou Wang wrote:
+>> Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
+>> ---
+>>   arch/arm/boot/dts/hip04.dtsi |   31 ++++++++++++++++++++++++++++++=
++
+>>   1 file changed, 31 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.=
+dtsi
+>> index abb42ca..e63fc61 100644
+>> --- a/arch/arm/boot/dts/hip04.dtsi
+>> +++ b/arch/arm/boot/dts/hip04.dtsi
+>> @@ -386,5 +386,36 @@
+>>   				interrupts =3D <0 389 4>;
+>>   			};
+>>   		};
+>> +
+>> +		nand: nand@4020000 {
+>> +			compatible =3D "hisilicon,504-nfc";
+>
+> In PATCH 2/3 and 3/3 you are using "hisilicon,nfc504".
+>
 
-Suggested-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Addy Ke <addy.ke-JkTZp4/KTbpWk0Htik3J/w@public.gmane.org>
----
- drivers/spi/spi-rockchip.c | 2 ++
- 1 file changed, 2 insertions(+)
+It was my mistake. All should be "hisilicon,504-nfc". Thanks a lot.
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index a8866c9..cb8fd6f 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -814,6 +814,8 @@ static const struct dev_pm_ops rockchip_spi_pm = {
- 
- static const struct of_device_id rockchip_spi_dt_match[] = {
- 	{ .compatible = "rockchip,rk3066-spi", },
-+	{ .compatible = "rockchip,rk3188-spi", },
-+	{ .compatible = "rockchip,rk3288-spi", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, rockchip_spi_dt_match);
--- 
-1.8.3.2
+>> +			reg =3D <0x4020000 0x10000>, <0x5000000 0x1000>;
+>> +			interrupts =3D <0 379 4>;
+>> +			nand-bus-width =3D <8>;
+>> +			nand-ecc-mode =3D "none";
+>> +			hisi,nand-ecc-bits =3D <0>;
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <1>;
+>> +
+>> +			partition@0 {
+>> +				label =3D "nand_text";
+>> +				reg =3D <0x00000000 0x00400000>;
+>> +			};
+>> +
+>> +			partition@00400000 {
+>> +				label =3D "nand_monitor";
+>> +				reg =3D <0x00400000 0x00400000>;
+>> +			};
+>> +
+>> +			partition@00800000 {
+>> +				label =3D "nand_kernel";
+>> +				reg =3D <0x00800000 0x00800000>;
+>> +			};
+>> +
+>> +			partition@01000000 {
+>> +				label =3D "nand_fs";
+>> +				reg =3D <0x01000000 0x1f000000>;
+>> +			};
+>> +		};
+>>   	};
+>>   };
+>>
+>
 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
