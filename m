@@ -1,72 +1,39 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 11 Jul 2014 16:08:23 +0100
-Message-ID: <20140711150823.GU6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
- <20140708005954.GC22939@google.com>
- <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
- <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
- <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
- <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
- <20140711141115.GB16321@arm.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 8/8] drm/tilcdc: panel: Add support for enable GPIO
+Date: Fri, 11 Jul 2014 12:08:58 -0300
+Message-ID: <CAOMZO5CawR9qMbm3HLf4+S3-pcf4m=VCUqm0W9LXXYzNzv2aOQ@mail.gmail.com>
+References: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <1405088334-11215-9-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140711141115.GB16321@arm.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1405088334-11215-9-git-send-email-ezequiel@vanguardiasur.com.ar>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Daniel Vetter <daniel.vetter@ffwll.ch>, DRI mailing list <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 03:11:16PM +0100, Catalin Marinas wrote:
-> On Thu, Jul 10, 2014 at 11:36:10PM +0100, Bjorn Helgaas wrote:
-> > Most of the rest of the v7 discussion was about "Introduce a domain
-> > number for pci_host_bridge."  I think we should add arm64 using the
-> > existing pci_scan_root_bus() and keep the domain number in the arm6=
-4
-> > sysdata structure like every other arch does.  Isn't that feasible?
-> > We can worry about domain unification later.
->=20
-> I think that's what we were trying to avoid, adding an arm64-specific
-> pci_sys_data structure (and arm64-specific API). IIUC, avoiding this
-> would allow the host controller drivers to use the sysdata pointer fo=
-r
-> their own private data structures.
->=20
-> Also since you can specify the domain number via DT (and in Liviu's
-> v8 patches read by of_create_pci_host_bridge), I think it would make
-> sense to have it stored in some generic data structures (e.g.
-> pci_host_bridge) rather than in an arm64 private sysdata.
->=20
-> (Liviu is thinking of an alternative API but maybe he could briefly
-> describe it here before posting a new series)
->=20
-> --=20
-> Catalin
+On Fri, Jul 11, 2014 at 11:18 AM, Ezequiel Garcia
+<ezequiel@vanguardiasur.com.ar> wrote:
+> In order to support the "enable GPIO" available in many panel devices,
+> this commit adds a proper devicetree binding.
+>
+> By providing an enable GPIO in the devicetree, the driver can now turn
+> off and on the panel device, and/or the backlight device. Both the
+> backlight and the GPIO are optional properties.
+> +       panel_mod->enable_gpio = devm_gpiod_get(&pdev->dev, "enable");
+> +       if (IS_ERR(panel_mod->enable_gpio)) {
+> +               ret = PTR_ERR(panel_mod->enable_gpio);
+> +               if (ret != -ENOENT) {
 
-
-My plan is to keep the domain number in the pci_host_bridge and split
-the creation of the pci_host_bridge out of the pci_create_root_bus().
-The new function (tentatively called pci_create_new_root_bus()) will
-no longer call pci_alloc_host_bridge() but will accept it as a
-parameter, allowing one to be able to set the domain_nr ahead of the
-root bus creation.
-
-Best regards,
-Liviu
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Shouldn't this be controlled by a regulator instead? What if the panel
+is powered from a PMIC output?
