@@ -1,62 +1,43 @@
-From: Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/1] spi: samsung: Update binding documentation
-Date: Fri, 11 Jul 2014 14:41:03 +0530
-Message-ID: <1405069863-17723-1-git-send-email-sachin.kamat@samsung.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, spk.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sachin Kamat <spk.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] Documentation: dt-bindings: move exynos-adc.txt to
+ more iio/adc/
+Date: Fri, 11 Jul 2014 14:47:19 +0530
+Message-ID: <CAK5sBcFvPo38LtWAhee0xO=KONM5V-UEDzgjCc=uEXtG32NowA@mail.gmail.com>
+References: <1405069589-10388-1-git-send-email-ch.naveen@samsung.com>
+	<1405069589-10388-3-git-send-email-ch.naveen@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405069589-10388-3-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Naveen Krishna <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Samsung SPI driver uses generic DMA bindings. Update the documentation
-accordingly.
+Hi Naveen,
 
-Signed-off-by: Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/spi/spi-samsung.txt        |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+On Fri, Jul 11, 2014 at 2:36 PM, Naveen Krishna Chatradhi
+<ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> The DT bindings in exynos-adc.txt applies to the ADC
+> driver (exynos-adc.c) developed based on IIO framework.
+>
+> The bindings are more appropriate to be under
+> Documentation/devicetree/bindings/iio/adc/
+>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |   82 --------------------
+>  .../devicetree/bindings/iio/adc/exynos-adc.txt     |   82 ++++++++++++++++++++
+>  2 files changed, 82 insertions(+), 82 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/exynos-adc.txt
+>
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
-index fe6f9037b561..7f2d88d3fbe7 100644
---- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
-@@ -17,14 +17,11 @@ Required SoC Specific Properties:
- - interrupts: The interrupt number to the cpu. The interrupt specifier format
-   depends on the interrupt controller.
- 
--[PRELIMINARY: the dma channel allocation will change once there are
--official DMA bindings]
-+- dmas : Two or more DMA channel specifiers following the convention outlined
-+  in bindings/dma/dma.txt
- 
--- tx-dma-channel: The dma channel specifier for tx operations. The format of
--  the dma specifier depends on the dma controller.
--
--- rx-dma-channel: The dma channel specifier for rx operations. The format of
--  the dma specifier depends on the dma controller.
-+- dma-names: Names for the dma channels. There must be at least one channel
-+  named "tx" for transmit and named "rx" for receive.
- 
- Required Board Specific Properties:
- 
-@@ -73,8 +70,11 @@ Example:
- 		compatible = "samsung,exynos4210-spi";
- 		reg = <0x12d20000 0x100>;
- 		interrupts = <0 66 0>;
--		tx-dma-channel = <&pdma0 5>;
--		rx-dma-channel = <&pdma0 4>;
-+		dmas = <&pdma0 5
-+			&pdma0 4>;
-+		dma-names = "tx", "rx";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 	};
- 
- - Board Specific Portion:
+Tip: For only a file move or rename please use "-M" with git
+format-patch. That will make the
+patch concise.
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sachin.
