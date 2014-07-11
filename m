@@ -1,44 +1,49 @@
-From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL clocksource
-Date: Fri, 11 Jul 2014 19:48:24 +0300
-Message-ID: <53C01558.3090607@nvidia.com>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>	<1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com> <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for pci_host_bridge.
+Date: Fri, 11 Jul 2014 11:02:56 -0600
+Message-ID: <CAErSpo7C8qzmdp+XgVi2ysXj_NcgvVY7RVfBZ2PHimLzrzANMQ@mail.gmail.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com> <20140708005954.GC22939@google.com>
+ <20140708104655.GC6501@e106497-lin.cambridge.arm.com> <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
+ <20140708224847.GC4980@e106497-lin.cambridge.arm.com> <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
+ <20140710094758.GA6501@e106497-lin.cambridge.arm.com> <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
+ <20140711141115.GB16321@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140711141115.GB16321@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/07/14 19:28, Andrew Bresticker wrote:
-> On Thu, Jul 10, 2014 at 2:42 PM, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> The DFLL is the main clocksource for the fast CPU cluster on Tegra124
->> and also provides automatic CPU rail voltage scaling as well. The DFLL
->> is a separate IP block from the usual Tegra124 clock-and-reset
->> controller, so it gets its own node in the device tree.
+On Fri, Jul 11, 2014 at 8:11 AM, Catalin Marinas
+<catalin.marinas@arm.com> wrote:
+> On Thu, Jul 10, 2014 at 11:36:10PM +0100, Bjorn Helgaas wrote:
+>> Most of the rest of the v7 discussion was about "Introduce a domain
+>> number for pci_host_bridge."  I think we should add arm64 using the
+>> existing pci_scan_root_bus() and keep the domain number in the arm64
+>> sysdata structure like every other arch does.  Isn't that feasible?
+>> We can worry about domain unification later.
 >
->> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> I think that's what we were trying to avoid, adding an arm64-specific
+> pci_sys_data structure (and arm64-specific API). IIUC, avoiding this
+> would allow the host controller drivers to use the sysdata pointer for
+> their own private data structures.
 >
->> +- nvidia,pmic-voltage-table: Array of 2-tuples.  Each entry should have the
->> +  form <register-value voltage-in-uV>, indicating the register value that
->> +  needs to be programmed to the PMIC for changing the VDD_CPU voltage to
->> +  the specified voltage. The table must be in ascending order by the voltage.
->
-> Instead of listing the register values for each voltage in the DT,
-> can't you use regulator_list_voltage() to create this map?
->
+> Also since you can specify the domain number via DT (and in Liviu's
+> v8 patches read by of_create_pci_host_bridge), I think it would make
+> sense to have it stored in some generic data structures (e.g.
+> pci_host_bridge) rather than in an arm64 private sysdata.
 
-I don't see a way to get the register values that way, unless we assume 
-that the mapping is linear and doesn't have holes.
+It would definitely be nice to keep the domain in a generic data
+structure rather than an arm64-specific one.  But every other arch
+keeps it in an arch-specific structure today, and I think following
+that existing pattern is the quickest way forward.
 
--- 
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But you mentioned arm64-specific API, too.  What do you have in mind
+there?  I know there will be arm64 implementations of various
+pcibios_*() functions (just like for every other arch), but it sounds
+like there might be something else?
+
+Bjorn
