@@ -1,55 +1,60 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: [PATCH 0/8] tilcdc-panel: Backlight and GPIO devicetree support
-Date: Fri, 11 Jul 2014 11:18:46 -0300
-Message-ID: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, daniel.vetter-/w4YWyX8dFk@public.gmane.org, =?UTF-8?q?Guido=20Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 13/13] [RFC] irqchip: renesas-irqc: Add binding docs for
+ new R-Car Gen2 SoCs
+Date: Fri, 11 Jul 2014 11:24:14 +0200
+Message-ID: <20140711092414.GR12420@verge.net.au>
+References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+ <1404908623-909-14-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404908623-909-14-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello all,
+On Wed, Jul 09, 2014 at 02:23:43PM +0200, Geert Uytterhoeven wrote:
+>   - r8a7792 (R-Car V2H)
+>   - r8a7793 (R-Car M2-N)
+>   - r8a7794 (R-Car E2)
+> 
+> r8a7791 is now called "R-Car M2-W".
 
-This patchset adds the required changes to support an optional backlight
-and GPIO for the tilcdc panel driver.
+As per my comments on patches in this series:
 
-There was some code to support a backlight, but it was somewhat broken
-and undocumented. I've followed the nice implementation in panel-simple
-and added a similar one here.
+	I don't feel strongly about this either way.  But it seems to me
+	that if we want to start using "M2-W" then we should make some
+	effort, though not necessarily immediately, to update all instances
+	of "M2" that already exist in the tree.
 
-The enable GPIO is required to turn on and off devices with such capability.
-Also here, I've followed panel-simple which looks correct.
+        This seems to be in keeping with the approach we ave taken for
+        these SoCs for other drivers. And from that point of view it is
+        fine by me.  But I wonder how sure are we that the hardware on the
+        SoCs will work with this approach.
 
-In addition to this there are very minor cosmetic cleanups and a larger
-error path fix in tilcdc's DRM driver .load error path.
-
-This patchset applies on top of drm-next branch which contains the latest
-tilcdc pushed by Guido.
-
-If at all possible, I'd like to get this merged for v3.17. If a pull request
-is needed, don't hesitate to ask and I'll prepare one.
-
-Comments and tests welcome!
-
-Ezequiel Garcia (8):
-  drm/tilcdc: Fix the error path in tilcdc_load()
-  drm/tilcdc: panel: Add missing of_node_put
-  drm/tilcdc: panel: Remove unused variable
-  drm/tilcdc: panel: Spurious whitespace removal
-  drm/tilcdc: panel: Use devm_kzalloc to simplify the error path
-  drm/tilcdc: panel: Fix backlight devicetree support
-  drm/tilcdc: panel: Set return value explicitly
-  drm/tilcdc: panel: Add support for enable GPIO
-
- .../devicetree/bindings/drm/tilcdc/panel.txt       |  7 ++
- drivers/gpu/drm/tilcdc/tilcdc_drv.c                | 60 +++++++++++++++---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c              | 74 +++++++++++++++++-----
- 3 files changed, 114 insertions(+), 27 deletions(-)
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/interrupt-controller/renesas,irqc.txt        | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+> index f819e2a5907c..cd9d92708c21 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+> @@ -6,7 +6,10 @@ Required properties:
+>    Examples with soctypes are:
+>      - "renesas,irqc-r8a73a4" (R-Mobile AP6)
+>      - "renesas,irqc-r8a7790" (R-Car H2)
+> -    - "renesas,irqc-r8a7791" (R-Car M2)
+> +    - "renesas,irqc-r8a7791" (R-Car M2-W)
+> +    - "renesas,irqc-r8a7792" (R-Car V2H)
+> +    - "renesas,irqc-r8a7793" (R-Car M2-N)
+> +    - "renesas,irqc-r8a7794" (R-Car E2)
+>  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+>    interrupts.txt in this directory
+>  
+> -- 
+> 1.9.1
+> 
