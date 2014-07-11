@@ -1,46 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
-Date: Fri, 11 Jul 2014 14:38:41 +0200
-Message-ID: <CACRpkdb6OrTW63AuVqyFt_h=J-WpcvL+Bb7HpM+RD7EeSDoAbQ@mail.gmail.com>
-References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
-	<5cc8b89b-20ff-4fa9-92dd-bb2f6d3512d8@BY2FFO11FD030.protection.gbl>
-	<CACRpkdb1M3-hrSKLKWz21LCJ1sMvsq5E-aqkpmVhy0NwOS5HhA@mail.gmail.com>
-	<20140707152309.GH4939@tarshish>
-	<CACRpkdY+3hy5iw=uRdmu665NWsoGacTMgjUq97219kEcfn7Dqw@mail.gmail.com>
-	<20140711062811.GC3003@tarshish>
-	<CACRpkdYi_xbixsgvF0NMVdRmxbAgDVOnq-vzYVpDkLHTL8-12A@mail.gmail.com>
-	<20140711122744.GE3003@tarshish>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] spi: efm32: correct namespacing of location property
+Date: Fri, 11 Jul 2014 13:39:49 +0100
+Message-ID: <20140711123949.GM30458@sirena.org.uk>
+References: <CAOesGMjgX5PWBSD2YP7mTGMWafxBjeMDmzZoPCXb27YPUHEcyw@mail.gmail.com>
+ <1405066677-12858-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140711122744.GE3003@tarshish>
-Sender: linux-doc-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Harini Katakam <harinik@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Harini Katakam <harinikatakamlinux@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Harini Katakam <harini.katakam@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZcSASNCKFtrdv99s"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1405066677-12858-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 2:27 PM, Baruch Siach <baruch@tkos.co.il> wrote:
-> On Fri, Jul 11, 2014 at 02:06:29PM +0200, Linus Walleij wrote:
 
->> So given that an FPGA is a piece of hardware, it should have its firmware
->> loaded from the kernel and a kernel driver communicating with it I guess?
->>
->> I feel the smell of a huge bundle of userspace drivers for something that
->> should be handled by the kernel.
->
-> The FPGA can be loaded using simple SPI bit-banging, for which I used the
-> userspace SPI interface. Nothing fancy, just a few hundred LoC. Kernel driver
-> along with a userspace interface to be maintained forever for this task seems
-> an overkill to me.
+--ZcSASNCKFtrdv99s
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK I'd say yes maybe it's like a modem on the other side of a serial
-line then, and then it makes sense to have that as a userspace thing.
+On Fri, Jul 11, 2014 at 10:17:57AM +0200, Uwe Kleine-K=F6nig wrote:
+> Olof Johansson pointed out that usually the company name is picked as
+> namespace prefix to specific properties. So expect "energymicro,location"
+> but fall back to the previously introduced name "efm32,location".
 
-It's just that when it comes to anything relating to the electrical
-connections on the board, that stuff should be in some device tree
-or similar HW description format, and then this needs to be parsed
-by userspace too, and ... yuck. It's just so incoherent in a
-helicopter view.
+Applied, thanks.
 
-Yours,
-Linus Walleij
+--ZcSASNCKFtrdv99s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTv9sRAAoJELSic+t+oim9gz0P/icOIW3qSSwG+T7ZIhIgXZvN
+LsI13gvaW1n9UilXU+MdAsRm21GAIkw8J3IxXHpFLnZAqXkrqiDUhFI2ZP59Bd5s
+IWGOP33d4AFbgRHj24gKs1PfHc7EbHavbtytBZ6aQDbPqrT3I0yBXCSJGqj3RjtE
+Y7VBCe+DCK+r+aonHQopENYf/rTzjGXsJvd7CyN2qyvW3mwGOaFigb+MKR691HC3
+CPBpqhEDCTvPJEjJqnR7uS7cX8gcwkESVdWsYjmbRr9wjvk8r40EwDOb91N22hU7
+FWMbx7uh4gNwH3NQGfstZJBaVI0gkxhAukXW4iwcPUZhQVHiOb1YQQfhMA6nqYvx
+wo549nc13bzUuw+4sAebEQzbnYx1Mo5hMla8ts9XXMUVHGU0imEM3kdt/AOf08jK
+UgNh3Phpenmfl0bNckSI9BjJoy0vA+LJNIvu79zrUvj+PeJ/5PgaoDfNM+RGZqLo
+skQFq3b1V6qIcz7NCzSOnWUYfFVR9Lolui3HbSDSGzu5GxDWSKkTYJDsTYT/IwlC
+q4nxBgjaNTfpnMadUmf37XWv1PSx4Z6972hNa2GGRz2kzScXFouJ7ciOQCgIh11i
+pqAXxUIqHzp4N+uG5p2zxAZiF9codJcrWzOdjybw0BpXJ/I44bxm/Pyjyr5m58gk
+FS+9RMHYxpKr7V6GJC7O
+=wL/w
+-----END PGP SIGNATURE-----
+
+--ZcSASNCKFtrdv99s--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
