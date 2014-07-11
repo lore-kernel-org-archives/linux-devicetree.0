@@ -1,62 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 1/3] pwm: add Rockchip SoC PWM support
-Date: Fri, 11 Jul 2014 17:02:19 +0200
-Message-ID: <20140711150218.GC6523@ulmo>
-References: <1403360528-12757-1-git-send-email-b.galvani@gmail.com>
- <1403360528-12757-2-git-send-email-b.galvani@gmail.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] bus: ARM CCN PMU driver
+Date: Fri, 11 Jul 2014 16:02:34 +0100
+Message-ID: <1405090954.32598.60.camel@hornet>
+References: <1405088056-29181-1-git-send-email-pawel.moll@arm.com>
+	 <20140711142135.GA21766@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403360528-12757-2-git-send-email-b.galvani@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140711142135.GA21766-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnaldo Carvalho de Melo <acme-f8uhVLnGfZaxAyOMLChx1axOck334EZe@public.gmane.org>, Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2014-07-11 at 15:21 +0100, Russell King - ARM Linux wrote:
+> On Fri, Jul 11, 2014 at 03:14:16PM +0100, Pawel Moll wrote:
+> > diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> > index 1f37d98..6ab2a62 100644
+> > --- a/drivers/bus/Kconfig
+> > +++ b/drivers/bus/Kconfig
+> > @@ -4,14 +4,6 @@
+> >  
+> >  menu "Bus devices"
+> >  
+> > -config BRCMSTB_GISB_ARB
+> > -	bool "Broadcom STB GISB bus arbiter"
+> > -	depends on ARM
+> > -	help
+> > -	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
+> > -	  arbiter. This driver provides timeout and target abort error handling
+> > -	  and internal bus master decoding.
+> > -
+> ...
+> > diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> > index 6a4ea7e..493b4ff 100644
+> > --- a/drivers/bus/Makefile
+> > +++ b/drivers/bus/Makefile
+> > @@ -2,14 +2,15 @@
+> >  # Makefile for the bus drivers.
+> >  #
+> >  
+> > -obj-$(CONFIG_BRCMSTB_GISB_ARB)	+= brcmstb_gisb.o
+> 
+> I assume that as these exist in the patch, you haven't looked through
+> the patch to check what you're actually submitting... 
 
---6zdv2QT/q3FMhpsV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is, obviously, my bad and lack of attention after last minute
+rebase, for which I apologise.
 
-On Sat, Jun 21, 2014 at 04:22:06PM +0200, Beniamino Galvani wrote:
-> This commit adds a driver for the PWM controller found on Rockchip
-> RK29, RK30 and RK31 SoCs.
->=20
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> ---
->  drivers/pwm/Kconfig        |    7 ++
->  drivers/pwm/Makefile       |    1 +
->  drivers/pwm/pwm-rockchip.c |  177 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 185 insertions(+)
->  create mode 100644 drivers/pwm/pwm-rockchip.c
+> how can we be
+> sure that the rest of the patch is what you intend to submit?
 
-Applied, thanks.
+Of course you can't be sure, unless you are willing to take my word for
+it. Maybe the fact that 46% of the added lines contains upper- or
+lowercase string "CCN" matching the subject can support my plea.
 
-Thierry
+Pawel
 
---6zdv2QT/q3FMhpsV
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTv/x6AAoJEN0jrNd/PrOhD5IP/i87rwB1uak/S2rChBuCF73Y
-0L3n63Ghvriq+1y4esla9+yOTMW6TVA3vAxxn24TGMYPW3u8F66KYYLVP9RVcm5i
-24RuMVe6PGIxISw44jLbLPjMyanMI+4EoBMS3ISn/1zAnDnt7+nToOH5IOD6rRLX
-ISoLF3f7iruEgP2968O5wcD2KA8tDiy7HLbN2yymHgba8ONyB2glrj26LuZcy738
-wRjmTwd9A7PLov6B1h5BmC0wEl4zn2r5XUrFkZUfceGQyb1WZRDJHr8eh/Y9w7FJ
-VTDGwTDi5hA52xeJbct2o20QwueqFM3Kxarq0Utd3dRotw6UI//4TQwHOSa7Y7Jp
-Rr3Fcx3tywW9GgSyuJhFvesKRKHd9EEY1Ty+xN595SnustrMDtCgYQP+N7IGfzVg
-l8eCL1402QRqCmjvsUTfAumijLzvF9HjYOX4+fBgKZiC8EiXZOugjfbD4S3FuVGI
-VAkWWerSzrUCSGu56454amPZJmN2sBglPGx9EFEhsRhjYkTOGGV20wtt4VvWII7i
-lAN0QS1emZAlwgxGp9LrCNCrrDX7w10cp+CK0vHQ2VdVBEcCYj00GGwridS1c8pM
-xENmPQCm+eFNXG1Uu9jtXRIiFKSuAoQhVQAIGBmPrrjO2ALCIsGVNOQmzd1ToIjB
-IW/2oPfwkXzx6gDvfpc7
-=e3o9
------END PGP SIGNATURE-----
-
---6zdv2QT/q3FMhpsV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
