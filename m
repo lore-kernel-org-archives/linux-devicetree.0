@@ -1,59 +1,32 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS) support
-Date: Thu, 10 Jul 2014 21:02:35 -0700
-Message-ID: <CAD=FV=XrgKSaOOutRr6wkNa6vu3uXo3ny43zyKCQzbYpe5xb2A@mail.gmail.com>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
-	<1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
-	<CADGdYn6tyTBZOjZH8JBUVMJ1kh-tht=tkU4tA+oM=PbfTYkqGw@mail.gmail.com>
-	<53BF41C8.4080304@collabora.co.uk>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 12/13] cpufreq: Add cpufreq driver for Tegra124
+Date: Fri, 11 Jul 2014 10:05:56 +0530
+Message-ID: <CAKohpom9ORXFiUU4=V+CxgN0ZOFLMEhEjHiU8HsYUYDybNXgHQ@mail.gmail.com>
+References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
+	<1405028569-14253-13-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53BF41C8.4080304@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: amit daniel kachhap <amit.daniel@samsung.com>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Tushar Behera <trblinux@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Andreas Farber <afaerber@suse.de>, LAK <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405028569-14253-13-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tuomas,
 
-On Thu, Jul 10, 2014 at 6:45 PM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
->> I think when DVS gpio is used all the 8 voltage levels are fetched
->> from DT during booting and the registers are programmed accordingly.
->> Any further set/get_voltage just changes the GPIO lines.
->> Any reason why this method is not used?
+On 11 July 2014 03:12, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Add a new cpufreq driver for Tegra124. Instead of using the PLLX as
+> the CPU clocksource, switch immediately to the DFLL. It allows the use
+> of higher clock rates, and will automatically scale the CPU voltage as
+> well. We also rely on the DFLL driver to determine the CPU clock
+> frequencies that the chip supports, so that we can directly build a
+> cpufreq table with the OPP library helper dev_pm_opp_init_cpufreq_table.
 >
-> What are you describing is how the DT binding works for other Maxim PMICs that
-> also have DVS support right? (e.g: max8997).
+> This driver is a completely independent of the old cpufreq driver
+> (tegra-cpufreq), which is only used on Tegra20.
 >
-> The DVS binding in max77686/802 is actually a subset of the one in max8997 so it
-> let's you only choose which single DVS index is going to be used. The GPIOs in
-> "max77686,pmic-buck-dvs-gpios" should match "pmic-buck-default-dvs-idx".
->
-> To be honest I just took the DT binding that was used in the max77xxx driver
-> from the Chrome OS 3.8 kernel and didn't compare it with other Maxim PMICs DT
-> bingings.
->
-> I wonder if I should just take the DVS patches out from this initial version to
-> avoid blocking the max77802 support and then we can discuss this in more detail.
+> Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-To give background:
-
-* On exynos5250 / exynos5420 / exynos5800 the CPUFreq driver exposes
-more than 8 different operating points.  You could argue about whether
-that's useful but that's the way it is right now.  That means that
-using the GPIOs is not trivial (you'd have to use a mix of GPIOs and
-i2c and use heuristics).
-
-* On the Samsung Chromebook 2 we use the DVFS GPIOs to get back to a
-sane state after a warm reset.  When the CPU resets itself all GPIOs
-will default back to their reset state.  That will effectively
-transfer us to DVFS slot 0.  We make sure that the kernel always
-modifies a different DVFS slot.
-
-* On all known boards all DVFS GPIOs were hooked up.  I originally
-wrote code assuming that someone could design a board with fewer lines
-hooked up but I don't know of that being done.
-
--Doug
+Please reuse cpufreq-cpu0 instead of adding a new driver. Similar
+is being adopted by all platforms now: krait, mvebu, etc..
