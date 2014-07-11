@@ -1,26 +1,62 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 12/13] cpufreq: Add cpufreq driver for Tegra124
-Date: Fri, 11 Jul 2014 14:44:07 +0530
-Message-ID: <CAKohpokGOtdY2SyJuN1QcVoDy2wsMcveiyr1e4cr0oe2j__h5g@mail.gmail.com>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
-	<1405028569-14253-13-git-send-email-ttynkkynen@nvidia.com>
-	<CAKohpom9ORXFiUU4=V+CxgN0ZOFLMEhEjHiU8HsYUYDybNXgHQ@mail.gmail.com>
-	<20140711091207.GY23218@tbergstrom-lnx.Nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140711091207.GY23218@tbergstrom-lnx.Nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/1] spi: samsung: Update binding documentation
+Date: Fri, 11 Jul 2014 14:41:03 +0530
+Message-ID: <1405069863-17723-1-git-send-email-sachin.kamat@samsung.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, spk.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 July 2014 14:42, Peter De Schrijver <pdeschrijver@nvidia.com> wrote:
-> I don't think that's going to work? The voltage scaling is handled in hw.
+Samsung SPI driver uses generic DMA bindings. Update the documentation
+accordingly.
 
-Ahh..
+Signed-off-by: Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/spi/spi-samsung.txt        |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-> cpufreq-cpu0 seems to assume explicit sw control of the vdd_cpu regulator?
+diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+index fe6f9037b561..7f2d88d3fbe7 100644
+--- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
++++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+@@ -17,14 +17,11 @@ Required SoC Specific Properties:
+ - interrupts: The interrupt number to the cpu. The interrupt specifier format
+   depends on the interrupt controller.
+ 
+-[PRELIMINARY: the dma channel allocation will change once there are
+-official DMA bindings]
++- dmas : Two or more DMA channel specifiers following the convention outlined
++  in bindings/dma/dma.txt
+ 
+-- tx-dma-channel: The dma channel specifier for tx operations. The format of
+-  the dma specifier depends on the dma controller.
+-
+-- rx-dma-channel: The dma channel specifier for rx operations. The format of
+-  the dma specifier depends on the dma controller.
++- dma-names: Names for the dma channels. There must be at least one channel
++  named "tx" for transmit and named "rx" for receive.
+ 
+ Required Board Specific Properties:
+ 
+@@ -73,8 +70,11 @@ Example:
+ 		compatible = "samsung,exynos4210-spi";
+ 		reg = <0x12d20000 0x100>;
+ 		interrupts = <0 66 0>;
+-		tx-dma-channel = <&pdma0 5>;
+-		rx-dma-channel = <&pdma0 4>;
++		dmas = <&pdma0 5
++			&pdma0 4>;
++		dma-names = "tx", "rx";
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 	};
+ 
+ - Board Specific Portion:
+-- 
+1.7.9.5
 
-Its optional. If it fails to find a regulator, it doesn't depend or
-play with it.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
