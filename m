@@ -1,101 +1,81 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
-Date: Fri, 11 Jul 2014 08:44:17 +0100
-Message-ID: <20140711074417.GA8233@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1405005486-26355-2-git-send-email-peter.griffin@linaro.org>
- <Pine.LNX.4.44L0.1407101154070.1492-100000@iolanthe.rowland.org>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] serial: efm32: correct namespacing of location property
+Date: Fri, 11 Jul 2014 10:16:45 +0200
+Message-ID: <1405066605-12801-1-git-send-email-u.kleine-koenig@pengutronix.de>
+References: <CAOesGMjgX5PWBSD2YP7mTGMWafxBjeMDmzZoPCXb27YPUHEcyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1407101154070.1492-100000@iolanthe.rowland.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: linux-arm-kernel@lists.infradead.org, Kernel development list <linux-kernel@vger.kernel.org>, maxime.coquelin@st.com, patrice.chotard@st.com, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, USB list <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, lee.jones@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMjgX5PWBSD2YP7mTGMWafxBjeMDmzZoPCXb27YPUHEcyw@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Olof Johansson pointed out that usually the company name is picked as
+namespace prefix to specific properties. So expect "energymicro,locatio=
+n"
+but fall back to the previously introduced name "efm32,location".
 
-Thanks for reviewing.
+Cc: Olof Johansson <olof@lixom.net>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+---
+ Documentation/devicetree/bindings/serial/efm32-uart.txt | 4 ++--
+ drivers/tty/serial/efm32-uart.c                         | 8 +++++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-On Thu, 10 Jul 2014, Alan Stern wrote:
+diff --git a/Documentation/devicetree/bindings/serial/efm32-uart.txt b/=
+Documentation/devicetree/bindings/serial/efm32-uart.txt
+index 3ca01336b837..8adbab268ca3 100644
+--- a/Documentation/devicetree/bindings/serial/efm32-uart.txt
++++ b/Documentation/devicetree/bindings/serial/efm32-uart.txt
+@@ -6,7 +6,7 @@ Required properties:
+ - interrupts : Should contain uart interrupt
+=20
+ Optional properties:
+-- efm32,location : Decides the location of the USART I/O pins.
++- energymicro,location : Decides the location of the USART I/O pins.
+   Allowed range : [0 .. 5]
+   Default: 0
+=20
+@@ -16,5 +16,5 @@ uart@0x4000c400 {
+ 	compatible =3D "energymicro,efm32-uart";
+ 	reg =3D <0x4000c400 0x400>;
+ 	interrupts =3D <15>;
+-	efm32,location =3D <0>;
++	energymicro,location =3D <0>;
+ };
+diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32=
+-uart.c
+index 3b0ee9afd76f..cb007a4f4d15 100644
+--- a/drivers/tty/serial/efm32-uart.c
++++ b/drivers/tty/serial/efm32-uart.c
+@@ -671,10 +671,16 @@ static int efm32_uart_probe_dt(struct platform_de=
+vice *pdev,
+ 	if (!np)
+ 		return 1;
+=20
+-	ret =3D of_property_read_u32(np, "efm32,location", &location);
++	ret =3D of_property_read_u32(np, "energymicro,location", &location);
++
++	if (ret)
++		/* fall back to wrongly namespaced property */
++		ret =3D of_property_read_u32(np, "efm32,location", &location);
++
+ 	if (ret)
+ 		/* fall back to old and (wrongly) generic property "location" */
+ 		ret =3D of_property_read_u32(np, "location", &location);
++
+ 	if (!ret) {
+ 		if (location > 5) {
+ 			dev_err(&pdev->dev, "invalid location\n");
+--=20
+2.0.0
 
-> On Thu, 10 Jul 2014, Peter Griffin wrote:
-> 
-> > This driver adds support for the USB HCD present in STi
-> > SoC's from STMicroelectronics. It has been tested on the
-> > stih416-b2020 board.
-> 
-> This driver file, along with the Kconfig changes, belongs in the
-> arch/platform-specific source directory.  Not in drivers/usb/host/.  
-> It is, after all, a platform driver that registers two platform
-> devices.
-
-Why do think that?
-
-AFAIK certainly for ARM we are trying NOT to add code
-under the arch/platform directorys and get the code into the relevant subsystems.
-
-In order to prove the above if you look in drivers/usb/host/ there are many other 
-similar platform drivers for other SoC families: -
-bcma-hcd.c
-ehci-atmel.c
-ssb-hcd.c
-ehci-exynos.c
-ehci-fsl.c
-ehci-mxc.c 
-ehci-omap.c
-ehci-orion.c
-ohci-nxp.c
-and more, but you get the idea. In short I believe this to be the correct directory :-)
-
-> 
-> > +++ b/drivers/usb/host/Kconfig
-> > @@ -753,6 +753,23 @@ config USB_HCD_SSB
-> >  
-> >  	  If unsure, say N.
-> >  
-> > +config USB_HCD_ST
-> > +	tristate "STMicroelectronics STi family HCD support"
-> 
-> Why does this need to be tristate?  Why not always build it into the 
-> kernel?  Or at least make it boolean rather than tristate.
-
-Building as a module is useful on these embedded SoCs usually as a mechanism for speeding up boot time.
-Anything which isn't critical to getting the core functionality of the device going (in this case decoding
-TV and outputting on HDMI), can be deffered to a later point. Things like USB drivers, can then be loaded in
-after that point (deffered module loading), to give the appearence of 'instant on' (which in consumer electronics
-is what everyone wishes to achieve).
-
-Going back to my examples above, most of these platforms are also defined as tristate.
-
-> 
-> > +	depends on ARCH_STI
-> > +	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-> > +	select USB_EHCI_HCD_PLATFORM if USB_EHCI_HCD
-> > +	select MFD_SYSCON
-> > +	select GENERIC_PHY
-> > +	help
-> > +	  Enable support for the EHCI and OCHI host controller on ST
-> 
-> s/OCHI/OHCI/
-
-Good spot, will fix in V2
-
-> 
-> > + 	  consumer electronics SoCs.
-> > +
-> > + 	  It converts the ST driver into two platform device drivers
-> 
-> It converts the ST driver?  That doesn't sound right at all.  You could 
-> eliminate this paragraph completely and nobody would miss it.
-
-I agree the wording is a little off there, I can remove or re-phrase it. What it is trying to express
-is that it is slightly different to some other platform drivers, in that it creates two platform drivers one
-for the ehci controller and the other for the OHCI controller. From looking at other drivers in this directory 
-this driver is quite similar to USB_HCD_BCMA, which also deemed it noteworthy to mention in the help, although
-phrased somewhat more succinctly.
-
-regards,
-
-Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
