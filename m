@@ -1,127 +1,44 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 8/9] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Fri, 11 Jul 2014 10:08:51 +0100
-Message-ID: <20140711090851.GL6501@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-9-git-send-email-Liviu.Dudau@arm.com>
- <004601cf9cdb$ca08f7f0$5e1ae7d0$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <004601cf9cdb$ca08f7f0$5e1ae7d0$%han@samsung.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Sinan Kaya' <okaya@codeaurora.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Suravee Suthikulanit' <suravee.suthikulpanit@amd.com>, 'LKML' <linux-kernel@vger.kernel.org>, 'Device Tree ML' <devicetree@vger.kernel.org>, 'LAKML' <linux-arm-kernel@lists.infradead.org>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 0/4] iio: exynos-adc: use syscon instead of ioremap
+Date: Fri, 11 Jul 2014 14:36:25 +0530
+Message-ID: <1405069589-10388-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 08:43:21AM +0100, Jingoo Han wrote:
-> On Wednesday, July 02, 2014 3:44 AM, Liviu Dudau wrote:
-> >=20
-> > Several platforms use a rather generic version of parsing
-> > the device tree to find the host bridge ranges. Move the common cod=
-e
-> > into the generic PCI code and use it to create a pci_host_bridge
-> > structure that can be used by arch code.
-> >=20
-> > Based on early attempts by Andrew Murray to unify the code.
-> > Used powerpc and microblaze PCI code as starting point.
-> >=20
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  drivers/of/of_pci.c       | 135 ++++++++++++++++++++++++++++++++++=
-++++++++++++
-> >  drivers/pci/host-bridge.c |  18 +++++++
-> >  include/linux/of_pci.h    |  10 ++++
-> >  include/linux/pci.h       |   8 +++
-> >  4 files changed, 171 insertions(+)
-> >=20
-> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> > index 8481996..55d8320 100644
-> > --- a/drivers/of/of_pci.c
-> > +++ b/drivers/of/of_pci.c
->=20
-> [.....]
->=20
-> > +struct pci_host_bridge *
-> > +of_create_pci_host_bridge(struct device *parent, struct pci_ops *o=
-ps, void *host_data)
-> > +{
-> > +	int err, domain, busno;
-> > +	struct resource *bus_range;
-> > +	struct pci_bus *root_bus;
-> > +	struct pci_host_bridge *bridge;
-> > +	resource_size_t io_base;
-> > +	LIST_HEAD(res);
-> > +
-> > +	bus_range =3D kzalloc(sizeof(*bus_range), GFP_KERNEL);
-> > +	if (!bus_range)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	domain =3D of_alias_get_id(parent->of_node, "pci-domain");
-> > +	if (domain =3D=3D -ENODEV)
-> > +		domain =3D atomic_inc_return(&domain_nr);
-> > +
-> > +	err =3D of_pci_parse_bus_range(parent->of_node, bus_range);
-> > +	if (err) {
-> > +		dev_info(parent, "No bus range for %s, using default [0-255]\n",
-> > +			parent->of_node->full_name);
-> > +		bus_range->start =3D 0;
-> > +		bus_range->end =3D 255;
-> > +		bus_range->flags =3D IORESOURCE_BUS;
-> > +	}
-> > +	busno =3D bus_range->start;
-> > +	pci_add_resource(&res, bus_range);
-> > +
-> > +	/* now parse the rest of host bridge bus ranges */
-> > +	err =3D pci_host_bridge_of_get_ranges(parent->of_node, &res, &io_=
-base);
-> > +	if (err)
-> > +		goto err_create;
-> > +
-> > +	/* then create the root bus */
-> > +	root_bus =3D pci_create_root_bus_in_domain(parent, domain, busno,
-> > +						ops, host_data, &res);
-> > +	if (IS_ERR(root_bus)) {
-> > +		err =3D PTR_ERR(root_bus);
-> > +		goto err_create;
-> > +	}
-> > +
-> > +	bridge =3D to_pci_host_bridge(root_bus->bridge);
-> > +	bridge->io_base =3D io_base;
->=20
-> Hi Liviu Dudau,
->=20
-> Would you fix the following warning?
->=20
-> drivers/of/of_pci.c: In function 'of_create_pci_host_bridge'
-> drivers/of/of_pci.c:218:18: warning: 'of_base' may be used uninitiali=
-zed in this function [-Wmaybe-uninitialized]
->   bridge->io_base =3D io_base;
+This patch does the following
+1. Use the syscon and Regmap API instead of ioremappaing the
+   ADC_PHY register from PMU.
+2. Moves the exynos-adc.txt from bindings/arm/samsung/
+   to bindings/iio/adc/.
+3. Updates the Documentation in exynos-adc.txt with syscon phandle
+   for the ADC nodes.
+4. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
+   Exynos5420 with the syscon phandle.
 
-Yes, I have a simple fix which is to set the initial value to zero when=
- declaring the variable.
+Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
+by verifying sysfs entries provided by HWMON based NTC thermistors.
 
-Best regards,
-Liviu
+Tested-By for Exynos3250, Exynos4x12 would be appreciated.
 
->=20
-> Best regards,
-> Jingoo Han
->=20
-> [.....]
->=20
->=20
+Naveen Krishna Chatradhi (4):
+  iio: exyno-adc: use syscon for PMU register access
+  Documentation: dt-bindings: move exynos-adc.txt to more iio/adc/
+  Documentation: dt-bindings: update exynos-adc.txt with syscon handle
+  ARM: dts: exynos: Add sysreg phandle to ADC node
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |   82 ------------------
+ .../devicetree/bindings/iio/adc/exynos-adc.txt     |   87 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+ drivers/iio/adc/exynos_adc.c                       |   29 +++++--
+ 7 files changed, 115 insertions(+), 95 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/exynos-adc.txt
+
+-- 
+1.7.9.5
