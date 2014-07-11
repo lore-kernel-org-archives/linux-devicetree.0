@@ -1,58 +1,119 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: exynos-audss: Update as per existing framework
-Date: Fri, 11 Jul 2014 12:40:24 +0200
-Message-ID: <53BFBF18.3080704@samsung.com>
-References: <1405071475-31946-1-git-send-email-tushar.b@samsung.com>
- <1405071475-31946-3-git-send-email-tushar.b@samsung.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding documentation
+Date: Fri, 11 Jul 2014 16:11:03 +0530
+Message-ID: <53BFBF3F.8040804@gmail.com>
+References: <1405074557-5519-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1405071475-31946-3-git-send-email-tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1405074557-5519-1-git-send-email-b29396@freescale.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, socketcan@hartkopp.net, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tushar,
+On 07/11/2014 03:59 PM, Dong Aisheng wrote:
+> add M_CAN device tree binding documentation
+>
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+> Cc: Varka Bhadram <varkabhadram@gmail.com>
+> Signed-off-by: Dong Aisheng <b29396@freescale.com>
+> ---
+>   .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++++++++++
+>   1 files changed, 65 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> new file mode 100644
+> index 0000000..c4cb263
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -0,0 +1,65 @@
+> +Bosch MCAN controller Device Tree Bindings
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "bosch,m_can" for M_CAN controllers
+> +- reg			: physical base address and size of the M_CAN
+> +			  registers map and Message RAM
+> +- reg-names		: Should be "m_can" and "message_ram"
+> +- interrupts		: Should be the interrupt number of M_CAN interrupt
+> +			  line 0 and line 1, could be same if sharing
+> +			  the same interrupt.
+> +- interrupt-names	: Should contain "int0" and "int1"
+> +- clocks		: Clocks used by controller, should be host clock
+> +			  and CAN clock.
+> +- clock-names		: Should contain "hclk" and "cclk"
+> +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
 
-On 11/07/14 11:37, Tushar Behera wrote:
-> Change exynos-audss clock driver as per existing clock framework from
-> the existing module driver framework.
+I think this should be pinctrl-0
 
-Can you explain what's the actual issue you're trying to solve with that
-patch ? What's the problem with this driver being a platform driver ?
-It feels we're moving in circles here, see
+> +- pinctrl-names		: Names corresponding to the numbered pinctrl states
 
-commit b37a4224104568198b93fb9831224cfe7d83fff8
-Author: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Date:   Wed Sep 25 14:12:47 2013 -0700
+remove 1 tab space before :
 
-    clk: exynos-audss: convert to platform device
+> +- mram-cfg		: Message RAM configuration data.
+> +  Multiple M_CAN instances can share the same Message RAM and each element(e.g
+> +  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
+> +  so this property is telling driver how the shared or private Message RAM
+> +  are used by this M_CAN controller.
+> +
 
-    The Exynos AudioSS clock controller will later be modified to allow
-    input clocks to be specified via device-tree in order to support
-    multiple Exynos SoCs.  This will introduce a dependency on the core
-    SoC clock controller being initialized first so that the AudioSS driver
-    can look up its input clocks, but the order in which clock providers
-    are probed in of_clk_init() is not guaranteed.  Since deferred probing
-    is not supported in of_clk_init() and the AudioSS block is not the core
-    controller, we can initialize it later as a platform device.
+It may written like:
+mram-cfg		: Message RAM configuration data
+			  Multiple M_CAN instances can share the same Message RAM and each element
+			  (e.g Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
+			  ...
 
-    Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-    Acked-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-    Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-    Acked-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-    Acked-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-    Signed-off-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> +  The format should be as follows:
+> +  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems
+> +   txe_elems txb_elems>
+> +  The 'offset' is an address offset of the Message RAM where the following
+> +  elements start from. This is usually set to 0x0 if you're using a private
+> +  Message RAM. The remain cells are used to specify how many elements are used
+> +  for each FIFO/Buffer.
+> +
+> +M_CAN includes the following elements according to user manual:
+> +11-bit Filter	0-128 elements / 0-128 words
+> +29-bit Filter	0-64 elements / 0-128 words
+> +Rx FIFO 0	0-64 elements / 0-1152 words
+> +Rx FIFO 1	0-64 elements / 0-1152 words
+> +Rx Buffers	0-64 elements / 0-1152 words
+> +Tx Event FIFO	0-32 elements / 0-64 words
+> +Tx Buffers	0-32 elements / 0-576 words
+> +
+> +Please refer to 2.4.1 Message RAM Configuration in Bosch M_CAN user manual
+> +for details.
+> +
+> +Example:
+> +SoC dtsi:
+> +m_can1: can@020e8000 {
+> +	compatible = "bosch,m_can";
+> +	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
+> +	reg-names = "m_can", "message_ram";
+> +	interrupts = <0 114 0x04>,
+> +		     <0 114 0x04>;
+> +	interrupt-names = "int0", "int1";
+> +	clocks = <&clks IMX6SX_CLK_CANFD>,
+> +		 <&clks IMX6SX_CLK_CANFD>;
+> +	clock-names = "hclk", "cclk";
+> +	mram-cfg = <0x0 0 0 32 0 0 0 1>;
+> +	status = "disabled";
+> +};
+> +
+> +Board dtsi:
+> +&m_can1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_m_can1>;
+> +	status = "enabled";
+> +};
 
-I realize of_clk_init() now handles better clock provider dependencies,
-nevertheless do we really need all this churn ?
 
---
-Thanks,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Varka Bhadram.
+
