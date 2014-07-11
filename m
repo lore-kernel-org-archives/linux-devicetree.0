@@ -1,125 +1,55 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 10/13] [RFC] ARM: dts: Add shmobile platform device tree
- bindings documentation
-Date: Fri, 11 Jul 2014 11:17:20 +0200
-Message-ID: <20140711091720.GO12420@verge.net.au>
-References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
- <1404908623-909-11-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1404908623-909-11-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: [PATCH 0/8] tilcdc-panel: Backlight and GPIO devicetree support
+Date: Fri, 11 Jul 2014 11:18:46 -0300
+Message-ID: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, daniel.vetter-/w4YWyX8dFk@public.gmane.org, =?UTF-8?q?Guido=20Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 02:23:40PM +0200, Geert Uytterhoeven wrote:
-> Add Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
-> Documentation, listing supported SoCs and boards.
-> 
-> This allows to use checkpatch to validate DTSes referring to Renesas
-> shmobile SoCs, and boards containing those SoCs.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: linux-arm-kernel@lists.infradead.org
+Hello all,
 
-Thanks Geert,
+This patchset adds the required changes to support an optional backlight
+and GPIO for the tilcdc panel driver.
 
-from my point of view this seems nice. Is there a reason it is marked as an RFC?
+There was some code to support a backlight, but it was somewhat broken
+and undocumented. I've followed the nice implementation in panel-simple
+and added a similar one here.
 
-> ---
->  Documentation/devicetree/bindings/arm/shmobile.txt | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/shmobile.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-> new file mode 100644
-> index 000000000000..baa25c92597d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -0,0 +1,71 @@
-> +Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
-> +--------------------------------------------------------------------
-> +
-> +SoCs:
-> +
-> +  - Emma Mobile EV2
-> +    compatible = "renesas,emev2"
-> +  - RZ/A1H (R7S72100)
-> +    compatible = "renesas,r7s72100"
-> +  - R-Mobile APE6 (R8A73A40)
-> +    compatible = "renesas,r8a73a4"
-> +  - R-Mobile A1 (R8A77400)
-> +    compatible = "renesas,r8a7740"
-> +  - R-Car M1A (R8A77781)
-> +    compatible = "renesas,r8a7778"
-> +  - R-Car H1 (R8A77790)
-> +    compatible = "renesas,r8a7779"
-> +  - R-Car H2 (R8A77900)
-> +    compatible = "renesas,r8a7790"
-> +  - R-Car M2-W (R8A77910)
-> +    compatible = "renesas,r8a7791"
-> +  - R-Car V2H (R8A77920)
-> +    compatible = "renesas,r8a7792"
-> +  - R-Car M2-N (R8A77930)
-> +    compatible = "renesas,r8a7793"
-> +  - R-Car E2 (R8A77940)
-> +    compatible = "renesas,r8a7794"
-> +  - SH-Mobile AP4 (R8A73720/SH7372)
-> +    compatible = "renesas,sh7372"
-> +  - SH-Mobile AG5 (R8A73A00/SH73A0)
-> +    compatible = "renesas,sh73a0"
-> +
-> +
-> +Boards:
-> +
-> +  - Alt
-> +    compatible = "renesas,alt", "renesas,r8a7794"
-> +  - APE6-EVM
-> +    compatible = "renesas,ape6evm", "renesas,r8a73a4"
-> +  - APE6-EVM - Reference Device Tree Implementation
-> +    compatible = "renesas,ape6evm-reference", "renesas,r8a73a4"
-> +  - Atmark Techno Armadillo-800 EVA
-> +    compatible = "renesas,armadillo800eva"
-> +  - Atmark Techno Armadillo-800 EVA - Reference Device Tree Implementation
-> +    compatible = "renesas,armadillo800eva-reference", "renesas,r8a7740"
-> +  - BOCK-W
-> +    compatible = "renesas,bockw", "renesas,r8a7778"
-> +  - BOCK-W - Reference Device Tree Implementation
-> +    compatible = "renesas,bockw-reference", "renesas,r8a7778"
-> +  - Genmai (RTK772100BC00000BR)
-> +    compatible = "renesas,genmai", "renesas,r7s72100"
-> +  - Henninger
-> +    compatible = "renesas,henninger", "renesas,r8a7791"
-> +  - Koelsch (RTP0RC7791SEB00010S)
-> +    compatible = "renesas,koelsch", "renesas,r8a7791"
-> +  - EMEV2 KZM9D
-> +    compatible = "renesas,kzm9d", "renesas,emev2"
-> +  - KZM-A9-GT
-> +    compatible = "renesas,kzm9g", "renesas,sh73a0"
-> +  - KZM-A9-GT - Reference Device Tree Implementation
-> +    compatible = "renesas,kzm9g-reference", "renesas,sh73a0"
-> +  - Lager (RTP0RC7790SEB00010S)
-> +    compatible = "renesas,lager", "renesas,r8a7790"
-> +  - Mackerel (R0P7372LC0016RL, AP4 EVM 2nd)
-> +    compatible = "renesas,mackerel"
-> +  - Marzen
-> +    compatible = "renesas,marzen", "renesas,r8a7779"
-> +
-> +Note: Reference Device Tree Implementations are temporary implementations
-> +      to ease the migration from platform devices to Device Tree, and are
-> +      intended to be removed in the future.
-> -- 
-> 1.9.1
-> 
+The enable GPIO is required to turn on and off devices with such capability.
+Also here, I've followed panel-simple which looks correct.
+
+In addition to this there are very minor cosmetic cleanups and a larger
+error path fix in tilcdc's DRM driver .load error path.
+
+This patchset applies on top of drm-next branch which contains the latest
+tilcdc pushed by Guido.
+
+If at all possible, I'd like to get this merged for v3.17. If a pull request
+is needed, don't hesitate to ask and I'll prepare one.
+
+Comments and tests welcome!
+
+Ezequiel Garcia (8):
+  drm/tilcdc: Fix the error path in tilcdc_load()
+  drm/tilcdc: panel: Add missing of_node_put
+  drm/tilcdc: panel: Remove unused variable
+  drm/tilcdc: panel: Spurious whitespace removal
+  drm/tilcdc: panel: Use devm_kzalloc to simplify the error path
+  drm/tilcdc: panel: Fix backlight devicetree support
+  drm/tilcdc: panel: Set return value explicitly
+  drm/tilcdc: panel: Add support for enable GPIO
+
+ .../devicetree/bindings/drm/tilcdc/panel.txt       |  7 ++
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c                | 60 +++++++++++++++---
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c              | 74 +++++++++++++++++-----
+ 3 files changed, 114 insertions(+), 27 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
