@@ -1,148 +1,74 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding documentation
-Date: Fri, 11 Jul 2014 14:54:00 +0200
-Message-ID: <53BFDE68.4040405@pengutronix.de>
-References: <1405074557-5519-1-git-send-email-b29396@freescale.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] of: Add NVIDIA Tegra XUSB pad controller binding
+Date: Fri, 11 Jul 2014 14:58:00 +0200
+Message-ID: <20140711125759.GB10744@ulmo>
+References: <1403177830-28595-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="5wjAIv2KUdBeeALe3sfrXN0KQ31lfUBO7"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1405074557-5519-1-git-send-email-b29396@freescale.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org
-Cc: wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
+	protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403177830-28595-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---5wjAIv2KUdBeeALe3sfrXN0KQ31lfUBO7
-Content-Type: text/plain; charset=UTF-8
+
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 07/11/2014 12:29 PM, Dong Aisheng wrote:
-> add M_CAN device tree binding documentation
+On Thu, Jun 19, 2014 at 01:37:07PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >=20
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-> Cc: Varka Bhadram <varkabhadram@gmail.com>
-> Signed-off-by: Dong Aisheng <b29396@freescale.com>
+> This patch adds the device tree binding documentation for the XUSB pad
+> controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and PHY
+> capabilities.
+>=20
+> Tested-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++=
-++++++++
->  1 files changed, 65 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt=
-
+> Changes in v4:
+> - drop unneeded #address-cells =3D <0> and #size-cells =3D <0>
 >=20
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Docu=
-mentation/devicetree/bindings/net/can/m_can.txt
-> new file mode 100644
-> index 0000000..c4cb263
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> @@ -0,0 +1,65 @@
-> +Bosch MCAN controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "bosch,m_can" for M_CAN controllers
-> +- reg			: physical base address and size of the M_CAN
-> +			  registers map and Message RAM
-> +- reg-names		: Should be "m_can" and "message_ram"
-> +- interrupts		: Should be the interrupt number of M_CAN interrupt
-> +			  line 0 and line 1, could be same if sharing
-> +			  the same interrupt.
-> +- interrupt-names	: Should contain "int0" and "int1"
-> +- clocks		: Clocks used by controller, should be host clock
-> +			  and CAN clock.
-> +- clock-names		: Should contain "hclk" and "cclk"
-> +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinct=
-rl-bindings.txt
-> +- pinctrl-names		: Names corresponding to the numbered pinctrl states
-> +- mram-cfg		: Message RAM configuration data.
-> +  Multiple M_CAN instances can share the same Message RAM and each ele=
-ment(e.g
-> +  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configur=
-able,
-> +  so this property is telling driver how the shared or private Message=
- RAM
-> +  are used by this M_CAN controller.
-
-Will you have to modify the binding, espeically the mram-cfg, if you add
-canfd support to the driver?
-
-I think mram-cfg should have a vendor prefix, e.g.: bosch,mram-cfg
-
-> +
-> +  The format should be as follows:
-> +  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems
-> +   txe_elems txb_elems>
-> +  The 'offset' is an address offset of the Message RAM where the follo=
-wing
-> +  elements start from. This is usually set to 0x0 if you're using a pr=
-ivate
-> +  Message RAM. The remain cells are used to specify how many elements =
-are used
-> +  for each FIFO/Buffer.
-> +
-> +M_CAN includes the following elements according to user manual:
-> +11-bit Filter	0-128 elements / 0-128 words
-> +29-bit Filter	0-64 elements / 0-128 words
-> +Rx FIFO 0	0-64 elements / 0-1152 words
-> +Rx FIFO 1	0-64 elements / 0-1152 words
-> +Rx Buffers	0-64 elements / 0-1152 words
-> +Tx Event FIFO	0-32 elements / 0-64 words
-> +Tx Buffers	0-32 elements / 0-576 words
-> +
-> +Please refer to 2.4.1 Message RAM Configuration in Bosch M_CAN user ma=
-nual
-> +for details.
-> +
-> +Example:
-> +SoC dtsi:
-> +m_can1: can@020e8000 {
-> +	compatible =3D "bosch,m_can";
-> +	reg =3D <0x020e8000 0x4000>, <0x02298000 0x4000>;
-> +	reg-names =3D "m_can", "message_ram";
-> +	interrupts =3D <0 114 0x04>,
-> +		     <0 114 0x04>;
-> +	interrupt-names =3D "int0", "int1";
-> +	clocks =3D <&clks IMX6SX_CLK_CANFD>,
-> +		 <&clks IMX6SX_CLK_CANFD>;
-> +	clock-names =3D "hclk", "cclk";
-> +	mram-cfg =3D <0x0 0 0 32 0 0 0 1>;
-> +	status =3D "disabled";
-> +};
-> +
-> +Board dtsi:
-> +&m_can1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_m_can1>;
-> +	status =3D "enabled";
-> +};
+> Changes in v2:
+> - move header file to this patch and refer to it in the binding
+> - update example to match the latest binding
 >=20
+>  .../pinctrl/nvidia,tegra124-xusb-padctl.txt        | 127 +++++++++++++++=
+++++++
+>  include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |   7 ++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegr=
+a124-xusb-padctl.txt
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
 
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Patches 1 and 2 applied to the for-3.17/xusb-padctl branch with Linus'
+Acked-by.
 
+Thierry
 
---5wjAIv2KUdBeeALe3sfrXN0KQ31lfUBO7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--jq0ap7NbKX2Kqbes
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+Version: GnuPG v2
 
-iEYEARECAAYFAlO/3mgACgkQjTAFq1RaXHMIDgCeORLAvW2aCKNMZiBQz19qablD
-GecAmwSppdP8vIpQ9bbSHiCcqDEMfrbE
-=3wNX
+iQIcBAEBAgAGBQJTv99XAAoJEN0jrNd/PrOhb/gQALIwB07tJwDQvIykPVA4DoZc
+lV2+sfpTVdmF0SsqffXo+y/0WD1R5BVIifufr3AdRll7qwNZ44VMr6rMLNg6dSgd
+bXFYKLAv2gV5GzV1Zd5HYorEqOm78ULv/OM/FeS9bVKerbOFb3MEWoxzkGLetTjm
+XJKqF/SiVyUh8wvV6tQGlniH7s2FXk5eGv20pPP10Pnpe1QZsRgYyCILlMmpPgzm
+W+GVGLG/krVczaEmB9w+ISHOx8SbZ+89Uz/rr0rrVZXZecyDFF7kYeAk4Y+/46vx
+S0d40/a9rgkCMVfqtZ9x8o4/C9wD6qgUcmcYbGj6trPw5hl4GwFtfjLsUS1no66e
+2Z/Ij/xeL/oGsAw2AUNyjiXuZxDtMMRfj7zmWPNsIrdf4Y7+7xH4DhROhZL6ImI7
+5p4jYuiHgSlC83xcimDjDWWZ4KKWQ16RQpnZ+gehOFQ7rHWJQBqDB4iEwXLTcdbe
+pR5RHU8+hJ1huqu1GQdKMK7UyT1KYm5KWzc8M3nfZLvJFPoW4uKg/h5p80hzHeSa
+iEvMP7NnF0d6GebFNWimfl8RdLxdGQ3Jiu11REf9K578EJ5iX8ARn9i2cX4QwuL9
+UHsh4qsMD5rvUQoXT8U9nHG+OjEnhjJvVpcZzIaoqbllmisEvD92DUq/vSkLcU3D
+hPAMb15cMJnHJ4aIRA6w
+=1a2d
 -----END PGP SIGNATURE-----
 
---5wjAIv2KUdBeeALe3sfrXN0KQ31lfUBO7--
+--jq0ap7NbKX2Kqbes--
