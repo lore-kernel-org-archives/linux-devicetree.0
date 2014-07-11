@@ -1,89 +1,277 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 11 Jul 2014 19:02:06 +0100
-Message-ID: <20140711180151.GH16321@arm.com>
-References: <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
- <20140708005954.GC22939@google.com>
- <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
- <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
- <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
- <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
- <20140711141115.GB16321@arm.com>
- <CAErSpo7C8qzmdp+XgVi2ysXj_NcgvVY7RVfBZ2PHimLzrzANMQ@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v1] clk: qcom: Add APQ8084 Multimedia Clock Controller
+ (MMCC) support
+Date: Fri, 11 Jul 2014 13:53:45 -0700
+Message-ID: <53C04ED9.6030508@codeaurora.org>
+References: <1402591302-12100-1-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo7C8qzmdp+XgVi2ysXj_NcgvVY7RVfBZ2PHimLzrzANMQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1402591302-12100-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 06:02:56PM +0100, Bjorn Helgaas wrote:
-> On Fri, Jul 11, 2014 at 8:11 AM, Catalin Marinas
-> <catalin.marinas@arm.com> wrote:
-> > On Thu, Jul 10, 2014 at 11:36:10PM +0100, Bjorn Helgaas wrote:
-> >> Most of the rest of the v7 discussion was about "Introduce a domain
-> >> number for pci_host_bridge."  I think we should add arm64 using the
-> >> existing pci_scan_root_bus() and keep the domain number in the arm64
-> >> sysdata structure like every other arch does.  Isn't that feasible?
-> >> We can worry about domain unification later.
-> >
-> > I think that's what we were trying to avoid, adding an arm64-specific
-> > pci_sys_data structure (and arm64-specific API). IIUC, avoiding this
-> > would allow the host controller drivers to use the sysdata pointer for
-> > their own private data structures.
-> >
-> > Also since you can specify the domain number via DT (and in Liviu's
-> > v8 patches read by of_create_pci_host_bridge), I think it would make
-> > sense to have it stored in some generic data structures (e.g.
-> > pci_host_bridge) rather than in an arm64 private sysdata.
-> 
-> It would definitely be nice to keep the domain in a generic data
-> structure rather than an arm64-specific one.  But every other arch
-> keeps it in an arch-specific structure today, and I think following
-> that existing pattern is the quickest way forward.
+On 06/12/14 09:41, Georgi Djakov wrote:
+> Add support for the multimedia clock controller found on the APQ8084
+> based platforms. This will allow the multimedia device drivers to
+> control their clocks.
+>
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> ---
 
-In this case we end up with an arm64-specific struct pci_sys_data and I
-assume some API that takes care of this data structure to populate the
-domain nr.
+I started picking up the qcom clock patches from the list. I see that
+this one has a small problem though:
 
-In Liviu's implementation, of_create_pci_host_bridge() is called by the
-host controller driver directly and reads the domain_nr from the DT. It
-also gets a void *host_data which it stores as sysdata in the pci_bus
-structure (but that's specific to the host controller driver rather than
-arm64). Since sysdata is opaque to of_create_pci_host_bridge(), it
-cannot set the domain_nr.
+drivers/clk/qcom/mmcc-apq8084.c:169:10: warning: Initializer entry
+defined twice
+drivers/clk/qcom/mmcc-apq8084.c:170:10:   also defined here
+drivers/clk/qcom/mmcc-apq8084.c:185:10: warning: Initializer entry
+defined twice
+drivers/clk/qcom/mmcc-apq8084.c:187:10:   also defined here
+drivers/clk/qcom/mmcc-apq8084.c:203:10: warning: Initializer entry
+defined twice
+drivers/clk/qcom/mmcc-apq8084.c:205:10:   also defined here
 
-If we go for arm64 sysdata, the host controller driver would have to
-call some arm64 pci* function (maybe with its own private data as
-argument) which would have to parse the DT, assign the domain nr and
-eventually call pci_create_root_bus(). But it means that significant
-part of of_create_pci_host_bridge() would be moved under arch/arm64 (an
-alternative is for each host driver to implement its own
-of_create_pci_host_bridge()).
+> diff --git a/drivers/clk/qcom/mmcc-apq8084.c b/drivers/clk/qcom/mmcc-apq8084.c
+> new file mode 100644
+> index 0000000..9cc956a
+> --- /dev/null
+> +++ b/drivers/clk/qcom/mmcc-apq8084.c
+> @@ -0,0 +1,3352 @@
+> +/*
+> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#include <dt-bindings/clock/qcom,mmcc-apq8084.h>
+> +#include <dt-bindings/reset/qcom,mmcc-apq8084.h>
+> +
+> +#include "common.h"
+> +#include "clk-regmap.h"
+> +#include "clk-pll.h"
+> +#include "clk-rcg.h"
+> +#include "clk-branch.h"
+> +#include "reset.h"
+> +
+> +#define P_XO		0
+> +#define P_MMPLL0	1
+> +#define P_EDPLINK	1
+> +#define P_MMPLL1	2
+> +#define P_HDMIPLL	2
+> +#define P_GPLL0		3
+> +#define P_EDPVCO	3
+> +#define P_MMPLL4	3
 
-In addition, host drivers would retrieve their private data from the
-arm64 specific sysdata structure and we were trying to make host drivers
-depend only on generic data structures and API rather than arch
-specific.
+Seems that these are shared in the same parent map table. I'm not sure
+the best way to fix this yet because it's pretty annoying to come up
+with an optimal order. Maybe the whole scheme should be thrown out and
+we should just loop over the parent map looking for a particular enum
+value, and then have that enum map to the actual register value. We lose
+the direct indexing into the array, but it sure makes things a lot
+easier and avoids this whole mess.
 
-> But you mentioned arm64-specific API, too.  What do you have in mind
-> there?  I know there will be arm64 implementations of various
-> pcibios_*() functions (just like for every other arch), but it sounds
-> like there might be something else?
+> +#define P_GPLL1		4
+> +#define P_DSI0PLL	4
+> +#define P_DSI0PLL_BYTE	4
+> +#define P_MMPLL2	4
+> +#define P_MMPLL3	4
+> +#define P_DSI1PLL	5
+> +#define P_DSI1PLL_BYTE	5
+> +#define P_MMSLEEP	6
+> +
+> +static const u8 mmcc_xo_mmpll0_mmpll1_gpll0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_MMPLL1]	= 2,
+> +	[P_GPLL0]	= 5,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_mmpll1_gpll0[] = {
+> +	"xo",
+> +	"mmpll0_vote",
+> +	"mmpll1_vote",
+> +	"mmss_gpll0_vote",
+> +};
+> +
+> +static const u8 mmcc_xo_mmpll0_dsi_hdmi_gpll0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_HDMIPLL]	= 4,
+> +	[P_GPLL0]	= 5,
+> +	[P_DSI0PLL]	= 2,
+> +	[P_DSI1PLL]	= 3,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_dsi_hdmi_gpll0[] = {
+> +	"xo",
+> +	"mmpll0_vote",
+> +	"hdmipll",
+> +	"mmss_gpll0_vote",
+> +	"dsi0pll",
+> +	"dsi1pll",
+> +};
+> +
+> +static const u8 mmcc_xo_mmpll0_1_2_gpll0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_MMPLL1]	= 2,
+> +	[P_GPLL0]	= 5,
+> +	[P_MMPLL2]	= 3,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_1_2_gpll0[] = {
+> +	"xo",
+> +	"mmpll0_vote",
+> +	"mmpll1_vote",
+> +	"mmss_gpll0_vote",
+> +	"mmpll2",
+> +};
+> +
+> +static const u8 mmcc_xo_mmpll0_1_3_gpll0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_MMPLL1]	= 2,
+> +	[P_GPLL0]	= 5,
+> +	[P_MMPLL3]	= 3,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_1_3_gpll0[] = {
+> +	"xo",
+> +	"mmpll0_vote",
+> +	"mmpll1_vote",
+> +	"mmss_gpll0_vote",
+> +	"mmpll3",
+> +};
+> +
+> +static const u8 mmcc_xo_dsi_hdmi_edp_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_EDPLINK]	= 4,
+> +	[P_HDMIPLL]	= 3,
+> +	[P_EDPVCO]	= 5,
+> +	[P_DSI0PLL]	= 1,
+> +	[P_DSI1PLL]	= 2,
+> +};
+> +
+> +static const char *mmcc_xo_dsi_hdmi_edp[] = {
+> +	"xo",
+> +	"edp_link_clk",
+> +	"hdmipll",
+> +	"edp_vco_div",
+> +	"dsi0pll",
+> +	"dsi1pll",
+> +};
+> +
+> +static const u8 mmcc_xo_dsi_hdmi_edp_gpll0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_EDPLINK]	= 4,
+> +	[P_HDMIPLL]	= 3,
+> +	[P_GPLL0]	= 5,
+> +	[P_DSI0PLL]	= 1,
+> +	[P_DSI1PLL]	= 2,
+> +};
+> +
+> +static const char *mmcc_xo_dsi_hdmi_edp_gpll0[] = {
+> +	"xo",
+> +	"edp_link_clk",
+> +	"hdmipll",
+> +	"gpll0_vote",
+> +	"dsi0pll",
+> +	"dsi1pll",
+> +};
+> +
+> +static const u8 mmcc_xo_dsibyte_hdmi_edp_gpll0_map[] = {
+> +	[P_XO]			= 0,
+> +	[P_EDPLINK]		= 4,
+> +	[P_HDMIPLL]		= 3,
+> +	[P_GPLL0]		= 5,
+> +	[P_DSI0PLL_BYTE]	= 1,
+> +	[P_DSI1PLL_BYTE]	= 2,
+> +};
+> +
+> +static const char *mmcc_xo_dsibyte_hdmi_edp_gpll0[] = {
+> +	"xo",
+> +	"edp_link_clk",
+> +	"hdmipll",
+> +	"gpll0_vote",
+> +	"dsi0pllbyte",
+> +	"dsi1pllbyte",
+> +};
+> +
+> +static const u8 mmcc_xo_mmpll0_1_4_gpll0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_MMPLL1]	= 2,
+> +	[P_MMPLL4]	= 3,
+> +	[P_GPLL0]	= 5,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_1_4_gpll0[] = {
+> +	"xo",
+> +	"mmpll0",
+> +	"mmpll1",
+> +	"mmpll4",
+> +	"gpll0",
+> +};
+> +
+> +static const u8 mmcc_xo_mmpll0_1_4_gpll1_0_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_MMPLL1]	= 2,
+> +	[P_MMPLL4]	= 3,
+> +	[P_GPLL1]	= 4,
+> +	[P_GPLL0]	= 5,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_1_4_gpll1_0[] = {
+> +	"xo",
+> +	"mmpll0",
+> +	"mmpll1",
+> +	"mmpll4",
+> +	"gpll1",
+> +	"gpll0",
+> +};
+> +
+> +static const u8 mmcc_xo_mmpll0_1_4_gpll1_0_sleep_map[] = {
+> +	[P_XO]		= 0,
+> +	[P_MMPLL0]	= 1,
+> +	[P_MMPLL1]	= 2,
+> +	[P_MMPLL4]	= 3,
+> +	[P_GPLL1]	= 4,
+> +	[P_GPLL0]	= 5,
+> +	[P_MMSLEEP]	= 6,
+> +};
+> +
+> +static const char *mmcc_xo_mmpll0_1_4_gpll1_0_sleep[] = {
+> +	"xo",
+> +	"mmpll0",
+> +	"mmpll1",
+> +	"mmpll4",
+> +	"gpll1",
+> +	"gpll0",
+> +	"sleep_clk_src",
+> +};
+> +
+>
 
-Not much left which is arm64 specific, just some callbacks:
-
-http://linux-arm.org/git?p=linux-ld.git;a=commitdiff;h=82ebbce34506676528b9a7ae8f8fbc84b6b6248e
-
-AFAICT, there isn't anything that host drivers need to call directly.
-Basically we want to decouple the PCI host driver model from the arch
-specific data structures/API.
 
 -- 
-Catalin
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
