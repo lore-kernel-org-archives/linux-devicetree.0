@@ -1,237 +1,54 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCHv2 5/5] ARM: dts: OMAP2+: Add #mbox-cells property to all mailbox nodes
-Date: Fri, 11 Jul 2014 17:04:12 -0500
-Message-ID: <1405116252-53612-6-git-send-email-s-anna@ti.com>
-References: <1405116252-53612-1-git-send-email-s-anna@ti.com>
+From: Markus Mayer <markus.mayer@linaro.org>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Fri, 11 Jul 2014 15:09:03 -0700
+Message-ID: <CAPdLdqmBUFaCjdLrYJh3P2jizYC3GP0g7ut+FNaLQ5a73gMp0w@mail.gmail.com>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
+	<1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405116252-53612-1-git-send-email-s-anna@ti.com>
+In-Reply-To: <1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Suman Anna <s-anna@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Girish K S <ks.giri@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Courtney Cavin <courtney.cavin@sonymobile.com>, Matt Porter <mporter@linaro.org>, Craig McGeachie <slapdau@yahoo.com.au>, LeyFoon Tan <lftan.linux@gmail.com>, Loic Pallardy <loic.pallardy@st.com>, Suman Anna <s-anna@ti.com>, ashwin.chaugule@linaro.org, bjorn@kryo.se, Patch Tracking <patches@linaro.org>, Mollie.Wu@tw.fujitsu.com, t.takinishi@jp.fujitsu.com
 List-Id: devicetree@vger.kernel.org
 
-The '#mbox-cells' property is added to all the OMAP mailbox
-nodes. This property is mandatory with the new mailbox framework.
+On 11 July 2014 02:35, Jassi Brar <jaswinder.singh@linaro.org> wrote:
+> Introduce common framework for client/protocol drivers and
+> controller drivers of Inter-Processor-Communication (IPC).
+>
+> Client driver developers should have a look at
+>  include/linux/mailbox_client.h to understand the part of
+> the API exposed to client drivers.
+> Similarly controller driver developers should have a look
+> at include/linux/mailbox_controller.h
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> ---
+>  .../devicetree/bindings/mailbox/mailbox.txt        |  33 ++
+>  Documentation/mailbox.txt                          | 107 +++++
+>  MAINTAINERS                                        |   8 +
+>  drivers/mailbox/Makefile                           |   4 +
+>  drivers/mailbox/mailbox.c                          | 490 +++++++++++++++++++++
+>  include/linux/mailbox_client.h                     |  48 ++
+>  include/linux/mailbox_controller.h                 | 128 ++++++
+>  7 files changed, 818 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/mailbox.txt
+>  create mode 100644 Documentation/mailbox.txt
+>  create mode 100644 drivers/mailbox/mailbox.c
+>  create mode 100644 include/linux/mailbox_client.h
+>  create mode 100644 include/linux/mailbox_controller.h
 
-Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/am33xx.dtsi   |  1 +
- arch/arm/boot/dts/am4372.dtsi   |  1 +
- arch/arm/boot/dts/dra7.dtsi     | 13 +++++++++++++
- arch/arm/boot/dts/omap2420.dtsi |  1 +
- arch/arm/boot/dts/omap2430.dtsi |  1 +
- arch/arm/boot/dts/omap3.dtsi    |  1 +
- arch/arm/boot/dts/omap4.dtsi    |  1 +
- arch/arm/boot/dts/omap5.dtsi    |  1 +
- 8 files changed, 20 insertions(+)
+I don't think combining code and documentation like this is the right
+approach. As per
+Documentation/devicetree/bindings/submitting-patches.txt:
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.d=
-tsi
-index e4f165a..5663ff5 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -352,6 +352,7 @@
- 			reg =3D <0x480C8000 0x200>;
- 			interrupts =3D <77>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_wkupm3: wkup_m3 {
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.d=
-tsi
-index 3be2a87..8619519 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -166,6 +166,7 @@
- 			reg =3D <0x480C8000 0x200>;
- 			interrupts =3D <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_wkupm3: wkup_m3 {
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 99c40d4..626137f 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -342,6 +342,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x4a0f4000 0x200>;
- 			ti,hwmods =3D "mailbox1";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <3>;
- 			ti,mbox-num-fifos =3D <8>;
- 			status =3D "disabled";
-@@ -351,6 +352,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x4883a000 0x200>;
- 			ti,hwmods =3D "mailbox2";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -360,6 +362,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x4883c000 0x200>;
- 			ti,hwmods =3D "mailbox3";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -369,6 +372,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x4883e000 0x200>;
- 			ti,hwmods =3D "mailbox4";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -378,6 +382,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48840000 0x200>;
- 			ti,hwmods =3D "mailbox5";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -387,6 +392,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48842000 0x200>;
- 			ti,hwmods =3D "mailbox6";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -396,6 +402,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48844000 0x200>;
- 			ti,hwmods =3D "mailbox7";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -405,6 +412,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48846000 0x200>;
- 			ti,hwmods =3D "mailbox8";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -414,6 +422,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x4885e000 0x200>;
- 			ti,hwmods =3D "mailbox9";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -423,6 +432,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48860000 0x200>;
- 			ti,hwmods =3D "mailbox10";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -432,6 +442,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48862000 0x200>;
- 			ti,hwmods =3D "mailbox11";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -441,6 +452,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48864000 0x200>;
- 			ti,hwmods =3D "mailbox12";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -450,6 +462,7 @@
- 			compatible =3D "ti,omap4-mailbox";
- 			reg =3D <0x48802000 0x200>;
- 			ti,hwmods =3D "mailbox13";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap24=
-20.dtsi
-index d14f16c..bea6f07 100644
---- a/arch/arm/boot/dts/omap2420.dtsi
-+++ b/arch/arm/boot/dts/omap2420.dtsi
-@@ -157,6 +157,7 @@
- 			interrupts =3D <26>, <34>;
- 			interrupt-names =3D "dsp", "iva";
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <6>;
- 			mbox_dsp: dsp {
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap24=
-30.dtsi
-index db02be2..689bd08 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -247,6 +247,7 @@
- 			reg =3D <0x48094000 0x200>;
- 			interrupts =3D <26>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <6>;
- 			mbox_dsp: dsp {
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dts=
-i
-index b2ae8b8..75c290f 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -332,6 +332,7 @@
- 			ti,hwmods =3D "mailbox";
- 			reg =3D <0x48094000 0x200>;
- 			interrupts =3D <26>;
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <2>;
- 			ti,mbox-num-fifos =3D <2>;
- 			mbox_dsp: dsp {
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dts=
-i
-index bc54d66..d08b98a 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -654,6 +654,7 @@
- 			reg =3D <0x4a0f4000 0x200>;
- 			interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <3>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_ipu: mbox_ipu {
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dts=
-i
-index f7ec4cd..0b8cf23 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -641,6 +641,7 @@
- 			reg =3D <0x4a0f4000 0x200>;
- 			interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <3>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_ipu: mbox_ipu {
---=20
-2.0.0
+"1) The Documentation/ portion of the patch should be a separate patch."
+
+I am not sure if binding document and regular documentation should be
+separated out or if they can stay together  (those more knowledgeable,
+please comment!), but the code portion should definitely be a separate
+patch from the documentation.
+
+Regards,
+-Markus
