@@ -1,73 +1,38 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS)
- support
-Date: Fri, 11 Jul 2014 12:15:51 +0200
-Message-ID: <53BFB957.7010307@collabora.co.uk>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk> <1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk> <CADGdYn6tyTBZOjZH8JBUVMJ1kh-tht=tkU4tA+oM=PbfTYkqGw@mail.gmail.com> <53BF41C8.4080304@collabora.co.uk> <53BFB1BA.6030108@samsung.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH] ARM: at91: at91sam9x5: add clocks for usb device
+Date: Fri, 11 Jul 2014 18:22:55 +0800
+Message-ID: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53BFB1BA.6030108@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, amit daniel kachhap <amit.daniel@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Yadwinder Singh Brar <yadi.brar01@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, Tushar Behera <trblinux@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Andreas Farber <afaerber@suse.de>, LAK <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, jiri.prchal@aksignal.cz
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tomasz,
+Add clocks for usb device, or else switch to CCF, the gadget
+won't work.
 
-On 07/11/2014 11:43 AM, Tomasz Figa wrote:
-> Hi Javier,
-> 
-> On 11.07.2014 03:45, Javier Martinez Canillas wrote:
->> On 07/10/2014 11:59 AM, amit daniel kachhap wrote:
->>> On Sat, Jul 5, 2014 at 1:54 AM, Javier Martinez Canillas
->>> <javier.martinez@collabora.co.uk> wrote:
-> 
-> [snip]
-> 
->>>> @@ -111,6 +223,13 @@ static struct max77686_platform_data *max77686_i2c_parse_dt_pdata(struct device
->>>>                 return NULL;
->>>>
->>>>         dev->platform_data = pd;
->>>> +
->>>> +       /* Read default index and ignore errors, since default is 0 */
->>>> +       of_property_read_u32(np, "max77686,pmic-buck-default-dvs-idx",
->>>> +                            &pd->buck_default_idx);
->>> Any error checking code here. Say if pmic-buck-default-dvs-idx exceed 8?
->> 
->> I'm not a DT expert but AFAIK the kernel should expect the data in a FDT to be
->> correct and should not validate it on runtime. There is work-in-progress to add
->> a proper schema checking for DTS to the dtc so on build time it can be validated
->> that a DTS is valid.
->> 
->> AFAIU the only thing that the kernel should check is if a required property does
->> not exist.
-> 
-> I'd disagree on this.
-> 
-> IMHO schema (if it progresses further, as unfortunately I can't find
-> time to dedicate to it and looks like it's similar for other people that
-> used to be involved) should be focused on structural checks, i.e. proper
-> layout of nodes and properties, basic data types and so, to figure out
-> common errors earlier than at boot-up time.
-> 
-> On kernel side this should be treated in the same way as platform data.
-> I agree that some existing drivers do little to validate incoming data,
-> but I believe it is a good practice to validate things that the driver
-> has no control over, especially when it's about a PMIC, when invalid
-> data can have quite serious effects and detecting even some of them
-> (e.g. value to big, which would overflow in target bit field) might
-> prevent a failure.
-> 
+Reported-by: Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz>
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
+---
+ arch/arm/boot/dts/at91sam9x5.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks a lot for the clarification and I completely agree with your explanation.
-I'll add proper validation for the data obtained by DT then. It would be nice if
-this was documented somewhere (or maybe I missed it).
-
-> Best regards,
-> Tomasz
-> 
-
-Best regards,
-Javier
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91=
+sam9x5.dtsi
+index d6133f4..2ebc421 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -1045,6 +1045,8 @@
+ 				reg =3D <0x00500000 0x80000
+ 				       0xf803c000 0x400>;
+ 				interrupts =3D <23 IRQ_TYPE_LEVEL_HIGH 0>;
++				clocks =3D <&usb>, <&udphs_clk>;
++				clock-names =3D "hclk", "pclk";
+ 				status =3D "disabled";
+=20
+ 				ep0 {
+--=20
+1.8.5.2
