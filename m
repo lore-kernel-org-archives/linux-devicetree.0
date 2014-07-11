@@ -1,49 +1,103 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for pci_host_bridge.
-Date: Thu, 10 Jul 2014 16:36:10 -0600
-Message-ID: <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com> <20140708005954.GC22939@google.com>
- <20140708104655.GC6501@e106497-lin.cambridge.arm.com> <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com> <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
+From: Jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: randconfig build error with next-20140710, in sound/soc/rockchip/rockchip_i2s.c
+Date: Fri, 11 Jul 2014 08:07:20 +0800
+Message-ID: <53BF2AB8.7050307@rock-chips.com>
+References: <CA+r1ZhgB=BG5jsSaWBLMvRUjZ=X4gKJzv6KysyvPSOtFuUTbng@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+r1ZhgB=BG5jsSaWBLMvRUjZ=X4gKJzv6KysyvPSOtFuUTbng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jim Davis <jim.epost-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, linux-next <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 10, 2014 at 3:47 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+Hi Heiko:
 
-> I don't see a way out of adding new PCI interfaces if we want to have support in
-> the PCI framework for unifying existing architectures. Of course, there is the painful
-> alternative of changing the existing APIs and fixing arches in one go, but like you've
-> said is going to be messy. I don't think I (or the people and companies wanting PCIe
-> on arm64) should cop out and pick a quick fix that adds sysdata structure into arm64
-> just to avoid new APIs, as this is not going to help anyone in long term. What I can
-> do is to create a set of parallel APIs for pci_{scan,create}_root_bus() that take
-> a pci_host_bridge pointer and start converting architectures one by one to that API
-> while deprecating the existing one. That way we can add arm64 easily as it would be
-> the first architecture to use new code without breaking things *and* we provide a
-> migration path.
+Is it caused by the headfile ?
+#include <linux/module.h>
 
-A lot of the v7 discussion was about pci_register_io_range().  I
-apologize, because I think I really derailed things there and it was
-unwarranted.  Arnd was right that migrating other arches should be a
-separate effort.  I *think* I was probably thinking about the proposal
-of adding pci_create_root_bus_in_domain(), and my reservations about
-that got transferred to the pci_register_io_range() discussion.  In
-any case, I'm completely fine with pci_register_io_range() now.
+Adviced by the maintainers, I tried not to include the headfile one by =
+one, then to compile
+driver each time, I found that is success to compile it without module.=
+h, of course
+I just compiled driver with command "ARCH=3Darm".
 
-Most of the rest of the v7 discussion was about "Introduce a domain
-number for pci_host_bridge."  I think we should add arm64 using the
-existing pci_scan_root_bus() and keep the domain number in the arm64
-sysdata structure like every other arch does.  Isn't that feasible?
-We can worry about domain unification later.
+Look up the codes, I found the functions like
+	MODULE_DESCRIPTION
+will be defined as
+	#define MODULE_DESCRIPTION(x)	/* x */
+so the code in rockchip iis driver
+	"MODULE_DESCRIPTION("ROCKCHIP IIS ASoC Interface") "
+will be defined as
+	"ROCKCHIP IIS ASoC Interface"
+that should cause the error while robot to compile.
 
-I haven't followed closely enough to know what other objections people had.
+Am I right ?
 
-Bjorn
+If it is, do I need to make a new patch or just reply to the mail ? or =
+how ...
+
+
+On 2014=E5=B9=B407=E6=9C=8810=E6=97=A5 21:53, Jim Davis wrote:
+> Building with the attached random configuration file,
+>=20
+> sound/soc/rockchip/rockchip_i2s.c:526:20: error: expected declaration=
+ specifiers
+>  or =E2=80=98...=E2=80=99 before string constant
+>  MODULE_DESCRIPTION("ROCKCHIP IIS ASoC Interface");
+>                     ^
+> sound/soc/rockchip/rockchip_i2s.c:527:15: error: expected declaration=
+ specifiers
+>  or =E2=80=98...=E2=80=99 before string constant
+>  MODULE_AUTHOR("jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+>                ^
+> sound/soc/rockchip/rockchip_i2s.c:528:16: error: expected declaration=
+ specifiers
+>  or =E2=80=98...=E2=80=99 before string constant
+>  MODULE_LICENSE("GPL v2");
+>                 ^
+> sound/soc/rockchip/rockchip_i2s.c:529:14: error: expected declaration=
+ specifiers
+>  or =E2=80=98...=E2=80=99 before string constant
+>  MODULE_ALIAS("platform:" DRV_NAME);
+>               ^
+> sound/soc/rockchip/rockchip_i2s.c:530:1: warning: data definition has=
+ no type or
+>  storage class [enabled by default]
+>  MODULE_DEVICE_TABLE(of, rockchip_i2s_match);
+>  ^
+> sound/soc/rockchip/rockchip_i2s.c:530:1: error: type defaults to =E2=80=
+=98int=E2=80=99
+> in declaration of =E2=80=98MODULE_DEVICE_TABLE=E2=80=99 [-Werror=3Dim=
+plicit-int]
+> sound/soc/rockchip/rockchip_i2s.c:530:1: warning: parameter names (wi=
+thout types
+> ) in function declaration [enabled by default]
+> cc1: some warnings being treated as errors
+> make[3]: *** [sound/soc/rockchip/rockchip_i2s.o] Error 1
+>=20
+
+--=20
+-------------
+=E8=AE=B8 =E5=89=91 =E7=BE=A4 Jay
+Rockchip Electronics Co.Ltd
+***********************************************************************=
+*****
+*IMPORTANT NOTICE:*This email is from Fuzhou Rockchip Electronics Co.,
+Ltd .The contents of this email and any attachments may contain
+information that is privileged, confidential and/or exempt from
+disclosure under applicable law and relevant NDA. If you are not the
+intended recipient, you are hereby notified that any disclosure,
+copying, distribution, or use of the information is STRICTLY PROHIBITED=
+=2E
+Please immediately contact the sender as soon as possible and destroy
+the material in its entirety in any format. Thank you.
+***********************************************************************=
+*****
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
