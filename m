@@ -1,241 +1,380 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Fri, 11 Jul 2014 14:00:25 +0200
-Message-ID: <20140711140025.62873695@bbrezillon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1584022.nQ4HpIUW7J@avalon> <20140710145626.48cb956f@bbrezillon>
- <33456066.4Q4p6nxKdU@avalon>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Fri, 11 Jul 2014 14:03:22 +0200
+Message-ID: <53BFD28A.5090202@pengutronix.de>
+References: <1405074557-5519-1-git-send-email-b29396@freescale.com> <1405074557-5519-2-git-send-email-b29396@freescale.com> <53BFC6CE.9090408@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <33456066.4Q4p6nxKdU@avalon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="1Rn9C8UrGNicxT8V9g6F2l8otV4A4RtvB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53BFC6CE.9090408-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jul 2014 12:37:46 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--1Rn9C8UrGNicxT8V9g6F2l8otV4A4RtvB
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> Hi Boris,
-> 
-> On Thursday 10 July 2014 14:56:26 Boris BREZILLON wrote:
-> > On Thu, 10 Jul 2014 13:16:21 +0200 Laurent Pinchart wrote:
-> > > On Monday 07 July 2014 18:42:59 Boris BREZILLON wrote:
-> > > > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
-> > > > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> > > > controller device.
-> > > > 
-> > > > The HLCDC block provides a single RGB output port, and only supports LCD
-> > > > panels connection to LCD panels for now.
-> > > > 
-> > > > The atmel,panel property link the HLCDC RGB output with the LCD panel
-> > > > connected on this port (note that the HLCDC RGB connector implementation
-> > > > makes use of the DRM panel framework).
-> > > > 
-> > > > Connection to other external devices (DRM bridges) might be added later
-> > > > by mean of a new atmel,xxx (atmel,bridge) property.
-> > > > 
-> > > > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > > > ---
-> > > > 
-> > > >  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++++++++++++
-> > > >  1 file changed, 59 insertions(+)
-> > > >  create mode 100644
-> > > >  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt new file mode
-> > > > 100644
-> > > > index 0000000..594bdb2
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > @@ -0,0 +1,59 @@
-> > > > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) DRM driver
-> > > > +
-> > > > +The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD
-> > > > device.
-> > > > +See Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt for more
-> > > > details.
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible: value should be one of the following:
-> > > > +   "atmel,hlcdc-dc"
-> > > > + - interrupts: the HLCDC interrupt definition
-> > > > + - pinctrl-names: the pin control state names. Should contain
-> > > > "default",
-> > > > +   "rgb-444", "rgb-565", "rgb-666" and "rgb-888".
-> > > > + - pinctrl-[0-4]: should contain the pinctrl states described by
-> > > > pinctrl
-> > > > +   names.
-> > > 
-> > > Do you need to switch between the different pinctrl configurations at
-> > > runtime, or is the configuration selected from the panel type, which
-> > > doesn't change ?
-> >
-> > At the moment no, but if we ever need to support different devices on
-> > the same RGB connector (actually Atmel's sama5d3xek boards have an
-> > RGB to HDMI bridge connected on the same RGB connector) and these
-> > devices do not support the same RGB mode (say your LCD panel supports
-> > RGB888 and your RGB to HDMI bridge supports RGB555), then depending on
-> > the output you select you'll have to change your pinctrl config at
-> > runtime.
-> 
-> Just to make sure I understand the use case correctly, are you talking about 
-> two devices (for example an RGB666 panel and an RGB888 RGB to HDMI bridge) 
-> connected to the same output, with the ability to switch between the two at 
-> runtime ?
+On 07/11/2014 01:13 PM, Varka Bhadram wrote:
+> On 07/11/2014 03:59 PM, Dong Aisheng wrote:
+>=20
+> (...)
+>=20
+>> +/* m_can private data structure */
+>> +struct m_can_priv {
+>> +    struct can_priv can;    /* must be the first member */
+>> +    struct napi_struct napi;
+>> +    struct net_device *dev;
+>> +    struct device *device;
+>> +    struct clk *hclk;
+>> +    struct clk *cclk;
+>> +    void __iomem *base;
+>> +    u32 irqstatus;
+>> +
+>> +    /* message ram configuration */
+>> +    void __iomem *mram_base;
+>> +    struct mram_cfg mcfg[MRAM_CFG_NUM];
+>> +};
+>> +
+>=20
+> It will be good if we write the comments for the driver private structu=
+re
+>=20
+>> +static inline u32 m_can_read(const struct m_can_priv *priv, enum
+>> m_can_reg reg)
+>> +{
+>> +    return readl(priv->base + reg);
+>> +}
+>> +
+>=20
+> (...)
+>=20
+>> +static void free_m_can_dev(struct net_device *dev)
+>> +{
+>> +    free_candev(dev);
+>> +}
+>> +
+>=20
+> Why do we need a separate function which calls a single function...  :-=
+)
 
-Exactly.
+To be symetric with alloc_m_can_dev()
 
-> That's a valid case (on a side note we shouldn't forget that the 
-> option of using both devices at the same time should be supported as well), 
+>=20
+>> +static struct net_device *alloc_m_can_dev(void)
+>> +{
+>> +    struct net_device *dev;
+>> +    struct m_can_priv *priv;
+>> +
+>> +    dev =3D alloc_candev(sizeof(struct m_can_priv), 1);
+>=20
+> sizeof(*priv)...?
+>=20
+>> +    if (!dev)
+>> +        return NULL;
+>=20
+> Return value -ENOMEM ?
 
-AFAICT this is only possible if both devices connected to the RGB
-connector use the same mode.
+I'm okay with NULL, however if we want to return an arror value, it must
+be ERR_PTR() wrapped.
 
-> but I would probably go for a fixed pinctrl configuration that supports both, 
-> although switching configurations at runtime would be a micro-optimization 
-> that might make sense.
+>=20
+>> +
+>> +    priv =3D netdev_priv(dev);
+>> +    netif_napi_add(dev, &priv->napi, m_can_poll, M_CAN_NAPI_WEIGHT);
+>> +
+>> +    priv->dev =3D dev;
+>> +    priv->can.bittiming_const =3D &m_can_bittiming_const;
+>> +    priv->can.do_set_mode =3D m_can_set_mode;
+>> +    priv->can.do_get_berr_counter =3D m_can_get_berr_counter;
+>> +    priv->can.ctrlmode_supported =3D CAN_CTRLMODE_LOOPBACK |
+>> +                    CAN_CTRLMODE_LISTENONLY |
+>> +                    CAN_CTRLMODE_BERR_REPORTING;
+>> +
+>> +    return dev;
+>> +}
+>> +
+>> +static int m_can_open(struct net_device *dev)
+>> +{
+>> +    struct m_can_priv *priv =3D netdev_priv(dev);
+>> +    int err;
+>> +
+>> +    err =3D clk_prepare_enable(priv->hclk);
+>> +    if (err)
+>> +        return err;
+>> +
+>> +    err =3D clk_prepare_enable(priv->cclk);
+>> +    if (err)
+>> +        goto exit_disable_hclk;
+>> +
+>> +    /* open the can device */
+>> +    err =3D open_candev(dev);
+>> +    if (err) {
+>> +        netdev_err(dev, "failed to open can device\n");
+>> +        goto exit_disable_cclk;
+>> +    }
+>> +
+>> +    /* register interrupt handler */
+>> +    err =3D request_irq(dev->irq, m_can_isr, IRQF_SHARED, dev->name,
+>> +              dev);
+>=20
+> why don't we use devm_request_irq()...? If you use this no need to worr=
+y
+> about freeing the irq
 
-Yep, it should work, and I agree that we're unlikely to reuse some RGB
-pins for other usage when the active device is the one using RGB666
-mode.
+=2E..because the IRQ is allocated during ifup and released during ifdown.=
 
-> 
-> > I'd say we could get rid of this runtime pinctrl config as a first step
-> > if DT ABI stability was not required.
-> > But it is, and I'd like to have a future proof binding to handle these
-> > tricky cases when they occurs (if they ever do).
-> 
-> I think we have a shortcoming of the pinctrl API here in the general case. The 
-> API only allows you to select a single configuration per device. Imagine the 
-> same display controller, with two DPI outputs, each of them configurable in 
-> 444, 565, 666 or 888 modes. With the current API we would have to create 4*4 = 
-> 16 pinctrl configurations for all combinations. That obviously wouldn't scale, 
-> so we'll have to fix this eventually. From a DT stability point of view, I 
-> would thus avoid specifying multiple pinctrl configurations now until we come 
-> up with a standard way to support this use case.
 
-Given your inputs, I guess I'll drop dynamic pinctrl config for the
-next version.
+>=20
+>> +    if (err < 0) {
+>> +        netdev_err(dev, "failed to request interrupt\n");
+>> +        goto exit_irq_fail;
+>> +    }
+>> +
+>> +    /* start the m_can controller */
+>> +    m_can_start(dev);
+>> +
+>> +    can_led_event(dev, CAN_LED_EVENT_OPEN);
+>> +    napi_enable(&priv->napi);
+>> +    netif_start_queue(dev);
+>> +
+>> +    return 0;
+>> +
+>> +exit_irq_fail:
+>> +    close_candev(dev);
+>> +exit_disable_cclk:
+>> +    clk_disable_unprepare(priv->cclk);
+>> +exit_disable_hclk:
+>> +    clk_disable_unprepare(priv->hclk);
+>> +    return err;
+>> +}
+>> +
+>> +static void m_can_stop(struct net_device *dev)
+>> +{
+>> +    struct m_can_priv *priv =3D netdev_priv(dev);
+>> +
+>> +    /* disable all interrupts */
+>> +    m_can_disable_all_interrupts(priv);
+>> +
+>> +    clk_disable_unprepare(priv->hclk);
+>> +    clk_disable_unprepare(priv->cclk);
+>> +
+>> +    /* set the state as STOPPED */
+>> +    priv->can.state =3D CAN_STATE_STOPPED;
+>> +}
+>> +
+>> +static int m_can_close(struct net_device *dev)
+>> +{
+>> +    struct m_can_priv *priv =3D netdev_priv(dev);
+>> +
+>> +    netif_stop_queue(dev);
+>> +    napi_disable(&priv->napi);
+>> +    m_can_stop(dev);
+>> +    free_irq(dev->irq, dev);
+>=20
+> not required when you use devm_request_irq()
 
-> 
-> > Anyway, I'm open to any other alternative that could let me add support
-> > for this later on.
-> > 
-> > BTW, is there any reason for not defining an RGB connector type (I'm
-> > currently defining HLCDC connector as an LVDS connector) ?
-> 
-> Not that I know of. The DRM API has been developed before display on embedded 
-> systems became such a hot topic. If we had to redo it today, panels might be 
-> exposed to userspace as such, with a connector. We have to live with the past, 
-> so the connector will stay, but adding a new RGB connector type could make 
-> sense (although we might need a different name, in a way the VGA and LVDS 
-> connectors also carry RGB signals).
+No....see above.
 
-I had the same concern: I didn't find how this kind of connectors
-was named (most of the time they're just referenced as RGB) :-).
-What about RAW_RGB ?
+>=20
+>> +    close_candev(dev);
+>> +    can_led_event(dev, CAN_LED_EVENT_STOP);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>=20
+> (...)
+>=20
+>> +
+>> +static const struct of_device_id m_can_of_table[] =3D {
+>> +    { .compatible =3D "bosch,m_can", .data =3D NULL },
+>=20
+> we can simply give '0' . No need of .data =3D NULL. Things should be
+> simple right....  :-)
 
-> 
-> > > > + - atmel,panel: Should contain a phandle with 2 parameters.
-> > > > +   The first cell is a phandle to a DRM panel device
-> > > > +   The second cell encodes the RGB mode, which can take the following
-> > > > values:
-> > > > +   * 0: RGB444
-> > > > +   * 1: RGB565
-> > > > +   * 2: RGB666
-> > > > +   * 3: RGB888
-> > > > +   The third cell encodes specific flags describing LCD signals
-> > > > configuration
-> > > > +   (see Atmel's datasheet for a full description of these
-> > > > fields):
-> > > > +   * bit 0: HSPOL: Horizontal Synchronization Pulse Polarity
-> > > > +   * bit 1: VSPOL: Vertical Synchronization Pulse Polarity
-> > > > +   * bit 2: VSPDLYS: Vertical Synchronization Pulse Start
-> > > > +   * bit 3: VSPDLYE: Vertical Synchronization Pulse End
-> > > > +   * bit 4: DISPPOL: Display Signal Polarity
-> > > > +   * bit 7: DISPDLY: LCD Controller Display Power Signal
-> > > > Synchronization
-> > > > +   * bit 12: VSPSU: LCD Controller Vertical synchronization Pulse Setup
-> > > > Configuration
-> > > > +   * bit 13: VSPHO: LCD Controller Vertical synchronization Pulse Hold
-> > > > Configuration
-> > > > +   * bit 16-20: GUARDTIME: LCD DISPLAY Guard Time
-> > > 
-> > > If I'm not mistaken, those are HLCDC configuration values that depend on
-> > > the panel type and characteristics. Shouldn't they then be queries from
-> > > the panel through the drm_panel API at runtime instead of being specified
-> > > in DT ? This would likely require extending the drm_panel API.
-> > 
-> > HSPOL and VSPOL can be deduced from DRM_MODE_FLAG_[PN]HSYNC and
-> > DRM_MODE_FLAG_[PN]VSYNC, I'm not sure for the other flags or the
-> > GUARDTIME value.
-> > 
-> > Another question I had regarding these flags is whether they were LCD
-> > panel specific or a mix of panel and board implementation.
-> > Take the VSYNC HSYNC polarity, of course the LCD panel defines what it
-> > expects in terms of polarity, but nothing prevents the HW designer from
-> > inverting the VSYNC/HSYNC polarity (expect common sense :-)), right ?
-> >
-> > A solution would be to override some drm_display_mode settings with
-> > informations taken from the DT.
-> 
-> Given that I gave the exact same argument during a V4L2 DT bindings design 
-> review, I can only agree :-) It thus makes sense to specify polarities in the 
-> HLCDC DT node. The RGB mode, however, should probably be queried from the 
-> panel, as I don't expect it to be board-dependent but only panel-dependent.
+=2Edata should be a pointer, while "0" isn't. (Although 0 is valid C, we
+don't want a integer 0 to initialize a pointer.) However, you can omit
+=2Edata =3D NULL completely. When initialzing via C99, any omited members=
+ of
+the struct will automatically be initialized with 0x0. I like to see the
+=2Edata =3D NULL because it documents that there isn't any data (yet), on=
+ce
+another compatible is added, we need the .data anyways.
 
-Yes, what I had in mind is some kind of RGB connector framework (or
-just helper functions), where you could define the supported RGB modes
-and rely on another infrastructure to define the supported drm display
-modes.
-Because RGB connector is not just related to panels: see this RGB to
-HDMI bridge [1] (this is the one used on Atmel's dev boards).
-Moreover, simple panels are connector agnostics for now, and I'm not
-sure we want to change that.
+>=20
+>> +    { /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, m_can_of_table);
+>> +
+>> +static int m_can_of_parse_mram(struct platform_device *pdev,
+>> +                   struct m_can_priv *priv)
+>> +{
+>> +    struct device_node *np =3D pdev->dev.of_node;
+>> +    struct resource *res;
+>> +    void __iomem *addr;
+>> +    u32 out_val[MRAM_CFG_LEN];
+>> +    int ret;
+>> +
+>> +    /* message ram could be shared */
+>> +    res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> "message_ram");
+>> +    if (!res)
+>> +        return -ENODEV;
+>> +
+>> +    addr =3D devm_ioremap(&pdev->dev, res->start, resource_size(res))=
+;
+>> +    if (!addr)
+>> +        return -ENODEV;
+>=20
+> Is this err return is appropriate ... ?
 
-[1]http://pdf1.alldatasheet.fr/datasheet-pdf/view/218068/SILICONIMAGE/SII9022.html
+-ENOMEM seems to be more commonly used.
 
-> 
-> I'm not sure about the other bits in the third cell, maybe we should discuss 
-> them in more details. I'm always wary when I see DT bindings referring to a 
-> datasheet :-) Getting the information from the panel by default, with a 
-> possible override, is an interesting option. You would thus likely need 
-> several DT properties associated with each connection to a panel. Would it 
-> then make sense to use the OF graph DT bindings instead of the atmel,panel 
-> property to specify connections ? You could store per-connection data in the 
-> endpoint and/or port nodes.
+>=20
+>> +
+>> +    /* get message ram configuration */
+>> +    ret =3D of_property_read_u32_array(np, "mram-cfg",
+>> +                     out_val, sizeof(out_val) / 4);
+>> +    if (ret) {
+>> +        dev_err(&pdev->dev, "can not get message ram configuration\n"=
+);
+>> +        return -ENODEV;
+>> +    }
+>> +
+>=20
+> Is this err return is appropriate ... ?
 
-I'll take a look at these bindings and let you know if they match my
-needs.
+Whay do you suggest?
 
-> 
-> > Thanks for your review.
-> 
-> You're welcome. Sorry for not having had time to review the driver itself. 
-> Given my limited bandwidth at the moment I've decided to concentrate on the DT 
-> bindings first.
+>=20
+>> +    priv->mram_base =3D addr;
+>> +    priv->mcfg[MRAM_SIDF].off =3D out_val[0];
+>> +    priv->mcfg[MRAM_SIDF].num =3D out_val[1];
+>> +    priv->mcfg[MRAM_XIDF].off =3D priv->mcfg[MRAM_SIDF].off +
+>> +            priv->mcfg[MRAM_SIDF].num * SIDF_ELEMENT_SIZE;
+>> +    priv->mcfg[MRAM_XIDF].num =3D out_val[2];
+>> +    priv->mcfg[MRAM_RXF0].off =3D priv->mcfg[MRAM_XIDF].off +
+>> +            priv->mcfg[MRAM_XIDF].num * XIDF_ELEMENT_SIZE;
+>> +    priv->mcfg[MRAM_RXF0].num =3D out_val[3] & RXFC_FS_MASK;
+>> +    priv->mcfg[MRAM_RXF1].off =3D priv->mcfg[MRAM_RXF0].off +
+>> +            priv->mcfg[MRAM_RXF0].num * RXF0_ELEMENT_SIZE;
+>> +    priv->mcfg[MRAM_RXF1].num =3D out_val[4] & RXFC_FS_MASK;
+>> +    priv->mcfg[MRAM_RXB].off =3D priv->mcfg[MRAM_RXF1].off +
+>> +            priv->mcfg[MRAM_RXF1].num * RXF1_ELEMENT_SIZE;
+>> +    priv->mcfg[MRAM_RXB].num =3D out_val[5];
+>> +    priv->mcfg[MRAM_TXE].off =3D priv->mcfg[MRAM_RXB].off +
+>> +            priv->mcfg[MRAM_RXB].num * RXB_ELEMENT_SIZE;
+>> +    priv->mcfg[MRAM_TXE].num =3D out_val[6];
+>> +    priv->mcfg[MRAM_TXB].off =3D priv->mcfg[MRAM_TXE].off +
+>> +            priv->mcfg[MRAM_TXE].num * TXE_ELEMENT_SIZE;
+>> +    priv->mcfg[MRAM_TXB].num =3D out_val[7] & TXBC_NDTB_MASK;
+>> +
+>> +    dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0
+>> 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d\n",
+>> +        priv->mram_base,
+>> +        priv->mcfg[MRAM_SIDF].off, priv->mcfg[MRAM_SIDF].num,
+>> +        priv->mcfg[MRAM_XIDF].off, priv->mcfg[MRAM_XIDF].num,
+>> +        priv->mcfg[MRAM_RXF0].off, priv->mcfg[MRAM_RXF0].num,
+>> +        priv->mcfg[MRAM_RXF1].off, priv->mcfg[MRAM_RXF1].num,
+>> +        priv->mcfg[MRAM_RXB].off, priv->mcfg[MRAM_RXB].num,
+>> +        priv->mcfg[MRAM_TXE].off, priv->mcfg[MRAM_TXE].num,
+>> +        priv->mcfg[MRAM_TXB].off, priv->mcfg[MRAM_TXB].num);
+>> +
+>=20
+> dev_dbg() will insert the new lines in b/w. It wont print the values as=
 
-No problem, after all DT bindings is the most tricky part of our work
-nowadays, isn't it ;-) ?
+> you expected.
+> Check this by enabling debug ...
 
-Thanks,
+What do you mean by b/w?
 
-Boris
+>=20
+>> +    return 0;
+>> +}
+>> +
+>=20
+> (...)
+>=20
+>> +
+>> +static void unregister_m_can_dev(struct net_device *dev)
+>> +{
+>> +    unregister_candev(dev);
+>> +}
+>> +
+>=20
+> again a function which calls a single func.
+>=20
+>> +static int m_can_plat_remove(struct platform_device *pdev)
+>> +{
+>> +    struct net_device *dev =3D platform_get_drvdata(pdev);
+>> +
+>> +    unregister_m_can_dev(dev);
+>> +    platform_set_drvdata(pdev, NULL);
+>> +
+>> +    free_m_can_dev(dev);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops m_can_pmops =3D {
+>> +    SET_SYSTEM_SLEEP_PM_OPS(m_can_suspend, m_can_resume)
+>> +};
+>> +
+>> +static struct platform_driver m_can_plat_driver =3D {
+>> +    .driver =3D {
+>> +        .name =3D KBUILD_MODNAME,
+>> +        .owner =3D THIS_MODULE,
+>=20
+> No need to update .owner. module_platform_driver() will do for you.
+> see:http://lxr.free-electrons.com/source/include/linux/platform_device.=
+h#L190
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Oh, right.
+
+>> +        .of_match_table =3D of_match_ptr(m_can_of_table),
+>> +        .pm     =3D &m_can_pmops,
+>> +    },
+>> +    .probe =3D m_can_plat_probe,
+>> +    .remove =3D m_can_plat_remove,
+>> +};
+>> +
+>> +module_platform_driver(m_can_plat_driver);
+>> +
+>> +MODULE_AUTHOR("Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("CAN bus driver for Bosch M_CAN controller");
+>=20
+>=20
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--1Rn9C8UrGNicxT8V9g6F2l8otV4A4RtvB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlO/0ooACgkQjTAFq1RaXHOcoACfdJV6e1csdmjgwSk+anLbHHwS
+8G8AnRwG8joj/2QX93LWtS0GLGg6emhC
+=jjPr
+-----END PGP SIGNATURE-----
+
+--1Rn9C8UrGNicxT8V9g6F2l8otV4A4RtvB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
