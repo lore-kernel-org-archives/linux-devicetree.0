@@ -1,130 +1,33 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v6 15/23] regulator: max77686: Setup DVS-related GPIOs
- on probe
-Date: Fri, 11 Jul 2014 04:03:00 +0200
-Message-ID: <53BF45D4.2000302@collabora.co.uk>
-References: <1404467722-26687-1-git-send-email-javier.martinez@collabora.co.uk>	<1404467722-26687-16-git-send-email-javier.martinez@collabora.co.uk> <CADGdYn4EURaHinWVksQSPzVr=CkZYcrqvWsO7mKDz_gY9XB__Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/4] patches for rockchip spi driver
+Date: Fri, 11 Jul 2014 10:06:29 +0800
+Message-ID: <1405044389-6800-1-git-send-email-addy.ke@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADGdYn4EURaHinWVksQSPzVr=CkZYcrqvWsO7mKDz_gY9XB__Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: amit daniel kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yadwinder Singh Brar <yadi.brar01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-JkTZp4/KTbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Amit,
+From: Addy Ke <addy.ke-JkTZp4/KTbpWk0Htik3J/w@public.gmane.org>
 
-On 07/10/2014 12:08 PM, amit daniel kachhap wrote:
-> On Fri, Jul 4, 2014 at 3:25 PM, Javier Martinez Canillas
-> <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
->> MAX77686 PMIC support Dyamic Voltage Scaling (DVS) on a set
->> of Buck regulators. A number of GPIO are connected to these
->> lines and are requested by the mfd driver. Setup the GPIO
->> pins from the regulator driver.
-> If possible merge this patch with patch 8. Both are adding DVS
-> support. Put regmap_copy dependency patch in very beginning.
+These patches based on:
+- git: kernel/git/broonie/spi.git
+- branch: topic/rockchip
+- commit: c15369087ae5c7db7f3e3604822eac6ab87429bd
 
-As Lee already said, I split the changes to minimize the cross-subsystem churn.
+Addy Ke (4):
+  spi/rockchip: cleanup some coding issues and uncessary output
+  spi/rockchip: call wait_for_idle() for the transfer to complete
+  spi/rockchip: master->mode_bits: remove SPI_CS_HIGH bit
+  spi/rockchip: add compatible strings for RK3188 and RK3288
 
->>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
->> ---
->>  drivers/regulator/max77686.c | 34 ++++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
->> index ef1af2d..ecce77a 100644
->> --- a/drivers/regulator/max77686.c
->> +++ b/drivers/regulator/max77686.c
->> @@ -435,6 +435,12 @@ static int max77686_pmic_dt_parse_pdata(struct platform_device *pdev,
->>  }
->>  #endif /* CONFIG_OF */
->>
->> +static inline bool max77686_is_dvs_buck(int id)
->> +{
->> +       /* BUCK 2,3 and 4 support DVS */
->> +       return (id >= MAX77686_BUCK2 && id <= MAX77686_BUCK4);
-> I am just wondering if along with above check, SELB gpios (if present)
-> can be used to confirm if BUCK's are DVS based or not.
+ drivers/spi/spi-rockchip.c | 74 ++++++++++++++++++++++++++++------------------
+ 1 file changed, 45 insertions(+), 29 deletions(-)
 
-I don't know if SELB gpios being present or not should be used to determine
-whether a BUCK includes the DVS feature. AFAIK boards could have some of these
-lines hardwired and pulled high or low instead of using a GPIO.
+-- 
+1.8.3.2
 
->> +}
->> +
->>  static int max77686_pmic_probe(struct platform_device *pdev)
->>  {
->>         struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
->> @@ -442,6 +448,9 @@ static int max77686_pmic_probe(struct platform_device *pdev)
->>         struct max77686_data *max77686;
->>         int i, ret = 0;
->>         struct regulator_config config = { };
->> +       unsigned int reg;
->> +       int buck_default_idx;
->> +       int buck_old_idx;
->>
->>         dev_dbg(&pdev->dev, "%s\n", __func__);
->>
->> @@ -472,13 +481,34 @@ static int max77686_pmic_probe(struct platform_device *pdev)
->>         config.driver_data = max77686;
->>         platform_set_drvdata(pdev, max77686);
->>
->> +       buck_default_idx = pdata->buck_default_idx;
->> +       buck_old_idx = max77686_read_gpios(pdata);
->> +
->>         for (i = 0; i < MAX77686_REGULATORS; i++) {
->>                 struct regulator_dev *rdev;
->> +               int id = pdata->regulators[i].id;
->>
->>                 config.init_data = pdata->regulators[i].initdata;
->>                 config.of_node = pdata->regulators[i].of_node;
->>
->>                 max77686->opmode[i] = regulators[i].enable_mask;
->> +
->> +               if (max77686_is_dvs_buck(id)) {
->> +                       /* Try to copy over data so we keep firmware settings */
->> +                       reg = regulators[i].vsel_reg;
->> +
->> +                       ret = regmap_reg_copy(iodev->regmap,
->> +                                             reg + buck_default_idx,
->> +                                             reg + buck_old_idx);
->> +
->> +                       if (ret)
->> +                               dev_warn(&pdev->dev, "Copy err %d => %d (%d)\n",
->> +                                        reg + buck_old_idx,
->> +                                        reg + buck_default_idx, ret);
->> +
->> +                       regulators[i].vsel_reg += buck_default_idx;
->> +               }
->> +
->>                 rdev = devm_regulator_register(&pdev->dev,
->>                                                 &regulators[i], &config);
->>                 if (IS_ERR(rdev)) {
->> @@ -488,6 +518,10 @@ static int max77686_pmic_probe(struct platform_device *pdev)
->>                 }
->>         }
->>
->> +       ret = max77686_setup_gpios(iodev->dev);
->> +       if (ret)
->> +               return ret;
->> +
->>         return 0;
->>  }
->>
->> --
->> 2.0.0.rc2
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
 
-Best regards,
-Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
