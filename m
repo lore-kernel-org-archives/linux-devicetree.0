@@ -1,58 +1,38 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [PATCH] Input: Add driver for Microchip's CAP1106
-Date: Fri, 11 Jul 2014 11:47:54 +0200
-Message-ID: <CANq1E4Snpdd_8d8e1gSKjKjJb9KsxjEGDUToKfn8AbyLSOUa6g@mail.gmail.com>
-References: <1405064550-12222-1-git-send-email-zonque@gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 0/2] clk: exynos-audss: Adapt to exising clock framework
+Date: Fri, 11 Jul 2014 11:51:27 +0200
+Message-ID: <53BFB39F.6040606@samsung.com>
+References: <1405071475-31946-1-git-send-email-tushar.b@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1405064550-12222-1-git-send-email-zonque@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: dtor@mail.ru, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1405071475-31946-1-git-send-email-tushar.b@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.b@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: robh+dt@kernel.org, grant.likely@linaro.org, kgene.kim@samsung.com, mturquette@linaro.org, trblinux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Tushar,
 
-On Fri, Jul 11, 2014 at 9:42 AM, Daniel Mack <zonque@gmail.com> wrote:
-> This patch adds a driver for Microchips CAP1106, an I2C driven, 6-channel
-> capacitive touch sensor.
->
-> For now, only the capacitive buttons are supported, and no specific
-> settings that can be tweaked for individual channels, except for the
-> device-wide sensitivity gain. The defaults seem to work just fine out of
-> the box, so I'll leave configurable parameters for someone who's in need
-> of them and who can actually measure the impact. All registers are
-> prepared, however. Many of them are just not used for now.
->
-> The implementation does not make any attempt to be compatible to platform
-> data driven boards, but fully depends on CONFIG_OF.
->
-> Power management functions are also left for volounteers with the ability
-> to actually test them.
->
-> Signed-off-by: Daniel Mack <zonque@gmail.com>
-> ---
->  .../devicetree/bindings/input/cap1106.txt          |  63 ++++
->  drivers/input/keyboard/Kconfig                     |  10 +
->  drivers/input/keyboard/Makefile                    |   1 +
->  drivers/input/keyboard/cap1106.c                   | 376 +++++++++++++++++++++
->  4 files changed, 450 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/cap1106.txt
->  create mode 100644 drivers/input/keyboard/cap1106.c
->
-> diff --git a/Documentation/devicetree/bindings/input/cap1106.txt b/Documentation/devicetree/bindings/input/cap1106.txt
-> new file mode 100644
-> index 0000000..57f5af3
-...
-> +       spin_lock_irqsave(&priv->lock, flags);
-> +       disable_irq(priv->irq);
-> +       cancel_work_sync(&priv->work);
-> +       spin_unlock_irqrestore(&priv->lock, flags);
+On 11.07.2014 11:37, Tushar Behera wrote:
+> The patchset is targetted as moving exising exynos-audss clock driver from being
+> a module driver. The driver is now registered through CLK_OF_DECLARE and is
+> inline with other Samsung clock drivers.
 
-Btw., cancel_work_sync() has a might_sleep() annotation, so you really
-cannot call it while holding spinlocks (see start_flush_work() in
-workqueue.c).
+I'm afraid I have to NAK this series or at least the part converting the
+driver back to use CLK_OF_DECLARE().
 
-Cheers
-David
+We have deliberately made this driver a platform driver, because this is
+how drivers should be modeled in Linux kernel whenever possible.
+CLK_OF_DECLARE() should be only considered a hack to work around late
+initialization of driver model. Reverting this change without a good
+reason (and you haven't provided such) is just going backwards.
+
+Rest of this series is actually quite nice, though, as reusing Samsung
+clock helpers reduces the line count significantly, so if you could
+rework this to keep this driver a platform driver then we could get
+something I could ack.
+
+Best regards,
+Tomasz
