@@ -1,119 +1,60 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding documentation
-Date: Fri, 11 Jul 2014 16:11:03 +0530
-Message-ID: <53BFBF3F.8040804@gmail.com>
-References: <1405074557-5519-1-git-send-email-b29396@freescale.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: at91sam9x5: add clocks for usb device
+Date: Fri, 11 Jul 2014 12:47:56 +0200
+Message-ID: <20140711104755.GA3112@piout.net>
+References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1405074557-5519-1-git-send-email-b29396@freescale.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org
-Cc: wg@grandegger.com, socketcan@hartkopp.net, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1405074175-22444-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2014 03:59 PM, Dong Aisheng wrote:
-> add M_CAN device tree binding documentation
->
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-> Cc: Varka Bhadram <varkabhadram@gmail.com>
-> Signed-off-by: Dong Aisheng <b29396@freescale.com>
+On 11/07/2014 at 18:22:55 +0800, Bo Shen wrote :
+> Add clocks for usb device, or else switch to CCF, the gadget
+> won't work.
+>=20
+> Reported-by: Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
 > ---
->   .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++++++++++
->   1 files changed, 65 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-> new file mode 100644
-> index 0000000..c4cb263
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> @@ -0,0 +1,65 @@
-> +Bosch MCAN controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "bosch,m_can" for M_CAN controllers
-> +- reg			: physical base address and size of the M_CAN
-> +			  registers map and Message RAM
-> +- reg-names		: Should be "m_can" and "message_ram"
-> +- interrupts		: Should be the interrupt number of M_CAN interrupt
-> +			  line 0 and line 1, could be same if sharing
-> +			  the same interrupt.
-> +- interrupt-names	: Should contain "int0" and "int1"
-> +- clocks		: Clocks used by controller, should be host clock
-> +			  and CAN clock.
-> +- clock-names		: Should contain "hclk" and "cclk"
-> +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
+>  arch/arm/boot/dts/at91sam9x5.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at=
+91sam9x5.dtsi
+> index d6133f4..2ebc421 100644
+> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+> @@ -1045,6 +1045,8 @@
+>  				reg =3D <0x00500000 0x80000
+>  				       0xf803c000 0x400>;
+>  				interrupts =3D <23 IRQ_TYPE_LEVEL_HIGH 0>;
+> +				clocks =3D <&usb>, <&udphs_clk>;
+> +				clock-names =3D "hclk", "pclk";
+>  				status =3D "disabled";
+> =20
+>  				ep0 {
+> --=20
+> 1.8.5.2
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-I think this should be pinctrl-0
-
-> +- pinctrl-names		: Names corresponding to the numbered pinctrl states
-
-remove 1 tab space before :
-
-> +- mram-cfg		: Message RAM configuration data.
-> +  Multiple M_CAN instances can share the same Message RAM and each element(e.g
-> +  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
-> +  so this property is telling driver how the shared or private Message RAM
-> +  are used by this M_CAN controller.
-> +
-
-It may written like:
-mram-cfg		: Message RAM configuration data
-			  Multiple M_CAN instances can share the same Message RAM and each element
-			  (e.g Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
-			  ...
-
-> +  The format should be as follows:
-> +  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems
-> +   txe_elems txb_elems>
-> +  The 'offset' is an address offset of the Message RAM where the following
-> +  elements start from. This is usually set to 0x0 if you're using a private
-> +  Message RAM. The remain cells are used to specify how many elements are used
-> +  for each FIFO/Buffer.
-> +
-> +M_CAN includes the following elements according to user manual:
-> +11-bit Filter	0-128 elements / 0-128 words
-> +29-bit Filter	0-64 elements / 0-128 words
-> +Rx FIFO 0	0-64 elements / 0-1152 words
-> +Rx FIFO 1	0-64 elements / 0-1152 words
-> +Rx Buffers	0-64 elements / 0-1152 words
-> +Tx Event FIFO	0-32 elements / 0-64 words
-> +Tx Buffers	0-32 elements / 0-576 words
-> +
-> +Please refer to 2.4.1 Message RAM Configuration in Bosch M_CAN user manual
-> +for details.
-> +
-> +Example:
-> +SoC dtsi:
-> +m_can1: can@020e8000 {
-> +	compatible = "bosch,m_can";
-> +	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-> +	reg-names = "m_can", "message_ram";
-> +	interrupts = <0 114 0x04>,
-> +		     <0 114 0x04>;
-> +	interrupt-names = "int0", "int1";
-> +	clocks = <&clks IMX6SX_CLK_CANFD>,
-> +		 <&clks IMX6SX_CLK_CANFD>;
-> +	clock-names = "hclk", "cclk";
-> +	mram-cfg = <0x0 0 0 32 0 0 0 1>;
-> +	status = "disabled";
-> +};
-> +
-> +Board dtsi:
-> +&m_can1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_m_can1>;
-> +	status = "enabled";
-> +};
-
-
--- 
-Regards,
-Varka Bhadram.
-
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
