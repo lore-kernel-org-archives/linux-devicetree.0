@@ -1,139 +1,84 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
-Date: Fri, 11 Jul 2014 17:21:05 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1407111656170.17043-100000@netrider.rowland.org>
-References: <20140711074417.GA8233@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCHv2 01/10] ARM: dts: OMAP2+: Add mailbox fifo and user information
+Date: Fri, 11 Jul 2014 16:44:34 -0500
+Message-ID: <1405115083-52977-2-git-send-email-s-anna@ti.com>
+References: <1405115083-52977-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140711074417.GA8233@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1405115083-52977-1-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Paul Walmsley <paul@pwsan.com>, Dave Gerlach <d-gerlach@ti.com>, Jassi Brar <jaswinder.singh@linaro.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jul 2014, Peter Griffin wrote:
+The number of mailbox fifos and users (IP interrupts) are added
+to the Mailbox DT nodes on OMAP2420, OMAP2430, OMAP3, and OMAP5
+family of SoCs through the DT properties "ti,mbox-num-fifos" and
+"ti,mbox-num-users" properties. This data represents the same data
+that used to be represented in hwmod attribute data through the
+.num_fifos and .num_users fields previously.
 
-> Hi Alan,
-> 
-> Thanks for reviewing.
-> 
-> On Thu, 10 Jul 2014, Alan Stern wrote:
-> 
-> > On Thu, 10 Jul 2014, Peter Griffin wrote:
-> > 
-> > > This driver adds support for the USB HCD present in STi
-> > > SoC's from STMicroelectronics. It has been tested on the
-> > > stih416-b2020 board.
-> > 
-> > This driver file, along with the Kconfig changes, belongs in the
-> > arch/platform-specific source directory.  Not in drivers/usb/host/.  
-> > It is, after all, a platform driver that registers two platform
-> > devices.
-> 
-> Why do think that?
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ arch/arm/boot/dts/omap2420.dtsi | 2 ++
+ arch/arm/boot/dts/omap2430.dtsi | 2 ++
+ arch/arm/boot/dts/omap3.dtsi    | 2 ++
+ arch/arm/boot/dts/omap5.dtsi    | 2 ++
+ 4 files changed, 8 insertions(+)
 
-Because it is true.  One can easily see that st-hcd.c is a platform
-driver: It contains a module_platform_driver() line and a struct
-platform_driver definition near the end.  And it registers a platform
-device by calling platform_device_add() in st_hcd_device_create(),
-which is called twice by st_hcd_probe().
+diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
+index e83b046..6d21994 100644
+--- a/arch/arm/boot/dts/omap2420.dtsi
++++ b/arch/arm/boot/dts/omap2420.dtsi
+@@ -157,6 +157,8 @@
+ 			interrupts = <26>, <34>;
+ 			interrupt-names = "dsp", "iva";
+ 			ti,hwmods = "mailbox";
++			ti,mbox-num-users = <4>;
++			ti,mbox-num-fifos = <6>;
+ 		};
+ 
+ 		timer1: timer@48028000 {
+diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+index c4e8013..aa6a354 100644
+--- a/arch/arm/boot/dts/omap2430.dtsi
++++ b/arch/arm/boot/dts/omap2430.dtsi
+@@ -247,6 +247,8 @@
+ 			reg = <0x48094000 0x200>;
+ 			interrupts = <26>;
+ 			ti,hwmods = "mailbox";
++			ti,mbox-num-users = <4>;
++			ti,mbox-num-fifos = <6>;
+ 		};
+ 
+ 		timer1: timer@49018000 {
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index b2891a9..575a49b 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -332,6 +332,8 @@
+ 			ti,hwmods = "mailbox";
+ 			reg = <0x48094000 0x200>;
+ 			interrupts = <26>;
++			ti,mbox-num-users = <2>;
++			ti,mbox-num-fifos = <2>;
+ 		};
+ 
+ 		mcspi1: spi@48098000 {
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 3bfda16..0e8336e 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -641,6 +641,8 @@
+ 			reg = <0x4a0f4000 0x200>;
+ 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "mailbox";
++			ti,mbox-num-users = <3>;
++			ti,mbox-num-fifos = <8>;
+ 		};
+ 
+ 		timer1: timer@4ae18000 {
+-- 
+2.0.0
 
-> AFAIK certainly for ARM we are trying NOT to add code
-> under the arch/platform directorys and get the code into the relevant subsystems.
-
-This does not agree with my experiences.
-
-> In order to prove the above if you look in drivers/usb/host/ there are many other 
-> similar platform drivers for other SoC families: -
-> bcma-hcd.c
-> ehci-atmel.c
-> ssb-hcd.c
-> ehci-exynos.c
-> ehci-fsl.c
-> ehci-mxc.c 
-> ehci-omap.c
-> ehci-orion.c
-> ohci-nxp.c
-> and more, but you get the idea. In short I believe this to be the
-> correct directory :-)
-
-No.  bcma-hcd.c and ssb-hcd.c are similar to your st-hcd.c, but the
-others aren't.
-
-Take ehci-atmel.c as a typical example.  It does not define any
-ehci_pdata structure and does not call platform_device_add(); instead
-it calls usb_add_hcd().  The others work the same way.  I would suggest
-that bcma-hcd.c and ssb-hcd.c don't belong in drivers/usb/host either.
-
-For examples of drivers that _do_ resemble st-hcd.c, look in:
-
-arch/arm/mach-cns3xxx/cns3420vb.c
-arch/arm/mach-cns3xxx/core.c
-arch/arm/mach-shmobile/setup-r8a7778.c
-arch/arm/mach-shmobile/setup-r8a7779.c
-arch/arm/mach-omap2/board-cm-t3517.c
-arch/mips/netlogic/xlr/platform.c
-arch/mips/ath79/dev-usb.c
-arch/mips/loongson1/common/platform.c
-arch/mips/alchemy/common/platform.c
-
-These files all define ehci_pdata structures and register platform 
-devices.  And they obviously are all located in arch/platform-specific 
-directories.
-
-> > > +++ b/drivers/usb/host/Kconfig
-> > > @@ -753,6 +753,23 @@ config USB_HCD_SSB
-> > >  
-> > >  	  If unsure, say N.
-> > >  
-> > > +config USB_HCD_ST
-> > > +	tristate "STMicroelectronics STi family HCD support"
-> > 
-> > Why does this need to be tristate?  Why not always build it into the 
-> > kernel?  Or at least make it boolean rather than tristate.
-> 
-> Building as a module is useful on these embedded SoCs usually as a mechanism for speeding up boot time.
-> Anything which isn't critical to getting the core functionality of the device going (in this case decoding
-> TV and outputting on HDMI), can be deffered to a later point. Things like USB drivers, can then be loaded in
-> after that point (deffered module loading), to give the appearence of 'instant on' (which in consumer electronics
-> is what everyone wishes to achieve).
-
-But st-hcd.c takes very little time to run.  ehci-platform will cause a 
-delay, so it makes sense for ehci-platform to be a module.  But there's 
-no reason for st-hcd to be a module.
-
-> Going back to my examples above, most of these platforms are also defined as tristate.
-
-Probably for historical reasons.  They don't need to be tristate now.
-
-> > > + 	  consumer electronics SoCs.
-> > > +
-> > > + 	  It converts the ST driver into two platform device drivers
-> > 
-> > It converts the ST driver?  That doesn't sound right at all.  You could 
-> > eliminate this paragraph completely and nobody would miss it.
-> 
-> I agree the wording is a little off there, I can remove or re-phrase it. What it is trying to express
-> is that it is slightly different to some other platform drivers, in that it creates two platform drivers one
-
-It creates two platform _devices_, not two platform _drivers_.
-
-> for the ehci controller and the other for the OHCI controller.
-
-In that respect it is very similar to the drivers I listed above.
-
->  From looking at other drivers in this directory 
-> this driver is quite similar to USB_HCD_BCMA, which also deemed it noteworthy to mention in the help, although
-> phrased somewhat more succinctly.
-
-People reading the Kconfig help text don't care what other drivers are 
-similar to yours.  All they want to know is whether or not they should 
-enable your driver.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
