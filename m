@@ -1,41 +1,63 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
-Date: Fri, 11 Jul 2014 14:06:29 +0200
-Message-ID: <CACRpkdYi_xbixsgvF0NMVdRmxbAgDVOnq-vzYVpDkLHTL8-12A@mail.gmail.com>
-References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
-	<5cc8b89b-20ff-4fa9-92dd-bb2f6d3512d8@BY2FFO11FD030.protection.gbl>
-	<CACRpkdb1M3-hrSKLKWz21LCJ1sMvsq5E-aqkpmVhy0NwOS5HhA@mail.gmail.com>
-	<20140707152309.GH4939@tarshish>
-	<CACRpkdY+3hy5iw=uRdmu665NWsoGacTMgjUq97219kEcfn7Dqw@mail.gmail.com>
-	<20140711062811.GC3003@tarshish>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH 2/2] clk: exynos-audss: Update as per existing framework
+Date: Fri, 11 Jul 2014 17:37:43 +0530
+Message-ID: <53BFD38F.5010805@gmail.com>
+References: <1405071475-31946-1-git-send-email-tushar.b@samsung.com> <1405071475-31946-3-git-send-email-tushar.b@samsung.com> <53BFBF18.3080704@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140711062811.GC3003@tarshish>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53BFBF18.3080704@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tushar Behera <tushar.b@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, kgene.kim@samsung.com, mturquette@linaro.org, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 8:28 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> On Tue, Jul 08, 2014 at 11:27:57AM +0200, Linus Walleij wrote:
+On 07/11/2014 04:10 PM, Sylwester Nawrocki wrote:
+> Hi Tushar,
+> 
+> On 11/07/14 11:37, Tushar Behera wrote:
+>> Change exynos-audss clock driver as per existing clock framework from
+>> the existing module driver framework.
+> 
+> Can you explain what's the actual issue you're trying to solve with that
+> patch ? What's the problem with this driver being a platform driver ?
+> It feels we're moving in circles here, see
+> 
+> commit b37a4224104568198b93fb9831224cfe7d83fff8
+> Author: Andrew Bresticker <abrestic@chromium.org>
+> Date:   Wed Sep 25 14:12:47 2013 -0700
+> 
+>     clk: exynos-audss: convert to platform device
+> 
+>     The Exynos AudioSS clock controller will later be modified to allow
+>     input clocks to be specified via device-tree in order to support
+>     multiple Exynos SoCs.  This will introduce a dependency on the core
+>     SoC clock controller being initialized first so that the AudioSS driver
+>     can look up its input clocks, but the order in which clock providers
+>     are probed in of_clk_init() is not guaranteed.  Since deferred probing
+>     is not supported in of_clk_init() and the AudioSS block is not the core
+>     controller, we can initialize it later as a platform device.
+> 
+>     Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>     Acked-by: Tomasz Figa <t.figa@samsung.com>
+>     Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>     Acked-by: Mike Turquette <mturquette@linaro.org>
+>     Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+>     Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> 
+> I realize of_clk_init() now handles better clock provider dependencies,
+> nevertheless do we really need all this churn ?
+> 
 
->> What is the usecase here?
->
-> During boot I need to know, for example, when an FPGA is ready to be
-> programmed, and when said FPGA has finished its initialization. I also read
-> the sate of on-board DIP switches to determine the desired boot method. I find
-> the current sysfs interface quite convenient for these and similar tasks.
+I have sent v2 of the patchset while retaining the platform driver
+infrastructure. Awaiting your review comments on that.
 
-So given that an FPGA is a piece of hardware, it should have its firmware
-loaded from the kernel and a kernel driver communicating with it I guess?
+> --
+> Thanks,
+> Sylwester
+> 
 
-I feel the smell of a huge bundle of userspace drivers for something that
-should be handled by the kernel.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+-- 
+Tushar Behera
