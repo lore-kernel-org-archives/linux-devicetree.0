@@ -1,55 +1,53 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 07/13] ARM: shmobile: r8a73a4 dtsi: Add SoC-specific irqc
- compatible property
-Date: Fri, 11 Jul 2014 11:15:35 +0200
-Message-ID: <20140711091534.GL12420@verge.net.au>
+Subject: Re: [PATCH 12/13] [RFC] thermal: rcar: Add binding docs for new
+ R-Car Gen2 SoCs
+Date: Fri, 11 Jul 2014 11:21:12 +0200
+Message-ID: <20140711092112.GQ12420@verge.net.au>
 References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
- <1404908623-909-8-git-send-email-geert+renesas@glider.be>
+ <1404908623-909-13-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404908623-909-8-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1404908623-909-13-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 02:23:37PM +0200, Geert Uytterhoeven wrote:
-> The interrupt controller used the generic compatible property only.
-> Add the SoC-specific one, to make it future proof.
+On Wed, Jul 09, 2014 at 02:23:42PM +0200, Geert Uytterhoeven wrote:
+>   - r8a7792 (R-Car V2H)
+>   - r8a7793 (R-Car M2-N)
+>   - r8a7794 (R-Car E2)
 > 
+> r8a7791 is now called "R-Car M2-W".
+
+I don't feel strongly about this either way.  But it seems to me that if we
+want to start using "M2-W" then we should make some effort, though not
+necessarily immediately, to update all instances of "M2" that already exist
+in the tree.
+
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Thanks, please repost this once the binding has been
-accepted by the maintainer.
-
 > ---
->  arch/arm/boot/dts/r8a73a4.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-> index 82c5ac825386..f3bd3d4603d7 100644
-> --- a/arch/arm/boot/dts/r8a73a4.dtsi
-> +++ b/arch/arm/boot/dts/r8a73a4.dtsi
-> @@ -51,7 +51,7 @@
->  	};
->  
->  	irqc0: interrupt-controller@e61c0000 {
-> -		compatible = "renesas,irqc";
-> +		compatible = "renesas,irqc-r8a73a4", "renesas,irqc";
->  		#interrupt-cells = <2>;
->  		interrupt-controller;
->  		reg = <0 0xe61c0000 0 0x200>;
-> @@ -90,7 +90,7 @@
->  	};
->  
->  	irqc1: interrupt-controller@e61c0200 {
-> -		compatible = "renesas,irqc";
-> +		compatible = "renesas,irqc-r8a73a4", "renesas,irqc";
->  		#interrupt-cells = <2>;
->  		interrupt-controller;
->  		reg = <0 0xe61c0200 0 0x200>;
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> index 0ef00be44b01..43404b197933 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> @@ -7,7 +7,10 @@ Required properties:
+>  			    - "renesas,thermal-r8a73a4" (R-Mobile AP6)
+>  			    - "renesas,thermal-r8a7779" (R-Car H1)
+>  			    - "renesas,thermal-r8a7790" (R-Car H2)
+> -			    - "renesas,thermal-r8a7791" (R-Car M2)
+> +			    - "renesas,thermal-r8a7791" (R-Car M2-W)
+> +			    - "renesas,thermal-r8a7792" (R-Car V2H)
+> +			    - "renesas,thermal-r8a7793" (R-Car M2-N)
+> +			    - "renesas,thermal-r8a7794" (R-Car E2)
+>  - reg			: Address range of the thermal registers.
+>  			  The 1st reg will be recognized as common register
+>  			  if it has "interrupts".
 > -- 
 > 1.9.1
 > 
