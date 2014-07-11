@@ -1,75 +1,130 @@
-From: Zhou Wang <wangzhou.bry@gmail.com>
-Subject: Re: [PATCH 1/3] mtd: hisilicon: add device tree node for nand controller
-Date: Fri, 11 Jul 2014 10:40:20 +0800
-Message-ID: <53BF4E94.7030104@gmail.com>
-References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com> <1404115409-20200-2-git-send-email-wangzhou.bry@gmail.com> <53BCEA77.2080004@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53BCEA77.2080004@huawei.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jerome FORISSIER <jerome.forissier@huawei.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, caizhiyong@huawei.com, wangzhou1@hisilicon.com
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv5 1/5] mmc: dw_mmc: modify the dt-binding for removing
+ slot-node and supports-highspeed
+Date: Fri, 11 Jul 2014 12:49:43 +0900
+Message-ID: <1405050587-5577-2-git-send-email-jh80.chung@samsung.com>
+References: <1405050587-5577-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1405050587-5577-1-git-send-email-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2014=E5=B9=B407=E6=9C=8809=E6=97=A5 15:08, Jerome FORISSIER wrote:
-> On 30-Jun-14 10:03, Zhou Wang wrote:
->> Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
->> ---
->>   arch/arm/boot/dts/hip04.dtsi |   31 ++++++++++++++++++++++++++++++=
-+
->>   1 file changed, 31 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.=
-dtsi
->> index abb42ca..e63fc61 100644
->> --- a/arch/arm/boot/dts/hip04.dtsi
->> +++ b/arch/arm/boot/dts/hip04.dtsi
->> @@ -386,5 +386,36 @@
->>   				interrupts =3D <0 389 4>;
->>   			};
->>   		};
->> +
->> +		nand: nand@4020000 {
->> +			compatible =3D "hisilicon,504-nfc";
->
-> In PATCH 2/3 and 3/3 you are using "hisilicon,nfc504".
->
+Almost Soc is used the slot per a host.
+Don't use the slot-node and deprecated the "supports-highsped" property.
+Instead, use the cap-mmc/sd-highspeed.
 
-It was my mistake. All should be "hisilicon,504-nfc". Thanks a lot.
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Reviewed-by: Tushar Behera <trblinux@gmail.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
+Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+---
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 +++++------------
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 +++++-------
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 +++++-------
+ 3 files changed, 15 insertions(+), 26 deletions(-)
 
->> +			reg =3D <0x4020000 0x10000>, <0x5000000 0x1000>;
->> +			interrupts =3D <0 379 4>;
->> +			nand-bus-width =3D <8>;
->> +			nand-ecc-mode =3D "none";
->> +			hisi,nand-ecc-bits =3D <0>;
->> +			#address-cells =3D <1>;
->> +			#size-cells =3D <1>;
->> +
->> +			partition@0 {
->> +				label =3D "nand_text";
->> +				reg =3D <0x00000000 0x00400000>;
->> +			};
->> +
->> +			partition@00400000 {
->> +				label =3D "nand_monitor";
->> +				reg =3D <0x00400000 0x00400000>;
->> +			};
->> +
->> +			partition@00800000 {
->> +				label =3D "nand_kernel";
->> +				reg =3D <0x00800000 0x00800000>;
->> +			};
->> +
->> +			partition@01000000 {
->> +				label =3D "nand_fs";
->> +				reg =3D <0x01000000 0x1f000000>;
->> +			};
->> +		};
->>   	};
->>   };
->>
->
-
+diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+index 532b1d4..9308325 100644
+--- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+@@ -46,13 +46,14 @@ Required Properties:
+       - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
+         phase shift clocks should be 0.
+ 
+-Required properties for a slot:
++Required properties for a slot (Deprecated - Recommend to use one slot per a host):
+ 
+ * gpios: specifies a list of gpios used for command, clock and data bus. The
+   first gpio is the command line and the second gpio is the clock line. The
+   rest of the gpios (depending on the bus-width property) are the data lines in
+   no particular order. The format of the gpio specifier depends on the gpio
+   controller.
++ (Deprecated - Refer to Documentaion/devicetree/binding/pinctrl/samsung-pinctrl.txt)
+ 
+ Example:
+ 
+@@ -69,21 +70,13 @@ Example:
+ 
+ 	dwmmc0@12200000 {
+ 		num-slots = <1>;
+-		supports-highspeed;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
+ 		broken-cd;
+ 		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+ 		samsung,dw-mshc-ciu-div = <3>;
+ 		samsung,dw-mshc-sdr-timing = <2 3>;
+ 		samsung,dw-mshc-ddr-timing = <1 2>;
+-
+-		slot@0 {
+-			reg = <0>;
+-			bus-width = <8>;
+-			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
+-				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
+-				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
+-				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
+-				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
+-		};
++		bus-width = <8>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+index e5bc49f..3b35449 100644
+--- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+@@ -34,13 +34,11 @@ Example:
+ 		num-slots = <1>;
+ 		vmmc-supply = <&ldo12>;
+ 		fifo-depth = <0x100>;
+-		supports-highspeed;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
+-		slot@0 {
+-			reg = <0>;
+-			bus-width = <4>;
+-			disable-wp;
+-			cd-gpios = <&gpio10 3 0>;
+-		};
++		bus-width = <4>;
++		disable-wp;
++		cd-gpios = <&gpio10 3 0>;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
+ 	};
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+index 2d4a725..346c609 100644
+--- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+@@ -67,7 +67,8 @@ Optional properties:
+ * card-detect-delay: Delay in milli-seconds before detecting card after card
+   insert event. The default value is 0.
+ 
+-* supports-highspeed: Enables support for high speed cards (up to 50MHz)
++* supports-highspeed (DEPRECATED): Enables support for high speed cards (up to 50MHz)
++			   (use "cap-mmc-highspeed" or "cap-sd-highspeed" instead)
+ 
+ * broken-cd: as documented in mmc core bindings.
+ 
+@@ -98,14 +99,11 @@ board specific portions as listed below.
+ 		clock-frequency = <400000000>;
+ 		clock-freq-min-max = <400000 200000000>;
+ 		num-slots = <1>;
+-		supports-highspeed;
+ 		broken-cd;
+ 		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+ 		vmmc-supply = <&buck8>;
+-
+-		slot@0 {
+-			reg = <0>;
+-			bus-width = <8>;
+-		};
++		bus-width = <8>;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
+ 	};
+-- 
+1.7.9.5
