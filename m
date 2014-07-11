@@ -1,93 +1,132 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: Re: [PATCH 10/13] ARM: tegra: Enable the DFLL on the Jetson TK1
-Date: Fri, 11 Jul 2014 10:14:42 +0300
-Message-ID: <53BF8EE2.4070702@nvidia.com>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com> <1405028569-14253-11-git-send-email-ttynkkynen@nvidia.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v8 0/9] Support for creating generic PCI host bridges from
+ DT
+Date: Fri, 11 Jul 2014 16:33:23 +0900
+Message-ID: <004501cf9cda$65703610$3050a230$%han@samsung.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
+ <20140708171828.GM6501@e106497-lin.cambridge.arm.com>
+ <CACoXjcn3b7otcbxdr+RAVNHHjHyVsvw0QcmK5jd-QBF8SQX5iw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1405028569-14253-11-git-send-email-ttynkkynen@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <CACoXjcn3b7otcbxdr+RAVNHHjHyVsvw0QcmK5jd-QBF8SQX5iw@mail.gmail.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Tanmay Inamdar' <tinamdar@apm.com>, 'Liviu Dudau' <Liviu.Dudau@arm.com>
+Cc: 'Rob Herring' <robherring2@gmail.com>, 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Sinan Kaya' <okaya@codeaurora.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Suravee Suthikulanit' <suravee.suthikulpanit@amd.com>, 'Device Tree ML' <devicetree@vger.kernel.org>, 'LKML' <linux-kernel@vger.kernel.org>, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-It might look nicer if the voltage table was in a separate file. A bit 
-of a border case, maybe.
+On Friday, July 11, 2014 9:44 AM, Tanmay Inamdar wrote:
+> On Tue, Jul 8, 2014 at 10:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
+ote:
+> > On Sun, Jul 06, 2014 at 04:23:43PM +0100, Rob Herring wrote:
+> >> On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> =
+wrote:
+> >> > This is my resurected attempt at adding support for generic PCI =
+host
+> >> > bridge controllers that make use of device tree information to
+> >> > configure themselves. I've tagged it as v8 although the patches
+> >> > have now been reshuffled in order to ease adoption so referring =
+to
+> >> > the older versions might be a bit of a hoop jumping exercise.
+> >> >
+> >> > Changes from v7:
+> >> >   - Reordered the patches so that fixes and non-controversial pa=
+tches
+> >> >     from v7 can be accepted more easily. If agreed I can split t=
+he
+> >> >     series again into patches that can be upstreamed easily and =
+ones
+> >> >     that still need discussion.
+> >> >   - Moved the of_create_host_bridge() function to drivers/of/of_=
+pci.c
+> >> >     to better reflect its target use.
+> >> >   - Added the function to remap the bus I/O resources that used =
+to be
+> >> >     provided in my arm64 patch series and (re)named it pci_remap=
+_iospace()
+> >> >   - Removed error code checking from parsing and mapping of IRQ =
+from DT
+> >> >     in recognition that some PCI devices will not have legacy IR=
+Q mappings.
+> >> >
+> >> > v7 thread here with all the historic information: https://lkml.o=
+rg/lkml/2014/3/14/279
+> >>
+> >> Can you publish a branch for this series please.
+> >>
+> >> Rob
+> >>
+> >
+> > Hi Rob,
+> >
+> > I have pushed a brach that matches my v8 patchset +1 obvious missin=
+g header include
+> > here: http://www.linux-arm.org/git?p=3Dlinux-ld.git;a=3Dshortlog;h=3D=
+refs/heads/for-upstream/pci_v8
+> >
+>=20
+> I was still getting following compilation error after applying arm64
+> pci headers. Please let me know if I am missing something.
+>=20
+> linux-git/drivers/of/of_pci.c: In function =E2=80=98pci_host_bridge_o=
+f_get_ranges=E2=80=99:
+> linux-git/drivers/of/of_pci.c:114:22: error: storage size of =E2=80=98=
+range=E2=80=99 isn=E2=80=99t known
+>   struct of_pci_range range;
+>                       ^
+> linux-git/drivers/of/of_pci.c:115:29: error: storage size of =E2=80=98=
+parser=E2=80=99
+> isn=E2=80=99t known
+>   struct of_pci_range_parser parser;
+>                              ^
+> linux-git/drivers/of/of_pci.c:121:2: error: implicit declaration of
+> function =E2=80=98of_pci_range_parser_init=E2=80=99
+> [-Werror=3Dimplicit-function-declaration]
+>   err =3D of_pci_range_parser_init(&parser, dev);
+>=20
+>=20
+> Below patch fixes the errors.
+>=20
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 55d8320..da88dac 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/export.h>
+>  #include <linux/of.h>
+>  #include <linux/of_pci.h>
+> +#include <linux/of_address.h>
 
-On 11/07/14 00:42, Tuomas Tynkkynen wrote:
-> ...
-> +		nvidia,pmic-voltage-table =
-> +			<0x1e 700000>,
-> +			<0x1f 710000>,
-> +			<0x20 720000>,
-> +			<0x21 730000>,
-> +			<0x22 740000>,
-> +			<0x23 750000>,
-> +			<0x24 760000>,
-> +			<0x25 770000>,
-> +			<0x26 780000>,
-> +			<0x27 790000>,
-> +			<0x28 800000>,
-> +			<0x29 810000>,
-> +			<0x2a 820000>,
-> +			<0x2b 830000>,
-> +			<0x2c 840000>,
-> +			<0x2d 850000>,
-> +			<0x2e 860000>,
-> +			<0x2f 870000>,
-> +			<0x30 880000>,
-> +			<0x31 890000>,
-> +			<0x32 900000>,
-> +			<0x33 910000>,
-> +			<0x34 920000>,
-> +			<0x35 930000>,
-> +			<0x36 940000>,
-> +			<0x37 950000>,
-> +			<0x38 960000>,
-> +			<0x39 970000>,
-> +			<0x3a 980000>,
-> +			<0x3b 990000>,
-> +			<0x3c 1000000>,
-> +			<0x3d 1010000>,
-> +			<0x3e 1020000>,
-> +			<0x3f 1030000>,
-> +			<0x40 1040000>,
-> +			<0x41 1050000>,
-> +			<0x42 1060000>,
-> +			<0x43 1070000>,
-> +			<0x44 1080000>,
-> +			<0x45 1090000>,
-> +			<0x46 1100000>,
-> +			<0x47 1110000>,
-> +			<0x48 1120000>,
-> +			<0x49 1130000>,
-> +			<0x4a 1140000>,
-> +			<0x4b 1150000>,
-> +			<0x4c 1160000>,
-> +			<0x4d 1170000>,
-> +			<0x4e 1180000>,
-> +			<0x4f 1190000>,
-> +			<0x50 1200000>,
-> +			<0x51 1210000>,
-> +			<0x52 1220000>,
-> +			<0x53 1230000>,
-> +			<0x54 1240000>,
-> +			<0x55 1250000>,
-> +			<0x56 1260000>,
-> +			<0x57 1270000>,
-> +			<0x58 1280000>,
-> +			<0x59 1290000>,
-> +			<0x5a 1300000>,
-> +			<0x5b 1310000>,
-> +			<0x5c 1320000>,
-> +			<0x5d 1330000>,
-> +			<0x5e 1340000>,
-> +			<0x5f 1350000>,
-> +			<0x60 1360000>,
-> +			<0x61 1370000>,
-> +			<0x62 1380000>,
-> +			<0x63 1390000>,
-> +			<0x64 1400000>;
- > ...
+Yes, right. I also found the build errors as above mentioned.
+"of_address.h" should be included, in order to fix the build errors.
+However, for readability, the following would be better.
+
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_pci.h>
+
+Best regards,
+Jingoo Han
+
+>=20
+>  static inline int __of_pci_pci_compare(struct device_node *node,
+>                                        unsigned int data)
+>=20
+>=20
+> > Best regards,
+> > Liviu
+> >
+> >
+> > --
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > | I would like to |
+> > | fix the world,  |
+> > | but they're not |
+> > | giving me the   |
+> >  \ source code!  /
+> >   ---------------
+> >     =C2=AF\_(=E3=83=84)_/=C2=AF
+> >
