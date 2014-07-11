@@ -1,47 +1,42 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 11 Jul 2014 15:11:16 +0100
-Message-ID: <20140711141115.GB16321@arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
- <20140708005954.GC22939@google.com>
- <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
- <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
- <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
- <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v4 01/21] leds: make brightness type consistent across
+ whole subsystem
+Date: Fri, 11 Jul 2014 16:04:04 +0200
+Message-ID: <1405087464-13762-2-git-send-email-j.anaszewski@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
-Content-Language: en-US
+In-reply-to: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 10, 2014 at 11:36:10PM +0100, Bjorn Helgaas wrote:
-> Most of the rest of the v7 discussion was about "Introduce a domain
-> number for pci_host_bridge."  I think we should add arm64 using the
-> existing pci_scan_root_bus() and keep the domain number in the arm64
-> sysdata structure like every other arch does.  Isn't that feasible?
-> We can worry about domain unification later.
+Documentations states that brightness units type is enum led_brightness
+and this is the type used by the led API functions. Adjust the type
+of brightness variables in the struct led_classdev accordingly.
 
-I think that's what we were trying to avoid, adding an arm64-specific
-pci_sys_data structure (and arm64-specific API). IIUC, avoiding this
-would allow the host controller drivers to use the sysdata pointer for
-their own private data structures.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+---
+ include/linux/leds.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Also since you can specify the domain number via DT (and in Liviu's
-v8 patches read by of_create_pci_host_bridge), I think it would make
-sense to have it stored in some generic data structures (e.g.
-pci_host_bridge) rather than in an arm64 private sysdata.
-
-(Liviu is thinking of an alternative API but maybe he could briefly
-describe it here before posting a new series)
-
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index e436864..995f933 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -31,8 +31,8 @@ enum led_brightness {
+ 
+ struct led_classdev {
+ 	const char		*name;
+-	int			 brightness;
+-	int			 max_brightness;
++	enum led_brightness	 brightness;
++	enum led_brightness	 max_brightness;
+ 	int			 flags;
+ 
+ 	/* Lower 16 bits reflect status */
 -- 
-Catalin
+1.7.9.5
