@@ -1,38 +1,88 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 0/2] clk: exynos-audss: Adapt to exising clock framework
-Date: Fri, 11 Jul 2014 11:51:27 +0200
-Message-ID: <53BFB39F.6040606@samsung.com>
-References: <1405071475-31946-1-git-send-email-tushar.b@samsung.com>
+From: jianqun <xjq@rock-chips.com>
+Subject: [PATCH 0/2] add rockchip i2s driver
+Date: Fri, 11 Jul 2014 17:54:47 +0800
+Message-ID: <1405072489-20802-1-git-send-email-xjq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1405071475-31946-1-git-send-email-tushar.b@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.b@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: robh+dt@kernel.org, grant.likely@linaro.org, kgene.kim@samsung.com, mturquette@linaro.org, trblinux@gmail.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: heiko@sntech.de, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, robh+dt@kernel.org, zhangqing@rock-chips.com
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, yzq@rock-chips.com, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, cf@rock-chips.com, Jianqun Xu <xjq@rock-chips.com>, kfx@rock-chips.com, zyw@rock-chips.com, hj@rock-chips.com, zhenfu.fang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tushar,
+From: Jianqun Xu <xjq@rock-chips.com>
 
-On 11.07.2014 11:37, Tushar Behera wrote:
-> The patchset is targetted as moving exising exynos-audss clock driver from being
-> a module driver. The driver is now registered through CLK_OF_DECLARE and is
-> inline with other Samsung clock drivers.
+This patch is to add driver for I2S controller in RK3xxx SoCs.
 
-I'm afraid I have to NAK this series or at least the part converting the
-driver back to use CLK_OF_DECLARE().
+The only one change in this patch against which has been reviewed before is to 
+fix randconfig build error with next-20140710 by add "#include <linux/module.h>".
 
-We have deliberately made this driver a platform driver, because this is
-how drivers should be modeled in Linux kernel whenever possible.
-CLK_OF_DECLARE() should be only considered a hack to work around late
-initialization of driver model. Reverting this change without a good
-reason (and you haven't provided such) is just going backwards.
+Jianqun Xu (2):
+  ASoC: dt-bindings: add rockchip i2s bindings
 
-Rest of this series is actually quite nice, though, as reusing Samsung
-clock helpers reduces the line count significantly, so if you could
-rework this to keep this driver a platform driver then we could get
-something I could ack.
+changes since v2:
+ - change the description of dma-names, adviced by Mark
+ - change the description of interrupts, adviced by Mark
+ - list clock-names to be easy to read, adviced by Mark
+ - modify compatible for rk3288 example, adviced by Mark and Heiko
 
-Best regards,
-Tomasz
+ changes since v1:
+ - modify the description of clock-names property, adviced by Mark Rutland.
+ - modify the example to fit for rk3288.
+
+
+  ASoC: add driver for Rockchip RK3xxx I2S controller
+
+changes since v3:
+ - fix randconfig build error with next-20140710 by add "#include <linux/module.h>"
+   tested with config given by robot test.
+
+changes since v2:
+ - replace 4 with DMA_SLAVE_BUSWIDTH_4_BYTES
+ - modify supported rate to SNDRV_PCM_RATE_8000_192000
+ - rename head file to "rockchi_i2s.h"
+
+changes since v1:
+ - proper indentation for function arguments, adviced by Varka Bhadram
+ - replace sizeof(struct rk_i2s_dev) with sizeof(*i2s), adviced by Mark Rutland
+ - not to include head files which are unused actually in driver, adviced by Mark Brown
+ - modify i2s_tx_status/i2s_rx_status to more meaningful with tx_start/rx_start, adviced by Mark Brown
+ - use regmap_update_bits to reduce the amount of time spent locked, adviced by Mark Brown
+ - add warning for possible error while waiting for the hardware to be ready, adviced by Mark Brown
+ - error checking for clk_set_rate, adviced by Mark Brown
+ - error checking for i2s_runtime_resume, adviced by Mark Brown
+ - remove set_clkdiv operation, clock setting will do it, adviced by Mark Brown
+ - no need SND_SOC for SND_SOC_ROCKCHIP, also allow the driver to be select when
+   COMPILE_TEST is selected, adviced by Lars-Peter Clausen
+ - not to include head files which are unused actually in driver, adviced by Lars-Peter Clausen
+ - I2S core just use one snd_soc_dai_driver struct, adviced by Lars-Peter Clausen
+ - delete rockchip_pcm.c and related codes, use generic dmaengine API, adviced by Lars-Peter and Mark Brown
+ - a driver should never attempt to change its own device name, just use
+   the name that the kernel set, adviced by Lars-Peter and Mark Brown
+ 
+
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |   37 ++
+ sound/soc/Kconfig                                  |    1 +
+ sound/soc/Makefile                                 |    1 +
+ sound/soc/rockchip/Kconfig                         |   12 +
+ sound/soc/rockchip/Makefile                        |    4 +
+ sound/soc/rockchip/rockchip_i2s.c                  |  531 ++++++++++++++++++++
+ sound/soc/rockchip/rockchip_i2s.h                  |  223 ++++++++
+ 7 files changed, 809 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+ create mode 100644 sound/soc/rockchip/Kconfig
+ create mode 100644 sound/soc/rockchip/Makefile
+ create mode 100644 sound/soc/rockchip/rockchip_i2s.c
+ create mode 100644 sound/soc/rockchip/rockchip_i2s.h
+
+-- 
+1.7.9.5
