@@ -1,116 +1,50 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss
- always enabled
-Date: Fri, 11 Jul 2014 11:48:54 +0530
-Message-ID: <53BF81CE.60507@gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com> <1402464739-19044-2-git-send-email-tushar.b@samsung.com> <20140611165027.6562.64928@quantum> <CAC5m3BwR9WhiiDqUw1A6FjmzAnQ02xCBxOeAaY2nt3CRqTz+oQ@mail.gmail.com> <20140612210920.6562.96815@quantum>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v2 1/2] gpio: Add driver for Zynq GPIO controller
+Date: Fri, 11 Jul 2014 09:28:11 +0300
+Message-ID: <20140711062811.GC3003@tarshish>
+References: <1403091577-10232-1-git-send-email-harinik@xilinx.com>
+ <5cc8b89b-20ff-4fa9-92dd-bb2f6d3512d8@BY2FFO11FD030.protection.gbl>
+ <CACRpkdb1M3-hrSKLKWz21LCJ1sMvsq5E-aqkpmVhy0NwOS5HhA@mail.gmail.com>
+ <20140707152309.GH4939@tarshish>
+ <CACRpkdY+3hy5iw=uRdmu665NWsoGacTMgjUq97219kEcfn7Dqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140612210920.6562.96815@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Tushar Behera <tushar.b@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, lkml <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY+3hy5iw=uRdmu665NWsoGacTMgjUq97219kEcfn7Dqw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Harini Katakam <harinik@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Harini Katakam <harinikatakamlinux@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Harini Katakam <harini.katakam@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2014 02:39 AM, Mike Turquette wrote:
-> Quoting Tushar Behera (2014-06-12 00:29:23)
->> On Wed, Jun 11, 2014 at 10:20 PM, Mike Turquette <mturquette@linaro.org> wrote:
->>> Quoting Tushar Behera (2014-06-10 22:32:17)
->>>> When the output clock of AUDSS mux is disabled, we are getting kernel
->>>> oops while doing a clk_get() on other clocks provided by AUDSS. Though
->>>> user manual doesn't specify this dependency, we came across this issue
->>>> while disabling the parent of AUDSS mux clocks.
->>>
->>> Hi Tushar,
->>>
->>> Can you help me understand better what the actual problem is? What is
->>> the root cause of the kernel oops?
->>
->> Currently AUDSS mux has two parents, XXTI crystal and MAU_EPLL clock.
->> As per observation, when the output of AUDSS mux is gated, we are not
->> able to do any operation on the clocks provided by MAU block (mostly
->> the clocks used by ADMA and audio blocks).
-> 
-> I tried to get a datasheet for Exynos 54xx but could not find it. I even
-> looked at the public 5250 data sheet, but it is completely missing
-> Chapter 34, "Audio Subsystem", which apparently contains Figure 34-3,
-> "Clock names and clock tree diagram of MAUDIO_BLK".
-> 
-> So without any clue about your hardware (not for lack of trying) I would
-> guess that somewhere in the parent hierarchy you have an interface clock
-> which must be enabled in order for you to touch the registers pertaining
-> to the downstream audio clocks.
-> 
+Hi Linus,
 
-Yes, right. As per observation, we need to keep the output of AUDSS mux
-enabled to access the registers present in MAU block.
-
-> The right way to handle this requires two steps:
+On Tue, Jul 08, 2014 at 11:27:57AM +0200, Linus Walleij wrote:
+> On Mon, Jul 7, 2014 at 5:23 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+> > On Mon, Jul 07, 2014 at 04:51:56PM +0200, Linus Walleij wrote:
 > 
-> 1) model your interface clock in the Linux clock framework if you
-> haven't already (I assume it is a gate clock, or the child of a gate
-> clock)
+> >> This needs someone to step in and provide a replacement, my preferred
+> >> mechanism would be a /dev/gpiochip0/... hierarchy using char devices.
+> >
+> > I really like the ability to control GPIOs from shell, both interactively and
+> > scripted. I find it useful for quick hardware level debugging,
 > 
-
-The interface clock is already part of the clock framework.
-
-> 2) the clk_ops callbacks for the affected audio clocks should wrap their
-> operations (i.e. critical secion) with a clk_enable/clk_disable pair,
-> where the clock being enables/disable is the interface clock mentioned
-> above in #1
+> I would be happy to carry it in the unstable-ABI debugfs for sure.
+> It's the supported ABI that bothers me.
 > 
-> The CCF is reentrant, so you can do this by simply using the top-level
-> clk.h API from within your clk_ops callbacks.
+> > and for boot
+> > time scripting (mainly in initramfs).
 > 
+> What is the usecase here?
 
-Right now, the clocks are registered with clk_register_mux,
-clk_register_div and clk_register_gate calls which in turn set
-appropriate clk_ops callbacks. If I need to wrap the register access
-during these clk_ops callbacks with clk_enable/clk_disable of interface
-lock, I would have to reimplement the clk_ops callbacks in
-clk-exynos-audss driver.
+During boot I need to know, for example, when an FPGA is ready to be 
+programmed, and when said FPGA has finished its initialization. I also read 
+the sate of on-board DIP switches to determine the desired boot method. I find 
+the current sysfs interface quite convenient for these and similar tasks.
 
-Is that the approach that you are suggesting?
-
-> I might be totally wrong about the cause of the hang, but that's my best
-> guess based on everyone's bug reports.
-> 
-
-There are 5 gate clocks within MAU block. While disabling the unused
-clocks, if CLK_MAU_EPLL is disabled first, then we are getting this
-system hang.
-
-
-> Regards,
-> Mike
-> 
->>
->>>
->>> You mention calling clk_get on child clocks of the AUDSS mux fails, but
->>> I cannot imagine why. How can the enable/disable state of a clock affect
->>> the ability to clk_get other clocks?
->>>
->>
->> I might have a little vogue while updating the commit message
->> (mentioning about clk_get which surely is only a s/w operation), but
->> there is definitely some issue with handling those clocks under given
->> scenario.
->>
->> I am on leave till end of this week, so I will update you more with
->> the logs on Monday.
->>
->> Thanks,
->> --
->> Tushar
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+baruch
 
 -- 
-Tushar Behera
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
