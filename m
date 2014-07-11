@@ -1,39 +1,47 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 8/8] drm/tilcdc: panel: Add support for enable GPIO
-Date: Fri, 11 Jul 2014 12:08:58 -0300
-Message-ID: <CAOMZO5CawR9qMbm3HLf4+S3-pcf4m=VCUqm0W9LXXYzNzv2aOQ@mail.gmail.com>
-References: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <1405088334-11215-9-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 10/13] [RFC] ARM: dts: Add shmobile platform device tree
+ bindings documentation
+Date: Fri, 11 Jul 2014 17:09:22 +0200
+Message-ID: <20140711150921.GA1777@verge.net.au>
+References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+ <1404908623-909-11-git-send-email-geert+renesas@glider.be>
+ <20140711091720.GO12420@verge.net.au>
+ <CAMuHMdXP6GfO7OEnXU8x4Sn5j8_tA2nnrFANr1sriB-B4BYoOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1405088334-11215-9-git-send-email-ezequiel@vanguardiasur.com.ar>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Daniel Vetter <daniel.vetter@ffwll.ch>, DRI mailing list <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXP6GfO7OEnXU8x4Sn5j8_tA2nnrFANr1sriB-B4BYoOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 11:18 AM, Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
-> In order to support the "enable GPIO" available in many panel devices,
-> this commit adds a proper devicetree binding.
->
-> By providing an enable GPIO in the devicetree, the driver can now turn
-> off and on the panel device, and/or the backlight device. Both the
-> backlight and the GPIO are optional properties.
-> +       panel_mod->enable_gpio = devm_gpiod_get(&pdev->dev, "enable");
-> +       if (IS_ERR(panel_mod->enable_gpio)) {
-> +               ret = PTR_ERR(panel_mod->enable_gpio);
-> +               if (ret != -ENOENT) {
+On Fri, Jul 11, 2014 at 04:26:03PM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Fri, Jul 11, 2014 at 11:17 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > On Wed, Jul 09, 2014 at 02:23:40PM +0200, Geert Uytterhoeven wrote:
+> >> Add Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
+> >> Documentation, listing supported SoCs and boards.
+> >>
+> >> This allows to use checkpatch to validate DTSes referring to Renesas
+> >> shmobile SoCs, and boards containing those SoCs.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> >
+> > Thanks Geert,
+> >
+> > from my point of view this seems nice. Is there a reason it is marked as an RFC?
+> 
+> >From the cover letter:
+> 
+> "The last 4 patches contain compatible strings for new R-Car Gen2 SoCs,
+>  which are not yet in active use, hence the RFC status."
 
-Shouldn't this be controlled by a regulator instead? What if the panel
-is powered from a PMIC output?
+Thanks, sorry for missing that.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
