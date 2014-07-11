@@ -1,63 +1,329 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH 2/2] clk: exynos-audss: Update as per existing framework
-Date: Fri, 11 Jul 2014 17:37:43 +0530
-Message-ID: <53BFD38F.5010805@gmail.com>
-References: <1405071475-31946-1-git-send-email-tushar.b@samsung.com> <1405071475-31946-3-git-send-email-tushar.b@samsung.com> <53BFBF18.3080704@samsung.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v3 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Fri, 11 Jul 2014 17:43:19 +0530
+Message-ID: <53BFD4DF.7030003@gmail.com>
+References: <1405074557-5519-1-git-send-email-b29396@freescale.com> <1405074557-5519-2-git-send-email-b29396@freescale.com> <53BFC6CE.9090408@gmail.com> <53BFD28A.5090202@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53BFBF18.3080704@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tushar Behera <tushar.b@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, kgene.kim@samsung.com, mturquette@linaro.org, t.figa@samsung.com
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <53BFD28A.5090202@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2014 04:10 PM, Sylwester Nawrocki wrote:
-> Hi Tushar,
-> 
-> On 11/07/14 11:37, Tushar Behera wrote:
->> Change exynos-audss clock driver as per existing clock framework from
->> the existing module driver framework.
-> 
-> Can you explain what's the actual issue you're trying to solve with that
-> patch ? What's the problem with this driver being a platform driver ?
-> It feels we're moving in circles here, see
-> 
-> commit b37a4224104568198b93fb9831224cfe7d83fff8
-> Author: Andrew Bresticker <abrestic@chromium.org>
-> Date:   Wed Sep 25 14:12:47 2013 -0700
-> 
->     clk: exynos-audss: convert to platform device
-> 
->     The Exynos AudioSS clock controller will later be modified to allow
->     input clocks to be specified via device-tree in order to support
->     multiple Exynos SoCs.  This will introduce a dependency on the core
->     SoC clock controller being initialized first so that the AudioSS driver
->     can look up its input clocks, but the order in which clock providers
->     are probed in of_clk_init() is not guaranteed.  Since deferred probing
->     is not supported in of_clk_init() and the AudioSS block is not the core
->     controller, we can initialize it later as a platform device.
-> 
->     Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->     Acked-by: Tomasz Figa <t.figa@samsung.com>
->     Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->     Acked-by: Mike Turquette <mturquette@linaro.org>
->     Acked-by: Kukjin Kim <kgene.kim@samsung.com>
->     Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> 
-> I realize of_clk_init() now handles better clock provider dependencies,
-> nevertheless do we really need all this churn ?
-> 
+On 07/11/2014 05:33 PM, Marc Kleine-Budde wrote:
+> On 07/11/2014 01:13 PM, Varka Bhadram wrote:
+>> On 07/11/2014 03:59 PM, Dong Aisheng wrote:
+>>
+>> (...)
+>>
+>>> +/* m_can private data structure */
+>>> +struct m_can_priv {
+>>> +    struct can_priv can;    /* must be the first member */
+>>> +    struct napi_struct napi;
+>>> +    struct net_device *dev;
+>>> +    struct device *device;
+>>> +    struct clk *hclk;
+>>> +    struct clk *cclk;
+>>> +    void __iomem *base;
+>>> +    u32 irqstatus;
+>>> +
+>>> +    /* message ram configuration */
+>>> +    void __iomem *mram_base;
+>>> +    struct mram_cfg mcfg[MRAM_CFG_NUM];
+>>> +};
+>>> +
+>> It will be good if we write the comments for the driver private structure
+>>
+>>> +static inline u32 m_can_read(const struct m_can_priv *priv, enum
+>>> m_can_reg reg)
+>>> +{
+>>> +    return readl(priv->base + reg);
+>>> +}
+>>> +
+>> (...)
+>>
+>>> +static void free_m_can_dev(struct net_device *dev)
+>>> +{
+>>> +    free_candev(dev);
+>>> +}
+>>> +
+>> Why do we need a separate function which calls a single function...  :-)
+> To be symetric with alloc_m_can_dev()
+>
+>>> +static struct net_device *alloc_m_can_dev(void)
+>>> +{
+>>> +    struct net_device *dev;
+>>> +    struct m_can_priv *priv;
+>>> +
+>>> +    dev = alloc_candev(sizeof(struct m_can_priv), 1);
+>> sizeof(*priv)...?
+>>
+>>> +    if (!dev)
+>>> +        return NULL;
+>> Return value -ENOMEM ?
+> I'm okay with NULL, however if we want to return an arror value, it must
+> be ERR_PTR() wrapped.
+>
+>>> +
+>>> +    priv = netdev_priv(dev);
+>>> +    netif_napi_add(dev, &priv->napi, m_can_poll, M_CAN_NAPI_WEIGHT);
+>>> +
+>>> +    priv->dev = dev;
+>>> +    priv->can.bittiming_const = &m_can_bittiming_const;
+>>> +    priv->can.do_set_mode = m_can_set_mode;
+>>> +    priv->can.do_get_berr_counter = m_can_get_berr_counter;
+>>> +    priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
+>>> +                    CAN_CTRLMODE_LISTENONLY |
+>>> +                    CAN_CTRLMODE_BERR_REPORTING;
+>>> +
+>>> +    return dev;
+>>> +}
+>>> +
+>>> +static int m_can_open(struct net_device *dev)
+>>> +{
+>>> +    struct m_can_priv *priv = netdev_priv(dev);
+>>> +    int err;
+>>> +
+>>> +    err = clk_prepare_enable(priv->hclk);
+>>> +    if (err)
+>>> +        return err;
+>>> +
+>>> +    err = clk_prepare_enable(priv->cclk);
+>>> +    if (err)
+>>> +        goto exit_disable_hclk;
+>>> +
+>>> +    /* open the can device */
+>>> +    err = open_candev(dev);
+>>> +    if (err) {
+>>> +        netdev_err(dev, "failed to open can device\n");
+>>> +        goto exit_disable_cclk;
+>>> +    }
+>>> +
+>>> +    /* register interrupt handler */
+>>> +    err = request_irq(dev->irq, m_can_isr, IRQF_SHARED, dev->name,
+>>> +              dev);
+>> why don't we use devm_request_irq()...? If you use this no need to worry
+>> about freeing the irq
+> ...because the IRQ is allocated during ifup and released during ifdown.
+>
+>>> +    if (err < 0) {
+>>> +        netdev_err(dev, "failed to request interrupt\n");
+>>> +        goto exit_irq_fail;
+>>> +    }
+>>> +
+>>> +    /* start the m_can controller */
+>>> +    m_can_start(dev);
+>>> +
+>>> +    can_led_event(dev, CAN_LED_EVENT_OPEN);
+>>> +    napi_enable(&priv->napi);
+>>> +    netif_start_queue(dev);
+>>> +
+>>> +    return 0;
+>>> +
+>>> +exit_irq_fail:
+>>> +    close_candev(dev);
+>>> +exit_disable_cclk:
+>>> +    clk_disable_unprepare(priv->cclk);
+>>> +exit_disable_hclk:
+>>> +    clk_disable_unprepare(priv->hclk);
+>>> +    return err;
+>>> +}
+>>> +
+>>> +static void m_can_stop(struct net_device *dev)
+>>> +{
+>>> +    struct m_can_priv *priv = netdev_priv(dev);
+>>> +
+>>> +    /* disable all interrupts */
+>>> +    m_can_disable_all_interrupts(priv);
+>>> +
+>>> +    clk_disable_unprepare(priv->hclk);
+>>> +    clk_disable_unprepare(priv->cclk);
+>>> +
+>>> +    /* set the state as STOPPED */
+>>> +    priv->can.state = CAN_STATE_STOPPED;
+>>> +}
+>>> +
+>>> +static int m_can_close(struct net_device *dev)
+>>> +{
+>>> +    struct m_can_priv *priv = netdev_priv(dev);
+>>> +
+>>> +    netif_stop_queue(dev);
+>>> +    napi_disable(&priv->napi);
+>>> +    m_can_stop(dev);
+>>> +    free_irq(dev->irq, dev);
+>> not required when you use devm_request_irq()
+> No....see above.
+>
+>>> +    close_candev(dev);
+>>> +    can_led_event(dev, CAN_LED_EVENT_STOP);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>> (...)
+>>
+>>> +
+>>> +static const struct of_device_id m_can_of_table[] = {
+>>> +    { .compatible = "bosch,m_can", .data = NULL },
+>> we can simply give '0' . No need of .data = NULL. Things should be
+>> simple right....  :-)
+> .data should be a pointer, while "0" isn't. (Although 0 is valid C, we
+> don't want a integer 0 to initialize a pointer.) However, you can omit
+> .data = NULL completely. When initialzing via C99, any omited members of
+> the struct will automatically be initialized with 0x0. I like to see the
+> .data = NULL because it documents that there isn't any data (yet), once
+> another compatible is added, we need the .data anyways.
 
-I have sent v2 of the patchset while retaining the platform driver
-infrastructure. Awaiting your review comments on that.
+static const struct of_device_id m_can_of_table[] = {
+	{ .compatible = "bosch,m_can", },
+};
 
-> --
-> Thanks,
-> Sylwester
-> 
+This is enough... right ?
 
-Thanks,
+>>> +    { /* sentinel */ },
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, m_can_of_table);
+>>> +
+>>> +static int m_can_of_parse_mram(struct platform_device *pdev,
+>>> +                   struct m_can_priv *priv)
+>>> +{
+>>> +    struct device_node *np = pdev->dev.of_node;
+>>> +    struct resource *res;
+>>> +    void __iomem *addr;
+>>> +    u32 out_val[MRAM_CFG_LEN];
+>>> +    int ret;
+>>> +
+>>> +    /* message ram could be shared */
+>>> +    res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>> "message_ram");
+>>> +    if (!res)
+>>> +        return -ENODEV;
+>>> +
+>>> +    addr = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+>>> +    if (!addr)
+>>> +        return -ENODEV;
+>> Is this err return is appropriate ... ?
+> -ENOMEM seems to be more commonly used.
+>
+>>> +
+>>> +    /* get message ram configuration */
+>>> +    ret = of_property_read_u32_array(np, "mram-cfg",
+>>> +                     out_val, sizeof(out_val) / 4);
+>>> +    if (ret) {
+>>> +        dev_err(&pdev->dev, "can not get message ram configuration\n");
+>>> +        return -ENODEV;
+>>> +    }
+>>> +
+>> Is this err return is appropriate ... ?
+> Whay do you suggest?
+>
+>>> +    priv->mram_base = addr;
+>>> +    priv->mcfg[MRAM_SIDF].off = out_val[0];
+>>> +    priv->mcfg[MRAM_SIDF].num = out_val[1];
+>>> +    priv->mcfg[MRAM_XIDF].off = priv->mcfg[MRAM_SIDF].off +
+>>> +            priv->mcfg[MRAM_SIDF].num * SIDF_ELEMENT_SIZE;
+>>> +    priv->mcfg[MRAM_XIDF].num = out_val[2];
+>>> +    priv->mcfg[MRAM_RXF0].off = priv->mcfg[MRAM_XIDF].off +
+>>> +            priv->mcfg[MRAM_XIDF].num * XIDF_ELEMENT_SIZE;
+>>> +    priv->mcfg[MRAM_RXF0].num = out_val[3] & RXFC_FS_MASK;
+>>> +    priv->mcfg[MRAM_RXF1].off = priv->mcfg[MRAM_RXF0].off +
+>>> +            priv->mcfg[MRAM_RXF0].num * RXF0_ELEMENT_SIZE;
+>>> +    priv->mcfg[MRAM_RXF1].num = out_val[4] & RXFC_FS_MASK;
+>>> +    priv->mcfg[MRAM_RXB].off = priv->mcfg[MRAM_RXF1].off +
+>>> +            priv->mcfg[MRAM_RXF1].num * RXF1_ELEMENT_SIZE;
+>>> +    priv->mcfg[MRAM_RXB].num = out_val[5];
+>>> +    priv->mcfg[MRAM_TXE].off = priv->mcfg[MRAM_RXB].off +
+>>> +            priv->mcfg[MRAM_RXB].num * RXB_ELEMENT_SIZE;
+>>> +    priv->mcfg[MRAM_TXE].num = out_val[6];
+>>> +    priv->mcfg[MRAM_TXB].off = priv->mcfg[MRAM_TXE].off +
+>>> +            priv->mcfg[MRAM_TXE].num * TXE_ELEMENT_SIZE;
+>>> +    priv->mcfg[MRAM_TXB].num = out_val[7] & TXBC_NDTB_MASK;
+>>> +
+>>> +    dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0
+>>> 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d\n",
+>>> +        priv->mram_base,
+>>> +        priv->mcfg[MRAM_SIDF].off, priv->mcfg[MRAM_SIDF].num,
+>>> +        priv->mcfg[MRAM_XIDF].off, priv->mcfg[MRAM_XIDF].num,
+>>> +        priv->mcfg[MRAM_RXF0].off, priv->mcfg[MRAM_RXF0].num,
+>>> +        priv->mcfg[MRAM_RXF1].off, priv->mcfg[MRAM_RXF1].num,
+>>> +        priv->mcfg[MRAM_RXB].off, priv->mcfg[MRAM_RXB].num,
+>>> +        priv->mcfg[MRAM_TXE].off, priv->mcfg[MRAM_TXE].num,
+>>> +        priv->mcfg[MRAM_TXB].off, priv->mcfg[MRAM_TXB].num);
+>>> +
+>> dev_dbg() will insert the new lines in b/w. It wont print the values as
+>> you expected.
+>> Check this by enabling debug ...
+> What do you mean by b/w?
+
+You are expecting the data to be print in format like:
+pdev->dev/name: mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d
+
+But when we use the dev_dbg()/pr_debug()... It will put data like:
+pdev->dev/name: mram_base %p sidf 0x%x
+0x%x %d rxf0 0x%x
+rxf1 0x%x %d rxb
+....
+
+check this by enable DEBUG...
+
+>>> +    return 0;
+>>> +}
+>>> +
+>> (...)
+>>
+>>> +
+>>> +static void unregister_m_can_dev(struct net_device *dev)
+>>> +{
+>>> +    unregister_candev(dev);
+>>> +}
+>>> +
+>> again a function which calls a single func.
+>>
+>>> +static int m_can_plat_remove(struct platform_device *pdev)
+>>> +{
+>>> +    struct net_device *dev = platform_get_drvdata(pdev);
+>>> +
+>>> +    unregister_m_can_dev(dev);
+>>> +    platform_set_drvdata(pdev, NULL);
+>>> +
+>>> +    free_m_can_dev(dev);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static const struct dev_pm_ops m_can_pmops = {
+>>> +    SET_SYSTEM_SLEEP_PM_OPS(m_can_suspend, m_can_resume)
+>>> +};
+>>> +
+>>> +static struct platform_driver m_can_plat_driver = {
+>>> +    .driver = {
+>>> +        .name = KBUILD_MODNAME,
+>>> +        .owner = THIS_MODULE,
+>> No need to update .owner. module_platform_driver() will do for you.
+>> see:http://lxr.free-electrons.com/source/include/linux/platform_device.h#L190
+> Oh, right.
+>
+>>> +        .of_match_table = of_match_ptr(m_can_of_table),
+>>> +        .pm     = &m_can_pmops,
+>>> +    },
+>>> +    .probe = m_can_plat_probe,
+>>> +    .remove = m_can_plat_remove,
+>>> +};
+>>> +
+>>> +module_platform_driver(m_can_plat_driver);
+>>> +
+>>> +MODULE_AUTHOR("Dong Aisheng <b29396@freescale.com>");
+>>> +MODULE_LICENSE("GPL v2");
+>>> +MODULE_DESCRIPTION("CAN bus driver for Bosch M_CAN controller");
+>>
+> Marc
+>
+
+
 -- 
-Tushar Behera
+Regards,
+Varka Bhadram.
+
