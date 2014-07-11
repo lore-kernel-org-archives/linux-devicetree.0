@@ -1,116 +1,125 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH v8 0/9] Support for creating generic PCI host bridges from DT
-Date: Thu, 10 Jul 2014 17:44:07 -0700
-Message-ID: <CACoXjcn3b7otcbxdr+RAVNHHjHyVsvw0QcmK5jd-QBF8SQX5iw@mail.gmail.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
-	<CAL_JsqK_CfagmiFOpOXVYGry22nGnCZL0ZXeJhYxb9zp=P2fsQ@mail.gmail.com>
-	<20140708171828.GM6501@e106497-lin.cambridge.arm.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS)
+ support
+Date: Fri, 11 Jul 2014 02:51:40 +0200
+Message-ID: <53BF351C.8060008@collabora.co.uk>
+References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>	<1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk> <CACRpkdYs93snBFYZMKN6kd==b9jZehnp1eHV5bHaBNsNRt62pQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140708171828.GM6501@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYs93snBFYZMKN6kd==b9jZehnp1eHV5bHaBNsNRt62pQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, Tushar Behera <trblinux@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Andreas Farber <afaerber@suse.de>, Alexandre Courbot <gnurou@gmail.com>, Rob Jones <rob.jones@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Linus,
 
-On Tue, Jul 8, 2014 at 10:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrot=
-e:
-> On Sun, Jul 06, 2014 at 04:23:43PM +0100, Rob Herring wrote:
->> On Tue, Jul 1, 2014 at 1:43 PM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
-ote:
->> > This is my resurected attempt at adding support for generic PCI ho=
-st
->> > bridge controllers that make use of device tree information to
->> > configure themselves. I've tagged it as v8 although the patches
->> > have now been reshuffled in order to ease adoption so referring to
->> > the older versions might be a bit of a hoop jumping exercise.
->> >
->> > Changes from v7:
->> >   - Reordered the patches so that fixes and non-controversial patc=
-hes
->> >     from v7 can be accepted more easily. If agreed I can split the
->> >     series again into patches that can be upstreamed easily and on=
-es
->> >     that still need discussion.
->> >   - Moved the of_create_host_bridge() function to drivers/of/of_pc=
-i.c
->> >     to better reflect its target use.
->> >   - Added the function to remap the bus I/O resources that used to=
- be
->> >     provided in my arm64 patch series and (re)named it pci_remap_i=
-ospace()
->> >   - Removed error code checking from parsing and mapping of IRQ fr=
-om DT
->> >     in recognition that some PCI devices will not have legacy IRQ =
-mappings.
->> >
->> > v7 thread here with all the historic information: https://lkml.org=
-/lkml/2014/3/14/279
+On 07/10/2014 11:46 AM, Linus Walleij wrote:
+> On Fri, Jul 4, 2014 at 10:24 PM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk> wrote:
+> 
+>> Some regulators on the MAX77686 PMIC have Dynamic Voltage Scaling
+>> (DVS) support that allows output voltage to change dynamically.
 >>
->> Can you publish a branch for this series please.
+>> For MAX77686, these regulators are Buck regulators 2, 3 and 4.
 >>
->> Rob
+>> Each Buck output voltage is selected using a set of external
+>> inputs: DVS1-3 and SELB2-4.
 >>
->
-> Hi Rob,
->
-> I have pushed a brach that matches my v8 patchset +1 obvious missing =
-header include
-> here: http://www.linux-arm.org/git?p=3Dlinux-ld.git;a=3Dshortlog;h=3D=
-refs/heads/for-upstream/pci_v8
->
+>> DVS registers can be used to configure the output voltages for each
+>> Buck regulator and which one is active is controled by DVSx lines.
+>>
+>> SELBx lines are used to control if individual Buck lines are ON or OFF.
+>>
+>> This patch adds support to configure the DVSx and SELBx lines
+>> from DT and to setup and read the GPIO lines connected to them.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> (...)
+>> +#include <linux/gpio/consumer.h>
+> 
+> THANKS for using modern interfaces!
+> 
 
-I was still getting following compilation error after applying arm64
-pci headers. Please let me know if I am missing something.
+Thanks to you and Alexandre for keep improving the GPIO subsystem!
 
-linux-git/drivers/of/of_pci.c: In function =E2=80=98pci_host_bridge_of_=
-get_ranges=E2=80=99:
-linux-git/drivers/of/of_pci.c:114:22: error: storage size of =E2=80=98r=
-ange=E2=80=99 isn=E2=80=99t known
-  struct of_pci_range range;
-                      ^
-linux-git/drivers/of/of_pci.c:115:29: error: storage size of =E2=80=98p=
-arser=E2=80=99
-isn=E2=80=99t known
-  struct of_pci_range_parser parser;
-                             ^
-linux-git/drivers/of/of_pci.c:121:2: error: implicit declaration of
-function =E2=80=98of_pci_range_parser_init=E2=80=99
-[-Werror=3Dimplicit-function-declaration]
-  err =3D of_pci_range_parser_init(&parser, dev);
+>> +static void max77686_dt_parse_dvs_gpio(struct device *dev)
+>> +{
+>> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
+>> +       int i;
+>> +
+>> +       /*
+>> +        * NOTE: we don't consider GPIO errors fatal; board may have some lines
+>> +        * directly pulled high or low and thus doesn't specify them.
+>> +        */
+>> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++)
+>> +               pd->buck_gpio_dvs[i] =
+>> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-dvs", i);
+>> +
+>> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++)
+>> +               pd->buck_gpio_selb[i] =
+>> +                       devm_gpiod_get_index(dev, "max77686,pmic-buck-selb", i);
+>> +}
+> 
+> Rob Jones has a patch cooking that adds gpio_get_array() so this thing
+> merits also adding devm_gpiod_get_array() I think?
+> 
 
+Yes, I just asked [0] Rob on the other thread if he is already implementing the
+descriptor-based version of his devm_request_gpio_array() or if I should go and
+implement it.
 
-Below patch fixes the errors.
+Now, I wonder if that can be done in a follow-up patch (e.g: use the new
+devm_gpiod_get_array once it lands in Torvalds tree)  since this series already
+touches several subsystems (mfd, regulators, clk and rtc) so if possible I would
+prefer to not add another cross-subsystem dependency :)
 
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 55d8320..da88dac 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -2,6 +2,7 @@
- #include <linux/export.h>
- #include <linux/of.h>
- #include <linux/of_pci.h>
-+#include <linux/of_address.h>
+>> +/**
+>> + * max77686_setup_gpios() - init DVS-related GPIOs
+>> + * @dev: device whose platform data contains the dvs GPIOs information
+>> + *
+>> + * This function claims / initalizations GPIOs related to DVS if they are
+>> + * defined. This may have the effect of switching voltages if the
+>> + * pdata->buck_default_idx does not match the boot time state of pins.
+>> + */
+>> +int max77686_setup_gpios(struct device *dev)
+>> +{
+>> +       struct max77686_platform_data *pd = dev_get_platdata(dev);
+>> +       int buck_default_idx = pd->buck_default_idx;
+>> +       int ret;
+>> +       int i;
+>> +
+>> +       /* Set all SELB high to avoid glitching while DVS is changing */
+>> +       for (i = 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++) {
+>> +               struct gpio_desc *gpio = pd->buck_gpio_selb[i];
+>> +
+>> +               /* OK if some GPIOs aren't defined */
+>> +               if (IS_ERR(gpio))
+>> +                       continue;
+>> +
+>> +               ret = gpiod_direction_output_raw(gpio, 1);
+> 
+> Why does this have to be raw? Usually that is not to be used.
+> 
 
- static inline int __of_pci_pci_compare(struct device_node *node,
-                                       unsigned int data)
+Right, I can't think of a good reason why this has to be raw and not just use
+gpiod_direction_output() which will check the active-low flag and set the value
+accordingly. I'll change it on the next revision.
 
+> Apart from this it looks OK.
+> 
 
-> Best regards,
-> Liviu
->
->
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
->
+Great, thanks a lot for your feedback.
+
+> Yours,
+> Linus Walleij
+> 
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/7/10/722
