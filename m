@@ -1,56 +1,62 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: [PATCH 7/8] drm/tilcdc: panel: Set return value explicitly
-Date: Fri, 11 Jul 2014 11:18:53 -0300
-Message-ID: <1405088334-11215-8-git-send-email-ezequiel@vanguardiasur.com.ar>
-References: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405088334-11215-1-git-send-email-ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, daniel.vetter-/w4YWyX8dFk@public.gmane.org, =?UTF-8?q?Guido=20Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 12/13] [RFC] thermal: rcar: Add binding docs for new
+ R-Car Gen2 SoCs
+Date: Fri, 11 Jul 2014 11:23:08 +0200
+Message-ID: <20140711092308.GC22753@verge.net.au>
+References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+ <1404908623-909-13-git-send-email-geert+renesas@glider.be>
+ <20140711092112.GQ12420@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140711092112.GQ12420@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of setting an initial value for the return code, set it explicitly
-on each error path. This is just a cosmetic cleanup, as preparation for the
-enable GPIO support.
+On Fri, Jul 11, 2014 at 11:21:12AM +0200, Simon Horman wrote:
+> On Wed, Jul 09, 2014 at 02:23:42PM +0200, Geert Uytterhoeven wrote:
+> >   - r8a7792 (R-Car V2H)
+> >   - r8a7793 (R-Car M2-N)
+> >   - r8a7794 (R-Car E2)
+> > 
+> > r8a7791 is now called "R-Car M2-W".
+> 
+> I don't feel strongly about this either way.  But it seems to me that if we
+> want to start using "M2-W" then we should make some effort, though not
+> necessarily immediately, to update all instances of "M2" that already exist
+> in the tree.
 
-Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
----
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Also, as per my comment on tmio-mmc:
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 3dcf08e..f2a5b23 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -346,7 +346,7 @@ static int panel_probe(struct platform_device *pdev)
- 	struct panel_module *panel_mod;
- 	struct tilcdc_module *mod;
- 	struct pinctrl *pinctrl;
--	int ret = -EINVAL;
-+	int ret;
- 
- 	/* bail out early if no DT data: */
- 	if (!node) {
-@@ -381,12 +381,14 @@ static int panel_probe(struct platform_device *pdev)
- 	panel_mod->timings = of_get_display_timings(node);
- 	if (!panel_mod->timings) {
- 		dev_err(&pdev->dev, "could not get panel timings\n");
-+		ret = -EINVAL;
- 		goto fail_free;
- 	}
- 
- 	panel_mod->info = of_get_panel_info(node);
- 	if (!panel_mod->info) {
- 		dev_err(&pdev->dev, "could not get panel info\n");
-+		ret = -EINVAL;
- 		goto fail_timings;
- 	}
- 
--- 
-1.9.1
+	This seems to be in keeping with the approach we ave taken for
+	these SoCs for other drivers. And from that point of view it is
+	fine by me.  But I wonder how sure are we that the hardware on the
+	SoCs will work with this approach.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> > index 0ef00be44b01..43404b197933 100644
+> > --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> > +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> > @@ -7,7 +7,10 @@ Required properties:
+> >  			    - "renesas,thermal-r8a73a4" (R-Mobile AP6)
+> >  			    - "renesas,thermal-r8a7779" (R-Car H1)
+> >  			    - "renesas,thermal-r8a7790" (R-Car H2)
+> > -			    - "renesas,thermal-r8a7791" (R-Car M2)
+> > +			    - "renesas,thermal-r8a7791" (R-Car M2-W)
+> > +			    - "renesas,thermal-r8a7792" (R-Car V2H)
+> > +			    - "renesas,thermal-r8a7793" (R-Car M2-N)
+> > +			    - "renesas,thermal-r8a7794" (R-Car E2)
+> >  - reg			: Address range of the thermal registers.
+> >  			  The 1st reg will be recognized as common register
+> >  			  if it has "interrupts".
+> > -- 
+> > 1.9.1
+> > 
