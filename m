@@ -1,139 +1,69 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH 1/5] of: Do not free memory at of_node_release option
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 2/4] of: Add old prop argument on OF_RECONFIG_UPDATE_PROPERTY
-Date: Mon, 28 Jul 2014 23:06:47 +0300
-Message-Id: <1406578009-30154-3-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1406578009-30154-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1406578009-30154-1-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <20140709181800.6012AC4180B@trevor.secretlab.ca>
+Date: Fri, 11 Jul 2014 23:29:51 +0300
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A139A476-1868-4E58-9232-CE9184017861@konsulko.com>
+References: <1404493129-8914-1-git-send-email-pantelis.antoniou@konsulko.com> <1404493129-8914-2-git-send-email-pantelis.antoniou@konsulko.com> <20140707131018.7E33EC409D5@trevor.secretlab.ca> <21848B64-6661-4D22-A3D4-4E85E38EB758@konsulko.com> <20140709181800.6012AC4180B@trevor.secretlab.ca>
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The notifier now includes the old_prop argument when updating
-properties, propagate this API to changeset internals while
-also retaining the old behaviour of retrieving the old_property
-when NULL is passed.
+Hi Grant,
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/dynamic.c  | 18 ++++++++++++++----
- drivers/of/selftest.c |  2 +-
- include/linux/of.h    | 20 +++++++++++++-------
- 3 files changed, 28 insertions(+), 12 deletions(-)
+On Jul 9, 2014, at 9:18 PM, Grant Likely wrote:
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index b82b375..73c1c4a 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -624,6 +624,7 @@ int of_changeset_revert(struct of_changeset *ocs)
-  * @action:	action to perform
-  * @np:		Pointer to device node
-  * @prop:	Pointer to property
-+ * @old_prop:	Pointer to old property (if updating)
-  *
-  * On action being one of:
-  * + OF_RECONFIG_ATTACH_NODE
-@@ -634,10 +635,21 @@ int of_changeset_revert(struct of_changeset *ocs)
-  * Returns 0 on success, a negative error value in case of an error.
-  */
- int of_changeset_action(struct of_changeset *ocs, unsigned long action,
--		struct device_node *np, struct property *prop)
-+		struct device_node *np, struct property *prop,
-+		struct property *oldprop)
- {
- 	struct of_changeset_entry *ce;
- 
-+	/* in case someone passed NULL as old_prop, find it */
-+	if (action == OF_RECONFIG_UPDATE_PROPERTY && prop && !oldprop) {
-+		oldprop = of_find_property(np, prop->name, NULL);
-+		if (!oldprop) {
-+			pr_err("%s: Failed to find old_prop for \"%s/%s\"\n",
-+					__func__, np->full_name, prop->name);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	ce = kzalloc(sizeof(*ce), GFP_KERNEL);
- 	if (!ce) {
- 		pr_err("%s: Failed to allocate\n", __func__);
-@@ -647,9 +659,7 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
- 	ce->action = action;
- 	ce->np = of_node_get(np);
- 	ce->prop = prop;
--
--	if (action == OF_RECONFIG_UPDATE_PROPERTY && prop)
--		ce->old_prop = of_find_property(np, prop->name, NULL);
-+	ce->old_prop = oldprop;
- 
- 	/* add it to the list */
- 	list_add_tail(&ce->node, &ocs->entries);
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index d410026..f122e1b 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -334,7 +334,7 @@ static void __init of_selftest_changeset(void)
- 	selftest(!of_changeset_detach_node(&chgset, nremove), "fail remove node\n");
- 	selftest(!of_changeset_attach_node(&chgset, n21), "fail attach n21\n");
- 	selftest(!of_changeset_add_property(&chgset, parent, ppadd), "fail add prop\n");
--	selftest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
-+	selftest(!of_changeset_update_property(&chgset, parent, ppupdate, NULL), "fail update prop\n");
- 	selftest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
- 	mutex_lock(&of_mutex);
- 	selftest(!of_changeset_apply(&chgset), "apply failed\n");
-diff --git a/include/linux/of.h b/include/linux/of.h
-index bc91fbb..bf38c2f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -829,36 +829,42 @@ extern int of_changeset_apply(struct of_changeset *ocs);
- extern int of_changeset_revert(struct of_changeset *ocs);
- extern int of_changeset_action(struct of_changeset *ocs,
- 		unsigned long action, struct device_node *np,
--		struct property *prop);
-+		struct property *prop, struct property *old_prop);
- 
- static inline int of_changeset_attach_node(struct of_changeset *ocs,
- 		struct device_node *np)
- {
--	return of_changeset_action(ocs, OF_RECONFIG_ATTACH_NODE, np, NULL);
-+	return of_changeset_action(ocs, OF_RECONFIG_ATTACH_NODE, np, NULL,
-+			NULL);
- }
- 
- static inline int of_changeset_detach_node(struct of_changeset *ocs,
- 		struct device_node *np)
- {
--	return of_changeset_action(ocs, OF_RECONFIG_DETACH_NODE, np, NULL);
-+	return of_changeset_action(ocs, OF_RECONFIG_DETACH_NODE, np, NULL,
-+			NULL);
- }
- 
- static inline int of_changeset_add_property(struct of_changeset *ocs,
- 		struct device_node *np, struct property *prop)
- {
--	return of_changeset_action(ocs, OF_RECONFIG_ADD_PROPERTY, np, prop);
-+	return of_changeset_action(ocs, OF_RECONFIG_ADD_PROPERTY, np, prop,
-+			NULL);
- }
- 
- static inline int of_changeset_remove_property(struct of_changeset *ocs,
- 		struct device_node *np, struct property *prop)
- {
--	return of_changeset_action(ocs, OF_RECONFIG_REMOVE_PROPERTY, np, prop);
-+	return of_changeset_action(ocs, OF_RECONFIG_REMOVE_PROPERTY, np, prop,
-+			NULL);
- }
- 
- static inline int of_changeset_update_property(struct of_changeset *ocs,
--		struct device_node *np, struct property *prop)
-+		struct device_node *np, struct property *prop,
-+		struct property *old_prop)
- {
--	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, prop);
-+	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, prop,
-+			old_prop);
- }
- #endif
- 
--- 
-1.7.12
+> On Mon, 7 Jul 2014 16:13:42 +0300, Pantelis Antoniou =
+<pantelis.antoniou@konsulko.com> wrote:
+>> Hi Grant,
+>>=20
+>> On Jul 7, 2014, at 4:10 PM, Grant Likely wrote:
+>>=20
+>>> On Fri,  4 Jul 2014 19:58:45 +0300, Pantelis Antoniou =
+<pantelis.antoniou@konsulko.com> wrote:
+>>>> Introduce an option whether to free or not the memory of a node
+>>>> and it's properties when of_node_release is called.
+>>>>=20
+>>>> The option is located in the chosen node, and its name is
+>>>> of-node-keep. When this boolean property is missing the default
+>>>> behaviour of freeing is preserved.
+>>>=20
+>>> No way. The problem is buggy kernel code. We've got a plan to fix =
+that.
+>>> In the mean time I'm okay with a CONFIG_ option that inhibits =
+freeing,
+>>> or *maybe* a runtime global option that causes free() to not be =
+called.
+>>>=20
+>>> What this patch does is not helpful.
+>>>=20
+>>=20
+>> Well, it was a long shot. FWIW I don't need it for overlays, this is =
+just to
+>> make sure we don't crash in case we have a buggy driver calling =
+of_node_put()
+>> twice or something.
+>>=20
+>> I'm open to suggestions on how to track and fix those.
+>=20
+> Switching to RCU is the first step. That lets us convert users into
+> using rcu barriers instead of manually tracking of_node_get/put
+> ordering. I would also like to talk to Julie about getting coccinelle
+> report on node and property pointer references being held outside the
+> rcu barriers without an of_node_get()
+>=20
+
+Sounds good to me. Let's see what monsters lie under the bed over there.
+
+>>=20
+>>> g.
+>>>=20
+>>=20
+
+Regards
+
+-- Pantelis
