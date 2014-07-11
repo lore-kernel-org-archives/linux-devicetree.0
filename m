@@ -1,64 +1,58 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v7 08/24] mfd: max77686: Add Dynamic Voltage Scaling (DVS)
- support
-Date: Fri, 11 Jul 2014 11:43:22 +0200
-Message-ID: <53BFB1BA.6030108@samsung.com>
-References: <1404505467-26526-1-git-send-email-javier.martinez@collabora.co.uk>
- <1404505467-26526-9-git-send-email-javier.martinez@collabora.co.uk>
- <CADGdYn6tyTBZOjZH8JBUVMJ1kh-tht=tkU4tA+oM=PbfTYkqGw@mail.gmail.com>
- <53BF41C8.4080304@collabora.co.uk>
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: [PATCH] Input: Add driver for Microchip's CAP1106
+Date: Fri, 11 Jul 2014 11:47:54 +0200
+Message-ID: <CANq1E4Snpdd_8d8e1gSKjKjJb9KsxjEGDUToKfn8AbyLSOUa6g@mail.gmail.com>
+References: <1405064550-12222-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53BF41C8.4080304@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, amit daniel kachhap <amit.daniel@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Yadwinder Singh Brar <yadi.brar01@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, Tushar Behera <trblinux@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Andreas Farber <afaerber@suse.de>, LAK <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1405064550-12222-1-git-send-email-zonque@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: dtor@mail.ru, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Hi
 
-On 11.07.2014 03:45, Javier Martinez Canillas wrote:
-> On 07/10/2014 11:59 AM, amit daniel kachhap wrote:
->> On Sat, Jul 5, 2014 at 1:54 AM, Javier Martinez Canillas
->> <javier.martinez@collabora.co.uk> wrote:
+On Fri, Jul 11, 2014 at 9:42 AM, Daniel Mack <zonque@gmail.com> wrote:
+> This patch adds a driver for Microchips CAP1106, an I2C driven, 6-channel
+> capacitive touch sensor.
+>
+> For now, only the capacitive buttons are supported, and no specific
+> settings that can be tweaked for individual channels, except for the
+> device-wide sensitivity gain. The defaults seem to work just fine out of
+> the box, so I'll leave configurable parameters for someone who's in need
+> of them and who can actually measure the impact. All registers are
+> prepared, however. Many of them are just not used for now.
+>
+> The implementation does not make any attempt to be compatible to platform
+> data driven boards, but fully depends on CONFIG_OF.
+>
+> Power management functions are also left for volounteers with the ability
+> to actually test them.
+>
+> Signed-off-by: Daniel Mack <zonque@gmail.com>
+> ---
+>  .../devicetree/bindings/input/cap1106.txt          |  63 ++++
+>  drivers/input/keyboard/Kconfig                     |  10 +
+>  drivers/input/keyboard/Makefile                    |   1 +
+>  drivers/input/keyboard/cap1106.c                   | 376 +++++++++++++++++++++
+>  4 files changed, 450 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/cap1106.txt
+>  create mode 100644 drivers/input/keyboard/cap1106.c
+>
+> diff --git a/Documentation/devicetree/bindings/input/cap1106.txt b/Documentation/devicetree/bindings/input/cap1106.txt
+> new file mode 100644
+> index 0000000..57f5af3
+...
+> +       spin_lock_irqsave(&priv->lock, flags);
+> +       disable_irq(priv->irq);
+> +       cancel_work_sync(&priv->work);
+> +       spin_unlock_irqrestore(&priv->lock, flags);
 
-[snip]
+Btw., cancel_work_sync() has a might_sleep() annotation, so you really
+cannot call it while holding spinlocks (see start_flush_work() in
+workqueue.c).
 
->>> @@ -111,6 +223,13 @@ static struct max77686_platform_data *max77686_i2c_parse_dt_pdata(struct device
->>>                 return NULL;
->>>
->>>         dev->platform_data = pd;
->>> +
->>> +       /* Read default index and ignore errors, since default is 0 */
->>> +       of_property_read_u32(np, "max77686,pmic-buck-default-dvs-idx",
->>> +                            &pd->buck_default_idx);
->> Any error checking code here. Say if pmic-buck-default-dvs-idx exceed 8?
-> 
-> I'm not a DT expert but AFAIK the kernel should expect the data in a FDT to be
-> correct and should not validate it on runtime. There is work-in-progress to add
-> a proper schema checking for DTS to the dtc so on build time it can be validated
-> that a DTS is valid.
-> 
-> AFAIU the only thing that the kernel should check is if a required property does
-> not exist.
-
-I'd disagree on this.
-
-IMHO schema (if it progresses further, as unfortunately I can't find
-time to dedicate to it and looks like it's similar for other people that
-used to be involved) should be focused on structural checks, i.e. proper
-layout of nodes and properties, basic data types and so, to figure out
-common errors earlier than at boot-up time.
-
-On kernel side this should be treated in the same way as platform data.
-I agree that some existing drivers do little to validate incoming data,
-but I believe it is a good practice to validate things that the driver
-has no control over, especially when it's about a PMIC, when invalid
-data can have quite serious effects and detecting even some of them
-(e.g. value to big, which would overflow in target bit field) might
-prevent a failure.
-
-Best regards,
-Tomasz
+Cheers
+David
