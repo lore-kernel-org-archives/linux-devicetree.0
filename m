@@ -1,53 +1,60 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] i2c: efm32: correct namespacing of location property
-Date: Fri, 11 Jul 2014 10:28:26 +0200
-Message-ID: <20140711082826.GJ11056@pengutronix.de>
-References: <CAOesGMjgX5PWBSD2YP7mTGMWafxBjeMDmzZoPCXb27YPUHEcyw@mail.gmail.com>
- <1405066940-12919-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 RESEND] mfd: arizona: Update DT binding to support
+ LDO1 init_data
+Date: Fri, 11 Jul 2014 09:30:58 +0100
+Message-ID: <20140711083058.GK11948@lee--X1>
+References: <1405008249-4370-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1405066940-12919-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1405008249-4370-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Thu, 10 Jul 2014, Charles Keepax wrote:
 
-> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-=
-efm32.c
-> index f7eccd682de9..5c4cf94527e3 100644
-> --- a/drivers/i2c/busses/i2c-efm32.c
-> +++ b/drivers/i2c/busses/i2c-efm32.c
-> @@ -370,7 +370,13 @@ static int efm32_i2c_probe(struct platform_devic=
-e *pdev)
->  		return ret;
->  	}
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt |    8 ++++++++
+>  1 files changed, 8 insertions(+), 0 deletions(-)
+
+These would normally require a DT Ack, but as they don't seem to be
+adding anything controversial, I'll just apply them.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
+mentation/devicetree/bindings/mfd/arizona.txt
+> index 36a0c3d..fd51988 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -42,6 +42,14 @@ Optional properties:
+>      the chip default will be used.  If present exactly five values m=
+ust
+>      be specified.
 > =20
-> -	ret =3D of_property_read_u32(np, "efm32,location", &location);
+> +  - DCVDD-supply : Power supply, only needs to be specified if DCVDD=
+ is being
+> +    externally supplied. As covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
 > +
-> +	ret =3D of_property_read_u32(np, "energymicro,location", &location)=
-;
+> +Optional subnodes:
+> +  - ldo1 : Initial data for the LDO1 regulator, as covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
 > +
-> +	if (!ret)
-This must be "if (ret)". I noticed during testing but obviously forgot
-to fixup before sending out. Should I resend?
-
-Best regards
-Uwe
-> +		/* fall back to wrongly namespaced property */
-> +		ret =3D of_property_read_u32(np, "efm32,location", &location);
-> +
->  	if (!ret) {
->  		dev_dbg(&pdev->dev, "using location %u\n", location);
->  	} else {
+>  Example:
+> =20
+>  codec: wm5102@1a {
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
