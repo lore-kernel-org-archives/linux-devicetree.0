@@ -1,75 +1,62 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 12/13] cpufreq: Add cpufreq driver for Tegra124
-Date: Fri, 11 Jul 2014 16:57:36 +0200
-Message-ID: <20140711145735.GB6523@ulmo>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
- <1405028569-14253-13-git-send-email-ttynkkynen@nvidia.com>
- <CAKohpom9ORXFiUU4=V+CxgN0ZOFLMEhEjHiU8HsYUYDybNXgHQ@mail.gmail.com>
- <20140711091207.GY23218@tbergstrom-lnx.Nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 1/3] pwm: add Rockchip SoC PWM support
+Date: Fri, 11 Jul 2014 17:02:19 +0200
+Message-ID: <20140711150218.GC6523@ulmo>
+References: <1403360528-12757-1-git-send-email-b.galvani@gmail.com>
+ <1403360528-12757-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140711091207.GY23218-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403360528-12757-2-git-send-email-b.galvani@gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---CUfgB8w4ZwR/yMy5
+--6zdv2QT/q3FMhpsV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 11, 2014 at 12:12:07PM +0300, Peter De Schrijver wrote:
-> On Fri, Jul 11, 2014 at 06:35:56AM +0200, Viresh Kumar wrote:
-> > Hi Tuomas,
-> >=20
-> > On 11 July 2014 03:12, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> > > Add a new cpufreq driver for Tegra124. Instead of using the PLLX as
-> > > the CPU clocksource, switch immediately to the DFLL. It allows the use
-> > > of higher clock rates, and will automatically scale the CPU voltage as
-> > > well. We also rely on the DFLL driver to determine the CPU clock
-> > > frequencies that the chip supports, so that we can directly build a
-> > > cpufreq table with the OPP library helper dev_pm_opp_init_cpufreq_tab=
-le.
-> > >
-> > > This driver is a completely independent of the old cpufreq driver
-> > > (tegra-cpufreq), which is only used on Tegra20.
-> > >
-> > > Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Please reuse cpufreq-cpu0 instead of adding a new driver. Similar
-> > is being adopted by all platforms now: krait, mvebu, etc..
+On Sat, Jun 21, 2014 at 04:22:06PM +0200, Beniamino Galvani wrote:
+> This commit adds a driver for the PWM controller found on Rockchip
+> RK29, RK30 and RK31 SoCs.
 >=20
-> I don't think that's going to work? The voltage scaling is handled in hw.
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> ---
+>  drivers/pwm/Kconfig        |    7 ++
+>  drivers/pwm/Makefile       |    1 +
+>  drivers/pwm/pwm-rockchip.c |  177 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 185 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-rockchip.c
 
-Do we have to handle it in hardware or can we opt to do it in software,
-too?
+Applied, thanks.
 
 Thierry
 
---CUfgB8w4ZwR/yMy5
+--6zdv2QT/q3FMhpsV
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTv/tfAAoJEN0jrNd/PrOh5fQP/360RWQfDEPQH1EmcEsWbo7M
-jt/kDXJkWAI2L4+Vcx3nUdUApXAgiYM9c+2coS8utvx5SSwT+vLTjpj+SVjLpOnE
-SQ/G3i2D8qMfipa/ZUAlxLkkGxHqz9dREhos/ZVuUxj8/3YOw/bTWa5lpzovVwsZ
-9g7uoPo+KQEY3cWbhlO2G40/O75I+KLWK1hPyd4+jZwI/M/alutiKPrOOYPEcdNH
-rRMtfW0oeyhjPHAW9r3YFr8nMSJDHv0C1hQyJjROhIMA/1DeKol4BPJwqzpa2His
-o2HXK4xnkjL03nSSEDAXYEXWS7gABpWU/O/QQ5Pm7xAazlWhDYrO+L0aIwqI3Bi2
-kyBEWz39CyUeGYNigd90gekXAKqp8lbSxk+GvM3gmuCbBNzULIASRXm/FF/h1pa2
-QZpST7rDhyyZ3a8qZ5iPrWK01LZVaIUI/UKZYE4maomT3eUMzqXwK6RBOVzLrVLY
-DbjOIzgMUDiqpWbZlaXHX22Nixqidfe2d5eEjdZPmtML4dh/1hfaxI/nKhZWbIPK
-MOD5aHX0KlaniNP8iy/83FQpio/hMZJ6+cTrqbqSAQ8G/i+bRKd5PJmHFIbf7bRX
-GJDXNiFIcTlgfopJ8Vj8pvVr89I60u8Ok0vGofyjVjhrBW+Dm/FBOl30J7lTwttd
-cHoVIKsipFaT1TvEc2WD
-=Z6sU
+iQIcBAEBAgAGBQJTv/x6AAoJEN0jrNd/PrOhD5IP/i87rwB1uak/S2rChBuCF73Y
+0L3n63Ghvriq+1y4esla9+yOTMW6TVA3vAxxn24TGMYPW3u8F66KYYLVP9RVcm5i
+24RuMVe6PGIxISw44jLbLPjMyanMI+4EoBMS3ISn/1zAnDnt7+nToOH5IOD6rRLX
+ISoLF3f7iruEgP2968O5wcD2KA8tDiy7HLbN2yymHgba8ONyB2glrj26LuZcy738
+wRjmTwd9A7PLov6B1h5BmC0wEl4zn2r5XUrFkZUfceGQyb1WZRDJHr8eh/Y9w7FJ
+VTDGwTDi5hA52xeJbct2o20QwueqFM3Kxarq0Utd3dRotw6UI//4TQwHOSa7Y7Jp
+Rr3Fcx3tywW9GgSyuJhFvesKRKHd9EEY1Ty+xN595SnustrMDtCgYQP+N7IGfzVg
+l8eCL1402QRqCmjvsUTfAumijLzvF9HjYOX4+fBgKZiC8EiXZOugjfbD4S3FuVGI
+VAkWWerSzrUCSGu56454amPZJmN2sBglPGx9EFEhsRhjYkTOGGV20wtt4VvWII7i
+lAN0QS1emZAlwgxGp9LrCNCrrDX7w10cp+CK0vHQ2VdVBEcCYj00GGwridS1c8pM
+xENmPQCm+eFNXG1Uu9jtXRIiFKSuAoQhVQAIGBmPrrjO2ALCIsGVNOQmzd1ToIjB
+IW/2oPfwkXzx6gDvfpc7
+=e3o9
 -----END PGP SIGNATURE-----
 
---CUfgB8w4ZwR/yMy5--
+--6zdv2QT/q3FMhpsV--
