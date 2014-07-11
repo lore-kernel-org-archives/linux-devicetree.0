@@ -1,68 +1,30 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 11 Jul 2014 17:09:25 +0100
-Message-ID: <20140711160925.GD16321@arm.com>
-References: <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
- <20140708005954.GC22939@google.com>
- <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
- <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
- <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
- <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
- <20140711141115.GB16321@arm.com>
- <20140711150823.GU6501@e106497-lin.cambridge.arm.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL clocksource
+Date: Fri, 11 Jul 2014 09:28:09 -0700
+Message-ID: <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
+References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
+	<1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140711150823.GU6501@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 04:08:23PM +0100, Liviu Dudau wrote:
-> On Fri, Jul 11, 2014 at 03:11:16PM +0100, Catalin Marinas wrote:
-> > On Thu, Jul 10, 2014 at 11:36:10PM +0100, Bjorn Helgaas wrote:
-> > > Most of the rest of the v7 discussion was about "Introduce a domain
-> > > number for pci_host_bridge."  I think we should add arm64 using the
-> > > existing pci_scan_root_bus() and keep the domain number in the arm64
-> > > sysdata structure like every other arch does.  Isn't that feasible?
-> > > We can worry about domain unification later.
-> > 
-> > I think that's what we were trying to avoid, adding an arm64-specific
-> > pci_sys_data structure (and arm64-specific API). IIUC, avoiding this
-> > would allow the host controller drivers to use the sysdata pointer for
-> > their own private data structures.
-> > 
-> > Also since you can specify the domain number via DT (and in Liviu's
-> > v8 patches read by of_create_pci_host_bridge), I think it would make
-> > sense to have it stored in some generic data structures (e.g.
-> > pci_host_bridge) rather than in an arm64 private sysdata.
-> > 
-> > (Liviu is thinking of an alternative API but maybe he could briefly
-> > describe it here before posting a new series)
-> 
-> My plan is to keep the domain number in the pci_host_bridge and split
-> the creation of the pci_host_bridge out of the pci_create_root_bus().
+On Thu, Jul 10, 2014 at 2:42 PM, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
+> The DFLL is the main clocksource for the fast CPU cluster on Tegra124
+> and also provides automatic CPU rail voltage scaling as well. The DFLL
+> is a separate IP block from the usual Tegra124 clock-and-reset
+> controller, so it gets its own node in the device tree.
 
-Wouldn't it make more sense to add domain_nr to the pci_bus structure
-(well, only needed for the root bus)? It would simplify pci_domain_nr()
-as well which only takes a pci_bus parameter.
+> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
 
-> The new function (tentatively called pci_create_new_root_bus()) will
-> no longer call pci_alloc_host_bridge() but will accept it as a
-> parameter, allowing one to be able to set the domain_nr ahead of the
-> root bus creation.
+> +- nvidia,pmic-voltage-table: Array of 2-tuples.  Each entry should have the
+> +  form <register-value voltage-in-uV>, indicating the register value that
+> +  needs to be programmed to the PMIC for changing the VDD_CPU voltage to
+> +  the specified voltage. The table must be in ascending order by the voltage.
 
-If we place domain_nr in pci_bus, this split wouldn't help but we still
-need your original pci_create_root_bus_in_domain(). Are there other uses
-of your proposal above?
-
-Yet another alternative is to ignore PCI domains altogether (domain 0
-always).
-
--- 
-Catalin
+Instead of listing the register values for each voltage in the DT,
+can't you use regulator_list_voltage() to create this map?
