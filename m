@@ -1,65 +1,64 @@
-From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL clocksource
-Date: Fri, 11 Jul 2014 20:21:27 +0300
-Message-ID: <53C01D17.2050906@nvidia.com>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>	<1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com>	<CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>	<53C01558.3090607@nvidia.com> <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 8/8] drm/tilcdc: panel: Add support for enable GPIO
+Date: Fri, 11 Jul 2014 14:38:59 -0300
+Message-ID: <20140711173859.GA869@arch.cereza>
+References: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <1405088334-11215-9-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <CAOMZO5CawR9qMbm3HLf4+S3-pcf4m=VCUqm0W9LXXYzNzv2aOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5CawR9qMbm3HLf4+S3-pcf4m=VCUqm0W9LXXYzNzv2aOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Fabio,
 
+On 11 Jul 12:08 PM, Fabio Estevam wrote:
+> On Fri, Jul 11, 2014 at 11:18 AM, Ezequiel Garcia
+> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+> > In order to support the "enable GPIO" available in many panel devic=
+es,
+> > this commit adds a proper devicetree binding.
+> >
+> > By providing an enable GPIO in the devicetree, the driver can now t=
+urn
+> > off and on the panel device, and/or the backlight device. Both the
+> > backlight and the GPIO are optional properties.
+> > +       panel_mod->enable_gpio =3D devm_gpiod_get(&pdev->dev, "enab=
+le");
+> > +       if (IS_ERR(panel_mod->enable_gpio)) {
+> > +               ret =3D PTR_ERR(panel_mod->enable_gpio);
+> > +               if (ret !=3D -ENOENT) {
+>=20
+> Shouldn't this be controlled by a regulator instead? What if the pane=
+l
+> is powered from a PMIC output?
 
-On 11/07/14 20:08, Andrew Bresticker wrote:
-> On Fri, Jul 11, 2014 at 9:48 AM, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>
->>
->> On 11/07/14 19:28, Andrew Bresticker wrote:
->>>
->>> On Thu, Jul 10, 2014 at 2:42 PM, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> wrote:
->>>>
->>>> The DFLL is the main clocksource for the fast CPU cluster on Tegra124
->>>> and also provides automatic CPU rail voltage scaling as well. The DFLL
->>>> is a separate IP block from the usual Tegra124 clock-and-reset
->>>> controller, so it gets its own node in the device tree.
->>>
->>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
->>>> b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
->>>
->>>
->>>> +- nvidia,pmic-voltage-table: Array of 2-tuples.  Each entry should have
->>>> the
->>>> +  form <register-value voltage-in-uV>, indicating the register value
->>>> that
->>>> +  needs to be programmed to the PMIC for changing the VDD_CPU voltage to
->>>> +  the specified voltage. The table must be in ascending order by the
->>>> voltage.
->>>
->>>
->>> Instead of listing the register values for each voltage in the DT,
->>> can't you use regulator_list_voltage() to create this map?
->>>
->>
->> I don't see a way to get the register values that way, unless we assume that
->> the mapping is linear and doesn't have holes.
->
-> Hmm... I guess if you don't assume it's linear and continuous you'd
-> have to iterate over all 256 selectors.
->
+I'm not sure I understand how is that related. I have a New Heaven LCD =
+panel
+(NHD-4.3-480272EF-ATXL#-T) and it has a signal called "Display On/Off" =
+that
+I'm using to enable and disable the panel from a GPIO.
 
-I don't think we can assume that each selector maps to a concrete 
-register value, though I'm not sure. include/linux/regulator/driver.h 
-documents for @list_voltage "Selectors range from zero to one less 
-regulator_desc.n_voltages." but maybe the consumer API could take 
-different values.
+This is useful when switching the output from the panel to the HDMI for
+instance, and turn off the display panel when the output goes to the HD=
+MI.
 
--- 
-nvpublic
+Probably I'm missing something, I can't really see how regulators fit h=
+ere.
+
+Thanks!
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
