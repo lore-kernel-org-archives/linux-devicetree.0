@@ -1,318 +1,144 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH] pinctrl: qcom: Make muxing of gpio function explicit
-Date: Fri, 11 Jul 2014 18:21:24 -0700
-Message-ID: <1405128084-15731-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
+ gpio block
+Date: Fri, 11 Jul 2014 18:56:58 -0700
+Message-ID: <53C095EA.90000@codeaurora.org>
+References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com> <1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com> <CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com> <CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com> <CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of relying on pinmux->disable(), make the gpio function an
-explicit function for all pins that supports it.
+On 07/10/14 02:53, Linus Walleij wrote:
+> On Wed, Jul 9, 2014 at 11:18 PM, Bjorn Andersson <bjorn@kryo.se> wrote:
+>> On Wed, Jul 9, 2014 at 1:53 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>> On Tue, Jul 8, 2014 at 3:26 AM, Bjorn Andersson
+>>> <bjorn.andersson@sonymobile.com> wrote:
+>>>
+>>> +- function:
+>>> +       Usage: optional
+>>> +       Value type: <string>
+>>> +       Definition: Specify the alternative function to be configured for the
+>>> +                   specified pins.  Valid values are:
+>>> +                       "normal",
+>>> +                       "paired",
+>>> +                       "func1",
+>>> +                       "func2",
+>>> +                       "dtest1",
+>>> +                       "dtest2",
+>>> +                       "dtest3",
+>>> +                       "dtest4"
+>>> These are a bit ambigous, why doesn't the driver present functions that
+>>> are more specific than "func1", "func2"? Or "dtest1"?
+>> I agree, unfortunately I have only seen traces of the actual function matrix;
+>> for pm8xxx I have no documentation and for pm8x41 they are only listed as
+>> func[1-2] and dtest[1-4].
+>>
+>> Maybe if someone at Qualcomm could release such a list we could provide a
+>> proper table instead.
+> I guess Stephen Boyd can help us. (?)
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
+Ok. "normal" is pretty much gpio mode, i.e. don't mux anything. "paired"
+is where we take the output of the gpio next to it and loop it back into
+this gpio (and vice versa). So gpio1 is paired with gpio2, gpio 3 is
+paired with gpio 4, etc. This allows us to make level translators by
+choosing different supply voltages for the paired gpios. "func1" and
+"func2" are used for muxing things internally. "dtest" is used to mux
+specific things out for testing purposes, not really used in any
+end-products but still useful while debugging. I can provide the
+function to pin mapping if necessary. There are lots of pmics.
 
-This fixes the regression that was introduced by removing the disable function
-from the pinmux ops. I was exploiting the disable function to put the gpio pins
-"back" into gpio state and this was apparently not the right way to do things.
+>
+>>>> +- bias-pull-up:
+>>>> +       Usage: optional
+>>>> +       Value type: <u32> (optional)
+>>>> +       Definition: The specified pins should be configued as pull up. An
+>>>> +                   optional argument can be used to configure the strength.
+>>>> +                   Valid values are; as defined in
+>>>> +                   <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+>>>> +                   1: 30uA                     (PM8XXX_GPIO_PULL_UP_30)
+>>>> +                   2: 1.5uA                    (PM8XXX_GPIO_PULL_UP_1P5)
+>>>> +                   3: 31.5uA                   (PM8XXX_GPIO_PULL_UP_31P5)
+>>>> +                   4: 1.5uA + 30uA boost       (PM8XXX_GPIO_PULL_UP_1P5_30)
+>>> Hm, I don't know of the internal kernel API or so, but I'm thinking that
+>>> for the DT bindings, this definition should be generic in
+>>> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>>> and put in SI units like uA.
+>> Totally agree with you; and this is already specified in pinctrl-binding.txt as
+>> being Ohm.
+>>
+>> So I first did a spin with the strength as a separate property, but as that
+>> because the only part that pinconf-generic didn't parse for me I merged it and
+>> wanted your comment on it.
+> Yeah. And thinking of it.... how can it be uA? It has to be Ohms... it's a pull
+> up resistor thing after all. I suspect the uA value is just something like the
+> maximum current drawn through the pullup given a certain voltage?
+>
+>>> So I would prefer:
+>>>
+>>> bias-pull-up = <30>;
+>>>
+>> Yeah, but that's the easy one ;)
+>>
+>> How do you say 1.5 or 31.5 and how do you differ that from 1.5 + 30 boot?
+> It needs to be set using Ohms.
+>
+>>> for 30 uA. Maybe we want nA even? I'm uncertain about the proper granularity
+>>> here :-/
+>>>
+>>> Magic enumerators 1,2,3,4 doesn't seem so good, that seems more like it's
+>>> trying to match the magic value that is to be poked into a register or
+>>> something like that.
+>> The stuff going into the hardware is a value 0-3 for pull up; so these values
+>> are "only" an enum with the additional benefit of saying "bias-pull-up;"
+>> results in 30uA pull up which is the most commonly used form (hence being
+>> optional).
+> What is the nominal voltage of these pins? GIven that you can figure
+> out the Ohms. And I suspect it to be something very close to N times
+> the resistance of a depleted transistor in this technology.
 
- .../bindings/pinctrl/qcom,apq8064-pinctrl.txt      |  2 +-
- .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt      |  2 +-
- .../bindings/pinctrl/qcom,msm8960-pinctrl.txt      |  4 +--
- .../bindings/pinctrl/qcom,msm8974-pinctrl.txt      |  2 +-
- drivers/pinctrl/qcom/pinctrl-apq8064.c             | 19 +++++++++++++-
- drivers/pinctrl/qcom/pinctrl-ipq8064.c             | 17 +++++++++++-
- drivers/pinctrl/qcom/pinctrl-msm8960.c             | 30 +++++++++++++++++++++-
- drivers/pinctrl/qcom/pinctrl-msm8x74.c             | 29 ++++++++++++++++++++-
- 8 files changed, 96 insertions(+), 9 deletions(-)
+I believe the nominal voltage changes depending on which supply you
+choose (power-source in this document). Basically the gpio can be
+connected to different regulators on the pmic so you can choose
+different voltages, i.e. 1.8V, 3.0V, 3.3V etc. Furthermore, some of the
+regulators you can choose have variable voltage, although it may not be
+variable enough to have much effect on this. So it would seem that the
+pull-up resistance would be directly affected by which power-source is
+chosen. Maybe we just shouldn't use the generic properties for this?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-index 7181f92..0211c6d 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-@@ -46,7 +46,7 @@ Valid values for pins are:
-   gpio0-gpio89
- 
- Valid values for function are:
--  cam_mclk, codec_mic_i2s, codec_spkr_i2s, gsbi1, gsbi2, gsbi3, gsbi4,
-+  cam_mclk, codec_mic_i2s, codec_spkr_i2s, gpio, gsbi1, gsbi2, gsbi3, gsbi4,
-   gsbi4_cam_i2c, gsbi5, gsbi5_spi_cs1, gsbi5_spi_cs2, gsbi5_spi_cs3, gsbi6,
-   gsbi6_spi_cs1, gsbi6_spi_cs2, gsbi6_spi_cs3, gsbi7, gsbi7_spi_cs1,
-   gsbi7_spi_cs2, gsbi7_spi_cs3, gsbi_cam_i2c, hdmi, mi2s, riva_bt, riva_fm,
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-index e0d35a4..e33e4dc 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-@@ -51,7 +51,7 @@ Valid values for qcom,pins are:
- 
- 
- Valid values for function are:
--  mdio, mi2s, pdm, ssbi, spmi, audio_pcm, gsbi1, gsbi2, gsbi4, gsbi5,
-+  mdio, mi2s, pdm, ssbi, spmi, audio_pcm, gpio, gsbi1, gsbi2, gsbi4, gsbi5,
-   gsbi5_spi_cs1, gsbi5_spi_cs2, gsbi5_spi_cs3, gsbi6, gsbi7, nss_spi, sdc1,
-   spdif, nand, tsif1, tsif2, usb_fs_n, usb_fs, usb2_hsic, rgmii2, sata,
-   pcie1_rst, pcie1_prsnt, pcie1_pwren_n, pcie1_pwren, pcie1_pwrflt,
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
-index 7dece8d..93b7de9 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
-@@ -83,7 +83,7 @@ to specify in a pin configuration subnode:
- 		    sdc3_data
- 
- - function:
--	Usage: optional
-+	Usage: required
- 	Value type: <string>
- 	Definition: Specify the alternative function to be configured for the
- 		    specified pins. Functions are only valid for gpio pins.
-@@ -92,7 +92,7 @@ to specify in a pin configuration subnode:
- 		    codec_mic_i2s, codec_spkr_i2s, ext_gps, fm, gps_blanking,
- 		    gps_pps_in, gps_pps_out, gp_clk_0a, gp_clk_0b, gp_clk_1a,
- 		    gp_clk_1b, gp_clk_2a, gp_clk_2b, gp_mn, gp_pdm_0a,
--		    gp_pdm_0b, gp_pdm_1a, gp_pdm_1b, gp_pdm_2a, gp_pdm_2b,
-+		    gp_pdm_0b, gp_pdm_1a, gp_pdm_1b, gp_pdm_2a, gp_pdm_2b, gpio,
- 		    gsbi1, gsbi1_spi_cs1_n, gsbi1_spi_cs2a_n, gsbi1_spi_cs2b_n,
- 		    gsbi1_spi_cs3_n, gsbi2, gsbi2_spi_cs1_n, gsbi2_spi_cs2_n,
- 		    gsbi2_spi_cs3_n, gsbi3, gsbi4, gsbi4_3d_cam_i2c_l,
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-index 73262b5..d2ea80d 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-@@ -70,7 +70,7 @@ Valid values for function are:
-   cam_mckl0, cam_mclk1, cam_mclk2, cam_mclk3, mdp_vsync, hdmi_cec, hdmi_ddc,
-   hdmi_hpd, edp_hpd, gp_pdm0, gp_pdm1, gp_pdm2, gp_pdm3, gp0_clk, gp1_clk,
-   gp_mn, tsif1, tsif2, hsic, grfc, audio_ref_clk, qua_mi2s, pri_mi2s, spkr_mi2s,
--  ter_mi2s, sec_mi2s, bt, fm, wlan, slimbus
-+  ter_mi2s, sec_mi2s, bt, fm, wlan, slimbus, gpio
- 
-   (Note that this is not yet the complete list of functions)
- 
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8064.c b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-index 519f788..feb6f15 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-@@ -230,7 +230,7 @@ static const unsigned int sdc3_data_pins[] = { 95 };
- 		.pins = gpio##id##_pins,		\
- 		.npins = ARRAY_SIZE(gpio##id##_pins),	\
- 		.funcs = (int[]){			\
--			APQ_MUX_NA, /* gpio mode */	\
-+			APQ_MUX_gpio,			\
- 			APQ_MUX_##f1,			\
- 			APQ_MUX_##f2,			\
- 			APQ_MUX_##f3,			\
-@@ -293,6 +293,7 @@ enum apq8064_functions {
- 	APQ_MUX_cam_mclk,
- 	APQ_MUX_codec_mic_i2s,
- 	APQ_MUX_codec_spkr_i2s,
-+	APQ_MUX_gpio,
- 	APQ_MUX_gsbi1,
- 	APQ_MUX_gsbi2,
- 	APQ_MUX_gsbi3,
-@@ -335,6 +336,21 @@ static const char * const codec_mic_i2s_groups[] = {
- static const char * const codec_spkr_i2s_groups[] = {
- 	"gpio39", "gpio40", "gpio41", "gpio42"
- };
-+static const char * const gpio_groups[] = {
-+	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
-+	"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-+	"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-+	"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
-+	"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
-+	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
-+	"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", "gpio48", "gpio49",
-+	"gpio50", "gpio51", "gpio52", "gpio53", "gpio54", "gpio55", "gpio56",
-+	"gpio57", "gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63",
-+	"gpio64", "gpio65", "gpio66", "gpio67", "gpio68", "gpio69", "gpio70",
-+	"gpio71", "gpio72", "gpio73", "gpio74", "gpio75", "gpio76", "gpio77",
-+	"gpio78", "gpio79", "gpio80", "gpio81", "gpio82", "gpio83", "gpio84",
-+	"gpio85", "gpio86", "gpio87", "gpio88", "gpio89"
-+};
- static const char * const gsbi1_groups[] = {
- 	"gpio18", "gpio19", "gpio20", "gpio21"
- };
-@@ -430,6 +446,7 @@ static const struct msm_function apq8064_functions[] = {
- 	FUNCTION(cam_mclk),
- 	FUNCTION(codec_mic_i2s),
- 	FUNCTION(codec_spkr_i2s),
-+	FUNCTION(gpio),
- 	FUNCTION(gsbi1),
- 	FUNCTION(gsbi2),
- 	FUNCTION(gsbi3),
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-index acafea4..767cf11 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-@@ -183,7 +183,7 @@ static const unsigned int sdc3_data_pins[] = { 71 };
- 		.pins = gpio##id##_pins,		\
- 		.npins = ARRAY_SIZE(gpio##id##_pins),	\
- 		.funcs = (int[]){			\
--			IPQ_MUX_NA, /* gpio mode */	\
-+			IPQ_MUX_gpio,			\
- 			IPQ_MUX_##f1,			\
- 			IPQ_MUX_##f2,			\
- 			IPQ_MUX_##f3,			\
-@@ -243,6 +243,7 @@ static const unsigned int sdc3_data_pins[] = { 71 };
- 	}
- 
- enum ipq8064_functions {
-+	IPQ_MUX_gpio,
- 	IPQ_MUX_mdio,
- 	IPQ_MUX_mi2s,
- 	IPQ_MUX_pdm,
-@@ -291,6 +292,19 @@ enum ipq8064_functions {
- 	IPQ_MUX_NA,
- };
- 
-+static const char * const gpio_groups[] = {
-+	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
-+	"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-+	"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-+	"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
-+	"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
-+	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
-+	"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", "gpio48", "gpio49",
-+	"gpio50", "gpio51", "gpio52", "gpio53", "gpio54", "gpio55", "gpio56",
-+	"gpio57", "gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63",
-+	"gpio64", "gpio65", "gpio66", "gpio67", "gpio68"
-+};
-+
- static const char * const mdio_groups[] = {
- 	"gpio0", "gpio1", "gpio10", "gpio11",
- };
-@@ -481,6 +495,7 @@ static const char * const ps_hold_groups[] = {
- };
- 
- static const struct msm_function ipq8064_functions[] = {
-+	FUNCTION(gpio),
- 	FUNCTION(mdio),
- 	FUNCTION(ssbi),
- 	FUNCTION(spmi),
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8960.c b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-index 564543b..3504703 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8960.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-@@ -355,7 +355,7 @@ static const unsigned int sdc3_data_pins[] = { 157 };
- 		.pins = gpio##id##_pins,		\
- 		.npins = ARRAY_SIZE(gpio##id##_pins),	\
- 		.funcs = (int[]){			\
--			MSM_MUX_NA, /* gpio mode */	\
-+			MSM_MUX_gpio,			\
- 			MSM_MUX_##f1,			\
- 			MSM_MUX_##f2,			\
- 			MSM_MUX_##f3,			\
-@@ -441,6 +441,7 @@ enum msm8960_functions {
- 	MSM_MUX_gp_pdm_1b,
- 	MSM_MUX_gp_pdm_2a,
- 	MSM_MUX_gp_pdm_2b,
-+	MSM_MUX_gpio,
- 	MSM_MUX_gsbi1,
- 	MSM_MUX_gsbi1_spi_cs1_n,
- 	MSM_MUX_gsbi1_spi_cs2a_n,
-@@ -622,6 +623,32 @@ static const char * const gp_pdm_2b_groups[] = {
- 	"gpio53"
- };
- 
-+static const char * const gpio_groups[] = {
-+	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
-+	"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-+	"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-+	"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
-+	"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
-+	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
-+	"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", "gpio48", "gpio49",
-+	"gpio50", "gpio51", "gpio52", "gpio53", "gpio54", "gpio55", "gpio56",
-+	"gpio57", "gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63",
-+	"gpio64", "gpio65", "gpio66", "gpio67", "gpio68", "gpio69", "gpio70",
-+	"gpio71", "gpio72", "gpio73", "gpio74", "gpio75", "gpio76", "gpio77",
-+	"gpio78", "gpio79", "gpio80", "gpio81", "gpio82", "gpio83", "gpio84",
-+	"gpio85", "gpio86", "gpio87", "gpio88", "gpio89", "gpio90", "gpio91",
-+	"gpio92", "gpio93", "gpio94", "gpio95", "gpio96", "gpio97", "gpio98",
-+	"gpio99", "gpio100", "gpio101", "gpio102", "gpio103", "gpio104",
-+	"gpio105", "gpio106", "gpio107", "gpio108", "gpio109", "gpio110",
-+	"gpio111", "gpio112", "gpio113", "gpio114", "gpio115", "gpio116",
-+	"gpio117", "gpio118", "gpio119", "gpio120", "gpio121", "gpio122",
-+	"gpio123", "gpio124", "gpio125", "gpio126", "gpio127", "gpio128",
-+	"gpio129", "gpio130", "gpio131", "gpio132", "gpio133", "gpio134",
-+	"gpio135", "gpio136", "gpio137", "gpio138", "gpio139", "gpio140",
-+	"gpio141", "gpio142", "gpio143", "gpio144", "gpio145", "gpio146",
-+	"gpio147", "gpio148", "gpio149", "gpio150", "gpio151"
-+};
-+
- static const char * const gsbi1_groups[] = {
- 	"gpio6", "gpio7", "gpio8", "gpio9"
- };
-@@ -961,6 +988,7 @@ static const struct msm_function msm8960_functions[] = {
- 	FUNCTION(gp_pdm_1b),
- 	FUNCTION(gp_pdm_2a),
- 	FUNCTION(gp_pdm_2b),
-+	FUNCTION(gpio),
- 	FUNCTION(gsbi1),
- 	FUNCTION(gsbi1_spi_cs1_n),
- 	FUNCTION(gsbi1_spi_cs2a_n),
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8x74.c b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-index 4183069..8c97201 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-@@ -342,7 +342,7 @@ static const unsigned int sdc2_data_pins[] = { 151 };
- 		.pins = gpio##id##_pins,		\
- 		.npins = ARRAY_SIZE(gpio##id##_pins),	\
- 		.funcs = (int[]){			\
--			MSM_MUX_NA, /* gpio mode */	\
-+			MSM_MUX_gpio,			\
- 			MSM_MUX_##f1,			\
- 			MSM_MUX_##f2,			\
- 			MSM_MUX_##f3,			\
-@@ -402,6 +402,7 @@ static const unsigned int sdc2_data_pins[] = { 151 };
-  * the pingroup table below.
-  */
- enum msm8x74_functions {
-+	MSM_MUX_gpio,
- 	MSM_MUX_cci_i2c0,
- 	MSM_MUX_cci_i2c1,
- 	MSM_MUX_blsp_i2c1,
-@@ -509,6 +510,31 @@ enum msm8x74_functions {
- 	MSM_MUX_NA,
- };
- 
-+static const char * const gpio_groups[] = {
-+	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
-+	"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-+	"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-+	"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
-+	"gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio35",
-+	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
-+	"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", "gpio48", "gpio49",
-+	"gpio50", "gpio51", "gpio52", "gpio53", "gpio54", "gpio55", "gpio56",
-+	"gpio57", "gpio58", "gpio59", "gpio60", "gpio61", "gpio62", "gpio63",
-+	"gpio64", "gpio65", "gpio66", "gpio67", "gpio68", "gpio69", "gpio70",
-+	"gpio71", "gpio72", "gpio73", "gpio74", "gpio75", "gpio76", "gpio77",
-+	"gpio78", "gpio79", "gpio80", "gpio81", "gpio82", "gpio83", "gpio84",
-+	"gpio85", "gpio86", "gpio87", "gpio88", "gpio89", "gpio90", "gpio91",
-+	"gpio92", "gpio93", "gpio94", "gpio95", "gpio96", "gpio97", "gpio98",
-+	"gpio99", "gpio100", "gpio101", "gpio102", "gpio103", "gpio104",
-+	"gpio105", "gpio106", "gpio107", "gpio108", "gpio109", "gpio110",
-+	"gpio111", "gpio112", "gpio113", "gpio114", "gpio115", "gpio116",
-+	"gpio117", "gpio118", "gpio119", "gpio120", "gpio121", "gpio122",
-+	"gpio123", "gpio124", "gpio125", "gpio126", "gpio127", "gpio128",
-+	"gpio129", "gpio130", "gpio131", "gpio132", "gpio133", "gpio134",
-+	"gpio135", "gpio136", "gpio137", "gpio138", "gpio139", "gpio140",
-+	"gpio141", "gpio142", "gpio143", "gpio144", "gpio145"
-+};
-+
- static const char * const blsp_uart1_groups[] = {
- 	"gpio0", "gpio1", "gpio2", "gpio3"
- };
-@@ -728,6 +754,7 @@ static const char * const wlan_groups[] = {
- static const char * const slimbus_groups[] = { "gpio70", "gpio71" };
- 
- static const struct msm_function msm8x74_functions[] = {
-+	FUNCTION(gpio),
- 	FUNCTION(cci_i2c0),
- 	FUNCTION(cci_i2c1),
- 	FUNCTION(uim1),
+BTW, I see that power-source has made a comeback. What are the units? Is
+that in mV? If it is I'm slightly concerned that we're not accurately
+describing the hardware in cases where the voltage can actually be
+different. And I worry about configurations where we may have the same
+power source muxed into the gpio twice from different places on the
+pmic. Sometimes we do this and actually need to choose the "right" power
+source even though they're technically running at the same voltage (one
+may be slightly cleaner signal or something).
+
+>>>> +- drive-strength:
+>>>> +       Usage: optional
+>>>> +       Value type: <u32>
+>>>> +       Definition: Selects the drive strength for the specified pins. Value
+>>>> +                   drive strengths are:
+>>>> +                       0: no   (PM8XXX_GPIO_STRENGTH_NO)
+>>>> +                       1: high (PM8XXX_GPIO_STRENGTH_HIGH)
+>>>> +                       2: medium       (PM8XXX_GPIO_STRENGTH_MED)
+>>>> +                       3: low  (PM8XXX_GPIO_STRENGTH_LOW)
+>>> I would really prefer to have these in mA, because the genric pinconf
+>>> bindings say they should be! SI units are so much more understandable.
+>> This is all the information to be found in the available documentation and
+>> code. Maybe someone from Qualcomm can shed some light on it?
+> Stephen?
+
+I've emailed the hardware engineers. I'm pretty sure this is the same
+story as the pull-up though. It varies depending on the input voltage. I
+hope to get more information soon.
+
 -- 
-1.8.2.2
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
