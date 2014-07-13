@@ -1,38 +1,52 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
-Date: Sat, 12 Jul 2014 16:51:47 -0700
-Message-ID: <CAJAp7OgR7xc=LSf9tj+XQY1Nk=dQxCxTZ6HBEdf0NsriDZF85g@mail.gmail.com>
-References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
-	<CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
-	<1404904380.16296.17.camel@iivanov-dev>
-	<CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
-	<CAJAp7Og0Cr3oY=XpT4NzKUWykxkRTq1ZRDyamW6tgohfBs3dmg@mail.gmail.com>
-	<1404999558.16296.31.camel@iivanov-dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1404999558.16296.31.camel@iivanov-dev>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2 RESEND 2/2] clk: clps711x: Add DT bindings documentation
+Date: Sun, 13 Jul 2014 08:38:20 +0400
+Message-ID: <1405226300-3032-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 10, 2014 at 6:39 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> On Wed, 2014-07-09 at 07:02 -0700, Bjorn Andersson wrote:
-[..]
->> Correct Ivan; we do however share the same issues related to how to do
->> interrupt handling,
->
-> Yep, but do we actually need to do interrupt handling in driver?
-> Interrupts are handled by parent device. GPIO client drivers could
-> use interrupt-controller registered by core driver?
->
+This patch adds DT binding documentation for the Cirrus Logic
+CLPS711X-based CPUs clock subsystem.
 
-Among other things we have the volume and camera keys hooked to these
-pins, using the gpio-keys driver; so that needs to be able to convert
-a gpio to an irq.
-But I don't believe we should turn this driver into an
-interrupt-controller; as that wouldn't add any value...
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+ .../devicetree/bindings/clock/clps711x-clock.txt      | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/clps711x-clock.txt
 
-Regards,
-Bjorn
+diff --git a/Documentation/devicetree/bindings/clock/clps711x-clock.txt b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
+new file mode 100644
+index 0000000..ce5a747
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
+@@ -0,0 +1,19 @@
++* Clock bindings for the Cirrus Logic CLPS711X CPUs
++
++Required properties:
++- compatible       : Shall contain "cirrus,clps711x-clk".
++- reg              : Address of the internal register set.
++- startup-frequency: Factory set CPU startup frequency in HZ.
++- #clock-cells     : Should be <1>.
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell. See include/dt-bindings/clock/clps711x-clock.h
++for the full list of CLPS711X clock IDs.
++
++Example:
++	clks: clks@80000000 {
++		#clock-cells = <1>;
++		compatible = "cirrus,ep7312-clk", "cirrus,clps711x-clk";
++		reg = <0x80000000 0xc000>;
++		startup-frequency = <73728000>;
++	};
+-- 
+1.8.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
