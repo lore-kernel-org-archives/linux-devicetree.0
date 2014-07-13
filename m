@@ -1,47 +1,57 @@
 From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH v2 RESEND 2/2] clk: clps711x: Add DT bindings documentation
-Date: Sun, 13 Jul 2014 08:38:20 +0400
-Message-ID: <1405226300-3032-1-git-send-email-shc_work@mail.ru>
+Subject: [PATCH RESEND 2/2] clocksource: clps711x: Add DT bindings documentation
+Date: Sun, 13 Jul 2014 08:45:36 +0400
+Message-ID: <1405226736-5122-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 This patch adds DT binding documentation for the Cirrus Logic
-CLPS711X-based CPUs clock subsystem.
+CLPS711X-based CPUs clocksource subsystem.
 
 Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 ---
- .../devicetree/bindings/clock/clps711x-clock.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clps711x-clock.txt
+ .../bindings/timer/cirrus,clps711x-timer.txt       | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/clps711x-clock.txt b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
+diff --git a/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt b/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
 new file mode 100644
-index 0000000..ce5a747
+index 0000000..cd55b52
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
-@@ -0,0 +1,19 @@
-+* Clock bindings for the Cirrus Logic CLPS711X CPUs
++++ b/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
+@@ -0,0 +1,29 @@
++* Cirrus Logic CLPS711X Timer Counter
 +
 +Required properties:
-+- compatible       : Shall contain "cirrus,clps711x-clk".
-+- reg              : Address of the internal register set.
-+- startup-frequency: Factory set CPU startup frequency in HZ.
-+- #clock-cells     : Should be <1>.
++- compatible: Shall contain "cirrus,clps711x-timer".
++- reg       : Address and length of the register set.
++- interrupts: The interrupt number of the timer.
++- clocks    : phandle of timer reference clock.
 +
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell. See include/dt-bindings/clock/clps711x-clock.h
-+for the full list of CLPS711X clock IDs.
++Note: Each timer should have an alias correctly numbered in "aliases" node.
 +
 +Example:
-+	clks: clks@80000000 {
-+		#clock-cells = <1>;
-+		compatible = "cirrus,ep7312-clk", "cirrus,clps711x-clk";
-+		reg = <0x80000000 0xc000>;
-+		startup-frequency = <73728000>;
++	aliases {
++		timer0 = &timer1;
++		timer1 = &timer2;
++	};
++
++	timer1: timer@80000300 {
++		compatible = "cirrus,ep7312-timer", "cirrus,clps711x-timer";
++		reg = <0x80000300 0x4>;
++		interrupts = <8>;
++		clocks = <&clks 5>;
++	};
++
++	timer2: timer@80000340 {
++		compatible = "cirrus,ep7312-timer", "cirrus,clps711x-timer";
++		reg = <0x80000340 0x4>;
++		interrupts = <9>;
++		clocks = <&clks 6>;
 +	};
 -- 
 1.8.5.5
