@@ -1,85 +1,145 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL
- clocksource
-Date: Mon, 14 Jul 2014 11:22:03 +0100
-Message-ID: <20140714102203.GD6800@sirena.org.uk>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
- <1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com>
- <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
- <53C01558.3090607@nvidia.com>
- <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA@mail.gmail.com>
- <53C01D17.2050906@nvidia.com>
- <20140714083854.GO2081@ulmo>
- <20140714091233.GC6800@sirena.org.uk>
- <20140714092434.GA9755@ulmo>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2] arm: dra7xx: Add hwmod data for pcie1 and pcie2 subsystems
+Date: Mon, 14 Jul 2014 16:04:57 +0530
+Message-ID: <53C3B251.8000209@ti.com>
+References: <1403719366-9656-3-git-send-email-kishon@ti.com> <1404896567-32204-1-git-send-email-kishon@ti.com> <53BD2136.9030009@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HWvPVVuAAfuRc6SZ"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140714092434.GA9755@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <53BD2136.9030009@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>, paul@pwsan.com
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 09 July 2014 04:32 PM, Rajendra Nayak wrote:
+> On Wednesday 09 July 2014 02:32 PM, Kishon Vijay Abraham I wrote:
+>> Added hwmod data for pcie1 and pcie2 subsystem present in DRA7xx SOC.
+>>
+>> Cc: Tony Lindgren <tony@atomide.com>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> Cc: Paul Walmsley <paul@pwsan.com>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> Changes from v1:
+>> * changed the clock domain to "pcie_clkdm"
+>> * Added PCIe as a slave port for l3_main.
+> 
+> Looks good to me,
+> Reviewed-by: Rajendra Nayak <rnayak@ti.com>
 
---HWvPVVuAAfuRc6SZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Paul,
 
-On Mon, Jul 14, 2014 at 11:24:35AM +0200, Thierry Reding wrote:
-> On Mon, Jul 14, 2014 at 10:12:33AM +0100, Mark Brown wrote:
+Can you pick this one?
 
-> > The selector value is opaque, it's entirely up to the driver to define
-> > it.  If you could tell me what "this" is I might be able to advise on
-> > how to do it.
-
-> Tegra124 (and later, also some earlier variants) have this DFLL clock
-> that can program a PMIC automatically depending on the CPU frequency.
-> This DT binding did propose putting this into device tree as a table of
-> <frequency value> pairs where the frequency corresponds to the CPU
-> frequency and the value is the register value to be programmed into the
-> PMIC by the DFLL hardware (there are two additional properties to define
-> the slave address and the register offset).
-
-> Andrew proposed that this table could instead be built by using
-> regulator_list_voltage() instead. However, due to the fact that the DFLL
-> hardware needs to know the immediate value to write into a register, the
-> requirement would be for a 1:1 mapping between selector and register
-> value. Given that the API needs to cover the general case I don't see
-> how it could practically ensure this.
-
-Well, if you're going to do that you've already created a private API
-between the regulator driver and the device since you're assuming that
-the device is controlled only by register writes to a single register
-bitfield which isn't always the case.
-
-As with all these things it would also be better to extend the regulator
-API so that users like this can discover the register address and so on
-too rather than having to replicate that information in the device tree.
-No sense in having to specify this information multiple times.
-
---HWvPVVuAAfuRc6SZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTw69IAAoJELSic+t+oim9vYsP/1rNXCyp6jnrPpqyXMbjGQ+Z
-SQf3wtuArwhkqPZ0OB25wt249Va9HE5s/0Wgl/MzvU7fLgZLlSOTztpLJqlD9Yej
-0u3S36G0PZSGhbtqtaFHNyRyr7JA40N+Ca889AK/RoEuCLce09imSvGRoqqtAnt9
-Rm3uGvgqPQ5gU9DKO386wea1gmgt47rbydzu1E6sRhe87eAtnnMUqnldQZZ/LITW
-S+rhR5W5rKXDrb7OEJ3NEtbofXIZ73OM9lKdlsr6wvXqo+jBu6MDgBBe4WCNYLWz
-ZmwSBg2zXcH+e5z3mSKdL41+W/d/66EgdiMjX/BOFqmCXFk0pw196eQlYI2DrqjA
-qRbce2y3pesVx0dv2pgWkWSUSKOK8zUGHdDr9ahcbMxMHpLj42X+0BIbLmP1vZw9
-gk13yx1oKiQmpekmNV46X1LP825xV3OiywdGf2XOeMtq0tKtRs1CH0gifFMO0PVL
-1aWINFAdCSwrNL8JCIK2IbU3ciFOgMPqU/rFlDWddizp4LJNv1BSRosBU4mfrB1r
-6JKHX1PHzZlAhdamXNbvmj0Phha0iwI5GnEOB8U/+rfXOHpLZApC33QPwsSEx9oj
-c0hhKrugQ2Xh1JGMMiFpTIAE+yeN+9J00hF7m8ZiQxtms7yKTGAfSjg3Ib3cjxUC
-2hx4wLmeuCxdbz0lkoYz
-=dVQS
------END PGP SIGNATURE-----
-
---HWvPVVuAAfuRc6SZ--
+Thanks
+Kishon
+> 
+>>
+>> Boot log for dra7xx can be found at http://paste.ubuntu.com/7769402/
+>>
+>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c |   73 +++++++++++++++++++++++++++++
+>>  1 file changed, 73 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> index 6ff40a6..2f37ca8 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -1290,6 +1290,43 @@ static struct omap_hwmod dra7xx_ocp2scp3_hwmod = {
+>>  };
+>>  
+>>  /*
+>> + * 'PCIE' class
+>> + *
+>> + */
+>> +
+>> +static struct omap_hwmod_class dra7xx_pcie_hwmod_class = {
+>> +	.name	= "pcie",
+>> +};
+>> +
+>> +/* pcie1 */
+>> +static struct omap_hwmod dra7xx_pcie1_hwmod = {
+>> +	.name		= "pcie1",
+>> +	.class		= &dra7xx_pcie_hwmod_class,
+>> +	.clkdm_name	= "pcie_clkdm",
+>> +	.main_clk	= "l4_root_clk_div",
+>> +	.prcm = {
+>> +		.omap4 = {
+>> +			.clkctrl_offs	= DRA7XX_CM_PCIE_CLKSTCTRL_OFFSET,
+>> +			.modulemode	= MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +};
+>> +
+>> +/* pcie2 */
+>> +static struct omap_hwmod dra7xx_pcie2_hwmod = {
+>> +	.name		= "pcie2",
+>> +	.class		= &dra7xx_pcie_hwmod_class,
+>> +	.clkdm_name	= "pcie_clkdm",
+>> +	.main_clk	= "l4_root_clk_div",
+>> +	.prcm = {
+>> +		.omap4 = {
+>> +			.clkctrl_offs = DRA7XX_CM_PCIE_CLKSTCTRL_OFFSET,
+>> +			.modulemode   = MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +};
+>> +
+>> +/*
+>>   * 'PCIE PHY' class
+>>   *
+>>   */
+>> @@ -2448,6 +2485,38 @@ static struct omap_hwmod_ocp_if dra7xx_l4_cfg__ocp2scp1 = {
+>>  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>>  };
+>>  
+>> +/* l3_main_1 -> pcie1 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l3_main_1__pcie1 = {
+>> +	.master		= &dra7xx_l3_main_1_hwmod,
+>> +	.slave		= &dra7xx_pcie1_hwmod,
+>> +	.clk		= "l3_iclk_div",
+>> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_cfg -> pcie1 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie1 = {
+>> +	.master		= &dra7xx_l4_cfg_hwmod,
+>> +	.slave		= &dra7xx_pcie1_hwmod,
+>> +	.clk		= "l4_root_clk_div",
+>> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l3_main_1 -> pcie2 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l3_main_1__pcie2 = {
+>> +	.master		= &dra7xx_l3_main_1_hwmod,
+>> +	.slave		= &dra7xx_pcie2_hwmod,
+>> +	.clk		= "l3_iclk_div",
+>> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_cfg -> pcie2 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie2 = {
+>> +	.master		= &dra7xx_l4_cfg_hwmod,
+>> +	.slave		= &dra7xx_pcie2_hwmod,
+>> +	.clk		= "l4_root_clk_div",
+>> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>>  /* l4_cfg -> pcie1 phy */
+>>  static struct omap_hwmod_ocp_if dra7xx_l4_cfg__pcie1_phy = {
+>>  	.master		= &dra7xx_l4_cfg_hwmod,
+>> @@ -2813,6 +2882,10 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+>>  	&dra7xx_l4_cfg__mpu,
+>>  	&dra7xx_l4_cfg__ocp2scp1,
+>>  	&dra7xx_l4_cfg__ocp2scp3,
+>> +	&dra7xx_l3_main_1__pcie1,
+>> +	&dra7xx_l4_cfg__pcie1,
+>> +	&dra7xx_l3_main_1__pcie2,
+>> +	&dra7xx_l4_cfg__pcie2,
+>>  	&dra7xx_l4_cfg__pcie1_phy,
+>>  	&dra7xx_l4_cfg__pcie2_phy,
+>>  	&dra7xx_l3_main_1__qspi,
+>>
+> 
