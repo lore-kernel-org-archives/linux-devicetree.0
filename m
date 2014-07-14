@@ -1,121 +1,132 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: zynq: Add Parallella device tree
-Date: Mon, 14 Jul 2014 20:23:13 +0200
-Message-ID: <53C42011.5070708@suse.de>
-References: <1404075022-28745-1-git-send-email-afaerber@suse.de>	<1404075022-28745-2-git-send-email-afaerber@suse.de>	<CAOesGMhKY1Lb+o8AbtFXS5c7SLg2uGt4-oosdro2FMj_+bB6Tw@mail.gmail.com>	<61d660b7-17a9-4817-ba34-40a5c1674d28@BY2FFO11FD032.protection.gbl> <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Mon, 14 Jul 2014 19:43:21 +0100
+Message-ID: <20140714184321.GW6800@sirena.org.uk>
+References: <1405093489-11897-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RMorpr61ug7CvG36"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405093489-11897-1-git-send-email-dmurphy@ti.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 14.07.2014 20:12, schrieb Olof Johansson:
-> On Tue, Jul 8, 2014 at 4:18 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org=
-> wrote:
->> On 06/30/2014 07:15 AM, Olof Johansson wrote:
->>> Hi,
->>>
->>> On Sun, Jun 29, 2014 at 1:50 PM, Andreas F=C3=A4rber <afaerber@suse=
-=2Ede> wrote:
->>>> This allows to boot the Adapteva Parallella board to serial consol=
-e.
->>>>
->>>> Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
->>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->>>
->>> Nice and clean DTS, just a couple of comments below.
->>>
->>>> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot=
-/dts/zynq-parallella.dts
->>>> new file mode 100644
->>>> index 0000000..98df66c
->>>> --- /dev/null
->>>> +++ b/arch/arm/boot/dts/zynq-parallella.dts
->>>> @@ -0,0 +1,63 @@
->>>> +/*
->>>> + * Copyright (c) 2014 SUSE LINUX Products GmbH
->>>> + *
->>>> + * Derived from zynq-zed.dts:
->>>> + *
->>>> + *  Copyright (C) 2011 Xilinx
->>>> + *  Copyright (C) 2012 National Instruments Corp.
->>>> + *  Copyright (C) 2013 Xilinx
->>>> + *
->>>> + * This software is licensed under the terms of the GNU General P=
-ublic
->>>> + * License version 2, as published by the Free Software Foundatio=
-n, and
->>>> + * may be copied, distributed, and modified under those terms.
->>>> + *
->>>> + * This program is distributed in the hope that it will be useful=
-,
->>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> + * GNU General Public License for more details.
->>>> + */
->>>> +/dts-v1/;
->>>> +/include/ "zynq-7000.dtsi"
->>>> +
->>>> +/ {
->>>> +       model =3D "Parallella Board";
->=20
-> You might want to have this say "Adapteva Parallella Board" instead
-> (just noticed).
->=20
->>>> +       compatible =3D "xlnx,zynq-7000";
->>>
->>> This should have a more specific compatible as the first one. Proba=
-bly
->>> something like:
->>>    compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
->>
->> We were using these compatible properties but later there is no reas=
-on
->> to create them because they will be unused.
->> It is easy to add it when you need it which is not this case.
->=20
-> No, please add it from day one, otherwise everybody needs to update
-> their device tree, some will miss doing it, etc, etc. It's a simple
-> and trivial thing to do, and no reason to leave it o ut.
 
-OK, I have that prepared already, including the appropriate documentati=
-on.
+--RMorpr61ug7CvG36
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>> +
->>>> +       memory {
->>>> +               device_type =3D "memory";
->>>> +               reg =3D <0 0x20000000>;
->>>
->>> Does the bootloader update this entry, or is it truly static? If it=
-'s
->>> updated then it's become recent habit to leave the memory size empt=
-y
->>> in the static file.
->>
->> Depends on your bootloader. I think it is good to have it here.
->> Also this file can be used by u-boot for example and u-boot can be c=
-onfigured
->> from it that's why I think that make sense to keep this here.
->=20
-> Ok. It's become commonplace to leave memory empty for the machines
-> where it's guaranteed that the bootloader will have updated it, to
-> avoid having stale or incorrect values in the static tree. I'm not
-> going to be strict about it, but it's something to consider.
+On Fri, Jul 11, 2014 at 10:44:49AM -0500, Dan Murphy wrote:
 
-Will update then, thanks.
+> @@ -754,4 +755,8 @@ config SND_SOC_TPA6130A2
+>  	tristate "Texas Instruments TPA6130A2 headphone amplifier"
+>  	depends on I2C
+> =20
+> +config SND_SOC_TAS2552
+> +	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
+> +	depends on I2C
+> +
+>  endmenu
 
-Andreas
+Keep this and Makefile sorted - since this is a proper CODEC driver it
+should be in with the CODECs and also sorted in alphabetical order.
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static int tas2552_startup(struct snd_pcm_substream *substream,
+> +			   struct snd_soc_dai *dai)
+> +{
+> +	struct snd_soc_codec *codec =3D dai->codec;
+> +
+> +	pm_runtime_get_sync(codec->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void tas2552_shutdown(struct snd_pcm_substream *substream,
+> +			   struct snd_soc_dai *dai)
+> +{
+> +	struct snd_soc_codec *codec =3D dai->codec;
+> +
+> +	pm_runtime_put(codec->dev);
+> +}
+
+These runtime calls should be redundant, the framework should hold a
+runtime PM reference on devices while they are active.  Does this not
+work for you?
+
+> +	pm_runtime_get_sync(codec->dev);
+
+Check the return value here.
+
+> +	snd_soc_write(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN |
+> +				  TAS2552_BOOST_EN | TAS2552_APT_EN |
+> +				  TAS2552_PLL_ENABLE | TAS2552_LIM_EN);
+
+The PLL is enabled all the time not via DAPM or similar (it's never
+disabled)?
+
+> +static int tas2552_resume(struct snd_soc_codec *codec)
+> +{
+> +	struct tas2552_data *tas2552 =3D snd_soc_codec_get_drvdata(codec);
+> +	int ret;
+> +
+> +	ret =3D regulator_bulk_enable(ARRAY_SIZE(tas2552->supplies),
+> +				    tas2552->supplies);
+> +
+> +	if (ret !=3D 0) {
+> +		dev_err(codec->dev, "Failed to enable supplies: %d\n",
+> +			ret);
+> +	}
+> +
+> +	pm_runtime_get_sync(codec->dev);
+
+Remove these runtime PM calls from suspend and resume, they're not doing
+what you think (and will prevent runtime PM from doing anything).  Let
+the frameworks worry about it for now, or explicitly call the runtime
+suspend and resume operators if and only if the device is runtime
+active.
+
+> +	for (i =3D 0; i < ARRAY_SIZE(data->supplies); i++)
+> +		data->supplies[i].supply =3D tas2552_supply_names[i];
+> +
+> +	ret =3D devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
+> +				      data->supplies);
+> +	if (ret !=3D 0)
+> +		dev_err(dev, "Failed to request supplies: %d\n", ret);
+
+These supplies are mandatory (as they should be) but weren't mentioned
+in the DT binding - please add them there.
+
+> +static const struct i2c_device_id tas2552_id[] =3D {
+> +	{ "tas2552-codec", 0 },
+> +	{ }
+> +};
+
+No -codec.
+
+--RMorpr61ug7CvG36
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTxCTGAAoJELSic+t+oim9nAgQAIrmTZMVO2kaoAnVjddXToCa
+9BDz7g38s+Fvv4xOyEVbfmb3S5nznqYQuWjVouRo6iFJH/O/mvsIffZVA4GqiyrF
+s2c6GTxgcnHewShoQLtVy9WMnhGIxCMb8fYzSHmU9Ml099HsknVSX9pJNZdn4UBD
+NyY8Iw2vihTAs+G+aZYqu80/O1ByqsF0no2qi8qgduBLg7NbQyOXPAE1mKkWUOkl
+P/sOtcnfr7sujjMIHC5e9/5DgrfrOwq2TzfaR9/yBP4wr+mq/ole3heisNdHHiPy
+wD+0Bemum/EiBT6RO3osJVvSc+jxsirH6Gz79wSX5xX0PAAebegsZe9/S4OM8lVP
+w732Qgftnog/+89/n5py5pz6LH2LV+Z96uqEAOpEa8ZQ8yk3EVpZYeTKZs4c7uK2
+BlreWhS/xp3NtCsU7BsuVgmK0RVcjjYUkWAKznWz38azFRSpIjrJhPNQee9OaBv8
+0RDVK6Sd8MtkNDo6oEEEGiXye76huK76lvteDsVXqRGDhH8Hlt59MRFw60W2FQih
+ZdUAwckYanRVjGJLWHkxzWpF00/P3bTqUy2F1r04B77+NLnz54+cIAAuj3I0yHcY
+DES5g6yGeqTHeAcGG3dr0eqGmV382F3V3Os9GgAbTvEHLAI/3XKH6udBulcIpQ3h
+rcf3baw4MIicb91j4b63
+=HxrG
+-----END PGP SIGNATURE-----
+
+--RMorpr61ug7CvG36--
