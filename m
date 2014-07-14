@@ -1,143 +1,41 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding
- documentation
-Date: Mon, 14 Jul 2014 11:24:53 +0800
-Message-ID: <20140714032451.GA1668@shlinux1.ap.freescale.net>
-References: <1405074557-5519-1-git-send-email-b29396@freescale.com>
- <53BFBF3F.8040804@gmail.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Mon, 14 Jul 2014 09:47:57 +0530
+Message-ID: <CAJe_Zhe5W4D+TzyfKdE8KvSc8SJwyHG3SQGpUyd8-ML-wHBDyg@mail.gmail.com>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
+	<1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
+	<CAJ5Y-eYPffYQ57ERODyBYYKjL2FVhGapKmP0YxzcT9rswfaJaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53BFBF3F.8040804@gmail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJ5Y-eYPffYQ57ERODyBYYKjL2FVhGapKmP0YxzcT9rswfaJaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 04:11:03PM +0530, Varka Bhadram wrote:
-> On 07/11/2014 03:59 PM, Dong Aisheng wrote:
-> >add M_CAN device tree binding documentation
-> >
-> >Cc: Wolfgang Grandegger <wg@grandegger.com>
-> >Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> >Cc: Mark Rutland <mark.rutland@arm.com>
-> >Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-> >Cc: Varka Bhadram <varkabhadram@gmail.com>
-> >Signed-off-by: Dong Aisheng <b29396@freescale.com>
-> >---
-> >  .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++++++++++
-> >  1 files changed, 65 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
-> >
-> >diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-> >new file mode 100644
-> >index 0000000..c4cb263
-> >--- /dev/null
-> >+++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> >@@ -0,0 +1,65 @@
-> >+Bosch MCAN controller Device Tree Bindings
-> >+-------------------------------------------------
-> >+
-> >+Required properties:
-> >+- compatible		: Should be "bosch,m_can" for M_CAN controllers
-> >+- reg			: physical base address and size of the M_CAN
-> >+			  registers map and Message RAM
-> >+- reg-names		: Should be "m_can" and "message_ram"
-> >+- interrupts		: Should be the interrupt number of M_CAN interrupt
-> >+			  line 0 and line 1, could be same if sharing
-> >+			  the same interrupt.
-> >+- interrupt-names	: Should contain "int0" and "int1"
-> >+- clocks		: Clocks used by controller, should be host clock
-> >+			  and CAN clock.
-> >+- clock-names		: Should contain "hclk" and "cclk"
-> >+- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-> 
-> I think this should be pinctrl-0
-> 
+On 11 July 2014 17:16, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Jassi,
+>
+> Other than a few nits, this looks good to me.
+>
+Thanks for the nits. I will club them together with other feedback on
+the patchset.
 
-First, this part is defined by pinctrl binding doc.
-Second i think it may be possible someone wants to add other pinctrl states
-when implement low power state in the future.
-So i just keep it as pinctrl-<n>.
+>
+> Hopefully you've run this through checkpatch as well? Also, were you
+> able to sort out the process of getting this stuff hosted on Linaro's
+> git servers? or elsewhere? It would really help maintainers to pick
+> this up and for others to rebase on top of your changes.
+>
+I didn't think it was a good idea to keep a 'dev-branch' for a new
+subsystem before having even a single Ack or Reviewed-by.  Users
+should track patch revisions on mailing lists and later maintainers
+will be sent a tree:branch to pick Acked patches from.
 
-> >+- pinctrl-names		: Names corresponding to the numbered pinctrl states
-> 
-> remove 1 tab space before :
-> 
-
-It's a bit strange.
-Other line like pinctrl-<n> is also two tabs.
-And the code looks fine and already aligned.
-- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-- pinctrl-names		: Names corresponding to the numbered pinctrl states
-Do you mean change line of pinctrl-names from two tabs to one space and a tab before :?
-
-> >+- mram-cfg		: Message RAM configuration data.
-> >+  Multiple M_CAN instances can share the same Message RAM and each element(e.g
-> >+  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
-> >+  so this property is telling driver how the shared or private Message RAM
-> >+  are used by this M_CAN controller.
-> >+
-> 
-> It may written like:
-> mram-cfg		: Message RAM configuration data
-> 			  Multiple M_CAN instances can share the same Message RAM and each element
-> 			  (e.g Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
-> 			  ...
-> 
-
-I'm fine with that.
-The question is it's easy to over 80 columns if writing like that,
-is it ok?
-
-Regards
-Dong Aisheng
-> >+  The format should be as follows:
-> >+  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems
-> >+   txe_elems txb_elems>
-> >+  The 'offset' is an address offset of the Message RAM where the following
-> >+  elements start from. This is usually set to 0x0 if you're using a private
-> >+  Message RAM. The remain cells are used to specify how many elements are used
-> >+  for each FIFO/Buffer.
-> >+
-> >+M_CAN includes the following elements according to user manual:
-> >+11-bit Filter	0-128 elements / 0-128 words
-> >+29-bit Filter	0-64 elements / 0-128 words
-> >+Rx FIFO 0	0-64 elements / 0-1152 words
-> >+Rx FIFO 1	0-64 elements / 0-1152 words
-> >+Rx Buffers	0-64 elements / 0-1152 words
-> >+Tx Event FIFO	0-32 elements / 0-64 words
-> >+Tx Buffers	0-32 elements / 0-576 words
-> >+
-> >+Please refer to 2.4.1 Message RAM Configuration in Bosch M_CAN user manual
-> >+for details.
-> >+
-> >+Example:
-> >+SoC dtsi:
-> >+m_can1: can@020e8000 {
-> >+	compatible = "bosch,m_can";
-> >+	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-> >+	reg-names = "m_can", "message_ram";
-> >+	interrupts = <0 114 0x04>,
-> >+		     <0 114 0x04>;
-> >+	interrupt-names = "int0", "int1";
-> >+	clocks = <&clks IMX6SX_CLK_CANFD>,
-> >+		 <&clks IMX6SX_CLK_CANFD>;
-> >+	clock-names = "hclk", "cclk";
-> >+	mram-cfg = <0x0 0 0 32 0 0 0 1>;
-> >+	status = "disabled";
-> >+};
-> >+
-> >+Board dtsi:
-> >+&m_can1 {
-> >+	pinctrl-names = "default";
-> >+	pinctrl-0 = <&pinctrl_m_can1>;
-> >+	status = "enabled";
-> >+};
-> 
-> 
-> -- 
-> Regards,
-> Varka Bhadram.
-> 
+Cheers,
+Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
