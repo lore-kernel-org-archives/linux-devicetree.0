@@ -1,259 +1,183 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH v2 1/5] mfd: qpnp: add support for Qualcomm QPNP PMICs
-Date: Mon, 14 Jul 2014 15:03:06 +0100
-Message-ID: <20140714140306.GB3993@lee--X1>
-References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com>
- <1404393243-7324-2-git-send-email-svarbanov@mm-sol.com>
- <20140709143426.GC2635@lee--X1>
- <53BD5EC5.3080801@mm-sol.com>
- <20140710083654.GQ2635@lee--X1>
- <53BEB1DB.6010301@mm-sol.com>
- <20140711090718.GA30519@lee--X1>
- <53C3DE99.4090100@mm-sol.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/8] mmc: sdhci: host: add new f_sdh30
+Date: Mon, 14 Jul 2014 16:04:08 +0200
+Message-ID: <7710458.qT0KZ5qsA6@wuerfel>
+References: <1405232971-4607-1-git-send-email-mollie.wu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53C3DE99.4090100@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1405232971-4607-1-git-send-email-mollie.wu@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Mollie Wu <mollie.wu@linaro.org>, linux@arm.linux.org.uk, anton@enomsg.org, pawel.moll@arm.com, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, patches@linaro.org, linux-mmc@vger.kernel.org, chris@printf.net, robh+dt@kernel.org, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, jaswinder.singh@linaro.org, andy.green@linaro.org, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jul 2014, Stanimir Varbanov wrote:
-> On 07/11/2014 12:07 PM, Lee Jones wrote:
-> > On Thu, 10 Jul 2014, Stanimir Varbanov wrote:
-> >>>>>> The Qualcomm QPNP PMIC chips are components used with the
-> >>>>>> Snapdragon 800 series SoC family.  This driver exists
-> >>>>>> largely as a glue mfd component, it exists to be an owner
-> >>>>>> of an SPMI regmap for children devices described in
-> >>>>>> device tree.
-> >>>>>>
-> >>>>>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> >>>>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >>>>>> ---
-> >>>>>>  drivers/mfd/Kconfig     |   15 ++++++
-> >>>>>>  drivers/mfd/Makefile    |    1 +
-> >>>>>>  drivers/mfd/qpnp-spmi.c |  129 ++++++++++++++++++++++++++++++=
-+++++++++++++++++
-> >>>>>>  3 files changed, 145 insertions(+), 0 deletions(-)
-> >>>>>>  create mode 100644 drivers/mfd/qpnp-spmi.c
-> >>>>>>
-> >>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >>>>>> index ee8204c..258b733 100644
-> >>>>>> --- a/drivers/mfd/Kconfig
-> >>>>>> +++ b/drivers/mfd/Kconfig
-> >>>>>> @@ -524,6 +524,21 @@ config MFD_PM8921_CORE
-> >>>>>>  	  Say M here if you want to include support for PM8921 chip =
-as a module.
-> >>>>>>  	  This will build a module called "pm8921-core".
-> >>>>>> =20
-> >>>>>> +config MFD_QPNP_SPMI
-> >>>>>> +	tristate "Qualcomm QPNP SPMI PMIC"
-> >>>>>> +	depends on ARCH_QCOM || COMPILE_TEST
-> >>>>>> +	depends on OF
-> >>>>>> +	select MFD_CORE
-> >>>>>> +	select REGMAP_SPMI
-> >>>>>> +	help
-> >>>>>> +	  This enables support for the Qualcomm QPNP SPMI PMICs.
-> >>>>>> +	  These PMICs are currently used with the Snapdragon 800 ser=
-ies of
-> >>>>>> +	  SoCs.  Note, that this will only be useful paired with des=
-criptions
-> >>>>>> +	  of the independent functions as children nodes in the devi=
-ce tree.
-> >>>>>
-> >>
-> >> <snip>
-> >>
-> >>>>>
-> >>>>>> + * This program is distributed in the hope that it will be us=
-eful,
-> >>>>>> + * but WITHOUT ANY WARRANTY; without even the implied warrant=
-y of
-> >>>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See =
-the
-> >>>>>> + * GNU General Public License for more details.
-> >>>>>> + */
-> >>>>>> +#include <linux/kernel.h>
-> >>>>>> +#include <linux/module.h>
-> >>>>>> +#include <linux/spmi.h>
-> >>>>>> +#include <linux/regmap.h>
-> >>>>>> +#include <linux/of_address.h>
-> >>>>>> +#include <linux/slab.h>
-> >>>>>> +#include <linux/mfd/core.h>
-> >>>>>> +
-> >>>>>> +#define QPNP_RESOURCE_SIZE	256
-> >>>>>> +
-> >>>>>> +static const struct regmap_config qpnp_regmap_config =3D {
-> >>>>>> +	.reg_bits	=3D 16,
-> >>>>>> +	.val_bits	=3D 8,
-> >>>>>> +	.max_register	=3D 0xffff,
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static int qpnp_index_to_resource(struct device_node *np, int=
- index,
-> >>>>>> +				  struct resource *res)
-> >>>>>> +{
-> >>>>>> +	const char *name =3D NULL;
-> >>>>>> +	const __be32 *addrp;
-> >>>>>> +	u64 addr;
-> >>>>>> +
-> >>>>>> +	addrp =3D of_get_address(np, index, NULL, NULL);
-> >>>>>> +	if (!addrp)
-> >>>>>> +		return -EINVAL;
-> >>>>>> +
-> >>>>>> +	addr =3D of_read_number(addrp, 1);
-> >>>>>> +	if (addr =3D=3D OF_BAD_ADDR)
-> >>>>>> +		return -EINVAL;
-> >>>>>> +
-> >>>>>> +	of_property_read_string_index(np, "reg-names", index, &name)=
-;
-> >>>>>> +
-> >>>>>> +	res->start =3D addr;
-> >>>>>> +	res->end =3D addr + QPNP_RESOURCE_SIZE - 1;
-> >>>>>> +	res->flags =3D IORESOURCE_REG;
-> >>>>>> +	res->name =3D name ? name : np->name;
-> >>>>>> +
-> >>>>>> +	return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static int qpnp_add_device(struct spmi_device *root, struct d=
-evice_node *child)
-> >>>>>> +{
-> >>>>>> +	struct mfd_cell cell =3D {};
-> >>>>>> +	struct resource *res, *r;
-> >>>>>> +	int num_resources =3D 0;
-> >>>>>> +	const char *compat;
-> >>>>>> +	int ret, i;
-> >>>>>> +
-> >>>>>> +	compat =3D of_get_property(child, "compatible", NULL);
-> >>>>>> +	if (!compat)
-> >>>>>> +		return -ENODEV;
-> >>>>>> +
-> >>>>>> +	while (of_get_address(child, num_resources, NULL, NULL))
-> >>>>>> +		num_resources++;
-> >>>>>> +
-> >>>>>> +	if (!num_resources)
-> >>>>>> +		return -ENODEV;
-> >>>>>> +
-> >>>>>> +	res =3D kcalloc(num_resources, sizeof(*res), GFP_KERNEL);
-> >>>>>> +	if (!res)
-> >>>>>> +		return -ENOMEM;
-> >>>>>> +
-> >>>>>> +	r =3D res;
-> >>>>>> +	for (i =3D 0; i < num_resources; i++, r++)
-> >>>>>> +		qpnp_index_to_resource(child, i, r);
-> >>>>>> +
-> >>>>>> +	cell.name =3D kasprintf(GFP_KERNEL, "%x.%04x.%s", root->usid=
-,
-> >>>>>> +			      (u16)res[0].start, child->name);
-> >>>>>> +	cell.of_compatible =3D compat;
-> >>>>>> +	cell.num_resources =3D num_resources;
-> >>>>>> +	cell.resources =3D res;
-> >>>>>> +
-> >>>>>> +	ret =3D mfd_add_devices(&root->dev, PLATFORM_DEVID_NONE, &ce=
-ll, 1,
-> >>>>>> +			      NULL, 0, NULL);
-> >>>>>> +
-> >>>>>> +	kfree(res);
-> >>>>>> +	kfree(cell.name);
-> >>>>>> +
-> >>>>>> +	return ret;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static int qpnp_probe(struct spmi_device *sdev)
-> >>>>>> +{
-> >>>>>> +	struct device_node *root =3D sdev->dev.of_node;
-> >>>>>> +	struct device_node *child;
-> >>>>>> +	struct regmap *regmap;
-> >>>>>> +
-> >>>>>> +	regmap =3D devm_regmap_init_spmi_ext(sdev, &qpnp_regmap_conf=
-ig);
-> >>>>>> +	if (IS_ERR(regmap))
-> >>>>>> +		return PTR_ERR(regmap);
-> >>>>>> +
-> >>>>>> +	for_each_available_child_of_node(root, child)
-> >>>>>> +		qpnp_add_device(sdev, child);
-> >>>>>
-> >>>>> This entire driver looks like a re-write of of_platform_populat=
-e().
-> >>>>>
-> >>>>> Why?
-> >>>>
-> >>>> of_platform_populate is not used because the PMIC function resou=
-rces are
-> >>>> non-translatable. You can see that the resources are of type
-> >>>> IORESOURCE_REG (qpnp_index_to_resource()) not IORESOURCE_MEM or =
-_IO.
-> >>>>
-> >>>> The whole point of this mfd driver is to parse devicetree to pre=
-pare
-> >>>> resources for every child and create platform device for it thro=
-ugh
-> >>>> mfd_add_devices(). Then the PMIC function driver got its resourc=
-es and
-> >>>> use them as register addresses passed to regmap. These register =
-accesses
-> >>>> hits the SPMI controller which is the physical interface between=
- PMIC's
-> >>>> and SoC.
-> >>>
-> >>> I can't help but think that if this is required, it should be par=
-t of
-> >>> the core OF code, rather than doing your own thing which looks
-> >>> frighteningly like existing framework functionality.
-> >>
-> >> does it make sense to have a common of_mfd code for devicetree par=
-sing?
-> >> Is that discussed already? I mean presently the mfd_cell resources=
- and
-> >> number of resources are passed by the mfd_add_devices users. Is it
-> >> possible to have common code which parses devicetree sub-nodes of =
-the
-> >> parent device_node and fill resources/create platform devices for =
-them.
-> >=20
-> > I'm not sure it does.  Normally users _either_ represent devices in
-> > MFD cells from within the driver _or_ populate using existing DT
-> > interfaces i.e. of_platform_populate().  This is the first time I'v=
-e
-> > seen someone attempt to parse the entire MFD node structure from
-> > within a driver.
->=20
-> Our goal is to use common mfd driver for various Qualcomm PMIC from t=
-he
-> same PMIC generation (codenamed QPNP). Presently we have good
-> abstraction of the register manipulation functions through regmap-spm=
-i
-> layer. Using the devicetree to represent different peripherals base
-> addresses (reg property) gives us a benefit by avoiding huge header
-> files in linux/mfd and make flexible transition to new PMIC's which j=
-ust
-> change the base addresses but keep the IP block the same. This way we
-> should change the devicetree binding without touch the drivers.
+On Sunday 13 July 2014 14:29:31 Mollie Wu wrote:
+> +Required properties:
+> +- compatible: "fujitsu,f-sdh30"
+> +- voltage-ranges : This is a list of pairs. In each pair, two cells
+> +  are required. First cell specifies minimum slot voltage (mV), second
+> +  cell specifies maximum slot voltage (mV). In case of supported voltage
+> +  range is discontinuous, several ranges could be specified as a list.
+> +
+> +Optional properties:
+> +- pwr-mux-gpios: This is one optional gpio for controlling a power mux
+> +  which switches between two power supplies. 3.3V is selected when gpio
+> +  is high, and 1.8V is selected when gpio is low. This voltage is used
+> +  for signal level.
 
-I'm still not convinced that you need to write your own parser.  If
-you're concerned about not translating the reg property, use (or
-don't) the 'ranges' property accordingly.
+It sounds like what you really want here is a reference to a gpio-regulator
+node and, and to put the details of the voltage switching in there.
 
-> > After searching for some documentation to try and figure this out, =
-I
-> > noticed that you've also missed a patch from your set:
-> >=20
-> >   mfd: qpnp-spmi: document DT bindings for Qualcomm QPNP PMICs
->=20
-> I sent a new version without RFC tag which includes this binding
-> document [1].
->=20
-> >=20
-> > ... which might help enlighten the DT guys.
-> >=20
->=20
+> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+> new file mode 100644
+> index 0000000..8d23f2d
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
+> @@ -0,0 +1,380 @@
+> +/*
+> + * linux/drivers/mmc/host/sdhci_f_sdh30.c
+> + *
+> + * Copyright (C) 2013 - 2014 Fujitsu Semiconductor, Ltd
+> + *              Vincent Yang <vincent.yang@tw.fujitsu.com>
+> + * Copyright (C) 2014 Linaro Ltd  Andy Green <andy.green@linaro.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, version 2 of the License.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/mmc/sd.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/card.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/suspend.h>
+> +
+> +#include "sdhci.h"
+> +#include "sdhci-pltfm.h"
+> +#include "../core/core.h"
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Should this be <linux/mmc/core.h>? A device driver should not be looking
+at the drivers/mmc/core/core.h.
+
+> +#define DRIVER_NAME "f_sdh30"
+
+This macro doesn't seem to serve any purpose, it would be easier to
+read if you open-code this.
+
+> +
+> +void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
+> +{
+> +	struct f_sdhost_priv *priv = sdhci_priv(host);
+> +	u32 ctrl = 0;
+> +
+> +	usleep_range(2500, 3000);
+> +	ctrl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
+> +	ctrl |= F_SDH30_CRES_O_DN;
+> +	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
+> +	ctrl |= F_SDH30_MSEL_O_1_8;
+> +	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
+> +
+> +	if (gpio_is_valid(priv->gpio_select_1v8)) {
+> +		dev_info(priv->dev, "%s: setting gpio\n", __func__);
+> +		gpio_direction_output(priv->gpio_select_1v8, 0);
+> +	}
+> +
+> +	ctrl &= ~F_SDH30_CRES_O_DN;
+> +	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
+> +	usleep_range(2500, 3000);
+> +
+> +	if (priv->vendor_hs200) {
+> +		dev_info(priv->dev, "%s: setting hs200\n", __func__);
+> +		ctrl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +		ctrl |= priv->vendor_hs200;
+> +		sdhci_writel(host, ctrl, F_SDH30_ESD_CONTROL);
+> +	}
+> +
+> +	ctrl = sdhci_readl(host, F_SDH30_TUNING_SETTING);
+> +	ctrl |= F_SDH30_CMD_CHK_DIS;
+> +	sdhci_writel(host, ctrl, F_SDH30_TUNING_SETTING);
+> +}
+
+I think this should really use the regulator API.
+
+If the regular is defined properly, this will work without any extra code.
+
+> +unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+> +{
+> +	return F_SDH30_MIN_CLOCK;
+> +}
+> +
+> +void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	struct f_sdhost_priv *priv = sdhci_priv(host);
+> +
+> +	if (gpio_is_valid(priv->gpio_select_1v8))
+> +		gpio_direction_output(priv->gpio_select_1v8, 1);
+> +
+> +	if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0) {
+> +		sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
+> +		mmiowb();
+> +	}
+
+Can you explain the mmiowb call here?
+
+> +
+> +	if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width)) {
+> +		switch (bus_width) {
+> +		case 8:
+> +			dev_info(dev, "Applying 8 bit bus width\n");
+> +			host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+> +			break;
+> +		case 4:
+> +			dev_info(dev, "Applying 4 bit bus width\n");
+> +			host->mmc->caps |= MMC_CAP_4_BIT_DATA;
+> +			break;
+> +		case 1:
+> +		default:
+> +			dev_err(dev, "Invalid bus width: %u\n", bus_width);
+> +			break;
+> +		}
+> +	}
+
+This should probably be done in generic sdhci code somewhere. How about
+adding it to sdhci_get_of_property instead_
+> +	priv->clk_sd4 = clk_get(&pdev->dev, "sd_sd4clk");
+> +	if (!IS_ERR(priv->clk_sd4)) {
+> +		ret = clk_prepare_enable(priv->clk_sd4);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Failed to enable sd4 clock: %d\n", ret);
+> +			goto err_clk1;
+> +		}
+> +	}
+> +	priv->clk_b = clk_get(&pdev->dev, "sd_bclk");
+> +	if (!IS_ERR(priv->clk_b)) {
+> +		ret = clk_prepare_enable(priv->clk_b);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Failed to enable clk_b clock: %d\n", ret);
+> +			goto err_clk2;
+> +		}
+> +	}
+
+Please pick clock names that match what some of the other drivers use.
+
+Ideally some of that should also move to common code.
+
+	Arnd
