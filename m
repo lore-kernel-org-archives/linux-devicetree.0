@@ -1,67 +1,121 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 9/9] pci: Remap I/O bus resources into CPU space with
- pci_remap_iospace()
-Date: Mon, 14 Jul 2014 20:15:48 +0200
-Message-ID: <7345495.UDsgOtKzyQ@wuerfel>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-10-git-send-email-Liviu.Dudau@arm.com>
- <20140714165443.GI1112@arm.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: zynq: Add Parallella device tree
+Date: Mon, 14 Jul 2014 20:23:13 +0200
+Message-ID: <53C42011.5070708@suse.de>
+References: <1404075022-28745-1-git-send-email-afaerber@suse.de>	<1404075022-28745-2-git-send-email-afaerber@suse.de>	<CAOesGMhKY1Lb+o8AbtFXS5c7SLg2uGt4-oosdro2FMj_+bB6Tw@mail.gmail.com>	<61d660b7-17a9-4817-ba34-40a5c1674d28@BY2FFO11FD032.protection.gbl> <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140714165443.GI1112@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 14 July 2014 17:54:43 Catalin Marinas wrote:
-> On Tue, Jul 01, 2014 at 07:43:34PM +0100, Liviu Dudau wrote:
-> > Introduce a default implementation for remapping PCI bus I/O resources
-> > onto the CPU address space. Architectures with special needs may
-> > provide their own version, but most should be able to use this one.
-> [...]
-> > +/**
-> > + *   pci_remap_iospace - Remap the memory mapped I/O space
-> > + *   @res: Resource describing the I/O space
-> > + *   @phys_addr: physical address where the range will be mapped.
-> > + *
-> > + *   Remap the memory mapped I/O space described by the @res
-> > + *   into the CPU physical address space. Only architectures
-> > + *   that have memory mapped IO defined (and hence PCI_IOBASE)
-> > + *   should call this function.
-> > + */
-> > +int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
-> > +{
-> > +     int err = -ENODEV;
-> > +
-> > +#ifdef PCI_IOBASE
-> > +     if (!(res->flags & IORESOURCE_IO))
-> > +             return -EINVAL;
-> > +
-> > +     if (res->end > IO_SPACE_LIMIT)
-> > +             return -EINVAL;
-> > +
-> > +     err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
-> > +                             res->end + 1 + (unsigned long)PCI_IOBASE,
-> > +                             phys_addr, __pgprot(PROT_DEVICE_nGnRE));
-> 
-> Except that PROT_DEVICE_nGnRE is arm64 only. I think that's a function
-> that should remain arch specific.
-> 
+Am 14.07.2014 20:12, schrieb Olof Johansson:
+> On Tue, Jul 8, 2014 at 4:18 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org=
+> wrote:
+>> On 06/30/2014 07:15 AM, Olof Johansson wrote:
+>>> Hi,
+>>>
+>>> On Sun, Jun 29, 2014 at 1:50 PM, Andreas F=C3=A4rber <afaerber@suse=
+=2Ede> wrote:
+>>>> This allows to boot the Adapteva Parallella board to serial consol=
+e.
+>>>>
+>>>> Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>>
+>>> Nice and clean DTS, just a couple of comments below.
+>>>
+>>>> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot=
+/dts/zynq-parallella.dts
+>>>> new file mode 100644
+>>>> index 0000000..98df66c
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/boot/dts/zynq-parallella.dts
+>>>> @@ -0,0 +1,63 @@
+>>>> +/*
+>>>> + * Copyright (c) 2014 SUSE LINUX Products GmbH
+>>>> + *
+>>>> + * Derived from zynq-zed.dts:
+>>>> + *
+>>>> + *  Copyright (C) 2011 Xilinx
+>>>> + *  Copyright (C) 2012 National Instruments Corp.
+>>>> + *  Copyright (C) 2013 Xilinx
+>>>> + *
+>>>> + * This software is licensed under the terms of the GNU General P=
+ublic
+>>>> + * License version 2, as published by the Free Software Foundatio=
+n, and
+>>>> + * may be copied, distributed, and modified under those terms.
+>>>> + *
+>>>> + * This program is distributed in the hope that it will be useful=
+,
+>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + * GNU General Public License for more details.
+>>>> + */
+>>>> +/dts-v1/;
+>>>> +/include/ "zynq-7000.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +       model =3D "Parallella Board";
+>=20
+> You might want to have this say "Adapteva Parallella Board" instead
+> (just noticed).
+>=20
+>>>> +       compatible =3D "xlnx,zynq-7000";
+>>>
+>>> This should have a more specific compatible as the first one. Proba=
+bly
+>>> something like:
+>>>    compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
+>>
+>> We were using these compatible properties but later there is no reas=
+on
+>> to create them because they will be unused.
+>> It is easy to add it when you need it which is not this case.
+>=20
+> No, please add it from day one, otherwise everybody needs to update
+> their device tree, some will miss doing it, etc, etc. It's a simple
+> and trivial thing to do, and no reason to leave it o ut.
 
-How about #defining a macro with the correct pgprot value in asm/pci.h
-or asm/pgtable.h?
-We can provide a default for that in another architecture independent
-location.
+OK, I have that prepared already, including the appropriate documentati=
+on.
 
-	Arnd
+>>>> +
+>>>> +       memory {
+>>>> +               device_type =3D "memory";
+>>>> +               reg =3D <0 0x20000000>;
+>>>
+>>> Does the bootloader update this entry, or is it truly static? If it=
+'s
+>>> updated then it's become recent habit to leave the memory size empt=
+y
+>>> in the static file.
+>>
+>> Depends on your bootloader. I think it is good to have it here.
+>> Also this file can be used by u-boot for example and u-boot can be c=
+onfigured
+>> from it that's why I think that make sense to keep this here.
+>=20
+> Ok. It's become commonplace to leave memory empty for the machines
+> where it's guaranteed that the bootloader will have updated it, to
+> avoid having stale or incorrect values in the static tree. I'm not
+> going to be strict about it, but it's something to consider.
+
+Will update then, thanks.
+
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
