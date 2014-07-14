@@ -1,76 +1,68 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v8 9/9] pci: Remap I/O bus resources into CPU space with
- pci_remap_iospace()
-Date: Mon, 14 Jul 2014 17:56:53 +0100
-Message-ID: <20140714165653.GD825@e106497-lin.cambridge.arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-10-git-send-email-Liviu.Dudau@arm.com>
- <20140714165443.GI1112@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140714165443.GI1112@arm.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v4 2/4] usb: gadget: pxa27x_udc device-tree documentation
+Date: Mon, 14 Jul 2014 19:05:30 +0200
+Message-ID: <1405357532-32629-2-git-send-email-robert.jarzmik@free.fr>
+References: <1405357532-32629-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405357532-32629-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 14, 2014 at 05:54:43PM +0100, Catalin Marinas wrote:
-> On Tue, Jul 01, 2014 at 07:43:34PM +0100, Liviu Dudau wrote:
-> > Introduce a default implementation for remapping PCI bus I/O resour=
-ces
-> > onto the CPU address space. Architectures with special needs may
-> > provide their own version, but most should be able to use this one.
-> [...]
-> > +/**
-> > + *	pci_remap_iospace - Remap the memory mapped I/O space
-> > + *	@res: Resource describing the I/O space
-> > + *	@phys_addr: physical address where the range will be mapped.
-> > + *
-> > + *	Remap the memory mapped I/O space described by the @res
-> > + *	into the CPU physical address space. Only architectures
-> > + *	that have memory mapped IO defined (and hence PCI_IOBASE)
-> > + *	should call this function.
-> > + */
-> > +int __weak pci_remap_iospace(const struct resource *res, phys_addr=
-_t phys_addr)
-> > +{
-> > +	int err =3D -ENODEV;
-> > +
-> > +#ifdef PCI_IOBASE
-> > +	if (!(res->flags & IORESOURCE_IO))
-> > +		return -EINVAL;
-> > +
-> > +	if (res->end > IO_SPACE_LIMIT)
-> > +		return -EINVAL;
-> > +
-> > +	err =3D ioremap_page_range(res->start + (unsigned long)PCI_IOBASE=
-,
-> > +				res->end + 1 + (unsigned long)PCI_IOBASE,
-> > +				phys_addr, __pgprot(PROT_DEVICE_nGnRE));
->=20
-> Except that PROT_DEVICE_nGnRE is arm64 only. I think that's a functio=
-n
-> that should remain arch specific.
+Add documentation for device-tree binding of arm PXA 27x udc (usb
+device) driver.
 
-Yes, I was following Arnd's suggestion and lost track of the fact that
-PROT_DEVICE_nGnRE is arm64 specific.
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-Best regards,
-Liviu
+---
+Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
+          This is a consequence of other DT reviews on the marvell
+          namings.
+Since V2: Mark's review
+          - described standard properties
+          - use standard gpio bindings for pullup gpio
+Since V3: Arnd's review
+          - removed clock-names
+---
+ Documentation/devicetree/bindings/usb/pxa-usb.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
->=20
-> --=20
-> Catalin
+diff --git a/Documentation/devicetree/bindings/usb/pxa-usb.txt b/Documentation/devicetree/bindings/usb/pxa-usb.txt
+index 79729a9..9c33179 100644
+--- a/Documentation/devicetree/bindings/usb/pxa-usb.txt
++++ b/Documentation/devicetree/bindings/usb/pxa-usb.txt
+@@ -29,3 +29,25 @@ Example:
+ 		marvell,port-mode = <2>; /* PMM_GLOBAL_MODE */
+ 	};
+ 
++UDC
++
++Required properties:
++ - compatible: Should be "marvell,pxa270-udc" for USB controllers
++   used in device mode.
++ - reg: usb device MMIO address space
++ - interrupts: single interrupt generated by the UDC IP
++ - clocks: input clock of the UDC IP (see clock-bindings.txt)
++
++Optional properties:
++ - gpios:
++   - gpio activated to control the USB D+ pullup (see gpio.txt)
++
++Example:
++
++		pxa27x_udc: udc@40600000 {
++			compatible = "marvell,pxa270-udc";
++			reg = <0x40600000 0x10000>;
++			interrupts = <11>;
++			clocks = <&pxa2xx_clks 11>;
++			gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
++		};
+-- 
+2.0.0.rc2
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
