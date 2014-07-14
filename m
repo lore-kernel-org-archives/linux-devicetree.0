@@ -1,89 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/2] devicetree: Add Cadence WDT devicetree bindings
- documentation
-Date: Mon, 14 Jul 2014 16:07:49 +0100
-Message-ID: <20140714150749.GH26465@leverpostej>
-References: <1405340169-2820-1-git-send-email-harinik@xilinx.com>
- <1405340169-2820-2-git-send-email-harinik@xilinx.com>
+From: Daniel Drake <drake@endlessm.com>
+Subject: Re: [alsa-devel] [PATCH V3 2/2] ASoC: samsung: Add machine driver for
+ Odroid X2/U3
+Date: Mon, 14 Jul 2014 16:25:42 +0100
+Message-ID: <CAD8Lp460Ym1y5OS8ya=jddO-spnojyGVWkUWhXmKCfbOOGL61A@mail.gmail.com>
+References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
+	<1404479625-25385-2-git-send-email-s.nawrocki@samsung.com>
+	<CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
+	<53BEBC3F.6030205@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405340169-2820-2-git-send-email-harinik@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "harinikatakamlinux@gmail.com" <harinikatakamlinux@gmail.com>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53BEBC3F.6030205@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Chen Zhen <zhen1.chen@samsung.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 14, 2014 at 01:16:09PM +0100, Harini Katakam wrote:
-> Add cadence-wdt bindings documentation.
-> 
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> ---
-> 
-> v3 changes:
-> - Change reset property type and improve description.
-> - Improve description of clocks and interrupts.
-> - Use watchdog@ in the example.
-> - Use only cdns compatible string for now.
-> 
-> v2:
-> No changes
-> 
-> ---
->  .../devicetree/bindings/watchdog/cadence-wdt.txt   |   27 ++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> new file mode 100644
-> index 0000000..ab23e38
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> @@ -0,0 +1,27 @@
-> +Zynq Watchdog Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "cdns,wdt-r1p2".
-> +- clocks		: Input clock specifier. This should be the ref clk.
+On Thu, Jul 10, 2014 at 5:15 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> On 08/07/14 11:15, Daniel Drake wrote:
+>> Testing on ODROID-U2, v3 is not quite working for me, but v2 of the
+>> patch was fine.
+>> I boot up, run:
+>> # speaker-test -c 2 -t wav
+>>
+>> As soon as I hear the word "front" I press ctrl+c and then run the
+>> command again.
+>> Now the command hangs with no audible output.
+>>
+>> Any ideas? Let me know if you have trouble reproducing.
+>
+> I just posted a patch addressing this, please let me know
+> if there are any further issues.
 
-This wording makes it sound like the watchdog block has more than one
-clock input. Does it?
 
-> +- reg			: Physical base address and size of WDT registers map.
-> +- interrupts		: Property with a value describing the interrupt
-> +			  number. This interrupt is used for indication
-> +			  when the watchdog times out.
+Sorry for not testing sooner. Your patch solves the issue.
 
-Just say "the watchdog timeout interrupt", or (better) use the name of
-the interrupt from the documentation.
-
-> +- interrupt-parent	: Must be core interrupt controller.
-> +
-> +Optional properties
-> +- reset			: If this property exists, then a reset is done
-> +			  when watchdog times out.
-
-That's a bit of an ambiguous name (too easy to misconstrue as a reset
-device reference). Do any other watchdogs have similar properties?
-
-Thanks,
-Mark.
-
-> +- timeout-sec		: Watchdog timeout value (in seconds).
-> +
-> +Example:
-> +	watchdog@f8005000 {
-> +		compatible = "xlnx,zynq-wdt-r1p2";
-> +		clocks = <&clkc 45>;
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <0 9 1>;
-> +		reg = <0xf8005000 0x1000>;
-> +		reset;
-> +		timeout-sec = <10>;
-> +	};
-> -- 
-> 1.7.9.5
-> 
-> 
+Thanks
+Daniel
