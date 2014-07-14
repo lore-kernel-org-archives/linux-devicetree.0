@@ -1,60 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 1/2] ASoC: samsung: Add machine driver for Odroid X2/U3
-Date: Mon, 14 Jul 2014 12:31:18 +0100
-Message-ID: <20140714113118.GE6800@sirena.org.uk>
-References: <1403108551-25058-1-git-send-email-s.nawrocki@samsung.com>
- <1403108551-25058-2-git-send-email-s.nawrocki@samsung.com>
- <20140630184658.GE23300@sirena.org.uk>
- <53C3BEB9.7000706@samsung.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WBsA/oQW3eTA3LlM"
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v8 00/13] Add Maxim 77802 PMIC support
+Date: Mon, 14 Jul 2014 13:35:56 +0200
+Message-ID: <1405337769-3741-1-git-send-email-javier.martinez@collabora.co.uk>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53C3BEB9.7000706@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, zhen1.chen@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, alsa-devel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+This series are based on drivers added by Simon Glass to the Chrome OS
+kernel and adds support for the Maxim 77802 Power Management IC, their
+regulators, clocks, RTC and i2c interface.
 
---WBsA/oQW3eTA3LlM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a v8 of the patch-set that addresses issues pointed out in v7.
+Individual changes are added on each patch but the biggest changes are:
 
-On Mon, Jul 14, 2014 at 01:27:53PM +0200, Sylwester Nawrocki wrote:
+* Patches 1-7 from v7 are not included since those were improvements to
+the max77686 mfd driver and can be applied independently. Lee Jones said
+that he is going to pick them from the posted v7 series.
 
-> Too bad, I noticed this comment only just now.  I'll consider this and
-> will try again and see how simple-card could be used.  There is also the
-> samsung-i2s-sec secondary 'overlay' CPU DAI that would need to be handled,
-> and we have it now internally specified in the machine driver through
-> cpu_dai_name, rather than cpu_of_node.
-> There might be some more work in the driver needed to support the
-> secondary I2S interface generically with DT.
+I've created a patchwork bundle with 1-7 from v7 to make it easy to apply:
 
-You should be converting the device to DPCM for both that and the
-compressed audio path.
+https://patchwork.kernel.org/bundle/javier/max77686-improvements/
 
---WBsA/oQW3eTA3LlM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+* The Dynamic Voltage Scaling support has been removed since that can be
+added in a follow up series and shouldn't block the minimum PMIC support.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+The patch-set has been tested on both Daisy/Snow (max77686) and Peach
+Pit (max77802) Chromebooks and it's composed of the following patches:
 
-iQIcBAEBAgAGBQJTw7+DAAoJELSic+t+oim96UYP/RkReXbBb6THPBdOv4kXm0kk
-5sEjYy8O5VD0bppMmrbhO03dSKH7uF608z04FpD3KNCm4sOJCsKYwqsWY+aSTU43
-xW7mDCdOXgLK6tmxyCX9pTDEadkg3rZIOeVcmTP/YdUyEgc4TSyxyWFjCGqRIzr7
-wRYdIMb8Br4BK/MMoJc8hcQ6aZZZHGkGVMZ3a6Gr02WLSIk1R3tfqWCJgTr3PO+d
-gX2OotvwPBgw3bFboTVKYU1Rrl3uu7QUB46UAqRUAVyAV5aqLxSK1B9rQxT7G45I
-xzpeqBcS7aYGavtcG28gxq2NtElBfGch/9KPCnum8PwgieL01/AYYYIFyLKpXIKQ
-/r19JzEir6uI1rr4OQJZUy/0RjGIb2CGmyCRYEnfPEuzdL8e6Obwl5MdsHY9pKYt
-Mqti4sU96k5a3qhGUbLnCHnAyPqqVGPD+g+FuQedCKLSqZFGonYKSonSlUy45EeH
-Aq49T59yNUhcIY8tBw4eucskCQC9z14sAZ4KTE12gWZuHAJkEyFCXB7TkVBouMQz
-u/VdMolsItZjUAtK2ITPoyVU4oD5oFn+sqrSMUgeXhoAX31j6EMKze1WOr2huu4D
-UTxETrqrjfMFDKPv20CFWv06akWeK4yFoInfecyIXOxVKeDaYKbdZR03hZ6k4Ymk
-a2vKlC6r9FZuZ11mg/nM
-=9i8a
------END PGP SIGNATURE-----
+[PATCH v8 01/13] mfd: max77686: Add Maxim 77802 PMIC support
+[PATCH v8 02/13] mfd: max77802: Add DT binding documentation
+[PATCH v8 03/13] regulator: Add driver for Maxim 77802 PMIC regulators
+[PATCH v8 04/13] clk: max77686: Add DT include for MAX77686 PMIC clock
+[PATCH v8 05/13] clk: Add generic driver for Maxim PMIC clocks
+[PATCH v8 06/13] clk: max77686: Convert to the generic max clock driver
+[PATCH v8 07/13] clk: max77686: Improve Maxim 77686 PMIC clocks binding
+[PATCH v8 08/13] clk: Add driver for Maxim 77802 PMIC clocks
+[PATCH v8 09/13] clk: max77802: Add DT binding documentation
+[PATCH v8 10/13] rtc: max77686: Allow the max77686 rtc to wakeup the system
+[PATCH v8 11/13] rtc: max77686: Remove dead code for SMPL and WTSR
+[PATCH v8 12/13] rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+[PATCH v8 13/13] ARM: dts: Add max77802 to exynos5420-peach-pit and exynos5800-peach-pi
 
---WBsA/oQW3eTA3LlM--
+Patch 01/13 extend the max77686 mfd driver to also support the max77802
+PMIC and patch 02/13 adds the DT binding documentation for this PMIC.
+
+Patch 03/13 adds support for the regulators found in the PMIC.
+
+Patch 04/13 to 07/13 are improvements and refactoring to the max77686 clock
+driver to avoid code duplication when adding max77802 clocks support in patch
+08/13. Patch 09/13 adds the DT binding document for the max77802 clock driver.
+
+Patches 10/13 and 11/13 are improvements to max77686 RTC driver and patch
+12/13 adds support for the RTC found in the max77802 PMIC.
+
+Finally patch 13/13 adds the required device node to the Peach Pit and Pi
+exynos5 based boards.
+
+Since there are cross-subsystems dependencies, I think that the best way to
+sort this out is if relevant maintainers ack the patches so 01/13 to 012/13
+can be merged through the mfd tree. The patches and the relevant acks are:
+
+Patch 03/13 (regulator - Mark Brown)
+Patches 04/13 to 09/13 (clk - Mike Turquette)
+Patches 10/13 to 12/13 (rtc - Alessandro Zummo)
+
+Patch 13/13 is only a DTS change so it can be picked by Kukjin Kim once the
+other patches are picked by Lee Jones.
+
+Since we are in 3.16-rc5 already, it would be great if I can get your acks
+or feedback since I was hoping this series to make it to 3.17. This is due
+other series that were already posted depend on this one.
+
+Also, the series have been reviewed and tested by Samsung folks and most of
+the patches already collected Reviewed-by and Tested-by tags.
+
+Thanks a lot and best regards,
+Javier
