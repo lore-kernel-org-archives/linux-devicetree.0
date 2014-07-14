@@ -1,63 +1,67 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 2/2] regulator: twl: Re-add clk32kg to get wifi
- working
-Date: Mon, 14 Jul 2014 19:13:38 +0100
-Message-ID: <20140714181338.GR6800@sirena.org.uk>
-References: <1405338655-18415-1-git-send-email-sassmann@kpanic.de>
- <1405338655-18415-3-git-send-email-sassmann@kpanic.de>
- <20140714120051.GF6800@sirena.org.uk>
- <53C3C77F.7080208@kpanic.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 9/9] pci: Remap I/O bus resources into CPU space with
+ pci_remap_iospace()
+Date: Mon, 14 Jul 2014 20:15:48 +0200
+Message-ID: <7345495.UDsgOtKzyQ@wuerfel>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-10-git-send-email-Liviu.Dudau@arm.com>
+ <20140714165443.GI1112@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ep5m4srWGXPl6O+g"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53C3C77F.7080208-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140714165443.GI1112@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 14 July 2014 17:54:43 Catalin Marinas wrote:
+> On Tue, Jul 01, 2014 at 07:43:34PM +0100, Liviu Dudau wrote:
+> > Introduce a default implementation for remapping PCI bus I/O resources
+> > onto the CPU address space. Architectures with special needs may
+> > provide their own version, but most should be able to use this one.
+> [...]
+> > +/**
+> > + *   pci_remap_iospace - Remap the memory mapped I/O space
+> > + *   @res: Resource describing the I/O space
+> > + *   @phys_addr: physical address where the range will be mapped.
+> > + *
+> > + *   Remap the memory mapped I/O space described by the @res
+> > + *   into the CPU physical address space. Only architectures
+> > + *   that have memory mapped IO defined (and hence PCI_IOBASE)
+> > + *   should call this function.
+> > + */
+> > +int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+> > +{
+> > +     int err = -ENODEV;
+> > +
+> > +#ifdef PCI_IOBASE
+> > +     if (!(res->flags & IORESOURCE_IO))
+> > +             return -EINVAL;
+> > +
+> > +     if (res->end > IO_SPACE_LIMIT)
+> > +             return -EINVAL;
+> > +
+> > +     err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
+> > +                             res->end + 1 + (unsigned long)PCI_IOBASE,
+> > +                             phys_addr, __pgprot(PROT_DEVICE_nGnRE));
+> 
+> Except that PROT_DEVICE_nGnRE is arm64 only. I think that's a function
+> that should remain arch specific.
+> 
 
---Ep5m4srWGXPl6O+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+How about #defining a macro with the correct pgprot value in asm/pci.h
+or asm/pgtable.h?
+We can provide a default for that in another architecture independent
+location.
 
-On Mon, Jul 14, 2014 at 02:05:19PM +0200, Stefan Assmann wrote:
-> On 14.07.2014 14:00, Mark Brown wrote:
-
-> >No, you need to implement clocks using the clock API.  Please read the
-> >changelogs for the above commits...
-
-> Yes, that's what I expected. Got any pointers for me how to do this?
-> Never done that before, a little help would be appreciated.
-
-There should be plenty of examples in drivers/clk?
-
---Ep5m4srWGXPl6O+g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTxB3PAAoJELSic+t+oim92+8P/1l81qiVO2NQnk9au/uIBw58
-jAYfVD5heD/JSOQISGcUJmdMHLdfHA/WMZKPNJEmzul2L/tWPARxX03f0X41k+UK
-/Yb+lj1lBJ0hS3JLsTo126aL/OtXSH0wVXpsZLZIuLjXQ5w/h/0umhaTcjwvjoZT
-7p4P10nJe7i0SVnvRW1j9dYhcw5XWD+b1TFX+xvAbDZKkKzplRgWp4js/GD08wzj
-Sesq/OGAQrFFgcIIhuRW8dnuxcPTyFaTHI0MH+WzBaPPqfqWTiT9ihPl0GSAnfce
-SHToauSgWL5qkYDN7Mj+5allTAMztCV27Fbod/JZgU4+gnsJwICZSWc9cX8h/Vx+
-buj5IAdGCIw2skqd42wssLy9AmrJ9zDuVifywjeqDkqAp3Eao6kA5Oq93aacALYN
-Y9YO4HOOOQ/45dibZo3yezemjYM19l26o0F/3MnxL1y1tVAz8kUoPYX5rF/FOQQC
-fHkejox0GwOKluEVWpPHT7YpD/9px4LUYSV8fDFrGy+OUYrknpvX2cC2jDxqe3sA
-fsMr7bASek5sfD2h3L5p9Pbu70AmLydOeU+xUB6HjP7WXGO4q1dP6bfeuTV/L/hs
-UgBvS4/+NoXtxSmNRBd9sg7DuwbabyPklr3XdNjQ7eMPT2svOKIsavAN12qFmKRn
-5KkqewKv0cDX/1oo72wN
-=vRR3
------END PGP SIGNATURE-----
-
---Ep5m4srWGXPl6O+g--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
