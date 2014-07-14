@@ -1,11 +1,15 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: [RFC V1] devicetree: Dialog Semiconductor consolidate existing vendor
- prefixes to standardise on 'dlg'
-Date: Mon, 14 Jul 2014 17:07:20 +0100
-Message-ID: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC V1] devicetree: Dialog Semiconductor consolidate existing
+ vendor prefixes to standardise on 'dlg'
+Date: Mon, 14 Jul 2014 17:21:01 +0100
+Message-ID: <20140714162101.GM26465@leverpostej>
+References: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5723654742554792406=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,232 +19,145 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, DEVICE
- TREE <devicetree@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guenter Roeck <linux@roeck-us.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jason
- Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonathan Cameron <jic23@kernel.org>, Kumar Gala <galak@codeaurora.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Sascha Hauer <kernel@pengutronix.de>Shawn Guo <s>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
---===============5723654742554792406==
-Content-Type: text/plain
-
-From: Opensource [Steve Twiss] <stwiss.opensource@diasemi.com>
-
-This patch series updates the device tree vendor prefix for
-Dialog Semiconductor
-
-Various methods are currently used throughout the kernel: 'diasemi',
-'dialog' and 'dlg'. Others have also been suggested.
-
-This patch set aims to consolidate the usage of the vendor prefix to
-use a common standard. The prefix 'dlg' is used.
-
-This e-mail is in response to the previous thread here:
-
-- https://lkml.org/lkml/2014/6/11/262
-
-
-Signed-off-by: Opensource [Steve Twiss] <stwiss.opensource@diasemi.com>
----
-Checks performed with linux-next/next-20140714/scripts/checkpatch.pl
- trivial-devices.txt       total: 0 errors, 0 warnings, 89 lines checked
- da9210.txt                total: 0 errors, 0 warnings, 21 lines checked
- vendor-prefixes.txt       total: 0 errors, 0 warnings, 149 lines checked
- imx53-smd.dts             total: 0 errors, 2 warnings, 279 lines checked
- imx6qdl-phytec-pfla02.dtsi total: 0 errors, 2 warnings, 357 lines checked
- da9055-core.c             total: 0 errors, 0 warnings, 428 lines checked
-
-This patch applies against linux-next and next-20140714
-
-Regards,
-Steve Twiss, Dialog Semiconductor Ltd.
-
- .../devicetree/bindings/i2c/trivial-devices.txt    |  2 +-
- .../devicetree/bindings/regulator/da9210.txt       |  4 ++--
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/arm/boot/dts/imx53-smd.dts                    |  2 +-
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  2 +-
- drivers/mfd/da9055-core.c                          | 26 +++++++++++-----------
- 6 files changed, 19 insertions(+), 18 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 37803eb..a02b8a1 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -44,7 +44,7 @@ dallas,ds1775		Tiny Digital Thermometer and Thermostat
- dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
- dallas,ds4510		CPU Supervisor with Nonvolatile Memory and Programmable I/O
- dallas,ds75		Digital Thermometer and Thermostat
--dialog,da9053		DA9053: flexible system level PMIC with multicore support
-+dlg,da9053		DA9053: flexible system level PMIC with multicore support
- epson,rx8025		High-Stability. I2C-Bus INTERFACE REAL TIME CLOCK MODULE
- epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
-diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt b/Documentation/devicetree/bindings/regulator/da9210.txt
-index f120f22..3297c53 100644
---- a/Documentation/devicetree/bindings/regulator/da9210.txt
-+++ b/Documentation/devicetree/bindings/regulator/da9210.txt
-@@ -2,7 +2,7 @@
- 
- Required properties:
- 
--- compatible:	must be "diasemi,da9210"
-+- compatible:	must be "dlg,da9210"
- - reg:		the i2c slave address of the regulator. It should be 0x68.
- 
- Any standard regulator properties can be used to configure the single da9210
-@@ -11,7 +11,7 @@ DCDC.
- Example:
- 
- 	da9210@68 {
--		compatible = "diasemi,da9210";
-+		compatible = "dlg,da9210";
- 		reg = <0x68>;
- 
- 		regulator-min-microvolt = <900000>;
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 5d27e5a..35a833e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -37,6 +37,7 @@ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
- denx	Denx Software Engineering
- digi	Digi International Inc.
-+dlg	Dialog Semiconductor
- dlink	D-Link Corporation
- dmo	Data Modul AG
- ebv	EBV Elektronik
-diff --git a/arch/arm/boot/dts/imx53-smd.dts b/arch/arm/boot/dts/imx53-smd.dts
-index 5ec1590..1d32557 100644
---- a/arch/arm/boot/dts/imx53-smd.dts
-+++ b/arch/arm/boot/dts/imx53-smd.dts
-@@ -265,7 +265,7 @@
- 	};
- 
- 	pmic: dialog@48 {
--		compatible = "dialog,da9053", "dialog,da9052";
-+		compatible = "dlg,da9053", "dlg,da9052";
- 		reg = <0x48>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index 2694aa8..0e50bb0 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -83,7 +83,7 @@
- 	};
- 
- 	pmic@58 {
--		compatible = "dialog,da9063";
-+		compatible = "dlg,da9063";
- 		reg = <0x58>;
- 		interrupt-parent = <&gpio4>;
- 		interrupts = <17 0x8>; /* active-low GPIO4_17 */
-diff --git a/drivers/mfd/da9055-core.c b/drivers/mfd/da9055-core.c
-index caf8dcf..b4d920c 100644
---- a/drivers/mfd/da9055-core.c
-+++ b/drivers/mfd/da9055-core.c
-@@ -296,73 +296,73 @@ static struct resource da9055_ld05_6_resource = {
- 
- static const struct mfd_cell da9055_devs[] = {
- 	{
--		.of_compatible = "dialog,da9055-gpio",
-+		.of_compatible = "dlg,da9055-gpio",
- 		.name = "da9055-gpio",
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 1,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 2,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 3,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 4,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 5,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 6,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.id = 7,
- 		.resources = &da9055_ld05_6_resource,
- 		.num_resources = 1,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-regulator",
-+		.of_compatible = "dlg,da9055-regulator",
- 		.name = "da9055-regulator",
- 		.resources = &da9055_ld05_6_resource,
- 		.num_resources = 1,
- 		.id = 8,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-onkey",
-+		.of_compatible = "dlg,da9055-onkey",
- 		.name = "da9055-onkey",
- 		.resources = &da9055_onkey_resource,
- 		.num_resources = 1,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-rtc",
-+		.of_compatible = "dlg,da9055-rtc",
- 		.name = "da9055-rtc",
- 		.resources = da9055_rtc_resource,
- 		.num_resources = ARRAY_SIZE(da9055_rtc_resource),
- 	},
- 	{
--		.of_compatible = "dialog,da9055-hwmon",
-+		.of_compatible = "dlg,da9055-hwmon",
- 		.name = "da9055-hwmon",
- 		.resources = &da9055_hwmon_resource,
- 		.num_resources = 1,
- 	},
- 	{
--		.of_compatible = "dialog,da9055-watchdog",
-+		.of_compatible = "dlg,da9055-watchdog",
- 		.name = "da9055-watchdog",
- 	},
- };
--- 
-end-of-patch for RFC V1
-
-
-
---===============5723654742554792406==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5723654742554792406==--
+T24gTW9uLCBKdWwgMTQsIDIwMTQgYXQgMDU6MDc6MjBQTSArMDEwMCwgT3BlbnNvdXJjZSBbU3Rl
+dmUgVHdpc3NdIHdyb3RlOgo+IEZyb206IE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXSA8c3R3aXNz
+Lm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+Cj4gCj4gVGhpcyBwYXRjaCBzZXJpZXMgdXBkYXRlcyB0
+aGUgZGV2aWNlIHRyZWUgdmVuZG9yIHByZWZpeCBmb3IKPiBEaWFsb2cgU2VtaWNvbmR1Y3Rvcgo+
+IAo+IFZhcmlvdXMgbWV0aG9kcyBhcmUgY3VycmVudGx5IHVzZWQgdGhyb3VnaG91dCB0aGUga2Vy
+bmVsOiAnZGlhc2VtaScsCj4gJ2RpYWxvZycgYW5kICdkbGcnLiBPdGhlcnMgaGF2ZSBhbHNvIGJl
+ZW4gc3VnZ2VzdGVkLgo+IAo+IFRoaXMgcGF0Y2ggc2V0IGFpbXMgdG8gY29uc29saWRhdGUgdGhl
+IHVzYWdlIG9mIHRoZSB2ZW5kb3IgcHJlZml4IHRvCj4gdXNlIGEgY29tbW9uIHN0YW5kYXJkLiBU
+aGUgcHJlZml4ICdkbGcnIGlzIHVzZWQuCj4gCj4gVGhpcyBlLW1haWwgaXMgaW4gcmVzcG9uc2Ug
+dG8gdGhlIHByZXZpb3VzIHRocmVhZCBoZXJlOgo+IAo+IC0gaHR0cHM6Ly9sa21sLm9yZy9sa21s
+LzIwMTQvNi8xMS8yNjIKCkluIHRoYXQgcmVzcG9uc2UsIFJvYiBwb2ludGVkIG91dCB0aGUgb2xk
+IGZvcm1zIHNob3VsZCBiZSBtYXJrZWQKZGVwcmVjYXRlZCwgYnV0IHRoZSBwYXRjaCBzZWVtcyB0
+byBvdXRyaWdodCByZW1vdmUgdGhlbS4KCkFyZSB3ZSBzdXJlIHRoaXMgZG9lc24ndCBicmVhayBh
+biBleGlzdGluZyBEVEIgYW55d2hlcmU/CgpUaGFua3MsCk1hcmsuCiAKPiAKPiBTaWduZWQtb2Zm
+LWJ5OiBPcGVuc291cmNlIFtTdGV2ZSBUd2lzc10gPHN0d2lzcy5vcGVuc291cmNlQGRpYXNlbWku
+Y29tPgo+IC0tLQo+IENoZWNrcyBwZXJmb3JtZWQgd2l0aCBsaW51eC1uZXh0L25leHQtMjAxNDA3
+MTQvc2NyaXB0cy9jaGVja3BhdGNoLnBsCj4gIHRyaXZpYWwtZGV2aWNlcy50eHQgICAgICAgdG90
+YWw6IDAgZXJyb3JzLCAwIHdhcm5pbmdzLCA4OSBsaW5lcyBjaGVja2VkCj4gIGRhOTIxMC50eHQg
+ICAgICAgICAgICAgICAgdG90YWw6IDAgZXJyb3JzLCAwIHdhcm5pbmdzLCAyMSBsaW5lcyBjaGVj
+a2VkCj4gIHZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgdG90YWw6IDAgZXJyb3JzLCAwIHdhcm5p
+bmdzLCAxNDkgbGluZXMgY2hlY2tlZAo+ICBpbXg1My1zbWQuZHRzICAgICAgICAgICAgIHRvdGFs
+OiAwIGVycm9ycywgMiB3YXJuaW5ncywgMjc5IGxpbmVzIGNoZWNrZWQKPiAgaW14NnFkbC1waHl0
+ZWMtcGZsYTAyLmR0c2kgdG90YWw6IDAgZXJyb3JzLCAyIHdhcm5pbmdzLCAzNTcgbGluZXMgY2hl
+Y2tlZAo+ICBkYTkwNTUtY29yZS5jICAgICAgICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJu
+aW5ncywgNDI4IGxpbmVzIGNoZWNrZWQKPiAKPiBUaGlzIHBhdGNoIGFwcGxpZXMgYWdhaW5zdCBs
+aW51eC1uZXh0IGFuZCBuZXh0LTIwMTQwNzE0Cj4gCj4gUmVnYXJkcywKPiBTdGV2ZSBUd2lzcywg
+RGlhbG9nIFNlbWljb25kdWN0b3IgTHRkLgo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9p
+MmMvdHJpdmlhbC1kZXZpY2VzLnR4dCAgICB8ICAyICstCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0ICAgICAgIHwgIDQgKystLQo+ICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAxICsKPiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NTMtc21kLmR0cyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBhcmNo
+L2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaSAgICAgICB8ICAyICstCj4g
+IGRyaXZlcnMvbWZkL2RhOTA1NS1jb3JlLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjYg
+KysrKysrKysrKystLS0tLS0tLS0tLQo+ICA2IGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
+KyksIDE4IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKPiBpbmRleCAzNzgwM2Vi
+Li5hMDJiOGExIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dAo+IEBAIC00NCw3ICs0NCw3IEBAIGRh
+bGxhcyxkczE3NzUJCVRpbnkgRGlnaXRhbCBUaGVybW9tZXRlciBhbmQgVGhlcm1vc3RhdAo+ICBk
+YWxsYXMsZHMzMjMyCQlFeHRyZW1lbHkgQWNjdXJhdGUgScOCwrJDIFJUQyB3aXRoIEludGVncmF0
+ZWQgQ3J5c3RhbCBhbmQgU1JBTQo+ICBkYWxsYXMsZHM0NTEwCQlDUFUgU3VwZXJ2aXNvciB3aXRo
+IE5vbnZvbGF0aWxlIE1lbW9yeSBhbmQgUHJvZ3JhbW1hYmxlIEkvTwo+ICBkYWxsYXMsZHM3NQkJ
+RGlnaXRhbCBUaGVybW9tZXRlciBhbmQgVGhlcm1vc3RhdAo+IC1kaWFsb2csZGE5MDUzCQlEQTkw
+NTM6IGZsZXhpYmxlIHN5c3RlbSBsZXZlbCBQTUlDIHdpdGggbXVsdGljb3JlIHN1cHBvcnQKPiAr
+ZGxnLGRhOTA1MwkJREE5MDUzOiBmbGV4aWJsZSBzeXN0ZW0gbGV2ZWwgUE1JQyB3aXRoIG11bHRp
+Y29yZSBzdXBwb3J0Cj4gIGVwc29uLHJ4ODAyNQkJSGlnaC1TdGFiaWxpdHkuIEkyQy1CdXMgSU5U
+RVJGQUNFIFJFQUwgVElNRSBDTE9DSyBNT0RVTEUKPiAgZXBzb24scng4NTgxCQlJMkMtQlVTIElO
+VEVSRkFDRSBSRUFMIFRJTUUgQ0xPQ0sgTU9EVUxFCj4gIGZzbCxtYWczMTEwCQlNQUczMTEwOiBY
+dHJpbnNpYyBIaWdoIEFjY3VyYWN5LCAzRCBNYWduZXRvbWV0ZXIKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0Cj4gaW5k
+ZXggZjEyMGYyMi4uMzI5N2M1MyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQKPiBAQCAtMiw3ICsyLDcgQEAK
+PiAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAKPiAtLSBjb21wYXRpYmxlOgltdXN0IGJlICJk
+aWFzZW1pLGRhOTIxMCIKPiArLSBjb21wYXRpYmxlOgltdXN0IGJlICJkbGcsZGE5MjEwIgo+ICAt
+IHJlZzoJCXRoZSBpMmMgc2xhdmUgYWRkcmVzcyBvZiB0aGUgcmVndWxhdG9yLiBJdCBzaG91bGQg
+YmUgMHg2OC4KPiAKPiAgQW55IHN0YW5kYXJkIHJlZ3VsYXRvciBwcm9wZXJ0aWVzIGNhbiBiZSB1
+c2VkIHRvIGNvbmZpZ3VyZSB0aGUgc2luZ2xlIGRhOTIxMAo+IEBAIC0xMSw3ICsxMSw3IEBAIERD
+REMuCj4gIEV4YW1wbGU6Cj4gCj4gIAlkYTkyMTBANjggewo+IC0JCWNvbXBhdGlibGUgPSAiZGlh
+c2VtaSxkYTkyMTAiOwo+ICsJCWNvbXBhdGlibGUgPSAiZGxnLGRhOTIxMCI7Cj4gIAkJcmVnID0g
+PDB4Njg+Owo+IAo+ICAJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDkwMDAwMD47Cj4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4
+ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhl
+cy50eHQKPiBpbmRleCA1ZDI3ZTVhLi4zNWE4MzNlIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPiBAQCAtMzcs
+NiArMzcsNyBAQCBkYWxsYXMJTWF4aW0gSW50ZWdyYXRlZCBQcm9kdWN0cyAoZm9ybWVybHkgRGFs
+bGFzIFNlbWljb25kdWN0b3IpCj4gIGRhdmljb20JREFWSUNPTSBTZW1pY29uZHVjdG9yLCBJbmMu
+Cj4gIGRlbngJRGVueCBTb2Z0d2FyZSBFbmdpbmVlcmluZwo+ICBkaWdpCURpZ2kgSW50ZXJuYXRp
+b25hbCBJbmMuCj4gK2RsZwlEaWFsb2cgU2VtaWNvbmR1Y3Rvcgo+ICBkbGluawlELUxpbmsgQ29y
+cG9yYXRpb24KPiAgZG1vCURhdGEgTW9kdWwgQUcKPiAgZWJ2CUVCViBFbGVrdHJvbmlrCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMgYi9hcmNoL2FybS9ib290
+L2R0cy9pbXg1My1zbWQuZHRzCj4gaW5kZXggNWVjMTU5MC4uMWQzMjU1NyAxMDA2NDQKPiAtLS0g
+YS9hcmNoL2FybS9ib290L2R0cy9pbXg1My1zbWQuZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NTMtc21kLmR0cwo+IEBAIC0yNjUsNyArMjY1LDcgQEAKPiAgCX07Cj4gCj4gIAlwbWlj
+OiBkaWFsb2dANDggewo+IC0JCWNvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1MyIsICJkaWFsb2cs
+ZGE5MDUyIjsKPiArCQljb21wYXRpYmxlID0gImRsZyxkYTkwNTMiLCAiZGxnLGRhOTA1MiI7Cj4g
+IAkJcmVnID0gPDB4NDg+Owo+ICAJfTsKPiAgfTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvaW14NnFkbC1waHl0ZWMtcGZsYTAyLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2
+cWRsLXBoeXRlYy1wZmxhMDIuZHRzaQo+IGluZGV4IDI2OTRhYTguLjBlNTBiYjAgMTAwNjQ0Cj4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1waHl0ZWMtcGZsYTAyLmR0c2kKPiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaQo+IEBAIC04Myw3
+ICs4Myw3IEBACj4gIAl9Owo+IAo+ICAJcG1pY0A1OCB7Cj4gLQkJY29tcGF0aWJsZSA9ICJkaWFs
+b2csZGE5MDYzIjsKPiArCQljb21wYXRpYmxlID0gImRsZyxkYTkwNjMiOwo+ICAJCXJlZyA9IDww
+eDU4PjsKPiAgCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvND47Cj4gIAkJaW50ZXJydXB0cyA9
+IDwxNyAweDg+OyAvKiBhY3RpdmUtbG93IEdQSU80XzE3ICovCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbWZkL2RhOTA1NS1jb3JlLmMgYi9kcml2ZXJzL21mZC9kYTkwNTUtY29yZS5jCj4gaW5kZXgg
+Y2FmOGRjZi4uYjRkOTIwYyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9kYTkwNTUtY29yZS5j
+Cj4gKysrIGIvZHJpdmVycy9tZmQvZGE5MDU1LWNvcmUuYwo+IEBAIC0yOTYsNzMgKzI5Niw3MyBA
+QCBzdGF0aWMgc3RydWN0IHJlc291cmNlIGRhOTA1NV9sZDA1XzZfcmVzb3VyY2UgPSB7Cj4gCj4g
+IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgZGE5MDU1X2RldnNbXSA9IHsKPiAgCXsKPiAt
+CQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LWdwaW8iLAo+ICsJCS5vZl9jb21wYXRp
+YmxlID0gImRsZyxkYTkwNTUtZ3BpbyIsCj4gIAkJLm5hbWUgPSAiZGE5MDU1LWdwaW8iLAo+ICAJ
+fSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJlZ3VsYXRvciIs
+Cj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5uYW1l
+ID0gImRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5pZCA9IDEsCj4gIAl9LAo+ICAJewo+IC0JCS5v
+Zl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtcmVndWxhdG9yIiwKPiArCQkub2ZfY29tcGF0
+aWJsZSA9ICJkbGcsZGE5MDU1LXJlZ3VsYXRvciIsCj4gIAkJLm5hbWUgPSAiZGE5MDU1LXJlZ3Vs
+YXRvciIsCj4gIAkJLmlkID0gMiwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBhdGlibGUgPSAi
+ZGlhbG9nLGRhOTA1NS1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkw
+NTUtcmVndWxhdG9yIiwKPiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwKPiAgCQkuaWQg
+PSAzLAo+ICAJfSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJl
+Z3VsYXRvciIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1bGF0b3IiLAo+
+ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5pZCA9IDQsCj4gIAl9LAo+ICAJ
+ewo+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtcmVndWxhdG9yIiwKPiArCQku
+b2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LXJlZ3VsYXRvciIsCj4gIAkJLm5hbWUgPSAiZGE5
+MDU1LXJlZ3VsYXRvciIsCj4gIAkJLmlkID0gNSwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBh
+dGlibGUgPSAiZGlhbG9nLGRhOTA1NS1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0g
+ImRsZyxkYTkwNTUtcmVndWxhdG9yIiwKPiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwK
+PiAgCQkuaWQgPSA2LAo+ICAJfSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2cs
+ZGE5MDU1LXJlZ3VsYXRvciIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1
+bGF0b3IiLAo+ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5pZCA9IDcsCj4g
+IAkJLnJlc291cmNlcyA9ICZkYTkwNTVfbGQwNV82X3Jlc291cmNlLAo+ICAJCS5udW1fcmVzb3Vy
+Y2VzID0gMSwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1
+NS1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkwNTUtcmVndWxhdG9y
+IiwKPiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwKPiAgCQkucmVzb3VyY2VzID0gJmRh
+OTA1NV9sZDA1XzZfcmVzb3VyY2UsCj4gIAkJLm51bV9yZXNvdXJjZXMgPSAxLAo+ICAJCS5pZCA9
+IDgsCj4gIAl9LAo+ICAJewo+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtb25r
+ZXkiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkwNTUtb25rZXkiLAo+ICAJCS5uYW1l
+ID0gImRhOTA1NS1vbmtleSIsCj4gIAkJLnJlc291cmNlcyA9ICZkYTkwNTVfb25rZXlfcmVzb3Vy
+Y2UsCj4gIAkJLm51bV9yZXNvdXJjZXMgPSAxLAo+ICAJfSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0
+aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJ0YyIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRh
+OTA1NS1ydGMiLAo+ICAJCS5uYW1lID0gImRhOTA1NS1ydGMiLAo+ICAJCS5yZXNvdXJjZXMgPSBk
+YTkwNTVfcnRjX3Jlc291cmNlLAo+ICAJCS5udW1fcmVzb3VyY2VzID0gQVJSQVlfU0laRShkYTkw
+NTVfcnRjX3Jlc291cmNlKSwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlh
+bG9nLGRhOTA1NS1od21vbiIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1od21v
+biIsCj4gIAkJLm5hbWUgPSAiZGE5MDU1LWh3bW9uIiwKPiAgCQkucmVzb3VyY2VzID0gJmRhOTA1
+NV9od21vbl9yZXNvdXJjZSwKPiAgCQkubnVtX3Jlc291cmNlcyA9IDEsCj4gIAl9LAo+ICAJewo+
+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtd2F0Y2hkb2ciLAo+ICsJCS5vZl9j
+b21wYXRpYmxlID0gImRsZyxkYTkwNTUtd2F0Y2hkb2ciLAo+ICAJCS5uYW1lID0gImRhOTA1NS13
+YXRjaGRvZyIsCj4gIAl9LAo+ICB9Owo+IC0tCj4gZW5kLW9mLXBhdGNoIGZvciBSRkMgVjEKPiAK
+PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
