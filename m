@@ -1,105 +1,67 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding documentation
-Date: Mon, 14 Jul 2014 10:07:06 +0530
-Message-ID: <53C35E72.2050902@gmail.com>
-References: <1405074557-5519-1-git-send-email-b29396@freescale.com> <53BFBF3F.8040804@gmail.com> <20140714032451.GA1668@shlinux1.ap.freescale.net>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Mon, 14 Jul 2014 10:26:22 +0530
+Message-ID: <CAJe_ZhdrM1Th9MxDkYJo-_5n2BbF1KyByoWnZV+yxEDcEcHjYw@mail.gmail.com>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
+	<1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
+	<CAPdLdqmBUFaCjdLrYJh3P2jizYC3GP0g7ut+FNaLQ5a73gMp0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20140714032451.GA1668@shlinux1.ap.freescale.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPdLdqmBUFaCjdLrYJh3P2jizYC3GP0g7ut+FNaLQ5a73gMp0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2014 08:54 AM, Dong Aisheng wrote:
-> On Fri, Jul 11, 2014 at 04:11:03PM +0530, Varka Bhadram wrote:
->> On 07/11/2014 03:59 PM, Dong Aisheng wrote:
->>> add M_CAN device tree binding documentation
->>>
->>> Cc: Wolfgang Grandegger <wg@grandegger.com>
->>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
->>> Cc: Varka Bhadram <varkabhadram@gmail.com>
->>> Signed-off-by: Dong Aisheng <b29396@freescale.com>
->>> ---
->>>   .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++++++++++
->>>   1 files changed, 65 insertions(+), 0 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
->>> new file mode 100644
->>> index 0000000..c4cb263
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->>> @@ -0,0 +1,65 @@
->>> +Bosch MCAN controller Device Tree Bindings
->>> +-------------------------------------------------
->>> +
->>> +Required properties:
->>> +- compatible		: Should be "bosch,m_can" for M_CAN controllers
->>> +- reg			: physical base address and size of the M_CAN
->>> +			  registers map and Message RAM
->>> +- reg-names		: Should be "m_can" and "message_ram"
->>> +- interrupts		: Should be the interrupt number of M_CAN interrupt
->>> +			  line 0 and line 1, could be same if sharing
->>> +			  the same interrupt.
->>> +- interrupt-names	: Should contain "int0" and "int1"
->>> +- clocks		: Clocks used by controller, should be host clock
->>> +			  and CAN clock.
->>> +- clock-names		: Should contain "hclk" and "cclk"
->>> +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
->> I think this should be pinctrl-0
+On 12 July 2014 03:39, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 11 July 2014 02:35, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Introduce common framework for client/protocol drivers and
+>> controller drivers of Inter-Processor-Communication (IPC).
 >>
-> First, this part is defined by pinctrl binding doc.
-> Second i think it may be possible someone wants to add other pinctrl states
-> when implement low power state in the future.
-> So i just keep it as pinctrl-<n>.
-
-Normally we will use pinctrl-0 for mentioning the pinctrl bindings.
-
-If somebody going to add something to the pinctrl bindings they will
-add separately with pinctrl-1: bla bla bla...
-
->>> +- pinctrl-names		: Names corresponding to the numbered pinctrl states
->> remove 1 tab space before :
+>> Client driver developers should have a look at
+>>  include/linux/mailbox_client.h to understand the part of
+>> the API exposed to client drivers.
+>> Similarly controller driver developers should have a look
+>> at include/linux/mailbox_controller.h
 >>
-> It's a bit strange.
-> Other line like pinctrl-<n> is also two tabs.
-> And the code looks fine and already aligned.
-> - pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-> - pinctrl-names		: Names corresponding to the numbered pinctrl states
-> Do you mean change line of pinctrl-names from two tabs to one space and a tab before :?
+>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mailbox/mailbox.txt        |  33 ++
+>>  Documentation/mailbox.txt                          | 107 +++++
+>>  MAINTAINERS                                        |   8 +
+>>  drivers/mailbox/Makefile                           |   4 +
+>>  drivers/mailbox/mailbox.c                          | 490 +++++++++++++++++++++
+>>  include/linux/mailbox_client.h                     |  48 ++
+>>  include/linux/mailbox_controller.h                 | 128 ++++++
+>>  7 files changed, 818 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/mailbox.txt
+>>  create mode 100644 Documentation/mailbox.txt
+>>  create mode 100644 drivers/mailbox/mailbox.c
+>>  create mode 100644 include/linux/mailbox_client.h
+>>  create mode 100644 include/linux/mailbox_controller.h
 >
-When i see in the patch the alignment is like this
-pinctrl-<n>	:
-pinctrl-name		:
+> I don't think combining code and documentation like this is the right
+> approach. As per
+> Documentation/devicetree/bindings/submitting-patches.txt:
+>
+> "1) The Documentation/ portion of the patch should be a separate patch."
+>
+Thanks, in fact the previous revision was split like that. But
+encouraged by seeing many other instances, I took the liberty to club
+them together because neither part makes sense without the other. Also
+any reviewer looking at one has to look at the other too.
 
->>> +- mram-cfg		: Message RAM configuration data.
->>> +  Multiple M_CAN instances can share the same Message RAM and each element(e.g
->>> +  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
->>> +  so this property is telling driver how the shared or private Message RAM
->>> +  are used by this M_CAN controller.
->>> +
->> It may written like:
->> mram-cfg		: Message RAM configuration data
->> 			  Multiple M_CAN instances can share the same Message RAM and each element
->> 			  (e.g Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
->> 			  ...
->>
-> I'm fine with that.
-> The question is it's easy to over 80 columns if writing like that,
-> is it ok?
+> I am not sure if binding document and regular documentation should be
+> separated out or if they can stay together  (those more knowledgeable,
+> please comment!), but the code portion should definitely be a separate
+> patch from the documentation.
+>
+I am willing to learn and split the patchset again, if the gods want so..
 
-When we follow the above format it would be more readable.
-
-> Regards
-> Dong Aisheng
-
-
--- 
-Regards,
-Varka Bhadram.
-
+Cheers,
+Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
