@@ -1,63 +1,122 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH] ARM: dts: rk3188-radxarock: add GPIO IR receiver node
-Date: Mon, 14 Jul 2014 21:04:26 +0200
-Message-ID: <20140714190355.GA16904@gmail.com>
-References: <1405253401-15534-1-git-send-email-b.galvani@gmail.com>
- <2390327.HZxnbJmfOO@diego>
+From: "Murphy, Dan" <dmurphy@ti.com>
+Subject: Re: [PATCH v6] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Mon, 14 Jul 2014 19:07:06 +0000
+Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49D80B10@DFLE09.ent.ti.com>
+References: <1405093489-11897-1-git-send-email-dmurphy@ti.com>
+ <20140714184321.GW6800@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2390327.HZxnbJmfOO@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-sound-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 13, 2014 at 02:37:40PM +0200, Heiko St=FCbner wrote:
-> Am Sonntag, 13. Juli 2014, 14:10:01 schrieb Beniamino Galvani:
-> > This adds a device tree node for the infrared receiver connected to=
- a
-> > GPIO pin on the Radxa Rock.
-> >=20
-> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/rk3188-radxarock.dts |   13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts
-> > b/arch/arm/boot/dts/rk3188-radxarock.dts index 19d45b4..1d87bcb 100=
-644
-> > --- a/arch/arm/boot/dts/rk3188-radxarock.dts
-> > +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-> > @@ -23,6 +23,13 @@
-> >  		reg =3D <0x60000000 0x80000000>;
-> >  	};
-> >=20
-> > +	ir_recv: ir-receiver {
-> > +		compatible =3D "gpio-ir-receiver";
-> > +		gpios =3D <&gpio0 10 1>;
-> > +		pinctrl-names =3D "default";
-> > +		pinctrl-0 =3D <&ir_recv_pin>;
-> > +	};
-> > +
->=20
-> hmm, on second glance, I'm actually not sure if this shouldn't belong=
- in the=20
-> soc subnode, like the gpio-keys and leds.
+On 07/14/2014 01:43 PM, Mark Brown wrote:
+> On Fri, Jul 11, 2014 at 10:44:49AM -0500, Dan Murphy wrote:
+>
+>> @@ -754,4 +755,8 @@ config SND_SOC_TPA6130A2
+>>  	tristate "Texas Instruments TPA6130A2 headphone amplifier"
+>>  	depends on I2C
+>>  
+>> +config SND_SOC_TAS2552
+>> +	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
+>> +	depends on I2C
+>> +
+>>  endmenu
+> Keep this and Makefile sorted - since this is a proper CODEC driver it
+> should be in with the CODECs and also sorted in alphabetical order.
 
-(adding devicetree mailing list)
+OK.  I was trying to stay away from a conflict by adding to the
+bottom of the file.
 
-I placed the IR receiver under the root node after looking at what
-other boards do, for example:
+>
+>> +static int tas2552_startup(struct snd_pcm_substream *substream,
+>> +			   struct snd_soc_dai *dai)
+>> +{
+>> +	struct snd_soc_codec *codec = dai->codec;
+>> +
+>> +	pm_runtime_get_sync(codec->dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tas2552_shutdown(struct snd_pcm_substream *substream,
+>> +			   struct snd_soc_dai *dai)
+>> +{
+>> +	struct snd_soc_codec *codec = dai->codec;
+>> +
+>> +	pm_runtime_put(codec->dev);
+>> +}
+> These runtime calls should be redundant, the framework should hold a
+> runtime PM reference on devices while they are active.  Does this not
+> work for you?
 
-  imx6dl-hummingboard.dts
-  imx6qdl-cubox-i.dtsi
-  dove-cubox.dts
+I will verify that the calls get called.
 
-On the other hand, if gpio-keys and leds are under the soc node
-probably it makes sense to follow the same rule also for the IR
-receiver.
+>
+>> +	pm_runtime_get_sync(codec->dev);
+> Check the return value here.
 
-Beniamino
+OK
+
+>
+>> +	snd_soc_write(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN |
+>> +				  TAS2552_BOOST_EN | TAS2552_APT_EN |
+>> +				  TAS2552_PLL_ENABLE | TAS2552_LIM_EN);
+> The PLL is enabled all the time not via DAPM or similar (it's never
+> disabled)?
+
+Good catch.  I will make sure the PLL Is disabled in the shutdown call.
+
+>
+>> +static int tas2552_resume(struct snd_soc_codec *codec)
+>> +{
+>> +	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
+>> +	int ret;
+>> +
+>> +	ret = regulator_bulk_enable(ARRAY_SIZE(tas2552->supplies),
+>> +				    tas2552->supplies);
+>> +
+>> +	if (ret != 0) {
+>> +		dev_err(codec->dev, "Failed to enable supplies: %d\n",
+>> +			ret);
+>> +	}
+>> +
+>> +	pm_runtime_get_sync(codec->dev);
+> Remove these runtime PM calls from suspend and resume, they're not doing
+> what you think (and will prevent runtime PM from doing anything).  Let
+> the frameworks worry about it for now, or explicitly call the runtime
+> suspend and resume operators if and only if the device is runtime
+> active.
+
+OK
+
+>
+>> +	for (i = 0; i < ARRAY_SIZE(data->supplies); i++)
+>> +		data->supplies[i].supply = tas2552_supply_names[i];
+>> +
+>> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
+>> +				      data->supplies);
+>> +	if (ret != 0)
+>> +		dev_err(dev, "Failed to request supplies: %d\n", ret);
+> These supplies are mandatory (as they should be) but weren't mentioned
+> in the DT binding - please add them there.
+
+Will add
+
+>
+>> +static const struct i2c_device_id tas2552_id[] = {
+>> +	{ "tas2552-codec", 0 },
+>> +	{ }
+>> +};
+> No -codec.
+
+Missed this one
+
+-- 
+------------------
+Dan Murphy
+
