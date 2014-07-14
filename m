@@ -1,68 +1,45 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: DRA7: Add node for RTC
-Date: Mon, 14 Jul 2014 20:15:22 +0530
-Message-ID: <53C3ED02.7020206@ti.com>
-References: <alpine.DEB.2.02.1407060031120.23762@utopia.booyaka.com> <1404894932-26677-1-git-send-email-lokeshvutla@ti.com> <1404894932-26677-3-git-send-email-lokeshvutla@ti.com> <20140709091232.GJ28884@atomide.com> <53BD0C43.1090002@ti.com> <20140709100914.GL28884@atomide.com> <53BD1AF8.2060609@ti.com> <20140709105055.GP28884@atomide.com> <53BD1FC3.6050500@ti.com> <20140709110051.GQ28884@atomide.com> <53BD2249.2080808@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/4] dra7: Add PCIe support
+Date: Mon, 14 Jul 2014 20:25:01 +0530
+Message-ID: <1405349705-31400-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53BD2249.2080808@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Keerthy <a0393675@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, paul@pwsan.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@ti.com, devicetree@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, nsekhar@ti.com
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, bhelgaas@google.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org
+Cc: kishon@ti.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-On Wednesday 09 July 2014 04:36 PM, Keerthy wrote:
-> On Wednesday 09 July 2014 04:30 PM, Tony Lindgren wrote:
->> * Keerthy <a0393675@ti.com> [140709 03:59]:
->>> On Wednesday 09 July 2014 04:20 PM, Tony Lindgren wrote:
->>>> * Keerthy <a0393675@ti.com> [140709 03:39]:
->>>>> On Wednesday 09 July 2014 03:39 PM, Tony Lindgren wrote:
->>>>>> * Keerthy <a0393675@ti.com> [140709 02:36]:
->>>>>>> On Wednesday 09 July 2014 02:42 PM, Tony Lindgren wrote:
->>>>>>>> * Lokesh Vutla <lokeshvutla@ti.com> [140709 01:37]:
->>>>>>>>> --- a/arch/arm/boot/dts/dra7-evm.dts
->>>>>>>>> +++ b/arch/arm/boot/dts/dra7-evm.dts
->>>>>>>>> @@ -249,6 +249,7 @@
->>>>>>>>>                       regulator-min-microvolt = <1050000>;
->>>>>>>>>                       regulator-max-microvolt = <1050000>;
->>>>>>>>>                       regulator-boot-on;
->>>>>>>>> +                    regulator-always-on;
->>>>>>>>>                   };
->>>>>>>> Is this regulator really always on?
->>>>>>> This feeds on to RTC which is a free running clock. So i guess always on is
->>>>>>> justified no?
->>>>>> Well the dts entries should describe the hardware. If the
->>>>>> regulator can be enabled and disabled, we should not claim it's
->>>>>> always on.
->>>>>  From the PMIC perspective every regulator can be enabled and
->>>>> disabled. From a Board perspective there are some which need
->>>>> to be always on. For Ex: SMPS123 which feeds on to the MPU.
->>>> Right, and we already have regulator-boot-on for those. Or are
->>>> you seeing some issue with that?
->>> regulator-boot-on describes that at boot a particular regulator is on.
->>> It does not guarantee that it will be on for the rest of the time. The
->>> regulator framework can go ahead and disable it if no one has requested
->>> for it. In case of RTC we do not want that to happen.
->> That's a bug in the RTC driver then. The driver should request a
->> regulator if it's specified.
+Changes from v1:
+* fixed dw_pcie_prog_viewport_io_outbound() to use untranslated address
+* split dra7xx patch into driver part and documentation part
 
-In my experiments I observed that when RTC regulator is switched off and switched on, there is an abort while
-accessing RTC registers.
-After discussing with hardware team, it is confirmed that this LDO9 regulator powering RTC cannot be turned off when
-SoC is active and expected to be always on.
+[1] is split into separate series in order for individual subsystem
+Maintainers to pick up the patches. This series handles the PCIe
+support for DRA7.
 
-Thanks and regards,
-Lokesh
+Rebased to pci -next.
 
-> 
-> Okay.
-> 
->>
->> Regards,
->>
->> Tony
-> 
+[1] -> https://lkml.org/lkml/2014/5/29/258
+
+Kishon Vijay Abraham I (4):
+  PCI: designware: Configuration space should be specified in 'reg'
+  PCI: designware: use untranslated address while programming ATU
+  Documentation: pci: ti: Add dt binding documentation for PCIe in
+    DRA7xx
+  PCI: host: pcie-dra7xx: add support for pcie-dra7xx controller
+
+ .../devicetree/bindings/pci/designware-pcie.txt    |    4 +
+ Documentation/devicetree/bindings/pci/ti-pci.txt   |   59 +++
+ drivers/pci/host/Kconfig                           |   10 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pci-dra7xx.c                      |  458 ++++++++++++++++++++
+ drivers/pci/host/pcie-designware.c                 |   72 ++-
+ drivers/pci/host/pcie-designware.h                 |    4 +
+ 7 files changed, 592 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
+ create mode 100644 drivers/pci/host/pci-dra7xx.c
+
+-- 
+1.7.9.5
 
