@@ -1,160 +1,128 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Mon, 14 Jul 2014 08:44:53 +0200
-Message-ID: <20140714064452.GD2081@ulmo>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
- <20140712093917.GD18601@arm.com>
- <CAF6AEGutHp+3f3iPA+jjaRkqq=5T_vytZ_ESoSqsQ4RHZ8F8yQ@mail.gmail.com>
- <201407121422.02078.arnd@arndb.de>
- <CAF6AEGs7=3UByP2DLm-uwU03wr7M14x2t-0hLX-VPJ6_eZbU3g@mail.gmail.com>
- <20140713094341.GB23235@arm.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding
+ documentation
+Date: Mon, 14 Jul 2014 15:06:58 +0800
+Message-ID: <20140714070657.GC1668@shlinux1.ap.freescale.net>
+References: <1405074557-5519-1-git-send-email-b29396@freescale.com>
+ <53BFDE68.4040405@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HWvPVVuAAfuRc6SZ"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-can-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140713094341.GB23235@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Joerg Roedel <joro@8bytes.org>, Olav Haugan <ohaugan@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Grundler <grundler@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Varun Sethi <varun.sethi@freescale.com>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
+In-Reply-To: <53BFDE68.4040405@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 11, 2014 at 02:54:00PM +0200, Marc Kleine-Budde wrote:
+> On 07/11/2014 12:29 PM, Dong Aisheng wrote:
+> > add M_CAN device tree binding documentation
+> > 
+> > Cc: Wolfgang Grandegger <wg@grandegger.com>
+> > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+> > Cc: Varka Bhadram <varkabhadram@gmail.com>
+> > Signed-off-by: Dong Aisheng <b29396@freescale.com>
+> > ---
+> >  .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++++++++++
+> >  1 files changed, 65 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> > new file mode 100644
+> > index 0000000..c4cb263
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> > @@ -0,0 +1,65 @@
+> > +Bosch MCAN controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible		: Should be "bosch,m_can" for M_CAN controllers
+> > +- reg			: physical base address and size of the M_CAN
+> > +			  registers map and Message RAM
+> > +- reg-names		: Should be "m_can" and "message_ram"
+> > +- interrupts		: Should be the interrupt number of M_CAN interrupt
+> > +			  line 0 and line 1, could be same if sharing
+> > +			  the same interrupt.
+> > +- interrupt-names	: Should contain "int0" and "int1"
+> > +- clocks		: Clocks used by controller, should be host clock
+> > +			  and CAN clock.
+> > +- clock-names		: Should contain "hclk" and "cclk"
+> > +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
+> > +- pinctrl-names		: Names corresponding to the numbered pinctrl states
+> > +- mram-cfg		: Message RAM configuration data.
+> > +  Multiple M_CAN instances can share the same Message RAM and each element(e.g
+> > +  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
+> > +  so this property is telling driver how the shared or private Message RAM
+> > +  are used by this M_CAN controller.
+> 
+> Will you have to modify the binding, espeically the mram-cfg, if you add
+> canfd support to the driver?
+> 
 
---HWvPVVuAAfuRc6SZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No need, CANFD in i.MX6SX is using the same IP of Bosch M_CAN.
 
-On Sun, Jul 13, 2014 at 10:43:41AM +0100, Will Deacon wrote:
-> On Sat, Jul 12, 2014 at 01:57:31PM +0100, Rob Clark wrote:
-> > On Sat, Jul 12, 2014 at 8:22 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Saturday 12 July 2014, Rob Clark wrote:
-> > >> >> Was there actually a good reason for having the device link to the
-> > >> >> iommu rather than the other way around?  How much would people ha=
-te it
-> > >> >> if I just ignore the generic bindings and use something that work=
-s for
-> > >> >> me instead.  I mean, it isn't exactly like there is going to be .=
-dts
-> > >> >> re-use across different SoC's..  and at least with current IOMMU =
-API
-> > >> >> some sort of of_get_named_iommu() API doesn't really make sense.
-> > >> >
-> > >> > The thing is, if you end up ignoring the generic binding then we h=
-ave two
-> > >> > IOMMUs using the same (ARM SMMU) binding and it begs the question =
-as to
-> > >> > which is the more generic! I know we're keen to get this merged, b=
-ut merging
-> > >> > something that people won't use and calling it generic doesn't see=
-m ideal
-> > >> > either. We do, however, desperately need a generic binding.
-> > >>
-> > >> yeah, ignoring the generic binding is not my first choice.  I'd rath=
-er
-> > >> have something that works well for everyone.  But I wasn't really su=
-re
-> > >> if the current proposal was arbitrary, or if there are some
-> > >> conflicting requirements between different platforms.
-> > >
-> > > The common case that needs to be simple is attaching one (master) dev=
-ice
-> > > to an IOMMU using the shared global context for the purposes of imple=
-menting
-> > > the dma-mapping API.
-> >=20
-> > well, I don't disagree that IOMMU API has some problems.  It is too
-> > tied to the bus type, which doesn't really seem to make sense for
-> > platform devices.  (Unless we start having multiple platform busses?)
-> >=20
-> > But at least given the current IOMMU API I'm not really sure how it
-> > makes a difference which way the link goes.  But if there has already
-> > been some discussion about how you want to handle the tie in with
-> > dma-mapping, if you could point me at that then maybe your point will
-> > make more sense to me.
->=20
-> If you look at the proposed binding in isolation, I think it *is* cleaner
-> than the ARM SMMU binding (I've acked it...) and I believe it's more
-> consistent with the way we describe linkages elsewhere.
->=20
-> However, the issue you're raising is that it's more difficult to make use=
- of
-> in a Linux IOMMU driver.
+> I think mram-cfg should have a vendor prefix, e.g.: bosch,mram-cfg
+> 
 
-Like I said, if it's difficult to make use of this in a Linux IOMMU
-driver then the right thing that we should be focusing on is enhancing
-the IOMMU framework to better cope with this.
+It's a good idea.
+Will update it.
 
-> The reward you'll get for using it will come eventually when the DMA
-> ops are automatically swizzled for devices using the generic binding.
+> > +
+> > +  The format should be as follows:
+> > +  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems
+> > +   txe_elems txb_elems>
+> > +  The 'offset' is an address offset of the Message RAM where the following
+> > +  elements start from. This is usually set to 0x0 if you're using a private
+> > +  Message RAM. The remain cells are used to specify how many elements are used
+> > +  for each FIFO/Buffer.
+> > +
+> > +M_CAN includes the following elements according to user manual:
+> > +11-bit Filter	0-128 elements / 0-128 words
+> > +29-bit Filter	0-64 elements / 0-128 words
+> > +Rx FIFO 0	0-64 elements / 0-1152 words
+> > +Rx FIFO 1	0-64 elements / 0-1152 words
+> > +Rx Buffers	0-64 elements / 0-1152 words
+> > +Tx Event FIFO	0-32 elements / 0-64 words
+> > +Tx Buffers	0-32 elements / 0-576 words
+> > +
+> > +Please refer to 2.4.1 Message RAM Configuration in Bosch M_CAN user manual
+> > +for details.
+> > +
+> > +Example:
+> > +SoC dtsi:
+> > +m_can1: can@020e8000 {
+> > +	compatible = "bosch,m_can";
+> > +	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
+> > +	reg-names = "m_can", "message_ram";
+> > +	interrupts = <0 114 0x04>,
+> > +		     <0 114 0x04>;
+> > +	interrupt-names = "int0", "int1";
+> > +	clocks = <&clks IMX6SX_CLK_CANFD>,
+> > +		 <&clks IMX6SX_CLK_CANFD>;
+> > +	clock-names = "hclk", "cclk";
+> > +	mram-cfg = <0x0 0 0 32 0 0 0 1>;
+> > +	status = "disabled";
+> > +};
+> > +
+> > +Board dtsi:
+> > +&m_can1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_m_can1>;
+> > +	status = "enabled";
+> > +};
+> > 
+> 
+> Marc
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
 
-Note that for the case that Rob mentioned (and similarly for the primary
-use-case that I have) the DMA integration layer isn't a good fit. So the
-goal should be to make this easier to work with when using the DMA layer
-*and* when using the IOMMU API directly.
-
-> My plan for the ARM SMMU driver is:
->=20
->   (1) Change ->probe() to walk the device-tree looking for all masters wi=
-th
->       phandles back to the SMMU instance being probed
-
-You and Rob mentioned this several times and I don't understand why the
-SMMU needs to know all masters up front. Is this necessary because it
-needs to program all registers at .probe() time and they can't be
-reprogrammed subsequently? Or is this just some kind of optimization?
-
->   (2) For each master, extract the Stream IDs and add them to the internal
->       SMMU driver data structures (an rbtree per SMMU instance). For
->       hotpluggable buses, we'll need a way for the bus controller to
->       reserve a range of IDs -- this will likely be a later extension to
->       the binding.
->=20
->   (3) When we get an ->add() call, warn if it's a device we haven't seen
->       and reject the addition.
-
-It seems to me like this would be the logical place to parse stream IDs.
-You could for example have a case where some device tree contains a node
-for which no driver will ever be loaded (for example because it hasn't
-been built-in, or the device is never used and the module is therefore
-never loaded). That's a situation that you cannot determine by simply
-walking the device tree in the IOMMU's .probe().
-
-I've always thought about IOMMU masters much in the same way as other
-types of resources, such as memory or interrupts. In the rest of the
-kernel we do carefully try to postpone allocation of these resources
-until they are required, specifically so we don't waste resources when
-they're unused.
-
-That's also one of the reasons why I think associating an IOMMU with the
-bus type is bad. Currently if an IOMMU driver thinks it should enable
-translation for a given device, then there's no way for that device's
-driver to opt out again. There may be reasons (performance, hardware
-bugs, ...) for the driver to decide against using the IOMMU for
-translation, but there's currently no way to do that if the IOMMU driver
-disagrees.
-
-Thierry
-
---HWvPVVuAAfuRc6SZ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTw3xkAAoJEN0jrNd/PrOh4qAP/RDykkcY/l5q1gWmLxRkUWLf
-hpCekrmhq82KeHqAkZ+0VfjR2z5OCG34uEx8zKoGZL7vqPimryaqcn4z725cuJEA
-30zMaET0m7bsMOsKMerfKSI3nFo7LYtM2yLUdgtSF5n/Vlxa/Sjl2UftVA9CXuUs
-KhKooGaXX6Tq2QeDLBWmqoXp7NkOJKc1csldopTA/fyfXjq4mAgSJRm9I4zQQQLq
-F2dVcq3AkhLjPCZ1/zjjd8ytAoF+uf5rB3GpE1txed6KcDuoAOJd/XO1pGyJdQDP
-Ll5/2LOjjglr+2w2Ggr7irit/9aZMi3QSqS7UFifR8nn9Qvvbswp6h61TMxsJ2dI
-afYJlNRoMGhML43TNxcfQFEzxeNdQInMCGj/Z4CH/4cK/rUwj83IoWhq3JbfAuZO
-QzOnqxkgqSVCPXszRCJRNYztTV6SOs6MUU45YS1Ll/Oni6A0mb5qJvkOdoyv+cY5
-S8Q89kindX/U06DhMJAaK4qM0Q/kwJDx1CTXymO4RIVu8FnPRC6n8cax7N3aKXvh
-T81OlTpPEmHK2muDyFi4gu+b8kUs+gmgSuni+CqK1y+oSPZz0wcDn0UB3Cw1FUAd
-qnBQtgaSUb7RZOQzn28cekEqKLiFz/8VlAM0XY1osynu2xhq+KNHNkUAlQlTq6ea
-XpFZbon0iJNjWUPpoPBe
-=Wp/6
------END PGP SIGNATURE-----
-
---HWvPVVuAAfuRc6SZ--
+Regards
+Dong Aisheng
