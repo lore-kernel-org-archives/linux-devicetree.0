@@ -1,263 +1,68 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] gpio: keystone: add dsp gpio controller driver
-Date: Mon, 14 Jul 2014 18:28:27 +0300
-Message-ID: <1405351707-12142-1-git-send-email-grygorii.strashko@ti.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH V2 2/2] ARM: dts: DRA7: Add node for RTC
+Date: Mon, 14 Jul 2014 20:15:22 +0530
+Message-ID: <53C3ED02.7020206@ti.com>
+References: <alpine.DEB.2.02.1407060031120.23762@utopia.booyaka.com> <1404894932-26677-1-git-send-email-lokeshvutla@ti.com> <1404894932-26677-3-git-send-email-lokeshvutla@ti.com> <20140709091232.GJ28884@atomide.com> <53BD0C43.1090002@ti.com> <20140709100914.GL28884@atomide.com> <53BD1AF8.2060609@ti.com> <20140709105055.GP28884@atomide.com> <53BD1FC3.6050500@ti.com> <20140709110051.GQ28884@atomide.com> <53BD2249.2080808@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: santosh.shilimkar@ti.com, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
-Cc: ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53BD2249.2080808@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Keerthy <a0393675@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, paul@pwsan.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@ti.com, devicetree@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
+Hi Tony,
+On Wednesday 09 July 2014 04:36 PM, Keerthy wrote:
+> On Wednesday 09 July 2014 04:30 PM, Tony Lindgren wrote:
+>> * Keerthy <a0393675@ti.com> [140709 03:59]:
+>>> On Wednesday 09 July 2014 04:20 PM, Tony Lindgren wrote:
+>>>> * Keerthy <a0393675@ti.com> [140709 03:39]:
+>>>>> On Wednesday 09 July 2014 03:39 PM, Tony Lindgren wrote:
+>>>>>> * Keerthy <a0393675@ti.com> [140709 02:36]:
+>>>>>>> On Wednesday 09 July 2014 02:42 PM, Tony Lindgren wrote:
+>>>>>>>> * Lokesh Vutla <lokeshvutla@ti.com> [140709 01:37]:
+>>>>>>>>> --- a/arch/arm/boot/dts/dra7-evm.dts
+>>>>>>>>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+>>>>>>>>> @@ -249,6 +249,7 @@
+>>>>>>>>>                       regulator-min-microvolt = <1050000>;
+>>>>>>>>>                       regulator-max-microvolt = <1050000>;
+>>>>>>>>>                       regulator-boot-on;
+>>>>>>>>> +                    regulator-always-on;
+>>>>>>>>>                   };
+>>>>>>>> Is this regulator really always on?
+>>>>>>> This feeds on to RTC which is a free running clock. So i guess always on is
+>>>>>>> justified no?
+>>>>>> Well the dts entries should describe the hardware. If the
+>>>>>> regulator can be enabled and disabled, we should not claim it's
+>>>>>> always on.
+>>>>>  From the PMIC perspective every regulator can be enabled and
+>>>>> disabled. From a Board perspective there are some which need
+>>>>> to be always on. For Ex: SMPS123 which feeds on to the MPU.
+>>>> Right, and we already have regulator-boot-on for those. Or are
+>>>> you seeing some issue with that?
+>>> regulator-boot-on describes that at boot a particular regulator is on.
+>>> It does not guarantee that it will be on for the rest of the time. The
+>>> regulator framework can go ahead and disable it if no one has requested
+>>> for it. In case of RTC we do not want that to happen.
+>> That's a bug in the RTC driver then. The driver should request a
+>> regulator if it's specified.
 
-On Keystone SOCs, ARM host can send interrupts to DSP cores using the
-DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
-each DSP core. This is one of the component used by the IPC mechanism used
-on Keystone SOCs.
+In my experiments I observed that when RTC regulator is switched off and switched on, there is an abort while
+accessing RTC registers.
+After discussing with hardware team, it is confirmed that this LDO9 regulator powering RTC cannot be turned off when
+SoC is active and expected to be always on.
 
-Keystone 2 DSP GPIO controller has specific features:
-- each GPIO can be configured only as output pin;
-- setting GPIO value to 1 causes IRQ generation on target DSP core;
-- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-  pending.
+Thanks and regards,
+Lokesh
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../devicetree/bindings/gpio/gpio-keystone.txt     |   43 ++++++
- drivers/gpio/Kconfig                               |    8 ++
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-keystone.c                       |  138 ++++++++++++++++++++
- 4 files changed, 190 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-keystone.txt
- create mode 100644 drivers/gpio/gpio-keystone.c
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
-new file mode 100644
-index 0000000..cdda018
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
-@@ -0,0 +1,43 @@
-+Keystone 2 DSP GPIO controller bindings
-+
-+HOST OS userland running on ARM can send interrupts to DSP cores using
-+the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
-+This is one of the component used by the IPC mechanism used on Keystone SOCs.
-+
-+For example TCI6638K2K SoC has 12 DSP GPIO controllers:
-+ - 8 for C66x CorePacx CPUs 0-7
-+
-+Keystone 2 DSP GPIO controller has specific features:
-+- each GPIO can be configured only as output pin;
-+- setting GPIO value to 1 causes IRQ generation on target DSP core;
-+- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-+  pending.
-+
-+Required Properties:
-+- compatible: should be "ti,keystone-gpio"
-+
-+- ti,syscon-dev:	phandle/offset pair. The phandle to syscon used to
-+			access device state control registers and the offset
-+			in order to use block of device's specific registers.
-+
-+- gpio-controller : Marks the device node as a gpio controller.
-+
-+- #gpio-cells : Should be one.
-+				See gpio.txt in this directory for a of the cells format
-+
-+Please refer to gpio.txt in this directory for details of the common GPIO
-+bindings used by client devices.
-+
-+Example:
-+	kgpio0: keystone_gpio@02620240 {
-+		compatible = "ti,keystone-gpio";
-+		ti,syscon-dev = <&devctrl 0x240>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	dsp0: dsp0 {
-+		compatible = "linux,rproc-user";
-+		...
-+		kick-gpio = <&kgpio0 27>;
-+	};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 4a1b511..7566283 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -158,6 +158,14 @@ config GPIO_EP93XX
- 	depends on ARCH_EP93XX
- 	select GPIO_GENERIC
- 
-+config GPIO_KEYSTONE
-+	tristate "Keystone DSP GPIO support"
-+	depends on ARCH_KEYSTONE
-+	help
-+	  Say yes here to support the DSP GPIO driver for Keystone 2. This defines
-+	  up to 28 GPIOs per each Remote (DSP) core. This is used to send
-+	  signals from ARM to the Remote (DSP) core.
-+
- config GPIO_ZEVIO
- 	bool "LSI ZEVIO SoC memory mapped GPIOs"
- 	depends on ARM && OF_GPIO
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d10f6a9..520bb2a 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_IOP)		+= gpio-iop.o
- obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
- obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
- obj-$(CONFIG_GPIO_KEMPLD)	+= gpio-kempld.o
-+obj-$(CONFIG_GPIO_KEYSTONE)	+= gpio-keystone.o
- obj-$(CONFIG_ARCH_KS8695)	+= gpio-ks8695.o
- obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
- obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
-diff --git a/drivers/gpio/gpio-keystone.c b/drivers/gpio/gpio-keystone.c
-new file mode 100644
-index 0000000..9ff3bf6
---- /dev/null
-+++ b/drivers/gpio/gpio-keystone.c
-@@ -0,0 +1,138 @@
-+/*
-+ * Keystone 2 DSP GPIO support.
-+ *
-+ * Copyright (C) 2014 Texas Instruments, Inc.
-+ * Author: Murali Karicheri <m-karicheri2@ti.com>
-+ *	   Grygorii Strashko <grygorii.strashko@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/gpio.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+
-+/* 28 bits in IPCGRx are treated as GPIO pins to generate interrupt */
-+#define GPIOS_PER_BANK		28
-+#define GPIO_OFFSET		4
-+
-+struct keystone_gpio_bank {
-+	struct gpio_chip	 chip;
-+	struct device		*dev;
-+	struct regmap		*devctrl_regs;
-+	u32			devctrl_offset;
-+};
-+#define chip_to_bank(c) \
-+	container_of(c, struct keystone_gpio_bank, chip)
-+
-+static int keystone_gpio_direction_out(struct gpio_chip *c, unsigned ofs, int val)
-+{
-+	return 0;
-+}
-+
-+static int keystone_gpio_get(struct gpio_chip *c, unsigned ofs)
-+{
-+	struct keystone_gpio_bank *bank = chip_to_bank(c);
-+	int bit = ofs + GPIO_OFFSET;
-+	int ret;
-+	u32 val = 0;
-+
-+	ret = regmap_read(bank->devctrl_regs, bank->devctrl_offset, &val);
-+	if (ret < 0)
-+		dev_dbg(bank->dev, "gpio read failed ret(%d)\n", ret);
-+
-+	return (val >> bit) & 1;
-+}
-+
-+static void keystone_gpio_set(struct gpio_chip *c, unsigned ofs, int val)
-+{
-+	struct keystone_gpio_bank *bank = chip_to_bank(c);
-+	int bit = ofs + GPIO_OFFSET;
-+	int ret;
-+
-+	if (!val)
-+		return;
-+
-+	ret = regmap_write(bank->devctrl_regs, bank->devctrl_offset,
-+			   BIT(bit) | 1);
-+	if (ret < 0)
-+		dev_dbg(bank->dev, "gpio write failed ret(%d)\n", ret);
-+}
-+
-+static int keystone_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct keystone_gpio_bank *bank;
-+	int ret = 0;
-+
-+	bank = devm_kzalloc(&pdev->dev, sizeof(*bank), GFP_KERNEL);
-+	if (!bank)
-+		return -ENOMEM;
-+
-+	bank->devctrl_regs =
-+		syscon_regmap_lookup_by_phandle(np, "ti,syscon-dev");
-+	if (IS_ERR(bank->devctrl_regs))
-+		return PTR_ERR(bank->devctrl_regs);
-+
-+	ret = of_property_read_u32_index(np, "ti,syscon-dev", 1,
-+					 &bank->devctrl_offset);
-+	if (ret) {
-+		dev_err(dev, "couldn't read the devctrl_offset offset!\n");
-+		return ret;
-+	}
-+
-+	bank->dev			= dev;
-+#ifdef CONFIG_OF_GPIO
-+	bank->chip.of_node		= of_node_get(np);
-+#endif
-+	bank->chip.label		= dev_name(dev);
-+	bank->chip.get			= keystone_gpio_get;
-+	bank->chip.set			= keystone_gpio_set;
-+	bank->chip.direction_output	= keystone_gpio_direction_out;
-+	bank->chip.base			= -1;
-+	bank->chip.ngpio		= GPIOS_PER_BANK;
-+
-+	platform_set_drvdata(pdev, bank);
-+
-+	ret = gpiochip_add(&bank->chip);
-+	if (ret) {
-+		dev_err(dev, "gpio chip registration failed ret(%d)\n", ret);
-+		return ret;
-+	}
-+
-+	dev_info(bank->dev, "registered %d gpios\n", bank->chip.ngpio);
-+	return ret;
-+}
-+
-+static int keystone_gpio_remove(struct platform_device *pdev)
-+{
-+	struct keystone_gpio_bank *bank = platform_get_drvdata(pdev);
-+
-+	return gpiochip_remove(&bank->chip);
-+}
-+
-+static const struct of_device_id keystone_gpio_dt_ids[] = {
-+	{ .compatible = "ti,keystone-gpio", },
-+	{ },
-+};
-+
-+static struct platform_driver keystone_gpio_driver = {
-+	.probe		= keystone_gpio_probe,
-+	.remove		= keystone_gpio_remove,
-+	.driver		= {
-+		.name	= "keystone-gpio",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = keystone_gpio_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(keystone_gpio_driver);
-+
-+MODULE_AUTHOR("Texas Instruments");
-+MODULE_AUTHOR("Murali Karicheri <m-karicheri2@ti.com>");
-+MODULE_DESCRIPTION("Texas Instruments Keystone 2 DSP GPIO");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+> 
+> Okay.
+> 
+>>
+>> Regards,
+>>
+>> Tony
+> 
 
