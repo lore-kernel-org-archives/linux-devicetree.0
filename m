@@ -1,144 +1,69 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
-Date: Mon, 14 Jul 2014 10:52:47 +0100
-Message-ID: <20140714095247.GB4980@leverpostej>
-References: <1405073193-21448-1-git-send-email-zonque@gmail.com>
+Subject: Re: [PATCH v2 8/9] Documentation: devicetree: Document sclk-jpeg
+ clock for exynos3250 SoC
+Date: Mon, 14 Jul 2014 10:56:40 +0100
+Message-ID: <20140714095640.GC4980@leverpostej>
+References: <1405091990-28567-1-git-send-email-j.anaszewski@samsung.com>
+ <1405091990-28567-9-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1405073193-21448-1-git-send-email-zonque@gmail.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: "dtor@mail.ru" <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1405091990-28567-9-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "andrzej.p@samsung.com" <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 11, 2014 at 11:06:33AM +0100, Daniel Mack wrote:
-> This patch adds a driver for Microchips CAP1106, an I2C driven, 6-channel
-> capacitive touch sensor.
+On Fri, Jul 11, 2014 at 04:19:49PM +0100, Jacek Anaszewski wrote:
+> JPEG IP on Exynos3250 SoC requires enabling two clock
+> gates for its operation. This patch documents this
+> requirement.
 > 
-> For now, only the capacitive buttons are supported, and no specific
-> settings that can be tweaked for individual channels, except for the
-> device-wide sensitivity gain. The defaults seem to work just fine out of
-> the box, so I'll leave configurable parameters for someone who's in need
-> of them and who can actually measure the impact. All registers are
-> prepared, however. Many of them are just not used for now.
-> 
-> The implementation does not make any attempt to be compatible to platform
-> data driven boards, but fully depends on CONFIG_OF.
-> 
-> Power management functions are also left for volounteers with the ability
-> to actually test them.
-> 
-> Signed-off-by: Daniel Mack <zonque@gmail.com>
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
 > ---
-> v2:
->  * Fix potential deadlocks pointed out by David.
+>  .../bindings/media/exynos-jpeg-codec.txt           |    9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
->  .../devicetree/bindings/input/cap1106.txt          |  63 ++++
->  drivers/input/keyboard/Kconfig                     |  10 +
->  drivers/input/keyboard/Makefile                    |   1 +
->  drivers/input/keyboard/cap1106.c                   | 378 +++++++++++++++++++++
->  4 files changed, 452 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/cap1106.txt
->  create mode 100644 drivers/input/keyboard/cap1106.c
-> 
-> diff --git a/Documentation/devicetree/bindings/input/cap1106.txt b/Documentation/devicetree/bindings/input/cap1106.txt
-> new file mode 100644
-> index 0000000..57f5af3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/cap1106.txt
-> @@ -0,0 +1,63 @@
-> +Device tree bindings for Microchip CAP1106, 6 channel capacitive touch sensor
-> +
-> +The node for this driver must be a child of a I2C controller node, as the
-> +device communication via I2C only.
-> +
-> +Required properties:
-> +
-> +       compatible:             Must be "microchip,cap1106"
-> +       reg:                    The I2C slave address of the device.
-> +                               Only 0x28 is valid.
-> +       interrupt:              Node describing the interrupt line the device's
-> +                               ALERT#/CM_IRQ# pin is connected to.
+> diff --git a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> index 937b755..3142745 100644
+> --- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> +++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> @@ -3,9 +3,12 @@ Samsung S5P/EXYNOS SoC series JPEG codec
+>  Required properties:
+>  
+>  - compatible	: should be one of:
+> -		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg";
+> +		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
+> +		  "samsung,exynos3250-jpeg";
+>  - reg		: address and length of the JPEG codec IP register set;
+>  - interrupts	: specifies the JPEG codec IP interrupt;
+> -- clocks	: should contain the JPEG codec IP gate clock specifier, from the
+> +- clocks	: should contain the JPEG codec IP gate clock specifier and
+> +		  for the Exynos3250 SoC additionally the SCLK_JPEG entry; from the
+>  		  common clock bindings;
+> -- clock-names	: should contain "jpeg" entry.
+> +- clock-names	: should contain "jpeg" entry and additionally "sclk-jpeg" entry
+> +		  for Exynos3250 SoC
 
-s/interrupt/interrupts/
+Please turn this into a list for easier reading, e.g.
 
-This is a _property_, not a node.
+- clock-names: should contain:
+  * "jpeg" for the gate clock.
+  * "sclk-jpeg" for the SCLK_JPEG clock (only for Exynos3250).
 
-I take it the device only has a single interrupt line?
+You could also define clocks in terms of clock-names to avoid
+redundancy.
 
-> +
-> +Optional properties:
-> +
-> +       autorepeat:             Enables the Linux input system's autorepeat
-> +                               feature on the input device.
-> +       microchip,sensor-gain:  Defines the gain of the sensor circuitry. This
-> +                               effectively controls the sensitivity, as a
-> +                               smaller delta capacitance is required to
-> +                               generate the same delta count values.
-> +                               Valid values are 1, 2, 4, and 8.
-> +                               By default, a gain of 1 is set.
-
-Does the official documentation describe this in absolute terms?
-
-> +
-> +To define details of each individual button channel, six subnodes can be
-> +specified. Inside each of those, the following property is valid:
-> +
-> +       linux,keycode:  Specify the numeric identifier of the keycode to be
-> +                       generated when this channel is activated. If this
-> +                       property is omitted, KEY_A, KEY_B, etc are used as
-> +                       defaults.
-
-What are those subnodes, and how are they told apart? Name, compatible?
-
-I strongly recommend against relying on the order of the DT. It's very
-easy for that to get messed up and makes things hard to read.
-
-Is is not possible to use linux,keymap and treat the buttons as a
-matrix keypad? Then you don't need subnodes at all, and you can have a
-sparse keymap if you want.
-
-[...]
-
-> +struct cap1106_priv {
-> +       struct regmap *regmap;
-> +       struct input_dev *idev;
-> +       struct work_struct work;
-> +       spinlock_t lock;
-> +       bool closed:1;
-
-I don't think you're saving anything here by trying to have a bool
-bitfield.
-
-[...]
-
-> +       i = 0;
-> +       for_each_child_of_node(node, child) {
-> +               if (i == CAP1106_NUM_CHN) {
-> +                       dev_err(dev, "Too many button nodes.\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               if (!of_property_read_u32(child, "linux,keycode", &tmp32))
-> +                       priv->keycodes[i] = tmp32;
-> +
-> +               i++;
-> +       }
-
-I don't think that it is a good idea to rely on the order of sub-nodes
-in the DTB.
-
-[...]
-
-> +       if (of_get_property(node, "autorepeat", NULL))
-> +               __set_bit(EV_REP, priv->idev->evbit);
-
-Use of_property_read_bool.
-
-/me mutters usual grumblings about the autorepeat property.
+The SCLK_JPEG name sounds like a global name for the clock. Is there a
+name for the input line on the JPEG block this is plugged into?
 
 Thanks,
 Mark.
