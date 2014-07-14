@@ -1,35 +1,63 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 5/5] ARM: sunxi: Add A31 RTC driver to sunxi_defconfig
-Date: Mon, 14 Jul 2014 15:32:17 +0800
-Message-ID: <1405323137-24287-6-git-send-email-wens@csie.org>
-References: <1405323137-24287-1-git-send-email-wens@csie.org>
+Subject: [PATCH 0/5] ARM: sunxi: RTC support for A31/A23
+Date: Mon, 14 Jul 2014 15:32:12 +0800
+Message-ID: <1405323137-24287-1-git-send-email-wens@csie.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405323137-24287-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a driver for A31's RTC, enable it
-in the default sunxi config.
+Hi everyone,
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+This series adds support for the RTC in A31 and A23 SoCs. The series
+applies to sunxi-next, with the sun8i patch based on my sun8i PRCM
+series.
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 7209bfd..0abc2ab 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -93,6 +93,7 @@ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
- CONFIG_RTC_CLASS=y
- # CONFIG_RTC_INTF_SYSFS is not set
- # CONFIG_RTC_INTF_PROC is not set
-+CONFIG_RTC_DRV_SUN6I=y
- CONFIG_RTC_DRV_SUNXI=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_PHY_SUN4I_USB=y
+The A31 has a new RTC block that is separate from the timer block.
+It has separate interrupts for each of the alarms, and a different
+format for the counter alarm. The driver has been tested on the
+A31 Hummingbird, and the A23 tablet I'm using to work on sun8i
+support.
+
+Patch 1 adds the driver for the RTC.
+
+Patch 2 is a minor cleanup. This makes rtc-sunxi depend on sun4i or
+sun7i, the 2 platforms the driver is actually used on.
+
+Patch 3 adds the RTC device node to the sun6i DTSI.
+
+Patch 4 adds the RTC device node to the sun8i DTSI.
+
+Patch 5 adds enables rtc-sun6i in the sunxi defconfig.
+
+
+Is there an RTC tree we need to merge the driver through?
+Or can we merge all the patches through Maxime's sunxi tree?
+
+
+Cheers
+ChenYu
+
+
+Chen-Yu Tsai (5):
+  rtc: sun6i: Add sun6i RTC driver
+  rtc: sunxi: Depend on platforms sun4i/sun7i that actually have the rtc
+  ARM: dts: sun6i: add rtc device node
+  ARM: dts: sun8i: add rtc device node
+  ARM: sunxi: Add A31 RTC driver to sunxi_defconfig
+
+ .../devicetree/bindings/rtc/sun6i-rtc.txt          |  17 +
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |   6 +
+ arch/arm/boot/dts/sun8i-a23.dtsi                   |   6 +
+ arch/arm/configs/sunxi_defconfig                   |   1 +
+ drivers/rtc/Kconfig                                |   9 +-
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-sun6i.c                            | 466 +++++++++++++++++++++
+ 7 files changed, 505 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+ create mode 100644 drivers/rtc/rtc-sun6i.c
+
 -- 
 2.0.1
 
