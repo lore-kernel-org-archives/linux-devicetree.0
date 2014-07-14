@@ -1,122 +1,63 @@
-From: "Murphy, Dan" <dmurphy@ti.com>
-Subject: Re: [PATCH v6] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Mon, 14 Jul 2014 19:07:06 +0000
-Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49D80B10@DFLE09.ent.ti.com>
-References: <1405093489-11897-1-git-send-email-dmurphy@ti.com>
- <20140714184321.GW6800@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
+ driver
+Date: Mon, 14 Jul 2014 20:15:33 +0100
+Message-ID: <20140714191533.GH6800@sirena.org.uk>
+References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
+ <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
+ <20140714172524.GH6800@sirena.org.uk>
+ <CAHfPSqAzab931yurSs+3zj=uoFj93FuAdd24AQKm1fZm07Nq8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ihETVmeDfwOC2qSl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHfPSqAzab931yurSs+3zj=uoFj93FuAdd24AQKm1fZm07Nq8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2014 01:43 PM, Mark Brown wrote:
-> On Fri, Jul 11, 2014 at 10:44:49AM -0500, Dan Murphy wrote:
->
->> @@ -754,4 +755,8 @@ config SND_SOC_TPA6130A2
->>  	tristate "Texas Instruments TPA6130A2 headphone amplifier"
->>  	depends on I2C
->>  
->> +config SND_SOC_TAS2552
->> +	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
->> +	depends on I2C
->> +
->>  endmenu
-> Keep this and Makefile sorted - since this is a proper CODEC driver it
-> should be in with the CODECs and also sorted in alphabetical order.
 
-OK.  I was trying to stay away from a conflict by adding to the
-bottom of the file.
+--ihETVmeDfwOC2qSl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
->> +static int tas2552_startup(struct snd_pcm_substream *substream,
->> +			   struct snd_soc_dai *dai)
->> +{
->> +	struct snd_soc_codec *codec = dai->codec;
->> +
->> +	pm_runtime_get_sync(codec->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static void tas2552_shutdown(struct snd_pcm_substream *substream,
->> +			   struct snd_soc_dai *dai)
->> +{
->> +	struct snd_soc_codec *codec = dai->codec;
->> +
->> +	pm_runtime_put(codec->dev);
->> +}
-> These runtime calls should be redundant, the framework should hold a
-> runtime PM reference on devices while they are active.  Does this not
-> work for you?
+On Tue, Jul 15, 2014 at 12:31:32AM +0530, Naveen Krishna Ch wrote:
 
-I will verify that the calls get called.
+> in this case spi-s3c64xx.c will continue to ignore the generic SPI "cs-gpios"
+> implementation.
 
->
->> +	pm_runtime_get_sync(codec->dev);
-> Check the return value here.
+> I'm willing to implement any suggestion to fix this issue.
 
-OK
+The problem isn't what you're trying to do, the problem is verifying
+that it has been done correctly - making sure that everything has been
+accounted for in the change itself.
 
->
->> +	snd_soc_write(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN |
->> +				  TAS2552_BOOST_EN | TAS2552_APT_EN |
->> +				  TAS2552_PLL_ENABLE | TAS2552_LIM_EN);
-> The PLL is enabled all the time not via DAPM or similar (it's never
-> disabled)?
+--ihETVmeDfwOC2qSl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Good catch.  I will make sure the PLL Is disabled in the shutdown call.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
->
->> +static int tas2552_resume(struct snd_soc_codec *codec)
->> +{
->> +	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
->> +	int ret;
->> +
->> +	ret = regulator_bulk_enable(ARRAY_SIZE(tas2552->supplies),
->> +				    tas2552->supplies);
->> +
->> +	if (ret != 0) {
->> +		dev_err(codec->dev, "Failed to enable supplies: %d\n",
->> +			ret);
->> +	}
->> +
->> +	pm_runtime_get_sync(codec->dev);
-> Remove these runtime PM calls from suspend and resume, they're not doing
-> what you think (and will prevent runtime PM from doing anything).  Let
-> the frameworks worry about it for now, or explicitly call the runtime
-> suspend and resume operators if and only if the device is runtime
-> active.
+iQIcBAEBAgAGBQJTxCxSAAoJELSic+t+oim9130P/iP6/+ZTARJ8xRg5CUub6ZHF
+85DbYmOwNfrYaZE0p9VF5NfJhsyuqb4viSGzHCh4vSYEFhM86s8nEE3kwgYnx5fJ
+zSBxdWhLPp1j/uA2Vbath8fkTebfiAreQ+cWx4GWf/iuNvkYd1Tqar7PdmudFLoA
+Om4QYO8kUlE0oreS6skEahEPuRAJTnSRAFGpzELw/JnMhkszAXk9biYnBV9PN6mF
+TBQnvNZCmBnkzkuTPzD/09WAsSY/Ny3r3mbUnBqYaL0WzK2cTvg4Ist2gwcRVQSh
+HHDidrKdt01w6e7CL36RN4GCEUWZaQnxu+nZVCvSUm3z0iqv7X7GuafC2I0O6abI
+XYgM3lEBGWtGLPR1+7o5R88CMaCUJrq6LygsY8Ow1HRtjigw+iw10HKDWOlu5Ctm
+51/R5a1DnY+nX4M6Z34DGPwvkqDBokDiPS46mQ+Wm8cW57W1urYglnfyG6VVU9yL
+yhdfkYoRNDG08igWnOV1+u+lhn25H/cZ8TS7KJKZIUuuwV+QZrsu1mI/hZJnu2TB
+efOo8YNVqbsl4d81mkq1YgmY4dpkYbaGPFKUe4KkJMxeMKDfW8C/aCtPz2zGWDMV
+rr3oBlXQy5Q/fZuoy0JcTH/LLmwrJrRqgKYqLpnRtIbdlyzIjlHB6cKa/5Q6dgse
+BJFBp+ay63rTQ6A7Sbyt
+=9v4Q
+-----END PGP SIGNATURE-----
 
-OK
-
->
->> +	for (i = 0; i < ARRAY_SIZE(data->supplies); i++)
->> +		data->supplies[i].supply = tas2552_supply_names[i];
->> +
->> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
->> +				      data->supplies);
->> +	if (ret != 0)
->> +		dev_err(dev, "Failed to request supplies: %d\n", ret);
-> These supplies are mandatory (as they should be) but weren't mentioned
-> in the DT binding - please add them there.
-
-Will add
-
->
->> +static const struct i2c_device_id tas2552_id[] = {
->> +	{ "tas2552-codec", 0 },
->> +	{ }
->> +};
-> No -codec.
-
-Missed this one
-
--- 
-------------------
-Dan Murphy
-
+--ihETVmeDfwOC2qSl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
