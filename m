@@ -1,439 +1,343 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 06/11] pwm: sti: Add new driver for ST's PWM IP
-Date: Mon, 14 Jul 2014 15:33:27 +0100
-Message-ID: <1405348412-7352-7-git-send-email-lee.jones@linaro.org>
-References: <1405348412-7352-1-git-send-email-lee.jones@linaro.org>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] irqchip: add keystone irq controller ip driver
+Date: Mon, 14 Jul 2014 18:27:57 +0300
+Message-ID: <1405351677-12108-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1405348412-7352-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-pwm@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, ajitpal.singh@st.com, thierry.reding@gmail.com, lee.jones@linaro.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver supports all current STi platforms' PWM IPs.
+On Keystone SOCs, DSP cores can send interrupts to ARM
+host using the IRQ controller IP. It provides 28 IRQ
+signals to ARM. The IRQ handler running on HOST OS can
+identify DSP signal source by analyzing SRCCx bits in
+IPCARx registers. This is one of the component used by
+the IPC mechanism used on Keystone SOCs.
 
-Signed-off-by: Ajit Pal Singh <ajitpal.singh@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 ---
- drivers/pwm/Kconfig   |  10 ++
- drivers/pwm/Makefile  |   1 +
- drivers/pwm/pwm-sti.c | 366 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 377 insertions(+)
- create mode 100644 drivers/pwm/pwm-sti.c
+ .../interrupt-controller/ti,keystone-irq.txt       |   36 +++
+ drivers/irqchip/Kconfig                            |    7 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-keystone.c                     |  235 ++++++++++++++++++++
+ 4 files changed, 279 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
+ create mode 100644 drivers/irqchip/irq-keystone.c
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4ad7b89..bdc4b35 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -292,4 +292,14 @@ config PWM_VT8500
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-vt8500.
- 
-+config PWM_STI
-+	tristate "STiH4xx PWM support"
-+	depends on ARCH_STI
-+	depends on OF
-+	help
-+	  Generic PWM framework driver for STiH4xx SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-st.
-+
- endif
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 5c86a19..878333a 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
-+obj-$(CONFIG_PWM_STI)		+= pwm-st.o
- obj-$(CONFIG_PWM_TEGRA)		+= pwm-tegra.o
- obj-$(CONFIG_PWM_TIECAP)	+= pwm-tiecap.o
- obj-$(CONFIG_PWM_TIEHRPWM)	+= pwm-tiehrpwm.o
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
 new file mode 100644
-index 0000000..fdedce0
+index 0000000..68d27b7
 --- /dev/null
-+++ b/drivers/pwm/pwm-sti.c
-@@ -0,0 +1,366 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
+@@ -0,0 +1,36 @@
++Keystone 2 IRQ controller IP
++
++On Keystone SOCs, DSP cores can send interrupts to ARM
++host using the IRQ controller IP. It provides 28 IRQ signals to ARM.
++The IRQ handler running on HOST OS can identify DSP signal source by
++analyzing SRCCx bits in IPCARx registers. This is one of the component
++used by the IPC mechanism used on Keystone SOCs.
++
++Required Properties:
++- compatible: should be "ti,keystone-irq"
++- ti,syscon-dev:	phandle and offset pair. The phandle to syscon used to
++			access device control registers and the offset inside
++			device control registers range.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode interrupt
++					 source should be 1.
++- interrupts: interrupt reference to primary interrupt controller
++
++Please refer to interrupts.txt in this directory for details of the common
++Interrupt Controllers bindings used by client devices.
++
++Example:
++	kirq0: keystone_irq0@026202a0 {
++		compatible = "ti,keystone-irq";
++		ti,syscon-dev = <&devctrl 0x2a0>;
++		interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++
++	dsp0: dsp0 {
++		compatible = "linux,rproc-user";
++		...
++		interrupt-parent = <&kirq0>;
++		interrupts = <10 2>;
++	};
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index bbb746e..7f413c4 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -91,3 +91,10 @@ config IRQ_CROSSBAR
+ 	  The primary irqchip invokes the crossbar's callback which inturn allocates
+ 	  a free irq and configures the IP. Thus the peripheral interrupts are
+ 	  routed to one of the free irqchip interrupt lines.
++
++config KEYSTONE_IRQ
++	tristate "Keystone 2 IRQ controller IP"
++	depends on ARCH_KEYSTONE
++	help
++		Support for Texas Instruments Keystone 2 IRQ controller IP which
++		is part of the Keystone 2 IPC mechanism
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 62a13e5..7d0636b 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -30,3 +30,4 @@ obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
+ obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
+ obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
+ obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
++obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
+diff --git a/drivers/irqchip/irq-keystone.c b/drivers/irqchip/irq-keystone.c
+new file mode 100644
+index 0000000..309ef74
+--- /dev/null
++++ b/drivers/irqchip/irq-keystone.c
+@@ -0,0 +1,235 @@
 +/*
-+ * PWM device driver for ST SoCs.
-+ * Author: Ajit Pal Singh <ajitpal.singh@st.com>
++ * Texas Instruments Keystone IRQ controller IP driver
 + *
-+ * Copyright (C) 2013-2014 STMicroelectronics (R&D) Limited
++ * Copyright (C) 2014 Texas Instruments, Inc.
++ * Author: Sajesh Kumar Saran <sajesh-l0cyMroinI0@public.gmane.org>
++ *	   Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+#include <linux/bsearch.h>
-+#include <linux/clk.h>
-+#include <linux/math64.h>
-+#include <linux/mfd/syscon.h>
++#include <linux/irq.h>
++#include <linux/bitops.h>
 +#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/irqdomain.h>
++#include <linux/irqchip/chained_irq.h>
 +#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
++#include <linux/of_platform.h>
++#include <linux/mfd/syscon.h>
 +#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/time.h>
++#include "irqchip.h"
 +
-+#define STI_DS_REG(ch)	(4 * (ch))	/* Channel's Duty Cycle register */
-+#define STI_PWMCR	0x50		/* Control/Config register */
-+#define STI_INTEN	0x54		/* Interrupt Enable/Disable register */
 +
-+/* Regfield IDs */
-+enum {
-+	PWMCLK_PRESCALE,
-+	PWM_EN,
-+	PWM_INT_EN,
++/* The source ID bits start from 4 to 31 (total 28 bits)*/
++#define BIT_OFS			4
++#define KYESTONE_N_IRQ		(32 - BIT_OFS)
 +
-+	/* Keep last */
-+	MAX_REGFIELDS
++struct keystone_irq_device {
++	struct device		*dev;
++	struct irq_chip		 chip;
++	u32			 mask;
++	u32			 irq;
++	struct irq_domain	*irqd;
++	struct regmap		*devctrl_regs;
++	u32			devctrl_offset;
 +};
 +
-+struct sti_pwm_compat_data {
-+	const struct reg_field *reg_fields;
-+	unsigned int num_chan;
-+	unsigned int max_pwm_cnt;
-+	unsigned int max_prescale;
-+};
-+
-+struct sti_pwm_chip {
-+	struct device *dev;
-+	struct clk *clk;
-+	unsigned long clk_rate;
-+	struct regmap *regmap;
-+	struct sti_pwm_compat_data *cdata;
-+	struct regmap_field *prescale;
-+	struct regmap_field *pwm_en;
-+	struct regmap_field *pwm_int_en;
-+	unsigned long *pwm_periods;
-+	struct pwm_chip chip;
-+	void __iomem *mmio;
-+};
-+
-+static const struct reg_field sti_pwm_regfields[MAX_REGFIELDS] = {
-+	[PWMCLK_PRESCALE]	= REG_FIELD(STI_PWMCR, 0, 3),
-+	[PWM_EN]		= REG_FIELD(STI_PWMCR, 9, 9),
-+	[PWM_INT_EN]		= REG_FIELD(STI_INTEN, 0, 0),
-+};
-+
-+static inline struct sti_pwm_chip *to_sti_pwmchip(struct pwm_chip *chip)
++static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
 +{
-+	return container_of(chip, struct sti_pwm_chip, chip);
++	int ret;
++	u32 val = 0;
++
++	ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
++	if (ret < 0)
++		dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
++	return val;
 +}
 +
-+/*
-+ * Calculate the period values supported by the PWM for the
-+ * current clock rate.
-+ */
-+static void sti_pwm_calc_periods(struct sti_pwm_chip *pc)
++static inline void
++keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
 +{
-+	struct sti_pwm_compat_data *cdata = pc->cdata;
-+	struct device *dev = pc->dev;
-+	unsigned long val;
-+	int i;
-+
-+	/*
-+	 * period_ns = (10^9 * (prescaler + 1) * (MAX_PWM_COUNT + 1)) / CLK_RATE
-+	 */
-+	val = NSEC_PER_SEC / pc->clk_rate;
-+	val *= cdata->max_pwm_cnt + 1;
-+
-+	dev_dbg(dev, "possible periods for clkrate[HZ]:%lu\n", pc->clk_rate);
-+
-+	for (i = 0; i <= cdata->max_prescale; i++) {
-+		pc->pwm_periods[i] = val * (i + 1);
-+		dev_dbg(dev, "prescale:%d, period[ns]:%lu\n",
-+			i, pc->pwm_periods[i]);
-+	}
-+}
-+
-+static int sti_pwm_cmp_periods(const void *key, const void *elt)
-+{
-+	unsigned long i = *(unsigned long *)key;
-+	unsigned long j = *(unsigned long *)elt;
-+
-+	if (i < j)
-+		return -1;
-+	else
-+		return i == j ? 0 : 1;
-+}
-+
-+/*
-+ * For STiH4xx PWM IP, the PWM period is fixed to 256 local clock cycles.
-+ * The only way to change the period (apart from changing the PWM input clock)
-+ * is to change the PWM clock prescaler.
-+ * The prescaler is of 4 bits, so only 16 prescaler values and hence only
-+ * 16 possible period values are supported (for a particular clock rate).
-+ * The requested period will be applied only if it matches one of these
-+ * 16 values.
-+ */
-+static int sti_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 int duty_ns, int period_ns)
-+{
-+	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
-+	struct sti_pwm_compat_data *cdata = pc->cdata;
-+	struct device *dev = pc->dev;
-+	unsigned int prescale, pwmvalx;
-+	unsigned long *found;
 +	int ret;
 +
-+	/*
-+	 * Search for matching period value. The corresponding index is our
-+	 * prescale value
-+	 */
-+	found = bsearch(&period_ns, &pc->pwm_periods[0],
-+			cdata->max_prescale + 1, sizeof(unsigned long),
-+			sti_pwm_cmp_periods);
-+	if (!found) {
-+		dev_err(dev, "failed to find matching period\n");
-+		return -EINVAL;
++	ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
++	if (ret < 0)
++		dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
++}
++
++static void keystone_irq_mask(struct irq_data *d)
++{
++	struct keystone_irq_device *kirq = irq_data_get_irq_chip_data(d);
++
++	kirq->mask |= BIT(d->hwirq);
++	dev_dbg(kirq->dev, "mask %lu [%x]\n", d->hwirq, kirq->mask);
++}
++
++void keystone_irq_unmask(struct irq_data *d)
++{
++	struct keystone_irq_device *kirq = irq_data_get_irq_chip_data(d);
++
++	kirq->mask &= ~BIT(d->hwirq);
++	dev_dbg(kirq->dev, "unmask %lu [%x]\n", d->hwirq, kirq->mask);
++}
++
++void keystone_irq_ack(struct irq_data *d)
++{
++	struct keystone_irq_device *kirq = irq_data_get_irq_chip_data(d);
++
++	/* nothing to do here */
++	dev_dbg(kirq->dev, "ack %lu [%x]\n", d->hwirq, kirq->mask);
++}
++
++void keystone_irq_handler(unsigned irq, struct irq_desc *desc)
++{
++	struct keystone_irq_device *kirq = irq_desc_get_handler_data(desc);
++	unsigned long pending;
++	int src, virq;
++
++	dev_dbg(kirq->dev, "start irq %d\n", irq);
++
++	chained_irq_enter(irq_desc_get_chip(desc), desc);
++
++	pending = keystone_irq_readl(kirq);
++	keystone_irq_writel(kirq, pending);
++
++	dev_dbg(kirq->dev, "pending 0x%lx, mask 0x%x\n", pending, kirq->mask);
++
++	pending = (pending >> BIT_OFS) & ~kirq->mask;
++
++	dev_dbg(kirq->dev, "pending after mask 0x%lx\n", pending);
++
++	for (src = 0; src < KYESTONE_N_IRQ; src++) {
++		if (BIT(src) & pending) {
++			virq = irq_find_mapping(kirq->irqd, src);
++			dev_dbg(kirq->dev, "dispatch bit %d, virq %d\n",
++				src, virq);
++			if (!virq)
++				dev_warn(kirq->dev, "sporious irq detected hwirq %d, virq %d\n",
++					 src, virq);
++			generic_handle_irq(virq);
++		}
 +	}
 +
-+	prescale = found - &pc->pwm_periods[0];
++	chained_irq_exit(irq_desc_get_chip(desc), desc);
 +
-+	/*
-+	 * When PWMVal == 0, PWM pulse = 1 local clock cycle.
-+	 * When PWMVal == max_pwm_count,
-+	 * PWM pulse = (max_pwm_count + 1) local cycles,
-+	 * that is continuous pulse: signal never goes low.
-+	 */
-+	pwmvalx = cdata->max_pwm_cnt * duty_ns / period_ns;
-+
-+	dev_dbg(dev, "prescale:%u, period:%i, duty:%i, pwmvalx:%u\n",
-+		prescale, period_ns, duty_ns, pwmvalx);
-+
-+	/* Enable clock before writing to PWM registers */
-+	ret = clk_enable(pc->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_field_write(pc->prescale, prescale);
-+	if (ret)
-+		goto clk_dis;
-+
-+	ret = regmap_write(pc->regmap, STI_PWMVAL(pwm->hwpwm), pwmvalx);
-+	if (ret)
-+		goto clk_dis;
-+
-+	ret = regmap_field_write(pc->pwm_int_en, 0);
-+
-+clk_dis:
-+	clk_disable(pc->clk);
-+	return ret;
++	dev_dbg(kirq->dev, "end irq %d\n", irq);
 +}
 +
-+static int sti_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
++				irq_hw_number_t hw)
 +{
-+	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
-+	struct device *dev = pc->dev;
-+	int ret;
++	struct keystone_irq_device *kirq = h->host_data;
 +
-+	ret = clk_enable(pc->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_field_write(pc->pwm_en, 1);
-+	if (ret)
-+		dev_err(dev, "%s,pwm_en write failed\n", __func__);
-+
-+	return ret;
-+}
-+
-+static void sti_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
-+	struct device *dev = pc->dev;
-+	unsigned int val;
-+
-+	regmap_field_write(pc->pwm_en, 0);
-+
-+	regmap_read(pc->regmap, STI_CNT, &val);
-+
-+	dev_dbg(dev, "pwm counter :%u\n", val);
-+
-+	clk_disable(pc->clk);
-+}
-+
-+static const struct pwm_ops sti_pwm_ops = {
-+	.config = sti_pwm_config,
-+	.enable = sti_pwm_enable,
-+	.disable = sti_pwm_disable,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int sti_pwm_probe_dt(struct sti_pwm_chip *pc)
-+{
-+	struct device *dev = pc->dev;
-+	const struct reg_field *reg_fields;
-+	struct device_node *np = dev->of_node;
-+	struct sti_pwm_compat_data *cdata = pc->cdata;
-+	u32 num_chan;
-+
-+	of_property_read_u32(np, "st,pwm-num-chan", &num_chan);
-+	if (num_chan)
-+		cdata->num_chan = num_chan;
-+
-+	reg_fields = cdata->reg_fields;
-+
-+	pc->prescale = devm_regmap_field_alloc(dev, pc->regmap,
-+					       reg_fields[PWMCLK_PRESCALE]);
-+	if (IS_ERR(pc->prescale))
-+		return PTR_ERR(pc->prescale);
-+
-+	pc->pwm_en = devm_regmap_field_alloc(dev, pc->regmap,
-+					     reg_fields[PWM_EN]);
-+	if (IS_ERR(pc->pwm_en))
-+		return PTR_ERR(pc->pwm_en);
-+
-+	pc->pwm_int_en = devm_regmap_field_alloc(dev, pc->regmap,
-+						 reg_fields[PWM_INT_EN]);
-+	if (IS_ERR(pc->pwm_int_en))
-+		return PTR_ERR(pc->pwm_int_en);
-+
++	irq_set_chip_data(virq, kirq);
++	irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
++	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
 +	return 0;
 +}
 +
-+static const struct regmap_config sti_pwm_regmap_config = {
-+	.reg_bits   = 32,
-+	.val_bits   = 32,
-+	.reg_stride = 4,
++static struct irq_domain_ops keystone_irq_ops = {
++	.map	= keystone_irq_map,
++	.xlate	= irq_domain_xlate_onecell,
 +};
 +
-+static int sti_pwm_probe(struct platform_device *pdev)
++static int keystone_irq_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct sti_pwm_compat_data *cdata;
-+	struct sti_pwm_chip *pc;
-+	struct resource *res;
++	struct device_node *np = dev->of_node;
++	struct keystone_irq_device *kirq;
 +	int ret;
 +
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	cdata = devm_kzalloc(dev, sizeof(*cdata), GFP_KERNEL);
-+	if (!cdata)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	pc->mmio = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pc->mmio))
-+		return PTR_ERR(pc->mmio);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, pc->mmio,
-+					   &sti_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap))
-+		return PTR_ERR(pc->regmap);
-+
-+	/*
-+	 * Setup PWM data with default values: some values could be replaced
-+	 * with specific ones provided from Device Tree.
-+	 */
-+	cdata->reg_fields   = &sti_pwm_regfields[0];
-+	cdata->max_prescale = 0xff;
-+	cdata->max_pwm_cnt  = 255;
-+	cdata->num_chan     = 1;
-+
-+	pc->cdata = cdata;
-+	pc->dev = dev;
-+
-+	ret = sti_pwm_probe_dt(pc);
-+	if (ret)
-+		return ret;
-+
-+	pc->pwm_periods = devm_kzalloc(dev,
-+			sizeof(unsigned long) * (pc->cdata->max_prescale + 1),
-+			GFP_KERNEL);
-+	if (!pc->pwm_periods)
-+		return -ENOMEM;
-+
-+	pc->clk = of_clk_get_by_name(np, "pwm");
-+	if (IS_ERR(pc->clk)) {
-+		dev_err(dev, "failed to get PWM clock\n");
-+		return PTR_ERR(pc->clk);
-+	}
-+
-+	pc->clk_rate = clk_get_rate(pc->clk);
-+	if (!pc->clk_rate) {
-+		dev_err(dev, "failed to get clock rate\n");
++	if (np == NULL)
 +		return -EINVAL;
-+	}
 +
-+	ret = clk_prepare(pc->clk);
++	kirq = devm_kzalloc(dev, sizeof(*kirq), GFP_KERNEL);
++	if (!kirq)
++		return -ENOMEM;
++
++	kirq->devctrl_regs =
++		syscon_regmap_lookup_by_phandle(np, "ti,syscon-dev");
++	if (IS_ERR(kirq->devctrl_regs))
++		return PTR_ERR(kirq->devctrl_regs);
++
++	ret = of_property_read_u32_index(np, "ti,syscon-dev", 1,
++					 &kirq->devctrl_offset);
 +	if (ret) {
-+		dev_err(dev, "failed to prepare clock\n");
++		dev_err(dev, "couldn't read the devctrl_offset offset!\n");
 +		return ret;
 +	}
 +
-+	sti_pwm_calc_periods(pc);
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &sti_pwm_ops;
-+	pc->chip.base = -1;
-+	pc->chip.npwm = pc->cdata->num_chan;
-+	pc->chip.can_sleep = true;
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		clk_unprepare(pc->clk);
-+		return ret;
++	kirq->irq = platform_get_irq(pdev, 0);
++	if (kirq->irq < 0) {
++		dev_err(dev, "no irq resource %d\n", kirq->irq);
++		return kirq->irq;
 +	}
 +
-+	platform_set_drvdata(pdev, pc);
++	kirq->dev = dev;
++	kirq->mask = ~0x0;
++	kirq->chip.name		= "keystone-irq";
++	kirq->chip.irq_ack	= keystone_irq_ack;
++	kirq->chip.irq_mask	= keystone_irq_mask;
++	kirq->chip.irq_unmask	= keystone_irq_unmask;
++
++	kirq->irqd = irq_domain_add_linear(np, KYESTONE_N_IRQ,
++					   &keystone_irq_ops, kirq);
++	if (!kirq->irqd) {
++		dev_err(dev, "IRQ domain registration failed\n");
++		return -ENODEV;
++	}
++
++	platform_set_drvdata(pdev, kirq);
++
++	irq_set_chained_handler(kirq->irq, keystone_irq_handler);
++	irq_set_handler_data(kirq->irq, kirq);
++
++	/* clear all source bits */
++	keystone_irq_writel(kirq, ~0x0);
++
++	dev_info(dev, "irqchip registered, nr_irqs %u\n", KYESTONE_N_IRQ);
 +
 +	return 0;
 +}
 +
-+static int sti_pwm_remove(struct platform_device *pdev)
++static int keystone_irq_remove(struct platform_device *pdev)
 +{
-+	struct sti_pwm_chip *pc = platform_get_drvdata(pdev);
-+	unsigned int i;
++	struct keystone_irq_device *kirq = platform_get_drvdata(pdev);
++	int hwirq;
 +
-+	for (i = 0; i < pc->cdata->num_chan; i++)
-+		pwm_disable(&pc->chip.pwms[i]);
++	for (hwirq = 0; hwirq < KYESTONE_N_IRQ; hwirq++)
++		irq_dispose_mapping(irq_find_mapping(kirq->irqd, hwirq));
 +
-+	clk_unprepare(pc->clk);
-+
-+	return pwmchip_remove(&pc->chip);
++	irq_domain_remove(kirq->irqd);
++	return 0;
 +}
 +
-+static const struct of_device_id sti_pwm_of_match[] = {
-+	{ .compatible = "st,sti-pwm", },
-+	{ /* sentinel */ }
++static const struct of_device_id keystone_irq_dt_ids[] = {
++	{ .compatible = "ti,keystone-irq", },
++	{},
 +};
-+MODULE_DEVICE_TABLE(of, sti_pwm_of_match);
++MODULE_DEVICE_TABLE(of, keystone_irq_dt_ids);
 +
-+static struct platform_driver sti_pwm_driver = {
-+	.driver = {
-+		.name	= "sti-pwm",
-+		.of_match_table = sti_pwm_of_match,
-+	},
-+	.probe		= sti_pwm_probe,
-+	.remove		= sti_pwm_remove,
++static struct platform_driver keystone_irq_device_driver = {
++	.probe		= keystone_irq_probe,
++	.remove		= keystone_irq_remove,
++	.driver		= {
++		.name	= "keystone_irq",
++		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(keystone_irq_dt_ids),
++	}
 +};
-+module_platform_driver(sti_pwm_driver);
 +
-+MODULE_AUTHOR("Ajit Pal Singh <ajitpal.singh@st.com>");
-+MODULE_DESCRIPTION("STMicroelectronics ST PWM driver");
-+MODULE_LICENSE("GPL");
++module_platform_driver(keystone_irq_device_driver);
++
++MODULE_AUTHOR("Texas Instruments");
++MODULE_AUTHOR("Sajesh Kumar Saran");
++MODULE_AUTHOR("Grygorii Strashko");
++MODULE_DESCRIPTION("Keystone IRQ chip");
++MODULE_LICENSE("GPL v2");
 -- 
-1.8.3.2
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
