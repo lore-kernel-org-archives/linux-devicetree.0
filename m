@@ -1,55 +1,60 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [RESEND PATCH 0/6] thermal: sti: Add new Thermal driver
-Date: Mon, 14 Jul 2014 22:14:37 +0800
-Message-ID: <1405347277.28592.25.camel@rzhang1-toshiba>
-References: <1401980819-19962-1-git-send-email-lee.jones@linaro.org>
-	 <20140624092309.GD13803@lee--X1> <20140709120823.GA32573@lee--X1>
-	 <1404911964.28592.4.camel@rzhang1-toshiba> <20140709134646.GB479@lee--X1>
-	 <20140714130824.GA3993@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [REQUEST] DT patch not reviewed for 2 months+
+Date: Mon, 14 Jul 2014 16:20:08 +0200
+Message-ID: <4473843.TzcaEArWEr@wuerfel>
+References: <Pine.LNX.4.64.1407132145230.21736@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140714130824.GA3993@lee--X1>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ajitpal.singh@st.com, edubezval@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.64.1407132145230.21736-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-07-14 at 14:08 +0100, Lee Jones wrote:
-> On Wed, 09 Jul 2014, Lee Jones wrote:
-> > On Wed, 09 Jul 2014, Zhang Rui wrote:
-> > > On Wed, 2014-07-09 at 13:08 +0100, Lee Jones wrote:
-> > > > On Tue, 24 Jun 2014, Lee Jones wrote:
-> > > > 
-> > > > > > I'm re-sending this set, as one of the maintainers' email addresses
-> > > > > > is incorrect in the MAINTAINERS file.
-> > > > > > 
-> > > > > > This patchset adds full support for 2 types of Thermal Controllers
-> > > > > > produced by STMicroelectronics.  One is a more traditional memory
-> > > > > > mapped variant, the other is controlled solely by system configuration
-> > > > > > registers.
-> > > > > 
-> > > > > Any thing from the Thermal guys? Has this set fallen through the gaps?
-> > > > 
-> > > > Anything at all?  It's been well over a month now.
-> > > > 
-> > > Well, for the soc thermal drivers, I'd prefer to take them via Eduardo,
-> > > but as we didn't get any feedback from Eduardo, I will take them.
-> > 
-> > Thanks Rui.
-> > 
-> > So have you taken all 4 "thermal: sti: *" patches?
+On Sunday 13 July 2014 22:00:11 Guennadi Liakhovetski wrote:
+> Hi all,
 > 
-> Have you taken these yet?
-Not yet.
-will do tomorrow.
-
-thanks,
-rui
->   I notice that these aren't in -next yet.
+> On 10th of May I submitted 2 patches
 > 
-> > The ARM ones should go through Maxime.
+> http://thread.gmane.org/gmane.linux.drivers.devicetree/73577
 > 
+> of which 1 adds documentation for DT bindings for a dmaengine driver. The 
+> driver doesn't add any new bindings, only standard bindings are used and 
+> the respective generic document is referenced in the patch. This makes me 
+> think, that a review of that patch should really be a matter of a couple 
+> of minutes. Unfortunateky this still hasn't happened. If the patch had 
+> been reviewed promptly, it still could make it into 3.16. We're at 
+> 3.16-rc4 in the meantime. Have I done anything wrong in the patch 
+> submission procedure? What do I have to do to get this patch reviewed soon 
+> to get it in 3.17?
+
+The fallback for device drivers is that if nobody finds the time to review
+the binding, the subsystem maintainer can just take it anyway.
+
+I hadn't seen this driver so far, but looked at it now. The binding looks
+good to me, so feel free to resend it with
+
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+
+The driver also looks good, but there is one part that can now be
+done more efficiently:
+
++	dma_cap_zero(mask);
++	dma_cap_set(DMA_SLAVE, mask);
++
++	dchan = dma_request_channel(mask, nbpf_dma_filter, ofdma->of_node);
++	if (!dchan)
++		return NULL;
 
 
+Here you can just call dma_get_any_slave_channel() and remove the filter
+function. The way you do it is also correct, but we're trying to get
+away from that, as it just adds pointless overhead.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
