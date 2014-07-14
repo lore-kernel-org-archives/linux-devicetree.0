@@ -1,60 +1,144 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] ARM: tegra: Add resets & has-utmi-pad-registers
- flag to all USB PHYs
-Date: Mon, 14 Jul 2014 11:51:06 +0200
-Message-ID: <20140714095105.GA9870@ulmo>
-References: <1404436179-10745-1-git-send-email-ttynkkynen@nvidia.com>
- <1404436179-10745-3-git-send-email-ttynkkynen@nvidia.com>
- <53BEAD70.5010504@nvidia.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
+Date: Mon, 14 Jul 2014 10:52:47 +0100
+Message-ID: <20140714095247.GB4980@leverpostej>
+References: <1405073193-21448-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53BEAD70.5010504-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405073193-21448-1-git-send-email-zonque@gmail.com>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: "dtor@mail.ru" <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 11, 2014 at 11:06:33AM +0100, Daniel Mack wrote:
+> This patch adds a driver for Microchips CAP1106, an I2C driven, 6-channel
+> capacitive touch sensor.
+> 
+> For now, only the capacitive buttons are supported, and no specific
+> settings that can be tweaked for individual channels, except for the
+> device-wide sensitivity gain. The defaults seem to work just fine out of
+> the box, so I'll leave configurable parameters for someone who's in need
+> of them and who can actually measure the impact. All registers are
+> prepared, however. Many of them are just not used for now.
+> 
+> The implementation does not make any attempt to be compatible to platform
+> data driven boards, but fully depends on CONFIG_OF.
+> 
+> Power management functions are also left for volounteers with the ability
+> to actually test them.
+> 
+> Signed-off-by: Daniel Mack <zonque@gmail.com>
+> ---
+> v2:
+>  * Fix potential deadlocks pointed out by David.
+> 
+>  .../devicetree/bindings/input/cap1106.txt          |  63 ++++
+>  drivers/input/keyboard/Kconfig                     |  10 +
+>  drivers/input/keyboard/Makefile                    |   1 +
+>  drivers/input/keyboard/cap1106.c                   | 378 +++++++++++++++++++++
+>  4 files changed, 452 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/cap1106.txt
+>  create mode 100644 drivers/input/keyboard/cap1106.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/cap1106.txt b/Documentation/devicetree/bindings/input/cap1106.txt
+> new file mode 100644
+> index 0000000..57f5af3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/cap1106.txt
+> @@ -0,0 +1,63 @@
+> +Device tree bindings for Microchip CAP1106, 6 channel capacitive touch sensor
+> +
+> +The node for this driver must be a child of a I2C controller node, as the
+> +device communication via I2C only.
+> +
+> +Required properties:
+> +
+> +       compatible:             Must be "microchip,cap1106"
+> +       reg:                    The I2C slave address of the device.
+> +                               Only 0x28 is valid.
+> +       interrupt:              Node describing the interrupt line the device's
+> +                               ALERT#/CM_IRQ# pin is connected to.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+s/interrupt/interrupts/
 
-On Thu, Jul 10, 2014 at 06:12:48PM +0300, Tuomas Tynkkynen wrote:
-> Thierry,
->=20
-> Since Stephen's on a vacation, I'd like to double-check with you that the=
- DT
-> changes looks good. Greg has applied these to the USB tree today.
+This is a _property_, not a node.
 
-Yes, looks sane to me. Not sure how much people will like to see the DTS
-changes go in through the USB tree, but I don't see a lot of potential
-for conflicts, so chances are nobody will notice anyway.
+I take it the device only has a single interrupt line?
 
-Thierry
+> +
+> +Optional properties:
+> +
+> +       autorepeat:             Enables the Linux input system's autorepeat
+> +                               feature on the input device.
+> +       microchip,sensor-gain:  Defines the gain of the sensor circuitry. This
+> +                               effectively controls the sensitivity, as a
+> +                               smaller delta capacitance is required to
+> +                               generate the same delta count values.
+> +                               Valid values are 1, 2, 4, and 8.
+> +                               By default, a gain of 1 is set.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature
+Does the official documentation describe this in absolute terms?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +
+> +To define details of each individual button channel, six subnodes can be
+> +specified. Inside each of those, the following property is valid:
+> +
+> +       linux,keycode:  Specify the numeric identifier of the keycode to be
+> +                       generated when this channel is activated. If this
+> +                       property is omitted, KEY_A, KEY_B, etc are used as
+> +                       defaults.
 
-iQIcBAEBAgAGBQJTw6gJAAoJEN0jrNd/PrOhGZYQAIWAWjQKLY6zmitSDSIQ3YFr
-CEdHCnI1/VVaVNLRLtUM7e/qRvY34W9mrY4wIi3u8SbwbiVKURjuZpbsc+bc0TC5
-ykdTgi9/AnLbddqVVupzrZrYbi7+T1r/F++J3eGLHnPAl1ckwO0gc8DJ4NInMlEM
-4+jCpvMCFxeL58HOqhDfTmocQojJpUz0IvRv2SmjStehgMIIDBEQuL4Mqbzp00eV
-jPPQ+TN7GmiCIHjm6KJxy9C4brP5YBYwdmXXIgqmkQN7AmXCVCGHG8Ebh55x3Tbg
-5vQ0KljngDRjXm9OWmX1hgZYTZ+eYZl5ceMw2/pCVr30PHjYxDtM7Yg6ZhYsOQ6F
-8vPxYe73um8uXAs+7HNWQRce9GZc+FwegW+NizBqszUqfkL12ZAtB7Szds6mVa56
-LXyAsKYJ30y1aico6CUlcm1P/UDpY2IA2Qg/BVattfdmKtaGR8FAaSljppKCFCOk
-DuynaPLtFkwlnBklXVgK9xxIPZ2E+QCBASKpHCfaVdRidDpa6Ca/0NKBmT98NfrM
-bNqGF6ALhIWwZUSXS++MUyL/C6aeu286f7SwM3pz3iaJtsc9EvoSc/FHNV7cOpY1
-i3PFyCLMlis73MjlnHGXeCIzux5X34vPvusqNboFDE4yyox0w4iBRYnFXEbLAkmS
-bCzBIuyIcRVCPHbPn4O3
-=WvrZ
------END PGP SIGNATURE-----
+What are those subnodes, and how are they told apart? Name, compatible?
 
---r5Pyd7+fXNt84Ff3--
+I strongly recommend against relying on the order of the DT. It's very
+easy for that to get messed up and makes things hard to read.
+
+Is is not possible to use linux,keymap and treat the buttons as a
+matrix keypad? Then you don't need subnodes at all, and you can have a
+sparse keymap if you want.
+
+[...]
+
+> +struct cap1106_priv {
+> +       struct regmap *regmap;
+> +       struct input_dev *idev;
+> +       struct work_struct work;
+> +       spinlock_t lock;
+> +       bool closed:1;
+
+I don't think you're saving anything here by trying to have a bool
+bitfield.
+
+[...]
+
+> +       i = 0;
+> +       for_each_child_of_node(node, child) {
+> +               if (i == CAP1106_NUM_CHN) {
+> +                       dev_err(dev, "Too many button nodes.\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               if (!of_property_read_u32(child, "linux,keycode", &tmp32))
+> +                       priv->keycodes[i] = tmp32;
+> +
+> +               i++;
+> +       }
+
+I don't think that it is a good idea to rely on the order of sub-nodes
+in the DTB.
+
+[...]
+
+> +       if (of_get_property(node, "autorepeat", NULL))
+> +               __set_bit(EV_REP, priv->idev->evbit);
+
+Use of_property_read_bool.
+
+/me mutters usual grumblings about the autorepeat property.
+
+Thanks,
+Mark.
