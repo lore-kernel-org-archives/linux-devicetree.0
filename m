@@ -1,55 +1,52 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv2 0/5] OMAP Mailbox framework adoption & DT support
-Date: Mon, 14 Jul 2014 16:53:41 -0500
-Message-ID: <53C45165.2030707@ti.com>
-References: <1405116252-53612-1-git-send-email-s-anna@ti.com>	<CAPdLdq=ZnPBQiGVbKOk8G5soP=uPYpT7mEjigpR=W1Hc4btV3g@mail.gmail.com>	<53C3FE0C.4080502@ti.com> <CAPdLdqnd36QQ5v9-owiSFptbdkDxyYXjfRW=PdvaXKUr3B6_pQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH] irqchip: gic: Add binding probe for ARM GIC400
+Date: Tue, 15 Jul 2014 00:03:03 +0200
+Message-ID: <2621565.f5eISveXXJ@diego>
+References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com> <1404947104-21345-2-git-send-email-suravee.suthikulpanit@amd.com> <2932284.F1eaAf8ArJ@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPdLdqnd36QQ5v9-owiSFptbdkDxyYXjfRW=PdvaXKUr3B6_pQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Markus Mayer <markus.mayer@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <2932284.F1eaAf8ArJ@diego>
+Sender: linux-doc-owner@vger.kernel.org
+To: suravee.suthikulpanit@amd.com, jason@lakedaemon.net
+Cc: linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, Catalin.Marinas@arm.com, Harish.Kasiviswanathan@amd.com, linux-kernel@vger.kernel.org, Will.Deacon@arm.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, linux-pci@vger.kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
->
->> There are couple of dependent preparatory series. You probably missed
->> the following in the cover letter.
->>> The series depends on the OMAP mailbox cleanup series [5] and the
->>> refreshed OMAP mailbox DT/hwmod cleanup series [2].
->>
->> As long as you pick the two dependent series, they apply fine on any of
->> the 3.16-rcs. I have posted all the series based on 3.16-rc2. Here's a
->> merged branch for your reference (not for pulling though, it has one
->> additional commit to allow me to test on OMAP2)
->> https://github.com/sumananna/mailbox/commits/submit/3.16-rc2-omap-mbox-v8-fwk-v2
->>
->> The last 2 patches in the series also depend on the mailbox framework
->> patches from Jassi to not throw any build errors if enabled.
-> 
-> That worked. Thanks for the pointer. FYI, there is a minor merge
-> conflict rebasing the series onto 3.16-rc5.
-> 
-> Applying: ARM: OMAP2+: Avoid mailbox legacy device creation for DT-boot
-> Using index info to reconstruct a base tree...
-> M arch/arm/mach-omap2/devices.c
-> Falling back to patching base and 3-way merge...
-> Auto-merging arch/arm/mach-omap2/devices.c
-> CONFLICT (content): Merge conflict in arch/arm/mach-omap2/devices.c
-> Failed to merge in the changes.
-> Patch failed at 0029 ARM: OMAP2+: Avoid mailbox legacy device creation
-> for DT-boot
-> 
-> That's due to this commit:
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=1d29a0722f6c38f79785c9ffb911730598de84e2
+Commit 3ab72f9156bb "dt-bindings: add GIC-400 binding" added the
+"arm,gic-400" compatible string, but the corresponding IRQCHIP_DECLARE
+was never added to the gic driver.
 
-OK, thanks, that's because of the removal of the line immediately above
-the omap_init_mbox() deletion. Anyway, that should be a trivial rebase
-and the patch contents should remain the same. Once OMAP3 becomes
-DT-boot only, I will submit a patch to delete the omap_init_mbox().
+Therefore add the missing irqchip declaration for it.
 
-regards
-Suman
+Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+
+Removed additional empty line and adapted commit message to mark it
+as fixing an issue.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+As I really need this, I took the liberty of adapting the patch accordingly
+to make it apply on top of the current irqchip/for-next (or urgent) and
+explicitly state the fixed issue. Hope that is ok
+
+ drivers/irqchip/irq-gic.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 9d26643..6ff28b4 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1020,6 +1020,7 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+ 	gic_cnt++;
+ 	return 0;
+ }
++IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
+-- 
+1.9.0
+
+
