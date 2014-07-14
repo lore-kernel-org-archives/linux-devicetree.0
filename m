@@ -1,125 +1,68 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
-Date: Mon, 14 Jul 2014 14:39:18 +0530
-Message-ID: <CAPdUM4P7sijj_-fa_Opuo73ugAW7coUDZ+UnSp_tnjkHacJFVw@mail.gmail.com>
-References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
-	<CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
-	<53A12EA3.5010007@samsung.com>
-	<CAPdUM4OK+ATMMRM67dV5JeeTGMu=XA7Gvi7Uif+Hypf3iP+6jg@mail.gmail.com>
-	<CAPdUM4MToVJC5KRS1DUDmYEdUx2PGBE0G1v7p-SGgqpw7SPOhw@mail.gmail.com>
-	<53BC0F8F.4010106@samsung.com>
-	<CAPdUM4NGXDz-bX=qqzC7LXRE5fCapdHGZeUZ29Xov=P7VZykgg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL
+ clocksource
+Date: Mon, 14 Jul 2014 10:12:33 +0100
+Message-ID: <20140714091233.GC6800@sirena.org.uk>
+References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
+ <1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com>
+ <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
+ <53C01558.3090607@nvidia.com>
+ <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA@mail.gmail.com>
+ <53C01D17.2050906@nvidia.com>
+ <20140714083854.GO2081@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4NGXDz-bX=qqzC7LXRE5fCapdHGZeUZ29Xov=P7VZykgg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Izn7cH1Com+I3R9J"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140714083854.GO2081@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
 
-Please consider this patch for your branch. This patch is important
-for Display for Exynos5 boards.
+--Izn7cH1Com+I3R9J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Rahul Sharma.
+On Mon, Jul 14, 2014 at 10:38:56AM +0200, Thierry Reding wrote:
+> On Fri, Jul 11, 2014 at 08:21:27PM +0300, Tuomas Tynkkynen wrote:
 
-On 9 July 2014 17:00, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> Hi Tomasz,
->
-> On 8 July 2014 21:04, Tomasz Figa <t.figa@samsung.com> wrote:
->> Hi Rahul,
->>
->> On 07.07.2014 15:37, Rahul Sharma wrote:
->>> Hi Andrej, Inki,
->>>
->>> On 18 June 2014 12:06, Rahul Sharma <rahul.sharma@samsung.com> wrote:
->>>> Hi Andrej,
->>>>
->>>> On 18 June 2014 11:46, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>> On 06/17/2014 07:49 AM, Rahul Sharma wrote:
->>>>>> Hi All,
->>>>>>
->>>>>> Please review this patch.
->>>>>>
->>>>>> Regards,
->>>>>> Rahul Sharma
->>>>>>
->>>>>> On 9 June 2014 16:58, Rahul Sharma <rahul.sharma@samsung.com> wrote:
->>>>>>> Display domain is removed due to instability issues. Explaining
->>>>>>> the problem below:
->>>>>>>
->>>>>>> exynos_init_late triggers the pm_genpd_poweroff_unused which
->>>>>>> powers off the unused power domains. This call hits before
->>>>>>> the trigger to deferred probes.
->>>>>>>
->>>>>>> DRM DP Panel defers the probe due to supply get failure. By the
->>>>>>> time, deferred probe is scheduled again, Display Power Domain is
->>>>>>> powered off by pm_genpd_poweroff_unused.
->>>>>>>
->>>>>>> FIMD and DP drivers are accessing registers during Probe and Bind
->>>>>>> callbacks. If display domain is enabled/disabled around register
->>>>>>> accesses, display domain gets unstable and we are getting Power
->>>>>>> Domain Disable fail notification. Increasing the Timeout also
->>>>>>> didn't help.
->>>>>
->>>>> As I understand the problem is that fimd and dp drivers access hw
->>>>> registers without enabling power domain. So the proper solution is to
->>>>> fix these drivers.
->>>>
->>>> That is also a problem but I fixed those accesses in my local kernel before
->>>> hitting this issue. If we do register accesses in FIMD/DP probe/bind we
->>>> observes "Prefetch abort" exception. But here the problem is that 'DP
->>>> domain disable' starts failing if we enable/disable multiple times.
->>>>
->>>>>
->>>>> Btw. there are already patches removing hw access from probe/bind of
->>>>> fimd. I guess removing also hw access from dp probe/bind could be a good
->>>>> solution.
->>>>
->>>> Please let me know the links for posted patches. I will test with those patches.
->>>
->>> Is there any update on this? Please share the patches which fixes the
->>> above issue or avoid the above scenario of multiple PM Domain enable/disable.
->>> I will test them for exynos5 based boards. Otherwise we should get this change
->>> merged else display will remain broken for exynos5 based boards.
->>
->> Andrzej is on holidays right now, so he won't be able to reply in this
->> thread until he's back. Here are two patches I was able to find on the
->> related MLs that might be fixing the cause of your issues:
->
-> Ok. thanks for the update.
->
-> We should test with Ajay's patches which includes DP probe deferring
-> based on availability of bridge chip. +
->
-> few patches which cleanup register access in FIMD and DP probe/bind
-> OR
-> few patches to enable Display power domain and clocks just before the
-> register access. As done in https://lkml.org/lkml/2014/7/4/188.
->
-> Later solution results into display power domain enable failure in case of DRM
-> probe defer.
->
-> I am just curious if Andrej has some solution for the first approach which can
-> be tested for defer probe and S2R scenarios.
->
-> Regards,
-> Rahul Sharma.
->
->>
->> [PATCH] drm/exynos: remove hardware overlays disable from fimd probe
->> (https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31629.html)
->>
->> [PATCH] drm/exynos: fimd: Keep power enabled during fimd_bind
->> (https://lkml.org/lkml/2014/7/4/188)
->>
->> Best regards,
->> Tomasz
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > I don't think we can assume that each selector maps to a concrete register
+> > value, though I'm not sure. include/linux/regulator/driver.h documents for
+> > @list_voltage "Selectors range from zero to one less
+> > regulator_desc.n_voltages." but maybe the consumer API could take different
+> > values.
+
+> I don't think the regulator API makes any guarantees that the selector
+> corresponds to a register value. Adding Mark Brown, maybe he can help
+> figure out the best way to do this.
+
+The selector value is opaque, it's entirely up to the driver to define
+it.  If you could tell me what "this" is I might be able to advise on
+how to do it.
+
+--Izn7cH1Com+I3R9J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTw57+AAoJELSic+t+oim9AGsP/RZe8JPihANdv/oeybcpori8
+i2DpTFTqDeqbjE6YqHLCjBuQdHAwr+liAFnYyuaYOy1mIymqufXZw+oiUX9jNraW
+LOXJuq8pU1z+nJvjBgQVNsy8t6lScak1IpLYmA8N2wpL2AMtlBqnKCyxs1OZloYF
+3TXHwfPGZ9cQrONrYAHSEEpX+xkBZ0NSc9VaCwwEC+DR9jc8ODXj/bJkBp9JXrZm
+jHLGl4p5H8IvIKQSxp1iFc/lDkNgobzTEV/I+n2NksyVRqYRZaHlMOzzzT6u/jyf
+8bJqjFe0gg982lBs8j07yWG6hgralBiC98nvlS1zunuXepM0Nge9IO6gsycd31qJ
+CD0RabiwRSlJGlliSiePNNDDH7pzO8bDq1NuG2SijnZq2YvP2kN2z6xu4x8q+YpJ
+h/c2i3/Y5rBeliT5LcukoIKicc6QAuKP2lZUWA2aZWcGHgUDHhivE6ibjkaFwco5
+GQSZ63psaIbJINtVKeWbkFtswwGeGxPdgK5I3qEcoRnEfn/Aala4XmorgpV90seL
+OnrWFOdjZuTDYHmr3SKoRs48u74Bt4Ce2Fq1rAgeltXfiRff1exiwYcoupUx9pkQ
+INA/P9TAguSJBy0hj4/zBMtZObsp9T/T89gliTf8v/yBo5+N9l4xQNJakq9muS4P
+jBg4x2lRrdNC/7a/Qpn9
+=oEVi
+-----END PGP SIGNATURE-----
+
+--Izn7cH1Com+I3R9J--
