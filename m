@@ -1,66 +1,50 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v3 2/2] can: m_can: add Bosch M_CAN controller support
-Date: Mon, 14 Jul 2014 13:05:55 +0530
-Message-ID: <53C3885B.5020008@gmail.com>
-References: <1405074557-5519-1-git-send-email-b29396@freescale.com> <1405074557-5519-2-git-send-email-b29396@freescale.com> <53BFC6CE.9090408@gmail.com> <53BFD28A.5090202@pengutronix.de> <53BFD4DF.7030003@gmail.com> <20140714072146.GD1668@shlinux1.ap.freescale.net>
+From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Mon, 14 Jul 2014 09:04:05 +0100
+Message-ID: <CAJ5Y-eb3EqbmNNKFPFShiBEDEf11pPMg2hVhMz=RPt+1H+FyZQ@mail.gmail.com>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
+	<1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
+	<CAJ5Y-eYPffYQ57ERODyBYYKjL2FVhGapKmP0YxzcT9rswfaJaA@mail.gmail.com>
+	<CAJe_Zhe5W4D+TzyfKdE8KvSc8SJwyHG3SQGpUyd8-ML-wHBDyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20140714072146.GD1668@shlinux1.ap.freescale.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_Zhe5W4D+TzyfKdE8KvSc8SJwyHG3SQGpUyd8-ML-wHBDyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2014 12:51 PM, Dong Aisheng wrote:
->
-> +    dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0
-> 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d\n",
-> +        priv->mram_base,
-> +        priv->mcfg[MRAM_SIDF].off, priv->mcfg[MRAM_SIDF].num,
-> +        priv->mcfg[MRAM_XIDF].off, priv->mcfg[MRAM_XIDF].num,
-> +        priv->mcfg[MRAM_RXF0].off, priv->mcfg[MRAM_RXF0].num,
-> +        priv->mcfg[MRAM_RXF1].off, priv->mcfg[MRAM_RXF1].num,
-> +        priv->mcfg[MRAM_RXB].off, priv->mcfg[MRAM_RXB].num,
-> +        priv->mcfg[MRAM_TXE].off, priv->mcfg[MRAM_TXE].num,
-> +        priv->mcfg[MRAM_TXB].off, priv->mcfg[MRAM_TXB].num);
-> +
->>>> dev_dbg() will insert the new lines in b/w. It wont print the values as
->>>> you expected.
->>>> Check this by enabling debug ...
->>> What do you mean by b/w?
->> You are expecting the data to be print in format like:
->> pdev->dev/name: mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d
+Hello,
+
+On 14 July 2014 05:17, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 11 July 2014 17:16, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Hi Jassi,
 >>
->> But when we use the dev_dbg()/pr_debug()... It will put data like:
->> pdev->dev/name: mram_base %p sidf 0x%x
->> 0x%x %d rxf0 0x%x
->> rxf1 0x%x %d rxb
->> ....
+>> Other than a few nits, this looks good to me.
 >>
->> check this by enable DEBUG...
+> Thanks for the nits. I will club them together with other feedback on
+> the patchset.
+>
 >>
-> My test showed the format is:
-> root@imx6qdlsolo:~# uname -a
-> Linux imx6qdlsolo 3.16.0-rc2-next-20140627-00006-gd55dd62-dirty #373 SMP Fri Jul 11 18:12:31 CST 2014 armv7l GNU/Linux
-> root@imx6qdlsolo:~# dmesg | grep m_can
-> m_can 20e8000.can: mram_base c0990000 sidf 0x0 0 xidf 0x0 0 rxf0 0x0 32 rxf1 0x200 0 rxb 0x200 0 txe 0x200 0 txb 0x200 1
-> m_can 20e8000.can: m_can device registered (regs=c0988000, irq=146)
-> m_can 20f0000.can: mram_base c09a0000 sidf 0x400 0 xidf 0x400 0 rxf0 0x400 32 rxf1 0x600 0 rxb 0x600 0 txe 0x600 0 txb 0x600 1
-> m_can 20f0000.can: m_can device registered (regs=c0998000, irq=147)
->
-I think you got the expected result.
+>> Hopefully you've run this through checkpatch as well? Also, were you
+>> able to sort out the process of getting this stuff hosted on Linaro's
+>> git servers? or elsewhere? It would really help maintainers to pick
+>> this up and for others to rebase on top of your changes.
+>>
+> I didn't think it was a good idea to keep a 'dev-branch' for a new
+> subsystem before having even a single Ack or Reviewed-by.  Users
+> should track patch revisions on mailing lists and later maintainers
+> will be sent a tree:branch to pick Acked patches from.
 
-I faced the above problem when i use pr_debug(). Can you check with this....?
+Your private dev branch doesn't need to have any Acks/Reviewed-bys.
+You can add my signature after addressing the feedback.
 
-This is good. Thanks for clarification.
+Reviewed-by: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
->
-> Regards
-> Dong Aisheng
->
--- 
-Regards,
-Varka Bhadram.
-
+Cheers,
+Ashwin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
