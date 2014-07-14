@@ -1,92 +1,62 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
- driver
-Date: Mon, 14 Jul 2014 18:25:24 +0100
-Message-ID: <20140714172524.GH6800@sirena.org.uk>
-References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
- <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
+Date: Mon, 14 Jul 2014 19:07:18 +0100
+Message-ID: <20140714180718.GL6800@sirena.org.uk>
+References: <1404982207-4707-2-git-send-email-harinik@xilinx.com>
+ <CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
+ <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
+ <CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
+ <CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
+ <20140710120120.GD30458@sirena.org.uk>
+ <CAFcVECJvvch9Li0WihqoWcGNMMDVXfrujLUq6wvca46FztYpzA@mail.gmail.com>
+ <20140710150713.GJ30458@sirena.org.uk>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B748213306@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <10e00662-1e08-4552-aae7-1e2029e56238@BY2FFO11FD051.protection.gbl>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8/pVXlBMPtxfSuJG"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="9JSHP372f+2dzJ8X"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org, naveenkrishna.ch@gmail.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
+In-Reply-To: <10e00662-1e08-4552-aae7-1e2029e56238@BY2FFO11FD051.protection.gbl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harini.katakam@xilinx.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, Michal Simek <michals@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xil>
 List-Id: devicetree@vger.kernel.org
 
 
---8/pVXlBMPtxfSuJG
+--9JSHP372f+2dzJ8X
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 14, 2014 at 11:11:44AM +0530, Naveen Krishna Chatradhi wrote:
+On Mon, Jul 14, 2014 at 07:22:24AM +0000, Harini Katakam wrote:
 
-> @@ -812,6 +800,10 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
->  		spi->controller_data =3D cs;
->  	}
-> =20
-> +	/* For the non-DT platforms derive chip selects from controller data */
-> +	if (!spi->dev.of_node)
-> +		spi->cs_gpio =3D cs->line;
-> +
->  	if (IS_ERR_OR_NULL(cs)) {
->  		dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
->  		return -ENODEV;
-> @@ -819,17 +811,16 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
-> =20
->  	if (!spi_get_ctldata(spi)) {
->  		/* Request gpio only if cs line is asserted by gpio pins */
-> -		if (sdd->cs_gpio) {
-> -			err =3D gpio_request_one(cs->line, GPIOF_OUT_INIT_HIGH,
-> -					dev_name(&spi->dev));
-> +		if (gpio_is_valid(spi->cs_gpio)) {
+> As per your suggestions, I could send this driver in multiple stages -
+> Initially, qspi driver without flash specifics (this will work straight-away for a single flash)
+> In the next set, flash specifics changes for dual flash configurations (parallel/stacked)
+> Is that acceptable?
 
-As previously mentioned gpio_is_valid() is *not* a direct substitute for
-checking if the boolean flag cs_gpio has been set since 0 is a valid
-GPIO on at least some of these platforms and as discussed several times
-already some of the SoCs require the use of the built in chip select.
+Yes, that should be fine.
 
-In general it's quite hard to tie the description in the patch to the
-code changes, not helped by the decision to do separate refactorings
-like this conversion to gpio_is_valid() as part of the one patch.  The
-description of the patch now makes some statements about what the
-problem that's intended to be fixed is but it still doesn't seem
-entirely clear that everything has been thought through fully and tied
-to the code.
-
-The original code appears to be buggy which isn't helping anything but
-it's hard to have confidence that this isn't going to break some other
-use case that currently works given the lack of clarity and the number
-of revisions that have been required so far.
-
-I think some combination of smaller changes and a clearer working
-through of the before and after states for both DT and non DT cases to
-show that everything has been considered would help a lot.  I may have
-another stare at this but it's worrying how hard I'm needing to think.
-
---8/pVXlBMPtxfSuJG
+--9JSHP372f+2dzJ8X
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTxBKBAAoJELSic+t+oim9QP8P/RHc1G9eqFq4SLxSD/ihcMrv
-HQ/QDv2y3sckHIEVOGNPG6KpqYPFL1FZkl6iehQ9IXXJcs+1yQ9n1oRzOz5Ymbfv
-IPkX9vyM33q52Hrtrfnl2Sgv9P3fQRFPUn8mM3Y9V9bB0kvFANWt8ueF72oUTLkZ
-t0sF/yGbvdRHMXCFQmYZqISKTvjiZrYZdjHmmlOADXymlNJh+LlN48YJeU+yMPP3
-b+TGYtCwqYcfl3V1qjXapNnWi8TQJUczk5SiAsbs33U1tIFoavcQCpKisAtSgoBE
-IArMoafrPxpP1KY1kGRD4FMM7/00cb7hziv/WlTlTRzaaoRuQA1h4M2wiogt/FLC
-WfOAP1mjmk55o3kQ0YtrfQOCCsicPAAgDgDdYL9IRpJP0PnrQ7OdEUq0L02Rb4kl
-dQS0qmnRlpF9pGxuuvpDWRmqJcviSGuWLS8HJvg+OFt/Z3K/plMAKKiI0Urv7uTy
-cafFnN5+NUA4Z+4ND0RwDPnqSCG5g0arYs7fvX9JKyUGjvbxd9LaD821QtOg77WA
-4jNFKvFyzykH5enHhmbllBa3gSFqdJfRcLEBThrG4GKco3Qygv4HJ5jF7jo/5wiP
-SwjWqR9QuCuawgvKQzk71qyCavbVv09IpZEMdkH1oKO9uMwXCNOmL605KbqrVMSf
-IcETCjuOa2Zwhl7iM2es
-=9yH/
+iQIcBAEBAgAGBQJTxBxSAAoJELSic+t+oim9OBEP+wUY1itsZhpeEcXkgSsPvTwD
+mb3NuQyDYfI1Yr+VzifJF4Wrf2WembQr2zhFqNceC9NHB98uSFih+cK88NYHU/p4
+iGK/leChsv3LxX3muVPdohhdI+dKFTdlJyytY7NauFr+hPQjQ8zdo2m+/upxbHjE
+KebnKSdHH4D1ihuhBfVn7bByIvHfHPQfdhxSliC5RUtqlygyVBmyOeIzeNKB4irB
+1qOTuXgtBWq+7JzWS429Kn8f+H42CpXtdMMhJZwQEfO1NoRtHU/afxGHKUjW8XoS
+3GQujHyRLBapCRdJETjQpo737dHGQMNVcoEQe+pn+eYhgJHKkWm1Dq2P0cxs/S9J
+FhjajJWFYQirMpfUAFWeKQQ899l5o8iwWWTqAvmuAl1IkE9N9CVofqyhDbY5sPT6
+rtpk/z9Pxa/5WUvIU25fRXyLbXs2iKy23xbOk1Rwa6VhC+lUKnP+ApLRIEpa+1LV
+0PqBJmb4f+eFgpfhrY7jEaB/XSHJ3+nzQ2zHKSwZc7utWhrEdTFAk+5w91IskI+N
+R0+2afsNnM0HmKmsnm/jMSgi7aeQXwVoXazNgO+cjTj4XRFKB/2cvjf8QfUvrUHD
+lqFNCvSN1Av36ZYUoy4OQxDty/wKjKX2G8lRKQhzhUodVn5K5A5k6sXi+SIkLTOA
+K+ZJpy8AUhfCBBCAoMDt
+=iIgl
 -----END PGP SIGNATURE-----
 
---8/pVXlBMPtxfSuJG--
+--9JSHP372f+2dzJ8X--
