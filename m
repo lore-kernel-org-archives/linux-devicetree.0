@@ -1,62 +1,112 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 1/2] spi: Add support for Zynq QSPI controller
-Date: Mon, 14 Jul 2014 19:07:18 +0100
-Message-ID: <20140714180718.GL6800@sirena.org.uk>
-References: <1404982207-4707-2-git-send-email-harinik@xilinx.com>
- <CAMuHMdXO-PkQ+07F=aZEjvH1Kh7uhWK8i3V9w+1aHvvtg7wDoQ@mail.gmail.com>
- <CAFcVECJ93Lw1MRVU-=zLRbB6To--zmAxz8OLObu=mhV84-FTNA@mail.gmail.com>
- <CAMuHMdU2HyCwXBJTAyswyj7XqhzhHQ24MamGLLVgMwU4xi0kxQ@mail.gmail.com>
- <CAFcVEC+-bM91WmfwweDdTvJ7KwH+dxKDLkzsT82snWKhukLeYQ@mail.gmail.com>
- <20140710120120.GD30458@sirena.org.uk>
- <CAFcVECJvvch9Li0WihqoWcGNMMDVXfrujLUq6wvca46FztYpzA@mail.gmail.com>
- <20140710150713.GJ30458@sirena.org.uk>
- <03CA77BA8AF6F1469AEDFBDA1322A7B748213306@XAP-PVEXMBX01.xlnx.xilinx.com>
- <10e00662-1e08-4552-aae7-1e2029e56238@BY2FFO11FD051.protection.gbl>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: zynq: Add Parallella device tree
+Date: Mon, 14 Jul 2014 11:12:45 -0700
+Message-ID: <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q@mail.gmail.com>
+References: <1404075022-28745-1-git-send-email-afaerber@suse.de>
+	<1404075022-28745-2-git-send-email-afaerber@suse.de>
+	<CAOesGMhKY1Lb+o8AbtFXS5c7SLg2uGt4-oosdro2FMj_+bB6Tw@mail.gmail.com>
+	<61d660b7-17a9-4817-ba34-40a5c1674d28@BY2FFO11FD032.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9JSHP372f+2dzJ8X"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <10e00662-1e08-4552-aae7-1e2029e56238@BY2FFO11FD051.protection.gbl>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Sascha Hauer <s.hauer@pengutronix.de>, Jingoo Han <jg1.han@samsung.com>, Sourav Poddar <sourav.poddar@ti.com>, Michal Simek <michals@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xil>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <61d660b7-17a9-4817-ba34-40a5c1674d28-neA4ZlFjCT3tsTj3uZFmc2YJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 8, 2014 at 4:18 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> =
+wrote:
+> On 06/30/2014 07:15 AM, Olof Johansson wrote:
+>> Hi,
+>>
+>> On Sun, Jun 29, 2014 at 1:50 PM, Andreas F=C3=A4rber <afaerber@suse.=
+de> wrote:
+>>> This allows to boot the Adapteva Parallella board to serial console=
+=2E
+>>>
+>>> Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>
+>> Nice and clean DTS, just a couple of comments below.
+>>
+>>> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/=
+dts/zynq-parallella.dts
+>>> new file mode 100644
+>>> index 0000000..98df66c
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/zynq-parallella.dts
+>>> @@ -0,0 +1,63 @@
+>>> +/*
+>>> + * Copyright (c) 2014 SUSE LINUX Products GmbH
+>>> + *
+>>> + * Derived from zynq-zed.dts:
+>>> + *
+>>> + *  Copyright (C) 2011 Xilinx
+>>> + *  Copyright (C) 2012 National Instruments Corp.
+>>> + *  Copyright (C) 2013 Xilinx
+>>> + *
+>>> + * This software is licensed under the terms of the GNU General Pu=
+blic
+>>> + * License version 2, as published by the Free Software Foundation=
+, and
+>>> + * may be copied, distributed, and modified under those terms.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + */
+>>> +/dts-v1/;
+>>> +/include/ "zynq-7000.dtsi"
+>>> +
+>>> +/ {
+>>> +       model =3D "Parallella Board";
 
---9JSHP372f+2dzJ8X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You might want to have this say "Adapteva Parallella Board" instead
+(just noticed).
 
-On Mon, Jul 14, 2014 at 07:22:24AM +0000, Harini Katakam wrote:
+>>> +       compatible =3D "xlnx,zynq-7000";
+>>
+>> This should have a more specific compatible as the first one. Probab=
+ly
+>> something like:
+>>    compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
+>
+> We were using these compatible properties but later there is no reaso=
+n
+> to create them because they will be unused.
+> It is easy to add it when you need it which is not this case.
 
-> As per your suggestions, I could send this driver in multiple stages -
-> Initially, qspi driver without flash specifics (this will work straight-away for a single flash)
-> In the next set, flash specifics changes for dual flash configurations (parallel/stacked)
-> Is that acceptable?
+No, please add it from day one, otherwise everybody needs to update
+their device tree, some will miss doing it, etc, etc. It's a simple
+and trivial thing to do, and no reason to leave it o ut.
 
-Yes, that should be fine.
+>>> +
+>>> +       memory {
+>>> +               device_type =3D "memory";
+>>> +               reg =3D <0 0x20000000>;
+>>
+>> Does the bootloader update this entry, or is it truly static? If it'=
+s
+>> updated then it's become recent habit to leave the memory size empty
+>> in the static file.
+>
+> Depends on your bootloader. I think it is good to have it here.
+> Also this file can be used by u-boot for example and u-boot can be co=
+nfigured
+> from it that's why I think that make sense to keep this here.
 
---9JSHP372f+2dzJ8X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Ok. It's become commonplace to leave memory empty for the machines
+where it's guaranteed that the bootloader will have updated it, to
+avoid having stale or incorrect values in the static tree. I'm not
+going to be strict about it, but it's something to consider.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTxBxSAAoJELSic+t+oim9OBEP+wUY1itsZhpeEcXkgSsPvTwD
-mb3NuQyDYfI1Yr+VzifJF4Wrf2WembQr2zhFqNceC9NHB98uSFih+cK88NYHU/p4
-iGK/leChsv3LxX3muVPdohhdI+dKFTdlJyytY7NauFr+hPQjQ8zdo2m+/upxbHjE
-KebnKSdHH4D1ihuhBfVn7bByIvHfHPQfdhxSliC5RUtqlygyVBmyOeIzeNKB4irB
-1qOTuXgtBWq+7JzWS429Kn8f+H42CpXtdMMhJZwQEfO1NoRtHU/afxGHKUjW8XoS
-3GQujHyRLBapCRdJETjQpo737dHGQMNVcoEQe+pn+eYhgJHKkWm1Dq2P0cxs/S9J
-FhjajJWFYQirMpfUAFWeKQQ899l5o8iwWWTqAvmuAl1IkE9N9CVofqyhDbY5sPT6
-rtpk/z9Pxa/5WUvIU25fRXyLbXs2iKy23xbOk1Rwa6VhC+lUKnP+ApLRIEpa+1LV
-0PqBJmb4f+eFgpfhrY7jEaB/XSHJ3+nzQ2zHKSwZc7utWhrEdTFAk+5w91IskI+N
-R0+2afsNnM0HmKmsnm/jMSgi7aeQXwVoXazNgO+cjTj4XRFKB/2cvjf8QfUvrUHD
-lqFNCvSN1Av36ZYUoy4OQxDty/wKjKX2G8lRKQhzhUodVn5K5A5k6sXi+SIkLTOA
-K+ZJpy8AUhfCBBCAoMDt
-=iIgl
------END PGP SIGNATURE-----
-
---9JSHP372f+2dzJ8X--
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
