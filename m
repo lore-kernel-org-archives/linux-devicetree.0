@@ -1,66 +1,48 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
-Date: Mon, 14 Jul 2014 10:58:54 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1407141054010.10763-100000@netrider.rowland.org>
-References: <20140714083549.GK2954@lee--X1>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 0/4] New Qualcomm PMIC pin controller drivers
+Date: Mon, 14 Jul 2014 18:00:49 +0300
+Message-ID: <1405350049.13503.35.camel@iivanov-dev>
+References: <1404745893-6379-1-git-send-email-iivanov@mm-sol.com>
+	 <CACRpkdYcoA-nifxojO5tZUy6dL6P2PTSGW0mVLUfqG20rOg-Nw@mail.gmail.com>
+	 <1404904380.16296.17.camel@iivanov-dev>
+	 <CACRpkdb25foEcNroqLyZbX93FxqAZ7=2pGo6GPWP8YdrjUS8gg@mail.gmail.com>
+	 <CAJAp7Og0Cr3oY=XpT4NzKUWykxkRTq1ZRDyamW6tgohfBs3dmg@mail.gmail.com>
+	 <1404999558.16296.31.camel@iivanov-dev>
+	 <CAJAp7OgR7xc=LSf9tj+XQY1Nk=dQxCxTZ6HBEdf0NsriDZF85g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140714083549.GK2954@lee--X1>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OgR7xc=LSf9tj+XQY1Nk=dQxCxTZ6HBEdf0NsriDZF85g@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jul 2014, Lee Jones wrote:
+On Sat, 2014-07-12 at 16:51 -0700, Bjorn Andersson wrote:
+> On Thu, Jul 10, 2014 at 6:39 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+> > On Wed, 2014-07-09 at 07:02 -0700, Bjorn Andersson wrote:
+> [..]
+> >> Correct Ivan; we do however share the same issues related to how to do
+> >> interrupt handling,
+> >
+> > Yep, but do we actually need to do interrupt handling in driver?
+> > Interrupts are handled by parent device. GPIO client drivers could
+> > use interrupt-controller registered by core driver?
+> >
+> 
+> Among other things we have the volume and camera keys hooked to these
+> pins, using the gpio-keys driver; so that needs to be able to convert
+> a gpio to an irq.
+> But I don't believe we should turn this driver into an
+> interrupt-controller; as that wouldn't add any value...
 
-> On Fri, 11 Jul 2014, Alan Stern wrote:
-> > On Fri, 11 Jul 2014, Peter Griffin wrote:
-> > > On Thu, 10 Jul 2014, Alan Stern wrote:
-> > > 
-> > > > On Thu, 10 Jul 2014, Peter Griffin wrote:
-> > > > 
-> > > > > This driver adds support for the USB HCD present in STi
-> > > > > SoC's from STMicroelectronics. It has been tested on the
-> > > > > stih416-b2020 board.
-> > > > 
-> > > > This driver file, along with the Kconfig changes, belongs in the
-> > > > arch/platform-specific source directory.  Not in drivers/usb/host/.  
-> > > > It is, after all, a platform driver that registers two platform
-> > > > devices.
-> > > 
-> > > Why do think that?
-> > 
-> > Because it is true.  One can easily see that st-hcd.c is a platform
-> > driver: It contains a module_platform_driver() line and a struct
-> > platform_driver definition near the end.  And it registers a platform
-> > device by calling platform_device_add() in st_hcd_device_create(),
-> > which is called twice by st_hcd_probe().
-> 
-> You are correct that this is indeed a platform driver and in the 'old
-> days' these would have been stuffed into the ARM sub-architecture
-> directories.  However, these became far too bloated and created too
-> much churn which angered Linus.  A great deal has changed since his
-> ARM rant [1].  All drivers (platform or otherwise) are now to live in
-> 'drivers', which makes a great deal of sense really, doesn't it?
-> 
-> Did you grep kernel wide for module_platform_driver()?
-> 
-> $ git grep module_platform_driver -- arch/ | wc -l
-> 12
-> 
-> $ git grep module_platform_driver -- drivers/ | wc -l
-> 1138
-> 
-> Most platform drivers have already been moved.
+I agree. But I would like to avoid specifying 44 "interrupts" in
+DT files if they are known a priory in driver for specific chip.
 
-Okay, I grant the point.  Objections withdrawn.  Fix up the spelling 
-error and the other stuff in the Kconfig help text, and this will be 
-acceptable.
+Only drawback that I could see is that it will be little odd for
+client drivers, which are using SPMI PMIC pinctrl driver, to specify
+4 parameters required by interrupts property.
 
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan
