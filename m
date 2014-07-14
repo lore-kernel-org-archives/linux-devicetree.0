@@ -1,63 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
- driver
-Date: Mon, 14 Jul 2014 20:15:33 +0100
-Message-ID: <20140714191533.GH6800@sirena.org.uk>
-References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
- <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
- <20140714172524.GH6800@sirena.org.uk>
- <CAHfPSqAzab931yurSs+3zj=uoFj93FuAdd24AQKm1fZm07Nq8Q@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6] ASoC: tas2552: Support TI TAS2552
+	Amplifier
+Date: Mon, 14 Jul 2014 20:17:11 +0100
+Message-ID: <20140714191711.GI6800@sirena.org.uk>
+References: <1405093489-11897-1-git-send-email-dmurphy@ti.com>
+ <20140714184321.GW6800@sirena.org.uk>
+ <00FC9A978A94B7418C33AFAE8A35ED49D80B10@DFLE09.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ihETVmeDfwOC2qSl"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHfPSqAzab931yurSs+3zj=uoFj93FuAdd24AQKm1fZm07Nq8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4206703550393951933=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49D80B10@DFLE09.ent.ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Murphy, Dan" <dmurphy@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ihETVmeDfwOC2qSl
+--===============4206703550393951933==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aJFFgG5QZHt5jcrP"
+Content-Disposition: inline
+
+
+--aJFFgG5QZHt5jcrP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jul 15, 2014 at 12:31:32AM +0530, Naveen Krishna Ch wrote:
+On Mon, Jul 14, 2014 at 07:07:06PM +0000, Murphy, Dan wrote:
+> On 07/14/2014 01:43 PM, Mark Brown wrote:
 
-> in this case spi-s3c64xx.c will continue to ignore the generic SPI "cs-gpios"
-> implementation.
+> >> +config SND_SOC_TAS2552
+> >> +	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
+> >> +	depends on I2C
+> >> +
+> >>  endmenu
 
-> I'm willing to implement any suggestion to fix this issue.
+> > Keep this and Makefile sorted - since this is a proper CODEC driver it
+> > should be in with the CODECs and also sorted in alphabetical order.
 
-The problem isn't what you're trying to do, the problem is verifying
-that it has been done correctly - making sure that everything has been
-accounted for in the change itself.
+> OK.  I was trying to stay away from a conflict by adding to the
+> bottom of the file.
 
---ihETVmeDfwOC2qSl
+The whole point is to avoid conflicts - if everyone adds at the bottom
+of the file any two adds are pretty much guaranteed to conflict either
+on application or on merge.  Sorting avoids most of these and makes any
+that do occur much clearer.
+
+--aJFFgG5QZHt5jcrP
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTxCxSAAoJELSic+t+oim9130P/iP6/+ZTARJ8xRg5CUub6ZHF
-85DbYmOwNfrYaZE0p9VF5NfJhsyuqb4viSGzHCh4vSYEFhM86s8nEE3kwgYnx5fJ
-zSBxdWhLPp1j/uA2Vbath8fkTebfiAreQ+cWx4GWf/iuNvkYd1Tqar7PdmudFLoA
-Om4QYO8kUlE0oreS6skEahEPuRAJTnSRAFGpzELw/JnMhkszAXk9biYnBV9PN6mF
-TBQnvNZCmBnkzkuTPzD/09WAsSY/Ny3r3mbUnBqYaL0WzK2cTvg4Ist2gwcRVQSh
-HHDidrKdt01w6e7CL36RN4GCEUWZaQnxu+nZVCvSUm3z0iqv7X7GuafC2I0O6abI
-XYgM3lEBGWtGLPR1+7o5R88CMaCUJrq6LygsY8Ow1HRtjigw+iw10HKDWOlu5Ctm
-51/R5a1DnY+nX4M6Z34DGPwvkqDBokDiPS46mQ+Wm8cW57W1urYglnfyG6VVU9yL
-yhdfkYoRNDG08igWnOV1+u+lhn25H/cZ8TS7KJKZIUuuwV+QZrsu1mI/hZJnu2TB
-efOo8YNVqbsl4d81mkq1YgmY4dpkYbaGPFKUe4KkJMxeMKDfW8C/aCtPz2zGWDMV
-rr3oBlXQy5Q/fZuoy0JcTH/LLmwrJrRqgKYqLpnRtIbdlyzIjlHB6cKa/5Q6dgse
-BJFBp+ay63rTQ6A7Sbyt
-=9v4Q
+iQIcBAEBAgAGBQJTxCy0AAoJELSic+t+oim9ZC0P/0xXUNawujyd33X24/UV5qSp
+aloiKAIzyiIrQyCudGVQT541+Kida3csZi8U+xGD5AGrxohCR44sFdcZKfmSeIWH
+C1rJcmMdTrfv3GaPgUYJ5Vlq7UK25C76JjZ0x0VIuG2Tnaz7tbIPawdbV4ResHEq
+YWi1GKgqY59tGI8KQGM2vpg8LPa7n+MUQEA6XkBMTmqX6u631XWpHzo1h0UpcZvH
+ro48VsVg1wrUXixlQozPw8wyfJDvs72L/avOqx8XmeSVuIGNAHQNisBaCE1yPzhH
+reaYLPafKra3Eb/8gBuCUqSsqgOwKElfCsZVU8qoCU+yX4rsPBo1f+idgWdp+ASZ
+biy2NyNhnTqP8hLa+iNjArxHR+axUSPQvlXMpJz6GHBDK3+SIRkrcSTLzGo4EQ5w
+5OLGfxllX1u51YnjGhf5yVoXeXee4oNftPWVxrsslWSfOehAdZ5yj9W/nskweiA+
+xWz6EGMmq3tbHXExh7ZXjeAVlfoJmCRkOBEt8/EhQUtCbH2JEICQeXFtVROOwP1r
+/rDNp/nfsl4mERZjQu0/kmAXA5VoL9K+3fBRpSybSAii3B8fpy3DinwVcIc2v0nc
++4m7TNfzfcFJ/tqLr5DKK5iPNaqNqUAY/cJcCG2UvG3ZD7r3wvJR8GO641or3KKB
+i3XvoKw4thb1TRR2GB3F
+=g9z5
 -----END PGP SIGNATURE-----
 
---ihETVmeDfwOC2qSl--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--aJFFgG5QZHt5jcrP--
+
+--===============4206703550393951933==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4206703550393951933==--
