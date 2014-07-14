@@ -1,49 +1,114 @@
-From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
-Date: Mon, 14 Jul 2014 09:04:05 +0100
-Message-ID: <CAJ5Y-eb3EqbmNNKFPFShiBEDEf11pPMg2hVhMz=RPt+1H+FyZQ@mail.gmail.com>
-References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
-	<1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
-	<CAJ5Y-eYPffYQ57ERODyBYYKjL2FVhGapKmP0YxzcT9rswfaJaA@mail.gmail.com>
-	<CAJe_Zhe5W4D+TzyfKdE8KvSc8SJwyHG3SQGpUyd8-ML-wHBDyg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 RESEND 0/4] CMA & device tree, once again
+Date: Mon, 14 Jul 2014 10:28:03 +0200
+Message-ID: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_Zhe5W4D+TzyfKdE8KvSc8SJwyHG3SQGpUyd8-ML-wHBDyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonsoo Kim <iamjoonsoo.kim-Hm3cg6mZ9cc@public.gmane.org>, "Aneesh Kumar K.V." <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On 14 July 2014 05:17, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 11 July 2014 17:16, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi Jassi,
->>
->> Other than a few nits, this looks good to me.
->>
-> Thanks for the nits. I will club them together with other feedback on
-> the patchset.
->
->>
->> Hopefully you've run this through checkpatch as well? Also, were you
->> able to sort out the process of getting this stuff hosted on Linaro's
->> git servers? or elsewhere? It would really help maintainers to pick
->> this up and for others to rebase on top of your changes.
->>
-> I didn't think it was a good idea to keep a 'dev-branch' for a new
-> subsystem before having even a single Ack or Reviewed-by.  Users
-> should track patch revisions on mailing lists and later maintainers
-> will be sent a tree:branch to pick Acked patches from.
+(please ignore previous patchset, I've attached wrong version of patches)
 
-Your private dev branch doesn't need to have any Acks/Reviewed-bys.
-You can add my signature after addressing the feedback.
+This is one more respin of the patches which add support for creating
+reserved memory regions defined in device tree. The last attempt
+(http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html)
+ended in merging only half of the code, so right now we have complete
+documentation merged and only basic code, which implements a half of it
+is written in the documentation. Although the merged patches allow to
+reserve memory, there is no way of using it for devices and drivers.
 
-Reviewed-by: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This situation makes CMA rather useless, as the main architecture (ARM),
+which used it, has been converted from board-file based system
+initialization to device tree. Thus there is no place to use direct
+calls to dma_declare_contiguous() and some new solution, which bases on
+device tree, is urgently needed.
 
-Cheers,
-Ashwin
+This patch series fixes this issue. It provides two, already widely
+discussed and already present in the kernel, drivers for reserved
+memory: first based on DMA-coherent allocator, second using Contiguous
+Memory Allocator. The first one nicely implements typical 'carved out'
+reserved memory way of allocating contiguous buffers in a kernel-style
+way. The memory is used exclusively by devices assigned to the given
+memory region. The second one allows to reuse reserved memory for
+movable kernel pages (like disk buffers, anonymous memory) and migrates
+it out when device to allocates contiguous memory buffer. Both driver
+provides memory buffers via standard dma-mapping API.
+
+The patches have been rebased on top of latest CMA and mm changes merged
+to akmp kernel tree.
+
+To define a 64MiB CMA region following node is needed:
+
+multimedia_reserved: multimedia_mem_region {
+	compatible = "shared-dma-pool";
+	reusable;
+	size = <0x4000000>;
+	alignment = <0x400000>;
+};
+
+Similarly, one can define 64MiB region with DMA coherent memory:
+
+multimedia_reserved: multimedia_mem_region {
+	compatible = "shared-dma-pool";
+	no-map;
+	size = <0x4000000>;
+	alignment = <0x400000>;
+};
+
+Then the defined region can be assigned to devices:
+
+scaler: scaler@12500000 {
+	memory-region = <&multimedia_reserved>;
+	/* ... */
+};
+codec: codec@12600000 {
+	memory-region = <&multimedia_reserved>;
+	/* ... */
+};
+
+Best regards
+Marek Szyprowski
+Samsung R&D Institute Poland
+
+Changes since v1:
+(http://www.spinics.net/lists/arm-kernel/msg343702.html)
+- fixed possible memory leak in case of reserved memory allocation failure
+  (thanks to Joonsoo Kim)
+
+Changes since the version posted in '[PATCH v6 00/11] reserved-memory 
+regions/CMA in devicetree, again' thread 
+http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html:
+- rebased on top of '[PATCH v3 -next 0/9] CMA: generalize CMA reserved
+area management code' patch series on v3.16-rc3
+- improved dma-coherent driver, now it correctly handles assigning more
+than one device to the given memory region
+
+
+Patch summary:
+
+Marek Szyprowski (4):
+  drivers: of: add automated assignment of reserved regions to client
+    devices
+  drivers: of: initialize and assign reserved memory to newly created
+    devices
+  drivers: dma-coherent: add initialization from device tree
+  drivers: dma-contiguous: add initialization from device tree
+
+ drivers/base/dma-coherent.c     | 137 ++++++++++++++++++++++++++++++++++------
+ drivers/base/dma-contiguous.c   |  67 ++++++++++++++++++++
+ drivers/of/of_reserved_mem.c    |  70 ++++++++++++++++++++
+ drivers/of/platform.c           |   7 ++
+ include/linux/cma.h             |   3 +
+ include/linux/of_reserved_mem.h |   7 ++
+ mm/cma.c                        |  62 ++++++++++++++----
+ 7 files changed, 323 insertions(+), 30 deletions(-)
+
+-- 
+1.9.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
