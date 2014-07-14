@@ -1,40 +1,70 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: Re: [alsa-devel] [PATCH V3 2/2] ASoC: samsung: Add machine driver for
- Odroid X2/U3
-Date: Mon, 14 Jul 2014 16:25:42 +0100
-Message-ID: <CAD8Lp460Ym1y5OS8ya=jddO-spnojyGVWkUWhXmKCfbOOGL61A@mail.gmail.com>
-References: <1404479625-25385-1-git-send-email-s.nawrocki@samsung.com>
-	<1404479625-25385-2-git-send-email-s.nawrocki@samsung.com>
-	<CAD8Lp44JFtbcD22c+0PVb5S4U1kVTTxHD=PgqiKzhVypFW5Prg@mail.gmail.com>
-	<53BEBC3F.6030205@samsung.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [REQUEST] DT patch not reviewed for 2 months+
+Date: Mon, 14 Jul 2014 17:41:22 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407141732130.27454@axis700.grange>
+References: <Pine.LNX.4.64.1407132145230.21736@axis700.grange>
+ <4473843.TzcaEArWEr@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53BEBC3F.6030205@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Chen Zhen <zhen1.chen@samsung.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4473843.TzcaEArWEr@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 10, 2014 at 5:15 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 08/07/14 11:15, Daniel Drake wrote:
->> Testing on ODROID-U2, v3 is not quite working for me, but v2 of the
->> patch was fine.
->> I boot up, run:
->> # speaker-test -c 2 -t wav
->>
->> As soon as I hear the word "front" I press ctrl+c and then run the
->> command again.
->> Now the command hangs with no audible output.
->>
->> Any ideas? Let me know if you have trouble reproducing.
->
-> I just posted a patch addressing this, please let me know
-> if there are any further issues.
+Hi Arnd,
 
+Thanks for the review!
 
-Sorry for not testing sooner. Your patch solves the issue.
+On Mon, 14 Jul 2014, Arnd Bergmann wrote:
+
+> On Sunday 13 July 2014 22:00:11 Guennadi Liakhovetski wrote:
+> > Hi all,
+> > 
+> > On 10th of May I submitted 2 patches
+> > 
+> > http://thread.gmane.org/gmane.linux.drivers.devicetree/73577
+> > 
+> > of which 1 adds documentation for DT bindings for a dmaengine driver. The 
+> > driver doesn't add any new bindings, only standard bindings are used and 
+> > the respective generic document is referenced in the patch. This makes me 
+> > think, that a review of that patch should really be a matter of a couple 
+> > of minutes. Unfortunateky this still hasn't happened. If the patch had 
+> > been reviewed promptly, it still could make it into 3.16. We're at 
+> > 3.16-rc4 in the meantime. Have I done anything wrong in the patch 
+> > submission procedure? What do I have to do to get this patch reviewed soon 
+> > to get it in 3.17?
+> 
+> The fallback for device drivers is that if nobody finds the time to review
+> the binding, the subsystem maintainer can just take it anyway.
+> 
+> I hadn't seen this driver so far, but looked at it now. The binding looks
+> good to me, so feel free to resend it with
+> 
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
+> The driver also looks good, but there is one part that can now be
+> done more efficiently:
+> 
+> +	dma_cap_zero(mask);
+> +	dma_cap_set(DMA_SLAVE, mask);
+> +
+> +	dchan = dma_request_channel(mask, nbpf_dma_filter, ofdma->of_node);
+> +	if (!dchan)
+> +		return NULL;
+> 
+> 
+> Here you can just call dma_get_any_slave_channel() and remove the filter
+> function. The way you do it is also correct, but we're trying to get
+> away from that, as it just adds pointless overhead.
+
+Ok, I'll have a look at it and make sure to send a rebased update asap 
+(that is hopefully next weekend...)!
 
 Thanks
-Daniel
+Guennadi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
