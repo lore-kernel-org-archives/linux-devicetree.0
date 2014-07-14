@@ -1,61 +1,72 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 0/5] OMAP Mailbox framework adoption & DT support
-Date: Mon, 14 Jul 2014 10:58:04 -0500
-Message-ID: <53C3FE0C.4080502@ti.com>
-References: <1405116252-53612-1-git-send-email-s-anna@ti.com> <CAPdLdq=ZnPBQiGVbKOk8G5soP=uPYpT7mEjigpR=W1Hc4btV3g@mail.gmail.com>
+From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH 0/4 V3] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Mon, 14 Jul 2014 10:59:57 -0500
+Message-ID: <53C3FE7D.3090805@amd.com>
+References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <20140713231431.GM13108@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPdLdq=ZnPBQiGVbKOk8G5soP=uPYpT7mEjigpR=W1Hc4btV3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140713231431.GM13108@titan.lakedaemon.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: marc.zyngier@arm.com, mark.rutland@arm.com, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
-
-On 07/11/2014 06:15 PM, Markus Mayer wrote:
-> On 11 July 2014 15:04, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> Hi,
+On 7/13/2014 6:14 PM, Jason Cooper wrote:
+> Suravee,
+>
+> On Wed, Jul 09, 2014 at 06:05:00PM -0500, suravee.suthikulpanit@amd.com wrote:
+>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 >>
->> This is a refresh of the OMAP Mailbox framework adoption & DT support
->> series [1], to work with the revised OMAP mailbox DT/hwmod cleanup
->> series [2].
+>> This patch set introduces support for MSI(-X) in GICv2m specification,
+>> which is implemented in some variation of GIC400.
 >>
->> The series has one less patch than the previous series, with the patch
->> "mailbox/omap: add a custom of_xlate function" squashed into the OMAP
->> mailbox framework adaptation patch. The first 3 patches deal with the
->> OMAP DT bindings and parse support like previous series, and the last
->> 2 patches deal with the mailbox framework adaptation. The testing is
->> also done with the updated v8 version of mailbox framework [3] from
->> Jassi Brar, no changes are required for the v7 to v8 update.
->>
->> The AM335 PM suspend series [4] which relies on this series also does
->> not require any changes.
-> 
-> May I ask what branch this series is based upon? I tried a number of
-> branches (3.16-rcX, 3.15, linux-next), and the series won't apply to
-> any of them (other than patch 1/5, which does apply fine, but that
-> also contains no code).
+>> This depends on and has been tested with the V7 of"Add support for PCI in AArch64"
+>> (https://lkml.org/lkml/2014/3/14/320).
+>
+> Grrr.  I mis-spoke against your v1 of this series.  There are more
+> changes to irq-gic.c than I originally thought in this series.
 
-There are couple of dependent preparatory series. You probably missed
-the following in the cover letter.
-> The series depends on the OMAP mailbox cleanup series [5] and the
-> refreshed OMAP mailbox DT/hwmod cleanup series [2].
+I am not quite sure what your are referring to.
 
-As long as you pick the two dependent series, they apply fine on any of
-the 3.16-rcs. I have posted all the series based on 3.16-rc2. Here's a
-merged branch for your reference (not for pulling though, it has one
-additional commit to allow me to test on OMAP2)
-https://github.com/sumananna/mailbox/commits/submit/3.16-rc2-omap-mbox-v8-fwk-v2
+> Additionally, we have a lot of other significant changes to that driver
+> as well this cycle.  It would be really helpful if I could take patches
+> 1-3 through irqchip/gic.  I can Ack #4 with the Subject change, and the
+> branch it lands in can depend on irqchip/gic, no problem there.
 
-The last 2 patches in the series also depend on the mailbox framework
-patches from Jassi to not throw any build errors if enabled.
+Patch 1-3 should be able to go through the irqchip/gic along with the 
+gicv3 from Marc, which I have rebased this patch against.
 
-regards
-Suman
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch 4 is arch64 architectural changes.  Therefore, it might need to be 
+going through a different branch. Marc/Mark/Will/Catalin, do you have 
+any suggestions on which branch this should go to?
+
+> My main concern is your statement above and your answer to my inquiry
+> against v1.
+>
+> Right now, I'm only concerned about breaking the build.  Can I take 1-3?
+> Or, do we need to wait until aarch64 PCI lands in mainline?
+
+1 and 2 should be trivial since there is no change functionally.
+
+3 mostly adding new files which should not get built if ARCH64 PCI is 
+not supported based on the arch/arm64/Kconfig below.
+
++++ b/arch/arm64/Kconfig
+@@ -9,6 +9,7 @@ config ARM64
+  	select ARM_AMBA
+  	select ARM_ARCH_TIMER
+  	select ARM_GIC
++	select ARM_GIC_V2M if (PCI && PCI_MSI)
+  	select ARM_GIC_V3
+  	select BUILDTIME_EXTABLE_SORT
+  	select CLONE_BACKWARDS
+
+The only thing is the change related to MSI in the irq-gic.c which 
+should not affect with the non-PCI system.
+
+Thanks,
+
+Suravee
