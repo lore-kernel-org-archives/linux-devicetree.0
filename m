@@ -1,163 +1,76 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC V1] devicetree: Dialog Semiconductor consolidate existing
- vendor prefixes to standardise on 'dlg'
-Date: Mon, 14 Jul 2014 17:21:01 +0100
-Message-ID: <20140714162101.GM26465@leverpostej>
-References: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V2 2/2] ARM: dts: DRA7: Add node for RTC
+Date: Mon, 14 Jul 2014 09:23:24 -0700
+Message-ID: <20140714162324.GF20068@atomide.com>
+References: <1404894932-26677-3-git-send-email-lokeshvutla@ti.com>
+ <20140709091232.GJ28884@atomide.com>
+ <53BD0C43.1090002@ti.com>
+ <20140709100914.GL28884@atomide.com>
+ <53BD1AF8.2060609@ti.com>
+ <20140709105055.GP28884@atomide.com>
+ <53BD1FC3.6050500@ti.com>
+ <20140709110051.GQ28884@atomide.com>
+ <53BD2249.2080808@ti.com>
+ <53C3ED02.7020206@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <53C3ED02.7020206@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Keerthy <a0393675@ti.com>, paul@pwsan.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@ti.com, devicetree@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMTQsIDIwMTQgYXQgMDU6MDc6MjBQTSArMDEwMCwgT3BlbnNvdXJjZSBbU3Rl
-dmUgVHdpc3NdIHdyb3RlOgo+IEZyb206IE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXSA8c3R3aXNz
-Lm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+Cj4gCj4gVGhpcyBwYXRjaCBzZXJpZXMgdXBkYXRlcyB0
-aGUgZGV2aWNlIHRyZWUgdmVuZG9yIHByZWZpeCBmb3IKPiBEaWFsb2cgU2VtaWNvbmR1Y3Rvcgo+
-IAo+IFZhcmlvdXMgbWV0aG9kcyBhcmUgY3VycmVudGx5IHVzZWQgdGhyb3VnaG91dCB0aGUga2Vy
-bmVsOiAnZGlhc2VtaScsCj4gJ2RpYWxvZycgYW5kICdkbGcnLiBPdGhlcnMgaGF2ZSBhbHNvIGJl
-ZW4gc3VnZ2VzdGVkLgo+IAo+IFRoaXMgcGF0Y2ggc2V0IGFpbXMgdG8gY29uc29saWRhdGUgdGhl
-IHVzYWdlIG9mIHRoZSB2ZW5kb3IgcHJlZml4IHRvCj4gdXNlIGEgY29tbW9uIHN0YW5kYXJkLiBU
-aGUgcHJlZml4ICdkbGcnIGlzIHVzZWQuCj4gCj4gVGhpcyBlLW1haWwgaXMgaW4gcmVzcG9uc2Ug
-dG8gdGhlIHByZXZpb3VzIHRocmVhZCBoZXJlOgo+IAo+IC0gaHR0cHM6Ly9sa21sLm9yZy9sa21s
-LzIwMTQvNi8xMS8yNjIKCkluIHRoYXQgcmVzcG9uc2UsIFJvYiBwb2ludGVkIG91dCB0aGUgb2xk
-IGZvcm1zIHNob3VsZCBiZSBtYXJrZWQKZGVwcmVjYXRlZCwgYnV0IHRoZSBwYXRjaCBzZWVtcyB0
-byBvdXRyaWdodCByZW1vdmUgdGhlbS4KCkFyZSB3ZSBzdXJlIHRoaXMgZG9lc24ndCBicmVhayBh
-biBleGlzdGluZyBEVEIgYW55d2hlcmU/CgpUaGFua3MsCk1hcmsuCiAKPiAKPiBTaWduZWQtb2Zm
-LWJ5OiBPcGVuc291cmNlIFtTdGV2ZSBUd2lzc10gPHN0d2lzcy5vcGVuc291cmNlQGRpYXNlbWku
-Y29tPgo+IC0tLQo+IENoZWNrcyBwZXJmb3JtZWQgd2l0aCBsaW51eC1uZXh0L25leHQtMjAxNDA3
-MTQvc2NyaXB0cy9jaGVja3BhdGNoLnBsCj4gIHRyaXZpYWwtZGV2aWNlcy50eHQgICAgICAgdG90
-YWw6IDAgZXJyb3JzLCAwIHdhcm5pbmdzLCA4OSBsaW5lcyBjaGVja2VkCj4gIGRhOTIxMC50eHQg
-ICAgICAgICAgICAgICAgdG90YWw6IDAgZXJyb3JzLCAwIHdhcm5pbmdzLCAyMSBsaW5lcyBjaGVj
-a2VkCj4gIHZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgdG90YWw6IDAgZXJyb3JzLCAwIHdhcm5p
-bmdzLCAxNDkgbGluZXMgY2hlY2tlZAo+ICBpbXg1My1zbWQuZHRzICAgICAgICAgICAgIHRvdGFs
-OiAwIGVycm9ycywgMiB3YXJuaW5ncywgMjc5IGxpbmVzIGNoZWNrZWQKPiAgaW14NnFkbC1waHl0
-ZWMtcGZsYTAyLmR0c2kgdG90YWw6IDAgZXJyb3JzLCAyIHdhcm5pbmdzLCAzNTcgbGluZXMgY2hl
-Y2tlZAo+ICBkYTkwNTUtY29yZS5jICAgICAgICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJu
-aW5ncywgNDI4IGxpbmVzIGNoZWNrZWQKPiAKPiBUaGlzIHBhdGNoIGFwcGxpZXMgYWdhaW5zdCBs
-aW51eC1uZXh0IGFuZCBuZXh0LTIwMTQwNzE0Cj4gCj4gUmVnYXJkcywKPiBTdGV2ZSBUd2lzcywg
-RGlhbG9nIFNlbWljb25kdWN0b3IgTHRkLgo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-MmMvdHJpdmlhbC1kZXZpY2VzLnR4dCAgICB8ICAyICstCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0ICAgICAgIHwgIDQgKystLQo+ICAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAxICsKPiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NTMtc21kLmR0cyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBhcmNo
-L2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaSAgICAgICB8ICAyICstCj4g
-IGRyaXZlcnMvbWZkL2RhOTA1NS1jb3JlLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjYg
-KysrKysrKysrKystLS0tLS0tLS0tLQo+ICA2IGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
-KyksIDE4IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKPiBpbmRleCAzNzgwM2Vi
-Li5hMDJiOGExIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dAo+IEBAIC00NCw3ICs0NCw3IEBAIGRh
-bGxhcyxkczE3NzUJCVRpbnkgRGlnaXRhbCBUaGVybW9tZXRlciBhbmQgVGhlcm1vc3RhdAo+ICBk
-YWxsYXMsZHMzMjMyCQlFeHRyZW1lbHkgQWNjdXJhdGUgScOCwrJDIFJUQyB3aXRoIEludGVncmF0
-ZWQgQ3J5c3RhbCBhbmQgU1JBTQo+ICBkYWxsYXMsZHM0NTEwCQlDUFUgU3VwZXJ2aXNvciB3aXRo
-IE5vbnZvbGF0aWxlIE1lbW9yeSBhbmQgUHJvZ3JhbW1hYmxlIEkvTwo+ICBkYWxsYXMsZHM3NQkJ
-RGlnaXRhbCBUaGVybW9tZXRlciBhbmQgVGhlcm1vc3RhdAo+IC1kaWFsb2csZGE5MDUzCQlEQTkw
-NTM6IGZsZXhpYmxlIHN5c3RlbSBsZXZlbCBQTUlDIHdpdGggbXVsdGljb3JlIHN1cHBvcnQKPiAr
-ZGxnLGRhOTA1MwkJREE5MDUzOiBmbGV4aWJsZSBzeXN0ZW0gbGV2ZWwgUE1JQyB3aXRoIG11bHRp
-Y29yZSBzdXBwb3J0Cj4gIGVwc29uLHJ4ODAyNQkJSGlnaC1TdGFiaWxpdHkuIEkyQy1CdXMgSU5U
-RVJGQUNFIFJFQUwgVElNRSBDTE9DSyBNT0RVTEUKPiAgZXBzb24scng4NTgxCQlJMkMtQlVTIElO
-VEVSRkFDRSBSRUFMIFRJTUUgQ0xPQ0sgTU9EVUxFCj4gIGZzbCxtYWczMTEwCQlNQUczMTEwOiBY
-dHJpbnNpYyBIaWdoIEFjY3VyYWN5LCAzRCBNYWduZXRvbWV0ZXIKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0Cj4gaW5k
-ZXggZjEyMGYyMi4uMzI5N2M1MyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQKPiBAQCAtMiw3ICsyLDcgQEAK
-PiAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAKPiAtLSBjb21wYXRpYmxlOgltdXN0IGJlICJk
-aWFzZW1pLGRhOTIxMCIKPiArLSBjb21wYXRpYmxlOgltdXN0IGJlICJkbGcsZGE5MjEwIgo+ICAt
-IHJlZzoJCXRoZSBpMmMgc2xhdmUgYWRkcmVzcyBvZiB0aGUgcmVndWxhdG9yLiBJdCBzaG91bGQg
-YmUgMHg2OC4KPiAKPiAgQW55IHN0YW5kYXJkIHJlZ3VsYXRvciBwcm9wZXJ0aWVzIGNhbiBiZSB1
-c2VkIHRvIGNvbmZpZ3VyZSB0aGUgc2luZ2xlIGRhOTIxMAo+IEBAIC0xMSw3ICsxMSw3IEBAIERD
-REMuCj4gIEV4YW1wbGU6Cj4gCj4gIAlkYTkyMTBANjggewo+IC0JCWNvbXBhdGlibGUgPSAiZGlh
-c2VtaSxkYTkyMTAiOwo+ICsJCWNvbXBhdGlibGUgPSAiZGxnLGRhOTIxMCI7Cj4gIAkJcmVnID0g
-PDB4Njg+Owo+IAo+ICAJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDkwMDAwMD47Cj4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4
-ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhl
-cy50eHQKPiBpbmRleCA1ZDI3ZTVhLi4zNWE4MzNlIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPiBAQCAtMzcs
-NiArMzcsNyBAQCBkYWxsYXMJTWF4aW0gSW50ZWdyYXRlZCBQcm9kdWN0cyAoZm9ybWVybHkgRGFs
-bGFzIFNlbWljb25kdWN0b3IpCj4gIGRhdmljb20JREFWSUNPTSBTZW1pY29uZHVjdG9yLCBJbmMu
-Cj4gIGRlbngJRGVueCBTb2Z0d2FyZSBFbmdpbmVlcmluZwo+ICBkaWdpCURpZ2kgSW50ZXJuYXRp
-b25hbCBJbmMuCj4gK2RsZwlEaWFsb2cgU2VtaWNvbmR1Y3Rvcgo+ICBkbGluawlELUxpbmsgQ29y
-cG9yYXRpb24KPiAgZG1vCURhdGEgTW9kdWwgQUcKPiAgZWJ2CUVCViBFbGVrdHJvbmlrCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg1My1zbWQuZHRzCj4gaW5kZXggNWVjMTU5MC4uMWQzMjU1NyAxMDA2NDQKPiAtLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9pbXg1My1zbWQuZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NTMtc21kLmR0cwo+IEBAIC0yNjUsNyArMjY1LDcgQEAKPiAgCX07Cj4gCj4gIAlwbWlj
-OiBkaWFsb2dANDggewo+IC0JCWNvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1MyIsICJkaWFsb2cs
-ZGE5MDUyIjsKPiArCQljb21wYXRpYmxlID0gImRsZyxkYTkwNTMiLCAiZGxnLGRhOTA1MiI7Cj4g
-IAkJcmVnID0gPDB4NDg+Owo+ICAJfTsKPiAgfTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnFkbC1waHl0ZWMtcGZsYTAyLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2
-cWRsLXBoeXRlYy1wZmxhMDIuZHRzaQo+IGluZGV4IDI2OTRhYTguLjBlNTBiYjAgMTAwNjQ0Cj4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1waHl0ZWMtcGZsYTAyLmR0c2kKPiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaQo+IEBAIC04Myw3
-ICs4Myw3IEBACj4gIAl9Owo+IAo+ICAJcG1pY0A1OCB7Cj4gLQkJY29tcGF0aWJsZSA9ICJkaWFs
-b2csZGE5MDYzIjsKPiArCQljb21wYXRpYmxlID0gImRsZyxkYTkwNjMiOwo+ICAJCXJlZyA9IDww
-eDU4PjsKPiAgCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvND47Cj4gIAkJaW50ZXJydXB0cyA9
-IDwxNyAweDg+OyAvKiBhY3RpdmUtbG93IEdQSU80XzE3ICovCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbWZkL2RhOTA1NS1jb3JlLmMgYi9kcml2ZXJzL21mZC9kYTkwNTUtY29yZS5jCj4gaW5kZXgg
-Y2FmOGRjZi4uYjRkOTIwYyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9kYTkwNTUtY29yZS5j
-Cj4gKysrIGIvZHJpdmVycy9tZmQvZGE5MDU1LWNvcmUuYwo+IEBAIC0yOTYsNzMgKzI5Niw3MyBA
-QCBzdGF0aWMgc3RydWN0IHJlc291cmNlIGRhOTA1NV9sZDA1XzZfcmVzb3VyY2UgPSB7Cj4gCj4g
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgZGE5MDU1X2RldnNbXSA9IHsKPiAgCXsKPiAt
-CQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LWdwaW8iLAo+ICsJCS5vZl9jb21wYXRp
-YmxlID0gImRsZyxkYTkwNTUtZ3BpbyIsCj4gIAkJLm5hbWUgPSAiZGE5MDU1LWdwaW8iLAo+ICAJ
-fSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJlZ3VsYXRvciIs
-Cj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5uYW1l
-ID0gImRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5pZCA9IDEsCj4gIAl9LAo+ICAJewo+IC0JCS5v
-Zl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtcmVndWxhdG9yIiwKPiArCQkub2ZfY29tcGF0
-aWJsZSA9ICJkbGcsZGE5MDU1LXJlZ3VsYXRvciIsCj4gIAkJLm5hbWUgPSAiZGE5MDU1LXJlZ3Vs
-YXRvciIsCj4gIAkJLmlkID0gMiwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBhdGlibGUgPSAi
-ZGlhbG9nLGRhOTA1NS1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkw
-NTUtcmVndWxhdG9yIiwKPiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwKPiAgCQkuaWQg
-PSAzLAo+ICAJfSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJl
-Z3VsYXRvciIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1bGF0b3IiLAo+
-ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5pZCA9IDQsCj4gIAl9LAo+ICAJ
-ewo+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtcmVndWxhdG9yIiwKPiArCQku
-b2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LXJlZ3VsYXRvciIsCj4gIAkJLm5hbWUgPSAiZGE5
-MDU1LXJlZ3VsYXRvciIsCj4gIAkJLmlkID0gNSwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBh
-dGlibGUgPSAiZGlhbG9nLGRhOTA1NS1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0g
-ImRsZyxkYTkwNTUtcmVndWxhdG9yIiwKPiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwK
-PiAgCQkuaWQgPSA2LAo+ICAJfSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2cs
-ZGE5MDU1LXJlZ3VsYXRvciIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1
-bGF0b3IiLAo+ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLAo+ICAJCS5pZCA9IDcsCj4g
-IAkJLnJlc291cmNlcyA9ICZkYTkwNTVfbGQwNV82X3Jlc291cmNlLAo+ICAJCS5udW1fcmVzb3Vy
-Y2VzID0gMSwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1
-NS1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkwNTUtcmVndWxhdG9y
-IiwKPiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwKPiAgCQkucmVzb3VyY2VzID0gJmRh
-OTA1NV9sZDA1XzZfcmVzb3VyY2UsCj4gIAkJLm51bV9yZXNvdXJjZXMgPSAxLAo+ICAJCS5pZCA9
-IDgsCj4gIAl9LAo+ICAJewo+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtb25r
-ZXkiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkwNTUtb25rZXkiLAo+ICAJCS5uYW1l
-ID0gImRhOTA1NS1vbmtleSIsCj4gIAkJLnJlc291cmNlcyA9ICZkYTkwNTVfb25rZXlfcmVzb3Vy
-Y2UsCj4gIAkJLm51bV9yZXNvdXJjZXMgPSAxLAo+ICAJfSwKPiAgCXsKPiAtCQkub2ZfY29tcGF0
-aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJ0YyIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRh
-OTA1NS1ydGMiLAo+ICAJCS5uYW1lID0gImRhOTA1NS1ydGMiLAo+ICAJCS5yZXNvdXJjZXMgPSBk
-YTkwNTVfcnRjX3Jlc291cmNlLAo+ICAJCS5udW1fcmVzb3VyY2VzID0gQVJSQVlfU0laRShkYTkw
-NTVfcnRjX3Jlc291cmNlKSwKPiAgCX0sCj4gIAl7Cj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlh
-bG9nLGRhOTA1NS1od21vbiIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1od21v
-biIsCj4gIAkJLm5hbWUgPSAiZGE5MDU1LWh3bW9uIiwKPiAgCQkucmVzb3VyY2VzID0gJmRhOTA1
-NV9od21vbl9yZXNvdXJjZSwKPiAgCQkubnVtX3Jlc291cmNlcyA9IDEsCj4gIAl9LAo+ICAJewo+
-IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtd2F0Y2hkb2ciLAo+ICsJCS5vZl9j
-b21wYXRpYmxlID0gImRsZyxkYTkwNTUtd2F0Y2hkb2ciLAo+ICAJCS5uYW1lID0gImRhOTA1NS13
-YXRjaGRvZyIsCj4gIAl9LAo+ICB9Owo+IC0tCj4gZW5kLW9mLXBhdGNoIGZvciBSRkMgVjEKPiAK
-PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+* Lokesh Vutla <lokeshvutla@ti.com> [140714 07:47]:
+> Hi Tony,
+> On Wednesday 09 July 2014 04:36 PM, Keerthy wrote:
+> > On Wednesday 09 July 2014 04:30 PM, Tony Lindgren wrote:
+> >> * Keerthy <a0393675@ti.com> [140709 03:59]:
+> >>> On Wednesday 09 July 2014 04:20 PM, Tony Lindgren wrote:
+> >>>> * Keerthy <a0393675@ti.com> [140709 03:39]:
+> >>>>> On Wednesday 09 July 2014 03:39 PM, Tony Lindgren wrote:
+> >>>>>> * Keerthy <a0393675@ti.com> [140709 02:36]:
+> >>>>>>> On Wednesday 09 July 2014 02:42 PM, Tony Lindgren wrote:
+> >>>>>>>> * Lokesh Vutla <lokeshvutla@ti.com> [140709 01:37]:
+> >>>>>>>>> --- a/arch/arm/boot/dts/dra7-evm.dts
+> >>>>>>>>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> >>>>>>>>> @@ -249,6 +249,7 @@
+> >>>>>>>>>                       regulator-min-microvolt = <1050000>;
+> >>>>>>>>>                       regulator-max-microvolt = <1050000>;
+> >>>>>>>>>                       regulator-boot-on;
+> >>>>>>>>> +                    regulator-always-on;
+> >>>>>>>>>                   };
+> >>>>>>>> Is this regulator really always on?
+> >>>>>>> This feeds on to RTC which is a free running clock. So i guess always on is
+> >>>>>>> justified no?
+> >>>>>> Well the dts entries should describe the hardware. If the
+> >>>>>> regulator can be enabled and disabled, we should not claim it's
+> >>>>>> always on.
+> >>>>>  From the PMIC perspective every regulator can be enabled and
+> >>>>> disabled. From a Board perspective there are some which need
+> >>>>> to be always on. For Ex: SMPS123 which feeds on to the MPU.
+> >>>> Right, and we already have regulator-boot-on for those. Or are
+> >>>> you seeing some issue with that?
+> >>> regulator-boot-on describes that at boot a particular regulator is on.
+> >>> It does not guarantee that it will be on for the rest of the time. The
+> >>> regulator framework can go ahead and disable it if no one has requested
+> >>> for it. In case of RTC we do not want that to happen.
+> >> That's a bug in the RTC driver then. The driver should request a
+> >> regulator if it's specified.
+> 
+> In my experiments I observed that when RTC regulator is switched
+> off and switched on, there is an abort while accessing RTC registers.
+
+Right, then you know you have the right regulator :)
+
+> After discussing with hardware team, it is confirmed that this
+> LDO9 regulator powering RTC cannot be turned off when
+> SoC is active and expected to be always on.
+
+Hmm but sounds like you already proved it can be idled? So
+the regulator really should be managed by the driver?
+
+Regards,
+
+Tony
