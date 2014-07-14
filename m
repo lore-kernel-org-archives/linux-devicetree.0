@@ -1,144 +1,157 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v3 1/2] can: m_can: add device tree binding documentation
-Date: Mon, 14 Jul 2014 10:48:23 +0530
-Message-ID: <53C3681F.90308@gmail.com>
-References: <1405074557-5519-1-git-send-email-b29396@freescale.com> <53BFBF3F.8040804@gmail.com> <20140714032451.GA1668@shlinux1.ap.freescale.net> <53C35E72.2050902@gmail.com> <20140714050403.GB1668@shlinux1.ap.freescale.net>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Mon, 14 Jul 2014 11:10:55 +0530
+Message-ID: <CAJe_Zhc8UMNO6t0pwuPQ5=fM4UARoru+AV2Jb6+7MAaDBoO9=A@mail.gmail.com>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
+	<1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
+	<201407111926.13939.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20140714050403.GB1668@shlinux1.ap.freescale.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201407111926.13939.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2014 10:34 AM, Dong Aisheng wrote:
-> On Mon, Jul 14, 2014 at 10:07:06AM +0530, Varka Bhadram wrote:
->> On 07/14/2014 08:54 AM, Dong Aisheng wrote:
->>> On Fri, Jul 11, 2014 at 04:11:03PM +0530, Varka Bhadram wrote:
->>>> On 07/11/2014 03:59 PM, Dong Aisheng wrote:
->>>>> add M_CAN device tree binding documentation
->>>>>
->>>>> Cc: Wolfgang Grandegger<wg@grandegger.com>
->>>>> Cc: Marc Kleine-Budde<mkl@pengutronix.de>
->>>>> Cc: Mark Rutland<mark.rutland@arm.com>
->>>>> Cc: Oliver Hartkopp<socketcan@hartkopp.net>
->>>>> Cc: Varka Bhadram<varkabhadram@gmail.com>
->>>>> Signed-off-by: Dong Aisheng<b29396@freescale.com>
->>>>> ---
->>>>>   .../devicetree/bindings/net/can/m_can.txt          |   65 ++++++++++++++++++++
->>>>>   1 files changed, 65 insertions(+), 0 deletions(-)
->>>>>   create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>> new file mode 100644
->>>>> index 0000000..c4cb263
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>> @@ -0,0 +1,65 @@
->>>>> +Bosch MCAN controller Device Tree Bindings
->>>>> +-------------------------------------------------
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible		: Should be "bosch,m_can" for M_CAN controllers
->>>>> +- reg			: physical base address and size of the M_CAN
->>>>> +			  registers map and Message RAM
->>>>> +- reg-names		: Should be "m_can" and "message_ram"
->>>>> +- interrupts		: Should be the interrupt number of M_CAN interrupt
->>>>> +			  line 0 and line 1, could be same if sharing
->>>>> +			  the same interrupt.
->>>>> +- interrupt-names	: Should contain "int0" and "int1"
->>>>> +- clocks		: Clocks used by controller, should be host clock
->>>>> +			  and CAN clock.
->>>>> +- clock-names		: Should contain "hclk" and "cclk"
->>>>> +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
->>>> I think this should be pinctrl-0
->>>>
->>> First, this part is defined by pinctrl binding doc.
->>> Second i think it may be possible someone wants to add other pinctrl states
->>> when implement low power state in the future.
->>> So i just keep it as pinctrl-<n>.
->> Normally we will use pinctrl-0 for mentioning the pinctrl bindings.
->>
->> If somebody going to add something to the pinctrl bindings they will
->> add separately with pinctrl-1: bla bla bla...
->>
-> Will it cause misleading that it only supports one state?
-> And if we only define pinctrl-0 here, how do we describe pinctrl-names?
-> It should be "default"? It looks not accurate enough to me.
+On 11 July 2014 22:56, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 11 July 2014, Jassi Brar wrote:
+>> +
+>> + This document aims to help developers write client and controller
+>> +drivers for the API. But before we start, let us note that the
+>> +client (especially) and controller drivers are likely going to be
+>> +very platform specific because the remote firmware is likely to be
+>> +proprietary and implement non-standard protocol. So even if two
+>> +platforms employ, say, PL320 controller, the client drivers can't
+>> +be shared across them. Even the PL320 driver might need to accomodate
+>> +some platform specific quirks. So the API is meant mainly to avoid
+>> +similar copies of code written for each platform.
+>> + Some of the choices made during implementation are the result of this
+>> +peculiarity of this "common" framework.
 >
-> Per my understanding, I think it's better to leave it as standard
-> pinctrl-binding doc states since anyhow people should read pinctrl-binding doc.
+> Note that there might be the case where you have a Linux instance
+> on both sides communicating over a standard protocol, so while it's
+> certainly true that a lot of the users (in particular the existing
+> ones) are talking to a proprietary firmware, it's not necessarily so.
 >
->>>>> +- pinctrl-names		: Names corresponding to the numbered pinctrl states
->>>> remove 1 tab space before :
->>>>
->>> It's a bit strange.
->>> Other line like pinctrl-<n> is also two tabs.
->>> And the code looks fine and already aligned.
->>> - pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
->>> - pinctrl-names		: Names corresponding to the numbered pinctrl states
->>> Do you mean change line of pinctrl-names from two tabs to one space and a tab before :?
->>>
->> When i see in the patch the alignment is like this
->> pinctrl-<n>	:
->> pinctrl-name		:
->>
-> Yes,in the original patch it's like:
-> +- pinctrl-<n>          : Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-> +- pinctrl-names                : Names corresponding to the numbered pinctrl states
+> An example I can think of is using the mailbox API as a low-level
+> implementation detail of a PCI-PCI link connecting two identical
+> hosts using a standard protocol like virtio or ntb-net on top.
 >
-> If remove one tab:
-> +- pinctrl-<n>          : Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-> +- pinctrl-names        : Names corresponding to the numbered pinctrl states
->
-> But in vim reading the code, it's like:
-> - pinctrl-<n>           : Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-> - pinctrl-names : Names corresponding to the numbered pinctrl states
-> I don't know why.
-> What should we do about this case?
-
-It seems to me that the style followed in bindings/pinctrl/pinctrl-bindings.txt
-looks good to me.
-
-pinctrl-<n>:		Pinctrl states as described in
-			bindings/pinctrl/pinctrl-bindings.txt
-pinctrl-names: 		Names corresponding to the
-			numbered pinctrl states
-
->>>>> +- mram-cfg		: Message RAM configuration data.
->>>>> +  Multiple M_CAN instances can share the same Message RAM and each element(e.g
->>>>> +  Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
->>>>> +  so this property is telling driver how the shared or private Message RAM
->>>>> +  are used by this M_CAN controller.
->>>>> +
->>>> It may written like:
->>>> mram-cfg		: Message RAM configuration data
->>>> 			  Multiple M_CAN instances can share the same Message RAM and each element
->>>> 			  (e.g Rx FIFO or Tx Buffer and etc) number in Message RAM is also configurable,
->>>> 			  ...
->>>>
->>> I'm fine with that.
->>> The question is it's easy to over 80 columns if writing like that,
->>> is it ok?
->> When we follow the above format it would be more readable.
->>
-> Okay.
->
->>> Regards
->>> Dong Aisheng
->> -- 
->> Regards,
->> Varka Bhadram.
->>
-> Regards
-> Dong Aisheng
->
->   
+Yes, and I have been careful to use the word 'likely', and not 'always' :)
+I will add your example as a note in this documentation though.
 
 
--- 
-Regards,
-Varka Bhadram.
+>> +     Part 2 - Client Driver (See include/linux/mailbox_client.h)
+>> +
+>> + The client might want to operate in blocking mode (synchronously
+>> +send a message through before returning) or non-blocking/async mode (submit
+>> +a message and a callback function to the API and return immediately).
+>> +
+>> +
+>> +static struct mbox_chan *ch_async, *ch_blk;
+>> +static struct mbox_client cl_async, cl_blk;
+>> +static struct completion c_aysnc;
+>
+> Using static variables for these is probably not good as an
+> example: we try to write all drivers in a way that lets them
+> handle multiple instances of the same hardware, so a better
+> example may be to put the same things into a data structure
+> that is dynamically allocatied by the client, even if that is
+> a little more verbose than your current examaple.
+>
+Yeah, that implies for any code.
+Here is only an example of how to use the api. One will have to put in
+extra effort to screw it up if the client drivers are already well
+written :)
 
+
+>> +/*
+>> + * This is the handler for data received from remote. The behaviour is purely
+>> + * dependent upon the protocol. This is just an example.
+>> + */
+>> +static void message_from_remote(struct mbox_client *cl, void *mssg)
+>> +{
+>> +     if (cl == &cl_async) {
+>> +             if (is_an_ack(mssg)) {
+>> +                     /* An ACK to our last sample sent */
+>> +                     return; /* Or do something else here */
+>> +             } else { /* A new message from remote */
+>> +                     queue_req(mssg);
+>> +             }
+>> +     } else {
+>> +             /* Remote f/w sends only ACK packets on this channel */
+>> +             return;
+>> +     }
+>> +}
+>> +
+>> +static void sample_sent(struct mbox_client *cl, void *mssg, int r)
+>> +{
+>> +     complete(&c_aysnc);
+>> +}
+>
+> Each of these would consequently do something like
+>
+>         struct my_mailbox *m = container_of(mbox_client, struct my_mailbox, client);
+>         complete(&m->completion);
+>
+Yup. I will change the example in documentation.
+
+>
+>> +static struct mbox_chan *
+>> +of_mbox_index_xlate(struct mbox_controller *mbox,
+>> +                 const struct of_phandle_args *sp)
+>> +{
+>> +     int ind = sp->args[0];
+>> +
+>> +     if (ind >= mbox->num_chans)
+>> +             return NULL;
+>> +
+>> +     return &mbox->chans[ind];
+>> +}
+>
+> Should this perhaps check that #mbox-cells is '1'?
+> For other values, this function can't really work.
+>
+Even for #mbox-cell==1 it won't work if the argument mean something
+other than what it expects (a direct index). I think it should be the
+responsibility of the developer to ensure he doesn't use the stock
+xlate() if it doesn't support his platform. So I usually skip such
+checks. If you think otherwise, I can add it though.
+
+
+>> +/**
+>> + * struct mbox_client - User of a mailbox
+>> + * @dev:             The client device
+>> + * @chan_name:               The string token to identify a channel out of more
+>> + *                   than one specified for the client via DT
+>> + * @tx_block:                If the mbox_send_message should block until data is
+>> + *                   transmitted.
+>> + * @tx_tout:         Max block period in ms before TX is assumed failure
+>> + * @knows_txdone:    if the client could run the TX state machine. Usually
+>> + *                   if the client receives some ACK packet for transmission.
+>> + *                   Unused if the controller already has TX_Done/RTR IRQ.
+>> + * @rx_callback:     Atomic callback to provide client the data received
+>> + * @tx_done:         Atomic callback to tell client of data transmission
+>> + */
+>
+> It may be worthwhile listing here which callbacks are being called under a
+> spinlock and which are allowed to sleep. Same for the other structures with
+> function pointers.
+>
+OK, will do.
+
+> None of these comments are show-stoppers, overall I'm very happy with the
+> current state of the mailbox API and I think we should merge it  in the next
+> merge window.
+>
+Thanks a lot! I will respin another patchset, waiting another day or
+two for feedback, with the hope to finally get some ACK or Reviewed by
+:)
+
+Cheers,
+Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
