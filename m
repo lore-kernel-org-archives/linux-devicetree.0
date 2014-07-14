@@ -1,846 +1,504 @@
-From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v7] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Mon, 14 Jul 2014 15:10:45 -0500
-Message-ID: <1405368645-4168-1-git-send-email-dmurphy@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: add support of the max5821
+Date: Mon, 14 Jul 2014 21:21:42 +0100
+Message-ID: <53C43BD6.9030102@kernel.org>
+References: <1405359159-12379-1-git-send-email-tremyfr@yahoo.fr>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405359159-12379-1-git-send-email-tremyfr@yahoo.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Reynes <tremyfr@yahoo.fr>, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, armadeus-forum@lists.sourceforge.net, devicetree@vger.kernel.org, julien.boibessot@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Support the TI TAS2552 Class D amplifier.
+On 14/07/14 18:32, Philippe Reynes wrote:
+> Signed-off-by: Philippe Reynes <tremyfr@yahoo.fr>
+Hi Philippe,
 
-The TAS2552 is a high efficiency Class-D audio
-power amplifier with advanced battery current
-management and an integrated Class-G boost
-The device constantly measures the
-current and voltage across the load and provides a
-digital stream of this information.
+Mostly looks good, a few things inline.
+Bigger ones are:
+1) You need locking to prevent some state changes occuring mid way through a
+    read (as it requires a register write then a read back of a value).
+2) Use a regulator for your reference voltage.  We probably still have a few
+    IIO drivers specifying references in a similar fashion to what you have
+    here, but they are all ancient (and some predate the regulator framework).
 
-Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
----
+Jonathan
+> ---
+>   .../devicetree/bindings/iio/dac/max5821.txt        |   18 +
+>   drivers/iio/dac/Kconfig                            |    8 +
+>   drivers/iio/dac/Makefile                           |    1 +
+>   drivers/iio/dac/max5821.c                          |  368 ++++++++++++++++++++
+>   4 files changed, 395 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/iio/dac/max5821.txt
+>   create mode 100644 drivers/iio/dac/max5821.c
+>
+> diff --git a/Documentation/devicetree/bindings/iio/dac/max5821.txt b/Documentation/devicetree/bindings/iio/dac/max5821.txt
+> new file mode 100644
+> index 0000000..242265f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/max5821.txt
+> @@ -0,0 +1,18 @@
+> +Maxim max5821 DAC device driver
+> +
+> +Required properties:
+> +	- compatible: Must be "maxim,max5821"
+> +	- reg: Should contain the ADC I2C address
+> +
+> +Optional properties:
+> +	- vref_mv: Reference input Voltage in mv. This should only be set if
+> +	there is an external reference voltage connected to the REF
+> +	pin. If the property is not set, 3600 is used as the reference voltage.
+As stated below, this wants to be a regulator and you don't want to have
+an arbitary default (just confuses matters).
 
-v7 - Addressed pm_runtime comments, sorted and alphatized the Makefile
-and Kconfg, removed "-codec", disable PLL at probe -
-https://patchwork.kernel.org/patch/4535501/
-v6 - Addressed comments from v5 also added PLL algorithim instead of
-hard coding PLL registers - https://patchwork.kernel.org/patch/4476001/
-v5 - Consolidated dai_fmt call back to write serial control register
-once - https://patchwork.kernel.org/patch/4474531/
-v4 - Added pm_runtime support, removed magical numbers, added regulator
-support, changed from legacy gpio to new gpiod calls, fixed default register
-values, flipped on battery tracking support and
-added suspend/resume support - https://patchwork.kernel.org/patch/4465611/
-v3 - Updated bindings doc per comments, rearranged probe pdata vs 
-np check - https://patchwork.kernel.org/patch/4453481/
-v2 - Address RFC comments- Added regmap, and snd_soc calls
-removed debug code, address checkpatch errors -https://patchwork.kernel.org/patch/4378281/
+> +
+> +Example:
+> +
+> +	max5821@38 {
+> +		compatible = "maxim,max5821";
+> +		reg = <0x38>;
+> +		vref_mv = <3600>;
+> +	};
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index f378ca8..4428acb 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -152,6 +152,14 @@ config MAX517
+>   	  This driver can also be built as a module.  If so, the module
+>   	  will be called max517.
+>
+> +config MAX5821
+> +	tristate "Maxim MAX5821 DAC driver"
+> +	depends on I2C
+> +	depends on OF
+> +	help
+> +	  Say yes here to build support for Maxim MAX5821
+> +	  10 bits dac.
+> +
+>   config MCP4725
+>   	tristate "MCP4725 DAC driver"
+>   	depends on I2C
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index bb84ad6..82545c0 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -17,4 +17,5 @@ obj-$(CONFIG_AD5791) += ad5791.o
+>   obj-$(CONFIG_AD5686) += ad5686.o
+>   obj-$(CONFIG_AD7303) += ad7303.o
+>   obj-$(CONFIG_MAX517) += max517.o
+> +obj-$(CONFIG_MAX5821) += max5821.o
+>   obj-$(CONFIG_MCP4725) += mcp4725.o
+> diff --git a/drivers/iio/dac/max5821.c b/drivers/iio/dac/max5821.c
+> new file mode 100644
+> index 0000000..92a1aa3
+> --- /dev/null
+> +++ b/drivers/iio/dac/max5821.c
+> @@ -0,0 +1,368 @@
+> + /*
+> +  * iio/dac/max5821.c
+> +  * Copyright (C) 2014 Philippe Reynes
+> +  *
+> +  * This program is free software; you can redistribute it and/or modify
+> +  * it under the terms of the GNU General Public License version 2 as
+> +  * published by the Free Software Foundation.
+> +  */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +
+> +#define MAX5821_DRV_NAME			"max5821"
+I normally get slightly iritated with this convention.  In this case
+you don't even use the above define.  Please get rid of it!
 
- .../devicetree/bindings/sound/tas2552.txt          |   26 +
- include/sound/tas2552-plat.h                       |   25 +
- sound/soc/codecs/Kconfig                           |    5 +
- sound/soc/codecs/Makefile                          |    2 +
- sound/soc/codecs/tas2552.c                         |  540 ++++++++++++++++++++
- sound/soc/codecs/tas2552.h                         |  129 +++++
- 6 files changed, 727 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tas2552.txt
- create mode 100644 include/sound/tas2552-plat.h
- create mode 100644 sound/soc/codecs/tas2552.c
- create mode 100644 sound/soc/codecs/tas2552.h
+> +#define MAX5821_MAX_DAC_CHANNELS		2
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2552.txt b/Documentation/devicetree/bindings/sound/tas2552.txt
-new file mode 100644
-index 0000000..55e2a0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas2552.txt
-@@ -0,0 +1,26 @@
-+Texas Instruments - tas2552 Codec module
-+
-+The tas2552 serial control bus communicates through I2C protocols
-+
-+Required properties:
-+	- compatible - One of:
-+		"ti,tas2552" - TAS2552
-+	- reg -  I2C slave address
-+	- supply-*: Required supply regulators are:
-+		"vbat"		battery voltage
-+		"iovdd"		I/O Voltage
-+		"avdd"		Analog DAC Voltage
-+
-+Optional properties:
-+	- enable-gpio - gpio pin to enable/disable the device
-+
-+Example:
-+
-+tas2552: tas2552@41 {
-+	compatible = "ti,tas2552";
-+	reg = <0x41>;
-+	enable-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
-+};
-+
-+For more product information please see the link below:
-+http://www.ti.com/product/TAS2552
-diff --git a/include/sound/tas2552-plat.h b/include/sound/tas2552-plat.h
-new file mode 100644
-index 0000000..65e7627
---- /dev/null
-+++ b/include/sound/tas2552-plat.h
-@@ -0,0 +1,25 @@
-+/*
-+ * TAS2552 driver platform header
-+ *
-+ * Copyright (C) 2014 Texas Instruments Inc.
-+ *
-+ * Author: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#ifndef TAS2552_PLAT_H
-+#define TAS2552_PLAT_H
-+
-+struct tas2552_platform_data {
-+	int enable_gpio;
-+};
-+
-+#endif
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 0b9571c..fbaa329 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -91,6 +91,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_STA350 if I2C
- 	select SND_SOC_STA529 if I2C
- 	select SND_SOC_STAC9766 if SND_SOC_AC97_BUS
-+	select SND_SOC_TAS2552 if I2C
- 	select SND_SOC_TAS5086 if I2C
- 	select SND_SOC_TLV320AIC23_I2C if I2C
- 	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
-@@ -521,6 +522,10 @@ config SND_SOC_STA529
- config SND_SOC_STAC9766
- 	tristate
- 
-+config SND_SOC_TAS2552
-+	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
-+	depends on I2C
-+
- config SND_SOC_TAS5086
- 	tristate "Texas Instruments TAS5086 speaker amplifier"
- 	depends on I2C
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index 1bd6e1c..3f20ecd 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -162,6 +162,7 @@ snd-soc-wm-hubs-objs := wm_hubs.o
- # Amp
- snd-soc-max9877-objs := max9877.o
- snd-soc-tpa6130a2-objs := tpa6130a2.o
-+snd-soc-tas2552-objs := tas2552.o
- 
- obj-$(CONFIG_SND_SOC_88PM860X)	+= snd-soc-88pm860x.o
- obj-$(CONFIG_SND_SOC_AB8500_CODEC)	+= snd-soc-ab8500-codec.o
-@@ -255,6 +256,7 @@ obj-$(CONFIG_SND_SOC_STA32X)   += snd-soc-sta32x.o
- obj-$(CONFIG_SND_SOC_STA350)   += snd-soc-sta350.o
- obj-$(CONFIG_SND_SOC_STA529)   += snd-soc-sta529.o
- obj-$(CONFIG_SND_SOC_STAC9766)	+= snd-soc-stac9766.o
-+obj-$(CONFIG_SND_SOC_TAS2552)	+= snd-soc-tas2552.o
- obj-$(CONFIG_SND_SOC_TAS5086)	+= snd-soc-tas5086.o
- obj-$(CONFIG_SND_SOC_TLV320AIC23)	+= snd-soc-tlv320aic23.o
- obj-$(CONFIG_SND_SOC_TLV320AIC23_I2C)	+= snd-soc-tlv320aic23-i2c.o
-diff --git a/sound/soc/codecs/tas2552.c b/sound/soc/codecs/tas2552.c
-new file mode 100644
-index 0000000..f0760af
---- /dev/null
-+++ b/sound/soc/codecs/tas2552.c
-@@ -0,0 +1,540 @@
-+/*
-+ * tas2552.c - ALSA SoC Texas Instruments TAS2552 Mono Audio Amplifier
-+ *
-+ * Copyright (C) 2014 Texas Instruments Incorporated -  http://www.ti.com
-+ *
-+ * Author: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/errno.h>
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/soc-dapm.h>
-+#include <sound/tlv.h>
-+#include <sound/tas2552-plat.h>
-+
-+#include "tas2552.h"
-+
-+static struct reg_default tas2552_reg_defs[] = {
-+	{TAS2552_CFG_1, 0x22},
-+	{TAS2552_CFG_3, 0x80},
-+	{TAS2552_DOUT, 0x00},
-+	{TAS2552_OUTPUT_DATA, 0xc0},
-+	{TAS2552_PDM_CFG, 0x01},
-+	{TAS2552_PGA_GAIN, 0x00},
-+	{TAS2552_BOOST_PT_CTRL, 0x0f},
-+	{TAS2552_RESERVED_0D, 0x00},
-+	{TAS2552_LIMIT_RATE_HYS, 0x08},
-+	{TAS2552_CFG_2, 0xef},
-+	{TAS2552_SER_CTRL_1, 0x00},
-+	{TAS2552_SER_CTRL_2, 0x00},
-+	{TAS2552_PLL_CTRL_1, 0x10},
-+	{TAS2552_PLL_CTRL_2, 0x00},
-+	{TAS2552_PLL_CTRL_3, 0x00},
-+	{TAS2552_BTIP, 0x8f},
-+	{TAS2552_BTS_CTRL, 0x80},
-+	{TAS2552_LIMIT_RELEASE, 0x04},
-+	{TAS2552_LIMIT_INT_COUNT, 0x00},
-+	{TAS2552_EDGE_RATE_CTRL, 0x40},
-+	{TAS2552_VBAT_DATA, 0x00},
-+};
-+
-+#define TAS2552_NUM_SUPPLIES	3
-+static const char *tas2552_supply_names[TAS2552_NUM_SUPPLIES] = {
-+	"vbat",		/* vbat voltage */
-+	"iovdd",	/* I/O Voltage */
-+	"avdd",		/* Analog DAC Voltage */
-+};
-+
-+struct tas2552_data {
-+	struct snd_soc_codec *codec;
-+	struct regmap *regmap;
-+	struct i2c_client *tas2552_client;
-+	struct regulator_bulk_data supplies[TAS2552_NUM_SUPPLIES];
-+	struct gpio_desc *enable_gpio;
-+	unsigned char regs[TAS2552_VBAT_DATA];
-+	unsigned int mclk;
-+};
-+
-+static void tas2552_sw_shutdown(struct tas2552_data *tas_data, int sw_shutdown)
-+{
-+	u8 cfg1_reg;
-+
-+	if (sw_shutdown)
-+		cfg1_reg = 0;
-+	else
-+		cfg1_reg = TAS2552_SWS_MASK;
-+
-+	snd_soc_update_bits(tas_data->codec, TAS2552_CFG_1,
-+						 TAS2552_SWS_MASK, cfg1_reg);
-+}
-+
-+static int tas2552_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params,
-+			     struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+	struct tas2552_data *tas2552 = dev_get_drvdata(codec->dev);
-+	int sample_rate, pll_clk;
-+	int d;
-+	u8 p, j;
-+
-+	/* Turn on Class D amplifier */
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN_MASK,
-+						TAS2552_CLASSD_EN);
-+
-+	if (!tas2552->mclk)
-+		return -EINVAL;
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE, 0);
-+
-+	if (tas2552->mclk == TAS2552_245MHZ_CLK ||
-+		tas2552->mclk == TAS2552_225MHZ_CLK) {
-+		/* By pass the PLL configuration */
-+		snd_soc_update_bits(codec, TAS2552_PLL_CTRL_2,
-+				    TAS2552_PLL_BYPASS_MASK,
-+				    TAS2552_PLL_BYPASS);
-+	} else {
-+		/* Fill in the PLL control registers for J & D
-+		 * PLL_CLK = (.5 * freq * J.D) / 2^p
-+		 * Need to fill in J and D here based on incoming freq
-+		 */
-+		p = snd_soc_read(codec, TAS2552_PLL_CTRL_1);
-+		p = (p >> 7);
-+		sample_rate = params_rate(params);
-+
-+		if (sample_rate == 48000)
-+			pll_clk = TAS2552_245MHZ_CLK;
-+		else if (sample_rate == 44100)
-+			pll_clk = TAS2552_225MHZ_CLK;
-+		else {
-+			dev_vdbg(codec->dev, "Substream sample rate is not found %i\n",
-+					params_rate(params));
-+			return -EINVAL;
-+		}
-+
-+		j = (pll_clk * 2 * (1 << p)) / tas2552->mclk;
-+		d = (pll_clk * 2 * (1 << p)) % tas2552->mclk;
-+
-+		snd_soc_update_bits(codec, TAS2552_PLL_CTRL_1,
-+				TAS2552_PLL_J_MASK, j);
-+		snd_soc_write(codec, TAS2552_PLL_CTRL_2,
-+					(d >> 7) & TAS2552_PLL_D_UPPER_MASK);
-+		snd_soc_write(codec, TAS2552_PLL_CTRL_3,
-+				d & TAS2552_PLL_D_LOWER_MASK);
-+
-+	}
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE,
-+						TAS2552_PLL_ENABLE);
-+
-+	return 0;
-+}
-+
-+static int tas2552_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+	u8 serial_format;
-+	u8 serial_control_mask;
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		serial_format = 0x00;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFM:
-+		serial_format = TAS2552_WORD_CLK_MASK;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+		serial_format = TAS2552_BIT_CLK_MASK;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		serial_format = (TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK);
-+		break;
-+	default:
-+		dev_vdbg(codec->dev, "DAI Format master is not found\n");
-+		return -EINVAL;
-+	}
-+
-+	serial_control_mask = TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK;
-+
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		serial_format &= TAS2552_DAIFMT_I2S_MASK;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_A:
-+		serial_format |= TAS2552_DAIFMT_DSP;
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		serial_format |= TAS2552_DAIFMT_RIGHT_J;
-+		break;
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		serial_format |= TAS2552_DAIFMT_LEFT_J;
-+		break;
-+	default:
-+		dev_vdbg(codec->dev, "DAI Format is not found\n");
-+		return -EINVAL;
-+	}
-+
-+	if (fmt & SND_SOC_DAIFMT_FORMAT_MASK)
-+		serial_control_mask |= TAS2552_DATA_FORMAT_MASK;
-+
-+	snd_soc_update_bits(codec, TAS2552_SER_CTRL_1, serial_control_mask,
-+						serial_format);
-+
-+	return 0;
-+}
-+
-+static int tas2552_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
-+				  unsigned int freq, int dir)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+	struct tas2552_data *tas2552 = dev_get_drvdata(codec->dev);
-+
-+	tas2552->mclk = freq;
-+
-+	return 0;
-+}
-+
-+static int tas2552_mute(struct snd_soc_dai *dai, int mute)
-+{
-+	u8 cfg1_reg;
-+	struct snd_soc_codec *codec = dai->codec;
-+
-+	if (mute)
-+		cfg1_reg = TAS2552_MUTE_MASK;
-+	else
-+		cfg1_reg = ~TAS2552_MUTE_MASK;
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_1, TAS2552_MUTE_MASK, cfg1_reg);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_RUNTIME
-+static int tas2552_runtime_suspend(struct device *dev)
-+{
-+	struct tas2552_data *tas2552 = dev_get_drvdata(dev);
-+
-+	tas2552_sw_shutdown(tas2552, 0);
-+
-+	if (tas2552->enable_gpio)
-+		gpiod_set_value(tas2552->enable_gpio, 0);
-+
-+	regcache_cache_only(tas2552->regmap, true);
-+	regcache_mark_dirty(tas2552->regmap);
-+
-+	return 0;
-+}
-+
-+static int tas2552_runtime_resume(struct device *dev)
-+{
-+	struct tas2552_data *tas2552 = dev_get_drvdata(dev);
-+
-+	if (tas2552->enable_gpio)
-+		gpiod_set_value(tas2552->enable_gpio, 1);
-+
-+	tas2552_sw_shutdown(tas2552, 1);
-+
-+	regcache_cache_only(tas2552->regmap, false);
-+	regcache_sync(tas2552->regmap);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops tas2552_pm = {
-+	SET_RUNTIME_PM_OPS(tas2552_runtime_suspend, tas2552_runtime_resume,
-+			   NULL)
-+};
-+
-+static void tas2552_shutdown(struct snd_pcm_substream *substream,
-+			   struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE, 0);
-+}
-+
-+static struct snd_soc_dai_ops tas2552_speaker_dai_ops = {
-+	.hw_params	= tas2552_hw_params,
-+	.set_sysclk	= tas2552_set_dai_sysclk,
-+	.set_fmt	= tas2552_set_dai_fmt,
-+	.shutdown	= tas2552_shutdown,
-+	.digital_mute = tas2552_mute,
-+};
-+
-+/* Formats supported by TAS2552 driver. */
-+#define TAS2552_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
-+			 SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
-+
-+/* TAS2552 dai structure. */
-+static struct snd_soc_dai_driver tas2552_dai[] = {
-+	{
-+		.name = "tas2552-amplifier",
-+		.playback = {
-+			.stream_name = "Speaker",
-+			.channels_min = 2,
-+			.channels_max = 2,
-+			.rates = SNDRV_PCM_RATE_8000_192000,
-+			.formats = TAS2552_FORMATS,
-+		},
-+		.ops = &tas2552_speaker_dai_ops,
-+	},
-+};
-+
-+/*
-+ * DAC digital volumes. From -7 to 24 dB in 1 dB steps
-+ */
-+static DECLARE_TLV_DB_SCALE(dac_tlv, -7, 100, 24);
-+
-+static const struct snd_kcontrol_new tas2552_snd_controls[] = {
-+	SOC_SINGLE_TLV("Speaker Driver Playback Volume",
-+			 TAS2552_PGA_GAIN, 0, 0x1f, 1, dac_tlv),
-+};
-+
-+static const struct reg_default tas2552_init_regs[] = {
-+	{ TAS2552_RESERVED_0D, 0xc0 },
-+};
-+
-+static int tas2552_codec_probe(struct snd_soc_codec *codec)
-+{
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+	int ret;
-+
-+	tas2552->codec = codec;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(tas2552->supplies),
-+				    tas2552->supplies);
-+
-+	if (ret != 0) {
-+		dev_err(codec->dev, "Failed to enable supplies: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	if (tas2552->enable_gpio)
-+		gpiod_set_value(tas2552->enable_gpio, 1);
-+
-+	ret = pm_runtime_get_sync(codec->dev);
-+	if (ret < 0) {
-+		dev_err(codec->dev, "Enabling device failed: %d\n",
-+			ret);
-+		goto probe_fail;
-+	}
-+
-+	snd_soc_write(codec, TAS2552_CFG_1, TAS2552_MUTE_MASK |
-+				TAS2552_PLL_SRC_BCLK);
-+	snd_soc_write(codec, TAS2552_CFG_3, TAS2552_I2S_OUT_SEL |
-+				TAS2552_DIN_SRC_SEL_AVG_L_R | TAS2552_88_96KHZ);
-+	snd_soc_write(codec, TAS2552_DOUT, TAS2552_PDM_DATA_I);
-+	snd_soc_write(codec, TAS2552_OUTPUT_DATA, TAS2552_PDM_DATA_V_I | 0x8);
-+	snd_soc_write(codec, TAS2552_PDM_CFG, TAS2552_PDM_BCLK_SEL);
-+	snd_soc_write(codec, TAS2552_BOOST_PT_CTRL, TAS2552_APT_DELAY_200 |
-+				TAS2552_APT_THRESH_2_1_7);
-+
-+	ret = regmap_register_patch(tas2552->regmap, tas2552_init_regs,
-+					    ARRAY_SIZE(tas2552_init_regs));
-+	if (ret != 0) {
-+		dev_err(codec->dev, "Failed to write init registers: %d\n",
-+			ret);
-+		goto patch_fail;
-+	}
-+
-+	snd_soc_write(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN |
-+				  TAS2552_BOOST_EN | TAS2552_APT_EN |
-+				  TAS2552_LIM_EN);
-+	return 0;
-+
-+patch_fail:
-+	pm_runtime_put(codec->dev);
-+probe_fail:
-+	if (tas2552->enable_gpio)
-+		gpiod_set_value(tas2552->enable_gpio, 0);
-+
-+	regulator_bulk_disable(ARRAY_SIZE(tas2552->supplies),
-+					tas2552->supplies);
-+	return -EIO;
-+}
-+
-+static int tas2552_codec_remove(struct snd_soc_codec *codec)
-+{
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+
-+	if (tas2552->enable_gpio)
-+		gpiod_set_value(tas2552->enable_gpio, 0);
-+
-+	return 0;
-+};
-+
-+#ifdef CONFIG_PM
-+static int tas2552_suspend(struct snd_soc_codec *codec)
-+{
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+	int ret;
-+
-+	ret = regulator_bulk_disable(ARRAY_SIZE(tas2552->supplies),
-+					tas2552->supplies);
-+
-+	if (ret != 0)
-+		dev_err(codec->dev, "Failed to disable supplies: %d\n",
-+			ret);
-+	return 0;
-+}
-+
-+static int tas2552_resume(struct snd_soc_codec *codec)
-+{
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(tas2552->supplies),
-+				    tas2552->supplies);
-+
-+	if (ret != 0) {
-+		dev_err(codec->dev, "Failed to enable supplies: %d\n",
-+			ret);
-+	}
-+
-+	return 0;
-+}
-+#else
-+#define tas2552_suspend NULL
-+#define tas2552_resume NULL
-+#endif
-+
-+static struct snd_soc_codec_driver soc_codec_dev_tas2552 = {
-+	.probe = tas2552_codec_probe,
-+	.remove = tas2552_codec_remove,
-+	.suspend =	tas2552_suspend,
-+	.resume = tas2552_resume,
-+	.controls = tas2552_snd_controls,
-+	.num_controls = ARRAY_SIZE(tas2552_snd_controls),
-+};
-+
-+static const struct regmap_config tas2552_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = TAS2552_MAX_REG,
-+	.reg_defaults = tas2552_reg_defs,
-+	.num_reg_defaults = ARRAY_SIZE(tas2552_reg_defs),
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static int tas2552_probe(struct i2c_client *client,
-+			   const struct i2c_device_id *id)
-+{
-+	struct device *dev;
-+	struct tas2552_data *data;
-+	int ret;
-+	int i;
-+
-+	dev = &client->dev;
-+	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-+	if (data == NULL)
-+		return -ENOMEM;
-+
-+	data->enable_gpio = devm_gpiod_get(dev, "enable");
-+	if (IS_ERR(data->enable_gpio)) {
-+		ret = PTR_ERR(data->enable_gpio);
-+		if (ret != -ENOENT && ret != -ENOSYS)
-+			return ret;
-+
-+		data->enable_gpio = NULL;
-+	} else {
-+		gpiod_direction_output(data->enable_gpio, 0);
-+	}
-+
-+	data->tas2552_client = client;
-+	data->regmap = devm_regmap_init_i2c(client, &tas2552_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		ret = PTR_ERR(data->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(data->supplies); i++)
-+		data->supplies[i].supply = tas2552_supply_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
-+				      data->supplies);
-+	if (ret != 0)
-+		dev_err(dev, "Failed to request supplies: %d\n", ret);
-+
-+	pm_runtime_set_active(&client->dev);
-+	pm_runtime_set_autosuspend_delay(&client->dev, 1000);
-+	pm_runtime_use_autosuspend(&client->dev);
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_mark_last_busy(&client->dev);
-+	pm_runtime_put_sync_autosuspend(&client->dev);
-+
-+	dev_set_drvdata(&client->dev, data);
-+
-+	ret = snd_soc_register_codec(&client->dev,
-+				      &soc_codec_dev_tas2552,
-+				      tas2552_dai, ARRAY_SIZE(tas2552_dai));
-+	if (ret < 0)
-+		dev_err(&client->dev, "Failed to register codec: %d\n", ret);
-+
-+	return 0;
-+}
-+
-+static int tas2552_i2c_remove(struct i2c_client *client)
-+{
-+	snd_soc_unregister_codec(&client->dev);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id tas2552_id[] = {
-+	{ "tas2552", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, tas2552_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tas2552_of_match[] = {
-+	{ .compatible = "ti,tas2552", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tas2552_of_match);
-+#endif
-+
-+static struct i2c_driver tas2552_i2c_driver = {
-+	.driver = {
-+		.name = "tas2552",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(tas2552_of_match),
-+		.pm = &tas2552_pm,
-+	},
-+	.probe = tas2552_probe,
-+	.remove = tas2552_i2c_remove,
-+	.id_table = tas2552_id,
-+};
-+
-+module_i2c_driver(tas2552_i2c_driver);
-+
-+MODULE_AUTHOR("Dan Muprhy <dmurphy-l0cyMroinI0@public.gmane.org>");
-+MODULE_DESCRIPTION("TAS2552 Audio amplifier driver");
-+MODULE_LICENSE("GPL");
-diff --git a/sound/soc/codecs/tas2552.h b/sound/soc/codecs/tas2552.h
-new file mode 100644
-index 0000000..6cea8f3
---- /dev/null
-+++ b/sound/soc/codecs/tas2552.h
-@@ -0,0 +1,129 @@
-+/*
-+ * tas2552.h - ALSA SoC Texas Instruments TAS2552 Mono Audio Amplifier
-+ *
-+ * Copyright (C) 2014 Texas Instruments Incorporated -  http://www.ti.com
-+ *
-+ * Author: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#ifndef __TAS2552_H__
-+#define __TAS2552_H__
-+
-+/* Register Address Map */
-+#define TAS2552_DEVICE_STATUS	0x00
-+#define TAS2552_CFG_1			0x01
-+#define TAS2552_CFG_2			0x02
-+#define TAS2552_CFG_3			0x03
-+#define TAS2552_DOUT			0x04
-+#define TAS2552_SER_CTRL_1		0x05
-+#define TAS2552_SER_CTRL_2		0x06
-+#define TAS2552_OUTPUT_DATA		0x07
-+#define TAS2552_PLL_CTRL_1		0x08
-+#define TAS2552_PLL_CTRL_2		0x09
-+#define TAS2552_PLL_CTRL_3		0x0a
-+#define TAS2552_BTIP			0x0b
-+#define TAS2552_BTS_CTRL		0x0c
-+#define TAS2552_RESERVED_0D		0x0d
-+#define TAS2552_LIMIT_RATE_HYS	0x0e
-+#define TAS2552_LIMIT_RELEASE	0x0f
-+#define TAS2552_LIMIT_INT_COUNT	0x10
-+#define TAS2552_PDM_CFG			0x11
-+#define TAS2552_PGA_GAIN		0x12
-+#define TAS2552_EDGE_RATE_CTRL	0x13
-+#define TAS2552_BOOST_PT_CTRL	0x14
-+#define TAS2552_VER_NUM			0x16
-+#define TAS2552_VBAT_DATA		0x19
-+#define TAS2552_MAX_REG			0x20
-+
-+/* CFG1 Register Masks */
-+#define TAS2552_MUTE_MASK		(1 << 2)
-+#define TAS2552_SWS_MASK		(1 << 1)
-+#define TAS2552_WCLK_MASK		0x07
-+#define TAS2552_CLASSD_EN_MASK	(1 << 7)
-+
-+/* CFG2 Register Masks */
-+#define TAS2552_CLASSD_EN		(1 << 7)
-+#define TAS2552_BOOST_EN		(1 << 6)
-+#define TAS2552_APT_EN			(1 << 5)
-+#define TAS2552_PLL_ENABLE		(1 << 3)
-+#define TAS2552_LIM_EN			(1 << 2)
-+#define TAS2552_IVSENSE_EN		(1 << 1)
-+
-+/* CFG3 Register Masks */
-+#define TAS2552_WORD_CLK_MASK		(1 << 7)
-+#define TAS2552_BIT_CLK_MASK		(1 << 6)
-+#define TAS2552_DATA_FORMAT_MASK	(0x11 << 2)
-+
-+#define TAS2552_DAIFMT_I2S_MASK		0xf3
-+#define TAS2552_DAIFMT_DSP			(1 << 3)
-+#define TAS2552_DAIFMT_RIGHT_J		(1 << 4)
-+#define TAS2552_DAIFMT_LEFT_J		(0x11 << 3)
-+
-+#define TAS2552_PLL_SRC_MCLK	0x00
-+#define TAS2552_PLL_SRC_BCLK	(1 << 3)
-+#define TAS2552_PLL_SRC_IVCLKIN	(1 << 4)
-+#define TAS2552_PLL_SRC_1_8_FIXED (0x11 << 3)
-+
-+#define TAS2552_DIN_SRC_SEL_MUTED	0x00
-+#define TAS2552_DIN_SRC_SEL_LEFT	(1 << 4)
-+#define TAS2552_DIN_SRC_SEL_RIGHT	(1 << 5)
-+#define TAS2552_DIN_SRC_SEL_AVG_L_R	(0x11 << 4)
-+
-+#define TAS2552_PDM_IN_SEL		(1 << 5)
-+#define TAS2552_I2S_OUT_SEL		(1 << 6)
-+#define TAS2552_ANALOG_IN_SEL	(1 << 7)
-+
-+/* CFG3 WCLK Dividers */
-+#define TAS2552_8KHZ		0x00
-+#define TAS2552_11_12KHZ	(1 << 1)
-+#define TAS2552_16KHZ		(1 << 2)
-+#define TAS2552_22_24KHZ	(1 << 3)
-+#define TAS2552_32KHZ		(1 << 4)
-+#define TAS2552_44_48KHZ	(1 << 5)
-+#define TAS2552_88_96KHZ	(1 << 6)
-+#define TAS2552_176_192KHZ	(1 << 7)
-+
-+/* OUTPUT_DATA register */
-+#define TAS2552_PDM_DATA_I		0x00
-+#define TAS2552_PDM_DATA_V		(1 << 6)
-+#define TAS2552_PDM_DATA_I_V	(1 << 7)
-+#define TAS2552_PDM_DATA_V_I	(0x11 << 6)
-+
-+/* PDM CFG Register */
-+#define TAS2552_PDM_DATA_ES_RISE 0x4
-+
-+#define TAS2552_PDM_PLL_CLK_SEL 0x00
-+#define TAS2552_PDM_IV_CLK_SEL	(1 << 1)
-+#define TAS2552_PDM_BCLK_SEL	(1 << 2)
-+#define TAS2552_PDM_MCLK_SEL	(1 << 3)
-+
-+/* Boost pass-through register */
-+#define TAS2552_APT_DELAY_50	0x00
-+#define TAS2552_APT_DELAY_75	(1 << 1)
-+#define TAS2552_APT_DELAY_125	(1 << 2)
-+#define TAS2552_APT_DELAY_200	(1 << 3)
-+
-+#define TAS2552_APT_THRESH_2_5		0x00
-+#define TAS2552_APT_THRESH_1_7		(1 << 3)
-+#define TAS2552_APT_THRESH_1_4_1_1	(1 << 4)
-+#define TAS2552_APT_THRESH_2_1_7	(0x11 << 2)
-+
-+/* PLL Control Register */
-+#define TAS2552_245MHZ_CLK			24576000
-+#define TAS2552_225MHZ_CLK			22579200
-+#define TAS2552_PLL_J_MASK			0x7f
-+#define TAS2552_PLL_D_UPPER_MASK	0x3f
-+#define TAS2552_PLL_D_LOWER_MASK	0xff
-+#define TAS2552_PLL_BYPASS_MASK		0x80
-+#define TAS2552_PLL_BYPASS			0x80
-+
-+#endif
--- 
-1.7.9.5
+> +
+> +/* command bytes */
+> +#define MAX5821_LOAD_DAC_A_IN_REG_B		0x00
+> +#define MAX5821_LOAD_DAC_B_IN_REG_A		0x10
+> +#define MAX5821_EXTENDED_COMMAND_MODE		0xf0
+> +#define MAX5821_READ_DAC_A_COMMAND		0xf1
+> +#define MAX5821_READ_DAC_B_COMMAND		0xf2
+> +
+> +#define MAX5821_EXTENDED_POWER_UP		0x00
+> +#define MAX5821_EXTENDED_POWER_DOWN_MODE0	0x01
+> +#define MAX5821_EXTENDED_POWER_DOWN_MODE1	0x02
+> +#define MAX5821_EXTENDED_POWER_DOWN_MODE2	0x03
+> +#define MAX5821_EXTENDED_DAC_A			0x04
+> +#define MAX5821_EXTENDED_DAC_B			0x08
+> +
+> +enum max5821_device_ids {
+> +	ID_MAX5821,
+> +};
+> +
+> +struct max5821_data {
+> +	struct i2c_client	*client;
+> +	unsigned short		vref_mv;
+> +	bool			powerdown[MAX5821_MAX_DAC_CHANNELS];
+> +	u8			powerdown_mode[MAX5821_MAX_DAC_CHANNELS];
+> +};
+> +
+> +static const char * const max5821_powerdown_modes[] = {
+> +	"three_state",
+> +	"1kohm_to_gnd",
+> +	"100kohm_to_gnd",
+> +};
+> +
+> +static int max5821_get_powerdown_mode(struct iio_dev *indio_dev,
+> +				      const struct iio_chan_spec *chan)
+> +{
+> +	struct max5821_data *st = iio_priv(indio_dev);
+> +
+> +	return st->powerdown_mode[chan->channel];
+> +}
+> +
+> +static int max5821_set_powerdown_mode(struct iio_dev *indio_dev,
+> +				      const struct iio_chan_spec *chan,
+> +				      unsigned int mode)
+> +{
+> +	struct max5821_data *st = iio_priv(indio_dev);
+> +
+> +	st->powerdown_mode[chan->channel] = mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_enum max5821_powerdown_mode_enum = {
+> +	.items = max5821_powerdown_modes,
+> +	.num_items = ARRAY_SIZE(max5821_powerdown_modes),
+> +	.get = max5821_get_powerdown_mode,
+> +	.set = max5821_set_powerdown_mode,
+> +};
+> +
+> +static ssize_t max5821_read_dac_powerdown(struct iio_dev *indio_dev,
+> +					  uintptr_t private,
+> +					  const struct iio_chan_spec *chan,
+> +					  char *buf)
+> +{
+> +	struct max5821_data *st = iio_priv(indio_dev);
+> +
+> +	return sprintf(buf, "%d\n", st->powerdown[chan->channel]);
+> +}
+> +
+> +static int max5821_sync_powerdown_mode(struct max5821_data *data,
+> +				       const struct iio_chan_spec *chan)
+> +{
+> +	u8 outbuf[2];
+> +
+> +	outbuf[0] = MAX5821_EXTENDED_COMMAND_MODE;
+> +
+> +	if (chan->channel == 0)
+> +		outbuf[1] = MAX5821_EXTENDED_DAC_A;
+> +	else
+> +		outbuf[1] = MAX5821_EXTENDED_DAC_B;
+> +
+> +	if (data->powerdown[chan->channel])
+> +		outbuf[1] |= data->powerdown_mode[chan->channel] + 1;
+> +	else
+> +		outbuf[1] |= MAX5821_EXTENDED_POWER_UP;
+> +
+> +	return i2c_master_send(data->client, outbuf, 2);
+> +}
+> +
+> +static ssize_t max5821_write_dac_powerdown(struct iio_dev *indio_dev,
+> +					   uintptr_t private,
+> +					   const struct iio_chan_spec *chan,
+> +					   const char *buf, size_t len)
+> +{
+> +	struct max5821_data *data = iio_priv(indio_dev);
+> +	bool powerdown;
+> +	int ret;
+> +
+> +	ret = strtobool(buf, &powerdown);
+> +	if (ret)
+> +		return ret;
+> +
+> +	data->powerdown[chan->channel] = powerdown;
+> +
+> +	ret = max5821_sync_powerdown_mode(data, chan);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return len;
+> +}
+> +
+> +static const struct iio_chan_spec_ext_info max5821_ext_info[] = {
+> +	{
+> +		.name = "powerdown",
+> +		.read = max5821_read_dac_powerdown,
+> +		.write = max5821_write_dac_powerdown,
+> +		.shared = IIO_SEPARATE,
+> +	},
+> +	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &max5821_powerdown_mode_enum),
+> +	IIO_ENUM_AVAILABLE("powerdown_mode", &max5821_powerdown_mode_enum),
+> +	{ },
+> +};
+> +
+> +#define MAX5821_CHANNEL(chan) {					\
+> +	.type = IIO_VOLTAGE,					\
+> +	.indexed = 1,						\
+> +	.output = 1,						\
+> +	.channel = (chan),					\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
+> +	.ext_info = max5821_ext_info,				\
+> +}
+> +
+> +static const struct iio_chan_spec max5821_channels[] = {
+> +	MAX5821_CHANNEL(0),
+> +	MAX5821_CHANNEL(1)
+> +};
+> +
+> +static int max5821_get_value(struct iio_dev *indio_dev,
+> +			     int *val, int channel)
+> +{
+> +	struct max5821_data *data = iio_priv(indio_dev);
+> +	struct i2c_client *client = data->client;
+> +	u8 outbuf[1];
+> +	u8 inbuf[2];
+> +	int ret;
+> +
+> +	switch (channel) {
+> +	case 0:
+> +		outbuf[0] = MAX5821_READ_DAC_A_COMMAND;
+> +		break;
+> +	case 1:
+> +		outbuf[0] = MAX5821_READ_DAC_B_COMMAND;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = i2c_master_send(client, outbuf, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +	else if (ret != 1)
+> +		return -EIO;
+> +
+> +	ret = i2c_master_recv(client, inbuf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +	else if (ret != 2)
+> +		return -EIO;
+It somehow always feels like this error handling should be in the
+i2c core.  Just how often does it make sense to receive too little
+from and i2c transaction?  Anyhow, such is life ;)
+You could set this up to use i2c_transfer instead of separating it like
+this.
+You also have no locking in here so it's more than possible that two
+simultaneous reads will occur messing up what you get back.
+(add a mutex around all cases where a change in the middle of a function
+  might mess things up).
+> +
+> +	*val = ((inbuf[0] & 0x0f) << 6) | (inbuf[1] >> 2);
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int max5821_set_value(struct iio_dev *indio_dev,
+> +			     int val, int channel)
+> +{
+> +	struct max5821_data *data = iio_priv(indio_dev);
+> +	struct i2c_client *client = data->client;
+> +	u8 outbuf[2];
+> +	int ret;
+> +
+> +	if ((val < 0) || (val > 1023))
+> +		return -EINVAL;
+> +
+> +	switch (channel) {
+> +	case 0:
+I would use a lookup table for these and other registers
+thus moving the switch statements into a lookup in a table.
+> +		outbuf[0] = MAX5821_LOAD_DAC_A_IN_REG_B;
+> +		break;
+> +	case 1:
+> +		outbuf[0] = MAX5821_LOAD_DAC_B_IN_REG_A;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	outbuf[0] |= val >> 6;
+> +	outbuf[1] = (val & 0x3f) << 2;
+> +
+> +	ret = i2c_master_send(client, outbuf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +	else if (ret != 2)
+> +		return -EIO;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int max5821_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long mask)
+> +{
+> +	struct max5821_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = max5821_get_value(indio_dev, val, chan->channel);
+return directly for simpler program flow and to loose the local
+variable ret
+> +		break;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = data->vref_mv;
+> +		*val2 = 10;
+> +		ret = IIO_VAL_FRACTIONAL_LOG2;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int max5821_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long mask)
+> +{
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = max5821_set_value(indio_dev, val, chan->channel);
+return directly to simplify the flow rather than waiting till the end
+of the function.  Gets rid of the local variable ret as well.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also you should verify that val2 = 0 to confirm valid inputs.
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int max5821_suspend(struct device *dev)
+> +{
+> +	u8 outbuf[2];
+> +
+> +	outbuf[0] = MAX5821_EXTENDED_COMMAND_MODE;
+> +	outbuf[1] = MAX5821_EXTENDED_DAC_A | MAX5821_EXTENDED_DAC_B
+> +				| MAX5821_EXTENDED_POWER_DOWN_MODE2;
+> +
+> +	return i2c_master_send(to_i2c_client(dev), outbuf, 2);
+> +}
+> +
+> +static int max5821_resume(struct device *dev)
+> +{
+> +	u8 outbuf[2];
+> +
+> +	outbuf[0] = MAX5821_EXTENDED_COMMAND_MODE;
+> +	outbuf[1] = MAX5821_EXTENDED_DAC_A | MAX5821_EXTENDED_DAC_B
+> +				| MAX5821_EXTENDED_POWER_UP;
+Perhaps use c99 array assignment
+	u8 outbuf[2] = { MAX5821...
+
+> +
+> +	return i2c_master_send(to_i2c_client(dev), outbuf, 2);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(max5821_pm_ops, max5821_suspend, max5821_resume);
+> +#define MAX5821_PM_OPS (&max5821_pm_ops)
+> +#else
+> +#define MAX5821_PM_OPS NULL
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +static const struct iio_info max5821_info = {
+> +	.read_raw = max5821_read_raw,
+> +	.write_raw = max5821_write_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static int max5821_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct max5821_data *data;
+> +	struct iio_dev *indio_dev;
+> +	struct device_node *np = client->dev.of_node;
+> +	u32 tmp;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +	data = iio_priv(indio_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	data->client = client;
+> +
+> +	/* max5821 start in powerdown mode 100Kohm to ground */
+> +	for (tmp = 0; tmp < MAX5821_MAX_DAC_CHANNELS; tmp++) {
+> +		data->powerdown[tmp] = 1;
+It's a boolean so please use true or false
+> +		data->powerdown_mode[tmp] = 2; /* index of "100kohm_to_gnd" */
+Deploy defines to give magic values names, or in this case an actual enum
+might make sense.
+> +	}
+> +
+> +	if (of_property_read_u32(np, "vref_mv", &tmp) == 0)
+> +		data->vref_mv = tmp;
+> +	else
+> +		data->vref_mv = 3600;
+Please use a regulator for the voltage reference and don't provide a default
+as there isn't any meaningful fall back (such as an internal reference).
+> +
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->num_channels = 2;
+Apply the principal of saving reviewers looking elsewhere to
+check anything. In this case use ARRAY_SIZE(max5821_channels) rather
+than 2.
+> +	indio_dev->channels = max5821_channels;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &max5821_info;
+> +
+> +	return iio_device_register(indio_dev);
+> +}
+> +
+> +static int max5821_remove(struct i2c_client *client)
+> +{
+> +	iio_device_unregister(i2c_get_clientdata(client));
+As this is all that is in here, you can use devm_iio_device_register
+and not have any remove function at all.  If you don't do it I'll
+only get a patch sometime soon proposing the change :(
+
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id max5821_id[] = {
+> +	{ "max5821", ID_MAX5821 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, max5821_id);
+> +
+> +static const struct of_device_id max5821_of_match[] = {
+> +	{ .compatible = "maxim,max5821" },
+> +	{ }
+> +};
+> +
+> +static struct i2c_driver max5821_driver = {
+> +	.driver = {
+> +		.name	= "max5821",
+> +		.pm     = MAX5821_PM_OPS,
+> +		.owner	= THIS_MODULE,
+> +	},
+> +	.probe		= max5821_probe,
+> +	.remove		= max5821_remove,
+> +	.id_table	= max5821_id,
+> +};
+> +module_i2c_driver(max5821_driver);
+> +
+> +MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
+> +MODULE_DESCRIPTION("MAX5821 DAC");
+> +MODULE_LICENSE("GPL v2");
+>
