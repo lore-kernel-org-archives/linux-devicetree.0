@@ -1,74 +1,81 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 RESEND 2/4] drivers: of: initialize and assign reserved
- memory to newly created devices
-Date: Mon, 14 Jul 2014 10:28:05 +0200
-Message-ID: <1405326487-15346-3-git-send-email-m.szyprowski@samsung.com>
-References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1405326487-15346-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonsoo Kim <iamjoonsoo.kim-Hm3cg6mZ9cc@public.gmane.org>, "Aneesh Kumar K.V." <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH v3 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Mon, 14 Jul 2014 16:24:34 +0800
+Message-ID: <20140714082432.GA21584@shlinux1.ap.freescale.net>
+References: <1405074557-5519-1-git-send-email-b29396@freescale.com>
+ <1405074557-5519-2-git-send-email-b29396@freescale.com>
+ <53BFC6CE.9090408@gmail.com> <53BFD28A.5090202@pengutronix.de>
+ <53BFD4DF.7030003@gmail.com>
+ <20140714072146.GD1668@shlinux1.ap.freescale.net>
+ <53C3885B.5020008@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53C3885B.5020008@gmail.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Use recently introduced of_reserved_mem_device_init() function to
-automatically assign respective reserved memory region to the newly created
-platform and amba device.
+On Mon, Jul 14, 2014 at 01:05:55PM +0530, Varka Bhadram wrote:
+> On 07/14/2014 12:51 PM, Dong Aisheng wrote:
+> >
+> >+    dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0
+> >0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d\n",
+> >+        priv->mram_base,
+> >+        priv->mcfg[MRAM_SIDF].off, priv->mcfg[MRAM_SIDF].num,
+> >+        priv->mcfg[MRAM_XIDF].off, priv->mcfg[MRAM_XIDF].num,
+> >+        priv->mcfg[MRAM_RXF0].off, priv->mcfg[MRAM_RXF0].num,
+> >+        priv->mcfg[MRAM_RXF1].off, priv->mcfg[MRAM_RXF1].num,
+> >+        priv->mcfg[MRAM_RXB].off, priv->mcfg[MRAM_RXB].num,
+> >+        priv->mcfg[MRAM_TXE].off, priv->mcfg[MRAM_TXE].num,
+> >+        priv->mcfg[MRAM_TXB].off, priv->mcfg[MRAM_TXB].num);
+> >+
+> >>>>dev_dbg() will insert the new lines in b/w. It wont print the values as
+> >>>>you expected.
+> >>>>Check this by enabling debug ...
+> >>>What do you mean by b/w?
+> >>You are expecting the data to be print in format like:
+> >>pdev->dev/name: mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d
+> >>
+> >>But when we use the dev_dbg()/pr_debug()... It will put data like:
+> >>pdev->dev/name: mram_base %p sidf 0x%x
+> >>0x%x %d rxf0 0x%x
+> >>rxf1 0x%x %d rxb
+> >>....
+> >>
+> >>check this by enable DEBUG...
+> >>
+> >My test showed the format is:
+> >root@imx6qdlsolo:~# uname -a
+> >Linux imx6qdlsolo 3.16.0-rc2-next-20140627-00006-gd55dd62-dirty #373 SMP Fri Jul 11 18:12:31 CST 2014 armv7l GNU/Linux
+> >root@imx6qdlsolo:~# dmesg | grep m_can
+> >m_can 20e8000.can: mram_base c0990000 sidf 0x0 0 xidf 0x0 0 rxf0 0x0 32 rxf1 0x200 0 rxb 0x200 0 txe 0x200 0 txb 0x200 1
+> >m_can 20e8000.can: m_can device registered (regs=c0988000, irq=146)
+> >m_can 20f0000.can: mram_base c09a0000 sidf 0x400 0 xidf 0x400 0 rxf0 0x400 32 rxf1 0x600 0 rxb 0x600 0 txe 0x600 0 txb 0x600 1
+> >m_can 20f0000.can: m_can device registered (regs=c0998000, irq=147)
+> >
+> I think you got the expected result.
+> 
+> I faced the above problem when i use pr_debug(). Can you check with this....?
+> 
 
-Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/of/platform.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+It works too.
+root@imx6qdlsolo:~# dmesg | grep mram 
+mram_base c0990000 sidf 0x0 0 xidf 0x0 0 rxf0 0x0 32 rxf1 0x200 0 rxb 0x200 0 txe 0x200 0 txb 0x200 1
+mram_base c09a0000 sidf 0x400 0 xidf 0x400 0 rxf0 0x400 32 rxf1 0x600 0 rxb 0x600 0 txe 0x600 0 txb 0x600 1
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 500436f9be7f..a9055d3da5c2 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -21,6 +21,7 @@
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- 
- const struct of_device_id of_default_bus_match_table[] = {
-@@ -233,12 +234,15 @@ static struct platform_device *of_platform_device_create_pdata(
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 
-+	of_reserved_mem_device_init(&dev->dev);
-+
- 	/* We do not fill the DMA ops for platform devices by default.
- 	 * This is currently the responsibility of the platform code
- 	 * to do such, possibly using a device notifier
- 	 */
- 
- 	if (of_device_add(dev) != 0) {
-+		of_reserved_mem_device_release(&dev->dev);
- 		platform_device_put(dev);
- 		goto err_clear_flag;
- 	}
-@@ -300,6 +304,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 	else
- 		of_device_make_bus_id(&dev->dev);
- 
-+	of_reserved_mem_device_init(&dev->dev);
-+
- 	/* Allow the HW Peripheral ID to be overridden */
- 	prop = of_get_property(node, "arm,primecell-periphid", NULL);
- 	if (prop)
-@@ -326,6 +332,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 	return dev;
- 
- err_free:
-+	of_reserved_mem_device_release(&dev->dev);
- 	amba_device_put(dev);
- err_clear_flag:
- 	of_node_clear_flag(node, OF_POPULATED);
--- 
-1.9.2
+> This is good. Thanks for clarification.
+> 
+> >
+> >Regards
+> >Dong Aisheng
+> >
+> -- 
+> Regards,
+> Varka Bhadram.
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Dong Aisheng
