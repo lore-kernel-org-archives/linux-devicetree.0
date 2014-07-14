@@ -1,120 +1,196 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [RESEND PATCH 8/8] ARM: dts: dra7: Add dt data for PCIe controller
-Date: Mon, 14 Jul 2014 16:12:23 +0530
-Message-ID: <1405334543-25509-9-git-send-email-kishon@ti.com>
-References: <1405334543-25509-1-git-send-email-kishon@ti.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v5 05/14] drm/exynos: dsi: add pass TE host ops to support
+ LCD I80 interface
+Date: Mon, 14 Jul 2014 19:45:28 +0900
+Message-ID: <53C3B4C8.1070601@samsung.com>
+References: <1404779987-5337-1-git-send-email-yj44.cho@samsung.com>
+ <1404779987-5337-6-git-send-email-yj44.cho@samsung.com>
+ <20140709152207.GA17359@ulmo> <53BDE6FF.1000600@samsung.com>
+ <20140710073826.GB17918@ulmo> <53C3A15F.4020401@samsung.com>
+ <20140714094130.GD9755@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405334543-25509-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kishon-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140714094130.GD9755@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Added dt data for PCIe controller. This node contains dt data for
-both the DRA7 part of designware controller and for the designware core.
-The documention for this node can be found @ ../bindings/pci/ti-pci.txt.
+Hi Thierry,
 
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7.dtsi |   69 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+On 07/14/2014 06:41 PM, Thierry Reding wrote:
+> On Mon, Jul 14, 2014 at 06:22:39PM +0900, YoungJun Cho wrote:
+>> Hi Thierry,
+>>
+>> Thank you for comment.
+>>
+>> On 07/10/2014 04:38 PM, Thierry Reding wrote:
+>>> On Thu, Jul 10, 2014 at 10:06:07AM +0900, YoungJun Cho wrote:
+>>>> On 07/10/2014 12:22 AM, Thierry Reding wrote:
+>>>>> On Tue, Jul 08, 2014 at 09:39:38AM +0900, YoungJun Cho wrote:
+>>>>>> To support LCD I80 interface, the DSI host calls this function
+>>>>>> to notify the panel tearing effect synchronization signal to
+>>>>>> the CRTC device manager to trigger to transfer video image.
+>>>>>>
+>>>>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>>>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>>> ---
+>>>>>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c | 11 +++++++++++
+>>>>>>   include/drm/drm_mipi_dsi.h              |  7 +++++++
+>>>>>>   2 files changed, 18 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>>> index dad543a..76e34ca 100644
+>>>>>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>>> @@ -24,6 +24,7 @@
+>>>>>>   #include <video/mipi_display.h>
+>>>>>>   #include <video/videomode.h>
+>>>>>>
+>>>>>> +#include "exynos_drm_crtc.h"
+>>>>>>   #include "exynos_drm_drv.h"
+>>>>>>
+>>>>>>   /* returns true iff both arguments logically differs */
+>>>>>> @@ -1041,10 +1042,20 @@ static ssize_t exynos_dsi_host_transfer(struct mipi_dsi_host *host,
+>>>>>>   	return (ret < 0) ? ret : xfer.rx_done;
+>>>>>>   }
+>>>>>>
+>>>>>> +static void exynos_dsi_host_pass_te(struct mipi_dsi_host *host)
+>>>>>> +{
+>>>>>> +	struct exynos_dsi *dsi = host_to_dsi(host);
+>>>>>> +	struct drm_encoder *encoder = dsi->encoder;
+>>>>>> +
+>>>>>> +	if (dsi->state & DSIM_STATE_ENABLED)
+>>>>>> +		exynos_drm_crtc_te_handler(encoder->crtc);
+>>>>>> +}
+>>>>>> +
+>>>>>>   static const struct mipi_dsi_host_ops exynos_dsi_ops = {
+>>>>>>   	.attach = exynos_dsi_host_attach,
+>>>>>>   	.detach = exynos_dsi_host_detach,
+>>>>>>   	.transfer = exynos_dsi_host_transfer,
+>>>>>> +	.pass_te = exynos_dsi_host_pass_te,
+>>>>>>   };
+>>>>>>
+>>>>>>   static int exynos_dsi_poweron(struct exynos_dsi *dsi)
+>>>>>> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+>>>>>> index 944f33f..3f21bea 100644
+>>>>>> --- a/include/drm/drm_mipi_dsi.h
+>>>>>> +++ b/include/drm/drm_mipi_dsi.h
+>>>>>> @@ -49,6 +49,12 @@ struct mipi_dsi_msg {
+>>>>>>    * @detach: detach DSI device from DSI host
+>>>>>>    * @transfer: send and/or receive DSI packet, return number of received bytes,
+>>>>>>    * 	      or error
+>>>>>> + * @pass_te: call the crtc te_handler() callback from DSI host.
+>>>>>> + *	     The panel generates tearing effect synchronization signal between
+>>>>>> + *	     MCU and FB to display video images. And the display controller
+>>>>>> + *	     should trigger to transfer video image at this signal. So the panel
+>>>>>> + *	     receives the TE IRQ, then calls this function to notify it to the
+>>>>>> + *	     display controller.
+>>>>>>    */
+>>>>>>   struct mipi_dsi_host_ops {
+>>>>>>   	int (*attach)(struct mipi_dsi_host *host,
+>>>>>> @@ -57,6 +63,7 @@ struct mipi_dsi_host_ops {
+>>>>>>   		      struct mipi_dsi_device *dsi);
+>>>>>>   	ssize_t (*transfer)(struct mipi_dsi_host *host,
+>>>>>>   			    struct mipi_dsi_msg *msg);
+>>>>>> +	void (*pass_te)(struct mipi_dsi_host *host);
+>>>>>
+>>>>> I've objected to this particular change before and that objection still
+>>>>> stands. I don't see how this is related to DSI. It seems like an
+>>>>> implementation detail of this particular setup and I think it should be
+>>>>> handled differently (within the Exynos DSI controller implementation
+>>>>> possibly).
+>>>>>
+>>>>
+>>>> Okay, I understand what you mean.
+>>>> As you know, this function is called by panel TE interrupt handler, so it
+>>>> could be accessed by panel.
+>>>> Do you have any good idea for panel to access exynos_drm_dsi directly
+>>>> without mipi_dis_host_ops?
+>>>
+>>> I've gone through the DSI specification again and the only mention of
+>>> the tearing effect is in section 8.12 "TE Signaling in DSI". That says
+>>> the following:
+>>>
+>>> 	A Command Mode display module has its own timing controller and
+>>> 	local frame buffer for display refresh. In some cases the host
+>>> 	processor needs to be notified of timing events on the display
+>>> 	module, e.g. the start of vertical blanking or similar timing
+>>> 	information. In a traditional parallel-bus interface like DBI-2,
+>>> 	a dedicated signal wire labeled TE (Tearing Effect) is provided
+>>> 	to convey such timing information to the host processor. In a
+>>> 	DSI system, the same information, with reasonably low latency,
+>>> 	shall be transmitted from the display module to the host
+>>> 	processor when requested, using the bidirectional Data Lane.
+>>>
+>>> My interpretation of that is that a DSI peripheral doesn't have a
+>>> dedicated TE signal. Now the panel that you want to support here seems
+>>> to have one, so I'm wondering if maybe it isn't a DSI panel at all but
+>>> rather DBI.
+>>
+>> Uhm, this panel is DSI panel right. It provides TE external pad to transfer
+>> TE pulse to host AP and it also provides TE relevant 3 DCS, so host AP could
+>> choose either of them.
+>> But I think it's better to use IRQ instead of polling method.
+>
+> According to the specification you don't have to rely on polling. You
+> can simply pass control of the bus to the peripheral (via a BTA
+> sequence) and then wait for the peripheral to signal TE.
+>
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index cbaf47d..b6060d3 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -99,6 +99,75 @@
- 			};
- 		};
- 
-+		axi@0 {
-+			compatible = "simple-bus";
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+			ranges = <0x51000000 0x51000000 0x3000
-+				  0x0	     0x20000000 0x10000000>;
-+			pcie@51000000 {
-+				compatible = "ti,dra7-pcie";
-+				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
-+				reg-names = "rc_dbics", "ti_conf", "config";
-+				interrupts = <0 232 0x4>, <0 233 0x4>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				device_type = "pci";
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-+				#interrupt-cells = <1>;
-+				num-lanes = <1>;
-+				ti,hwmods = "pcie1";
-+				phys = <&pcie1_phy>;
-+				phy-names = "pcie-phy0";
-+				interrupt-map-mask = <0 0 0 7>;
-+				interrupt-map = <0 0 0 1 &pcie1_intc 1>,
-+						<0 0 0 2 &pcie1_intc 2>,
-+						<0 0 0 3 &pcie1_intc 3>,
-+						<0 0 0 4 &pcie1_intc 4>;
-+				pcie1_intc: interrupt-controller {
-+					interrupt-controller;
-+					#address-cells = <0>;
-+					#interrupt-cells = <1>;
-+				};
-+			};
-+		};
-+
-+		axi@1 {
-+			compatible = "simple-bus";
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+			ranges = <0x51800000 0x51800000 0x3000
-+				  0x0	     0x30000000 0x10000000>;
-+			status = "disabled";
-+			pcie@51000000 {
-+				compatible = "ti,dra7-pcie";
-+				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
-+				reg-names = "rc_dbics", "ti_conf", "config";
-+				interrupts = <0 355 0x4>, <0 356 0x4>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				device_type = "pci";
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
-+				#interrupt-cells = <1>;
-+				num-lanes = <1>;
-+				ti,hwmods = "pcie2";
-+				phys = <&pcie2_phy>;
-+				phy-names = "pcie-phy0";
-+				interrupt-map-mask = <0 0 0 7>;
-+				interrupt-map = <0 0 0 1 &pcie2_intc 1>,
-+						<0 0 0 2 &pcie2_intc 2>,
-+						<0 0 0 3 &pcie2_intc 3>,
-+						<0 0 0 4 &pcie2_intc 4>;
-+				pcie2_intc: interrupt-controller {
-+					interrupt-controller;
-+					#address-cells = <0>;
-+					#interrupt-cells = <1>;
-+				};
-+			};
-+		};
-+
- 		cm_core_aon: cm_core_aon@4a005000 {
- 			compatible = "ti,dra7-cm-core-aon";
- 			reg = <0x4a005000 0x2000>;
--- 
-1.7.9.5
+I need to check that the Exynos DSIM driver supports this BTA sequence.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That said, I've been doing some research and it seems like we have a
+> somewhat similar feature on Tegra. What happens there is that there are
+> three GPIO pins that can be repurposed for TE signalling. But as opposed
+> to using them as interrupts the display controller can be configured to
+> use them, upon which it will automatically handle the TE signal by
+> sending the next frame.
+
+Could you explain more detail how the Tegra display controller could be 
+configured with this GPIO pins?
+I have no idea except that the display controller registers this GPIO as 
+an IRQ.
+
+>
+> So we have at least two very different implementations of this on two
+> different SoCs. Further the specification explicitly recommends using
+> the BTA sequence and DSI protocol to wait for TE. So I still think that
+> controllers that provide an additional, non-spec compliant method to
+> signal TE should handle it separately rather than within DSI. Otherwise
+> we essentially need to make the DSI "core" aware of all these quirks,
+> and I'd rather avoid that.
+
+You mean, the DSI specification guides to use BTA, so it's better to use 
+display controller rather than DSIM, right?
+
+>
+>> As Inki commented before, I'll try to use remote-endpoint property of DSI
+>> device node in exynos DSIM driver and call FIMD notifier.
+>
+> Sounds like it matches what I said above. I'm not a huge fan of
+> notifiers, but if it works for you I suppose that's fine. The
+> alternative would be to directly call a FIMD function, which is
+> somewhat more explicit than a notifier.
+
+Yes, I also like explicit call, so I want to use dsi_host_ops and calls 
+it in panel. But there is an objection to use dis_host_ops, we think 
+notifier in exynos dsim for fimd(display controller).
+
+Thank you.
+Best regards YJ
+
+>
+> Thierry
+>
