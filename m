@@ -1,54 +1,47 @@
 From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v2 0/6] Migrate PXA27x platforms to clock framework
-Date: Mon, 14 Jul 2014 17:54:17 +0200
-Message-ID: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr>
+Subject: [PATCH v2 2/6] clk: dts: document pxa clock binding
+Date: Mon, 14 Jul 2014 17:54:19 +0200
+Message-ID: <1405353263-13424-3-git-send-email-robert.jarzmik@free.fr>
+References: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405353263-13424-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the second opus of this serie.
->From the previous one, the approach was changed as Mike and Haojian asked :
- - the device-tree description shrunk to almost nothing
- - the device-tree driver is common amongst all PXA variants
- - a common clk-pxa.c is (will be) used amongst all PXA variants
+Document the device-tree binding of Marvell PXA based SoCs.
+PXA clocks are mostly fixed rate and fixed ratio clocks derived from an
+external oscillator, and gated by a register set (CKEN or CKEN*).
 
-As before, the goal remains the same :
- - keeping legacy platforms working (ie. without device-tree)
- - enable PXA27x to work with a device-tree kernel, and hence
-   open the way to drivers conversion
- - be robust enough to support pxa25x and pxa3xx later inclusion
-   with almost no change to clk-pxa-dt.c.
-
-Robert Jarzmik (6):
-  clk: add pxa clocks infrastructure
-  clk: dts: document pxa clock binding
-  arm: pxa: add clock pll selection bits
-  clk: add pxa27x clock drivers
-  dts: add devicetree bindings for pxa27x clocks
-  arm: pxa: Transition pxa27x to clk framework
-
- .../devicetree/bindings/clock/pxa-clock.txt        |  16 +
- arch/arm/Kconfig                                   |   1 +
- arch/arm/boot/dts/pxa27x.dtsi                      |  20 +-
- arch/arm/mach-pxa/Makefile                         |   8 +-
- arch/arm/mach-pxa/include/mach/pxa2xx-regs.h       |  10 +
- arch/arm/mach-pxa/pxa27x.c                         | 186 +----------
- drivers/clk/Makefile                               |   1 +
- drivers/clk/pxa/Makefile                           |   2 +
- drivers/clk/pxa/clk-pxa.c                          |  97 ++++++
- drivers/clk/pxa/clk-pxa.h                          | 107 ++++++
- drivers/clk/pxa/clk-pxa27x.c                       | 370 +++++++++++++++++++++
- include/dt-bindings/clock/pxa-clock.h              |  77 +++++
- 12 files changed, 716 insertions(+), 179 deletions(-)
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/pxa-clock.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/pxa-clock.txt
- create mode 100644 drivers/clk/pxa/Makefile
- create mode 100644 drivers/clk/pxa/clk-pxa.c
- create mode 100644 drivers/clk/pxa/clk-pxa.h
- create mode 100644 drivers/clk/pxa/clk-pxa27x.c
- create mode 100644 include/dt-bindings/clock/pxa-clock.h
 
+diff --git a/Documentation/devicetree/bindings/clock/pxa-clock.txt b/Documentation/devicetree/bindings/clock/pxa-clock.txt
+new file mode 100644
+index 0000000..4b4a902
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/pxa-clock.txt
+@@ -0,0 +1,16 @@
++* Clock bindings for Marvell PXA chips
++
++Required properties:
++- compatible: Should be "marvell,pxa-clocks"
++- #clock-cells: Should be <1>
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell (see include/.../pxa-clock.h).
++
++Examples:
++
++pxa2xx_clks: pxa2xx_clks@41300004 {
++        compatible = "marvell,pxa-clocks";
++        #clock-cells = <1>;
++        status = "okay";
++};
 -- 
 2.0.0.rc2
 
