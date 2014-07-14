@@ -1,120 +1,138 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 6/8] net: ethernet driver: Fujitsu OGMA
-Date: Mon, 14 Jul 2014 15:50:52 +0200
-Message-ID: <18609483.Jzi9Hxcq2r@wuerfel>
-References: <1405233107-4762-1-git-send-email-mollie.wu@linaro.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
+ gpio block
+Date: Mon, 14 Jul 2014 16:58:55 +0300
+Message-ID: <1405346335.13503.25.camel@iivanov-dev>
+References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
+	 <CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com>
+	 <CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com>
+	 <CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
+	 <53C095EA.90000@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1405233107-4762-1-git-send-email-mollie.wu@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mollie Wu <mollie.wu@linaro.org>, devicetree@vger.kernel.org, netdev@vger.kernel.org, mark.rutland@arm.com, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, andy.green@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, patches@linaro.org, stephen@networkplumber.org, jaswinder.singh@linaro.org, robh+dt@kernel.org, romieu@fr.zoreil.com, olof@lixom.net, f.fainelli@gmail.com, davem@davemloft.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <53C095EA.90000@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 13 July 2014 14:31:47 Mollie Wu wrote:
-> +
-> +Example:
-> +	eth0: f_taiki {
-> +                compatible = "fujitsu,ogma";
-> +		reg = <0 0x31600000 0x10000>, <0 0x31618000 0x4000>, <0 0x3161c000 0x4000>;
-> +		interrupts = <0 163 0x4>;
-> +		clocks = <&clk_alw_0_8>;
-> +		phy-mode = "rgmii";
-> +		max-speed = <1000>;
-> +		max-frame-size = <9000>;
-> +		local-mac-address = [ a4 17 31 00 00 ed ];
-> +		phy-handle = <&ethphy0>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@1 {
-> +			device_type = "ethernet-phy";
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <1>;
-> +		};
-> +	};
+On Fri, 2014-07-11 at 18:56 -0700, Stephen Boyd wrote:
+> On 07/10/14 02:53, Linus Walleij wrote:
+> > On Wed, Jul 9, 2014 at 11:18 PM, Bjorn Andersson <bjorn@kryo.se> wrote:
+> >> On Wed, Jul 9, 2014 at 1:53 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>> On Tue, Jul 8, 2014 at 3:26 AM, Bjorn Andersson
+> >>> <bjorn.andersson@sonymobile.com> wrote:
+> >>>
+> >>> +- function:
+> >>> +       Usage: optional
+> >>> +       Value type: <string>
+> >>> +       Definition: Specify the alternative function to be configured for the
+> >>> +                   specified pins.  Valid values are:
+> >>> +                       "normal",
+> >>> +                       "paired",
+> >>> +                       "func1",
+> >>> +                       "func2",
+> >>> +                       "dtest1",
+> >>> +                       "dtest2",
+> >>> +                       "dtest3",
+> >>> +                       "dtest4"
+> >>> These are a bit ambigous, why doesn't the driver present functions that
+> >>> are more specific than "func1", "func2"? Or "dtest1"?
+> >> I agree, unfortunately I have only seen traces of the actual function matrix;
+> >> for pm8xxx I have no documentation and for pm8x41 they are only listed as
+> >> func[1-2] and dtest[1-4].
+> >>
+> >> Maybe if someone at Qualcomm could release such a list we could provide a
+> >> proper table instead.
+> > I guess Stephen Boyd can help us. (?)
+> 
+> Ok. "normal" is pretty much gpio mode, i.e. don't mux anything. "paired"
+> is where we take the output of the gpio next to it and loop it back into
+> this gpio (and vice versa). So gpio1 is paired with gpio2, gpio 3 is
+> paired with gpio 4, etc. This allows us to make level translators by
+> choosing different supply voltages for the paired gpios. "func1" and
+> "func2" are used for muxing things internally. "dtest" is used to mux
+> specific things out for testing purposes, not really used in any
+> end-products but still useful while debugging. I can provide the
+> function to pin mapping if necessary. There are lots of pmics.
 
-The name of the device should be "ethernet" rather than "f_taiki".
+Thank you Stephen. If understand it right, this is more like option for
+the pin when it is GPIO. Next generation of PMIC's have support for pin
+acting like analog-input/output and current sink. So I will like
+to keep "function" property for selecting one of the above functions.
+Choosing between "normal", "paired"... options in QPNP pinctrl driver
+is supported trough passing values, defined in DT header file, to
+"output-high" property. Please don't kill me :-).
 
-For the compatible string, it would be good to have a version number included.
-If you cannot find out the version of the ogma hardware, add the identifier for
-the soc it is used in, e.g.
+> 
+> >
+> >>>> +- bias-pull-up:
+> >>>> +       Usage: optional
+> >>>> +       Value type: <u32> (optional)
+> >>>> +       Definition: The specified pins should be configued as pull up. An
+> >>>> +                   optional argument can be used to configure the strength.
+> >>>> +                   Valid values are; as defined in
+> >>>> +                   <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> >>>> +                   1: 30uA                     (PM8XXX_GPIO_PULL_UP_30)
+> >>>> +                   2: 1.5uA                    (PM8XXX_GPIO_PULL_UP_1P5)
+> >>>> +                   3: 31.5uA                   (PM8XXX_GPIO_PULL_UP_31P5)
+> >>>> +                   4: 1.5uA + 30uA boost       (PM8XXX_GPIO_PULL_UP_1P5_30)
+> >>> Hm, I don't know of the internal kernel API or so, but I'm thinking that
+> >>> for the DT bindings, this definition should be generic in
+> >>> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> >>> and put in SI units like uA.
+> >> Totally agree with you; and this is already specified in pinctrl-binding.txt as
+> >> being Ohm.
+> >>
+> >> So I first did a spin with the strength as a separate property, but as that
+> >> because the only part that pinconf-generic didn't parse for me I merged it and
+> >> wanted your comment on it.
+> > Yeah. And thinking of it.... how can it be uA? It has to be Ohms... it's a pull
+> > up resistor thing after all. I suspect the uA value is just something like the
+> > maximum current drawn through the pullup given a certain voltage?
+> >
+> >>> So I would prefer:
+> >>>
+> >>> bias-pull-up = <30>;
+> >>>
+> >> Yeah, but that's the easy one ;)
+> >>
+> >> How do you say 1.5 or 31.5 and how do you differ that from 1.5 + 30 boot?
+> > It needs to be set using Ohms.
+> >
+> >>> for 30 uA. Maybe we want nA even? I'm uncertain about the proper granularity
+> >>> here :-/
+> >>>
+> >>> Magic enumerators 1,2,3,4 doesn't seem so good, that seems more like it's
+> >>> trying to match the magic value that is to be poked into a register or
+> >>> something like that.
+> >> The stuff going into the hardware is a value 0-3 for pull up; so these values
+> >> are "only" an enum with the additional benefit of saying "bias-pull-up;"
+> >> results in 30uA pull up which is the most commonly used form (hence being
+> >> optional).
+> > What is the nominal voltage of these pins? GIven that you can figure
+> > out the Ohms. And I suspect it to be something very close to N times
+> > the resistance of a depleted transistor in this technology.
+> 
+> I believe the nominal voltage changes depending on which supply you
+> choose (power-source in this document). Basically the gpio can be
+> connected to different regulators on the pmic so you can choose
+> different voltages, i.e. 1.8V, 3.0V, 3.3V etc. Furthermore, some of the
+> regulators you can choose have variable voltage, although it may not be
+> variable enough to have much effect on this. So it would seem that the
+> pull-up resistance would be directly affected by which power-source is
+> chosen. Maybe we just shouldn't use the generic properties for this?
 
-	compatible = "fujitsu,mb86s73-ogma", "fujitsu,ogma";
++1 for custom property. "current-generator"? 
 
-The driver only needs to match the generic string, but it's better
-to be prepared for the case where we have to support slightly different
-variants.
+> 
+> BTW, I see that power-source has made a comeback. What are the units? 
 
-> +static inline void ogma_writel(struct ogma_priv *priv, u32 reg_addr, u32 val)
-> +{
-> +	writel(val, priv->ioaddr + (reg_addr << 2));
-> +}
-> +
-> +static inline u32 ogma_readl(struct ogma_priv *priv, u32 reg_addr)
-> +{
-> +	return readl(priv->ioaddr + (reg_addr << 2));
-> +}
-for best performance, it may be better to use readl_relaxed() by default
-and only use the nonrelaxed accesses in the cases where you have to
-synchronize with DMA transfers.
+Documentation states it is "a custom format" :-).
 
-> +
-> +#define TIMEOUT_SPINS_MAC 1000000
-> +
-> +static u32 ogma_clk_type(u32 freq)
-> +{
-> +	if (freq < 35 * OGMA_CLK_MHZ)
-> +		return OGMA_GMAC_GAR_REG_CR_25_35_MHZ;
-> +	if (freq < 60 * OGMA_CLK_MHZ)
-> +		return OGMA_GMAC_GAR_REG_CR_35_60_MHZ;
-> +	if (freq < 100 * OGMA_CLK_MHZ)
-> +		return OGMA_GMAC_GAR_REG_CR_60_100_MHZ;
-> +	if (freq < 150 * OGMA_CLK_MHZ)
-> +		return OGMA_GMAC_GAR_REG_CR_100_150_MHZ;
-> +	if (freq < 250 * OGMA_CLK_MHZ)
-> +		return OGMA_GMAC_GAR_REG_CR_150_250_MHZ;
-> +
-> +	return OGMA_GMAC_GAR_REG_CR_250_300_MHZ;
-> +}
-> +
-> +static int ogma_wait_while_busy(struct ogma_priv *priv, u32 addr, u32 mask)
-> +{
-> +	u32 timeout = TIMEOUT_SPINS_MAC;
-> +
-> +	while (--timeout && ogma_readl(priv, addr) & mask)
-> +		;
-> +	if (!timeout) {
-> +		netdev_WARN(priv->net_device, "%s: timeout\n", __func__);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
 
-The callers of this function seem to all be from non-atomic context, so it
-would be good to occasionally msleep() here, either after each try, or
-after initially spinning for as long as it takes to succeed most of the
-time.
-
-> +
-> +static void ogma_napi_tx_processing(struct napi_struct *napi_p)
-> +{
-> +	struct ogma_priv *priv = container_of(napi_p, struct ogma_priv, napi);
-> +
-> +	ogma_ring_irq_clr(priv, OGMA_RING_TX, OGMA_IRQ_EMPTY);
-> +	ogma_clean_tx_desc_ring(priv);
-> +
-> +	if (netif_queue_stopped(priv->net_device) &&
-> +	    ogma_get_tx_avail_num(priv) >= OGMA_NETDEV_TX_PKT_SCAT_NUM_MAX)
-> +		netif_wake_queue(priv->net_device);
-> +}
-
-You should probably call netdev_tx_completed_queue() here and 
-netdev_tx_sent_queue() when sending the frame. See http://lwn.net/Articles/454390/
-for a description of the API.
-
-	Arnd
+Regards,
+Ivan
