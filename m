@@ -1,69 +1,57 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [REQUEST] DT patch not reviewed for 2 months+
-Date: Mon, 14 Jul 2014 17:41:22 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1407141732130.27454@axis700.grange>
-References: <Pine.LNX.4.64.1407132145230.21736@axis700.grange>
- <4473843.TzcaEArWEr@wuerfel>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v2 0/6] Migrate PXA27x platforms to clock framework
+Date: Mon, 14 Jul 2014 17:54:17 +0200
+Message-ID: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4473843.TzcaEArWEr@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+This is the second opus of this serie.
+>From the previous one, the approach was changed as Mike and Haojian asked :
+ - the device-tree description shrunk to almost nothing
+ - the device-tree driver is common amongst all PXA variants
+ - a common clk-pxa.c is (will be) used amongst all PXA variants
 
-Thanks for the review!
+As before, the goal remains the same :
+ - keeping legacy platforms working (ie. without device-tree)
+ - enable PXA27x to work with a device-tree kernel, and hence
+   open the way to drivers conversion
+ - be robust enough to support pxa25x and pxa3xx later inclusion
+   with almost no change to clk-pxa-dt.c.
 
-On Mon, 14 Jul 2014, Arnd Bergmann wrote:
+Robert Jarzmik (6):
+  clk: add pxa clocks infrastructure
+  clk: dts: document pxa clock binding
+  arm: pxa: add clock pll selection bits
+  clk: add pxa27x clock drivers
+  dts: add devicetree bindings for pxa27x clocks
+  arm: pxa: Transition pxa27x to clk framework
 
-> On Sunday 13 July 2014 22:00:11 Guennadi Liakhovetski wrote:
-> > Hi all,
-> > 
-> > On 10th of May I submitted 2 patches
-> > 
-> > http://thread.gmane.org/gmane.linux.drivers.devicetree/73577
-> > 
-> > of which 1 adds documentation for DT bindings for a dmaengine driver. The 
-> > driver doesn't add any new bindings, only standard bindings are used and 
-> > the respective generic document is referenced in the patch. This makes me 
-> > think, that a review of that patch should really be a matter of a couple 
-> > of minutes. Unfortunateky this still hasn't happened. If the patch had 
-> > been reviewed promptly, it still could make it into 3.16. We're at 
-> > 3.16-rc4 in the meantime. Have I done anything wrong in the patch 
-> > submission procedure? What do I have to do to get this patch reviewed soon 
-> > to get it in 3.17?
-> 
-> The fallback for device drivers is that if nobody finds the time to review
-> the binding, the subsystem maintainer can just take it anyway.
-> 
-> I hadn't seen this driver so far, but looked at it now. The binding looks
-> good to me, so feel free to resend it with
-> 
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> The driver also looks good, but there is one part that can now be
-> done more efficiently:
-> 
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +
-> +	dchan = dma_request_channel(mask, nbpf_dma_filter, ofdma->of_node);
-> +	if (!dchan)
-> +		return NULL;
-> 
-> 
-> Here you can just call dma_get_any_slave_channel() and remove the filter
-> function. The way you do it is also correct, but we're trying to get
-> away from that, as it just adds pointless overhead.
+ .../devicetree/bindings/clock/pxa-clock.txt        |  16 +
+ arch/arm/Kconfig                                   |   1 +
+ arch/arm/boot/dts/pxa27x.dtsi                      |  20 +-
+ arch/arm/mach-pxa/Makefile                         |   8 +-
+ arch/arm/mach-pxa/include/mach/pxa2xx-regs.h       |  10 +
+ arch/arm/mach-pxa/pxa27x.c                         | 186 +----------
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/pxa/Makefile                           |   2 +
+ drivers/clk/pxa/clk-pxa.c                          |  97 ++++++
+ drivers/clk/pxa/clk-pxa.h                          | 107 ++++++
+ drivers/clk/pxa/clk-pxa27x.c                       | 370 +++++++++++++++++++++
+ include/dt-bindings/clock/pxa-clock.h              |  77 +++++
+ 12 files changed, 716 insertions(+), 179 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/pxa-clock.txt
+ create mode 100644 drivers/clk/pxa/Makefile
+ create mode 100644 drivers/clk/pxa/clk-pxa.c
+ create mode 100644 drivers/clk/pxa/clk-pxa.h
+ create mode 100644 drivers/clk/pxa/clk-pxa27x.c
+ create mode 100644 include/dt-bindings/clock/pxa-clock.h
 
-Ok, I'll have a look at it and make sure to send a rebased update asap 
-(that is hopefully next weekend...)!
+-- 
+2.0.0.rc2
 
-Thanks
-Guennadi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
