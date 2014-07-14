@@ -1,111 +1,83 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL
- clocksource
-Date: Mon, 14 Jul 2014 10:38:56 +0200
-Message-ID: <20140714083854.GO2081@ulmo>
-References: <1405028569-14253-1-git-send-email-ttynkkynen@nvidia.com>
- <1405028569-14253-2-git-send-email-ttynkkynen@nvidia.com>
- <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
- <53C01558.3090607@nvidia.com>
- <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA@mail.gmail.com>
- <53C01D17.2050906@nvidia.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v3 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Mon, 14 Jul 2014 14:16:05 +0530
+Message-ID: <53C398CD.1060404@gmail.com>
+References: <1405074557-5519-1-git-send-email-b29396@freescale.com> <1405074557-5519-2-git-send-email-b29396@freescale.com> <53BFC6CE.9090408@gmail.com> <53BFD28A.5090202@pengutronix.de> <53BFD4DF.7030003@gmail.com> <20140714072146.GD1668@shlinux1.ap.freescale.net> <53C3885B.5020008@gmail.com> <20140714082432.GA21584@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MmQIYbZiCoQ2kDro"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53C01D17.2050906@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Cc: Andrew Bresticker <abrestic@chromium.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20140714082432.GA21584@shlinux1.ap.freescale.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
+On 07/14/2014 01:54 PM, Dong Aisheng wrote:
+> On Mon, Jul 14, 2014 at 01:05:55PM +0530, Varka Bhadram wrote:
+>> On 07/14/2014 12:51 PM, Dong Aisheng wrote:
+>>> +    dev_dbg(&pdev->dev, "mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0
+>>> 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d\n",
+>>> +        priv->mram_base,
+>>> +        priv->mcfg[MRAM_SIDF].off, priv->mcfg[MRAM_SIDF].num,
+>>> +        priv->mcfg[MRAM_XIDF].off, priv->mcfg[MRAM_XIDF].num,
+>>> +        priv->mcfg[MRAM_RXF0].off, priv->mcfg[MRAM_RXF0].num,
+>>> +        priv->mcfg[MRAM_RXF1].off, priv->mcfg[MRAM_RXF1].num,
+>>> +        priv->mcfg[MRAM_RXB].off, priv->mcfg[MRAM_RXB].num,
+>>> +        priv->mcfg[MRAM_TXE].off, priv->mcfg[MRAM_TXE].num,
+>>> +        priv->mcfg[MRAM_TXB].off, priv->mcfg[MRAM_TXB].num);
+>>> +
+>>>>>> dev_dbg() will insert the new lines in b/w. It wont print the values as
+>>>>>> you expected.
+>>>>>> Check this by enabling debug ...
+>>>>> What do you mean by b/w?
+>>>> You are expecting the data to be print in format like:
+>>>> pdev->dev/name: mram_base %p sidf 0x%x %d xidf 0x%x %d rxf0 0x%x %d rxf1 0x%x %d rxb 0x%x %d txe 0x%x %d txb 0x%x %d
+>>>>
+>>>> But when we use the dev_dbg()/pr_debug()... It will put data like:
+>>>> pdev->dev/name: mram_base %p sidf 0x%x
+>>>> 0x%x %d rxf0 0x%x
+>>>> rxf1 0x%x %d rxb
+>>>> ....
+>>>>
+>>>> check this by enable DEBUG...
+>>>>
+>>> My test showed the format is:
+>>> root@imx6qdlsolo:~# uname -a
+>>> Linux imx6qdlsolo 3.16.0-rc2-next-20140627-00006-gd55dd62-dirty #373 SMP Fri Jul 11 18:12:31 CST 2014 armv7l GNU/Linux
+>>> root@imx6qdlsolo:~# dmesg | grep m_can
+>>> m_can 20e8000.can: mram_base c0990000 sidf 0x0 0 xidf 0x0 0 rxf0 0x0 32 rxf1 0x200 0 rxb 0x200 0 txe 0x200 0 txb 0x200 1
+>>> m_can 20e8000.can: m_can device registered (regs=c0988000, irq=146)
+>>> m_can 20f0000.can: mram_base c09a0000 sidf 0x400 0 xidf 0x400 0 rxf0 0x400 32 rxf1 0x600 0 rxb 0x600 0 txe 0x600 0 txb 0x600 1
+>>> m_can 20f0000.can: m_can device registered (regs=c0998000, irq=147)
+>>>
+>> I think you got the expected result.
+>>
+>> I faced the above problem when i use pr_debug(). Can you check with this....?
+>>
+> It works too.
+> root@imx6qdlsolo:~# dmesg | grep mram
+> mram_base c0990000 sidf 0x0 0 xidf 0x0 0 rxf0 0x0 32 rxf1 0x200 0 rxb 0x200 0 txe 0x200 0 txb 0x200 1
+> mram_base c09a0000 sidf 0x400 0 xidf 0x400 0 rxf0 0x400 32 rxf1 0x600 0 rxb 0x600 0 txe 0x600 0 txb 0x600 1
+>
+Ohooooo... I got the problem because i used pr_debug in a 'for' loop.
 
---MmQIYbZiCoQ2kDro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Any way thanks.
 
-On Fri, Jul 11, 2014 at 08:21:27PM +0300, Tuomas Tynkkynen wrote:
->=20
->=20
-> On 11/07/14 20:08, Andrew Bresticker wrote:
-> >On Fri, Jul 11, 2014 at 9:48 AM, Tuomas Tynkkynen <ttynkkynen@nvidia.com=
-> wrote:
-> >>
-> >>
-> >>On 11/07/14 19:28, Andrew Bresticker wrote:
-> >>>
-> >>>On Thu, Jul 10, 2014 at 2:42 PM, Tuomas Tynkkynen <ttynkkynen@nvidia.c=
-om>
-> >>>wrote:
-> >>>>
-> >>>>The DFLL is the main clocksource for the fast CPU cluster on Tegra124
-> >>>>and also provides automatic CPU rail voltage scaling as well. The DFLL
-> >>>>is a separate IP block from the usual Tegra124 clock-and-reset
-> >>>>controller, so it gets its own node in the device tree.
-> >>>
-> >>>
-> >>>>diff --git
-> >>>>a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> >>>>b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> >>>
-> >>>
-> >>>>+- nvidia,pmic-voltage-table: Array of 2-tuples.  Each entry should h=
-ave
-> >>>>the
-> >>>>+  form <register-value voltage-in-uV>, indicating the register value
-> >>>>that
-> >>>>+  needs to be programmed to the PMIC for changing the VDD_CPU voltag=
-e to
-> >>>>+  the specified voltage. The table must be in ascending order by the
-> >>>>voltage.
-> >>>
-> >>>
-> >>>Instead of listing the register values for each voltage in the DT,
-> >>>can't you use regulator_list_voltage() to create this map?
-> >>>
-> >>
-> >>I don't see a way to get the register values that way, unless we assume=
- that
-> >>the mapping is linear and doesn't have holes.
-> >
-> >Hmm... I guess if you don't assume it's linear and continuous you'd
-> >have to iterate over all 256 selectors.
-> >
->=20
-> I don't think we can assume that each selector maps to a concrete register
-> value, though I'm not sure. include/linux/regulator/driver.h documents for
-> @list_voltage "Selectors range from zero to one less
-> regulator_desc.n_voltages." but maybe the consumer API could take differe=
-nt
-> values.
+>> This is good. Thanks for clarification.
+>>
+>>> Regards
+>>> Dong Aisheng
+>>>
+>> -- 
+>> Regards,
+>> Varka Bhadram.
+>>
+> Regards
+> Dong Aisheng
 
-I don't think the regulator API makes any guarantees that the selector
-corresponds to a register value. Adding Mark Brown, maybe he can help
-figure out the best way to do this.
 
-Thierry
+-- 
+Regards,
+Varka Bhadram.
 
---MmQIYbZiCoQ2kDro
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTw5ceAAoJEN0jrNd/PrOhSIwP/i8ObzBFUR0bWFqC9Kwqs3aX
-vu7z+L0oMXbkiHx2qcaAjhF7M8vVV3lAxwXQIDde9uMc/LevjN43YqhRnGgXZAvC
-bSurdg1+RQRht3uPKA6IIVyz3O+mra4MrQgzRqfA2AY2NrixLqyBohLel2Eebf7Q
-HjHqFhagTmFv7fL9iIZpec0/gkR2Ht7R3+NCLG7VBs+Xby5qvkdDJTaWHSpreSSK
-KQ233hrtlrcAogqq/PTKR8bALJeP/Z56U9Q7VTBvQkRRczz9ihidfApz+xQiGv6B
-NnmGpM/3zz/C+RHwQ47HjWB4yCS8tcv6br6mCsIykUrHnE6rSz7H4Z5uJSvRoo+a
-ZNuKVkOoSiaaTzlx3wt2c/MdSX49ISrJZZqDUMFWOr9oEGPA/1U89cONa1AZSrkq
-ev1fFF5UcnYU0uhmnIt36YunCLv1TFH9jBUVSjhEk0mGue2ZyPLvdmaHcccqc+gx
-ADlah85xU44xcGOeQtJfAq8drL6a8JeTUtrNUzttLOaTEcV7tPt/3IUXiVKVGFvm
-kY3HTCDEWbnu65NSYHLxzqPBkml/8B9rorL/83PP7qaVQ5njT6nnE/hHjYb7QKpM
-464KI+3pq4EFNa79dja1H2FOeuwIBbT/mQp5DGVamQk+KqaIs2aB2a7HPK14GUNx
-4XCGet3kN2duFTpuozy/
-=suW1
------END PGP SIGNATURE-----
-
---MmQIYbZiCoQ2kDro--
