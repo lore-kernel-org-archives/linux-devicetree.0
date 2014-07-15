@@ -1,60 +1,57 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
-Date: Tue, 15 Jul 2014 18:17:40 +0100
-Message-ID: <20140715171740.GA26068@leverpostej>
-References: <1405073193-21448-1-git-send-email-zonque@gmail.com>
- <20140714095247.GB4980@leverpostej>
- <53C3AEE1.4030805@zonque.org>
- <20140715085138.GR26465@leverpostej>
- <20140715164149.GA40351@core.coreip.homeip.net>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
+Date: Tue, 15 Jul 2014 22:51:02 +0530
+Message-ID: <CAHfPSqA5MMtaY5kb85xmZXkN62a+otgDAM93Gxn9d9fHv39k=g@mail.gmail.com>
+References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
+ <1405316506-27855-2-git-send-email-ch.naveen@samsung.com> <53C55D17.90109@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140715164149.GA40351@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Daniel Mack <daniel@zonque.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53C55D17.90109@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 05:41:49PM +0100, Dmitry Torokhov wrote:
-> Hi Mark,
-> 
-> On Tue, Jul 15, 2014 at 09:51:38AM +0100, Mark Rutland wrote:
-> > On Mon, Jul 14, 2014 at 11:20:17AM +0100, Daniel Mack wrote:
-> > > 
-> > > linux,keycode feels a bit overkill here though, so I'd rather go for a
-> > > fixed-size linux,keycodes property. The number of entries is fixed,
-> > > anyway. Would you be fine with that?
-> > 
-> > Assuming no-one's likely to want a sparse keymap (i.e. one where some
-> > keys do nothing) then that's probably ok.
-> 
-> 
-> For such a small keymap, if one does not want to use some of the
-> buttons, setting corresponding entries to KEY_RESERVED should work well.
+Hello Tomasz,
 
-Ah, I was not aware of KEY_RESERVED. That sounds perfect then.
+On 15 July 2014 22:25, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Naveen,
+>
+> On 14.07.2014 07:41, Naveen Krishna Chatradhi wrote:
+>> Since, (3146bee spi: s3c64xx: Added provision for dedicated cs pin)
+>>
+>> spi-s3c64xx.c driver expects
+>> 1. chip select gpios from "cs-gpio"(singular) under the
+>>    "controller-data" node of the client/slave device of the SPI.
+>
+> Please work a bit more on readability of your commit messages,
+> especially in terms of using correct terminology to avoid unnecessary
+> confusion.
+>
+> s/'chip select gpios'/'chip select GPIO pins'/
+> s/'"cs-gpio"(singular)'/'"cs-gpio" property'/
+> s/'client/slave device of the SPI'/'SPI device'/
 
-> > > 
-> > > I took that from the gpio-keys driver. Is there a better way to denote
-> > > such a feature?
-> > 
-> > Unfortunately not, given current practice. My gripe is that it's a Linux
-> > detail that were describing rather than a property of the device. We can
-> > forget about that for now.
-> 
-> I prefer looking at it as user expressing the desired behavior of the
-> driver; it is up to OS to deliver such behavior ;)
+Sure, I'm working on that.
 
-Sure, but the user and DTB author are not the same, and may have
-different preferences. Additionally autorepeat as a property only tells
-half the story; I might prefer a 1ms delay while my neighbour Joe might
-like a 3 billion year delay (he's a bit like that, Joe is). He also only
-wants the esc key to repeat and can't figure out how to express that in
-this DTB thing he's never heard of.
+>
+> More things like this follow in rest of the text below.
+>
+> Otherwise I believe the code after this patch does the right thing, so:
+>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-We can just leave this with me grumbling if you prefer ;)
+I've submitted another patch set which does the same functionality
+as this patch set. I believe the new series is more cleaner in terms of
+patch separation and documentation.
 
-Thanks,
-Mark.
+Kindly, let me know your comments on that series.
+http://www.spinics.net/lists/arm-kernel/msg347634.html
+
+>
+> Best regards,
+> Tomasz
+-- 
+Thanks & Regards,
+(: Naveen :)
