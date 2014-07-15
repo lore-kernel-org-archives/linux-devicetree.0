@@ -1,72 +1,71 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [PATCH v3 2/2] devicetree: Add Cadence WDT devicetree bindings documentation
-Date: Tue, 15 Jul 2014 14:34:06 +0530
-Message-ID: <CAFcVECJ+tO4U5H2QvuY8xpkh5FrX_PtCvrH8FsZQ28bJwYRckA@mail.gmail.com>
-References: <1405340169-2820-1-git-send-email-harinik@xilinx.com>
-	<1405340169-2820-2-git-send-email-harinik@xilinx.com>
-	<20140714150749.GH26465@leverpostej>
-	<CAFcVECK9U_3+3htTAu7r-agi43mC9Z2pqHeS9TpHTbZ3=o-o8w@mail.gmail.com>
-	<20140715085914.GT26465@leverpostej>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 9/9] pci: Remap I/O bus resources into CPU space with
+ pci_remap_iospace()
+Date: Tue, 15 Jul 2014 10:09:40 +0100
+Message-ID: <20140715090939.GA18203@arm.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <1404240214-9804-10-git-send-email-Liviu.Dudau@arm.com>
+ <20140714165443.GI1112@arm.com>
+ <7345495.UDsgOtKzyQ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140715085914.GT26465@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7345495.UDsgOtKzyQ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Jul 14, 2014 at 07:15:48PM +0100, Arnd Bergmann wrote:
+> On Monday 14 July 2014 17:54:43 Catalin Marinas wrote:
+> > On Tue, Jul 01, 2014 at 07:43:34PM +0100, Liviu Dudau wrote:
+> > > Introduce a default implementation for remapping PCI bus I/O resources
+> > > onto the CPU address space. Architectures with special needs may
+> > > provide their own version, but most should be able to use this one.
+> > [...]
+> > > +/**
+> > > + *   pci_remap_iospace - Remap the memory mapped I/O space
+> > > + *   @res: Resource describing the I/O space
+> > > + *   @phys_addr: physical address where the range will be mapped.
+> > > + *
+> > > + *   Remap the memory mapped I/O space described by the @res
+> > > + *   into the CPU physical address space. Only architectures
+> > > + *   that have memory mapped IO defined (and hence PCI_IOBASE)
+> > > + *   should call this function.
+> > > + */
+> > > +int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+> > > +{
+> > > +     int err = -ENODEV;
+> > > +
+> > > +#ifdef PCI_IOBASE
+> > > +     if (!(res->flags & IORESOURCE_IO))
+> > > +             return -EINVAL;
+> > > +
+> > > +     if (res->end > IO_SPACE_LIMIT)
+> > > +             return -EINVAL;
+> > > +
+> > > +     err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
+> > > +                             res->end + 1 + (unsigned long)PCI_IOBASE,
+> > > +                             phys_addr, __pgprot(PROT_DEVICE_nGnRE));
+> > 
+> > Except that PROT_DEVICE_nGnRE is arm64 only. I think that's a function
+> > that should remain arch specific.
+> > 
+> 
+> How about #defining a macro with the correct pgprot value in asm/pci.h
+> or asm/pgtable.h?
+> We can provide a default for that in another architecture independent
+> location.
 
-On Tue, Jul 15, 2014 at 2:29 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Jul 15, 2014 at 07:39:40AM +0100, Harini Katakam wrote:
->> Hi Mark,
->>
->> On Mon, Jul 14, 2014 at 8:37 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Mon, Jul 14, 2014 at 01:16:09PM +0100, Harini Katakam wrote:
->> >> Add cadence-wdt bindings documentation.
->> >>
->> >> Signed-off-by: Harini Katakam <harinik@xilinx.com>
->> >> ---
->> >>
->> >> v3 changes:
->> >> - Change reset property type and improve description.
->> >> - Improve description of clocks and interrupts.
->> >> - Use watchdog@ in the example.
->> >> - Use only cdns compatible string for now.
->> >>
->> >> v2:
->> >> No changes
->> >>
->> >> ---
->> >>  .../devicetree/bindings/watchdog/cadence-wdt.txt   |   27 ++++++++++++++++++++
->> >>  1 file changed, 27 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
->> >>
+That should work. We already have pgprot_noncached/writecombine in
+asm-generic/pgtable.h which all architectures seem to include. The
+default can be pgprot_noncached and we would invoke it as
+pgprot_device(PAGE_KERNEL).
 
-<snip>
-
->> >> +Optional properties
->> >> +- reset                      : If this property exists, then a reset is done
->> >> +                       when watchdog times out.
->> >
->> > That's a bit of an ambiguous name (too easy to misconstrue as a reset
->> > device reference). Do any other watchdogs have similar properties?
->>
->> I could change it to "reset-on-timeout" if that better.
->> From the documentation of other drivers, there seems to be a reset-type
->> property in atmel. Dint find any other reset related properties.
->>
->
-> Ok. reset-on-timeout sounds like a better property name to avoid
-> possible confusion.
->
-> That said, what happens if we don't specify the device should reset the
-> system (but have a timeout-sec property)?
->
-
-A reset wont be done but a message will be printed when the watchdog times out
-just as an indication.
-
-Regards,
-Harini
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
