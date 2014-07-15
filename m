@@ -1,195 +1,101 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH v4 2/2] can: m_can: add Bosch M_CAN controller support
-Date: Tue, 15 Jul 2014 17:07:21 +0800
-Message-ID: <20140715090719.GA3374@shlinux1.ap.freescale.net>
-References: <1405338041-19945-1-git-send-email-b29396@freescale.com>
- <1405338041-19945-2-git-send-email-b29396@freescale.com>
- <53C3C97A.7080102@pengutronix.de>
- <20140715033324.GC21584@shlinux1.ap.freescale.net>
- <53C4D872.9060707@pengutronix.de>
- <20140715082637.GA2601@shlinux1.ap.freescale.net>
- <53C4EA68.5090606@pengutronix.de>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: add support of the max5821
+Date: Tue, 15 Jul 2014 10:21:26 +0100
+Message-ID: <c0929d8c-7835-4522-9280-6c1c422df035@email.android.com>
+References: <1405359159-12379-1-git-send-email-tremyfr@yahoo.fr> <53C43BD6.9030102@kernel.org> <CAAj6DX2Tnt6=CuNAhkq_D=pknbEv=j7tf7Dtm7aoCm3gMu+RQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53C4EA68.5090606@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAj6DX2Tnt6=CuNAhkq_D=pknbEv=j7tf7Dtm7aoCm3gMu+RQw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antonio Borneo <borneo.antonio@gmail.com>
+Cc: Philippe Reynes <tremyfr@yahoo.fr>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, armadeus-forum@lists.sourceforge.net, devicetree@vger.kernel.org, julien.boibessot@free.fr
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 10:46:32AM +0200, Marc Kleine-Budde wrote:
-> On 07/15/2014 10:26 AM, Dong Aisheng wrote:
-> >>>>> +static void m_can_read_fifo(const struct net_device *dev, struct can_frame *cf,
-> >>>>> +			    u32 rxfs)
-> >>>>> +{
-> >>>>> +	struct m_can_priv *priv = netdev_priv(dev);
-> >>>>> +	u32 flags, fgi;
-> >>>>> +
-> >>>>> +	/* calculate the fifo get index for where to read data */
-> >>>>> +	fgi = (rxfs & RXFS_FGI_MASK) >> RXFS_FGI_OFF;
-> >>>>> +	flags = m_can_fifo_read(priv, fgi, 0x0);
-> >>>>                                            ^^^
-> >>>>
-> >>>> Can you introduce an enum for the offsets, please adjust the signature
-> >>>> of m_can_fifo_read() accordingly.
-> >>>>
-> >>>
-> >>> I wonder enum may not be suitable.
-> >>> The Rx Buffer and FIFO Element is as follows:
-> >>>    31 24 23 16 15 8 7 0
-> >>> R0 ESI XTD RTR ID[28:0]
-> >>
-> >> M_CAN_FIFO_ID
-> >>
-> >>> R1 ANMF FIDX[6:0] res EDL BRS DLC[3:0] RXTS[15:0]
-> >>
-> >> M_CAN_FIFO_DLC
-> >>
-> >>> R2 DB3[7:0] DB2[7:0] DB1[7:0] DB0[7:0]
-> >>> R3 DB7[7:0] DB6[7:0] DB5[7:0] DB4[7:0]
-> >>
-> >> M_CAN_FIFO_DATA0
-> >> M_CAN_FIFO_DATA1
-> >>
-> > 
-> > You mean as follows?
-> > enum m_can_fifo {
-> >         M_CAN_FIFO_ID = 0,
-> >         M_CAN_FIFO_DLC,
-> = 0x4,
-> >         M_CAN_FIFO_DATA0,
-> = 0x8,
-> >         M_CAN_FIFO_DATA1,
-> = 0xc,
-> > };
-> > 
-> > static inline u32 m_can_fifo_read(const struct m_can_priv *priv,
-> >                                   u32 fgi, enum m_can_fifo fifo)
-> > {
-> >         return readl(priv->mram_base + priv->mcfg[MRAM_RXF0].off +
-> >                      fgi * RXF0_ELEMENT_SIZE + fifo * 0x4);
-> > }
-> 
-> without the * 0x4
-> 
-> > id = m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
-> > 
-> > The problem is when adding long frames support, it becomes:
-> > enum m_can_fifo {
-> >         M_CAN_FIFO_ID = 0,
-> >         M_CAN_FIFO_DLC,
-> >         M_CAN_FIFO_DATA0,
-> >         M_CAN_FIFO_DATA1,
-> >         ....
-> >         M_CAN_FIFO_DATA15,
-> > };
-> 
-> #define M_CAN_FIFO_DATA(n)
-> 	(enum m_can_fifo)(M_CAN_FIFO_DATA_0 + (n) << 2)
-> 
-
-This is a bit strange using and we may still have to define other M_CAN_FIFO_DATAx
-to avoid the enum value exceeds the defined range.
-enum m_can_fifo {
-        M_CAN_FIFO_ID = 0,
-        M_CAN_FIFO_DLC = 0x4,
-        M_CAN_FIFO_DATA0 = 0x8,
-        M_CAN_FIFO_DATA1 = 0xc,
-	....
-        M_CAN_FIFO_DATA15 = 0xc,
-};
-
-However, actually we will not use them at all after introducing M_CAN_FIFO_DATA(n).
-If that, why we still need define them in enum?
-
-Comparing to this way, why not simply just do as follows:
-#define M_CAN_FIFO_ID		0x0
-#define M_CAN_FIFO_DLC		0x4
-#define M_CAN_FIFO_DATA(n)	(0x8 + (n) << 2)
-
-What do you think?
-
-> > But it's useless because we may not use enum to read fifo data anymore.
-> > It's not suitable to read fifo one by one:
-> > m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA0);
-> > m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA1);
-> > ..
-> > m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA15);
-> > 
-> > 
-> > Instead, we may read data according to real dlc value within a for loop like:
-> > #define M_CAN_FIFO(n)   (n * 0x4)
-> > id = m_can_fifo_read(priv, fgi, M_CAN_FIFO(0));
-> > dlc = m_can_fifo_read(priv, fgi, M_CAN_FIFO(1));
-> > for (i = 0; dlc > 0; dlc -= 0x4, i++) {
-> >         ....
-> >         data[i] = m_can_fifo_read(priv, fgi, M_CAN_FIFO(i + 2));
-> > }
-> 
-> id = m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
-> dlc = m_can_fifo_read(priv, fgi, M_CAN_FIFO_DLC);
-> for (i = 0; i <= dlc; i++)
-> 	data[i] = m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA(i));
-
-Does it work?
-The dlc is in bytes while m_can_fifo_read is read in words.
-
-Regards
-Dong Aisheng
-
-> 
-> > So i'm not sure define that enum now is really needed.
-> 
-> [...]
-> 
-> >>>>> +static int m_can_handle_lec_err(struct net_device *dev,
-> >>>>> +				enum m_can_lec_type lec_type)
-> >>>>> +{
-> >>>>> +	struct m_can_priv *priv = netdev_priv(dev);
-> >>>>> +	struct net_device_stats *stats = &dev->stats;
-> >>>>> +	struct can_frame *cf;
-> >>>>> +	struct sk_buff *skb;
-> >>>>> +
-> >>>>> +	/* early exit if no lec update */
-> >>>>> +	if (lec_type == LEC_UNUSED)
-> >>>>> +		return 0;
-> >>>>
-> >>>> I think this is not needed, as checked by the only caller.
-> >>>
-> >>> You mean move it to caller as follows?
-> >>>         /* handle lec errors on the bus */
-> >>>         if ((psr & LEC_UNUSED) && ((psr & LEC_UNUSED)!= LEC_UNUSED) &&
-> >>
-> >> yes - or something like this:
-> >>
-> >> static inline bool is_lec(u32 psr)
-> >> {
-> >> 	u32 psr &= LEC_UNUSED
-> >>
-> >> 	return psr && (psr != LEC_UNUSED)
-> >> }
-> >>
-> >> 	if ((priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
-> >> 		is_lec(psr)) {
-> >> 	}
-> >>
-> > 
-> > 
-> > Looks fine.
-> > Maybe is_lec_err(u32 psr) better? :-)
-> 
-> Yes, is_lec() was just a random placeholder :) Descriptive function
-> names are always preferred.
-> 
-> Marc
-> 
-> -- 
-> Pengutronix e.K.                  | Marc Kleine-Budde           |
-> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-> 
 
 
+On July 15, 2014 9:56:17 AM GMT+01:00, Antonio Borneo <borneo.antonio@gmail.com> wrote:
+>On Tue, Jul 15, 2014 at 4:21 AM, Jonathan Cameron <jic23@kernel.org>
+>wrote:
+>> On 14/07/14 18:32, Philippe Reynes wrote:
+>
+>Hi Jonathan,
+>
+>regarding your comment below
+>
+><snip>
+>>> +static int max5821_get_value(struct iio_dev *indio_dev,
+>>> +                            int *val, int channel)
+>>> +{
+>>> +       struct max5821_data *data = iio_priv(indio_dev);
+>>> +       struct i2c_client *client = data->client;
+>>> +       u8 outbuf[1];
+>>> +       u8 inbuf[2];
+>>> +       int ret;
+>>> +
+>>> +       switch (channel) {
+>>> +       case 0:
+>>> +               outbuf[0] = MAX5821_READ_DAC_A_COMMAND;
+>>> +               break;
+>>> +       case 1:
+>>> +               outbuf[0] = MAX5821_READ_DAC_B_COMMAND;
+>>> +               break;
+>>> +       default:
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       ret = i2c_master_send(client, outbuf, 1);
+>>> +       if (ret < 0)
+>>> +               return ret;
+>>> +       else if (ret != 1)
+>>> +               return -EIO;
+>>> +
+>>> +       ret = i2c_master_recv(client, inbuf, 2);
+>>> +       if (ret < 0)
+>>> +               return ret;
+>>> +       else if (ret != 2)
+>>> +               return -EIO;
+>>
+>> It somehow always feels like this error handling should be in the
+>> i2c core.  Just how often does it make sense to receive too little
+>> from and i2c transaction?  Anyhow, such is life ;)
+>
+>You wrote:
+>
+>> You could set this up to use i2c_transfer instead of separating it
+>like
+>> this.
+>
+>Accordingly to:
+>- Documentation/i2c/i2c-protocol
+>- Documentation/i2c/writing-clients
+>a sequence of i2c_master_send() and i2c_master_recv() is not fully
+>equivalent to a single i2c_transfer(); in latter case the transactions
+>would be combined and the stop bit in between would be removed.
+>
+>I checked the datasheet of max5821 and it reports that
+>"Each transmit sequence is framed by a START (S) or REPEATED START
+>(Sr) condition and a STOP (P) condition."
+>So combined transaction should work with this device.
+>
+>But we have few I2C controllers that cannot send combined transactions
+>and would return error.
+>E.g. in drivers/i2c/busses/i2c-powermac.c
+>i2c_powermac_master_xfer() returns -EOPNOTSUPP when num!=1.
+>
+>What is the proper way to address this:
+>- use combine transactions, since supported by majority of (but not
+>all) controllers?
+>or
+>- keep individual transactions, if not strictly required by the
+>protocol of the I2C device?
+I would go with working on the vast majority unless we have a user actually using such
+ an i2c controller.
+>
+>Thanks,
+>Antonio
+
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
