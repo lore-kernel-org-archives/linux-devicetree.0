@@ -1,11 +1,13 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 00/15] Add Flexgen Clock support
-Date: Tue, 15 Jul 2014 17:20:16 +0200
-Message-ID: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 05/15] clk: st: Adds Flexgen clock binding
+Date: Tue, 15 Jul 2014 17:20:21 +0200
+Message-ID: <1405437631-23623-6-git-send-email-gabriel.fernandez@linaro.org>
+References: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,59 +21,165 @@ To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@
 Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Changes in v3:
- - Change commit message
- - Remove uncessary (void *) cast
- - add a block diagram for flexgen clock binding documentation
+A Flexgen structure is composed by:
+- a clock cross bar (represented by a mux element)
+- a pre and final dividers (represented by a divider and gate elements)
 
-Changes in v2:
- - use static const for clkgen_pll_data and stm_fs tables (from
-   Peter Griffin review)
- - add 326 and 333 Mhz frequencies
- - cosmetic correction in st,clkgen-vcc.txt
- - use of kcalloc instead of kzalloc in drivers/clk/st/clk-flexgen.c
-
-The goal of this series is to add Flexgen clock support to ST SoCs.
-
-A Flexgen clock is composed by:
-  - a clock cross bar (represented by a mux element)
-  - a pre and final dividers (represented by a divider and gate elements)
-
-Tested on B2120 board.
-
-Gabriel Fernandez (15):
-  clk: st: Update ST clock binding documentation
-  drivers: clk: st: use static const for stm_fs tables
-  drivers: clk: st: use static const for clkgen_pll_data tables
-  drivers: clk: st: Remove uncessary (void *) cast
-  clk: st: Adds Flexgen clock binding
-  drivers: clk: st: STiH407: Support for Flexgen Clocks
-  drivers: clk: st: STiH407: Support for A9 MUX Clocks
-  drivers: clk: st: STiH407: Support for clockgenA0
-  drivers: clk: st: Add polarity bit indication
-  drivers: clk: st: Add quadfs reset handling
-  drivers: clk: st: STiH407: Support for clockgenC0
-  drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
-  drivers: clk: st: STiH407: Support for clockgenA9
-  drivers: clk: st: Update frequency tables for fs660c32 and fs432c65
-  drivers: clk: st: Use round to closest divider flag
-
- .../bindings/clock/st/st,clkgen-divmux.txt         |  28 +-
- .../devicetree/bindings/clock/st/st,clkgen-mux.txt |   6 +-
- .../devicetree/bindings/clock/st/st,clkgen-pll.txt |  17 +-
- .../bindings/clock/st/st,clkgen-prediv.txt         |   8 +-
- .../devicetree/bindings/clock/st/st,clkgen-vcc.txt |  34 ++-
- .../devicetree/bindings/clock/st/st,clkgen.txt     |  59 ++--
- .../devicetree/bindings/clock/st/st,flexgen.txt    | 119 ++++++++
- .../devicetree/bindings/clock/st/st,quadfs.txt     |  15 +-
- drivers/clk/st/Makefile                            |   2 +-
- drivers/clk/st/clk-flexgen.c                       | 331 +++++++++++++++++++++
- drivers/clk/st/clkgen-fsyn.c                       | 223 +++++++++++---
- drivers/clk/st/clkgen-mux.c                        |  12 +-
- drivers/clk/st/clkgen-pll.c                        |  94 +++++-
- 13 files changed, 828 insertions(+), 120 deletions(-)
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Acked-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ .../devicetree/bindings/clock/st/st,clkgen.txt     |   5 +
+ .../devicetree/bindings/clock/st/st,flexgen.txt    | 119 +++++++++++++++++++++
+ 2 files changed, 124 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
- create mode 100644 drivers/clk/st/clk-flexgen.c
 
+diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+index 427bad8..78978f1 100644
+--- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
++++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+@@ -32,6 +32,10 @@ address is common of all subnode.
+ 		vcc_node {
+ 			...
+ 		};
++
++		flexgen_node {
++			...
++		};
+ 		...
+ 	};
+ 
+@@ -45,6 +49,7 @@ Each subnode should use the binding discribe in [2]..[7]
+ [5] Documentation/devicetree/bindings/clock/st,clkgen-prediv.txt
+ [6] Documentation/devicetree/bindings/clock/st,vcc.txt
+ [7] Documentation/devicetree/bindings/clock/st,quadfs.txt
++[8] Documentation/devicetree/bindings/clock/st,flexgen.txt
+ 
+ 
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+new file mode 100644
+index 0000000..1d3ace0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+@@ -0,0 +1,119 @@
++Binding for a type of flexgen structure found on certain
++STMicroelectronics consumer electronics SoC devices
++
++This structure includes:
++- a clock cross bar (represented by a mux element)
++- a pre and final dividers (represented by a divider and gate elements)
++
++Flexgen structure is a part of Clockgen[1].
++
++Please find an example below:
++
++    Clockgen block diagram
++    -------------------------------------------------------------------
++   |                     Flexgen stucture                              |
++   |                  ---------------------------------------------    |
++   |                 |    -------       --------       --------    |   |
++clk_sysin            |   |       |     |        |     |        |   |   |
++---|-----------------|-->|       |     |        |     |        |   |   |
++   | |               |   |       |     |        |     |        |   |   |
++   | |   -------     |   |       |     |Pre     |     |Final   |   |   |
++   | |  |PLL0   |    |   |       |     |Dividers|     |Dividers|   |   |
++   | |->|       |    |   |       |     |  x32   |     |  x32   |   |   |
++   | |  |  odf_0|----|-->|       |     |        |     |        |   |   |
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |   -------     |   |       |     |        |     |        |   |   |
++   | |               |   |       |     |        |     |        |   |   |
++   | |   -------     |   | Clock |     |        |     |        |   |   |
++   | |  |PLL1   |    |   |       |     |        |     |        |   |   |
++   | |->|       |    |   | Cross |     |        |     |        |   |   |
++   | |  |  odf_0|----|-->|       |     |        |     |        | CLK_DIV[31:0]
++   | |  |       |    |   | Bar   |====>|        |====>|        |===|=========>
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |  |       |    |   |       |     |        |     |        |   |   |
++   | |   -------     |   |       |     |        |     |        |   |   |
++   | |               |   |       |     |        |     |        |   |   |
++   | |   -------     |   |       |     |        |     |        |   |   |
++   | |  |QUADFS |    |   |       |     |        |     |        |   |   |
++   | |->|    ch0|----|-->|       |     |        |     |        |   |   |
++   |    |       |    |   |       |     |        |     |        |   |   |
++   |    |    ch1|----|-->|       |     |        |     |        |   |   |
++   |    |       |    |   |       |     |        |     |        |   |   |
++   |    |    ch2|----|-->|       |     | DIV    |     | DIV    |   |   |
++   |    |       |    |   |       |     |  1 to  |     |  1 to  |   |   |
++   |    |    ch3|----|-->|       |     |   1024 |     |     64 |   |   |
++   |     -------     |   |       |     |        |     |        |   |   |
++   |                 |    -------       --------       --------    |   |
++   |                   --------------------------------------------    |
++   |                                                                   |
++    -------------------------------------------------------------------
++
++This binding uses the common clock binding[2].
++
++[1] Documentation/devicetree/bindings/clock/st/st,clkgen.txt
++[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : shall be:
++  "st,flexgen"
++
++- #clock-cells : from common clock binding; shall be set to 1 (multiple clock
++  outputs).
++
++- clocks : must be set to the parent's phandle. it's could be output clocks of
++  a quadsfs or/and a pll or/and clk_sysin (up to 7 clocks)
++
++- clock-output-names : List of strings used to name the clock outputs.
++
++Example:
++
++	clk_s_c0_flexgen: clk-s-c0-flexgen {
++
++		#clock-cells = <1>;
++		compatible = "st,flexgen";
++
++		clocks = <&clk_s_c0_pll0 0>,
++			 <&clk_s_c0_pll1 0>,
++			 <&clk_s_c0_quadfs 0>,
++			 <&clk_s_c0_quadfs 1>,
++			 <&clk_s_c0_quadfs 2>,
++			 <&clk_s_c0_quadfs 3>,
++			 <&clk_sysin>;
++
++		clock-output-names = "clk-icn-gpu",
++				     "clk-fdma",
++				     "clk-nand",
++				     "clk-hva",
++				     "clk-proc-stfe",
++				     "clk-proc-tp",
++				     "clk-rx-icn-dmu",
++				     "clk-rx-icn-hva",
++				     "clk-icn-cpu",
++				     "clk-tx-icn-dmu",
++				     "clk-mmc-0",
++				     "clk-mmc-1",
++				     "clk-jpegdec",
++				     "clk-ext2fa9",
++				     "clk-ic-bdisp-0",
++				     "clk-ic-bdisp-1",
++				     "clk-pp-dmu",
++				     "clk-vid-dmu",
++				     "clk-dss-lpc",
++				     "clk-st231-aud-0",
++				     "clk-st231-gp-1",
++				     "clk-st231-dmu",
++				     "clk-icn-lmi",
++				     "clk-tx-icn-disp-1",
++				     "clk-icn-sbc",
++				     "clk-stfe-frc2",
++				     "clk-eth-phy",
++				     "clk-eth-ref-phyclk",
++				     "clk-flash-promip",
++				     "clk-main-disp",
++				     "clk-aux-disp",
++				     "clk-compo-dvp";
++	};
 -- 
 1.9.1
