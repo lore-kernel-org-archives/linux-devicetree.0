@@ -1,96 +1,89 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: [PATCH 1/1] video/atmel_lcdfb: Introduce regulator support
-Date: Tue, 15 Jul 2014 14:33:25 +0200
-Message-ID: <1405427605-5288-1-git-send-email-alexander.stein@systec-electronic.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
+ driver
+Date: Tue, 15 Jul 2014 13:35:57 +0100
+Message-ID: <20140715123557.GB17528@sirena.org.uk>
+References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
+ <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
+ <20140714172524.GH6800@sirena.org.uk>
+ <CABxcv==yuWJYmSiVV=HELMdwi-8aAG-aiT9o12HUBp8uRaBxkQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv==yuWJYmSiVV=HELMdwi-8aAG-aiT9o12HUBp8uRaBxkQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds regulator support to enable/disable the LCD voltage, using
-'lcd-supply' as regulator name.
 
-Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
----
- .../devicetree/bindings/video/atmel,lcdc.txt         |  3 +++
- drivers/video/fbdev/atmel_lcdfb.c                    | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-index 1ec175eddca8..5ae0faf443c3 100644
---- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-+++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-@@ -20,6 +20,9 @@ Required nodes:
- - default-mode: a videomode within the display with timing parameters
- 	as specified below.
- 
-+Optional properties:
-+- lcd-supply: Regulator for LCD supply voltage.
-+
- Example:
- 
- 	fb0: fb@0x00500000 {
-diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
-index d36e830d6fc6..59fd2e062d4f 100644
---- a/drivers/video/fbdev/atmel_lcdfb.c
-+++ b/drivers/video/fbdev/atmel_lcdfb.c
-@@ -24,6 +24,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <video/of_display_timing.h>
-+#include <linux/regulator/consumer.h>
- #include <video/videomode.h>
- 
- #include <mach/cpu.h>
-@@ -60,6 +61,7 @@ struct atmel_lcdfb_info {
- 	struct atmel_lcdfb_pdata pdata;
- 
- 	struct atmel_lcdfb_config *config;
-+	struct regulator	*reg_lcd;
- };
- 
- struct atmel_lcdfb_power_ctrl_gpio {
-@@ -302,10 +304,24 @@ static void init_contrast(struct atmel_lcdfb_info *sinfo)
- 
- static inline void atmel_lcdfb_power_control(struct atmel_lcdfb_info *sinfo, int on)
- {
-+	int ret;
- 	struct atmel_lcdfb_pdata *pdata = &sinfo->pdata;
- 
- 	if (pdata->atmel_lcdfb_power_control)
- 		pdata->atmel_lcdfb_power_control(pdata, on);
-+	else if (sinfo->reg_lcd) {
-+		if (on) {
-+			ret = regulator_enable(sinfo->reg_lcd);
-+			if (ret)
-+				dev_err(&sinfo->pdev->dev,
-+					"lcd regulator enable failed:	%d\n", ret);
-+		} else {
-+			ret = regulator_disable(sinfo->reg_lcd);
-+			if (ret)
-+				dev_err(&sinfo->pdev->dev,
-+					"lcd regulator disable failed: %d\n", ret);
-+		}
-+	}
- }
- 
- static struct fb_fix_screeninfo atmel_lcdfb_fix __initdata = {
-@@ -1192,6 +1208,10 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
- 	if (!sinfo->config)
- 		goto free_info;
- 
-+	sinfo->reg_lcd = devm_regulator_get(&pdev->dev, "lcd");
-+	if (IS_ERR(sinfo->reg_lcd))
-+		sinfo->reg_lcd = NULL;
-+
- 	info->flags = ATMEL_LCDFB_FBINFO_DEFAULT;
- 	info->pseudo_palette = sinfo->pseudo_palette;
- 	info->fbops = &atmel_lcdfb_ops;
--- 
-1.8.5.5
+On Tue, Jul 15, 2014 at 12:38:58PM +0200, Javier Martinez Canillas wrote:
+> Hello Mark,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Don't top post.
+
+> On Mon, Jul 14, 2014 at 7:25 PM, Mark Brown <broonie@kernel.org> wrote:
+> > On Mon, Jul 14, 2014 at 11:11:44AM +0530, Naveen Krishna Chatradhi wrote:
+
+> So, the .line field is used to specify a GPIO, not a chip select. So
+> gpio_is_valid() should also be used to check that cs->line is a valid
+> GPIO. If board file does not want to use a GPIO and wants to use a
+> built-in chip select then it should either not use a struct
+> s3c64xx_spi_csinfo at all or set .line to -ENOENT in order to be
+> consistent with the SPI core.
+
+This sort of "let's make everyone instabuggy" change is not good
+practice, especially when it's mixed in with some other not obviously
+related change, has an unclear benefit and is barely mentioned in the
+commit log - I found this through code review, not through it being a
+clearly intentional and considered part of the change.
+
+> As I said before this patch is fixing a bug in the SPI driver, the
+> first version of the series was posted on June, 10 so many other
+> patches already depend on this fix. So it would be great if we can
+> move this forward since this is hurting the platform support as a
+> whole.
+
+So provide a clear, easy to understand patch series then.  As I've said
+before this series is setting off lots of alarm bells - the large number
+of versions, the difficulty in understanding what it was supposed to do
+both for the overall goal of the series and the individual changes, and
+the fact that several people have found bugs for use cases other than
+your own (all the way up to removing non-DT support) are all saying that
+this is something that needs careful review and also making that review
+difficult.
+
+Code review is an important part of the process, we need people to work
+to make that review easy, address review comments and allow a reasonable
+time for the review to happen (something that's obviously going to be
+quicker with submissions that are easier to review).
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTxSAqAAoJELSic+t+oim9jo4P/0IoZoHvgu6y9r8lD2LK/KIX
+QS9HOJidlCM9r7psiKhnMIDVO2voS30Wb/GM7lHtpjir5y5JjAvzvY5fW0mUO6op
+hDdAwJuvb/dlBmVtRRFyESt2xc8dQAoQAGEomVhRWY2HH5qYMNgHXAh+fzEkeIKg
+Iw4x5eUuSIfToKQoZBGLrnVx8OUaNfGtLUdEem5yR4ApgnlBdYcBlLXvoSiB/VHm
+UaPhCRagmhdopK49akONH3b3UjCCy3/L406+yEQL3XMjfYIrRr22Jhsk4owRkNTq
+i0bPvYoyBE30KsKodpzMjG2fGpj79/KRItn9G+1mOIfHv2zEguRo022o/IotKGZd
+S3J80KD4OAwk8LsBYNahHlj9RT2UJ27IWeQ7ovGVFBDHMVZaCCzMqqPP+hKLIl0Y
+bin9alhvpQ7x8TSOtscvhE1SsDL/OTuHtRfMX357nw1T5n2tWVTkZJ31s1js+lBy
+0D4ElMrGVlHyd4x/D4Xl81xyZtCti261cSr3aSUhl5JbERkrp14Iu9lYttBHL+Sr
+BurxmgurcACsNoHxrCfzLPxiutDLNyHdY9JKJz5gLh65gaYyfT36Hd/BA9I+/iyi
+tYxUFdv5K46gimj2plbWxE4NypgZi2xhbZzRFI76+GxQRv2L1Y2o+3ZTRfaeCbTt
+be7eCvGPcQm+UqZan5/H
+=Xxxa
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
