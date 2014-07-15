@@ -1,61 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
- driver
-Date: Tue, 15 Jul 2014 12:00:00 +0100
-Message-ID: <20140715110000.GA17528@sirena.org.uk>
-References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
- <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
- <20140714172524.GH6800@sirena.org.uk>
- <CAHfPSqAzab931yurSs+3zj=uoFj93FuAdd24AQKm1fZm07Nq8Q@mail.gmail.com>
- <20140714191533.GH6800@sirena.org.uk>
- <CAHfPSqAgCbfL2nkrfSYNJZitT-nGw7+5fpR9FMaabmwVJM6jUQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHfPSqAgCbfL2nkrfSYNJZitT-nGw7+5fpR9FMaabmwVJM6jUQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
+From: Zhou Wang <wangzhou.bry@gmail.com>
+Subject: [PATCH v1 0/3] mtd: hisilicon: add a new driver for NAND controller of hisilicon hip04 Soc
+Date: Tue, 15 Jul 2014 18:58:23 +0800
+Message-ID: <1405421906-660-1-git-send-email-wangzhou.bry@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: wangzhou1@hisilicon.com, caizhiyong@huawei.com, Zhou Wang <wangzhou.bry@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This series patches add the support for NAND controller of hisilicon
+hip04 Soc. These patches are base on branch integration-hilt-working-v3.14 
+in linaro landing-team git repository[1].
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The NAND controller IP was developed by hisilicon and need a new driver
+to support. The driver is usable and I tested it on hisilicon hip04-d01
+board.
 
-On Tue, Jul 15, 2014 at 09:33:21AM +0530, Naveen Krishna Ch wrote:
-> On 15 July 2014 00:45, Mark Brown <broonie@kernel.org> wrote:
+Changes in v1:
+- Remove callback functions out of struct hinfc_host, and call them directly
+  in relative functions.
+- Change hinfc_read and hinfc_write from macros to inline functions.
+- Instead of putting pointers, embed struct nand_chip and struct mtd_info in
+  struct hinfc_host directly.
+- rewrite some unclear lines in device tree binding document, correct some
+  code style error.
 
-> > The problem isn't what you're trying to do, the problem is verifying
-> > that it has been done correctly - making sure that everything has been
-> > accounted for in the change itself.
+[1] ssh://git@git.linaro.org/landing-teams/working/hisilicon/kernel.git
 
-> Understand your concern. I will try to get it tested on as many platforms.
 
-That's useful, but please note that it's mainly a code review thing.
+Zhou Wang (3):
+  mtd: hisilicon: add device tree node for nand controller
+  mtd: hisilicon: add a new nand controller driver for hisilicon hip04 Soc
+  mtd: hisilicon: add device tree binding documentation
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/mtd/hisi-nand.txt          |   40 +
+ arch/arm/boot/dts/hip04.dtsi                       |   31 +
+ drivers/mtd/nand/Kconfig                           |    5 +
+ drivers/mtd/nand/Makefile                          |    1 +
+ drivers/mtd/nand/hisi_nand.c                       |  836 ++++++++++++++++++++
+ 5 files changed, 913 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/hisi-nand.txt
+ create mode 100644 drivers/mtd/nand/hisi_nand.c
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+-- 
+1.7.9.5
 
-iQIcBAEBAgAGBQJTxQmtAAoJELSic+t+oim9dB0P/jebDkqiuuUfanpDMmS362hr
-+VLGU0tQ0QKE1cCyDJaCPGGdRnEBuWEDWqA0LHc4YNoUJ/6yjhTcLMRdPXabk0DN
-A8FBeICkOIt6vzVzDokblHB80t5a4vCiKSDD6htgOyZ+Ux5bfQut3BoEKUwwWcgq
-6MCPymc98L/C+xb3Dq4pMD4PTwd16DKptRt/x/7FFjVbtMQOdAZ8GeTNu88lSEJ4
-3jE2W12WfLbrLiZoQWYVLBOi/XntTYQI+hQZbjvqxon2Z6C/FA1wLi+p7r3sE9Js
-s7yL8ooKQDGPV6np9TX2hBiJYgi/mXD9f8Ax+L14Ow/mU+MI1HzEVuwiRpdNKdpd
-a0dFpHmE2jPhRrVTfHFwXDf9rV4OrmZlEo1YUrgcb8CTagiSUTJYxDreatI3iTz4
-xHtDvSDABy0pTRirDlR0VVNsGCXDvZwTI8p7MvLhyHK2+4tUl5y6KQurGck9+M5p
-ls4qYccY9r+o3ZLsOamaDbDNNmKjdjykj8e/HUr5mY4avcAS5cx8mgAegdmOKUEN
-7sFWOcDEcJ6FqcKScRLW/uVAiPxOH9Eo7VWSTScer0b6hccG26EoK4trXPTeQ/OT
-9tbtfdSn+3BcDkXRd+N9rSl7FfvsaGMOFqh+CsEBxqvVVMQb7P6RgesFIgV2tgY8
-DhAB9CalbrPHozjS4nzD
-=puuZ
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
