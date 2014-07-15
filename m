@@ -1,147 +1,186 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Tue, 15 Jul 2014 12:06:19 +0200
-Message-ID: <20140715120619.7f29c458@bbrezillon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1404751384-5077-7-git-send-email-boris.brezillon@free-electrons.com>
- <20140714100542.GB9870@ulmo>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [RFC V1] devicetree: Dialog Semiconductor consolidate existing
+ vendor prefixes to standardise on 'dlg'
+Date: Tue, 15 Jul 2014 10:07:57 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B269FA@SW-EX-MBX02.diasemi.com>
+References: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
+ <20140714162101.GM26465@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140714100542.GB9870@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140714162101.GM26465@leverpostej>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <Support.Opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hello Thierry,
-
-On Mon, 14 Jul 2014 12:05:43 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
-
-> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote:
-> > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
-> > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> > controller device.
-> > 
-> > The HLCDC block provides a single RGB output port, and only supports LCD
-> > panels connection to LCD panels for now.
-> > 
-> > The atmel,panel property link the HLCDC RGB output with the LCD panel
-> > connected on this port (note that the HLCDC RGB connector implementation
-> > makes use of the DRM panel framework).
-> > 
-> > Connection to other external devices (DRM bridges) might be added later by
-> > mean of a new atmel,xxx (atmel,bridge) property.
-> > 
-> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 ++++++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> 
-> This is the wrong directory. Device tree bindings describe hardware, but
-> DRM is a Linux-specific framework. And yes, there are already files in
-> that directory, I know, but that doesn't make it any better.
-> 
-> I suggest either devicetree/bindings/gpu or devicetree/bindings/video.
-
-No problem, I'll move the documentation into devicetree/bindings/video
-(the HLCDC does not provide any 3D rendering functionality and thus
-I'm not sure moving the bindings documentation into
-devicetree/bindings/gpu makes sense).
-
-> 
-> > diff --git a/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> [...]
-> > +The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
-> > +See Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt for more details.
-> 
-> I think it's better to refer to these using relative filenames. When the
-> device tree bindings are moved out of the kernel tree, they may no
-> longer use the same hierarchy.
-
-Sure.
-By relative path you mean ../../mfd/atmel-hlcdc.txt or just
-mfd/atmel-hlcdc.txt ?
-
-> 
-> > +Required properties:
-> > + - compatible: value should be one of the following:
-> > +   "atmel,hlcdc-dc"
-> 
-> There's only one value, so perhaps: should be "atmel,hlcdc-dc".
-
-Yes, I'll fix that.
-
-> 
-> > + - atmel,panel: Should contain a phandle with 2 parameters.
-> > +   The first cell is a phandle to a DRM panel device
-> > +   The second cell encodes the RGB mode, which can take the following values:
-> > +   * 0: RGB444
-> > +   * 1: RGB565
-> > +   * 2: RGB666
-> > +   * 3: RGB888
-> 
-> These are properties of the panel and should be obtained from the panel
-> directly rather than an additional cell in this specifier.
-
-Okay.
-What's the preferred way of doing this ?
-What about defining an rgb-mode property in the panel node.
-
-BTW, have you received this series [1] adding support for the LCD panel
-I'm testing this driver with.
-
-[1] https://lkml.org/lkml/2014/6/5/612
-
-> 
-> > +   The third cell encodes specific flags describing LCD signals configuration
-> > +   (see Atmel's datasheet for a full description of these fields):
-> > +   * bit 0: HSPOL: Horizontal Synchronization Pulse Polarity
-> > +   * bit 1: VSPOL: Vertical Synchronization Pulse Polarity
-> > +   * bit 2: VSPDLYS: Vertical Synchronization Pulse Start
-> > +   * bit 3: VSPDLYE: Vertical Synchronization Pulse End
-> > +   * bit 4: DISPPOL: Display Signal Polarity
-> > +   * bit 7: DISPDLY: LCD Controller Display Power Signal Synchronization
-> > +   * bit 12: VSPSU: LCD Controller Vertical synchronization Pulse Setup Configuration
-> > +   * bit 13: VSPHO: LCD Controller Vertical synchronization Pulse Hold Configuration
-> > +   * bit 16-20: GUARDTIME: LCD DISPLAY Guard Time
-> 
-> Similarly for most of these: HSPOL and VSPOL seem to correspond to the
-> DRM_MODE_FLAG_{{P,N},{H,V}}SYNC flags in struct drm_display_mode. And
-> VSPDLYS as well as VSPDLYE sound like they may be vsync_start and
-> vsync_end of the same structure.
-
-I agree with HSPOL and VSPOL.
-
-> 
-> As for the others, maybe if you could explain what exactly they are we
-> may be able to find a better fit.
-
-Atmel datasheets include several timing diagrams [2] (chapter "32.6.17
-Output Timing Generation" page 603), and I think you will get more
-informations from these diagrams than if I try to explain what I
-understood ;-).
-
-Best Regards,
-
-Boris
-
-[1]https://lkml.org/lkml/2014/6/5/612
-[2]http://www.atmel.com/Images/Atmel_11121_32-bit-Cortex-A5-Microcontroller_SAMA5D3_Datasheet.pdf
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+DQoNCk9uIDE0IEp1bHkgMjAxNCAxNzoyMSwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPkZyb206IE1h
+cmsgUnV0bGFuZCBbbWFpbHRvOm1hcmsucnV0bGFuZEBhcm0uY29tXQ0KPg0KPk9uIE1vbiwgSnVs
+IDE0LCAyMDE0IGF0IDA1OjA3OjIwUE0gKzAxMDAsIE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXSB3
+cm90ZToNCj4+IEZyb206IE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXSA8c3R3aXNzLm9wZW5zb3Vy
+Y2VAZGlhc2VtaS5jb20+DQo+Pg0KPj4gVGhpcyBwYXRjaCBzZXJpZXMgdXBkYXRlcyB0aGUgZGV2
+aWNlIHRyZWUgdmVuZG9yIHByZWZpeCBmb3INCj4+IERpYWxvZyBTZW1pY29uZHVjdG9yDQo+Pg0K
+Pj4gVmFyaW91cyBtZXRob2RzIGFyZSBjdXJyZW50bHkgdXNlZCB0aHJvdWdob3V0IHRoZSBrZXJu
+ZWw6ICdkaWFzZW1pJywNCj4+ICdkaWFsb2cnIGFuZCAnZGxnJy4gT3RoZXJzIGhhdmUgYWxzbyBi
+ZWVuIHN1Z2dlc3RlZC4NCj4+DQo+PiBUaGlzIHBhdGNoIHNldCBhaW1zIHRvIGNvbnNvbGlkYXRl
+IHRoZSB1c2FnZSBvZiB0aGUgdmVuZG9yIHByZWZpeCB0bw0KPj4gdXNlIGEgY29tbW9uIHN0YW5k
+YXJkLiBUaGUgcHJlZml4ICdkbGcnIGlzIHVzZWQuDQo+Pg0KPj4gVGhpcyBlLW1haWwgaXMgaW4g
+cmVzcG9uc2UgdG8gdGhlIHByZXZpb3VzIHRocmVhZCBoZXJlOg0KPj4NCj4+IC0gaHR0cHM6Ly9s
+a21sLm9yZy9sa21sLzIwMTQvNi8xMS8yNjINCj4NCj5JbiB0aGF0IHJlc3BvbnNlLCBSb2IgcG9p
+bnRlZCBvdXQgdGhlIG9sZCBmb3JtcyBzaG91bGQgYmUgbWFya2VkDQo+ZGVwcmVjYXRlZCwgYnV0
+IHRoZSBwYXRjaCBzZWVtcyB0byBvdXRyaWdodCByZW1vdmUgdGhlbS4NCj4NCj5BcmUgd2Ugc3Vy
+ZSB0aGlzIGRvZXNuJ3QgYnJlYWsgYW4gZXhpc3RpbmcgRFRCIGFueXdoZXJlPw0KPg0KPlRoYW5r
+cywNCj5NYXJrLg0KDQpIaSBNYXJrLA0KDQpSb2Igc2FpZCB0aGF0IHRoZSBvbGQgZm9ybXMgc2hv
+dWxkIGJlIG1hcmtlZCBhcyBkZXByZWNhdGVkLCBidXQgSSBkaWRuJ3QNCmRlcHJlY2F0ZSBhbnkg
+ImRpYWxvZyIgb3IgImRpYXNlbWkiIGVudHJpZXMgaW4gdGhpcyBwYXRjaCBiZWNhdXNlIEkgaGF2
+ZQ0Kb25seSBtYWRlIHR3byB0eXBlcyBvZiBjaGFuZ2U6DQoNCigxKSBkZWZpbml0aW9ucyBvZiAi
+ZGlhc2VtaSIgb3IgImRpYWxvZyIgdGhhdCBoYXZlIG5vdCBiZWVuIHVzZWQgaW4gdGhlIGtlcm5l
+bDsNCigyKSBkZWZpbml0aW9ucyBvZiAiZGlhc2VtaSIgb3IgImRpYWxvZyIgdGhhdCBhcmUgaW5j
+b21wYXRpYmxlIHdpdGggZXhpc3RpbmcgZHJpdmVyIGNvZGUuDQoNCkluIGJvdGggb2YgdGhlc2Ug
+Y2FzZXMgdGhleSBjYW5ub3QgYWZmZWN0IGFueSB3b3JraW5nIERUQi4NCg0KQWN0dWFsbHkgLS0g
+SSB3aWxsIG5lZWQgdG8gcmVzZW5kIGEgVjIgdG8gdGhpcyBwYXRjaCBiZWNhdXNlIEkgZGlkIG1p
+c3Mgb3V0IHR3bw0KZmlsZXMgZm9yIERBOTIxMCB3aGljaCByZWZlcmVuY2UgdGhlIHVudXNlZCBj
+b21wYXRpYmxlIGZsYWcgImRpYXNlbWkiIGFuZCBJDQptaWdodCBhcyB3ZWxsIGZpeCB0aG9zZSB3
+aGlsZSBJIGFtIGRvaW5nIHRoaXMgY2hhbmdlLg0KDQpJIHdpbGwgcmVzZW5kIHRob3NlIGNoYW5n
+ZXMgYWxsIG15ICJ3b3JraW5nIiBpbiBteSBuZXh0IHBhdGNoIFJGQyBWMi4NCg0KUmVnYXJkcywN
+ClN0ZXZlDQoNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBPcGVuc291cmNlIFtTdGV2ZSBUd2lzc10g
+PHN0d2lzcy5vcGVuc291cmNlQGRpYXNlbWkuY29tPg0KPj4gLS0tDQo+PiBDaGVja3MgcGVyZm9y
+bWVkIHdpdGggbGludXgtbmV4dC9uZXh0LTIwMTQwNzE0L3NjcmlwdHMvY2hlY2twYXRjaC5wbA0K
+Pj4gIHRyaXZpYWwtZGV2aWNlcy50eHQgICAgICAgdG90YWw6IDAgZXJyb3JzLCAwIHdhcm5pbmdz
+LCA4OSBsaW5lcyBjaGVja2VkDQo+PiAgZGE5MjEwLnR4dCAgICAgICAgICAgICAgICB0b3RhbDog
+MCBlcnJvcnMsIDAgd2FybmluZ3MsIDIxIGxpbmVzIGNoZWNrZWQNCj4+ICB2ZW5kb3ItcHJlZml4
+ZXMudHh0ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgMTQ5IGxpbmVzIGNoZWNr
+ZWQNCj4+ICBpbXg1My1zbWQuZHRzICAgICAgICAgICAgIHRvdGFsOiAwIGVycm9ycywgMiB3YXJu
+aW5ncywgMjc5IGxpbmVzIGNoZWNrZWQNCj4+ICBpbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaSB0
+b3RhbDogMCBlcnJvcnMsIDIgd2FybmluZ3MsIDM1NyBsaW5lcyBjaGVja2VkDQo+PiAgZGE5MDU1
+LWNvcmUuYyAgICAgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDAgd2FybmluZ3MsIDQyOCBsaW5l
+cyBjaGVja2VkDQo+Pg0KPj4gVGhpcyBwYXRjaCBhcHBsaWVzIGFnYWluc3QgbGludXgtbmV4dCBh
+bmQgbmV4dC0yMDE0MDcxNA0KPj4NCj4+IFJlZ2FyZHMsDQo+PiBTdGV2ZSBUd2lzcywgRGlhbG9n
+IFNlbWljb25kdWN0b3IgTHRkLg0KPj4NCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMv
+dHJpdmlhbC1kZXZpY2VzLnR4dCAgICB8ICAyICstDQo+PiAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcmVndWxhdG9yL2RhOTIxMC50eHQgICAgICAgfCAgNCArKy0tDQo+PiAgLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgMSArDQo+PiAgYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NTMtc21kLmR0cyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQ0KPj4g
+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpICAgICAgIHwgIDIg
+Ky0NCj4+ICBkcml2ZXJzL21mZC9kYTkwNTUtY29yZS5jICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8IDI2ICsrKysrKysrKysrLS0tLS0tLS0tLS0NCj4+ICA2IGZpbGVzIGNoYW5nZWQsIDE5IGlu
+c2VydGlvbnMoKyksIDE4IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQNCj5iL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dA0K
+Pj4gaW5kZXggMzc4MDNlYi4uYTAyYjhhMSAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dA0KPj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0DQo+
+PiBAQCAtNDQsNyArNDQsNyBAQCBkYWxsYXMsZHMxNzc1CQlUaW55IERpZ2l0YWwgVGhlcm1vbWV0
+ZXIgYW5kDQo+VGhlcm1vc3RhdA0KPj4gIGRhbGxhcyxkczMyMzIJCUV4dHJlbWVseSBBY2N1cmF0
+ZSBJw4LCskMgUlRDIHdpdGggSW50ZWdyYXRlZCBDcnlzdGFsIGFuZA0KPlNSQU0NCj4+ICBkYWxs
+YXMsZHM0NTEwCQlDUFUgU3VwZXJ2aXNvciB3aXRoIE5vbnZvbGF0aWxlIE1lbW9yeSBhbmQNCj5Q
+cm9ncmFtbWFibGUgSS9PDQo+PiAgZGFsbGFzLGRzNzUJCURpZ2l0YWwgVGhlcm1vbWV0ZXIgYW5k
+IFRoZXJtb3N0YXQNCj4+IC1kaWFsb2csZGE5MDUzCQlEQTkwNTM6IGZsZXhpYmxlIHN5c3RlbSBs
+ZXZlbCBQTUlDIHdpdGgNCj5tdWx0aWNvcmUgc3VwcG9ydA0KPj4gK2RsZyxkYTkwNTMJCURBOTA1
+MzogZmxleGlibGUgc3lzdGVtIGxldmVsIFBNSUMgd2l0aCBtdWx0aWNvcmUNCj5zdXBwb3J0DQo+
+PiAgZXBzb24scng4MDI1CQlIaWdoLVN0YWJpbGl0eS4gSTJDLUJ1cyBJTlRFUkZBQ0UgUkVBTCBU
+SU1FIENMT0NLDQo+TU9EVUxFDQo+PiAgZXBzb24scng4NTgxCQlJMkMtQlVTIElOVEVSRkFDRSBS
+RUFMIFRJTUUgQ0xPQ0sgTU9EVUxFDQo+PiAgZnNsLG1hZzMxMTAJCU1BRzMxMTA6IFh0cmluc2lj
+IEhpZ2ggQWNjdXJhY3ksIDNEIE1hZ25ldG9tZXRlcg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvZGE5MjEwLnR4dA0KPmIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0DQo+PiBpbmRl
+eCBmMTIwZjIyLi4zMjk3YzUzIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9kYTkyMTAudHh0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQNCj4+IEBAIC0yLDcgKzIs
+NyBAQA0KPj4NCj4+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4NCj4+IC0tIGNvbXBhdGlibGU6
+CW11c3QgYmUgImRpYXNlbWksZGE5MjEwIg0KPj4gKy0gY29tcGF0aWJsZToJbXVzdCBiZSAiZGxn
+LGRhOTIxMCINCj4+ICAtIHJlZzoJCXRoZSBpMmMgc2xhdmUgYWRkcmVzcyBvZiB0aGUgcmVndWxh
+dG9yLiBJdCBzaG91bGQgYmUgMHg2OC4NCj4+DQo+PiAgQW55IHN0YW5kYXJkIHJlZ3VsYXRvciBw
+cm9wZXJ0aWVzIGNhbiBiZSB1c2VkIHRvIGNvbmZpZ3VyZSB0aGUgc2luZ2xlIGRhOTIxMA0KPj4g
+QEAgLTExLDcgKzExLDcgQEAgRENEQy4NCj4+ICBFeGFtcGxlOg0KPj4NCj4+ICAJZGE5MjEwQDY4
+IHsNCj4+IC0JCWNvbXBhdGlibGUgPSAiZGlhc2VtaSxkYTkyMTAiOw0KPj4gKwkJY29tcGF0aWJs
+ZSA9ICJkbGcsZGE5MjEwIjsNCj4+ICAJCXJlZyA9IDwweDY4PjsNCj4+DQo+PiAgCQlyZWd1bGF0
+b3ItbWluLW1pY3Jvdm9sdCA9IDw5MDAwMDA+Ow0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+Yi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPj4gaW5kZXggNWQy
+N2U1YS4uMzVhODMzZSAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPj4gQEAgLTM3LDYgKzM3LDcgQEAg
+ZGFsbGFzCU1heGltIEludGVncmF0ZWQgUHJvZHVjdHMgKGZvcm1lcmx5IERhbGxhcw0KPlNlbWlj
+b25kdWN0b3IpDQo+PiAgZGF2aWNvbQlEQVZJQ09NIFNlbWljb25kdWN0b3IsIEluYy4NCj4+ICBk
+ZW54CURlbnggU29mdHdhcmUgRW5naW5lZXJpbmcNCj4+ICBkaWdpCURpZ2kgSW50ZXJuYXRpb25h
+bCBJbmMuDQo+PiArZGxnCURpYWxvZyBTZW1pY29uZHVjdG9yDQo+PiAgZGxpbmsJRC1MaW5rIENv
+cnBvcmF0aW9uDQo+PiAgZG1vCURhdGEgTW9kdWwgQUcNCj4+ICBlYnYJRUJWIEVsZWt0cm9uaWsN
+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg1My1zbWQuZHRzIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NTMtDQo+c21kLmR0cw0KPj4gaW5kZXggNWVjMTU5MC4uMWQzMjU1NyAx
+MDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMNCj4+ICsrKyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMNCj4+IEBAIC0yNjUsNyArMjY1LDcgQEAN
+Cj4+ICAJfTsNCj4+DQo+PiAgCXBtaWM6IGRpYWxvZ0A0OCB7DQo+PiAtCQljb21wYXRpYmxlID0g
+ImRpYWxvZyxkYTkwNTMiLCAiZGlhbG9nLGRhOTA1MiI7DQo+PiArCQljb21wYXRpYmxlID0gImRs
+ZyxkYTkwNTMiLCAiZGxnLGRhOTA1MiI7DQo+PiAgCQlyZWcgPSA8MHg0OD47DQo+PiAgCX07DQo+
+PiAgfTsNCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1w
+ZmxhMDIuZHRzaQ0KPmIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1waHl0ZWMtcGZsYTAyLmR0
+c2kNCj4+IGluZGV4IDI2OTRhYTguLjBlNTBiYjAgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL2FybS9i
+b290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaQ0KPj4gKysrIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvaW14NnFkbC1waHl0ZWMtcGZsYTAyLmR0c2kNCj4+IEBAIC04Myw3ICs4Myw3IEBADQo+
+PiAgCX07DQo+Pg0KPj4gIAlwbWljQDU4IHsNCj4+IC0JCWNvbXBhdGlibGUgPSAiZGlhbG9nLGRh
+OTA2MyI7DQo+PiArCQljb21wYXRpYmxlID0gImRsZyxkYTkwNjMiOw0KPj4gIAkJcmVnID0gPDB4
+NTg+Ow0KPj4gIAkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzQ+Ow0KPj4gIAkJaW50ZXJydXB0
+cyA9IDwxNyAweDg+OyAvKiBhY3RpdmUtbG93IEdQSU80XzE3ICovDQo+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9tZmQvZGE5MDU1LWNvcmUuYyBiL2RyaXZlcnMvbWZkL2RhOTA1NS1jb3JlLmMNCj4+
+IGluZGV4IGNhZjhkY2YuLmI0ZDkyMGMgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL21mZC9kYTkw
+NTUtY29yZS5jDQo+PiArKysgYi9kcml2ZXJzL21mZC9kYTkwNTUtY29yZS5jDQo+PiBAQCAtMjk2
+LDczICsyOTYsNzMgQEAgc3RhdGljIHN0cnVjdCByZXNvdXJjZSBkYTkwNTVfbGQwNV82X3Jlc291
+cmNlID0gew0KPj4NCj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1mZF9jZWxsIGRhOTA1NV9kZXZz
+W10gPSB7DQo+PiAgCXsNCj4+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNTUtZ3Bp
+byIsDQo+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LWdwaW8iLA0KPj4gIAkJLm5h
+bWUgPSAiZGE5MDU1LWdwaW8iLA0KPj4gIAl9LA0KPj4gIAl7DQo+PiAtCQkub2ZfY29tcGF0aWJs
+ZSA9ICJkaWFsb2csZGE5MDU1LXJlZ3VsYXRvciIsDQo+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJk
+bGcsZGE5MDU1LXJlZ3VsYXRvciIsDQo+PiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwN
+Cj4+ICAJCS5pZCA9IDEsDQo+PiAgCX0sDQo+PiAgCXsNCj4+IC0JCS5vZl9jb21wYXRpYmxlID0g
+ImRpYWxvZyxkYTkwNTUtcmVndWxhdG9yIiwNCj4+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxk
+YTkwNTUtcmVndWxhdG9yIiwNCj4+ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLA0KPj4g
+IAkJLmlkID0gMiwNCj4+ICAJfSwNCj4+ICAJew0KPj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlh
+bG9nLGRhOTA1NS1yZWd1bGF0b3IiLA0KPj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1
+NS1yZWd1bGF0b3IiLA0KPj4gIAkJLm5hbWUgPSAiZGE5MDU1LXJlZ3VsYXRvciIsDQo+PiAgCQku
+aWQgPSAzLA0KPj4gIAl9LA0KPj4gIAl7DQo+PiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2cs
+ZGE5MDU1LXJlZ3VsYXRvciIsDQo+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LXJl
+Z3VsYXRvciIsDQo+PiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwNCj4+ICAJCS5pZCA9
+IDQsDQo+PiAgCX0sDQo+PiAgCXsNCj4+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxkYTkw
+NTUtcmVndWxhdG9yIiwNCj4+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkwNTUtcmVndWxh
+dG9yIiwNCj4+ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLA0KPj4gIAkJLmlkID0gNSwN
+Cj4+ICAJfSwNCj4+ICAJew0KPj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1NS1y
+ZWd1bGF0b3IiLA0KPj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1yZWd1bGF0b3Ii
+LA0KPj4gIAkJLm5hbWUgPSAiZGE5MDU1LXJlZ3VsYXRvciIsDQo+PiAgCQkuaWQgPSA2LA0KPj4g
+IAl9LA0KPj4gIAl7DQo+PiAtCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LXJlZ3Vs
+YXRvciIsDQo+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LXJlZ3VsYXRvciIsDQo+
+PiAgCQkubmFtZSA9ICJkYTkwNTUtcmVndWxhdG9yIiwNCj4+ICAJCS5pZCA9IDcsDQo+PiAgCQku
+cmVzb3VyY2VzID0gJmRhOTA1NV9sZDA1XzZfcmVzb3VyY2UsDQo+PiAgCQkubnVtX3Jlc291cmNl
+cyA9IDEsDQo+PiAgCX0sDQo+PiAgCXsNCj4+IC0JCS5vZl9jb21wYXRpYmxlID0gImRpYWxvZyxk
+YTkwNTUtcmVndWxhdG9yIiwNCj4+ICsJCS5vZl9jb21wYXRpYmxlID0gImRsZyxkYTkwNTUtcmVn
+dWxhdG9yIiwNCj4+ICAJCS5uYW1lID0gImRhOTA1NS1yZWd1bGF0b3IiLA0KPj4gIAkJLnJlc291
+cmNlcyA9ICZkYTkwNTVfbGQwNV82X3Jlc291cmNlLA0KPj4gIAkJLm51bV9yZXNvdXJjZXMgPSAx
+LA0KPj4gIAkJLmlkID0gOCwNCj4+ICAJfSwNCj4+ICAJew0KPj4gLQkJLm9mX2NvbXBhdGlibGUg
+PSAiZGlhbG9nLGRhOTA1NS1vbmtleSIsDQo+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5
+MDU1LW9ua2V5IiwNCj4+ICAJCS5uYW1lID0gImRhOTA1NS1vbmtleSIsDQo+PiAgCQkucmVzb3Vy
+Y2VzID0gJmRhOTA1NV9vbmtleV9yZXNvdXJjZSwNCj4+ICAJCS5udW1fcmVzb3VyY2VzID0gMSwN
+Cj4+ICAJfSwNCj4+ICAJew0KPj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1NS1y
+dGMiLA0KPj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiZGxnLGRhOTA1NS1ydGMiLA0KPj4gIAkJLm5h
+bWUgPSAiZGE5MDU1LXJ0YyIsDQo+PiAgCQkucmVzb3VyY2VzID0gZGE5MDU1X3J0Y19yZXNvdXJj
+ZSwNCj4+ICAJCS5udW1fcmVzb3VyY2VzID0gQVJSQVlfU0laRShkYTkwNTVfcnRjX3Jlc291cmNl
+KSwNCj4+ICAJfSwNCj4+ICAJew0KPj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1
+NS1od21vbiIsDQo+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LWh3bW9uIiwNCj4+
+ICAJCS5uYW1lID0gImRhOTA1NS1od21vbiIsDQo+PiAgCQkucmVzb3VyY2VzID0gJmRhOTA1NV9o
+d21vbl9yZXNvdXJjZSwNCj4+ICAJCS5udW1fcmVzb3VyY2VzID0gMSwNCj4+ICAJfSwNCj4+ICAJ
+ew0KPj4gLQkJLm9mX2NvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1NS13YXRjaGRvZyIsDQo+PiAr
+CQkub2ZfY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LXdhdGNoZG9nIiwNCj4+ICAJCS5uYW1lID0g
+ImRhOTA1NS13YXRjaGRvZyIsDQo+PiAgCX0sDQo+PiAgfTsNCj4+IC0tDQo+PiBlbmQtb2YtcGF0
+Y2ggZm9yIFJGQyBWMQ0KPj4NCj4+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
