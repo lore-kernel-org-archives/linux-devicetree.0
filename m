@@ -1,135 +1,52 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Tue, 15 Jul 2014 14:14:16 +0200
-Message-ID: <20140715141416.0af2de62@bbrezillon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1417324.PxofUz16v0@avalon>
-	<20140715103718.GB6616@ulmo>
-	<1645765.yCSTbHcZMC@avalon>
-	<20140715105253.GE6616@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140715105253.GE6616@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Tim Niemeyer <tim.niemeyer@corscience>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 0/3] spi: s3c64xx: fix the driver to use "cs-gpios" property
+Date: Tue, 15 Jul 2014 17:50:57 +0530
+Message-ID: <1405426860-18404-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 15 Jul 2014 12:52:54 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
+Current SPI core has generic implementation for configuring
+the Chip select gpios during .setup() & .cleanup(). By modifying
+the spi-s3c64xx.c driver to expect the "cs-gpios" property in SPI
+device node instead of the subnode "controller-data".
 
-> On Tue, Jul 15, 2014 at 12:43:02PM +0200, Laurent Pinchart wrote:
-> > Hi Thierry,
-> > 
-> > On Tuesday 15 July 2014 12:37:19 Thierry Reding wrote:
-> > > On Tue, Jul 15, 2014 at 12:20:02PM +0200, Laurent Pinchart wrote:
-> > > > On Tuesday 15 July 2014 12:06:19 Boris BREZILLON wrote:
-> > > >> On Mon, 14 Jul 2014 12:05:43 +0200 Thierry Reding wrote:
-> > > >>> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote:
-> > > >>>> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs
-> > > >>>> (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family) provides a
-> > > >>>> display controller device.
-> > > >>>> 
-> > > >>>> The HLCDC block provides a single RGB output port, and only supports
-> > > >>>> LCD panels connection to LCD panels for now.
-> > > >>>> 
-> > > >>>> The atmel,panel property link the HLCDC RGB output with the LCD
-> > > >>>> panel connected on this port (note that the HLCDC RGB connector
-> > > >>>> implementation makes use of the DRM panel framework).
-> > > >>>> 
-> > > >>>> Connection to other external devices (DRM bridges) might be added
-> > > >>>> later by mean of a new atmel,xxx (atmel,bridge) property.
-> > > >>>> 
-> > > >>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > > >>>> ---
-> > > >>>> 
-> > > >>>>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++++++++
-> > > >>>>  1 file changed, 59 insertions(+)
-> > > >>>>  create mode 100644
-> > > >>>>  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > 
-> > > > [snip]
-> > > > 
-> > > >>>> + - atmel,panel: Should contain a phandle with 2 parameters.
-> > > >>>> +   The first cell is a phandle to a DRM panel device
-> > > >>>> +   The second cell encodes the RGB mode, which can take the
-> > > >>>> following values:
-> > > >>>> +   * 0: RGB444
-> > > >>>> +   * 1: RGB565
-> > > >>>> +   * 2: RGB666
-> > > >>>> +   * 3: RGB888
-> > > >>> 
-> > > >>> These are properties of the panel and should be obtained from the
-> > > >>> panel directly rather than an additional cell in this specifier.
-> > > >> 
-> > > >> Okay.
-> > > >> What's the preferred way of doing this ?
-> > > >> What about defining an rgb-mode property in the panel node.
-> > > > 
-> > > > You could do that, but it won't help you much, as the HLCDC driver must
-> > > > not parse properties from the panel node. You should instead extend the
-> > > > drm_panel API with a function to retrieve panel properties. The HLCDC
-> > > > driver will then query the panel driver at runtime for the interface
-> > > > type. The panel driver will get the information from hardcoded data in
-> > > > the driver, from DT or possibly in some cases by querying the panel
-> > > > hardware directly.
-> > > 
-> > > My preference for this would be that we either add this to some existing
-> > > structure (struct drm_display_info seems like a good candidate) or if
-> > > the number of parameters grows out of hands, then maybe even introduce a
-> > > new type of device that's specific for the interface. DRM panels are an
-> > > abstraction for panels, that is, interface-agnostic, and if we start
-> > > exposing interface specific parameters things will start to become very
-> > > unwieldy.
-> > 
-> > I agree with the goal of keeping drm_panel interface-agnostic. However, one 
-> > way or another, interface parameters will need to be communicated between the 
-> > panel driver and the controller driver. My preference, if we need to extend 
-> > the number and/or scope of parameters beyond what drm_display_info could 
-> > reasonably contain, would be to implement a new drm_panel operation to 
-> > query/configure interface parameters, using a structure that contains the 
-> > interface type and a union of type-specific structures. This would keep the 
-> > API generic in the sense of not requiring explicit knowledge of all interfaces 
-> > in the drivers, while offering the flexibility we need with a way to easily 
-> > detect the interface type at runtime and react on unknown/unsupported types.
-> 
-> That's exactly what I was hoping could be avoided. If instead we modeled
-> the interface type as a bus, we could for example have an lvds_bus along
-> with an lvds_device and then use that as the natural place to store
-> these properties. Much like we do for DSI.
+This way we can avoid parsing the "cs-gpios" in the driver.
 
-I understand this is not a simple case here, and this is why I left
-RGB mode config in the HLCDC node in the first place.
+This patch set also does the following
+1. Validate the "struct s3c64xx_spi_csinfo *cs" object and the
+   CS gpio for both DT and NON-DT before using them.
+2. Correct the dt-bindings for exynos4210-smdkv310.dts, exynos4412-trats2.dts
+   and exynos5250-smdk5250.dts
+3. Updates the DT bindings.
 
-Anyway, I agree that this rgb mode should not be defined in the hlcdc
-node but rather in the slave device. I said slave device and not panel
-device here because the device connected to the RGB connector is not
-necessarily an LCD panel (i.e. atmel is connecting a raw RGB to HDMI
-bridge on the RGB connector). And given that I definitely think an
-interface bus architecture is better: this way we could configure RGB
-mode no matter what kind of device is connected on this bus and we
-could keep slave devices interface-agnostic.
+Note: 
+This patchset is a rework of the changes under review @
+http://www.mail-archive.com/devicetree@vger.kernel.org/msg34501.html
 
-This being said, I guess modeling interface (or connector) types as
-busses is not that simple.
+Tested on Exynos5420 and Exynos5250 based Peach PIT, PI and Snow boards
+respectively using the flashrom utility to access SPI flash.
 
-I really want to help here, so let me know what I can do.
+This patchset is needed by the changes
+http://www.gossamer-threads.com/lists/linux/kernel/1951607
 
-Just a side note: you are saying that RGB mode is a panel property, and
-this is not entirely true (it might depends on board design) :-). In
-some HW designs, LSB bits of the RGB connector are either connected to
-ground or to the first available MSB bit. This way you can use an LCD
-panel supporting RGB888 mode with an display controller supporting lower
-modes (RGB555 or RGB666).
+Tested-by on boards based on Exynos4, S5P, S3C series SoCs
+would be appreciated.
 
-Best Regards,
+Naveen Krishna Chatradhi (3):
+  spi: s3c64xx: move property "cs-gpio" from controller_data subnode   
+      to SPI DT node
+  spi: s3c64xx: validate s3c64xx_spi_csinfo before using
+  ARM: DTS: fix the chip select gpios definition in the SPI nodes
 
-Boris
+ .../devicetree/bindings/spi/spi-samsung.txt        |   10 ++++----
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |    2 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    2 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    2 +-
+ drivers/spi/spi-s3c64xx.c                          |   27 +++++++-------------
+ 5 files changed, 17 insertions(+), 26 deletions(-)
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.7.9.5
