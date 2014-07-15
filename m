@@ -1,17 +1,11 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC V1] devicetree: Dialog Semiconductor consolidate existing
- vendor prefixes to standardise on 'dlg'
-Date: Tue, 15 Jul 2014 12:09:44 +0100
-Message-ID: <20140715110944.GY26465@leverpostej>
-References: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
- <20140714162101.GM26465@leverpostej>
- <6ED8E3B22081A4459DAC7699F3695FB7D0B269FA@SW-EX-MBX02.diasemi.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [GIT PULL] Mediatek basic support for v3.17
+Date: Tue, 15 Jul 2014 13:11:42 +0200
+Message-ID: <CABuKBe+h0Et5_+o4_i-Eu7EQ8Xka7YFoKmO=U0B7NnVQBdQ8FA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B269FA@SW-EX-MBX02.diasemi.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,63 +15,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <Support.Opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, ak@linux.intel.com, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>, u.kleine-koenig@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetre>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 11:07:57AM +0100, Opensource [Steve Twiss] wrote:
-> 
-> 
-> On 14 July 2014 17:21, Mark Rutland wrote:
-> >From: Mark Rutland [mailto:mark.rutland@arm.com]
-> >
-> >On Mon, Jul 14, 2014 at 05:07:20PM +0100, Opensource [Steve Twiss] wrote:
-> >> From: Opensource [Steve Twiss] <stwiss.opensource@diasemi.com>
-> >>
-> >> This patch series updates the device tree vendor prefix for
-> >> Dialog Semiconductor
-> >>
-> >> Various methods are currently used throughout the kernel: 'diasemi',
-> >> 'dialog' and 'dlg'. Others have also been suggested.
-> >>
-> >> This patch set aims to consolidate the usage of the vendor prefix to
-> >> use a common standard. The prefix 'dlg' is used.
-> >>
-> >> This e-mail is in response to the previous thread here:
-> >>
-> >> - https://lkml.org/lkml/2014/6/11/262
-> >
-> >In that response, Rob pointed out the old forms should be marked
-> >deprecated, but the patch seems to outright remove them.
-> >
-> >Are we sure this doesn't break an existing DTB anywhere?
-> >
-> >Thanks,
-> >Mark.
-> 
-> Hi Mark,
-> 
-> Rob said that the old forms should be marked as deprecated, but I didn't
-> deprecate any "dialog" or "diasemi" entries in this patch because I have
-> only made two types of change:
-> 
-> (1) definitions of "diasemi" or "dialog" that have not been used in the kernel;
-> (2) definitions of "diasemi" or "dialog" that are incompatible with existing driver code.
-> 
-> In both of these cases they cannot affect any working DTB.
+The following changes since commit 7171511eaec5bf23fb06078f59784a3a0626b38f:
 
-Ok, that sounds fine then. That just wasn't immediately obvious.
+  Linux 3.16-rc1 (2014-06-15 17:45:28 -1000)
 
-Could you please note those facts in the commit message when you next
-post?
+are available in the git repository at:
 
-> Actually -- I will need to resend a V2 to this patch because I did miss out two
-> files for DA9210 which reference the unused compatible flag "diasemi" and I
-> might as well fix those while I am doing this change.
-> 
-> I will resend those changes all my "working" in my next patch RFC V2.
+  https://github.com/mbgg/linux-mediatek.git tags/v3.17-next-basic-support
 
-That sounds fine to me.
+for you to fetch changes up to 747eec721f99b3d2eb3985c3199bfb54888c716d:
 
-Cheers,
-Mark.
+  arm: mediatek: add dts for Aquaris5 mobile phone (2014-07-15 11:15:00 +0200)
+
+----------------------------------------------------------------
+This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
+Support is quite basic, as the only component working up to now are the
+timers.
+
+----------------------------------------------------------------
+Matthias Brugger (7):
+      of: Provide function to request and map memory
+      clocksource: Add support for the Mediatek SoCs
+      dt-bindings: add mtk-timer bindings
+      vendor-prefixes: add prefix for Mediatek Inc.
+      arm: add basic support for Mediatek MT6589 boards
+      dt-bindings: add documentation for Mediatek SoC
+      arm: mediatek: add dts for Aquaris5 mobile phone
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    8 +
+ .../bindings/timer/mediatek,mtk-timer.txt          |   17 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm/Kconfig                                   |    2 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |   25 ++
+ arch/arm/boot/dts/mt6589.dtsi                      |   94 +++++++
+ arch/arm/mach-mediatek/Kconfig                     |    6 +
+ arch/arm/mach-mediatek/Makefile                    |    1 +
+ arch/arm/mach-mediatek/mediatek.c                  |   27 ++
+ drivers/clocksource/Kconfig                        |    5 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/mtk_timer.c                    |  261 ++++++++++++++++++++
+ drivers/of/address.c                               |   36 +++
+ include/linux/io.h                                 |    2 +
+ include/linux/of_address.h                         |   11 +
+ lib/devres.c                                       |    2 -
+ 17 files changed, 498 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
+ create mode 100644
+Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+ create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+ create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+ create mode 100644 arch/arm/mach-mediatek/Kconfig
+ create mode 100644 arch/arm/mach-mediatek/Makefile
+ create mode 100644 arch/arm/mach-mediatek/mediatek.c
+ create mode 100644 drivers/clocksource/mtk_timer.c
