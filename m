@@ -1,184 +1,167 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v4 2/2] can: m_can: add Bosch M_CAN controller support
-Date: Tue, 15 Jul 2014 10:46:32 +0200
-Message-ID: <53C4EA68.5090606@pengutronix.de>
-References: <1405338041-19945-1-git-send-email-b29396@freescale.com> <1405338041-19945-2-git-send-email-b29396@freescale.com> <53C3C97A.7080102@pengutronix.de> <20140715033324.GC21584@shlinux1.ap.freescale.net> <53C4D872.9060707@pengutronix.de> <20140715082637.GA2601@shlinux1.ap.freescale.net>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
+Date: Tue, 15 Jul 2014 09:51:38 +0100
+Message-ID: <20140715085138.GR26465@leverpostej>
+References: <1405073193-21448-1-git-send-email-zonque@gmail.com>
+ <20140714095247.GB4980@leverpostej>
+ <53C3AEE1.4030805@zonque.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="5Hi0m3uSfHKAVs2N6113je6JaURrvTqEh"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20140715082637.GA2601@shlinux1.ap.freescale.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53C3AEE1.4030805@zonque.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: "dtor@mail.ru" <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---5Hi0m3uSfHKAVs2N6113je6JaURrvTqEh
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 14, 2014 at 11:20:17AM +0100, Daniel Mack wrote:
+> Hi Mark,
+> 
+> thanks a lot for your feedback! Much appreciated.
+> 
+> On 07/14/2014 11:52 AM, Mark Rutland wrote:
+> > On Fri, Jul 11, 2014 at 11:06:33AM +0100, Daniel Mack wrote:
+> 
+> >> +++ b/Documentation/devicetree/bindings/input/cap1106.txt
+> >> @@ -0,0 +1,63 @@
+> >> +Device tree bindings for Microchip CAP1106, 6 channel capacitive touch sensor
+> >> +
+> >> +The node for this driver must be a child of a I2C controller node, as the
+> >> +device communication via I2C only.
+> >> +
+> >> +Required properties:
+> >> +
+> >> +       compatible:             Must be "microchip,cap1106"
+> >> +       reg:                    The I2C slave address of the device.
+> >> +                               Only 0x28 is valid.
+> >> +       interrupt:              Node describing the interrupt line the device's
+> >> +                               ALERT#/CM_IRQ# pin is connected to.
+> > 
+> > s/interrupt/interrupts/
+> > 
+> > This is a _property_, not a node.
+> 
+> Yes, I reworded that description a couple of times. Together with
+> interrupt-parent, it's actually a property referencing a node ;) Will fix.
+> 
+> > I take it the device only has a single interrupt line?
+> 
+> Yes.
 
-On 07/15/2014 10:26 AM, Dong Aisheng wrote:
->>>>> +static void m_can_read_fifo(const struct net_device *dev, struct c=
-an_frame *cf,
->>>>> +			    u32 rxfs)
->>>>> +{
->>>>> +	struct m_can_priv *priv =3D netdev_priv(dev);
->>>>> +	u32 flags, fgi;
->>>>> +
->>>>> +	/* calculate the fifo get index for where to read data */
->>>>> +	fgi =3D (rxfs & RXFS_FGI_MASK) >> RXFS_FGI_OFF;
->>>>> +	flags =3D m_can_fifo_read(priv, fgi, 0x0);
->>>>                                            ^^^
->>>>
->>>> Can you introduce an enum for the offsets, please adjust the signatu=
-re
->>>> of m_can_fifo_read() accordingly.
->>>>
->>>
->>> I wonder enum may not be suitable.
->>> The Rx Buffer and FIFO Element is as follows:
->>>    31 24 23 16 15 8 7 0
->>> R0 ESI XTD RTR ID[28:0]
->>
->> M_CAN_FIFO_ID
->>
->>> R1 ANMF FIDX[6:0] res EDL BRS DLC[3:0] RXTS[15:0]
->>
->> M_CAN_FIFO_DLC
->>
->>> R2 DB3[7:0] DB2[7:0] DB1[7:0] DB0[7:0]
->>> R3 DB7[7:0] DB6[7:0] DB5[7:0] DB4[7:0]
->>
->> M_CAN_FIFO_DATA0
->> M_CAN_FIFO_DATA1
->>
->=20
-> You mean as follows?
-> enum m_can_fifo {
->         M_CAN_FIFO_ID =3D 0,
->         M_CAN_FIFO_DLC,
-=3D 0x4,
->         M_CAN_FIFO_DATA0,
-=3D 0x8,
->         M_CAN_FIFO_DATA1,
-=3D 0xc,
-> };
->=20
-> static inline u32 m_can_fifo_read(const struct m_can_priv *priv,
->                                   u32 fgi, enum m_can_fifo fifo)
-> {
->         return readl(priv->mram_base + priv->mcfg[MRAM_RXF0].off +
->                      fgi * RXF0_ELEMENT_SIZE + fifo * 0x4);
-> }
+Ok, that sounds fine then.
 
-without the * 0x4
+> >> +
+> >> +Optional properties:
+> >> +
+> >> +       autorepeat:             Enables the Linux input system's autorepeat
+> >> +                               feature on the input device.
+> >> +       microchip,sensor-gain:  Defines the gain of the sensor circuitry. This
+> >> +                               effectively controls the sensitivity, as a
+> >> +                               smaller delta capacitance is required to
+> >> +                               generate the same delta count values.
+> >> +                               Valid values are 1, 2, 4, and 8.
+> >> +                               By default, a gain of 1 is set.
+> > 
+> > Does the official documentation describe this in absolute terms?
+> 
+> The documentation describes the gain feature as "1, 2, 4, or 8", so I
+> kept it like this in the bindings. Internally, the register stores that
+> value in 2 bits. The driver takes care for the translation.
 
-> id =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
->=20
-> The problem is when adding long frames support, it becomes:
-> enum m_can_fifo {
->         M_CAN_FIFO_ID =3D 0,
->         M_CAN_FIFO_DLC,
->         M_CAN_FIFO_DATA0,
->         M_CAN_FIFO_DATA1,
->         ....
->         M_CAN_FIFO_DATA15,
-> };
+That sounds fine.
 
-#define M_CAN_FIFO_DATA(n)
-	(enum m_can_fifo)(M_CAN_FIFO_DATA_0 + (n) << 2)
+> >> +To define details of each individual button channel, six subnodes can be
+> >> +specified. Inside each of those, the following property is valid:
+> >> +
+> >> +       linux,keycode:  Specify the numeric identifier of the keycode to be
+> >> +                       generated when this channel is activated. If this
+> >> +                       property is omitted, KEY_A, KEY_B, etc are used as
+> >> +                       defaults.
+> > 
+> > What are those subnodes, and how are they told apart? Name, compatible?
+> > 
+> > I strongly recommend against relying on the order of the DT. It's very
+> > easy for that to get messed up and makes things hard to read.
+> > 
+> > Is is not possible to use linux,keymap and treat the buttons as a
+> > matrix keypad? Then you don't need subnodes at all, and you can have a
+> > sparse keymap if you want.
+> 
+> Hmm, I thought about that, but there are - in theory - more details that
+> could be specified per channel. I left those functions out for the first
+> version, as I have no good way to test them.
 
-> But it's useless because we may not use enum to read fifo data anymore.=
+Ok. Could you elaborate on what those details might be? It might make
+sense to have these as nodes if there are arbitrary properties to
+describe for each button, but I'm not familiar enough with the hardware
+to make a call either way.
 
-> It's not suitable to read fifo one by one:
-> m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA0);
-> m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA1);
-> ..
-> m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA15);
->=20
->=20
-> Instead, we may read data according to real dlc value within a for loop=
- like:
-> #define M_CAN_FIFO(n)   (n * 0x4)
-> id =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO(0));
-> dlc =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO(1));
-> for (i =3D 0; dlc > 0; dlc -=3D 0x4, i++) {
->         ....
->         data[i] =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO(i + 2));
-> }
+> Hence, my idea was to have everything related to one channel nicely
+> grouped in a subnode. I've also seen bindings that rely on the order of
+> subnodes before, for example in regulator drivers.
 
-id =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
-dlc =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_DLC);
-for (i =3D 0; i <=3D dlc; i++)
-	data[i] =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA(i));
+Sure. There's plenty of bad practice in DT bindings and code. There's
+just too much of it going on to get everything sane, and it's not always
+possible to fix the insane stuff if people are already using it.
 
-> So i'm not sure define that enum now is really needed.
+> But I agree with you that it makes board definitions error-prone.
+> 
+> linux,keycode feels a bit overkill here though, so I'd rather go for a
+> fixed-size linux,keycodes property. The number of entries is fixed,
+> anyway. Would you be fine with that?
 
-[...]
+Assuming no-one's likely to want a sparse keymap (i.e. one where some
+keys do nothing) then that's probably ok.
 
->>>>> +static int m_can_handle_lec_err(struct net_device *dev,
->>>>> +				enum m_can_lec_type lec_type)
->>>>> +{
->>>>> +	struct m_can_priv *priv =3D netdev_priv(dev);
->>>>> +	struct net_device_stats *stats =3D &dev->stats;
->>>>> +	struct can_frame *cf;
->>>>> +	struct sk_buff *skb;
->>>>> +
->>>>> +	/* early exit if no lec update */
->>>>> +	if (lec_type =3D=3D LEC_UNUSED)
->>>>> +		return 0;
->>>>
->>>> I think this is not needed, as checked by the only caller.
->>>
->>> You mean move it to caller as follows?
->>>         /* handle lec errors on the bus */
->>>         if ((psr & LEC_UNUSED) && ((psr & LEC_UNUSED)!=3D LEC_UNUSED)=
- &&
->>
->> yes - or something like this:
->>
->> static inline bool is_lec(u32 psr)
->> {
->> 	u32 psr &=3D LEC_UNUSED
->>
->> 	return psr && (psr !=3D LEC_UNUSED)
->> }
->>
->> 	if ((priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
->> 		is_lec(psr)) {
->> 	}
->>
->=20
->=20
-> Looks fine.
-> Maybe is_lec_err(u32 psr) better? :-)
+> >> +struct cap1106_priv {
+> >> +       struct regmap *regmap;
+> >> +       struct input_dev *idev;
+> >> +       struct work_struct work;
+> >> +       spinlock_t lock;
+> >> +       bool closed:1;
+> > 
+> > I don't think you're saving anything here by trying to have a bool
+> > bitfield.
+> 
+> That variable has been dropped in v3 already :)
+> 
+> >> +       i = 0;
+> >> +       for_each_child_of_node(node, child) {
+> >> +               if (i == CAP1106_NUM_CHN) {
+> >> +                       dev_err(dev, "Too many button nodes.\n");
+> >> +                       return -EINVAL;
+> >> +               }
+> >> +
+> >> +               if (!of_property_read_u32(child, "linux,keycode", &tmp32))
+> >> +                       priv->keycodes[i] = tmp32;
+> >> +
+> >> +               i++;
+> >> +       }
+> > 
+> > I don't think that it is a good idea to rely on the order of sub-nodes
+> > in the DTB.
+> 
+> Jup, I agree. As mentioned above, I'd like to solve that with
+> linux,keycode for now.
+> 
+> > [...]
+> > 
+> >> +       if (of_get_property(node, "autorepeat", NULL))
+> >> +               __set_bit(EV_REP, priv->idev->evbit);
+> > 
+> > Use of_property_read_bool.
+> 
+> Will do, thanks.
+> 
+> > /me mutters usual grumblings about the autorepeat property.
+> 
+> I took that from the gpio-keys driver. Is there a better way to denote
+> such a feature?
 
-Yes, is_lec() was just a random placeholder :) Descriptive function
-names are always preferred.
+Unfortunately not, given current practice. My gripe is that it's a Linux
+detail that were describing rather than a property of the device. We can
+forget about that for now.
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---5Hi0m3uSfHKAVs2N6113je6JaURrvTqEh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlPE6mgACgkQjTAFq1RaXHNTrQCdGFxFmIhM8HjYKTeVTdGhPTLe
-ZTMAn0MAA+hCdQC9e3WDvpEfeZKlIfsC
-=YGRd
------END PGP SIGNATURE-----
-
---5Hi0m3uSfHKAVs2N6113je6JaURrvTqEh--
+Thanks,
+Mark.
