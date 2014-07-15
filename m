@@ -1,61 +1,46 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC/PATCH 5/5] ARM: dts: am437x-sk-evm: add vpfe support and
- ov2659 sensor
-Date: Tue, 15 Jul 2014 13:02:04 -0500
-Message-ID: <20140715180204.GB5098@saruman.home>
-References: <1405447012-5340-1-git-send-email-balbi@ti.com>
- <1405447012-5340-6-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
+Date: Tue, 15 Jul 2014 23:33:49 +0530
+Message-ID: <CAJe_ZheGrGZMVXZN2SMtBtq4+fX7KsiMSEfAM0mVcb6f80Kckg@mail.gmail.com>
+References: <1405232911-4569-1-git-send-email-mollie.wu@linaro.org>
+	<CAL_JsqKvwxjEDZPVwL646PhPKr7oemBzxr6cZ+X=uJQ2u_XZ8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405447012-5340-6-git-send-email-balbi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: hans.verkuil@cisco.com, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, robh+dt@kernel.org, linux@arm.linux.org.uk, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org, archit@ti.com, detheridge@ti.com, sakari.ailus@iki.fi, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKvwxjEDZPVwL646PhPKr7oemBzxr6cZ+X=uJQ2u_XZ8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---s2ZSL+KKDSLx8OML
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 15 July 2014 20:41, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Hi,
+...
 
-On Tue, Jul 15, 2014 at 12:56:52PM -0500, Felipe Balbi wrote:
-> From: Darren Etheridge <detheridge@ti.com>
->=20
-> Adding necessary dts nodes to enable vpfe and ov2659 sensor on the correc=
-t i2c
+>> +               interrupts = <0 36 4>, /* LP Non-Sec */
+>> +                            <0 35 4>, /* HP Non-Sec */
+>> +                            <0 37 4>; /* Secure */
+>> +       };
+>> +
+>> +       mhu_client: scb@0 {
+>> +               compatible = "fujitsu,scb";
+>> +               mbox = <&mhu 1>;
+>
+> Is the mailbox binding finalized?
+>
+I have sent a patchset for common mailbox and its bindings. You are on
+CC list. Arnd seems OK with it.
 
-clearly this doesn't add ov2659 sensor support because we can't release
-the driver for it. I'll fix the patch subject and commit log locally.
+....
 
---=20
-balbi
+Will address rest all of your comments.
 
---s2ZSL+KKDSLx8OML
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTxWycAAoJEIaOsuA1yqREKS0QAIhBMunn466IygPdJGKyabKw
-OOPcUH5CYwX6LZIpEbYJSZOuOTpTvjroeElK0C+7/Z/czGNCv6ctGmzLzrk+/ixo
-tZJ8wkYHfUE+MIv9jo0A8Z8+8nINloCz/j0+E9F2ULSt+PGBiXIb0gTAVjgJhne+
-eWD+CISm7KPF98mBHoERsco/hfmSoB3U2R1V4BL5wsQkdtccaXCa09TsKV2F2EnA
-ZWDKXPEILE0r+zrIl5PJOyTVfhFAmM7JvOY3ThiLU7xjS3RMLM6W0OCYLCaYblAT
-QEtdQ3qZuisPB6kuFrZSIzhcC9vtOtybzzN//bOBKfz5AxWo19HlEFjDd7D0/PxZ
-PeLRWXR/T9IEgRbfWov4pIDwvCqzDI7gWMGWixQgJqC7ZgQuvSiM+CRDj/rJZhRI
-kcgi5xwEJWDu7gd5iLYfautM2zhl0vn9nTULmHLQtWdHyYGXef58EkaBWfAJM4lT
-QIPOfu5BugbfAgPZiDgIgG2d/fimlJb3r1/GuNBsy35UDvUzG7UHxVafUd2rnaE8
-pfF7zVIE5gCKjE33XlPkMZGE/bKJe3hc90AVwjt6hpjZIRoetYF4Cx8HczJ8OE8B
-LmFAjsGmodpq4IJ6BQbZeU3Xi+EJw42vSFhaO3iPQsLrLsILEa5dIOlqfcy7AIks
-hIEl/jC62g49I7iEh9fm
-=gaRx
------END PGP SIGNATURE-----
-
---s2ZSL+KKDSLx8OML--
+>
+> That's all I've got time and energy for reviewing for now.
+>
+Thanks a lot!
+-Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
