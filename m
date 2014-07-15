@@ -1,89 +1,188 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] serial: 8250_dw: Add support for
- deferred probing
-Date: Tue, 15 Jul 2014 09:00:33 +0200
-Message-ID: <20140715070033.GF3745@lukather>
-References: <1404892479-12222-1-git-send-email-wens@csie.org>
- <1404892479-12222-6-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Tue, 15 Jul 2014 09:10:52 +0200
+Message-ID: <53C4D3FC.1030401@pengutronix.de>
+References: <1405338041-19945-1-git-send-email-b29396@freescale.com> <1405338041-19945-2-git-send-email-b29396@freescale.com> <53C3D155.8080005@gmail.com> <20140715062712.GA9796@shlinux1.ap.freescale.net> <53C4D0B6.4010302@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QXO0/MSS4VvK6f+D"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJNFSOPAKGQEV7JM6MQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404892479-12222-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+ protocol="application/pgp-signature";
+ boundary="AbLGqBhrxvIuq0W0U0OJMPi094VXBa1iC"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <53C4D0B6.4010302@gmail.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>, Dong Aisheng <b29396@freescale.com>
+Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-
---QXO0/MSS4VvK6f+D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--AbLGqBhrxvIuq0W0U0OJMPi094VXBa1iC
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 09, 2014 at 03:54:38PM +0800, Chen-Yu Tsai wrote:
-> The 8250_dw driver fails to probe if the specified clock isn't
-> registered at probe time. Even if a clock frequency is given,
-> the required clock might be gated because it wasn't properly
-> enabled.
+On 07/15/2014 08:56 AM, Varka Bhadram wrote:
+> On 07/15/2014 11:57 AM, Dong Aisheng wrote:
+>> On Mon, Jul 14, 2014 at 06:17:17PM +0530, Varka Bhadram wrote:
+>>>
+>>> +/* Test Register (TEST) */
+>>> +#define TEST_LBCK    BIT(4)
+>>> +
+>>> +/* CC Control Register(CCCR) */
+>>> +#define CCCR_TEST    BIT(7)
+>>> +#define CCCR_MON    BIT(5)
+>>> +#define CCCR_CCE    BIT(1)
+>>> +#define CCCR_INIT    BIT(0)
+>>> +
+>>> +/* Bit Timing & Prescaler Register (BTP) */
+>>> +#define BTR_BRP_MASK        0x3ff
+>>> +#define BTR_BRP_SHIFT        16
+>>> +#define BTR_TSEG1_SHIFT        8
+>>> +#define BTR_TSEG1_MASK        (0x3f << BTR_TSEG1_SHIFT)
+>>> +#define BTR_TSEG2_SHIFT        4
+>>> +#define BTR_TSEG2_MASK        (0xf << BTR_TSEG2_SHIFT)
+>>> +#define BTR_SJW_SHIFT        0
+>>> +#define BTR_SJW_MASK        0xf
+>>> +
+>>> +/* Error Counter Register(ECR) */
+>>> +#define ECR_RP            BIT(15)
+>>> +#define ECR_REC_SHIFT        8
+>>> +#define ECR_REC_MASK        (0x7f << ECR_REC_SHIFT)
+>>> +#define ECR_TEC_SHIFT        0
+>>> +#define ECR_TEC_MASK        0xff
+>>> +
+>>> +/* Protocol Status Register(PSR) */
+>>> +#define PSR_BO        BIT(7)
+>>> +#define PSR_EW        BIT(6)
+>>> +#define PSR_EP        BIT(5)
+>>> +#define PSR_LEC_MASK    0x7
+>>> +
+>>> +/* Interrupt Register(IR) */
+>>> +#define IR_ALL_INT    0xffffffff
+>>> +#define IR_STE        BIT(31)
+>>> +#define IR_FOE        BIT(30)
+>>> +#define IR_ACKE        BIT(29)
+>>> +#define IR_BE        BIT(28)
+>>> +#define IR_CRCE        BIT(27)
+>>> +#define IR_WDI        BIT(26)
+>>> +#define IR_BO        BIT(25)
+>>> +#define IR_EW        BIT(24)
+>>> +#define IR_EP        BIT(23)
+>>> +#define IR_ELO        BIT(22)
+>>> +#define IR_BEU        BIT(21)
+>>> +#define IR_BEC        BIT(20)
+>>> +#define IR_DRX        BIT(19)
+>>> +#define IR_TOO        BIT(18)
+>>> +#define IR_MRAF        BIT(17)
+>>> +#define IR_TSW        BIT(16)
+>>> +#define IR_TEFL        BIT(15)
+>>> +#define IR_TEFF        BIT(14)
+>>> +#define IR_TEFW        BIT(13)
+>>> +#define IR_TEFN        BIT(12)
+>>> +#define IR_TFE        BIT(11)
+>>> +#define IR_TCF        BIT(10)
+>>> +#define IR_TC        BIT(9)
+>>> +#define IR_HPM        BIT(8)
+>>> +#define IR_RF1L        BIT(7)
+>>> +#define IR_RF1F        BIT(6)
+>>> +#define IR_RF1W        BIT(5)
+>>> +#define IR_RF1N        BIT(4)
+>>> +#define IR_RF0L        BIT(3)
+>>> +#define IR_RF0F        BIT(2)
+>>> +#define IR_RF0W        BIT(1)
+>>> +#define IR_RF0N        BIT(0)
+>>> +#define IR_ERR_STATE    (IR_BO | IR_EW | IR_EP)
+>>> +#define IR_ERR_LEC    (IR_STE    | IR_FOE | IR_ACKE | IR_BE | IR_CRC=
+E)
+>>> +#define IR_ERR_BUS    (IR_ERR_LEC | IR_WDI | IR_ELO | IR_BEU | IR_BE=
+C \
+>>> +            | IR_TOO | IR_MRAF | IR_TSW | IR_TEFL | IR_RF1L \
+>>> +            | IR_RF0L)
+>>> +#define IR_ERR_ALL    (IR_ERR_STATE | IR_ERR_BUS)
+>>> +
+>>> +/* Interrupt Line Select (ILS) */
+>>> +#define ILS_ALL_INT0    0x0
+>>> +#define ILS_ALL_INT1    0xFFFFFFFF
+>>> +
+>>> +/* Interrupt Line Enable (ILE) */
+>>> +#define ILE_EINT0    BIT(0)
+>>> +#define ILE_EINT1    BIT(1)
+>>> +
+>>> +/* Rx FIFO 0/1 Configuration (RXF0C/RXF1C) */
+>>> +#define RXFC_FWM_OFF    24
+>>> +#define RXFC_FWM_MASK    0x7f
+>>> +#define RXFC_FWM_1    (1 << RXFC_FWM_OFF)
+>>> +#define RXFC_FS_OFF    16
+>>> +#define RXFC_FS_MASK    0x7f
+>>> +
+>>> +/* Rx FIFO 0/1 Status (RXF0S/RXF1S) */
+>>> +#define RXFS_RFL    BIT(25)
+>>> +#define RXFS_FF        BIT(24)
+>>> +#define RXFS_FPI_OFF    16
+>>> +#define RXFS_FPI_MASK    0x3f0000
+>>> +#define RXFS_FGI_OFF    8
+>>> +#define RXFS_FGI_MASK    0x3f00
+>>> +#define RXFS_FFL_MASK    0x7f
+>>> +
+>>> +/* Tx Buffer Configuration(TXBC) */
+>>> +#define TXBC_NDTB_OFF    16
+>>> +#define TXBC_NDTB_MASK    0x3f
+>>> +
+>>> +/* Tx Buffer Element Size Configuration(TXESC) */
+>>> +#define TXESC_TBDS_8BYTES    0x0
+>>> +/* Tx Buffer Element */
+>>> +#define TX_BUF_XTD    BIT(30)
+>>> +#define TX_BUF_RTR    BIT(29)
+>>> +
+>>> +/* Rx Buffer Element Size Configuration(TXESC) */
+>>> +#define M_CAN_RXESC_8BYTES    0x0
+>>> +/* Tx Buffer Element */
+>>> +#define RX_BUF_ESI    BIT(31)
+>>> +#define RX_BUF_XTD    BIT(30)
+>>> +#define RX_BUF_RTR    BIT(29)
+>>> +
+>>> +/* Tx Event FIFO Con.guration (TXEFC) */
+>>> +#define TXEFC_EFS_OFF    16
+>>> +#define TXEFC_EFS_MASK    0x3f
+>>> +
+>>> +/* Message RAM Configuration (in bytes) */
+>>> +#define SIDF_ELEMENT_SIZE    4
+>>> +#define XIDF_ELEMENT_SIZE    8
+>>> +#define RXF0_ELEMENT_SIZE    16
+>>> +#define RXF1_ELEMENT_SIZE    16
+>>> +#define RXB_ELEMENT_SIZE    16
+>>> +#define TXE_ELEMENT_SIZE    8
+>>> +#define TXB_ELEMENT_SIZE    16
+>>> Alignment for all the includes
+>>>
+>> What do you mean?
+>>
+> I mean all the #define from top not aligned.
+> It would be looks good if aligned properly.
 >=20
-> This happened to me when the device is registered through DT,
-> and the clock was part of an MFD, the PRCM found on A31 and A23
-> SoCs. Unlike core clocks that are registered with OF_CLK_DECLARE,
-> which happen almost immediately after the kernel starts, the
-> clocks are registered as sub-devices of the PRCM MFD platform
-> device. Even though devices are registered in the order they are
-> found in the DT, the drivers are registered in a different,
-> arbitrary order. It is possible that the 8250_dw driver is
-> registered, and thus associated with the device and probed, before
-> the clock driver is registered and probed.
->=20
-> 8250_dw then reports unable to get the clock, and fails. Without
-> a working console, the kernel panics.
->=20
-> This patch adds support for deferred probe handling for the clock
-> and reset controller.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Give common tab spaces for all the #defines...
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+As I argumented in my other mail, I prefer one space, so no alignment.
 
-Thanks!
-Maxime
+Marc
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
---QXO0/MSS4VvK6f+D
+
+--AbLGqBhrxvIuq0W0U0OJMPi094VXBa1iC
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTxNGRAAoJEBx+YmzsjxAgPw8QAIN0tPNzUK9p+PH0UZ14T813
-g6BCLztYWJueJ/tCsa3ZepX/JljL3kMFHp0SSOydckg6U6grIcj09nLomiCo/kK1
-jhyoTpzBWu1qlDJF9ljURdfNcMj90R+LJmjXyg8ri7LOuLqcVNOkUk8iwGVPtAmx
-Py1zteSEX4nuEXaCl34P9JdiFxbGfGZ2q7z0/6qTpDci2ATWoqg8THnrCh7+HcSW
-as55hkJC5aMwrc3z3tGCkpf0ekNiCyhRv8ir4ULE06oc8NrPXt+PfWkwXv186J/s
-TewFmhQ1Pt+GqgQTysAJIta7ViUlFRvShOJlvFwhQsOuZH5GILvQzDOnTabzw9nc
-KVAKQoKrefKgd4IsDxK+X2P9XlPopCYKq55yXHPL8p4H/6xbravG3gIo8pHtz1bl
-+Drlsmrc9AcTx1kXDXedQchl49r33bGyaVchVnVDdHBQpZnm64x00gpj22ilxQoQ
-rFW+uf8J/Yy/PEH73hUHOklWk+Q1ga1MHS90bHth3AE3VCMm3rldjBlNBRW/pR1a
-CvYJnakKKwrTbsOamaZVshL/kfsuNkjPp6/LzOVIQmKwWCuw8NAEdrikZNIjB2+Q
-uoHpyft6vOJacAgn7037SU5J7Zs765LTmb/A+S5bipyNRIMNTcXZSDgDfQXD9HYe
-Ac+ftTj2TApLNDJYpiCx
-=HtMF
+iEYEARECAAYFAlPE0/wACgkQjTAFq1RaXHOuLQCggYIb51y43Uw8Jcpv/QYK1oVE
+CjQAn2Yix2FtpPKPQICUXefBc9da4uuH
+=uH6O
 -----END PGP SIGNATURE-----
 
---QXO0/MSS4VvK6f+D--
+--AbLGqBhrxvIuq0W0U0OJMPi094VXBa1iC--
