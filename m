@@ -1,52 +1,135 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add gta04 board variants
-Date: Tue, 15 Jul 2014 05:04:56 -0700
-Message-ID: <20140715120455.GC28715@atomide.com>
-References: <1405369228-27197-1-git-send-email-marek@goldelico.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Tue, 15 Jul 2014 14:14:16 +0200
+Message-ID: <20140715141416.0af2de62@bbrezillon>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1417324.PxofUz16v0@avalon>
+	<20140715103718.GB6616@ulmo>
+	<1645765.yCSTbHcZMC@avalon>
+	<20140715105253.GE6616@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1405369228-27197-1-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140715105253.GE6616@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Tim Niemeyer <tim.niemeyer@corscience>
 List-Id: devicetree@vger.kernel.org
 
-* Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [140714 13:22]:
-> This patch series completes the GTA04 device tree to describe all hardware
-> components that are on the different variants of the GTA04 boards.
+On Tue, 15 Jul 2014 12:52:54 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
+
+> On Tue, Jul 15, 2014 at 12:43:02PM +0200, Laurent Pinchart wrote:
+> > Hi Thierry,
+> > 
+> > On Tuesday 15 July 2014 12:37:19 Thierry Reding wrote:
+> > > On Tue, Jul 15, 2014 at 12:20:02PM +0200, Laurent Pinchart wrote:
+> > > > On Tuesday 15 July 2014 12:06:19 Boris BREZILLON wrote:
+> > > >> On Mon, 14 Jul 2014 12:05:43 +0200 Thierry Reding wrote:
+> > > >>> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote:
+> > > >>>> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs
+> > > >>>> (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family) provides a
+> > > >>>> display controller device.
+> > > >>>> 
+> > > >>>> The HLCDC block provides a single RGB output port, and only supports
+> > > >>>> LCD panels connection to LCD panels for now.
+> > > >>>> 
+> > > >>>> The atmel,panel property link the HLCDC RGB output with the LCD
+> > > >>>> panel connected on this port (note that the HLCDC RGB connector
+> > > >>>> implementation makes use of the DRM panel framework).
+> > > >>>> 
+> > > >>>> Connection to other external devices (DRM bridges) might be added
+> > > >>>> later by mean of a new atmel,xxx (atmel,bridge) property.
+> > > >>>> 
+> > > >>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> > > >>>> ---
+> > > >>>> 
+> > > >>>>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++++++++
+> > > >>>>  1 file changed, 59 insertions(+)
+> > > >>>>  create mode 100644
+> > > >>>>  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> > > > 
+> > > > [snip]
+> > > > 
+> > > >>>> + - atmel,panel: Should contain a phandle with 2 parameters.
+> > > >>>> +   The first cell is a phandle to a DRM panel device
+> > > >>>> +   The second cell encodes the RGB mode, which can take the
+> > > >>>> following values:
+> > > >>>> +   * 0: RGB444
+> > > >>>> +   * 1: RGB565
+> > > >>>> +   * 2: RGB666
+> > > >>>> +   * 3: RGB888
+> > > >>> 
+> > > >>> These are properties of the panel and should be obtained from the
+> > > >>> panel directly rather than an additional cell in this specifier.
+> > > >> 
+> > > >> Okay.
+> > > >> What's the preferred way of doing this ?
+> > > >> What about defining an rgb-mode property in the panel node.
+> > > > 
+> > > > You could do that, but it won't help you much, as the HLCDC driver must
+> > > > not parse properties from the panel node. You should instead extend the
+> > > > drm_panel API with a function to retrieve panel properties. The HLCDC
+> > > > driver will then query the panel driver at runtime for the interface
+> > > > type. The panel driver will get the information from hardcoded data in
+> > > > the driver, from DT or possibly in some cases by querying the panel
+> > > > hardware directly.
+> > > 
+> > > My preference for this would be that we either add this to some existing
+> > > structure (struct drm_display_info seems like a good candidate) or if
+> > > the number of parameters grows out of hands, then maybe even introduce a
+> > > new type of device that's specific for the interface. DRM panels are an
+> > > abstraction for panels, that is, interface-agnostic, and if we start
+> > > exposing interface specific parameters things will start to become very
+> > > unwieldy.
+> > 
+> > I agree with the goal of keeping drm_panel interface-agnostic. However, one 
+> > way or another, interface parameters will need to be communicated between the 
+> > panel driver and the controller driver. My preference, if we need to extend 
+> > the number and/or scope of parameters beyond what drm_display_info could 
+> > reasonably contain, would be to implement a new drm_panel operation to 
+> > query/configure interface parameters, using a structure that contains the 
+> > interface type and a union of type-specific structures. This would keep the 
+> > API generic in the sense of not requiring explicit knowledge of all interfaces 
+> > in the drivers, while offering the flexibility we need with a way to easily 
+> > detect the interface type at runtime and react on unknown/unsupported types.
 > 
-> Marek Belisko (5):
->   arm: dts: omap3-gta04: Add missing nodes to fully describe gta04 board
->   arm: dts: omap3-gta04: Rename gta04.dts to gta04.dtsi and add a4 model
->   arm: dts: Add gta04a3 model
->   arm: dts: Add gta04+b2 model bindings
->   arm: dts: Add gta04+b3 model bindings
+> That's exactly what I was hoping could be avoided. If instead we modeled
+> the interface type as a bus, we could for example have an lvds_bus along
+> with an lvds_device and then use that as the natural place to store
+> these properties. Much like we do for DSI.
 
-Hmm at least the first patch won't apply:
+I understand this is not a simple case here, and this is why I left
+RGB mode config in the HLCDC node in the first place.
 
-Hunk #4 FAILED at 143.
-Hunk #5 succeeded at 142 with fuzz 2 (offset -26 lines).
-Hunk #6 succeeded at 287 (offset -26 lines).
-Hunk #7 succeeded at 364 (offset -26 lines).
-Hunk #8 succeeded at 433 (offset -26 lines).
-Hunk #9 succeeded at 472 (offset -26 lines).
-Hunk #10 succeeded at 485 (offset -26 lines).
-Hunk #11 succeeded at 556 (offset -26 lines).
-Hunk #12 FAILED at 720.
-2 out of 12 hunks FAILED -- rejects in file arch/arm/boot/dts/omap3-gta04.dts
+Anyway, I agree that this rgb mode should not be defined in the hlcdc
+node but rather in the slave device. I said slave device and not panel
+device here because the device connected to the RGB connector is not
+necessarily an LCD panel (i.e. atmel is connecting a raw RGB to HDMI
+bridge on the RGB connector). And given that I definitely think an
+interface bus architecture is better: this way we could configure RGB
+mode no matter what kind of device is connected on this bus and we
+could keep slave devices interface-agnostic.
 
-Can you please repost against let's say v3.16-rc1? Maybe also
-check they apply cleanly against omap-for-v3.17/dt branch that
-I just pushed out to:
+This being said, I guess modeling interface (or connector) types as
+busses is not that simple.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap omap-for-v3.17/dt
+I really want to help here, so let me know what I can do.
 
-Thanks,
+Just a side note: you are saying that RGB mode is a panel property, and
+this is not entirely true (it might depends on board design) :-). In
+some HW designs, LSB bits of the RGB connector are either connected to
+ground or to the first available MSB bit. This way you can use an LCD
+panel supporting RGB888 mode with an display controller supporting lower
+modes (RGB555 or RGB666).
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
