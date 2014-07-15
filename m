@@ -1,37 +1,73 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 5/6] ARM: dts: rockchip: add core rk3288 dtsi
-Date: Wed, 16 Jul 2014 01:02:20 +0200
-Message-ID: <1868508.hOA6VOBqnH@diego>
-References: <1471578.ILeMmG2DL6@diego>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v4 2/3] soc: qcom-rpm: Driver for the Qualcomm RPM
+Date: Tue, 15 Jul 2014 16:00:40 -0700
+Message-ID: <1405465241-28684-3-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471578.ILeMmG2DL6@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Node definitions shared by all rk3288 based boards.
+Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
+and 8064 based devices. The driver exposes resources that child drivers
+can operate on; to implementing regulator, clock and bus frequency
+drivers.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 561 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 561 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288.dtsi
+ drivers/soc/qcom/Kconfig     |  14 +
+ drivers/soc/qcom/Makefile    |   1 +
+ drivers/soc/qcom/qcom_rpm.c  | 596 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/soc/qcom_rpm.h |  12 +
+ 4 files changed, 623 insertions(+)
+ create mode 100644 drivers/soc/qcom/qcom_rpm.c
+ create mode 100644 include/linux/soc/qcom_rpm.h
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 7bd2c94..a8c2a96 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -9,3 +9,17 @@ config QCOM_GSBI
+           functions for connecting the underlying serial UART, SPI, and I2C
+           devices to the output pins.
+ 
++config QCOM_RPM
++	tristate "Qualcomm Resource Power Manager (RPM)"
++	depends on ARCH_QCOM && OF
++	help
++	  If you say yes to this option, support will be included for the
++	  Resource Power Manager system found in the Qualcomm 8660, 8960 and
++	  8064 based devices.
++
++	  This is required to access many regulators, clocks and bus
++	  frequencies controlled by the RPM on these devices.
++
++	  Say M here if you want to include support for the Qualcomm RPM as a
++	  module. This will build a module called "qcom_rpm".
++
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index 4389012..e7706e8 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
++obj-$(CONFIG_QCOM_RPM) +=	qcom_rpm.o
+diff --git a/drivers/soc/qcom/qcom_rpm.c b/drivers/soc/qcom/qcom_rpm.c
 new file mode 100644
-index 0000000..6e36cec
+index 0000000..228665b
 --- /dev/null
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -0,0 +1,561 @@
++++ b/drivers/soc/qcom/qcom_rpm.c
+@@ -0,0 +1,596 @@
 +/*
++ * Copyright (c) 2014, Sony Mobile Communications AB.
++ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,560 +75,605 @@ index 0000000..6e36cec
 + * GNU General Public License for more details.
 + */
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/clock/rk3288-cru.h>
-+#include "skeleton.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3288";
-+
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a12";
-+			reg = <0x500>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a12";
-+			reg = <0x501>;
-+		};
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a12";
-+			reg = <0x502>;
-+		};
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a12";
-+			reg = <0x503>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		xin24m: xin24m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		architected-timer {
-+			compatible = "arm,armv7-timer";
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clock-frequency = <24000000>;
-+		};
-+
-+		gic: interrupt-controller@ffc01000 {
-+			compatible = "arm,gic-400";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+
-+			reg = <0xffc01000 0x1000>,
-+			      <0xffc02000 0x1000>,
-+			      <0xffc04000 0x2000>,
-+			      <0xffc06000 0x2000>;
-+			interrupts = <GIC_PPI 9 0xf04>;
-+		};
-+
-+		pmu: pmu@ff730000 {
-+			compatible = "syscon";
-+			reg = <0xff730000 0x100>;
-+		};
-+
-+		sgrf: syscon@ff740000 {
-+			compatible = "syscon";
-+			reg = <0xff740000 0x1000>;
-+		};
-+
-+		cru: cru@ff760000 {
-+			compatible = "rockchip,rk3288-cru";
-+			reg = <0xff760000 0x1000>;
-+			rockchip,grf = <&grf>;
-+
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		grf: syscon@ff770000 {
-+			compatible = "syscon";
-+			reg = <0xff770000 0x1000>;
-+		};
-+
-+		pinctrl: pinctrl@ff770000 {
-+			compatible = "rockchip,rk3288-pinctrl";
-+			rockchip,grf = <&grf>;
-+			rockchip,pmu = <&pmu>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			gpio0: gpio0@ff750000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg =	<0xff750000 0x100>;
-+				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO0>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio1: gpio1@ff780000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff780000 0x100>;
-+				interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO1>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio2: gpio2@ff790000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff790000 0x100>;
-+				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO2>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio3: gpio3@ff7a0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff7a0000 0x100>;
-+				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO3>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio4: gpio4@ff7b0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff7b0000 0x100>;
-+				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO4>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio5: gpio5@ff7c0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff7c0000 0x100>;
-+				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO5>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio6: gpio6@ff7d0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff7d0000 0x100>;
-+				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO6>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio7: gpio7@ff7e0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff7e0000 0x100>;
-+				interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO7>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio8: gpio8@ff7f0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0xff7f0000 0x100>;
-+				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cru PCLK_GPIO8>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			pcfg_pull_up: pcfg_pull_up {
-+				bias-pull-up;
-+			};
-+
-+			pcfg_pull_down: pcfg_pull_down {
-+				bias-pull-down;
-+			};
-+
-+			pcfg_pull_none: pcfg_pull_none {
-+				bias-disable;
-+			};
-+
-+			i2c0 {
-+				i2c0_xfer: i2c0-xfer {
-+					rockchip,pins = <0 15 RK_FUNC_1 &pcfg_pull_none>,
-+							<0 16 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			i2c1 {
-+				i2c1_xfer: i2c1-xfer {
-+					rockchip,pins = <8 4 RK_FUNC_1 &pcfg_pull_none>,
-+							<8 5 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			i2c2 {
-+				i2c2_xfer: i2c2-xfer {
-+					rockchip,pins = <6 9 RK_FUNC_1 &pcfg_pull_none>,
-+							<6 10 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			i2c3 {
-+				i2c3_xfer: i2c3-xfer {
-+					rockchip,pins = <2 16 RK_FUNC_1 &pcfg_pull_none>,
-+							<2 17 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			i2c4 {
-+				i2c4_xfer: i2c4-xfer {
-+					rockchip,pins = <7 17 RK_FUNC_1 &pcfg_pull_none>,
-+							<7 18 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			i2c5 {
-+				i2c5_xfer: i2c5-xfer {
-+					rockchip,pins = <7 19 RK_FUNC_1 &pcfg_pull_none>,
-+							<7 20 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			sdmmc {
-+				sdmmc_clk: sdmmc-clk {
-+					rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				sdmmc_cmd: sdmmc-cmd {
-+					rockchip,pins = <6 21 RK_FUNC_1 &pcfg_pull_up>;
-+				};
-+
-+				sdmmc_cd: sdmcc-cd {
-+					rockchip,pins = <6 22 RK_FUNC_1 &pcfg_pull_up>;
-+				};
-+
-+				sdmmc_bus1: sdmmc-bus1 {
-+					rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up>;
-+				};
-+
-+				sdmmc_bus4: sdmmc-bus4 {
-+					rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up>,
-+							<6 17 RK_FUNC_1 &pcfg_pull_up>,
-+							<6 18 RK_FUNC_1 &pcfg_pull_up>,
-+							<6 19 RK_FUNC_1 &pcfg_pull_up>;
-+				};
-+			};
-+
-+			emmc {
-+				emmc_clk: emmc-clk {
-+					rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
-+				};
-+
-+				emmc_cmd: emmc-cmd {
-+					rockchip,pins = <3 16 RK_FUNC_2 &pcfg_pull_up>;
-+				};
-+
-+				emmc_pwr: emmc-pwr {
-+					rockchip,pins = <3 9 RK_FUNC_2 &pcfg_pull_up>;
-+				};
-+
-+				emmc_bus1: emmc-bus1 {
-+					rockchip,pins = <3 0 RK_FUNC_2 &pcfg_pull_up>;
-+				};
-+
-+				emmc_bus4: emmc-bus4 {
-+					rockchip,pins = <3 0 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 1 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 2 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 3 RK_FUNC_2 &pcfg_pull_up>;
-+				};
-+
-+				emmc_bus8: emmc-bus8 {
-+					rockchip,pins = <3 0 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 1 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 2 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 3 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 4 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 5 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 6 RK_FUNC_2 &pcfg_pull_up>,
-+							<3 7 RK_FUNC_2 &pcfg_pull_up>;
-+				};
-+			};
-+
-+			uart0 {
-+				uart0_xfer: uart0-xfer {
-+					rockchip,pins = <4 16 RK_FUNC_1 &pcfg_pull_up>,
-+							<4 17 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				uart0_cts: uart0-cts {
-+					rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				uart0_rts: uart0-rts {
-+					rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			uart1 {
-+				uart1_xfer: uart1-xfer {
-+					rockchip,pins = <5 8 RK_FUNC_1 &pcfg_pull_up>,
-+							<5 9 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				uart1_cts: uart1-cts {
-+					rockchip,pins = <5 10 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				uart1_rts: uart1-rts {
-+					rockchip,pins = <5 11 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			uart2 {
-+				uart2_xfer: uart2-xfer {
-+					rockchip,pins = <7 22 RK_FUNC_1 &pcfg_pull_up>,
-+							<7 23 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+				/* no rts / cts for uart2 */
-+			};
-+
-+			uart3 {
-+				uart3_xfer: uart3-xfer {
-+					rockchip,pins = <7 7 RK_FUNC_1 &pcfg_pull_up>,
-+							<7 8 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				uart3_cts: uart3-cts {
-+					rockchip,pins = <7 9 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+
-+				uart3_rts: uart3-rts {
-+					rockchip,pins = <7 10 RK_FUNC_1 &pcfg_pull_none>;
-+				};
-+			};
-+
-+			uart4 {
-+				uart4_xfer: uart4-xfer {
-+					rockchip,pins = <5 12 3 &pcfg_pull_up>,
-+							<5 13 3 &pcfg_pull_none>;
-+				};
-+
-+				uart4_cts: uart4-cts {
-+					rockchip,pins = <5 14 3 &pcfg_pull_none>;
-+				};
-+
-+				uart4_rts: uart4-rts {
-+					rockchip,pins = <5 15 3 &pcfg_pull_none>;
-+				};
-+			};
-+		};
-+
-+		i2c0: i2c@ff650000 {
-+			compatible = "rockchip,rk3288-i2c";
-+			reg = <0xff650000 0x1000>;
-+			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clock-names = "i2c";
-+			clocks = <&cru PCLK_I2C0>;
-+
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@ff140000 {
-+			compatible = "rockchip,rk3288-i2c";
-+			reg = <0xff140000 0x1000>;
-+			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clock-names = "i2c";
-+			clocks = <&cru PCLK_I2C1>;
-+
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@ff660000 {
-+			compatible = "rockchip,rk3288-i2c";
-+			reg = <0xff660000 0x1000>;
-+			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clock-names = "i2c";
-+			clocks = <&cru PCLK_I2C2>;
-+
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@ff150000 {
-+			compatible = "rockchip,rk3288-i2c";
-+			reg = <0xff150000 0x1000>;
-+			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clock-names = "i2c";
-+			clocks = <&cru PCLK_I2C3>;
-+
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@ff160000 {
-+			compatible = "rockchip,rk3288-i2c";
-+			reg = <0xff160000 0x1000>;
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clock-names = "i2c";
-+			clocks = <&cru PCLK_I2C4>;
-+
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@ff170000 {
-+			compatible = "rockchip,rk3288-i2c";
-+			reg = <0xff170000 0x1000>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clock-names = "i2c";
-+			clocks = <&cru PCLK_I2C5>;
-+
-+			status = "disabled";
-+		};
-+
-+		watchdog@ff800000 {
-+			compatible = "snps,dw-wdt";
-+			reg = <0xff800000 0x100>;
-+			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart0: serial@ff180000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xff180000 0x100>;
-+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-+			clock-names = "baudclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@ff190000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xff190000 0x100>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
-+			clock-names = "baudclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@ff690000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xff690000 0x100>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
-+			clock-names = "baudclk", "apb_pclk";
-+			status = "disabled";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_xfer>;
-+		};
-+
-+		uart3: serial@ff1b0000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xff1b0000 0x100>;
-+			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
-+			clock-names = "baudclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@ff1c0000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xff1c0000 0x100>;
-+			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&cru SCLK_UART4>, <&cru PCLK_UART4>;
-+			clock-names = "baudclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+	};
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of_platform.h>
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/soc/qcom_rpm.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++
++#include <dt-bindings/soc/qcom,rpm.h>
++
++struct qcom_rpm_resource {
++	unsigned target_id;
++	unsigned status_id;
++	unsigned select_id;
++	unsigned size;
 +};
++
++struct qcom_rpm_data {
++	u32 version;
++	const struct qcom_rpm_resource *resource_table;
++	unsigned n_resources;
++};
++
++struct qcom_rpm {
++	struct device *dev;
++	struct regmap *ipc_regmap;
++	unsigned ipc_offset;
++	unsigned ipc_bit;
++
++	struct completion ack;
++	struct mutex lock;
++
++	void __iomem *status_regs;
++	void __iomem *ctrl_regs;
++	void __iomem *req_regs;
++
++	u32 ack_status;
++
++	const struct qcom_rpm_data *data;
++};
++
++#define RPM_STATUS_REG(rpm, i)	((rpm)->status_regs + (i) * 4)
++#define RPM_CTRL_REG(rpm, i)	((rpm)->ctrl_regs + (i) * 4)
++#define RPM_REQ_REG(rpm, i)	((rpm)->req_regs + (i) * 4)
++
++#define RPM_REQUEST_TIMEOUT	(5 * HZ)
++
++#define RPM_REQUEST_CONTEXT	3
++#define RPM_REQ_SELECT		11
++#define RPM_ACK_CONTEXT		15
++#define RPM_ACK_SELECTOR	23
++#define RPM_SELECT_SIZE		7
++
++#define RPM_ACTIVE_STATE	BIT(0)
++#define RPM_NOTIFICATION	BIT(30)
++#define RPM_REJECTED		BIT(31)
++
++#define RPM_SIGNAL		BIT(2)
++
++static const struct qcom_rpm_resource apq8064_rpm_resource_table[] = {
++	[QCOM_RPM_CXO_CLK] =			{ 25, 9, 5, 1 },
++	[QCOM_RPM_PXO_CLK] =			{ 26, 10, 6, 1 },
++	[QCOM_RPM_APPS_FABRIC_CLK] =		{ 27, 11, 8, 1 },
++	[QCOM_RPM_SYS_FABRIC_CLK] =		{ 28, 12, 9, 1 },
++	[QCOM_RPM_MM_FABRIC_CLK] =		{ 29, 13, 10, 1 },
++	[QCOM_RPM_DAYTONA_FABRIC_CLK] =		{ 30, 14, 11, 1 },
++	[QCOM_RPM_SFPB_CLK] =			{ 31, 15, 12, 1 },
++	[QCOM_RPM_CFPB_CLK] =			{ 32, 16, 13, 1 },
++	[QCOM_RPM_MMFPB_CLK] =			{ 33, 17, 14, 1 },
++	[QCOM_RPM_EBI1_CLK] =			{ 34, 18, 16, 1 },
++	[QCOM_RPM_APPS_FABRIC_HALT] =		{ 35, 19, 18, 1 },
++	[QCOM_RPM_APPS_FABRIC_MODE] =		{ 37, 20, 19, 1 },
++	[QCOM_RPM_APPS_FABRIC_IOCTL] =		{ 40, 21, 20, 1 },
++	[QCOM_RPM_APPS_FABRIC_ARB] =		{ 41, 22, 21, 12 },
++	[QCOM_RPM_SYS_FABRIC_HALT] =		{ 53, 23, 22, 1 },
++	[QCOM_RPM_SYS_FABRIC_MODE] =		{ 55, 24, 23, 1 },
++	[QCOM_RPM_SYS_FABRIC_IOCTL] =		{ 58, 25, 24, 1 },
++	[QCOM_RPM_SYS_FABRIC_ARB] =		{ 59, 26, 25, 30 },
++	[QCOM_RPM_MM_FABRIC_HALT] =		{ 89, 27, 26, 1 },
++	[QCOM_RPM_MM_FABRIC_MODE] =		{ 91, 28, 27, 1 },
++	[QCOM_RPM_MM_FABRIC_IOCTL] =		{ 94, 29, 28, 1 },
++	[QCOM_RPM_MM_FABRIC_ARB] =		{ 95, 30, 29, 21 },
++	[QCOM_RPM_PM8921_S1] =			{ 116, 31, 30, 2 },
++	[QCOM_RPM_PM8921_S2] =			{ 118, 33, 31, 2 },
++	[QCOM_RPM_PM8921_S3] =			{ 120, 35, 32, 2 },
++	[QCOM_RPM_PM8921_S4] =			{ 122, 37, 33, 2 },
++	[QCOM_RPM_PM8921_S5] =			{ 124, 39, 34, 2 },
++	[QCOM_RPM_PM8921_S6] =			{ 126, 41, 35, 2 },
++	[QCOM_RPM_PM8921_S7] =			{ 128, 43, 36, 2 },
++	[QCOM_RPM_PM8921_S8] =			{ 130, 45, 37, 2 },
++	[QCOM_RPM_PM8921_L1] =			{ 132, 47, 38, 2 },
++	[QCOM_RPM_PM8921_L2] =			{ 134, 49, 39, 2 },
++	[QCOM_RPM_PM8921_L3] =			{ 136, 51, 40, 2 },
++	[QCOM_RPM_PM8921_L4] =			{ 138, 53, 41, 2 },
++	[QCOM_RPM_PM8921_L5] =			{ 140, 55, 42, 2 },
++	[QCOM_RPM_PM8921_L6] =			{ 142, 57, 43, 2 },
++	[QCOM_RPM_PM8921_L7] =			{ 144, 59, 44, 2 },
++	[QCOM_RPM_PM8921_L8] =			{ 146, 61, 45, 2 },
++	[QCOM_RPM_PM8921_L9] =			{ 148, 63, 46, 2 },
++	[QCOM_RPM_PM8921_L10] =			{ 150, 65, 47, 2 },
++	[QCOM_RPM_PM8921_L11] =			{ 152, 67, 48, 2 },
++	[QCOM_RPM_PM8921_L12] =			{ 154, 69, 49, 2 },
++	[QCOM_RPM_PM8921_L13] =			{ 156, 71, 50, 2 },
++	[QCOM_RPM_PM8921_L14] =			{ 158, 73, 51, 2 },
++	[QCOM_RPM_PM8921_L15] =			{ 160, 75, 52, 2 },
++	[QCOM_RPM_PM8921_L16] =			{ 162, 77, 53, 2 },
++	[QCOM_RPM_PM8921_L17] =			{ 164, 79, 54, 2 },
++	[QCOM_RPM_PM8921_L18] =			{ 166, 81, 55, 2 },
++	[QCOM_RPM_PM8921_L19] =			{ 168, 83, 56, 2 },
++	[QCOM_RPM_PM8921_L20] =			{ 170, 85, 57, 2 },
++	[QCOM_RPM_PM8921_L21] =			{ 172, 87, 58, 2 },
++	[QCOM_RPM_PM8921_L22] =			{ 174, 89, 59, 2 },
++	[QCOM_RPM_PM8921_L23] =			{ 176, 91, 60, 2 },
++	[QCOM_RPM_PM8921_L24] =			{ 178, 93, 61, 2 },
++	[QCOM_RPM_PM8921_L25] =			{ 180, 95, 62, 2 },
++	[QCOM_RPM_PM8921_L26] =			{ 182, 97, 63, 2 },
++	[QCOM_RPM_PM8921_L27] =			{ 184, 99, 64, 2 },
++	[QCOM_RPM_PM8921_L28] =			{ 186, 101, 65, 2 },
++	[QCOM_RPM_PM8921_L29] =			{ 188, 103, 66, 2 },
++	[QCOM_RPM_PM8921_CLK1] =		{ 190, 105, 67, 2 },
++	[QCOM_RPM_PM8921_CLK2] =		{ 192, 107, 68, 2 },
++	[QCOM_RPM_PM8921_LVS1] =		{ 194, 109, 69, 1 },
++	[QCOM_RPM_PM8921_LVS2] =		{ 195, 110, 70, 1 },
++	[QCOM_RPM_PM8921_LVS3] =		{ 196, 111, 71, 1 },
++	[QCOM_RPM_PM8921_LVS4] =		{ 197, 112, 72, 1 },
++	[QCOM_RPM_PM8921_LVS5] =		{ 198, 113, 73, 1 },
++	[QCOM_RPM_PM8921_LVS6] =		{ 199, 114, 74, 1 },
++	[QCOM_RPM_PM8921_LVS7] =		{ 200, 115, 75, 1 },
++	[QCOM_RPM_PM8821_S1] =			{ 201, 116, 76, 2 },
++	[QCOM_RPM_PM8821_S2] =			{ 203, 118, 77, 2 },
++	[QCOM_RPM_PM8821_L1] =			{ 205, 120, 78, 2 },
++	[QCOM_RPM_PM8921_NCP] =			{ 207, 122, 80, 2 },
++	[QCOM_RPM_CXO_BUFFERS] =		{ 209, 124, 81, 1 },
++	[QCOM_RPM_USB_OTG_SWITCH] =		{ 210, 125, 82, 1 },
++	[QCOM_RPM_HDMI_SWITCH] =		{ 211, 126, 83, 1 },
++	[QCOM_RPM_DDR_DMM] =			{ 212, 127, 84, 2 },
++	[QCOM_RPM_VDDMIN_GPIO] =		{ 215, 131, 89, 1 },
++};
++
++static const struct qcom_rpm_data apq8064_template = {
++	.version = 3,
++	.resource_table = apq8064_rpm_resource_table,
++	.n_resources = ARRAY_SIZE(apq8064_rpm_resource_table),
++};
++
++static const struct qcom_rpm_resource msm8660_rpm_resource_table[] = {
++	[QCOM_RPM_CXO_CLK] =			{ 32, 12, 5, 1 },
++	[QCOM_RPM_PXO_CLK] =			{ 33, 13, 6, 1 },
++	[QCOM_RPM_PLL_4] =			{ 34, 14, 7, 1 },
++	[QCOM_RPM_APPS_FABRIC_CLK] =		{ 35, 15, 8, 1 },
++	[QCOM_RPM_SYS_FABRIC_CLK] =		{ 36, 16, 9, 1 },
++	[QCOM_RPM_MM_FABRIC_CLK] =		{ 37, 17, 10, 1 },
++	[QCOM_RPM_DAYTONA_FABRIC_CLK] =		{ 38, 18, 11, 1 },
++	[QCOM_RPM_SFPB_CLK] =			{ 39, 19, 12, 1 },
++	[QCOM_RPM_CFPB_CLK] =			{ 40, 20, 13, 1 },
++	[QCOM_RPM_MMFPB_CLK] =			{ 41, 21, 14, 1 },
++	[QCOM_RPM_SMI_CLK] =			{ 42, 22, 15, 1 },
++	[QCOM_RPM_EBI1_CLK] =			{ 43, 23, 16, 1 },
++	[QCOM_RPM_APPS_L2_CACHE_CTL] =		{ 44, 24, 17, 1 },
++	[QCOM_RPM_APPS_FABRIC_HALT] =		{ 45, 25, 18, 2 },
++	[QCOM_RPM_APPS_FABRIC_MODE] =		{ 47, 26, 19, 3 },
++	[QCOM_RPM_APPS_FABRIC_ARB] =		{ 51, 28, 21, 6 },
++	[QCOM_RPM_SYS_FABRIC_HALT] =		{ 63, 29, 22, 2 },
++	[QCOM_RPM_SYS_FABRIC_MODE] =		{ 65, 30, 23, 3 },
++	[QCOM_RPM_SYS_FABRIC_ARB] =		{ 69, 32, 25, 22 },
++	[QCOM_RPM_MM_FABRIC_HALT] =		{ 105, 33, 26, 2 },
++	[QCOM_RPM_MM_FABRIC_MODE] =		{ 107, 34, 27, 3 },
++	[QCOM_RPM_MM_FABRIC_ARB] =		{ 111, 36, 29, 23 },
++	[QCOM_RPM_PM8901_SMPS0] =		{ 134, 37, 30, 2 },
++	[QCOM_RPM_PM8901_SMPS1] =		{ 136, 39, 31, 2 },
++	[QCOM_RPM_PM8901_SMPS2] =		{ 138, 41, 32, 2 },
++	[QCOM_RPM_PM8901_SMPS3] =		{ 140, 43, 33, 2 },
++	[QCOM_RPM_PM8901_SMPS4] =		{ 142, 45, 34, 2 },
++	[QCOM_RPM_PM8901_LDO0] =		{ 144, 47, 35, 2 },
++	[QCOM_RPM_PM8901_LDO1] =		{ 146, 49, 36, 2 },
++	[QCOM_RPM_PM8901_LDO2] =		{ 148, 51, 37, 2 },
++	[QCOM_RPM_PM8901_LDO3] =		{ 150, 53, 38, 2 },
++	[QCOM_RPM_PM8901_LDO4] =		{ 152, 55, 39, 2 },
++	[QCOM_RPM_PM8901_LDO5] =		{ 154, 57, 40, 2 },
++	[QCOM_RPM_PM8901_LDO6] =		{ 156, 59, 41, 2 },
++	[QCOM_RPM_PM8901_LVS0] =		{ 158, 61, 42, 1 },
++	[QCOM_RPM_PM8901_LVS1] =		{ 159, 62, 43, 1 },
++	[QCOM_RPM_PM8901_LVS2] =		{ 160, 63, 44, 1 },
++	[QCOM_RPM_PM8901_LVS3] =		{ 161, 64, 45, 1 },
++	[QCOM_RPM_PM8901_MVS] =			{ 162, 65, 46, 1 },
++	[QCOM_RPM_PM8058_SMPS0] =		{ 163, 66, 47, 2 },
++	[QCOM_RPM_PM8058_SMPS1] =		{ 165, 68, 48, 2 },
++	[QCOM_RPM_PM8058_SMPS2] =		{ 167, 70, 49, 2 },
++	[QCOM_RPM_PM8058_SMPS3] =		{ 169, 72, 50, 2 },
++	[QCOM_RPM_PM8058_SMPS4] =		{ 171, 74, 51, 2 },
++	[QCOM_RPM_PM8058_LDO0] =		{ 173, 76, 52, 2 },
++	[QCOM_RPM_PM8058_LDO1] =		{ 175, 78, 53, 2 },
++	[QCOM_RPM_PM8058_LDO2] =		{ 177, 80, 54, 2 },
++	[QCOM_RPM_PM8058_LDO3] =		{ 179, 82, 55, 2 },
++	[QCOM_RPM_PM8058_LDO4] =		{ 181, 84, 56, 2 },
++	[QCOM_RPM_PM8058_LDO5] =		{ 183, 86, 57, 2 },
++	[QCOM_RPM_PM8058_LDO6] =		{ 185, 88, 58, 2 },
++	[QCOM_RPM_PM8058_LDO7] =		{ 187, 90, 59, 2 },
++	[QCOM_RPM_PM8058_LDO8] =		{ 189, 92, 60, 2 },
++	[QCOM_RPM_PM8058_LDO9] =		{ 191, 94, 61, 2 },
++	[QCOM_RPM_PM8058_LDO10] =		{ 193, 96, 62, 2 },
++	[QCOM_RPM_PM8058_LDO11] =		{ 195, 98, 63, 2 },
++	[QCOM_RPM_PM8058_LDO12] =		{ 197, 100, 64, 2 },
++	[QCOM_RPM_PM8058_LDO13] =		{ 199, 102, 65, 2 },
++	[QCOM_RPM_PM8058_LDO14] =		{ 201, 104, 66, 2 },
++	[QCOM_RPM_PM8058_LDO15] =		{ 203, 106, 67, 2 },
++	[QCOM_RPM_PM8058_LDO16] =		{ 205, 108, 68, 2 },
++	[QCOM_RPM_PM8058_LDO17] =		{ 207, 110, 69, 2 },
++	[QCOM_RPM_PM8058_LDO18] =		{ 209, 112, 70, 2 },
++	[QCOM_RPM_PM8058_LDO19] =		{ 211, 114, 71, 2 },
++	[QCOM_RPM_PM8058_LDO20] =		{ 213, 116, 72, 2 },
++	[QCOM_RPM_PM8058_LDO21] =		{ 215, 118, 73, 2 },
++	[QCOM_RPM_PM8058_LDO22] =		{ 217, 120, 74, 2 },
++	[QCOM_RPM_PM8058_LDO23] =		{ 219, 122, 75, 2 },
++	[QCOM_RPM_PM8058_LDO24] =		{ 221, 124, 76, 2 },
++	[QCOM_RPM_PM8058_LDO25] =		{ 223, 126, 77, 2 },
++	[QCOM_RPM_PM8058_LVS0] =		{ 225, 128, 78, 1 },
++	[QCOM_RPM_PM8058_LVS1] =		{ 226, 129, 79, 1 },
++	[QCOM_RPM_PM8058_NCP] =			{ 227, 130, 80, 2 },
++	[QCOM_RPM_CXO_BUFFERS] =		{ 229, 132, 81, 1 },
++};
++
++static const struct qcom_rpm_data msm8660_template = {
++	.version = -1,
++	.resource_table = msm8660_rpm_resource_table,
++	.n_resources = ARRAY_SIZE(msm8660_rpm_resource_table),
++};
++
++static const struct qcom_rpm_resource msm8960_rpm_resource_table[] = {
++	[QCOM_RPM_CXO_CLK] =			{ 25, 9, 5, 1 },
++	[QCOM_RPM_PXO_CLK] =			{ 26, 10, 6, 1 },
++	[QCOM_RPM_APPS_FABRIC_CLK] =		{ 27, 11, 8, 1 },
++	[QCOM_RPM_SYS_FABRIC_CLK] =		{ 28, 12, 9, 1 },
++	[QCOM_RPM_MM_FABRIC_CLK] =		{ 29, 13, 10, 1 },
++	[QCOM_RPM_DAYTONA_FABRIC_CLK] =		{ 30, 14, 11, 1 },
++	[QCOM_RPM_SFPB_CLK] =			{ 31, 15, 12, 1 },
++	[QCOM_RPM_CFPB_CLK] =			{ 32, 16, 13, 1 },
++	[QCOM_RPM_MMFPB_CLK] =			{ 33, 17, 14, 1 },
++	[QCOM_RPM_EBI1_CLK] =			{ 34, 18, 16, 1 },
++	[QCOM_RPM_APPS_FABRIC_HALT] =		{ 35, 19, 18, 1 },
++	[QCOM_RPM_APPS_FABRIC_MODE] =		{ 37, 20, 19, 1 },
++	[QCOM_RPM_APPS_FABRIC_IOCTL] =		{ 40, 21, 20, 1 },
++	[QCOM_RPM_APPS_FABRIC_ARB] =		{ 41, 22, 21, 12 },
++	[QCOM_RPM_SYS_FABRIC_HALT] =		{ 53, 23, 22, 1 },
++	[QCOM_RPM_SYS_FABRIC_MODE] =		{ 55, 24, 23, 1 },
++	[QCOM_RPM_SYS_FABRIC_IOCTL] =		{ 58, 25, 24, 1 },
++	[QCOM_RPM_SYS_FABRIC_ARB] =		{ 59, 26, 25, 29 },
++	[QCOM_RPM_MM_FABRIC_HALT] =		{ 88, 27, 26, 1 },
++	[QCOM_RPM_MM_FABRIC_MODE] =		{ 90, 28, 27, 1 },
++	[QCOM_RPM_MM_FABRIC_IOCTL] =		{ 93, 29, 28, 1 },
++	[QCOM_RPM_MM_FABRIC_ARB] =		{ 94, 30, 29, 23 },
++	[QCOM_RPM_PM8921_S1] =			{ 117, 31, 30, 2 },
++	[QCOM_RPM_PM8921_S2] =			{ 119, 33, 31, 2 },
++	[QCOM_RPM_PM8921_S3] =			{ 121, 35, 32, 2 },
++	[QCOM_RPM_PM8921_S4] =			{ 123, 37, 33, 2 },
++	[QCOM_RPM_PM8921_S5] =			{ 125, 39, 34, 2 },
++	[QCOM_RPM_PM8921_S6] =			{ 127, 41, 35, 2 },
++	[QCOM_RPM_PM8921_S7] =			{ 129, 43, 36, 2 },
++	[QCOM_RPM_PM8921_S8] =			{ 131, 45, 37, 2 },
++	[QCOM_RPM_PM8921_L1] =			{ 133, 47, 38, 2 },
++	[QCOM_RPM_PM8921_L2] =			{ 135, 49, 39, 2 },
++	[QCOM_RPM_PM8921_L3] =			{ 137, 51, 40, 2 },
++	[QCOM_RPM_PM8921_L4] =			{ 139, 53, 41, 2 },
++	[QCOM_RPM_PM8921_L5] =			{ 141, 55, 42, 2 },
++	[QCOM_RPM_PM8921_L6] =			{ 143, 57, 43, 2 },
++	[QCOM_RPM_PM8921_L7] =			{ 145, 59, 44, 2 },
++	[QCOM_RPM_PM8921_L8] =			{ 147, 61, 45, 2 },
++	[QCOM_RPM_PM8921_L9] =			{ 149, 63, 46, 2 },
++	[QCOM_RPM_PM8921_L10] =			{ 151, 65, 47, 2 },
++	[QCOM_RPM_PM8921_L11] =			{ 153, 67, 48, 2 },
++	[QCOM_RPM_PM8921_L12] =			{ 155, 69, 49, 2 },
++	[QCOM_RPM_PM8921_L13] =			{ 157, 71, 50, 2 },
++	[QCOM_RPM_PM8921_L14] =			{ 159, 73, 51, 2 },
++	[QCOM_RPM_PM8921_L15] =			{ 161, 75, 52, 2 },
++	[QCOM_RPM_PM8921_L16] =			{ 163, 77, 53, 2 },
++	[QCOM_RPM_PM8921_L17] =			{ 165, 79, 54, 2 },
++	[QCOM_RPM_PM8921_L18] =			{ 167, 81, 55, 2 },
++	[QCOM_RPM_PM8921_L19] =			{ 169, 83, 56, 2 },
++	[QCOM_RPM_PM8921_L20] =			{ 171, 85, 57, 2 },
++	[QCOM_RPM_PM8921_L21] =			{ 173, 87, 58, 2 },
++	[QCOM_RPM_PM8921_L22] =			{ 175, 89, 59, 2 },
++	[QCOM_RPM_PM8921_L23] =			{ 177, 91, 60, 2 },
++	[QCOM_RPM_PM8921_L24] =			{ 179, 93, 61, 2 },
++	[QCOM_RPM_PM8921_L25] =			{ 181, 95, 62, 2 },
++	[QCOM_RPM_PM8921_L26] =			{ 183, 97, 63, 2 },
++	[QCOM_RPM_PM8921_L27] =			{ 185, 99, 64, 2 },
++	[QCOM_RPM_PM8921_L28] =			{ 187, 101, 65, 2 },
++	[QCOM_RPM_PM8921_L29] =			{ 189, 103, 66, 2 },
++	[QCOM_RPM_PM8921_CLK1] =		{ 191, 105, 67, 2 },
++	[QCOM_RPM_PM8921_CLK2] =		{ 193, 107, 68, 2 },
++	[QCOM_RPM_PM8921_LVS1] =		{ 195, 109, 69, 1 },
++	[QCOM_RPM_PM8921_LVS2] =		{ 196, 110, 70, 1 },
++	[QCOM_RPM_PM8921_LVS3] =		{ 197, 111, 71, 1 },
++	[QCOM_RPM_PM8921_LVS4] =		{ 198, 112, 72, 1 },
++	[QCOM_RPM_PM8921_LVS5] =		{ 199, 113, 73, 1 },
++	[QCOM_RPM_PM8921_LVS6] =		{ 200, 114, 74, 1 },
++	[QCOM_RPM_PM8921_LVS7] =		{ 201, 115, 75, 1 },
++	[QCOM_RPM_PM8921_NCP] =			{ 202, 116, 80, 2 },
++	[QCOM_RPM_CXO_BUFFERS] =		{ 204, 118, 81, 1 },
++	[QCOM_RPM_USB_OTG_SWITCH] =		{ 205, 119, 82, 1 },
++	[QCOM_RPM_HDMI_SWITCH] =		{ 206, 120, 83, 1 },
++	[QCOM_RPM_DDR_DMM] =			{ 207, 121, 84, 2 },
++};
++
++static const struct qcom_rpm_data msm8960_template = {
++	.version = 3,
++	.resource_table = msm8960_rpm_resource_table,
++	.n_resources = ARRAY_SIZE(msm8960_rpm_resource_table),
++};
++
++static const struct of_device_id qcom_rpm_of_match[] = {
++	{ .compatible = "qcom,rpm-apq8064", .data = &apq8064_template },
++	{ .compatible = "qcom,rpm-msm8660", .data = &msm8660_template },
++	{ .compatible = "qcom,rpm-msm8960", .data = &msm8960_template },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_rpm_of_match);
++
++struct qcom_rpm *dev_get_qcom_rpm(struct device *dev)
++{
++	return dev_get_drvdata(dev);
++}
++EXPORT_SYMBOL(dev_get_qcom_rpm);
++
++int qcom_rpm_write(struct qcom_rpm *rpm, int resource, u32 *buf, size_t count)
++{
++	const struct qcom_rpm_resource *res;
++	const struct qcom_rpm_data *data = rpm->data;
++	u32 sel_mask[RPM_SELECT_SIZE] = { 0 };
++	int left;
++	int ret = 0;
++	int i;
++
++	if (WARN_ON(resource < 0 || resource >= data->n_resources))
++		return -EINVAL;
++
++	res = &data->resource_table[resource];
++	if (WARN_ON(res->size != count))
++		return -EINVAL;
++
++	mutex_lock(&rpm->lock);
++
++	for (i = 0; i < res->size; i++)
++		writel_relaxed(buf[i], RPM_REQ_REG(rpm, res->target_id + i));
++
++	bitmap_set((unsigned long *)sel_mask, res->select_id, 1);
++	for (i = 0; i < ARRAY_SIZE(sel_mask); i++) {
++		writel_relaxed(sel_mask[i],
++			       RPM_CTRL_REG(rpm, RPM_REQ_SELECT + i));
++	}
++
++	writel_relaxed(RPM_ACTIVE_STATE,
++		       RPM_CTRL_REG(rpm, RPM_REQUEST_CONTEXT));
++
++	reinit_completion(&rpm->ack);
++	regmap_write(rpm->ipc_regmap, rpm->ipc_offset, BIT(rpm->ipc_bit));
++
++	left = wait_for_completion_timeout(&rpm->ack, RPM_REQUEST_TIMEOUT);
++	if (!left)
++		ret = -ETIMEDOUT;
++	else if (rpm->ack_status & RPM_REJECTED)
++		ret = -EIO;
++
++	mutex_unlock(&rpm->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL(qcom_rpm_write);
++
++static irqreturn_t qcom_rpm_ack_interrupt(int irq, void *dev)
++{
++	struct qcom_rpm *rpm = dev;
++	u32 ack;
++	int i;
++
++	ack = readl_relaxed(RPM_CTRL_REG(rpm, RPM_ACK_CONTEXT));
++	for (i = 0; i < RPM_SELECT_SIZE; i++)
++		writel_relaxed(0, RPM_CTRL_REG(rpm, RPM_ACK_SELECTOR + i));
++	writel(0, RPM_CTRL_REG(rpm, RPM_ACK_CONTEXT));
++
++	if (ack & RPM_NOTIFICATION) {
++		dev_warn(rpm->dev, "ignoring notification!\n");
++	} else {
++		rpm->ack_status = ack;
++		complete(&rpm->ack);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t qcom_rpm_err_interrupt(int irq, void *dev)
++{
++	struct qcom_rpm *rpm = dev;
++
++	regmap_write(rpm->ipc_regmap, rpm->ipc_offset, BIT(rpm->ipc_bit));
++	dev_err(rpm->dev, "RPM triggered fatal error\n");
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t qcom_rpm_wakeup_interrupt(int irq, void *dev)
++{
++	return IRQ_HANDLED;
++}
++
++static int qcom_rpm_probe(struct platform_device *pdev)
++{
++	const struct of_device_id *match;
++	struct device_node *syscon_np;
++	struct resource *res;
++	struct qcom_rpm *rpm;
++	u32 fw_version[3];
++	int irq_wakeup;
++	int irq_ack;
++	int irq_err;
++	int ret;
++
++	rpm = devm_kzalloc(&pdev->dev, sizeof(*rpm), GFP_KERNEL);
++	if (!rpm) {
++		dev_err(&pdev->dev, "Can't allocate qcom_rpm\n");
++		return -ENOMEM;
++	}
++	rpm->dev = &pdev->dev;
++	mutex_init(&rpm->lock);
++	init_completion(&rpm->ack);
++
++	irq_ack = platform_get_irq_byname(pdev, "ack");
++	if (irq_ack < 0) {
++		dev_err(&pdev->dev, "required ack interrupt missing\n");
++		return irq_ack;
++	}
++
++	irq_err = platform_get_irq_byname(pdev, "err");
++	if (irq_err < 0) {
++		dev_err(&pdev->dev, "required err interrupt missing\n");
++		return irq_err;
++	}
++
++	irq_wakeup = platform_get_irq_byname(pdev, "wakeup");
++	if (irq_wakeup < 0) {
++		dev_err(&pdev->dev, "required wakeup interrupt missing\n");
++		return irq_wakeup;
++	}
++
++	match = of_match_device(qcom_rpm_of_match, &pdev->dev);
++	rpm->data = match->data;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
++	rpm->ctrl_regs = rpm->status_regs + 0x400;
++	rpm->req_regs = rpm->status_regs + 0x600;
++	if (IS_ERR(rpm->status_regs))
++		return PTR_ERR(rpm->status_regs);
++
++	syscon_np = of_parse_phandle(pdev->dev.of_node, "qcom,ipc", 0);
++	if (!syscon_np) {
++		dev_err(&pdev->dev, "no qcom,ipc node\n");
++		return -ENODEV;
++	}
++
++	rpm->ipc_regmap = syscon_node_to_regmap(syscon_np);
++	if (IS_ERR(rpm->ipc_regmap))
++		return PTR_ERR(rpm->ipc_regmap);
++
++	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,ipc", 1,
++					 &rpm->ipc_offset);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "no offset in qcom,ipc\n");
++		return -EINVAL;
++	}
++
++	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,ipc", 2,
++					 &rpm->ipc_bit);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "no bit in qcom,ipc\n");
++		return -EINVAL;
++	}
++
++	dev_set_drvdata(&pdev->dev, rpm);
++
++	fw_version[0] = readl(RPM_STATUS_REG(rpm, 0));
++	fw_version[1] = readl(RPM_STATUS_REG(rpm, 1));
++	fw_version[2] = readl(RPM_STATUS_REG(rpm, 2));
++	if (fw_version[0] != rpm->data->version) {
++		dev_err(&pdev->dev,
++			"RPM version %u.%u.%u incompatible with driver version %u",
++			fw_version[0],
++			fw_version[1],
++			fw_version[2],
++			rpm->data->version);
++		return -EFAULT;
++	}
++
++	dev_info(&pdev->dev, "RPM firmware %u.%u.%u\n", fw_version[0],
++							fw_version[1],
++							fw_version[2]);
++
++	writel(fw_version[0], RPM_CTRL_REG(rpm, 0));
++	writel(fw_version[1], RPM_CTRL_REG(rpm, 1));
++	writel(fw_version[2], RPM_CTRL_REG(rpm, 2));
++
++	ret = devm_request_irq(&pdev->dev,
++			       irq_ack,
++			       qcom_rpm_ack_interrupt,
++			       IRQF_TRIGGER_RISING | IRQF_NO_SUSPEND,
++			       "qcom_rpm_ack",
++			       rpm);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to request ack interrupt\n");
++		return ret;
++	}
++
++	ret = irq_set_irq_wake(irq_ack, 1);
++	if (ret)
++		dev_warn(&pdev->dev, "failed to mark ack irq as wakeup\n");
++
++	ret = devm_request_irq(&pdev->dev,
++			       irq_err,
++			       qcom_rpm_err_interrupt,
++			       IRQF_TRIGGER_RISING,
++			       "qcom_rpm_err",
++			       rpm);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to request err interrupt\n");
++		return ret;
++	}
++
++	ret = devm_request_irq(&pdev->dev,
++			       irq_wakeup,
++			       qcom_rpm_wakeup_interrupt,
++			       IRQF_TRIGGER_RISING,
++			       "qcom_rpm_wakeup",
++			       rpm);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to request wakeup interrupt\n");
++		return ret;
++	}
++
++	ret = irq_set_irq_wake(irq_wakeup, 1);
++	if (ret)
++		dev_warn(&pdev->dev, "failed to mark wakeup irq as wakeup\n");
++
++	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
++}
++
++static int qcom_rpm_remove_child(struct device *dev, void *unused)
++{
++	platform_device_unregister(to_platform_device(dev));
++	return 0;
++}
++
++static int qcom_rpm_remove(struct platform_device *pdev)
++{
++	device_for_each_child(&pdev->dev, NULL, qcom_rpm_remove_child);
++	return 0;
++}
++
++static struct platform_driver qcom_rpm_driver = {
++	.probe = qcom_rpm_probe,
++	.remove = qcom_rpm_remove,
++	.driver  = {
++		.name  = "qcom_rpm",
++		.owner = THIS_MODULE,
++		.of_match_table = qcom_rpm_of_match,
++	},
++};
++
++static int __init qcom_rpm_init(void)
++{
++	return platform_driver_register(&qcom_rpm_driver);
++}
++arch_initcall(qcom_rpm_init);
++
++static void __exit qcom_rpm_exit(void)
++{
++	platform_driver_unregister(&qcom_rpm_driver);
++}
++module_exit(qcom_rpm_exit)
++
++MODULE_DESCRIPTION("Qualcomm Resource Power Manager driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/soc/qcom_rpm.h b/include/linux/soc/qcom_rpm.h
+new file mode 100644
+index 0000000..a52bc37
+--- /dev/null
++++ b/include/linux/soc/qcom_rpm.h
+@@ -0,0 +1,12 @@
++#ifndef __QCOM_RPM_H__
++#define __QCOM_RPM_H__
++
++#include <linux/types.h>
++
++struct device;
++struct qcom_rpm;
++
++struct qcom_rpm *dev_get_qcom_rpm(struct device *dev);
++int qcom_rpm_write(struct qcom_rpm *rpm, int resource, u32 *buf, size_t count);
++
++#endif
 -- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.2
