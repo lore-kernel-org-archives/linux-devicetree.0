@@ -1,33 +1,45 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH] ARM: dts: exynos5410: Fill in CPU clock-frequency
-Date: Tue, 15 Jul 2014 14:57:14 +0200
-Message-ID: <53C5252A.2040301@suse.de>
-References: <1403466596-3347-1-git-send-email-afaerber@suse.de> <53A7DCF8.4090108@samsung.com> <53B690B9.2090906@suse.de> <53B7175B.1030109@samsung.com>
+From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH RFC 2/2] regulator: twl: Re-add clk32kg to get wifi working
+Date: Tue, 15 Jul 2014 14:59:14 +0200
+Message-ID: <53C525A2.8080609@kpanic.de>
+References: <1405338655-18415-1-git-send-email-sassmann@kpanic.de> <1405338655-18415-3-git-send-email-sassmann@kpanic.de> <20140714120051.GF6800@sirena.org.uk> <53C3C77F.7080208@kpanic.de> <20140714181338.GR6800@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53B7175B.1030109@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LKML <linux-kernel@vger.kernel.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kumar Gala <galak@codeaurora.org>, "ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140714181338.GR6800-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On 14.07.2014 20:13, Mark Brown wrote:
+> On Mon, Jul 14, 2014 at 02:05:19PM +0200, Stefan Assmann wrote:
+>> On 14.07.2014 14:00, Mark Brown wrote:
+>
+>>> No, you need to implement clocks using the clock API.  Please read the
+>>> changelogs for the above commits...
+>
+>> Yes, that's what I expected. Got any pointers for me how to do this?
+>> Never done that before, a little help would be appreciated.
+>
+> There should be plenty of examples in drivers/clk?
 
-Am 04.07.2014 23:06, schrieb Kukjin Kim:
-> BTW Andreas, I can't use 'F=C3=A4rber' in my git tree so which one is=
- right
-> or more preferred? Farber, Faerber, Ferber? Sorry.
+Looking at this more closely it seems to me that it's a regulator thing
+after all. In the end it all boils down to a single register write.
+twl_i2c_write_u8(TWL_MODULE_PM_RECEIVER, 0x41, 0x8e);
+This is a write to the CLK32KG_CFG_STATE [1] register to power on the
+device.
 
-Hm, git-am should in theory just work fine for this patch with UTF-8 on
-Linux. As for Reviewed-by / Tested-by, some people had success with
-copy&paste, otherwise Faerber as in the email please.
+I tried moving that to omap4xxx_dt_clk_init() but that won't work
+because the twl core structures aren't initialized yet.
 
-Thanks,
-Andreas
+Any suggestions?
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+   Stefan
+
+[1] http://www.cjemicros.f2s.com/public/datasheets/TWL6030_Register_Map.pdf page 196
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
