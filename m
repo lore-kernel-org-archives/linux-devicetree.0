@@ -1,908 +1,204 @@
-From: Zhou Wang <wangzhou.bry@gmail.com>
-Subject: =?UTF-8?q?=5BPATCH=20v1=202/3=5D=20mtd=3A=20hisilicon=3A=20add=20a=20new=20nand=20controller=20driver=20for=20hisilicon=20hip04=20Soc?=
-Date: Tue, 15 Jul 2014 18:58:25 +0800
-Message-ID: <1405421906-660-3-git-send-email-wangzhou.bry@gmail.com>
-References: <1405421906-660-1-git-send-email-wangzhou.bry@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Tue, 15 Jul 2014 13:07:58 +0200
+Message-ID: <1484511.NijXCAc7Hx@avalon>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1645765.yCSTbHcZMC@avalon> <20140715105253.GE6616@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405421906-660-1-git-send-email-wangzhou.bry@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: wangzhou1@hisilicon.com, caizhiyong@huawei.com, Zhou Wang <wangzhou.bry@gmail.com>
+Content-Type: multipart/mixed; boundary="===============1554947283=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140715105253.GE6616@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
----
- drivers/mtd/nand/Kconfig     |    5 +
- drivers/mtd/nand/Makefile    |    1 +
- drivers/mtd/nand/hisi_nand.c |  836 ++++++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 842 insertions(+)
- create mode 100644 drivers/mtd/nand/hisi_nand.c
 
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index 90ff447..253f8c8 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -510,4 +510,9 @@ config MTD_NAND_XWAY
- 	  Enables support for NAND Flash chips on Lantiq XWAY SoCs. NAND is a=
-ttached
- 	  to the External Bus Unit (EBU).
-=20
-+config MTD_NAND_HISI
-+	tristate "Support for NAND controller on Hisilicon SoC"
-+	help
-+	  Enables support for NAND controller on Hisilicon SoC.
-+
- endif # MTD_NAND
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index 542b568..d0881cf 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -49,5 +49,6 @@ obj-$(CONFIG_MTD_NAND_JZ4740)		+=3D jz4740_nand.o
- obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+=3D gpmi-nand/
- obj-$(CONFIG_MTD_NAND_XWAY)		+=3D xway_nand.o
- obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+=3D bcm47xxnflash/
-+obj-$(CONFIG_MTD_NAND_HISI)	        +=3D hisi_nand.o
-=20
- nand-objs :=3D nand_base.o nand_bbt.o
-diff --git a/drivers/mtd/nand/hisi_nand.c b/drivers/mtd/nand/hisi_nand.=
-c
-new file mode 100644
-index 0000000..c5142bb
---- /dev/null
-+++ b/drivers/mtd/nand/hisi_nand.c
-@@ -0,0 +1,836 @@
-+/*
-+ * Hisilicon NAND Flash controller driver
-+ *
-+ * Copyright =C2=A9 2012-2014 HiSilicon Technologies Co., Ltd.
-+ *              http://www.hisilicon.com
-+ *
-+ * Author: Zhou Wang <wangzhou.bry@gmail.com>
-+ * The initial developer of the original code is Zhiyong Cai
-+ * <caizhiyong@huawei.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
+--===============1554947283==
+Content-Type: multipart/signed; boundary="nextPart2571326.jt6PdmGK5u"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+
+
+--nextPart2571326.jt6PdmGK5u
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+
+Hi Thierry,
+
+On Tuesday 15 July 2014 12:52:54 Thierry Reding wrote:
+> On Tue, Jul 15, 2014 at 12:43:02PM +0200, Laurent Pinchart wrote:
+> > On Tuesday 15 July 2014 12:37:19 Thierry Reding wrote:
+> >> On Tue, Jul 15, 2014 at 12:20:02PM +0200, Laurent Pinchart wrote:
+> >>> On Tuesday 15 July 2014 12:06:19 Boris BREZILLON wrote:
+> >>>> On Mon, 14 Jul 2014 12:05:43 +0200 Thierry Reding wrote:
+> >>>>> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote=
+:
+> >>>>>> The Atmel HLCDC (HLCD Controller) IP available on some Atmel S=
+oCs
+> >>>>>> (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family) provid=
+es a
+> >>>>>> display controller device.
+> >>>>>>=20
+> >>>>>> The HLCDC block provides a single RGB output port, and only
+> >>>>>> supports LCD panels connection to LCD panels for now.
+> >>>>>>=20
+> >>>>>> The atmel,panel property link the HLCDC RGB output with the LC=
+D
+> >>>>>> panel connected on this port (note that the HLCDC RGB connecto=
+r
+> >>>>>> implementation makes use of the DRM panel framework).
+> >>>>>>=20
+> >>>>>> Connection to other external devices (DRM bridges) might be ad=
+ded
+> >>>>>> later by mean of a new atmel,xxx (atmel,bridge) property.
+> >>>>>>=20
+> >>>>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons=
+.com>
+> >>>>>> ---
+> >>>>>>=20
+> >>>>>>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++=
++++++
+> >>>>>>  1 file changed, 59 insertions(+)
+> >>>>>>  create mode 100644
+> >>>>>>  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> >>>=20
+> >>> [snip]
+> >>>=20
+> >>>>>> + - atmel,panel: Should contain a phandle with 2 parameters.
+> >>>>>> +   The first cell is a phandle to a DRM panel device
+> >>>>>> +   The second cell encodes the RGB mode, which can take the
+> >>>>>> following values:
+> >>>>>> +   * 0: RGB444
+> >>>>>> +   * 1: RGB565
+> >>>>>> +   * 2: RGB666
+> >>>>>> +   * 3: RGB888
+> >>>>>=20
+> >>>>> These are properties of the panel and should be obtained from t=
+he
+> >>>> panel directly rather than an additional cell in this specifier.=
+
+> >>>>=20
+> >>>> Okay.
+> >>>> What's the preferred way of doing this ?
+> >>>> What about defining an rgb-mode property in the panel node.
+> >>>=20
+> >>> You could do that, but it won't help you much, as the HLCDC drive=
+r
+> >>> must not parse properties from the panel node. You should instead=
+
+> >>> extend the drm_panel API with a function to retrieve panel proper=
+ties.
+> >>> The HLCDC driver will then query the panel driver at runtime for =
+the
+> >>> interface type. The panel driver will get the information from
+> >>> hardcoded data in the driver, from DT or possibly in some cases b=
 y
-+ * it under the terms of the GNU General Public License as published b=
-y
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/of.h>
-+#include <linux/of_mtd.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/sizes.h>
-+#include <linux/clk.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/mtd/nand.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/mtd/partitions.h>
-+
-+#define HINFC504_MAX_CHIP                               (4)
-+#define HINFC504_W_LATCH                                (5)
-+#define HINFC504_R_LATCH                                (7)
-+#define HINFC504_RW_LATCH                               (3)
-+
-+#define HINFC504_NFC_TIMEOUT				(2 * HZ)
-+#define HINFC504_NFC_DMA_TIMEOUT			(5 * HZ)
-+#define HINFC504_CHIP_DELAY				(25)
-+
-+#define HINFC504_REG_BASE_ADDRESS_LEN			(0x100)
-+#define HINFC504_BUFFER_BASE_ADDRESS_LEN		(2048 + 128)
-+
-+#define HINFC504_ADDR_CYCLE_MASK			0x4
-+
-+#define HINFC504_CON					0x00
-+#define HINFC504_CON_OP_MODE_NORMAL			(1U << 0)
-+#define HINFC504_CON_PAGEISZE_SHIFT			(1)
-+#define HINFC504_CON_PAGESIZE_MASK			(0x07)
-+#define HINFC504_CON_BUS_WIDTH				(1U << 4)
-+#define HINFC504_CON_READY_BUSY_SEL			(1U << 8)
-+#define HINFC504_CON_ECCTYPE_SHIFT			(9)
-+#define HINFC504_CON_ECCTYPE_MASK			(0x07)
-+
-+#define HINFC504_PWIDTH					0x04
-+#define SET_HINFC504_PWIDTH(_w_lcnt, _r_lcnt, _rw_hcnt) \
-+	((_w_lcnt) | (((_r_lcnt) & 0x0F) << 4) | (((_rw_hcnt) & 0x0F) << 8))
-+
-+#define HINFC504_CMD					0x0C
-+#define HINFC504_ADDRL					0x10
-+#define HINFC504_ADDRH					0x14
-+#define HINFC504_DATA_NUM				0x18
-+
-+#define HINFC504_OP					0x1C
-+#define HINFC504_OP_READ_DATA_EN			(1U << 1)
-+#define HINFC504_OP_WAIT_READY_EN			(1U << 2)
-+#define HINFC504_OP_CMD2_EN				(1U << 3)
-+#define HINFC504_OP_WRITE_DATA_EN			(1U << 4)
-+#define HINFC504_OP_ADDR_EN				(1U << 5)
-+#define HINFC504_OP_CMD1_EN				(1U << 6)
-+#define HINFC504_OP_NF_CS_SHIFT				(7)
-+#define HINFC504_OP_NF_CS_MASK				(3)
-+#define HINFC504_OP_ADDR_CYCLE_SHIFT			(9)
-+#define HINFC504_OP_ADDR_CYCLE_MASK			(7)
-+
-+#define HINFC504_STATUS					0x20
-+#define HINFC504_READY					(1U << 0)
-+
-+#define HINFC504_INTEN					0x24
-+#define HINFC504_INTEN_DMA				(1U << 9)
-+#define HINFC504_INTEN_UE				(1U << 6)
-+#define HINFC504_INTEN_CE				(1U << 5)
-+
-+#define HINFC504_INTS					0x28
-+#define HINFC504_INTS_DMA				(1U << 9)
-+#define HINFC504_INTS_UE				(1U << 6)
-+#define HINFC504_INTS_CE				(1U << 5)
-+
-+#define HINFC504_INTCLR					0x2C
-+#define HINFC504_INTCLR_DMA				(1U << 9)
-+#define HINFC504_INTCLR_UE				(1U << 6)
-+#define HINFC504_INTCLR_CE				(1U << 5)
-+
-+#define HINFC504_ECC_STATUS                             0x5C
-+#define HINFC504_ECC_1_BIT_SHIFT                        16
-+#define HINFC504_ECC_16_BIT_SHIFT                       12
-+
-+#define HINFC504_DMA_CTRL				0x60
-+#define HINFC504_DMA_CTRL_DMA_START			(1U << 0)
-+#define HINFC504_DMA_CTRL_WE				(1U << 1)
-+#define HINFC504_DMA_CTRL_DATA_AREA_EN			(1U << 2)
-+#define HINFC504_DMA_CTRL_OOB_AREA_EN			(1U << 3)
-+#define HINFC504_DMA_CTRL_BURST4_EN			(1U << 4)
-+#define HINFC504_DMA_CTRL_BURST8_EN			(1U << 5)
-+#define HINFC504_DMA_CTRL_BURST16_EN			(1U << 6)
-+#define HINFC504_DMA_CTRL_ADDR_NUM_SHIFT		(7)
-+#define HINFC504_DMA_CTRL_ADDR_NUM_MASK			(1)
-+#define HINFC504_DMA_CTRL_CS_SHIFT			(8)
-+#define HINFC504_DMA_CTRL_CS_MASK			(0x03)
-+
-+#define HINFC504_DMA_ADDR_DATA				0x64
-+#define HINFC504_DMA_ADDR_OOB				0x68
-+
-+#define HINFC504_DMA_LEN				0x6C
-+#define HINFC504_DMA_LEN_OOB_SHIFT			(16)
-+#define HINFC504_DMA_LEN_OOB_MASK			(0xFFF)
-+
-+#define HINFC504_DMA_PARA				0x70
-+#define HINFC504_DMA_PARA_DATA_RW_EN			(1U << 0)
-+#define HINFC504_DMA_PARA_OOB_RW_EN			(1U << 1)
-+#define HINFC504_DMA_PARA_DATA_EDC_EN			(1U << 2)
-+#define HINFC504_DMA_PARA_OOB_EDC_EN			(1U << 3)
-+#define HINFC504_DMA_PARA_DATA_ECC_EN			(1U << 4)
-+#define HINFC504_DMA_PARA_OOB_ECC_EN			(1U << 5)
-+
-+#define HINFC_VERSION                                   0x74
-+#define HINFC504_LOG_READ_ADDR				0x7C
-+#define HINFC504_LOG_READ_LEN				0x80
-+
-+#define HINFC504_NANDINFO_LEN				0x10
-+
-+struct hinfc_host {
-+	struct nand_chip	chip;
-+	struct mtd_info		mtd;
-+	struct device		*dev;
-+	void __iomem		*iobase;
-+	struct completion       cmd_complete;
-+	unsigned int		offset;
-+	unsigned int		command;
-+	int			chipselect;
-+	unsigned int		addr_cycle;
-+	unsigned int		addr_value[2];
-+	unsigned int		cache_addr_value[2];
-+	char			*buffer;
-+	dma_addr_t		dma_buffer;
-+	dma_addr_t		dma_oob;
-+	int			version;
-+	unsigned int            ecc_bits;
-+	unsigned int            irq_status; /* interrupt status */
-+};
-+
-+static inline unsigned int hinfc_read(struct hinfc_host *host, unsigne=
-d int reg)
-+{
-+	return readl(host->iobase + reg);
-+}
-+
-+static inline void hinfc_write(struct hinfc_host *host, unsigned int v=
-alue,
-+			       unsigned int reg)
-+{
-+	writel(value, host->iobase + reg);
-+}
-+
-+static void wait_controller_finished(struct hinfc_host *host)
-+{
-+	unsigned long timeout =3D jiffies + HINFC504_NFC_TIMEOUT;
-+	int val;
-+
-+	while (time_before(jiffies, timeout)) {
-+		val =3D hinfc_read(host, HINFC504_STATUS);
-+		if (host->command =3D=3D NAND_CMD_ERASE2) {
-+			/* nfc is ready */
-+			while (!(val & HINFC504_READY))	{
-+				usleep_range(500, 1000);
-+				val =3D hinfc_read(host, HINFC504_STATUS);
-+			}
-+			return;
-+		} else {
-+			if (val & HINFC504_READY)
-+				return;
-+		}
-+	}
-+
-+	/* wait cmd timeout */
-+	dev_err(host->dev, "Wait NAND controller exec cmd timeout.\n");
-+}
-+
-+static void hisi_nfc_dma_transfer(struct hinfc_host *host, int todev)
-+{
-+	struct mtd_info	*mtd =3D &host->mtd;
-+	struct nand_chip *chip =3D mtd->priv;
-+	unsigned long val;
-+	int ret;
-+
-+	hinfc_write(host, host->dma_buffer, HINFC504_DMA_ADDR_DATA);
-+	hinfc_write(host, host->dma_oob, HINFC504_DMA_ADDR_OOB);
-+
-+	if (chip->ecc.mode =3D=3D NAND_ECC_NONE) {
-+		hinfc_write(host, ((mtd->oobsize & HINFC504_DMA_LEN_OOB_MASK)
-+			<< HINFC504_DMA_LEN_OOB_SHIFT), HINFC504_DMA_LEN);
-+
-+		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
-+			| HINFC504_DMA_PARA_OOB_RW_EN, HINFC504_DMA_PARA);
-+	} else {
-+		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
-+		| HINFC504_DMA_PARA_OOB_RW_EN | HINFC504_DMA_PARA_DATA_EDC_EN
-+		| HINFC504_DMA_PARA_OOB_EDC_EN | HINFC504_DMA_PARA_DATA_ECC_EN
-+		| HINFC504_DMA_PARA_OOB_ECC_EN, HINFC504_DMA_PARA);
-+	}
-+
-+	val =3D (HINFC504_DMA_CTRL_DMA_START | HINFC504_DMA_CTRL_BURST4_EN
-+		| HINFC504_DMA_CTRL_BURST8_EN | HINFC504_DMA_CTRL_BURST16_EN
-+		| HINFC504_DMA_CTRL_DATA_AREA_EN | HINFC504_DMA_CTRL_OOB_AREA_EN
-+		| ((host->addr_cycle =3D=3D 4 ? 1 : 0)
-+			<< HINFC504_DMA_CTRL_ADDR_NUM_SHIFT)
-+		| ((host->chipselect & HINFC504_DMA_CTRL_CS_MASK)
-+			<< HINFC504_DMA_CTRL_CS_SHIFT));
-+
-+	if (todev)
-+		val |=3D HINFC504_DMA_CTRL_WE;
-+
-+	hinfc_write(host, val, HINFC504_DMA_CTRL);
-+
-+	init_completion(&host->cmd_complete);
-+	ret =3D wait_for_completion_timeout(&host->cmd_complete,
-+			HINFC504_NFC_DMA_TIMEOUT);
-+
-+	if (!ret) {
-+		dev_err(host->dev, "DMA operation(irq) timeout!\n");
-+		/* sanity check */
-+		val =3D hinfc_read(host, HINFC504_DMA_CTRL);
-+		if (!(val & HINFC504_DMA_CTRL_DMA_START))
-+			dev_err(host->dev, "dma is already done but without irq ACK!");
-+		else
-+			dev_err(host->dev, "dma is really timeout!");
-+	}
-+}
-+
-+static int hisi_nfc_send_cmd_pageprog(struct hinfc_host *host)
-+{
-+	host->addr_value[0] &=3D 0xffff0000;
-+
-+	hinfc_write(host, host->addr_value[0], HINFC504_ADDRL);
-+	hinfc_write(host, host->addr_value[1], HINFC504_ADDRH);
-+	hinfc_write(host, NAND_CMD_PAGEPROG << 8 | NAND_CMD_SEQIN,
-+		    HINFC504_CMD);
-+
-+	hisi_nfc_dma_transfer(host, 1);
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_send_cmd_readstart(struct hinfc_host *host)
-+{
-+	struct mtd_info	*mtd =3D &host->mtd;
-+
-+	if ((host->addr_value[0] =3D=3D host->cache_addr_value[0]) &&
-+	    (host->addr_value[1] =3D=3D host->cache_addr_value[1]))
-+		return 0;
-+
-+	host->addr_value[0] &=3D 0xffff0000;
-+
-+	hinfc_write(host, host->addr_value[0], HINFC504_ADDRL);
-+	hinfc_write(host, host->addr_value[1], HINFC504_ADDRH);
-+	hinfc_write(host, NAND_CMD_READSTART << 8 | NAND_CMD_READ0,
-+		    HINFC504_CMD);
-+
-+	hinfc_write(host, 0, HINFC504_LOG_READ_ADDR);
-+	hinfc_write(host, mtd->writesize + mtd->oobsize,
-+		    HINFC504_LOG_READ_LEN);
-+
-+	hisi_nfc_dma_transfer(host, 0);
-+
-+	host->cache_addr_value[0] =3D host->addr_value[0];
-+	host->cache_addr_value[1] =3D host->addr_value[1];
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_send_cmd_erase(struct hinfc_host *host)
-+{
-+	hinfc_write(host, host->addr_value[0], HINFC504_ADDRL);
-+	hinfc_write(host, (NAND_CMD_ERASE2 << 8) | NAND_CMD_ERASE1,
-+		    HINFC504_CMD);
-+
-+	hinfc_write(host, HINFC504_OP_WAIT_READY_EN
-+		| HINFC504_OP_CMD2_EN
-+		| HINFC504_OP_CMD1_EN
-+		| HINFC504_OP_ADDR_EN
-+		| ((host->chipselect & HINFC504_OP_NF_CS_MASK)
-+			<< HINFC504_OP_NF_CS_SHIFT)
-+		| ((host->addr_cycle & HINFC504_OP_ADDR_CYCLE_MASK)
-+			<< HINFC504_OP_ADDR_CYCLE_SHIFT),
-+		HINFC504_OP);
-+
-+	wait_controller_finished(host);
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_send_cmd_readid(struct hinfc_host *host)
-+{
-+	hinfc_write(host, HINFC504_NANDINFO_LEN, HINFC504_DATA_NUM);
-+	hinfc_write(host, NAND_CMD_READID, HINFC504_CMD);
-+	hinfc_write(host, 0, HINFC504_ADDRL);
-+
-+	hinfc_write(host, HINFC504_OP_CMD1_EN | HINFC504_OP_ADDR_EN
-+		| HINFC504_OP_READ_DATA_EN
-+		| ((host->chipselect & HINFC504_OP_NF_CS_MASK)
-+			<< HINFC504_OP_NF_CS_SHIFT)
-+		| 1 << HINFC504_OP_ADDR_CYCLE_SHIFT, HINFC504_OP);
-+
-+	wait_controller_finished(host);
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_send_cmd_status(struct hinfc_host *host)
-+{
-+	hinfc_write(host, HINFC504_NANDINFO_LEN, HINFC504_DATA_NUM);
-+	hinfc_write(host, NAND_CMD_STATUS, HINFC504_CMD);
-+	hinfc_write(host, HINFC504_OP_CMD1_EN
-+		| HINFC504_OP_READ_DATA_EN
-+		| ((host->chipselect & HINFC504_OP_NF_CS_MASK)
-+			<< HINFC504_OP_NF_CS_SHIFT),
-+		HINFC504_OP);
-+
-+	wait_controller_finished(host);
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_send_cmd_reset(struct hinfc_host *host, int chipse=
-lect)
-+{
-+	hinfc_write(host, NAND_CMD_RESET, HINFC504_CMD);
-+
-+	hinfc_write(host, HINFC504_OP_CMD1_EN
-+		| ((chipselect & HINFC504_OP_NF_CS_MASK)
-+			<< HINFC504_OP_NF_CS_SHIFT)
-+		| HINFC504_OP_WAIT_READY_EN,
-+		HINFC504_OP);
-+
-+	wait_controller_finished(host);
-+
-+	return 0;
-+}
-+
-+static void hisi_nfc_select_chip(struct mtd_info *mtd, int chipselect)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+
-+	if (chipselect < 0)
-+		return;
-+
-+	host->chipselect =3D chipselect;
-+}
-+
-+static uint8_t hisi_nfc_read_byte(struct mtd_info *mtd)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+
-+	if (host->command =3D=3D NAND_CMD_STATUS)
-+		return readb(chip->IO_ADDR_R);
-+
-+	host->offset++;
-+
-+	if (host->command =3D=3D NAND_CMD_READID)
-+		return readb(chip->IO_ADDR_R + host->offset - 1);
-+
-+	return readb(host->buffer + host->offset - 1);
-+}
-+
-+static u16 hisi_nfc_read_word(struct mtd_info *mtd)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+
-+	host->offset +=3D 2;
-+	return readw(host->buffer + host->offset - 2);
-+}
-+
-+static void hisi_nfc_write_buf(struct mtd_info *mtd, const uint8_t *bu=
-f, int len)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+
-+	memcpy(host->buffer + host->offset, buf, len);
-+	host->offset +=3D len;
-+}
-+
-+static void hisi_nfc_read_buf(struct mtd_info *mtd, uint8_t *buf, int =
-len)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+
-+	memcpy(buf, host->buffer + host->offset, len);
-+	host->offset +=3D len;
-+}
-+
-+static void set_addr(struct mtd_info *mtd, int column, int page_addr)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+
-+	host->addr_cycle    =3D 0;
-+	host->addr_value[0] =3D 0;
-+	host->addr_value[1] =3D 0;
-+
-+	/* Serially input address */
-+	if (column !=3D -1) {
-+		/* Adjust columns for 16 bit buswidth */
-+		if (chip->options & NAND_BUSWIDTH_16)
-+			column >>=3D 1;
-+
-+		host->addr_value[0] =3D column & 0xffff;
-+		host->addr_cycle    =3D 2;
-+	}
-+	if (page_addr !=3D -1) {
-+		host->addr_value[0] |=3D (page_addr & 0xffff)
-+			<< (host->addr_cycle * 8);
-+		host->addr_cycle    +=3D 2;
-+		/* One more address cycle for devices > 128MiB */
-+		if (chip->chipsize > (128 << 20)) {
-+			host->addr_cycle +=3D 1;
-+			if (host->command =3D=3D NAND_CMD_ERASE1)
-+				host->addr_value[0] |=3D ((page_addr >> 16) & 0xff) << 16;
-+			else
-+				host->addr_value[1] |=3D ((page_addr >> 16) & 0xff);
-+		}
-+	}
-+}
-+
-+static void hisi_nfc_cmdfunc(struct mtd_info *mtd, unsigned command, i=
-nt column,
-+		int page_addr)
-+{
-+	struct nand_chip *chip =3D mtd->priv;
-+	struct hinfc_host *host =3D chip->priv;
-+	int is_cache_invalid =3D 1;
-+	unsigned int flag =3D 0;
-+	host->command =3D  command;
-+
-+	switch (command) {
-+	case NAND_CMD_READ0:
-+	case NAND_CMD_READOOB:
-+		if (command =3D=3D NAND_CMD_READ0)
-+			host->offset =3D column;
-+		else
-+			host->offset =3D column + mtd->writesize;
-+
-+		is_cache_invalid =3D 0;
-+		set_addr(mtd, column, page_addr);
-+		hisi_nfc_send_cmd_readstart(host);
-+		break;
-+
-+	case NAND_CMD_SEQIN:
-+		host->offset =3D column;
-+
-+	case NAND_CMD_ERASE1:
-+		set_addr(mtd, column, page_addr);
-+		break;
-+
-+	case NAND_CMD_PAGEPROG:
-+		hisi_nfc_send_cmd_pageprog(host);
-+		break;
-+
-+	case NAND_CMD_ERASE2:
-+		hisi_nfc_send_cmd_erase(host);
-+		break;
-+
-+	case NAND_CMD_READID:
-+		host->offset =3D column;
-+		memset(chip->IO_ADDR_R, 0, 0x10);
-+		hisi_nfc_send_cmd_readid(host);
-+		break;
-+
-+	case NAND_CMD_STATUS:
-+		flag =3D hinfc_read(host, HINFC504_CON);
-+		if (chip->ecc.mode =3D=3D NAND_ECC_HW)
-+			hinfc_write(host,
-+				    flag && ~(HINFC504_CON_ECCTYPE_MASK <<
-+				    HINFC504_CON_ECCTYPE_SHIFT), HINFC504_CON);
-+
-+		host->offset =3D 0;
-+		memset(chip->IO_ADDR_R, 0, 0x10);
-+		hisi_nfc_send_cmd_status(host);
-+		hinfc_write(host, flag, HINFC504_CON);
-+		break;
-+
-+	case NAND_CMD_RESET:
-+		hisi_nfc_send_cmd_reset(host, host->chipselect);
-+		break;
-+
-+	default:
-+		dev_err(host->dev, "Error: unsupported cmd(cmd=3D%x, col=3D%x, page=3D=
-%x)\n",
-+			command, column, page_addr);
-+	}
-+
-+	if (is_cache_invalid) {
-+		host->cache_addr_value[0] =3D ~0;
-+		host->cache_addr_value[1] =3D ~0;
-+	}
-+}
-+
-+static irqreturn_t hinfc_irq_handle(int irq, void *devid)
-+{
-+	struct hinfc_host *host =3D devid;
-+	unsigned int flag;
-+
-+	flag =3D hinfc_read(host, HINFC504_INTS);
-+	/* store interrupts state */
-+	host->irq_status |=3D flag;
-+
-+	if (flag & HINFC504_INTS_DMA) {
-+		hinfc_write(host, HINFC504_INTCLR_DMA, HINFC504_INTCLR);
-+		complete(&host->cmd_complete);
-+	} else if (flag & HINFC504_INTS_CE) {
-+		hinfc_write(host, HINFC504_INTCLR_CE, HINFC504_INTCLR);
-+	} else if (flag & HINFC504_INTS_UE) {
-+		hinfc_write(host, HINFC504_INTCLR_UE, HINFC504_INTCLR);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int hisi_nand_read_page_hwecc(struct mtd_info *mtd,
-+	struct nand_chip *chip, uint8_t *buf, int oob_required, int page)
-+{
-+	struct hinfc_host *host =3D chip->priv;
-+	int max_bitflips =3D 0, stat =3D 0;
-+
-+	chip->read_buf(mtd, buf, mtd->writesize);
-+	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
-+
-+	/* errors which can not be corrected by ECC */
-+	if (host->irq_status & HINFC504_INTS_UE) {
-+		mtd->ecc_stats.failed++;
-+	} else if (host->irq_status & HINFC504_INTS_CE) {
-+		/* need add other ECC modes! */
-+		switch (host->ecc_bits) {
-+		case 1:
-+			stat =3D hweight8(hinfc_read(host, HINFC504_ECC_STATUS)>>
-+						HINFC504_ECC_1_BIT_SHIFT);
-+			break;
-+		case 6:
-+			stat =3D hweight16(hinfc_read(host, HINFC504_ECC_STATUS)>>
-+			HINFC504_ECC_16_BIT_SHIFT & 0x0fff);
-+		}
-+		mtd->ecc_stats.corrected +=3D stat;
-+		max_bitflips =3D max_t(unsigned int, max_bitflips, stat);
-+	}
-+	host->irq_status =3D 0;
-+
-+	return max_bitflips;
-+}
-+
-+static int hisi_nand_write_page_hwecc(struct mtd_info *mtd,
-+		struct nand_chip *chip, const uint8_t *buf, int oob_required)
-+{
-+	chip->write_buf(mtd, buf, mtd->writesize);
-+	if (oob_required)
-+		chip->write_buf(mtd, chip->oob_poi, mtd->oobsize);
-+
-+	return 0;
-+}
-+
-+static void hisi_nfc_host_init(struct hinfc_host *host)
-+{
-+	struct nand_chip *chip =3D &host->chip;
-+	host->version =3D hinfc_read(host, HINFC_VERSION);
-+	unsigned int flag =3D 0;
-+
-+	host->addr_cycle		=3D 0;
-+	host->addr_value[0]		=3D 0;
-+	host->addr_value[1]		=3D 0;
-+	host->cache_addr_value[0]	=3D ~0;
-+	host->cache_addr_value[1]	=3D ~0;
-+	host->chipselect		=3D 0;
-+
-+	/* default page size: 2K, ecc_none. need modify */
-+	flag =3D HINFC504_CON_OP_MODE_NORMAL | HINFC504_CON_READY_BUSY_SEL
-+		| ((0x001 & HINFC504_CON_PAGESIZE_MASK)
-+			<< HINFC504_CON_PAGEISZE_SHIFT)
-+		| ((0x0 & HINFC504_CON_ECCTYPE_MASK)
-+			<< HINFC504_CON_ECCTYPE_SHIFT)
-+		| ((chip->options & NAND_BUSWIDTH_16) ?
-+			HINFC504_CON_BUS_WIDTH : 0);
-+	hinfc_write(host, flag, HINFC504_CON);
-+
-+	memset(chip->IO_ADDR_R, 0xff, HINFC504_BUFFER_BASE_ADDRESS_LEN);
-+
-+	hinfc_write(host, SET_HINFC504_PWIDTH(HINFC504_W_LATCH,
-+		    HINFC504_R_LATCH, HINFC504_RW_LATCH), HINFC504_PWIDTH);
-+
-+	/* enable dma irq */
-+	hinfc_write(host, HINFC504_INTEN_DMA, HINFC504_INTEN);
-+}
-+
-+static struct nand_ecclayout nand_ecc_2K_1bit =3D {
-+	.oobfree =3D { {24, 40} }
-+};
-+
-+static struct nand_ecclayout nand_ecc_2K_16bits =3D {
-+	.oobavail =3D 6,
-+	.oobfree =3D { {2, 6} },
-+};
-+
-+static int hisi_nfc_ecc_probe(struct hinfc_host *host)
-+{
-+	struct nand_chip *chip =3D &host->chip;
-+	unsigned int flag;
-+
-+	chip->ecc.read_page =3D hisi_nand_read_page_hwecc;
-+	chip->ecc.write_page =3D hisi_nand_write_page_hwecc;
-+
-+	switch (host->ecc_bits) {
-+	case 1:
-+		chip->ecc.layout =3D &nand_ecc_2K_1bit;
-+		chip->ecc.strength =3D 1;
-+		chip->ecc.size =3D 512;
-+		break;
-+	case 6:
-+		chip->ecc.layout =3D &nand_ecc_2K_16bits;
-+		chip->ecc.strength =3D 16;
-+		chip->ecc.size =3D 1024;
-+	}
-+
-+	flag =3D hinfc_read(host, HINFC504_CON);
-+	/* add ecc type configure */
-+	flag |=3D ((host->ecc_bits & HINFC504_CON_ECCTYPE_MASK)
-+						<< HINFC504_CON_ECCTYPE_SHIFT);
-+	hinfc_write(host, flag, HINFC504_CON);
-+
-+	/* enable ecc irq */
-+	flag =3D hinfc_read(host, HINFC504_INTEN) & 0xfff;
-+	hinfc_write(host, flag | HINFC504_INTEN_UE | HINFC504_INTEN_CE,
-+		    HINFC504_INTEN);
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_probe(struct platform_device *pdev)
-+{
-+	int ret =3D 0, irq, buswidth, flag, max_chips =3D HINFC504_MAX_CHIP;
-+	struct device *dev =3D &pdev->dev;
-+	struct hinfc_host *host;
-+	struct nand_chip  *chip;
-+	struct mtd_info   *mtd;
-+	struct resource	  *res;
-+	struct device_node *np =3D dev->of_node;
-+	struct mtd_part_parser_data ppdata;
-+
-+	host =3D devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-+	if (!host)
-+		return -ENOMEM;
-+	host->dev =3D dev;
-+
-+	platform_set_drvdata(pdev, host);
-+	chip =3D &host->chip;
-+	mtd  =3D &host->mtd;
-+
-+	irq =3D platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "no IRQ resource defined\n");
-+		ret =3D -ENXIO;
-+		goto err_res;
-+	}
-+
-+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	host->iobase =3D devm_ioremap_resource(dev, res);
-+	if (IS_ERR(host->iobase)) {
-+		ret =3D PTR_ERR(host->iobase);
-+		dev_err(dev, "devm_ioremap_resource[0] fail\n");
-+		goto err_res;
-+	}
-+
-+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	chip->IO_ADDR_R =3D chip->IO_ADDR_W =3D devm_ioremap_resource(dev, re=
-s);
-+	if (IS_ERR(chip->IO_ADDR_R)) {
-+		ret =3D PTR_ERR(chip->IO_ADDR_R);
-+		dev_err(dev, "devm_ioremap_resource[1] fail\n");
-+		goto err_res;
-+	}
-+
-+	mtd->priv		=3D chip;
-+	mtd->owner		=3D THIS_MODULE;
-+	mtd->name		=3D "hisi_nand";
-+
-+	chip->priv		=3D host;
-+	chip->cmdfunc		=3D hisi_nfc_cmdfunc;
-+	chip->select_chip	=3D hisi_nfc_select_chip;
-+	chip->read_byte		=3D hisi_nfc_read_byte;
-+	chip->read_word		=3D hisi_nfc_read_word;
-+	chip->write_buf		=3D hisi_nfc_write_buf;
-+	chip->read_buf		=3D hisi_nfc_read_buf;
-+	chip->chip_delay	=3D HINFC504_CHIP_DELAY;
-+
-+	chip->ecc.mode =3D of_get_nand_ecc_mode(np);
-+	/* read ecc-bits from dts */
-+	of_property_read_u32(np, "hisi,nand-ecc-bits", &host->ecc_bits);
-+
-+	buswidth =3D of_get_nand_bus_width(np);
-+	if (buswidth =3D=3D 16)
-+		chip->options |=3D NAND_BUSWIDTH_16;
-+
-+	hisi_nfc_host_init(host);
-+
-+	ret =3D devm_request_irq(dev, irq, hinfc_irq_handle, IRQF_DISABLED,
-+				"nandc", host);
-+	if (ret) {
-+		dev_err(dev, "failed to request IRQ\n");
-+		goto err_irq;
-+	}
-+
-+	ret =3D nand_scan_ident(mtd, max_chips, NULL);
-+	if (ret) {
-+		ret =3D -ENODEV;
-+		goto err_ident;
-+	}
-+
-+	host->buffer =3D dma_alloc_coherent(dev, mtd->writesize + mtd->oobsiz=
-e,
-+		&host->dma_buffer, GFP_KERNEL);
-+	if (!host->buffer) {
-+		dev_err(dev, "Can't malloc memory for NAND driver.\n");
-+		ret =3D -ENOMEM;
-+		goto err_buf;
-+	}
-+	host->dma_oob =3D host->dma_buffer + mtd->writesize;
-+	memset(host->buffer, 0xff, mtd->writesize + mtd->oobsize);
-+
-+	flag =3D hinfc_read(host, HINFC504_CON);
-+	flag &=3D ~(HINFC504_CON_PAGESIZE_MASK << HINFC504_CON_PAGEISZE_SHIFT=
-);
-+	switch (mtd->writesize) {
-+	case 2048:
-+		flag |=3D (0x001 << HINFC504_CON_PAGEISZE_SHIFT);
-+	/* add more pagesize support
-+	 * default pagesize has been set in hisi_nfc_host_init
-+	 */
-+	}
-+	hinfc_write(host, flag, HINFC504_CON);
-+
-+	if (chip->ecc.mode =3D=3D NAND_ECC_HW)
-+		hisi_nfc_ecc_probe(host);
-+
-+	nand_scan_tail(mtd);
-+
-+	ppdata.of_node =3D np;
-+	ret =3D mtd_device_parse_register(mtd, NULL, &ppdata, NULL, 0);
-+	if (ret) {
-+		dev_err(dev, "Err MTD partition=3D%d\n", ret);
-+		goto err_mtd;
-+	}
-+
-+	return 0;
-+
-+err_mtd:
-+	nand_release(mtd);
-+err_ident:
-+err_irq:
-+err_buf:
-+	if (host->buffer)
-+		dma_free_coherent(dev, mtd->writesize + mtd->oobsize,
-+				  host->buffer, host->dma_buffer);
-+err_res:
-+	return ret;
-+}
-+
-+static int hisi_nfc_remove(struct platform_device *pdev)
-+{
-+	struct hinfc_host *host =3D platform_get_drvdata(pdev);
-+	struct mtd_info *mtd =3D &host->mtd;
-+
-+	nand_release(mtd);
-+	dma_free_coherent(&pdev->dev, mtd->writesize + mtd->oobsize,
-+			  host->buffer, host->dma_buffer);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int hisi_nfc_suspend(struct platform_device *pdev,
-+			       pm_message_t state)
-+{
-+	struct hinfc_host *host =3D platform_get_drvdata(pdev);
-+
-+	while ((hinfc_read(host, HINFC504_STATUS) & 0x1) =3D=3D 0x0)
-+		;
-+
-+	while ((hinfc_read(host, HINFC504_DMA_CTRL))
-+		& HINFC504_DMA_CTRL_DMA_START)
-+		_cond_resched();
-+
-+	return 0;
-+}
-+
-+static int hisi_nfc_resume(struct platform_device *pdev)
-+{
-+	int cs;
-+	struct hinfc_host *host =3D platform_get_drvdata(pdev);
-+	struct nand_chip *chip =3D &host->chip;
-+
-+	for (cs =3D 0; cs < chip->numchips; cs++)
-+		hisi_nfc_send_cmd_reset(host, cs);
-+	hinfc_write(host, SET_HINFC504_PWIDTH(HINFC504_W_LATCH,
-+		    HINFC504_R_LATCH, HINFC504_RW_LATCH), HINFC504_PWIDTH);
-+
-+	return 0;
-+}
-+#endif
-+static SIMPLE_DEV_PM_OPS(hisi_nfc_pm_ops, hisi_nfc_suspend, hisi_nfc_r=
-esume);
-+
-+static const struct of_device_id nfc_id_table[] =3D {
-+	{ .compatible =3D "hisilicon,504-nfc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, nfc_id_table);
-+
-+static struct platform_driver hisi_nfc_driver =3D {
-+	.driver =3D {
-+		.name  =3D "hisi_nand",
-+		.of_match_table =3D of_match_ptr(nfc_id_table),
-+		.pm =3D &hisi_nfc_pm_ops,
-+	},
-+	.probe		=3D hisi_nfc_probe,
-+	.remove		=3D hisi_nfc_remove,
-+};
-+
-+module_platform_driver(hisi_nfc_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Zhiyong Cai");
-+MODULE_AUTHOR("Zhou Wang");
-+MODULE_DESCRIPTION("Hisilicon Nand Flash Controller Driver");
---=20
-1.7.9.5
+> >>> querying the panel hardware directly.
+> >>=20
+> >> My preference for this would be that we either add this to some ex=
+isting
+> >> structure (struct drm_display_info seems like a good candidate) or=
+ if
+> >> the number of parameters grows out of hands, then maybe even intro=
+duce a
+> >> new type of device that's specific for the interface. DRM panels a=
+re an
+> >> abstraction for panels, that is, interface-agnostic, and if we sta=
+rt
+> >> exposing interface specific parameters things will start to become=
+ very
+> >> unwieldy.
+> >=20
+> > I agree with the goal of keeping drm_panel interface-agnostic. Howe=
+ver,
+> > one way or another, interface parameters will need to be communicat=
+ed
+> > between the panel driver and the controller driver. My preference, =
+if we
+> > need to extend the number and/or scope of parameters beyond what
+> > drm_display_info could reasonably contain, would be to implement a =
+new
+> > drm_panel operation to query/configure interface parameters, using =
+a
+> > structure that contains the interface type and a union of type-spec=
+ific
+> > structures. This would keep the API generic in the sense of not req=
+uiring
+> > explicit knowledge of all interfaces in the drivers, while offering=
+ the
+> > flexibility we need with a way to easily detect the interface type =
+at
+> > runtime and react on unknown/unsupported types.
+>
+> That's exactly what I was hoping could be avoided. If instead we mode=
+led
+> the interface type as a bus, we could for example have an lvds_bus al=
+ong
+> with an lvds_device and then use that as the natural place to store
+> these properties. Much like we do for DSI.
+
+And I believe that's what we should avoid ;-) First of all, let's not f=
+orget=20
+that Linux models control busses, not data busses. DSI is a special cas=
+e as it=20
+combines the control and data busses, but in the general case the same=20=
+
+implementation isn't possible. An LVDS panel controlled through I2C nee=
+ds to=20
+be an I2C device sitting on an I2C bus.
+
+Then, I believe it would make all drivers simpler if we had a single ob=
+ject=20
+type to deal with, with proper abstractions for bus types. A drm_panel =
+that=20
+can model panels regardless of the data bus type, with one operation th=
+at=20
+conveys bus-specific information, makes storing the objects and communi=
+cating=20
+with them simpler than having to deal with different kind of devices.
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--nextPart2571326.jt6PdmGK5u
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABAgAGBQJTxQuOAAoJEIkPb2GL7hl1IKcH/27zUiG9x+SL71RDxmJoDlKt
+vX7JbLA5i2zKBnsZeZH/jCLJMXHj/LBXsvnw+C5GLAxM6LSO97TyTz8GDAyCxnlg
++dE3WhGnFfRYrNpYNUtqTP9YHHu8/NRZC/zvqO1PUNddBVdovf9j6+WfceirQYX4
+2YCmazGAyWCOJJjkF5MRlqfZNB7y/KEY8o43n+sT/6N7BQ+oSxRvA93RmUPUWUg8
+0VXo0BlJznFe/DtXh2cVA3vdLdhLGR1dsbER+0/MLrCe5zkIV2gJ7TlBxbol5rei
+B7T9QGa7L97748OFoPHRM8lfWG/JJHsvOB8UEaR7DBWpw5TkRi2aEyJhNc9meT0=
+=UT4u
+-----END PGP SIGNATURE-----
+
+--nextPart2571326.jt6PdmGK5u--
+
+
+--===============1554947283==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1554947283==--
