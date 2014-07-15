@@ -1,88 +1,62 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv6 2/2] dt/bindings: Add the DT binding documentation for
- endianness
-Date: Tue, 15 Jul 2014 05:36:54 +0000
-Message-ID: <54b4550212bb402f957f75bded781e5e@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
- <1405398183-31345-3-git-send-email-Li.Xiubo@freescale.com>
- <53C4BD24.9000503@gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip
+ support
+Date: Tue, 15 Jul 2014 14:37:21 +0900
+Message-ID: <53C4BE11.1020302@samsung.com>
+References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
+ <53B4E7D6.6000204@suse.de>
+ <CAD=FV=UH=sgZKFxH35qfBb-XJGJ9ctSSdVRhTEkt6zk0f+R4mA@mail.gmail.com>
+ <CAEC9eQO+j8iikztW4Q47xKRM71C6qGaCuBTdSW=odKG0kRsWBg@mail.gmail.com>
+ <CAOesGMgvLr+14tFP3N-kTwH9wJ8+1=OXoiEo9_KFDyOSFpK7nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53C4BD24.9000503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAOesGMgvLr+14tFP3N-kTwH9wJ8+1=OXoiEo9_KFDyOSFpK7nw@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Doug Anderson <dianders@chromium.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Andrzej Hajda <a.hajda@samsung.com>, cpgs@samsung.com, Ajay kumar <ajaynumb@gmail.com>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNp?= =?UTF-8?B?bg==?= <marcheu@chromium.org>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> > +For one device driver, which will run in different scenarios above
-> > +on different SoCs using the devicetree, we need one way to simplify
-> > +this.
-> > +
-> > +Required properties:
-> > +- {big,little}-endian: these are boolean properties, if absent
-> > +  meaning that the CPU and the Device are in the same endianness mode,
-> > +  these properties are for register values and all the buffers only.
-> > +
-> 
-> It would be more readable if its like this:
-> Required properties:
-> - {big,little}-endian:	These are boolean properties, if absent meaning
-> 			that the CPU and the Device are in the same
-> 			endianness mode, these propperties are for
-> 			values and all the buffers only.
-> 
-
-Yes, it is.
-
-See the next verison.
-
-Thanks,
-
-BRs
-Xiubo
-
-
-
-> > +Examples:
-> > +Scenario 1 : CPU in LE mode & device in LE mode.
-> > +dev: dev@40031000 {
-> > +	      compatible = "name";
-> > +	      reg = <0x40031000 0x1000>;
-> > +	      ...
-> > +};
-> > +
-> > +Scenario 2 : CPU in LE mode & device in BE mode.
-> > +dev: dev@40031000 {
-> > +	      compatible = "name";
-> > +	      reg = <0x40031000 0x1000>;
-> > +	      ...
-> > +	      big-endian;
-> > +};
-> > +
-> > +Scenario 3 : CPU in BE mode & device in BE mode.
-> > +dev: dev@40031000 {
-> > +	      compatible = "name";
-> > +	      reg = <0x40031000 0x1000>;
-> > +	      ...
-> > +};
-> > +
-> > +Scenario 4 : CPU in BE mode & device in LE mode.
-> > +dev: dev@40031000 {
-> > +	      compatible = "name";
-> > +	      reg = <0x40031000 0x1000>;
-> > +	      ...
-> > +	      little-endian;
-> > +};
-> 
-> 
-> --
-> Regards,
-> Varka Bhadram.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxNOuFhCAwN+yblCAxNeydvCAwMjoyMiwgT2xvZiBKb2hhbnNzb24gd3JvdGU6Cj4gSW5r
+aSwKPiAKPiBZb3UgaGF2ZSBhY2tzLCBhbmQgeW91IGhhdmUgdGhlIHRlc3RlZC1ieXMgeW91IHJl
+cXVlc3RlZC4gQ2FuIHlvdQo+IHBsZWFzZSBwaWNrIHRoaXMgdXAgcXVpY2tseSBzbyB0aGF0IHdl
+IGNhbiBoYXZlIGdyYXBoaWNzIHdvcmtpbmcgd2l0aAo+IGFuIHVwc3RyZWFtIGtlcm5lbCBvbiBj
+aHJvbWVib29rcz8KPiAKPiBEYXZlLCBpZiBJbmtpIGtlZXBzIGRyYWdnaW5nIGhpcyBmZWV0IGxp
+a2UgdGhpcyBjYW4geW91IHBsZWFzZSBhcHBseQo+IHRoaXMgc2VyaWVzIGRpcmVjdGx5PyBUaGVz
+ZSBkZWxheXMgYXJlIHJpZGljdWxvdXMgYW5kIGl0J3MgaHVydGluZwo+IGZvcndhcmQgcHJvZ3Jl
+c3Mgb24gdGhlIHBsYXRmb3JtIGFzIGEgd2hvbGUuCj4gCgpIaSwKCkkgYW0gbm90IHJlYWxseSBk
+cmFnZ2luZy4gV2UgbmVlZCB0byB3YWl0IGZvciBBQ0tzIG9mIG90aGVyIG1haW50YWluZXJzOgpw
+bGVhc2Uga25vdyB0aGF0IHRoaXMgcGF0Y2ggc2VyaWVzIGluY2x1ZGVzIG5vbi1FeHlub3MgcGFy
+dC4KCkZvciB0aGlzLCBBamF5IHJlcXVlc3RlZCBhbHJlYWR5IGl0IHRvIERhbmllbCwgVGhpZXJy
+eSwgYW5kIFJvYiBhIHdlZWsKYWdvLiBJZiB0aGVyZSBhcmUgbm8gYW55IEFDS3MgZnJvbSB0aGVt
+IHVudGlsIHRoaXMgd2VlaywgSSBwbGFuIHRvIHBpY2sKdGhlbSB1cC4KClNvIHBsZWFzZSB3YWl0
+LgoKVGhhbmtzLApJbmtpIERhZQoKPiAKPiBUaGFua3MsCj4gCj4gLU9sb2YKPiAKPiAKPiBPbiBU
+dWUsIEp1bCA4LCAyMDE0IGF0IDExOjExIFBNLCBBamF5IGt1bWFyIDxhamF5bnVtYkBnbWFpbC5j
+b20+IHdyb3RlOgo+PiBIaSBEYW5pZWwsIFRoaWVycnkgYW5kIFJvYiwKPj4KPj4gQ3VycmVudGx5
+LCB0aGUgZm9sbG93aW5nIGJvYXJkcyBhcmUgd29ya2luZyBmaW5lIHdpdGggdGhlIGJyaWRnZSBj
+aGlwIHNlcmllczoKPj4gLSBzbm93Cj4+IC0gc3ByaW5nCj4+IC0gcGVhY2hfcGl0Cj4+IC0gcGVh
+Y2hfcGkKPj4gQW5kLCBJIGRpZCBjaGFuZ2UgbXkgb3JpZ2luYWwgcGF0Y2hzZXQgYmFzZWQgb24g
+eW91ciBjb21tZW50cyBoZXJlOgo+PiAoMSkgW1JGQyBWMiAwLzNdIGRybS9icmlkZ2U6IHBhbmVs
+IGFuZCBjaGFpbmluZwo+PiAgICAgICAgIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGlu
+dXgtc2Ftc3VuZy1zb2MvbXNnMzAxNjAuaHRtbAo+PiAoMikgW1JGQyBWMyAwLzNdIGRybS9icmlk
+Z2U6IHBhbmVsIGFuZCBjaGFpbmluZwo+PiAgICAgICAgIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQv
+bGlzdHMvbGludXgtc2Ftc3VuZy1zb2MvbXNnMzA1MDcuaHRtbAo+Pgo+PiBJZiB5b3UgdGhpbmsg
+dGhpcyBpcyBub3QgdGhlIHJpZ2h0IHdheSBvZiBkb2luZyBpdCwgcGxlYXNlIGNvbWUgZm9yd2Fy
+ZCB3aXRoCj4+IG1vcmUgc3VnZ2VzdGlvbnMsIG9yIGtpbmRseSBBQ0sgaXQuCj4+IEkgYW0ganVz
+dCB3b25kZXJpbmcgaG93IGxvbmcgY2FuIEkga2VlcCB3YWl0aW5nIGZvciBjb21tZW50cz8KPj4K
+Pj4gUmVnYXJkcywKPj4gQWpheQo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlz
+dDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPj4gdGhlIGJvZHkg
+b2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPj4gTW9yZSBtYWpvcmRv
+bW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4g
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
