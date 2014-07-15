@@ -1,98 +1,96 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 3/3] ARM: DTS: fix the chip select gpios definition in the SPI
- nodes
-Date: Tue, 15 Jul 2014 17:51:00 +0530
-Message-ID: <1405426860-18404-4-git-send-email-ch.naveen@samsung.com>
-References: <1405426860-18404-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1405426860-18404-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: [PATCH 1/1] video/atmel_lcdfb: Introduce regulator support
+Date: Tue, 15 Jul 2014 14:33:25 +0200
+Message-ID: <1405427605-5288-1-git-send-email-alexander.stein@systec-electronic.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch replaces the "cs-gpio" from "controller-data" node
-as was specified in the old binding and use the standard
-"cs-gpios" property expected by the SPI core as is defined in
-the new binding.
+This adds regulator support to enable/disable the LCD voltage, using
+'lcd-supply' as regulator name.
 
-Respective changes are preposed to spi-s3c64xx.c driver.
-@ http://www.spinics.net/lists/linux-samsung-soc/msg32282.html
-
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Cc: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
 ---
-This change is being reviewed @
+ .../devicetree/bindings/video/atmel,lcdc.txt         |  3 +++
+ drivers/video/fbdev/atmel_lcdfb.c                    | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-http://www.mail-archive.com/devicetree@vger.kernel.org/msg34498.html
-
- arch/arm/boot/dts/exynos4210-smdkv310.dts |    2 +-
- arch/arm/boot/dts/exynos4412-trats2.dts   |    2 +-
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 636d166..676e6e0 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -168,6 +168,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+index 1ec175eddca8..5ae0faf443c3 100644
+--- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
++++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+@@ -20,6 +20,9 @@ Required nodes:
+ - default-mode: a videomode within the display with timing parameters
+ 	as specified below.
  
- 	spi_2: spi@13940000 {
-+		cs-gpios = <&gpc1 2 0>;
- 		status = "okay";
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
++
+ Example:
  
- 		w25x80@0 {
-@@ -178,7 +179,6 @@
- 			spi-max-frequency = <1000000>;
+ 	fb0: fb@0x00500000 {
+diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
+index d36e830d6fc6..59fd2e062d4f 100644
+--- a/drivers/video/fbdev/atmel_lcdfb.c
++++ b/drivers/video/fbdev/atmel_lcdfb.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <video/of_display_timing.h>
++#include <linux/regulator/consumer.h>
+ #include <video/videomode.h>
  
- 			controller-data {
--				cs-gpio = <&gpc1 2 0>;
- 				samsung,spi-feedback-delay = <0>;
- 			};
+ #include <mach/cpu.h>
+@@ -60,6 +61,7 @@ struct atmel_lcdfb_info {
+ 	struct atmel_lcdfb_pdata pdata;
  
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 7787844..11967f4 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -589,6 +589,7 @@
- 	spi_1: spi@13930000 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&spi1_bus>;
-+		cs-gpios = <&gpb 5 0>;
- 		status = "okay";
+ 	struct atmel_lcdfb_config *config;
++	struct regulator	*reg_lcd;
+ };
  
- 		s5c73m3_spi: s5c73m3 {
-@@ -596,7 +597,6 @@
- 			spi-max-frequency = <50000000>;
- 			reg = <0>;
- 			controller-data {
--				cs-gpio = <&gpb 5 0>;
- 				samsung,spi-feedback-delay = <2>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a794a70..0c6433a 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -316,6 +316,7 @@
- 	};
+ struct atmel_lcdfb_power_ctrl_gpio {
+@@ -302,10 +304,24 @@ static void init_contrast(struct atmel_lcdfb_info *sinfo)
  
- 	spi_1: spi@12d30000 {
-+		cs-gpios = <&gpa2 5 0>;
- 		status = "okay";
+ static inline void atmel_lcdfb_power_control(struct atmel_lcdfb_info *sinfo, int on)
+ {
++	int ret;
+ 	struct atmel_lcdfb_pdata *pdata = &sinfo->pdata;
  
- 		w25q80bw@0 {
-@@ -326,7 +327,6 @@
- 			spi-max-frequency = <1000000>;
+ 	if (pdata->atmel_lcdfb_power_control)
+ 		pdata->atmel_lcdfb_power_control(pdata, on);
++	else if (sinfo->reg_lcd) {
++		if (on) {
++			ret = regulator_enable(sinfo->reg_lcd);
++			if (ret)
++				dev_err(&sinfo->pdev->dev,
++					"lcd regulator enable failed:	%d\n", ret);
++		} else {
++			ret = regulator_disable(sinfo->reg_lcd);
++			if (ret)
++				dev_err(&sinfo->pdev->dev,
++					"lcd regulator disable failed: %d\n", ret);
++		}
++	}
+ }
  
- 			controller-data {
--				cs-gpio = <&gpa2 5 0>;
- 				samsung,spi-feedback-delay = <0>;
- 			};
+ static struct fb_fix_screeninfo atmel_lcdfb_fix __initdata = {
+@@ -1192,6 +1208,10 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
+ 	if (!sinfo->config)
+ 		goto free_info;
  
++	sinfo->reg_lcd = devm_regulator_get(&pdev->dev, "lcd");
++	if (IS_ERR(sinfo->reg_lcd))
++		sinfo->reg_lcd = NULL;
++
+ 	info->flags = ATMEL_LCDFB_FBINFO_DEFAULT;
+ 	info->pseudo_palette = sinfo->pseudo_palette;
+ 	info->fbops = &atmel_lcdfb_ops;
 -- 
-1.7.9.5
+1.8.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
