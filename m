@@ -1,90 +1,102 @@
-From: Antonio Borneo <borneo.antonio@gmail.com>
-Subject: Re: [PATCH] iio: add support of the max5821
-Date: Tue, 15 Jul 2014 16:56:17 +0800
-Message-ID: <CAAj6DX2Tnt6=CuNAhkq_D=pknbEv=j7tf7Dtm7aoCm3gMu+RQw@mail.gmail.com>
-References: <1405359159-12379-1-git-send-email-tremyfr@yahoo.fr>
-	<53C43BD6.9030102@kernel.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/2] devicetree: Add Cadence WDT devicetree bindings
+ documentation
+Date: Tue, 15 Jul 2014 09:59:14 +0100
+Message-ID: <20140715085914.GT26465@leverpostej>
+References: <1405340169-2820-1-git-send-email-harinik@xilinx.com>
+ <1405340169-2820-2-git-send-email-harinik@xilinx.com>
+ <20140714150749.GH26465@leverpostej>
+ <CAFcVECK9U_3+3htTAu7r-agi43mC9Z2pqHeS9TpHTbZ3=o-o8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53C43BD6.9030102@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Philippe Reynes <tremyfr@yahoo.fr>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, armadeus-forum@lists.sourceforge.net, devicetree@vger.kernel.org, julien.boibessot@free.fr
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFcVECK9U_3+3htTAu7r-agi43mC9Z2pqHeS9TpHTbZ3=o-o8w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harinikatakamlinux@gmail.com>
+Cc: "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 4:21 AM, Jonathan Cameron <jic23@kernel.org> wrote:
-> On 14/07/14 18:32, Philippe Reynes wrote:
+On Tue, Jul 15, 2014 at 07:39:40AM +0100, Harini Katakam wrote:
+> Hi Mark,
+> 
+> On Mon, Jul 14, 2014 at 8:37 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Mon, Jul 14, 2014 at 01:16:09PM +0100, Harini Katakam wrote:
+> >> Add cadence-wdt bindings documentation.
+> >>
+> >> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> >> ---
+> >>
+> >> v3 changes:
+> >> - Change reset property type and improve description.
+> >> - Improve description of clocks and interrupts.
+> >> - Use watchdog@ in the example.
+> >> - Use only cdns compatible string for now.
+> >>
+> >> v2:
+> >> No changes
+> >>
+> >> ---
+> >>  .../devicetree/bindings/watchdog/cadence-wdt.txt   |   27 ++++++++++++++++++++
+> >>  1 file changed, 27 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+> >> new file mode 100644
+> >> index 0000000..ab23e38
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+> >> @@ -0,0 +1,27 @@
+> >> +Zynq Watchdog Device Tree Bindings
+> >> +-------------------------------------------
+> >> +
+> >> +Required properties:
+> >> +- compatible         : Should be "cdns,wdt-r1p2".
+> >> +- clocks             : Input clock specifier. This should be the ref clk.
+> >
+> > This wording makes it sound like the watchdog block has more than one
+> > clock input. Does it?
+> 
+> It doesn't. It has one APB clock - named pclk.
 
-Hi Jonathan,
+Ok. Could we refer to that by name in the description then? The phrase
+"This should be the ref clk" makes it sound like there are other clocks
+we aren't describing.
 
-regarding your comment below
+> >
+> >> +- reg                        : Physical base address and size of WDT registers map.
+> >> +- interrupts         : Property with a value describing the interrupt
+> >> +                       number. This interrupt is used for indication
+> >> +                       when the watchdog times out.
+> >
+> > Just say "the watchdog timeout interrupt", or (better) use the name of
+> > the interrupt from the documentation.
+> 
+> OK. Yeah I'll do that. The interrupt name is wd_irq.
 
-<snip>
->> +static int max5821_get_value(struct iio_dev *indio_dev,
->> +                            int *val, int channel)
->> +{
->> +       struct max5821_data *data = iio_priv(indio_dev);
->> +       struct i2c_client *client = data->client;
->> +       u8 outbuf[1];
->> +       u8 inbuf[2];
->> +       int ret;
->> +
->> +       switch (channel) {
->> +       case 0:
->> +               outbuf[0] = MAX5821_READ_DAC_A_COMMAND;
->> +               break;
->> +       case 1:
->> +               outbuf[0] = MAX5821_READ_DAC_B_COMMAND;
->> +               break;
->> +       default:
->> +               return -EINVAL;
->> +       }
->> +
->> +       ret = i2c_master_send(client, outbuf, 1);
->> +       if (ret < 0)
->> +               return ret;
->> +       else if (ret != 1)
->> +               return -EIO;
->> +
->> +       ret = i2c_master_recv(client, inbuf, 2);
->> +       if (ret < 0)
->> +               return ret;
->> +       else if (ret != 2)
->> +               return -EIO;
->
-> It somehow always feels like this error handling should be in the
-> i2c core.  Just how often does it make sense to receive too little
-> from and i2c transaction?  Anyhow, such is life ;)
+That sounds good to me.
+ 
+> >
+> >> +- interrupt-parent   : Must be core interrupt controller.
+> >> +
+> >> +Optional properties
+> >> +- reset                      : If this property exists, then a reset is done
+> >> +                       when watchdog times out.
+> >
+> > That's a bit of an ambiguous name (too easy to misconstrue as a reset
+> > device reference). Do any other watchdogs have similar properties?
+> 
+> I could change it to "reset-on-timeout" if that better.
+> From the documentation of other drivers, there seems to be a reset-type
+> property in atmel. Dint find any other reset related properties.
+> 
 
-You wrote:
+Ok. reset-on-timeout sounds like a better property name to avoid
+possible confusion.
 
-> You could set this up to use i2c_transfer instead of separating it like
-> this.
-
-Accordingly to:
-- Documentation/i2c/i2c-protocol
-- Documentation/i2c/writing-clients
-a sequence of i2c_master_send() and i2c_master_recv() is not fully
-equivalent to a single i2c_transfer(); in latter case the transactions
-would be combined and the stop bit in between would be removed.
-
-I checked the datasheet of max5821 and it reports that
-"Each transmit sequence is framed by a START (S) or REPEATED START
-(Sr) condition and a STOP (P) condition."
-So combined transaction should work with this device.
-
-But we have few I2C controllers that cannot send combined transactions
-and would return error.
-E.g. in drivers/i2c/busses/i2c-powermac.c
-i2c_powermac_master_xfer() returns -EOPNOTSUPP when num!=1.
-
-What is the proper way to address this:
-- use combine transactions, since supported by majority of (but not
-all) controllers?
-or
-- keep individual transactions, if not strictly required by the
-protocol of the I2C device?
+That said, what happens if we don't specify the device should reset the
+system (but have a timeout-sec property)?
 
 Thanks,
-Antonio
+Mark.
