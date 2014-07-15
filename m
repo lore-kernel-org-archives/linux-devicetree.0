@@ -1,60 +1,105 @@
 From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
- driver
-Date: Tue, 15 Jul 2014 19:22:27 +0200
-Message-ID: <53C56353.2040902@samsung.com>
-References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
- <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
- <53C55D17.90109@samsung.com>
- <CAHfPSqA5MMtaY5kb85xmZXkN62a+otgDAM93Gxn9d9fHv39k=g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] spi: s3c64xx: move "cs-gpio" from subnode to SPI DT
+ node
+Date: Tue, 15 Jul 2014 19:30:08 +0200
+Message-ID: <53C56520.8030801@samsung.com>
+References: <1405426860-18404-1-git-send-email-ch.naveen@samsung.com>
+ <1405426860-18404-2-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAHfPSqA5MMtaY5kb85xmZXkN62a+otgDAM93Gxn9d9fHv39k=g@mail.gmail.com>
+In-reply-to: <1405426860-18404-2-git-send-email-ch.naveen@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15.07.2014 19:21, Naveen Krishna Ch wrote:
-> Hello Tomasz,
-> 
-> On 15 July 2014 22:25, Tomasz Figa <t.figa@samsung.com> wrote:
->> Hi Naveen,
->>
->> On 14.07.2014 07:41, Naveen Krishna Chatradhi wrote:
->>> Since, (3146bee spi: s3c64xx: Added provision for dedicated cs pin)
->>>
->>> spi-s3c64xx.c driver expects
->>> 1. chip select gpios from "cs-gpio"(singular) under the
->>>    "controller-data" node of the client/slave device of the SPI.
->>
->> Please work a bit more on readability of your commit messages,
->> especially in terms of using correct terminology to avoid unnecessary
->> confusion.
->>
->> s/'chip select gpios'/'chip select GPIO pins'/
->> s/'"cs-gpio"(singular)'/'"cs-gpio" property'/
->> s/'client/slave device of the SPI'/'SPI device'/
-> 
-> Sure, I'm working on that.
-> 
->>
->> More things like this follow in rest of the text below.
->>
->> Otherwise I believe the code after this patch does the right thing, so:
->>
->> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> 
-> I've submitted another patch set which does the same functionality
-> as this patch set. I believe the new series is more cleaner in terms of
-> patch separation and documentation.
-> 
-> Kindly, let me know your comments on that series.
-> http://www.spinics.net/lists/arm-kernel/msg347634.html
+Hi Naveen,
 
-Right. I noticed it just now and am looking at it.
+Please see my comments inline.
+
+On 15.07.2014 14:20, Naveen Krishna Chatradhi wrote:
+> This patch modifies the spi-s3c64xx.c driver to fetch the 
+> Chip select or Slave select gpio line property "cs-gpios"
+> from SPI node instead of "controller_data" subnode.
+> 
+> Rename the property "cs-gpio" to "cs-gpios" in accordance
+> with the SPI core. Such that s3c64xx.c can use spi->cs_gpio
+> instead of parsing the property in the driver.
+> 
+> Update the dt-bindings ion spi/spi-samsung.txt
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> ---
+> This patch is a rework of the change @
+> http://www.mail-archive.com/devicetree@vger.kernel.org/msg34500.html
+> 
+> I'm not sure if i can carry forward the other Signed-offs and Tested-bys
+
+[snip]
+
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 75a5696..72bfba6 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -764,12 +764,6 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> -	data_np = of_get_child_by_name(slave_np, "controller-data");
+> -	if (!data_np) {
+> -		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+> -		return ERR_PTR(-EINVAL);
+> -	}
+
+Do you need to move this code block?
+
+> -
+>  	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
+>  	if (!cs) {
+>  		of_node_put(data_np);
+> @@ -777,13 +771,17 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+>  	}
+>  
+>  	/* The CS line is asserted/deasserted by the gpio pin */
+> -	if (sdd->cs_gpio)
+> -		cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
+> +	cs->line = spi->cs_gpio;
+>  
+>  	if (!gpio_is_valid(cs->line)) {
+
+This check is wrong when native chip select is used. However I'm not
+sure how to distinguish this from a situation when invalid GPIO was
+specified, because cs->line will be -ENOENT in both cases. Mark, any ideas?
+
+>  		dev_err(&spi->dev, "chip select gpio is not specified or invalid\n");
+>  		kfree(cs);
+> -		of_node_put(data_np);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	data_np = of_get_child_by_name(slave_np, "controller-data");
+> +	if (!data_np) {
+> +		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> @@ -1077,7 +1075,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+>  	sdd->sfr_start = mem_res->start;
+>  	sdd->cs_gpio = true;
+>  	if (pdev->dev.of_node) {
+> -		if (!of_find_property(pdev->dev.of_node, "cs-gpio", NULL))
+> +		if (!of_find_property(pdev->dev.of_node, "cs-gpios", NULL))
+>  			sdd->cs_gpio = false;
+
+What is this boolean flag used for now? If cs->line now either contains
+a valid GPIO or a negative error, why gpio_is_valid() couldn't be used
+on it? I believe it was done correctly in previous version.
 
 Best regards,
 Tomasz
