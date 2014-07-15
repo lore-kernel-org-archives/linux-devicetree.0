@@ -1,76 +1,51 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v3] hwmon: pwm-fan: Add pwm-fan driver
-Date: Tue, 15 Jul 2014 18:49:47 +0530
-Message-ID: <53C52A73.8010307@gmail.com>
-References: <1405425092-553-1-git-send-email-k.debski@samsung.com>
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: Re: mwifiex card reset
+Date: Tue, 15 Jul 2014 15:25:17 +0200
+Message-ID: <CALtMJEBWVgxbc+Kqna41EBSc8Rwn=jFO-3BNjNWibvp6EQvAUg@mail.gmail.com>
+References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
+	<20140628052220.GG10407@us.netrek.org>
+	<20140628072322.GC7410@atomide.com>
+	<CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
+	<20140630061912.GA2461@atomide.com>
+	<53B1BAC1.3090902@zonque.org>
+	<477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
+	<20140701065721.GM24891@us.netrek.org>
+	<CA+NduCAuRFTQneJUBiKP2Aeq2HCxe71yxg_iDDStkNvhzRg-Rg@mail.gmail.com>
+	<CAD=FV=Xi5B2=tssgQSgjeKtYVcw-x9pS6Ci580M6OfroPCb+RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1405425092-553-1-git-send-email-k.debski@samsung.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
-Cc: t.figa@samsung.com, m.szyprowski@samsung.com, linux@roeck-us.net, tklauser@distanz.ch, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=Xi5B2=tssgQSgjeKtYVcw-x9pS6Ci580M6OfroPCb+RA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Olof Johansson <olof@lixom.net>, James Cameron <quozl@laptop.org>, Bing Zhao <bzhao@marvell.com>, Daniel Mack <daniel@zonque.org>, Tony Lindgren <tony@atomide.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2014 05:21 PM, Kamil Debski wrote:
-> The pwm-fan driver enables control of fans connected to PWM lines.
-> This driver uses the PWM framework, so it is compatible with all
-> PWM devices that provide drivers through the PWM framework.
+2014-07-01 17:09 GMT+02:00 Doug Anderson <dianders@chromium.org>:
+> +Olof who posted the patch that Yuvaraj referenced.
 >
-> Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> ---
-> Changes since v2:
-> - add CONFIG_PM_SLEEP around pwm_fan_suspend and pwm_fan_resume
-> Changes since v1:
-> - added documentation to Documentation/hwmon
-> - fix checkpatch errors
-> 	- added extra description to Kconfig
-> 	- removed whitespace errors
-> - include files rearranged to be in alphabetical order
-> - remove unused sysfs entry pwm1_enable
-> - changed the behavior of the set_pwm function
-> 	- when 0 PWM value is set pwm_disable is run
-> 	- pwm_config return value is checked for errors
-> - use of ATTRIBUTE_GROUPS was added
-> - removed "Not enouch memory" error message
-> - fixed probe return value in case of devm_of_pwm_get error
-> - changed hwmon_device_register_with_groups to
->    devm_hwmon_device_register_with_groups
-> - changes suspend/resume to use pwm_disable/enable
-> - removed unnecessary CONFIG_PM_SLEEP ifdefs
-> ---
->   .../devicetree/bindings/hwmon/pwm-fan.txt          |   12 ++
->   Documentation/hwmon/pwm-fan                        |   17 ++
->   drivers/hwmon/Kconfig                              |   11 ++
->   drivers/hwmon/Makefile                             |    1 +
->   drivers/hwmon/pwm-fan.c                            |  201 ++++++++++++++++++++
->   5 files changed, 242 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/pwm-fan.txt
->   create mode 100644 Documentation/hwmon/pwm-fan
->   create mode 100644 drivers/hwmon/pwm-fan.c
+> On Tue, Jul 1, 2014 at 5:20 AM, Yuvaraj Cd <yuvaraj.lkml@gmail.com> wrote:
+>> On Tue, Jul 1, 2014 at 12:27 PM, James Cameron <quozl@laptop.org> wrote:
+>>> On Mon, Jun 30, 2014 at 11:44:29PM -0700, Bing Zhao wrote:
+>>>> I may have missed something, but doesn't the MMC_POWER_OFF and
+>>>> MMC_POWER_ON|UP handling in controller driver help?
+>>>> Anyway the clocks/GPIOs/regulators are sort of platform
+>>>> dependent. Would it be better putting it in /arch/arm/mach-xxxxx/?
+>>>
+>>> Wouldn't device tree for mmc be better?
+>> I have come across same problem.Below is the thread in which more
+>> discussions happened on this.
+>>  http://patchwork.ozlabs.org/patch/312444/
+>> I am adding few more those who are interested in this solution.
 >
-> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> new file mode 100644
-> index 0000000..f534607
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> @@ -0,0 +1,12 @@
-> +Bindings for a fan connected to the PWM lines
-> +
-> +Required properties:
-> +- compatible: "pwm-fan"
-> +- pwms: the PWM that is used to control the PWM fan
->
-It would be more readable if it like this...
-Required properties:
-- compatible		: should be "pwm-fan"
-- pwms			: The PWM that is used to control the PWM fan
+> Thanks to Yuvaraj for referencing the old thread.
 
+http://www.spinics.net/lists/linux-mmc/msg26564.html
 
+Quite a read indeed
 
+Meanwhile I got a working prototype for omap_hsmmc/mwifiex based on this series:
+http://www.spinics.net/lists/linux-mmc/msg27228.html
 
--- 
-Regards,
-Varka Bhadram.
-
+I will post my patches, once the FDT format is set in stone, and Ulf
+has had some time to work on v2 of his series.
