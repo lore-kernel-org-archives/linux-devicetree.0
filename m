@@ -1,134 +1,172 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
-Date: Tue, 15 Jul 2014 12:38:58 +0200
-Message-ID: <CABxcv==yuWJYmSiVV=HELMdwi-8aAG-aiT9o12HUBp8uRaBxkQ@mail.gmail.com>
-References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
-	<1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
-	<20140714172524.GH6800@sirena.org.uk>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Tue, 15 Jul 2014 12:43:02 +0200
+Message-ID: <1645765.yCSTbHcZMC@avalon>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1417324.PxofUz16v0@avalon> <20140715103718.GB6616@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140714172524.GH6800@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: multipart/mixed; boundary="===============1350475062=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140715103718.GB6616@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-I agree that the commit message could have a better description and I
-understand your concerns. I'm not an SPI expert by any means but I did
-my best to review the patches and provide feedback to Naveen on the
-first iterations of the series.
+--===============1350475062==
+Content-Type: multipart/signed; boundary="nextPart6166125.pbvtJFaVzN"; micalg="pgp-sha1"; protocol="application/pgp-signature"
 
-On Mon, Jul 14, 2014 at 7:25 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Jul 14, 2014 at 11:11:44AM +0530, Naveen Krishna Chatradhi wrote:
->
->> @@ -812,6 +800,10 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
->>               spi->controller_data = cs;
->>       }
->>
->> +     /* For the non-DT platforms derive chip selects from controller data */
->> +     if (!spi->dev.of_node)
->> +             spi->cs_gpio = cs->line;
->> +
->>       if (IS_ERR_OR_NULL(cs)) {
->>               dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
->>               return -ENODEV;
->> @@ -819,17 +811,16 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
->>
->>       if (!spi_get_ctldata(spi)) {
->>               /* Request gpio only if cs line is asserted by gpio pins */
->> -             if (sdd->cs_gpio) {
->> -                     err = gpio_request_one(cs->line, GPIOF_OUT_INIT_HIGH,
->> -                                     dev_name(&spi->dev));
->> +             if (gpio_is_valid(spi->cs_gpio)) {
->
-> As previously mentioned gpio_is_valid() is *not* a direct substitute for
-> checking if the boolean flag cs_gpio has been set since 0 is a valid
-> GPIO on at least some of these platforms and as discussed several times
-> already some of the SoCs require the use of the built in chip select.
->
 
-Please correct me if I'm wrong but in this case I think that using
-gpio_is_valid(spi->cs_gpio) is the right thing to do. The SPI core
-will set spi->cs_gpio to -ENOENT if a Device Tree didn't use the
-"cs-gpios" property of if the format (explained in
-Documentation/devicetree/bindings/spi/spi-bus.txt) to specify a
-native/built-in line chip select is used:
+--nextPart6166125.pbvtJFaVzN
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-cs-gpios = <&gpio1 0 0> <0>
-cs0 : &gpio1 0 0
-cs1 : native
+Hi Thierry,
 
-So in that case gpio_is_valid(spi->cs_gpio) will return false which is
-what Naveen wants in his patch.
+On Tuesday 15 July 2014 12:37:19 Thierry Reding wrote:
+> On Tue, Jul 15, 2014 at 12:20:02PM +0200, Laurent Pinchart wrote:
+> > On Tuesday 15 July 2014 12:06:19 Boris BREZILLON wrote:
+> >> On Mon, 14 Jul 2014 12:05:43 +0200 Thierry Reding wrote:
+> >>> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote:
+> >>>> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoC=
+s
+> >>>> (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family) provides=
+ a
+> >>>> display controller device.
+> >>>>=20
+> >>>> The HLCDC block provides a single RGB output port, and only supp=
+orts
+> >>>> LCD panels connection to LCD panels for now.
+> >>>>=20
+> >>>> The atmel,panel property link the HLCDC RGB output with the LCD
+> >>>> panel connected on this port (note that the HLCDC RGB connector
+> >>>> implementation makes use of the DRM panel framework).
+> >>>>=20
+> >>>> Connection to other external devices (DRM bridges) might be adde=
+d
+> >>>> later by mean of a new atmel,xxx (atmel,bridge) property.
+> >>>>=20
+> >>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.c=
+om>
+> >>>> ---
+> >>>>=20
+> >>>>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++++=
+++++
+> >>>>  1 file changed, 59 insertions(+)
+> >>>>  create mode 100644
+> >>>>  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> >=20
+> > [snip]
+> >=20
+> >>>> + - atmel,panel: Should contain a phandle with 2 parameters.
+> >>>> +   The first cell is a phandle to a DRM panel device
+> >>>> +   The second cell encodes the RGB mode, which can take the
+> >>>> following values:
+> >>>> +   * 0: RGB444
+> >>>> +   * 1: RGB565
+> >>>> +   * 2: RGB666
+> >>>> +   * 3: RGB888
+> >>>=20
+> >>> These are properties of the panel and should be obtained from the=
 
-Now, a problem is that in the non-DT case the patch does not rely on
-the spi->cs_gpio value set by the SPI core but instead overwrites it
-with the value in cs->line. So as you said this would have been an
-issue if legacy non-DT board code used s3c64xx_spi_csinfo .line to
-specify that the built-in chip select should be used instead of a
-GPIO.
+> >>> panel directly rather than an additional cell in this specifier.
+> >>=20
+> >> Okay.
+> >> What's the preferred way of doing this ?
+> >> What about defining an rgb-mode property in the panel node.
+> >=20
+> > You could do that, but it won't help you much, as the HLCDC driver =
+must
+> > not parse properties from the panel node. You should instead extend=
+ the
+> > drm_panel API with a function to retrieve panel properties. The HLC=
+DC
+> > driver will then query the panel driver at runtime for the interfac=
+e
+> > type. The panel driver will get the information from hardcoded data=
+ in
+> > the driver, from DT or possibly in some cases by querying the panel=
 
-But looking at the board files that sets struct spi_board_info
-.controller_data to struct s3c64xx_spi_csinfo I see that the the .line
-field is actually used to specify a GPIO pin and not a chip select.
+> > hardware directly.
+>=20
+> My preference for this would be that we either add this to some exist=
+ing
+> structure (struct drm_display_info seems like a good candidate) or if=
 
-In fact there is only one user in mainline
-(arch/arm/mach-s3c64xx/mach-crag6410-module.c) that do this:
+> the number of parameters grows out of hands, then maybe even introduc=
+e a
+> new type of device that's specific for the interface. DRM panels are =
+an
+> abstraction for panels, that is, interface-agnostic, and if we start
+> exposing interface specific parameters things will start to become ve=
+ry
+> unwieldy.
 
-#define S3C64XX_GPC(_nr)      (S3C64XX_GPIO_C_START + (_nr))
+I agree with the goal of keeping drm_panel interface-agnostic. However,=
+ one=20
+way or another, interface parameters will need to be communicated betwe=
+en the=20
+panel driver and the controller driver. My preference, if we need to ex=
+tend=20
+the number and/or scope of parameters beyond what drm_display_info coul=
+d=20
+reasonably contain, would be to implement a new drm_panel operation to=20=
 
-static struct s3c64xx_spi_csinfo wm0010_spi_csinfo = {
-        .line = S3C64XX_GPC(3),
-};
+query/configure interface parameters, using a structure that contains t=
+he=20
+interface type and a union of type-specific structures. This would keep=
+ the=20
+API generic in the sense of not requiring explicit knowledge of all int=
+erfaces=20
+in the drivers, while offering the flexibility we need with a way to ea=
+sily=20
+detect the interface type at runtime and react on unknown/unsupported t=
+ypes.
 
-static struct spi_board_info wm1253_devs[] = {
-        [0] = {
-                .modalias       = "wm0010",
-                .max_speed_hz   = 26 * 1000 * 1000,
-                .bus_num        = 0,
-                .chip_select    = 0,
-                .mode           = SPI_MODE_0,
-                .irq            = S3C_EINT(4),
-                .controller_data = &wm0010_spi_csinfo,
-                .platform_data = &wm0010_pdata,
-        },
-};
+=2D-=20
+Regards,
 
-So, the .line field is used to specify a GPIO, not a chip select. So
-gpio_is_valid() should also be used to check that cs->line is a valid
-GPIO. If board file does not want to use a GPIO and wants to use a
-built-in chip select then it should either not use a struct
-s3c64xx_spi_csinfo at all or set .line to -ENOENT in order to be
-consistent with the SPI core.
+Laurent Pinchart
 
-Now, looking at this I realize that there is a bug in the spi-s3c64xx
-driver since it does not check if spi->controller_data is NULL in the
-non-DT case which I believe it can be true.
+--nextPart6166125.pbvtJFaVzN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-> In general it's quite hard to tie the description in the patch to the
-> code changes, not helped by the decision to do separate refactorings
-> like this conversion to gpio_is_valid() as part of the one patch.  The
-> description of the patch now makes some statements about what the
-> problem that's intended to be fixed is but it still doesn't seem
-> entirely clear that everything has been thought through fully and tied
-> to the code.
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-AFAICT most of the refactoring is actually removing the buggy code
-that was introduced in commit 3146bee ("spi: s3c64xx: Added provision
-for dedicated cs pin"). So maybe Naveen can try doing a new series
-first reverting the offending commit and then on top of that adding
-the support for the generic "cs-gpios" DT property used by the SPI
-core?
+iQEcBAABAgAGBQJTxQW8AAoJEIkPb2GL7hl1LzwH/RUV9pwNoIE8Q/z+eWGb/NHJ
+upGt2jmmfvhMq6WPvXbmHZPoYMIn6nqwsfKTJ3qPQHfV4QBXfc4IuwSmYSbOnd8X
+28kWC/aodiMZ61o0Hlh72qmiWmIP48xZOvd/xZmdbOD/p92jJ4WEJPr5ROKX03ML
+6vtjUAtDCmlmbZMlwaQCzld4P+r6COJdZ/tJdKSM/NAnYM3fnWkXaP1EsIxcu0pI
+MKAln4gTcQqZx6gxXNzXEMlS8miqEo4aora1o0ubAy3A93HTKQO+a8H61Bn0BoC9
+Qu1sPkFMvKe5XiV8SLLPoHnE07sbRGpGEOkOe63LKPzfUEyHZvLy7uatZ70QwiI=
+=jpCw
+-----END PGP SIGNATURE-----
 
-As I said before this patch is fixing a bug in the SPI driver, the
-first version of the series was posted on June, 10 so many other
-patches already depend on this fix. So it would be great if we can
-move this forward since this is hurting the platform support as a
-whole.
+--nextPart6166125.pbvtJFaVzN--
 
-Thanks a lot and best regards,
-Javier
+
+--===============1350475062==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1350475062==--
