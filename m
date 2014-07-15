@@ -1,151 +1,88 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 03/15] drivers: clk: st: use static const for
- clkgen_pll_data tables
-Date: Tue, 15 Jul 2014 17:20:19 +0200
-Message-ID: <1405437631-23623-4-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 12/15] drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
+Date: Tue, 15 Jul 2014 17:20:28 +0200
+Message-ID: <1405437631-23623-13-git-send-email-gabriel.fernandez@linaro.org>
 References: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olivier Bideau <olivier.bideau@st.com>
 List-Id: devicetree@vger.kernel.org
 
-converts clkgen_pll_data tables into static const
+The patch added support for ClockGenD0/D2/D3
+It includes one 660 Quadfs.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+Acked-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/clk/st/clkgen-pll.c | 30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ drivers/clk/st/clkgen-fsyn.c | 46 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index d8b9b1a..cdf23db 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -59,7 +59,7 @@ static const struct clk_ops st_pll800c65_ops;
- static const struct clk_ops stm_pll3200c32_ops;
- static const struct clk_ops st_pll1200c32_ops;
- 
--static struct clkgen_pll_data st_pll1600c65_ax = {
-+static const struct clkgen_pll_data st_pll1600c65_ax = {
- 	.pdn_status	= CLKGEN_FIELD(0x0, 0x1,			19),
- 	.locked_status	= CLKGEN_FIELD(0x0, 0x1,			31),
- 	.mdiv		= CLKGEN_FIELD(0x0, C65_MDIV_PLL1600_MASK,	0),
-@@ -67,7 +67,7 @@ static struct clkgen_pll_data st_pll1600c65_ax = {
- 	.ops		= &st_pll1600c65_ops
+diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
+index 84fcf71..dc5bcb7 100644
+--- a/drivers/clk/st/clkgen-fsyn.c
++++ b/drivers/clk/st/clkgen-fsyn.c
+@@ -298,6 +298,48 @@ static const struct clkgen_quadfs_data st_fs660c32_C_407 = {
+ 	.get_rate	= clk_fs660c32_dig_get_rate,
  };
  
--static struct clkgen_pll_data st_pll800c65_ax = {
-+static const struct clkgen_pll_data st_pll800c65_ax = {
- 	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			19),
- 	.locked_status	= CLKGEN_FIELD(0x0,	0x1,			31),
- 	.mdiv		= CLKGEN_FIELD(0x0,	C65_MDIV_PLL800_MASK,	0),
-@@ -76,7 +76,7 @@ static struct clkgen_pll_data st_pll800c65_ax = {
- 	.ops		= &st_pll800c65_ops
++static const struct clkgen_quadfs_data st_fs660c32_D_407 = {
++	.nrst_present = true,
++	.nrst	= { CLKGEN_FIELD(0x2a0, 0x1, 0),
++		    CLKGEN_FIELD(0x2a0, 0x1, 1),
++		    CLKGEN_FIELD(0x2a0, 0x1, 2),
++		    CLKGEN_FIELD(0x2a0, 0x1, 3) },
++	.ndiv	= CLKGEN_FIELD(0x2a4, 0x7, 16),
++	.pe	= { CLKGEN_FIELD(0x2b4, 0x7fff, 0),
++		    CLKGEN_FIELD(0x2b8, 0x7fff, 0),
++		    CLKGEN_FIELD(0x2bc, 0x7fff, 0),
++		    CLKGEN_FIELD(0x2c0, 0x7fff, 0) },
++	.sdiv	= { CLKGEN_FIELD(0x2b4, 0xf, 20),
++		    CLKGEN_FIELD(0x2b8, 0xf, 20),
++		    CLKGEN_FIELD(0x2bc, 0xf, 20),
++		    CLKGEN_FIELD(0x2c0, 0xf, 20) },
++	.npda	= CLKGEN_FIELD(0x2a0, 0x1, 12),
++	.nsb	= { CLKGEN_FIELD(0x2a0, 0x1, 8),
++		    CLKGEN_FIELD(0x2a0, 0x1, 9),
++		    CLKGEN_FIELD(0x2a0, 0x1, 10),
++		    CLKGEN_FIELD(0x2a0, 0x1, 11) },
++	.nsdiv_present = true,
++	.nsdiv	= { CLKGEN_FIELD(0x2b4, 0x1, 24),
++		    CLKGEN_FIELD(0x2b8, 0x1, 24),
++		    CLKGEN_FIELD(0x2bc, 0x1, 24),
++		    CLKGEN_FIELD(0x2c0, 0x1, 24) },
++	.mdiv	= { CLKGEN_FIELD(0x2b4, 0x1f, 15),
++		    CLKGEN_FIELD(0x2b8, 0x1f, 15),
++		    CLKGEN_FIELD(0x2bc, 0x1f, 15),
++		    CLKGEN_FIELD(0x2c0, 0x1f, 15) },
++	.en	= { CLKGEN_FIELD(0x2ac, 0x1, 0),
++		    CLKGEN_FIELD(0x2ac, 0x1, 1),
++		    CLKGEN_FIELD(0x2ac, 0x1, 2),
++		    CLKGEN_FIELD(0x2ac, 0x1, 3) },
++	.lockstatus_present = true,
++	.lock_status = CLKGEN_FIELD(0x2A0, 0x1, 24),
++	.powerup_polarity = 1,
++	.standby_polarity = 1,
++	.pll_ops	= &st_quadfs_pll_c32_ops,
++	.rtbl		= fs660c32_rtbl,
++	.rtbl_cnt	= ARRAY_SIZE(fs660c32_rtbl),
++	.get_rate	= clk_fs660c32_dig_get_rate,};
++
+ /**
+  * DOC: A Frequency Synthesizer that multiples its input clock by a fixed factor
+  *
+@@ -989,6 +1031,10 @@ static struct of_device_id quadfs_of_match[] = {
+ 		.compatible = "st,stih407-quadfs660-D",
+ 		.data = &st_fs660c32_D_407
+ 	},
++	{
++		.compatible = "st,stih407-quadfs660-D",
++		.data = (void *)&st_fs660c32_D_407
++	},
+ 	{}
  };
  
--static struct clkgen_pll_data st_pll3200c32_a1x_0 = {
-+static const struct clkgen_pll_data st_pll3200c32_a1x_0 = {
- 	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			31),
- 	.locked_status	= CLKGEN_FIELD(0x4,	0x1,			31),
- 	.ndiv		= CLKGEN_FIELD(0x0,	C32_NDIV_MASK,		0x0),
-@@ -93,7 +93,7 @@ static struct clkgen_pll_data st_pll3200c32_a1x_0 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static struct clkgen_pll_data st_pll3200c32_a1x_1 = {
-+static const struct clkgen_pll_data st_pll3200c32_a1x_1 = {
- 	.pdn_status	= CLKGEN_FIELD(0xC,	0x1,			31),
- 	.locked_status	= CLKGEN_FIELD(0x10,	0x1,			31),
- 	.ndiv		= CLKGEN_FIELD(0xC,	C32_NDIV_MASK,		0x0),
-@@ -111,7 +111,7 @@ static struct clkgen_pll_data st_pll3200c32_a1x_1 = {
- };
- 
- /* 415 specific */
--static struct clkgen_pll_data st_pll3200c32_a9_415 = {
-+static const struct clkgen_pll_data st_pll3200c32_a9_415 = {
- 	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
- 	.locked_status	= CLKGEN_FIELD(0x6C,	0x1,			0),
- 	.ndiv		= CLKGEN_FIELD(0x0,	C32_NDIV_MASK,		9),
-@@ -122,7 +122,7 @@ static struct clkgen_pll_data st_pll3200c32_a9_415 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static struct clkgen_pll_data st_pll3200c32_ddr_415 = {
-+static const struct clkgen_pll_data st_pll3200c32_ddr_415 = {
- 	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
- 	.locked_status	= CLKGEN_FIELD(0x100,	0x1,			0),
- 	.ndiv		= CLKGEN_FIELD(0x8,	C32_NDIV_MASK,		0),
-@@ -135,7 +135,7 @@ static struct clkgen_pll_data st_pll3200c32_ddr_415 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static struct clkgen_pll_data st_pll1200c32_gpu_415 = {
-+static const struct clkgen_pll_data st_pll1200c32_gpu_415 = {
- 	.pdn_status	= CLKGEN_FIELD(0x144,	0x1,			3),
- 	.locked_status	= CLKGEN_FIELD(0x168,	0x1,			0),
- 	.ldf		= CLKGEN_FIELD(0x0,	C32_LDF_MASK,		3),
-@@ -146,7 +146,7 @@ static struct clkgen_pll_data st_pll1200c32_gpu_415 = {
- };
- 
- /* 416 specific */
--static struct clkgen_pll_data st_pll3200c32_a9_416 = {
-+static const struct clkgen_pll_data st_pll3200c32_a9_416 = {
- 	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
- 	.locked_status	= CLKGEN_FIELD(0x6C,	0x1,			0),
- 	.ndiv		= CLKGEN_FIELD(0x8,	C32_NDIV_MASK,		0),
-@@ -157,7 +157,7 @@ static struct clkgen_pll_data st_pll3200c32_a9_416 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static struct clkgen_pll_data st_pll3200c32_ddr_416 = {
-+static const struct clkgen_pll_data st_pll3200c32_ddr_416 = {
- 	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
- 	.locked_status	= CLKGEN_FIELD(0x10C,	0x1,			0),
- 	.ndiv		= CLKGEN_FIELD(0x8,	C32_NDIV_MASK,		0),
-@@ -170,7 +170,7 @@ static struct clkgen_pll_data st_pll3200c32_ddr_416 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static struct clkgen_pll_data st_pll1200c32_gpu_416 = {
-+static const struct clkgen_pll_data st_pll1200c32_gpu_416 = {
- 	.pdn_status	= CLKGEN_FIELD(0x8E4,	0x1,			3),
- 	.locked_status	= CLKGEN_FIELD(0x90C,	0x1,			0),
- 	.ldf		= CLKGEN_FIELD(0x0,	C32_LDF_MASK,		3),
-@@ -450,9 +450,8 @@ static void __init clkgena_c65_pll_setup(struct device_node *np)
- 	 * PLL0 HS (high speed) output
- 	 */
- 	clk_data->clks[0] = clkgen_pll_register(parent_name,
--						&st_pll1600c65_ax,
--						reg + CLKGENAx_PLL0_OFFSET,
--						clk_name);
-+			(struct clkgen_pll_data *) &st_pll1600c65_ax,
-+			reg + CLKGENAx_PLL0_OFFSET, clk_name);
- 
- 	if (IS_ERR(clk_data->clks[0]))
- 		goto err;
-@@ -480,9 +479,8 @@ static void __init clkgena_c65_pll_setup(struct device_node *np)
- 	 * PLL1 output
- 	 */
- 	clk_data->clks[2] = clkgen_pll_register(parent_name,
--						&st_pll800c65_ax,
--						reg + CLKGENAx_PLL1_OFFSET,
--						clk_name);
-+			(struct clkgen_pll_data *) &st_pll800c65_ax,
-+			reg + CLKGENAx_PLL1_OFFSET, clk_name);
- 
- 	if (IS_ERR(clk_data->clks[2]))
- 		goto err;
 -- 
 1.9.1
