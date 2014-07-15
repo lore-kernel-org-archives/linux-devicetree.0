@@ -1,61 +1,195 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
-Date: Tue, 15 Jul 2014 11:12:22 +0200
-Message-ID: <53C4F076.1070500@zonque.org>
-References: <1405073193-21448-1-git-send-email-zonque@gmail.com> <20140714095247.GB4980@leverpostej> <53C3AEE1.4030805@zonque.org> <20140715085138.GR26465@leverpostej>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH v4 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Tue, 15 Jul 2014 17:07:21 +0800
+Message-ID: <20140715090719.GA3374@shlinux1.ap.freescale.net>
+References: <1405338041-19945-1-git-send-email-b29396@freescale.com>
+ <1405338041-19945-2-git-send-email-b29396@freescale.com>
+ <53C3C97A.7080102@pengutronix.de>
+ <20140715033324.GC21584@shlinux1.ap.freescale.net>
+ <53C4D872.9060707@pengutronix.de>
+ <20140715082637.GA2601@shlinux1.ap.freescale.net>
+ <53C4EA68.5090606@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20140715085138.GR26465@leverpostej>
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "dtor@mail.ru" <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53C4EA68.5090606@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2014 10:51 AM, Mark Rutland wrote:
-> On Mon, Jul 14, 2014 at 11:20:17AM +0100, Daniel Mack wrote:
-
->> Hmm, I thought about that, but there are - in theory - more details that
->> could be specified per channel. I left those functions out for the first
->> version, as I have no good way to test them.
+On Tue, Jul 15, 2014 at 10:46:32AM +0200, Marc Kleine-Budde wrote:
+> On 07/15/2014 10:26 AM, Dong Aisheng wrote:
+> >>>>> +static void m_can_read_fifo(const struct net_device *dev, struct can_frame *cf,
+> >>>>> +			    u32 rxfs)
+> >>>>> +{
+> >>>>> +	struct m_can_priv *priv = netdev_priv(dev);
+> >>>>> +	u32 flags, fgi;
+> >>>>> +
+> >>>>> +	/* calculate the fifo get index for where to read data */
+> >>>>> +	fgi = (rxfs & RXFS_FGI_MASK) >> RXFS_FGI_OFF;
+> >>>>> +	flags = m_can_fifo_read(priv, fgi, 0x0);
+> >>>>                                            ^^^
+> >>>>
+> >>>> Can you introduce an enum for the offsets, please adjust the signature
+> >>>> of m_can_fifo_read() accordingly.
+> >>>>
+> >>>
+> >>> I wonder enum may not be suitable.
+> >>> The Rx Buffer and FIFO Element is as follows:
+> >>>    31 24 23 16 15 8 7 0
+> >>> R0 ESI XTD RTR ID[28:0]
+> >>
+> >> M_CAN_FIFO_ID
+> >>
+> >>> R1 ANMF FIDX[6:0] res EDL BRS DLC[3:0] RXTS[15:0]
+> >>
+> >> M_CAN_FIFO_DLC
+> >>
+> >>> R2 DB3[7:0] DB2[7:0] DB1[7:0] DB0[7:0]
+> >>> R3 DB7[7:0] DB6[7:0] DB5[7:0] DB4[7:0]
+> >>
+> >> M_CAN_FIFO_DATA0
+> >> M_CAN_FIFO_DATA1
+> >>
+> > 
+> > You mean as follows?
+> > enum m_can_fifo {
+> >         M_CAN_FIFO_ID = 0,
+> >         M_CAN_FIFO_DLC,
+> = 0x4,
+> >         M_CAN_FIFO_DATA0,
+> = 0x8,
+> >         M_CAN_FIFO_DATA1,
+> = 0xc,
+> > };
+> > 
+> > static inline u32 m_can_fifo_read(const struct m_can_priv *priv,
+> >                                   u32 fgi, enum m_can_fifo fifo)
+> > {
+> >         return readl(priv->mram_base + priv->mcfg[MRAM_RXF0].off +
+> >                      fgi * RXF0_ELEMENT_SIZE + fifo * 0x4);
+> > }
 > 
-> Ok. Could you elaborate on what those details might be? It might make
-> sense to have these as nodes if there are arbitrary properties to
-> describe for each button, but I'm not familiar enough with the hardware
-> to make a call either way.
-
-No, there are just settings that can be made for each indvidual
-channel/button, such as sensitivity settings for instance. But they can
-of course be specified in a similar manner as the keycodes, in a
-fixed-size array. That's completely ok I think.
-
->> linux,keycode feels a bit overkill here though, so I'd rather go for a
->> fixed-size linux,keycodes property. The number of entries is fixed,
->> anyway. Would you be fine with that?
+> without the * 0x4
 > 
-> Assuming no-one's likely to want a sparse keymap (i.e. one where some
-> keys do nothing) then that's probably ok.
-
-If such a setup occurs, support for disabling channels could easily be
-added, and in such cases, the keycode is simple ignored. I don't think a
-sparse matrix keymap makes much sense here, especially as the buttons
-are not organized in rows and columns.
-
->>> /me mutters usual grumblings about the autorepeat property.
->>
->> I took that from the gpio-keys driver. Is there a better way to denote
->> such a feature?
+> > id = m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
+> > 
+> > The problem is when adding long frames support, it becomes:
+> > enum m_can_fifo {
+> >         M_CAN_FIFO_ID = 0,
+> >         M_CAN_FIFO_DLC,
+> >         M_CAN_FIFO_DATA0,
+> >         M_CAN_FIFO_DATA1,
+> >         ....
+> >         M_CAN_FIFO_DATA15,
+> > };
 > 
-> Unfortunately not, given current practice. My gripe is that it's a Linux
-> detail that were describing rather than a property of the device. We can
-> forget about that for now.
+> #define M_CAN_FIFO_DATA(n)
+> 	(enum m_can_fifo)(M_CAN_FIFO_DATA_0 + (n) << 2)
+> 
 
-I see, so I'll leave it as it is.
+This is a bit strange using and we may still have to define other M_CAN_FIFO_DATAx
+to avoid the enum value exceeds the defined range.
+enum m_can_fifo {
+        M_CAN_FIFO_ID = 0,
+        M_CAN_FIFO_DLC = 0x4,
+        M_CAN_FIFO_DATA0 = 0x8,
+        M_CAN_FIFO_DATA1 = 0xc,
+	....
+        M_CAN_FIFO_DATA15 = 0xc,
+};
 
-I'll drop the input device unregister call as Dmitry said, and repost v5.
+However, actually we will not use them at all after introducing M_CAN_FIFO_DATA(n).
+If that, why we still need define them in enum?
 
+Comparing to this way, why not simply just do as follows:
+#define M_CAN_FIFO_ID		0x0
+#define M_CAN_FIFO_DLC		0x4
+#define M_CAN_FIFO_DATA(n)	(0x8 + (n) << 2)
 
-Thanks again!
-Daniel
+What do you think?
+
+> > But it's useless because we may not use enum to read fifo data anymore.
+> > It's not suitable to read fifo one by one:
+> > m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA0);
+> > m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA1);
+> > ..
+> > m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA15);
+> > 
+> > 
+> > Instead, we may read data according to real dlc value within a for loop like:
+> > #define M_CAN_FIFO(n)   (n * 0x4)
+> > id = m_can_fifo_read(priv, fgi, M_CAN_FIFO(0));
+> > dlc = m_can_fifo_read(priv, fgi, M_CAN_FIFO(1));
+> > for (i = 0; dlc > 0; dlc -= 0x4, i++) {
+> >         ....
+> >         data[i] = m_can_fifo_read(priv, fgi, M_CAN_FIFO(i + 2));
+> > }
+> 
+> id = m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
+> dlc = m_can_fifo_read(priv, fgi, M_CAN_FIFO_DLC);
+> for (i = 0; i <= dlc; i++)
+> 	data[i] = m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA(i));
+
+Does it work?
+The dlc is in bytes while m_can_fifo_read is read in words.
+
+Regards
+Dong Aisheng
+
+> 
+> > So i'm not sure define that enum now is really needed.
+> 
+> [...]
+> 
+> >>>>> +static int m_can_handle_lec_err(struct net_device *dev,
+> >>>>> +				enum m_can_lec_type lec_type)
+> >>>>> +{
+> >>>>> +	struct m_can_priv *priv = netdev_priv(dev);
+> >>>>> +	struct net_device_stats *stats = &dev->stats;
+> >>>>> +	struct can_frame *cf;
+> >>>>> +	struct sk_buff *skb;
+> >>>>> +
+> >>>>> +	/* early exit if no lec update */
+> >>>>> +	if (lec_type == LEC_UNUSED)
+> >>>>> +		return 0;
+> >>>>
+> >>>> I think this is not needed, as checked by the only caller.
+> >>>
+> >>> You mean move it to caller as follows?
+> >>>         /* handle lec errors on the bus */
+> >>>         if ((psr & LEC_UNUSED) && ((psr & LEC_UNUSED)!= LEC_UNUSED) &&
+> >>
+> >> yes - or something like this:
+> >>
+> >> static inline bool is_lec(u32 psr)
+> >> {
+> >> 	u32 psr &= LEC_UNUSED
+> >>
+> >> 	return psr && (psr != LEC_UNUSED)
+> >> }
+> >>
+> >> 	if ((priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
+> >> 		is_lec(psr)) {
+> >> 	}
+> >>
+> > 
+> > 
+> > Looks fine.
+> > Maybe is_lec_err(u32 psr) better? :-)
+> 
+> Yes, is_lec() was just a random placeholder :) Descriptive function
+> names are always preferred.
+> 
+> Marc
+> 
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
+
 
