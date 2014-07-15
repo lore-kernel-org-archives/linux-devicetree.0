@@ -1,47 +1,61 @@
 From: Zhou Wang <wangzhou.bry@gmail.com>
-Subject: [PATCH v1 0/3] mtd: hisilicon: add a new driver for NAND controller of hisilicon hip04 Soc
-Date: Tue, 15 Jul 2014 18:58:23 +0800
-Message-ID: <1405421906-660-1-git-send-email-wangzhou.bry@gmail.com>
+Subject: [PATCH v1 1/3] mtd: hisilicon: add device tree node for nand controller
+Date: Tue, 15 Jul 2014 18:58:24 +0800
+Message-ID: <1405421906-660-2-git-send-email-wangzhou.bry@gmail.com>
+References: <1405421906-660-1-git-send-email-wangzhou.bry@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1405421906-660-1-git-send-email-wangzhou.bry@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: wangzhou1@hisilicon.com, caizhiyong@huawei.com, Zhou Wang <wangzhou.bry@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This series patches add the support for NAND controller of hisilicon
-hip04 Soc. These patches are base on branch integration-hilt-working-v3.14 
-in linaro landing-team git repository[1].
+Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
+---
+ arch/arm/boot/dts/hip04.dtsi |   31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-The NAND controller IP was developed by hisilicon and need a new driver
-to support. The driver is usable and I tested it on hisilicon hip04-d01
-board.
-
-Changes in v1:
-- Remove callback functions out of struct hinfc_host, and call them directly
-  in relative functions.
-- Change hinfc_read and hinfc_write from macros to inline functions.
-- Instead of putting pointers, embed struct nand_chip and struct mtd_info in
-  struct hinfc_host directly.
-- rewrite some unclear lines in device tree binding document, correct some
-  code style error.
-
-[1] ssh://git@git.linaro.org/landing-teams/working/hisilicon/kernel.git
-
-
-Zhou Wang (3):
-  mtd: hisilicon: add device tree node for nand controller
-  mtd: hisilicon: add a new nand controller driver for hisilicon hip04 Soc
-  mtd: hisilicon: add device tree binding documentation
-
- .../devicetree/bindings/mtd/hisi-nand.txt          |   40 +
- arch/arm/boot/dts/hip04.dtsi                       |   31 +
- drivers/mtd/nand/Kconfig                           |    5 +
- drivers/mtd/nand/Makefile                          |    1 +
- drivers/mtd/nand/hisi_nand.c                       |  836 ++++++++++++++++++++
- 5 files changed, 913 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/hisi-nand.txt
- create mode 100644 drivers/mtd/nand/hisi_nand.c
-
+diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+index 681267a..6ff48eb 100644
+--- a/arch/arm/boot/dts/hip04.dtsi
++++ b/arch/arm/boot/dts/hip04.dtsi
+@@ -387,5 +387,36 @@
+ 				interrupts = <0 389 4>;
+ 			};
+ 		};
++
++		nand: nand@4020000 {
++			compatible = "hisilicon,504-nfc";
++			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
++			interrupts = <0 379 4>;
++			nand-bus-width = <8>;
++			nand-ecc-mode = "none";
++			hisi,nand-ecc-bits = <0>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "nand_text";
++				reg = <0x00000000 0x00400000>;
++			};
++
++			partition@00400000 {
++				label = "nand_monitor";
++				reg = <0x00400000 0x00400000>;
++			};
++
++			partition@00800000 {
++				label = "nand_kernel";
++				reg = <0x00800000 0x00800000>;
++			};
++
++			partition@01000000 {
++				label = "nand_fs";
++				reg = <0x01000000 0x1f000000>;
++			};
++		};
+ 	};
+ };
 -- 
 1.7.9.5
 
