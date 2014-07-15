@@ -1,71 +1,61 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 9/9] pci: Remap I/O bus resources into CPU space with
- pci_remap_iospace()
-Date: Tue, 15 Jul 2014 10:09:40 +0100
-Message-ID: <20140715090939.GA18203@arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-10-git-send-email-Liviu.Dudau@arm.com>
- <20140714165443.GI1112@arm.com>
- <7345495.UDsgOtKzyQ@wuerfel>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
+Date: Tue, 15 Jul 2014 11:12:22 +0200
+Message-ID: <53C4F076.1070500@zonque.org>
+References: <1405073193-21448-1-git-send-email-zonque@gmail.com> <20140714095247.GB4980@leverpostej> <53C3AEE1.4030805@zonque.org> <20140715085138.GR26465@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7345495.UDsgOtKzyQ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20140715085138.GR26465@leverpostej>
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "dtor@mail.ru" <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 14, 2014 at 07:15:48PM +0100, Arnd Bergmann wrote:
-> On Monday 14 July 2014 17:54:43 Catalin Marinas wrote:
-> > On Tue, Jul 01, 2014 at 07:43:34PM +0100, Liviu Dudau wrote:
-> > > Introduce a default implementation for remapping PCI bus I/O resources
-> > > onto the CPU address space. Architectures with special needs may
-> > > provide their own version, but most should be able to use this one.
-> > [...]
-> > > +/**
-> > > + *   pci_remap_iospace - Remap the memory mapped I/O space
-> > > + *   @res: Resource describing the I/O space
-> > > + *   @phys_addr: physical address where the range will be mapped.
-> > > + *
-> > > + *   Remap the memory mapped I/O space described by the @res
-> > > + *   into the CPU physical address space. Only architectures
-> > > + *   that have memory mapped IO defined (and hence PCI_IOBASE)
-> > > + *   should call this function.
-> > > + */
-> > > +int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
-> > > +{
-> > > +     int err = -ENODEV;
-> > > +
-> > > +#ifdef PCI_IOBASE
-> > > +     if (!(res->flags & IORESOURCE_IO))
-> > > +             return -EINVAL;
-> > > +
-> > > +     if (res->end > IO_SPACE_LIMIT)
-> > > +             return -EINVAL;
-> > > +
-> > > +     err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
-> > > +                             res->end + 1 + (unsigned long)PCI_IOBASE,
-> > > +                             phys_addr, __pgprot(PROT_DEVICE_nGnRE));
-> > 
-> > Except that PROT_DEVICE_nGnRE is arm64 only. I think that's a function
-> > that should remain arch specific.
-> > 
+On 07/15/2014 10:51 AM, Mark Rutland wrote:
+> On Mon, Jul 14, 2014 at 11:20:17AM +0100, Daniel Mack wrote:
+
+>> Hmm, I thought about that, but there are - in theory - more details that
+>> could be specified per channel. I left those functions out for the first
+>> version, as I have no good way to test them.
 > 
-> How about #defining a macro with the correct pgprot value in asm/pci.h
-> or asm/pgtable.h?
-> We can provide a default for that in another architecture independent
-> location.
+> Ok. Could you elaborate on what those details might be? It might make
+> sense to have these as nodes if there are arbitrary properties to
+> describe for each button, but I'm not familiar enough with the hardware
+> to make a call either way.
 
-That should work. We already have pgprot_noncached/writecombine in
-asm-generic/pgtable.h which all architectures seem to include. The
-default can be pgprot_noncached and we would invoke it as
-pgprot_device(PAGE_KERNEL).
+No, there are just settings that can be made for each indvidual
+channel/button, such as sensitivity settings for instance. But they can
+of course be specified in a similar manner as the keycodes, in a
+fixed-size array. That's completely ok I think.
 
--- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> linux,keycode feels a bit overkill here though, so I'd rather go for a
+>> fixed-size linux,keycodes property. The number of entries is fixed,
+>> anyway. Would you be fine with that?
+> 
+> Assuming no-one's likely to want a sparse keymap (i.e. one where some
+> keys do nothing) then that's probably ok.
+
+If such a setup occurs, support for disabling channels could easily be
+added, and in such cases, the keycode is simple ignored. I don't think a
+sparse matrix keymap makes much sense here, especially as the buttons
+are not organized in rows and columns.
+
+>>> /me mutters usual grumblings about the autorepeat property.
+>>
+>> I took that from the gpio-keys driver. Is there a better way to denote
+>> such a feature?
+> 
+> Unfortunately not, given current practice. My gripe is that it's a Linux
+> detail that were describing rather than a property of the device. We can
+> forget about that for now.
+
+I see, so I'll leave it as it is.
+
+I'll drop the input device unregister call as Dmitry said, and repost v5.
+
+
+Thanks again!
+Daniel
+
