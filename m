@@ -1,69 +1,47 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 13/15] drivers: clk: st: STiH407: Support for clockgenA9
-Date: Tue, 15 Jul 2014 17:20:29 +0200
-Message-ID: <1405437631-23623-14-git-send-email-gabriel.fernandez@linaro.org>
-References: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/6] clock support for Tegra132
+Date: Tue, 15 Jul 2014 18:24:30 +0300
+Message-ID: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, Olivier Bideau <olivier.bideau@st.com>, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch added support for DT registration of ClockGenA9
-It includes c32 type PLL.
+Tegra132 has almost the same clock structure as Tegra124, except for the CPU
+related clocks.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
----
- drivers/clk/st/clkgen-pll.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Patch 1 is a small change to not stop initializing clocks when an error is
+	encountered
+Patch 2 makes tegra_clocks_apply_init_table an arch_initcall to make it work
+	on ARM64
+Patch 3 updates the Tegra124 binding doc with the details about the clock
+	changes for Tegra132
+Patch 4 adds a new binding for the CPU clocks on Tegra132
+Patch 5 Implements the changes to the CAR clocks for Tegra132
+Patch 6 Implements the new Tegar132 ccplex clocks
 
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index 5327a74..29769d7 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -216,6 +216,18 @@ static const struct clkgen_pll_data st_pll3200c32_407_c0_1 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
-+static const struct clkgen_pll_data st_pll3200c32_407_a9 = {
-+	/* 407 A9 */
-+	.pdn_status	= CLKGEN_FIELD(0x1a8,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x87c,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x1b0,	C32_NDIV_MASK,		0),
-+	.idf		= CLKGEN_FIELD(0x1a8,	C32_IDF_MASK,		25),
-+	.num_odfs = 1,
-+	.odf		= { CLKGEN_FIELD(0x1b0, C32_ODF_MASK,		8) },
-+	.odf_gate	= { CLKGEN_FIELD(0x1ac, 0x1,			28) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
- /**
-  * DOC: Clock Generated by PLL, rate set and enabled by bootloader
-  *
-@@ -618,6 +630,10 @@ static struct of_device_id c32_pll_of_match[] = {
- 		.compatible = "st,stih407-plls-c32-c0_1",
- 		.data = &st_pll3200c32_407_c0_1,
- 	},
-+	{
-+		.compatible = "st,stih407-plls-c32-a9",
-+		.data = &st_pll3200c32_407_a9,
-+	},
- 	{}
- };
- 
+Peter De Schrijver (6):
+  clk: tegra: don't abort clk init on error
+  clk: tegra: make tegra_clocks_apply_init_table arch_initcall
+  clk: tegra: Update binding doc Tegra132
+  clk: tegra: add nvidia,tegra132-ccplex-clk binding
+  clk: tegra: Add support for Tegra132 CAR clocks
+  clk: tegra: Add Tegra132 ccplex clocks
+
+ .../bindings/clock/nvidia,tegra124-car.txt         |    8 +++--
+ .../bindings/clock/nvidia,tegra132-ccplex-clk.txt  |   27 ++++++++++++++++
+ arch/arm/mach-tegra/tegra.c                        |    3 --
+ drivers/clk/tegra/Makefile                         |    2 +
+ drivers/clk/tegra/clk-tegra124.c                   |   32 ++++++++++++++++++++
+ drivers/clk/tegra/clk.c                            |    9 ++++--
+ include/dt-bindings/clock/tegra132-ccplex.h        |   12 +++++++
+ include/linux/clk/tegra.h                          |    2 -
+ 8 files changed, 84 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra132-ccplex-clk.txt
+ create mode 100644 include/dt-bindings/clock/tegra132-ccplex.h
+
 -- 
-1.9.1
+1.7.7.rc0.72.g4b5ea.dirty
