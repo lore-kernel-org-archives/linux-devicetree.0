@@ -1,45 +1,76 @@
-From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH RFC 2/2] regulator: twl: Re-add clk32kg to get wifi working
-Date: Tue, 15 Jul 2014 14:59:14 +0200
-Message-ID: <53C525A2.8080609@kpanic.de>
-References: <1405338655-18415-1-git-send-email-sassmann@kpanic.de> <1405338655-18415-3-git-send-email-sassmann@kpanic.de> <20140714120051.GF6800@sirena.org.uk> <53C3C77F.7080208@kpanic.de> <20140714181338.GR6800@sirena.org.uk>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v3] hwmon: pwm-fan: Add pwm-fan driver
+Date: Tue, 15 Jul 2014 18:49:47 +0530
+Message-ID: <53C52A73.8010307@gmail.com>
+References: <1405425092-553-1-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140714181338.GR6800-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1405425092-553-1-git-send-email-k.debski@samsung.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
+Cc: t.figa@samsung.com, m.szyprowski@samsung.com, linux@roeck-us.net, tklauser@distanz.ch, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.07.2014 20:13, Mark Brown wrote:
-> On Mon, Jul 14, 2014 at 02:05:19PM +0200, Stefan Assmann wrote:
->> On 14.07.2014 14:00, Mark Brown wrote:
+On 07/15/2014 05:21 PM, Kamil Debski wrote:
+> The pwm-fan driver enables control of fans connected to PWM lines.
+> This driver uses the PWM framework, so it is compatible with all
+> PWM devices that provide drivers through the PWM framework.
 >
->>> No, you need to implement clocks using the clock API.  Please read the
->>> changelogs for the above commits...
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> ---
+> Changes since v2:
+> - add CONFIG_PM_SLEEP around pwm_fan_suspend and pwm_fan_resume
+> Changes since v1:
+> - added documentation to Documentation/hwmon
+> - fix checkpatch errors
+> 	- added extra description to Kconfig
+> 	- removed whitespace errors
+> - include files rearranged to be in alphabetical order
+> - remove unused sysfs entry pwm1_enable
+> - changed the behavior of the set_pwm function
+> 	- when 0 PWM value is set pwm_disable is run
+> 	- pwm_config return value is checked for errors
+> - use of ATTRIBUTE_GROUPS was added
+> - removed "Not enouch memory" error message
+> - fixed probe return value in case of devm_of_pwm_get error
+> - changed hwmon_device_register_with_groups to
+>    devm_hwmon_device_register_with_groups
+> - changes suspend/resume to use pwm_disable/enable
+> - removed unnecessary CONFIG_PM_SLEEP ifdefs
+> ---
+>   .../devicetree/bindings/hwmon/pwm-fan.txt          |   12 ++
+>   Documentation/hwmon/pwm-fan                        |   17 ++
+>   drivers/hwmon/Kconfig                              |   11 ++
+>   drivers/hwmon/Makefile                             |    1 +
+>   drivers/hwmon/pwm-fan.c                            |  201 ++++++++++++++++++++
+>   5 files changed, 242 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+>   create mode 100644 Documentation/hwmon/pwm-fan
+>   create mode 100644 drivers/hwmon/pwm-fan.c
 >
->> Yes, that's what I expected. Got any pointers for me how to do this?
->> Never done that before, a little help would be appreciated.
+> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> new file mode 100644
+> index 0000000..f534607
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> @@ -0,0 +1,12 @@
+> +Bindings for a fan connected to the PWM lines
+> +
+> +Required properties:
+> +- compatible: "pwm-fan"
+> +- pwms: the PWM that is used to control the PWM fan
 >
-> There should be plenty of examples in drivers/clk?
+It would be more readable if it like this...
+Required properties:
+- compatible		: should be "pwm-fan"
+- pwms			: The PWM that is used to control the PWM fan
 
-Looking at this more closely it seems to me that it's a regulator thing
-after all. In the end it all boils down to a single register write.
-twl_i2c_write_u8(TWL_MODULE_PM_RECEIVER, 0x41, 0x8e);
-This is a write to the CLK32KG_CFG_STATE [1] register to power on the
-device.
 
-I tried moving that to omap4xxx_dt_clk_init() but that won't work
-because the twl core structures aren't initialized yet.
 
-Any suggestions?
 
-   Stefan
+-- 
+Regards,
+Varka Bhadram.
 
-[1] http://www.cjemicros.f2s.com/public/datasheets/TWL6030_Register_Map.pdf page 196
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
