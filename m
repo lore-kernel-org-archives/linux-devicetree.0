@@ -1,129 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 3/7] dmaengine: rcar-dmac: Add device tree bindings documentation
-Date: Tue, 15 Jul 2014 22:18:38 +0200
-Message-ID: <1405455522-20676-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1405455522-20676-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1405455522-20676-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Re-send PATCH 1/1] arm: dra7xx: Add hwmod data for MDIO and
+ CPSW
+Date: Tue, 15 Jul 2014 20:21:21 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1407152019020.21432@utopia.booyaka.com>
+References: <1404825399-10330-1-git-send-email-mugunthanvnm@ti.com> <20140709095552.GA25154@breakpoint.cc> <20140709100147.GB25154@breakpoint.cc>
+Mime-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="843723315-788041059-1405455633=:21432"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140709100147.GB25154-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Content-ID: <alpine.DEB.2.02.1407152020410.21432-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for the R-Car Generation 2 DMA
-Controller (DMAC).
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../devicetree/bindings/dma/renesas,rcar-dmac.txt  | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+--843723315-788041059-1405455633=:21432
+Content-Type: TEXT/PLAIN; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <alpine.DEB.2.02.1407152020411.21432-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-new file mode 100644
-index 0000000..9202790
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -0,0 +1,98 @@
-+* Renesas R-Car DMA Controller Device Tree bindings
-+
-+Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
-+controller instances named DMAC capable of serving multiple clients. Channels
-+can be dedicated to specific clients or shared between a large number of
-+clients.
-+
-+DMA clients are connected to the DMAC ports referenced by an 8-bit identifier
-+called MID/RID.
-+
-+Each DMA client is connected to one dedicated port of the DMAC, identified by
-+an 8-bit port number called the MID/RID. A DMA controller can thus serve up to
-+256 clients in total. When the number of hardware channels is lower than the
-+number of clients to be served, channels must be shared between multiple DMA
-+clients. The association of DMA clients to DMAC channels is fully dynamic and
-+not described in these device tree bindings.
-+
-+Required Properties:
-+
-+- compatible: must contain "renesas,rcar-dmac"
-+
-+- reg: base address and length of the registers block for the DMAC
-+
-+- interrupts: interrupt specifiers for the DMAC, one for each entry in
-+  interrupt-names.
-+- interrupt-names: one entry per channel, named "ch%u", where %u is the
-+  channel number ranging from zero to the number of channels minus one.
-+
-+- clock-names: "fck" for the functional clock
-+- clocks: a list of phandle + clock-specifier pairs, one for each entry
-+  in clock-names.
-+- clock-names: must contain "fck" for the functional clock.
-+
-+- #dma-cells: must be <1>, the cell specifies the MID/RID of the DMAC port
-+  connected to the DMA client
-+- dma-channels: number of DMA channels
-+
-+Example: R8A7790 (R-Car H2) SYS-DMACs
-+
-+	dmac0: dma-controller@e6700000 {
-+		compatible = "renesas,rcar-dmac";
-+		reg = <0 0xe6700000 0 0x20000>;
-+		interrupts = <0 197 IRQ_TYPE_LEVEL_HIGH
-+			      0 200 IRQ_TYPE_LEVEL_HIGH
-+			      0 201 IRQ_TYPE_LEVEL_HIGH
-+			      0 202 IRQ_TYPE_LEVEL_HIGH
-+			      0 203 IRQ_TYPE_LEVEL_HIGH
-+			      0 204 IRQ_TYPE_LEVEL_HIGH
-+			      0 205 IRQ_TYPE_LEVEL_HIGH
-+			      0 206 IRQ_TYPE_LEVEL_HIGH
-+			      0 207 IRQ_TYPE_LEVEL_HIGH
-+			      0 208 IRQ_TYPE_LEVEL_HIGH
-+			      0 209 IRQ_TYPE_LEVEL_HIGH
-+			      0 210 IRQ_TYPE_LEVEL_HIGH
-+			      0 211 IRQ_TYPE_LEVEL_HIGH
-+			      0 212 IRQ_TYPE_LEVEL_HIGH
-+			      0 213 IRQ_TYPE_LEVEL_HIGH
-+			      0 214 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				"ch0", "ch1", "ch2", "ch3",
-+				"ch4", "ch5", "ch6", "ch7",
-+				"ch8", "ch9", "ch10", "ch11",
-+				"ch12", "ch13", "ch14", "ch15";
-+		clocks = <&mstp2_clks R8A7790_CLK_SYS_DMAC0>;
-+		clock-names = "fck";
-+		#dma-cells = <1>;
-+		dma-channels = <15>;
-+	};
-+
-+	dmac1: dma-controller@e6720000 {
-+		compatible = "renesas,rcar-dmac";
-+		reg = <0 0xe6720000 0 0x20000>;
-+		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH
-+			      0 216 IRQ_TYPE_LEVEL_HIGH
-+			      0 217 IRQ_TYPE_LEVEL_HIGH
-+			      0 218 IRQ_TYPE_LEVEL_HIGH
-+			      0 219 IRQ_TYPE_LEVEL_HIGH
-+			      0 308 IRQ_TYPE_LEVEL_HIGH
-+			      0 309 IRQ_TYPE_LEVEL_HIGH
-+			      0 310 IRQ_TYPE_LEVEL_HIGH
-+			      0 311 IRQ_TYPE_LEVEL_HIGH
-+			      0 312 IRQ_TYPE_LEVEL_HIGH
-+			      0 313 IRQ_TYPE_LEVEL_HIGH
-+			      0 314 IRQ_TYPE_LEVEL_HIGH
-+			      0 315 IRQ_TYPE_LEVEL_HIGH
-+			      0 316 IRQ_TYPE_LEVEL_HIGH
-+			      0 317 IRQ_TYPE_LEVEL_HIGH
-+			      0 318 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				"ch0", "ch1", "ch2", "ch3",
-+				"ch4", "ch5", "ch6", "ch7",
-+				"ch8", "ch9", "ch10", "ch11",
-+				"ch12", "ch13", "ch14", "ch15";
-+		clocks = <&mstp2_clks R8A7790_CLK_SYS_DMAC1>;
-+		clock-names = "fck";
-+		#dma-cells = <1>;
-+		dma-channels = <15>;
-+	};
--- 
-1.8.5.5
+Hi Sebastian,
 
+On Wed, 9 Jul 2014, Sebastian Andrzej Siewior wrote:
+
+> On 2014-07-09 11:55:52 [+0200], Sebastian Andrzej Siewior wrote:
+> > On 2014-07-08 18:46:39 [+0530], Mugunthan V N wrote:
+> > > Adding hwmod data for CPSW and MDIO which is present in DRA7xx SoC
+> >=20
+> > I reverted my patch, applied this one and after boot I got:
+> Oh me dum dum. I had --dry-run=E2=80=A6
+>=20
+> Acked-by: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+>=20
+> This is basically what Tony hasked me to do: No IRQ numbers & iomem.
+
+Sorry - I'm a bit confused - Sebastian, did you test this one?  If so, is=
+=20
+it okay to add a Tested-by from you?
+
+Mugunthan, could you please get a Reviewed-by: from one of the folks on=20
+the DRA7xx SoC integration reviewers list that I sent earlier?
+
+
+- Paul
+--843723315-788041059-1405455633=:21432--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
