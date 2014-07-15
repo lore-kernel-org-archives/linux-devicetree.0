@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 01/11] mmc: sh_mmcif: Document DT bindings
-Date: Wed, 16 Jul 2014 00:45:11 +0200
-Message-ID: <1405464321-4723-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 06/11] ARM: shmobile: r8a7790: Rename mmcif node to mmc
+Date: Wed, 16 Jul 2014 00:45:16 +0200
+Message-ID: <1405464321-4723-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1405464321-4723-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-mmc-owner@vger.kernel.org>
 In-Reply-To: <1405464321-4723-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,54 +10,28 @@ To: linux-sh@vger.kernel.org
 Cc: linux-mmc@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Ian Molton <ian.molton@codethink.co.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The sh-mmcif driver implements DT support but the bindings are not
-documented. Document them.
+Node names should describe the function of the device, not its IP core
+name.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../devicetree/bindings/mmc/renesas,mmcif.txt      | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+ arch/arm/boot/dts/r8a7790.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-new file mode 100644
-index 0000000..299081f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-@@ -0,0 +1,32 @@
-+* Renesas Multi Media Card Interface (MMCIF) Controller
-+
-+This file documents differences between the core properties in mmc.txt
-+and the properties used by the MMCIF device.
-+
-+
-+Required properties:
-+
-+- compatible: must contain one of the following
-+	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
-+	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
-+	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
-+	- "renesas,sh-mmcif" for the generic MMCIF
-+
-+- clocks: reference to the functional clock
-+
-+- dmas: reference to the DMA channels, one per channel name listed in the
-+  dma-names property.
-+- dma-names: must contain "tx" for the transmit DMA channel and "rx" for the
-+  receive DMA channel.
-+
-+
-+Example: R8A7790 (R-Car H2) MMCIF0
-+
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 0f15f7c..4fae298 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -356,7 +356,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	mmcif0: mmcif@ee200000 {
 +	mmcif0: mmc@ee200000 {
-+		compatible = "renesas,mmcif-r8a7790", "renesas,sh-mmcif";
-+		reg = <0 0xee200000 0 0x80>;
-+		interrupts = <0 169 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7790_CLK_MMCIF0>;
-+		dmas = <&dmac0 0xd1>, <&dmac0 0xd2>;
-+		dma-names = "tx", "rx";
-+	};
+ 		compatible = "renesas,mmcif-r8a7790", "renesas,sh-mmcif";
+ 		reg = <0 0xee200000 0 0x80>;
+ 		interrupts = <0 169 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 1.8.5.5
 
