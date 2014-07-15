@@ -1,96 +1,89 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC V1] devicetree: Dialog Semiconductor consolidate existing
- vendor prefixes to standardise on 'dlg'
-Date: Tue, 15 Jul 2014 12:13:50 +0100
-Message-ID: <20140715111350.GA18495@sirena.org.uk>
-References: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
- <20140714162101.GM26465@leverpostej>
- <6ED8E3B22081A4459DAC7699F3695FB7D0B269FA@SW-EX-MBX02.diasemi.com>
- <20140715110944.GY26465@leverpostej>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [RESEND PATCH v3 05/11] drm: add Atmel HLCDC Display Controller
+ support
+Date: Tue, 15 Jul 2014 13:26:24 +0200
+Message-ID: <20140715132624.00add008@bbrezillon>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1404751384-5077-6-git-send-email-boris.brezillon@free-electrons.com>
+	<20140712201654.565472d8@bbrezillon>
+	<CAF6AEGv=irY0B-Cg6No7voadnShYQTwSLpZjk19xxX5qGcZeMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9208548269256216062=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140715110944.GY26465@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Silvio F <silvio.fricke@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Philipp Zabel <p.zabel@pengutronix.de>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <Support.Opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, Florian
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGv=irY0B-Cg6No7voadnShYQTwSLpZjk19xxX5qGcZeMw@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.c>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 12 Jul 2014 14:37:16 -0400
+Rob Clark <robdclark@gmail.com> wrote:
 
---===============9208548269256216062==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
+> On Sat, Jul 12, 2014 at 2:16 PM, Boris BREZILLON
+> <boris.brezillon@free-electrons.com> wrote:
+> > Hello,
+> >
+> > On Mon,  7 Jul 2014 18:42:58 +0200
+> > Boris BREZILLON <boris.brezillon@free-electrons.com> wrote:
+> >
+> >
+> >> +int atmel_hlcdc_layer_disable(struct atmel_hlcdc_layer *layer)
+> >> +{
+> >> +     struct atmel_hlcdc_layer_dma_channel *dma = &layer->dma;
+> >> +     unsigned long flags;
+> >> +     int i;
+> >> +
+> >> +     spin_lock_irqsave(&dma->lock, flags);
+> >> +     for (i = 0; i < layer->max_planes; i++) {
+> >> +             if (!dma->cur[i])
+> >> +                     break;
+> >> +
+> >> +             dma->cur[i]->ctrl = 0;
+> >> +     }
+> >> +     spin_unlock_irqrestore(&dma->lock, flags);
+> >> +
+> >> +     return 0;
+> >> +}
+> >
+> >
+> > I'm trying to simplify the hlcdc_layer code and in order to do that I
+> > need to know what's expected when a user calls plane_disable (or more
+> > exactly DRM_IOCTL_MODE_SETPLANE ioctl call with the frame buffer ID set
+> > to 0).
+> >
+> > The HLCDC Display Controller support two types of disable:
+> >
+> > 1) The plane is disabled at the end of the current frame (the is the
+> > solution I'm using)
+> >
+> > 2) The plane is disabled right away (I haven't tested it, but I think
+> > this solution could generate some sort of artifacts for a short period
+> > of time, because the framebuffer might be partially displayed)
+> >
+> > If solution 1 is chosen, should I wait for the plane to be actually
+> > disabled before returning ?
+> 
+> for cursor in particular, if you block, it is going to be a massive
+> slowdown for some apps.  I remember at least older gdm would rapidly
+> flash a spinning cursor.  As a result, if you wait for vsync each
+> time, it would take a couple minutes to login!
 
+That makes sense.
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 
+> if #2 works, I'd recommend it.  Otherwise you may have to do some of
+> the same hijinks that I have to do in mdp4_crtc for the cursor.
 
-On Tue, Jul 15, 2014 at 12:09:44PM +0100, Mark Rutland wrote:
-> On Tue, Jul 15, 2014 at 11:07:57AM +0100, Opensource [Steve Twiss] wrote:
+I already have a working solution which does not block with #1, I was
+just trying to simplify my code ;-).
+I'll try #2 and if it works without any side effects I'll go for it.
 
-> > Rob said that the old forms should be marked as deprecated, but I didn't
-> > deprecate any "dialog" or "diasemi" entries in this patch because I have
-> > only made two types of change:
+Thanks,
 
-> > (1) definitions of "diasemi" or "dialog" that have not been used in the kernel;
-> > (2) definitions of "diasemi" or "dialog" that are incompatible with existing driver code.
+Boris
 
-> > In both of these cases they cannot affect any working DTB.
-
-> Ok, that sounds fine then. That just wasn't immediately obvious.
-
-> Could you please note those facts in the commit message when you next
-> post?
-
-I thought we were already trying to do the stable ABI thing in wich case
-at least the first case (where we just happen to not have in tree DTs
-using the identifiers) should still remain supported?  It's not like it
-really costs us anything to do it.
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTxQzrAAoJELSic+t+oim96QwP/0nGX+/1gXpwtOhD7jG+f2dS
-v3RDwz+Es2wv5CvytR3D1y9hezaQI2LqHPo8pB/gY28ALdbfSgQ1ODp3FLztXCgy
-/7FAbLCjF8Lg4awtqOl0cnhyoe78DPpRs+Jqur1bTlFjvBTy5CnthdE2nM/kqUPO
-QF3OktN59MSpPaeAgdxztD7RvLH7fOv+h66kMV7/9+SLaF7Jdu5pxYgW6UBtD9jH
-79q2IMlc4gthK7zoHpswv8ntoY2VoNIj74mgtx6d96fNV3Nqe1esV62lHtOQzTkK
-ZNgcnfb1HIw59crm09zPMEasPId5FUxiS5OBwV9k/Hz8lnNddPk2JoPtXu/cCFRA
-pdCD6GTxsrbKLcF9h3vlLQr+rcDh1vavdroSePHnsvIF1Y5ru8V0gKB3C8nr4ymW
-7ei3Gbfcj6arbxCeRpQsg0hrG1XQxKk9HrbPaEtDee+eT6m3NGQzO1w9g4JTvMpo
-2lAaq3bzow9MngKz05+BHtBxStHMVJ9KUE4RHiWQVneNEJt/wrOXyxdWjrt2Hfk2
-YMttUP5pQg4drjIQPVIucak95/MQHzNacXeoVMHVD65i1T2zuLxpvGEo9EvEmbm2
-PQtxjzbSVhV/y+K7Lgt1jaCG/N72XHvNu/bfxfOK0DIE2i2S2s8tqKCLrdVqqfnS
-cQTlfRoUGtRKxjh9/GV3
-=NkQN
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
-
-
---===============9208548269256216062==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============9208548269256216062==--
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
