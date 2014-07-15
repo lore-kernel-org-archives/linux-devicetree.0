@@ -1,204 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Tue, 15 Jul 2014 13:07:58 +0200
-Message-ID: <1484511.NijXCAc7Hx@avalon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1645765.yCSTbHcZMC@avalon> <20140715105253.GE6616@ulmo>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC V1] devicetree: Dialog Semiconductor consolidate existing
+ vendor prefixes to standardise on 'dlg'
+Date: Tue, 15 Jul 2014 12:09:44 +0100
+Message-ID: <20140715110944.GY26465@leverpostej>
+References: <201407141616.s6EGG7uK022881@swsrvapps-01.diasemi.com>
+ <20140714162101.GM26465@leverpostej>
+ <6ED8E3B22081A4459DAC7699F3695FB7D0B269FA@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1554947283=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140715105253.GE6616@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B269FA@SW-EX-MBX02.diasemi.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <Support.Opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 15, 2014 at 11:07:57AM +0100, Opensource [Steve Twiss] wrote:
+> 
+> 
+> On 14 July 2014 17:21, Mark Rutland wrote:
+> >From: Mark Rutland [mailto:mark.rutland@arm.com]
+> >
+> >On Mon, Jul 14, 2014 at 05:07:20PM +0100, Opensource [Steve Twiss] wrote:
+> >> From: Opensource [Steve Twiss] <stwiss.opensource@diasemi.com>
+> >>
+> >> This patch series updates the device tree vendor prefix for
+> >> Dialog Semiconductor
+> >>
+> >> Various methods are currently used throughout the kernel: 'diasemi',
+> >> 'dialog' and 'dlg'. Others have also been suggested.
+> >>
+> >> This patch set aims to consolidate the usage of the vendor prefix to
+> >> use a common standard. The prefix 'dlg' is used.
+> >>
+> >> This e-mail is in response to the previous thread here:
+> >>
+> >> - https://lkml.org/lkml/2014/6/11/262
+> >
+> >In that response, Rob pointed out the old forms should be marked
+> >deprecated, but the patch seems to outright remove them.
+> >
+> >Are we sure this doesn't break an existing DTB anywhere?
+> >
+> >Thanks,
+> >Mark.
+> 
+> Hi Mark,
+> 
+> Rob said that the old forms should be marked as deprecated, but I didn't
+> deprecate any "dialog" or "diasemi" entries in this patch because I have
+> only made two types of change:
+> 
+> (1) definitions of "diasemi" or "dialog" that have not been used in the kernel;
+> (2) definitions of "diasemi" or "dialog" that are incompatible with existing driver code.
+> 
+> In both of these cases they cannot affect any working DTB.
 
---===============1554947283==
-Content-Type: multipart/signed; boundary="nextPart2571326.jt6PdmGK5u"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Ok, that sounds fine then. That just wasn't immediately obvious.
 
+Could you please note those facts in the commit message when you next
+post?
 
---nextPart2571326.jt6PdmGK5u
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+> Actually -- I will need to resend a V2 to this patch because I did miss out two
+> files for DA9210 which reference the unused compatible flag "diasemi" and I
+> might as well fix those while I am doing this change.
+> 
+> I will resend those changes all my "working" in my next patch RFC V2.
 
-Hi Thierry,
+That sounds fine to me.
 
-On Tuesday 15 July 2014 12:52:54 Thierry Reding wrote:
-> On Tue, Jul 15, 2014 at 12:43:02PM +0200, Laurent Pinchart wrote:
-> > On Tuesday 15 July 2014 12:37:19 Thierry Reding wrote:
-> >> On Tue, Jul 15, 2014 at 12:20:02PM +0200, Laurent Pinchart wrote:
-> >>> On Tuesday 15 July 2014 12:06:19 Boris BREZILLON wrote:
-> >>>> On Mon, 14 Jul 2014 12:05:43 +0200 Thierry Reding wrote:
-> >>>>> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote=
-:
-> >>>>>> The Atmel HLCDC (HLCD Controller) IP available on some Atmel S=
-oCs
-> >>>>>> (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family) provid=
-es a
-> >>>>>> display controller device.
-> >>>>>>=20
-> >>>>>> The HLCDC block provides a single RGB output port, and only
-> >>>>>> supports LCD panels connection to LCD panels for now.
-> >>>>>>=20
-> >>>>>> The atmel,panel property link the HLCDC RGB output with the LC=
-D
-> >>>>>> panel connected on this port (note that the HLCDC RGB connecto=
-r
-> >>>>>> implementation makes use of the DRM panel framework).
-> >>>>>>=20
-> >>>>>> Connection to other external devices (DRM bridges) might be ad=
-ded
-> >>>>>> later by mean of a new atmel,xxx (atmel,bridge) property.
-> >>>>>>=20
-> >>>>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons=
-.com>
-> >>>>>> ---
-> >>>>>>=20
-> >>>>>>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++=
-+++++
-> >>>>>>  1 file changed, 59 insertions(+)
-> >>>>>>  create mode 100644
-> >>>>>>  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> >>>=20
-> >>> [snip]
-> >>>=20
-> >>>>>> + - atmel,panel: Should contain a phandle with 2 parameters.
-> >>>>>> +   The first cell is a phandle to a DRM panel device
-> >>>>>> +   The second cell encodes the RGB mode, which can take the
-> >>>>>> following values:
-> >>>>>> +   * 0: RGB444
-> >>>>>> +   * 1: RGB565
-> >>>>>> +   * 2: RGB666
-> >>>>>> +   * 3: RGB888
-> >>>>>=20
-> >>>>> These are properties of the panel and should be obtained from t=
-he
-> >>>> panel directly rather than an additional cell in this specifier.=
-
-> >>>>=20
-> >>>> Okay.
-> >>>> What's the preferred way of doing this ?
-> >>>> What about defining an rgb-mode property in the panel node.
-> >>>=20
-> >>> You could do that, but it won't help you much, as the HLCDC drive=
-r
-> >>> must not parse properties from the panel node. You should instead=
-
-> >>> extend the drm_panel API with a function to retrieve panel proper=
-ties.
-> >>> The HLCDC driver will then query the panel driver at runtime for =
-the
-> >>> interface type. The panel driver will get the information from
-> >>> hardcoded data in the driver, from DT or possibly in some cases b=
-y
-> >>> querying the panel hardware directly.
-> >>=20
-> >> My preference for this would be that we either add this to some ex=
-isting
-> >> structure (struct drm_display_info seems like a good candidate) or=
- if
-> >> the number of parameters grows out of hands, then maybe even intro=
-duce a
-> >> new type of device that's specific for the interface. DRM panels a=
-re an
-> >> abstraction for panels, that is, interface-agnostic, and if we sta=
-rt
-> >> exposing interface specific parameters things will start to become=
- very
-> >> unwieldy.
-> >=20
-> > I agree with the goal of keeping drm_panel interface-agnostic. Howe=
-ver,
-> > one way or another, interface parameters will need to be communicat=
-ed
-> > between the panel driver and the controller driver. My preference, =
-if we
-> > need to extend the number and/or scope of parameters beyond what
-> > drm_display_info could reasonably contain, would be to implement a =
-new
-> > drm_panel operation to query/configure interface parameters, using =
-a
-> > structure that contains the interface type and a union of type-spec=
-ific
-> > structures. This would keep the API generic in the sense of not req=
-uiring
-> > explicit knowledge of all interfaces in the drivers, while offering=
- the
-> > flexibility we need with a way to easily detect the interface type =
-at
-> > runtime and react on unknown/unsupported types.
->
-> That's exactly what I was hoping could be avoided. If instead we mode=
-led
-> the interface type as a bus, we could for example have an lvds_bus al=
-ong
-> with an lvds_device and then use that as the natural place to store
-> these properties. Much like we do for DSI.
-
-And I believe that's what we should avoid ;-) First of all, let's not f=
-orget=20
-that Linux models control busses, not data busses. DSI is a special cas=
-e as it=20
-combines the control and data busses, but in the general case the same=20=
-
-implementation isn't possible. An LVDS panel controlled through I2C nee=
-ds to=20
-be an I2C device sitting on an I2C bus.
-
-Then, I believe it would make all drivers simpler if we had a single ob=
-ject=20
-type to deal with, with proper abstractions for bus types. A drm_panel =
-that=20
-can model panels regardless of the data bus type, with one operation th=
-at=20
-conveys bus-specific information, makes storing the objects and communi=
-cating=20
-with them simpler than having to deal with different kind of devices.
-
-=2D-=20
-Regards,
-
-Laurent Pinchart
-
---nextPart2571326.jt6PdmGK5u
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAABAgAGBQJTxQuOAAoJEIkPb2GL7hl1IKcH/27zUiG9x+SL71RDxmJoDlKt
-vX7JbLA5i2zKBnsZeZH/jCLJMXHj/LBXsvnw+C5GLAxM6LSO97TyTz8GDAyCxnlg
-+dE3WhGnFfRYrNpYNUtqTP9YHHu8/NRZC/zvqO1PUNddBVdovf9j6+WfceirQYX4
-2YCmazGAyWCOJJjkF5MRlqfZNB7y/KEY8o43n+sT/6N7BQ+oSxRvA93RmUPUWUg8
-0VXo0BlJznFe/DtXh2cVA3vdLdhLGR1dsbER+0/MLrCe5zkIV2gJ7TlBxbol5rei
-B7T9QGa7L97748OFoPHRM8lfWG/JJHsvOB8UEaR7DBWpw5TkRi2aEyJhNc9meT0=
-=UT4u
------END PGP SIGNATURE-----
-
---nextPart2571326.jt6PdmGK5u--
-
-
---===============1554947283==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1554947283==--
+Cheers,
+Mark.
