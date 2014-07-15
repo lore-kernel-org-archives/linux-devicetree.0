@@ -1,420 +1,61 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
-Date: Tue, 15 Jul 2014 23:46:38 +0530
-Message-ID: <CAJe_Zhd5SN-G9NURfpujYdBBpEtq5sPAQJJG0f-T4X+fXX-HqA@mail.gmail.com>
-References: <message-id-of-cover-letter@videotron.ca>
-	<1405232911-4569-1-git-send-email-mollie.wu@linaro.org>
-	<alpine.LFD.2.11.1407151214070.3647@knanqh.ubzr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.11.1407151214070.3647-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v3 0/7]  Devfreq support for Exynos5250/5420
+Date: Wed, 16 Jul 2014 00:03:26 +0530
+Message-ID: <1405449206-26146-1-git-send-email-a.kesavan@samsung.com>
+References: <1400779322-4410-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1400779322-4410-1-git-send-email-a.kesavan@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, linux-pm@vger.kernel.org, kgene.kim@samsung.com
+Cc: rjw@sisk.pl, t.figa@samsung.com, kesavan.abhilash@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 July 2014 22:35, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, 13 Jul 2014, Mollie Wu wrote:
->
->> diff --git a/arch/arm/mach-mb86s7x/board.c b/arch/arm/mach-mb86s7x/board.c
->> new file mode 100644
->> index 0000000..d6e76ec
->> --- /dev/null
->> +++ b/arch/arm/mach-mb86s7x/board.c
->> @@ -0,0 +1,65 @@
->> +/*
->> + * Support for the Fujitsu's MB86S7x based devices.
->> + *
->> + * Copyright (C) 2014 Linaro, LTD
->> + *
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation, version 2 of the License.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#include <linux/of.h>
->> +
->> +#include <asm/mcpm.h>
->> +#include <asm/mach/map.h>
->> +#include <asm/mach/arch.h>
->> +
->> +#include "iomap.h"
->> +
->> +bool __init mb86s7x_smp_init_ops(void)
->> +{
->> +     struct device_node *node;
->> +
->> +     node = of_find_compatible_node(NULL, NULL, "arm,cci-400");
->> +     if (node && of_device_is_available(node)) {
->> +             mcpm_smp_set_ops();
->> +             return true;
->> +     }
->> +
->> +     return false;
->> +}
->
-> You should be able to call mcpm_smp_set_ops() directly from
-> mb86s7x_mcpm_init() and dispense with this function entirely.
->
-Yup, thanks.
+This patchset adds devfreq support on Exynos5250 and Exynos5420.
+The patches add the missing INT clock support for exynos5250 and
+also add a new 5420 driver. We also have patches which add the
+PPMU node and fix a typo in the exynos5250 driver.
 
-> [...]
->
->> diff --git a/arch/arm/mach-mb86s7x/mcpm.c b/arch/arm/mach-mb86s7x/mcpm.c
->> new file mode 100644
->> index 0000000..86d223f
->> --- /dev/null
->> +++ b/arch/arm/mach-mb86s7x/mcpm.c
->> @@ -0,0 +1,293 @@
->> +/*
->> + * arch/arm/mach-mb86s7x/mcpm.c
->> + *
->> + * "Inspired" by tc_pm.c
->> + * Copyright:        (C) 2013-2014  Fujitsu Semiconductor Limited
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/io.h>
->> +#include <linux/pm.h>
->> +#include <linux/delay.h>
->> +#include <linux/kernel.h>
->> +#include <linux/reboot.h>
->> +#include <linux/arm-cci.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/irqchip/arm-gic.h>
->> +#include <linux/platform_data/mb86s7x_mbox.h>
->> +
->> +#include <asm/mcpm.h>
->> +#include <asm/cp15.h>
->> +#include <asm/cputype.h>
->> +#include <asm/system_misc.h>
->> +
->> +#include "iomap.h"
->> +
->> +static arch_spinlock_t mb86s7x_pm_lock = __ARCH_SPIN_LOCK_UNLOCKED;
->> +static int mb86s7x_pm_use_count[2][2];
->> +
->> +#define MB86S7X_WFICOLOR_VIRT (MB86S7X_ISRAM_VIRT + WFI_COLOR_REG_OFFSET)
->> +
->> +static void mb86s7x_set_wficolor(unsigned clstr, unsigned cpu, unsigned clr)
->> +{
->> +     u8 val;
->> +
->> +     if (clr & ~AT_WFI_COLOR_MASK)
->> +             return;
->> +
->> +     val = readb_relaxed(MB86S7X_WFICOLOR_VIRT + clstr * 2 + cpu);
->> +     val &= ~AT_WFI_COLOR_MASK;
->> +     val |= clr;
->> +     writeb_relaxed(val, MB86S7X_WFICOLOR_VIRT + clstr * 2 + cpu);
->> +}
->> +
->> +static int mb86s7x_pm_power_up(unsigned int cpu, unsigned int cluster)
->> +{
->> +     struct completion got_rsp;
->> +     int ret = 0;
->> +
->> +     pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
->
-> You should ensure cpu and cluster are within the allowed range here.
->
-OK, I didn't realize mcpm core could call with invalid cpu/cluster ids.
+Changes since RFC v1:
+	- Exynos5420 support has been added to the existent Exynos5250
+	  driver itself.
+	- Rebased on Chanwoo Choi's devfreq consolidation patchset.
+	- Removed unused clocks from the clock list
+	- Used the PPMU nodes with different compatible strings to
+	  differentiate between exynos5250 and exynos5420.
+Changes since RFC v2:
+	- Re-based on the latest devfreq/samsung clock tree.
+	- Fixed comment from Sergei Shtylyov.
 
+The patches have been tested on Exynos5250 based Snow board and Exynos5420
+based Peach-Pit boards. They have been prepared on linux-next(20140714) with
+the samsung clk-next branch merged[1].
 
->> +
->> +     arch_spin_lock(&mb86s7x_pm_lock);
->
-> As mentioned in my previous email there has to be a local_irq_disable()
-> here before locking.
->
-OK
+[1] //git.kernel.org/pub/scm/linux/kernel/git/tfiga/samsung-clk.git
 
->> +
->> +     mb86s7x_pm_use_count[cpu][cluster]++;
->> +
->> +     if (mb86s7x_pm_use_count[cpu][cluster] == 1) {
->> +             struct mb86s7x_cpu_gate cmd;
->> +
->> +             arch_spin_unlock(&mb86s7x_pm_lock);
->
-> Hmmm.... I was about to say that you cannot drop the lock here, however
-> if the count is now 1, that means the target CPU is either down or
-> already prepared to get there, and it cannot race with the code here. So
-> far so good.
->
->> +             cmd.payload_size = sizeof(cmd);
->> +             cmd.cluster_class = 0;
->> +             cmd.cluster_id = cluster;
->> +             cmd.cpu_id = cpu;
->> +             cmd.cpu_state = SCB_CPU_STATE_ON;
->> +
->> +             pr_debug("%s:%d CMD Cl_Class-%u CL_ID-%u CPU_ID-%u STATE-%u}\n",
->> +                      __func__, __LINE__, cmd.cluster_class,
->> +                      cmd.cluster_id, cmd.cpu_id, cmd.cpu_state);
->> +
->> +             init_completion(&got_rsp);
->> +             mb86s7x_set_wficolor(cluster, cpu, AT_WFI_DO_NOTHING);
->> +             ret = mhu_send_packet(CMD_CPU_CLOCK_GATE_SET_REQ,
->> +                                   &cmd, sizeof(cmd), &got_rsp);
->> +             if (ret < 0) {
->> +                     pr_err("%s:%d failed!\n", __func__, __LINE__);
->> +                     return ret;
->> +             }
->> +             if (ret)
->> +                     wait_for_completion(&got_rsp);
->> +
->> +             pr_debug("%s:%d REP Cl_Class-%u CL_ID-%u CPU_ID-%u STATE-%u}\n",
->> +                      __func__, __LINE__, cmd.cluster_class,
->> +                      cmd.cluster_id, cmd.cpu_id, cmd.cpu_state);
->> +
->> +             if (cmd.cpu_state != SCB_CPU_STATE_ON)
->> +                     return -ENODEV;
->> +
->> +     } else if (mb86s7x_pm_use_count[cpu][cluster] != 2) {
->> +             /*
->> +              * The only possible values are:
->> +              * 0 = CPU down
->> +              * 1 = CPU (still) up
->> +              * 2 = CPU requested to be up before it had a chance
->> +              *     to actually make itself down.
->> +              * Any other value is a bug.
->> +              */
->> +             BUG();
->> +     }
->> +
->> +     arch_spin_unlock(&mb86s7x_pm_lock);
->
-> If the count became 1, the lock was already unlocked above.
->
-Ah, yes. thanks.
+Abhilash Kesavan (3):
+  ARM: dts: Add PPMU device tree support for Exynos5250
+  ARM: dts: Add PPMU device tree support for Exynos5420
+  PM / devfreq: exynos: Fix typo in macro
 
->> +
->> +     return 0;
->> +}
->> +
->> +static void mb86s7x_pm_suspend(u64 ignored)
->> +{
->> +     unsigned int mpidr, cpu, cluster;
->> +     bool last_man = false, skip_wfi = false;
->> +
->> +     mpidr = read_cpuid_mpidr();
->> +     cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
->> +     cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
->> +
->> +     pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
->> +     __mcpm_cpu_going_down(cpu, cluster);
->> +
->> +     arch_spin_lock(&mb86s7x_pm_lock);
->> +     BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
->> +
->> +     mb86s7x_pm_use_count[cpu][cluster]--;
->> +
->> +     if (mb86s7x_pm_use_count[cpu][cluster] == 0) {
->> +             if (!mb86s7x_pm_use_count[0][cluster] &&
->> +                 !mb86s7x_pm_use_count[1][cluster])
->> +                     last_man = true;
->> +             mb86s7x_set_wficolor(cluster, cpu, AT_WFI_DO_POWEROFF);
->> +     } else if (mb86s7x_pm_use_count[cpu][cluster] == 1) {
->> +             skip_wfi = true; /* Overtaken by a power up */
->> +     } else {
->> +             BUG();
->> +     }
->> +
->> +     if (!skip_wfi)
->> +             gic_cpu_if_down();
->> +
->> +     if (last_man && __mcpm_outbound_enter_critical(cpu, cluster)) {
->> +             arch_spin_unlock(&mb86s7x_pm_lock);
->> +
->> +             if (read_cpuid_part_number() == ARM_CPU_PART_CORTEX_A15) {
->> +                     /*
->> +                      * On the Cortex-A15 we need to disable
->> +                      * L2 prefetching before flushing the cache.
->> +                      */
->> +                     asm volatile(
->> +                     "mcr p15, 1, %0, c15, c0, 3\n\t"
->> +                     "isb\n\t"
->> +                     "dsb"
->> +                     : : "r" (0x400));
->> +             }
->> +
->> +             v7_exit_coherency_flush(all);
->> +
->> +             cci_disable_port_by_cpu(mpidr);
->> +
->> +             __mcpm_outbound_leave_critical(cluster, CLUSTER_DOWN);
->> +     } else {
->> +             arch_spin_unlock(&mb86s7x_pm_lock);
->> +             v7_exit_coherency_flush(louis);
->> +     }
->> +
->> +     __mcpm_cpu_down(cpu, cluster);
->> +
->> +     /* Now we are prepared for power-down, do it: */
->> +     if (!skip_wfi)
->> +             wfi();
->> +
->> +     /* Not dead at this point?  Let our caller cope. */
->> +}
->> +
->> +static void mb86s7x_pm_power_down(void)
->> +{
->> +     mb86s7x_pm_suspend(0);
->> +}
->> +
->> +static int mb86s7x_wait_for_powerdown(unsigned int cpu, unsigned int cluster)
->> +{
->> +     struct mb86s7x_cpu_gate cmd;
->> +     struct completion got_rsp;
->> +     int i, ret;
->> +
->> +     cmd.payload_size = sizeof(cmd);
->> +     cmd.cluster_class = 0;
->> +     cmd.cluster_id = cluster;
->> +     cmd.cpu_id = cpu;
->> +     cmd.cpu_state = SCB_CPU_STATE_ON;
->> +
->> +     for (i = 0; i < 50; i++) {
->> +             init_completion(&got_rsp);
->> +             ret = mhu_send_packet(CMD_CPU_CLOCK_GATE_GET_REQ,
->> +                                   &cmd, sizeof(cmd), &got_rsp);
->> +             if (ret < 0) {
->> +                     pr_err("%s:%d failed to get CPU status\n",
->> +                            __func__, __LINE__);
->> +                     return -ETIMEDOUT;
->
-> You should probably return the actual error from mhu_send_packet() here
-> as this is probably not going to be a time-out error ?
->
-OK.
+Andrew Bresticker (2):
+  clk: exynos5250: add aliases for clocks used by devfreq
+  PM / devfreq: exynos5250: migrate to common-clock
 
->> +             }
->> +             if (ret)
->> +                     wait_for_completion(&got_rsp);
->
-> Maybe wait_for_completion_timeout() so execution doesn't get stuck if
-> the answer never comes back.  That is valid for the other call sites as
-> well.
->
-OK, though we are dead if communication with remote fails because
-something real bad has to have happened to remote whose job is mainly
-to serve our requests.
+Arjun.K.V (2):
+  clk: exynos5420: Add aliases for clocks used by devfreq
+  PM / devfreq: Add devfreq driver for Exynos5420
 
->> +             pr_debug("%s:%d Cl_Class-%u CL_ID-%u CPU_ID-%u STATE-%u\n",
->> +                      __func__, __LINE__,
->> +                      cmd.cluster_class, cmd.cluster_id,
->> +                      cmd.cpu_id, cmd.cpu_state);
->> +
->> +             if (cmd.cpu_state == SCB_CPU_STATE_OFF)
->> +                     return 0;
->> +
->> +             msleep(20);
->> +     }
->> +
->> +     return -ETIMEDOUT;
->> +}
->> +
->> +static const struct mcpm_platform_ops mb86s7x_pm_power_ops = {
->> +     .power_up               = mb86s7x_pm_power_up,
->> +     .power_down             = mb86s7x_pm_power_down,
->> +     .wait_for_powerdown     = mb86s7x_wait_for_powerdown,
->> +     .suspend                = mb86s7x_pm_suspend,
->> +};
->
-> For proper behavior with cpuidle you'll need to provide a powered_up
-> method as well.
->
-OK.
+ .../bindings/arm/exynos/ppmu-exynos5.txt           |   26 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |    8 +
+ arch/arm/boot/dts/exynos5420.dtsi                  |    7 +
+ drivers/clk/samsung/clk-exynos5250.c               |   25 +-
+ drivers/clk/samsung/clk-exynos5420.c               |   73 ++-
+ drivers/devfreq/Kconfig                            |   10 +-
+ drivers/devfreq/exynos/exynos5_bus.c               |  665 +++++++++++++++++---
+ drivers/devfreq/exynos/exynos_ppmu.h               |    2 +-
+ 8 files changed, 702 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/exynos/ppmu-exynos5.txt
 
->> +
->> +static void mb86s7x_restart(enum reboot_mode reboot_mode, const char *unused)
->> +{
->> +     /* Reboot immediately */
->> +     mb86s7x_reboot(50);
->> +}
->> +
->> +static void mb86s7x_poweroff(void)
->> +{
->> +     /* Reboot never, remain dead */
->> +     mb86s7x_reboot(~0);
->> +}
->> +
->> +/*
->> + * Enable cluster-level coherency, in preparation for turning on the MMU.
->> + */
->> +static void __naked mb86s7x_pm_power_up_setup(unsigned int affinity_level)
->> +{
->> +     asm volatile ("\n"
->> +"    cmp     r0, #1\n"
->> +"    bxne    lr\n"
->> +"    b       cci_enable_port_for_self");
->> +}
->> +
->> +static int __init mb86s7x_mcpm_init(void)
->> +{
->> +     unsigned int mpidr, cpu, cluster;
->> +     struct mb86s7x_scb_version cmd;
->> +     struct completion got_rsp;
->> +     int ret;
->> +
->> +     arm_pm_restart = mb86s7x_restart;
->> +     pm_power_off = mb86s7x_poweroff;
->> +
->> +     if (!cci_probed())
->> +             return -ENODEV;
->> +
->> +     mpidr = read_cpuid_mpidr();
->> +     cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
->> +     cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
->> +
->> +     pr_info("Booting on cpu_%u cluster_%u\n", cpu, cluster);
->> +     mb86s7x_pm_use_count[cpu][cluster] = 1;
->> +
->> +     /* reset the wfi 'color' for primary cpu */
->> +     mb86s7x_set_wficolor(cluster, cpu, AT_WFI_DO_NOTHING);
->> +
->> +     /* Set entry point for any CPU nowonwards */
->> +     writel_relaxed(virt_to_phys(mcpm_entry_point),
->> +                  MB86S7X_TRAMPOLINE_VIRT + SEC_RSTADDR_OFF);
->> +
->> +     cmd.payload_size = sizeof(cmd);
->> +     cmd.version = 0;
->> +     cmd.config_version = 0;
->> +     init_completion(&got_rsp);
->> +     ret = mhu_send_packet(CMD_SCB_CAPABILITY_GET_REQ,
->> +                           &cmd, sizeof(cmd), &got_rsp);
->> +     if (ret < 0)
->> +             pr_err("%s:%d failed to get SCB version\n",
->> +                    __func__, __LINE__);
->> +     if (ret)
->> +             wait_for_completion(&got_rsp);
->
-> There appears to be a recurring pattern here:
->
->   - fill up mb86s7x_scb_version structure
->   - init_completion()
->   - mhu_send_packet()
->   - complain if error
->   - otherwise possibly wait_for_completion()
->
-> All this could be abstracted in a common function to reduce code
-> duplication.
->
-OK.
+-- 
+1.7.9.5
 
-Thank you.
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
