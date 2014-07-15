@@ -1,89 +1,65 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] mfd: sun6i-prcm: Add support for
- Allwinner A23 PRCM
-Date: Tue, 15 Jul 2014 08:55:15 +0200
-Message-ID: <20140715065515.GE3745@lukather>
-References: <1404892479-12222-1-git-send-email-wens@csie.org>
- <1404892479-12222-4-git-send-email-wens@csie.org>
- <20140710093707.GC11948@lee--X1>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V2 2/2] ARM: dts: DRA7: Add node for RTC
+Date: Mon, 14 Jul 2014 23:59:28 -0700
+Message-ID: <20140715065928.GK20068@atomide.com>
+References: <53BD0C43.1090002@ti.com>
+ <20140709100914.GL28884@atomide.com>
+ <53BD1AF8.2060609@ti.com>
+ <20140709105055.GP28884@atomide.com>
+ <53BD1FC3.6050500@ti.com>
+ <20140709110051.GQ28884@atomide.com>
+ <53BD2249.2080808@ti.com>
+ <53C3ED02.7020206@ti.com>
+ <20140714162324.GF20068@atomide.com>
+ <53C4A8F5.2000302@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sfyO1m2EN8ZOtJL6"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5VCSOPAKGQEZQGXY6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140710093707.GC11948@lee--X1>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <53C4A8F5.2000302@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Keerthy <a0393675@ti.com>, paul@pwsan.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@ti.com, devicetree@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
+* Lokesh Vutla <lokeshvutla@ti.com> [140714 21:09]:
+> On Monday 14 July 2014 09:53 PM, Tony Lindgren wrote:
+> > * Lokesh Vutla <lokeshvutla@ti.com> [140714 07:47]:
+> >>
+> >> In my experiments I observed that when RTC regulator is switched
+> >> off and switched on, there is an abort while accessing RTC registers.
+> > 
+> > Right, then you know you have the right regulator :)
+>
+> Once we switch it off it is expected, but then if it is *switched on*
+> it is expected that we should be able to access registers. Here there
+> is an abort accessing these registers. 
 
---sfyO1m2EN8ZOtJL6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Most likely you need to also reconfigure the registers or
+re-enable the clock or reset it at the interconnect too.
 
-Hi Lee,
+> >> After discussing with hardware team, it is confirmed that this
+> >> LDO9 regulator powering RTC cannot be turned off when
+> >> SoC is active and expected to be always on.
+> > 
+> > Hmm but sounds like you already proved it can be idled? So
+> > the regulator really should be managed by the driver?
+>
+> Actually I adapted the driver to support a power regulator.
+> Then I observed that if rtc is loaded as  a module there is
+> an abort(  which is happening because the regulator is disabled
+> once and re-enabled). So when we checked with the hardware team,
+> they confirmed that ldo9 should not be disabled. 
 
-On Thu, Jul 10, 2014 at 10:37:07AM +0100, Lee Jones wrote:
-> On Wed, 09 Jul 2014, Chen-Yu Tsai wrote:
->=20
-> > The Allwinner A23 SoC has a PRCM unit like the previous A31 SoC.
-> > The differences are the AR100 clock can no longer be modified,
-> > the APB0 clock has different divisors, and some clock gates are
-> > gone.
-> >=20
-> > This patch adds a compatible with a modified subdevice list for
-> > the A23.
-> >=20
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/mfd/sun6i-prcm.txt         |  2 +-
-> >  drivers/mfd/sun6i-prcm.c                           | 30 ++++++++++++++=
-++++++++
-> >  2 files changed, 31 insertions(+), 1 deletion(-)
->=20
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hmm so how is it enabled initially then?
 
-We don't have any dependency on this driver, so it would be simpler if
-you could just take it through your tree I guess.
+To me it sounds like very standard stuff to reinitialize
+a driver for any omap device when waking from suspend or
+returning from off-idle. If the RTC device cannot be reset,
+idled and re-initialized properly, there's something wrong
+with the RTC driver, clocks, regulators, or hwmod data for
+that device.
 
-Thanks!
-Maxime
+Regards,
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---sfyO1m2EN8ZOtJL6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTxNBTAAoJEBx+YmzsjxAgfl8P/jFHIOvMnJE/mqI1P6XIOTv0
-dbKGL39V8id6nmuytvSnVRUnPNK+CoNMmY5bDD648TfI2FcgxvoC300v/1+e+lls
-0Hn2S/ZWgSuY4VQ2LpPAyGWewhJW+fkRD7EvKo32M33DTm+//jCfSGqimfwgMKbN
-r9r4TSwB+E4XkaZqzLtlulUPFpxcgENhOIxOi+5uub48UKPkuDyNG/Ha2fNpvOR6
-xvZnj+J9IVHBx9Jc3Jo2NCNQBmyaLxIk54yLOl8Zav5WBMrG3AUdjPGLHD0U+t08
-OjWjDM+yWQdXdYnT67wl2ddLWohQBuvVIWpzwaWHOpBdeHxIAT7lQm1mGgEYMYgk
-UyfeV8PEVPehlLpZlWsdGBTDxZFYorhY4Y7+WVc0073BTVPhRTrd9gqiu2wa+Wh/
-Bwlq57z5f8FONQSHbeM1Hi/4EK1jgnU7Kg3iI5K8EYc3bKcRKBpdBm339HklXirJ
-vistM6goTwO0CDOcUrnvp/df/Xdb0hYl7QFoFQQOni1a42RP+R0Aorsw8tC8Ema4
-M1KnOexedgnQ0VsBH2hoiDinL1FkWj789HtDy8gXQM9iXVOG0kjRSewxGkeBdk+D
-MvOEKNQO5SOlzT2UAlR24X5MloufuxXC7LD+/j6DxoFU9uO6OwFwbc1RcvtZX90s
-0O6LeOP+vfqmbsWAKXM0
-=AumZ
------END PGP SIGNATURE-----
-
---sfyO1m2EN8ZOtJL6--
+Tony
