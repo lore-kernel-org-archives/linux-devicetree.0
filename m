@@ -1,286 +1,121 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: add rk3288 evaluation board
-Date: Wed, 16 Jul 2014 01:02:58 +0200
-Message-ID: <2186895.xqgxh7zegl@diego>
-References: <1471578.ILeMmG2DL6@diego>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
+Date: Wed, 16 Jul 2014 08:35:50 +0900
+Message-ID: <53C5BAD6.5030603@samsung.com>
+References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>	<CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>	<53A12EA3.5010007@samsung.com>	<CAPdUM4OK+ATMMRM67dV5JeeTGMu=XA7Gvi7Uif+Hypf3iP+6jg@mail.gmail.com>	<CAPdUM4MToVJC5KRS1DUDmYEdUx2PGBE0G1v7p-SGgqpw7SPOhw@mail.gmail.com>	<53BC0F8F.4010106@samsung.com>	<CAPdUM4NGXDz-bX=qqzC7LXRE5fCapdHGZeUZ29Xov=P7VZykgg@mail.gmail.com> <CAPdUM4P7sijj_-fa_Opuo73ugAW7coUDZ+UnSp_tnjkHacJFVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471578.ILeMmG2DL6@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4P7sijj_-fa_Opuo73ugAW7coUDZ+UnSp_tnjkHacJFVw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-There exist 2 variants using either the act8846 or rk808 as pmic, while the
-rest of the board stays the same.
+On 07/14/14 18:09, Rahul Sharma wrote:
+> Hi Kukjin,
+>
+Hi Rahul,
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/rk3288-evb-act8846.dts | 136 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3288-evb-rk808.dts   |  19 +++++
- arch/arm/boot/dts/rk3288-evb.dtsi        |  77 +++++++++++++++++
- 3 files changed, 232 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-evb-act8846.dts
- create mode 100644 arch/arm/boot/dts/rk3288-evb-rk808.dts
- create mode 100644 arch/arm/boot/dts/rk3288-evb.dtsi
+> Please consider this patch for your branch. This patch is important
+> for Display for Exynos5 boards.
+>
+OK, I will take this for exynos5420 display for 3.17...BTW I'm not sure 
+this is a regression for 3.16 or not...if so, please let me know.
 
-diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-new file mode 100644
-index 0000000..9b1ef03
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-@@ -0,0 +1,136 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-evb.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3288-evb-act8846", "rockchip,rk3288";
-+};
-+
-+&i2c0 {
-+	hym8563@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hym8563_int>;
-+
-+		#clock-cells = <0>;
-+		clock-output-names = "xin32k";
-+	};
-+
-+	act8846: act8846@5a {
-+		compatible = "active-semi,act8846";
-+		reg = <0x5a>;
-+		status = "okay";
-+	};
-+};
-+
-+&act8846 {
-+	regulators {
-+		vcc_ddr: REG1 {
-+			regulator-name = "VCC_DDR";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-always-on;
-+		};
-+
-+		vcc_io: REG2 {
-+			regulator-name = "VCC_IO";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_log: REG3 {
-+			regulator-name = "VDD_LOG";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-always-on;
-+		};
-+
-+		vcc_20: REG4 {
-+			regulator-name = "VCC_20";
-+			regulator-min-microvolt = <2000000>;
-+			regulator-max-microvolt = <2000000>;
-+			regulator-always-on;
-+		};
-+
-+		vccio_sd: REG5 {
-+			regulator-name = "VCCIO_SD";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd10_lcd: REG6 {
-+			regulator-name = "VDD10_LCD";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-always-on;
-+		};
-+
-+		vcca_codec: REG7 {
-+			regulator-name = "VCCA_CODEC";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vcca_tp: REG8 {
-+			regulator-name = "VCCA_TP";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vccio_pmu: REG9 {
-+			regulator-name = "VCCIO_PMU";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_10: REG10 {
-+			regulator-name = "VDD_10";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-always-on;
-+		};
-+
-+		vcc_18: REG11 {
-+			regulator-name = "VCC_18";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vcc18_lcd: REG12 {
-+			regulator-name = "VCC18_LCD";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		hym8563_int: hym8563-int {
-+			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-new file mode 100644
-index 0000000..c168cb2
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-@@ -0,0 +1,19 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-evb.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3288-evb-rk808", "rockchip,rk3288";
-+
-+};
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-new file mode 100644
-index 0000000..ff642d4
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -0,0 +1,77 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "rk3288.dtsi"
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+	};
-+
-+	memory {
-+		reg = <0x0 0x80000000>;
-+	};
-+
-+	soc {
-+		gpio-keys {
-+			compatible = "gpio-keys";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			autorepeat;
-+
-+			button@0 {
-+				gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-+				linux,code = <116>;
-+				label = "GPIO Key Power";
-+				linux,input-type = <1>;
-+				gpio-key,wakeup = <1>;
-+				debounce-interval = <100>;
-+			};
-+		};
-+
-+		i2c0: i2c@ff650000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_xfer>;
-+			status = "okay";
-+		};
-+
-+		watchdog@ff800000 {
-+			status = "okay";
-+		};
-+
-+		serial@ff180000 {
-+			status = "okay";
-+		};
-+
-+		serial@ff190000 {
-+			status = "okay";
-+		};
-+
-+		uart2: serial@ff690000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_xfer>;
-+			status = "okay";
-+		};
-+
-+		uart3: serial@ff1b0000 {
-+			status = "okay";
-+		};
-+
-+		uart4: serial@ff1c0000 {
-+			status = "okay";
-+		};
-+	};
-+};
--- 
-1.9.0
+Thanks,
+Kukjin
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards,
+> Rahul Sharma.
+>
+> On 9 July 2014 17:00, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
+>> Hi Tomasz,
+>>
+>> On 8 July 2014 21:04, Tomasz Figa<t.figa@samsung.com>  wrote:
+>>> Hi Rahul,
+>>>
+>>> On 07.07.2014 15:37, Rahul Sharma wrote:
+>>>> Hi Andrej, Inki,
+>>>>
+>>>> On 18 June 2014 12:06, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
+>>>>> Hi Andrej,
+>>>>>
+>>>>> On 18 June 2014 11:46, Andrzej Hajda<a.hajda@samsung.com>  wrote:
+>>>>>> On 06/17/2014 07:49 AM, Rahul Sharma wrote:
+>>>>>>> Hi All,
+>>>>>>>
+>>>>>>> Please review this patch.
+>>>>>>>
+>>>>>>> Regards,
+>>>>>>> Rahul Sharma
+>>>>>>>
+>>>>>>> On 9 June 2014 16:58, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
+>>>>>>>> Display domain is removed due to instability issues. Explaining
+>>>>>>>> the problem below:
+>>>>>>>>
+>>>>>>>> exynos_init_late triggers the pm_genpd_poweroff_unused which
+>>>>>>>> powers off the unused power domains. This call hits before
+>>>>>>>> the trigger to deferred probes.
+>>>>>>>>
+>>>>>>>> DRM DP Panel defers the probe due to supply get failure. By the
+>>>>>>>> time, deferred probe is scheduled again, Display Power Domain is
+>>>>>>>> powered off by pm_genpd_poweroff_unused.
+>>>>>>>>
+>>>>>>>> FIMD and DP drivers are accessing registers during Probe and Bind
+>>>>>>>> callbacks. If display domain is enabled/disabled around register
+>>>>>>>> accesses, display domain gets unstable and we are getting Power
+>>>>>>>> Domain Disable fail notification. Increasing the Timeout also
+>>>>>>>> didn't help.
+>>>>>>
+>>>>>> As I understand the problem is that fimd and dp drivers access hw
+>>>>>> registers without enabling power domain. So the proper solution is to
+>>>>>> fix these drivers.
+>>>>>
+>>>>> That is also a problem but I fixed those accesses in my local kernel before
+>>>>> hitting this issue. If we do register accesses in FIMD/DP probe/bind we
+>>>>> observes "Prefetch abort" exception. But here the problem is that 'DP
+>>>>> domain disable' starts failing if we enable/disable multiple times.
+>>>>>
+>>>>>>
+>>>>>> Btw. there are already patches removing hw access from probe/bind of
+>>>>>> fimd. I guess removing also hw access from dp probe/bind could be a good
+>>>>>> solution.
+>>>>>
+>>>>> Please let me know the links for posted patches. I will test with those patches.
+>>>>
+>>>> Is there any update on this? Please share the patches which fixes the
+>>>> above issue or avoid the above scenario of multiple PM Domain enable/disable.
+>>>> I will test them for exynos5 based boards. Otherwise we should get this change
+>>>> merged else display will remain broken for exynos5 based boards.
+>>>
+>>> Andrzej is on holidays right now, so he won't be able to reply in this
+>>> thread until he's back. Here are two patches I was able to find on the
+>>> related MLs that might be fixing the cause of your issues:
+>>
+>> Ok. thanks for the update.
+>>
+>> We should test with Ajay's patches which includes DP probe deferring
+>> based on availability of bridge chip. +
+>>
+>> few patches which cleanup register access in FIMD and DP probe/bind
+>> OR
+>> few patches to enable Display power domain and clocks just before the
+>> register access. As done in https://lkml.org/lkml/2014/7/4/188.
+>>
+>> Later solution results into display power domain enable failure in case of DRM
+>> probe defer.
+>>
+>> I am just curious if Andrej has some solution for the first approach which can
+>> be tested for defer probe and S2R scenarios.
+>>
+>> Regards,
+>> Rahul Sharma.
+>>
+>>>
+>>> [PATCH] drm/exynos: remove hardware overlays disable from fimd probe
+>>> (https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31629.html)
+>>>
+>>> [PATCH] drm/exynos: fimd: Keep power enabled during fimd_bind
+>>> (https://lkml.org/lkml/2014/7/4/188)
