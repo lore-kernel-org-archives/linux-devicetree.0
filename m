@@ -1,60 +1,63 @@
-From: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] brcmfmac: OOB interrupt support
-Date: Tue, 15 Jul 2014 16:58:41 -0400
-Message-ID: <20140715205841.GG26012@tuxdriver.com>
-References: <1404051421-24377-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCJ6RRU764FRBYFMS2PAKGQEFNWG3SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1404051421-24377-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Content-Disposition: inline
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 01/11] mmc: sh_mmcif: Document DT bindings
+Date: Wed, 16 Jul 2014 00:45:11 +0200
+Message-ID: <1405464321-4723-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1405464321-4723-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1405464321-4723-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Ian Molton <ian.molton@codethink.co.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch "brcmfmac: Cleanup used device IDs." makes this series
-not build.  Unfortunately, I already merged that one...
+The sh-mmcif driver implements DT support but the bindings are not
+documented. Document them.
 
-Would you mind rebasing/reposting this?
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/mmc/renesas,mmcif.txt      | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
 
-Sorry...
-
-John
-
-On Sun, Jun 29, 2014 at 04:16:57PM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> Here is v2 of the brcmfmac: OOB interrupt support series.
-> 
-> Changes since v1:
-> -Post as a stand alone series, rather then together with sunxi pinctrl changes,
->  etc.
-> -Add a patch to fixup the names of the register addresses used in the
->  "brcmfmac: Fix OOB interrupt not working for BCM43362" patch
-> -Use the new register names in:
->  "brcmfmac: Fix OOB interrupt not working for BCM43362"
-> 
-> Changes since v2:
-> -"dt: bindings: add bindings for Broadcom bcm43xx sdio devices"
->  * changed the compatible string to brcm,bcm4329-fmac
->  * replaced the dt-bindings example with a real world example
-> -"brcmfmac: Fix OOB interrupt not working for BCM43362"
->  * updated commit message with confirmation from broadcom that this is the
->    right thing to do
-> 
-> Regards,
-> 
-> Hans
-> 
-
+diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+new file mode 100644
+index 0000000..299081f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+@@ -0,0 +1,32 @@
++* Renesas Multi Media Card Interface (MMCIF) Controller
++
++This file documents differences between the core properties in mmc.txt
++and the properties used by the MMCIF device.
++
++
++Required properties:
++
++- compatible: must contain one of the following
++	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
++	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
++	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
++	- "renesas,sh-mmcif" for the generic MMCIF
++
++- clocks: reference to the functional clock
++
++- dmas: reference to the DMA channels, one per channel name listed in the
++  dma-names property.
++- dma-names: must contain "tx" for the transmit DMA channel and "rx" for the
++  receive DMA channel.
++
++
++Example: R8A7790 (R-Car H2) MMCIF0
++
++	mmcif0: mmc@ee200000 {
++		compatible = "renesas,mmcif-r8a7790", "renesas,sh-mmcif";
++		reg = <0 0xee200000 0 0x80>;
++		interrupts = <0 169 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7790_CLK_MMCIF0>;
++		dmas = <&dmac0 0xd1>, <&dmac0 0xd2>;
++		dma-names = "tx", "rx";
++	};
 -- 
-John W. Linville		Someday the world will need a hero, and you
-linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org			might be all we have.  Be ready.
+1.8.5.5
+
