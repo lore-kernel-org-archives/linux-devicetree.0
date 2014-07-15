@@ -1,40 +1,66 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [GIT PULL] Mediatek basic support for v3.17
-Date: Tue, 15 Jul 2014 06:59:13 -0700
-Message-ID: <20140715135913.GA18571@kroah.com>
-References: <CABuKBe+h0Et5_+o4_i-Eu7EQ8Xka7YFoKmO=U0B7NnVQBdQ8FA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] Input: Add driver for Microchip's CAP1106
+Date: Tue, 15 Jul 2014 15:42:59 +0100
+Message-ID: <20140715144259.GD26465@leverpostej>
+References: <1405073193-21448-1-git-send-email-zonque@gmail.com>
+ <20140714095247.GB4980@leverpostej>
+ <53C3AEE1.4030805@zonque.org>
+ <20140715085138.GR26465@leverpostej>
+ <53C4F076.1070500@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABuKBe+h0Et5_+o4_i-Eu7EQ8Xka7YFoKmO=U0B7NnVQBdQ8FA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko.stuebner@bq.com>, ak@linux.intel.com, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>, u.kleine-koenig@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.co>
+In-Reply-To: <53C4F076.1070500@zonque.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: "dtor@mail.ru" <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "dh.herrmann@gmail.com" <dh.herrmann@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 01:11:42PM +0200, Matthias Brugger wrote:
-> The following changes since commit 7171511eaec5bf23fb06078f59784a3a0626b38f:
+On Tue, Jul 15, 2014 at 10:12:22AM +0100, Daniel Mack wrote:
+> On 07/15/2014 10:51 AM, Mark Rutland wrote:
+> > On Mon, Jul 14, 2014 at 11:20:17AM +0100, Daniel Mack wrote:
 > 
->   Linux 3.16-rc1 (2014-06-15 17:45:28 -1000)
+> >> Hmm, I thought about that, but there are - in theory - more details that
+> >> could be specified per channel. I left those functions out for the first
+> >> version, as I have no good way to test them.
+> > 
+> > Ok. Could you elaborate on what those details might be? It might make
+> > sense to have these as nodes if there are arbitrary properties to
+> > describe for each button, but I'm not familiar enough with the hardware
+> > to make a call either way.
 > 
-> are available in the git repository at:
+> No, there are just settings that can be made for each indvidual
+> channel/button, such as sensitivity settings for instance. But they can
+> of course be specified in a similar manner as the keycodes, in a
+> fixed-size array. That's completely ok I think.
 > 
->   https://github.com/mbgg/linux-mediatek.git tags/v3.17-next-basic-support
+> >> linux,keycode feels a bit overkill here though, so I'd rather go for a
+> >> fixed-size linux,keycodes property. The number of entries is fixed,
+> >> anyway. Would you be fine with that?
+> > 
+> > Assuming no-one's likely to want a sparse keymap (i.e. one where some
+> > keys do nothing) then that's probably ok.
+> 
+> If such a setup occurs, support for disabling channels could easily be
+> added, and in such cases, the keycode is simple ignored. I don't think a
+> sparse matrix keymap makes much sense here, especially as the buttons
+> are not organized in rows and columns.
+> 
+> >>> /me mutters usual grumblings about the autorepeat property.
+> >>
+> >> I took that from the gpio-keys driver. Is there a better way to denote
+> >> such a feature?
+> > 
+> > Unfortunately not, given current practice. My gripe is that it's a Linux
+> > detail that were describing rather than a property of the device. We can
+> > forget about that for now.
+> 
+> I see, so I'll leave it as it is.
+> 
+> I'll drop the input device unregister call as Dmitry said, and repost v5.
 
-As these are only 7 patches, why do a git pull?  And I know I can't take
-pull requests from github, I'm not sure what the rules are for the ARM
-SoC developers either...
+Sure, that all sounds fine.
 
-Just send patches, it's easier that way.
-
-greg k-h
+Cheers,
+Mark.
