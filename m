@@ -1,101 +1,176 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] iio: add support of the max5821
-Date: Tue, 15 Jul 2014 10:21:26 +0100
-Message-ID: <c0929d8c-7835-4522-9280-6c1c422df035@email.android.com>
-References: <1405359159-12379-1-git-send-email-tremyfr@yahoo.fr> <53C43BD6.9030102@kernel.org> <CAAj6DX2Tnt6=CuNAhkq_D=pknbEv=j7tf7Dtm7aoCm3gMu+RQw@mail.gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4 2/2] can: m_can: add Bosch M_CAN controller support
+Date: Tue, 15 Jul 2014 11:21:57 +0200
+Message-ID: <53C4F2B5.7050704@pengutronix.de>
+References: <1405338041-19945-1-git-send-email-b29396@freescale.com> <1405338041-19945-2-git-send-email-b29396@freescale.com> <53C3C97A.7080102@pengutronix.de> <20140715033324.GC21584@shlinux1.ap.freescale.net> <53C4D872.9060707@pengutronix.de> <20140715082637.GA2601@shlinux1.ap.freescale.net> <53C4EA68.5090606@pengutronix.de> <20140715090719.GA3374@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAj6DX2Tnt6=CuNAhkq_D=pknbEv=j7tf7Dtm7aoCm3gMu+RQw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antonio Borneo <borneo.antonio@gmail.com>
-Cc: Philippe Reynes <tremyfr@yahoo.fr>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, armadeus-forum@lists.sourceforge.net, devicetree@vger.kernel.org, julien.boibessot@free.fr
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="IbkQSVi6T7AiP2lnsO3uJDOPD091WPEvK"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20140715090719.GA3374@shlinux1.ap.freescale.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--IbkQSVi6T7AiP2lnsO3uJDOPD091WPEvK
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-
-On July 15, 2014 9:56:17 AM GMT+01:00, Antonio Borneo <borneo.antonio@gmail.com> wrote:
->On Tue, Jul 15, 2014 at 4:21 AM, Jonathan Cameron <jic23@kernel.org>
->wrote:
->> On 14/07/14 18:32, Philippe Reynes wrote:
->
->Hi Jonathan,
->
->regarding your comment below
->
-><snip>
->>> +static int max5821_get_value(struct iio_dev *indio_dev,
->>> +                            int *val, int channel)
->>> +{
->>> +       struct max5821_data *data = iio_priv(indio_dev);
->>> +       struct i2c_client *client = data->client;
->>> +       u8 outbuf[1];
->>> +       u8 inbuf[2];
->>> +       int ret;
->>> +
->>> +       switch (channel) {
->>> +       case 0:
->>> +               outbuf[0] = MAX5821_READ_DAC_A_COMMAND;
->>> +               break;
->>> +       case 1:
->>> +               outbuf[0] = MAX5821_READ_DAC_B_COMMAND;
->>> +               break;
->>> +       default:
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       ret = i2c_master_send(client, outbuf, 1);
->>> +       if (ret < 0)
->>> +               return ret;
->>> +       else if (ret != 1)
->>> +               return -EIO;
->>> +
->>> +       ret = i2c_master_recv(client, inbuf, 2);
->>> +       if (ret < 0)
->>> +               return ret;
->>> +       else if (ret != 2)
->>> +               return -EIO;
+On 07/15/2014 11:07 AM, Dong Aisheng wrote:
+> On Tue, Jul 15, 2014 at 10:46:32AM +0200, Marc Kleine-Budde wrote:
+>> On 07/15/2014 10:26 AM, Dong Aisheng wrote:
+>>>>>>> +static void m_can_read_fifo(const struct net_device *dev, struct=
+ can_frame *cf,
+>>>>>>> +			    u32 rxfs)
+>>>>>>> +{
+>>>>>>> +	struct m_can_priv *priv =3D netdev_priv(dev);
+>>>>>>> +	u32 flags, fgi;
+>>>>>>> +
+>>>>>>> +	/* calculate the fifo get index for where to read data */
+>>>>>>> +	fgi =3D (rxfs & RXFS_FGI_MASK) >> RXFS_FGI_OFF;
+>>>>>>> +	flags =3D m_can_fifo_read(priv, fgi, 0x0);
+>>>>>>                                            ^^^
+>>>>>>
+>>>>>> Can you introduce an enum for the offsets, please adjust the signa=
+ture
+>>>>>> of m_can_fifo_read() accordingly.
+>>>>>>
+>>>>>
+>>>>> I wonder enum may not be suitable.
+>>>>> The Rx Buffer and FIFO Element is as follows:
+>>>>>    31 24 23 16 15 8 7 0
+>>>>> R0 ESI XTD RTR ID[28:0]
+>>>>
+>>>> M_CAN_FIFO_ID
+>>>>
+>>>>> R1 ANMF FIDX[6:0] res EDL BRS DLC[3:0] RXTS[15:0]
+>>>>
+>>>> M_CAN_FIFO_DLC
+>>>>
+>>>>> R2 DB3[7:0] DB2[7:0] DB1[7:0] DB0[7:0]
+>>>>> R3 DB7[7:0] DB6[7:0] DB5[7:0] DB4[7:0]
+>>>>
+>>>> M_CAN_FIFO_DATA0
+>>>> M_CAN_FIFO_DATA1
+>>>>
+>>>
+>>> You mean as follows?
+>>> enum m_can_fifo {
+>>>         M_CAN_FIFO_ID =3D 0,
+>>>         M_CAN_FIFO_DLC,
+>> =3D 0x4,
+>>>         M_CAN_FIFO_DATA0,
+>> =3D 0x8,
+>>>         M_CAN_FIFO_DATA1,
+>> =3D 0xc,
+>>> };
+>>>
+>>> static inline u32 m_can_fifo_read(const struct m_can_priv *priv,
+>>>                                   u32 fgi, enum m_can_fifo fifo)
+>>> {
+>>>         return readl(priv->mram_base + priv->mcfg[MRAM_RXF0].off +
+>>>                      fgi * RXF0_ELEMENT_SIZE + fifo * 0x4);
+>>> }
 >>
->> It somehow always feels like this error handling should be in the
->> i2c core.  Just how often does it make sense to receive too little
->> from and i2c transaction?  Anyhow, such is life ;)
->
->You wrote:
->
->> You could set this up to use i2c_transfer instead of separating it
->like
->> this.
->
->Accordingly to:
->- Documentation/i2c/i2c-protocol
->- Documentation/i2c/writing-clients
->a sequence of i2c_master_send() and i2c_master_recv() is not fully
->equivalent to a single i2c_transfer(); in latter case the transactions
->would be combined and the stop bit in between would be removed.
->
->I checked the datasheet of max5821 and it reports that
->"Each transmit sequence is framed by a START (S) or REPEATED START
->(Sr) condition and a STOP (P) condition."
->So combined transaction should work with this device.
->
->But we have few I2C controllers that cannot send combined transactions
->and would return error.
->E.g. in drivers/i2c/busses/i2c-powermac.c
->i2c_powermac_master_xfer() returns -EOPNOTSUPP when num!=1.
->
->What is the proper way to address this:
->- use combine transactions, since supported by majority of (but not
->all) controllers?
->or
->- keep individual transactions, if not strictly required by the
->protocol of the I2C device?
-I would go with working on the vast majority unless we have a user actually using such
- an i2c controller.
->
->Thanks,
->Antonio
+>> without the * 0x4
+>>
+>>> id =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
+>>>
+>>> The problem is when adding long frames support, it becomes:
+>>> enum m_can_fifo {
+>>>         M_CAN_FIFO_ID =3D 0,
+>>>         M_CAN_FIFO_DLC,
+>>>         M_CAN_FIFO_DATA0,
+>>>         M_CAN_FIFO_DATA1,
+>>>         ....
+>>>         M_CAN_FIFO_DATA15,
+>>> };
+>>
+>> #define M_CAN_FIFO_DATA(n)
+>> 	(enum m_can_fifo)(M_CAN_FIFO_DATA_0 + (n) << 2)
+>>
+>=20
+> This is a bit strange using and we may still have to define other M_CAN=
+_FIFO_DATAx
+> to avoid the enum value exceeds the defined range.
+> enum m_can_fifo {
+>         M_CAN_FIFO_ID =3D 0,
+>         M_CAN_FIFO_DLC =3D 0x4,
+>         M_CAN_FIFO_DATA0 =3D 0x8,
+>         M_CAN_FIFO_DATA1 =3D 0xc,
+> 	....
+>         M_CAN_FIFO_DATA15 =3D 0xc,
+> };
+>=20
+> However, actually we will not use them at all after introducing M_CAN_F=
+IFO_DATA(n).
+> If that, why we still need define them in enum?
+>=20
+> Comparing to this way, why not simply just do as follows:
+> #define M_CAN_FIFO_ID		0x0
+> #define M_CAN_FIFO_DLC		0x4
+> #define M_CAN_FIFO_DATA(n)	(0x8 + (n) << 2)
+>=20
+> What do you think?
 
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+Looks good.
+
+>=20
+>>> But it's useless because we may not use enum to read fifo data anymor=
+e.
+>>> It's not suitable to read fifo one by one:
+>>> m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA0);
+>>> m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA1);
+>>> ..
+>>> m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA15);
+>>>
+>>>
+>>> Instead, we may read data according to real dlc value within a for lo=
+op like:
+>>> #define M_CAN_FIFO(n)   (n * 0x4)
+>>> id =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO(0));
+>>> dlc =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO(1));
+>>> for (i =3D 0; dlc > 0; dlc -=3D 0x4, i++) {
+>>>         ....
+>>>         data[i] =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO(i + 2));
+>>> }
+>>
+>> id =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_ID);
+>> dlc =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_DLC);
+>> for (i =3D 0; i <=3D dlc; i++)
+>> 	data[i] =3D m_can_fifo_read(priv, fgi, M_CAN_FIFO_DATA(i));
+>=20
+> Does it work?
+> The dlc is in bytes while m_can_fifo_read is read in words.
+
+Doh! probably not :) But should work with something like this:
+
+int len =3D DIV_ROUND_UP(dlc, 4);
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--IbkQSVi6T7AiP2lnsO3uJDOPD091WPEvK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlPE8rUACgkQjTAFq1RaXHNplQCeNYxRP47UhsmVoWHK2yvs+aXQ
+yVMAn0kMFlGx2kcuxycQsBnHDqB+1DuA
+=iqDg
+-----END PGP SIGNATURE-----
+
+--IbkQSVi6T7AiP2lnsO3uJDOPD091WPEvK--
