@@ -1,127 +1,61 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: zynq: Add Parallella device tree
-Date: Tue, 15 Jul 2014 12:53:56 +0200
-Message-ID: <74ed2164-b1cf-4470-a853-e8f4c7804f41@BN1BFFO11FD008.protection.gbl>
-References: <1404075022-28745-1-git-send-email-afaerber@suse.de>
-	<1404075022-28745-2-git-send-email-afaerber@suse.de>
-	<CAOesGMhKY1Lb+o8AbtFXS5c7SLg2uGt4-oosdro2FMj_+bB6Tw@mail.gmail.com>
-	<61d660b7-17a9-4817-ba34-40a5c1674d28@BY2FFO11FD032.protection.gbl>
- <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3 v6] spi: s3c64xx: fix broken "cs_gpios" usage in the
+ driver
+Date: Tue, 15 Jul 2014 12:00:00 +0100
+Message-ID: <20140715110000.GA17528@sirena.org.uk>
+References: <1405316506-27855-1-git-send-email-ch.naveen@samsung.com>
+ <1405316506-27855-2-git-send-email-ch.naveen@samsung.com>
+ <20140714172524.GH6800@sirena.org.uk>
+ <CAHfPSqAzab931yurSs+3zj=uoFj93FuAdd24AQKm1fZm07Nq8Q@mail.gmail.com>
+ <20140714191533.GH6800@sirena.org.uk>
+ <CAHfPSqAgCbfL2nkrfSYNJZitT-nGw7+5fpR9FMaabmwVJM6jUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHfPSqAgCbfL2nkrfSYNJZitT-nGw7+5fpR9FMaabmwVJM6jUQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2014 08:12 PM, Olof Johansson wrote:
-> On Tue, Jul 8, 2014 at 4:18 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org=
-> wrote:
->> On 06/30/2014 07:15 AM, Olof Johansson wrote:
->>> Hi,
->>>
->>> On Sun, Jun 29, 2014 at 1:50 PM, Andreas F=C3=A4rber <afaerber@suse=
-=2Ede> wrote:
->>>> This allows to boot the Adapteva Parallella board to serial consol=
-e.
->>>>
->>>> Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
->>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->>>
->>> Nice and clean DTS, just a couple of comments below.
->>>
->>>> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot=
-/dts/zynq-parallella.dts
->>>> new file mode 100644
->>>> index 0000000..98df66c
->>>> --- /dev/null
->>>> +++ b/arch/arm/boot/dts/zynq-parallella.dts
->>>> @@ -0,0 +1,63 @@
->>>> +/*
->>>> + * Copyright (c) 2014 SUSE LINUX Products GmbH
->>>> + *
->>>> + * Derived from zynq-zed.dts:
->>>> + *
->>>> + *  Copyright (C) 2011 Xilinx
->>>> + *  Copyright (C) 2012 National Instruments Corp.
->>>> + *  Copyright (C) 2013 Xilinx
->>>> + *
->>>> + * This software is licensed under the terms of the GNU General P=
-ublic
->>>> + * License version 2, as published by the Free Software Foundatio=
-n, and
->>>> + * may be copied, distributed, and modified under those terms.
->>>> + *
->>>> + * This program is distributed in the hope that it will be useful=
-,
->>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> + * GNU General Public License for more details.
->>>> + */
->>>> +/dts-v1/;
->>>> +/include/ "zynq-7000.dtsi"
->>>> +
->>>> +/ {
->>>> +       model =3D "Parallella Board";
->=20
-> You might want to have this say "Adapteva Parallella Board" instead
-> (just noticed).
->=20
->>>> +       compatible =3D "xlnx,zynq-7000";
->>>
->>> This should have a more specific compatible as the first one. Proba=
-bly
->>> something like:
->>>    compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
->>
->> We were using these compatible properties but later there is no reas=
-on
->> to create them because they will be unused.
->> It is easy to add it when you need it which is not this case.
->=20
-> No, please add it from day one, otherwise everybody needs to update
-> their device tree, some will miss doing it, etc, etc. It's a simple
-> and trivial thing to do, and no reason to leave it o ut.
 
-It is trivial. None will just probably use it and upgrading DTS is simp=
-le
-but I don't really care.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jul 15, 2014 at 09:33:21AM +0530, Naveen Krishna Ch wrote:
+> On 15 July 2014 00:45, Mark Brown <broonie@kernel.org> wrote:
 
->>>> +
->>>> +       memory {
->>>> +               device_type =3D "memory";
->>>> +               reg =3D <0 0x20000000>;
->>>
->>> Does the bootloader update this entry, or is it truly static? If it=
-'s
->>> updated then it's become recent habit to leave the memory size empt=
-y
->>> in the static file.
->>
->> Depends on your bootloader. I think it is good to have it here.
->> Also this file can be used by u-boot for example and u-boot can be c=
-onfigured
->> from it that's why I think that make sense to keep this here.
->=20
-> Ok. It's become commonplace to leave memory empty for the machines
-> where it's guaranteed that the bootloader will have updated it, to
-> avoid having stale or incorrect values in the static tree. I'm not
-> going to be strict about it, but it's something to consider.
+> > The problem isn't what you're trying to do, the problem is verifying
+> > that it has been done correctly - making sure that everything has been
+> > accounted for in the change itself.
 
-I personally don't like this bootloader feature and IRC it is disabled
-for xilinx u-boot too.
+> Understand your concern. I will try to get it tested on as many platforms.
 
-Thanks,
-Michal
+That's useful, but please note that it's mainly a code review thing.
 
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJTxQmtAAoJELSic+t+oim9dB0P/jebDkqiuuUfanpDMmS362hr
++VLGU0tQ0QKE1cCyDJaCPGGdRnEBuWEDWqA0LHc4YNoUJ/6yjhTcLMRdPXabk0DN
+A8FBeICkOIt6vzVzDokblHB80t5a4vCiKSDD6htgOyZ+Ux5bfQut3BoEKUwwWcgq
+6MCPymc98L/C+xb3Dq4pMD4PTwd16DKptRt/x/7FFjVbtMQOdAZ8GeTNu88lSEJ4
+3jE2W12WfLbrLiZoQWYVLBOi/XntTYQI+hQZbjvqxon2Z6C/FA1wLi+p7r3sE9Js
+s7yL8ooKQDGPV6np9TX2hBiJYgi/mXD9f8Ax+L14Ow/mU+MI1HzEVuwiRpdNKdpd
+a0dFpHmE2jPhRrVTfHFwXDf9rV4OrmZlEo1YUrgcb8CTagiSUTJYxDreatI3iTz4
+xHtDvSDABy0pTRirDlR0VVNsGCXDvZwTI8p7MvLhyHK2+4tUl5y6KQurGck9+M5p
+ls4qYccY9r+o3ZLsOamaDbDNNmKjdjykj8e/HUr5mY4avcAS5cx8mgAegdmOKUEN
+7sFWOcDEcJ6FqcKScRLW/uVAiPxOH9Eo7VWSTScer0b6hccG26EoK4trXPTeQ/OT
+9tbtfdSn+3BcDkXRd+N9rSl7FfvsaGMOFqh+CsEBxqvVVMQb7P6RgesFIgV2tgY8
+DhAB9CalbrPHozjS4nzD
+=puuZ
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
