@@ -1,46 +1,57 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
-Date: Tue, 15 Jul 2014 23:33:49 +0530
-Message-ID: <CAJe_ZheGrGZMVXZN2SMtBtq4+fX7KsiMSEfAM0mVcb6f80Kckg@mail.gmail.com>
-References: <1405232911-4569-1-git-send-email-mollie.wu@linaro.org>
-	<CAL_JsqKvwxjEDZPVwL646PhPKr7oemBzxr6cZ+X=uJQ2u_XZ8g@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 0/4] iio: exynos-adc: use syscon instead of ioremap
+Date: Tue, 15 Jul 2014 19:13:20 +0100
+Message-ID: <53C56F40.1070304@kernel.org>
+References: <1405069589-10388-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKvwxjEDZPVwL646PhPKr7oemBzxr6cZ+X=uJQ2u_XZ8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1405069589-10388-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15 July 2014 20:41, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-...
-
->> +               interrupts = <0 36 4>, /* LP Non-Sec */
->> +                            <0 35 4>, /* HP Non-Sec */
->> +                            <0 37 4>; /* Secure */
->> +       };
->> +
->> +       mhu_client: scb@0 {
->> +               compatible = "fujitsu,scb";
->> +               mbox = <&mhu 1>;
+On 11/07/14 10:06, Naveen Krishna Chatradhi wrote:
+> This patch does the following
+> 1. Use the syscon and Regmap API instead of ioremappaing the
+>     ADC_PHY register from PMU.
+> 2. Moves the exynos-adc.txt from bindings/arm/samsung/
+>     to bindings/iio/adc/.
+> 3. Updates the Documentation in exynos-adc.txt with syscon phandle
+>     for the ADC nodes.
+> 4. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
+>     Exynos5420 with the syscon phandle.
 >
-> Is the mailbox binding finalized?
+> Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
+> by verifying sysfs entries provided by HWMON based NTC thermistors.
 >
-I have sent a patchset for common mailbox and its bindings. You are on
-CC list. Arnd seems OK with it.
-
-....
-
-Will address rest all of your comments.
-
+> Tested-By for Exynos3250, Exynos4x12 would be appreciated.
 >
-> That's all I've got time and energy for reviewing for now.
+This series all looks fine to me.  Took me a minute to work out what the point
+of the syscon change was (perhaps a little description in the cover letter
+would have been nice ;)
+
+Anyhow, with the device tree changes in here we'll have to let it sit for
+a while.  I'll also definitely want an ack from
+Kukjin Kim <kgene.kim@samsung.com> for the device tree changes.
+
+Jonathan
+> Naveen Krishna Chatradhi (4):
+>    iio: exyno-adc: use syscon for PMU register access
+>    Documentation: dt-bindings: move exynos-adc.txt to more iio/adc/
+>    Documentation: dt-bindings: update exynos-adc.txt with syscon handle
+>    ARM: dts: exynos: Add sysreg phandle to ADC node
 >
-Thanks a lot!
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   .../devicetree/bindings/arm/samsung/exynos-adc.txt |   82 ------------------
+>   .../devicetree/bindings/iio/adc/exynos-adc.txt     |   87 ++++++++++++++++++++
+>   arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+>   arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
+>   arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
+>   arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+>   drivers/iio/adc/exynos_adc.c                       |   29 +++++--
+>   7 files changed, 115 insertions(+), 95 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>   create mode 100644 Documentation/devicetree/bindings/iio/adc/exynos-adc.txt
+>
