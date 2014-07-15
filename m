@@ -1,143 +1,127 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Tue, 15 Jul 2014 12:52:54 +0200
-Message-ID: <20140715105253.GE6616@ulmo>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1417324.PxofUz16v0@avalon>
- <20140715103718.GB6616@ulmo>
- <1645765.yCSTbHcZMC@avalon>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: zynq: Add Parallella device tree
+Date: Tue, 15 Jul 2014 12:53:56 +0200
+Message-ID: <74ed2164-b1cf-4470-a853-e8f4c7804f41@BN1BFFO11FD008.protection.gbl>
+References: <1404075022-28745-1-git-send-email-afaerber@suse.de>
+	<1404075022-28745-2-git-send-email-afaerber@suse.de>
+	<CAOesGMhKY1Lb+o8AbtFXS5c7SLg2uGt4-oosdro2FMj_+bB6Tw@mail.gmail.com>
+	<61d660b7-17a9-4817-ba34-40a5c1674d28@BY2FFO11FD032.protection.gbl>
+ <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tVmo9FyGdCe4F4YN"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1645765.yCSTbHcZMC@avalon>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Tim Niemeyer <tim.niemeyer@corscience>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjMEiQkrCfYyc6y+s9kst74jAjTghbYvxUJ+9KvPGXj1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---tVmo9FyGdCe4F4YN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 15, 2014 at 12:43:02PM +0200, Laurent Pinchart wrote:
-> Hi Thierry,
+On 07/14/2014 08:12 PM, Olof Johansson wrote:
+> On Tue, Jul 8, 2014 at 4:18 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org=
+> wrote:
+>> On 06/30/2014 07:15 AM, Olof Johansson wrote:
+>>> Hi,
+>>>
+>>> On Sun, Jun 29, 2014 at 1:50 PM, Andreas F=C3=A4rber <afaerber@suse=
+=2Ede> wrote:
+>>>> This allows to boot the Adapteva Parallella board to serial consol=
+e.
+>>>>
+>>>> Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>>
+>>> Nice and clean DTS, just a couple of comments below.
+>>>
+>>>> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot=
+/dts/zynq-parallella.dts
+>>>> new file mode 100644
+>>>> index 0000000..98df66c
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/boot/dts/zynq-parallella.dts
+>>>> @@ -0,0 +1,63 @@
+>>>> +/*
+>>>> + * Copyright (c) 2014 SUSE LINUX Products GmbH
+>>>> + *
+>>>> + * Derived from zynq-zed.dts:
+>>>> + *
+>>>> + *  Copyright (C) 2011 Xilinx
+>>>> + *  Copyright (C) 2012 National Instruments Corp.
+>>>> + *  Copyright (C) 2013 Xilinx
+>>>> + *
+>>>> + * This software is licensed under the terms of the GNU General P=
+ublic
+>>>> + * License version 2, as published by the Free Software Foundatio=
+n, and
+>>>> + * may be copied, distributed, and modified under those terms.
+>>>> + *
+>>>> + * This program is distributed in the hope that it will be useful=
+,
+>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + * GNU General Public License for more details.
+>>>> + */
+>>>> +/dts-v1/;
+>>>> +/include/ "zynq-7000.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +       model =3D "Parallella Board";
 >=20
-> On Tuesday 15 July 2014 12:37:19 Thierry Reding wrote:
-> > On Tue, Jul 15, 2014 at 12:20:02PM +0200, Laurent Pinchart wrote:
-> > > On Tuesday 15 July 2014 12:06:19 Boris BREZILLON wrote:
-> > >> On Mon, 14 Jul 2014 12:05:43 +0200 Thierry Reding wrote:
-> > >>> On Mon, Jul 07, 2014 at 06:42:59PM +0200, Boris BREZILLON wrote:
-> > >>>> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs
-> > >>>> (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family) provides a
-> > >>>> display controller device.
-> > >>>>=20
-> > >>>> The HLCDC block provides a single RGB output port, and only suppor=
-ts
-> > >>>> LCD panels connection to LCD panels for now.
-> > >>>>=20
-> > >>>> The atmel,panel property link the HLCDC RGB output with the LCD
-> > >>>> panel connected on this port (note that the HLCDC RGB connector
-> > >>>> implementation makes use of the DRM panel framework).
-> > >>>>=20
-> > >>>> Connection to other external devices (DRM bridges) might be added
-> > >>>> later by mean of a new atmel,xxx (atmel,bridge) property.
-> > >>>>=20
-> > >>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > >>>> ---
-> > >>>>=20
-> > >>>>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 59 +++++++++=
-++
-> > >>>>  1 file changed, 59 insertions(+)
-> > >>>>  create mode 100644
-> > >>>>  Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > >=20
-> > > [snip]
-> > >=20
-> > >>>> + - atmel,panel: Should contain a phandle with 2 parameters.
-> > >>>> +   The first cell is a phandle to a DRM panel device
-> > >>>> +   The second cell encodes the RGB mode, which can take the
-> > >>>> following values:
-> > >>>> +   * 0: RGB444
-> > >>>> +   * 1: RGB565
-> > >>>> +   * 2: RGB666
-> > >>>> +   * 3: RGB888
-> > >>>=20
-> > >>> These are properties of the panel and should be obtained from the
-> > >>> panel directly rather than an additional cell in this specifier.
-> > >>=20
-> > >> Okay.
-> > >> What's the preferred way of doing this ?
-> > >> What about defining an rgb-mode property in the panel node.
-> > >=20
-> > > You could do that, but it won't help you much, as the HLCDC driver mu=
-st
-> > > not parse properties from the panel node. You should instead extend t=
-he
-> > > drm_panel API with a function to retrieve panel properties. The HLCDC
-> > > driver will then query the panel driver at runtime for the interface
-> > > type. The panel driver will get the information from hardcoded data in
-> > > the driver, from DT or possibly in some cases by querying the panel
-> > > hardware directly.
-> >=20
-> > My preference for this would be that we either add this to some existing
-> > structure (struct drm_display_info seems like a good candidate) or if
-> > the number of parameters grows out of hands, then maybe even introduce a
-> > new type of device that's specific for the interface. DRM panels are an
-> > abstraction for panels, that is, interface-agnostic, and if we start
-> > exposing interface specific parameters things will start to become very
-> > unwieldy.
+> You might want to have this say "Adapteva Parallella Board" instead
+> (just noticed).
 >=20
-> I agree with the goal of keeping drm_panel interface-agnostic. However, o=
-ne=20
-> way or another, interface parameters will need to be communicated between=
- the=20
-> panel driver and the controller driver. My preference, if we need to exte=
-nd=20
-> the number and/or scope of parameters beyond what drm_display_info could=
-=20
-> reasonably contain, would be to implement a new drm_panel operation to=20
-> query/configure interface parameters, using a structure that contains the=
-=20
-> interface type and a union of type-specific structures. This would keep t=
-he=20
-> API generic in the sense of not requiring explicit knowledge of all inter=
-faces=20
-> in the drivers, while offering the flexibility we need with a way to easi=
-ly=20
-> detect the interface type at runtime and react on unknown/unsupported typ=
-es.
+>>>> +       compatible =3D "xlnx,zynq-7000";
+>>>
+>>> This should have a more specific compatible as the first one. Proba=
+bly
+>>> something like:
+>>>    compatible =3D "adapteva,parallella", "xlnx,zynq-7000";
+>>
+>> We were using these compatible properties but later there is no reas=
+on
+>> to create them because they will be unused.
+>> It is easy to add it when you need it which is not this case.
+>=20
+> No, please add it from day one, otherwise everybody needs to update
+> their device tree, some will miss doing it, etc, etc. It's a simple
+> and trivial thing to do, and no reason to leave it o ut.
 
-That's exactly what I was hoping could be avoided. If instead we modeled
-the interface type as a bus, we could for example have an lvds_bus along
-with an lvds_device and then use that as the natural place to store
-these properties. Much like we do for DSI.
+It is trivial. None will just probably use it and upgrading DTS is simp=
+le
+but I don't really care.
 
-Thierry
 
---tVmo9FyGdCe4F4YN
-Content-Type: application/pgp-signature
+>>>> +
+>>>> +       memory {
+>>>> +               device_type =3D "memory";
+>>>> +               reg =3D <0 0x20000000>;
+>>>
+>>> Does the bootloader update this entry, or is it truly static? If it=
+'s
+>>> updated then it's become recent habit to leave the memory size empt=
+y
+>>> in the static file.
+>>
+>> Depends on your bootloader. I think it is good to have it here.
+>> Also this file can be used by u-boot for example and u-boot can be c=
+onfigured
+>> from it that's why I think that make sense to keep this here.
+>=20
+> Ok. It's become commonplace to leave memory empty for the machines
+> where it's guaranteed that the bootloader will have updated it, to
+> avoid having stale or incorrect values in the static tree. I'm not
+> going to be strict about it, but it's something to consider.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+I personally don't like this bootloader feature and IRC it is disabled
+for xilinx u-boot too.
 
-iQIcBAEBAgAGBQJTxQgFAAoJEN0jrNd/PrOht2wP/3MPDQvvGQoVKk5J8Pp6DzJ9
-tbK8dWvjeoyGJH0Y1Tzx9WVnJ7pg7SP6ERMtUEIe8/0xgoxcN35TsBDTIblF06Za
-5DvjHk4ARmIdGCJGysKm+aqpe2TqCbBAIUyzsOMIds7iIhaNDY4OjIZcAiRhtNlC
-STdQByrrgHIAuvYaWgfHeS2h6diuLtP3Tz5AuW/5iKNfOkLO5iWHObxdC75gex1D
-ZTv3O/36BoG0VqlhTy3b5OiIfrFasph3qoOxyr9uhtXAz4k0TDqYP1oWOBs9qrMR
-j5oy+Sg1BE7rDazjYbE87QigZ8Hu3v+T5ODUlq3hFfOxafMaDj5K4H4gFhl559kt
-cDKclLC8DROfhuVXcjgZ9AoYMHjCPgAU5Zzt2xdul2UN3SGUXE9P+ANlGO30fYS1
-VC51acwqdBXz+z578VwnyE8NnjeVqmKh1Vtjr+eqU8qJtfYNFoWyokQ7iIncE0rd
-+0nipmz5FOhY+0TNfgr1RIh+R9dD8fEn0PWGbrokJsUY9Na9d6YfbyoK5urYx0pb
-ThcBDKTJq0O/lgGfZ4PtkkzsBhL17j26Y2CFAl2wkVSqbwKpOuZK8PQP3b59yhbs
-Oapd2S1WDiaP8Z+q0NsbxjJ7TXjf3KbGLZsyQgRaGA1kyG4X+Y0/yi3KxZDYh0S0
-QscUuIEJeZVGdoIhjQY8
-=y9zU
------END PGP SIGNATURE-----
+Thanks,
+Michal
 
---tVmo9FyGdCe4F4YN--
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
