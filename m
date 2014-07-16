@@ -1,42 +1,101 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Re-send PATCH 1/1] arm: dra7xx: Add hwmod data for MDIO and
- CPSW
-Date: Wed, 16 Jul 2014 18:57:04 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1407161854360.23074@utopia.booyaka.com>
-References: <1404825399-10330-1-git-send-email-mugunthanvnm@ti.com> <20140709095552.GA25154@breakpoint.cc> <20140709100147.GB25154@breakpoint.cc> <alpine.DEB.2.02.1407152019020.21432@utopia.booyaka.com> <20140716070643.GC3378@breakpoint.cc>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] net: davinci_mdio: reuse for keystone2 arch
+Date: Wed, 16 Jul 2014 20:22:10 +0100
+Message-ID: <CA+V-a8sJXtXSzhSc9+6oq_yhommNnnUp=Y903hfyVcjsfe6Jcw@mail.gmail.com>
+References: <1405512783-20307-1-git-send-email-grygorii.strashko@ti.com> <1405512783-20307-2-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140716070643.GC3378-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+In-Reply-To: <1405512783-20307-2-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dlos <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Jul 2014, Sebastian Andrzej Siewior wrote:
+On Wed, Jul 16, 2014 at 1:13 PM, Grygorii Strashko
+<grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+> The similar MDIO HW blocks is used by keystone 2 SoCs as
+> in Davinci SoCs:
+> - one in Gigabit Ethernet (GbE) Switch Subsystem
+>   See http://www.ti.com/lit/ug/sprugv9d/sprugv9d.pdf
+> - one in 10 Gigabit Ethernet Subsystem
+>   See http://www.ti.com/lit/ug/spruhj5/spruhj5.pdf
+>
+> Hence, reuse Davinci MDIO driver for Keystone 2 and
+> enable TI networking for Keystone 2 devices
+>
+> Reviewed-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
-> On 2014-07-15 20:21:21 [+0000], Paul Walmsley wrote:
-> 
-> > > Acked-by: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-> > > 
-> > > This is basically what Tony hasked me to do: No IRQ numbers & iomem.
-> > 
-> > Sorry - I'm a bit confused - Sebastian, did you test this one?  If so, is 
-> > it okay to add a Tested-by from you?
-> 
-> Tested-by: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Reviewed-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Thanks Sebastian.
+Thanks,
+--Prabhakar Lad
 
-Mugunthan, next step would be for you to get a Reviewed-by: by someone who 
-has access to the (non-public) DRA7xx TRM, and can review for SoC 
-integration.  Since Rajendra is no longer at TI, the right person is 
-probably Tony.
-
-Then this patch should be mergeable.
-
-
-- Paul
+> ---
+>  .../devicetree/bindings/net/davinci-mdio.txt       |    8 ++++----
+>  drivers/net/ethernet/ti/Kconfig                    |    4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/davinci-mdio.txt b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+> index 72efaaf..0369e25 100644
+> --- a/Documentation/devicetree/bindings/net/davinci-mdio.txt
+> +++ b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+> @@ -1,8 +1,8 @@
+> -TI SoC Davinci MDIO Controller Device Tree Bindings
+> +TI SoC Davinci/Keystone2 MDIO Controller Device Tree Bindings
+>  ---------------------------------------------------
+>
+>  Required properties:
+> -- compatible           : Should be "ti,davinci_mdio"
+> +- compatible           : Should be "ti,davinci_mdio" or "ti,keystone_mdio"
+>  - reg                  : physical base address and size of the davinci mdio
+>                           registers map
+>  - bus_freq             : Mdio Bus frequency
+> @@ -19,7 +19,7 @@ file.
+>  Examples:
+>
+>         mdio: davinci_mdio@4A101000 {
+> -               compatible = "ti,cpsw";
+> +               compatible = "ti,davinci_mdio";
+>                 reg = <0x4A101000 0x1000>;
+>                 bus_freq = <1000000>;
+>         };
+> @@ -27,7 +27,7 @@ Examples:
+>  (or)
+>
+>         mdio: davinci_mdio@4A101000 {
+> -               compatible = "ti,cpsw";
+> +               compatible = "ti,davinci_mdio";
+>                 ti,hwmods = "davinci_mdio";
+>                 bus_freq = <1000000>;
+>         };
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index 53150c2..1769700 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -5,7 +5,7 @@
+>  config NET_VENDOR_TI
+>         bool "Texas Instruments (TI) devices"
+>         default y
+> -       depends on PCI || EISA || AR7 || (ARM && (ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX))
+> +       depends on PCI || EISA || AR7 || (ARM && (ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX || ARCH_KEYSTONE))
+>         ---help---
+>           If you have a network (Ethernet) card belonging to this class, say Y
+>           and read the Ethernet-HOWTO, available from
+> @@ -32,7 +32,7 @@ config TI_DAVINCI_EMAC
+>
+>  config TI_DAVINCI_MDIO
+>         tristate "TI DaVinci MDIO Support"
+> -       depends on ARM && ( ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX )
+> +       depends on ARM && ( ARCH_DAVINCI || ARCH_OMAP3 || SOC_AM33XX || ARCH_KEYSTONE )
+>         select PHYLIB
+>         ---help---
+>           This driver supports TI's DaVinci MDIO module.
+> --
+> 1.7.9.5
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
