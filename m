@@ -1,70 +1,655 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
- gpio block
-Date: Tue, 15 Jul 2014 17:23:51 -0700
-Message-ID: <CAJAp7OjU=FFdGKHPqovz+qrEhDCZ3E=uOSAOFbgYyLE01C9cPg@mail.gmail.com>
-References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
-	<CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com>
-	<CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com>
-	<CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
-	<53C095EA.90000@codeaurora.org>
-	<1405346335.13503.25.camel@iivanov-dev>
-	<53C449A3.2010404@codeaurora.org>
-	<1405406114.13503.40.camel@iivanov-dev>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: rockchip: add core rk3288 dtsi
+Date: Tue, 15 Jul 2014 17:55:28 -0700
+Message-ID: <20140716005528.GA26207@quad.lixom.net>
+References: <1471578.ILeMmG2DL6@diego>
+ <1868508.hOA6VOBqnH@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1405406114.13503.40.camel@iivanov-dev>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1868508.hOA6VOBqnH@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 14, 2014 at 11:35 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> On Mon, 2014-07-14 at 14:20 -0700, Stephen Boyd wrote:
-[..]
->> Isn't this document only for the gpios? I think you're talking about the
->> MPPs, which also exist on these generation of pmics. We should probably
->> avoid mixing the two (gpios and mpps) in one binding because they're
->> really different hardware.
->
-> I don't know. For me "gpio" looks like function of the pin hardware.
->
->>
->> >  So I will like
->> > to keep "function" property for selecting one of the above functions.
->> > Choosing between "normal", "paired"... options in QPNP pinctrl driver
->> > is supported trough passing values, defined in DT header file, to
->> > "output-high" property. Please don't kill me :-).
->>
->> Overloading output-high to choose the MPP mode doesn't seem to follow
->> the generic pinconfig binding. Does output-high even take a value? Why
->> can't we use the function property?
->
-> No, no.  using value of the output-high|low" is just to select
-> "normal", "paired"... thing. Function selection is via "function"
-> property. Currently QPNP support following functions "gpio", "mpp-ain",
-> "mpp-aout", "mpp-cs".
->
+Hi,
 
-Hi Ivan,
+Bunch-o-nits below.
 
->From your comment I presume that you don't have access to the
-documentation for these blocks.
+On Wed, Jul 16, 2014 at 01:02:20AM +0200, Heiko St=FCbner wrote:
+> Node definitions shared by all rk3288 based boards.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 561 ++++++++++++++++++++++++++++++++=
+++++++++++
+>  1 file changed, 561 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3288.dtsi
+>=20
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288=
+=2Edtsi
+> new file mode 100644
+> index 0000000..6e36cec
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -0,0 +1,561 @@
+> +/*
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/clock/rk3288-cru.h>
+> +#include "skeleton.dtsi"
+> +
+> +/ {
+> +	compatible =3D "rockchip,rk3288";
+> +
+> +	interrupt-parent =3D <&gic>;
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		cpu@0 {
 
-The pmic sports two types of pins; gpios and mpps (multi-purpose-pin).
-These are different hardware blocks; i.e. not a configuration thing.
+Unit address and reg should be the same. So this should be @500 (or reg=
+ 0, but
+I don't think that's what you want).
 
-The gpios can be input, output or both and they can be configured as
-gpio, paired, function 1 or function 2 (+ some test modes). So here it
-makes sense to have the functions "gpio", "paired" and the valid
-function combinations.
+> +			device_type =3D "cpu";
+> +			compatible =3D "arm,cortex-a12";
+> +			reg =3D <0x500>;
+> +		};
+> +		cpu@1 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "arm,cortex-a12";
+> +			reg =3D <0x501>;
+> +		};
+> +		cpu@2 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "arm,cortex-a12";
+> +			reg =3D <0x502>;
+> +		};
+> +		cpu@3 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "arm,cortex-a12";
+> +			reg =3D <0x503>;
+> +		};
+> +	};
+> +
+> +	soc {
 
-The mpps can be input, output or both; in either digital or analog
-mode. Or they can be a current sink. When configured as analog input
-you select which adc the pin should be routed to. Here it makes sense
-to have the functions "digital", "analog" and "current-sink" I think.
+As Doug mentioned, this isn't how we tend to do it any more (unless all=
+ devices
+are physically on a bus, but then it should probably be named something=
+ else
+than 'soc').
 
-Regards,
-Bjorn
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		compatible =3D "simple-bus";
+> +		ranges;
+> +
+> +		xin24m: xin24m {
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <24000000>;
+> +			#clock-cells =3D <0>;
+> +		};
+> +
+> +		architected-timer {
+
+Most other platforms just call this "timer".
+
+> +			compatible =3D "arm,armv7-timer";
+> +			interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEV=
+EL_HIGH)>,
+> +				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>=
+,
+> +				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>=
+,
+> +				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>=
+;
+> +			clock-frequency =3D <24000000>;
+> +		};
+> +
+> +		gic: interrupt-controller@ffc01000 {
+> +			compatible =3D "arm,gic-400";
+> +			interrupt-controller;
+> +			#interrupt-cells =3D <3>;
+> +			#address-cells =3D <0>;
+> +
+> +			reg =3D <0xffc01000 0x1000>,
+> +			      <0xffc02000 0x1000>,
+> +			      <0xffc04000 0x2000>,
+> +			      <0xffc06000 0x2000>;
+> +			interrupts =3D <GIC_PPI 9 0xf04>;
+> +		};
+> +
+> +		pmu: pmu@ff730000 {
+> +			compatible =3D "syscon";
+> +			reg =3D <0xff730000 0x100>;
+> +		};
+
+You should consider sorting entries based on address. That way, as you =
+add new
+entries over time, you'll have fewer conflicts than if they're all appe=
+nded
+instead.
+
+> +
+> +		sgrf: syscon@ff740000 {
+> +			compatible =3D "syscon";
+> +			reg =3D <0xff740000 0x1000>;
+> +		};
+> +
+> +		cru: cru@ff760000 {
+
+"cru"? The node name is usually something labelling the type of device
+("clock-controller")?
+
+> +			compatible =3D "rockchip,rk3288-cru";
+> +			reg =3D <0xff760000 0x1000>;
+> +			rockchip,grf =3D <&grf>;
+> +
+> +			#clock-cells =3D <1>;
+> +			#reset-cells =3D <1>;
+> +		};
+> +
+> +		grf: syscon@ff770000 {
+> +			compatible =3D "syscon";
+
+This should probably have a more precise compatible than _just_ syscon.
+
+> +			reg =3D <0xff770000 0x1000>;
+> +		};
+> +
+> +		pinctrl: pinctrl@ff770000 {
+
+If the node doesn't have a reg entry then it shouldn't have a unit addr=
+ess.
+
+> +			compatible =3D "rockchip,rk3288-pinctrl";
+> +			rockchip,grf =3D <&grf>;
+> +			rockchip,pmu =3D <&pmu>;
+> +
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <1>;
+> +			ranges;
+> +
+> +			gpio0: gpio0@ff750000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D	<0xff750000 0x100>;
+> +				interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO0>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio1: gpio1@ff780000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff780000 0x100>;
+> +				interrupts =3D <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO1>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio2: gpio2@ff790000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff790000 0x100>;
+> +				interrupts =3D <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO2>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio3: gpio3@ff7a0000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff7a0000 0x100>;
+> +				interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO3>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio4: gpio4@ff7b0000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff7b0000 0x100>;
+> +				interrupts =3D <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO4>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio5: gpio5@ff7c0000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff7c0000 0x100>;
+> +				interrupts =3D <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO5>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio6: gpio6@ff7d0000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff7d0000 0x100>;
+> +				interrupts =3D <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO6>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio7: gpio7@ff7e0000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff7e0000 0x100>;
+> +				interrupts =3D <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO7>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			gpio8: gpio8@ff7f0000 {
+> +				compatible =3D "rockchip,gpio-bank";
+> +				reg =3D <0xff7f0000 0x100>;
+> +				interrupts =3D <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&cru PCLK_GPIO8>;
+> +
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +			};
+> +
+> +			pcfg_pull_up: pcfg_pull_up {
+> +				bias-pull-up;
+> +			};
+> +
+> +			pcfg_pull_down: pcfg_pull_down {
+> +				bias-pull-down;
+> +			};
+> +
+> +			pcfg_pull_none: pcfg_pull_none {
+> +				bias-disable;
+> +			};
+> +
+> +			i2c0 {
+> +				i2c0_xfer: i2c0-xfer {
+> +					rockchip,pins =3D <0 15 RK_FUNC_1 &pcfg_pull_none>,
+> +							<0 16 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			i2c1 {
+> +				i2c1_xfer: i2c1-xfer {
+> +					rockchip,pins =3D <8 4 RK_FUNC_1 &pcfg_pull_none>,
+> +							<8 5 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			i2c2 {
+> +				i2c2_xfer: i2c2-xfer {
+> +					rockchip,pins =3D <6 9 RK_FUNC_1 &pcfg_pull_none>,
+> +							<6 10 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			i2c3 {
+> +				i2c3_xfer: i2c3-xfer {
+> +					rockchip,pins =3D <2 16 RK_FUNC_1 &pcfg_pull_none>,
+> +							<2 17 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			i2c4 {
+> +				i2c4_xfer: i2c4-xfer {
+> +					rockchip,pins =3D <7 17 RK_FUNC_1 &pcfg_pull_none>,
+> +							<7 18 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			i2c5 {
+> +				i2c5_xfer: i2c5-xfer {
+> +					rockchip,pins =3D <7 19 RK_FUNC_1 &pcfg_pull_none>,
+> +							<7 20 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			sdmmc {
+> +				sdmmc_clk: sdmmc-clk {
+> +					rockchip,pins =3D <6 20 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				sdmmc_cmd: sdmmc-cmd {
+> +					rockchip,pins =3D <6 21 RK_FUNC_1 &pcfg_pull_up>;
+> +				};
+> +
+> +				sdmmc_cd: sdmcc-cd {
+> +					rockchip,pins =3D <6 22 RK_FUNC_1 &pcfg_pull_up>;
+> +				};
+> +
+> +				sdmmc_bus1: sdmmc-bus1 {
+> +					rockchip,pins =3D <6 16 RK_FUNC_1 &pcfg_pull_up>;
+> +				};
+> +
+> +				sdmmc_bus4: sdmmc-bus4 {
+> +					rockchip,pins =3D <6 16 RK_FUNC_1 &pcfg_pull_up>,
+> +							<6 17 RK_FUNC_1 &pcfg_pull_up>,
+> +							<6 18 RK_FUNC_1 &pcfg_pull_up>,
+> +							<6 19 RK_FUNC_1 &pcfg_pull_up>;
+> +				};
+> +			};
+> +
+> +			emmc {
+> +				emmc_clk: emmc-clk {
+> +					rockchip,pins =3D <3 18 RK_FUNC_2 &pcfg_pull_none>;
+> +				};
+> +
+> +				emmc_cmd: emmc-cmd {
+> +					rockchip,pins =3D <3 16 RK_FUNC_2 &pcfg_pull_up>;
+> +				};
+> +
+> +				emmc_pwr: emmc-pwr {
+> +					rockchip,pins =3D <3 9 RK_FUNC_2 &pcfg_pull_up>;
+> +				};
+> +
+> +				emmc_bus1: emmc-bus1 {
+> +					rockchip,pins =3D <3 0 RK_FUNC_2 &pcfg_pull_up>;
+> +				};
+> +
+> +				emmc_bus4: emmc-bus4 {
+> +					rockchip,pins =3D <3 0 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 1 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 2 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 3 RK_FUNC_2 &pcfg_pull_up>;
+> +				};
+> +
+> +				emmc_bus8: emmc-bus8 {
+> +					rockchip,pins =3D <3 0 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 1 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 2 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 3 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 4 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 5 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 6 RK_FUNC_2 &pcfg_pull_up>,
+> +							<3 7 RK_FUNC_2 &pcfg_pull_up>;
+> +				};
+> +			};
+> +
+> +			uart0 {
+> +				uart0_xfer: uart0-xfer {
+> +					rockchip,pins =3D <4 16 RK_FUNC_1 &pcfg_pull_up>,
+> +							<4 17 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart0_cts: uart0-cts {
+> +					rockchip,pins =3D <4 18 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart0_rts: uart0-rts {
+> +					rockchip,pins =3D <4 19 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			uart1 {
+> +				uart1_xfer: uart1-xfer {
+> +					rockchip,pins =3D <5 8 RK_FUNC_1 &pcfg_pull_up>,
+> +							<5 9 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart1_cts: uart1-cts {
+> +					rockchip,pins =3D <5 10 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart1_rts: uart1-rts {
+> +					rockchip,pins =3D <5 11 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			uart2 {
+> +				uart2_xfer: uart2-xfer {
+> +					rockchip,pins =3D <7 22 RK_FUNC_1 &pcfg_pull_up>,
+> +							<7 23 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +				/* no rts / cts for uart2 */
+> +			};
+> +
+> +			uart3 {
+> +				uart3_xfer: uart3-xfer {
+> +					rockchip,pins =3D <7 7 RK_FUNC_1 &pcfg_pull_up>,
+> +							<7 8 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart3_cts: uart3-cts {
+> +					rockchip,pins =3D <7 9 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart3_rts: uart3-rts {
+> +					rockchip,pins =3D <7 10 RK_FUNC_1 &pcfg_pull_none>;
+> +				};
+> +			};
+> +
+> +			uart4 {
+> +				uart4_xfer: uart4-xfer {
+> +					rockchip,pins =3D <5 12 3 &pcfg_pull_up>,
+> +							<5 13 3 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart4_cts: uart4-cts {
+> +					rockchip,pins =3D <5 14 3 &pcfg_pull_none>;
+> +				};
+> +
+> +				uart4_rts: uart4-rts {
+> +					rockchip,pins =3D <5 15 3 &pcfg_pull_none>;
+> +				};
+> +			};
+> +		};
+> +
+> +		i2c0: i2c@ff650000 {
+> +			compatible =3D "rockchip,rk3288-i2c";
+> +			reg =3D <0xff650000 0x1000>;
+> +			interrupts =3D <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			clock-names =3D "i2c";
+> +			clocks =3D <&cru PCLK_I2C0>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		i2c1: i2c@ff140000 {
+> +			compatible =3D "rockchip,rk3288-i2c";
+> +			reg =3D <0xff140000 0x1000>;
+> +			interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			clock-names =3D "i2c";
+> +			clocks =3D <&cru PCLK_I2C1>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		i2c2: i2c@ff660000 {
+> +			compatible =3D "rockchip,rk3288-i2c";
+> +			reg =3D <0xff660000 0x1000>;
+> +			interrupts =3D <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			clock-names =3D "i2c";
+> +			clocks =3D <&cru PCLK_I2C2>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		i2c3: i2c@ff150000 {
+> +			compatible =3D "rockchip,rk3288-i2c";
+> +			reg =3D <0xff150000 0x1000>;
+> +			interrupts =3D <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			clock-names =3D "i2c";
+> +			clocks =3D <&cru PCLK_I2C3>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		i2c4: i2c@ff160000 {
+> +			compatible =3D "rockchip,rk3288-i2c";
+> +			reg =3D <0xff160000 0x1000>;
+> +			interrupts =3D <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			clock-names =3D "i2c";
+> +			clocks =3D <&cru PCLK_I2C4>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		i2c5: i2c@ff170000 {
+> +			compatible =3D "rockchip,rk3288-i2c";
+> +			reg =3D <0xff170000 0x1000>;
+> +			interrupts =3D <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			clock-names =3D "i2c";
+> +			clocks =3D <&cru PCLK_I2C5>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		watchdog@ff800000 {
+> +			compatible =3D "snps,dw-wdt";
+
+Same here, you might want a more specific compatible as the higher-prio=
+rity
+one.
+
+> +			reg =3D <0xff800000 0x100>;
+> +			interrupts =3D <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart0: serial@ff180000 {
+> +			compatible =3D "snps,dw-apb-uart";
+
+And again w.r.t compatible (I'll stop pointing them out now).
+
+> +			reg =3D <0xff180000 0x100>;
+> +			interrupts =3D <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift =3D <2>;
+> +			reg-io-width =3D <4>;
+> +			clocks =3D <&cru SCLK_UART0>, <&cru PCLK_UART0>;
+> +			clock-names =3D "baudclk", "apb_pclk";
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart1: serial@ff190000 {
+> +			compatible =3D "snps,dw-apb-uart";
+> +			reg =3D <0xff190000 0x100>;
+> +			interrupts =3D <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift =3D <2>;
+> +			reg-io-width =3D <4>;
+> +			clocks =3D <&cru SCLK_UART1>, <&cru PCLK_UART1>;
+> +			clock-names =3D "baudclk", "apb_pclk";
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart2: serial@ff690000 {
+> +			compatible =3D "snps,dw-apb-uart";
+> +			reg =3D <0xff690000 0x100>;
+> +			interrupts =3D <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift =3D <2>;
+> +			reg-io-width =3D <4>;
+> +			clocks =3D <&cru SCLK_UART2>, <&cru PCLK_UART2>;
+> +			clock-names =3D "baudclk", "apb_pclk";
+> +			status =3D "disabled";
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&uart2_xfer>;
+> +		};
+> +
+> +		uart3: serial@ff1b0000 {
+> +			compatible =3D "snps,dw-apb-uart";
+> +			reg =3D <0xff1b0000 0x100>;
+> +			interrupts =3D <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift =3D <2>;
+> +			reg-io-width =3D <4>;
+> +			clocks =3D <&cru SCLK_UART3>, <&cru PCLK_UART3>;
+> +			clock-names =3D "baudclk", "apb_pclk";
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart4: serial@ff1c0000 {
+> +			compatible =3D "snps,dw-apb-uart";
+> +			reg =3D <0xff1c0000 0x100>;
+> +			interrupts =3D <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift =3D <2>;
+> +			reg-io-width =3D <4>;
+> +			clocks =3D <&cru SCLK_UART4>, <&cru PCLK_UART4>;
+> +			clock-names =3D "baudclk", "apb_pclk";
+> +			status =3D "disabled";
+> +		};
+> +	};
+> +};
+> --=20
+> 1.9.0
+>=20
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
