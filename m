@@ -1,69 +1,43 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
-Date: Wed, 16 Jul 2014 12:16:50 +0100
-Message-ID: <53C65F22.20101@arm.com>
-References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org> <1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org> <53C64883.2050709@arm.com> <5340858.B9CZUE8s0j@wuerfel>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/2] net: davinci_mdio: reuse for keystone2 arch
+Date: Wed, 16 Jul 2014 15:13:01 +0300
+Message-ID: <1405512783-20307-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5340858.B9CZUE8s0j@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org" <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org" <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, "lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "loic.pallardy-qxv4g6HH51o@public.gmane.org" <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "s-anna-l0cyMroinI0@public.gmane.org" <s-anna-l0cyMroinI0@public.gmane.org>, "ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org" <Mollie.W>
+To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The similar MDIO HW blocks is used by keystone 2 SoCs as
+in Davinci SoCs:
+- one in Gigabit Ethernet (GbE) Switch Subsystem
+  See http://www.ti.com/lit/ug/sprugv9d/sprugv9d.pdf
+- one in 10 Gigabit Ethernet Subsystem
+  See http://www.ti.com/lit/ug/spruhj5/spruhj5.pdf
 
+Hence, reuse Davinci MDIO driver for Keystone 2 and
+enable TI networking for Keystone 2 devices.
 
-On 16/07/14 11:16, Arnd Bergmann wrote:
-> On Wednesday 16 July 2014 10:40:19 Sudeep Holla wrote:
->>> +
->>> +Required property:
->>> +- mbox: List of phandle and mailbox channel specifier.
->>> +
->>> +- mbox-names: List of identifier strings for each mailbox channel
->>> +               required by the client.
->>> +
->>
->> IMO the mailbox names are more associated with the controller channels/
->> mailbox rather than the clients using it. Does it make sense to move
->> this under controller. It also avoid each client replicating the names.
->
-> I think it would be best to just make the mbox-names property optional,
-> like we have for other subsystems.
->
+Also, as part of this series, enable PHY's creation from DT, because
+Keystone 2 supports DT boot mode only.
 
-OK that makes sense.
+Changes in v2:
+- review comments applied. 
+  Keystone 2 compatibility string changed to "ti,keystone_mdio".
 
-> Doing it in the mbox-controller makes no sense at all, because the
-> mbox controller has (or should have) no idea what the attached devices are.
->
+Grygorii Strashko (2):
+  net: davinci_mdio: reuse for keystone2 arch
+  net: davinci_mdio: allow to create phys from dt
 
-Agreed if these mbox-names are more specific to attached devices and that
-was my initial understanding too. But I got confused when I saw something
-like below in the patch[1]
+ .../devicetree/bindings/net/davinci-mdio.txt       |    8 ++++----
+ drivers/net/ethernet/ti/Kconfig                    |    4 ++--
+ drivers/net/ethernet/ti/davinci_mdio.c             |   21 ++++++++++++++++++--
+ 3 files changed, 25 insertions(+), 8 deletions(-)
 
-+       mhu: mhu0@2b1f0000 {
-+               #mbox-cells = <1>;
-+               compatible = "fujitsu,mhu";
-+               reg = <0 0x2B1F0000 0x1000>;
-+               interrupts = <0 36 4>, /* LP Non-Sec */
-+                            <0 35 4>, /* HP Non-Sec */
-+                            <0 37 4>; /* Secure */
-+       };
-+
-+       mhu_client: scb@0 {
-+               compatible = "fujitsu,scb";
-+               mbox = <&mhu 1>;
-+               mbox-names = "HP_NonSec";
-+       };
-
-Here the name used is more controller specific.
-
-Regards,
-Sudeep
-
-[1] http://www.spinics.net/lists/arm-kernel/msg346991.html
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
