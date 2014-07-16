@@ -1,59 +1,47 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Subject: [PATCH v3 10/12] ARM: dts: Berlin: enable USB on the BG2Q DMP
-Date: Wed, 16 Jul 2014 10:26:04 +0200
-Message-ID: <1405499166-6726-11-git-send-email-antoine.tenart@free-electrons.com>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: imx6qdl: Enable CODA960 VPU
+Date: Wed, 16 Jul 2014 10:27:59 +0200
+Message-ID: <1405499279.3622.4.camel@paszta.hi.pengutronix.de>
+References: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
+	 <1402679641-868-4-git-send-email-p.zabel@pengutronix.de>
+	 <20140618151229.GR8860@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140618151229.GR8860@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RW5hYmxlIHRoZSAyIGF2YWlsYWJsZSBVU0IgUEhZIGFuZCBVU0Igbm9kZXMgb24gdGhlIE1hcnZl
-bGwgQmVybGluIEJHMlEKRE1QLgoKU2lnbmVkLW9mZi1ieTogQW50b2luZSBUw6luYXJ0IDxhbnRv
-aW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmVy
-bGluMnEtbWFydmVsbC1kbXAuZHRzIHwgNTMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-CiAxIGZpbGUgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2JlcmxpbjJxLW1hcnZlbGwtZG1wLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Jl
-cmxpbjJxLW1hcnZlbGwtZG1wLmR0cwppbmRleCA5OTUxNTBmOTM3OTUuLjBkNTE1MDQ2ZjVmNSAx
-MDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMnEtbWFydmVsbC1kbXAuZHRzCisr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLW1hcnZlbGwtZG1wLmR0cwpAQCAtNyw2ICs3
-LDggQEAKICAqLwogCiAvZHRzLXYxLzsKKworI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bp
-by5oPgogI2luY2x1ZGUgImJlcmxpbjJxLmR0c2kiCiAKIC8gewpAQCAtMjEsNiArMjMsMzkgQEAK
-IAljaG9vc2VuIHsKIAkJYm9vdGFyZ3MgPSAiY29uc29sZT10dHlTMCwxMTUyMDAgZWFybHlwcmlu
-dGsiOwogCX07CisKKwlyZWd1bGF0b3JzIHsKKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsK
-KwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXJlZ191
-c2IwX3ZidXM6IHJlZ3VsYXRvckAwIHsKKwkJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVk
-IjsKKwkJCXJlZ3VsYXRvci1uYW1lID0gInVzYjBfdmJ1cyI7CisJCQlyZWd1bGF0b3ItbWluLW1p
-Y3Jvdm9sdCA9IDw1MDAwMDAwPjsKKwkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDUwMDAw
-MDA+OworCQkJZ3BpbyA9IDwmcG9ydGIgOCBHUElPX0FDVElWRV9ISUdIPjsKKwkJCWVuYWJsZS1h
-Y3RpdmUtaGlnaDsKKwkJfTsKKworCQlyZWdfdXNiMV92YnVzOiByZWd1bGF0b3JAMSB7CisJCQlj
-b21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7CisJCQlyZWd1bGF0b3ItbmFtZSA9ICJ1c2Ix
-X3ZidXMiOworCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NTAwMDAwMD47CisJCQlyZWd1
-bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDw1MDAwMDAwPjsKKwkJCWdwaW8gPSA8JnBvcnRiIDEwIEdQ
-SU9fQUNUSVZFX0hJR0g+OworCQkJZW5hYmxlLWFjdGl2ZS1oaWdoOworCQl9OworCisJCXJlZ191
-c2IyX3ZidXM6IHJlZ3VsYXRvckAyIHsKKwkJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVk
-IjsKKwkJCXJlZ3VsYXRvci1uYW1lID0gInVzYjJfdmJ1cyI7CisJCQlyZWd1bGF0b3ItbWluLW1p
-Y3Jvdm9sdCA9IDw1MDAwMDAwPjsKKwkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDUwMDAw
-MDA+OworCQkJZ3BpbyA9IDwmcG9ydGIgMTIgR1BJT19BQ1RJVkVfSElHSD47CisJCQllbmFibGUt
-YWN0aXZlLWhpZ2g7CisJCX07CisJfTsKIH07CiAKICZzZGhjaTEgewpAQCAtMzcsMyArNzIsMjEg
-QEAKICZ1YXJ0MCB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKKworJnVzYl9waHkwIHsKKwlzdGF0
-dXMgPSAib2theSI7Cit9OworCismdXNiX3BoeTIgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisK
-KyZ1c2IwIHsKKwl2YnVzLXN1cHBseSA9IDwmcmVnX3VzYjBfdmJ1cz47CisJc3RhdHVzID0gIm9r
-YXkiOworfTsKKworJnVzYjIgeworCXZidXMtc3VwcGx5ID0gPCZyZWdfdXNiMl92YnVzPjsKKwlz
-dGF0dXMgPSAib2theSI7Cit9OwotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Am Mittwoch, den 18.06.2014, 23:12 +0800 schrieb Shawn Guo:
+> On Fri, Jun 13, 2014 at 07:14:01PM +0200, Philipp Zabel wrote:
+> > This patch adds links to the on-chip SRAM and reset controller nodes
+> > and switches the interrupts. Make the BIT processor interrupt, which exists on
+> > all variants, the first one. The JPEG unit interrupt, which does not exist on
+> > i.MX27 and i.MX5 thus is an optional second interrupt.
+> > Use different compatible strings for i.MX6Q/D and i.MX6S/DL, as they have to
+> > load separate firmware images for some reason.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> The whole series looks good to me.
+> 
+> Rob,
+> 
+> Do you want to apply the first patch through DT tree, or may I have your
+> ACK to take the whole series via IMX tree?
+
+Hi,
+
+are there any reservations about these patches being merged through
+Shawn's IMX tree?
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
