@@ -1,83 +1,370 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [GIT PULL] Mediatek basic support for v3.17
-Date: Wed, 16 Jul 2014 15:47:20 +0200
-Message-ID: <CABuKBe+pF4jxSqot5KhOfzvnyK1d3PmfsMuL2HJ9jbUPFaYCOg@mail.gmail.com>
-References: <CABuKBe+h0Et5_+o4_i-Eu7EQ8Xka7YFoKmO=U0B7NnVQBdQ8FA@mail.gmail.com>
- <20140715135913.GA18571@kroah.com> <14060966.Jhk08lR3XI@wuerfel>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4] hwmon: pwm-fan: Add pwm-fan driver
+Date: Wed, 16 Jul 2014 06:52:55 -0700
+Message-ID: <53C683B7.9090805@roeck-us.net>
+References: <1405505014-24983-1-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <14060966.Jhk08lR3XI@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, ak@linux.intel.com, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>, u.kleine-koenig@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, rostedt@goodmis.org, fabf@sky
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405505014-24983-1-git-send-email-k.debski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
+Cc: t.figa@samsung.com, m.szyprowski@samsung.com, tklauser@distanz.ch, linux-pwm@vger.kernel.org, varkabhadram@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-2014-07-15 17:17 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
-> On Tuesday 15 July 2014 06:59:13 Greg KH wrote:
->> On Tue, Jul 15, 2014 at 01:11:42PM +0200, Matthias Brugger wrote:
->> > The following changes since commit 7171511eaec5bf23fb06078f59784a3a0626b38f:
->> >
->> >   Linux 3.16-rc1 (2014-06-15 17:45:28 -1000)
->> >
->> > are available in the git repository at:
->> >
->> >   https://github.com/mbgg/linux-mediatek.git tags/v3.17-next-basic-support
->>
->> As these are only 7 patches, why do a git pull?  And I know I can't take
->> pull requests from github, I'm not sure what the rules are for the ARM
->> SoC developers either...
->>
->> Just send patches, it's easier that way.
+Hi Kamil,
+
+comments inline.
+
+Thanks,
+Guenter
+
+On 07/16/2014 03:03 AM, Kamil Debski wrote:
+> The pwm-fan driver enables control of fans connected to PWM lines.
+> This driver uses the PWM framework, so it is compatible with all
+> PWM devices that provide drivers through the PWM framework.
 >
-> We generally prefer pull requests, but patches also work for us.
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> ---
+> Changes since v3:
+> - fix missing "\n" in error messages
+> - remove of_match_ptr which was not necessary
+> - change error returned in case of failed allocation to -ENOMEM
+> Changes since v2:
+> - add CONFIG_PM_SLEEP around pwm_fan_suspend and pwm_fan_resume
+> Changes since v1:
+> - added documentation to Documentation/hwmon
+> - fix checkpatch errors
+> 	- added extra description to Kconfig
+> 	- removed whitespace errors
+> - include files rearranged to be in alphabetical order
+> - remove unused sysfs entry pwm1_enable
+> - changed the behavior of the set_pwm function
+> 	- when 0 PWM value is set pwm_disable is run
+> 	- pwm_config return value is checked for errors
+> - use of ATTRIBUTE_GROUPS was added
+> - removed "Not enouch memory" error message
+> - fixed probe return value in case of devm_of_pwm_get error
+> - changed hwmon_device_register_with_groups to
+>    devm_hwmon_device_register_with_groups
+> - changes suspend/resume to use pwm_disable/enable
+> - removed unnecessary CONFIG_PM_SLEEP ifdefs
+> ---
+>   .../devicetree/bindings/hwmon/pwm-fan.txt          |   12 ++
+>   Documentation/hwmon/pwm-fan                        |   17 ++
+>   drivers/hwmon/Kconfig                              |   11 ++
+>   drivers/hwmon/Makefile                             |    1 +
+>   drivers/hwmon/pwm-fan.c                            |  202 ++++++++++++++++++++
+>   5 files changed, 243 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+>   create mode 100644 Documentation/hwmon/pwm-fan
+>   create mode 100644 drivers/hwmon/pwm-fan.c
 >
-> However, one note about the text in the pull request: Matthias,
-> please always try to be explicit about who you want to pull or
-> merge things when you are ready and list in the pull request the
-> other maintainers that have agreed to merging it (or whether they
-> have not sent an Ack yet, which is even more important).
-
-Ok, thank you for the advice. I will do so in the next pull request.
-
+> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> new file mode 100644
+> index 0000000..610757c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> @@ -0,0 +1,12 @@
+> +Bindings for a fan connected to the PWM lines
+> +
+> +Required properties:
+> +- compatible	: "pwm-fan"
+> +- pwms		: the PWM that is used to control the PWM fan
+> +
+> +Example:
+> +	pwm-fan {
+> +		compatible = "pwm-fan";
+> +		status = "okay";
+> +		pwms = <&pwm 0 10000 0>;
+> +	};
+> diff --git a/Documentation/hwmon/pwm-fan b/Documentation/hwmon/pwm-fan
+> new file mode 100644
+> index 0000000..18529d2
+> --- /dev/null
+> +++ b/Documentation/hwmon/pwm-fan
+> @@ -0,0 +1,17 @@
+> +Kernel driver pwm-fan
+> +=====================
+> +
+> +This driver enables the use of a PWM module to drive a fan. It uses the
+> +generic PWM interface thus it is hardware independent. It can be used on
+> +many SoCs, as long as the SoC supplies a PWM line driver that exposes
+> +the generic PWM API.
+> +
+> +Author: Kamil Debski <k.debski@samsung.com>
+> +
+> +Description
+> +-----------
+> +
+> +The driver implements a simple interface for driving a fan connected to
+> +a PWM output. It uses the generic PWM interface, thus it can be used with
+> +a range of SoCs. The driver exposes the fan to the user space through
+> +the hwmon's sysfs interface.
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 02d3d85..4ac13ab 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1105,6 +1105,17 @@ config SENSORS_PCF8591
 >
-> In this case, the clocksource driver needs an Ack from the clocksource
-> maintainers, and the drivers/of/address.c changes need an Ack from the
-> OF maintainers. I assume you have those, but I'd have to first look
-> at the patches to be sure.
+>   source drivers/hwmon/pmbus/Kconfig
 >
->         arnd
+> +config SENSORS_PWM_FAN
+> +	tristate "PWM fan"
+> +	depends on PWM
+> +	help
+> +	  If you say yes here you get support for fans connected to PWM lines.
+> +	  The driver uses the generic PWM interface, thus it will work on a
+> +	  variety of SoCs.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called pwm-fan.
+> +
+>   config SENSORS_SHT15
+>   	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+>   	depends on GPIOLIB
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 3dc0f02..3967ecf 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -120,6 +120,7 @@ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
+>   obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
+>   obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
+>   obj-$(CONFIG_SENSORS_PCF8591)	+= pcf8591.o
+> +obj-$(CONFIG_SENSORS_PWM_FAN)	+= pwm-fan.o
+>   obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+>   obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>   obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> new file mode 100644
+> index 0000000..cacb20a
+> --- /dev/null
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -0,0 +1,202 @@
+> +/*
+> + * pwm-fan.c - Hwmon driver for fans connected to PWM lines.
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + *
+> + * Author: Kamil Debski <k.debski@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/sysfs.h>
+> +
+> +#define MAX_PWM 255
+> +
+> +struct pwm_fan_ctx {
+> +	struct device *hwmon;
+> +	struct mutex lock;
+> +	struct platform_device *pdev;
 
-For the drivers/of/address.c patch I used to have an Ack [1] from
-Grant Likely who told me to merge it through arm-soc. But I deleted
-the Ack after changing the patch because of some comments from Russel
-King [2].
-So at the moment I don't have any Ack anymore.
+Neither hwmon nor pdev are used anywhere and are thus unnecessary.
 
-I have an Ack for the clocksource driver from Thomas [0]. Daniel
-wanted to merge it through his branch, but because of the changes in
-the OF patch he never did.
+> +	struct pwm_device *pwm;
+> +	unsigned int duty_cycle;
 
-So I suppose I have to get some comments from the OF maintainer about
-the patch, before we can go on with the pull request.
+duty_cycle is only used in the probe function, and is thus unnecessary as well.
 
-Sorry for the noise.
+> +	unsigned char pwm_value;
+> +};
+> +
+> +static ssize_t set_pwm(struct device *dev, struct device_attribute *attr,
+> +		       const char *buf, size_t count)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +	unsigned long pwm, duty;
+> +	int ret;
+> +
+> +	if (kstrtoul(buf, 10, &pwm) || pwm > MAX_PWM)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&ctx->lock);
+> +
+> +	if (ctx->pwm_value == pwm)
+> +		goto exit_set_pwm;
+> +
+> +	if (pwm == 0) {
+> +		pwm_disable(ctx->pwm);
+> +		ctx->pwm_value = pwm;
+> +		goto exit_set_pwm;
 
-Matthias
+You can add another label below to save the double assignment.
 
-[0] http://thread.gmane.org/gmane.linux.documentation/24562/focus=24665
-[1] http://thread.gmane.org/gmane.linux.documentation/24447/focus=331382
-[2] https://lkml.org/lkml/2014/6/20/676
+> +	}
+> +
+> +	duty = DIV_ROUND_UP(pwm * (ctx->pwm->period - 1), MAX_PWM);
+> +	ret = pwm_config(ctx->pwm, duty, ctx->pwm->period);
+> +	if (ret) {
+> +		count = ret; /* Set the return value */
 
+Subtle problem: count is of type size_t which is unsigned. Sure it may well be
+that the negative value is converted to unsigned and then converted back to signed
+on return, but it is not a good idea to depend on it. I would suggest to return ret
+and assign
+	ret = count;
+in the success case further below. You'll need an extra label for the success cases
+above.
 
--- 
-motzblog.wordpress.com
+> +		goto exit_set_pwm;
+> +	}
+> +
+> +	if (ctx->pwm_value == 0)
+> +		ret = pwm_enable(ctx->pwm);
+> +	if (ret) {
+> +		count = ret; /* Set the return value */
+> +		goto exit_set_pwm;
+> +	}
+
+This check for ret should really be within the if() statement.
+
+> +
+> +	ctx->duty_cycle = duty;
+> +	ctx->pwm_value = pwm;
+> +
+> +exit_set_pwm:
+> +	mutex_unlock(&ctx->lock);
+> +	return count;
+> +}
+> +
+> +static ssize_t show_pwm(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%u\n", ctx->pwm_value);
+> +}
+> +
+> +
+> +static SENSOR_DEVICE_ATTR(pwm1, S_IRUGO | S_IWUSR,
+> +		   show_pwm, set_pwm, 0);
+> +
+Continuation line is not needed here.
+
+> +static struct attribute *pwm_fan_attrs[] = {
+> +	&sensor_dev_attr_pwm1.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +ATTRIBUTE_GROUPS(pwm_fan);
+> +
+> +static int pwm_fan_probe(struct platform_device *pdev)
+> +{
+> +	struct pwm_fan_ctx *ctx;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->pdev = pdev;
+> +	mutex_init(&ctx->lock);
+> +
+> +	ctx->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, 0);
+> +	if (IS_ERR(ctx->pwm)) {
+> +		dev_err(&pdev->dev, "Could not get PWM\n");
+> +		return PTR_ERR(ctx->pwm);
+> +	}
+> +
+> +	dev_set_drvdata(&pdev->dev, ctx);
+> +	platform_set_drvdata(pdev, ctx);
+> +
+> +	/* Set duty cycle to maximum allowed */
+> +	ctx->duty_cycle = ctx->pwm->period - 1;
+> +	ctx->pwm_value = MAX_PWM;
+> +
+> +	ret = pwm_config(ctx->pwm, ctx->duty_cycle, ctx->pwm->period);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to configure PWM\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Enbale PWM output */
+> +	ret = pwm_enable(ctx->pwm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable PWM\n");
+> +		return ret;
+> +	}
+> +
+> +	ctx->hwmon = devm_hwmon_device_register_with_groups(&pdev->dev,
+> +							    "pwmfan", ctx,
+> +							    pwm_fan_groups);
+> +
+> +	if (IS_ERR(ctx->hwmon)) {
+> +		dev_err(&pdev->dev, "Failed to register hwmon device\n");
+> +		pwm_disable(ctx->pwm);
+> +		return PTR_ERR(ctx->hwmon);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int pwm_fan_remove(struct platform_device *pdev)
+> +{
+> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+> +
+> +	if (ctx->pwm_value)
+> +		pwm_disable(ctx->pwm);
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int pwm_fan_suspend(struct device *dev)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	if (ctx->pwm_value)
+> +		pwm_disable(ctx->pwm);
+> +	return 0;
+> +}
+> +
+> +static int pwm_fan_resume(struct device *dev)
+> +{
+> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	if (ctx->pwm_value)
+> +		return pwm_enable(ctx->pwm);
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(pwm_fan_pm, pwm_fan_suspend, pwm_fan_resume);
+> +
+> +static struct of_device_id of_pwm_fan_match[] = {
+> +	{ .compatible = "pwm-fan", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver pwm_fan_driver = {
+> +	.probe		= pwm_fan_probe,
+> +	.remove		= pwm_fan_remove,
+> +	.driver	= {
+> +		.name		= "pwm-fan",
+> +		.pm		= &pwm_fan_pm,
+> +		.of_match_table	= of_pwm_fan_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(pwm_fan_driver);
+> +
+> +MODULE_AUTHOR("Kamil Debski <k.debski@samsung.com>");
+> +MODULE_ALIAS("platform:pwm-fan");
+> +MODULE_DESCRIPTION("PWM FAN driver");
+> +MODULE_LICENSE("GPL");
+>
