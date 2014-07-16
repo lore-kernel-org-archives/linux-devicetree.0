@@ -1,108 +1,51 @@
-From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] spi: s3c64xx: fix DT binding breakage
-Date: Wed, 16 Jul 2014 21:20:38 +0530
-Message-ID: <CAHfPSqB7BHx49WmFJ-1gyXYMPOyfapnMEGnwPiYOpap=295Vjg@mail.gmail.com>
-References: <1405523950-2231-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Wed, 16 Jul 2014 21:31:54 +0530
+Message-ID: <CAKohpo=bUMKa752fBXZTb0WPYMfJtuR5uk7z-YaXYV63fhJWtg@mail.gmail.com>
+References: <cover.1404231535.git.viresh.kumar@linaro.org>
+	<CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
+	<53B4B0B3.9080000@codeaurora.org>
+	<CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
+	<20140703221609.11380.6884@quantum>
+	<CAKohpomNv_xvcmx03pb8nj=3O33Qt-2Dj2B1q3U46mv5EBtUjA@mail.gmail.com>
+	<CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405523950-2231-1-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hello Javier,
+Cc'ing Thomas,
 
-On 16 July 2014 20:49, Javier Martinez Canillas
-<javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
-> Hello Mark,
+On 8 July 2014 10:20, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 4 July 2014 09:51, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> Yeah, having something like what you suggested from DT is the perfect
+>> solution to get over this. The only reason why I am not touching that here
+>> is to not delay other patches just because of that.
+>>
+>> There are separate threads going on for that and probably somebody
+>> else was trying to push for that.
+>>
+>> That's it, nothing more. I would definitely like to use those bindings instead
+>>  of the crazy routines we are trying here, once that is finalized :)
 >
-> The s3c64xx SPI driver DT binding is currently broken. Commit
-> 3146bee ("spi: s3c64xx: Added provision for dedicated cs pin")
-> added a new "cs-gpio" property and made it a requirement in
-> order to make the driver behave in the same way that it used to.
->
-> The motivation of the offending commit was to allow boards that
-> want to use the native chip select (instead of a GPIO) to work
-> with the s3c64xx SPI driver. Something that was not possible
-> before since the driver made it mandatory to specify a GPIO.
->
-> Unfortunately the commit also changed the driver defaults since
-> now besides specifying a GPIO, it makes mandatory to also specify
-> that a GPIO is used while the default used to be the opposite.
->
-> That mean that old FDT are not working anymore after 3146bee
-> so DT backward compatibility was not ensured by that commit.
->
-> This is a follow-up series from a previous one posted by Naveen
-> Krishna [0] which attempts to solve the issue.
->
-> The feedback from Naveen's series was that the patches did not
-> provide a clear explanation about the rationale and goal of both
-> the series as a whole and the individual changes [1].
->
-> So I tried to take Navee's series and rework them to provide
-> an easier to understand patch series.
->
-> The series is composed of the following patches:
->
-> Javier Martinez Canillas (1):
->   Revert "spi: s3c64xx: Added provision for dedicated cs pin"
->
-> Naveen Krishna Chatradhi (3):
->   spi: s3c64xx: use the generic SPI "cs-gpios" property
->   spi: samsung: Update binding documentation
->   ARM: DTS: fix the chip select gpios definition in the SPI nodes
+> Do we have some kind of agreement for this temporary solution? Anyways
+> I will kick the other thread again to resolve the bindings soon.
 
-I should have mentioned what was the issue being fixed. Your
-explanation is very clear. I'm working on getting the terminology correct.
+Hi Mike/Rafael,
 
-Thank you.
+Thomas has a dependency on the patch adding "find_siblings()":
+http://www.spinics.net/lists/arm-kernel/msg348080.html
 
->
->  .../devicetree/bindings/spi/spi-samsung.txt        |  8 ++--
->  arch/arm/boot/dts/exynos4210-smdkv310.dts          |  2 +-
->  arch/arm/boot/dts/exynos4412-trats2.dts            |  2 +-
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |  2 +-
->  drivers/spi/spi-s3c64xx.c                          | 54 ++++++++++------------
->  5 files changed, 30 insertions(+), 38 deletions(-)
->
-> Patch 01/04 reverts the offending commit since it not only broke
-> the DT binding but also introduced a confusing "cs-gpio" property
-> while the driver already used a property with the same name.
->
-> Patch 02/04 fixes the DT binding for good by using the SPI core
-> "cs-gpios" property to specify the chip select GPIO instead of
-> using a custom property only used by this driver. This change
-> breaks backward compatibility but this has been broken for more
-> than a year and nobody complained so I think it's safe to change
-> it again in favor of using standard DT binding properties.
->
-> A benefit of Patch 02/04 is that it allows DT and legacy boards
-> that need to use the built-in CS instead of a GPIO to work with
-> the driver which was the original motivation of the broken commit.
->
-> Patch 03/04 updates the driver binding documentation accordingly
-> and patch 04/04 updates all the DTS board files in mainline.
->
-> Best regards,
-> Javier
->
-> [0]: http://www.spinics.net/lists/linux-samsung-soc/msg34163.html
-> [1]: http://www.spinics.net/lists/linux-samsung-soc/msg34309.html
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Would it be fine to get this temporary solution (Only within cpufreq-cpu0
+file, so that it doesn't become an API) for now and updating it later once
+bindings are closed?
 
+I have tried pinging on the other thread as well, but no one replied.
+And it looks those bindings are going to take some time to settle.
 
-
--- 
-Shine bright,
-(: Nav :)
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
