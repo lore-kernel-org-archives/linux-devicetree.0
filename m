@@ -1,47 +1,49 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: imx6qdl: Enable CODA960 VPU
-Date: Wed, 16 Jul 2014 10:27:59 +0200
-Message-ID: <1405499279.3622.4.camel@paszta.hi.pengutronix.de>
-References: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
-	 <1402679641-868-4-git-send-email-p.zabel@pengutronix.de>
-	 <20140618151229.GR8860@dragon>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Subject: [PATCH v3 08/12] Documentation: bindings: add doc for the USB2
+ ChipIdea USB driver
+Date: Wed, 16 Jul 2014 10:26:02 +0200
+Message-ID: <1405499166-6726-9-git-send-email-antoine.tenart@free-electrons.com>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140618151229.GR8860@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 18.06.2014, 23:12 +0800 schrieb Shawn Guo:
-> On Fri, Jun 13, 2014 at 07:14:01PM +0200, Philipp Zabel wrote:
-> > This patch adds links to the on-chip SRAM and reset controller nodes
-> > and switches the interrupts. Make the BIT processor interrupt, which exists on
-> > all variants, the first one. The JPEG unit interrupt, which does not exist on
-> > i.MX27 and i.MX5 thus is an optional second interrupt.
-> > Use different compatible strings for i.MX6Q/D and i.MX6S/DL, as they have to
-> > load separate firmware images for some reason.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> The whole series looks good to me.
-> 
-> Rob,
-> 
-> Do you want to apply the first patch through DT tree, or may I have your
-> ACK to take the whole series via IMX tree?
-
-Hi,
-
-are there any reservations about these patches being merged through
-Shawn's IMX tree?
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RG9jdW1lbnQgdGhlIFVTQjIgQ2hpcElkZWEgZHJpdmVyIChjaTEzeHh4KSBiaW5kaW5ncy4KClNp
+Z25lZC1vZmYtYnk6IEFudG9pbmUgVMOpbmFydCA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJv
+bnMuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0
+ICAgICAgIHwgMjMgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDIzIGlu
+c2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQKbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mYjMxNTcxODNlNmEKLS0tIC9kZXYvbnVsbAorKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQK
+QEAgLTAsMCArMSwyMyBAQAorKiBVU0IyIENoaXBJZGVhIFVTQiBjb250cm9sbGVyIGZvciBjaTEz
+eHh4CisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiY2hp
+cGlkZWEsdXNiMiIKKy0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0
+ZXJzCistIGludGVycnVwdHM6IGludGVycnVwdCBmb3IgdGhlIFVTQiBjb250cm9sbGVyCisKK09w
+dGlvbmFsIHByb3BlcnRpZXM6CistIGNsb2NrczogcmVmZXJlbmNlIHRvIHRoZSBVU0IgY2xvY2sK
+Ky0gdXNiLXBoeTogcmVmZXJlbmNlIHRvIHRoZSBVU0IgUEhZCistIHZidXMtc3VwcGx5OiByZWZl
+cmVuY2UgdG8gdGhlIFZCVVMgcmVndWxhdG9yCistIGRtYS1tYXNrOiBETUEgYml0IG1hc2sKKwor
+RXhhbXBsZToKKworCXVzYkBmN2VkMDAwMCB7CisJCWNvbXBhdGlibGUgPSAiY2hpcGlkZWEsdXNi
+MiI7CisJCXJlZyA9IDwweGY3ZWQwMDAwIDB4MTAwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19T
+UEkgMTEgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCWNsb2NrcyA9IDwmY2hpcCBDTEtJRF9VU0Iw
+PjsKKwkJdXNiLXBoeSA9IDwmdXNiX3BoeTA+OworCQl2YnVzLXN1cHBseSA9IDwmcmVnX3VzYjBf
+dmJ1cz47CisJfTsKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
