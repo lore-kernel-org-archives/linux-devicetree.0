@@ -1,276 +1,123 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: add rk3288 evaluation board
-Date: Tue, 15 Jul 2014 18:00:29 -0700
-Message-ID: <20140716010029.GC26207@quad.lixom.net>
-References: <1471578.ILeMmG2DL6@diego>
- <2186895.xqgxh7zegl@diego>
+From: Olav Haugan <ohaugan@codeaurora.org>
+Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
+Date: Tue, 15 Jul 2014 18:25:20 -0700
+Message-ID: <53C5D480.3030409@codeaurora.org>
+References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>	<20140712093917.GD18601@arm.com>	<CAF6AEGutHp+3f3iPA+jjaRkqq=5T_vytZ_ESoSqsQ4RHZ8F8yQ@mail.gmail.com>	<201407121422.02078.arnd@arndb.de>	<CAF6AEGs7=3UByP2DLm-uwU03wr7M14x2t-0hLX-VPJ6_eZbU3g@mail.gmail.com>	<20140713094341.GB23235@arm.com> <CAF6AEGt5cQhDCZgYX4=M1EKE=n2J=9G6mO02JMx-+Fcq_0ukfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2186895.xqgxh7zegl@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGt5cQhDCZgYX4=M1EKE=n2J=9G6mO02JMx-+Fcq_0ukfw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>, Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Joerg Roedel <joro@8bytes.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Grundler <grundler@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Varun Sethi <varun.sethi@freescale.com>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvi>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 7/13/2014 4:43 AM, Rob Clark wrote:
+> On Sun, Jul 13, 2014 at 5:43 AM, Will Deacon <will.deacon@arm.com> wrote:
+>> On Sat, Jul 12, 2014 at 01:57:31PM +0100, Rob Clark wrote:
+>>> On Sat, Jul 12, 2014 at 8:22 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>> On Saturday 12 July 2014, Rob Clark wrote:
+>>>>>>> Was there actually a good reason for having the device link to the
+>>>>>>> iommu rather than the other way around?  How much would people hate it
+>>>>>>> if I just ignore the generic bindings and use something that works for
+>>>>>>> me instead.  I mean, it isn't exactly like there is going to be .dts
+>>>>>>> re-use across different SoC's..  and at least with current IOMMU API
+>>>>>>> some sort of of_get_named_iommu() API doesn't really make sense.
+>>>>>>
+>>>>>> The thing is, if you end up ignoring the generic binding then we have two
+>>>>>> IOMMUs using the same (ARM SMMU) binding and it begs the question as to
+>>>>>> which is the more generic! I know we're keen to get this merged, but merging
+>>>>>> something that people won't use and calling it generic doesn't seem ideal
+>>>>>> either. We do, however, desperately need a generic binding.
+>>>>>
+>>>>> yeah, ignoring the generic binding is not my first choice.  I'd rather
+>>>>> have something that works well for everyone.  But I wasn't really sure
+>>>>> if the current proposal was arbitrary, or if there are some
+>>>>> conflicting requirements between different platforms.
+>>>>
+>>>> The common case that needs to be simple is attaching one (master) device
+>>>> to an IOMMU using the shared global context for the purposes of implementing
+>>>> the dma-mapping API.
+>>>
+>>> well, I don't disagree that IOMMU API has some problems.  It is too
+>>> tied to the bus type, which doesn't really seem to make sense for
+>>> platform devices.  (Unless we start having multiple platform busses?)
+>>>
+>>> But at least given the current IOMMU API I'm not really sure how it
+>>> makes a difference which way the link goes.  But if there has already
+>>> been some discussion about how you want to handle the tie in with
+>>> dma-mapping, if you could point me at that then maybe your point will
+>>> make more sense to me.
+>>
+>> If you look at the proposed binding in isolation, I think it *is* cleaner
+>> than the ARM SMMU binding (I've acked it...) and I believe it's more
+>> consistent with the way we describe linkages elsewhere.
+>>
+>> However, the issue you're raising is that it's more difficult to make use of
+>> in a Linux IOMMU driver. The reward you'll get for using it will come
+>> eventually when the DMA ops are automatically swizzled for devices using the
+>> generic binding.
+>>
+>> My plan for the ARM SMMU driver is:
+>>
+>>   (1) Change ->probe() to walk the device-tree looking for all masters with
+>>       phandles back to the SMMU instance being probed
+>>
+>>   (2) For each master, extract the Stream IDs and add them to the internal
+>>       SMMU driver data structures (an rbtree per SMMU instance). For
+>>       hotpluggable buses, we'll need a way for the bus controller to
+>>       reserve a range of IDs -- this will likely be a later extension to
+>>       the binding.
+>>
+>>   (3) When we get an ->add() call, warn if it's a device we haven't seen
+>>       and reject the addition.
+>>
+>> That way, ->attach() should be the same as it is now, I think.
+>>
+>> Have you tried implementing something like that? We agreed that (1) isn't
+>> pretty, but I don't have a good alternative and it's only done at
+>> probe-time.
+> 
+> I haven't tried implementing that yet, but I'm sure it would work.  I
+> was just hoping to avoid having to do that ;-)
 
-This mostly looks good, with a couple of comments below.
+Is the reason you want to do it this way because you want to guarantee
+that all masters (and stream IDs) have been identified before the first
+attach call? I am just wondering why you cannot continue doing the
+master/streamID discovery during add_device() callback?
 
-On Wed, Jul 16, 2014 at 01:02:58AM +0200, Heiko St=FCbner wrote:
-> +&i2c0 {
-> +	hym8563@51 {
-> +		compatible =3D "haoyu,hym8563";
-> +		reg =3D <0x51>;
-> +
-> +		interrupt-parent =3D <&gpio0>;
-> +		interrupts =3D <4 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&hym8563_int>;
-> +
-> +		#clock-cells =3D <0>;
-> +		clock-output-names =3D "xin32k";
-> +	};
-> +
-> +	act8846: act8846@5a {
-> +		compatible =3D "active-semi,act8846";
-> +		reg =3D <0x5a>;
-> +		status =3D "okay";
-> +	};
-> +};
-> +
-> +&act8846 {
+>>
+>> BTW: Is the msm-v0 IOMMU compatible with the ARM SMMU driver, or is it a
+>> completely different design requiring a different driver?
+> 
+> My understanding is that it is different from msm v1 IOMMU, although I
+> think it shares the same pagetable format with v1.  Not sure if that
+> is the same as arm-smmu?   If so it might be nice to try to extract
+> out some shared helper fxns for map/unmap as well.
+> 
+> I expect Olav knows better the similarities/differences.
+> 
 
-This is slightly odd since you're defining the node just above, you cou=
-ld just
-add the regulators right there.
+The msm-v0 IOMMU is not compatible with ARM SMMUv1 specification.
+However, it is a close cousin. The hardware was designed before the ARM
+SMMUv1 specification was available I believe. But it shares many of the
+same concepts as the ARM SMMUv1.
 
-> +	regulators {
-> +		vcc_ddr: REG1 {
-> +			regulator-name =3D "VCC_DDR";
-> +			regulator-min-microvolt =3D <1200000>;
-> +			regulator-max-microvolt =3D <1200000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcc_io: REG2 {
-> +			regulator-name =3D "VCC_IO";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdd_log: REG3 {
-> +			regulator-name =3D "VDD_LOG";
-> +			regulator-min-microvolt =3D <1000000>;
-> +			regulator-max-microvolt =3D <1000000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcc_20: REG4 {
-> +			regulator-name =3D "VCC_20";
-> +			regulator-min-microvolt =3D <2000000>;
-> +			regulator-max-microvolt =3D <2000000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vccio_sd: REG5 {
-> +			regulator-name =3D "VCCIO_SD";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdd10_lcd: REG6 {
-> +			regulator-name =3D "VDD10_LCD";
-> +			regulator-min-microvolt =3D <1000000>;
-> +			regulator-max-microvolt =3D <1000000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcca_codec: REG7 {
-> +			regulator-name =3D "VCCA_CODEC";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcca_tp: REG8 {
-> +			regulator-name =3D "VCCA_TP";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vccio_pmu: REG9 {
-> +			regulator-name =3D "VCCIO_PMU";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vdd_10: REG10 {
-> +			regulator-name =3D "VDD_10";
-> +			regulator-min-microvolt =3D <1000000>;
-> +			regulator-max-microvolt =3D <1000000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcc_18: REG11 {
-> +			regulator-name =3D "VCC_18";
-> +			regulator-min-microvolt =3D <1800000>;
-> +			regulator-max-microvolt =3D <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcc18_lcd: REG12 {
-> +			regulator-name =3D "VCC18_LCD";
-> +			regulator-min-microvolt =3D <1800000>;
-> +			regulator-max-microvolt =3D <1800000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	hym8563 {
-> +		hym8563_int: hym8563-int {
-> +			rockchip,pins =3D <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/d=
-ts/rk3288-evb-rk808.dts
-> new file mode 100644
-> index 0000000..c168cb2
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-> @@ -0,0 +1,19 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3288-evb.dtsi"
-> +
-> +/ {
-> +	compatible =3D "rockchip,rk3288-evb-rk808", "rockchip,rk3288";
-> +
-> +};
+msm-v0 IOMMU supports V7S page table format only. The ARM SMMU driver
+does not support V7S at this time. However, I believe we need to support
+this.
 
-No rk808 node? Or adding that once the driver is sorted out?
+Will, this reminds me. We definitely have a need to use different page
+tables in the ARM SMMU driver vs. the ARM CPU. We have an SoC with ARMv8
+cores (and thus ARMv8 page tables) but the SMMUs (SMMUv1) on this SoC
+only have support for V7S/V7L page table format. So we cannot use the
+same page table format as the CPU.
 
-> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk=
-3288-evb.dtsi
-> new file mode 100644
-> index 0000000..ff642d4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> @@ -0,0 +1,77 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include "rk3288.dtsi"
-> +
-> +/ {
-> +	aliases {
-> +		serial0 =3D &uart0;
-> +		serial1 =3D &uart1;
-> +		serial2 =3D &uart2;
-> +		serial3 =3D &uart3;
-> +		serial4 =3D &uart4;
-> +	};
-> +
-> +	memory {
-> +		reg =3D <0x0 0x80000000>;
-> +	};
-> +
-> +	soc {
-> +		gpio-keys {
+Thanks,
 
-I'd recommend doing all of these with &-references instead to avoid hav=
-ing to
-revisit this if/when the tree topography changes w.r.t. the 'soc' node.=
- Also,
-the gpio-keys should be on the top level.
+Olav
 
-> +			compatible =3D "gpio-keys";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			autorepeat;
-> +
-> +			button@0 {
-> +				gpios =3D <&gpio0 5 GPIO_ACTIVE_HIGH>;
-> +				linux,code =3D <116>;
-> +				label =3D "GPIO Key Power";
-> +				linux,input-type =3D <1>;
-> +				gpio-key,wakeup =3D <1>;
-> +				debounce-interval =3D <100>;
-> +			};
-> +		};
-> +
-> +		i2c0: i2c@ff650000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c0_xfer>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		watchdog@ff800000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		serial@ff180000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		serial@ff190000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart2: serial@ff690000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart2_xfer>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart3: serial@ff1b0000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart4: serial@ff1c0000 {
-> +			status =3D "okay";
-> +		};
-> +	};
-> +};
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
