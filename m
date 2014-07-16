@@ -1,47 +1,49 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 3/6] ARM: Kconfig: set default gpio number for rockchip SoCs
-Date: Tue, 15 Jul 2014 21:41:26 -0700
-Message-ID: <CAD=FV=X_A09XF29Sb5Pq97aE9ehXqUR21rXFKaT2NB_P6N6yYQ@mail.gmail.com>
-References: <1471578.ILeMmG2DL6@diego>
-	<2242498.pAI32mTkmn@diego>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2] arm: dra7xx: Add hwmod data for pcie1 and pcie2 subsystems
+Date: Wed, 16 Jul 2014 10:15:02 +0530
+Message-ID: <53C6034E.5000105@ti.com>
+References: <1403719366-9656-3-git-send-email-kishon@ti.com> <1404896567-32204-1-git-send-email-kishon@ti.com> <53BD2136.9030009@ti.com> <53C3B251.8000209@ti.com> <alpine.DEB.2.02.1407152013310.21432@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2242498.pAI32mTkmn@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1407152013310.21432@utopia.booyaka.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
 
-On Tue, Jul 15, 2014 at 4:01 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
-rote:
-> The new rk3288 needs a bigger gpio space, as it has 9 gpio banks.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  arch/arm/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 87b63fd..8d1dee0 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1574,6 +1574,7 @@ config ARCH_NR_GPIO
->         default 416 if ARCH_SUNXI
->         default 392 if ARCH_U8500
->         default 352 if ARCH_VT8500
-> +       default 288 if ARCH_ROCKCHIP
 
-Looks reasonable.  9 banks of 32 and that matches what's in the pinmux =
-driver.
+On Wednesday 16 July 2014 01:43 AM, Paul Walmsley wrote:
+> On Mon, 14 Jul 2014, Kishon Vijay Abraham I wrote:
+> 
+>> On Wednesday 09 July 2014 04:32 PM, Rajendra Nayak wrote:
+>>> On Wednesday 09 July 2014 02:32 PM, Kishon Vijay Abraham I wrote:
+>>>> Added hwmod data for pcie1 and pcie2 subsystem present in DRA7xx SOC.
+>>>>
+>>>> Cc: Tony Lindgren <tony@atomide.com>
+>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>> Cc: Paul Walmsley <paul@pwsan.com>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>> Changes from v1:
+>>>> * changed the clock domain to "pcie_clkdm"
+>>>> * Added PCIe as a slave port for l3_main.
+>>>
+>>> Looks good to me,
+>>> Reviewed-by: Rajendra Nayak <rnayak@ti.com>
+>>
+>> Paul,
+>>
+>> Can you pick this one?
+> 
+> Yep, queued for 3.17.
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks :-)
+
+-Kishon
+> 
+> - Paul
+> 
