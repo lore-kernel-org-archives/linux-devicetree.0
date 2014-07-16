@@ -1,85 +1,149 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
-Date: Wed, 16 Jul 2014 19:48:57 +0530
-Message-ID: <CAJe_Zhf8oH-MPg6HtFDoT6_LZxJzy3ff85-GsWcENQftNiJMxw@mail.gmail.com>
-References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>
-	<5461658.P0nNPHkj0L@wuerfel>
-	<CAJe_Zhdtzhv=1QfhCAu6G_nq0VqW9v6TvgHSJe9VmgJQwo0U3Q@mail.gmail.com>
-	<5214160.a78RDYzY5T@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v10 1/7] of: Provide function to request and map memory
+Date: Wed, 16 Jul 2014 09:26:30 -0500
+Message-ID: <CAL_Jsq+MJJA9OeKqM+dmYJdBRuuOcA-=4Ax3w8AqEhc8yOjeUw@mail.gmail.com>
+References: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com>
+ <1404745988-32558-2-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5214160.a78RDYzY5T@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, "mporter@linaro.org" <mporter@linaro.org>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "s-anna@ti.com" <s-anna@ti.com>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "patches@linaro.org" <patches@linaro.org>, "Mollie.Wu@tw.fujitsu.com" <Mollie.Wu@tw.fujitsu.com>, t.takinishi@jp.fujits
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1404745988-32558-2-git-send-email-matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, ak@linux.intel.com, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Shawn Guo <shawn.guo@freescale.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, anders.berg@lsi.com, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngie>
 List-Id: devicetree@vger.kernel.org
 
-On 16 July 2014 19:38, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 16 July 2014 18:42:22 Jassi Brar wrote:
->> On 16 July 2014 18:39, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Wednesday 16 July 2014 18:35:33 Jassi Brar wrote:
->> >> On 16 July 2014 18:15, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> > On Wednesday 16 July 2014 18:07:04 Jassi Brar wrote:
->> >> >> On 16 July 2014 15:46, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> >> > On Wednesday 16 July 2014 10:40:19 Sudeep Holla wrote:
->> >> >> >> > +
->> >> >> >> > +Required property:
->> >> >> >> > +- mbox: List of phandle and mailbox channel specifier.
->> >> >> >> > +
->> >> >> >> > +- mbox-names: List of identifier strings for each mailbox channel
->> >> >> >> > +               required by the client.
->> >> >> >> > +
->> >> >> >>
->> >> >> >> IMO the mailbox names are more associated with the controller channels/
->> >> >> >> mailbox rather than the clients using it. Does it make sense to move
->> >> >> >> this under controller. It also avoid each client replicating the names.
->> >> >> >
->> >> >> > I think it would be best to just make the mbox-names property optional,
->> >> >> > like we have for other subsystems.
->> >> >> >
->> >> >> A very similar subsystem - DMAEngine also has 'dma-names' as a
->> >> >> required property.
->> >> >>
->> >> >> If a client is assigned only 1 mbox in DT, we can do without
->> >> >> mbox-names. But I am not sure what to do if a client needs two or more
->> >> >> differently capable mboxes? Simply allocating in order of mbox request
->> >> >> doesn't seem very robust.
->> >> >
->> >> > Traditionally, these things (regs, interrupts, ...) are just accessed
->> >> > by index. The reason why dmaengine requires the name is that some machines
->> >> > can use multiple DMA engine devices attached to the same request line,
->> >> > so the dmaengine subsystem can pick any of them that has a matching
->> >> > name.
->> >> And also, I think, when a client needs 2 different dma channels, say
->> >> for RX and TX each. The api can't assign the first channel specified
->> >> in 'dmas' property to the first channel request that comes to it,
->> >> unless we assume client driver always requests dma channels in the
->> >> order written in its DT node.  And this is the main reason I see for
->> >> having mbox-names property.
->> >
->> > Most subsystems require passing an explicit index in this case.
->> >
->> >>   If we make mbox-names optional, do we assume client driver must
->> >> request mbox in the order specified in its DT node?
->> >
->> > Correct.
->> >
->> OK. So how about we drop mbox-names altogether and expect client
->> driver to simply provide an index of the mbox needed?
+On Mon, Jul 7, 2014 at 10:13 AM, Matthias Brugger
+<matthias.bgg@gmail.com> wrote:
+> A call to of_iomap does not request the memory region.
+> This patch adds the function of_io_request_and_map which requests
+> the memory region before mapping it.
 >
-> That would be fine with me, but I think a lot of people like
-> the idea of identifying things by name, and are used to that
-> from the other subsystems.
->
-> Maybe you can leave the mbox-names property defined as 'optional'
-> in the generic mbox binding but remove the code in Linux? That way
-> we can always put it back at a later point without changing the
-> binding in an incompatible way.
->
-> Individual mailbox clients can mandate specific strings.
->
-Sounds great.
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Suggested-by: Rob Herring <robh@kernel.org>
 
-Thanks
-Jassi
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  drivers/of/address.c       |   36 ++++++++++++++++++++++++++++++++++++
+>  include/linux/io.h         |    2 ++
+>  include/linux/of_address.h |   11 +++++++++++
+>  lib/devres.c               |    2 --
+>  4 files changed, 49 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 5edfcb0..e371825 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -702,6 +702,42 @@ void __iomem *of_iomap(struct device_node *np, int index)
+>  }
+>  EXPORT_SYMBOL(of_iomap);
+>
+> +/*
+> + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
+> + *                        for a given device_node
+> + * @device:    the device whose io range will be mapped
+> + * @index:     index of the io range
+> + * @name:      name of the resource
+> + *
+> + * Returns a pointer to the requested and mapped memory or an ERR_PTR() encoded
+> + * error code on failure. Usage example:
+> + *
+> + *     base = of_io_request_and_map(node, 0, "foo");
+> + *     if (IS_ERR(base))
+> + *             return PTR_ERR(base);
+> + */
+> +void __iomem *of_io_request_and_map(struct device_node *np, int index,
+> +                                       char *name)
+> +{
+> +       struct resource res;
+> +       void __iomem *mem;
+> +
+> +       if (of_address_to_resource(np, index, &res))
+> +               return IOMEM_ERR_PTR(-EINVAL);
+> +
+> +       if (!request_mem_region(res.start, resource_size(&res), name))
+> +               return IOMEM_ERR_PTR(-EBUSY);
+> +
+> +       mem = ioremap(res.start, resource_size(&res));
+> +       if (!mem) {
+> +               release_mem_region(res.start, resource_size(&res));
+> +               return IOMEM_ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       return mem;
+> +}
+> +EXPORT_SYMBOL(of_io_request_and_map);
+> +
+>  /**
+>   * of_dma_get_range - Get DMA range info
+>   * @np:                device node to get DMA range info
+> diff --git a/include/linux/io.h b/include/linux/io.h
+> index b76e6e5..d5fc9b8 100644
+> --- a/include/linux/io.h
+> +++ b/include/linux/io.h
+> @@ -58,6 +58,8 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
+>  }
+>  #endif
+>
+> +#define IOMEM_ERR_PTR(err) (__force void __iomem *)ERR_PTR(err)
+> +
+>  void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+>                             unsigned long size);
+>  void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index c13b878..fb7b722 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -109,7 +109,12 @@ static inline bool of_dma_is_coherent(struct device_node *np)
+>  extern int of_address_to_resource(struct device_node *dev, int index,
+>                                   struct resource *r);
+>  void __iomem *of_iomap(struct device_node *node, int index);
+> +void __iomem *of_io_request_and_map(struct device_node *device,
+> +                                       int index, char *name);
+>  #else
+> +
+> +#include <linux/io.h>
+> +
+>  static inline int of_address_to_resource(struct device_node *dev, int index,
+>                                          struct resource *r)
+>  {
+> @@ -120,6 +125,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+>  {
+>         return NULL;
+>  }
+> +
+> +static inline void __iomem *of_io_request_and_map(struct device_node *device,
+> +                                       int index, char *name)
+> +{
+> +       return IOMEM_ERR_PTR(-EINVAL);
+> +}
+>  #endif
+>
+>  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
+> diff --git a/lib/devres.c b/lib/devres.c
+> index f562bf6..bb63248 100644
+> --- a/lib/devres.c
+> +++ b/lib/devres.c
+> @@ -86,8 +86,6 @@ void devm_iounmap(struct device *dev, void __iomem *addr)
+>  }
+>  EXPORT_SYMBOL(devm_iounmap);
+>
+> -#define IOMEM_ERR_PTR(err) (__force void __iomem *)ERR_PTR(err)
+> -
+>  /**
+>   * devm_ioremap_resource() - check, request region, and ioremap resource
+>   * @dev: generic device to handle the resource for
+> --
+> 1.7.9.5
+>
