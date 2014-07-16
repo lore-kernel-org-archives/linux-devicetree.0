@@ -1,123 +1,63 @@
-From: Olav Haugan <ohaugan@codeaurora.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Tue, 15 Jul 2014 18:25:20 -0700
-Message-ID: <53C5D480.3030409@codeaurora.org>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>	<20140712093917.GD18601@arm.com>	<CAF6AEGutHp+3f3iPA+jjaRkqq=5T_vytZ_ESoSqsQ4RHZ8F8yQ@mail.gmail.com>	<201407121422.02078.arnd@arndb.de>	<CAF6AEGs7=3UByP2DLm-uwU03wr7M14x2t-0hLX-VPJ6_eZbU3g@mail.gmail.com>	<20140713094341.GB23235@arm.com> <CAF6AEGt5cQhDCZgYX4=M1EKE=n2J=9G6mO02JMx-+Fcq_0ukfw@mail.gmail.com>
+From: Huayi Li <huayi.li@csr.com>
+Subject: [PATCH v5 0/4] PWM: add and enable CSR SiRFSoC PWM driver
+Date: Wed, 16 Jul 2014 09:55:10 +0800
+Message-ID: <1405475714-10006-1-git-send-email-huayi.li@csr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGt5cQhDCZgYX4=M1EKE=n2J=9G6mO02JMx-+Fcq_0ukfw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>, Will Deacon <will.deacon@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Joerg Roedel <joro@8bytes.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Grundler <grundler@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Varun Sethi <varun.sethi@freescale.com>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvi>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: rongjun.ying@csr.com, Huayi Li <huayi.li@csr.com>, barry.song@csr.com, workgroup.linux@csr.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/13/2014 4:43 AM, Rob Clark wrote:
-> On Sun, Jul 13, 2014 at 5:43 AM, Will Deacon <will.deacon@arm.com> wrote:
->> On Sat, Jul 12, 2014 at 01:57:31PM +0100, Rob Clark wrote:
->>> On Sat, Jul 12, 2014 at 8:22 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Saturday 12 July 2014, Rob Clark wrote:
->>>>>>> Was there actually a good reason for having the device link to the
->>>>>>> iommu rather than the other way around?  How much would people hate it
->>>>>>> if I just ignore the generic bindings and use something that works for
->>>>>>> me instead.  I mean, it isn't exactly like there is going to be .dts
->>>>>>> re-use across different SoC's..  and at least with current IOMMU API
->>>>>>> some sort of of_get_named_iommu() API doesn't really make sense.
->>>>>>
->>>>>> The thing is, if you end up ignoring the generic binding then we have two
->>>>>> IOMMUs using the same (ARM SMMU) binding and it begs the question as to
->>>>>> which is the more generic! I know we're keen to get this merged, but merging
->>>>>> something that people won't use and calling it generic doesn't seem ideal
->>>>>> either. We do, however, desperately need a generic binding.
->>>>>
->>>>> yeah, ignoring the generic binding is not my first choice.  I'd rather
->>>>> have something that works well for everyone.  But I wasn't really sure
->>>>> if the current proposal was arbitrary, or if there are some
->>>>> conflicting requirements between different platforms.
->>>>
->>>> The common case that needs to be simple is attaching one (master) device
->>>> to an IOMMU using the shared global context for the purposes of implementing
->>>> the dma-mapping API.
->>>
->>> well, I don't disagree that IOMMU API has some problems.  It is too
->>> tied to the bus type, which doesn't really seem to make sense for
->>> platform devices.  (Unless we start having multiple platform busses?)
->>>
->>> But at least given the current IOMMU API I'm not really sure how it
->>> makes a difference which way the link goes.  But if there has already
->>> been some discussion about how you want to handle the tie in with
->>> dma-mapping, if you could point me at that then maybe your point will
->>> make more sense to me.
->>
->> If you look at the proposed binding in isolation, I think it *is* cleaner
->> than the ARM SMMU binding (I've acked it...) and I believe it's more
->> consistent with the way we describe linkages elsewhere.
->>
->> However, the issue you're raising is that it's more difficult to make use of
->> in a Linux IOMMU driver. The reward you'll get for using it will come
->> eventually when the DMA ops are automatically swizzled for devices using the
->> generic binding.
->>
->> My plan for the ARM SMMU driver is:
->>
->>   (1) Change ->probe() to walk the device-tree looking for all masters with
->>       phandles back to the SMMU instance being probed
->>
->>   (2) For each master, extract the Stream IDs and add them to the internal
->>       SMMU driver data structures (an rbtree per SMMU instance). For
->>       hotpluggable buses, we'll need a way for the bus controller to
->>       reserve a range of IDs -- this will likely be a later extension to
->>       the binding.
->>
->>   (3) When we get an ->add() call, warn if it's a device we haven't seen
->>       and reject the addition.
->>
->> That way, ->attach() should be the same as it is now, I think.
->>
->> Have you tried implementing something like that? We agreed that (1) isn't
->> pretty, but I don't have a good alternative and it's only done at
->> probe-time.
-> 
-> I haven't tried implementing that yet, but I'm sure it would work.  I
-> was just hoping to avoid having to do that ;-)
+Changes in v5:
+ - select the best source clock which can be divided to a more
+   accurate PWM clock
+ - only enable PWM clock and its source clock when needed 
 
-Is the reason you want to do it this way because you want to guarantee
-that all masters (and stream IDs) have been identified before the first
-attach call? I am just wondering why you cannot continue doing the
-master/streamID discovery during add_device() callback?
 
->>
->> BTW: Is the msm-v0 IOMMU compatible with the ARM SMMU driver, or is it a
->> completely different design requiring a different driver?
-> 
-> My understanding is that it is different from msm v1 IOMMU, although I
-> think it shares the same pagetable format with v1.  Not sure if that
-> is the same as arm-smmu?   If so it might be nice to try to extract
-> out some shared helper fxns for map/unmap as well.
-> 
-> I expect Olav knows better the similarities/differences.
-> 
+Changes in v3:
+ - v4: fix many issues from Thierry's feedbacks
 
-The msm-v0 IOMMU is not compatible with ARM SMMUv1 specification.
-However, it is a close cousin. The hardware was designed before the ARM
-SMMUv1 specification was available I believe. But it shares many of the
-same concepts as the ARM SMMUv1.
+Changes in v3:
+ - add "depends on" COMPILE_TEST according to Arnd's feedback;
+ - move the pwm clock source to dts according to Arnd's feedback;
+ - add lost dt-binding document
 
-msm-v0 IOMMU supports V7S page table format only. The ARM SMMU driver
-does not support V7S at this time. However, I believe we need to support
-this.
+Changes in v2:
+ - clean the source clock of PWM wave, use OSC(26MHz)
 
-Will, this reminds me. We definitely have a need to use different page
-tables in the ARM SMMU driver vs. the ARM CPU. We have an SoC with ARMv8
-cores (and thus ARMv8 page tables) but the SMMUs (SMMUv1) on this SoC
-only have support for V7S/V7L page table format. So we cannot use the
-same page table format as the CPU.
+Huayi Li (4):
+  pwm: add CSR SiRFSoc PWM driver
+  pwm: sirf: add dt-binding document
+  ARM: dts: sirf: fix the pwm-cells and clocks
+  ARM: prima2_defconfig: enable PWM and sirf PWM driver
 
-Thanks,
-
-Olav
+ Documentation/devicetree/bindings/pwm/pwm-sirf.txt |  29 ++
+ arch/arm/boot/dts/atlas6.dtsi                      |   8 +-
+ arch/arm/boot/dts/prima2.dtsi                      |   8 +-
+ arch/arm/configs/prima2_defconfig                  |   2 +
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sirf.c                             | 450 +++++++++++++++++++++
+ 7 files changed, 504 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sirf.txt
+ create mode 100644 drivers/pwm/pwm-sirf.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.3
+
+
+
+Member of the CSR plc group of companies. CSR plc registered in England and Wales, registered number 4187346, registered office Churchill House, Cambridge Business Park, Cowley Road, Cambridge, CB4 0WZ, United Kingdom
+More information can be found at www.csr.com. Keep up to date with CSR on our technical blog, www.csr.com/blog, CSR people blog, www.csr.com/people, YouTube, www.youtube.com/user/CSRplc, Facebook, www.facebook.com/pages/CSR/191038434253534, or follow us on Twitter at www.twitter.com/CSR_plc.
+New for 2014, you can now access the wide range of products powered by aptX at www.aptx.com.
