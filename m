@@ -1,32 +1,60 @@
-From: Stuart Longland <stuartl@vrt.com.au>
-Subject: [PATCH 2/2] devicetree: Document binding for isl12022 driver
-Date: Thu, 17 Jul 2014 07:31:02 +1000
-Message-ID: <1405546262-4333-3-git-send-email-stuartl@vrt.com.au>
-References: <20140716085904.GA26951@leverpostej>
- <1405546262-4333-1-git-send-email-stuartl@vrt.com.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405546262-4333-1-git-send-email-stuartl@vrt.com.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roman Fietze <roman.fietze@telemotive.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Stuart Longland <stuartl@vrt.com.au>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v4 06/21] leds: add API for setting torch brightness
+Date: Thu, 17 Jul 2014 00:54:44 +0300
+Message-ID: <20140716215444.GK16460@valkosipuli.retiisi.org.uk>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <1405087464-13762-7-git-send-email-j.anaszewski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405087464-13762-7-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stuart Longland <stuartl@vrt.com.au>
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
- 1 file changed, 1 insertion(+)
+Hi Jacek,
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index bef86e5..17e24e5 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -55,6 +55,7 @@ fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
- gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
- infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
- infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400khz)
-+isl,isl12022		Intersil ISL12020/ISL12022 I2C RTC Chip
- isl,isl12057		Intersil ISL12057 I2C RTC Chip
- maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
- maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+Jacek Anaszewski wrote:
+...
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 1a130cc..9bea9e6 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -44,11 +44,21 @@ struct led_classdev {
+>   #define LED_BLINK_ONESHOT_STOP	(1 << 18)
+>   #define LED_BLINK_INVERT	(1 << 19)
+>   #define LED_SYSFS_LOCK		(1 << 20)
+> +#define LED_DEV_CAP_TORCH	(1 << 21)
+>
+>   	/* Set LED brightness level */
+>   	/* Must not sleep, use a workqueue if needed */
+>   	void		(*brightness_set)(struct led_classdev *led_cdev,
+>   					  enum led_brightness brightness);
+> +	/*
+> +	 * Set LED brightness immediately - it is required for flash led
+> +	 * devices as they require setting torch brightness to have immediate
+> +	 * effect. brightness_set op cannot be used for this purpose because
+> +	 * the led drivers schedule a work queue task in it to allow for
+> +	 * being called from led-triggers, i.e. from the timer irq context.
+> +	 */
+
+Do we need to classify actual devices based on this? I think it's rather 
+a different API behaviour between the LED and the V4L2 APIs.
+
+On devices that are slow to control, the behaviour should be asynchronous
+over the LED API and synchronous when accessed through the V4L2 API. How
+about implementing the work queue, as I have suggested, in the framework, so
+that individual drivers don't need to care about this and just implement the
+synchronous variant of this op? A flag could be added to distinguish devices
+that are fast so that the work queue isn't needed.
+
+It'd be nice to avoid individual drivers having to implement multiple ops to
+do the same thing, just for differing user space interfacs.
+
 -- 
-1.8.5.5
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi     XMPP: sailus@retiisi.org.uk
