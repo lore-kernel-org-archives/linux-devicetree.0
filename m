@@ -1,74 +1,70 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/6] clk: tegra: Update binding doc Tegra132
-Date: Wed, 16 Jul 2014 11:42:44 +0300
-Message-ID: <20140716084244.GO23218@tbergstrom-lnx.Nvidia.com>
-References: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com>
- <1405437890-6468-4-git-send-email-pdeschrijver@nvidia.com>
- <20140716072539.GD7978@ulmo>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] drivers/rtc/rtc-isl12022.c: Device tree support
+Date: Wed, 16 Jul 2014 09:59:04 +0100
+Message-ID: <20140716085904.GA26951@leverpostej>
+References: <1405477705-16885-1-git-send-email-stuartl@vrt.com.au>
+ <1405477705-16885-2-git-send-email-stuartl@vrt.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140716072539.GD7978@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1405477705-16885-2-git-send-email-stuartl@vrt.com.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stuart Longland <stuartl@vrt.com.au>
+Cc: Roman Fietze <roman.fietze@telemotive.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 09:25:40AM +0200, Thierry Reding wrote:
-> * PGP Signed by an unknown key
+On Wed, Jul 16, 2014 at 03:28:25AM +0100, Stuart Longland wrote:
+> Add some support for configuring isl12020/isl12022 devices using the
+> Device Tree blob.
 > 
-> On Tue, Jul 15, 2014 at 06:24:33PM +0300, Peter De Schrijver wrote:
-> > Tegra132 has almost the same clock structure than Tegra124. This patch
-> > documents the missing clock IDs.
-> > 
-> > Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../bindings/clock/nvidia,tegra124-car.txt         |    8 +++++---
-> >  1 files changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-> > index ded5d62..28129a9 100644
-> > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-> > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-> > @@ -1,4 +1,4 @@
-> > -NVIDIA Tegra124 Clock And Reset Controller
-> > +NVIDIA Tegra124 and Tegra132 Clock And Reset Controller
-> >  
-> >  This binding uses the common clock binding:
-> >  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > @@ -7,14 +7,16 @@ The CAR (Clock And Reset) Controller on Tegra is the HW module responsible
-> >  for muxing and gating Tegra's clocks, and setting their rates.
-> >  
-> >  Required properties :
-> > -- compatible : Should be "nvidia,tegra124-car"
-> > +- compatible : Should be "nvidia,tegra124-car" or "nvidia,tegra132-car"
-> >  - reg : Should contain CAR registers location and length
-> >  - clocks : Should contain phandle and clock specifiers for two clocks:
-> >    the 32 KHz "32k_in", and the board-specific oscillator "osc".
-> >  - #clock-cells : Should be 1.
-> >    In clock consumers, this cell represents the clock ID exposed by the
-> >    CAR. The assignments may be found in header file
-> > -  <dt-bindings/clock/tegra124-car.h>.
-> > +  <dt-bindings/clock/tegra124-car.h>. The following clocks do not exist
-> > +  in the nvidia,tegra132-car binding: TEGRA124_CLK_CCLK_G,
-> > +  TEGRA124_CLK_CCLK_LP, TEGRA124_CLK_PLL_X and TEGRA124_CLK_PLL_X_OUT0.
-> 
-> Perhaps it would be useful to split up the common clocks and the
-> Tegra124-only clocks into separate header files and then provide
-> tegra132-car.h which includes only the ones in common with Tegra124.
-> 
-> In other words: tegra124-car-common.h would have all except the ones
-> above, then tegra124-car.h includes tegra124-car-common.h and defines
-> those that are Tegra124-only (the ones you listed above) and
-> tegra132-car.h can include tegra124-car-common.h.
-> 
-> That's somewhat extreme, but it has the benefit of giving us compile-
-> time checks as to whether the correct clocks are being used.
-> 
+> Signed-off-by: Stuart Longland <stuartl@vrt.com.au>
 
-Yes. That seems like a good plan.
+Please document this as with isl,isl12057, in
+Documentation/devicetree/bindings/i2c/trivial-devices.txt
 
-Cheers,
+The string itself looks fine.
 
-Peter.
+> ---
+>  drivers/rtc/rtc-isl12022.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
+> index 03b8911..aa55f08 100644
+> --- a/drivers/rtc/rtc-isl12022.c
+> +++ b/drivers/rtc/rtc-isl12022.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #define DRV_VERSION "0.1"
+>  
+> @@ -271,6 +273,13 @@ static int isl12022_probe(struct i2c_client *client,
+>  	return PTR_ERR_OR_ZERO(isl12022->rtc);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static struct of_device_id isl12022_dt_match[] = {
+> +	{ .compatible = "isl,isl12022" },
+> +	{ },
+> +};
+> +#endif
+> +
+>  static const struct i2c_device_id isl12022_id[] = {
+>  	{ "isl12022", 0 },
+>  	{ }
+> @@ -280,6 +289,9 @@ MODULE_DEVICE_TABLE(i2c, isl12022_id);
+>  static struct i2c_driver isl12022_driver = {
+>  	.driver		= {
+>  		.name	= "rtc-isl12022",
+> +#ifdef CONFIG_OF
+> +		.of_match_table = of_match_ptr(isl12022_dt_match),
+> +#endif
+
+You can drop the ifdef here, of_match_ptr(x) is NULL if !CONFIG_OF.
+
+Thanks,
+Mark.
