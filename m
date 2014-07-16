@@ -1,177 +1,22 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv2 2/5] mailbox/omap: add support for parsing dt devices
-Date: Wed, 16 Jul 2014 16:11:51 -0500
-Message-ID: <53C6EA97.9030400@ti.com>
-References: <1405116252-53612-1-git-send-email-s-anna@ti.com>	<1405116252-53612-3-git-send-email-s-anna@ti.com> <CAPdLdqmA5HkRe9xLOUybOQQzpkmqX8Ot4aH9ZA7B_s3Zp90tPw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAPdLdqmA5HkRe9xLOUybOQQzpkmqX8Ot4aH9ZA7B_s3Zp90tPw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Markus Mayer <markus.mayer@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
+From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Subject: [PATCH v4] i2c: busses: i2c-pxa.c:  Fix for possible null pointer dereference
+Date: Wed, 16 Jul 2014 23:14:10 +0200
+Message-ID: <1405545251-13087-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+This start as a fix for possible null pointer dereference.
+But after discussion with especially Wolfram, Jingoo and Emil it was
+decided to convert the code to uses Managed Device Resource instead.
 
-On 07/16/2014 03:50 PM, Markus Mayer wrote:
-> If I may nit-pick here for a minute...
-> 
-> On 11 July 2014 15:04, Suman Anna <s-anna@ti.com> wrote:
->> Logic has been added to the OMAP2+ mailbox code to parse the
->> mailbox dt nodes and construct the different sub-mailboxes
->> associated with the instance. The DT representation of the
->> sub-mailbox devices is different from legacy platform data
->> representation to allow flexibility of interrupt configuration
->> between Tx and Rx fifos (to also possibly allow simplex devices
->> in the future). The DT representation gathers similar information
->> that was being passed previously through the platform data, except
->> for the number of fifos, interrupts and interrupt type information,
->> which are gathered through driver compatible match data.
->>
->> The non-DT support has to be maintained for now to not break
->> OMAP3 legacy boot, and the legacy-style code will be cleaned
->> up once OMAP3 is also converted to DT-boot only.
->>
->> Cc: Jassi Brar <jassisinghbrar@gmail.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->>  drivers/mailbox/omap-mailbox.c | 156 ++++++++++++++++++++++++++++++++++-------
->>  1 file changed, 132 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-> 
-> [...]
-> 
->>  static int omap_mbox_probe(struct platform_device *pdev)
->>  {
->>         struct resource *mem;
->>         int ret;
->>         struct omap_mbox **list, *mbox, *mboxblk;
->>         struct omap_mbox_pdata *pdata = pdev->dev.platform_data;
->> -       struct omap_mbox_dev_info *info;
->> +       struct omap_mbox_dev_info *info = NULL;
->> +       struct omap_mbox_fifo_info *finfo, *finfoblk;
->>         struct omap_mbox_device *mdev;
->>         struct omap_mbox_fifo *fifo;
->> -       u32 intr_type;
->> +       struct device_node *node = pdev->dev.of_node;
->> +       struct device_node *child;
->> +       const struct of_device_id *match;
->> +       u32 intr_type, info_count;
->> +       u32 num_users, num_fifos;
->> +       u32 tmp[3];
->>         u32 l;
->>         int i;
->>
->> -       if (!pdata || !pdata->info_cnt || !pdata->info) {
->> +       if (!node && (!pdata || !pdata->info_cnt || !pdata->info)) {
->>                 pr_err("%s: platform not supported\n", __func__);
->>                 return -ENODEV;
->>         }
->>
->> +       if (node) {
-> 
-> I noticed here you are using
-> 
->     if (node)
->         /* DT stuff goes here */
->     else
->         /* non-DT stuff goes here */
-> 
-> but below the logic is reversed.
-> 
->> +               match = of_match_device(omap_mailbox_of_match, &pdev->dev);
->> +               if (!match)
->> +                       return -ENODEV;
->> +               intr_type = (u32)match->data;
->> +
->> +               if (of_property_read_u32(node, "ti,mbox-num-users",
->> +                                        &num_users))
->> +                       return -ENODEV;
->> +
->> +               if (of_property_read_u32(node, "ti,mbox-num-fifos",
->> +                                        &num_fifos))
->> +                       return -ENODEV;
->> +
->> +               info_count = of_get_available_child_count(node);
->> +               if (!info_count) {
->> +                       dev_err(&pdev->dev, "no available mbox devices found\n");
->> +                       return -ENODEV;
->> +               }
->> +       } else { /* non-DT device creation */
->> +               info_count = pdata->info_cnt;
->> +               info = pdata->info;
->> +               intr_type = pdata->intr_type;
->> +               num_users = pdata->num_users;
->> +               num_fifos = pdata->num_fifos;
->> +       }
->> +
->> +       finfoblk = devm_kzalloc(&pdev->dev, info_count * sizeof(*finfoblk),
->> +                               GFP_KERNEL);
->> +       if (!finfoblk)
->> +               return -ENOMEM;
->> +
->> +       finfo = finfoblk;
->> +       child = NULL;
->> +       for (i = 0; i < info_count; i++, finfo++) {
->> +               if (!node) {
-> 
-> Here it's
->     if (!node)
->         /* non-DT stuff */
->     else
->         /* DT stuff */
-> 
-> I think the "if (node) ..." version is a bit cleaner. Besides it's
-> nice if code is consistent. Do you mind changing the if statement here
-> so it matches the logic used above?
+Rickard Strandqvist (1):
+  i2c: busses: i2c-pxa.c:  Fix for possible null pointer dereference
 
-No, not at all, I will fix this up in the next version. I have to revise
-the framework adaptation patches anyway (remove tidspbridge changes as
-that driver is getting deleted and add a missing of_node_put).
+ drivers/i2c/busses/i2c-pxa.c |   65 ++++++++++++++----------------------------
+ 1 file changed, 22 insertions(+), 43 deletions(-)
 
-Do you prefer that I split up this series between DT conversion and
-framework adaptation or good with posting all the patches together? If
-latter, I will refresh it once the v9 version of the framework comes out.
-
-regards
-Suman
-
-> 
->> +                       finfo->tx_id = info->tx_id;
->> +                       finfo->rx_id = info->rx_id;
->> +                       finfo->tx_usr = info->usr_id;
->> +                       finfo->tx_irq = info->irq_id;
->> +                       finfo->rx_usr = info->usr_id;
->> +                       finfo->rx_irq = info->irq_id;
->> +                       finfo->name = info->name;
->> +                       info++;
->> +               } else {
->> +                       child = of_get_next_available_child(node, child);
->> +                       ret = of_property_read_u32_array(child, "ti,mbox-tx",
->> +                                                        tmp, ARRAY_SIZE(tmp));
->> +                       if (ret)
->> +                               return ret;
->> +                       finfo->tx_id = tmp[0];
->> +                       finfo->tx_irq = tmp[1];
->> +                       finfo->tx_usr = tmp[2];
->> +
->> +                       ret = of_property_read_u32_array(child, "ti,mbox-rx",
->> +                                                        tmp, ARRAY_SIZE(tmp));
->> +                       if (ret)
->> +                               return ret;
->> +                       finfo->rx_id = tmp[0];
->> +                       finfo->rx_irq = tmp[1];
->> +                       finfo->rx_usr = tmp[2];
->> +
->> +                       finfo->name = child->name;
->> +               }
->> +               if (finfo->tx_id >= num_fifos || finfo->rx_id >= num_fifos ||
->> +                   finfo->tx_usr >= num_users || finfo->rx_usr >= num_users)
->> +                       return -EINVAL;
->> +       }
->> +
-
+-- 
+1.7.10.4
