@@ -1,99 +1,41 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
-Date: Wed, 16 Jul 2014 11:09:47 -0500
-Message-ID: <53C6A3CB.5060005@ti.com>
-References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org>	<5461658.P0nNPHkj0L@wuerfel>	<CAJe_Zhdtzhv=1QfhCAu6G_nq0VqW9v6TvgHSJe9VmgJQwo0U3Q@mail.gmail.com>	<5214160.a78RDYzY5T@wuerfel> <CAJe_Zhf8oH-MPg6HtFDoT6_LZxJzy3ff85-GsWcENQftNiJMxw@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] spi: s3c64xx: fix DT binding breakage
+Date: Wed, 16 Jul 2014 18:33:42 +0200
+Message-ID: <53C6A966.10409@collabora.co.uk>
+References: <1405523950-2231-1-git-send-email-javier.martinez@collabora.co.uk> <20140716160249.GS17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJe_Zhf8oH-MPg6HtFDoT6_LZxJzy3ff85-GsWcENQftNiJMxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, "mporter@linaro.org" <mporter@linaro.org>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "patches@linaro.org" <patches@linaro.org>, "Mollie.Wu@tw.fujitsu.com" <Mollie.Wu@tw.fujitsu.com>, "t.takinishi@jp.fujitsu.com" <t.takinishi@jp.fujitsu.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140716160249.GS17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 07/16/2014 09:18 AM, Jassi Brar wrote:
-> On 16 July 2014 19:38, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Wednesday 16 July 2014 18:42:22 Jassi Brar wrote:
->>> On 16 July 2014 18:39, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Wednesday 16 July 2014 18:35:33 Jassi Brar wrote:
->>>>> On 16 July 2014 18:15, Arnd Bergmann <arnd@arndb.de> wrote:
->>>>>> On Wednesday 16 July 2014 18:07:04 Jassi Brar wrote:
->>>>>>> On 16 July 2014 15:46, Arnd Bergmann <arnd@arndb.de> wrote:
->>>>>>>> On Wednesday 16 July 2014 10:40:19 Sudeep Holla wrote:
->>>>>>>>>> +
->>>>>>>>>> +Required property:
->>>>>>>>>> +- mbox: List of phandle and mailbox channel specifier.
->>>>>>>>>> +
->>>>>>>>>> +- mbox-names: List of identifier strings for each mailbox channel
->>>>>>>>>> +               required by the client.
->>>>>>>>>> +
->>>>>>>>>
->>>>>>>>> IMO the mailbox names are more associated with the controller channels/
->>>>>>>>> mailbox rather than the clients using it. Does it make sense to move
->>>>>>>>> this under controller. It also avoid each client replicating the names.
->>>>>>>>
->>>>>>>> I think it would be best to just make the mbox-names property optional,
->>>>>>>> like we have for other subsystems.
->>>>>>>>
->>>>>>> A very similar subsystem - DMAEngine also has 'dma-names' as a
->>>>>>> required property.
->>>>>>>
->>>>>>> If a client is assigned only 1 mbox in DT, we can do without
->>>>>>> mbox-names. But I am not sure what to do if a client needs two or more
->>>>>>> differently capable mboxes? Simply allocating in order of mbox request
->>>>>>> doesn't seem very robust.
->>>>>>
->>>>>> Traditionally, these things (regs, interrupts, ...) are just accessed
->>>>>> by index. The reason why dmaengine requires the name is that some machines
->>>>>> can use multiple DMA engine devices attached to the same request line,
->>>>>> so the dmaengine subsystem can pick any of them that has a matching
->>>>>> name.
->>>>> And also, I think, when a client needs 2 different dma channels, say
->>>>> for RX and TX each. The api can't assign the first channel specified
->>>>> in 'dmas' property to the first channel request that comes to it,
->>>>> unless we assume client driver always requests dma channels in the
->>>>> order written in its DT node.  And this is the main reason I see for
->>>>> having mbox-names property.
->>>>
->>>> Most subsystems require passing an explicit index in this case.
->>>>
->>>>>   If we make mbox-names optional, do we assume client driver must
->>>>> request mbox in the order specified in its DT node?
->>>>
->>>> Correct.
->>>>
->>> OK. So how about we drop mbox-names altogether and expect client
->>> driver to simply provide an index of the mbox needed?
->>
->> That would be fine with me, but I think a lot of people like
->> the idea of identifying things by name, and are used to that
->> from the other subsystems.
->>
->> Maybe you can leave the mbox-names property defined as 'optional'
->> in the generic mbox binding but remove the code in Linux? That way
->> we can always put it back at a later point without changing the
->> binding in an incompatible way.
-
-I like this too, especially given that the framework uses this only to
-retrieve the index. The mbox_client structure currently requires the
-chan_name to be filled in, which means both the client driver and the
-framework end up having to parse the property.
-
-While we are at this, how about we change the property name from "mbox"
-to a plural-form "mboxes" to be inline with gpios, dmas etc.
-
-regards
-Suman
-
->>
->> Individual mailbox clients can mandate specific strings.
->>
-> Sounds great.
+On 07/16/2014 06:02 PM, Mark Brown wrote:
+> On Wed, Jul 16, 2014 at 05:19:06PM +0200, Javier Martinez Canillas wrote:
 > 
-> Thanks
-> Jassi
+> *sigh*  Yesterday Naveen submitted another, different, patch series also
+> attempting to improve things which I'm not seeing any reference to here.
+> Please coordinate with Naveen about what you are doing.
 > 
+
+Yes, I answered Naveen on his latest series and told him that I thought his v6
+was better and also that the commit messages where still not clearly explaining
+the motivation for the changes [0].
+
+So after that I asked him in private if he wouldn't mind if I try to rework his
+series to make it easier to understand and he agreed on that. I should had
+mentioned it the cover later, sorry about that.
+
+Please take a look to this series instead of the latest that was posted by Naveen.
+
+Thanks a lot and best regards,
+Javier
+
+[0]: https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg34860.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
