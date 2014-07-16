@@ -1,41 +1,100 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] spi: s3c64xx: fix DT binding breakage
-Date: Wed, 16 Jul 2014 18:33:42 +0200
-Message-ID: <53C6A966.10409@collabora.co.uk>
-References: <1405523950-2231-1-git-send-email-javier.martinez@collabora.co.uk> <20140716160249.GS17528@sirena.org.uk>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 01/12] reset: add the Berlin reset controller driver
+Date: Wed, 16 Jul 2014 18:39:53 +0200
+Message-ID: <20140716163953.GJ9858@lunn.ch>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1405499166-6726-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140716160249.GS17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1405499166-6726-2-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2014 06:02 PM, Mark Brown wrote:
-> On Wed, Jul 16, 2014 at 05:19:06PM +0200, Javier Martinez Canillas wrote:
-> 
-> *sigh*  Yesterday Naveen submitted another, different, patch series also
-> attempting to improve things which I'm not seeing any reference to here.
-> Please coordinate with Naveen about what you are doing.
-> 
+On Wed, Jul 16, 2014 at 10:25:55AM +0200, Antoine T=E9nart wrote:
+> Add a reset controller for Marvell Berlin SoCs which is used by the
+> USB PHYs drivers (for now).
+>=20
+> Signed-off-by: Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+>
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/reset/Makefile       |   1 +
+>  drivers/reset/reset-berlin.c | 131 +++++++++++++++++++++++++++++++++=
+++++++++++
+>  2 files changed, 132 insertions(+)
+>  create mode 100644 drivers/reset/reset-berlin.c
+>=20
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 60fed3d7820b..157d421f755b 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -1,4 +1,5 @@
+>  obj-$(CONFIG_RESET_CONTROLLER) +=3D core.o
+>  obj-$(CONFIG_ARCH_SOCFPGA) +=3D reset-socfpga.o
+> +obj-$(CONFIG_ARCH_BERLIN) +=3D reset-berlin.o
+>  obj-$(CONFIG_ARCH_SUNXI) +=3D reset-sunxi.o
+>  obj-$(CONFIG_ARCH_STI) +=3D sti/
+> diff --git a/drivers/reset/reset-berlin.c b/drivers/reset/reset-berli=
+n.c
+> new file mode 100644
+> index 000000000000..7b894047a81d
+> --- /dev/null
+> +++ b/drivers/reset/reset-berlin.c
+> @@ -0,0 +1,131 @@
+> +/*
+> + * Copyright (C) 2014 Marvell Technology Group Ltd.
+> + *
+> + * Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + * Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +
+> +#define BERLIN_MAX_RESETS	32
+> +
+> +#define to_berlin_reset_priv(p)		\
+> +	container_of((p), struct berlin_reset_priv, rcdev)
+> +
+> +struct berlin_reset_priv {
+> +	void __iomem			*base;
+> +	unsigned int			size;
+> +	struct reset_controller_dev	rcdev;
+> +};
+> +
+> +static int berlin_reset_reset(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
+> +{
+> +	struct berlin_reset_priv *priv =3D to_berlin_reset_priv(rcdev);
+> +	int offset =3D id >> 8;
+> +	int mask =3D BIT(id & 0xff);
 
-Yes, I answered Naveen on his latest series and told him that I thought his v6
-was better and also that the commit messages where still not clearly explaining
-the motivation for the changes [0].
+nit:=20
 
-So after that I asked him in private if he wouldn't mind if I try to rework his
-series to make it easier to understand and he agreed on that. I should had
-mentioned it the cover later, sorry about that.
+The parameter to BIT() should be 0-31. So you want to & with 5. Given
+your xlate function, it should never happen that it is greater than
+31. Hence it is only a nit. If you need to respin, you can change
+this, but don't bother to respin just because of this.
 
-Please take a look to this series instead of the latest that was posted by Naveen.
-
-Thanks a lot and best regards,
-Javier
-
-[0]: https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg34860.html
+    Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
