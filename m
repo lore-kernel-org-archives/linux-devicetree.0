@@ -1,91 +1,39 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 11/12] ARM: dts: berlin: add BG2CD nodes for USB support
-Date: Wed, 16 Jul 2014 10:26:05 +0200
-Message-ID: <1405499166-6726-12-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Subject: [PATCH v3 03/12] ARM: Berlin: select the reset controller
+Date: Wed, 16 Jul 2014 10:25:57 +0200
+Message-ID: <1405499166-6726-4-git-send-email-antoine.tenart@free-electrons.com>
 References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Adds nodes describing the Marvell Berlin BG2CD USB PHY and USB. The BG2=
-CD
-SoC has 2 USB ChipIdea controllers, with usb0 host-only and usb1 dual-r=
-ole
-capable.
-
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/berlin2cd.dtsi | 34 ++++++++++++++++++++++++++++++++=
-++
- 1 file changed, 34 insertions(+)
-
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berli=
-n2cd.dtsi
-index 68f7032b4686..5c6950531327 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -66,6 +66,22 @@
- 			clocks =3D <&chip CLKID_TWD>;
- 		};
-=20
-+		usb_phy0: usb-phy@b74000 {
-+			compatible =3D "marvell,berlin2cd-usb-phy";
-+			reg =3D <0xb74000 0x128>;
-+			#phy-cells =3D <0>;
-+			resets =3D <&chip 0x178 23>;
-+			status =3D "disabled";
-+		};
-+
-+		usb_phy1: usb-phy@b78000 {
-+			compatible =3D "marvell,berlin2cd-usb-phy";
-+			reg =3D <0xb78000 0x128>;
-+			#phy-cells =3D <0>;
-+			resets =3D <&chip 0x178 24>;
-+			status =3D "disabled";
-+		};
-+
- 		apb@e80000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
-@@ -242,6 +258,24 @@
- 			};
- 		};
-=20
-+		usb0: usb@ed0000 {
-+			compatible =3D "chipidea,usb2";
-+			reg =3D <0xed0000 0x200>;
-+			interrupts =3D <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&chip CLKID_USB0>;
-+			usb-phy =3D <&usb_phy0>;
-+			status =3D "disabled";
-+		};
-+
-+		usb1: usb@ee0000 {
-+			compatible =3D "chipidea,usb2";
-+			reg =3D <0xee0000 0x200>;
-+			interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&chip CLKID_USB1>;
-+			usb-phy =3D <&usb_phy1>;
-+			status =3D "disabled";
-+		};
-+
- 		apb@fc0000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
---=20
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIE1hcnZlbGwgQmVybGluIFNvQ3Mgbm93IGhhcyBhIHJlc2V0IGNvbnRyb2xsZXIuIEFkZCB0
+aGUgbmVlZGVkCmNvbmZpZ3VyYXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBBbnRvaW5lIFTDqW5hcnQg
+PGFudG9pbmUudGVuYXJ0QGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBhcmNoL2FybS9tYWNoLWJl
+cmxpbi9LY29uZmlnIHwgMiArKwogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmVybGluL0tjb25maWcgYi9hcmNoL2FybS9tYWNoLWJl
+cmxpbi9LY29uZmlnCmluZGV4IDI2MzFjZmM1YWIwZC4uM2E0ZmQxZTQxODAxIDEwMDY0NAotLS0g
+YS9hcmNoL2FybS9tYWNoLWJlcmxpbi9LY29uZmlnCisrKyBiL2FyY2gvYXJtL21hY2gtYmVybGlu
+L0tjb25maWcKQEAgLTEsMTEgKzEsMTMgQEAKIG1lbnVjb25maWcgQVJDSF9CRVJMSU4KIAlib29s
+ICJNYXJ2ZWxsIEJlcmxpbiBTb0NzIiBpZiBBUkNIX01VTFRJX1Y3CisJc2VsZWN0IEFSQ0hfSEFT
+X1JFU0VUX0NPTlRST0xMRVIKIAlzZWxlY3QgQVJDSF9SRVFVSVJFX0dQSU9MSUIKIAlzZWxlY3Qg
+QVJNX0dJQwogCXNlbGVjdCBHRU5FUklDX0lSUV9DSElQCiAJc2VsZWN0IERXX0FQQl9JQ1RMCiAJ
+c2VsZWN0IERXX0FQQl9USU1FUl9PRgogCXNlbGVjdCBQSU5DVFJMCisJc2VsZWN0IFJFU0VUX0NP
+TlRST0xMRVIKIAogaWYgQVJDSF9CRVJMSU4KIAotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
