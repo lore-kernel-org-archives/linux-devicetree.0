@@ -1,1261 +1,618 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Wed, 16 Jul 2014 11:38:24 -0600
-Message-ID: <20140716173824.GA24357@google.com>
-References: <1404361654-2894-1-git-send-email-sthokal@xilinx.com>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Re: [PATCH v3 7/7] PM / devfreq: Add devfreq driver for Exynos5420
+Date: Wed, 16 Jul 2014 23:29:40 +0530
+Message-ID: <CAM4voakxJp9Bi6Z6dGEN30ihQYpOpdOnoPkKOSQqCAeZyjcJ8g@mail.gmail.com>
+References: <1400779322-4410-8-git-send-email-a.kesavan@samsung.com>
+	<1405449368-26430-1-git-send-email-a.kesavan@samsung.com>
+	<53C6684D.4040605@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404361654-2894-1-git-send-email-sthokal@xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Srikanth Thokala <sthokal@xilinx.com>
-Cc: michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, arnd@arndb.de, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <53C6684D.4040605@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>
+Cc: "myungjoo.ham" <myungjoo.ham@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, devicetree <devicetree@vger.kernel.org>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 03, 2014 at 09:57:34AM +0530, Srikanth Thokala wrote:
-> This is the driver for Xilinx AXI PCIe Host Bridge Soft IP
-> 
-> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
-> ---
-> Changes in v4:
-> - Regarding the comments to separate ECAM functionality,
->   I have sent a separate patch and it is decided to implement
->   it later. The patch is here,
->   https://lkml.org/lkml/2014/5/18/54
-> - Fixed issue with adding configuration bus resource.
-> - Moved the logic for setting up bus resources to probe() from
->   pcie_setup().
-> - Instead of mapping all the MSI interrupts in the probe, changed
->   to map only when a MSI is requested.
-> - Earlier, the implementation of legacy and MSI interrupts init-
->   is mutually exclusive, now changed to have the legacy interrupts
->   init always and MSI interrupt init based on CONFIG_PCI_MSI flag.
-> - Regarding the MSI generic implementation comment, I will plan to
->   do on top of this driver patch.
-> - Rebased on 3.16-rc2.
-> - Fixed other minor comments.
-> - Thanks Arnd and Bjorn for the review.
-> 
-> Changes in v3:
-> - Rebased on v3.15.0-rc1
-> - Added support for interrupt-map DT functionality.
-> - Removed map_irq() wrapper, instead using of_irq_parse_and_map_pci().
-> - Modified resource mapping logic as per the series
->   "PCI: ARM: add support for generic PCI host controller"
-> - Modified devicetree binding documentation to update with interrupt-
->   map properties.
-> - Use devm calls wherever applicable.
-> - Fixed minor comments from Jason
-> - Thanks Jason for the review and suggestions.
-> 
-> Changes in v2:
-> - Rebased on v3.14.0-rc8
-> - Removed IP specific DT properties like include-rc, axibar-num etc.,
->   as suggested by Jason and Bjorn, Thanks
-> ---
->  .../devicetree/bindings/pci/xilinx-pcie.txt        |   62 ++
->  drivers/pci/host/Kconfig                           |    7 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pci-xilinx.c                      | 1027 ++++++++++++++++++++
->  4 files changed, 1097 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-pcie.txt
->  create mode 100644 drivers/pci/host/pci-xilinx.c
+Hi Tomasz,
 
-I see I forgot to ask for a MAINTAINERS entry for this driver.  Can
-you add one?
+On Wed, Jul 16, 2014 at 5:25 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Abhilash,
+>
+> Please see my comments inline.
+>
+> On 15.07.2014 20:36, Abhilash Kesavan wrote:
+>> From: "Arjun.K.V" <arjun.kv@samsung.com>
+>>
+>> Exynos5420 bus device devfreq driver monitors PPMU counters and
+>> adjusts INT domain operating frequencies and voltages. Support
+>> for 5420 has been added to the extant 5250 support.
+>>
+>> Signed-off-by: Arjun.K.V <arjun.kv@samsung.com>
+>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+>> ---
+>>  drivers/devfreq/Kconfig              |   10 +-
+>>  drivers/devfreq/exynos/exynos5_bus.c |  598 ++++++++++++++++++++++++++++------
+>>  2 files changed, 508 insertions(+), 100 deletions(-)
+>
+> [snip]
+>
+>>
+>> -#define MAX_SAFEVOLT                 1100000 /* 1.10V */
+>> -/* Assume that the bus is saturated if the utilization is 25% */
+>> -#define INT_BUS_SATURATION_RATIO     25
+>> +/* Assume that we need to bump up the level if the utilization is 10% */
+>> +#define INT_BUS_SATURATION_RATIO     10
+>
+> There is nothing about this change in commit message and changing the
+> ratio from 25% to 10% seems to be rather significant. Please give the
+> rationale for this change.
+Will do.
+>
+>> +#define INT_VOLT_STEP_UV             12500
+>> +
+>> +struct exynos5_busfreq_drv_data {
+>> +     int busf_type;
+>> +};
+>> +
+>> +enum exynos5_busf_type {
+>> +     TYPE_BUSF_EXYNOS5250,
+>> +     TYPE_BUSF_EXYNOS5420,
+>> +};
+>
+> Using this kind of enums is discouraged. Rather than that, just create a
+> structure that describes the differences between variants and use this
+> as type.
+OK.
+>
+>>
+>>  enum int_level_idx {
+>>       LV_0,
+>> @@ -41,12 +46,31 @@ enum int_level_idx {
+>>       _LV_END
+>>  };
+>
+> [snip]
+>
+>> +
+>> +static struct int_bus_opp_table *exynos5_int_opp_table;
+>> +static struct int_bus_opp_table exynos5250_int_opp_table[] = {
+>>       {LV_0, 266000, 1025000},
+>>       {LV_1, 200000, 1025000},
+>>       {LV_2, 160000, 1025000},
+>
+> [snip]
+>
+>> +static struct int_clk_info exynos5420_aclk_300_jpeg[] = {
+>> +     /* Level, Freq, Parent_Pll */
+>> +     {LV_0, 300000, D_PLL},
+>> +     {LV_1, 300000, D_PLL},
+>> +     {LV_2, 200000, D_PLL},
+>> +     {LV_3, 150000, D_PLL},
+>> +     {LV_4,  75000, D_PLL},
+>> +};
+>
+> These should be parsed from DT.
+OK.
+>
+>> +
+>> +#define EXYNOS5420_INT_PM_CLK(NAME, CLK, PCLK, CLK_INFO)     \
+>> +static struct int_comp_clks int_pm_clks_##NAME = {   \
+>> +     .mux_clk_name = CLK,                            \
+>> +     .div_clk_name = PCLK,                           \
+>> +     .clk_info = CLK_INFO,                           \
+>> +}
+>> +
+>> +EXYNOS5420_INT_PM_CLK(aclk_200_fsys, "aclk200_fsys",
+>> +                     "aclk200_fsys_d", exynos5420_aclk_200_fsys);
+>> +EXYNOS5420_INT_PM_CLK(pclk_200_fsys, "pclk200_fsys",
+>> +                     "pclk200_fsys_d", exynos5420_pclk_200_fsys);
+>> +EXYNOS5420_INT_PM_CLK(aclk_100_noc, "aclk100_noc",
+>> +                     "aclk100_noc_d", exynos5420_aclk_100_noc);
+>> +EXYNOS5420_INT_PM_CLK(aclk_400_wcore, "aclk400_wcore",
+>> +                     "aclk400_wcore_d", exynos5420_aclk_400_wcore);
+>> +EXYNOS5420_INT_PM_CLK(aclk_200_fsys2, "aclk200_fsys2",
+>> +                     "aclk200_fsys2_d", exynos5420_aclk_200_fsys2);
+>> +EXYNOS5420_INT_PM_CLK(aclk_400_mscl, "aclk400_mscl",
+>> +                     "aclk400_mscl_d", exynos5420_aclk_400_mscl);
+>> +EXYNOS5420_INT_PM_CLK(aclk_166, "aclk166",
+>> +                     "aclk166_d", exynos5420_aclk_166);
+>> +EXYNOS5420_INT_PM_CLK(aclk_266, "aclk266",
+>> +                     "aclk266_d", exynos5420_aclk_266);
+>> +EXYNOS5420_INT_PM_CLK(aclk_66, "aclk66",
+>> +                     "aclk66_d", exynos5420_aclk_66);
+>> +EXYNOS5420_INT_PM_CLK(aclk_300_disp1, "aclk300_disp1",
+>> +                     "aclk300_disp1_d", exynos5420_aclk_300_disp1);
+>> +EXYNOS5420_INT_PM_CLK(aclk_300_jpeg, "aclk300_jpeg",
+>> +                     "aclk300_jpeg_d", exynos5420_aclk_300_jpeg);
+>> +EXYNOS5420_INT_PM_CLK(aclk_400_disp1, "aclk400_disp1",
+>> +                     "aclk400_disp1_d", exynos5420_aclk_400_disp1);
+>
+> List of the clocks should be parsed from DT as well, without hardcoding
+> data for every SoC in the driver.
+>
+>> +
+>> +static struct int_comp_clks *exynos5420_int_pm_clks[] = {
+>> +     &int_pm_clks_aclk_200_fsys,
+>> +     &int_pm_clks_pclk_200_fsys,
+>> +     &int_pm_clks_aclk_100_noc,
+>> +     &int_pm_clks_aclk_400_wcore,
+>> +     &int_pm_clks_aclk_200_fsys2,
+>> +     &int_pm_clks_aclk_400_mscl,
+>> +     &int_pm_clks_aclk_166,
+>> +     &int_pm_clks_aclk_266,
+>> +     &int_pm_clks_aclk_66,
+>> +     &int_pm_clks_aclk_300_disp1,
+>> +     &int_pm_clks_aclk_300_jpeg,
+>> +     &int_pm_clks_aclk_400_disp1,
+>> +     NULL,
+>> +};
+>> +
+>> +static int exynos5250_int_set_rate(struct busfreq_data_int *data,
+>>                               unsigned long rate)
+>>  {
+>>       int index, i;
+>>
+>> -     for (index = 0; index < ARRAY_SIZE(exynos5_int_opp_table); index++) {
+>> -             if (exynos5_int_opp_table[index].clk == rate)
+>> +     for (index = 0; index < ARRAY_SIZE(exynos5250_int_opp_table); index++) {
+>> +             if (exynos5250_int_opp_table[index].clk == rate)
+>>                       break;
+>>       }
+>>
+>> @@ -161,8 +370,8 @@ static int exynos5_int_set_rate(struct busfreq_data_int *data,
+>>               return -EINVAL;
+>>
+>>       /* Change the system clock divider values */
+>> -     for (i = 0; i < ARRAY_SIZE(exynos5_int_clks); i++) {
+>> -             struct int_clk *clk_info = &exynos5_int_clks[i];
+>> +     for (i = 0; i < ARRAY_SIZE(exynos5250_int_clks); i++) {
+>> +             struct int_simple_clk *clk_info = &exynos5250_int_clks[i];
+>>               int ret;
+>>
+>>               ret = clk_set_rate(clk_info->clk,
+>> @@ -177,10 +386,111 @@ static int exynos5_int_set_rate(struct busfreq_data_int *data,
+>>       return 0;
+>>  }
+>>
+>> +static struct clk *exynos5420_find_pll(struct busfreq_data_int *data,
+>> +                                 enum int_bus_pll target_pll)
+>> +{
+>> +     struct clk *target_src_clk = NULL;
+>> +
+>> +     switch (target_pll) {
+>> +     case C_PLL:
+>> +             target_src_clk = data->mout_cpll;
+>> +             break;
+>> +     case M_PLL:
+>> +             target_src_clk = data->mout_mpll;
+>> +             break;
+>> +     case D_PLL:
+>> +             target_src_clk = data->mout_dpll;
+>> +             break;
+>> +     case I_PLL:
+>> +             target_src_clk = data->mout_ipll;
+>> +             break;
+>> +     default:
+>> +             break;
+>> +     }
+>
+> What about storing the clocks in an array? Then all you would need to do
+> could be as simple as accessing data->plls[target_pll].
+OK.
+>
+>> +
+>> +     return target_src_clk;
+>> +}
+>> +
+>> +static int exynos5420_int_set_rate(struct busfreq_data_int *data,
+>> +             unsigned long target_freq, unsigned long pre_freq)
+>> +{
+>> +     unsigned int i;
+>> +     unsigned long tar_rate;
+>> +     int target_idx = -EINVAL;
+>> +     int pre_idx = -EINVAL;
+>> +     struct int_comp_clks *int_clk;
+>> +     struct clk *new_src_pll;
+>> +     struct clk *old_src_pll;
+>> +     unsigned long old_src_rate, new_src_rate;
+>> +     unsigned long rate1, rate2, rate3, rate4;
+>> +
+>> +     /* Find the levels for target and previous frequencies */
+>> +     for (i = 0; i < _LV_END; i++) {
+>> +             if (exynos5420_int_opp_table[i].clk == target_freq)
+>> +                     target_idx = exynos5420_int_opp_table[i].idx;
+>> +             if (exynos5420_int_opp_table[i].clk == pre_freq)
+>> +                     pre_idx = exynos5420_int_opp_table[i].idx;
+>> +     }
+>> +
+>> +     list_for_each_entry(int_clk, &data->list, node) {
+>> +             tar_rate = int_clk->clk_info[target_idx].target_freq * 1000;
+>> +
+>> +             old_src_pll = clk_get_parent(int_clk->mux_clk);
+>> +             new_src_pll = exynos5420_find_pll(data,
+>> +                             int_clk->clk_info[target_idx].src_pll);
+>> +
+>> +             if (old_src_pll == new_src_pll) {
+>> +                     /* No need to change pll */
+>> +                     clk_set_rate(int_clk->div_clk, tar_rate);
+>> +                     pr_debug("%s: %s now %lu (%lu)\n", __func__,
+>> +                              int_clk->mux_clk_name,
+>> +                              clk_get_rate(int_clk->div_clk), tar_rate);
+>> +                     continue;
+>> +             }
+>> +
+>> +             old_src_rate = clk_get_rate(old_src_pll);
+>> +             new_src_rate = clk_get_rate(new_src_pll);
+>> +             rate1 = clk_get_rate(int_clk->div_clk);
+>> +
+>> +             /*
+>> +              * If we're switching to a faster PLL we should bump up the
+>> +              * divider before switching.
+>> +              */
+>> +             if (new_src_rate > old_src_rate) {
+>> +                     int new_div;
+>> +                     unsigned long tmp_rate;
+>> +
+>> +                     new_div = DIV_ROUND_UP(new_src_rate, tar_rate);
+>> +                     tmp_rate = DIV_ROUND_UP(old_src_rate, new_div);
+>> +                     clk_set_rate(int_clk->div_clk, tmp_rate);
+>> +             }
+>> +             rate2 = clk_get_rate(int_clk->div_clk);
+>> +
+>> +             /* We can safely change the mux now */
+>> +             clk_set_parent(int_clk->mux_clk, new_src_pll);
+>> +             rate3 = clk_get_rate(int_clk->div_clk);
+>> +
+>> +             /*
+>> +              * Give us a proper divider; technically not needed in the case
+>> +              * where we pre-calculated the divider above (the new_src_rate >
+>> +              * old_src_rate case), but let's be formal about it.
+>> +              */
+>> +             clk_set_rate(int_clk->div_clk, tar_rate);
+>> +             rate4 = clk_get_rate(int_clk->div_clk);
+>> +
+>> +             pr_debug("%s: %s => PLL %d; %lu=>%lu=>%lu=>%lu (%lu)\n",
+>> +                      __func__, int_clk->mux_clk_name,
+>> +                      int_clk->clk_info[target_idx].src_pll,
+>> +                      rate1, rate2, rate3, rate4, tar_rate);
+>> +     }
+>> +     return 0;
+>> +}
+>
+> The above function looks like it could be made much more generic and
+> reused for Exynos5250 as well.
+I will look at making it common for the two,
+>
+>> +
+>>  static int exynos5_int_setvolt(struct busfreq_data_int *data,
+>>                               unsigned long volt)
+>>  {
+>> -     return regulator_set_voltage(data->vdd_int, volt, MAX_SAFEVOLT);
+>> +     return regulator_set_voltage(data->vdd_int, volt,
+>> +                             volt + INT_VOLT_STEP_UV);
+>>  }
+>>
+>>  static int exynos5_busfreq_int_target(struct device *dev, unsigned long *_freq,
+>> @@ -218,18 +528,15 @@ static int exynos5_busfreq_int_target(struct device *dev, unsigned long *_freq,
+>>       if (data->disabled)
+>>               goto out;
+>>
+>> -     if (freq > exynos5_int_opp_table[0].clk)
+>> -             pm_qos_update_request(&data->int_req, freq * 16 / 1000);
+>> -     else
+>> -             pm_qos_update_request(&data->int_req, -1);
+>> -
+>>       if (old_freq < freq)
+>>               err = exynos5_int_setvolt(data, volt);
+>>       if (err)
+>>               goto out;
+>>
+>> -     err = exynos5_int_set_rate(data, freq);
+>> -
+>> +     if (data->type == TYPE_BUSF_EXYNOS5250)
+>> +             err = exynos5250_int_set_rate(data, freq);
+>> +     else
+>> +             err = exynos5420_int_set_rate(data, freq, old_freq);
+>>       if (err)
+>>               goto out;
+>>
+>> @@ -267,16 +574,20 @@ static int exynos5_int_get_dev_status(struct device *dev,
+>>  }
+>>
+>>  static struct devfreq_dev_profile exynos5_devfreq_int_profile = {
+>> -     .initial_freq           = 160000,
+>> -     .polling_ms             = 100,
+>> +     .polling_ms             = 10,
+>
+> Another change not mentioned in commit message.
+>
+>>       .target                 = exynos5_busfreq_int_target,
+>>       .get_dev_status         = exynos5_int_get_dev_status,
+>>  };
+>>
+>> -static int exynos5250_init_int_tables(struct busfreq_data_int *data)
+>> +static int exynos5_init_int_tables(struct busfreq_data_int *data)
+>>  {
+>>       int i, err = 0;
+>>
+>> +     if (data->type == TYPE_BUSF_EXYNOS5250)
+>> +             exynos5_int_opp_table = exynos5250_int_opp_table;
+>> +     else
+>> +             exynos5_int_opp_table = exynos5420_int_opp_table;
+>> +
+>>       for (i = LV_0; i < _LV_END; i++) {
+>>               err = dev_pm_opp_add(data->dev, exynos5_int_opp_table[i].clk,
+>>                               exynos5_int_opp_table[i].volt);
+>> @@ -297,6 +608,7 @@ static int exynos5_busfreq_int_pm_notifier_event(struct notifier_block *this,
+>>       struct dev_pm_opp *opp;
+>>       unsigned long maxfreq = ULONG_MAX;
+>>       unsigned long freq;
+>> +     unsigned long old_freq;
+>>       unsigned long volt;
+>>       int err = 0;
+>>
+>> @@ -322,8 +634,14 @@ static int exynos5_busfreq_int_pm_notifier_event(struct notifier_block *this,
+>>               if (err)
+>>                       goto unlock;
+>>
+>> -             err = exynos5_int_set_rate(data, freq);
+>> +             old_freq = data->curr_freq;
+>>
+>> +             if (data->type == TYPE_BUSF_EXYNOS5250)
+>> +                     err = exynos5250_int_set_rate(data, freq);
+>> +             else if (data->type == TYPE_BUSF_EXYNOS5420)
+>> +                     err = exynos5420_int_set_rate(data, freq, old_freq);
+>> +             else
+>> +                     err = -EINVAL;
+>>               if (err)
+>>                       goto unlock;
+>>
+>> @@ -345,16 +663,38 @@ unlock:
+>>       return NOTIFY_DONE;
+>>  }
+>>
+>> +static const struct of_device_id exynos5_busfreq_dt_match[];
+>> +
+>> +static inline int exynos5_busfreq_get_driver_data(struct platform_device *pdev)
+>> +{
+>> +#ifdef CONFIG_OF
+>
+> Exynos is DT-only, so there is no need to handle non-DT cases.
+OK.
+>
+>> +     struct exynos5_busfreq_drv_data *data;
+>> +
+>> +     if (pdev->dev.of_node) {
+>> +             const struct of_device_id *match;
+>> +
+>> +             match = of_match_node(exynos5_busfreq_dt_match,
+>> +                                     pdev->dev.of_node);
+>> +             data = (struct exynos5_busfreq_drv_data *) match->data;
+>> +             return data->busf_type;
+>> +     }
+>> +#endif
+>> +     return platform_get_device_id(pdev)->driver_data;
+>> +}
+>> +
+>>  static int exynos5_busfreq_int_probe(struct platform_device *pdev)
+>>  {
+>>       struct busfreq_data_int *data;
+>>       struct busfreq_ppmu_data *ppmu_data;
+>> +     struct device_node *np = pdev->dev.of_node;
+>>       struct dev_pm_opp *opp;
+>>       struct device *dev = &pdev->dev;
+>> -     struct device_node *np;
+>>       unsigned long initial_freq;
+>>       unsigned long initial_volt;
+>> +     struct clk *mux_clk, *div_clk;
+>> +     struct int_comp_clks *int_pm_clk;
+>>       int err = 0;
+>> +     int nr_clk;
+>>       int i;
+>>
+>>       data = devm_kzalloc(&pdev->dev, sizeof(struct busfreq_data_int),
+>> @@ -364,22 +704,27 @@ static int exynos5_busfreq_int_probe(struct platform_device *pdev)
+>>               return -ENOMEM;
+>>       }
+>>
+>> +     INIT_LIST_HEAD(&data->list);
+>> +     data->type = exynos5_busfreq_get_driver_data(pdev);
+>> +
+>>       ppmu_data = &data->ppmu_data;
+>> -     ppmu_data->ppmu_end = PPMU_END;
+>> +     if (data->type == TYPE_BUSF_EXYNOS5250) {
+>> +             ppmu_data->ppmu_end = PPMU_END_5250;
+>> +     } else if (data->type == TYPE_BUSF_EXYNOS5420) {
+>> +             ppmu_data->ppmu_end = PPMU_END_5420;
+>> +     } else {
+>> +             dev_err(dev, "Cannot determine the device id %d\n", data->type);
+>> +             return -EINVAL;
+>> +     }
+>> +
+>>       ppmu_data->ppmu = devm_kzalloc(dev,
+>> -                                    sizeof(struct exynos_ppmu) * PPMU_END,
+>> -                                    GFP_KERNEL);
+>> +                     sizeof(struct exynos_ppmu) * (ppmu_data->ppmu_end),
+>> +                     GFP_KERNEL);
+>>       if (!ppmu_data->ppmu) {
+>>               dev_err(dev, "Failed to allocate memory for exynos_ppmu\n");
+>>               return -ENOMEM;
+>>       }
+>>
+>> -     np = of_find_compatible_node(NULL, NULL, "samsung,exynos5250-ppmu");
+>> -     if (np == NULL) {
+>> -             pr_err("Unable to find PPMU node\n");
+>> -             return -ENOENT;
+>> -     }
+>
+> This was actually closer to the right solution than what this series
+> does. Actually there was similar attempt already, but for Exynos4 and I
+> even suggested how this could be handled properly. Please see [1] for
+> the whole discussion.
+>
+> [1]
+> https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg27491.html
+Chanwoo are you working on this for exynos4 ? As far as I can see
+there has been no further effort in adding the  power plane and ppmu
+bindings. So, before I start working on this I wanted to confirm that
+you don't have something in the pipeline.
 
-I'd also like an ack from Arnd or another devicetree person for the
-binding.
+Tomasz, I have read through the thread and as per your suggestions
+this is how the dt bindings (for my INT use case) would look like:
 
-I have a few minor comments below.
+ppmu_dmc0_0: ppmu@10D00000 {
+        /* Resources of PPMU */
+}
 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-> new file mode 100644
-> index 0000000..3e2c88d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-> @@ -0,0 +1,62 @@
-> +* Xilinx AXI PCIe Root Port Bridge DT description
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
-> +- reg: Should contain AXI PCIe registers location and length
-> +- device_type: must be "pci"
-> +- interrupts: Should contain AXI PCIe interrupt
-> +- interrupt-map-mask,
-> +  interrupt-map: standard PCI properties to define the mapping of the
-> +	PCI interface to interrupt numbers.
-> +- ranges: ranges for the PCI memory regions (I/O space region is not
-> +	supported by hardware)
-> +	Please refer to the standard PCI bus binding document for a more
-> +	detailed explanation
-> +
-> +Optional properties:
-> +- bus-range: PCI bus numbers covered
-> +
-> +Interrupt controller child node
-> ++++++++++++++++++++++++++++++++
-> +Required properties:
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #address-cells: specifies the number of cells needed to encode an
-> +	address. The value must be 0.
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +
-> +NOTE:
-> +The core provides a single interrupt for both INTx/MSI messages. So,
-> +created a interrupt controller node to support 'interrupt-map' DT
-> +functionality.  The driver will create an IRQ domain for this map, decode
-> +the four INTx interrupts in ISR and route them to this domain.
-> +
-> +
-> +Example:
-> +++++++++
-> +
-> +	pci_express: axi-pcie@50000000 {
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		#interrupt-cells = <1>;
-> +		compatible = "xlnx,axi-pcie-host-1.00.a";
-> +		reg = < 0x50000000 0x10000000 >;
-> +		device_type = "pci";
-> +		interrupts = < 0 52 4 >;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-map = <0 0 0 1 &pcie_intc 1>,
-> +				<0 0 0 2 &pcie_intc 2>,
-> +				<0 0 0 3 &pcie_intc 3>,
-> +				<0 0 0 4 &pcie_intc 4>;
-> +		ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
-> +
-> +		pcie_intc: interrupt-controller {
-> +			interrupt-controller;
-> +			#address-cells = <0>;
-> +			#interrupt-cells = <1>;
-> +		}
-> +	};
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index 21df477..afedcde 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -46,4 +46,11 @@ config PCI_HOST_GENERIC
->  	  Say Y here if you want to support a simple generic PCI host
->  	  controller, such as the one emulated by kvmtool.
->  
-> +config PCI_XILINX
-> +	bool "Xilinx AXI PCIe host bridge support"
-> +	depends on ARCH_ZYNQ
-> +	help
-> +	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
-> +	  Host Bridge driver.
-> +
->  endmenu
-> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-> index 611ba4b..68dfd06 100644
-> --- a/drivers/pci/host/Makefile
-> +++ b/drivers/pci/host/Makefile
-> @@ -6,3 +6,4 @@ obj-$(CONFIG_PCI_TEGRA) += pci-tegra.o
->  obj-$(CONFIG_PCI_RCAR_GEN2) += pci-rcar-gen2.o
->  obj-$(CONFIG_PCI_RCAR_GEN2_PCIE) += pcie-rcar.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
-> +obj-$(CONFIG_PCI_XILINX) += pci-xilinx.o
-> diff --git a/drivers/pci/host/pci-xilinx.c b/drivers/pci/host/pci-xilinx.c
-> new file mode 100644
-> index 0000000..57d59e7
-> --- /dev/null
-> +++ b/drivers/pci/host/pci-xilinx.c
-> @@ -0,0 +1,1027 @@
-> +/*
-> + * PCIe host controller driver for Xilinx AXI PCIe Bridge
-> + *
-> + * Copyright (c) 2012 - 2014 Xilinx, Inc.
-> + *
-> + * Based on the Tegra PCIe driver
-> + *
-> + * Bits taken from Synopsys Designware Host controller driver and
-> + * ARM PCI Host generic driver.
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation, either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/msi.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* Register definitions */
-> +#define XILINX_PCIE_REG_VSECC		0x00000128
-> +#define XILINX_PCIE_REG_VSECH		0x0000012c
-> +#define XILINX_PCIE_REG_BIR		0x00000130
-> +#define XILINX_PCIE_REG_BSCR		0x00000134
-> +#define XILINX_PCIE_REG_IDR		0x00000138
-> +#define XILINX_PCIE_REG_IMR		0x0000013c
-> +#define XILINX_PCIE_REG_BLR		0x00000140
-> +#define XILINX_PCIE_REG_PSCR		0x00000144
-> +#define XILINX_PCIE_REG_RPSC		0x00000148
-> +#define XILINX_PCIE_REG_MSIBASE1	0x0000014c
-> +#define XILINX_PCIE_REG_MSIBASE2	0x00000150
-> +#define XILINX_PCIE_REG_RPEFR		0x00000154
-> +#define XILINX_PCIE_REG_RPIFR1		0x00000158
-> +#define XILINX_PCIE_REG_RPIFR2		0x0000015c
-> +#define XILINX_PCIE_REG_VSECC2		0x00000200
-> +#define XILINX_PCIE_REG_VSECH2		0x00000204
-> +
-> +/* Interrupt registers definitions */
-> +#define XILINX_PCIE_INTR_LINK_DOWN	BIT(0)
-> +#define XILINX_PCIE_INTR_ECRC_ERR	BIT(1)
-> +#define XILINX_PCIE_INTR_STR_ERR	BIT(2)
-> +#define XILINX_PCIE_INTR_HOT_RESET	BIT(3)
-> +#define XILINX_PCIE_INTR_CFG_COMPL	GENMASK(7, 5)
-> +#define XILINX_PCIE_INTR_CFG_TIMEOUT	BIT(8)
-> +#define XILINX_PCIE_INTR_CORRECTABLE	BIT(9)
-> +#define XILINX_PCIE_INTR_NONFATAL	BIT(10)
-> +#define XILINX_PCIE_INTR_FATAL		BIT(11)
-> +#define XILINX_PCIE_INTR_INTX		BIT(16)
-> +#define XILINX_PCIE_INTR_MSI		BIT(17)
-> +#define XILINX_PCIE_INTR_SLV_UNSUPP	BIT(20)
-> +#define XILINX_PCIE_INTR_SLV_UNEXP	BIT(21)
-> +#define XILINX_PCIE_INTR_SLV_COMPL	BIT(22)
-> +#define XILINX_PCIE_INTR_SLV_ERRP	BIT(23)
-> +#define XILINX_PCIE_INTR_SLV_CMPABT	BIT(24)
-> +#define XILINX_PCIE_INTR_SLV_ILLBUR	BIT(25)
-> +#define XILINX_PCIE_INTR_MST_DECERR	BIT(26)
-> +#define XILINX_PCIE_INTR_MST_SLVERR	BIT(27)
-> +#define XILINX_PCIE_INTR_MST_ERRP	BIT(28)
-> +#define XILINX_PCIE_IMR_ALL_MASK	0x1FF30FED
-> +#define XILINX_PCIE_IDR_ALL_MASK	0xFFFFFFFF
-> +
-> +/* Root Port Error FIFO Read Register definitions */
-> +#define XILINX_PCIE_RPEFR_ERR_VALID	BIT(18)
-> +#define XILINX_PCIE_RPEFR_REQ_ID	GENMASK(15, 0)
-> +#define XILINX_PCIE_RPEFR_ALL_MASK	0xFFFFFFFF
-> +
-> +/* Root Port Interrupt FIFO Read Register 1 definitions */
-> +#define XILINX_PCIE_RPIFR1_INTR_VALID	BIT(31)
-> +#define XILINX_PCIE_RPIFR1_MSI_INTR	BIT(30)
-> +#define XILINX_PCIE_RPIFR1_INTR_ASSRT	BIT(29)
-> +#define XILINX_PCIE_RPIFR1_INTR_MASK	GENMASK(28, 27)
-> +#define XILINX_PCIE_RPIFR1_MSI_ADR_MASK	GENMASK(26, 16)
-> +#define XILINX_PCIE_RPIFR1_ALL_MASK	0xFFFFFFFF
-> +#define XILINX_PCIE_RPIFR1_INTR_SHIFT		27
-> +#define XILINX_PCIE_RPIFR1_MSI_ADR_SHIFT	16
-> +
-> +/* Bridge Info Register definitions */
-> +#define XILINX_PCIE_BIR_ECAM_SZ_MASK	GENMASK(18, 16)
-> +#define XILINX_PCIE_BIR_ECAM_SZ_SHIFT	16
-> +
-> +/* Root Port Interrupt FIFO Read Register 2 definitions */
-> +#define XILINX_PCIE_RPIFR2_MSG_DATA	GENMASK(15, 0)
-> +
-> +/* Root Port Status/control Register definitions */
-> +#define XILINX_PCIE_REG_RPSC_BEN	BIT(0)
-> +
-> +/* Phy Status/Control Register definitions */
-> +#define XILINX_PCIE_REG_PSCR_LNKUP	BIT(11)
-> +
-> +/* ECAM definitions */
-> +#define ECAM_BUS_NUM_SHIFT		20
-> +#define ECAM_DEV_NUM_SHIFT		12
-> +
-> +/* PCI Configuration space Bus Number Register definitions */
-> +#define PCI_SECONDARY_BUS_NUM_SHIFT	8
-> +#define PCI_SUBORDINATE_BUS_NUM_SHIFT	16
-> +#define PCI_LATENCY_TIMER_MASK		GENMASK(31, 24)
+ppmu_dmc0_1: ppmu@10D00000 {
+        /* Resources of PPMU */
+}
 
-These three #defines aren't used; can you remove them?  (If you need
-them someday, you should either try to use generic definitions from
-include/uapi/linux/pci_regs.h, or if they're Xilinx-specific, rename
-them so they look Xilinx-specific rather than generic.
+ppmu_dmc_1_0: ppmu@10D00000 {
+        /* Resources of PPMU */
+}
 
-> +
-> +/* Number of MSI IRQs */
-> +#define XILINX_NUM_MSI_IRQS		128
-> +
-> +/* Number of Memory Resources */
-> +#define XILINX_MAX_NUM_RESOURCES	3
-> +
-> +/**
-> + * struct xilinx_pcie_port - PCIe port information
-> + * @reg_base: IO Mapped Register Base
-> + * @irq: Interrupt number
-> + * @msi_pages: MSI pages
-> + * @root_busno: Root Bus number
-> + * @link_up: Link status flag
-> + * @dev: Device pointer
-> + * @irq_domain: IRQ domain pointer
-> + * @bus_range: Bus range
-> + * @resources: Bus Resources
-> + */
-> +struct xilinx_pcie_port {
-> +	void __iomem *reg_base;
-> +	u32 irq;
-> +	unsigned long msi_pages;
-> +	u8 root_busno;
-> +	bool link_up;
-> +	struct device *dev;
-> +	struct irq_domain *irq_domain;
-> +	struct resource bus_range;
-> +	struct list_head resources;
-> +};
-> +
-> +static DECLARE_BITMAP(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
-> +
-> +static inline struct xilinx_pcie_port *sys_to_pcie(struct pci_sys_data *sys)
-> +{
-> +	return sys->private_data;
-> +}
-> +
-> +static inline u32 pcie_read(struct xilinx_pcie_port *port, u32 reg)
-> +{
-> +	return readl(port->reg_base + reg);
-> +}
-> +
-> +static inline void pcie_write(struct xilinx_pcie_port *port,
-> +			      u32 val, u32 reg)
-> +{
-> +	writel(val, port->reg_base + reg);
-> +}
-> +
-> +static inline bool xilinx_pcie_is_link_up(struct xilinx_pcie_port *port)
+power-plane-int {
+        compatible = "exynos5420-int, power-plane";
+        samsung,ppmus = <&ppmu_dmc_0_0>, &ppmu_dmc_0_1>, &ppmu_dmc_1_0>;
+        samsung,devices = ??
+        clock-names = "aclk200_fsys", "pclk200_fsys", "aclk100_noc"...;
+        clocks = <&clock CLK_ACLK200_FSYS2>,...;
+        vdd_int-supply = <&buck3_reg>; /* VDD_INT */
+        operating-points = <
+                                   266000, 1300000
+                                   200000, 1250000
+                                   160000, 1225000
+                                   133000, 1200000
+                                   >;
+};
 
-Bool function names should be statements or properties, not questions,
-since a statement can be true or false but a question cannot.  For
-example, in this case, "xilinx_pcie_link_up()" or
-"xilinx_pcie_link_is_up()" would read better.
+Here are my doubts regarding this:
+1) The INT bus consists of several IPs like MFC, DISP, HDMI, ISP etc.
+The 3 PPMUs listed above monitor the load on the TOP block which these
+IPs are a part of. What should be the "samsung, devices" associated
+with it ?
+2) I have currently listed the virtual INT bus frequencies in
+"operating points" property. So, when there is a high load on the INT
+bus, there would be a request for say a virtual frequency of 266MHz
+which in turn would bump up several clocks (like MFC, DISP etc) to a
+desired level. Is it OK to have the virtual INT bus frequencies listed
+in DT ?
+3) There are over 10 clocks in 5420 that need to be controlled as part
+of the INT domain. Should all these clocks, parent clocks, hardware
+recommended source PLLs and the recommended clock rates (at each of
+the virtual INT bus frequencies) also be part of the power plane node
+? So that I parse all these clocks from dt and associate them with
+each of the virtual bus rates. Is that the correct approach ?
+>
+>> -
+>>       for (i = 0; i < ppmu_data->ppmu_end; i++) {
+>>               /* map PPMU memory region */
+>>               ppmu_data->ppmu[i].hw_base = of_iomap(np, i);
+>> @@ -388,13 +733,17 @@ static int exynos5_busfreq_int_probe(struct platform_device *pdev)
+>>                       return -ENOMEM;
+>>               }
+>>       }
+>> +
+>>       data->pm_notifier.notifier_call = exynos5_busfreq_int_pm_notifier_event;
+>>       data->dev = dev;
+>>       mutex_init(&data->lock);
+>>
+>> -     err = exynos5250_init_int_tables(data);
+>> -     if (err)
+>> +     err = exynos5_init_int_tables(data);
+>> +     if (err) {
+>> +             dev_err(dev, "Cannot initialize busfreq table %d\n",
+>> +                          data->type);
+>>               return err;
+>> +     }
+>>
+>>       data->vdd_int = devm_regulator_get(dev, "vdd_int");
+>>       if (IS_ERR(data->vdd_int)) {
+>> @@ -402,18 +751,70 @@ static int exynos5_busfreq_int_probe(struct platform_device *pdev)
+>>               return PTR_ERR(data->vdd_int);
+>>       }
+>>
+>> -     for (i = 0; i < ARRAY_SIZE(exynos5_int_clks); i++) {
+>> -             struct int_clk *clk_info = &exynos5_int_clks[i];
+>> +     if (data->type == TYPE_BUSF_EXYNOS5250) {
+>> +             for (i = 0; i < ARRAY_SIZE(exynos5250_int_clks); i++) {
+>> +                     struct int_simple_clk *clk_info =
+>> +                             &exynos5250_int_clks[i];
+>> +
+>> +                     clk_info->clk = devm_clk_get(dev, clk_info->clk_name);
+>> +                     if (IS_ERR(clk_info->clk)) {
+>> +                             dev_err(dev, "Failed to get clock %s\n",
+>> +                                     clk_info->clk_name);
+>> +                             return PTR_ERR(clk_info->clk);
+>> +                     }
+>> +             }
+>> +     } else {
+>> +             data->mout_ipll = devm_clk_get(dev, "mout_ipll");
+>> +             if (IS_ERR(data->mout_ipll)) {
+>> +                     dev_err(dev, "Cannot get clock \"mout_ipll\"\n");
+>> +                     return PTR_ERR(data->mout_ipll);
+>> +             }
+>>
+>> -             clk_info->clk = devm_clk_get(dev, clk_info->clk_name);
+>> -             if (IS_ERR(clk_info->clk)) {
+>> -                     dev_err(dev, "Failed to get clock %s\n",
+>> -                             clk_info->clk_name);
+>> -                     return PTR_ERR(clk_info->clk);
+>> +             data->mout_mpll = devm_clk_get(dev, "mout_mpll");
+>> +             if (IS_ERR(data->mout_mpll)) {
+>> +                     dev_err(dev, "Cannot get clock \"mout_mpll\"\n");
+>> +                     return PTR_ERR(data->mout_mpll);
+>> +             }
+>> +
+>> +             data->mout_dpll = devm_clk_get(dev, "mout_dpll");
+>> +             if (IS_ERR(data->mout_dpll)) {
+>> +                     dev_err(dev, "Cannot get clock \"mout_dpll\"\n");
+>> +                     return PTR_ERR(data->mout_dpll);
+>> +             }
+>> +
+>> +             data->mout_cpll = devm_clk_get(dev, "mout_cpll");
+>> +             if (IS_ERR(data->mout_cpll)) {
+>> +                     dev_err(dev, "Cannot get clock \"mout_cpll\"\n");
+>> +                     return PTR_ERR(data->mout_cpll);
+>> +             }
+>> +
+>> +             for (nr_clk = 0; exynos5420_int_pm_clks[nr_clk] != NULL;
+>> +                                                             nr_clk++) {
+>> +                     int_pm_clk = exynos5420_int_pm_clks[nr_clk];
+>> +                     mux_clk = devm_clk_get(dev, int_pm_clk->mux_clk_name);
+>> +                     if (IS_ERR(mux_clk)) {
+>> +                             dev_err(dev, "Cannot get mux clock: %s\n",
+>> +                                             int_pm_clk->mux_clk_name);
+>> +                             return PTR_ERR(mux_clk);
+>> +                     }
+>> +                     div_clk = devm_clk_get(dev, int_pm_clk->div_clk_name);
+>> +                     if (IS_ERR(div_clk)) {
+>> +                             dev_err(dev, "Cannot get div clock: %s\n",
+>> +                                             int_pm_clk->div_clk_name);
+>> +                             return PTR_ERR(div_clk);
+>> +                     }
+>> +                     int_pm_clk->mux_clk = mux_clk;
+>> +                     int_pm_clk->div_clk = div_clk;
+>> +                     list_add_tail(&int_pm_clk->node, &data->list);
+>
+> All those could be probably handled with an array and a for loop.
+>
+> In general, this patch apparently contains many separate changes and not
+> only is hard to review but also hard to debug potential problems - git
+> bisect has commit granularity.
+>
+> Please refactor the driver step by step first and then add support for
+> new SoC after it has all the needed features.
+You are right. I will first post patches adding dt support for only
+5250. If that looks good then will add for 5420.
+Thanks for the comprehensive review.
 
-> +{
-> +	return (pcie_read(port, XILINX_PCIE_REG_PSCR) &
-> +		XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
-> + * @port: PCIe port information
-> + */
-> +static inline void
-> +xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
-
-Put the signature all on one line.  It probably doesn't need to be
-inline (we're making a couple register accesses, so speed isn't a
-concern), and removing that will make it fit.
-
-> +{
-> +	u32 val = pcie_read(port, XILINX_PCIE_REG_RPEFR);
-> +
-> +	if (val & XILINX_PCIE_RPEFR_ERR_VALID) {
-> +		dev_dbg(port->dev, "Requester ID %d\n",
-> +			val & XILINX_PCIE_RPEFR_REQ_ID);
-> +		pcie_write(port, XILINX_PCIE_RPEFR_ALL_MASK,
-> +			   XILINX_PCIE_REG_RPEFR);
-> +	}
-> +}
-> +
-> +/**
-> + * xilinx_pcie_verify_config - Verify configuration
-> + * @bus: PCI Bus structure
-> + * @devfn: device/function
-> + *
-> + * Return: 0 on success and error value for invalid configuration
-> + */
-> +static int xilinx_pcie_verify_config(struct pci_bus *bus,
-> +				     unsigned int devfn)
-
-"verify_config" is not a great function name because it doesn't give a
-good clue about what the return value is.  If you make it boolean and
-name it, e.g., xilinx_pcie_valid_device(), then it's obvious.
-
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-> +
-> +	/* Check if link is up when trying to access downstream ports */
-> +	if (bus->number != port->root_busno)
-> +		if (!xilinx_pcie_is_link_up(port))
-> +			return -EINVAL;
-> +
-> +	/* Only one device down on each root port */
-> +	if (bus->number == port->root_busno && devfn > 0)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Do not read more than one device on the bus directly attached
-> +	 * to RC.
-> +	 */
-> +	if (bus->primary == port->root_busno && devfn > 0)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_get_config_base - Get configuration base
-> + * @bus: PCI Bus structure
-> + * @devfn: Device/function
-> + * @where: Offset from base
-> + *
-> + * Return: Base address of the configuration space needed to be
-> + *	   accessed.
-> + */
-> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
-> +						 unsigned int devfn,
-> +						 int where)
-
-"xilinx_pcie_config_base()" would be sufficient.  We use "get" as a
-clue that we're acquiring a reference (obviously not an issue here,
-but I think the "get" in this function name is still a bit redundant.)
-
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-> +	int relbus;
-> +
-> +	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> +		 (devfn << ECAM_DEV_NUM_SHIFT);
-> +
-> +	return port->reg_base + relbus + where;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_read_config - Read configuration space
-> + * @bus: PCI Bus structure
-> + * @devfn: Device/function
-> + * @where: Offset from base
-> + * @size: Byte/word/dword
-> + * @val: Value to be read
-> + *
-> + * Return: PCIBIOS_SUCCESSFUL on success
-> + *	   EINVAL/PCIBIOS_DEVICE_NOT_FOUND/PCIBIOS_BAD_REGISTER_NUMBER
-> + *	   on failure.
-> + */
-> +static int xilinx_pcie_read_config(struct pci_bus *bus,
-> +				   unsigned int devfn, int where,
-> +				   int size, u32 *val)
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-> +	void __iomem *addr;
-> +
-> +	if (!port) {
-> +		BUG();
-> +		return -EINVAL;
-> +	}
-
-I don't think you need to test "port" for NULL here.  And I don't
-think callers will be prepared for -EINVAL anyway; they'll be
-expecting PCIBIOS_* values.
-
-> +	if (xilinx_pcie_verify_config(bus, devfn)) {
-> +		*val = 0xFFFFFFFF;
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +	}
-> +
-> +	addr = xilinx_pcie_get_config_base(bus, devfn, where);
-> +
-> +	switch (size) {
-> +	case 1:
-> +		*val = readb(addr);
-> +		break;
-> +	case 2:
-> +		*val = readw(addr);
-> +		break;
-> +	default:
-> +		*val = readl(addr);
-> +		break;
-> +	}
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_write_config - Write configuration space
-> + * @bus: PCI Bus structure
-> + * @devfn: Device/function
-> + * @where: Offset from base
-> + * @size: Byte/word/dword
-> + * @val: Value to be written to device
-> + *
-> + * Return: PCIBIOS_SUCCESSFUL on success,
-> + *	   EINVAL/PCIBIOS_DEVICE_NOT_FOUND/PCIBIOS_BAD_REGISTER_NUMBER
-> + *	   on failure.
-> + */
-> +static int xilinx_pcie_write_config(struct pci_bus *bus,
-> +				    unsigned int devfn, int where,
-> +				    int size, u32 val)
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-> +	void __iomem *addr;
-> +
-> +	if (!port) {
-> +		BUG();
-> +		return -EINVAL;
-> +	}
-
-I don't think this test is necessary.
-
-> +	if (xilinx_pcie_verify_config(bus, devfn))
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	addr = xilinx_pcie_get_config_base(bus, devfn, where);
-> +
-> +	switch (size) {
-> +	case 1:
-> +		writeb(val, addr);
-> +		break;
-> +	case 2:
-> +		writew(val, addr);
-> +		break;
-> +	default:
-> +		writel(val, addr);
-> +		break;
-> +	}
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +/* PCIe operations */
-> +static struct pci_ops xilinx_pcie_ops = {
-> +	.read  = xilinx_pcie_read_config,
-> +	.write = xilinx_pcie_write_config,
-> +};
-> +
-> +/* MSI functions */
-> +
-> +/**
-> + * xilinx_pcie_destroy_msi - Free MSI number
-> + * @irq: IRQ to be freed
-> + */
-> +static void xilinx_pcie_destroy_msi(unsigned int irq)
-> +{
-> +	struct irq_desc *desc;
-> +	struct msi_desc *msi;
-> +	struct xilinx_pcie_port *port;
-> +
-> +	desc = irq_to_desc(irq);
-> +	msi = irq_desc_get_msi_desc(desc);
-> +	port = sys_to_pcie(msi->dev->bus->sysdata);
-> +	if (!port) {
-> +		BUG();
-> +		return;
-> +	}
-
-Or this one.
-
-> +	if (!test_bit(irq, msi_irq_in_use))
-> +		dev_err(port->dev, "Trying to free unused MSI#%d\n", irq);
-> +	else
-> +		clear_bit(irq, msi_irq_in_use);
-> +}
-> +
-> +/**
-> + * xilinx_pcie_assign_msi - Allocate MSI number
-> + * @port: PCIe port structure
-> + *
-> + * Return: A valid IRQ on success and error value on failure.
-> + */
-> +static int xilinx_pcie_assign_msi(struct xilinx_pcie_port *port)
-> +{
-> +	int pos;
-> +
-> +	pos = find_first_zero_bit(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
-> +	if (pos < XILINX_NUM_MSI_IRQS)
-> +		set_bit(pos, msi_irq_in_use);
-> +	else
-> +		return -ENOSPC;
-> +
-> +	return pos;
-> +}
-> +
-> +/**
-> + * xilinx_msi_teardown_irq - Destroy the MSI
-> + * @chip: MSI Chip descriptor
-> + * @irq: MSI IRQ to destroy
-> + */
-> +static void xilinx_msi_teardown_irq(struct msi_chip *chip, unsigned int irq)
-> +{
-> +	xilinx_pcie_destroy_msi(irq);
-> +}
-> +
-> +/**
-> + * xilinx_pcie_msi_setup_irq - Setup MSI request
-> + * @chip: MSI chip pointer
-> + * @pdev: PCIe device pointer
-> + * @desc: MSI descriptor pointer
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_pcie_msi_setup_irq(struct msi_chip *chip,
-> +				     struct pci_dev *pdev,
-> +				     struct msi_desc *desc)
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(pdev->bus->sysdata);
-> +	unsigned int irq;
-> +	int hwirq;
-> +	struct msi_msg msg;
-> +	phys_addr_t msg_addr;
-> +
-> +	if (!port) {
-> +		BUG();
-> +		return -EINVAL;
-> +	}
-
-Or this one.
-
-> +	hwirq = xilinx_pcie_assign_msi(port);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	irq = irq_create_mapping(port->irq_domain, hwirq);
-> +	if (!irq)
-> +		return -EINVAL;
-> +
-> +	irq_set_msi_desc(irq, desc);
-> +
-> +	msg_addr = virt_to_phys((void *)port->msi_pages);
-> +
-> +	msg.address_hi = 0;
-> +	msg.address_lo = msg_addr;
-> +	msg.data = irq;
-> +
-> +	write_msi_msg(irq, &msg);
-> +
-> +	return 0;
-> +}
-> +
-> +/* MSI Chip Descriptor */
-> +static struct msi_chip xilinx_pcie_msi_chip = {
-> +	.setup_irq = xilinx_pcie_msi_setup_irq,
-> +	.teardown_irq = xilinx_msi_teardown_irq,
-> +};
-> +
-> +/* HW Interrupt Chip Descriptor */
-> +static struct irq_chip xilinx_msi_irq_chip = {
-> +	.name = "Xilinx PCIe MSI",
-> +	.irq_enable = unmask_msi_irq,
-> +	.irq_disable = mask_msi_irq,
-> +	.irq_mask = mask_msi_irq,
-> +	.irq_unmask = unmask_msi_irq,
-> +};
-> +
-> +/**
-> + * xilinx_pcie_msi_map - Set the handler for the MSI and mark IRQ as valid
-> + * @domain: IRQ domain
-> + * @irq: Virtual IRQ number
-> + * @hwirq: HW interrupt number
-> + *
-> + * Return: Always returns 0.
-> + */
-> +static int xilinx_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
-> +			       irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &xilinx_msi_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +	set_irq_flags(irq, IRQF_VALID);
-> +
-> +	return 0;
-> +}
-> +
-> +/* IRQ Domain operations */
-> +static const struct irq_domain_ops msi_domain_ops = {
-> +	.map = xilinx_pcie_msi_map,
-> +};
-> +
-> +/**
-> + * xilinx_pcie_enable_msi - Enable MSI support
-> + * @port: PCIe port information
-> + */
-> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
-> +{
-> +	phys_addr_t msg_addr;
-> +
-> +	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
-> +	msg_addr = virt_to_phys((void *)port->msi_pages);
-> +	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
-> +	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
-> +}
-> +
-> +/**
-> + * xilinx_pcie_add_bus - Add MSI chip info to PCIe bus
-> + * @bus: PCIe bus
-> + */
-> +static void xilinx_pcie_add_bus(struct pci_bus *bus)
-> +{
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-
-Did you verify that this builds with both CONFIG_PCI_MSI=y and with it
-unset?
-
-> +		struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-> +
-> +		if (!port)
-> +			return;
-
-Unnecessary "port" test.
-
-> +		xilinx_pcie_msi_chip.dev = port->dev;
-> +		bus->msi = &xilinx_pcie_msi_chip;
-> +	}
-> +}
-> +
-> +/* INTx Functions */
-> +
-> +/**
-> + * xilinx_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
-> + * @domain: IRQ domain
-> + * @irq: Virtual IRQ number
-> + * @hwirq: HW interrupt number
-> + *
-> + * Return: Always returns 0.
-> + */
-> +static int xilinx_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> +				irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +	set_irq_flags(irq, IRQF_VALID);
-> +
-> +	return 0;
-> +}
-> +
-> +/* INTx IRQ Domain operations */
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = xilinx_pcie_intx_map,
-> +};
-> +
-> +/* PCIe HW Functions */
-> +
-> +/**
-> + * xilinx_pcie_intr_handler - Interrupt Service Handler
-> + * @irq: IRQ number
-> + * @data: PCIe port information
-> + *
-> + * Return: IRQ_HANDLED on success and IRQ_NONE on failure
-> + */
-> +static irqreturn_t xilinx_pcie_intr_handler(int irq, void *data)
-> +{
-> +	struct xilinx_pcie_port *port = (struct xilinx_pcie_port *)data;
-> +	u32 val, mask, status, msi_data;
-> +
-> +	/* Read interrupt decode and mask registers */
-> +	val = pcie_read(port, XILINX_PCIE_REG_IDR);
-> +	mask = pcie_read(port, XILINX_PCIE_REG_IMR);
-> +
-> +	status = val & mask;
-> +	if (!status)
-> +		return IRQ_NONE;
-> +
-> +	if (status & XILINX_PCIE_INTR_LINK_DOWN)
-> +		dev_warn(port->dev, "Link Down\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_ECRC_ERR)
-> +		dev_warn(port->dev, "ECRC failed\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_STR_ERR)
-> +		dev_warn(port->dev, "Streaming error\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_HOT_RESET)
-> +		dev_info(port->dev, "Hot reset\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_CFG_TIMEOUT)
-> +		dev_warn(port->dev, "ECAM access timeout\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_CORRECTABLE) {
-> +		dev_warn(port->dev, "Correctable error message\n");
-> +		xilinx_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_PCIE_INTR_NONFATAL) {
-> +		dev_warn(port->dev, "Non fatal error message\n");
-> +		xilinx_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_PCIE_INTR_FATAL) {
-> +		dev_warn(port->dev, "Fatal error message\n");
-> +		xilinx_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_PCIE_INTR_INTX) {
-> +		/* INTx interrupt received */
-> +		val = pcie_read(port, XILINX_PCIE_REG_RPIFR1);
-> +
-> +		/* Check whether interrupt valid */
-> +		if (!(val & XILINX_PCIE_RPIFR1_INTR_VALID)) {
-> +			dev_warn(port->dev, "RP Intr FIFO1 read error\n");
-> +			return IRQ_HANDLED;
-> +		}
-> +
-> +		/* Clear interrupt FIFO register 1 */
-> +		pcie_write(port, XILINX_PCIE_RPIFR1_ALL_MASK,
-> +			   XILINX_PCIE_REG_RPIFR1);
-> +
-> +		/* Handle INTx Interrupt */
-> +		val = ((val & XILINX_PCIE_RPIFR1_INTR_MASK) >>
-> +			XILINX_PCIE_RPIFR1_INTR_SHIFT) + 1;
-> +		generic_handle_irq(irq_find_mapping(port->irq_domain, val));
-> +	}
-> +
-> +	if (status & XILINX_PCIE_INTR_MSI) {
-> +		/* MSI Interrupt */
-> +		val = pcie_read(port, XILINX_PCIE_REG_RPIFR1);
-> +
-> +		if (!(val & XILINX_PCIE_RPIFR1_INTR_VALID)) {
-> +			dev_warn(port->dev, "RP Intr FIFO1 read error\n");
-> +			return IRQ_HANDLED;
-> +		}
-> +
-> +		if (val & XILINX_PCIE_RPIFR1_MSI_INTR) {
-> +			msi_data = pcie_read(port, XILINX_PCIE_REG_RPIFR2) &
-> +				   XILINX_PCIE_RPIFR2_MSG_DATA;
-> +
-> +			/* Clear interrupt FIFO register 1 */
-> +			pcie_write(port, XILINX_PCIE_RPIFR1_ALL_MASK,
-> +				   XILINX_PCIE_REG_RPIFR1);
-> +
-> +			if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +				/* Handle MSI Interrupt */
-> +				generic_handle_irq(msi_data);
-> +			}
-> +		}
-> +	}
-> +
-> +	if (status & XILINX_PCIE_INTR_SLV_UNSUPP)
-> +		dev_warn(port->dev, "Slave unsupported request\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_SLV_UNEXP)
-> +		dev_warn(port->dev, "Slave unexpected completion\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_SLV_COMPL)
-> +		dev_warn(port->dev, "Slave completion timeout\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_SLV_ERRP)
-> +		dev_warn(port->dev, "Slave Error Poison\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_SLV_CMPABT)
-> +		dev_warn(port->dev, "Slave Completer Abort\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_SLV_ILLBUR)
-> +		dev_warn(port->dev, "Slave Illegal Burst\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_MST_DECERR)
-> +		dev_warn(port->dev, "Master decode error\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_MST_SLVERR)
-> +		dev_warn(port->dev, "Master slave error\n");
-> +
-> +	if (status & XILINX_PCIE_INTR_MST_ERRP)
-> +		dev_warn(port->dev, "Master error poison\n");
-> +
-> +	/* Clear the Interrupt Decode register */
-> +	pcie_write(port, status, XILINX_PCIE_REG_IDR);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_free_irq_domain - Free IRQ domain
-> + * @port: PCIe port information
-> + */
-> +static void xilinx_pcie_free_irq_domain(struct xilinx_pcie_port *port)
-> +{
-> +	int i;
-> +	u32 irq, num_irqs;
-> +
-> +	/* Free IRQ Domain */
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +
-> +		free_pages(port->msi_pages, 0);
-> +
-> +		num_irqs = XILINX_NUM_MSI_IRQS;
-> +	} else {
-> +		/* INTx */
-> +		num_irqs = 4;
-> +	}
-> +
-> +	for (i = 0; i < num_irqs; i++) {
-> +		irq = irq_find_mapping(port->irq_domain, i);
-> +		if (irq > 0)
-> +			irq_dispose_mapping(irq);
-> +	}
-> +
-> +	irq_domain_remove(port->irq_domain);
-> +}
-> +
-> +/**
-> + * xilinx_pcie_init_irq_domain - Initialize IRQ domain
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *pcie_intc_node;
-> +
-> +	/* Setup INTx */
-> +	pcie_intc_node = of_get_next_child(node, NULL);
-> +	if (!pcie_intc_node) {
-> +		dev_err(dev, "No PCIe Intc node found\n");
-> +		return PTR_ERR(pcie_intc_node);
-> +	}
-> +
-> +	port->irq_domain = irq_domain_add_linear(pcie_intc_node, 4,
-> +						 &intx_domain_ops,
-> +						 port);
-> +	if (!port->irq_domain) {
-> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> +		return PTR_ERR(port->irq_domain);
-> +	}
-> +
-> +	/* Setup MSI */
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		port->irq_domain = irq_domain_add_linear(node,
-> +							 XILINX_NUM_MSI_IRQS,
-> +							 &msi_domain_ops,
-> +							 &xilinx_pcie_msi_chip);
-> +		if (!port->irq_domain) {
-> +			dev_err(dev, "Failed to get a MSI IRQ domain\n");
-> +			return PTR_ERR(port->irq_domain);
-> +		}
-> +
-> +		xilinx_pcie_enable_msi(port);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_init_port - Initialize hardware
-> + * @port: PCIe port information
-> + */
-> +static void xilinx_pcie_init_port(struct xilinx_pcie_port *port)
-> +{
-> +	port->link_up = xilinx_pcie_is_link_up(port);
-> +	if (!port->link_up)
-
-I'd use "if (port->link_up)" and reorder the dev_info() to avoid the
-negation (trivial, I know, but why use the negative when the positive
-works just as well?)
-
-> +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> +	else
-> +		dev_info(port->dev, "PCIe Link is UP\n");
-> +
-> +	/* Disable all interrupts*/
-> +	pcie_write(port, ~XILINX_PCIE_IDR_ALL_MASK,
-> +		   XILINX_PCIE_REG_IMR);
-> +
-> +	/* Clear pending interrupts */
-> +	pcie_write(port, pcie_read(port, XILINX_PCIE_REG_IDR) &
-> +			 XILINX_PCIE_IMR_ALL_MASK,
-> +		   XILINX_PCIE_REG_IDR);
-> +
-> +	/* Enable all interrupts*/
-
-Missing space before "*/" (also on "Disable all interrupts" comment).
-
-> +	pcie_write(port, XILINX_PCIE_IMR_ALL_MASK, XILINX_PCIE_REG_IMR);
-> +
-> +	/* Enable the Bridge enable bit */
-> +	pcie_write(port, pcie_read(port, XILINX_PCIE_REG_RPSC) |
-> +			 XILINX_PCIE_REG_RPSC_BEN,
-> +		   XILINX_PCIE_REG_RPSC);
-> +}
-> +
-> +/**
-> + * xilinx_pcie_setup - Setup memory resources
-> + * @nr: Bus number
-> + * @sys: Per controller structure
-> + *
-> + * Return: '1' on success and error value on failure
-
-Incorrect.  No point in a comment that explains obvious code anyway.
-But maybe DocBook requires it, and I guess it's OK then.
-
-> + */
-> +static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(sys);
-> +
-> +	list_splice_init(&port->resources, &sys->resources);
-> +
-> +	return 1;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_scan_bus - Scan PCIe bus for devices
-> + * @nr: Bus number
-> + * @sys: Per controller structure
-> + *
-> + * Return: Valid Bus pointer on success and NULL on failure
-> + */
-> +static struct pci_bus __init *xilinx_pcie_scan_bus(int nr,
-> +						   struct pci_sys_data *sys)
-> +{
-> +	struct xilinx_pcie_port *port = sys_to_pcie(sys);
-> +	struct pci_bus *bus;
-> +
-> +	if (port) {
-
-I think this test (and the BUG()) is superfluous.  I don't think it's
-possible to get here with sys->private_data == NULL.  And if we do,
-we'll take a null pointer fault and get a nice backtrace anyway.
-
-> +		port->root_busno = sys->busnr;
-> +		bus = pci_scan_root_bus(port->dev, sys->busnr, &xilinx_pcie_ops,
-> +					sys, &sys->resources);
-> +	} else {
-> +		bus = NULL;
-> +		BUG();
-> +	}
-> +
-> +	return bus;
-> +}
-> +
-> +
-> +/**
-> + * xilinx_pcie_parse_and_add_res - Add resources by parsing ranges
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_pcie_parse_and_add_res(struct xilinx_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct resource *mem;
-> +	resource_size_t offset;
-> +	struct of_pci_range_parser parser;
-> +	struct of_pci_range range;
-> +	struct pci_host_bridge_window *win;
-> +	int err = 0, mem_resno = 0;
-> +
-> +	/* Get the ranges */
-> +	if (of_pci_range_parser_init(&parser, node)) {
-> +		dev_err(dev, "missing \"ranges\" property\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Parse the ranges and add the resources found to the list */
-> +	for_each_of_pci_range(&parser, &range) {
-> +
-> +		if (mem_resno >= XILINX_MAX_NUM_RESOURCES) {
-> +			dev_err(dev, "Maximum memory resources exceeded\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		mem = devm_kmalloc(dev, sizeof(*mem), GFP_KERNEL);
-> +		if (!mem) {
-> +			err = -ENOMEM;
-> +			goto free_resources;
-> +		}
-> +
-> +		of_pci_range_to_resource(&range, node, mem);
-> +
-> +		switch (mem->flags & IORESOURCE_TYPE_BITS) {
-> +		case IORESOURCE_MEM:
-> +			offset = range.cpu_addr - range.pci_addr;
-> +			mem_resno++;
-> +			break;
-> +		default:
-> +			err = -EINVAL;
-> +			break;
-> +		}
-> +
-> +		if (err < 0) {
-> +			dev_warn(dev, "Invalid resource found %pR\n", mem);
-> +			continue;
-> +		}
-> +
-> +		err = request_resource(&iomem_resource, mem);
-> +		if (err)
-> +			goto free_resources;
-> +
-> +		pci_add_resource_offset(&port->resources, mem, offset);
-> +	}
-> +
-> +	/* Get the bus range */
-> +	if (of_pci_parse_bus_range(node, &port->bus_range)) {
-> +		u32 val = pcie_read(port, XILINX_PCIE_REG_BIR);
-> +		u8 last;
-> +
-> +		last = (val & XILINX_PCIE_BIR_ECAM_SZ_MASK) >>
-> +			XILINX_PCIE_BIR_ECAM_SZ_SHIFT;
-> +
-> +		port->bus_range = (struct resource) {
-> +			.name	= node->name,
-> +			.start	= 0,
-> +			.end	= last,
-> +			.flags	= IORESOURCE_BUS,
-> +		};
-> +	}
-> +
-> +	/* Register bus resource */
-> +	pci_add_resource(&port->resources, &port->bus_range);
-> +
-> +	return 0;
-> +
-> +free_resources:
-> +	release_child_resources(&iomem_resource);
-> +	list_for_each_entry(win, &port->resources, list)
-> +		devm_kfree(dev, win->res);
-> +	pci_free_resource_list(&port->resources);
-> +
-> +	return err;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_parse_dt - Parse Device tree
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct resource regs;
-> +	const char *type;
-> +	int err;
-> +
-> +	type = of_get_property(node, "device_type", NULL);
-> +	if (!type || strcmp(type, "pci")) {
-> +		dev_err(dev, "invalid \"device_type\" %s\n", type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	err = of_address_to_resource(node, 0, &regs);
-> +	if (err) {
-> +		dev_err(dev, "missing \"reg\" property\n");
-> +		return err;
-> +	}
-> +
-> +	port->reg_base = devm_ioremap_resource(dev, &regs);
-> +	if (IS_ERR(port->reg_base))
-> +		return PTR_ERR(port->reg_base);
-> +
-> +	port->irq = irq_of_parse_and_map(node, 0);
-> +	err = devm_request_irq(dev, port->irq, xilinx_pcie_intr_handler,
-> +			       IRQF_SHARED, "xilinx-pcie", port);
-> +	if (err) {
-> +		dev_err(dev, "unable to request irq %d\n", port->irq);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_probe - Probe function
-> + * @pdev: Platform device pointer
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct xilinx_pcie_port *port;
-> +	struct hw_pci hw;
-> +	struct device *dev = &pdev->dev;
-> +	int err;
-> +
-> +	if (!dev->of_node)
-> +		return -ENODEV;
-> +
-> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> +	if (!port)
-> +		return -ENOMEM;
-> +
-> +	port->dev = dev;
-> +
-> +	err = xilinx_pcie_parse_dt(port);
-> +	if (err) {
-> +		dev_err(dev, "Parsing DT failed\n");
-> +		return err;
-> +	}
-> +
-> +	xilinx_pcie_init_port(port);
-> +
-> +	err = xilinx_pcie_init_irq_domain(port);
-> +	if (err) {
-> +		dev_err(dev, "Failed creating IRQ Domain\n");
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * Parse PCI ranges, configuration bus range and
-> +	 * request their resources
-> +	 */
-> +	INIT_LIST_HEAD(&port->resources);
-> +	err = xilinx_pcie_parse_and_add_res(port);
-> +	if (err) {
-> +		dev_err(dev, "Failed adding resources\n");
-> +		return err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, port);
-> +
-> +	/* Register the device */
-> +	memset(&hw, 0, sizeof(hw));
-> +	hw = (struct hw_pci) {
-> +		.nr_controllers	= 1,
-> +		.private_data	= (void **)&port,
-> +		.setup		= xilinx_pcie_setup,
-> +		.map_irq	= of_irq_parse_and_map_pci,
-> +		.add_bus	= xilinx_pcie_add_bus,
-> +		.scan		= xilinx_pcie_scan_bus,
-> +		.ops		= &xilinx_pcie_ops,
-> +	};
-> +	pci_common_init_dev(dev, &hw);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_pcie_remove - Remove function
-> + * @pdev: Platform device pointer
-> + *
-> + * Return: '0' always
-> + */
-> +static int xilinx_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct xilinx_pcie_port *port = platform_get_drvdata(pdev);
-> +
-> +	xilinx_pcie_free_irq_domain(port);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id xilinx_pcie_of_match[] = {
-> +	{ .compatible = "xlnx,axi-pcie-host-1.00.a", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver xilinx_pcie_driver = {
-> +	.driver = {
-> +		.name = "xilinx-pcie",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = xilinx_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe = xilinx_pcie_probe,
-> +	.remove = xilinx_pcie_remove,
-> +};
-> +module_platform_driver(xilinx_pcie_driver);
-> +
-> +MODULE_AUTHOR("Xilinx Inc");
-> +MODULE_DESCRIPTION("Xilinx AXI PCIe driver");
-> +MODULE_LICENSE("GPLv2");
-
-I think you want "GPL v2" here (with the space; see
-license_is_gpl_compatible()).
+Regards,
+Abhilash
+>
+> Best regards,
+> Tomasz
