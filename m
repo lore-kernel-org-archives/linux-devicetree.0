@@ -1,147 +1,161 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 16 Jul 2014 16:24:21 -0400
-Message-ID: <CAF6AEGu9K6zu2EoN3LJhCUFwJ6dV+J0YCLeJ1TkWMHp8H3LjQA@mail.gmail.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-	<20140712093917.GD18601@arm.com>
-	<CAF6AEGutHp+3f3iPA+jjaRkqq=5T_vytZ_ESoSqsQ4RHZ8F8yQ@mail.gmail.com>
-	<201407121422.02078.arnd@arndb.de>
-	<CAF6AEGs7=3UByP2DLm-uwU03wr7M14x2t-0hLX-VPJ6_eZbU3g@mail.gmail.com>
-	<20140713094341.GB23235@arm.com>
-	<CAF6AEGt5cQhDCZgYX4=M1EKE=n2J=9G6mO02JMx-+Fcq_0ukfw@mail.gmail.com>
-	<53C5D480.3030409@codeaurora.org>
+From: Markus Mayer <markus.mayer@linaro.org>
+Subject: Re: [PATCHv2 2/5] mailbox/omap: add support for parsing dt devices
+Date: Wed, 16 Jul 2014 13:50:03 -0700
+Message-ID: <CAPdLdqmA5HkRe9xLOUybOQQzpkmqX8Ot4aH9ZA7B_s3Zp90tPw@mail.gmail.com>
+References: <1405116252-53612-1-git-send-email-s-anna@ti.com>
+	<1405116252-53612-3-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <53C5D480.3030409-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1405116252-53612-3-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, Pavel Machek <pavel@ucw.cz>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 9:25 PM, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 7/13/2014 4:43 AM, Rob Clark wrote:
->> On Sun, Jul 13, 2014 at 5:43 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On Sat, Jul 12, 2014 at 01:57:31PM +0100, Rob Clark wrote:
->>>> On Sat, Jul 12, 2014 at 8:22 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>>>> On Saturday 12 July 2014, Rob Clark wrote:
->>>>>>>> Was there actually a good reason for having the device link to the
->>>>>>>> iommu rather than the other way around?  How much would people hate it
->>>>>>>> if I just ignore the generic bindings and use something that works for
->>>>>>>> me instead.  I mean, it isn't exactly like there is going to be .dts
->>>>>>>> re-use across different SoC's..  and at least with current IOMMU API
->>>>>>>> some sort of of_get_named_iommu() API doesn't really make sense.
->>>>>>>
->>>>>>> The thing is, if you end up ignoring the generic binding then we have two
->>>>>>> IOMMUs using the same (ARM SMMU) binding and it begs the question as to
->>>>>>> which is the more generic! I know we're keen to get this merged, but merging
->>>>>>> something that people won't use and calling it generic doesn't seem ideal
->>>>>>> either. We do, however, desperately need a generic binding.
->>>>>>
->>>>>> yeah, ignoring the generic binding is not my first choice.  I'd rather
->>>>>> have something that works well for everyone.  But I wasn't really sure
->>>>>> if the current proposal was arbitrary, or if there are some
->>>>>> conflicting requirements between different platforms.
->>>>>
->>>>> The common case that needs to be simple is attaching one (master) device
->>>>> to an IOMMU using the shared global context for the purposes of implementing
->>>>> the dma-mapping API.
->>>>
->>>> well, I don't disagree that IOMMU API has some problems.  It is too
->>>> tied to the bus type, which doesn't really seem to make sense for
->>>> platform devices.  (Unless we start having multiple platform busses?)
->>>>
->>>> But at least given the current IOMMU API I'm not really sure how it
->>>> makes a difference which way the link goes.  But if there has already
->>>> been some discussion about how you want to handle the tie in with
->>>> dma-mapping, if you could point me at that then maybe your point will
->>>> make more sense to me.
->>>
->>> If you look at the proposed binding in isolation, I think it *is* cleaner
->>> than the ARM SMMU binding (I've acked it...) and I believe it's more
->>> consistent with the way we describe linkages elsewhere.
->>>
->>> However, the issue you're raising is that it's more difficult to make use of
->>> in a Linux IOMMU driver. The reward you'll get for using it will come
->>> eventually when the DMA ops are automatically swizzled for devices using the
->>> generic binding.
->>>
->>> My plan for the ARM SMMU driver is:
->>>
->>>   (1) Change ->probe() to walk the device-tree looking for all masters with
->>>       phandles back to the SMMU instance being probed
->>>
->>>   (2) For each master, extract the Stream IDs and add them to the internal
->>>       SMMU driver data structures (an rbtree per SMMU instance). For
->>>       hotpluggable buses, we'll need a way for the bus controller to
->>>       reserve a range of IDs -- this will likely be a later extension to
->>>       the binding.
->>>
->>>   (3) When we get an ->add() call, warn if it's a device we haven't seen
->>>       and reject the addition.
->>>
->>> That way, ->attach() should be the same as it is now, I think.
->>>
->>> Have you tried implementing something like that? We agreed that (1) isn't
->>> pretty, but I don't have a good alternative and it's only done at
->>> probe-time.
->>
->> I haven't tried implementing that yet, but I'm sure it would work.  I
->> was just hoping to avoid having to do that ;-)
->
-> Is the reason you want to do it this way because you want to guarantee
-> that all masters (and stream IDs) have been identified before the first
-> attach call? I am just wondering why you cannot continue doing the
-> master/streamID discovery during add_device() callback?
+If I may nit-pick here for a minute...
 
-it was mostly because I couldn't think of a sane way to differentiate
-between first and second time a device attaches (without keeping a
-reference to the device).  But I guess it is ok to assume no hotplug
-(since walking the device tree also seems acceptable)
+On 11 July 2014 15:04, Suman Anna <s-anna@ti.com> wrote:
+> Logic has been added to the OMAP2+ mailbox code to parse the
+> mailbox dt nodes and construct the different sub-mailboxes
+> associated with the instance. The DT representation of the
+> sub-mailbox devices is different from legacy platform data
+> representation to allow flexibility of interrupt configuration
+> between Tx and Rx fifos (to also possibly allow simplex devices
+> in the future). The DT representation gathers similar information
+> that was being passed previously through the platform data, except
+> for the number of fifos, interrupts and interrupt type information,
+> which are gathered through driver compatible match data.
+>
+> The non-DT support has to be maintained for now to not break
+> OMAP3 legacy boot, and the legacy-style code will be cleaned
+> up once OMAP3 is also converted to DT-boot only.
+>
+> Cc: Jassi Brar <jassisinghbrar@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  drivers/mailbox/omap-mailbox.c | 156 ++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 132 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
 
-BR,
--R
+[...]
 
->>>
->>> BTW: Is the msm-v0 IOMMU compatible with the ARM SMMU driver, or is it a
->>> completely different design requiring a different driver?
->>
->> My understanding is that it is different from msm v1 IOMMU, although I
->> think it shares the same pagetable format with v1.  Not sure if that
->> is the same as arm-smmu?   If so it might be nice to try to extract
->> out some shared helper fxns for map/unmap as well.
->>
->> I expect Olav knows better the similarities/differences.
->>
+>  static int omap_mbox_probe(struct platform_device *pdev)
+>  {
+>         struct resource *mem;
+>         int ret;
+>         struct omap_mbox **list, *mbox, *mboxblk;
+>         struct omap_mbox_pdata *pdata = pdev->dev.platform_data;
+> -       struct omap_mbox_dev_info *info;
+> +       struct omap_mbox_dev_info *info = NULL;
+> +       struct omap_mbox_fifo_info *finfo, *finfoblk;
+>         struct omap_mbox_device *mdev;
+>         struct omap_mbox_fifo *fifo;
+> -       u32 intr_type;
+> +       struct device_node *node = pdev->dev.of_node;
+> +       struct device_node *child;
+> +       const struct of_device_id *match;
+> +       u32 intr_type, info_count;
+> +       u32 num_users, num_fifos;
+> +       u32 tmp[3];
+>         u32 l;
+>         int i;
 >
-> The msm-v0 IOMMU is not compatible with ARM SMMUv1 specification.
-> However, it is a close cousin. The hardware was designed before the ARM
-> SMMUv1 specification was available I believe. But it shares many of the
-> same concepts as the ARM SMMUv1.
+> -       if (!pdata || !pdata->info_cnt || !pdata->info) {
+> +       if (!node && (!pdata || !pdata->info_cnt || !pdata->info)) {
+>                 pr_err("%s: platform not supported\n", __func__);
+>                 return -ENODEV;
+>         }
 >
-> msm-v0 IOMMU supports V7S page table format only. The ARM SMMU driver
-> does not support V7S at this time. However, I believe we need to support
-> this.
->
-> Will, this reminds me. We definitely have a need to use different page
-> tables in the ARM SMMU driver vs. the ARM CPU. We have an SoC with ARMv8
-> cores (and thus ARMv8 page tables) but the SMMUs (SMMUv1) on this SoC
-> only have support for V7S/V7L page table format. So we cannot use the
-> same page table format as the CPU.
->
-> Thanks,
->
-> Olav
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by The Linux Foundation
+> +       if (node) {
+
+I noticed here you are using
+
+    if (node)
+        /* DT stuff goes here */
+    else
+        /* non-DT stuff goes here */
+
+but below the logic is reversed.
+
+> +               match = of_match_device(omap_mailbox_of_match, &pdev->dev);
+> +               if (!match)
+> +                       return -ENODEV;
+> +               intr_type = (u32)match->data;
+> +
+> +               if (of_property_read_u32(node, "ti,mbox-num-users",
+> +                                        &num_users))
+> +                       return -ENODEV;
+> +
+> +               if (of_property_read_u32(node, "ti,mbox-num-fifos",
+> +                                        &num_fifos))
+> +                       return -ENODEV;
+> +
+> +               info_count = of_get_available_child_count(node);
+> +               if (!info_count) {
+> +                       dev_err(&pdev->dev, "no available mbox devices found\n");
+> +                       return -ENODEV;
+> +               }
+> +       } else { /* non-DT device creation */
+> +               info_count = pdata->info_cnt;
+> +               info = pdata->info;
+> +               intr_type = pdata->intr_type;
+> +               num_users = pdata->num_users;
+> +               num_fifos = pdata->num_fifos;
+> +       }
+> +
+> +       finfoblk = devm_kzalloc(&pdev->dev, info_count * sizeof(*finfoblk),
+> +                               GFP_KERNEL);
+> +       if (!finfoblk)
+> +               return -ENOMEM;
+> +
+> +       finfo = finfoblk;
+> +       child = NULL;
+> +       for (i = 0; i < info_count; i++, finfo++) {
+> +               if (!node) {
+
+Here it's
+    if (!node)
+        /* non-DT stuff */
+    else
+        /* DT stuff */
+
+I think the "if (node) ..." version is a bit cleaner. Besides it's
+nice if code is consistent. Do you mind changing the if statement here
+so it matches the logic used above?
+
+> +                       finfo->tx_id = info->tx_id;
+> +                       finfo->rx_id = info->rx_id;
+> +                       finfo->tx_usr = info->usr_id;
+> +                       finfo->tx_irq = info->irq_id;
+> +                       finfo->rx_usr = info->usr_id;
+> +                       finfo->rx_irq = info->irq_id;
+> +                       finfo->name = info->name;
+> +                       info++;
+> +               } else {
+> +                       child = of_get_next_available_child(node, child);
+> +                       ret = of_property_read_u32_array(child, "ti,mbox-tx",
+> +                                                        tmp, ARRAY_SIZE(tmp));
+> +                       if (ret)
+> +                               return ret;
+> +                       finfo->tx_id = tmp[0];
+> +                       finfo->tx_irq = tmp[1];
+> +                       finfo->tx_usr = tmp[2];
+> +
+> +                       ret = of_property_read_u32_array(child, "ti,mbox-rx",
+> +                                                        tmp, ARRAY_SIZE(tmp));
+> +                       if (ret)
+> +                               return ret;
+> +                       finfo->rx_id = tmp[0];
+> +                       finfo->rx_irq = tmp[1];
+> +                       finfo->rx_usr = tmp[2];
+> +
+> +                       finfo->name = child->name;
+> +               }
+> +               if (finfo->tx_id >= num_fifos || finfo->rx_id >= num_fifos ||
+> +                   finfo->tx_usr >= num_users || finfo->rx_usr >= num_users)
+> +                       return -EINVAL;
+> +       }
+> +
