@@ -1,189 +1,78 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 05/14] drm/exynos: dsi: add pass TE host ops to
- support LCD I80 interface
-Date: Wed, 16 Jul 2014 09:54:58 +0200
-Message-ID: <20140716075457.GH7978@ulmo>
-References: <1404779987-5337-6-git-send-email-yj44.cho@samsung.com>
- <20140709152207.GA17359@ulmo> <53BDE6FF.1000600@samsung.com>
- <20140710073826.GB17918@ulmo> <53C3A15F.4020401@samsung.com>
- <20140714094130.GD9755@ulmo> <53C3B4C8.1070601@samsung.com>
- <20140714110326.GA31460@ulmo> <53C49336.5050909@samsung.com>
- <53C5E20D.5010704@samsung.com>
+Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL
+ clocksource
+Date: Wed, 16 Jul 2014 10:01:34 +0200
+Message-ID: <20140716080133.GI7978@ulmo>
+References: <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
+ <53C01558.3090607@nvidia.com>
+ <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA@mail.gmail.com>
+ <53C01D17.2050906@nvidia.com>
+ <20140714083854.GO2081@ulmo>
+ <20140714091233.GC6800@sirena.org.uk>
+ <20140714092434.GA9755@ulmo>
+ <20140714102203.GD6800@sirena.org.uk>
+ <53C58DCB.90502@nvidia.com>
+ <20140715225252.GD17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1223882680=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53C5E20D.5010704@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G3juXO9GfR42w+sw"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140715225252.GD17528@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Andrew Bresticker <abrestic@chromium.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1223882680==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8/pVXlBMPtxfSuJG"
-Content-Disposition: inline
-
-
---8/pVXlBMPtxfSuJG
-Content-Type: text/plain; charset=utf-8
+--G3juXO9GfR42w+sw
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 16, 2014 at 11:23:09AM +0900, YoungJun Cho wrote:
-> Hi Inki,
+On Tue, Jul 15, 2014 at 11:52:52PM +0100, Mark Brown wrote:
+> On Tue, Jul 15, 2014 at 11:23:39PM +0300, Tuomas Tynkkynen wrote:
 >=20
-> On 07/15/2014 11:34 AM, Inki Dae wrote:
-> >On 2014=EB=85=84 07=EC=9B=94 14=EC=9D=BC 20:03, Thierry Reding wrote:
-> >>On Mon, Jul 14, 2014 at 07:45:28PM +0900, YoungJun Cho wrote:
-> >>>On 07/14/2014 06:41 PM, Thierry Reding wrote:
-> >>[...]
-> >>>>That said, I've been doing some research and it seems like we have a
-> >>>>somewhat similar feature on Tegra. What happens there is that there a=
-re
-> >>>>three GPIO pins that can be repurposed for TE signalling. But as oppo=
-sed
-> >>>>to using them as interrupts the display controller can be configured =
-to
-> >>>>use them, upon which it will automatically handle the TE signal by
-> >>>>sending the next frame.
-> >>>
-> >>>Could you explain more detail how the Tegra display controller could be
-> >>>configured with this GPIO pins?
-> >>>I have no idea except that the display controller registers this GPIO =
-as an
-> >>>IRQ.
-> >>
-> >>On Tegra the display controller has a special register that can be
-> >>programmed to use one of the three GPIOs as TE signal. Then the display
-> >>controller can be configured in one-shot (non-continuous) mode, which
-> >>means that software needs to explicitly set a trigger bit to tell the
-> >>display controller to send a new frame. If TE signalling is enabled,
-> >>then the display controller will not immediately send a new frame when
-> >>triggered but wait for signalling of this GPIO.
-> >>
-> >>>>So we have at least two very different implementations of this on two
-> >>>>different SoCs. Further the specification explicitly recommends using
-> >>>>the BTA sequence and DSI protocol to wait for TE. So I still think th=
-at
-> >>>>controllers that provide an additional, non-spec compliant method to
-> >>>>signal TE should handle it separately rather than within DSI. Otherwi=
-se
-> >>>>we essentially need to make the DSI "core" aware of all these quirks,
-> >>>>and I'd rather avoid that.
-> >>>
-> >>>You mean, the DSI specification guides to use BTA, so it's better to u=
-se
-> >>>display controller rather than DSIM, right?
-> >>
-> >>What I'm saying is that there's nothing about a side-band TE wire in the
-> >>DSI spec. In fact the spec explicitly says that this mechanism of an
-> >>external TE wire from older protocols (DBI) was replaced by the BTA
-> >>sequence over the protocol.
-> >>
-> >>Now, my understanding is that using the BTA sequence over the DSI
-> >>protocol would introduce some latency and that forces some panel vendors
-> >>to still provide a side-band TE wire even in DSI compliant panels. But
-> >>since this is not part of the specification there is no standard way to
-> >>do this (as evidenced by Tegra and Exynos). Therefore putting such
-> >>functionality into the core DSI code is bad.
-> >>
-> >>But that doesn't mean that you have to put this functionality into the
-> >>display controller driver on Exynos. What I'm saying is that it should
-> >>be handled by the SoC driver rather than the core. Where exactly
-> >>probably depends on the particular case.
-> >>
-> >>>>>As Inki commented before, I'll try to use remote-endpoint property o=
-f DSI
-> >>>>>device node in exynos DSIM driver and call FIMD notifier.
-> >>>>
-> >>>>Sounds like it matches what I said above. I'm not a huge fan of
-> >>>>notifiers, but if it works for you I suppose that's fine. The
-> >>>>alternative would be to directly call a FIMD function, which is
-> >>>>somewhat more explicit than a notifier.
-> >>>
-> >>>Yes, I also like explicit call, so I want to use dsi_host_ops and call=
-s it
-> >>>in panel. But there is an objection to use dis_host_ops, we think noti=
-fier
-> >>>in exynos dsim for fimd(display controller).
-> >>
-> >>There are other ways to explicitly call into the display controller. You
-> >>could for example get access to the CRTC that DSIM is currently
-> >>connected to (via exynos_dsi.encoder->crtc) and then cast that to a
-> >>struct exynos_drm_crtc and call a function to trigger a new frame to be
-> >>sent (for example exynos_drm_crtc_send_frame()). This assumes that you
-> >>can safely cast struct drm_crtc * to struct exynos_drm_crtc *, but that
-> >>shouldn't be a problem.
-> >>
-> >>With the above, you could make the DSIM handle the TE signal interrupts
-> >>and trigger the DC using the new exynos_drm_crtc_send_frame() function.
-> >>
-> >
-> >It seems better than the use of notifier. Actually, original patch used
-> >this way except TE event.
-> >Mr. Cho, let's use remote-endpoint property and this way instead of
-> >notifier.
-> >
+> > That sounds indeed useful for this case. How'd the following interface
+> > sound for the register offset / selector-to-register-value conversion?
+> > The I2C address would be a bit trickier to get as it would touch the
+> > regmap stuff as well, but perhaps it would be a good idea to have a
+> > phandle to the I2C device itself, and then parse the reg field for
+> > the address.
 >=20
-> The struct exynos_dsi has panel_node, which is valid by
-> exynos_dsi_host_attach() is called from panel, we could use it instead of
-> getting new remote-endpoint node.
->=20
-> So after called exynos_dsi_host_attach(), the dsi driver could know that =
-the
-> panel supports mipi command mode or video mode,
-> and if the panel is for mipi command mode one, dsi driver gets panel te g=
-pio
-> and registers its irq.
+> This looks fine, can you submit properly please?  For the I2C address
+> why not just have an interface to get the regmap and then provide a way
+> to get the underlying device back from the regmap?
 
-Why does the TE GPIO even need to be in the panel's device tree node?
-Wouldn't it make more sense for it to be in the DSIM node? After all
-that's what the GPIO is connected to, right? Well, at least logically
-if not physically.
+Is it mandatory for regulators to use regmap? Also I'm not sure how this
+will work with MFDs, since the device may not be the actual bus device,
+but rather a child of the MFD (and what we want access to is the MFD).
+Perhaps for regmaps that would work in most cases since MFDs seem to
+aften share the regmap with their children. However, the code in
+regulator_register() at least indicates that even then it's possible to
+have a regmap in children that's different from the top-level MFD.
 
 Thierry
 
---8/pVXlBMPtxfSuJG
+--G3juXO9GfR42w+sw
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTxi/RAAoJEN0jrNd/PrOhFBwP/0I8+O8e5l6BhhXE1t9+lfdE
-/s/OmPJe+IiAiDafSV98O2AV5pI6f2UcX52hAgPLVU1E6tZ0dYlR6I675ndeCKSv
-+7QHp4+AXtz/9sP3iGKsbVdQtS4Ie89eNgQxMGV4vSyhgy+WoAZRBHtej4b/jxXl
-fgp/2LXko6e7Tf6k9+7Eex7p7gXoNfLkbNomyFr7tewaNS0rNlRbWVgDp8MRZWWt
-Ouq48GpUcICxJ+8/KIEvt9dyFAiSGNS7aqMkypsbDdDI174041PIxMls53HNiO/o
-G4U1eacp3/wtldd2B6bGuiy5y0r1UePlHOpCxuy7iEQkDFxMMl6EouBlVYXiraxW
-M5RCrjdMLVVIMf9LgTm/aRVK84edf71p9EQVQLJJuNW/KpeCSyKeuQJVlnMVIWJX
-RLS6WufZRGHrCu97Ee1Yq9/PaqfJorK0nVc2INQHgDs7ylU8uIJH6YZhlR4SXxu7
-diYfvdg1AlNB3ZfoqNhw0aWgDpYA6QdZhogZs6JtY/HWPFqAGQ46xDzj5OIVkjFt
-K9CpGY3Oh3Hi3TVHC7RyHTHytsVyl3heOzdlty+35/sxrdGR1mecLx2j3Off4q6+
-H9dDI4NmByOmxO6MJlrqZaTYx/Vo9CDtT4ARzavZu1aVEtN+2V8ZK27HY1t/dFo2
-cC3IBJBAXraLUXbeIeQ1
-=v39U
+iQIcBAEBAgAGBQJTxjFdAAoJEN0jrNd/PrOh9DwP/3dzscoXYXMEY5bwISYqlh72
+OAspRRFCWc5DIrmpKCnzZQq8Z/BguxD4Qf3xWpkllLkpGJHJVa4489gPBOLQrxPa
+tR0t4fYHFxs4GT1m+LmuLH+yNArhEFcTZI+N7aWB2O+G4s8lvFJPZdVM604GZjXB
+9h8CkCyMnNZHRoOKKUt7bFNZ7xXaeV8NghmXUGIXPvqmUIjkzC5z+kNzYUsR6bPb
+cx6UJRYkf73IPyd983R57YW/E1mK9Vbz/6rCnfipqcpzHOpOB+n7aniecoe0bYOD
+KMHLtySu5IhYow1aNnJFdjKSZakVfnBqD1bgbIe+mCFGOUvlASux7TplreZkL0ST
+udY8m7cPyAATI/nL/FIR9cYcxVPJa68+oXeuu+iqTFuPEEAnUwvup+5njS9+u7cm
+0ke7hwJwIeGfDjdjkybgacCkf1HWXCkpayfubDpxdpmPf9aI8K1rmb+woHwo9sGs
+rstVQVMhg8HpYJnk2UiYGWUAg2C79RC4ZUT3LVDKUkGh69fpbvhTyyP2TqCBNIW7
+4fzCH9HBEmgrBnqcm7Z+s5MTuiZfuD5S3a5KAEM8vE0kvGnv/wJWOxfz51L/1Cd0
+4HNK5fneKpCx302+5D/ijPdgMF6zQ37wz9Rbe4nGZ2ZkR5L0zcPDe1WeYLy8sNSg
+WbSGZw8byksVNMXM2b9H
+=RhIM
 -----END PGP SIGNATURE-----
 
---8/pVXlBMPtxfSuJG--
-
---===============1223882680==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1223882680==--
+--G3juXO9GfR42w+sw--
