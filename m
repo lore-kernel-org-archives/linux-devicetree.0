@@ -1,58 +1,65 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: OF_DYNAMIC node lifecycle
-Date: Wed, 16 Jul 2014 16:26:49 -0600
-Message-ID: <CACxGe6scb291V9rjz2P48FxCEtXEEtOkgiQms=nZ_wdOf_cqHA@mail.gmail.com>
-References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>
- <53A30117.3010100@austin.ibm.com> <20140623144806.1348EC40A60@trevor.secretlab.ca>
- <53A9DB4F.9060708@austin.ibm.com> <20140625202446.77687C40AE6@trevor.secretlab.ca>
- <53AC7C2D.3040604@austin.ibm.com> <20140627124101.367F7C40E5E@trevor.secretlab.ca>
- <53AD8296.6040702@austin.ibm.com> <CACxGe6u5bVwYZjux9F2xzZSxZOSe37DGemCgcYtmiTP-xenQfg@mail.gmail.com>
- <53C6C4BE.6010301@gmail.com> <CACxGe6v8BgEcTRB-ftPVkR6Tqs3GPw_0fVuwFgff_VqawoocGA@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] regulator: qcom-rpm: Regulator driver for the
+ Qualcomm RPM
+Date: Wed, 16 Jul 2014 23:28:29 +0100
+Message-ID: <20140716222829.GO17528@sirena.org.uk>
+References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1405465241-28684-4-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAMf-jSn2YHF7ihRpXMfkPWYt8pNCj4o395OGha3BHD3K3mUv9g@mail.gmail.com>
+ <CAJAp7Oj1R-EkJoSdLEa6SBLbzE_N1MjsystQ9Z+x4L_SjU=56w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="D85EWoRcDXv1uhH1"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6v8BgEcTRB-ftPVkR6Tqs3GPw_0fVuwFgff_VqawoocGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJAp7Oj1R-EkJoSdLEa6SBLbzE_N1MjsystQ9Z+x4L_SjU=56w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Cc: pramod gurav <pramod.gurav.etc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 2:57 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jul 16, 2014 at 12:30 PM, Tyrel Datwyler
-> <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 07/15/2014 10:33 PM, Grant Likely wrote:
->>> I've got another question about powerpc reconfiguration. I was looking
->>> at the dlpar_configure_connector() function in dlpar.c. I see that the
->>> function has the ability to process multiple nodes with additional
->>> sibling and child nodes. It appears to link them into a detached tree
->>> structure, and the function returns a pointer to the first node.
->>>
->>> All of the callers of that function then call dlpar_attach_node(),
->>> which calls of_attach_node(). However, of_attach_node() only handles a
->>> single node. It doesn't handle siblings or children. Is this a bug?
->>> Does the configure connector ever actually receive more than one node
->>> at once?
->>
->> Yes, it is sometimes the case we will get a tree structure back of more
->> than one node. Under the proc interface implementation this just worked.
->> With the move to sysfs it appears we have a regression here. What makes
->> more sense here, for us to walk the tree calling of_attach_node, or to
->> move such tree walking logic into of_attach_node? From what I can tell
->> we are the only consumers of of_attach_node.
->
-> That is very shortly going to change. The overlay code also uses
-> of_attach_node(). I can make of_attach_node() recurse over
-> descendants, but I'm also considering moving the powerpc code over to
-> the of_changeset series that Panto and I are working on.
->
-> Either way, the handling of multiple nodes should be common code. I
-> think the easiest is to put the recursion into of_attach_node(), at
-> least for fixing the bug. It can be reworked later.
 
-On pseries, do notifiers ever fail? ie. Does the reconfig code ever
-object to a DT change and prevent it from being applied?
+--D85EWoRcDXv1uhH1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-g.
+On Wed, Jul 16, 2014 at 03:17:13PM -0700, Bjorn Andersson wrote:
+> On Wed, Jul 16, 2014 at 12:01 AM, pramod gurav
+> > On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
+> > <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+
+> >> +static const struct regulator_linear_range pldo_ranges[] = {
+> >> +       REGULATOR_LINEAR_RANGE( 750000,   0,  59, 12500),
+
+> > ERROR: space prohibited after that open parenthesis '('
+
+> I prefer the nicely aligned columns over checkpatch correctness here.
+
+Me too.
+
+--D85EWoRcDXv1uhH1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTxvyKAAoJELSic+t+oim9NngP/RoArEBjjlY82D9lo+UbT5nf
+chizzJ49scpVqzayPgiMMuOKpKKSQsFGRQe4fdi3u0sW/0PFfEHHHH9lVDmFgOxX
+OxiOdVQxDel2c5G9J2SZiZ0vT74ecJp5aPlq9MRdh1KtCRAcg+xOWQ2GzWmR8MyM
+GgPyC8IFTuoLkBMPjEMDKnnfy9OgsuPXxtZDifnSaFZXqiWgIXauwc0xrzbAtmTu
+IjhhX0DeEr1hXpfUnBifmbpjfDZqNtu96nrKFJvOoiAbhJnZQyge+ycg+JEmNZpv
+7jdN+gsh+jZI22Z3E92i9c9xbxT4n0NxTvjqmV89q+FRTyBjYAvp0+tpltinRe5F
+NetX15zM7aevhxXAzp1504tundKUqwi+3xuE1MAfDlHejIm0801AhPRLOVMctqP8
+SHTXPHcIY7cJ3dHtVJJANFEXn9oJjRRJCMwo1AZhzRihem9bPJ/ZtkoFIOMt2Bfn
+1ybj3xt78fqJruFcS4dvh95BCfAuBMpO0yYJfFPEDPAfvA6Y8wS9l027z9LeNEwa
+6hjIn5fxQIw2jvMNDlGzYHVYTtA+9LaorngeqZ4I679CZzFn3DAauo1FE4o4Lk6N
+Ta0WToAd8kEpc85kEhKCMZWdwI9FRHNCj1ElWYUy+D7zJqChYMYScI6/+nXygrQp
+Oc/vP06NsjuxaGeXXDSF
+=fREf
+-----END PGP SIGNATURE-----
+
+--D85EWoRcDXv1uhH1--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
