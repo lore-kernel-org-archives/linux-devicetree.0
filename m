@@ -1,70 +1,71 @@
-Return-Path: <atull@opensource.altera.com>
-From: Alan Tull <atull@opensource.altera.com>
-Subject: [RFC PATCH 0/3] Yet another stab at a fpga framework
-Date: Thu, 31 Jul 2014 16:59:01 -0500
-Message-ID: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
+Return-Path: <linaro-kernel-bounces@lists.linaro.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Wed, 16 Jul 2014 23:17:34 +0200
+Message-ID: <1799703.CIMzuBg3yU@vostro.rjw.lan>
+In-Reply-To: <20140716192815.786b1866@free-electrons.com>
+References: <cover.1404231535.git.viresh.kumar@linaro.org>
+ <CAKohpo=bUMKa752fBXZTb0WPYMfJtuR5uk7z-YaXYV63fhJWtg@mail.gmail.com>
+ <20140716192815.786b1866@free-electrons.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-kernel@vger.kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, Alan Tull <atull@opensource.altera.com>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-kernel>,
+ <mailto:linaro-kernel-request@lists.linaro.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-kernel>
+List-Post: <mailto:linaro-kernel@lists.linaro.org>
+List-Help: <mailto:linaro-kernel-request@lists.linaro.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-kernel>,
+ <mailto:linaro-kernel-request@lists.linaro.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Errors-To: linaro-kernel-bounces@lists.linaro.org
+Sender: linaro-kernel-bounces@lists.linaro.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Nishanth Menon <nm@ti.com>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Rob Herring <rob.herring@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Thomas P Abraham <thomas.ab@samsung.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Jason Cooper <jason@lakedaemon.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Gregory =?ISO-8859-1?Q?Cl=E9ment?= <gregory.clement@free-electrons.com>, Sachin Kamat <spk.linux@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The function of the framework is to provide consistent ways of
-programming raw images into FPGA's.
-
-The core (fpga-mgr.c) does not include a userspace interface
-and just exports kernel functions.
-
-This approach separates the core from the interfaces.
-
-Each interface can be enabled or disabled in the defconfig.
-
-Programming from device tree overlays is supported.
-
-The core exports kernel functions to:
-  * write the fpga from a buffer or using the firmware layer
-  * get fpga status
-  * find a particular fpga manager from a device tree phandle
-  * register/unregister lower level fpga drivers.
-
-The bus allows us to:
-  * program fpga from a device tree overlay using firmware.
-  * automatically reload firmware and reprogram fpga during resume.
-
-The sysfs interface:
-  * read only, get the name and status of fpga manager.
-
-I have a configfs interface patch which I haven't included,
-adds configfs as a separate file.
-
-TODO:
-  * Enable bridges after fpga programming, disable during suspend
-
-Examples are provided in the headers of the patches.
-
-Alan Tull
-
-
-Alan Tull (3):
-  fpga manager framework core
-  fpga bus driver
-  fpga sysfs interface
-
- drivers/Kconfig          |    2 +
- drivers/Makefile         |    1 +
- drivers/fpga/Kconfig     |   27 +++
- drivers/fpga/Makefile    |   12 ++
- drivers/fpga/bus.c       |  139 +++++++++++++++
- drivers/fpga/fpga-mgr.c  |  431 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/fpga/sysfs.c     |   68 ++++++++
- include/linux/fpga-mgr.h |  137 +++++++++++++++
- 8 files changed, 817 insertions(+)
- create mode 100644 drivers/fpga/Kconfig
- create mode 100644 drivers/fpga/Makefile
- create mode 100644 drivers/fpga/bus.c
- create mode 100644 drivers/fpga/fpga-mgr.c
- create mode 100644 drivers/fpga/sysfs.c
- create mode 100644 include/linux/fpga-mgr.h
-
--- 
-1.7.9.5
+T24gV2VkbmVzZGF5LCBKdWx5IDE2LCAyMDE0IDA3OjI4OjE1IFBNIFRob21hcyBQZXRhenpvbmkg
+d3JvdGU6Cj4gRGVhciBWaXJlc2ggS3VtYXIsCj4gCj4gT24gV2VkLCAxNiBKdWwgMjAxNCAyMToz
+MTo1NCArMDUzMCwgVmlyZXNoIEt1bWFyIHdyb3RlOgo+ID4gQ2MnaW5nIFRob21hcywKPiAKPiBU
+aGFua3MuIEFsc28gYWRkaW5nIEphc29uIENvb3BlciwgQW5kcmV3IEx1bm4sIEdyw6lnb3J5IENs
+ZW1lbnQgYW5kCj4gU2ViYXN0aWFuIEhlc3NlbGJhcnQgKHRoZSBtdmVidSBwbGF0Zm9ybSBtYWlu
+dGFpbmVycywgd2hpY2ggaW5jbHVkZQo+IE1hcnZlbGwgQXJtYWRhIFhQKS4KPiAKPiA+IE9uIDgg
+SnVseSAyMDE0IDEwOjIwLCBWaXJlc2ggS3VtYXIgPHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnPiB3
+cm90ZToKPiA+ID4gT24gNCBKdWx5IDIwMTQgMDk6NTEsIFZpcmVzaCBLdW1hciA8dmlyZXNoLmt1
+bWFyQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4gPj4gWWVhaCwgaGF2aW5nIHNvbWV0aGluZyBsaWtl
+IHdoYXQgeW91IHN1Z2dlc3RlZCBmcm9tIERUIGlzIHRoZSBwZXJmZWN0Cj4gPiA+PiBzb2x1dGlv
+biB0byBnZXQgb3ZlciB0aGlzLiBUaGUgb25seSByZWFzb24gd2h5IEkgYW0gbm90IHRvdWNoaW5n
+IHRoYXQgaGVyZQo+ID4gPj4gaXMgdG8gbm90IGRlbGF5IG90aGVyIHBhdGNoZXMganVzdCBiZWNh
+dXNlIG9mIHRoYXQuCj4gPiA+Pgo+ID4gPj4gVGhlcmUgYXJlIHNlcGFyYXRlIHRocmVhZHMgZ29p
+bmcgb24gZm9yIHRoYXQgYW5kIHByb2JhYmx5IHNvbWVib2R5Cj4gPiA+PiBlbHNlIHdhcyB0cnlp
+bmcgdG8gcHVzaCBmb3IgdGhhdC4KPiA+ID4+Cj4gPiA+PiBUaGF0J3MgaXQsIG5vdGhpbmcgbW9y
+ZS4gSSB3b3VsZCBkZWZpbml0ZWx5IGxpa2UgdG8gdXNlIHRob3NlIGJpbmRpbmdzIGluc3RlYWQK
+PiA+ID4+ICBvZiB0aGUgY3Jhenkgcm91dGluZXMgd2UgYXJlIHRyeWluZyBoZXJlLCBvbmNlIHRo
+YXQgaXMgZmluYWxpemVkIDopCj4gPiA+Cj4gPiA+IERvIHdlIGhhdmUgc29tZSBraW5kIG9mIGFn
+cmVlbWVudCBmb3IgdGhpcyB0ZW1wb3Jhcnkgc29sdXRpb24/IEFueXdheXMKPiA+ID4gSSB3aWxs
+IGtpY2sgdGhlIG90aGVyIHRocmVhZCBhZ2FpbiB0byByZXNvbHZlIHRoZSBiaW5kaW5ncyBzb29u
+Lgo+ID4gCj4gPiBIaSBNaWtlL1JhZmFlbCwKPiA+IAo+ID4gVGhvbWFzIGhhcyBhIGRlcGVuZGVu
+Y3kgb24gdGhlIHBhdGNoIGFkZGluZyAiZmluZF9zaWJsaW5ncygpIjoKPiA+IGh0dHA6Ly93d3cu
+c3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2czNDgwODAuaHRtbAo+ID4gCj4gPiBXb3Vs
+ZCBpdCBiZSBmaW5lIHRvIGdldCB0aGlzIHRlbXBvcmFyeSBzb2x1dGlvbiAoT25seSB3aXRoaW4g
+Y3B1ZnJlcS1jcHUwCj4gPiBmaWxlLCBzbyB0aGF0IGl0IGRvZXNuJ3QgYmVjb21lIGFuIEFQSSkg
+Zm9yIG5vdyBhbmQgdXBkYXRpbmcgaXQgbGF0ZXIgb25jZQo+ID4gYmluZGluZ3MgYXJlIGNsb3Nl
+ZD8KPiA+IAo+ID4gSSBoYXZlIHRyaWVkIHBpbmdpbmcgb24gdGhlIG90aGVyIHRocmVhZCBhcyB3
+ZWxsLCBidXQgbm8gb25lIHJlcGxpZWQuCj4gPiBBbmQgaXQgbG9va3MgdGhvc2UgYmluZGluZ3Mg
+YXJlIGdvaW5nIHRvIHRha2Ugc29tZSB0aW1lIHRvIHNldHRsZS4KPiAKPiBBbHRlcm5hdGl2ZWx5
+LCBJIGNvdWxkIHJlc3BpbiBteSBBcm1hZGEgWFAgc3BlY2lmaWMgY3B1ZnJlcSBkcml2ZXIsCj4g
+dW50aWwgYSBwcm9wZXIgY3B1ZnJlcS1nZW5lcmljIGRyaXZlciBpcyBzb3J0ZWQgb3V0LCBpZiB0
+aGF0J3MgbmVlZGVkLgo+IFNpbmNlIEkgd2FzIHRvbGQgYnkgVmlyZXNoIHRoYXQgdGhlIGNwdWZy
+ZXEtZ2VuZXJpYyBkcml2ZXIgc3VwcG9ydGluZwo+IGluZGVwZW5kZW50IHBlci1DUFUgY2xvY2tz
+IHdvdWxkIGJlIG1lcmdlZCBmb3IgMy4xNywgSSBiYXNlZCBteSBjcHVmcmVxCj4gZGV2ZWxvcG1l
+bnQgb24gdGhhdC4gUGxlYXNlIGxldCB1cyBrbm93IHF1aWNrbHkgaWYgdGhhdCdzIG5vdCBnb2lu
+ZyB0bwo+IGJlIHRoZSBjYXNlLAoKRmlyc3Qgb2ZmLCBJJ20gc29ycnkgSSBtYXkgbm90IGJlIGFi
+bGUgdG8gZG8gdGhhdCBxdWlja2x5LiAgSSdsbCBsZXQgeW91Cmtub3cgd2hlbiBJIGdldCB0byB0
+aGF0IG1hdGVyaWFsLgoKPiBzbyB0aGF0IHdlIGNhbiBlbmFibGUgY3B1ZnJlcSBvbiBBcm1hZGEg
+WFAgaW4gMy4xNywgZXZlbgo+IGlmIGl0J3MgZG9uZSB3aXRoIGEgc2VwYXJhdGUgY3B1ZnJlcSBk
+cml2ZXIsIHVudGlsIGNwdWZyZXEtZ2VuZXJpYwo+IGlzc3VlcyBnZXQgc29ydGVkIG91dC4KCklm
+IHlvdSB0YXJnZXQgdGhlIGdlbmVyaWMgb25lLCBJJ2Qgc3Ryb25nbHkgcmVjb21tZW5kIGFnYWlu
+c3QgdHJ5aW5nIHRvIGRvCmEgc2VwYXJhdGUgZHJpdmVyIGV2ZW4gaWYgdGhlIGdlbmVyaWMgdGhp
+bmcgaXMgbm90IHJlYWR5IGZvciB0aGUgbWVyZ2UKd2luZG93LgoKS2luZCByZWdhcmRzLApSYWZh
+ZWwKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW5h
+cm8ta2VybmVsIG1haWxpbmcgbGlzdApsaW5hcm8ta2VybmVsQGxpc3RzLmxpbmFyby5vcmcKaHR0
+cDovL2xpc3RzLmxpbmFyby5vcmcvbWFpbG1hbi9saXN0aW5mby9saW5hcm8ta2VybmVsCg==
