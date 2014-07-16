@@ -1,85 +1,51 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
-Date: Wed, 16 Jul 2014 10:40:19 +0100
-Message-ID: <53C64883.2050709@arm.com>
-References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org> <1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org>
+From: Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
+Subject: Re: [PATCH] drivers/rtc/rtc-isl12022.c: Device tree support
+Date: Wed, 16 Jul 2014 19:35:21 +1000
+Message-ID: <53C64759.8020505@vrt.com.au>
+References: <1405477705-16885-2-git-send-email-stuartl@vrt.com.au> <20140716085904.GA26951@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405071325-14683-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20140716085904.GA26951@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org" <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org" <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, "lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "loic.pallardy-qxv4g6HH51o@public.gmane.org" <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "s-anna-l0cyMroinI0@public.gmane.org" <s-anna-l0cyMroinI0@public.gmane.org>, "ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, "t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org" <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Roman Fietze <roman.fietze-rVvtEhYSWBkAey3BTtE3dg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
+On 16/07/14 18:59, Mark Rutland wrote:
+> On Wed, Jul 16, 2014 at 03:28:25AM +0100, Stuart Longland wrote:
+>> Add some support for configuring isl12020/isl12022 devices using the
+>> Device Tree blob.
+>>
+>> Signed-off-by: Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
+> 
+> Please document this as with isl,isl12057, in
+> Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> 
+> The string itself looks fine.
 
+No problems.  I'll do this shortly.
 
-On 11/07/14 10:35, Jassi Brar wrote:
-> Introduce common framework for client/protocol drivers and
-> controller drivers of Inter-Processor-Communication (IPC).
->
-> Client driver developers should have a look at
->   include/linux/mailbox_client.h to understand the part of
-> the API exposed to client drivers.
-> Similarly controller driver developers should have a look
-> at include/linux/mailbox_controller.h
->
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->   .../devicetree/bindings/mailbox/mailbox.txt        |  33 ++
->   Documentation/mailbox.txt                          | 107 +++++
->   MAINTAINERS                                        |   8 +
->   drivers/mailbox/Makefile                           |   4 +
->   drivers/mailbox/mailbox.c                          | 490 +++++++++++++++++++++
->   include/linux/mailbox_client.h                     |  48 ++
->   include/linux/mailbox_controller.h                 | 128 ++++++
->   7 files changed, 818 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mailbox/mailbox.txt
->   create mode 100644 Documentation/mailbox.txt
->   create mode 100644 drivers/mailbox/mailbox.c
->   create mode 100644 include/linux/mailbox_client.h
->   create mode 100644 include/linux/mailbox_controller.h
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-> new file mode 100644
-> index 0000000..3f00955
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-> @@ -0,0 +1,33 @@
-> +* Generic Mailbox Controller and client driver bindings
-> +
-> +Generic binding to provide a way for Mailbox controller drivers to
-> +assign appropriate mailbox channel to client drivers.
-> +
-> +* Mailbox Controller
-> +
-> +Required property:
-> +- #mbox-cells: Must be at least 1. Number of cells in a mailbox
-> +               specifier.
-> +
-> +Example:
-> +       mailbox: mailbox {
-> +               ...
-> +               #mbox-cells = <1>;
-> +       };
-> +
-> +
-> +* Mailbox Client
-> +
-> +Required property:
-> +- mbox: List of phandle and mailbox channel specifier.
-> +
-> +- mbox-names: List of identifier strings for each mailbox channel
-> +               required by the client.
-> +
+>> +#ifdef CONFIG_OF
+>> +		.of_match_table = of_match_ptr(isl12022_dt_match),
+>> +#endif
+> 
+> You can drop the ifdef here, of_match_ptr(x) is NULL if !CONFIG_OF.
 
-IMO the mailbox names are more associated with the controller channels/
-mailbox rather than the clients using it. Does it make sense to move
-this under controller. It also avoid each client replicating the names.
+Ahh okay, I wasn't sure how of_match_ptr worked, so I thought I'd play
+it safe.  A revised patch is coming right up.
 
 Regards,
-Sudeep
+-- 
+Stuart Longland
+Systems Engineer
+     _ ___
+\  /|_) |                           T: +61 7 3535 9619
+ \/ | \ |     38b Douglas Street    F: +61 7 3535 9699
+   SYSTEMS    Milton QLD 4064       http://www.vrt.com.au
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
