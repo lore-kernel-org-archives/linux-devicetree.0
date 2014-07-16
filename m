@@ -1,94 +1,101 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
- gpio block
-Date: Wed, 16 Jul 2014 11:18:14 +0300
-Message-ID: <1405498694.31919.20.camel@iivanov-dev>
-References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
-	 <CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com>
-	 <CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com>
-	 <CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
-	 <53C095EA.90000@codeaurora.org> <1405346335.13503.25.camel@iivanov-dev>
-	 <53C449A3.2010404@codeaurora.org> <1405406114.13503.40.camel@iivanov-dev>
-	 <CAJAp7OjU=FFdGKHPqovz+qrEhDCZ3E=uOSAOFbgYyLE01C9cPg@mail.gmail.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 00/12] ARM: berlin: USB support
+Date: Wed, 16 Jul 2014 10:25:54 +0200
+Message-ID: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OjU=FFdGKHPqovz+qrEhDCZ3E=uOSAOFbgYyLE01C9cPg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-07-15 at 17:23 -0700, Bjorn Andersson wrote:
-> On Mon, Jul 14, 2014 at 11:35 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> > On Mon, 2014-07-14 at 14:20 -0700, Stephen Boyd wrote:
-> [..]
-> >> Isn't this document only for the gpios? I think you're talking about the
-> >> MPPs, which also exist on these generation of pmics. We should probably
-> >> avoid mixing the two (gpios and mpps) in one binding because they're
-> >> really different hardware.
-> >
-> > I don't know. For me "gpio" looks like function of the pin hardware.
-> >
-> >>
-> >> >  So I will like
-> >> > to keep "function" property for selecting one of the above functions.
-> >> > Choosing between "normal", "paired"... options in QPNP pinctrl driver
-> >> > is supported trough passing values, defined in DT header file, to
-> >> > "output-high" property. Please don't kill me :-).
-> >>
-> >> Overloading output-high to choose the MPP mode doesn't seem to follow
-> >> the generic pinconfig binding. Does output-high even take a value? Why
-> >> can't we use the function property?
-> >
-> > No, no.  using value of the output-high|low" is just to select
-> > "normal", "paired"... thing. Function selection is via "function"
-> > property. Currently QPNP support following functions "gpio", "mpp-ain",
-> > "mpp-aout", "mpp-cs".
-> >
-> 
-> Hi Ivan,
-> 
-> From your comment I presume that you don't have access to the
-> documentation for these blocks.
-> 
-> The pmic sports two types of pins; gpios and mpps (multi-purpose-pin).
-> These are different hardware blocks; i.e. not a configuration thing.
+This series adds the support for ChipIdea USB2 (ci13xxx) controllers,
+the USB PHYs of the Marvell Berlin SoCs and also adds a reset
+controller for these SoCs.
 
-I am looking on GPIO's hardware blocks as stripped down MPP's.
+The reset controller is used by the PHY driver and shares the
+existing chip controller node with the clocks and one pin controller.
 
-> 
-> The gpios can be input, output or both and they can be configured as
-> gpio, paired, function 1 or function 2 (+ some test modes). So here it
-> makes sense to have the functions "gpio", "paired" and the valid
-> function combinations.
+The Marvell Berlin USB controllers are host only on the BG2Q and are
+compatible with USB ChipIdea. We here add a glue to use the available
+common functions for this kind of controllers, and add a generic USB2
+ChipIdea driver. A PHY driver is also added to control the USB PHY.
 
-I believe that MPP's also support these 'functions'.
+This series applies on top of the generic PHY support in the USB
+framework[1].
 
-> 
-> The mpps can be input, output or both; in either digital or analog
-> mode. Or they can be a current sink. When configured as analog input
-> you select which adc the pin should be routed to. Here it makes sense
-> to have the functions "digital", "analog" and "current-sink" I think.
+Changes since v2:
+	- moved the PHY driver to the generic PHY framework
+	- changed the compatible to 'chipidea,usb2'
+	- added a property to set the DMA mask in the USB2 CI driver
+	- separated dt specific calls in the CI probing function
+	- rebased on top of the generic PHY support for CI[1]
 
-My understanding is that MPP's are supporting everything which GPIO's
-does, plus analog functionality. 
+Changes since v1:
+        - made the Berlin CI USB driver a generic one
+        - added support to custom offset for the reset register
+        - added fixed regulators to support supply the VBUS
+        - modified the PHY driver to support the one one the BG2CD as
+          well
+        - documented the reset properties
+        - added bindings for the BG2CD
+        - cosmetic fixes
 
-I don't want at the end MPP's functions to be something like:
+[1] https://lkml.org/lkml/2014/7/15/330
 
-analog-normal, analog-paired, analog-function-1, analog-function-2, 
-digital-normal, digital-paired...
+Antoine T=C3=A9nart (10):
+  reset: add the Berlin reset controller driver
+  Documentation: bindings: add reset bindings docs for Marvell Berlin
+    SoCs
+  ARM: Berlin: select the reset controller
+  ARM: dts: berlin: add a required reset property in the chip controlle=
+r
+    node
+  phy: add the Berlin USB PHY driver
+  Documentation: bindings: add doc for the Berlin USB PHY
+  usb: chipidea: add a usb2 driver for ci13xxx
+  Documentation: bindings: add doc for the USB2 ChipIdea USB driver
+  ARM: dts: berlin: add BG2Q nodes for USB support
+  ARM: dts: Berlin: enable USB on the BG2Q DMP
 
-So better to leave normal/paired stuff as separate parameter (qcom,pair).
+Sebastian Hesselbarth (2):
+  ARM: dts: berlin: add BG2CD nodes for USB support
+  ARM: dts: berlin: enable USB on the Google Chromecast
 
-Plain GPIO hardware will just support 'gpio' function, while MPP's
-will have 'gpio', 'analog-in', 'analog-out', 'current-sink' 
+ .../devicetree/bindings/arm/marvell,berlin.txt     |  10 +
+ .../devicetree/bindings/phy/berlin-usb-phy.txt     |  16 ++
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  23 +++
+ arch/arm/boot/dts/berlin2.dtsi                     |   1 +
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts  |   4 +
+ arch/arm/boot/dts/berlin2cd.dtsi                   |  35 ++++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |  53 +++++
+ arch/arm/boot/dts/berlin2q.dtsi                    |  53 +++++
+ arch/arm/mach-berlin/Kconfig                       |   2 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-usb.c                       | 223 +++++++++++++=
+++++++++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-berlin.c                       | 131 ++++++++++++
+ drivers/usb/chipidea/Makefile                      |   1 +
+ drivers/usb/chipidea/ci_hdrc_usb2.c                | 147 +++++++++++++=
++
+ 16 files changed, 708 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-ph=
+y.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.=
+txt
+ create mode 100644 drivers/phy/phy-berlin-usb.c
+ create mode 100644 drivers/reset/reset-berlin.c
+ create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
 
-I am fine to split driver to two drivers (GPIO and MPP), which will
-make code a little more clean, but I am pretty sure there will be
-lot of duplication.
+--=20
+1.9.1
 
-Regards,
-Ivan
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
