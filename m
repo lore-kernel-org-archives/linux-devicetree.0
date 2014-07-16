@@ -1,50 +1,40 @@
-From: Peter Chen <Peter.Chen@freescale.com>
-Subject: RE: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Wed, 16 Jul 2014 11:58:14 +0000
-Message-ID: <cd73d8a384cc4040a0bbc6afc1f3063d@DM2PR0301MB0783.namprd03.prod.outlook.com>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
- <42036198.zWkqnus6xa@wuerfel> <20140716091533.GB28151@kwain>
- <5615007.cNNjmu3rBK@wuerfel>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 0/3] serial: samsung: get fifosize from DT and clean up
+Date: Wed, 16 Jul 2014 14:02:41 +0200
+Message-ID: <53C669E1.90800@samsung.com>
+References: <1405337838-30335-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5615007.cNNjmu3rBK@wuerfel>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, =?iso-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "balbi@ti.com" <balbi@ti.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "zmxu@marvell.com" <zmxu@marvell.com>, "jszhang@marvell.com" <jszhang@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1405337838-30335-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, ben-linux@fluff.org, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
- 
-> >
-> > Some people wanted the possibility to set the DMA mask as this USB2 CI
-> > driver does not do specific Berlin operation and can be reused later.
-> > I don't particularly need to call dma_coerce_mask_and_coherent() in my
-> > case, as far as I know.
+Hi Naveen,
+
+On 14.07.2014 13:37, Naveen Krishna Chatradhi wrote:
+> This patch set does the following
+> 1: Get fifosize from DT node. But, not mandating it.
+> 2. Corrects the case and default order in a switch
+> 3. Defines a variable to simply the code.
 > 
-> Ok, just remove the call then and rely on the default mask.
+> Console messages on Exynos5420 based peach pit and pi works fine.
 > 
-> > They can maybe give the restrictions they might want to put on the DMA
-> > mask.
+> Naveen Krishna Chatradhi (3):
+>   serial: samsung: get fifosize via device tree
+>   serial: samsung: correct the case and default order in switch
+>   serial: samsung: improve code clarity by defining a variable
 > 
-> If the restriction is from the bus, it should get handled automatically
-> by the device probe as long as the correct dma-ranges property is there
-> (though we have a small bug there at the moment). If there is a variation
-> of ci13xxx that can't do 32-bit DMA, that should use a different
-> compatible string and pass a fixed mask into dma_set_mask_and_coherent()
-> based on the device.
+>  .../devicetree/bindings/serial/samsung_uart.txt    |    4 ++++
+>  drivers/tty/serial/samsung.c                       |   19 +++++++++++++------
+>  2 files changed, 17 insertions(+), 6 deletions(-)
 > 
 
-Correct me if my below understanding is wrong please.
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-For three chipidea users:
-user_a: don't need dma mask
-user_b: dma mask value is dma_mask_b
-user_c: dma mask value is dma_mask_c
-
-We don't need to call dma_coerce_mask_and_coherent() at generic chipidea
-glue driver, and set dma-ranges as dma_mask_b at user_b's dts, and set
-dma-ranges as dma_mask_c at user_c's dts.
-
-Peter 
+--
+Best regards,
+Tomasz
