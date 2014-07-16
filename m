@@ -1,310 +1,375 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Wed, 16 Jul 2014 10:21:36 -0700
-Message-ID: <CAK5ve-+xyXyjPqejTPRvz=bJ4M5v19Uq1oaVv94QKqBWf1D4dA@mail.gmail.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com> <CAK5ve-L67=q-EpWvxD5-x+cFT7dh8p0HHuoUbAWA-j5BqCO52A@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 7/8] mailbox: f_mhu: add driver for Fujitsu MHU controller
+Date: Wed, 16 Jul 2014 18:37:01 +0100
+Message-ID: <53C6B83D.80602@arm.com>
+References: <message-id-of-cover-letter> <1405233128-4799-1-git-send-email-mollie.wu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAK5ve-L67=q-EpWvxD5-x+cFT7dh8p0HHuoUbAWA-j5BqCO52A@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405233128-4799-1-git-send-email-mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 10:19 AM, Bryan Wu <cooloney@gmail.com> wrote:
-> On Fri, Jul 11, 2014 at 7:04 AM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> This is is the fourth version of the patch series being a follow up
->> of the discussion on Media summit 2013-10-23, related to the
->> LED / flash API integration (the notes from the discussion were
->> enclosed in the message [1], paragraph 5).
->> The series is based on linux-next-20140707
->>
->
-> I really apologize that I missed your discussion email in my Gmail
-> inbox, it was archived some where. Even in this series some of these
-> patches are archived in different tab.
->
-> I will start to review and help to push this.
->
+Hi Mollie,
 
-In the mean time, could you please provide an git tree for me to pull?
-It's much easier for me to review in my git.
+On 13/07/14 07:32, Mollie Wu wrote:
+> Add driver for the proprietary Mailbox controller (f_mhu) in MB86S7x.
 
--Bryan
+And it looks like this is not Fujitsu proprietary MHU, it's exactly same IP
+on JUNO(ARM64 development platform from ARM [1]). I was not sure it's 
+standard
+IP used on other SoCs too, I too wrote similar driver :(.
 
+Can you please confirm this by reading Peripheral ID(PID: 0xFD0, 0xFE0 -
+0xFEC) and Component ID(COMPID: 0xFF0 - 0xFFC). Are they
+
+PID  - 0x04 0x98 0xB0 0x1B 0x00
+COMPID - 0x0D 0xF0 0x05 0xB1
+
+If so we have do s/f_mhu/arm_mhu/g :)
+
+> It has three channels - LowPri-NonSecure, HighPri-NonSecure and Secure.
+> The MB86S7x communicates over the HighPri-NonSecure channel.
 >
+> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+> Signed-off-by: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   drivers/mailbox/Kconfig  |   7 ++
+>   drivers/mailbox/Makefile |   2 +
+>   drivers/mailbox/f_mhu.c  | 227 +++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 236 insertions(+)
+>   create mode 100644 drivers/mailbox/f_mhu.c
 >
->> Description of the proposed modifications according to
->> the kernel components they are relevant to:
->>     - LED subsystem modifications
->>         * added led_flash module which, when enabled in the config,
->>           registers flash specific sysfs attributes, if the driver
->>           declares related features:
->>             - flash_brightness
->>             - max_flash_brightness
->>             - indicator_brightness
->>             - max_indicator_brightness
->>             - flash_timeout
->>             - max_flash_timeout
->>             - flash_strobe
->>             - external_strobe
->>             - flash_fault
->>           and exposes kernel internal API:
->>             - led_classdev_flash_register
->>             - led_classdev_flash_unregister
->>             - led_set_flash_strobe
->>             - led_get_flash_strobe
->>             - led_set_flash_brightness
->>             - led_update_flash_brightness
->>             - led_set_indicator_brightness
->>             - led_update_indicator_brightness
->>             - led_set_flash_timeout
->>             - led_get_flash_fault
->>             - led_set_external_strobe
->>             - led_sysfs_lock
->>             - led_sysfs_unlock
->>         * added Flash Manager functionality, available when
->>           led_flash module is enable in the config;
->>           if the device tree node of a flash led device contains
->>           relevant subnodes, it registers following sysfs attributes:
->>             - strobe_provider
->>             - strobe_providerN
->>             - blocking_strobe
->>           following kernel internal API is exposed by the flash manager:
->>             - led_flash_manager_register_flash
->>             - led_flash_manager_unregister_flash
->>             - led_flash_manager_setup_strobe
->>             - led_flash_manager_bind_async_mux
->>             - led_flash_manager_unbind_async_mux
->>     - Addition of a V4L2 Flash sub-device registration helpers
->>         * added v4l2-flash.c and v4l2-flash.h files with helper
->>           functions that facilitate registration/unregistration
->>           of a subdevice, which wrapps a LED subsystem device and
->>           exposes V4L2 Flash control interface
->>     - Addition of a LED Flash Class driver for the flash cell of
->>       the MAX77693 mfd
->>     - Addition of a LED Flash Class driver for the AAT1290 current
->>       regulator for flash leds along with its DT binding for the
->>       exynos4412-trats2 board, where standalone multiplexer is
->>       used for modifying strobe signal routing - either from the SoC
->>       GPIO or from a camera sensor. This arrangment is handled
->>       by the newly introduced Flash Manager functionality.
->>     - Update of the max77693.txt DT bindings documentation
->>     - Update of the common leds DT bindings documentation
->>
->> ================
->> Changes since v2
->> ================
->>
->>     - refactored the code so that it is possible to build
->>       led-core without led-flash module
->>     - added v4l2-flash ops which slackens dependency from
->>       the led-flash module
->>     - implemented led_clamp_align_val function and led_ctrl
->>       structure which allows to align led control values
->>       in the manner compatible with V4L2 Flash controls;
->>       the flash brightness and timeout units have been defined
->>       as microamperes and microseconds respectively to properly
->>       support devices which define current and time levels
->>       as fractions of 1/1000.
->>     - added support for the flash privacy leds
->>     - modified LED sysfs locking mechanism - now it locks/unlocks
->>       the interface on V4L2 Flash sub-device file open/close
->>     - changed hw_triggered attribute name to external_strobe,
->>       which maps on the V4L2_FLASH_STROBE_SOURCE_EXTERNAL name
->>       more intuitively
->>     - made external_strobe and indicator related sysfs attributes
->>       created optionally only if related features are declared
->>       by the led device driver
->>     - removed from the series patches modifying exynos4-is media
->>       controller - a proposal for "flash manager" which will take
->>       care of flash devices registration is due to be submitted
->>     - removed modifications to the LED class devices documentation,
->>       it will be covered after the whole functionality is accepted
->>
->> ================
->> Changes since v3
->> ================
->>
->>     - added Flash Manager feature
->>       - added generic LED Flash Class gpio mux driver
->>       - added sample async mux driver
->>       - added of helpers for parsing Flash Manager related
->>         device tree data
->>     - added V4L2_CID_FLASH_STROBE_PROVIDER control
->>     - introduced struct led_classdev_flash, which wrapps
->>       struct led_classdev
->>     - made all flash ops, except strobe_set, optional; if an op
->>       is absent the related sysfs attribute isn't created
->>     - added LED_DEV_CAP* flags
->>     - modified v4l2-flash helpers to create v4l2_device
->>       for v4l2_flash subdevices to register in it
->>     - modified max77693-flash driver and its DT bindings
->>       to allow for registering either one or two LED Flash
->>       Class devices, depending on the device tree settings.
->>     - added new API for setting torch_brightness
->>     - extended leds common DT binding documentation
->>
->> Issues:
->>
->> 1) Who should register V4L2 Flash sub-device?
->>
->> LED Flash Class devices, after introduction of the Flash Manager,
->> are not tightly coupled with any media controller. They are maintained
->> by the Flash Manager and made available for dynamic assignment to
->> any media system they are connected to through multiplexing devices.
->>
->> In the proposed rough solution, when support for V4L2 Flash sub-devices
->> is enabled, there is a v4l2_device created for them to register in.
->> This however implies that V4L2 Flash device will not be available
->> in any media controller, which calls its existence into question.
->>
->> Therefore I'd like to consult possible ways of solving this issue.
->> The option I see is implementing a mechanism for moving V4L2 Flash
->> sub-devices between media controllers. A V4L2 Flash sub-device
->> would initially be assigned to one media system in the relevant
->> device tree binding, but it could be dynamically reassigned to
->> the other one. However I'm not sure if media controller design
->> is prepared for dynamic modifications of its graph and how many
->> modifications in the existing drivers this solution would require.
->>
->> 2) Consequences of locking the Flash Manager during flash strobe
->>
->> In case a LED Flash Class device depends on muxes involved in
->> routing the other LED Flash Class device's strobe signals,
->> the Flash Manager must be locked for the time of strobing
->> to prevent reconfiguration of the strobe signal routing
->> by the other device.
->>
->> A blocking_strobe sysfs attribute was added to indicate whether
->> this is the case for the device.
->>
->> Nonetheless, this modifies behaviour of led_set_external_strobe
->> API, which also must block the caller for the time of strobing
->> to protect the strobe signal routing while the external strobe
->> signal provider asserts the flash_en pin.
->>
->> Use case for user space application would be following in this case:
->>   - spawn a new thread in which external strobe is activated
->>   - in the parent thread instruct the external strobe provider
->>     to strobe the flash
->>
->> As an improvement there could be an op added for notifying
->> the application that the strobe signal routing has been
->> set up. It would have to be called from the function
->> led_flash_manager_setup_strobe after led_flash_manager_set_external_strobe
->> returns.
->>
->> The blocking_strobe attribute would have to be also
->> mapped to a new V4L2 Flash control. Unfortunately it poses
->> a problem for the existing users of the V4L2 Flash API
->> which are not aware that setting V4L2_CID_FLASH_STROBE_SOURCE
->> may be blocking.
->>
->> As a solution led_set_external_strobe API could be extended
->> by a parameter telling whether the caller is prepared for
->> the blocking call. led_flash_manager_setup_strobe should
->> be extended accordingly then.
->> In V4L2 "V4L2_FLASH_STROBE_SOURCE_EXTERNAL_BLOCKING" menu item
->> could be added to handle this.
->> With existing V4L2_FLASH_STROBE_SOURCE_EXTERNAL the flash manager
->> wouldn't protect muxes against reconfiguration.
->>
->> TODO:
->>   - switch to using V4L2 array controls
->>   - add s_power op to the LED Flash Class
->>
->>
->> I will be off-line for three weeks from now on and will respond
->> to any questions after getting back.
->>
->>
->> Thanks,
->> Jacek Anaszewski
->>
->> Jacek Anaszewski (21):
->>   leds: make brightness type consistent across whole subsystem
->>   leds: implement sysfs interface locking mechanism
->>   leds: Improve and export led_update_brightness
->>   leds: Reorder include directives
->>   leds: avoid using deprecated DEVICE_ATTR macro
->>   leds: add API for setting torch brightness
->>   of: add of_node_ncmp wrapper
->>   leds: Add sysfs and kernel internal API for flash LEDs
->>   Documentation: leds: Add description of LED Flash Class extension
->>   Documentation: leds: add exemplary asynchronous mux driver
->>   DT: leds: Add flash led devices related properties
->>   DT: Add documentation for LED Class Flash Manger
->>   v4l2-device: add v4l2_device_register_subdev_node API
->>   v4l2-ctrls: add control for flash strobe signal providers
->>   media: Add registration helpers for V4L2 flash
->>   leds: Add support for max77693 mfd flash cell
->>   DT: Add documentation for the mfd Maxim max77693
->>   leds: Add driver for AAT1290 current regulator
->>   of: Add Skyworks Solutions, Inc. vendor prefix
->>   DT: Add documentation for the Skyworks AAT1290
->>   ARM: dts: add aat1290 current regulator device node
->>
->>  Documentation/DocBook/media/v4l/controls.xml       |   11 +
->>  Documentation/devicetree/bindings/leds/common.txt  |   16 +
->>  .../devicetree/bindings/leds/leds-aat1290.txt      |   17 +
->>  .../bindings/leds/leds-flash-manager.txt           |  165 +++
->>  Documentation/devicetree/bindings/mfd/max77693.txt |   62 ++
->>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>  Documentation/leds/leds-async-mux.c                |   65 ++
->>  Documentation/leds/leds-class-flash.txt            |  126 +++
->>  arch/arm/boot/dts/exynos4412-trats2.dts            |   24 +
->>  drivers/leds/Kconfig                               |   28 +
->>  drivers/leds/Makefile                              |    7 +
->>  drivers/leds/led-class-flash.c                     |  715 +++++++++++++
->>  drivers/leds/led-class.c                           |   58 +-
->>  drivers/leds/led-core.c                            |   51 +-
->>  drivers/leds/led-flash-gpio-mux.c                  |  102 ++
->>  drivers/leds/led-flash-manager.c                   |  698 +++++++++++++
->>  drivers/leds/led-triggers.c                        |   16 +-
->>  drivers/leds/leds-aat1290.c                        |  455 +++++++++
->>  drivers/leds/leds-max77693.c                       | 1070 ++++++++++++++++++++
->>  drivers/leds/of_led_flash_manager.c                |  155 +++
->>  drivers/media/v4l2-core/Kconfig                    |   11 +
->>  drivers/media/v4l2-core/Makefile                   |    2 +
->>  drivers/media/v4l2-core/v4l2-ctrls.c               |    2 +
->>  drivers/media/v4l2-core/v4l2-device.c              |   63 +-
->>  drivers/media/v4l2-core/v4l2-flash.c               |  580 +++++++++++
->>  drivers/mfd/max77693.c                             |    5 +-
->>  include/linux/led-class-flash.h                    |  290 ++++++
->>  include/linux/led-flash-gpio-mux.h                 |   68 ++
->>  include/linux/led-flash-manager.h                  |  121 +++
->>  include/linux/leds.h                               |   73 +-
->>  include/linux/mfd/max77693.h                       |   40 +
->>  include/linux/of.h                                 |    1 +
->>  include/linux/of_led_flash_manager.h               |   80 ++
->>  include/media/v4l2-device.h                        |    7 +
->>  include/media/v4l2-flash.h                         |  137 +++
->>  include/uapi/linux/v4l2-controls.h                 |    2 +
->>  36 files changed, 5272 insertions(+), 52 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-flash-manager.txt
->>  create mode 100644 Documentation/leds/leds-async-mux.c
->>  create mode 100644 Documentation/leds/leds-class-flash.txt
->>  create mode 100644 drivers/leds/led-class-flash.c
->>  create mode 100644 drivers/leds/led-flash-gpio-mux.c
->>  create mode 100644 drivers/leds/led-flash-manager.c
->>  create mode 100644 drivers/leds/leds-aat1290.c
->>  create mode 100644 drivers/leds/leds-max77693.c
->>  create mode 100644 drivers/leds/of_led_flash_manager.c
->>  create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
->>  create mode 100644 include/linux/led-class-flash.h
->>  create mode 100644 include/linux/led-flash-gpio-mux.h
->>  create mode 100644 include/linux/led-flash-manager.h
->>  create mode 100644 include/linux/of_led_flash_manager.h
->>  create mode 100644 include/media/v4l2-flash.h
->>
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-media" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index c8b5c13..681aac2 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -6,6 +6,13 @@ menuconfig MAILBOX
+>   	  signals. Say Y if your platform supports hardware mailboxes.
+>
+>   if MAILBOX
+> +
+> +config MBOX_F_MHU
+> +	bool
+
+On Juno, there's nothing that prevents me from compiling this as module.
+
+> +	depends on ARCH_MB86S7X
+
+Definitely not a requirement
+
+> +	help
+> +	  Say Y here if you want to use the F_MHU IPCM support.
+> +
+
+Also it needs some description.
+
+>   config PL320_MBOX
+>   	bool "ARM PL320 Mailbox"
+>   	depends on ARM_AMBA
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index 2fa343a..3707e93 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -2,6 +2,8 @@
+>
+>   obj-$(CONFIG_MAILBOX)		+= mailbox.o
+>
+> +obj-$(CONFIG_MBOX_F_MHU)	+= f_mhu.o
+> +
+>   obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
+>
+>   obj-$(CONFIG_OMAP_MBOX)		+= omap-mailbox.o
+> diff --git a/drivers/mailbox/f_mhu.c b/drivers/mailbox/f_mhu.c
+> new file mode 100644
+> index 0000000..cf5d3cd
+> --- /dev/null
+> +++ b/drivers/mailbox/f_mhu.c
+> @@ -0,0 +1,227 @@
+> +/*
+> + * Copyright (C) 2013-2014 Fujitsu Semiconductor Ltd.
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/mutex.h>
+> +#include <linux/delay.h>
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define INTR_STAT_OFS	0x0
+> +#define INTR_SET_OFS	0x8
+> +#define INTR_CLR_OFS	0x10
+> +
+> +#define MHU_SCFG	0x400
+> +
+
+Remove this.(secure access only register)
+
+> +struct mhu_link {
+> +	unsigned irq;
+> +	spinlock_t lock; /* channel regs */
+> +	void __iomem *tx_reg;
+> +	void __iomem *rx_reg;
+> +};
+> +
+> +struct f_mhu {
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	struct mhu_link mlink[3];
+> +	struct mbox_chan chan[3];
+> +	struct mbox_controller mbox;
+> +};
+> +
+> +static irqreturn_t mhu_rx_interrupt(int irq, void *p)
+> +{
+> +	struct mbox_chan *chan = (struct mbox_chan *)p;
+> +	struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+
+You don't need explicit cast from void pointers
+
+> +	u32 val;
+> +
+> +	pr_debug("%s:%d\n", __func__, __LINE__);
+
+Please remove all these debug prints.
+
+> +	/* See NOTE_RX_DONE */
+> +	val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
+> +	mbox_chan_received_data(chan, (void *)val);
+> +
+> +	/*
+> +	 * It is agreed with the remote firmware that the receiver
+> +	 * will clear the STAT register indicating it is ready to
+> +	 * receive next data - NOTE_RX_DONE
+> +	 */
+
+This note could be added as how this mailbox works in general and
+it's not just Rx right ? Even Tx done is based on this logic.
+Basically the logic is valid on both directions.
+
+> +	writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static bool mhu_last_tx_done(struct mbox_chan *chan)
+> +{
+> +	struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	pr_debug("%s:%d\n", __func__, __LINE__);
+> +	spin_lock_irqsave(&mlink->lock, flags);
+
+Why do we need this extra locks here ? mailbox core maintains
+per channel lock and uses it for at-least send_data IIRC. And this
+function is just reading status do we really need the lock ?
+
+I must be missing something here else  IMO we can get rid of this
+extra locks in here.
+
+> +	/* See NOTE_RX_DONE */
+> +	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
+> +	spin_unlock_irqrestore(&mlink->lock, flags);
+> +
+> +	return (val == 0);
+> +}
+> +
+> +static int mhu_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +	struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+> +	unsigned long flags;
+> +
+> +	pr_debug("%s:%d\n", __func__, __LINE__);
+> +	if (!mhu_last_tx_done(chan)) {
+> +		pr_err("%s:%d Shouldn't have seen the day!\n",
+> +		       __func__, __LINE__);
+> +		return -EBUSY;
+> +	}
+> +
+> +	spin_lock_irqsave(&mlink->lock, flags);
+> +	writel_relaxed((u32)data, mlink->tx_reg + INTR_SET_OFS);
+> +	spin_unlock_irqrestore(&mlink->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mhu_startup(struct mbox_chan *chan)
+> +{
+> +	struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+> +	unsigned long flags;
+> +	u32 val;
+> +	int ret;
+> +
+> +	pr_debug("%s:%d\n", __func__, __LINE__);
+> +	spin_lock_irqsave(&mlink->lock, flags);
+> +	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
+> +	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
+> +	spin_unlock_irqrestore(&mlink->lock, flags);
+> +
+> +	ret = request_irq(mlink->irq, mhu_rx_interrupt,
+> +			  IRQF_SHARED, "mhu_link", chan);
+
+Just a thought: Can this be threaded_irq instead ?
+Can move request_irq to probe instead esp. if threaded_irq ?
+That provides some flexibility to client's rx_callback.
+
+> +	if (unlikely(ret)) {
+> +		pr_err("Unable to aquire IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void mhu_shutdown(struct mbox_chan *chan)
+> +{
+> +	struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+> +
+> +	pr_debug("%s:%d\n", __func__, __LINE__);
+> +	free_irq(mlink->irq, chan);
+> +}
+> +
+> +static struct mbox_chan_ops mhu_ops = {
+> +	.send_data = mhu_send_data,
+> +	.startup = mhu_startup,
+> +	.shutdown = mhu_shutdown,
+> +	.last_tx_done = mhu_last_tx_done,
+> +};
+> +
+> +static int f_mhu_probe(struct platform_device *pdev)
+> +{
+> +	int i, err;
+> +	struct f_mhu *mhu;
+> +	struct resource *res;
+> +	int mhu_reg[3] = {0x0, 0x20, 0x200};
+
+Probably this gets simplified when you remove secure channel access ?
+
+> +
+> +	/* Allocate memory for device */
+> +	mhu = kzalloc(sizeof(*mhu), GFP_KERNEL);
+> +	if (!mhu) {
+> +		dev_err(&pdev->dev, "failed to allocate memory.\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	mhu->clk = clk_get(&pdev->dev, "clk");
+> +	if (unlikely(IS_ERR(mhu->clk))) {
+> +		dev_err(&pdev->dev, "unable to init clock\n");
+
+Don't bail out if there's no clock specified in DT. Clock might not
+be a hard requirement.
+
+> +		kfree(mhu);
+> +		return -EINVAL;
+> +	}
+> +	clk_prepare_enable(mhu->clk);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mhu->base = ioremap(res->start, resource_size(res));
+> +	if (!mhu->base) {
+> +		dev_err(&pdev->dev, "ioremap failed.\n");
+> +		kfree(mhu);
+> +		return -EBUSY;
+> +	}
+> +
+> +	/* Let UnTrustedOS's access violations don't bother us */
+> +	writel_relaxed(0, mhu->base + MHU_SCFG);
+> +
+
+Please don't do this. It can't work in non-secure mode. The firmware running
+with secure access needs to configure this appropriately.
+
+I might be missing to see, is there a binding document for this mhu ?
+
+> +	for (i = 0; i < 3; i++) {
+> +		mhu->chan[i].con_priv = &mhu->mlink[i];
+> +		spin_lock_init(&mhu->mlink[i].lock);
+> +		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+> +		mhu->mlink[i].irq = res->start;
+> +		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
+> +		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + 0x100;
+> +	}
+> +
+> +	mhu->mbox.dev = &pdev->dev;
+> +	mhu->mbox.chans = &mhu->chan[0];
+> +	mhu->mbox.num_chans = 3;
+
+Change this to 2, we shouldn't expose secular channel here as Linux can't
+access that anyway.
+
+> +	mhu->mbox.ops = &mhu_ops;
+> +	mhu->mbox.txdone_irq = false;
+> +	mhu->mbox.txdone_poll = true;
+> +	mhu->mbox.txpoll_period = 10;
+> +
+> +	platform_set_drvdata(pdev, mhu);
+> +
+> +	err = mbox_controller_register(&mhu->mbox);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Failed to register mailboxes %d\n", err);
+> +		iounmap(mhu->base);
+> +		kfree(mhu);
+> +	} else {
+> +		dev_info(&pdev->dev, "Fujitsu MHU Mailbox registered\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+Also to be module you need add remove.
+
+> +static const struct of_device_id f_mhu_dt_ids[] = {
+> +	{ .compatible = "fujitsu,mhu" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, f_mhu_dt_ids);
+> +
+> +static struct platform_driver f_mhu_driver = {
+> +	.driver		= {
+> +		.name	= "f_mhu",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = f_mhu_dt_ids,
+> +	},
+> +	.probe		= f_mhu_probe,
+> +};
+> +
+> +static int __init f_mhu_init(void)
+> +{
+> +	return platform_driver_register(&f_mhu_driver);
+> +}
+> +module_init(f_mhu_init);
+
+This can be module_platform_driver instead.
+
+Regards,
+Sudeep
+
+[1] 
+http://www.arm.com/products/tools/development-boards/versatile-express/juno-arm-development-platform.php
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
