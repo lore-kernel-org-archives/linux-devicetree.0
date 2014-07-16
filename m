@@ -1,64 +1,180 @@
 From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 02/12] Documentation: bindings: add reset bindings docs for Marvell Berlin SoCs
-Date: Wed, 16 Jul 2014 10:25:56 +0200
-Message-ID: <1405499166-6726-3-git-send-email-antoine.tenart@free-electrons.com>
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v3 01/12] reset: add the Berlin reset controller driver
+Date: Wed, 16 Jul 2014 10:25:55 +0200
+Message-ID: <1405499166-6726-2-git-send-email-antoine.tenart@free-electrons.com>
 References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the reset binding documentation to the SoC binding documentation as
-the reset driver in Marvell Berlin SoC is part of the chip/system
-control registers. This patch adds the required properties to configure
-the reset controller.
+Add a reset controller for Marvell Berlin SoCs which is used by the
+USB PHYs drivers (for now).
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- Documentation/devicetree/bindings/arm/marvell,berlin.txt | 10 ++++++++=
-++
- 1 file changed, 10 insertions(+)
+ drivers/reset/Makefile       |   1 +
+ drivers/reset/reset-berlin.c | 131 +++++++++++++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 132 insertions(+)
+ create mode 100644 drivers/reset/reset-berlin.c
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt b=
-/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-index 94013a9a8769..32a1a8a652ad 100644
---- a/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-@@ -90,11 +90,21 @@ Required subnode-properties:
- - groups: a list of strings describing the group names.
- - function: a string describing the function used to mux the groups.
-=20
-+* Reset controller binding
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 60fed3d7820b..157d421f755b 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_RESET_CONTROLLER) +=3D core.o
+ obj-$(CONFIG_ARCH_SOCFPGA) +=3D reset-socfpga.o
++obj-$(CONFIG_ARCH_BERLIN) +=3D reset-berlin.o
+ obj-$(CONFIG_ARCH_SUNXI) +=3D reset-sunxi.o
+ obj-$(CONFIG_ARCH_STI) +=3D sti/
+diff --git a/drivers/reset/reset-berlin.c b/drivers/reset/reset-berlin.=
+c
+new file mode 100644
+index 000000000000..7b894047a81d
+--- /dev/null
++++ b/drivers/reset/reset-berlin.c
+@@ -0,0 +1,131 @@
++/*
++ * Copyright (C) 2014 Marvell Technology Group Ltd.
++ *
++ * Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+A reset controller is part of the chip control registers set. The chip=
- control
-+node also provides the reset. The register set is not at the same offs=
-et between
-+Berlin SoCs.
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/types.h>
 +
-+Required property:
-+- #reset-cells: must be set to 2
++#define BERLIN_MAX_RESETS	32
 +
- Example:
-=20
- chip: chip-control@ea0000 {
- 	compatible =3D "marvell,berlin2-chip-ctrl";
- 	#clock-cells =3D <1>;
-+	#reset-cells =3D <2>;
- 	reg =3D <0xea0000 0x400>;
- 	clocks =3D <&refclk>, <&externaldev 0>;
- 	clock-names =3D "refclk", "video_ext0";
++#define to_berlin_reset_priv(p)		\
++	container_of((p), struct berlin_reset_priv, rcdev)
++
++struct berlin_reset_priv {
++	void __iomem			*base;
++	unsigned int			size;
++	struct reset_controller_dev	rcdev;
++};
++
++static int berlin_reset_reset(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	struct berlin_reset_priv *priv =3D to_berlin_reset_priv(rcdev);
++	int offset =3D id >> 8;
++	int mask =3D BIT(id & 0xff);
++
++	writel(mask, priv->base + offset);
++
++	/* let the reset be effective */
++	udelay(10);
++
++	return 0;
++}
++
++static struct reset_control_ops berlin_reset_ops =3D {
++	.reset	=3D berlin_reset_reset,
++};
++
++static int berlin_reset_xlate(struct reset_controller_dev *rcdev,
++			      const struct of_phandle_args *reset_spec)
++{
++	struct berlin_reset_priv *priv =3D to_berlin_reset_priv(rcdev);
++	unsigned offset, bit;
++
++	if (WARN_ON(reset_spec->args_count !=3D rcdev->of_reset_n_cells))
++		return -EINVAL;
++
++	offset =3D reset_spec->args[0];
++	bit =3D reset_spec->args[1];
++
++	if (offset >=3D priv->size)
++		return -EINVAL;
++
++	if (bit >=3D BERLIN_MAX_RESETS)
++		return -EINVAL;
++
++	return (offset << 8) | bit;
++}
++
++static int __berlin_reset_init(struct device_node *np)
++{
++	struct berlin_reset_priv *priv;
++	struct resource res;
++	resource_size_t size;
++	int ret;
++
++	priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	ret =3D of_address_to_resource(np, 0, &res);
++	if (ret)
++		goto err;
++
++	size =3D resource_size(&res);
++	priv->base =3D ioremap(res.start, size);
++	if (!priv->base) {
++		ret =3D -ENOMEM;
++		goto err;
++	}
++	priv->size =3D size;
++
++	priv->rcdev.owner =3D THIS_MODULE;
++	priv->rcdev.ops =3D &berlin_reset_ops;
++	priv->rcdev.of_node =3D np;
++	priv->rcdev.of_reset_n_cells =3D 2;
++	priv->rcdev.of_xlate =3D berlin_reset_xlate;
++
++	reset_controller_register(&priv->rcdev);
++
++	return 0;
++
++err:
++	kfree(priv);
++	return ret;
++}
++
++static const struct of_device_id berlin_reset_of_match[] __initconst =3D=
+ {
++	{ .compatible =3D "marvell,berlin2-chip-ctrl" },
++	{ .compatible =3D "marvell,berlin2cd-chip-ctrl" },
++	{ .compatible =3D "marvell,berlin2q-chip-ctrl" },
++	{ },
++};
++
++static int __init berlin_reset_init(void)
++{
++	struct device_node *np;
++	int ret;
++
++	for_each_matching_node(np, berlin_reset_of_match) {
++		ret =3D __berlin_reset_init(np);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++arch_initcall(berlin_reset_init);
 --=20
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
