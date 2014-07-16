@@ -1,172 +1,64 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
-Date: Wed, 16 Jul 2014 07:55:29 +0530
-Message-ID: <CAPdUM4N0UyMzvy4vXrVNu0y60=d6J5Zs-hCcD6u1dvCA7Eu-xg@mail.gmail.com>
-References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
-	<CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
-	<53A12EA3.5010007@samsung.com>
-	<CAPdUM4OK+ATMMRM67dV5JeeTGMu=XA7Gvi7Uif+Hypf3iP+6jg@mail.gmail.com>
-	<CAPdUM4MToVJC5KRS1DUDmYEdUx2PGBE0G1v7p-SGgqpw7SPOhw@mail.gmail.com>
-	<53BC0F8F.4010106@samsung.com>
-	<CAPdUM4NGXDz-bX=qqzC7LXRE5fCapdHGZeUZ29Xov=P7VZykgg@mail.gmail.com>
-	<CAPdUM4P7sijj_-fa_Opuo73ugAW7coUDZ+UnSp_tnjkHacJFVw@mail.gmail.com>
-	<53C5BAD6.5030603@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53C5BAD6.5030603@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, sunil joshi <joshi@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
+Subject: [PATCH] drivers/rtc/rtc-isl12022.c: Device tree support
+Date: Wed, 16 Jul 2014 12:28:25 +1000
+Message-ID: <1405477705-16885-2-git-send-email-stuartl@vrt.com.au>
+References: <1405477705-16885-1-git-send-email-stuartl@vrt.com.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405477705-16885-1-git-send-email-stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roman Fietze <roman.fietze-rVvtEhYSWBkAey3BTtE3dg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Kukjin,
+Add some support for configuring isl12020/isl12022 devices using the
+Device Tree blob.
 
-This is not a regression but Display domain in exynos5420 was never
-tested well before posting this patch in mainline. This is causing problems
-in drm probe deferring due to late init of bridge chip. Domain fails to disable
-after few enable/disable iterations during boot. Without this patch DP also
-fails to sync with video stream after resume from suspend. This patch is a
-blocker for above 2 use cases.
+Signed-off-by: Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
+---
+ drivers/rtc/rtc-isl12022.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Regards,
-Rahul Sharma.
+diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
+index 03b8911..aa55f08 100644
+--- a/drivers/rtc/rtc-isl12022.c
++++ b/drivers/rtc/rtc-isl12022.c
+@@ -17,6 +17,8 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #define DRV_VERSION "0.1"
+ 
+@@ -271,6 +273,13 @@ static int isl12022_probe(struct i2c_client *client,
+ 	return PTR_ERR_OR_ZERO(isl12022->rtc);
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id isl12022_dt_match[] = {
++	{ .compatible = "isl,isl12022" },
++	{ },
++};
++#endif
++
+ static const struct i2c_device_id isl12022_id[] = {
+ 	{ "isl12022", 0 },
+ 	{ }
+@@ -280,6 +289,9 @@ MODULE_DEVICE_TABLE(i2c, isl12022_id);
+ static struct i2c_driver isl12022_driver = {
+ 	.driver		= {
+ 		.name	= "rtc-isl12022",
++#ifdef CONFIG_OF
++		.of_match_table = of_match_ptr(isl12022_dt_match),
++#endif
+ 	},
+ 	.probe		= isl12022_probe,
+ 	.id_table	= isl12022_id,
+-- 
+1.8.5.5
 
-On 16 July 2014 05:05, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> On 07/14/14 18:09, Rahul Sharma wrote:
->>
->> Hi Kukjin,
->>
-> Hi Rahul,
->
->
->> Please consider this patch for your branch. This patch is important
->> for Display for Exynos5 boards.
->>
-> OK, I will take this for exynos5420 display for 3.17...BTW I'm not sure this
-> is a regression for 3.16 or not...if so, please let me know.
->
-> Thanks,
-> Kukjin
->
->
->> Regards,
->> Rahul Sharma.
->>
->> On 9 July 2014 17:00, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
->>>
->>> Hi Tomasz,
->>>
->>> On 8 July 2014 21:04, Tomasz Figa<t.figa@samsung.com>  wrote:
->>>>
->>>> Hi Rahul,
->>>>
->>>> On 07.07.2014 15:37, Rahul Sharma wrote:
->>>>>
->>>>> Hi Andrej, Inki,
->>>>>
->>>>> On 18 June 2014 12:06, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
->>>>>>
->>>>>> Hi Andrej,
->>>>>>
->>>>>> On 18 June 2014 11:46, Andrzej Hajda<a.hajda@samsung.com>  wrote:
->>>>>>>
->>>>>>> On 06/17/2014 07:49 AM, Rahul Sharma wrote:
->>>>>>>>
->>>>>>>> Hi All,
->>>>>>>>
->>>>>>>> Please review this patch.
->>>>>>>>
->>>>>>>> Regards,
->>>>>>>> Rahul Sharma
->>>>>>>>
->>>>>>>> On 9 June 2014 16:58, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
->>>>>>>>>
->>>>>>>>> Display domain is removed due to instability issues. Explaining
->>>>>>>>> the problem below:
->>>>>>>>>
->>>>>>>>> exynos_init_late triggers the pm_genpd_poweroff_unused which
->>>>>>>>> powers off the unused power domains. This call hits before
->>>>>>>>> the trigger to deferred probes.
->>>>>>>>>
->>>>>>>>> DRM DP Panel defers the probe due to supply get failure. By the
->>>>>>>>> time, deferred probe is scheduled again, Display Power Domain is
->>>>>>>>> powered off by pm_genpd_poweroff_unused.
->>>>>>>>>
->>>>>>>>> FIMD and DP drivers are accessing registers during Probe and Bind
->>>>>>>>> callbacks. If display domain is enabled/disabled around register
->>>>>>>>> accesses, display domain gets unstable and we are getting Power
->>>>>>>>> Domain Disable fail notification. Increasing the Timeout also
->>>>>>>>> didn't help.
->>>>>>>
->>>>>>>
->>>>>>> As I understand the problem is that fimd and dp drivers access hw
->>>>>>> registers without enabling power domain. So the proper solution is to
->>>>>>> fix these drivers.
->>>>>>
->>>>>>
->>>>>> That is also a problem but I fixed those accesses in my local kernel
->>>>>> before
->>>>>> hitting this issue. If we do register accesses in FIMD/DP probe/bind
->>>>>> we
->>>>>> observes "Prefetch abort" exception. But here the problem is that 'DP
->>>>>> domain disable' starts failing if we enable/disable multiple times.
->>>>>>
->>>>>>>
->>>>>>> Btw. there are already patches removing hw access from probe/bind of
->>>>>>> fimd. I guess removing also hw access from dp probe/bind could be a
->>>>>>> good
->>>>>>> solution.
->>>>>>
->>>>>>
->>>>>> Please let me know the links for posted patches. I will test with
->>>>>> those patches.
->>>>>
->>>>>
->>>>> Is there any update on this? Please share the patches which fixes the
->>>>> above issue or avoid the above scenario of multiple PM Domain
->>>>> enable/disable.
->>>>> I will test them for exynos5 based boards. Otherwise we should get this
->>>>> change
->>>>> merged else display will remain broken for exynos5 based boards.
->>>>
->>>>
->>>> Andrzej is on holidays right now, so he won't be able to reply in this
->>>> thread until he's back. Here are two patches I was able to find on the
->>>> related MLs that might be fixing the cause of your issues:
->>>
->>>
->>> Ok. thanks for the update.
->>>
->>> We should test with Ajay's patches which includes DP probe deferring
->>> based on availability of bridge chip. +
->>>
->>> few patches which cleanup register access in FIMD and DP probe/bind
->>> OR
->>> few patches to enable Display power domain and clocks just before the
->>> register access. As done in https://lkml.org/lkml/2014/7/4/188.
->>>
->>> Later solution results into display power domain enable failure in case
->>> of DRM
->>> probe defer.
->>>
->>> I am just curious if Andrej has some solution for the first approach
->>> which can
->>> be tested for defer probe and S2R scenarios.
->>>
->>> Regards,
->>> Rahul Sharma.
->>>
->>>>
->>>> [PATCH] drm/exynos: remove hardware overlays disable from fimd probe
->>>>
->>>> (https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31629.html)
->>>>
->>>> [PATCH] drm/exynos: fimd: Keep power enabled during fimd_bind
->>>> (https://lkml.org/lkml/2014/7/4/188)
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
