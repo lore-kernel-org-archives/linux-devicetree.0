@@ -1,90 +1,44 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2 2/2] net: davinci_mdio: allow to create phys from dt
-Date: Wed, 16 Jul 2014 15:13:03 +0300
-Message-ID: <1405512783-20307-3-git-send-email-grygorii.strashko@ti.com>
-References: <1405512783-20307-1-git-send-email-grygorii.strashko@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Wed, 16 Jul 2014 13:32:44 +0200
+Message-ID: <5773443.uubaG3Evxs@wuerfel>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org> <5340858.B9CZUE8s0j@wuerfel> <53C65F22.20101@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405512783-20307-1-git-send-email-grygorii.strashko@ti.com>
+In-Reply-To: <53C65F22.20101@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, santosh.shilimkar@ti.com, netdev@vger.kernel.org
-Cc: prabhakar.csengg@gmail.com, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, mugunthanvnm@ti.com, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, "mporter@linaro.org" <mporter@linaro.org>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "s-anna@ti.com" <s-anna@ti.com>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "patches@linaro.org" <patches@linaro.org>, "Mollie.Wu@tw.fujitsu.com" <Mollie.Wu@tw.fujitsu.com>, t.takinishi@jp.fu
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to create PHYs from DT in case
-if they are explicitly defined. The of_mdiobus_register() is
-used for such purposes.
+On Wednesday 16 July 2014 12:16:50 Sudeep Holla wrote:
+> 
+> Agreed if these mbox-names are more specific to attached devices and that
+> was my initial understanding too. But I got confused when I saw something
+> like below in the patch[1]
+> 
+> +       mhu: mhu0@2b1f0000 {
+> +               #mbox-cells = <1>;
+> +               compatible = "fujitsu,mhu";
+> +               reg = <0 0x2B1F0000 0x1000>;
+> +               interrupts = <0 36 4>, /* LP Non-Sec */
+> +                            <0 35 4>, /* HP Non-Sec */
+> +                            <0 37 4>; /* Secure */
+> +       };
+> +
+> +       mhu_client: scb@0 {
+> +               compatible = "fujitsu,scb";
+> +               mbox = <&mhu 1>;
+> +               mbox-names = "HP_NonSec";
+> +       };
+> 
+> Here the name used is more controller specific.
 
-For backward compatibility, call  of_mdiobus_register() only in case
-if at least one PHY's child is defined in DT, otherwise rollback to
-mdiobus_register().
+The name is definitely specific to the client, not the master. The
+string "HP_NonSec" should be required in the binding for the "fujitsu,scb"
+device here, and the scb driver should pass that hardcoded string
+to the mailbox API to ask for a channel.
 
-Reviewed-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
-Hi Santosh,
-
-I haven't changed style for long-comments, because Networking subsystem
-requires first line of comment not to be empty:
-WARNING:NETWORKING_BLOCK_COMMENT_STYLE: networking block comments don't use an empty /* line, use /* Comment...
-
- drivers/net/ethernet/ti/davinci_mdio.c |   21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-index 735dc53..2791f6f 100644
---- a/drivers/net/ethernet/ti/davinci_mdio.c
-+++ b/drivers/net/ethernet/ti/davinci_mdio.c
-@@ -38,6 +38,7 @@
- #include <linux/davinci_emac.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_mdio.h>
- #include <linux/pinctrl/consumer.h>
- 
- /*
-@@ -95,6 +96,10 @@ struct davinci_mdio_data {
- 	struct mii_bus	*bus;
- 	bool		suspended;
- 	unsigned long	access_time; /* jiffies */
-+	/* Indicates that driver shouldn't modify phy_mask in case
-+	 * if MDIO bus is registered from DT.
-+	 */
-+	bool		skip_scan;
- };
- 
- static void __davinci_mdio_reset(struct davinci_mdio_data *data)
-@@ -144,6 +149,9 @@ static int davinci_mdio_reset(struct mii_bus *bus)
- 	dev_info(data->dev, "davinci mdio revision %d.%d\n",
- 		 (ver >> 8) & 0xff, ver & 0xff);
- 
-+	if (data->skip_scan)
-+		return 0;
-+
- 	/* get phy mask from the alive register */
- 	phy_mask = __raw_readl(&data->regs->alive);
- 	if (phy_mask) {
-@@ -369,8 +377,17 @@ static int davinci_mdio_probe(struct platform_device *pdev)
- 		goto bail_out;
- 	}
- 
--	/* register the mii bus */
--	ret = mdiobus_register(data->bus);
-+	/* register the mii bus
-+	 * Create PHYs from DT only in case if PHY child nodes are explicitly
-+	 * defined to support backward compatibility with DTs which assume that
-+	 * Davinci MDIO will always scan the bus for PHYs detection.
-+	 */
-+	if (dev->of_node && of_get_child_count(dev->of_node)) {
-+		data->skip_scan = true;
-+		ret = of_mdiobus_register(data->bus, dev->of_node);
-+	} else {
-+		ret = mdiobus_register(data->bus);
-+	}
- 	if (ret)
- 		goto bail_out;
- 
--- 
-1.7.9.5
+	Arnd
