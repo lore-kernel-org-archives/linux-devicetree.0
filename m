@@ -1,64 +1,34 @@
-From: Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
-Subject: [PATCH] drivers/rtc/rtc-isl12022.c: Device tree support
-Date: Wed, 16 Jul 2014 12:28:25 +1000
-Message-ID: <1405477705-16885-2-git-send-email-stuartl@vrt.com.au>
-References: <1405477705-16885-1-git-send-email-stuartl@vrt.com.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405477705-16885-1-git-send-email-stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roman Fietze <roman.fietze-rVvtEhYSWBkAey3BTtE3dg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
+From: Stuart Longland <stuartl@vrt.com.au>
+Subject: Add device tree support to ISL12022 driver
+Date: Wed, 16 Jul 2014 12:28:24 +1000
+Message-ID: <1405477705-16885-1-git-send-email-stuartl@vrt.com.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roman Fietze <roman.fietze@telemotive.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add some support for configuring isl12020/isl12022 devices using the
-Device Tree blob.
+Hi all,
 
-Signed-off-by: Stuart Longland <stuartl-EoQOJlg3kTYQrrorzV6ljw@public.gmane.org>
----
- drivers/rtc/rtc-isl12022.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The attached patch adds support for configuring the ISL12022 real-time clock
+via the Device tree framework.  This is based on what I've seen in the related
+ISL12057 driver, it has been tested and works on a Technologic Systems TS-7670
+device which uses a ISL12020 RTC device, my device tree looks like this:
 
-diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
-index 03b8911..aa55f08 100644
---- a/drivers/rtc/rtc-isl12022.c
-+++ b/drivers/rtc/rtc-isl12022.c
-@@ -17,6 +17,8 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #define DRV_VERSION "0.1"
- 
-@@ -271,6 +273,13 @@ static int isl12022_probe(struct i2c_client *client,
- 	return PTR_ERR_OR_ZERO(isl12022->rtc);
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id isl12022_dt_match[] = {
-+	{ .compatible = "isl,isl12022" },
-+	{ },
-+};
-+#endif
-+
- static const struct i2c_device_id isl12022_id[] = {
- 	{ "isl12022", 0 },
- 	{ }
-@@ -280,6 +289,9 @@ MODULE_DEVICE_TABLE(i2c, isl12022_id);
- static struct i2c_driver isl12022_driver = {
- 	.driver		= {
- 		.name	= "rtc-isl12022",
-+#ifdef CONFIG_OF
-+		.of_match_table = of_match_ptr(isl12022_dt_match),
-+#endif
- 	},
- 	.probe		= isl12022_probe,
- 	.id_table	= isl12022_id,
--- 
-1.8.5.5
+	apbx@80040000 {
+		i2c0: i2c@80058000 {
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c0_pins_a>;
+			clock-frequency = <400000>;
+			status = "okay";
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+			isl12022@0x6f {
+				compatible = "isl,isl12022";
+				reg = <0x6f>;
+			};
+		};
+		... etc
+	};
+
+Regards,
+Stuart Longland
