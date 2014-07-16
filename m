@@ -1,74 +1,79 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: rockchip: add debug uart used by rk3288
-Date: Wed, 16 Jul 2014 08:09:27 -0700
-Message-ID: <CAD=FV=U9NviQ24CkbUCEMrWTLyXFb2FwT2wAHtKA7SF2PSFVdw@mail.gmail.com>
-References: <1471578.ILeMmG2DL6@diego>
-	<2866950.oXmKFGy9mh@diego>
-	<CAD=FV=W3aWeT3RP5_g9r8kV8ToeHfyn57JY-py2zGVW9DF_7RQ@mail.gmail.com>
-	<4054962.m70Hhy4CVc@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4054962.m70Hhy4CVc@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 0/4] spi: s3c64xx: fix DT binding breakage
+Date: Wed, 16 Jul 2014 17:19:06 +0200
+Message-ID: <1405523950-2231-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@samsung.com>, Sachin Kamat <sachin.kamat@samsung.com>, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+Hello Mark,
 
-On Wed, Jul 16, 2014 at 2:11 AM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
-rote:
-> Am Dienstag, 15. Juli 2014, 21:13:10 schrieb Doug Anderson:
->> Heiko,
->>
->> On Tue, Jul 15, 2014 at 4:00 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org=
-> wrote:
->> > The uarts on rk3288 are still compatible with the dw_8250, but loc=
-ated
->> > at a different position and need DEBUG_UART_8250_WORD enabled.
->> >
->> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->> > ---
->> >
->> >  arch/arm/Kconfig.debug | 12 +++++++++++-
->> >  1 file changed, 11 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
->> > index 8f90595..f68def0 100644
->> > --- a/arch/arm/Kconfig.debug
->> > +++ b/arch/arm/Kconfig.debug
->> > @@ -613,6 +613,14 @@ choice
->> >
->> >                   Say Y here if you want kernel low-level debuggin=
-g
->> >                   support
->> >                   on Rockchip based platforms.
->> >
->> > +       config DEBUG_RK32_UART2
->>
->> It's slightly confusing that you didn't rename the old "DEBUG_RK3X_U=
-ART2".
->
-> My problem is, to what :-) ... DEBUG_RK30_UART2 ?
->
-> RK30xx and RK31xx share these, but I guess at least the description s=
-hould be
-> adapted.
+The s3c64xx SPI driver DT binding is currently broken. Commit
+3146bee ("spi: s3c64xx: Added provision for dedicated cs pin")
+added a new "cs-gpio" property and made it a requirement in
+order to make the driver behave in the same way that it used to.
 
-Yeah, trying to get these things right is an impossible task.  The
-only thing I've ever seen that's sane is to just name things after the
-first person in the code base to use them rather than trying to guess
-ahead of time how similar products with similar marketing name will be
-in the future.
+The motivation of the offending commit was to allow boards that
+want to use the native chip select (instead of a GPIO) to work
+with the s3c64xx SPI driver. Something that was not possible
+before since the driver made it mandatory to specify a GPIO.
 
-=2E..agree that even if you don't do the rename here that updating the
-description would be nice.
+Unfortunately the commit also changed the driver defaults since
+now besides specifying a GPIO, it makes mandatory to also specify
+that a GPIO is used while the default used to be the opposite.
 
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That mean that old FDT are not working anymore after 3146bee
+so DT backward compatibility was not ensured by that commit.
+
+This is a follow-up series from a previous one posted by Naveen
+Krishna [0] which attempts to solve the issue.
+
+The feedback from Naveen's series was that the patches did not
+provide a clear explanation about the rationale and goal of both
+the series as a whole and the individual changes [1].
+
+So I tried to take Navee's series and rework them to provide
+an easier to understand patch series.
+
+The series is composed of the following patches:
+
+Javier Martinez Canillas (1):
+  Revert "spi: s3c64xx: Added provision for dedicated cs pin"
+
+Naveen Krishna Chatradhi (3):
+  spi: s3c64xx: use the generic SPI "cs-gpios" property
+  spi: samsung: Update binding documentation
+  ARM: DTS: fix the chip select gpios definition in the SPI nodes
+
+ .../devicetree/bindings/spi/spi-samsung.txt        |  8 ++--
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |  2 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts            |  2 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |  2 +-
+ drivers/spi/spi-s3c64xx.c                          | 54 ++++++++++------------
+ 5 files changed, 30 insertions(+), 38 deletions(-)
+
+Patch 01/04 reverts the offending commit since it not only broke
+the DT binding but also introduced a confusing "cs-gpio" property
+while the driver already used a property with the same name.
+
+Patch 02/04 fixes the DT binding for good by using the SPI core
+"cs-gpios" property to specify the chip select GPIO instead of
+using a custom property only used by this driver. This change
+breaks backward compatibility but this has been broken for more
+than a year and nobody complained so I think it's safe to change
+it again in favor of using standard DT binding properties.
+
+A benefit of Patch 02/04 is that it allows DT and legacy boards
+that need to use the built-in CS instead of a GPIO to work with
+the driver which was the original motivation of the broken commit.
+
+Patch 03/04 updates the driver binding documentation accordingly
+and patch 04/04 updates all the DTS board files in mainline.
+
+Best regards,
+Javier
+
+[0]: http://www.spinics.net/lists/linux-samsung-soc/msg34163.html
+[1]: http://www.spinics.net/lists/linux-samsung-soc/msg34309.html
