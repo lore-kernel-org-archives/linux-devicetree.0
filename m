@@ -1,59 +1,30 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH v5 1/2] can: m_can: add device tree binding
- documentation
-Date: Wed, 16 Jul 2014 18:40:54 +0800
-Message-ID: <20140716104054.GB20184@shlinux1.ap.freescale.net>
-References: <1405503050-16796-1-git-send-email-b29396@freescale.com>
- <53C64E51.9050606@pengutronix.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v3 1/7] clk: exynos5250: add aliases for clocks used by
+ devfreq
+Date: Wed, 16 Jul 2014 12:50:18 +0200
+Message-ID: <53C658EA.2050902@samsung.com>
+References: <1400779322-4410-2-git-send-email-a.kesavan@samsung.com>
+ <1405449222-26186-1-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53C64E51.9050606@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-can@vger.kernel.org, wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com, robh+dt@kernel.org, grant.likely@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1405449222-26186-1-git-send-email-a.kesavan@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Abhilash Kesavan <a.kesavan@samsung.com>, myungjoo.ham@samsung.com, linux-pm@vger.kernel.org, kgene.kim@samsung.com
+Cc: rjw@sisk.pl, kesavan.abhilash@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 12:05:05PM +0200, Marc Kleine-Budde wrote:
-> On 07/16/2014 11:30 AM, Dong Aisheng wrote:
-> > add M_CAN device tree binding documentation
-> > 
-> > Cc: Wolfgang Grandegger <wg@grandegger.com>
-> > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-> > Cc: Varka Bhadram <varkabhadram@gmail.com>
-> > Signed-off-by: Dong Aisheng <b29396@freescale.com>
-> > ---
-> > Changes since v4:
-> > - change the name of board dtsi to board dts which is more common
-> > 
-> > Changes since v3:
-> > - change mram-cfg property name to bosch,mram-cfg
-> > - indent change
-> > ---
-> >  .../devicetree/bindings/net/can/m_can.txt          |   67 ++++++++++++++++++++
-> >  1 files changed, 67 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+Hi Abhilash, Andrew,
+
+On 15.07.2014 20:33, Abhilash Kesavan wrote:
+> From: Andrew Bresticker <abrestic@chromium.org>
 > 
-> I'll apply this series once we've got an Ack for the DT folks.
-> 
+> Devfreq does not support DT-based lookup of these peripheral clocks,
+> so add aliases for them.
 
-Okay, thanks!
+I'm afraid I have to NAK this. This is going backwards. Please fix the
+devfreq driver instead.
 
-Copy Grant, Rob and Mark in case they have comments.
-
-Regards
-Dong Aisheng
-
-> Marc
-> 
-> -- 
-> Pengutronix e.K.                  | Marc Kleine-Budde           |
-> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-> 
-
-
+Best regards,
+Tomasz
