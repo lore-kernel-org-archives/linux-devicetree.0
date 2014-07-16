@@ -1,122 +1,71 @@
-From: Vincent.Yang <Vincent.Yang@tw.fujitsu.com>
-Subject: RE: [PATCH 2/8] mmc: sdhci: host: add new f_sdh30
-Date: Wed, 16 Jul 2014 19:07:49 +0800
-Message-ID: <830AC58E49A426478AC39824BC0FA915D8B8FF061A@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
-References: <1405232971-4607-1-git-send-email-mollie.wu@linaro.org>
- <7710458.qT0KZ5qsA6@wuerfel>
- <830AC58E49A426478AC39824BC0FA915D8B8FF0609@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
- <5526913.sJ4RMkanr6@wuerfel>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
+Date: Wed, 16 Jul 2014 12:16:50 +0100
+Message-ID: <53C65F22.20101@arm.com>
+References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org> <1405071325-14683-1-git-send-email-jaswinder.singh@linaro.org> <53C64883.2050709@arm.com> <5340858.B9CZUE8s0j@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5526913.sJ4RMkanr6@wuerfel>
-Content-Language: zh-TW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mollie Wu <mollie.wu@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, "anton@enomsg.org" <anton@enomsg.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "chris@printf.net" <chris@printf.net>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "patches@linaro.org" <patches@linaro.org>, "olof@lixom.net" <olof@lixom.net>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5340858.B9CZUE8s0j@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org" <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org" <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, "lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "loic.pallardy-qxv4g6HH51o@public.gmane.org" <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "s-anna-l0cyMroinI0@public.gmane.org" <s-anna-l0cyMroinI0@public.gmane.org>, "ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org" <Mollie.W>
 List-Id: devicetree@vger.kernel.org
 
->-----Original Message-----
->From: Arnd Bergmann [mailto:arnd@arndb.de]
->On Wednesday 16 July 2014 17:35:41 Vincent. Yang wrote:
->
->> >
->> >> +unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
->> >> +{
->> >> +     return F_SDH30_MIN_CLOCK;
->> >> +}
->> >> +
->> >> +void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
->> >> +{
->> >> +     struct f_sdhost_priv *priv = sdhci_priv(host);
->> >> +
->> >> +     if (gpio_is_valid(priv->gpio_select_1v8))
->> >> +             gpio_direction_output(priv->gpio_select_1v8, 1);
->> >> +
->> >> +     if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0) {
->> >> +             sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
->> >> +             mmiowb();
->> >> +     }
->> >
->> >Can you explain the mmiowb call here?
+
+
+On 16/07/14 11:16, Arnd Bergmann wrote:
+> On Wednesday 16 July 2014 10:40:19 Sudeep Holla wrote:
+>>> +
+>>> +Required property:
+>>> +- mbox: List of phandle and mailbox channel specifier.
+>>> +
+>>> +- mbox-names: List of identifier strings for each mailbox channel
+>>> +               required by the client.
+>>> +
 >>
->> This came from the original 3.0 based driver. It's trying to be a
->> write memory barrier. It wants to ensure the clock control change
->> actually happened before the following code.
->> I'll change it to a regular wmb in next version.
+>> IMO the mailbox names are more associated with the controller channels/
+>> mailbox rather than the clients using it. Does it make sense to move
+>> this under controller. It also avoid each client replicating the names.
 >
->Note that with 'readw'/writew', you shouldn't need any extra barriers.
->If sdhci_writew() is readw_relaxed(), wmb() is the correct barrier.
+> I think it would be best to just make the mbox-names property optional,
+> like we have for other subsystems.
+>
 
-Hi Arnd,
-The sdhci_writew() is using writew(), so I shouldn't need any extra
-barriers. I'll remove them in next version.
-Thanks a lot for your review!
+OK that makes sense.
 
+> Doing it in the mbox-controller makes no sense at all, because the
+> mbox controller has (or should have) no idea what the attached devices are.
+>
 
-Best regards,
-Vincent Yang
+Agreed if these mbox-names are more specific to attached devices and that
+was my initial understanding too. But I got confused when I saw something
+like below in the patch[1]
 
->
->> >> +
->> >> +     if (!of_property_read_u32(pdev->dev.of_node, "bus-width",
->&bus_width))
->> >{
->> >> +             switch (bus_width) {
->> >> +             case 8:
->> >> +                     dev_info(dev, "Applying 8 bit bus width\n");
->> >> +                     host->mmc->caps |= MMC_CAP_8_BIT_DATA;
->> >> +                     break;
->> >> +             case 4:
->> >> +                     dev_info(dev, "Applying 4 bit bus width\n");
->> >> +                     host->mmc->caps |= MMC_CAP_4_BIT_DATA;
->> >> +                     break;
->> >> +             case 1:
->> >> +             default:
->> >> +                     dev_err(dev, "Invalid bus width: %u\n", bus_width);
->> >> +                     break;
->> >> +             }
->> >> +     }
->> >
->> >This should probably be done in generic sdhci code somewhere. How about
->> >adding it to sdhci_get_of_property instead_
->>
->> I should use generic mmc_of_parse for it. I'll update it in next version.
->
->Ah right, I thought we had this in common code already but couldn't find
->it. Using mmc_of_parse() is definitely the correct solution here.
->
->> >> +     priv->clk_sd4 = clk_get(&pdev->dev, "sd_sd4clk");
->> >> +     if (!IS_ERR(priv->clk_sd4)) {
->> >> +             ret = clk_prepare_enable(priv->clk_sd4);
->> >> +             if (ret < 0) {
->> >> +                     dev_err(dev, "Failed to enable sd4 clock: %d\n", ret);
->> >> +                     goto err_clk1;
->> >> +             }
->> >> +     }
->> >> +     priv->clk_b = clk_get(&pdev->dev, "sd_bclk");
->> >> +     if (!IS_ERR(priv->clk_b)) {
->> >> +             ret = clk_prepare_enable(priv->clk_b);
->> >> +             if (ret < 0) {
->> >> +                     dev_err(dev, "Failed to enable clk_b clock: %d\n", ret);
->> >> +                     goto err_clk2;
->> >> +             }
->> >> +     }
->> >
->> >Please pick clock names that match what some of the other drivers use.
->>
->> I'll use "iface" and "core" for clock names because they match what used
->> in sdhci-msm driver.
->
->Ok, makes sense.
->
->        Arnd
++       mhu: mhu0@2b1f0000 {
++               #mbox-cells = <1>;
++               compatible = "fujitsu,mhu";
++               reg = <0 0x2B1F0000 0x1000>;
++               interrupts = <0 36 4>, /* LP Non-Sec */
++                            <0 35 4>, /* HP Non-Sec */
++                            <0 37 4>; /* Secure */
++       };
++
++       mhu_client: scb@0 {
++               compatible = "fujitsu,scb";
++               mbox = <&mhu 1>;
++               mbox-names = "HP_NonSec";
++       };
+
+Here the name used is more controller specific.
+
+Regards,
+Sudeep
+
+[1] http://www.spinics.net/lists/arm-kernel/msg346991.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
