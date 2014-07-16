@@ -1,96 +1,122 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v3 5/7] PM / devfreq: exynos5250: migrate to common-clock
-Date: Wed, 16 Jul 2014 13:03:40 +0200
-Message-ID: <53C65C0C.10200@samsung.com>
-References: <1400779322-4410-6-git-send-email-a.kesavan@samsung.com>
- <1405449332-26350-1-git-send-email-a.kesavan@samsung.com>
+From: Vincent.Yang <Vincent.Yang@tw.fujitsu.com>
+Subject: RE: [PATCH 2/8] mmc: sdhci: host: add new f_sdh30
+Date: Wed, 16 Jul 2014 19:07:49 +0800
+Message-ID: <830AC58E49A426478AC39824BC0FA915D8B8FF061A@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
+References: <1405232971-4607-1-git-send-email-mollie.wu@linaro.org>
+ <7710458.qT0KZ5qsA6@wuerfel>
+ <830AC58E49A426478AC39824BC0FA915D8B8FF0609@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
+ <5526913.sJ4RMkanr6@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1405449332-26350-1-git-send-email-a.kesavan@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Abhilash Kesavan <a.kesavan@samsung.com>, myungjoo.ham@samsung.com, linux-pm@vger.kernel.org, kgene.kim@samsung.com
-Cc: rjw@sisk.pl, kesavan.abhilash@gmail.com, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5526913.sJ4RMkanr6@wuerfel>
+Content-Language: zh-TW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mollie Wu <mollie.wu@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, "anton@enomsg.org" <anton@enomsg.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "chris@printf.net" <chris@printf.net>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "patches@linaro.org" <patches@linaro.org>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Abhilash, Andrew,
+>-----Original Message-----
+>From: Arnd Bergmann [mailto:arnd@arndb.de]
+>On Wednesday 16 July 2014 17:35:41 Vincent. Yang wrote:
+>
+>> >
+>> >> +unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+>> >> +{
+>> >> +     return F_SDH30_MIN_CLOCK;
+>> >> +}
+>> >> +
+>> >> +void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+>> >> +{
+>> >> +     struct f_sdhost_priv *priv = sdhci_priv(host);
+>> >> +
+>> >> +     if (gpio_is_valid(priv->gpio_select_1v8))
+>> >> +             gpio_direction_output(priv->gpio_select_1v8, 1);
+>> >> +
+>> >> +     if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0) {
+>> >> +             sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
+>> >> +             mmiowb();
+>> >> +     }
+>> >
+>> >Can you explain the mmiowb call here?
+>>
+>> This came from the original 3.0 based driver. It's trying to be a
+>> write memory barrier. It wants to ensure the clock control change
+>> actually happened before the following code.
+>> I'll change it to a regular wmb in next version.
+>
+>Note that with 'readw'/writew', you shouldn't need any extra barriers.
+>If sdhci_writew() is readw_relaxed(), wmb() is the correct barrier.
 
-Please see my comments inline.
+Hi Arnd,
+The sdhci_writew() is using writew(), so I shouldn't need any extra
+barriers. I'll remove them in next version.
+Thanks a lot for your review!
 
-On 15.07.2014 20:35, Abhilash Kesavan wrote:
-> From: Andrew Bresticker <abrestic@chromium.org>
-> 
-> Use the common-clock framework to scale frequencies for the various
-> peripheral clocks on the Exynos5250.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> ---
->  drivers/devfreq/exynos/exynos5_bus.c |  131 ++++++++++++++++++++++++++++++----
->  1 file changed, 119 insertions(+), 12 deletions(-)
-
-[snip]
-
-> +
->  static struct int_bus_opp_table exynos5_int_opp_table[] = {
->  	{LV_0, 266000, 1025000},
->  	{LV_1, 200000, 1025000},
-> @@ -75,6 +85,98 @@ static struct int_bus_opp_table exynos5_int_opp_table[] = {
->  	{0, 0, 0},
->  };
->  
-> +static struct int_clk_table aclk_166[] = {
-> +	{LV_0, 167000},
-> +	{LV_1, 111000},
-> +	{LV_2,  84000},
-> +	{LV_3,  84000},
-> +	{LV_4,  42000},
-> +};
-
-[snip]
-
-> +static struct int_clk_table aclk_300_gscl[] = {
-> +	{LV_0, 267000},
-> +	{LV_1, 267000},
-> +	{LV_2, 267000},
-> +	{LV_3, 200000},
-> +	{LV_4, 100000},
-> +};
-
-Shouldn't you manage this using OPP framework and parse this from DT?
-
-> +
-> +#define EXYNOS5_INT_CLK(name, tbl) {		\
-> +	.clk_name = name,			\
-> +	.freq_table = tbl,			\
-> +}
-
-[snip]
-
-> @@ -320,16 +427,16 @@ static int exynos5_busfreq_int_probe(struct platform_device *pdev)
->  	rcu_read_unlock();
->  	data->curr_freq = initial_freq;
->  
-> -	err = clk_set_rate(data->int_clk, initial_freq * 1000);
-> +	err = exynos5_int_setvolt(data, initial_volt);
-> +	if (err)
-> +		return err;
-> +
-> +	err = exynos5_int_set_rate(data, initial_freq);
->  	if (err) {
->  		dev_err(dev, "Failed to set initial frequency\n");
->  		return err;
->  	}
->  
-> -	err = exynos5_int_setvolt(data, initial_volt);
-> -	if (err)
-> -		return err;
-> -
-
-Whether voltage or rate should be set first depends on current settings
-and initial_{freq,volt}. Also it might be more convenient to simply call
-exynos5_busfreq_int_target() here.
 
 Best regards,
-Tomasz
+Vincent Yang
+
+>
+>> >> +
+>> >> +     if (!of_property_read_u32(pdev->dev.of_node, "bus-width",
+>&bus_width))
+>> >{
+>> >> +             switch (bus_width) {
+>> >> +             case 8:
+>> >> +                     dev_info(dev, "Applying 8 bit bus width\n");
+>> >> +                     host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+>> >> +                     break;
+>> >> +             case 4:
+>> >> +                     dev_info(dev, "Applying 4 bit bus width\n");
+>> >> +                     host->mmc->caps |= MMC_CAP_4_BIT_DATA;
+>> >> +                     break;
+>> >> +             case 1:
+>> >> +             default:
+>> >> +                     dev_err(dev, "Invalid bus width: %u\n", bus_width);
+>> >> +                     break;
+>> >> +             }
+>> >> +     }
+>> >
+>> >This should probably be done in generic sdhci code somewhere. How about
+>> >adding it to sdhci_get_of_property instead_
+>>
+>> I should use generic mmc_of_parse for it. I'll update it in next version.
+>
+>Ah right, I thought we had this in common code already but couldn't find
+>it. Using mmc_of_parse() is definitely the correct solution here.
+>
+>> >> +     priv->clk_sd4 = clk_get(&pdev->dev, "sd_sd4clk");
+>> >> +     if (!IS_ERR(priv->clk_sd4)) {
+>> >> +             ret = clk_prepare_enable(priv->clk_sd4);
+>> >> +             if (ret < 0) {
+>> >> +                     dev_err(dev, "Failed to enable sd4 clock: %d\n", ret);
+>> >> +                     goto err_clk1;
+>> >> +             }
+>> >> +     }
+>> >> +     priv->clk_b = clk_get(&pdev->dev, "sd_bclk");
+>> >> +     if (!IS_ERR(priv->clk_b)) {
+>> >> +             ret = clk_prepare_enable(priv->clk_b);
+>> >> +             if (ret < 0) {
+>> >> +                     dev_err(dev, "Failed to enable clk_b clock: %d\n", ret);
+>> >> +                     goto err_clk2;
+>> >> +             }
+>> >> +     }
+>> >
+>> >Please pick clock names that match what some of the other drivers use.
+>>
+>> I'll use "iface" and "core" for clock names because they match what used
+>> in sdhci-msm driver.
+>
+>Ok, makes sense.
+>
+>        Arnd
