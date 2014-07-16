@@ -1,93 +1,35 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v1] clk: qcom: Add APQ8084 Multimedia Clock Controller
- (MMCC) support
-Date: Tue, 15 Jul 2014 16:38:20 -0700
-Message-ID: <53C5BB6C.3090006@codeaurora.org>
-References: <1402591302-12100-1-git-send-email-gdjakov@mm-sol.com> <53C04ED9.6030508@codeaurora.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: rockchip: add core rk3288 dtsi
+Date: Tue, 15 Jul 2014 17:02:40 -0700
+Message-ID: <CAD=FV=X7n1bPHUw7+734x0xui9L1HO1otjczZ+rmKgBX0UdGDw@mail.gmail.com>
+References: <1471578.ILeMmG2DL6@diego>
+	<1868508.hOA6VOBqnH@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53C04ED9.6030508@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1868508.hOA6VOBqnH@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/14 13:53, Stephen Boyd wrote:
-> On 06/12/14 09:41, Georgi Djakov wrote:
->> Add support for the multimedia clock controller found on the APQ8084
->> based platforms. This will allow the multimedia device drivers to
->> control their clocks.
->>
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->> ---
-> I started picking up the qcom clock patches from the list. I see that
-> this one has a small problem though:
->
-> drivers/clk/qcom/mmcc-apq8084.c:169:10: warning: Initializer entry
-> defined twice
-> drivers/clk/qcom/mmcc-apq8084.c:170:10:   also defined here
-> drivers/clk/qcom/mmcc-apq8084.c:185:10: warning: Initializer entry
-> defined twice
-> drivers/clk/qcom/mmcc-apq8084.c:187:10:   also defined here
-> drivers/clk/qcom/mmcc-apq8084.c:203:10: warning: Initializer entry
-> defined twice
-> drivers/clk/qcom/mmcc-apq8084.c:205:10:   also defined here
->
+Heiko,
 
-Ok I've squashed in this fix:
+On Tue, Jul 15, 2014 at 4:02 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
+> +       soc {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               compatible =3D "simple-bus";
+> +               ranges;
 
-diff --git a/drivers/clk/qcom/mmcc-apq8084.c b/drivers/clk/qcom/mmcc-apq8084.c
-index 9cc956a5e9c9..751eea376a2b 100644
---- a/drivers/clk/qcom/mmcc-apq8084.c
-+++ b/drivers/clk/qcom/mmcc-apq8084.c
-@@ -34,12 +34,12 @@
- #define P_HDMIPLL      2
- #define P_GPLL0                3
- #define P_EDPVCO       3
--#define P_MMPLL4       3
--#define P_GPLL1                4
-+#define P_MMPLL4       4
- #define P_DSI0PLL      4
- #define P_DSI0PLL_BYTE 4
- #define P_MMPLL2       4
- #define P_MMPLL3       4
-+#define P_GPLL1                5
- #define P_DSI1PLL      5
- #define P_DSI1PLL_BYTE 5
- #define P_MMSLEEP      6
-@@ -166,8 +166,8 @@ static const u8 mmcc_xo_mmpll0_1_4_gpll0_map[] = {
-        [P_XO]          = 0,
-        [P_MMPLL0]      = 1,
-        [P_MMPLL1]      = 2,
--       [P_MMPLL4]      = 3,
-        [P_GPLL0]       = 5,
-+       [P_MMPLL4]      = 3,
- };
- 
- static const char *mmcc_xo_mmpll0_1_4_gpll0[] = {
-@@ -183,8 +183,8 @@ static const u8 mmcc_xo_mmpll0_1_4_gpll1_0_map[] = {
-        [P_MMPLL0]      = 1,
-        [P_MMPLL1]      = 2,
-        [P_MMPLL4]      = 3,
--       [P_GPLL1]       = 4,
-        [P_GPLL0]       = 5,
-+       [P_GPLL1]       = 4,
- };
- 
- static const char *mmcc_xo_mmpll0_1_4_gpll1_0[] = {
-@@ -201,8 +201,8 @@ static const u8 mmcc_xo_mmpll0_1_4_gpll1_0_sleep_map[] = {
-        [P_MMPLL0]      = 1,
-        [P_MMPLL1]      = 2,
-        [P_MMPLL4]      = 3,
--       [P_GPLL1]       = 4,
-        [P_GPLL0]       = 5,
-+       [P_GPLL1]       = 4,
-        [P_MMSLEEP]     = 6,
- };
+I haven't had time to do a full review, but I believe "soc" grouping
+is not suggested.  See <http://patchwork.ozlabs.org/patch/323194/>
 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
