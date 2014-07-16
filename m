@@ -1,42 +1,96 @@
-From: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
-Date: Wed, 16 Jul 2014 13:52:15 +0800
-Message-ID: <CAAfg0W5vRKamkpz0mJhVWg0Y_bnVG==TWhPEmziqFdkm1irJ5A@mail.gmail.com>
-References: <1405232911-4569-1-git-send-email-mollie.wu@linaro.org>
-	<CAL_JsqKvwxjEDZPVwL646PhPKr7oemBzxr6cZ+X=uJQ2u_XZ8g@mail.gmail.com>
+From: pramod gurav <pramod.gurav.etc@gmail.com>
+Subject: Re: [PATCH v4 3/3] regulator: qcom-rpm: Regulator driver for the
+ Qualcomm RPM
+Date: Wed, 16 Jul 2014 12:31:33 +0530
+Message-ID: <CAMf-jSn2YHF7ihRpXMfkPWYt8pNCj4o395OGha3BHD3K3mUv9g@mail.gmail.com>
+References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1405465241-28684-4-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKvwxjEDZPVwL646PhPKr7oemBzxr6cZ+X=uJQ2u_XZ8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jaswinder Singh <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1405465241-28684-4-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 July 2014 23:11, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Bjorn,
 
->> +               interrupts = <0 324 4>,
->> +                            <0 325 4>;
->> +               clocks = <&clk_alw_6_8>;
->> +       };
+On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> Driver for regulators exposed by the Resource Power Manager (RPM) found
+> in Qualcomm 8660, 8960 and 8064 based devices.
 >
-> No arch timer?
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  drivers/regulator/Kconfig              |  12 +
+>  drivers/regulator/Makefile             |   1 +
+>  drivers/regulator/qcom_rpm-regulator.c | 787 +++++++++++++++++++++++++++++++++
+>  3 files changed, 800 insertions(+)
+.
+.
+[snip]
+.
+.
+> + * Physically available PMIC regulator voltage ranges
+> + */
+> +static const struct regulator_linear_range pldo_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE( 750000,   0,  59, 12500),
 
-As Jassi said he'll solve the rest of the issues you found, but about
-the arch / localtimers... mb86s70 is a sort of initial demonstrator
-for the new technologies in this series for Fujitsu.  As such it has
-some errata and one of them is the localtimers are not workable, the
-clocksource has to be provided instead by sp804.  If we define the
-localtimers, the kernel will prefer them and we will fail to boot due
-to the hardware errata.  So, they should not be defined for this
-particular SoC.
+ERROR: space prohibited after that open parenthesis '('
 
-Later variants fix this errata like mb86s73 (also introduced in this
-patch series) and the Device Tree for that has the arch localtimers as
-you would expect.
+> +       REGULATOR_LINEAR_RANGE(1500000,  60, 123, 25000),
+> +       REGULATOR_LINEAR_RANGE(3100000, 124, 160, 50000),
+> +};
+> +
+> +static const struct regulator_linear_range nldo_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE( 750000,   0,  63, 12500),
 
--Andy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ditto.
+
+> +};
+> +
+> +static const struct regulator_linear_range nldo1200_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE( 375000,   0,  59,  6250),
+> +       REGULATOR_LINEAR_RANGE( 750000,  60, 123, 12500),
+
+Ditto
+
+> +};
+> +
+> +static const struct regulator_linear_range smps_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE( 375000,   0,  29, 12500),
+> +       REGULATOR_LINEAR_RANGE( 750000,  30,  89, 12500),
+> +       REGULATOR_LINEAR_RANGE(1500000,  90, 153, 25000),
+> +};
+> +
+> +static const struct regulator_linear_range ftsmps_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE( 350000,   0,   6, 50000),
+> +       REGULATOR_LINEAR_RANGE( 700000,   7,  63, 12500),
+> +       REGULATOR_LINEAR_RANGE(1500000,  64, 100, 50000),
+> +};
+
+Ditto
+
+> +
+> +static const struct regulator_linear_range ncp_ranges[] = {
+> +       REGULATOR_LINEAR_RANGE(1500000,   0,  31, 50000),
+
+[snip]
+
+> +MODULE_DESCRIPTION("Qualcomm RPM regulator driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.8.2.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
+-- 
+Thanks and Regards
+Pramod
