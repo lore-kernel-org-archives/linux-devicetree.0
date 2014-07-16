@@ -1,121 +1,101 @@
-Return-Path: <spk.linux@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <53D3FB9C.9080908@suse.de>
-References: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org>
-	<53D3FB9C.9080908@suse.de>
-Date: Sun, 27 Jul 2014 09:58:44 +0530
-Message-ID: <CAK5sBcFeaHrLLoSYCvrSMBX+eGYWoGPrCH0Uxy3Ao2OAYXoTNA@mail.gmail.com>
-Subject: Re: [RESEND][PATCHv2 0/3] Fix for buggy u-boot memory banks
-From: Sachin Kamat <spk.linux@gmail.com>
-Content-Type: multipart/alternative; boundary=e89a8f8397ade74a1204ff253d75
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Laura Abbott <lauraa@codeaurora.org>, Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-Path: <grant.likely@secretlab.ca>
+Return-Path: <grant.likely@secretlab.ca>
+Sender: Grant Likely <glikely@secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 4/5] of: Introduce tree change __foo_post methods.
+In-Reply-To: <179F42A4-1312-467B-9185-544E5189FEA5@konsulko.com>
+References: 
+	<1404493129-8914-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1404493129-8914-5-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140710005552.E74F0C41B68@trevor.secretlab.ca>
+	<179F42A4-1312-467B-9185-544E5189FEA5@konsulko.com>
+Date: Wed, 16 Jul 2014 07:20:46 -0600
+Message-Id: <20140716132046.22023C40FC8@trevor.secretlab.ca>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
---e89a8f8397ade74a1204ff253d75
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, 11 Jul 2014 23:04:55 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> Hi Grant,
+> 
+> On Jul 10, 2014, at 3:55 AM, Grant Likely wrote:
+> 
+> > On Fri,  4 Jul 2014 19:58:48 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> >> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> >> index 0d50318..b52fd6b 100644
+> >> --- a/drivers/of/base.c
+> >> +++ b/drivers/of/base.c
+> >> @@ -127,13 +127,24 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
+> >> 	return name;
+> >> }
+> >> 
+> >> -static int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+> >> +static int __of_add_property_sysfs(struct device_node *np, struct property *pp,
+> >> +		int ignore_dup_name)
+> >> {
+> >> 	int rc;
+> >> 
+> >> 	/* Important: Don't leak passwords */
+> >> 	bool secure = strncmp(pp->name, "security-", 9) == 0;
+> >> 
+> >> +	/* ignore duplicate name (transaction case) */
+> >> +	if (ignore_dup_name) {
+> >> +		struct kernfs_node *kn = sysfs_get_dirent(np->kobj.sd,
+> >> +				pp->name);
+> >> +		if (kn) {
+> >> +			sysfs_put(kn);
+> >> +			return 0;
+> >> +		}
+> >> +	}
+> >> +
+> > 
+> > What is this? There is no mention of it in the commit text, and the comment
+> > is far from sufficient. Under what conditions would this be valid? I'm
+> > particularly concerned because this changes behaviour and the new
+> > behaviour is used in the next hunk, so clearly it's not
+> > transaction-only?
+> > 
+> > I've dropped this hunk from the version I have in my tree.
+> > 
+> 
+> You need it. When you attach a new node to the tree, and then add a new
+> property to the same node, you end up calling __of_add_property_sysfs twice.
+> 
+> This is the easiest way to get around the problem.
 
-On Sunday, July 27, 2014, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+Ugh. That's nasty. It only papers over the problem and when something
+goes wrong it will silently fail. If this is necessary then it says to
+me that there is a problem in the design. Either the property should be
+modified direcly on the node before the node is attached, or modifying
+properties on an added node should be illegal.
 
-> Hi Laura,
->
-> Am 15.07.2014 19:03, schrieb Laura Abbott:
-> > This is a resend of the series to fix the uboot bug exposed by the
-> removal
-> > of meminfo. I haven't gotten any acks though.
-> >
-> > Please help with review/acks. Grant/Rob, I'd still like this to go
-> through
-> > the devicetree tree if possible.
->
-> Sorry for the delay in testing.
->
-> With this v2 applied on top of kgene's for-next branch (plus
-> https://patchwork.kernel.org/patch/4297431/ as build fix) I get:
->
-> [    9.699985] Unhandled fault: asynchronous external abort (0x211) at
-> 0x00000000
->
->
-If this is on Arndale octa board, please try disabling MCPM option.
+> >> +
+> >> /**
+> >>  * of_attach_node - Plug a device node into the tree and global list.
+> >>  */
+> >> @@ -120,7 +125,7 @@ int of_attach_node(struct device_node *np)
+> >> 	__of_attach_node(np);
+> >> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >> 
+> >> -	of_node_add(np);
+> >> +	__of_attach_node_post(np);
+> >> 	return 0;
+> >> }
+> >> 
+> >> @@ -160,6 +165,11 @@ void __of_detach_node(struct device_node *np)
+> >> 	of_node_set_flag(np, OF_DETACHED);
+> >> }
+> >> 
+> >> +void __of_detach_node_post(struct device_node *np)
+> >> +{
+> >> +	of_node_remove(np);
+> >> +}
+> > 
+> > Also silly.
+> > 
+> 
+> It's regular...
 
+Heh, my point was that of_node_remove() can be renamed.
 
-> Same for v1 that had worked okay before, so it's not your series, but it
-> may explain why you haven't heard on v2 from the others yet.
->
-> Regards,
-> Andreas
->
-> --
-> SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-> GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org <javascript:;>
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
-
---=20
-Regards,
-Sachin.
-
---e89a8f8397ade74a1204ff253d75
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<br><br>On Sunday, July 27, 2014, Andreas F=C3=A4rber &lt;<a href=3D"mailto=
-:afaerber@suse.de">afaerber@suse.de</a>&gt; wrote:<br><blockquote class=3D"=
-gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-=
-left:1ex">
-Hi Laura,<br>
-<br>
-Am 15.07.2014 19:03, schrieb Laura Abbott:<br>
-&gt; This is a resend of the series to fix the uboot bug exposed by the rem=
-oval<br>
-&gt; of meminfo. I haven&#39;t gotten any acks though.<br>
-&gt;<br>
-&gt; Please help with review/acks. Grant/Rob, I&#39;d still like this to go=
- through<br>
-&gt; the devicetree tree if possible.<br>
-<br>
-Sorry for the delay in testing.<br>
-<br>
-With this v2 applied on top of kgene&#39;s for-next branch (plus<br>
-<a href=3D"https://patchwork.kernel.org/patch/4297431/" target=3D"_blank">h=
-ttps://patchwork.kernel.org/patch/4297431/</a> as build fix) I get:<br>
-<br>
-[ =C2=A0 =C2=A09.699985] Unhandled fault: asynchronous external abort (0x21=
-1) at<br>
-0x00000000<br>
-<br></blockquote><div><br></div><div>If this is on Arndale octa board, plea=
-se try disabling MCPM option.</div><div>=C2=A0</div><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
-ft:1ex">
-
-Same for v1 that had worked okay before, so it&#39;s not your series, but i=
-t<br>
-may explain why you haven&#39;t heard on v2 from the others yet.<br>
-<br>
-Regards,<br>
-Andreas<br>
-<br>
---<br>
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany<br>
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=BC=
-rnberg<br>
---<br>
-To unsubscribe from this list: send the line &quot;unsubscribe linux-samsun=
-g-soc&quot; in<br>
-the body of a message to <a href=3D"javascript:;" onclick=3D"_e(event, &#39=
-;cvml&#39;, &#39;majordomo@vger.kernel.org&#39;)">majordomo@vger.kernel.org=
-</a><br>
-More majordomo info at =C2=A0<a href=3D"http://vger.kernel.org/majordomo-in=
-fo.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a><b=
-r>
-</blockquote><br><br>-- <br><div>Regards,</div><div>Sachin.</div><br>
-
---e89a8f8397ade74a1204ff253d75--
+g.
