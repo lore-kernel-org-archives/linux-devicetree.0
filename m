@@ -1,105 +1,97 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v1] gpio: keystone: add dsp gpio controller driver
-Date: Wed, 16 Jul 2014 15:35:44 +0530
-Message-ID: <53C64E78.4030506@gmail.com>
-References: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/8] mmc: sdhci: host: add new f_sdh30
+Date: Wed, 16 Jul 2014 12:10:07 +0200
+Message-ID: <5526913.sJ4RMkanr6@wuerfel>
+References: <1405232971-4607-1-git-send-email-mollie.wu@linaro.org> <7710458.qT0KZ5qsA6@wuerfel> <830AC58E49A426478AC39824BC0FA915D8B8FF0609@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, santosh.shilimkar@ti.com, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
-Cc: ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <830AC58E49A426478AC39824BC0FA915D8B8FF0609@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "Vincent. Yang" <Vincent.Yang@tw.fujitsu.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mollie Wu <mollie.wu@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "anton@enomsg.org" <anton@enomsg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, "patches@linaro.org" <patches@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "chris@printf.net" <chris@printf.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "andy.green@linaro.org" <andy.green@linaro.org>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2014 04:13 PM, Grygorii Strashko wrote:
-> From: Murali Karicheri <m-karicheri2@ti.com>
->
-> On Keystone SOCs, ARM host can send interrupts to DSP cores using the
-> DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
-> each DSP core. This is one of the component used by the IPC mechanism used
-> on Keystone SOCs.
->
-> Keystone 2 DSP GPIO controller has specific features:
-> - each GPIO can be configured only as output pin;
-> - setting GPIO value to 1 causes IRQ generation on target DSP core;
-> - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
->    pending.
->
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->   .../devicetree/bindings/gpio/gpio-keystone.txt     |   43 ++++++
->   drivers/gpio/Kconfig                               |    8 ++
->   drivers/gpio/Makefile                              |    1 +
->   drivers/gpio/gpio-keystone.c                       |  138 ++++++++++++++++++++
->   4 files changed, 190 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-keystone.txt
->   create mode 100644 drivers/gpio/gpio-keystone.c
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
-> new file mode 100644
-> index 0000000..4f92af4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
-> @@ -0,0 +1,43 @@
-> +Keystone 2 DSP GPIO controller bindings
-> +
-> +HOST OS userland running on ARM can send interrupts to DSP cores using
-> +the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
-> +This is one of the component used by the IPC mechanism used on Keystone SOCs.
-> +
-> +For example TCI6638K2K SoC has 8 DSP GPIO controllers:
-> + - 8 for C66x CorePacx CPUs 0-7
-> +
-> +Keystone 2 DSP GPIO controller has specific features:
-> +- each GPIO can be configured only as output pin;
-> +- setting GPIO value to 1 causes IRQ generation on target DSP core;
-> +- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-> +  pending.
-> +
-> +Required Properties:
-> +- compatible: should be "ti,keystone-dsp-gpio"
-> +
-> +- ti,syscon-dev:	phandle/offset pair. The phandle to syscon used to
-> +			access device state control registers and the offset
-> +			in order to use block of device's specific registers.
-> +
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +
-> +- #gpio-cells : Should be one.
-> +				See gpio.txt in this directory for a of the cells format
+On Wednesday 16 July 2014 17:35:41 Vincent. Yang wrote:
 
-All the properties not properly aligned. It would be more readable if
+> >
+> >> +unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+> >> +{
+> >> +     return F_SDH30_MIN_CLOCK;
+> >> +}
+> >> +
+> >> +void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+> >> +{
+> >> +     struct f_sdhost_priv *priv = sdhci_priv(host);
+> >> +
+> >> +     if (gpio_is_valid(priv->gpio_select_1v8))
+> >> +             gpio_direction_output(priv->gpio_select_1v8, 1);
+> >> +
+> >> +     if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0) {
+> >> +             sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
+> >> +             mmiowb();
+> >> +     }
+> >
+> >Can you explain the mmiowb call here?
+> 
+> This came from the original 3.0 based driver. It's trying to be a
+> write memory barrier. It wants to ensure the clock control change
+> actually happened before the following code.
+> I'll change it to a regular wmb in next version.
 
-Required Properties:
-- compatible		: should be "ti,keystone-dsp-gpio"
-- ti,syscon-dev		: phandle/offset pair. The phandle to syscon used to
-			  access device state control registers and the offset
-			  in order to use block of device's specific registers.
-- gpio-controller	: Marks the device node as a gpio controller.
-- #gpio-cells		: Should be one.
-			  See gpio.txt in this directory for a of the cells format
+Note that with 'readw'/writew', you shouldn't need any extra barriers.
+If sdhci_writew() is readw_relaxed(), wmb() is the correct barrier.
 
-> +
-> +Please refer to gpio.txt in this directory for details of the common GPIO
-> +bindings used by client devices.
-> +
+> >> +
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width))
+> >{
+> >> +             switch (bus_width) {
+> >> +             case 8:
+> >> +                     dev_info(dev, "Applying 8 bit bus width\n");
+> >> +                     host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+> >> +                     break;
+> >> +             case 4:
+> >> +                     dev_info(dev, "Applying 4 bit bus width\n");
+> >> +                     host->mmc->caps |= MMC_CAP_4_BIT_DATA;
+> >> +                     break;
+> >> +             case 1:
+> >> +             default:
+> >> +                     dev_err(dev, "Invalid bus width: %u\n", bus_width);
+> >> +                     break;
+> >> +             }
+> >> +     }
+> >
+> >This should probably be done in generic sdhci code somewhere. How about
+> >adding it to sdhci_get_of_property instead_
+> 
+> I should use generic mmc_of_parse for it. I'll update it in next version.
 
-(...)
+Ah right, I thought we had this in common code already but couldn't find
+it. Using mmc_of_parse() is definitely the correct solution here.
 
-> +static struct platform_driver keystone_gpio_driver = {
-> +	.probe		= keystone_gpio_probe,
-> +	.remove		= keystone_gpio_remove,
-> +	.driver		= {
-> +		.name	= "keystone-dsp-gpio",
-> +		.owner	= THIS_MODULE,
+> >> +     priv->clk_sd4 = clk_get(&pdev->dev, "sd_sd4clk");
+> >> +     if (!IS_ERR(priv->clk_sd4)) {
+> >> +             ret = clk_prepare_enable(priv->clk_sd4);
+> >> +             if (ret < 0) {
+> >> +                     dev_err(dev, "Failed to enable sd4 clock: %d\n", ret);
+> >> +                     goto err_clk1;
+> >> +             }
+> >> +     }
+> >> +     priv->clk_b = clk_get(&pdev->dev, "sd_bclk");
+> >> +     if (!IS_ERR(priv->clk_b)) {
+> >> +             ret = clk_prepare_enable(priv->clk_b);
+> >> +             if (ret < 0) {
+> >> +                     dev_err(dev, "Failed to enable clk_b clock: %d\n", ret);
+> >> +                     goto err_clk2;
+> >> +             }
+> >> +     }
+> >
+> >Please pick clock names that match what some of the other drivers use.
+> 
+> I'll use "iface" and "core" for clock names because they match what used
+> in sdhci-msm driver.
 
-We can drop owner field...  :-)  .It will update by module_platform_driver
+Ok, makes sense.
 
-
--- 
-Regards,
-Varka Bhadram.
-
+	Arnd
