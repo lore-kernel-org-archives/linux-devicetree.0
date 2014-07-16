@@ -1,70 +1,117 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v5 1/2] can: m_can: add device tree binding documentation
-Date: Wed, 16 Jul 2014 12:05:05 +0200
-Message-ID: <53C64E51.9050606@pengutronix.de>
-References: <1405503050-16796-1-git-send-email-b29396@freescale.com>
+From: pramod gurav <pramod.gurav.etc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] soc: devicetree: bindings: Add Qualcomm RPM DT binding
+Date: Wed, 16 Jul 2014 15:36:09 +0530
+Message-ID: <CAMf-jS=tkBYQ7mXp71F2_rPo6DE3e4C=sFHqg3Q26a08m6NxJQ@mail.gmail.com>
+References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1405465241-28684-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="fUckgXfaif9XaNSDuUaov41ov3hHXnhcl"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1405503050-16796-1-git-send-email-b29396@freescale.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org
-Cc: wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405465241-28684-2-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---fUckgXfaif9XaNSDuUaov41ov3hHXnhcl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Bjorn,
 
-On 07/16/2014 11:30 AM, Dong Aisheng wrote:
-> add M_CAN device tree binding documentation
->=20
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-> Cc: Varka Bhadram <varkabhadram@gmail.com>
-> Signed-off-by: Dong Aisheng <b29396@freescale.com>
+RPM breaks on IFC6410 without entry for 'qcom.ipc' node. Please find
+my observations below.
+
+On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
+<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> Add binding for the Qualcomm Resource Power Manager (RPM) found in 8660,
+> 8960 and 8064 based devices. The binding currently describes the rpm
+> itself and the regulator subnodes.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 > ---
-> Changes since v4:
-> - change the name of board dtsi to board dts which is more common
->=20
-> Changes since v3:
-> - change mram-cfg property name to bosch,mram-cfg
-> - indent change
-> ---
->  .../devicetree/bindings/net/can/m_can.txt          |   67 ++++++++++++=
-++++++++
->  1 files changed, 67 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt=
+>  .../devicetree/bindings/soc/qcom/qcom,rpm.txt      | 263 +++++++++++++++++++++
+>  include/dt-bindings/soc/qcom,rpm.h                 | 142 +++++++++++
+>  2 files changed, 405 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>  create mode 100644 include/dt-bindings/soc/qcom,rpm.h
+>
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+> new file mode 100644
+> index 0000000..ac98ffc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+> @@ -0,0 +1,263 @@
+> +Qualcomm Resource Power Manager (RPM)
+> +
+.
+[snip]
+.
+
+> +- #size-cells:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: must be 0
+> +
+> +- qcom,ipc:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: three entries specifying:
+> +                   - phandle to a syscon node representing the apcs registers
+> +                   - u32 representing offset to the register within the syscon
+> +                   - u32 representing the ipc bit within the register
+
+Was testing your patch on IFC6410 and looks like its breaking because
+this node support not being in IFC DTs. I was using the earlier
+versions of these patches and things were working. Please let me know
+the changes needed in IFC6410 DT for qcom,ipc.
+
+> +
+> +
+> += SUBDEVICES
+> +
+
+.
+[snip]
+.
+
+> +       Definition: resource as defined in <dt-bindings/soc/qcom/qcom,rpm.h>
+> +
+> +
+> += EXAMPLE
+> +
+> +       #include <dt-bindings/soc/qcom,rpm.h>
+> +
+> +       rpm@108000 {
+> +               compatible = "qcom,rpm-msm8960";
+> +               reg = <0x108000 0x1000>;
+> +               qcom,ipc = <&apcs 0x8 2>;
+
+Tried adding this but there is no reference to 'apcs' registers itself
+in any dts.
+
+Without these changes rpm breaks hence not able to test SATA which needs rpm.
+
+> +
+> +               interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
+> +               interrupt-names = "ack", "err", "wakeup";
+> +
+.
+[snip]
+.
+> +
+> +#endif
+> --
+> 1.8.2.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
 
-I'll apply this series once we've got an Ack for the DT folks.
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---fUckgXfaif9XaNSDuUaov41ov3hHXnhcl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlPGTlEACgkQjTAFq1RaXHOm3gCgizGzkGo2b+Gl/SYQz+8GUYk0
-L2cAoJXvadvxqoCCJoVxDgq7jIud2OEK
-=87FM
------END PGP SIGNATURE-----
-
---fUckgXfaif9XaNSDuUaov41ov3hHXnhcl--
+-- 
+Thanks and Regards
+Pramod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
