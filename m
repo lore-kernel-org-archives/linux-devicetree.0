@@ -1,78 +1,94 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 01/13] clk: tegra: Add binding for the Tegra124 DFLL
- clocksource
-Date: Wed, 16 Jul 2014 10:01:34 +0200
-Message-ID: <20140716080133.GI7978@ulmo>
-References: <CAL1qeaFF0ZpUFovxTuLXrBPRg2Lbf-754Z=ztD5HFZPbfnDsAw@mail.gmail.com>
- <53C01558.3090607@nvidia.com>
- <CAL1qeaHETQ7kSGNjPiwi_9WNMtr9qZp0KwjZCCxY29+_N4AcuA@mail.gmail.com>
- <53C01D17.2050906@nvidia.com>
- <20140714083854.GO2081@ulmo>
- <20140714091233.GC6800@sirena.org.uk>
- <20140714092434.GA9755@ulmo>
- <20140714102203.GD6800@sirena.org.uk>
- <53C58DCB.90502@nvidia.com>
- <20140715225252.GD17528@sirena.org.uk>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 2/3] pinctrl: Device tree bindings for Qualcomm pm8xxx
+ gpio block
+Date: Wed, 16 Jul 2014 11:18:14 +0300
+Message-ID: <1405498694.31919.20.camel@iivanov-dev>
+References: <1404782785-1824-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1404782785-1824-3-git-send-email-bjorn.andersson@sonymobile.com>
+	 <CACRpkdZ2hekBGe1-9GV-amqi50heghWhXJ9raW7P_Nif_Ci88g@mail.gmail.com>
+	 <CAJAp7OghZoTXutxw7hAsq1XA_wAhOXDNFO0tz8u9ceQ1fD9W1w@mail.gmail.com>
+	 <CACRpkdai=q3nmPk5OWQWn_UMdXmqcbFXJ90rxREBG9k6gdy88Q@mail.gmail.com>
+	 <53C095EA.90000@codeaurora.org> <1405346335.13503.25.camel@iivanov-dev>
+	 <53C449A3.2010404@codeaurora.org> <1405406114.13503.40.camel@iivanov-dev>
+	 <CAJAp7OjU=FFdGKHPqovz+qrEhDCZ3E=uOSAOFbgYyLE01C9cPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G3juXO9GfR42w+sw"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140715225252.GD17528@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Andrew Bresticker <abrestic@chromium.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OjU=FFdGKHPqovz+qrEhDCZ3E=uOSAOFbgYyLE01C9cPg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2014-07-15 at 17:23 -0700, Bjorn Andersson wrote:
+> On Mon, Jul 14, 2014 at 11:35 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+> > On Mon, 2014-07-14 at 14:20 -0700, Stephen Boyd wrote:
+> [..]
+> >> Isn't this document only for the gpios? I think you're talking about the
+> >> MPPs, which also exist on these generation of pmics. We should probably
+> >> avoid mixing the two (gpios and mpps) in one binding because they're
+> >> really different hardware.
+> >
+> > I don't know. For me "gpio" looks like function of the pin hardware.
+> >
+> >>
+> >> >  So I will like
+> >> > to keep "function" property for selecting one of the above functions.
+> >> > Choosing between "normal", "paired"... options in QPNP pinctrl driver
+> >> > is supported trough passing values, defined in DT header file, to
+> >> > "output-high" property. Please don't kill me :-).
+> >>
+> >> Overloading output-high to choose the MPP mode doesn't seem to follow
+> >> the generic pinconfig binding. Does output-high even take a value? Why
+> >> can't we use the function property?
+> >
+> > No, no.  using value of the output-high|low" is just to select
+> > "normal", "paired"... thing. Function selection is via "function"
+> > property. Currently QPNP support following functions "gpio", "mpp-ain",
+> > "mpp-aout", "mpp-cs".
+> >
+> 
+> Hi Ivan,
+> 
+> From your comment I presume that you don't have access to the
+> documentation for these blocks.
+> 
+> The pmic sports two types of pins; gpios and mpps (multi-purpose-pin).
+> These are different hardware blocks; i.e. not a configuration thing.
 
---G3juXO9GfR42w+sw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am looking on GPIO's hardware blocks as stripped down MPP's.
 
-On Tue, Jul 15, 2014 at 11:52:52PM +0100, Mark Brown wrote:
-> On Tue, Jul 15, 2014 at 11:23:39PM +0300, Tuomas Tynkkynen wrote:
->=20
-> > That sounds indeed useful for this case. How'd the following interface
-> > sound for the register offset / selector-to-register-value conversion?
-> > The I2C address would be a bit trickier to get as it would touch the
-> > regmap stuff as well, but perhaps it would be a good idea to have a
-> > phandle to the I2C device itself, and then parse the reg field for
-> > the address.
->=20
-> This looks fine, can you submit properly please?  For the I2C address
-> why not just have an interface to get the regmap and then provide a way
-> to get the underlying device back from the regmap?
+> 
+> The gpios can be input, output or both and they can be configured as
+> gpio, paired, function 1 or function 2 (+ some test modes). So here it
+> makes sense to have the functions "gpio", "paired" and the valid
+> function combinations.
 
-Is it mandatory for regulators to use regmap? Also I'm not sure how this
-will work with MFDs, since the device may not be the actual bus device,
-but rather a child of the MFD (and what we want access to is the MFD).
-Perhaps for regmaps that would work in most cases since MFDs seem to
-aften share the regmap with their children. However, the code in
-regulator_register() at least indicates that even then it's possible to
-have a regmap in children that's different from the top-level MFD.
+I believe that MPP's also support these 'functions'.
 
-Thierry
+> 
+> The mpps can be input, output or both; in either digital or analog
+> mode. Or they can be a current sink. When configured as analog input
+> you select which adc the pin should be routed to. Here it makes sense
+> to have the functions "digital", "analog" and "current-sink" I think.
 
---G3juXO9GfR42w+sw
-Content-Type: application/pgp-signature
+My understanding is that MPP's are supporting everything which GPIO's
+does, plus analog functionality. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+I don't want at the end MPP's functions to be something like:
 
-iQIcBAEBAgAGBQJTxjFdAAoJEN0jrNd/PrOh9DwP/3dzscoXYXMEY5bwISYqlh72
-OAspRRFCWc5DIrmpKCnzZQq8Z/BguxD4Qf3xWpkllLkpGJHJVa4489gPBOLQrxPa
-tR0t4fYHFxs4GT1m+LmuLH+yNArhEFcTZI+N7aWB2O+G4s8lvFJPZdVM604GZjXB
-9h8CkCyMnNZHRoOKKUt7bFNZ7xXaeV8NghmXUGIXPvqmUIjkzC5z+kNzYUsR6bPb
-cx6UJRYkf73IPyd983R57YW/E1mK9Vbz/6rCnfipqcpzHOpOB+n7aniecoe0bYOD
-KMHLtySu5IhYow1aNnJFdjKSZakVfnBqD1bgbIe+mCFGOUvlASux7TplreZkL0ST
-udY8m7cPyAATI/nL/FIR9cYcxVPJa68+oXeuu+iqTFuPEEAnUwvup+5njS9+u7cm
-0ke7hwJwIeGfDjdjkybgacCkf1HWXCkpayfubDpxdpmPf9aI8K1rmb+woHwo9sGs
-rstVQVMhg8HpYJnk2UiYGWUAg2C79RC4ZUT3LVDKUkGh69fpbvhTyyP2TqCBNIW7
-4fzCH9HBEmgrBnqcm7Z+s5MTuiZfuD5S3a5KAEM8vE0kvGnv/wJWOxfz51L/1Cd0
-4HNK5fneKpCx302+5D/ijPdgMF6zQ37wz9Rbe4nGZ2ZkR5L0zcPDe1WeYLy8sNSg
-WbSGZw8byksVNMXM2b9H
-=RhIM
------END PGP SIGNATURE-----
+analog-normal, analog-paired, analog-function-1, analog-function-2, 
+digital-normal, digital-paired...
 
---G3juXO9GfR42w+sw--
+So better to leave normal/paired stuff as separate parameter (qcom,pair).
+
+Plain GPIO hardware will just support 'gpio' function, while MPP's
+will have 'gpio', 'analog-in', 'analog-out', 'current-sink' 
+
+I am fine to split driver to two drivers (GPIO and MPP), which will
+make code a little more clean, but I am pretty sure there will be
+lot of duplication.
+
+Regards,
+Ivan
