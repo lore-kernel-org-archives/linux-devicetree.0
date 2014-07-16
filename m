@@ -1,14 +1,14 @@
 From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: rockchip: add debug uart used by rk3288
-Date: Tue, 15 Jul 2014 21:13:10 -0700
-Message-ID: <CAD=FV=W3aWeT3RP5_g9r8kV8ToeHfyn57JY-py2zGVW9DF_7RQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] ARM: Kconfig: set default gpio number for rockchip SoCs
+Date: Tue, 15 Jul 2014 21:41:26 -0700
+Message-ID: <CAD=FV=X_A09XF29Sb5Pq97aE9ehXqUR21rXFKaT2NB_P6N6yYQ@mail.gmail.com>
 References: <1471578.ILeMmG2DL6@diego>
-	<2866950.oXmKFGy9mh@diego>
+	<2242498.pAI32mTkmn@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2866950.oXmKFGy9mh@diego>
+In-Reply-To: <2242498.pAI32mTkmn@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
@@ -16,32 +16,27 @@ List-Id: devicetree@vger.kernel.org
 
 Heiko,
 
-On Tue, Jul 15, 2014 at 4:00 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+On Tue, Jul 15, 2014 at 4:01 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
 rote:
-> The uarts on rk3288 are still compatible with the dw_8250, but locate=
-d
-> at a different position and need DEBUG_UART_8250_WORD enabled.
+> The new rk3288 needs a bigger gpio space, as it has 9 gpio banks.
 >
 > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > ---
->  arch/arm/Kconfig.debug | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+>  arch/arm/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 8f90595..f68def0 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -613,6 +613,14 @@ choice
->                   Say Y here if you want kernel low-level debugging s=
-upport
->                   on Rockchip based platforms.
->
-> +       config DEBUG_RK32_UART2
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 87b63fd..8d1dee0 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1574,6 +1574,7 @@ config ARCH_NR_GPIO
+>         default 416 if ARCH_SUNXI
+>         default 392 if ARCH_U8500
+>         default 352 if ARCH_VT8500
+> +       default 288 if ARCH_ROCKCHIP
 
-It's slightly confusing that you didn't rename the old "DEBUG_RK3X_UART=
-2".
-
-Other than that:
+Looks reasonable.  9 banks of 32 and that matches what's in the pinmux =
+driver.
 
 Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
