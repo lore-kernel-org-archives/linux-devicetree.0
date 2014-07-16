@@ -1,43 +1,56 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] regulator: qcom-rpm: Regulator driver for the
- Qualcomm RPM
-Date: Wed, 16 Jul 2014 15:17:13 -0700
-Message-ID: <CAJAp7Oj1R-EkJoSdLEa6SBLbzE_N1MjsystQ9Z+x4L_SjU=56w@mail.gmail.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v4 1/3] soc: devicetree: bindings: Add Qualcomm RPM DT binding
+Date: Wed, 16 Jul 2014 15:20:40 -0700
+Message-ID: <CAJAp7OggtuxPSc0yXzMCs10aQ2R6E+m4Bu8sdLJopvrZ3+5Rmg@mail.gmail.com>
 References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1405465241-28684-4-git-send-email-bjorn.andersson@sonymobile.com>
-	<CAMf-jSn2YHF7ihRpXMfkPWYt8pNCj4o395OGha3BHD3K3mUv9g@mail.gmail.com>
+	<1405465241-28684-2-git-send-email-bjorn.andersson@sonymobile.com>
+	<CAMf-jS=tkBYQ7mXp71F2_rPo6DE3e4C=sFHqg3Q26a08m6NxJQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMf-jSn2YHF7ihRpXMfkPWYt8pNCj4o395OGha3BHD3K3mUv9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: pramod gurav <pramod.gurav.etc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAMf-jS=tkBYQ7mXp71F2_rPo6DE3e4C=sFHqg3Q26a08m6NxJQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: pramod gurav <pramod.gurav.etc@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 12:01 AM, pramod gurav
-<pramod.gurav.etc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Wed, Jul 16, 2014 at 3:06 AM, pramod gurav
+<pramod.gurav.etc@gmail.com> wrote:
 > Hi Bjorn,
 >
+> RPM breaks on IFC6410 without entry for 'qcom.ipc' node. Please find
+> my observations below.
+>
 > On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
-> <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> <bjorn.andersson@sonymobile.com> wrote:
 [...]
->> +static const struct regulator_linear_range pldo_ranges[] = {
->> +       REGULATOR_LINEAR_RANGE( 750000,   0,  59, 12500),
+>> +       rpm@108000 {
+>> +               compatible = "qcom,rpm-msm8960";
+>> +               reg = <0x108000 0x1000>;
+>> +               qcom,ipc = <&apcs 0x8 2>;
 >
-> ERROR: space prohibited after that open parenthesis '('
+> Tried adding this but there is no reference to 'apcs' registers itself
+> in any dts.
+>
+> Without these changes rpm breaks hence not able to test SATA which needs rpm.
 >
 
-I prefer the nicely aligned columns over checkpatch correctness here.
+Hi Pramod,
 
->> +       REGULATOR_LINEAR_RANGE(1500000,  60, 123, 25000),
->> +       REGULATOR_LINEAR_RANGE(3100000, 124, 160, 50000),
->> +};
->> +
+Unfortunately the ipc bits resides in a block that needs to be
+accesses by various device drivers so I had to extract the access; so
+you now need to reference it via a syscon handle and offset instead -
+as described above.
+
+The apcs node I used for testing this with looks like this:
+
+apcs: syscon@2011000 {
+    compatible = "syscon";
+    reg = <0x2011000 0x1000>;
+};
+
+Enable CONFIG_MFD_SYSCON and put the dt snippet somewhere under soc
+and you should be good.
 
 Regards,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
