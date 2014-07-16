@@ -1,57 +1,52 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Subject: [PATCH v3 04/12] ARM: dts: berlin: add a required reset property in
- the chip controller node
-Date: Wed, 16 Jul 2014 10:25:58 +0200
-Message-ID: <1405499166-6726-5-git-send-email-antoine.tenart@free-electrons.com>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: tegra: make tegra_clocks_apply_init_table
+ arch_initcall
+Date: Wed, 16 Jul 2014 11:27:40 +0300
+Message-ID: <20140716082740.GK23218@tbergstrom-lnx.Nvidia.com>
+References: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com>
+ <1405437890-6468-3-git-send-email-pdeschrijver@nvidia.com>
+ <20140716071932.GB7978@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140716071932.GB7978@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGNoaXAgY29udHJvbGxlciBub2RlIG5vdyBhbHNvIGRlc2NyaWJlcyB0aGUgTWFydmVsbCBC
-ZXJsaW4gcmVzZXQKY29udHJvbGxlci4gQWRkIHRoZSByZXF1aXJlZCAncmVzZXQtY2VsbHMnIHBy
-b3BlcnR5LgoKU2lnbmVkLW9mZi1ieTogQW50b2luZSBUw6luYXJ0IDxhbnRvaW5lLnRlbmFydEBm
-cmVlLWVsZWN0cm9ucy5jb20+CkFja2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1
-dHJvbml4LmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjIuZHRzaSAgIHwgMSArCiBh
-cmNoL2FybS9ib290L2R0cy9iZXJsaW4yY2QuZHRzaSB8IDEgKwogYXJjaC9hcm0vYm9vdC9kdHMv
-YmVybGluMnEuZHRzaSAgfCAxICsKIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMi5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvYmVybGluMi5kdHNpCmluZGV4IDI0NzdkYWM0ZDY0My4uOTdiMTI0OTI2NzVlIDEwMDY0
-NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvYmVybGluMi5kdHNpCkBAIC0yNDMsNiArMjQzLDcgQEAKIAkJY2hpcDogY2hpcC1jb250
-cm9sQGVhMDAwMCB7CiAJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYmVybGluMi1jaGlwLWN0cmwi
-OwogCQkJI2Nsb2NrLWNlbGxzID0gPDE+OworCQkJI3Jlc2V0LWNlbGxzID0gPDI+OwogCQkJcmVn
-ID0gPDB4ZWEwMDAwIDB4NDAwPjsKIAkJCWNsb2NrcyA9IDwmcmVmY2xrPjsKIAkJCWNsb2NrLW5h
-bWVzID0gInJlZmNsayI7CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yY2Qu
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpCmluZGV4IGNjMWRmNjVkYTUw
-NC4uNjhmNzAzMmI0Njg2IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yY2Qu
-ZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yY2QuZHRzaQpAQCAtMjMxLDYgKzIz
-MSw3IEBACiAJCWNoaXA6IGNoaXAtY29udHJvbEBlYTAwMDAgewogCQkJY29tcGF0aWJsZSA9ICJt
-YXJ2ZWxsLGJlcmxpbjJjZC1jaGlwLWN0cmwiOwogCQkJI2Nsb2NrLWNlbGxzID0gPDE+OworCQkJ
-I3Jlc2V0LWNlbGxzID0gPDI+OwogCQkJcmVnID0gPDB4ZWEwMDAwIDB4NDAwPjsKIAkJCWNsb2Nr
-cyA9IDwmcmVmY2xrPjsKIAkJCWNsb2NrLW5hbWVzID0gInJlZmNsayI7CmRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGlu
-MnEuZHRzaQppbmRleCA2MzVhMTZhNjRjYjQuLmE2ZjdlYzMyNTIwMCAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvYmVybGluMnEuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9iZXJs
-aW4ycS5kdHNpCkBAIC0yOTgsNiArMjk4LDcgQEAKIAkJY2hpcDogY2hpcC1jb250cm9sQGVhMDAw
-MCB7CiAJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYmVybGluMnEtY2hpcC1jdHJsIjsKIAkJCSNj
-bG9jay1jZWxscyA9IDwxPjsKKwkJCSNyZXNldC1jZWxscyA9IDwyPjsKIAkJCXJlZyA9IDwweGVh
-MDAwMCAweDQwMD4sIDwweGRkMDE3MCAweDEwPjsKIAkJCWNsb2NrcyA9IDwmcmVmY2xrPjsKIAkJ
-CWNsb2NrLW5hbWVzID0gInJlZmNsayI7Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Jul 16, 2014 at 09:19:33AM +0200, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, Jul 15, 2014 at 06:24:32PM +0300, Peter De Schrijver wrote:
+> [...]
+> > diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> > index d081732..65cde4e 100644
+> > --- a/drivers/clk/tegra/clk.c
+> > +++ b/drivers/clk/tegra/clk.c
+> > @@ -290,10 +290,13 @@ struct clk ** __init tegra_lookup_dt_id(int clk_id,
+> >  
+> >  tegra_clk_apply_init_table_func tegra_clk_apply_init_table;
+> >  
+> > -void __init tegra_clocks_apply_init_table(void)
+> > +static int __init tegra_clocks_apply_init_table(void)
+> >  {
+> >  	if (!tegra_clk_apply_init_table)
+> > -		return;
+> > +		return 0;
+> 
+> Shouldn't this be an error? Or perhaps WARN()? To make sure this gets
+
+An arch_initcall will be called for every ARM platform I think? In case
+this gets called on a non-Tegra platform, tegra_clk_apply_init_table will not
+be set and therefore a silent return 0; seems the most appropriate thing to do
+to me?
+
+Cheers,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
