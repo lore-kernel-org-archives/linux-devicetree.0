@@ -1,92 +1,130 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 16 Jul 2014 11:10:53 +0100
-Message-ID: <20140716101053.GJ29414@arm.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
- <20140712093917.GD18601@arm.com>
- <CAF6AEGutHp+3f3iPA+jjaRkqq=5T_vytZ_ESoSqsQ4RHZ8F8yQ@mail.gmail.com>
- <201407121422.02078.arnd@arndb.de>
- <CAF6AEGs7=3UByP2DLm-uwU03wr7M14x2t-0hLX-VPJ6_eZbU3g@mail.gmail.com>
- <20140713094341.GB23235@arm.com>
- <CAF6AEGt5cQhDCZgYX4=M1EKE=n2J=9G6mO02JMx-+Fcq_0ukfw@mail.gmail.com>
- <53C5D480.3030409@codeaurora.org>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v5 05/14] drm/exynos: dsi: add pass TE host ops to support
+ LCD I80 interface
+Date: Wed, 16 Jul 2014 19:12:52 +0900
+Message-ID: <53C65024.7080606@samsung.com>
+References: <1404779987-5337-6-git-send-email-yj44.cho@samsung.com>
+ <20140709152207.GA17359@ulmo> <53BDE6FF.1000600@samsung.com>
+ <20140710073826.GB17918@ulmo> <53C3A15F.4020401@samsung.com>
+ <20140714094130.GD9755@ulmo> <53C3B4C8.1070601@samsung.com>
+ <20140714110326.GA31460@ulmo> <53C49336.5050909@samsung.com>
+ <53C5E20D.5010704@samsung.com> <20140716075457.GH7978@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53C5D480.3030409-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWOunwaRDDq4rA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140716075457.GH7978@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 02:25:20AM +0100, Olav Haugan wrote:
-> On 7/13/2014 4:43 AM, Rob Clark wrote:
-> > On Sun, Jul 13, 2014 at 5:43 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> My plan for the ARM SMMU driver is:
-> >>
-> >>   (1) Change ->probe() to walk the device-tree looking for all masters with
-> >>       phandles back to the SMMU instance being probed
-> >>
-> >>   (2) For each master, extract the Stream IDs and add them to the internal
-> >>       SMMU driver data structures (an rbtree per SMMU instance). For
-> >>       hotpluggable buses, we'll need a way for the bus controller to
-> >>       reserve a range of IDs -- this will likely be a later extension to
-> >>       the binding.
-> >>
-> >>   (3) When we get an ->add() call, warn if it's a device we haven't seen
-> >>       and reject the addition.
-> >>
-> >> That way, ->attach() should be the same as it is now, I think.
-> >>
-> >> Have you tried implementing something like that? We agreed that (1) isn't
-> >> pretty, but I don't have a good alternative and it's only done at
-> >> probe-time.
-> > 
-> > I haven't tried implementing that yet, but I'm sure it would work.  I
-> > was just hoping to avoid having to do that ;-)
-> 
-> Is the reason you want to do it this way because you want to guarantee
-> that all masters (and stream IDs) have been identified before the first
-> attach call? I am just wondering why you cannot continue doing the
-> master/streamID discovery during add_device() callback?
-
-That's fine if we have one SMR per ID, but the moment we want to do more
-involved matching, we're going to need complete system knowledge prior to
-the first attach. I don't think we can safely reconfigure live streams on
-the fly.
-
-> >> BTW: Is the msm-v0 IOMMU compatible with the ARM SMMU driver, or is it a
-> >> completely different design requiring a different driver?
-> > 
-> > My understanding is that it is different from msm v1 IOMMU, although I
-> > think it shares the same pagetable format with v1.  Not sure if that
-> > is the same as arm-smmu?   If so it might be nice to try to extract
-> > out some shared helper fxns for map/unmap as well.
-> > 
-> > I expect Olav knows better the similarities/differences.
-> > 
-> 
-> The msm-v0 IOMMU is not compatible with ARM SMMUv1 specification.
-> However, it is a close cousin. The hardware was designed before the ARM
-> SMMUv1 specification was available I believe. But it shares many of the
-> same concepts as the ARM SMMUv1.
-> 
-> msm-v0 IOMMU supports V7S page table format only. The ARM SMMU driver
-> does not support V7S at this time. However, I believe we need to support
-> this.
-> 
-> Will, this reminds me. We definitely have a need to use different page
-> tables in the ARM SMMU driver vs. the ARM CPU. We have an SoC with ARMv8
-> cores (and thus ARMv8 page tables) but the SMMUs (SMMUv1) on this SoC
-> only have support for V7S/V7L page table format. So we cannot use the
-> same page table format as the CPU.
-
-That sounds like a sane use-case. The best thing to do would be to add
-some ARM page-table code as a library under drivers/iommu/, then we can
-move the ARM IOMMUs over to using that. Since we'd be moving away from the
-CPU page table helpers, we could also take the opportunity to use the
-coherent DMA API instead of the hack I currently use for flushing out tables
-to non-coherent walkers.
-
-Will
+SGkgVGhpZXJyeSwKCk9uIDA3LzE2LzIwMTQgMDQ6NTQgUE0sIFRoaWVycnkgUmVkaW5nIHdyb3Rl
+Ogo+IE9uIFdlZCwgSnVsIDE2LCAyMDE0IGF0IDExOjIzOjA5QU0gKzA5MDAsIFlvdW5nSnVuIENo
+byB3cm90ZToKPj4gSGkgSW5raSwKPj4KPj4gT24gMDcvMTUvMjAxNCAxMTozNCBBTSwgSW5raSBE
+YWUgd3JvdGU6Cj4+PiBPbiAyMDE064WEIDA37JuUIDE07J28IDIwOjAzLCBUaGllcnJ5IFJlZGlu
+ZyB3cm90ZToKPj4+PiBPbiBNb24sIEp1bCAxNCwgMjAxNCBhdCAwNzo0NToyOFBNICswOTAwLCBZ
+b3VuZ0p1biBDaG8gd3JvdGU6Cj4+Pj4+IE9uIDA3LzE0LzIwMTQgMDY6NDEgUE0sIFRoaWVycnkg
+UmVkaW5nIHdyb3RlOgo+Pj4+IFsuLi5dCj4+Pj4+PiBUaGF0IHNhaWQsIEkndmUgYmVlbiBkb2lu
+ZyBzb21lIHJlc2VhcmNoIGFuZCBpdCBzZWVtcyBsaWtlIHdlIGhhdmUgYQo+Pj4+Pj4gc29tZXdo
+YXQgc2ltaWxhciBmZWF0dXJlIG9uIFRlZ3JhLiBXaGF0IGhhcHBlbnMgdGhlcmUgaXMgdGhhdCB0
+aGVyZSBhcmUKPj4+Pj4+IHRocmVlIEdQSU8gcGlucyB0aGF0IGNhbiBiZSByZXB1cnBvc2VkIGZv
+ciBURSBzaWduYWxsaW5nLiBCdXQgYXMgb3Bwb3NlZAo+Pj4+Pj4gdG8gdXNpbmcgdGhlbSBhcyBp
+bnRlcnJ1cHRzIHRoZSBkaXNwbGF5IGNvbnRyb2xsZXIgY2FuIGJlIGNvbmZpZ3VyZWQgdG8KPj4+
+Pj4+IHVzZSB0aGVtLCB1cG9uIHdoaWNoIGl0IHdpbGwgYXV0b21hdGljYWxseSBoYW5kbGUgdGhl
+IFRFIHNpZ25hbCBieQo+Pj4+Pj4gc2VuZGluZyB0aGUgbmV4dCBmcmFtZS4KPj4+Pj4KPj4+Pj4g
+Q291bGQgeW91IGV4cGxhaW4gbW9yZSBkZXRhaWwgaG93IHRoZSBUZWdyYSBkaXNwbGF5IGNvbnRy
+b2xsZXIgY291bGQgYmUKPj4+Pj4gY29uZmlndXJlZCB3aXRoIHRoaXMgR1BJTyBwaW5zPwo+Pj4+
+PiBJIGhhdmUgbm8gaWRlYSBleGNlcHQgdGhhdCB0aGUgZGlzcGxheSBjb250cm9sbGVyIHJlZ2lz
+dGVycyB0aGlzIEdQSU8gYXMgYW4KPj4+Pj4gSVJRLgo+Pj4+Cj4+Pj4gT24gVGVncmEgdGhlIGRp
+c3BsYXkgY29udHJvbGxlciBoYXMgYSBzcGVjaWFsIHJlZ2lzdGVyIHRoYXQgY2FuIGJlCj4+Pj4g
+cHJvZ3JhbW1lZCB0byB1c2Ugb25lIG9mIHRoZSB0aHJlZSBHUElPcyBhcyBURSBzaWduYWwuIFRo
+ZW4gdGhlIGRpc3BsYXkKPj4+PiBjb250cm9sbGVyIGNhbiBiZSBjb25maWd1cmVkIGluIG9uZS1z
+aG90IChub24tY29udGludW91cykgbW9kZSwgd2hpY2gKPj4+PiBtZWFucyB0aGF0IHNvZnR3YXJl
+IG5lZWRzIHRvIGV4cGxpY2l0bHkgc2V0IGEgdHJpZ2dlciBiaXQgdG8gdGVsbCB0aGUKPj4+PiBk
+aXNwbGF5IGNvbnRyb2xsZXIgdG8gc2VuZCBhIG5ldyBmcmFtZS4gSWYgVEUgc2lnbmFsbGluZyBp
+cyBlbmFibGVkLAo+Pj4+IHRoZW4gdGhlIGRpc3BsYXkgY29udHJvbGxlciB3aWxsIG5vdCBpbW1l
+ZGlhdGVseSBzZW5kIGEgbmV3IGZyYW1lIHdoZW4KPj4+PiB0cmlnZ2VyZWQgYnV0IHdhaXQgZm9y
+IHNpZ25hbGxpbmcgb2YgdGhpcyBHUElPLgo+Pj4+Cj4+Pj4+PiBTbyB3ZSBoYXZlIGF0IGxlYXN0
+IHR3byB2ZXJ5IGRpZmZlcmVudCBpbXBsZW1lbnRhdGlvbnMgb2YgdGhpcyBvbiB0d28KPj4+Pj4+
+IGRpZmZlcmVudCBTb0NzLiBGdXJ0aGVyIHRoZSBzcGVjaWZpY2F0aW9uIGV4cGxpY2l0bHkgcmVj
+b21tZW5kcyB1c2luZwo+Pj4+Pj4gdGhlIEJUQSBzZXF1ZW5jZSBhbmQgRFNJIHByb3RvY29sIHRv
+IHdhaXQgZm9yIFRFLiBTbyBJIHN0aWxsIHRoaW5rIHRoYXQKPj4+Pj4+IGNvbnRyb2xsZXJzIHRo
+YXQgcHJvdmlkZSBhbiBhZGRpdGlvbmFsLCBub24tc3BlYyBjb21wbGlhbnQgbWV0aG9kIHRvCj4+
+Pj4+PiBzaWduYWwgVEUgc2hvdWxkIGhhbmRsZSBpdCBzZXBhcmF0ZWx5IHJhdGhlciB0aGFuIHdp
+dGhpbiBEU0kuIE90aGVyd2lzZQo+Pj4+Pj4gd2UgZXNzZW50aWFsbHkgbmVlZCB0byBtYWtlIHRo
+ZSBEU0kgImNvcmUiIGF3YXJlIG9mIGFsbCB0aGVzZSBxdWlya3MsCj4+Pj4+PiBhbmQgSSdkIHJh
+dGhlciBhdm9pZCB0aGF0Lgo+Pj4+Pgo+Pj4+PiBZb3UgbWVhbiwgdGhlIERTSSBzcGVjaWZpY2F0
+aW9uIGd1aWRlcyB0byB1c2UgQlRBLCBzbyBpdCdzIGJldHRlciB0byB1c2UKPj4+Pj4gZGlzcGxh
+eSBjb250cm9sbGVyIHJhdGhlciB0aGFuIERTSU0sIHJpZ2h0Pwo+Pj4+Cj4+Pj4gV2hhdCBJJ20g
+c2F5aW5nIGlzIHRoYXQgdGhlcmUncyBub3RoaW5nIGFib3V0IGEgc2lkZS1iYW5kIFRFIHdpcmUg
+aW4gdGhlCj4+Pj4gRFNJIHNwZWMuIEluIGZhY3QgdGhlIHNwZWMgZXhwbGljaXRseSBzYXlzIHRo
+YXQgdGhpcyBtZWNoYW5pc20gb2YgYW4KPj4+PiBleHRlcm5hbCBURSB3aXJlIGZyb20gb2xkZXIg
+cHJvdG9jb2xzIChEQkkpIHdhcyByZXBsYWNlZCBieSB0aGUgQlRBCj4+Pj4gc2VxdWVuY2Ugb3Zl
+ciB0aGUgcHJvdG9jb2wuCj4+Pj4KPj4+PiBOb3csIG15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB1
+c2luZyB0aGUgQlRBIHNlcXVlbmNlIG92ZXIgdGhlIERTSQo+Pj4+IHByb3RvY29sIHdvdWxkIGlu
+dHJvZHVjZSBzb21lIGxhdGVuY3kgYW5kIHRoYXQgZm9yY2VzIHNvbWUgcGFuZWwgdmVuZG9ycwo+
+Pj4+IHRvIHN0aWxsIHByb3ZpZGUgYSBzaWRlLWJhbmQgVEUgd2lyZSBldmVuIGluIERTSSBjb21w
+bGlhbnQgcGFuZWxzLiBCdXQKPj4+PiBzaW5jZSB0aGlzIGlzIG5vdCBwYXJ0IG9mIHRoZSBzcGVj
+aWZpY2F0aW9uIHRoZXJlIGlzIG5vIHN0YW5kYXJkIHdheSB0bwo+Pj4+IGRvIHRoaXMgKGFzIGV2
+aWRlbmNlZCBieSBUZWdyYSBhbmQgRXh5bm9zKS4gVGhlcmVmb3JlIHB1dHRpbmcgc3VjaAo+Pj4+
+IGZ1bmN0aW9uYWxpdHkgaW50byB0aGUgY29yZSBEU0kgY29kZSBpcyBiYWQuCj4+Pj4KPj4+PiBC
+dXQgdGhhdCBkb2Vzbid0IG1lYW4gdGhhdCB5b3UgaGF2ZSB0byBwdXQgdGhpcyBmdW5jdGlvbmFs
+aXR5IGludG8gdGhlCj4+Pj4gZGlzcGxheSBjb250cm9sbGVyIGRyaXZlciBvbiBFeHlub3MuIFdo
+YXQgSSdtIHNheWluZyBpcyB0aGF0IGl0IHNob3VsZAo+Pj4+IGJlIGhhbmRsZWQgYnkgdGhlIFNv
+QyBkcml2ZXIgcmF0aGVyIHRoYW4gdGhlIGNvcmUuIFdoZXJlIGV4YWN0bHkKPj4+PiBwcm9iYWJs
+eSBkZXBlbmRzIG9uIHRoZSBwYXJ0aWN1bGFyIGNhc2UuCj4+Pj4KPj4+Pj4+PiBBcyBJbmtpIGNv
+bW1lbnRlZCBiZWZvcmUsIEknbGwgdHJ5IHRvIHVzZSByZW1vdGUtZW5kcG9pbnQgcHJvcGVydHkg
+b2YgRFNJCj4+Pj4+Pj4gZGV2aWNlIG5vZGUgaW4gZXh5bm9zIERTSU0gZHJpdmVyIGFuZCBjYWxs
+IEZJTUQgbm90aWZpZXIuCj4+Pj4+Pgo+Pj4+Pj4gU291bmRzIGxpa2UgaXQgbWF0Y2hlcyB3aGF0
+IEkgc2FpZCBhYm92ZS4gSSdtIG5vdCBhIGh1Z2UgZmFuIG9mCj4+Pj4+PiBub3RpZmllcnMsIGJ1
+dCBpZiBpdCB3b3JrcyBmb3IgeW91IEkgc3VwcG9zZSB0aGF0J3MgZmluZS4gVGhlCj4+Pj4+PiBh
+bHRlcm5hdGl2ZSB3b3VsZCBiZSB0byBkaXJlY3RseSBjYWxsIGEgRklNRCBmdW5jdGlvbiwgd2hp
+Y2ggaXMKPj4+Pj4+IHNvbWV3aGF0IG1vcmUgZXhwbGljaXQgdGhhbiBhIG5vdGlmaWVyLgo+Pj4+
+Pgo+Pj4+PiBZZXMsIEkgYWxzbyBsaWtlIGV4cGxpY2l0IGNhbGwsIHNvIEkgd2FudCB0byB1c2Ug
+ZHNpX2hvc3Rfb3BzIGFuZCBjYWxscyBpdAo+Pj4+PiBpbiBwYW5lbC4gQnV0IHRoZXJlIGlzIGFu
+IG9iamVjdGlvbiB0byB1c2UgZGlzX2hvc3Rfb3BzLCB3ZSB0aGluayBub3RpZmllcgo+Pj4+PiBp
+biBleHlub3MgZHNpbSBmb3IgZmltZChkaXNwbGF5IGNvbnRyb2xsZXIpLgo+Pj4+Cj4+Pj4gVGhl
+cmUgYXJlIG90aGVyIHdheXMgdG8gZXhwbGljaXRseSBjYWxsIGludG8gdGhlIGRpc3BsYXkgY29u
+dHJvbGxlci4gWW91Cj4+Pj4gY291bGQgZm9yIGV4YW1wbGUgZ2V0IGFjY2VzcyB0byB0aGUgQ1JU
+QyB0aGF0IERTSU0gaXMgY3VycmVudGx5Cj4+Pj4gY29ubmVjdGVkIHRvICh2aWEgZXh5bm9zX2Rz
+aS5lbmNvZGVyLT5jcnRjKSBhbmQgdGhlbiBjYXN0IHRoYXQgdG8gYQo+Pj4+IHN0cnVjdCBleHlu
+b3NfZHJtX2NydGMgYW5kIGNhbGwgYSBmdW5jdGlvbiB0byB0cmlnZ2VyIGEgbmV3IGZyYW1lIHRv
+IGJlCj4+Pj4gc2VudCAoZm9yIGV4YW1wbGUgZXh5bm9zX2RybV9jcnRjX3NlbmRfZnJhbWUoKSku
+IFRoaXMgYXNzdW1lcyB0aGF0IHlvdQo+Pj4+IGNhbiBzYWZlbHkgY2FzdCBzdHJ1Y3QgZHJtX2Ny
+dGMgKiB0byBzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICosIGJ1dCB0aGF0Cj4+Pj4gc2hvdWxkbid0
+IGJlIGEgcHJvYmxlbS4KPj4+Pgo+Pj4+IFdpdGggdGhlIGFib3ZlLCB5b3UgY291bGQgbWFrZSB0
+aGUgRFNJTSBoYW5kbGUgdGhlIFRFIHNpZ25hbCBpbnRlcnJ1cHRzCj4+Pj4gYW5kIHRyaWdnZXIg
+dGhlIERDIHVzaW5nIHRoZSBuZXcgZXh5bm9zX2RybV9jcnRjX3NlbmRfZnJhbWUoKSBmdW5jdGlv
+bi4KPj4+Pgo+Pj4KPj4+IEl0IHNlZW1zIGJldHRlciB0aGFuIHRoZSB1c2Ugb2Ygbm90aWZpZXIu
+IEFjdHVhbGx5LCBvcmlnaW5hbCBwYXRjaCB1c2VkCj4+PiB0aGlzIHdheSBleGNlcHQgVEUgZXZl
+bnQuCj4+PiBNci4gQ2hvLCBsZXQncyB1c2UgcmVtb3RlLWVuZHBvaW50IHByb3BlcnR5IGFuZCB0
+aGlzIHdheSBpbnN0ZWFkIG9mCj4+PiBub3RpZmllci4KPj4+Cj4+Cj4+IFRoZSBzdHJ1Y3QgZXh5
+bm9zX2RzaSBoYXMgcGFuZWxfbm9kZSwgd2hpY2ggaXMgdmFsaWQgYnkKPj4gZXh5bm9zX2RzaV9o
+b3N0X2F0dGFjaCgpIGlzIGNhbGxlZCBmcm9tIHBhbmVsLCB3ZSBjb3VsZCB1c2UgaXQgaW5zdGVh
+ZCBvZgo+PiBnZXR0aW5nIG5ldyByZW1vdGUtZW5kcG9pbnQgbm9kZS4KPj4KPj4gU28gYWZ0ZXIg
+Y2FsbGVkIGV4eW5vc19kc2lfaG9zdF9hdHRhY2goKSwgdGhlIGRzaSBkcml2ZXIgY291bGQga25v
+dyB0aGF0IHRoZQo+PiBwYW5lbCBzdXBwb3J0cyBtaXBpIGNvbW1hbmQgbW9kZSBvciB2aWRlbyBt
+b2RlLAo+PiBhbmQgaWYgdGhlIHBhbmVsIGlzIGZvciBtaXBpIGNvbW1hbmQgbW9kZSBvbmUsIGRz
+aSBkcml2ZXIgZ2V0cyBwYW5lbCB0ZSBncGlvCj4+IGFuZCByZWdpc3RlcnMgaXRzIGlycS4KPgo+
+IFdoeSBkb2VzIHRoZSBURSBHUElPIGV2ZW4gbmVlZCB0byBiZSBpbiB0aGUgcGFuZWwncyBkZXZp
+Y2UgdHJlZSBub2RlPwo+IFdvdWxkbid0IGl0IG1ha2UgbW9yZSBzZW5zZSBmb3IgaXQgdG8gYmUg
+aW4gdGhlIERTSU0gbm9kZT8gQWZ0ZXIgYWxsCj4gdGhhdCdzIHdoYXQgdGhlIEdQSU8gaXMgY29u
+bmVjdGVkIHRvLCByaWdodD8gV2VsbCwgYXQgbGVhc3QgbG9naWNhbGx5Cj4gaWYgbm90IHBoeXNp
+Y2FsbHkuCj4KCkkgYWxzbyBhZ3JlZSB0aGF0IHRoZSBHUElPIGluIERUIG1lYW5zIHRoZSBjb25u
+ZWN0aW9uIGFmdGVyIGFsbC4KCkJ1dCB0aGUgcGFuZWwgcHJvdmlkZXMgdGhlIFRFIHBpbih0aGlz
+IGlzIG9idmlvdXMpIGFuZCBkZWNpZGVzIHRoZSBEU0lNIAptb2RlKGNvbW1hbmQgb3IgdmlkZW8p
+LgpUaGlzIFRFIHBpbiBpcyB1c2VsZXNzIGluIHZpZGVvIG1vZGUuCgpTbyBJIHRoaW5rIGl0J3Mg
+YmV0dGVyIGZvciBwYW5lbCB0byBkZWNpZGUgYW5kIHByb3ZpZGUgYWxsIHJlbGF0ZWQgdGhpbmdz
+LgoKVGhhbmsgeW91LgpCZXN0IHJlZ2FyZHMgWUoKCj4gVGhpZXJyeQo+CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
