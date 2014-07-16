@@ -1,90 +1,88 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv8 2/2] mailbox: Introduce framework for mailbox
-Date: Wed, 16 Jul 2014 15:34:12 +0100
-Message-ID: <53C68D64.4010702@arm.com>
-References: <1405071167-14503-1-git-send-email-jaswinder.singh@linaro.org> <5461658.P0nNPHkj0L@wuerfel> <CAJe_Zhdtzhv=1QfhCAu6G_nq0VqW9v6TvgHSJe9VmgJQwo0U3Q@mail.gmail.com> <5214160.a78RDYzY5T@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v8 4/9] pci: OF: Fix the conversion of IO ranges into IO resources.
+Date: Wed, 16 Jul 2014 09:35:37 -0500
+Message-ID: <CAL_JsqKaR=SYtM7BKTgO_AN5Vb0GCjaiKbA=9Zr7qGB29R9-5Q@mail.gmail.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <201407072322.00990.arnd@arndb.de> <20140708100332.GW6501@e106497-lin.cambridge.arm.com>
+ <201407091031.50402.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5214160.a78RDYzY5T@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org" <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org" <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, "lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "loic.pallardy-qxv4g6HH51o@public.gmane.org" <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "s-anna-l0cyMroinI0@public.gmane.org" <s-anna-l0cyMroinI0@public.gmane.org>, "ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bjorn-UYDU3/A3LUY@public.gmane.org" <bjorn-UYDU3/A3LUY@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org" <Mollie.Wu-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, t.takinishi-+CUm20s59er1P9xLtpHBDw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201407091031.50402.arnd@arndb.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 16/07/14 15:08, Arnd Bergmann wrote:
-> On Wednesday 16 July 2014 18:42:22 Jassi Brar wrote:
->> On 16 July 2014 18:39, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>> On Wednesday 16 July 2014 18:35:33 Jassi Brar wrote:
->>>> On 16 July 2014 18:15, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>>>> On Wednesday 16 July 2014 18:07:04 Jassi Brar wrote:
->>>>>> On 16 July 2014 15:46, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>>>>>> On Wednesday 16 July 2014 10:40:19 Sudeep Holla wrote:
->>>>>>>>> +
->>>>>>>>> +Required property:
->>>>>>>>> +- mbox: List of phandle and mailbox channel specifier.
->>>>>>>>> +
->>>>>>>>> +- mbox-names: List of identifier strings for each mailbox channel
->>>>>>>>> +               required by the client.
->>>>>>>>> +
->>>>>>>>
->>>>>>>> IMO the mailbox names are more associated with the controller channels/
->>>>>>>> mailbox rather than the clients using it. Does it make sense to move
->>>>>>>> this under controller. It also avoid each client replicating the names.
->>>>>>>
->>>>>>> I think it would be best to just make the mbox-names property optional,
->>>>>>> like we have for other subsystems.
->>>>>>>
->>>>>> A very similar subsystem - DMAEngine also has 'dma-names' as a
->>>>>> required property.
->>>>>>
->>>>>> If a client is assigned only 1 mbox in DT, we can do without
->>>>>> mbox-names. But I am not sure what to do if a client needs two or more
->>>>>> differently capable mboxes? Simply allocating in order of mbox request
->>>>>> doesn't seem very robust.
->>>>>
->>>>> Traditionally, these things (regs, interrupts, ...) are just accessed
->>>>> by index. The reason why dmaengine requires the name is that some machines
->>>>> can use multiple DMA engine devices attached to the same request line,
->>>>> so the dmaengine subsystem can pick any of them that has a matching
->>>>> name.
->>>> And also, I think, when a client needs 2 different dma channels, say
->>>> for RX and TX each. The api can't assign the first channel specified
->>>> in 'dmas' property to the first channel request that comes to it,
->>>> unless we assume client driver always requests dma channels in the
->>>> order written in its DT node.  And this is the main reason I see for
->>>> having mbox-names property.
->>>
->>> Most subsystems require passing an explicit index in this case.
->>>
->>>>    If we make mbox-names optional, do we assume client driver must
->>>> request mbox in the order specified in its DT node?
->>>
->>> Correct.
->>>
->> OK. So how about we drop mbox-names altogether and expect client
->> driver to simply provide an index of the mbox needed?
+On Wed, Jul 9, 2014 at 3:31 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 08 July 2014, Liviu Dudau wrote:
+>> On Mon, Jul 07, 2014 at 10:22:00PM +0100, Arnd Bergmann wrote:
+>> >
+>> > I looked at the other drivers briefly, and I think you indeed fix the Tegra
+>> > driver with this but break the integrator driver as mentioned above.
+>> > The other callers of of_pci_range_to_resource() are apparently not
+>> > impacted as they recalculate the values they get.
+>>
+>> I would argue that integrator version is having broken assumptions. If it would
+>> try to allocate that IO range or request the resource as returned currently by
+>> of_pci_range_to_resource (without my patch) it would fail. I know because I did
+>> the same thing in my host bridge driver and it failed miserably. That's why I
+>> tried to patch it.
 >
-> That would be fine with me, but I think a lot of people like
-> the idea of identifying things by name, and are used to that
-> from the other subsystems.
+> The integrator code was just introduced and the reason for how it does things
+> is the way that of_pci_range_to_resource() works today. We tried to cope with
+> it and not change the existing behavior in order to not break any other drivers.
 >
-> Maybe you can leave the mbox-names property defined as 'optional'
-> in the generic mbox binding but remove the code in Linux? That way
-> we can always put it back at a later point without changing the
-> binding in an incompatible way.
+> It's certainly not fair to call the integrator version broken, it just works
+> around the common code having a quirky interface. We should probably have
+> done of_pci_range_to_resource better than it is today (I would have argued
+> for it to return an IORESOURCE_MEM with the CPU address), but it took long
+> enough to get that merged and I was sick of arguing about it.
 >
-> Individual mailbox clients can mandate specific strings.
+>> If the IO space is memory mapped, then we use the port number, the io_offset
+>> and the PCI_IOBASE to get to the virtual address that, when accessed, will
+>> generate the correct addresses on the bus, based on what the host bridge has
+>> been configured.
+>>
+>> This is the current level of my understanding of PCI IO.
 
-This sounds reasonable to me.
+What is io_offset supposed to be and be based on?
 
-Regards,
-Sudeep
+> Your understanding is absolutely correct, and that's great because very few
+> people get that right. What I think we're really arguing about is what the
+> of_pci_range_to_resource is supposed to return. As you and Bjorn both pointed
+> out earlier, there are in fact two resources associated with the I/O window
+> and the flaw in the current implementation is that of_pci_range_to_resource
+> returns the numeric values for the IORESOURCE_MEM resource, but sets the
+> type to IORESOURCE_IO, which is offset from that by PCI_IOBASE.
+>
+> You try to fix that by making it return the correct IORESOURCE_IO resource,
+> which is a reasonable approach but you must not break drivers that rely
+> on the broken resource while doing that.
+>
+> The approach that I would have picked is to return the IORESOURCE_MEM
+> resource associated with the I/O window and pick a (basically random)
+> IORESOURCE_IO resource struct based on what hasn't been used and then
+> compute the appropriate io_offset from that. This approach of course
+> would also have required fixing up all drivers relying on the current
+> behavior.
+>
+> To be clear, I'm fine with you (and Bjorn if he cares) picking the
+> approach you like here, either one of these works fine as long as the
+> host drivers use the interface in the way it is defined.
+>
+>> Now, I believe Rob has switched entirely to using my series in some test that
+>> he has run and he hasn't encountered any issues, as long as one remembers in
+>> the host bridge driver to add the io_base offset to the .start resource. If
+>> not then I need to patch pci_v3.c.
+>
+> The crazy part of all these discussions is that basically nobody ever uses
+> I/O port access, so it's very hard to test and we don't even notice when
+> we get it wrong, but we end up spending most of the time for PCI host controller
+> reviews trying to get these right.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FWIW, I test i/o accesses with Versatile QEMU. The LSI53xxxx device in
+the model has a kconfig option to use i/o accesses. However, I have
+seen in the past this is an area where 2 wrongs can make a right.
+
+Rob
