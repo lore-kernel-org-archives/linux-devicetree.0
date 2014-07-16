@@ -1,70 +1,66 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] drivers/rtc/rtc-isl12022.c: Device tree support
-Date: Wed, 16 Jul 2014 09:59:04 +0100
-Message-ID: <20140716085904.GA26951@leverpostej>
-References: <1405477705-16885-1-git-send-email-stuartl@vrt.com.au>
- <1405477705-16885-2-git-send-email-stuartl@vrt.com.au>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v3 08/12] Documentation: bindings: add doc for the USB2
+ ChipIdea USB driver
+Date: Wed, 16 Jul 2014 10:59:24 +0200
+Message-ID: <20140716085924.GA28151@kwain>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1405499166-6726-9-git-send-email-antoine.tenart@free-electrons.com>
+ <23972141.94aiK9jz66@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1405477705-16885-2-git-send-email-stuartl@vrt.com.au>
+In-Reply-To: <23972141.94aiK9jz66@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Longland <stuartl@vrt.com.au>
-Cc: Roman Fietze <roman.fietze@telemotive.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 03:28:25AM +0100, Stuart Longland wrote:
-> Add some support for configuring isl12020/isl12022 devices using the
-> Device Tree blob.
-> 
-> Signed-off-by: Stuart Longland <stuartl@vrt.com.au>
+Hi Arnd,
 
-Please document this as with isl,isl12057, in
-Documentation/devicetree/bindings/i2c/trivial-devices.txt
+On Wed, Jul 16, 2014 at 10:39:36AM +0200, Arnd Bergmann wrote:
+> On Wednesday 16 July 2014 10:26:02 Antoine T=E9nart wrote:
+> > +
+> > +Required properties:
+> > +- compatible: should be "chipidea,usb2"
+> > +- reg: base address and length of the registers
+> > +- interrupts: interrupt for the USB controller
+> > +
+> > +Optional properties:
+> > +- clocks: reference to the USB clock
+> > +- usb-phy: reference to the USB PHY
+>=20
+> I think the phy reference should use the standard phy binding, using
+> "phys" property to refer to a node that has a "#phy-cells" property.
+>=20
+> It seems the code gets this right, but just the documentation is wron=
+g.
 
-The string itself looks fine.
+I moved this PHY driver from usb/phy/ to phy/ and forgot to update this
+property. I'll fix it.
 
-> ---
->  drivers/rtc/rtc-isl12022.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
-> index 03b8911..aa55f08 100644
-> --- a/drivers/rtc/rtc-isl12022.c
-> +++ b/drivers/rtc/rtc-isl12022.c
-> @@ -17,6 +17,8 @@
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  #include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  
->  #define DRV_VERSION "0.1"
->  
-> @@ -271,6 +273,13 @@ static int isl12022_probe(struct i2c_client *client,
->  	return PTR_ERR_OR_ZERO(isl12022->rtc);
->  }
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id isl12022_dt_match[] = {
-> +	{ .compatible = "isl,isl12022" },
-> +	{ },
-> +};
-> +#endif
-> +
->  static const struct i2c_device_id isl12022_id[] = {
->  	{ "isl12022", 0 },
->  	{ }
-> @@ -280,6 +289,9 @@ MODULE_DEVICE_TABLE(i2c, isl12022_id);
->  static struct i2c_driver isl12022_driver = {
->  	.driver		= {
->  		.name	= "rtc-isl12022",
-> +#ifdef CONFIG_OF
-> +		.of_match_table = of_match_ptr(isl12022_dt_match),
-> +#endif
+>=20
+> > +- vbus-supply: reference to the VBUS regulator
+> > +- dma-mask: DMA bit mask
+>=20
+> No. Do not use "dma-mask" as a property, that is a pure Linux specifi=
+c
+> concept. The DT way to express this is to use the 'dma-ranges' proper=
+ty
+> in the device's parent to describe any bus-related restrictions, and
+> for the driver to ask for a mask that matches what the hardware is
+> capable of (which may be smaller or larger than what the bus supports=
+).
 
-You can drop the ifdef here, of_match_ptr(x) is NULL if !CONFIG_OF.
+Ok. I'll answer in the CI driver's thread.
 
-Thanks,
-Mark.
+Thanks!
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
