@@ -1,45 +1,108 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Wed, 16 Jul 2014 23:18:52 +0200
-Message-ID: <1450785.beFNo3ByBF@vostro.rjw.lan>
-References: <cover.1404231535.git.viresh.kumar@linaro.org> <CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com> <CAKohpo=bUMKa752fBXZTb0WPYMfJtuR5uk7z-YaXYV63fhJWtg@mail.gmail.com>
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv5 3/5] ARM: dts: socfpga: unuse the slot-node and
+ deprecated the supports-highspeed for dw-mmc
+Date: Wed, 16 Jul 2014 16:06:09 -0500
+Message-ID: <1405544769.6107.1.camel@linux-builds1>
+References: <1405050587-5577-1-git-send-email-jh80.chung@samsung.com>
+	 <1405050587-5577-4-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=bUMKa752fBXZTb0WPYMfJtuR5uk7z-YaXYV63fhJWtg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Stephen Boyd <sboyd@codeaurora.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405050587-5577-4-git-send-email-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 16, 2014 09:31:54 PM Viresh Kumar wrote:
-> Cc'ing Thomas,
+On Fri, 2014-07-11 at 12:49 +0900, Jaehoon Chung wrote:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
 > 
-> On 8 July 2014 10:20, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 4 July 2014 09:51, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >> Yeah, having something like what you suggested from DT is the perfect
-> >> solution to get over this. The only reason why I am not touching that here
-> >> is to not delay other patches just because of that.
-> >>
-> >> There are separate threads going on for that and probably somebody
-> >> else was trying to push for that.
-> >>
-> >> That's it, nothing more. I would definitely like to use those bindings instead
-> >>  of the crazy routines we are trying here, once that is finalized :)
-> >
-> > Do we have some kind of agreement for this temporary solution? Anyways
-> > I will kick the other thread again to resolve the bindings soon.
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/socfpga_arria5.dtsi   |    9 +++------
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi |    9 +++------
+>  arch/arm/boot/dts/socfpga_vt.dts        |    9 +++------
+>  3 files changed, 9 insertions(+), 18 deletions(-)
 > 
-> Hi Mike/Rafael,
-> 
-> Thomas has a dependency on the patch adding "find_siblings()":
-> http://www.spinics.net/lists/arm-kernel/msg348080.html
-> 
-> Would it be fine to get this temporary solution (Only within cpufreq-cpu0
-> file, so that it doesn't become an API) for now and updating it later once
-> bindings are closed?
+> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> index 12d1c2c..468fc4c 100644
+> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> @@ -29,13 +29,10 @@
+>  
+>  		dwmmc0@ff704000 {
+>  			num-slots = <1>;
+> -			supports-highspeed;
+>  			broken-cd;
+> -
+> -			slot@0 {
+> -				reg = <0>;
+> -				bus-width = <4>;
+> -			};
+> +			bus-width = <4>;
+> +			cap-mmc-highspeed;
+> +			cap-sd-highspeed;
+>  		};
+>  
+>  		sysmgr@ffd08000 {
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> index bf51182..1ee03c4 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> @@ -30,13 +30,10 @@
+>  
+>  		dwmmc0@ff704000 {
+>  			num-slots = <1>;
+> -			supports-highspeed;
+>  			broken-cd;
+> -
+> -			slot@0 {
+> -				reg = <0>;
+> -				bus-width = <4>;
+> -			};
+> +			bus-width = <4>;
+> +			cap-mmc-highspeed;
+> +			cap-sd-highspeed;
+>  		};
+>  
+>  		ethernet@ff702000 {
+> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+> index 09792b4..f9345e0 100644
+> --- a/arch/arm/boot/dts/socfpga_vt.dts
+> +++ b/arch/arm/boot/dts/socfpga_vt.dts
+> @@ -43,13 +43,10 @@
+>  
+>  		dwmmc0@ff704000 {
+>  			num-slots = <1>;
+> -			supports-highspeed;
+>  			broken-cd;
+> -
+> -			slot@0 {
+> -				reg = <0>;
+> -				bus-width = <4>;
+> -			};
+> +			bus-width = <4>;
+> +			cap-mmc-highspeed;
+> +			cap-sd-highspeed;
+>  		};
+>  
+>  		ethernet@ff700000 {
 
-I don't like that idea, but I wonder what other people think.
+Acked-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-Rafael
+Thanks,
+Dinh
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
