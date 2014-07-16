@@ -1,48 +1,63 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/6] dt-bindings: arm: add arm,cortex-a12 cpu compatible
- property
-Date: Wed, 16 Jul 2014 10:03:21 +0100
-Message-ID: <20140716090321.GB26951@leverpostej>
-References: <1471578.ILeMmG2DL6@diego> <2686681.eHDb2kq8iP@diego>
- <20140716005616.GB26207@quad.lixom.net>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: rockchip: add debug uart used by rk3288
+Date: Wed, 16 Jul 2014 11:11:22 +0200
+Message-ID: <4054962.m70Hhy4CVc@diego>
+References: <1471578.ILeMmG2DL6@diego> <2866950.oXmKFGy9mh@diego> <CAD=FV=W3aWeT3RP5_g9r8kV8ToeHfyn57JY-py2zGVW9DF_7RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140716005616.GB26207@quad.lixom.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "dianders@chromium.org" <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, "eddie.cai@rock-chips.com" <eddie.cai@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=W3aWeT3RP5_g9r8kV8ToeHfyn57JY-py2zGVW9DF_7RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdWwgMTYsIDIwMTQgYXQgMDE6NTY6MTZBTSArMDEwMCwgT2xvZiBKb2hhbnNzb24g
-d3JvdGU6Cj4gT24gV2VkLCBKdWwgMTYsIDIwMTQgYXQgMTI6NTk6MzNBTSArMDIwMCwgSGVpa28g
-U3TDvGJuZXIgd3JvdGU6Cj4gPiBUaGlzIGlzIG5lY2Vzc2FyeSBmb3IgdGhlIG5ldyBSSzMyODgg
-c29jLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
-LmRlPgo+ID4gLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9j
-cHVzLnR4dCB8IDEgKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+ID4gCj4g
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9jcHVz
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1cy50eHQKPiA+
-IGluZGV4IDFmZTcyYTAuLjYyMGExYTggMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMudHh0Cj4gPiBAQCAtMTUyLDYgKzE1Miw3IEBAIG5v
-ZGVzIHRvIGJlIHByZXNlbnQgYW5kIGNvbnRhaW4gdGhlIHByb3BlcnRpZXMgZGVzY3JpYmVkIGJl
-bG93Lgo+ID4gIAkJCSAgICAiYXJtLGNvcnRleC1hNyIKPiA+ICAJCQkgICAgImFybSxjb3J0ZXgt
-YTgiCj4gPiAgCQkJICAgICJhcm0sY29ydGV4LWE5Igo+ID4gKwkJCSAgICAiYXJtLGNvcnRleC1h
-MTIiCj4gPiAgCQkJICAgICJhcm0sY29ydGV4LWExNSIKPiA+ICAJCQkgICAgImFybSxjb3J0ZXgt
-YTUzIgo+IAo+IFlvdSBtaWdodCBhcyB3ZWxsIGFkZCAtYTE3IHdoaWxlIHlvdSdyZSBhdCBpdCwg
-c2luY2UgaXQncyBhbiBhbm5vdW5jZWQgcGFydAo+IGZyb20gQVJNLgoKWWVzIHBsZWFzZSEKCkZv
-ciBzYWlkIHBhdGNoIHdpdGggYm90aCBzdHJpbmdzOgoKQWNrZWQtYnk6IE1hcmsgUnV0bGFuZCA8
-bWFyay5ydXRsYW5kQGFybS5jb20+CgpUaGFua3MsCk1hcmsuCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Am Dienstag, 15. Juli 2014, 21:13:10 schrieb Doug Anderson:
+> Heiko,
+>=20
+> On Tue, Jul 15, 2014 at 4:00 PM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
+ote:
+> > The uarts on rk3288 are still compatible with the dw_8250, but loca=
+ted
+> > at a different position and need DEBUG_UART_8250_WORD enabled.
+> >=20
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > ---
+> >=20
+> >  arch/arm/Kconfig.debug | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> > index 8f90595..f68def0 100644
+> > --- a/arch/arm/Kconfig.debug
+> > +++ b/arch/arm/Kconfig.debug
+> > @@ -613,6 +613,14 @@ choice
+> >=20
+> >                   Say Y here if you want kernel low-level debugging
+> >                   support
+> >                   on Rockchip based platforms.
+> >=20
+> > +       config DEBUG_RK32_UART2
+>=20
+> It's slightly confusing that you didn't rename the old "DEBUG_RK3X_UA=
+RT2".
+
+My problem is, to what :-) ... DEBUG_RK30_UART2 ?
+
+RK30xx and RK31xx share these, but I guess at least the description sho=
+uld be=20
+adapted.
+
+
+>=20
+> Other than that:
+>=20
+> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
