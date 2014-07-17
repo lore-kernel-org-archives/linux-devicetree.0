@@ -1,59 +1,56 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: keystone: add mdio devices entries
-Date: Thu, 17 Jul 2014 17:59:22 +0300
-Message-ID: <53C7E4CA.2090903@ti.com>
-References: <1404911660-10047-2-git-send-email-grygorii.strashko@ti.com> <1405609087-9128-1-git-send-email-grygorii.strashko@ti.com>
+From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH] irqchip: gic: Add binding probe for ARM GIC400
+Date: Thu, 17 Jul 2014 09:13:37 -0500
+Message-ID: <53C7DA11.2000105@amd.com>
+References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1404947104-21345-2-git-send-email-suravee.suthikulpanit@amd.com>
+ <2932284.F1eaAf8ArJ@diego> <2621565.f5eISveXXJ@diego>
+ <20140717124804.GI13108@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405609087-9128-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140717124804.GI13108@titan.lakedaemon.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, Catalin.Marinas@arm.com, Harish.Kasiviswanathan@amd.com, linux-kernel@vger.kernel.org, Will.Deacon@arm.com, linux-pci@vger.kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
-On 07/17/2014 05:58 PM, Grygorii Strashko wrote:
-> The Keystone 2 has MDIO HW block which are compatible
-> to Davinci SoCs:
-> See "Gigabit Ethernet (GbE) Switch Subsystem"
->    See http://www.ti.com/lit/ug/sprugv9d/sprugv9d.pdf
+On 7/17/2014 7:48 AM, Jason Cooper wrote:
+> On Tue, Jul 15, 2014 at 12:03:03AM +0200, Heiko St=FCbner wrote:
+>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>
+>> Commit 3ab72f9156bb "dt-bindings: add GIC-400 binding" added the
+>> "arm,gic-400" compatible string, but the corresponding IRQCHIP_DECLA=
+RE
+>> was never added to the gic driver.
+>>
+>> Therefore add the missing irqchip declaration for it.
+>>
+>> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>
+>> Removed additional empty line and adapted commit message to mark it
+>> as fixing an issue.
+>> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+>> ---
+>> As I really need this, I took the liberty of adapting the patch acco=
+rdingly
+>> to make it apply on top of the current irqchip/for-next (or urgent) =
+and
+>> explicitly state the fixed issue. Hope that is ok
+>>
+>>   drivers/irqchip/irq-gic.c | 1 +
+>>   1 file changed, 1 insertion(+)
 >
-> Hence, add corresponding DT entry for Keystone 2.
+> Applied to irqchip/urgent with Will's Ack and Cc'd to stable for v3.1=
+4+
+>
+> thx,
+>
+> Jason.
+>
+Thank you,
 
-This is updated version of patch (missed v2 in subj).
+Suravee
 
->
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> ---
->   arch/arm/boot/dts/keystone.dtsi |   11 +++++++++++
->   1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index c1414cb..9e31fe7 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -266,5 +266,16 @@
->   			ranges = <0 0 0x30000000 0x10000000
->   				  1 0 0x21000A00 0x00000100>;
->   		};
-> +
-> +		mdio: mdio@02090300 {
-> +			compatible	= "ti,keystone_mdio", "ti,davinci_mdio";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg		= <0x02090300 0x100>;
-> +			status = "disabled";
-> +			clocks = <&clkpa>;
-> +			clock-names = "fck";
-> +			bus_freq	= <2500000>;
-> +		};
->   	};
->   };
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
