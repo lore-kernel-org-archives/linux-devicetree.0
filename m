@@ -1,60 +1,51 @@
-From: pramod gurav <pramod.gurav.etc@gmail.com>
-Subject: Re: [PATCH 1/3] mfd: qpnp-spmi: add support for Qualcomm QPNP PMICs
-Date: Thu, 17 Jul 2014 16:21:33 +0530
-Message-ID: <CAMf-jSkxEmCeKDfw+=+QwgLHz7wYdWJB9qk1bi1gzP7Qpw-6jQ@mail.gmail.com>
-References: <1404834869-23049-1-git-send-email-svarbanov@mm-sol.com>
-	<1404834869-23049-2-git-send-email-svarbanov@mm-sol.com>
-	<CAMf-jSk5+c1QYfKfjqmstB60bM3adK5tgAYwmPKhOi6cSeM_WA@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
+Date: Thu, 17 Jul 2014 13:00 +0200
+Message-ID: <2360323.ktzTJnrmOX@avalon>
+References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com> <Pine.LNX.4.64.1403302313290.12008@axis700.grange> <53392FC9.9070706@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAMf-jSk5+c1QYfKfjqmstB60bM3adK5tgAYwmPKhOi6cSeM_WA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Josh Cartwright <joshc@codeaurora.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <53392FC9.9070706@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Linux Media Mailing List <linux-media@vger.kernel.org>, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 4:18 PM, pramod gurav
-<pramod.gurav.etc@gmail.com> wrote:
-> +Mark Brown
-> Hi Josh/Stanimir,
->
->
-> On Tue, Jul 8, 2014 at 9:24 PM, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
->> From: Josh Cartwright <joshc@codeaurora.org>
->>
->> The Qualcomm QPNP PMIC chips are components used with the
->> Snapdragon 800 series SoC family.  This driver exists
-> .
-> [SNIP]
-> .
->> +config MFD_QPNP_SPMI
->> +       tristate "Qualcomm QPNP SPMI PMIC"
->> +       depends on ARCH_QCOM || COMPILE_TEST
->> +       depends on OF
->> +       select MFD_CORE
->> +       select REGMAP_SPMI
-> REGMAP_SPMI use SPMI functions.
->
-> https://patchwork.kernel.org/patch/4566591/
+Hi Josh,
 
-Sorry for incomplete comment as I sent the mail by mistake.
-In above patchwork discussion Mark Brown suggested "driver using
-REGMAP_SPMI should depend on SPMI and select REGMAP_SPMI, assuming
-SPMI is a user-selectable Kconfig symbol."
+What's the status of this patch set ? Do you plan to rebase and resubmit it ?
 
->> +       help
->> +         This enables support for the Qualcomm QPNP SPMI PMICs.
->> +         These PMICs are currently used with the Snapdragon 800 series of
->> +         SoCs.  Note, that this will only be useful paired with descriptions
-> .
->
-> --
-> Thanks and Regards
-> Pramod
-
-
+On Monday 31 March 2014 17:05:13 Josh Wu wrote:
+> Dear Guennadi
+> 
+> On 3/31/2014 5:20 AM, Guennadi Liakhovetski wrote:
+> > Hi Josh,
+> > 
+> > Please correct me if I'm wrong, but I don't see how this is going to work
+> > without the central part - building asynchronous V4L2 data structures from
+> > the DT, something that your earlier patch
+> 
+> Here you mean Bryan Wu not me, right?   ;-)
+> Bryan write the patch "[v2] media: soc-camera: OF cameras" in:
+> https://patchwork.linuxtv.org/patch/22288/.
+> And I saw Ben Dooks already sent out his patch to support soc-camera OF
+> now (https://patchwork.linuxtv.org/patch/23304/) which is simpler than
+> Bryan's.
+> 
+> > "media: soc-camera: OF cameras"
+> > was doing, but which you stopped developing after a discussion with Ben
+> > (added to Cc).
+> 
+> And yes, atmel-isi dt patch should not work without above SoC-Camera of
+> support patch.
+> But as the atmel-isi dt binding document and port node can be finalized.
+> So I think this patch is ready for the mainline.
+> 
+> BTW: I will test Ben's patch with atmel-isi.
 
 -- 
-Thanks and Regards
-Pramod
+Regards,
+
+Laurent Pinchart
