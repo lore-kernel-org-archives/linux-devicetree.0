@@ -1,21 +1,25 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m
- MSI(-X)
-Date: Thu, 17 Jul 2014 09:13:20 -0400
-Message-ID: <20140717131320.GM13108@titan.lakedaemon.net>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Thu, 17 Jul 2014 14:17:58 +0100
+Message-ID: <20140717131758.GK30313@leverpostej>
 References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
  <1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: suravee.suthikulpanit@amd.com
-Cc: marc.zyngier@arm.com, mark.rutland@arm.com, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
+To: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 06:05:03PM -0500, suravee.suthikulpanit@amd.com wrote:
+Hi Suravee,
+
+Apologies for the late reply on this one. I was hoping that Marc would
+be able to take another look at this, but he's away at present.
+
+On Thu, Jul 10, 2014 at 12:05:03AM +0100, suravee.suthikulpanit@amd.com wrote:
 > From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 > 
 > ARM GICv2m specification extends GICv2 to support MSI(-X) with
@@ -54,10 +58,57 @@ On Wed, Jul 09, 2014 at 06:05:03PM -0500, suravee.suthikulpanit@amd.com wrote:
 >  8 files changed, 334 insertions(+), 13 deletions(-)
 >  create mode 100644 drivers/irqchip/irq-gic-v2m.c
 >  create mode 100644 drivers/irqchip/irq-gic-v2m.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 5573c08..d2eea0b 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -12,11 +12,14 @@ Main node required properties:
+> 
+>  - compatible : should be one of:
+>         "arm,gic-400"
+> +       "arm,gic-400-v2m"
 
-Applied to irqchip/gic with some minor typos fixed in the commit
-message.
+I'm still not entirely comfortable about this, as I was under the
+impression that the MSI frame was a block on the side of the GIC rather
+than being a composite entity with the rest of the GIC.
 
-thx,
+Which means that it would be entirely possible to attach multiple copies
+of that block, which this binding doesn't cover.
 
-Jason.
+>         "arm,cortex-a15-gic"
+>         "arm,cortex-a9-gic"
+>         "arm,cortex-a7-gic"
+>         "arm,arm11mp-gic"
+> +
+>  - interrupt-controller : Identifies the node as an interrupt controller
+> +
+>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>    interrupt source.  The type shall be a <u32> and the value shall be 3.
+> 
+> @@ -37,9 +40,16 @@ Main node required properties:
+>         the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
+>         the interrupt is wired to that CPU.  Only valid for PPI interrupts.
+> 
+> -- reg : Specifies base physical address(s) and size of the GIC registers. The
+> -  first region is the GIC distributor register base and size. The 2nd region is
+> -  the GIC cpu interface register base and size.
+> +- reg : Specifies base physical address(s) and size of the GIC register frames.
+> +
+> +  Region | Description
+> +  Index  |
+> +  -------------------------------------------------------------------
+> +     0   | GIC distributor register base and size
+> +     1   | GIC cpu interface register base and size
+> +     2   | VGIC interface control register base and size (Optional)
+> +     3   | VGIC CPU interface register base and size (Optional)
+> +     4   | GICv2m MSI interface register base and size (Optional)
+
+And describing it as a separate (but related) component would get around
+the issue of orthogonality with the GICV and GICH registers.
+
+Nit: can we use the architected prefixes here please? GICC, GICD, GICH,
+and GICV respectively for indexes 0-3.
+
+Cheers,
+Mark.
