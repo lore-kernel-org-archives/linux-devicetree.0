@@ -1,239 +1,98 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
-Date: Thu, 17 Jul 2014 22:24:43 +0530
-Message-ID: <CAJe_ZhdM88x883DqxerW-JWpVeiFR9yA7s_=gpPZ7w1qPDJR=A@mail.gmail.com>
-References: <1405232911-4569-1-git-send-email-mollie.wu@linaro.org>
-	<5755738.IRCDfO2QJn@wuerfel>
-	<CAJe_Zhc91g1=CTJUBaFaqk9Np4u4oEqddZEx_zeVxn7EdMEjmw@mail.gmail.com>
-	<13950816.fBdtyDiPqD@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Thu, 17 Jul 2014 17:58:16 +0100
+Message-ID: <20140717165816.GA17528@sirena.org.uk>
+References: <1405368645-4168-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <13950816.fBdtyDiPqD@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V8Y3+xXnhQGsvjWT"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405368645-4168-1-git-send-email-dmurphy@ti.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17 July 2014 19:18, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 17 July 2014 19:02:53 Jassi Brar wrote:
 
->
->> > Losing half the RAM or PCI should not be a problem, you'd just run
->> > with reduced functionality. You wouldn't want to do that in practice,
->> > but it's different from a hard dependency.
->> >
->> Sorry I am not sure what you mean. Is it ok as such?
->
-> What I mean is that it should be ok to drop the dependency, but you
-> can't add a 'select ARM_LPAE'. The memory should be handled correctly
-> already (you will just not see the upper 2GB), while the PCI host
-> driver should probably be checked for its error handling so it
-> prints a meaningful error message when it can't reach its MMIO space.
->
-OK, got it.
+--V8Y3+xXnhQGsvjWT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
->> >> >> +static void got_data(u32 code)
->> >> >> +{
->> >> >> +     struct completion *c = NULL;
->> >> >> +     mhu_handler_t hndlr = NULL;
->> >> >> +     unsigned long flags;
->> >> >> +     int ev;
->> >> >> +
->> >> >> +     if (code & RESP_BIT)
->> >> >> +             ev = EV_RR;
->> >> >> +     else
->> >> >> +             ev = EV_RC;
->> >> >> +
->> >> >> +     spin_lock_irqsave(&fsm_lock, flags);
->> >> >> +
->> >> >> +     if (mhu_fsm[fsm_state][ev] == MHU_INVLD) {
->> >> >> +             spin_unlock_irqrestore(&fsm_lock, flags);
->> >> >> +             pr_err("State-%d EV-%d FSM Broken!\n", fsm_state, ev);
->> >> >> +             return;
->> >> >> +     }
->> >> >> +     fsm_state = mhu_fsm[fsm_state][ev];
->> >> >> +
->> >> >> +     if (code & RESP_BIT) {
->> >> >> +             c = ax->c;
->> >> >> +             memcpy_fromio(ax->buf, rsp_from_scb, ax->len);
->> >> >> +             list_move(&ax->node, &free_xfers);
->> >> >> +             ax = NULL;
->> >> >> +     } else {
->> >> >> +             /* Find and dispatch relevant registered handler */
->> >> >> +             if (code < MHU_NUM_CMDS)
->> >> >> +                     hndlr = handler[code];
->> >> >> +             if (!hndlr)
->> >> >> +                     pr_err("No handler for CMD_%u\n", code);
->> >> >> +     }
->> >> >> +
->> >> >> +     spin_unlock_irqrestore(&fsm_lock, flags);
->> >> >> +
->> >> >> +     if (hndlr)
->> >> >> +             hndlr(code, cmd_from_scb);
->> >> >> +     if (c)
->> >> >> +             complete(c);
->> >> >> +}
->> >> >> +
->> >> >> +static void mhu_recv(struct mbox_client *cl, void *data)
->> >> >> +{
->> >> >> +     got_data((u32)data);
->> >> >> +     schedule_work(&scb_work);
->> >> >> +}
->> >> >
->> >> > Why the cast between integer and pointer?
->> >> >
->> >> The common mailbox framework passes around pointers to data packets.
->> >> Its completely between controller and client drivers to decide the
->> >> format of the packet. In my case the packet is a simple u32 value.
->> >
->> > I don't think the mailbox framework should allow that much
->> > flexibility, because that would break portable drivers that
->> > rely on a particular behavior from the mailbox provider.
->> >
->> > I understand that your driver is not portable to another mailbox
->> > provider, but it still seems like a mistake in the API that should
->> > better be fixed sooner than later.
->> >
->> Here is what I remember of many discussions on the point over the last year :)
->> o  We want to support zero-copy receives, which implies the mailbox
->> framework must simply forward the pointer to "data packet" from
->> controller to client driver.
->> o  We could not think of a generic enough structure for 'data packet'
->> that could fit all protocols. So we assume the data packet format is
->> an explicit understanding between the controller(+remote) and the
->> client driver.
->>
->> Or did I miss your point?
->
-> Forwarding a pointer is ok, but then I think you should not overload
-> the 'void *data' argument. In the case above, you don't actually use
-> a pointer at all, but instead you use a 'code' that is taken as
-> an index into an array or a flag.
->
-> This is particularly broken when you think about 64-bit machines
-> on which you cannot cast a pointer to an u32.
->
-> What I think you should do is define your own data type for the
-> mailbox, which would be specific to your mailbox client and change
-> the code above to
->
-> struct mhu_mbox_message {
->         u32 code; /* another client could store a pointer here */
-> };
->
-> static void mhu_recv(struct mbox_client *cl, void *data)
-> {
->         struct mhu_mbox_message *msg = data;
->
->         got_data(msg->code);
->         schedule_work(&scp_work);
-> }
->
-> You get the cost of another register load here, but that should
-> be almost free.
->
-> There should probably also be some way to ensure that the amount
-> of data passed in the structure matches between mbox provider
-> and client.
->
-Ah ok, I am relieved its only for controller-client, and not for the api :)
-Yes I will use mhu_mbox_message as you suggest.
+On Mon, Jul 14, 2014 at 03:10:45PM -0500, Dan Murphy wrote:
 
->> >> >> +                     do {
->> >> >> +retry:
->> >> >> +                             /* Wait until we get reply */
->> >> >> +                             count = 0x1000000;
->> >> >> +                             do {
->> >> >> +                                     cpu_relax();
->> >> >> +                                     val = readl_relaxed(
->> >> >> +                                             rx_reg + INTR_STAT_OFS);
->> >> >> +                             } while (--count && !val);
->> >> >> +
->> >> >> +                             if (!val) {
->> >> >> +                                     pr_err("%s:%d SCB didn't reply\n",
->> >> >> +                                            __func__, __LINE__);
->> >> >> +                                     goto retry;
->> >> >
->> >> > It seems like this loop is unbounded and will just print an error every
->> >> > 16M loops but never give up or re-enable interrupts if called with
->> >> > interrupts disabled.
->> >> >
->> >> > It should probably be changed to either enforce being called with interrupts
->> >> > enabled so you can call msleep() inbetween, or you should add error-handling
->> >> > in case the remote side does not reply.
->> >> >
->> >> We can do that for completeness but otherwise my platform is as good
->> >> as dead if the remote doesn't reply for some reason. And there is no
->> >> fool-proof way to recover the state-machine from a failed
->> >> communication.
->> >
->> > Do you know how long it takes normally? If you can prove that the
->> > reply normally comes within a few microseconds, you can instead call
->> > WARN_ON() once after too much time passes, and then continue polling.
->> >
->> > The case to avoid here is just accidentally polling for multiple
->> > milliseconds with interrupts disabled, which would cause a lot of
->> > problems.
->> >
->> From a few hundred micro-sec for CPU reset, to potentially tens of
->> milli-sec for some I2C transaction ... yes we do have for I2C over
->> mailbox! ;)
->>
->> Probably bailing out of the loop and returning -ETIMEOUT to the
->> caller, before a WARN(), is the simplest way to die.
->
-> If you can have multiple miliseconds here, I think the code should
-> be changed to run in non-atomic context and use msleep(1) or
-> usleep_range() as a back-off. Is that possible?
->
-I don't think we could sleep there but that should be ok because the
-code is used only when we don't have mailbox framework ready i.e, in
-very early boot before timers are ready and also as late as during
-reboot/poweroff. Also I realize long delays like those for I2C would
-never use this code - they would always have mailbox usable during
-their lifetime.
+There's a few smallish issues below but this is basically good so I've
+applied it, please send incremental fixed for the things below.
 
+> +	/* Turn on Class D amplifier */
+> +	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN_MASK,
+> +						TAS2552_CLASSD_EN);
+> +
 
->> >> >> +struct mb86s7x_peri_clk {
->> >> >> +     u32 payload_size;
->> >> >> +     u32 cntrlr;
->> >> >> +     u32 domain;
->> >> >> +     u32 port;
->> >> >> +     u32 en;
->> >> >> +     u64 freqency;
->> >> >> +} __packed;
->> >> >
->> >> > Just mark the last member by itself __packed. I assume you didn't
->> >> > actually mean to change the alignment of the data structure to one
->> >> > byte, but just want to say that the last one is misaligned.
->> >> >
->> >> This and others, are data packets that are passed between local and
->> >> remote via SharedMemory. __packed is only meant to specify that these
->> >> data structures have no holes in them.
->> >
->> > That would be '__packed __attribute__((aligned(4)))'. A struct of 'u32'
->> > already has no padding on any architecture that is supported by Linux.
->> > The only reason you need the packing here is because the u64 member is
->> > unaligned. Note that marking the entire structure as packed means that
->> > accesses are no longer atomic because the compiler may prefer to do them
->> > one byte at a time, which can break the protocol on the shared memory
->> > area.
->> >
->> We are not worried about the atomic access because the side sending
->> the data doesn't touch it until the other side indicates it has
->> consumed it.
->
-> It's still wrong though ;-)
->
-The remote f/w expects data to be contiguous and we can't assume how
-it reads the packet. So our firstmost priority is to have no holes in
-the region... like, say, USB descriptors.
+Why is this being done in hw_params() and not using DAPM?
 
-Thanks for your patience,
--Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static int tas2552_runtime_suspend(struct device *dev)
+> +{
+> +	struct tas2552_data *tas2552 = dev_get_drvdata(dev);
+> +
+> +	tas2552_sw_shutdown(tas2552, 0);
+> +
+> +	if (tas2552->enable_gpio)
+> +		gpiod_set_value(tas2552->enable_gpio, 0);
+> +
+> +	regcache_cache_only(tas2552->regmap, true);
+> +	regcache_mark_dirty(tas2552->regmap);
+
+It's better to do the GPIO set after making the device cache only in
+order to be sure nothing can come in and try to use the register map
+between the two.
+
+> +static void tas2552_shutdown(struct snd_pcm_substream *substream,
+> +			   struct snd_soc_dai *dai)
+> +{
+> +	struct snd_soc_codec *codec = dai->codec;
+> +
+> +	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE, 0);
+> +}
+
+I'd also expect the PLL power to be managed via DAPM.
+
+> +	ret = pm_runtime_get_sync(codec->dev);
+> +	if (ret < 0) {
+> +		dev_err(codec->dev, "Enabling device failed: %d\n",
+> +			ret);
+> +		goto probe_fail;
+> +	}
+
+There's no matching put for this in remove().
+
+> +	snd_soc_write(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN |
+> +				  TAS2552_BOOST_EN | TAS2552_APT_EN |
+> +				  TAS2552_LIM_EN);
+> +	return 0;
+
+The class D is still being enabled here.
+
+--V8Y3+xXnhQGsvjWT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTyAClAAoJELSic+t+oim9vFAQAIfAImcJxrutXsuM3Fsso8xF
+90mVS0WTPHQdt+T/DSBJddL36I3DywPm64r7kBCA3G8vpK77Gt8FanjzDMBj3Zkn
+UbPowIn158AB5UBGo9oxr6bV0pXlG8Eqcy8DatU1xyejzj1wOVfNsr5PUYpuzdCU
+a2nPjh6wAkrPjydBlLlzKzQnoaoMROssSBIcRHy0+PuiyERhfsB2mTbNLecqIohr
+R4GehaWEy23H1+YWGQhee2M3P5SrQd7ZsKfUEW4uZxvSqYJulvPT6EEewjJ80rRF
+akRoRaz6OyazUoqrHoGd75FAb5PCWcmwPk+zl5rTtGhd27NZUODcCMzYM1fd128G
+nqvUPiAPePSW82HbNyfgczLTGNpnfNjTWzDagsFeQhSg4QEdMXfFIlg3Kqmb7u17
+KHtobt6XI0tkFcYiKPGhtaThZ/L+PWcRoAq0liSpsn/36U/RU9Unz4bwvMgv238m
+tlJe7s08HwcHk2qI9ns5XzII2lpCbwWFh/8XSzi0Um7d3KRsQZGKxJ0plsV9B7SG
+5JEBfFylCkn8gc5CBSKCItstOGg0dLOg00b+Swqt6seMCLO8VuEFoL1M7oAvtXe9
+GXmxB9SquIBty5uRwgrr2my0LH4CxpsC9Hx1rrTXt5sn5Gzc1D+8I4jj/KRwCQ9D
+0W2Mr8L4OPHPkhMUxdsn
+=7QW7
+-----END PGP SIGNATURE-----
+
+--V8Y3+xXnhQGsvjWT--
