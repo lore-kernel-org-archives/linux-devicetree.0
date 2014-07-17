@@ -1,143 +1,45 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V5 05/12] Documentation: Add DT bindings for panel-lvds
- driver
-Date: Fri, 18 Jul 2014 00:48:11 +0200
-Message-ID: <20140717224809.GA8875@mithrandir>
-References: <1405629839-12086-1-git-send-email-ajaykumar.rs@samsung.com>
- <1405629839-12086-6-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQNygvwOGvw6QPGp+=7K9=oC9XvcEf9QSv=JBsEHyhM0wA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 0/4] Support for Qualcomm QPNP PMIC's
+Date: Thu, 17 Jul 2014 16:10:22 -0700
+Message-ID: <53C857DE.7030507@codeaurora.org>
+References: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAEC9eQNygvwOGvw6QPGp+=7K9=oC9XvcEf9QSv=JBsEHyhM0wA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/17/14 09:17, Stanimir Varbanov wrote:
+> Hello everyone,
+>
+> Here is the continuation of patch sets sent recently about Qualcomm
+> QPNP SPMI PMICs.
+>
+> The previous version of the patch set can be found at [1].
+>
+> Changes since v1:
+>  - removed completely custom *of* parser
+>  - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
+>  - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
+>
+> Removing of the custom *of* parser leads to that that the *reg* devicetree
+> property cannot exist and therefore cannot be parsed to get PMIC peripheral
+> resources. I took this step aside because no one from mfd drivers does this
+> parsing. This will lead to inconvenience in the peripheral drivers to define
+> internally the SPMI base addresses depending on the compatible property
+> i.e. PMIC version. 
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We should teach the of platform layer to translate reg properties up
+until the point that they can't be translated anymore. If they can't be
+translated all the way back to cpu addresses we can make the resource
+have IORESOURCE_REG instead of IORESOURCE_MEM and then said pmic
+platform drivers can use platform_get_resource() with IORESOURCE_REG
+instead of IORESOURCE_MEM to get the addresses.
 
-On Fri, Jul 18, 2014 at 02:20:39AM +0530, Ajay kumar wrote:
-> +devicetree@vger.kernel.org
->=20
-> On Fri, Jul 18, 2014 at 2:13 AM, Ajay Kumar <ajaykumar.rs@samsung.com> wr=
-ote:
-> > Add DT binding documentation for panel-lvds driver.
-> >
-> > Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> > ---
-> >  .../devicetree/bindings/panel/panel-lvds.txt       |   50 ++++++++++++=
-++++++++
-> >  1 file changed, 50 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/panel/panel-lvds.=
-txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/panel/panel-lvds.txt b/D=
-ocumentation/devicetree/bindings/panel/panel-lvds.txt
-> > new file mode 100644
-> > index 0000000..fdf91da2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/panel/panel-lvds.txt
-> > @@ -0,0 +1,50 @@
-> > +panel interface for eDP/lvds panels
-> > +
-> > +Required properties:
-> > +  - compatible: "panel-lvds"
-
-I think I've said this before. I oppose the addition of this binding. We
-need to list a device-specific compatible value here, wildcards like
-this aren't a good choice. And then if we have that compatible value we
-can move most of the optional properties below into a driver.
-
-> > +Optional properties:
-
-If all these properties are optional, then what happens if a device tree
-node doesn't contain any of them? Doesn't that turn the driver into one
-big no-op?
-
-> > +       -lcd-enable-gpios:
-> > +               panel LCD poweron GPIO.
-> > +                       Indicates which GPIO needs to be powered up as =
-output
-> > +                       to powerup/enable the switch to the LCD panel.
-> > +       -backlight-enable-gpios:
-> > +               panel LED enable GPIO.
-> > +                       Indicates which GPIO needs to be powered up as =
-output
-> > +                       to enable the backlight.
-
-I've also said before that this really belongs in a backlight driver.
-Chances are that you'll want to have a way to set the brightness of the
-backlight as well, so simply an enable GPIO won't be good enough.
-
-> > +       -panel-prepare-delay:
-> > +               delay value in ms required for panel_prepare process
-> > +                       Delay in ms needed for the panel LCD unit to
-> > +                       powerup completely.
-> > +                       ex: delay needed till eDP panel throws HPD.
-> > +                           delay needed so that we cans tart reading e=
-did.
-
-If the panel signals HPD then we don't need this delay at all and we
-should just wait for HPD instead.
-
-> > +       -panel-enable-delay:
-> > +               delay value in ms required for panel_enable process
-> > +                       Delay in ms needed for the panel backlight/LED =
-unit
-> > +                       to powerup, and delay needed between video_enab=
-le and
-> > +                       backlight_enable.
-> > +       -panel-disable-delay:
-> > +               delay value in ms required for panel_disable process
-> > +                       Delay in ms needed for the panel backlight/LED =
-unit
-> > +                       powerdown, and delay needed between backlight_d=
-isable
-> > +                       and video_disable.
-> > +       -panel-unprepare-delay:
-> > +               delay value in ms required for panel_post_disable proce=
-ss
-> > +                       Delay in ms needed for the panel LCD unit to
-> > +                       to powerdown completely, and the minimum delay =
-needed
-> > +                       before powering it on again.
-
-These delays are all panel specific and they don't vary per board, so
-they shouldn't go into the device tree at all.
-
-> > +       -panel-width-mm: physical panel width [mm]
-> > +       -panel-height-mm: physical panel height [mm]
-
-Same here.
-
-Thierry
-
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTyFKpAAoJEN0jrNd/PrOhl20QAL3X81voKh75GcgqC6zyRTx7
-0CdHOkjS8ZI8rtoaZBekYTMKBV4yHR1jnov9Ct3X+ows3rFbLdlROkuIzvr+uOJv
-6RjOaGAyseUKZSbiJFTOmkzJji4nFUfgPXbnq4RNfVrmCqhSysxPuyfLYJe61MBa
-osW1x1W/D0GgcjT6uX38Tn8l1oT9liOykWPDTDkQBQ2bbGvRvIvakN89BlUP9726
-paZpiRi4Zvlf1Bsev0NrMzKEgxeGQpbafsncey6yMVXjG1+WKvNd30zZvKHmxhWh
-ZSGw527jcYKk4VK9wR3fvG47sL2Z2Gx2M0PA6t/yhSsUJv0HE36678NMEHRskLEz
-7mqUvtliVGos0uYVhXxzaXH1wGknNx73YLhEqpC6qtib7cIYyE5ZUWkEI56rY35m
-7JeL+rD4Ojx2/W4NEAGferyb2oVwVencVtBaY89xIVv940Lm5QF2MI9s5IYHUwqU
-+KNgCudKqcziBmHju9QCmonQjWPQXr6IBmfldC/HmXD/snp3KiAq6vJfI5eUJqaw
-kac/7vUXmnSeBTFevMPxXeMMzpoN71N7ebO9JSHxvWE/JnR1O0XuJGXIqcdyarAE
-i+plixTd/Z0OBv6JQVKrsGFjSG/QFLJ8VfoE7LrgyficCVTYfgID9LrsMro4lJ8N
-6C0ptP8kSXGpieIuje09
-=3yMO
------END PGP SIGNATURE-----
-
---CE+1k2dSO48ffgeK--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
