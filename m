@@ -1,58 +1,66 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Thu, 17 Jul 2014 12:21:56 +0200
-Message-ID: <5456516.0fVZeXjF8k@wuerfel>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com> <22032517.gk8PRUMaIU@wuerfel> <93903d5fdf85427bb8a418894540c122@BN1PR0301MB0772.namprd03.prod.outlook.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] i2c: Relax mandatory I2C ID table passing
+Date: Thu, 17 Jul 2014 11:23:42 +0100
+Message-ID: <20140717102342.GD30888@lee--X1>
+References: <1403265753-25851-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <93903d5fdf85427bb8a418894540c122-RQSpjbwlmjS6oBnG8T5U3ZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403265753-25851-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 July 2014 01:20:54 Peter Chen wrote:
-> Thanks, arnd.
-> 
-> For chipidea generic glue layer case, if there are three devices who use this
-> driver, and all devices have 32-bit bus, some devices have less 32 address lines.
-> For example:
-> 
-> - the device_a doesn't need to use dma_mask
-> - the device_b needs dma_mask as 0xfffffffff
-> - the device_c needs dma_mask as 0xfffffff0, assume it has only 28 address lines
+Hi Wolfram,
 
-This makes no sense. You always need a dma mask, so the first case doesn't exist,
-and the second one is the default.
+Are you going to take a lot at this set?
 
-In the third case, I assume you mean 0x0fffffff, which is a 28-bit mask.
+> As previously discussed I believe it should be okay for an I2C device
+> driver _not_ supply an I2C ID table to match to.  The I2C subsystem
+> should be able to match via other means, such as via OF tables.  The
+> blocking factor during our previous conversation was to keep
+> registering via sysfs up and running.  This set does that.
+>=20
+> After thinking more deeply about the problem, it occurred to me that
+> any I2C device driver which uses the sysfs method and issues an
+> of_match_device() would also fail their probe().  Bolted on to this
+> set is a new, more generic way for these devices to match against
+> either of the I2C/OF tables.
+>=20
+> I hope this ticks all of your boxes.
+>=20
+> v3:
+>   - Insist on passing 'struct i2c_client' instead of 'struct device'
+>   - Remove hook from of_match_device()
+>=20
+> v2:
+>   - Removal of ACPI support (this is really an OF issue).
+>   - Add a new .probe2( with will seamlessly replace
+>   - Supply a warning on devices matching via OF without a suitable co=
+mpatible
+>   - Remove unified match_device() - bad idea as it subverts type-safe=
+ behaviour
+>   - Provide examples of the kind of clean-up possible after this set.
+>     - I already have the full support from the maintainer of these dr=
+ivers =3D;-)
+>=20
+> Kind regards,
+> Lee
+>=20
+>  arch/arm/configs/multi_v7_defconfig |  1 +
+>  drivers/i2c/i2c-core.c              | 72 +++++++++++++++++++++++++++=
+++++++++++++++++++++++++++++++++++++---------
+>  drivers/mfd/88pm860x-core.c         |  5 ++---
+>  drivers/mfd/as3722.c                | 12 ++----------
+>  include/linux/i2c.h                 | 22 +++++++++++++++++++++-
+>  5 files changed, 89 insertions(+), 23 deletions(-)
+>=20
 
-> My questions are:
-> - Can we not set dma_mask at driver, and only set dma-ranges at dts for device_b
-> and device_c as a solution to cover this different dma mask use case?
-
-try to understand my earlier reply. What is the problem with device_b?
-Is that a limitation of the bus it is connected to, or the version of the
-chipidea hardware?
-
-> - If we can't use this solution, would you suggest one?
-
-It depends on what the requirement of the hardware is, as I explained
-now for three times.
-
-> - If we can use this solution, for device_b and device_c, how can we write dma-ranges?
-> I can't find any arm platforms use it, only some powerpc platform use it.
-> According to the definition from Power_ePAPR_APPROVED_v1.1.pdf, it is
-> dma-ranges = <child-bus-address, parent-bus-address, length>
-> but I find the powerpc has different way for using dma-ranges. 
-
-It's now handled by of_dma_configure() in drivers/of/platform.c for all
-architectures.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
