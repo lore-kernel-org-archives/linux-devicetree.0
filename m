@@ -1,51 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
-Date: Thu, 17 Jul 2014 13:00 +0200
-Message-ID: <2360323.ktzTJnrmOX@avalon>
-References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com> <Pine.LNX.4.64.1403302313290.12008@axis700.grange> <53392FC9.9070706@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <53392FC9.9070706@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Linux Media Mailing List <linux-media@vger.kernel.org>, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 0/4 v2] iio: exynos-adc: use syscon instead of ioremap
+Date: Thu, 17 Jul 2014 16:49:49 +0530
+Message-ID: <1405595993-16661-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+Syscon is a regmap based framework to help various drivers access misc
+bits in registers which does not belong to another module.
+For example, Power Module, SYSREGs.
 
-What's the status of this patch set ? Do you plan to rebase and resubmit it ?
+With syscon, ADC can use generic regmap API to access
+registers of PMU which are registered into syscon.
+ 
+This patch does the following
+1. Use the syscon and Regmap API instead of ioremappaing the
+   ADC_PHY register from PMU.
+2. Moves the exynos-adc.txt from bindings/arm/samsung/
+   to bindings/iio/adc/.
+3. Updates the Documentation in exynos-adc.txt with syscon phandle
+   for the ADC nodes.
+4. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
+   Exynos5420 with the syscon phandle.
 
-On Monday 31 March 2014 17:05:13 Josh Wu wrote:
-> Dear Guennadi
-> 
-> On 3/31/2014 5:20 AM, Guennadi Liakhovetski wrote:
-> > Hi Josh,
-> > 
-> > Please correct me if I'm wrong, but I don't see how this is going to work
-> > without the central part - building asynchronous V4L2 data structures from
-> > the DT, something that your earlier patch
-> 
-> Here you mean Bryan Wu not me, right?   ;-)
-> Bryan write the patch "[v2] media: soc-camera: OF cameras" in:
-> https://patchwork.linuxtv.org/patch/22288/.
-> And I saw Ben Dooks already sent out his patch to support soc-camera OF
-> now (https://patchwork.linuxtv.org/patch/23304/) which is simpler than
-> Bryan's.
-> 
-> > "media: soc-camera: OF cameras"
-> > was doing, but which you stopped developing after a discussion with Ben
-> > (added to Cc).
-> 
-> And yes, atmel-isi dt patch should not work without above SoC-Camera of
-> support patch.
-> But as the atmel-isi dt binding document and port node can be finalized.
-> So I think this patch is ready for the mainline.
-> 
-> BTW: I will test Ben's patch with atmel-isi.
+Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
+by verifying sysfs entries provided by HWMON based NTC thermistors.
+
+Tested-By for Exynos3250, Exynos4x12 would be appreciated.
+
+Changes since v1:
+Adding syscon description in commit message
+
+Rebased on top of v5 version of ADC for exynos3250 from Changwoo.
+iio: adc: exynos_adc: Support Exynos3250 ADC and code clean
+https://lkml.org/lkml/2014/6/27/16
+
+Naveen Krishna Chatradhi (4):
+  iio: exyno-adc: use syscon for PMU register access
+  Documentation: dt-bindings: move exynos-adc.txt to more iio/adc/
+  Documentation: dt-bindings: update exynos-adc.txt with syscon handle
+  ARM: dts: exynos: Add sysreg phandle to ADC node
+
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |   82 ------------------
+ .../devicetree/bindings/iio/adc/exynos-adc.txt     |   87 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+ drivers/iio/adc/exynos_adc.c                       |   29 +++++--
+ 7 files changed, 115 insertions(+), 95 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/exynos-adc.txt
 
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.9.5
