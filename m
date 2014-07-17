@@ -1,54 +1,76 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/4 V3] irqchip: gic: Introduce ARM GICv2m MSI(-X)
- support
-Date: Thu, 17 Jul 2014 09:18:54 -0400
-Message-ID: <20140717131854.GN13108@titan.lakedaemon.net>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] irqchip: gic: Add binding probe for ARM GIC400
+Date: Thu, 17 Jul 2014 14:31:08 +0100
+Message-ID: <20140717133108.GL30313@leverpostej>
 References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1404947104-21345-2-git-send-email-suravee.suthikulpanit@amd.com>
+ <2932284.F1eaAf8ArJ@diego>
+ <2621565.f5eISveXXJ@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
+In-Reply-To: <2621565.f5eISveXXJ@diego>
 Sender: linux-doc-owner@vger.kernel.org
-To: suravee.suthikulpanit@amd.com
-Cc: marc.zyngier@arm.com, mark.rutland@arm.com, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 09, 2014 at 06:05:00PM -0500, suravee.suthikulpanit@amd.com wrote:
+On Mon, Jul 14, 2014 at 11:03:03PM +0100, Heiko St=C3=BCbner wrote:
 > From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> 
-> This patch set introduces support for MSI(-X) in GICv2m specification,
-> which is implemented in some variation of GIC400.
-> 
-> This depends on and has been tested with the V7 of"Add support for PCI in AArch64"
-> (https://lkml.org/lkml/2014/3/14/320).
-> 
-> Changes in V3:
->     * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/gic
->       (per Jason Cooper request)
->     * Misc fix/clean up per Mark Rutland comments
->     * Minor Clean up in the driver/irqchip/irq-gic-v2m.c: alloc_msi_irqs()
->     * Patch 4 is new to the series:
->         * Add ARM64-specific version arch_setup_msi_irqs() to allow support
->           for Multiple MSI.
->         * Add support for Multiple MSI for GICv2m.
-> 
-> Suravee Suthikulpanit (4):
->   irqchip: gic: Add binding probe for ARM GIC400
->   irqchip: gic: Restructuring ARM GIC code
->   irqchip: gic: Add supports for ARM GICv2m MSI(-X)
->   irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+>=20
+> Commit 3ab72f9156bb "dt-bindings: add GIC-400 binding" added the
+> "arm,gic-400" compatible string, but the corresponding IRQCHIP_DECLAR=
+E
+> was never added to the gic driver.
+>=20
+> Therefore add the missing irqchip declaration for it.
+>=20
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>=20
+> Removed additional empty line and adapted commit message to mark it
+> as fixing an issue.
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> As I really need this, I took the liberty of adapting the patch accor=
+dingly
+> to make it apply on top of the current irqchip/for-next (or urgent) a=
+nd
+> explicitly state the fixed issue. Hope that is ok
 
-Ok, patch #1 applied to irqchip/urgent.  Patches 2 and 3 applied to
-irqchip/gic with irqchip/urgent merged in.  To facilitate
-testing/merging, I've prepared an unsigned tag for you on the
-irqchip/gic branch:
+While this is a fix that we should have, I'm not certain I see why this
+is urgent. A dt can already have:
 
-  git://git.infradead.org/users/jcooper/linux.git tags/deps-irqchip-gic-3.17-2
+	compatible =3D "arm,gic-400", "arm,cortex-a15-gic";
 
-Unless you tell me I broke something horribly, this tag and irqchip/gic
-up to that point are stable.
+Which will work _today_, before this patch. If we need to treat the A15
+GIC string differently, we'll have to ensure we support the GIC 400
+string first.
 
-thx,
+Thanks,
+Mark.
 
-Jason.
+>=20
+>  drivers/irqchip/irq-gic.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 9d26643..6ff28b4 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -1020,6 +1020,7 @@ gic_of_init(struct device_node *node, struct de=
+vice_node *parent)
+>  	gic_cnt++;
+>  	return 0;
+>  }
+> +IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
+>  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+>  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
+>  IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
+> --=20
+> 1.9.0
+>=20
+>=20
+>=20
+>=20
