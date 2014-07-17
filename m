@@ -1,76 +1,48 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Thu, 17 Jul 2014 19:19:15 +0800
-Message-ID: <20140717111912.GA16025@shlinux1.ap.freescale.net>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
- <22032517.gk8PRUMaIU@wuerfel>
- <93903d5fdf85427bb8a418894540c122@BN1PR0301MB0772.namprd03.prod.outlook.com>
- <5456516.0fVZeXjF8k@wuerfel>
+Date: Thu, 17 Jul 2014 13:34:38 +0200
+Message-ID: <14435027.UvktXyQjy4@wuerfel>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com> <5456516.0fVZeXjF8k@wuerfel> <20140717111912.GA16025@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5456516.0fVZeXjF8k@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140717111912.GA16025@shlinux1.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Peter Chen <peter.chen@freescale.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "zmxu@marvell.com" <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "jszhang@marvell.com" <jszhang@marvell.com>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 12:21:56PM +0200, Arnd Bergmann wrote:
-> On Thursday 17 July 2014 01:20:54 Peter Chen wrote:
-> > Thanks, arnd.
-> > 
-> > For chipidea generic glue layer case, if there are three devices who use this
-> > driver, and all devices have 32-bit bus, some devices have less 32 address lines.
-> > For example:
-> > 
-> > - the device_a doesn't need to use dma_mask
-> > - the device_b needs dma_mask as 0xfffffffff
-> > - the device_c needs dma_mask as 0xfffffff0, assume it has only 28 address lines
+On Thursday 17 July 2014 19:19:15 Peter Chen wrote:
 > 
-> This makes no sense. You always need a dma mask, so the first case doesn't exist,
-> and the second one is the default.
+> Currently, we are designing a generic driver, we don't know what's the
+> hardware architecture, we are trying to find a solution how to set
+> dma mask for all possible devices which will use this driver, Antoine's
+> this patch is trying to cover this feature.
 > 
-> In the third case, I assume you mean 0x0fffffff, which is a 28-bit mask.
+> For example, 
 > 
-> > My questions are:
-> > - Can we not set dma_mask at driver, and only set dma-ranges at dts for device_b
-> > and device_c as a solution to cover this different dma mask use case?
+> Marvell Berlin doesn't need to set dma mask specific.
+> http://marc.info/?l=linux-arm-kernel&m=140205228507045&w=2
+> http://www.spinics.net/lists/linux-usb/msg110598.html
 > 
-> try to understand my earlier reply. What is the problem with device_b?
-> Is that a limitation of the bus it is connected to, or the version of the
-> chipidea hardware?
+> Xilinx zynq needs to set dma mask as 0xFFFFFFF0
+> http://marc.info/?l=linux-usb&m=140384129921706&w=2
 > 
-> > - If we can't use this solution, would you suggest one?
-> 
-> It depends on what the requirement of the hardware is, as I explained
-> now for three times.
-> 
+> FSL i.mx needs to set dma mask as DMA_BIT_MASK(32)
+> https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/tree/drivers/usb/chipidea/ci_hdrc_imx.c?h=usb-next
 
-Thanks, Arnd.
+Ok, I see now. I think we can safely drop it completely then:
 
-Currently, we are designing a generic driver, we don't know what's the
-hardware architecture, we are trying to find a solution how to set
-dma mask for all possible devices which will use this driver, Antoine's
-this patch is trying to cover this feature.
+- Berlin was only recently added and doesn't need to set the
+  mask because the common code handles it just fine now.
 
-For example, 
+- i.mx was added earlier, at a time where it was still necessary
 
-Marvell Berlin doesn't need to set dma mask specific.
-http://marc.info/?l=linux-arm-kernel&m=140205228507045&w=2
-http://www.spinics.net/lists/linux-usb/msg110598.html
+- zynq just made a mistake, 0xFFFFFFF0 was never a valid mask
+  and just happened to work by accident.
 
-Xilinx zynq needs to set dma mask as 0xFFFFFFF0
-http://marc.info/?l=linux-usb&m=140384129921706&w=2
+In summary, the 32-bit default mask will work on all of them,
+and we need no special code or DT properties for it.
 
-FSL i.mx needs to set dma mask as DMA_BIT_MASK(32)
-https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/tree/drivers/usb/chipidea/ci_hdrc_imx.c?h=usb-next
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
