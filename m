@@ -1,60 +1,50 @@
-From: pramod gurav <pramod.gurav.etc@gmail.com>
-Subject: Re: [PATCH v4 1/3] soc: devicetree: bindings: Add Qualcomm RPM DT binding
-Date: Thu, 17 Jul 2014 21:34:37 +0530
-Message-ID: <CAMf-jSkvC4P8-06XbmMH2i0xHvaYwH_VbfG6Ypp3F+ct5ZxM+A@mail.gmail.com>
-References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1405465241-28684-2-git-send-email-bjorn.andersson@sonymobile.com>
-	<CAMf-jS=tkBYQ7mXp71F2_rPo6DE3e4C=sFHqg3Q26a08m6NxJQ@mail.gmail.com>
-	<CAJAp7OggtuxPSc0yXzMCs10aQ2R6E+m4Bu8sdLJopvrZ3+5Rmg@mail.gmail.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [RFCv2] drm/msm: DT support for 8960/8064
+Date: Thu, 17 Jul 2014 09:08:32 -0700
+Message-ID: <CAJAp7Ojt3hACTVHEsZz8YMgpVBWkksnyZX1ijB3a1o6_+QgrpA@mail.gmail.com>
+References: <1404241055-3579-1-git-send-email-robdclark@gmail.com>
+ <1404835244-3735-1-git-send-email-robdclark@gmail.com>
+ <CADsdr6O75H33KV7D9fvDEpPfQ6FZ2bH-P84Zf=bjEVuNGbJn9A@mail.gmail.com>
+ <CAF6AEGvCiw5d4b68K7kGLY2YrLUEu9ggySZ0Q8HgHGzSW5qX8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OggtuxPSc0yXzMCs10aQ2R6E+m4Bu8sdLJopvrZ3+5Rmg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAF6AEGvCiw5d4b68K7kGLY2YrLUEu9ggySZ0Q8HgHGzSW5qX8w@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: divya ojha <odivya77@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 3:50 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
->> On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
->> <bjorn.andersson@sonymobile.com> wrote:
-> [...]
->>> +       rpm@108000 {
->>> +               compatible = "qcom,rpm-msm8960";
->>> +               reg = <0x108000 0x1000>;
->>> +               qcom,ipc = <&apcs 0x8 2>;
->>
->> Tried adding this but there is no reference to 'apcs' registers itself
->> in any dts.
->>
->> Without these changes rpm breaks hence not able to test SATA which needs rpm.
->>
+On Thu, Jul 17, 2014 at 8:29 AM, Rob Clark <robdclark@gmail.com> wrote:
+> On Thu, Jul 17, 2014 at 4:10 AM, divya ojha <odivya77@gmail.com> wrote:
+[...]
+>> Don't we need to have a if(regulator_enabled) check after
+>> devm_regulator_get function ?
+>> I see a similar test after camera regulator_get function call.
 >
-> Hi Pramod,
->
-> Unfortunately the ipc bits resides in a block that needs to be
-> accesses by various device drivers so I had to extract the access; so
-> you now need to reference it via a syscon handle and offset instead -
-> as described above.
->
-> The apcs node I used for testing this with looks like this:
->
-> apcs: syscon@2011000 {
->     compatible = "syscon";
->     reg = <0x2011000 0x1000>;
-> };
->
-> Enable CONFIG_MFD_SYSCON and put the dt snippet somewhere under soc
-> and you should be good.
+> tbh, I'm not 100% sure.
 >
 
-Thanks Bjorn. Did this and seen things working (sata atleast).
+Regulators in the Qualcomm platform works by casting votes with the
+RPM and there is no way to query the current state of a regulator, so
+the regulator code will only return information regarding the Linux
+systems votes.
 
-> Regards,
-> Bjorn
+So, we can unfortunately not check this.
 
+This setup also makes it important that if we want a regulator on and
+set to a certain voltage then we need to cast our vote with these
+values, or some other subsystem might lower it by releasing their
+votes.
 
-
--- 
-Thanks and Regards
-Pramod
+Regards,
+Bjorn
