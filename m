@@ -1,60 +1,51 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v2 0/4] dra7: Add PCIe support
-Date: Thu, 17 Jul 2014 11:58:55 +0900
-Message-ID: <009001cfa16b$0c558ea0$2500abe0$%han@samsung.com>
-References: <1405349705-31400-1-git-send-email-kishon@ti.com>
+From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4 v2] hwmon: ntc_thermistor: prepose vendor prefix change
+Date: Thu, 17 Jul 2014 09:51:21 +0530
+Message-ID: <CAHfPSqCGf2d6xXDGr974+4ipNsYx3-fOLT+u2OGN=c9FVPEkZg@mail.gmail.com>
+References: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
+ <02b501cf9064$34f16b80$9ed44280$@samsung.com> <53AAD8C8.3080506@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <1405349705-31400-1-git-send-email-kishon@ti.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Kishon Vijay Abraham I' <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53AAD8C8.3080506-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 14, 2014 11:55 PM, Kishon Vijay Abraham I wrote:
-> 
-> Changes from v1:
-> * fixed dw_pcie_prog_viewport_io_outbound() to use untranslated address
-> * split dra7xx patch into driver part and documentation part
-> 
-> [1] is split into separate series in order for individual subsystem
-> Maintainers to pick up the patches. This series handles the PCIe
-> support for DRA7.
-> 
-> Rebased to pci -next.
-> 
-> [1] -> https://lkml.org/lkml/2014/5/29/258
-> 
-> Kishon Vijay Abraham I (4):
->   PCI: designware: Configuration space should be specified in 'reg'
->   PCI: designware: use untranslated address while programming ATU
->   Documentation: pci: ti: Add dt binding documentation for PCIe in
->     DRA7xx
->   PCI: host: pcie-dra7xx: add support for pcie-dra7xx controller
+Hello Kukjin,
 
-Kishon,
+On 25 June 2014 19:42, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On 06/25/2014 03:57 AM, Kukjin Kim wrote:
+>>
+>> Naveen Krishna Chatradhi wrote:
+>>>
+>>>
+>> + Jean Delvare, Guenter Roeck
+>>
+>> I'm adding maintainers for drivers/hwmon/ntc* but I'm not sure.
+>>
+>> Hi,
+>>
+>> This series looks good to me. I will take 3/4 and 4/4 for exynos DT
+>> changes once
+>> hwmon/ntc maintainer pick the others.
+>>
+>
+> I applied both patches. Currently going through my test cycle.
+> I'll send them to Linus Thursday or Friday.
 
-Actually, I have no objections to these patches.
-Then, how about adding maintainer entry for pci-dra7xx.c
-to MAINTAINERS file? It would be good. :-)
+I see the 1/4 and 2/4 merged in togreg branch of
+http://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
 
-Best regards,
-Jingoo Han
+Can you pull the 3/4 and 4/4 patches.
 
-> 
->  .../devicetree/bindings/pci/designware-pcie.txt    |    4 +
->  Documentation/devicetree/bindings/pci/ti-pci.txt   |   59 +++
->  drivers/pci/host/Kconfig                           |   10 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pci-dra7xx.c                      |  458 ++++++++++++++++++++
->  drivers/pci/host/pcie-designware.c                 |   72 ++-
->  drivers/pci/host/pcie-designware.h                 |    4 +
->  7 files changed, 592 insertions(+), 16 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
->  create mode 100644 drivers/pci/host/pci-dra7xx.c
-> 
-> --
-> 1.7.9.5
+>
+> Guenter
+>
+
+
+
+-- 
+Regards,
+(: Naveen :)
