@@ -1,86 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
-Date: Thu, 17 Jul 2014 19:12:45 +0200
-Message-ID: <13232839.EhWsHsNIV6@wuerfel>
-References: <1405232911-4569-1-git-send-email-mollie.wu@linaro.org> <13950816.fBdtyDiPqD@wuerfel> <CAJe_ZhdM88x883DqxerW-JWpVeiFR9yA7s_=gpPZ7w1qPDJR=A@mail.gmail.com>
+From: pramod gurav <pramod.gurav.etc@gmail.com>
+Subject: Re: [PATCH v4 2/3] soc: qcom-rpm: Driver for the Qualcomm RPM
+Date: Thu, 17 Jul 2014 23:03:23 +0530
+Message-ID: <CAMf-jSnPpo39cXLbM9cefUr37J=hnEHqfJSetORxMnjsdoANdw@mail.gmail.com>
+References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1405465241-28684-3-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhdM88x883DqxerW-JWpVeiFR9yA7s_=gpPZ7w1qPDJR=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1405465241-28684-3-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 July 2014 22:24:43 Jassi Brar wrote:
-> On 17 July 2014 19:18, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Thursday 17 July 2014 19:02:53 Jassi Brar wrote:
+Hi Bjorn,
 
-> >> From a few hundred micro-sec for CPU reset, to potentially tens of
-> >> milli-sec for some I2C transaction ... yes we do have for I2C over
-> >> mailbox! ;)
-> >>
-> >> Probably bailing out of the loop and returning -ETIMEOUT to the
-> >> caller, before a WARN(), is the simplest way to die.
-> >
-> > If you can have multiple miliseconds here, I think the code should
-> > be changed to run in non-atomic context and use msleep(1) or
-> > usleep_range() as a back-off. Is that possible?
-> >
-> I don't think we could sleep there but that should be ok because the
-> code is used only when we don't have mailbox framework ready i.e, in
-> very early boot before timers are ready and also as late as during
-> reboot/poweroff. Also I realize long delays like those for I2C would
-> never use this code - they would always have mailbox usable during
-> their lifetime.
+On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
+> and 8064 based devices. The driver exposes resources that child drivers
+> can operate on; to implementing regulator, clock and bus frequency
+> drivers.
+>
 
-Ok, just add a comment then, and a warning if things take too long.
+[snip]
 
-> >> >> >> +struct mb86s7x_peri_clk {
-> >> >> >> +     u32 payload_size;
-> >> >> >> +     u32 cntrlr;
-> >> >> >> +     u32 domain;
-> >> >> >> +     u32 port;
-> >> >> >> +     u32 en;
-> >> >> >> +     u64 freqency;
-> >> >> >> +} __packed;
-> >> >> >
-> >> >> > Just mark the last member by itself __packed. I assume you didn't
-> >> >> > actually mean to change the alignment of the data structure to one
-> >> >> > byte, but just want to say that the last one is misaligned.
-> >> >> >
-> >> >> This and others, are data packets that are passed between local and
-> >> >> remote via SharedMemory. __packed is only meant to specify that these
-> >> >> data structures have no holes in them.
-> >> >
-> >> > That would be '__packed __attribute__((aligned(4)))'. A struct of 'u32'
-> >> > already has no padding on any architecture that is supported by Linux.
-> >> > The only reason you need the packing here is because the u64 member is
-> >> > unaligned. Note that marking the entire structure as packed means that
-> >> > accesses are no longer atomic because the compiler may prefer to do them
-> >> > one byte at a time, which can break the protocol on the shared memory
-> >> > area.
-> >> >
-> >> We are not worried about the atomic access because the side sending
-> >> the data doesn't touch it until the other side indicates it has
-> >> consumed it.
-> >
-> > It's still wrong though ;-)
-> >
-> The remote f/w expects data to be contiguous and we can't assume how
-> it reads the packet. So our firstmost priority is to have no holes in
-> the region... like, say, USB descriptors.
+> +       }
+> +
+> +       ret = irq_set_irq_wake(irq_ack, 1);
 
-The structures being contiguous is guaranteed by the ELF ABI, unless
-you have unaligned members.
+This calls fails and throws error on my ifc6410 with 3.16-rc5.
+Does this driver depend on pincntrl. Looks like the DT support for
+pincntrl driver is missing in apq8064 dts in mainline.
+Is that right?
 
-You can be explicit about it, but then you should also provide a
-new minimum alignment (e.g. 4 bytes) for the structure to avoid
-having the compiler turn everything into bytewise accesses.
+> +       if (ret)
+> +               dev_warn(&pdev->dev, "failed to mark ack irq as wakeup\n");
+> +
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+> +               return ret;
+> +       }
+> +
+> +       ret = irq_set_irq_wake(irq_wakeup, 1);
+
+This fails as well.
+
+> +       if (ret)
+> +               dev_warn(&pdev->dev, "failed to mark wakeup irq as wakeup\n");
+> +
+> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+
+[snip]
+
+
+-- 
+Thanks and Regards
+Pramod
