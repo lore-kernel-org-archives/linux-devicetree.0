@@ -1,191 +1,85 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/8] mailbox: f_mhu: add driver for Fujitsu MHU controller
-Date: Thu, 17 Jul 2014 22:37:08 +0530
-Message-ID: <CAJe_ZhcROjhXebJetyJus43jNKoBU60jXXRLwnHwMdPJ7LPq7Q@mail.gmail.com>
-References: <1405233128-4799-1-git-send-email-mollie.wu@linaro.org>
-	<53C6B83D.80602@arm.com>
-	<CAJe_Zhe_kqmeeu9vF3CZwu3WR=P-nj13Bx+VOBCE7NfGzGPx=g@mail.gmail.com>
-	<53C7A5F1.30209@arm.com>
-	<CAJe_ZhegVczzcRVikt=nWnwU3nGx2G2mNg9nGR3bF4FfHnPeEg@mail.gmail.com>
-	<53C7E71C.8020501@arm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: Add platform support for Fujitsu MB86S7X SoCs
+Date: Thu, 17 Jul 2014 19:12:45 +0200
+Message-ID: <13232839.EhWsHsNIV6@wuerfel>
+References: <1405232911-4569-1-git-send-email-mollie.wu@linaro.org> <13950816.fBdtyDiPqD@wuerfel> <CAJe_ZhdM88x883DqxerW-JWpVeiFR9yA7s_=gpPZ7w1qPDJR=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53C7E71C.8020501-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAJe_ZhdM88x883DqxerW-JWpVeiFR9yA7s_=gpPZ7w1qPDJR=A@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 July 2014 20:39, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->
-> On 17/07/14 13:56, Jassi Brar wrote:
->>
->> On 17 July 2014 16:01, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>
->>> On 17/07/14 07:25, Jassi Brar wrote:
->>>>
->>>>
->>>>>
->>>>>> +       u32 val;
->>>>>> +
->>>>>> +       pr_debug("%s:%d\n", __func__, __LINE__);
->>>>>
->>>>>
->>>>>
->>>>>
->>>>> Please remove all these debug prints.
->>>>>
->>>> These are as good as absent unless DEBUG is defined.
->>>>
->>>
->>> Yes, but with mailbox framework, the controller driver(esp. this one)is
->>> almost like a shim layer. Instead of each driver adding these debugs,
->>> IMO it would be good to have these in the framework.
->>>
->> OK
->>
->>>>>
->>>>>> +       /* See NOTE_RX_DONE */
->>>>>> +       val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
->>>>>> +       mbox_chan_received_data(chan, (void *)val);
->>>>>> +
->>>>>> +       /*
->>>>>> +        * It is agreed with the remote firmware that the receiver
->>>>>> +        * will clear the STAT register indicating it is ready to
->>>>>> +        * receive next data - NOTE_RX_DONE
->>>>>> +        */
->>>>>
->>>>>
->>>>>
->>>>> This note could be added as how this mailbox works in general and
->>>>> it's not just Rx right ? Even Tx done is based on this logic.
->>>>> Basically the logic is valid on both directions.
->>>>>
->>>> Yes that is a protocol level agreement. Different f/w may behave
->>>> differently.
->>>>
->>>
->>> Ok, I am not sure if that's entirely true because the MHU spec says it
->>> drives
->>> the signal using a 32-bit register, with all 32 bits logically ORed
->>> together.
->>> Usually only Rx signals are wired to interrupts and Tx needs to be polled
->>> but that's entirely implementation choice I believe.
->>>
->> On my platform, _STAT register only carries the command code but
->> actual data is exchanged via SharedMemory/SHM. Now we need to know
->> when the sent data packet (in SHM) has been consumed by the remote -
->> for which our protocol mandates the remote clear the TX_STAT register.
->> And vice-versa for RX.
->>
->>   Some other f/w may choose some other mechanism for TX-Done - say some
->> ACK bit set or even some time bound guarantee.
->>
->>> More over if it's protocol level agreement it should not belong here :)
->>>
->> My f/w expects the RX_STAT cleared after reading data from SHM. Where
->> do you think is the right place to clear RX_STAT?
->>
->
-> I understand that and what I am saying is the MHU is designed like that
-> and protocol is just using it. There's nothing specific to protocol. Ideally
-> if an implementation has both Rx and Tx interrupts, the RX_CLEAR from here
-> raises an interrupt to the firmware. In absence of it we need polling that's
-> what both Linux and firmware does for Tx case.
->
-> Even on Juno, it's same. But we should be able to extend it to support Tx
-> if an implementation supports. Similarly the firmware can make use of the
-> same when Linux clears Rx(it would be Tx complete/ack for the firmware)
->
-> When we need to make this driver work across different firmware, you just
-> can't rely on the firmware protocol, hence I am asking to drop those
-> comments.
->
-OK, I will remove the comment.
+On Thursday 17 July 2014 22:24:43 Jassi Brar wrote:
+> On 17 July 2014 19:18, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Thursday 17 July 2014 19:02:53 Jassi Brar wrote:
 
->
->> I have said many times in many threads... its the mailbox controller
->> _and_ the remote f/w that should be seen as one entity. It may not be
->> possible to write a controller driver that works with any remote
->> firmware.
->>
->
-> It should be possible if the remote protocol just use the same hardware
-> feature without any extra software policy at the lowest level(raw Tx and
-> Rx).
->
-I wouldn't count on f/w always done the right way. And I am speaking
-from my whatever first hand experience :D
-And sometimes there may just be bugs that need some quirks at controller level.
+> >> From a few hundred micro-sec for CPU reset, to potentially tens of
+> >> milli-sec for some I2C transaction ... yes we do have for I2C over
+> >> mailbox! ;)
+> >>
+> >> Probably bailing out of the loop and returning -ETIMEOUT to the
+> >> caller, before a WARN(), is the simplest way to die.
+> >
+> > If you can have multiple miliseconds here, I think the code should
+> > be changed to run in non-atomic context and use msleep(1) or
+> > usleep_range() as a back-off. Is that possible?
+> >
+> I don't think we could sleep there but that should be ok because the
+> code is used only when we don't have mailbox framework ready i.e, in
+> very early boot before timers are ready and also as late as during
+> reboot/poweroff. Also I realize long delays like those for I2C would
+> never use this code - they would always have mailbox usable during
+> their lifetime.
 
-> I believe that's what we need here if we want this driver to work
-> on both Juno and your platform. Agree ?
->
-Does this driver not work for Juno?
-If no, may I see your driver and the MHU manual (mine is 90% Japanese)?
+Ok, just add a comment then, and a warning if things take too long.
 
->
->>>
->>>>>> +static int mhu_startup(struct mbox_chan *chan)
->>>>>> +{
->>>>>> +       struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
->>>>>> +       unsigned long flags;
->>>>>> +       u32 val;
->>>>>> +       int ret;
->>>>>> +
->>>>>> +       pr_debug("%s:%d\n", __func__, __LINE__);
->>>>>> +       spin_lock_irqsave(&mlink->lock, flags);
->>>>>> +       val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
->>>>>> +       writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
->>>>>> +       spin_unlock_irqrestore(&mlink->lock, flags);
->>>>>> +
->>>>>> +       ret = request_irq(mlink->irq, mhu_rx_interrupt,
->>>>>> +                         IRQF_SHARED, "mhu_link", chan);
->>>>>
->>>>>
->>>>>
->>>>>
->>>>> Just a thought: Can this be threaded_irq instead ?
->>>>> Can move request_irq to probe instead esp. if threaded_irq ?
->>>>> That provides some flexibility to client's rx_callback.
->>>>>
->>>> This is controller driver, and can not know which client want
->>>> rx_callback in hard-irq context and which in thread_fn context.
->>>> Otherwise, request_irq() does evaluate to request_threaded_irq(), if
->>>> thats what you mean.
->>>
->>>
->>> Agreed but on contrary since MHU involves external firmware(running
->>> on different processor) which might have it's own latency, I prefer
->>> threaded over hard irq. And yes request_irq does evaluate to
->>> request_threaded_irq but with thread_fn = NULL which is not what I want.
->>>
->> If remote has its own latency, that does not mean we add some more :)
->>
->
-> No what I meant is unless there is a real need to use hard irq, we
-> should prefer threaded one otherwise.
->
-And how does controller discern a "real need" from a "soft need" to
-use hard irq?
-Even if the controller driver pushes data up from a threaded function,
-the client can't know the context and can't sleep because the
-intermediate API says the rx_callback should be assumed to be atomic.
-Again, it maybe more efficient if I see your implementation of the
-driver and understand your concerns about mine.
+> >> >> >> +struct mb86s7x_peri_clk {
+> >> >> >> +     u32 payload_size;
+> >> >> >> +     u32 cntrlr;
+> >> >> >> +     u32 domain;
+> >> >> >> +     u32 port;
+> >> >> >> +     u32 en;
+> >> >> >> +     u64 freqency;
+> >> >> >> +} __packed;
+> >> >> >
+> >> >> > Just mark the last member by itself __packed. I assume you didn't
+> >> >> > actually mean to change the alignment of the data structure to one
+> >> >> > byte, but just want to say that the last one is misaligned.
+> >> >> >
+> >> >> This and others, are data packets that are passed between local and
+> >> >> remote via SharedMemory. __packed is only meant to specify that these
+> >> >> data structures have no holes in them.
+> >> >
+> >> > That would be '__packed __attribute__((aligned(4)))'. A struct of 'u32'
+> >> > already has no padding on any architecture that is supported by Linux.
+> >> > The only reason you need the packing here is because the u64 member is
+> >> > unaligned. Note that marking the entire structure as packed means that
+> >> > accesses are no longer atomic because the compiler may prefer to do them
+> >> > one byte at a time, which can break the protocol on the shared memory
+> >> > area.
+> >> >
+> >> We are not worried about the atomic access because the side sending
+> >> the data doesn't touch it until the other side indicates it has
+> >> consumed it.
+> >
+> > It's still wrong though ;-)
+> >
+> The remote f/w expects data to be contiguous and we can't assume how
+> it reads the packet. So our firstmost priority is to have no holes in
+> the region... like, say, USB descriptors.
 
-> Also by latency I meant what if
-> the remote firmware misbehaves. In threaded version you have little
-> more flexibility whereas hard irq is executed with interrupts disabled.
-> At least the system is responsive and only MHU interrupts are disabled.
->
-If the remote firmware misbehaves, that is a bug of the platform. No
-mailbox API could/should account for such malfunctions.
+The structures being contiguous is guaranteed by the ELF ABI, unless
+you have unaligned members.
 
-Thanks
-Jassi
+You can be explicit about it, but then you should also provide a
+new minimum alignment (e.g. 4 bytes) for the structure to avoid
+having the compiler turn everything into bytewise accesses.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
