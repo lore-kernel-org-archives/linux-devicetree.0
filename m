@@ -1,50 +1,63 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [RFCv2] drm/msm: DT support for 8960/8064
-Date: Thu, 17 Jul 2014 09:08:32 -0700
-Message-ID: <CAJAp7Ojt3hACTVHEsZz8YMgpVBWkksnyZX1ijB3a1o6_+QgrpA@mail.gmail.com>
-References: <1404241055-3579-1-git-send-email-robdclark@gmail.com>
- <1404835244-3735-1-git-send-email-robdclark@gmail.com>
- <CADsdr6O75H33KV7D9fvDEpPfQ6FZ2bH-P84Zf=bjEVuNGbJn9A@mail.gmail.com>
- <CAF6AEGvCiw5d4b68K7kGLY2YrLUEu9ggySZ0Q8HgHGzSW5qX8w@mail.gmail.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Subject: Re: [PATCH 02/14] clk: sunxi: factors: Implement clock min and max
+ frequencies
+Date: Thu, 17 Jul 2014 13:09:35 -0300
+Message-ID: <53C7F53F.9000902@elopez.com.ar>
+References: <1405588134-2396-1-git-send-email-maxime.ripard@free-electrons.com> <1405588134-2396-3-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAF6AEGvCiw5d4b68K7kGLY2YrLUEu9ggySZ0Q8HgHGzSW5qX8w@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: divya ojha <odivya77@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1405588134-2396-3-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 8:29 AM, Rob Clark <robdclark@gmail.com> wrote:
-> On Thu, Jul 17, 2014 at 4:10 AM, divya ojha <odivya77@gmail.com> wrote:
-[...]
->> Don't we need to have a if(regulator_enabled) check after
->> devm_regulator_get function ?
->> I see a similar test after camera regulator_get function call.
+Hi Maxime,
+
+El 17/07/14 06:08, Maxime Ripard escribi=F3:
+> In the A13, the out of reset frequency for the PLL6 is too high to be=
+ actually
+> working.
 >
-> tbh, I'm not 100% sure.
+> Hence, we need to be able to lower down its frequency whenever we nee=
+d to use
+> the clock to some acceptable frequency.
 >
+> This patch adds two new properties in the clock-nodes, clk-min-freque=
+ncy and
+> clk-max-frequency, to specify acceptable boundaries for proper clock
+> operations.
 
-Regulators in the Qualcomm platform works by casting votes with the
-RPM and there is no way to query the current state of a regulator, so
-the regulator code will only return information regarding the Linux
-systems votes.
+This paragraph looks out of place
 
-So, we can unfortunately not check this.
+>
+> It also adds supports in the sunxi factor clocks driver to use these
+> boundaries, enforce them at prepare time to make sure that the driver=
+s will
+> have a decent frequency, even though it never called set_rate, but al=
+so make
+> sure we never cross these boundaries.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+(...)
+>
+> @@ -123,6 +147,9 @@ static int clk_factors_set_rate(struct clk_hw *hw=
+, unsigned long rate,
+>
+>   	factors->get_factors((u32 *)&rate, (u32)parent_rate, &n, &k, &m, &=
+p);
+>
+> +	if ((rate > factors->max_rate) || (rate < factors->min_rate))
+> +		return -EINVAL;
 
-This setup also makes it important that if we want a regulator on and
-set to a certain voltage then we need to cast our vote with these
-values, or some other subsystem might lower it by releasing their
-votes.
+Printing an error message here may come in handy in the future, what do=
+=20
+you think?
 
-Regards,
-Bjorn
+Thanks for working on this!
+
+Emilio
