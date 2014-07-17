@@ -1,17 +1,15 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 7/8] drivers: cpuidle: initialize Exynos driver
- through DT
-Date: Thu, 17 Jul 2014 15:20:20 +0100
-Message-ID: <20140717142019.GA21732@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-8-git-send-email-lorenzo.pieralisi@arm.com>
- <5019714.S4WTdsyrXS@amdc1032>
+From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH 0/4 V3] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Thu, 17 Jul 2014 09:48:29 -0500
+Message-ID: <53C7E23D.1050900@amd.com>
+References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <20140717131854.GN13108@titan.lakedaemon.net>
+ <20140717135534.GM30313@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5019714.S4WTdsyrXS@amdc1032>
-Content-Disposition: inline
+In-Reply-To: <20140717135534.GM30313@leverpostej>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,73 +19,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
+To: Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 04:23:38PM +0100, Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi,
-> 
-> On Wednesday, June 25, 2014 03:10:20 PM Lorenzo Pieralisi wrote:
-> > With the introduction of DT based idle states, CPUidle drivers for
-> > ARM can now initialize idle states data through properties in the device
-> > tree.
-> > 
-> > This patch adds code to the Exynos CPUidle driver to dynamically
-> > initialize idle states data through the updated device tree source
-> > files.
-> > 
-> > Cc: Kukjin Kim <kgene.kim@samsung.com>
-> > Cc: Tomasz Figa <t.figa@samsung.com>
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> > Compile tested, I am not sure I patched the right dts files, please check.
-> 
-> cpuidle-exynos driver is currently working properly in deeper cpuidle
-> mode (AFTR) on Exynos4210 and Exynos5250 (please also see the following
-> patch from Tomasz Figa: [1]).  There is ongoing work to AFTR mode work
-> also on Exynos4x12 and Exynos3250 but it is not complete yet.  Exynos5410
-> OTOH should probably use the generic big little cpuidle driver (this SoC
-> is similar to Exynos5420 one for which Chander Kashyap has developed
-> cpuidle-big_little support [2]).
-> 
-> Making long story short, I think that your patch should depend on patch
-> [1] and update only exynos4210.dtsi and exynos5250.dtsi.  Also for your
-> patch #6 there needs to be some coordination with merging of Chander's
-> patchset ([2]).
-> 
-> [1] http://www.spinics.net/lists/arm-kernel/msg341023.html
-> [2] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg664470.html
+On 7/17/2014 8:55 AM, Mark Rutland wrote:
+> Hi Jason,
+>
+> On Thu, Jul 17, 2014 at 02:18:54PM +0100, Jason Cooper wrote:
+>> On Wed, Jul 09, 2014 at 06:05:00PM -0500, suravee.suthikulpanit@amd.com wrote:
+>>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>>
+>>> This patch set introduces support for MSI(-X) in GICv2m specification,
+>>> which is implemented in some variation of GIC400.
+>>>
+>>> This depends on and has been tested with the V7 of"Add support for PCI in AArch64"
+>>> (https://lkml.org/lkml/2014/3/14/320).
+>>>
+>>> Changes in V3:
+>>>      * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/gic
+>>>        (per Jason Cooper request)
+>>>      * Misc fix/clean up per Mark Rutland comments
+>>>      * Minor Clean up in the driver/irqchip/irq-gic-v2m.c: alloc_msi_irqs()
+>>>      * Patch 4 is new to the series:
+>>>          * Add ARM64-specific version arch_setup_msi_irqs() to allow support
+>>>            for Multiple MSI.
+>>>          * Add support for Multiple MSI for GICv2m.
+>>>
+>>> Suravee Suthikulpanit (4):
+>>>    irqchip: gic: Add binding probe for ARM GIC400
+>>>    irqchip: gic: Restructuring ARM GIC code
+>>>    irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+>>>    irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+>>
+>> Ok, patch #1 applied to irqchip/urgent.  Patches 2 and 3 applied to
+>> irqchip/gic with irqchip/urgent merged in.  To facilitate
+>> testing/merging, I've prepared an unsigned tag for you on the
+>> irqchip/gic branch:
+>
+> I'm a little concerned that this is all going through for v3.17 without
+> a {Reviewed,Acked}-by from Marc or anyone working with GIC{,v2m}.
 
+> While his comments on v1 have been addressed, he has not had a chance to
+> acknowledge the solutions. I appreciate Marc's holiday is unfortunately
+> timed.
+>
+> I also have an open concern with the binding with regard to the
+> orthogonality of GICV GICH and the MSI registers.
 
-exynos4210.dtsi does not even have cpu nodes in it. Should I add them or
-this might trigger regression (ie cpu_logical_map()) ?
+The MSI part is normally enabled from the optional "msi-controller" 
+keyword. It should not really matter which compatible ID it uses.
 
-I will post a new version soon, should I just patch 5250 for now ?
+Ooops. I noticed that was accidentally dropped the check for 
+"msi-controller" in the gicv2m_of_init() function.  I'll send a follow 
+up patch to fix this.
 
-I would need help to test this patch thanks.
+> Suravee, do you need this urgently for v3.17? I was under the impression
+> that we wouldn't have full PCIe support by then.
+>
 
-Lorenzo
+PCI is the dependency for this patch to function.  So, it should be 
+aligned with upstreaming of PCI patches.
 
-> >  .../devicetree/bindings/arm/exynos/idle-states.txt | 27 ++++++++++++++++++++
-> >  arch/arm/boot/dts/exynos3250.dtsi                  | 16 ++++++++++++
-> >  arch/arm/boot/dts/exynos5250.dtsi                  | 15 +++++++++++
-> >  arch/arm/boot/dts/exynos5410.dtsi                  | 17 +++++++++++++
-> >  drivers/cpuidle/Kconfig.arm                        |  1 +
-> >  drivers/cpuidle/cpuidle-exynos.c                   | 29 +++++++++++++---------
-> >  6 files changed, 93 insertions(+), 12 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/exynos/idle-states.txt
-> 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
+Suravee
