@@ -1,60 +1,62 @@
-From: pramod gurav <pramod.gurav.etc@gmail.com>
+From: Bjorn Andersson <bjorn@kryo.se>
 Subject: Re: [PATCH v4 2/3] soc: qcom-rpm: Driver for the Qualcomm RPM
-Date: Thu, 17 Jul 2014 23:03:23 +0530
-Message-ID: <CAMf-jSnPpo39cXLbM9cefUr37J=hnEHqfJSetORxMnjsdoANdw@mail.gmail.com>
+Date: Thu, 17 Jul 2014 11:17:03 -0700
+Message-ID: <CAJAp7OjPPoZYk4QyT4CzB5ncpzYos_f0ZNFk4kWEKBGvzVvOmw@mail.gmail.com>
 References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
 	<1405465241-28684-3-git-send-email-bjorn.andersson@sonymobile.com>
+	<CAMf-jSnPpo39cXLbM9cefUr37J=hnEHqfJSetORxMnjsdoANdw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1405465241-28684-3-git-send-email-bjorn.andersson@sonymobile.com>
+In-Reply-To: <CAMf-jSnPpo39cXLbM9cefUr37J=hnEHqfJSetORxMnjsdoANdw@mail.gmail.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: pramod gurav <pramod.gurav.etc@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
-> and 8064 based devices. The driver exposes resources that child drivers
-> can operate on; to implementing regulator, clock and bus frequency
-> drivers.
+On Thu, Jul 17, 2014 at 10:33 AM, pramod gurav
+<pramod.gurav.etc@gmail.com> wrote:
+> Hi Bjorn,
+>
+> On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+>> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
+>> and 8064 based devices. The driver exposes resources that child drivers
+>> can operate on; to implementing regulator, clock and bus frequency
+>> drivers.
+>>
+>
+> [snip]
+>
+>> +       }
+>> +
+>> +       ret = irq_set_irq_wake(irq_ack, 1);
+>
+> This calls fails and throws error on my ifc6410 with 3.16-rc5.
+> Does this driver depend on pincntrl. Looks like the DT support for
+> pincntrl driver is missing in apq8064 dts in mainline.
+> Is that right?
 >
 
-[snip]
+This is a gic interrupt, to it's unrelated to pinctrl.
 
-> +       }
-> +
-> +       ret = irq_set_irq_wake(irq_ack, 1);
+What happens is that you end up in gic_set_wake() checking for the
+architecture specific implementation of irq_set_wake; on modern
+Qualcomm platforms waking the system up from sleep seems to be handled
+in it's entirety by the "Modem Power Manager" (or "MSM Power Manager")
+- in short MPM.
 
-This calls fails and throws error on my ifc6410 with 3.16-rc5.
-Does this driver depend on pincntrl. Looks like the DT support for
-pincntrl driver is missing in apq8064 dts in mainline.
-Is that right?
+So once we introduce a driver for the mpm hardware this should
+register these functions with the gic and we should get those marked
+as wakeup sources.
 
-> +       if (ret)
-> +               dev_warn(&pdev->dev, "failed to mark ack irq as wakeup\n");
-> +
-
-[snip]
-
-> +               return ret;
-> +       }
-> +
-> +       ret = irq_set_irq_wake(irq_wakeup, 1);
-
-This fails as well.
-
-> +       if (ret)
-> +               dev_warn(&pdev->dev, "failed to mark wakeup irq as wakeup\n");
-> +
-> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-
-[snip]
+It can be argued that this should be an error instead of just a
+"warning", but for systems where this fails; i.e. systems without the
+mpm driver we will not be able to go to sleep anyways, so if this call
+fails we shouldn't expect to ever be woken up again.
 
 
--- 
-Thanks and Regards
-Pramod
+So please ignore this warning for now; we will get there at some point.
+
+Regards,
+Bjorn
