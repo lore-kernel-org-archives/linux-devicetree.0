@@ -1,65 +1,53 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/4 V3] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
-Date: Thu, 17 Jul 2014 14:55:34 +0100
-Message-ID: <20140717135534.GM30313@leverpostej>
-References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
- <20140717131854.GN13108@titan.lakedaemon.net>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/4 v2] iio: exyno-adc: use syscon for PMU register access
+Date: Thu, 17 Jul 2014 15:56:55 +0200
+Message-ID: <4202302.OdUuvHROuH@amdc1032>
+References: <1405595993-16661-1-git-send-email-ch.naveen@samsung.com>
+ <CAK5sBcFR0nwmL97CYxhHHhwHREdNOMYZnc2DF+O=WdQLBHQbLA@mail.gmail.com>
+ <CAHfPSqDBfdmt2R4yB1AUG9U8UvsYtmVtL03-OMuozKGXYGdMgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140717131854.GN13108@titan.lakedaemon.net>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>
-Cc: Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAHfPSqDBfdmt2R4yB1AUG9U8UvsYtmVtL03-OMuozKGXYGdMgw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Sachin Kamat <spk.linux@gmail.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, cpgs@samsung.com, Grant Grundler <grundler@chromium.org>, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
 
-On Thu, Jul 17, 2014 at 02:18:54PM +0100, Jason Cooper wrote:
-> On Wed, Jul 09, 2014 at 06:05:00PM -0500, suravee.suthikulpanit@amd.com wrote:
-> > From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> > 
-> > This patch set introduces support for MSI(-X) in GICv2m specification,
-> > which is implemented in some variation of GIC400.
-> > 
-> > This depends on and has been tested with the V7 of"Add support for PCI in AArch64"
-> > (https://lkml.org/lkml/2014/3/14/320).
-> > 
-> > Changes in V3:
-> >     * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/gic
-> >       (per Jason Cooper request)
-> >     * Misc fix/clean up per Mark Rutland comments
-> >     * Minor Clean up in the driver/irqchip/irq-gic-v2m.c: alloc_msi_irqs()
-> >     * Patch 4 is new to the series:
-> >         * Add ARM64-specific version arch_setup_msi_irqs() to allow support
-> >           for Multiple MSI.
-> >         * Add support for Multiple MSI for GICv2m.
-> > 
-> > Suravee Suthikulpanit (4):
-> >   irqchip: gic: Add binding probe for ARM GIC400
-> >   irqchip: gic: Restructuring ARM GIC code
-> >   irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-> >   irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+Hi,
+
+On Thursday, July 17, 2014 05:41:16 PM Naveen Krishna Ch wrote:
+> Hello Sachin,
 > 
-> Ok, patch #1 applied to irqchip/urgent.  Patches 2 and 3 applied to
-> irqchip/gic with irqchip/urgent merged in.  To facilitate
-> testing/merging, I've prepared an unsigned tag for you on the
-> irqchip/gic branch:
+> On 17 July 2014 17:24, Sachin Kamat <spk.linux@gmail.com> wrote:
+> > Hi Naveen,
+> >
+> > On Thu, Jul 17, 2014 at 4:49 PM, Naveen Krishna Chatradhi
+> > <ch.naveen@samsung.com> wrote:
+> >> This patch updates the IIO based ADC driver to use syscon and regmap
+> >> APIs to access and use PMU registers instead of remapping the PMU
+> >> registers in the driver.
+> >>
+> >> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> >> To: linux-iio@vger.kernel.org
+> >
+> > With only this patch applied, I believe the ADC functionality would be broken.
+> > Perhaps the DT changes should be merged along with this patch?
+> 
+> Jonathan already mentioned that, he would wait for Ack from Kukjin.
+> With out the dts changes ADC driver will fail to probe but it wont
+> crash the system.
+> git bisect should still work.
 
-I'm a little concerned that this is all going through for v3.17 without
-a {Reviewed,Acked}-by from Marc or anyone working with GIC{,v2m}.
+Unless someone bisects things related to ADC functionality..
 
-While his comments on v1 have been addressed, he has not had a chance to
-acknowledge the solutions. I appreciate Marc's holiday is unfortunately
-timed.
+Also patch #1 seems to break device tree ABI (the old dtb will no longer
+work with the new kernel).
 
-I also have an open concern with the binding with regard to the
-orthogonality of GICV GICH and the MSI registers.
-
-Suravee, do you need this urgently for v3.17? I was under the impression
-that we wouldn't have full PCIe support by then.
-
-Cheers,
-Mark.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
