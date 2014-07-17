@@ -1,46 +1,50 @@
-From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH RFC 2/2] regulator: twl: Re-add clk32kg to get wifi working
-Date: Thu, 17 Jul 2014 10:36:48 +0200
-Message-ID: <53C78B20.6010602@kpanic.de>
-References: <1405338655-18415-1-git-send-email-sassmann@kpanic.de> <1405338655-18415-3-git-send-email-sassmann@kpanic.de> <20140714120051.GF6800@sirena.org.uk> <53C3C77F.7080208@kpanic.de> <20140714181338.GR6800@sirena.org.uk> <53C525A2.8080609@kpanic.de> <20140716212340.GZ17528@sirena.org.uk>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 0/4] dra7: Add PCIe support
+Date: Thu, 17 Jul 2014 14:11:21 +0530
+Message-ID: <53C78C31.7000709@ti.com>
+References: <1405349705-31400-1-git-send-email-kishon@ti.com> <009001cfa16b$0c558ea0$2500abe0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140716212340.GZ17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <009001cfa16b$0c558ea0$2500abe0$%han@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 16.07.2014 23:23, Mark Brown wrote:
-> On Tue, Jul 15, 2014 at 02:59:14PM +0200, Stefan Assmann wrote:
->
->> Looking at this more closely it seems to me that it's a regulator thing
->> after all. In the end it all boils down to a single register write.
->> twl_i2c_write_u8(TWL_MODULE_PM_RECEIVER, 0x41, 0x8e);
->> This is a write to the CLK32KG_CFG_STATE [1] register to power on the
->> device.
->
-> The register description happening to mention power doesn't mean it's
-> not functionally an enable for a clock.
->
->> I tried moving that to omap4xxx_dt_clk_init() but that won't work
->> because the twl core structures aren't initialized yet.
->
->> Any suggestions?
->
-> Why not just add this to (or create a new) clock driver for the chip?
->
 
-Problem is that twl_i2c_write_u8() calls twl_get_regmap() to get the
-regmap. This requires struct twl_priv to be populated which does not
-happen until twl_probe has run. That hasn't happened at the point when
-omap4xxx_dt_clk_init() gets called.
-Is there a way to defer a clock driver until twl_probe() has run?
 
-   Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thursday 17 July 2014 08:28 AM, Jingoo Han wrote:
+> On Monday, July 14, 2014 11:55 PM, Kishon Vijay Abraham I wrote:
+>>
+>> Changes from v1:
+>> * fixed dw_pcie_prog_viewport_io_outbound() to use untranslated address
+>> * split dra7xx patch into driver part and documentation part
+>>
+>> [1] is split into separate series in order for individual subsystem
+>> Maintainers to pick up the patches. This series handles the PCIe
+>> support for DRA7.
+>>
+>> Rebased to pci -next.
+>>
+>> [1] -> https://lkml.org/lkml/2014/5/29/258
+>>
+>> Kishon Vijay Abraham I (4):
+>>   PCI: designware: Configuration space should be specified in 'reg'
+>>   PCI: designware: use untranslated address while programming ATU
+>>   Documentation: pci: ti: Add dt binding documentation for PCIe in
+>>     DRA7xx
+>>   PCI: host: pcie-dra7xx: add support for pcie-dra7xx controller
+> 
+> Kishon,
+> 
+> Actually, I have no objections to these patches.
+
+Thanks :-)
+> Then, how about adding maintainer entry for pci-dra7xx.c
+> to MAINTAINERS file? It would be good. :-)
+
+Sure, will post it.
+
+-Kishon
