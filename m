@@ -1,101 +1,219 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Thu, 17 Jul 2014 01:20:54 +0000
-Message-ID: <93903d5fdf85427bb8a418894540c122@BN1PR0301MB0772.namprd03.prod.outlook.com>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
- <5615007.cNNjmu3rBK@wuerfel>
- <cd73d8a384cc4040a0bbc6afc1f3063d@DM2PR0301MB0783.namprd03.prod.outlook.com>
- <22032517.gk8PRUMaIU@wuerfel>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v5 05/14] drm/exynos: dsi: add pass TE host ops to support
+ LCD I80 interface
+Date: Thu, 17 Jul 2014 11:15:07 +0900
+Message-ID: <53C731AB.4030407@samsung.com>
+References: <1404779987-5337-6-git-send-email-yj44.cho@samsung.com>
+ <20140709152207.GA17359@ulmo> <53BDE6FF.1000600@samsung.com>
+ <20140710073826.GB17918@ulmo> <53C3A15F.4020401@samsung.com>
+ <20140714094130.GD9755@ulmo> <53C3B4C8.1070601@samsung.com>
+ <20140714110326.GA31460@ulmo> <53C49336.5050909@samsung.com>
+ <53C5E20D.5010704@samsung.com> <20140716075457.GH7978@ulmo>
+ <53C65024.7080606@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <22032517.gk8PRUMaIU@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: =?iso-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53C65024.7080606@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-> > > >
-> > > > Some people wanted the possibility to set the DMA mask as this
-> > > > USB2 CI driver does not do specific Berlin operation and can be
-> reused later.
-> > > > I don't particularly need to call dma_coerce_mask_and_coherent()
-> > > > in my case, as far as I know.
-> > >
-> > > Ok, just remove the call then and rely on the default mask.
-> > >
-> > > > They can maybe give the restrictions they might want to put on the
-> > > > DMA mask.
-> > >
-> > > If the restriction is from the bus, it should get handled
-> > > automatically by the device probe as long as the correct dma-ranges
-> > > property is there (though we have a small bug there at the moment).
-> > > If there is a variation of ci13xxx that can't do 32-bit DMA, that
-> > > should use a different compatible string and pass a fixed mask into
-> > > dma_set_mask_and_coherent() based on the device.
-> > >
-> >
-> > Correct me if my below understanding is wrong please.
-> >
-> > For three chipidea users:
-> > user_a: don't need dma mask
-> > user_b: dma mask value is dma_mask_b
-> > user_c: dma mask value is dma_mask_c
-> >
-> > We don't need to call dma_coerce_mask_and_coherent() at generic
-> > chipidea glue driver, and set dma-ranges as dma_mask_b at user_b's
-> > dts, and set dma-ranges as dma_mask_c at user_c's dts.
-> 
-> The dma-ranges property doesn't just encode a dma-mask for a device, but
-> rather how the children of a bus see the memory address space of the
-> parent.
-> 
-> For traditional reasons we default to assuming that a 32-bit dma_mask is
-> correct, but there may be multiple reasons why this is not true:
-> 
-> - you have a device connected to a bus that is smaller than 32-bit wide
->   (and that would have a dma-ranges property describing that)
-> - you have a device that has fewer than 32 address lines but is connected
->   to a 32-bit upstream bus (hence the dma-ranges describe all 32 bit,
->   but the driver must set a smaller mask)
-> - you have a 64-bit capable device connected to a 32-bit bus: the driver
->   will ask for a 64-bit mask, but the dma_set_mask() call refuses this
->   because of the bus capabilities.
-> - you have a 64-bit capable device on a 64-bit capable bus, and the
->   dma_set_mask call should succeed.
-> 
-> The mask is definitely never "user" specific, but is a combination of the
-> device you have and the bus it is connected to.
-> 
+On 2014=EB=85=84 07=EC=9B=94 16=EC=9D=BC 19:12, YoungJun Cho wrote:
+> Hi Thierry,
+>=20
+> On 07/16/2014 04:54 PM, Thierry Reding wrote:
+>> On Wed, Jul 16, 2014 at 11:23:09AM +0900, YoungJun Cho wrote:
+>>> Hi Inki,
+>>>
+>>> On 07/15/2014 11:34 AM, Inki Dae wrote:
+>>>> On 2014=EB=85=84 07=EC=9B=94 14=EC=9D=BC 20:03, Thierry Reding wro=
+te:
+>>>>> On Mon, Jul 14, 2014 at 07:45:28PM +0900, YoungJun Cho wrote:
+>>>>>> On 07/14/2014 06:41 PM, Thierry Reding wrote:
+>>>>> [...]
+>>>>>>> That said, I've been doing some research and it seems like we h=
+ave a
+>>>>>>> somewhat similar feature on Tegra. What happens there is that
+>>>>>>> there are
+>>>>>>> three GPIO pins that can be repurposed for TE signalling. But a=
+s
+>>>>>>> opposed
+>>>>>>> to using them as interrupts the display controller can be
+>>>>>>> configured to
+>>>>>>> use them, upon which it will automatically handle the TE signal=
+ by
+>>>>>>> sending the next frame.
+>>>>>>
+>>>>>> Could you explain more detail how the Tegra display controller
+>>>>>> could be
+>>>>>> configured with this GPIO pins?
+>>>>>> I have no idea except that the display controller registers this
+>>>>>> GPIO as an
+>>>>>> IRQ.
+>>>>>
+>>>>> On Tegra the display controller has a special register that can b=
+e
+>>>>> programmed to use one of the three GPIOs as TE signal. Then the
+>>>>> display
+>>>>> controller can be configured in one-shot (non-continuous) mode, w=
+hich
+>>>>> means that software needs to explicitly set a trigger bit to tell=
+ the
+>>>>> display controller to send a new frame. If TE signalling is enabl=
+ed,
+>>>>> then the display controller will not immediately send a new frame=
+ when
+>>>>> triggered but wait for signalling of this GPIO.
+>>>>>
+>>>>>>> So we have at least two very different implementations of this =
+on
+>>>>>>> two
+>>>>>>> different SoCs. Further the specification explicitly recommends
+>>>>>>> using
+>>>>>>> the BTA sequence and DSI protocol to wait for TE. So I still
+>>>>>>> think that
+>>>>>>> controllers that provide an additional, non-spec compliant meth=
+od to
+>>>>>>> signal TE should handle it separately rather than within DSI.
+>>>>>>> Otherwise
+>>>>>>> we essentially need to make the DSI "core" aware of all these
+>>>>>>> quirks,
+>>>>>>> and I'd rather avoid that.
+>>>>>>
+>>>>>> You mean, the DSI specification guides to use BTA, so it's bette=
+r
+>>>>>> to use
+>>>>>> display controller rather than DSIM, right?
+>>>>>
+>>>>> What I'm saying is that there's nothing about a side-band TE wire
+>>>>> in the
+>>>>> DSI spec. In fact the spec explicitly says that this mechanism of=
+ an
+>>>>> external TE wire from older protocols (DBI) was replaced by the B=
+TA
+>>>>> sequence over the protocol.
+>>>>>
+>>>>> Now, my understanding is that using the BTA sequence over the DSI
+>>>>> protocol would introduce some latency and that forces some panel
+>>>>> vendors
+>>>>> to still provide a side-band TE wire even in DSI compliant panels=
+=2E But
+>>>>> since this is not part of the specification there is no standard
+>>>>> way to
+>>>>> do this (as evidenced by Tegra and Exynos). Therefore putting suc=
+h
+>>>>> functionality into the core DSI code is bad.
+>>>>>
+>>>>> But that doesn't mean that you have to put this functionality int=
+o the
+>>>>> display controller driver on Exynos. What I'm saying is that it s=
+hould
+>>>>> be handled by the SoC driver rather than the core. Where exactly
+>>>>> probably depends on the particular case.
+>>>>>
+>>>>>>>> As Inki commented before, I'll try to use remote-endpoint
+>>>>>>>> property of DSI
+>>>>>>>> device node in exynos DSIM driver and call FIMD notifier.
+>>>>>>>
+>>>>>>> Sounds like it matches what I said above. I'm not a huge fan of
+>>>>>>> notifiers, but if it works for you I suppose that's fine. The
+>>>>>>> alternative would be to directly call a FIMD function, which is
+>>>>>>> somewhat more explicit than a notifier.
+>>>>>>
+>>>>>> Yes, I also like explicit call, so I want to use dsi_host_ops an=
+d
+>>>>>> calls it
+>>>>>> in panel. But there is an objection to use dis_host_ops, we thin=
+k
+>>>>>> notifier
+>>>>>> in exynos dsim for fimd(display controller).
+>>>>>
+>>>>> There are other ways to explicitly call into the display
+>>>>> controller. You
+>>>>> could for example get access to the CRTC that DSIM is currently
+>>>>> connected to (via exynos_dsi.encoder->crtc) and then cast that to=
+ a
+>>>>> struct exynos_drm_crtc and call a function to trigger a new frame
+>>>>> to be
+>>>>> sent (for example exynos_drm_crtc_send_frame()). This assumes tha=
+t you
+>>>>> can safely cast struct drm_crtc * to struct exynos_drm_crtc *, bu=
+t
+>>>>> that
+>>>>> shouldn't be a problem.
+>>>>>
+>>>>> With the above, you could make the DSIM handle the TE signal
+>>>>> interrupts
+>>>>> and trigger the DC using the new exynos_drm_crtc_send_frame()
+>>>>> function.
+>>>>>
+>>>>
+>>>> It seems better than the use of notifier. Actually, original patch=
+ used
+>>>> this way except TE event.
+>>>> Mr. Cho, let's use remote-endpoint property and this way instead o=
+f
+>>>> notifier.
+>>>>
+>>>
+>>> The struct exynos_dsi has panel_node, which is valid by
+>>> exynos_dsi_host_attach() is called from panel, we could use it
+>>> instead of
+>>> getting new remote-endpoint node.
+>>>
+>>> So after called exynos_dsi_host_attach(), the dsi driver could know
+>>> that the
+>>> panel supports mipi command mode or video mode,
+>>> and if the panel is for mipi command mode one, dsi driver gets pane=
+l
+>>> te gpio
+>>> and registers its irq.
+>>
+>> Why does the TE GPIO even need to be in the panel's device tree node=
+?
+>> Wouldn't it make more sense for it to be in the DSIM node? After all
+>> that's what the GPIO is connected to, right? Well, at least logicall=
+y
+>> if not physically.
+>>
+>=20
+> I also agree that the GPIO in DT means the connection after all.
+>=20
+> But the panel provides the TE pin(this is obvious) and decides the DS=
+IM
+> mode(command or video).
+> This TE pin is useless in video mode.
+>=20
+> So I think it's better for panel to decide and provide all related th=
+ings.
+>=20
 
-Thanks, arnd.
++1
 
-For chipidea generic glue layer case, if there are three devices who use this
-driver, and all devices have 32-bit bus, some devices have less 32 address lines.
-For example:
+device tree already connects them using endpoint node logically. And it
+wouldn't make sense for TE gpio pin to be in dsi node: TE pin belongs t=
+o
+panel device, not dsi.
 
-- the device_a doesn't need to use dma_mask
-- the device_b needs dma_mask as 0xfffffffff
-- the device_c needs dma_mask as 0xfffffff0, assume it has only 28 address lines
+And if dsi node has te gpio property, where i80 based parallel panel's
+te pin should be in? Display controller? if TE pin is placed in panel
+node, and fimd and parallel panel or dsi and mipi panel are connected
+logically using device tree (graph), that case would be clear.
 
-My questions are:
-- Can we not set dma_mask at driver, and only set dma-ranges at dts for device_b
-and device_c as a solution to cover this different dma mask use case?
+Thanks,
+Inki Dae
 
-- If we can't use this solution, would you suggest one?
-
-- If we can use this solution, for device_b and device_c, how can we write dma-ranges?
-I can't find any arm platforms use it, only some powerpc platform use it.
-According to the definition from Power_ePAPR_APPROVED_v1.1.pdf, it is
-dma-ranges = <child-bus-address, parent-bus-address, length>
-but I find the powerpc has different way for using dma-ranges. 
-
-Peter
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thank you.
+> Best regards YJ
+>=20
+>> Thierry
+>>
+>=20
+> --=20
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
