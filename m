@@ -1,49 +1,58 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] ARM: at91: move aic driver to drivers/irqchips
-Date: Thu, 17 Jul 2014 09:34:49 -0400
-Message-ID: <20140717133449.GP13108@titan.lakedaemon.net>
-References: <1405012462-766-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: efm32: correct namespacing of location property
+Date: Thu, 17 Jul 2014 15:40:00 +0200
+Message-ID: <20140717134000.GK2740@katana>
+References: <1405066940-12919-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1405068614-14279-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Ah40dssYA/cDqAW1"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1405012462-766-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1405068614-14279-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 10, 2014 at 07:14:15PM +0200, Boris BREZILLON wrote:
-> Hello,
-> 
-> This series moves the AIC driver to the irqchip directory and make use of
-> the generic chip framework whenever possible.
-> 
-> This driver only support DT boards (all legacy board files should be soon
-> replaced by their DT versions).
-> 
-> Since the last version AIC and AIC5 code have been split and common
-> functions have been moved to irq-atmel-aic-common.c.
-> I know there is not much code in this file and it could have been
-> duplicated in AIC and AIC5 drivers, but I'm planning to add more common
-> stuff soon (AIC irq fixups previously done in
-> arch/arm/mach-at91/sysirq_mask.c).
-> 
-> Jason, if everybody is fine with this version could you share a topic
-> branch  containing patch 1 to 3 with Nicolas ?
 
-I've now applied patches 1-3 to irqchip/atmel-aic.  You can find the
-branch here:
+--Ah40dssYA/cDqAW1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  git://git.infradead.org/users/jcooper/linux.git irqchip/atmel-aic
+On Fri, Jul 11, 2014 at 10:50:14AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Olof Johansson pointed out that usually the company name is picked as
+> namespace prefix to specific properties. So expect "energymicro,location"
+> but fall back to the previously introduced name "efm32,location".
+>=20
+> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-It will be merged into -next today, and I'll merge it into irqchip/core
-after a few days.
+Applied to for-next, thanks! If you think this is better suited in
+for-current, let me know.
 
-thx,
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Ah40dssYA/cDqAW1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTx9IwAAoJEBQN5MwUoCm26vYP/2Bp7QzcJiZpEpfNwhNGOjW8
+xZB8+B9m2e75F+XJRcnZTNrPOXRTVZ43VB63mTGDXCGZKYD3g/rCfOsErK4dQwY9
+vzdVVeCXAKA7+X5qxP/0uOycSF3NGzFXHSUabP7BHvAg68I2exnE47OrKXSsGr87
+DQyMXKFJIpXhJIkA50gzNo+x3rx7ceg3oe1RR2axKOOixRIGIQV7m/Zt8qpYxmkx
+PvMWX74l59jlbg5lqYy7dPXPKjoKyywDhnoq/w6J0Y6LuGsdIijw7AWsSvHO2pLY
+Pq6pmK1Lqf27ugqabcfU+UbIQRbj2sXHG6Mv314BwuMXlGuEgWOg5U1VZYSkHbPo
+QEBlhdLewu0+EUXVwhCvdNWgHvYTj6pcXTkWhSNk0jarEJbWwtJrPmZQZyZcUXF1
+wprF5CNGvvrfqNw1IrTJT02RxwJsO6GJC3BzZTH95YQgJDxPChBNwSywaM4Qnxmc
+xHvTEfbojCTt4i+Xr03W3Rs4U36KnbN0xwuRKOTQt1oHjdhl6fAYxQILAELK5Bbq
+O6If3zaLqS1NualuZaZlZKXMF3w1NKeEhOajZm3Qt0nSx6AKKXV2ZBpI772ooAjy
+CzeAQDj9xEIgNuKPOCiUfej6musAfsw+0DTUhIGy+CAyprwqA7GL7A6TUH0zcEzK
+WGdU6N8SmT32aB/X8yxl
+=VSPe
+-----END PGP SIGNATURE-----
+
+--Ah40dssYA/cDqAW1--
