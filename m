@@ -1,50 +1,71 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Thu, 17 Jul 2014 13:11:45 +0530
-Message-ID: <CAKohpokZXUzXKRWBje7QF_jrvOd5dmfmWQ2Csf3xiMuvT_vPYA@mail.gmail.com>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
-	<CAKohpo=Z5gEHOC5q40q8dfQfoNP5-WyhjG1arV99zJiG2c+6Xg@mail.gmail.com>
-	<CAKohpo=bUMKa752fBXZTb0WPYMfJtuR5uk7z-YaXYV63fhJWtg@mail.gmail.com>
-	<1450785.beFNo3ByBF@vostro.rjw.lan>
-	<CAKohpomPAp74Sf_DxqzFk1WzUTx5m=G-nj+d+QHW5q=gnVphhA@mail.gmail.com>
-	<20140717093518.486ac244@free-electrons.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [Re-send PATCH 1/1] arm: dra7xx: Add hwmod data for MDIO and CPSW
+Date: Thu, 17 Jul 2014 00:49:48 -0700
+Message-ID: <20140717074948.GF18374@atomide.com>
+References: <1404825399-10330-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140717093518.486ac244@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Simon Horman <horms@verge.net.au>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, Rob Herring <rob.herring@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Sachin Kamat <spk.linux@gmail.com>, Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404825399-10330-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 July 2014 13:05, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-> Could you summarize what is the issue with the binding?
->
-> At least for the case where we have one clock per CPU, the DT binding
-> is really dead simple: each CPU node can carry a "clocks" property, and
-> a "clock-latency" property. I really don't see why a long discussion is
-> needed to agree on such a binding.
->
-> Now, if the DT binding problem is related to those cases where you have
-> siblings, i.e one clock controlling *some* of the CPUs, but not all
-> CPUs or just one CPU, then maybe we could leave this aside for now,
+* Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> [140708 06:18]:
+> Adding hwmod data for CPSW and MDIO which is present in DRA7xx SoC
+> 
+> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+> This patch was already send twice on 2013-10-18 and 2014-05-13. Adding
+> more people in Cc to review the patch.
+> 
+> ---
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 65 +++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> index 20b4398..45b5113 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> @@ -273,6 +273,56 @@ static struct omap_hwmod dra7xx_ctrl_module_wkup_hwmod = {
+>  };
+>  
+>  /*
+> + * 'gmac' class
+> + * cpsw/gmac sub system
+> + */
+> +static struct omap_hwmod_class_sysconfig dra7xx_gmac_sysc = {
+> +	.rev_offs	= 0x0,
+> +	.sysc_offs	= 0x8,
+> +	.syss_offs	= 0x4,
+> +	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
+> +			   SYSS_HAS_RESET_STATUS),
+> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
+> +			   MSTANDBY_NO),
+> +	.sysc_fields	= &omap_hwmod_sysc_type3,
+> +};
 
-Yeah, we are stuck on that for now.
+We seem to have this layout WR_SOFT_RESET and WR_CONTROL in the TRM:
 
-> only support the following cases:
->
->  * One clock for all CPUs
->  * One clock for each CPU
+WR_SOFT_RESET
+[0]     SOFT_RESET
 
-Yeah, so I also proposed this yesterday that we stick to only these
-two implementations for now. And was looking at how would the
-cpufreq-generic driver come to know about this.
+WR_CONTROL
+[3:2]   MMR_STDBYMODE   0 = force-idle, 1 = no-standby
+[1:0]   MMR_IDLEMODE    0 = force-idle, 1 = no-idle
 
-So, one way out now is to see if "clocks" property is defined in
-multiple cpu nodes, if yes don't compare them and consider separate
-clocks for each cpu. We don't have to try matching that to any other
-node, as that's a very bad idea. Mike was already very upset with that :)
+And so it seems to match what am33xx also has for am33xx_cpgmac_sysc
+and am33xx TRM for 14.5.9 CONTROL register. So as far as I'm concerned:
 
-@Stephen/Rafael: Does that sound any better? Ofcourse the final thing
-is to get bindings to figure out relations between CPUs..
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
