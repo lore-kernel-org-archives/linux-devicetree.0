@@ -1,179 +1,55 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/8] mailbox: f_mhu: add driver for Fujitsu MHU controller
-Date: Thu, 17 Jul 2014 18:26:57 +0530
-Message-ID: <CAJe_ZhegVczzcRVikt=nWnwU3nGx2G2mNg9nGR3bF4FfHnPeEg@mail.gmail.com>
-References: <1405233128-4799-1-git-send-email-mollie.wu@linaro.org>
-	<53C6B83D.80602@arm.com>
-	<CAJe_Zhe_kqmeeu9vF3CZwu3WR=P-nj13Bx+VOBCE7NfGzGPx=g@mail.gmail.com>
-	<53C7A5F1.30209@arm.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] i2c: Relax mandatory I2C ID table passing
+Date: Thu, 17 Jul 2014 15:03:06 +0200
+Message-ID: <20140717130306.GG2740@katana>
+References: <1403265753-25851-1-git-send-email-lee.jones@linaro.org>
+ <20140717102342.GD30888@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53C7A5F1.30209-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JbKQpFqZXJ2T76Sg"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140717102342.GD30888@lee--X1>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17 July 2014 16:01, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 17/07/14 07:25, Jassi Brar wrote:
->>
->>>
->>>> +       u32 val;
->>>> +
->>>> +       pr_debug("%s:%d\n", __func__, __LINE__);
->>>
->>>
->>>
->>> Please remove all these debug prints.
->>>
->> These are as good as absent unless DEBUG is defined.
->>
->
-> Yes, but with mailbox framework, the controller driver(esp. this one)is
-> almost like a shim layer. Instead of each driver adding these debugs,
-> IMO it would be good to have these in the framework.
->
-OK
 
->>>
->>>> +       /* See NOTE_RX_DONE */
->>>> +       val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
->>>> +       mbox_chan_received_data(chan, (void *)val);
->>>> +
->>>> +       /*
->>>> +        * It is agreed with the remote firmware that the receiver
->>>> +        * will clear the STAT register indicating it is ready to
->>>> +        * receive next data - NOTE_RX_DONE
->>>> +        */
->>>
->>>
->>> This note could be added as how this mailbox works in general and
->>> it's not just Rx right ? Even Tx done is based on this logic.
->>> Basically the logic is valid on both directions.
->>>
->> Yes that is a protocol level agreement. Different f/w may behave
->> differently.
->>
->
-> Ok, I am not sure if that's entirely true because the MHU spec says it
-> drives
-> the signal using a 32-bit register, with all 32 bits logically ORed
-> together.
-> Usually only Rx signals are wired to interrupts and Tx needs to be polled
-> but that's entirely implementation choice I believe.
->
-On my platform, _STAT register only carries the command code but
-actual data is exchanged via SharedMemory/SHM. Now we need to know
-when the sent data packet (in SHM) has been consumed by the remote -
-for which our protocol mandates the remote clear the TX_STAT register.
-And vice-versa for RX.
+--JbKQpFqZXJ2T76Sg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Some other f/w may choose some other mechanism for TX-Done - say some
-ACK bit set or even some time bound guarantee.
+On Thu, Jul 17, 2014 at 11:23:42AM +0100, Lee Jones wrote:
+> Hi Wolfram,
+>=20
+> Are you going to take a lot at this set?
 
-> More over if it's protocol level agreement it should not belong here :)
->
-My f/w expects the RX_STAT cleared after reading data from SHM. Where
-do you think is the right place to clear RX_STAT?
-
-I have said many times in many threads... its the mailbox controller
-_and_ the remote f/w that should be seen as one entity. It may not be
-possible to write a controller driver that works with any remote
-firmware.
-
->
->>>> +static int mhu_startup(struct mbox_chan *chan)
->>>> +{
->>>> +       struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
->>>> +       unsigned long flags;
->>>> +       u32 val;
->>>> +       int ret;
->>>> +
->>>> +       pr_debug("%s:%d\n", __func__, __LINE__);
->>>> +       spin_lock_irqsave(&mlink->lock, flags);
->>>> +       val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
->>>> +       writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
->>>> +       spin_unlock_irqrestore(&mlink->lock, flags);
->>>> +
->>>> +       ret = request_irq(mlink->irq, mhu_rx_interrupt,
->>>> +                         IRQF_SHARED, "mhu_link", chan);
->>>
->>>
->>>
->>> Just a thought: Can this be threaded_irq instead ?
->>> Can move request_irq to probe instead esp. if threaded_irq ?
->>> That provides some flexibility to client's rx_callback.
->>>
->> This is controller driver, and can not know which client want
->> rx_callback in hard-irq context and which in thread_fn context.
->> Otherwise, request_irq() does evaluate to request_threaded_irq(), if
->> thats what you mean.
->
-> Agreed but on contrary since MHU involves external firmware(running
-> on different processor) which might have it's own latency, I prefer
-> threaded over hard irq. And yes request_irq does evaluate to
-> request_threaded_irq but with thread_fn = NULL which is not what I want.
->
-If remote has its own latency, that does not mean we add some more :)
-
->>   There might be use-cases like (diagnostic or other) data transfer
->> over mailbox where we don't wanna increase latency, so we have to
->> provide a rx_callback in hard-irq context.
->>
-> OK
->
-Cool.
-
->
->>>
->>>> +       for (i = 0; i < 3; i++) {
->>>> +               mhu->chan[i].con_priv = &mhu->mlink[i];
->>>> +               spin_lock_init(&mhu->mlink[i].lock);
->>>> +               res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
->>>> +               mhu->mlink[i].irq = res->start;
->>>> +               mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
->>>> +               mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + 0x100;
->>>> +       }
->>>> +
->>>> +       mhu->mbox.dev = &pdev->dev;
->>>> +       mhu->mbox.chans = &mhu->chan[0];
->>>> +       mhu->mbox.num_chans = 3;
->>>
->>>
->>>
->>> Change this to 2, we shouldn't expose secular channel here as Linux can't
->>> access that anyway.
->>>
->> On the contrary, I think the device driver code should be able to
->> manage every resource - secure or non-secure. If we remove secure
->> channel option, what do we do on some other platform that needs it?
->> And Linux may not always run in non-secure mode.
->
->
-> In general secure accesses are avoided these days in Linux as we have no
-> way to identify it. I agree there are few place where we do access.
-> Even though I don't like you have secure channel access in Linux, you
-> have valid reasons. In case you decide to support it, there is some
-> restrictions in bit 31, though RAZ/WI you need to notify that to protocol
-> if it tries to access it ?
->
->
->>   So here we populate all channels and let the clients knows which
->> channel to use via platform specific details - DT. Please note the
->> driver doesn't touch any secure resource if client doesn't ask it to
->> (except SCFG for now, which I think should have some S vs NS DT
->> binding).
->>
->
-> Not sure of this though. We need feedback from DT maintainers.
->
-Yup.
+Sure thing, yet I won't make it for 3.17, sadly :( It has high priority
+for 3.18, though.
 
 
-Cheers,
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--JbKQpFqZXJ2T76Sg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTx8mKAAoJEBQN5MwUoCm2yswP/1cqsTCBkIkCg36M1Jmc2qsP
+uI8dL3CQD9ZsT7FPr+o+UsGzTLvteSgACj1SDx5xArkTM8hdWW0Gfjp5KzRVk+vt
+1W/LfKcqJSycU5HhsiFK7721ANPJh3OD1dZtJXp0ZAbjSxxS+IieNN3qsbSZ6lJD
+9zj8hKi6n6AsVPRi0IQVnz37caUer02FODPVfKqJMR/8dJu2SprhMms1IfC21eEn
+/0nfMpmVpzHAX1PrSNjDLOpvgq5LxC7Ay7Cu2PHNCUBBqrfCilk0zuGg8fSaksfX
+llNta9OCApL/tLV8pcj+UKkyKweEDTmvhANly+eVbWLEsMyeulOKIJhTZXZBS01M
+OUzOsZCQ7r/RNw5lCD9KSq4LIRtWkDoxRNPDsEjncpTlUoI++y6I3Hi8D7vFKuUa
+TSfYXoARq5m2kbE2Tx++XZvckm04oqngjkA3uFFNMcC4uAPR/W0IwYulazrWQKjb
+2yF3TJD0ah5mK0dZgfFnaTgYnDdlEDn1H8OuUDDLWsYjZYUPPHwn+4WKwsD2JIkx
+ysFt+3DtRKDVvUskYBbBXmmlElBdlzbxYeGwHU302U1ZQueZCQTJFwqjZp0B5nf7
+JRwhPbXsT/xXxe1IInktffbo1VHXAxav6psVK34CqmcgFxmmvI+j6qcLJSAq2ZUw
+UCahopUzBBYdJATTaZl/
+=cI6F
+-----END PGP SIGNATURE-----
+
+--JbKQpFqZXJ2T76Sg--
