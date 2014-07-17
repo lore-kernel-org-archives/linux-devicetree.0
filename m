@@ -1,85 +1,60 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [RFCv2] drm/msm: DT support for 8960/8064
-Date: Thu, 17 Jul 2014 11:29:33 -0400
-Message-ID: <CAF6AEGvCiw5d4b68K7kGLY2YrLUEu9ggySZ0Q8HgHGzSW5qX8w@mail.gmail.com>
-References: <1404241055-3579-1-git-send-email-robdclark@gmail.com>
- <1404835244-3735-1-git-send-email-robdclark@gmail.com>
- <CADsdr6O75H33KV7D9fvDEpPfQ6FZ2bH-P84Zf=bjEVuNGbJn9A@mail.gmail.com>
+From: pramod gurav <pramod.gurav.etc@gmail.com>
+Subject: Re: [PATCH v4 1/3] soc: devicetree: bindings: Add Qualcomm RPM DT binding
+Date: Thu, 17 Jul 2014 21:34:37 +0530
+Message-ID: <CAMf-jSkvC4P8-06XbmMH2i0xHvaYwH_VbfG6Ypp3F+ct5ZxM+A@mail.gmail.com>
+References: <1405465241-28684-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1405465241-28684-2-git-send-email-bjorn.andersson@sonymobile.com>
+	<CAMf-jS=tkBYQ7mXp71F2_rPo6DE3e4C=sFHqg3Q26a08m6NxJQ@mail.gmail.com>
+	<CAJAp7OggtuxPSc0yXzMCs10aQ2R6E+m4Bu8sdLJopvrZ3+5Rmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CADsdr6O75H33KV7D9fvDEpPfQ6FZ2bH-P84Zf=bjEVuNGbJn9A@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: divya ojha <odivya77@gmail.com>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OggtuxPSc0yXzMCs10aQ2R6E+m4Bu8sdLJopvrZ3+5Rmg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 4:10 AM, divya ojha <odivya77@gmail.com> wrote:
-> Hi Rob,
+On Thu, Jul 17, 2014 at 3:50 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
+>> On Wed, Jul 16, 2014 at 4:30 AM, Bjorn Andersson
+>> <bjorn.andersson@sonymobile.com> wrote:
+> [...]
+>>> +       rpm@108000 {
+>>> +               compatible = "qcom,rpm-msm8960";
+>>> +               reg = <0x108000 0x1000>;
+>>> +               qcom,ipc = <&apcs 0x8 2>;
+>>
+>> Tried adding this but there is no reference to 'apcs' registers itself
+>> in any dts.
+>>
+>> Without these changes rpm breaks hence not able to test SATA which needs rpm.
+>>
 >
-> On Tue, Jul 8, 2014 at 9:30 PM, Rob Clark <robdclark@gmail.com> wrote:
->> Now that we (almost) have enough dependencies in place (MMCC, RPM, etc),
->> add necessary DT support so that we can use drm/msm on upstream kernel.
->>
->> Signed-off-by: Rob Clark <robdclark@gmail.com>
->> ---
->> I thought I sent this already, but looks like I've forgot.
-> ..
->> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
->> index 7f7aade..041c2fc 100644
->> --- a/drivers/gpu/drm/msm/hdmi/hdmi.c
->> +++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
->> @@ -123,7 +123,8 @@ struct hdmi *hdmi_init(struct drm_device *dev, struct drm_encoder *encoder)
->>         for (i = 0; i < config->hpd_reg_cnt; i++) {
->>                 struct regulator *reg;
->>
->> -               reg = devm_regulator_get(&pdev->dev, config->hpd_reg_names[i]);
->> +               reg = devm_regulator_get_exclusive(&pdev->dev,
->> +                               config->hpd_reg_names[i]);
->>                 if (IS_ERR(reg)) {
->>                         ret = PTR_ERR(reg);
->>                         dev_err(dev->dev, "failed to get hpd regulator: %s (%d)\n",
->> @@ -138,7 +139,8 @@ struct hdmi *hdmi_init(struct drm_device *dev, struct drm_encoder *encoder)
->>         for (i = 0; i < config->pwr_reg_cnt; i++) {
->>                 struct regulator *reg;
->>
->> -               reg = devm_regulator_get(&pdev->dev, config->pwr_reg_names[i]);
->> +               reg = devm_regulator_get_exclusive(&pdev->dev,
->> +                               config->pwr_reg_names[i]);
->>                 if (IS_ERR(reg)) {
->>                         ret = PTR_ERR(reg);
->>                         dev_err(dev->dev, "failed to get pwr regulator: %s (%d)\n",
+> Hi Pramod,
 >
-> Don't we need to have a if(regulator_enabled) check after
-> devm_regulator_get function ?
-> I see a similar test after camera regulator_get function call.
+> Unfortunately the ipc bits resides in a block that needs to be
+> accesses by various device drivers so I had to extract the access; so
+> you now need to reference it via a syscon handle and offset instead -
+> as described above.
+>
+> The apcs node I used for testing this with looks like this:
+>
+> apcs: syscon@2011000 {
+>     compatible = "syscon";
+>     reg = <0x2011000 0x1000>;
+> };
+>
+> Enable CONFIG_MFD_SYSCON and put the dt snippet somewhere under soc
+> and you should be good.
+>
 
-tbh, I'm not 100% sure.
+Thanks Bjorn. Did this and seen things working (sata atleast).
 
-Normally I would say that any driver using some resource (regulator,
-etc) should take it's own reference irrespective of whether some other
-driver already has the regulator/etc, enabled.  Otherwise the
-reference counting doesn't work out.
+> Regards,
+> Bjorn
 
-The thing I'm not 100% sure about is interaction w/ bootloader, in
-cases where bootloader does initial modeset.  I've had some problems
-in this area in the past when I was trying to get DSI working on my
-nexus4.  I doubt the correct solution is for the driver to check if
-regulator is already enabled by bootloader before enabling it, but I'm
-not sure if something else somewhere needs to drop references to
-resources enabled by bootloader.
 
-BR,
--R
 
-> -Regards
-> Divya
+-- 
+Thanks and Regards
+Pramod
