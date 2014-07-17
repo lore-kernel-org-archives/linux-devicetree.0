@@ -1,56 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 3/3] ASoC: fsl: add imx-es8328 machine driver
-Date: Thu, 17 Jul 2014 21:00:31 +0100
-Message-ID: <20140717200031.GJ17528@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 2/3] ASoC: add es8328 codec driver
+Date: Thu, 17 Jul 2014 21:46:28 +0100
+Message-ID: <20140717204628.GK17528@sirena.org.uk>
 References: <1405388494-21232-1-git-send-email-xobs@kosagi.com>
- <1405388494-21232-4-git-send-email-xobs@kosagi.com>
+ <1405388494-21232-3-git-send-email-xobs@kosagi.com>
+ <20140717195709.GI17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NWFdL9cNbHaIJHRV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1405388494-21232-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6086151142451430946=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140717195709.GI17528@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, lars@metafoo.de, devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Nicolin Chen <b42378@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bunnie@kosagi.com, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---NWFdL9cNbHaIJHRV
-Content-Type: text/plain; charset=us-ascii
+--===============6086151142451430946==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BRF4e1IEQp0HoEFj"
 Content-Disposition: inline
 
-On Tue, Jul 15, 2014 at 09:41:34AM +0800, Sean Cross wrote:
-> This adds an initial machine driver for the ES8328 audio codec on Freescale
-> boards.  The driver supports headphones and an audio regulator for an onboard
-> speaker amp.
 
-Applied, thanks.
+--BRF4e1IEQp0HoEFj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---NWFdL9cNbHaIJHRV
+On Thu, Jul 17, 2014 at 08:57:09PM +0100, Mark Brown wrote:
+> On Tue, Jul 15, 2014 at 09:41:33AM +0800, Sean Cross wrote:
+>=20
+> > Add a codec driver for the Everest ES8328.  It supports two separate au=
+dio
+> > outputs and two separate audio inputs.
+>=20
+> This looks mostly fine so I've applied it, there are some issues below -
+> please send followups fixing them.
+
+=2E..except it doesn't actually build since you use the variable ret in
+the probe function without declaring it.  Reverted, please fix this
+along with the other more minor issues and resubmit.
+
+--BRF4e1IEQp0HoEFj
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTyCtcAAoJELSic+t+oim9AV8P/jLO0K3AP8vOUKnqPd4Fcjql
-dePuEqfMgV4pbWgk9R4y4Ie0FrLlvGD5NDanJ2XFdDaes8zdNByUraBqRXI8tWwg
-upUqdoWblevoKZCx5McQY18zarjgAOI7cOpHOSPyccoDfAYGUM9pmsevuTtV9imm
-LQT0Yto2xh4Nwa9W9R0ZgAK6P+pfnJrgPgJkcCK0PszK+t2sf1eD6NoUnKfOoFuI
-5ns0Qdpd6bEBK72bixr55VfpLa1gtcNzjboU7DeR9NvSD1mIWObgErKeFgbA30yV
-XFPJYNZItrAWDi9c5SwPwpcE8wJY2FSQzNevHgdnF0sooWND/oA91lqSbhue+UE0
-DpPYtxJ+SiqMUwniFTsaSSqPeytV2bAoSfz9DclXSRMcA1lELCyCTO175S8CrafL
-XUByoqVDJS9zEJ43WM5Om+j1v6CYfJtBSgpOyku6rpbOjg/hRPZHuOHBPEMmFmHk
-6390rqn1rNytvCc9t3JVPB4ZryBA3y/Ygzu4Od8udZ/5PtfuH0s9SVjSXwrqiOx6
-Gv27UQDkWfl0t4UzAN9i0aoV0Ul9Oa5EW5dswIy7xaif9qcXh+4vuUWwZv7jJ+WM
-dS5vl2iih0fISz3hIwuJ5fEDTPU0G+tTV8qzPGu8yd9Hfw68zN0ptWHgdj40jM+T
-yL6u7AkJHuFHy218llZg
-=40O7
+iQIcBAEBAgAGBQJTyDYgAAoJELSic+t+oim9QGoP/jFybnXBLqvSWjrjdFHUfPIY
+C5W6WQKtLG3KL10lhlQxr/KBJL3LJfBZAdxTg0r8RBRFEEJTFisfa3Z58lDsUkSN
+Bgr2qRy4uTrfEJJs1pTpait8fhzQAoZFLQkU7NVIDBtidY4+WDizEzXU4g931/Nr
+xPwdlMWWMqsDsmahoxovB/A8lSTjSg4CWemk/e8NyphZlbKCWyq1KJi7SXQwx2Ix
+hHTSnfRKjMfOw5qQHSSQY6lLJ02LSR23/2p4gmvz4y4OR4ipBYemvK54YxicCj+0
+DJoV80CQU7HZFvB0/H9EULVQLhJbvyhLAvrv8Q1kmlj9qWgnlVR8nkN7V0fXiIT5
+EpVqBaackV9zkX0dOIT6eoZERTVkt0n3Jjeu5TcIrDEMgaSyNjxRIuAtGaPekhwX
+oVmbJey8jSLeicKgiW/urXLN6hPTofD9QqNYnssAHsbe4dbDJ7esaAsikwjhJRoH
+1dcmuZsD/n5fZnpdj1Vs0B4jx0PDP167mN2sebRKVihzFNJx5vq0mleJFIaaT41R
+6OsjgMHdecNNsSj6YR66zsyEJm5aRleKB55tuP+/6jsUDP+5mBFUvls7ZB/6i4T6
+NZVAZ76SAhhnJiVHslpvtaWcxLBSPzlVS92o1QaBbwXVW40WZ57qzlykKLQUfwFA
+zlm52up6Lkcube0mSYiP
+=xgl/
 -----END PGP SIGNATURE-----
 
---NWFdL9cNbHaIJHRV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--BRF4e1IEQp0HoEFj--
+
+--===============6086151142451430946==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6086151142451430946==--
