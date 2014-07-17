@@ -1,58 +1,58 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: rockchip: enable support for RK3288 SoCs
-Date: Thu, 17 Jul 2014 11:20:45 +0100
-Message-ID: <20140717102045.GG21153@arm.com>
-References: <1471578.ILeMmG2DL6@diego>
- <4355781.cnmcVo5AVu@diego>
- <CAD=FV=Vp2GqwEsLt5n5176ZRvDgNLSYFSUC6G+7pV6cuATuFTw@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Thu, 17 Jul 2014 12:21:56 +0200
+Message-ID: <5456516.0fVZeXjF8k@wuerfel>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com> <22032517.gk8PRUMaIU@wuerfel> <93903d5fdf85427bb8a418894540c122@BN1PR0301MB0772.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vp2GqwEsLt5n5176ZRvDgNLSYFSUC6G+7pV6cuATuFTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <93903d5fdf85427bb8a418894540c122-RQSpjbwlmjS6oBnG8T5U3ZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 08:57:21PM +0100, Doug Anderson wrote:
-> Heiko,
->=20
-> On Tue, Jul 15, 2014 at 4:01 PM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
-ote:
-> > Enable HAVE_ARM_ARCH_TIMER and add a rockchip,rk3288 compatible.
-> >
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> >  arch/arm/mach-rockchip/Kconfig    | 1 +
-> >  arch/arm/mach-rockchip/rockchip.c | 1 +
-> >  2 files changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchi=
-p/Kconfig
-> > index e4564c2..d168669 100644
-> > --- a/arch/arm/mach-rockchip/Kconfig
-> > +++ b/arch/arm/mach-rockchip/Kconfig
-> > @@ -6,6 +6,7 @@ config ARCH_ROCKCHIP
-> >         select ARCH_REQUIRE_GPIOLIB
-> >         select ARM_GIC
-> >         select CACHE_L2X0
-> > +       select HAVE_ARM_ARCH_TIMER
->=20
-> Do we want to think about allowing someone to enable the A9-based
-> Rockchip SoCs separately than the A12-based ones?  I know it doesn't
-> hurt to have the arch timer code present on A9 SoCs (it will figure
-> things out at runtime), but people trying to build an A9-based system
-> might not want the extra code?
+On Thursday 17 July 2014 01:20:54 Peter Chen wrote:
+> Thanks, arnd.
+> 
+> For chipidea generic glue layer case, if there are three devices who use this
+> driver, and all devices have 32-bit bus, some devices have less 32 address lines.
+> For example:
+> 
+> - the device_a doesn't need to use dma_mask
+> - the device_b needs dma_mask as 0xfffffffff
+> - the device_c needs dma_mask as 0xfffffff0, assume it has only 28 address lines
 
-More likely, people using the A12-based system won't want the CACHE_L2X=
-0
-code (which adds an outer_cache.sync check to wmb()).
+This makes no sense. You always need a dma mask, so the first case doesn't exist,
+and the second one is the default.
 
-Will
+In the third case, I assume you mean 0x0fffffff, which is a 28-bit mask.
+
+> My questions are:
+> - Can we not set dma_mask at driver, and only set dma-ranges at dts for device_b
+> and device_c as a solution to cover this different dma mask use case?
+
+try to understand my earlier reply. What is the problem with device_b?
+Is that a limitation of the bus it is connected to, or the version of the
+chipidea hardware?
+
+> - If we can't use this solution, would you suggest one?
+
+It depends on what the requirement of the hardware is, as I explained
+now for three times.
+
+> - If we can use this solution, for device_b and device_c, how can we write dma-ranges?
+> I can't find any arm platforms use it, only some powerpc platform use it.
+> According to the definition from Power_ePAPR_APPROVED_v1.1.pdf, it is
+> dma-ranges = <child-bus-address, parent-bus-address, length>
+> but I find the powerpc has different way for using dma-ranges. 
+
+It's now handled by of_dma_configure() in drivers/of/platform.c for all
+architectures.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
