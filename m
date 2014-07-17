@@ -1,7 +1,7 @@
 From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v2 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI PMICs
-Date: Thu, 17 Jul 2014 19:17:32 +0300
-Message-ID: <1405613855-27572-2-git-send-email-svarbanov@mm-sol.com>
+Subject: [PATCH v2 2/4] mfd: pm8xxx-spmi: document DT bindings for Qualcomm SPMI PMICs
+Date: Thu, 17 Jul 2014 19:17:33 +0300
+Message-ID: <1405613855-27572-3-git-send-email-svarbanov@mm-sol.com>
 References: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com>
@@ -10,129 +10,69 @@ To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kerne
 Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Josh Cartwright <joshc@codeaurora.org>
-
-The Qualcomm SPMI PMIC chips are components used with the
-Snapdragon 800 series SoC family.  This driver exists
-largely as a glue mfd component, it exists to be an owner
-of an SPMI regmap for children devices described in
-device tree.
+Document DT bindings used to describe the Qualcomm SPMI PMICs.
+Currently the SPMI PMICs supported are pm8941, pm8841 and pma8084.
 
 Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 ---
- drivers/mfd/Kconfig       |   16 +++++++++++
- drivers/mfd/Makefile      |    1 +
- drivers/mfd/pm8xxx-spmi.c |   63 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 80 insertions(+), 0 deletions(-)
- create mode 100644 drivers/mfd/pm8xxx-spmi.c
+ .../devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt   |   49 ++++++++++++++++++++
+ 1 files changed, 49 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 6cc4b6a..122e2d9 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -524,6 +524,22 @@ config MFD_PM8921_CORE
- 	  Say M here if you want to include support for PM8921 chip as a module.
- 	  This will build a module called "pm8921-core".
- 
-+config MFD_PM8XXX_SPMI
-+	tristate "Qualcomm PM8XXX SPMI PMICs"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on OF
-+	depends on SPMI
-+	select MFD_PM8XXX
-+	select REGMAP_SPMI
-+	help
-+	  This enables support for the Qualcomm PM8XXX SPMI PMICs.
-+	  These PMICs are currently used with the Snapdragon 800 series of
-+	  SoCs.  Note, that this will only be useful paired with descriptions
-+	  of the independent functions as children nodes in the device tree.
-+
-+	  Say M here if you want to include support for the PM8XXX SPMI PMIC
-+	  series as a module.  The module will be called "pm8xxx-spmi".
-+
- config MFD_RDC321X
- 	tristate "RDC R-321x southbridge"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 8afedba..93d82cc 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -153,6 +153,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
- obj-$(CONFIG_MFD_CS5535)	+= cs5535-mfd.o
- obj-$(CONFIG_MFD_OMAP_USB_HOST)	+= omap-usb-host.o omap-usb-tll.o
- obj-$(CONFIG_MFD_PM8921_CORE) 	+= pm8921-core.o ssbi.o
-+obj-$(CONFIG_MFD_PM8XXX_SPMI)	+= pm8xxx-spmi.o
- obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
- obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
- obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
-diff --git a/drivers/mfd/pm8xxx-spmi.c b/drivers/mfd/pm8xxx-spmi.c
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt
 new file mode 100644
-index 0000000..882da5e
+index 0000000..2b7f5b6
 --- /dev/null
-+++ b/drivers/mfd/pm8xxx-spmi.c
-@@ -0,0 +1,63 @@
-+/*
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/spmi.h>
-+#include <linux/regmap.h>
-+#include <linux/of_platform.h>
++++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt
+@@ -0,0 +1,49 @@
++          Qualcomm PM8XXX SPMI PMICs multi-function device bindings
 +
-+static const struct regmap_config pm8xxx_regmap_config = {
-+	.reg_bits	= 16,
-+	.val_bits	= 8,
-+	.max_register	= 0xffff,
-+};
++The Qualcomm PM8XXX series presently includes PM8941, PM8841 and PMA8084
++PMICs.  These PMICs use a QPNP scheme through SPMI interface.
++QPNP is effectively a partitioning scheme for dividing the SPMI extended
++register space up into logical pieces, and set of fixed register
++locations/definitions within these regions, with some of these regions
++specifically used for interrupt handling.
 +
-+static int pm8xxx_probe(struct spmi_device *sdev)
-+{
-+	struct device_node *root = sdev->dev.of_node;
-+	struct regmap *regmap;
++The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
++interfaced to the chip via the SPMI (System Power Management Interface) bus.
++Support for multiple independent functions are implemented by splitting the
++16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
++each. A function can consume one or more of these fixed-size register regions.
 +
-+	regmap = devm_regmap_init_spmi_ext(sdev, &pm8xxx_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
++Required properties:
++- compatible:      Should contain one of:
++                     "qcom,pm8941"
++                     "qcom,pm8841"
++                     "qcom,pma8084"
++- reg:             Specifies the SPMI USID slave address for this device.
++                   For more information see:
++                   Documentation/devicetree/bindings/spmi/spmi.txt
 +
-+	return of_platform_populate(root, NULL, NULL, &sdev->dev);
-+}
++Required properties for peripheral child nodes:
++- compatible:      Should contain "qcom,pm8xxx-xxx", where "xxx" is
++                   peripheral name. The "pm8xxx" can be any of supported PMICs,
++                   see example below.
 +
-+static void pm8xxx_remove(struct spmi_device *sdev)
-+{
-+	of_platform_depopulate(&sdev->dev);
-+}
++Optional properties for peripheral child nodes:
++- interrupts:      Interrupts are specified as a 4-tuple. For more information
++                   see:
++                   Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++- interrupt-names: Corresponding interrupt name to the interrupts property
 +
-+static const struct of_device_id pm8xxx_id_table[] = {
-+	{ .compatible = "qcom,pm8941" },
-+	{ .compatible = "qcom,pm8841" },
-+	{ .compatible = "qcom,pma8084" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pm8xxx_id_table);
++Each child node represents a function of the PMIC.
 +
-+static struct spmi_driver pm8xxx_driver = {
-+	.probe = pm8xxx_probe,
-+	.remove = pm8xxx_remove,
-+	.driver = {
-+		.name = "pm8xxx-spmi",
-+		.of_match_table = pm8xxx_id_table,
-+	},
-+};
-+module_spmi_driver(pm8xxx_driver);
++Example:
 +
-+MODULE_DESCRIPTION("PM8XXX SPMI PMIC driver");
-+MODULE_ALIAS("platform:" KBUILD_MODNAME);
-+MODULE_AUTHOR("The Linux Foundation");
-+MODULE_LICENSE("GPL v2");
++	pm8941@0 {
++		compatible = "qcom,pm8941";
++		reg = <0x0 SPMI_USID>;
++
++		rtc {
++			compatible = "qcom,pm8941-rtc";
++			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "alarm";
++		};
++	};
 -- 
 1.7.0.4
