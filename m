@@ -1,82 +1,95 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 2/3] ASoC: add es8328 codec driver
-Date: Thu, 17 Jul 2014 21:46:28 +0100
-Message-ID: <20140717204628.GK17528@sirena.org.uk>
-References: <1405388494-21232-1-git-send-email-xobs@kosagi.com>
- <1405388494-21232-3-git-send-email-xobs@kosagi.com>
- <20140717195709.GI17528@sirena.org.uk>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V5 05/12] Documentation: Add DT bindings for panel-lvds
+ driver
+Date: Fri, 18 Jul 2014 02:20:39 +0530
+Message-ID: <CAEC9eQNygvwOGvw6QPGp+=7K9=oC9XvcEf9QSv=JBsEHyhM0wA@mail.gmail.com>
+References: <1405629839-12086-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1405629839-12086-6-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6086151142451430946=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140717195709.GI17528@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, lars@metafoo.de, devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Nicolin Chen <b42378@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bunnie@kosagi.com, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1405629839-12086-6-git-send-email-ajaykumar.rs@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Javier Martinez Canillas <javier@dowhile0.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
++devicetree@vger.kernel.org
 
---===============6086151142451430946==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BRF4e1IEQp0HoEFj"
-Content-Disposition: inline
-
-
---BRF4e1IEQp0HoEFj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 17, 2014 at 08:57:09PM +0100, Mark Brown wrote:
-> On Tue, Jul 15, 2014 at 09:41:33AM +0800, Sean Cross wrote:
->=20
-> > Add a codec driver for the Everest ES8328.  It supports two separate au=
-dio
-> > outputs and two separate audio inputs.
->=20
-> This looks mostly fine so I've applied it, there are some issues below -
-> please send followups fixing them.
-
-=2E..except it doesn't actually build since you use the variable ret in
-the probe function without declaring it.  Reverted, please fix this
-along with the other more minor issues and resubmit.
-
---BRF4e1IEQp0HoEFj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTyDYgAAoJELSic+t+oim9QGoP/jFybnXBLqvSWjrjdFHUfPIY
-C5W6WQKtLG3KL10lhlQxr/KBJL3LJfBZAdxTg0r8RBRFEEJTFisfa3Z58lDsUkSN
-Bgr2qRy4uTrfEJJs1pTpait8fhzQAoZFLQkU7NVIDBtidY4+WDizEzXU4g931/Nr
-xPwdlMWWMqsDsmahoxovB/A8lSTjSg4CWemk/e8NyphZlbKCWyq1KJi7SXQwx2Ix
-hHTSnfRKjMfOw5qQHSSQY6lLJ02LSR23/2p4gmvz4y4OR4ipBYemvK54YxicCj+0
-DJoV80CQU7HZFvB0/H9EULVQLhJbvyhLAvrv8Q1kmlj9qWgnlVR8nkN7V0fXiIT5
-EpVqBaackV9zkX0dOIT6eoZERTVkt0n3Jjeu5TcIrDEMgaSyNjxRIuAtGaPekhwX
-oVmbJey8jSLeicKgiW/urXLN6hPTofD9QqNYnssAHsbe4dbDJ7esaAsikwjhJRoH
-1dcmuZsD/n5fZnpdj1Vs0B4jx0PDP167mN2sebRKVihzFNJx5vq0mleJFIaaT41R
-6OsjgMHdecNNsSj6YR66zsyEJm5aRleKB55tuP+/6jsUDP+5mBFUvls7ZB/6i4T6
-NZVAZ76SAhhnJiVHslpvtaWcxLBSPzlVS92o1QaBbwXVW40WZ57qzlykKLQUfwFA
-zlm52up6Lkcube0mSYiP
-=xgl/
------END PGP SIGNATURE-----
-
---BRF4e1IEQp0HoEFj--
-
---===============6086151142451430946==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6086151142451430946==--
+On Fri, Jul 18, 2014 at 2:13 AM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
+> Add DT binding documentation for panel-lvds driver.
+>
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+>  .../devicetree/bindings/panel/panel-lvds.txt       |   50 ++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/panel-lvds.txt
+>
+> diff --git a/Documentation/devicetree/bindings/panel/panel-lvds.txt b/Documentation/devicetree/bindings/panel/panel-lvds.txt
+> new file mode 100644
+> index 0000000..fdf91da2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/panel-lvds.txt
+> @@ -0,0 +1,50 @@
+> +panel interface for eDP/lvds panels
+> +
+> +Required properties:
+> +  - compatible: "panel-lvds"
+> +
+> +Optional properties:
+> +       -lcd-enable-gpios:
+> +               panel LCD poweron GPIO.
+> +                       Indicates which GPIO needs to be powered up as output
+> +                       to powerup/enable the switch to the LCD panel.
+> +       -backlight-enable-gpios:
+> +               panel LED enable GPIO.
+> +                       Indicates which GPIO needs to be powered up as output
+> +                       to enable the backlight.
+> +       -panel-prepare-delay:
+> +               delay value in ms required for panel_prepare process
+> +                       Delay in ms needed for the panel LCD unit to
+> +                       powerup completely.
+> +                       ex: delay needed till eDP panel throws HPD.
+> +                           delay needed so that we cans tart reading edid.
+> +       -panel-enable-delay:
+> +               delay value in ms required for panel_enable process
+> +                       Delay in ms needed for the panel backlight/LED unit
+> +                       to powerup, and delay needed between video_enable and
+> +                       backlight_enable.
+> +       -panel-disable-delay:
+> +               delay value in ms required for panel_disable process
+> +                       Delay in ms needed for the panel backlight/LED unit
+> +                       powerdown, and delay needed between backlight_disable
+> +                       and video_disable.
+> +       -panel-unprepare-delay:
+> +               delay value in ms required for panel_post_disable process
+> +                       Delay in ms needed for the panel LCD unit to
+> +                       to powerdown completely, and the minimum delay needed
+> +                       before powering it on again.
+> +       -panel-width-mm: physical panel width [mm]
+> +       -panel-height-mm: physical panel height [mm]
+> +
+> +Example:
+> +
+> +       panel-lvds {
+> +               compatible = "panel-lvds";
+> +               backlight-enable-gpios = <&gpx3 0 0>;
+> +               panel-prepare-delay = <40>;
+> +               panel-enable-delay = <20>;
+> +               panel-disable-delay = <20>;
+> +               panel-unprepare-delay = <30>;
+> +               panel-width-mm = <256>;
+> +               panel-height-mm = <144>;
+> +       };
+> --
+> 1.7.9.5
+>
