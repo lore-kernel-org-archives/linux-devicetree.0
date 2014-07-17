@@ -1,48 +1,92 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Thu, 17 Jul 2014 13:34:38 +0200
-Message-ID: <14435027.UvktXyQjy4@wuerfel>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com> <5456516.0fVZeXjF8k@wuerfel> <20140717111912.GA16025@shlinux1.ap.freescale.net>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 0/4] iio: exynos-adc: use syscon instead of ioremap
+Date: Thu, 17 Jul 2014 17:17:18 +0530
+Message-ID: <CAHfPSqDqJuhsMMocpz0jWxJhAuFQDpfssNB3kFN9bMcaPGtH0g@mail.gmail.com>
+References: <1405069589-10388-1-git-send-email-ch.naveen@samsung.com>
+ <53C56F40.1070304@kernel.org> <53C56FB1.2040700@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140717111912.GA16025@shlinux1.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Peter Chen <peter.chen@freescale.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "zmxu@marvell.com" <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "jszhang@marvell.com" <jszhang@marvell.com>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53C56FB1.2040700@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 July 2014 19:19:15 Peter Chen wrote:
-> 
-> Currently, we are designing a generic driver, we don't know what's the
-> hardware architecture, we are trying to find a solution how to set
-> dma mask for all possible devices which will use this driver, Antoine's
-> this patch is trying to cover this feature.
-> 
-> For example, 
-> 
-> Marvell Berlin doesn't need to set dma mask specific.
-> http://marc.info/?l=linux-arm-kernel&m=140205228507045&w=2
-> http://www.spinics.net/lists/linux-usb/msg110598.html
-> 
-> Xilinx zynq needs to set dma mask as 0xFFFFFFF0
-> http://marc.info/?l=linux-usb&m=140384129921706&w=2
-> 
-> FSL i.mx needs to set dma mask as DMA_BIT_MASK(32)
-> https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/tree/drivers/usb/chipidea/ci_hdrc_imx.c?h=usb-next
+Hello Jonathan,
 
-Ok, I see now. I think we can safely drop it completely then:
+On 15 July 2014 23:45, Jonathan Cameron <jic23@kernel.org> wrote:
+> On 15/07/14 19:13, Jonathan Cameron wrote:
+>>
+>> On 11/07/14 10:06, Naveen Krishna Chatradhi wrote:
+>>>
+>>> This patch does the following
+>>> 1. Use the syscon and Regmap API instead of ioremappaing the
+>>>     ADC_PHY register from PMU.
+>>> 2. Moves the exynos-adc.txt from bindings/arm/samsung/
+>>>     to bindings/iio/adc/.
+>>> 3. Updates the Documentation in exynos-adc.txt with syscon phandle
+>>>     for the ADC nodes.
+>>> 4. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
+>>>     Exynos5420 with the syscon phandle.
+>>>
+>>> Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
+>>> by verifying sysfs entries provided by HWMON based NTC thermistors.
+>>>
+>>> Tested-By for Exynos3250, Exynos4x12 would be appreciated.
+>>>
+>> This series all looks fine to me.  Took me a minute to work out what the
+>> point
+>> of the syscon change was (perhaps a little description in the cover letter
+>> would have been nice ;)
+>>
+>> Anyhow, with the device tree changes in here we'll have to let it sit for
+>> a while.  I'll also definitely want an ack from
+>> Kukjin Kim <kgene.kim@samsung.com> for the device tree changes.
+>
+> Although I haven't tried it, I'd imagine this might cause a little bit
+> of merging fun with the other exynos series waiting for Kukjin to
+> ack...
 
-- Berlin was only recently added and doesn't need to set the
-  mask because the common code handles it just fine now.
+I've tried to rebase on top of Chongwoo's v5 version changes for Exynos5320.
+there is one conflict with Documentation. I've submitted the v2 version.
 
-- i.mx was added earlier, at a time where it was still necessary
+> [PATCHv5 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and code clean
+>>
+>>
+>> Jonathan
+>>>
+>>> Naveen Krishna Chatradhi (4):
+>>>    iio: exyno-adc: use syscon for PMU register access
+>>>    Documentation: dt-bindings: move exynos-adc.txt to more iio/adc/
+>>>    Documentation: dt-bindings: update exynos-adc.txt with syscon handle
+>>>    ARM: dts: exynos: Add sysreg phandle to ADC node
+>>>
+>>>   .../devicetree/bindings/arm/samsung/exynos-adc.txt |   82
+>>> ------------------
+>>>   .../devicetree/bindings/iio/adc/exynos-adc.txt     |   87
+>>> ++++++++++++++++++++
+>>>   arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+>>>   arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
+>>>   arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
+>>>   arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+>>>   drivers/iio/adc/exynos_adc.c                       |   29 +++++--
+>>>   7 files changed, 115 insertions(+), 95 deletions(-)
+>>>   delete mode 100644
+>>> Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/iio/adc/exynos-adc.txt
+>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
 
-- zynq just made a mistake, 0xFFFFFFF0 was never a valid mask
-  and just happened to work by accident.
 
-In summary, the 32-bit default mask will work on all of them,
-and we need no special code or DT properties for it.
 
-	Arnd
+-- 
+Regards,
+(: Naveen :)
