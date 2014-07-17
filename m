@@ -1,187 +1,70 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 13/14] mmc: sunxi: Convert MMC driver to the standard clock phase API
-Date: Thu, 17 Jul 2014 11:08:53 +0200
-Message-ID: <1405588134-2396-14-git-send-email-maxime.ripard@free-electrons.com>
-References: <1405588134-2396-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1405588134-2396-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 2/2] regulator: twl: Re-add clk32kg to get wifi
+ working
+Date: Thu, 17 Jul 2014 10:58:12 +0100
+Message-ID: <20140717095812.GQ17528@sirena.org.uk>
+References: <1405338655-18415-1-git-send-email-sassmann@kpanic.de>
+ <1405338655-18415-3-git-send-email-sassmann@kpanic.de>
+ <20140714120051.GF6800@sirena.org.uk>
+ <53C3C77F.7080208@kpanic.de>
+ <20140714181338.GR6800@sirena.org.uk>
+ <53C525A2.8080609@kpanic.de>
+ <20140716212340.GZ17528@sirena.org.uk>
+ <53C78B20.6010602@kpanic.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="J/pvEKOcHgREgBce"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53C78B20.6010602-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have proper support to use the generic phase API in our clock
-driver, switch the MMC driver to use it.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- .../devicetree/bindings/mmc/sunxi-mmc.txt          |  8 +--
- drivers/mmc/host/sunxi-mmc.c                       | 72 +++++++++++++++-------
- 2 files changed, 53 insertions(+), 27 deletions(-)
+--J/pvEKOcHgREgBce
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
-index 91b3a3467150..4bf41d833804 100644
---- a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
-@@ -10,8 +10,8 @@ Absolute maximum transfer rate is 200MB/s
- Required properties:
-  - compatible : "allwinner,sun4i-a10-mmc" or "allwinner,sun5i-a13-mmc"
-  - reg : mmc controller base registers
-- - clocks : a list with 2 phandle + clock specifier pairs
-- - clock-names : must contain "ahb" and "mmc"
-+ - clocks : a list with 4 phandle + clock specifier pairs
-+ - clock-names : must contain "ahb", "mmc", "output" and "sample"
-  - interrupts : mmc controller interrupt
- 
- Optional properties:
-@@ -25,8 +25,8 @@ Examples:
- 	mmc0: mmc@01c0f000 {
- 		compatible = "allwinner,sun5i-a13-mmc";
- 		reg = <0x01c0f000 0x1000>;
--		clocks = <&ahb_gates 8>, <&mmc0_clk>;
--		clock-names = "ahb", "mod";
-+		clocks = <&ahb_gates 8>, <&mmc0_clk>, <&mmc0_output_clk>, <&mmc0_sample_clk>;
-+		clock-names = "ahb", "mod", "output", "sample";
- 		interrupts = <0 32 4>;
- 		status = "disabled";
- 	};
-diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-index 024f67c98cdc..8719cefa590d 100644
---- a/drivers/mmc/host/sunxi-mmc.c
-+++ b/drivers/mmc/host/sunxi-mmc.c
-@@ -22,7 +22,6 @@
- 
- #include <linux/clk.h>
- #include <linux/clk-private.h>
--#include <linux/clk/sunxi.h>
- 
- #include <linux/gpio.h>
- #include <linux/platform_device.h>
-@@ -230,6 +229,8 @@ struct sunxi_mmc_host {
- 	/* clock management */
- 	struct clk	*clk_ahb;
- 	struct clk	*clk_mmc;
-+	struct clk	*clk_sample;
-+	struct clk	*clk_output;
- 
- 	/* irq */
- 	spinlock_t	lock;
-@@ -617,7 +618,7 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
- static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
- 				  struct mmc_ios *ios)
- {
--	u32 rate, oclk_dly, rval, sclk_dly, src_clk;
-+	u32 rate, oclk_dly, rval, sclk_dly;
- 	int ret;
- 
- 	rate = clk_round_rate(host->clk_mmc, ios->clock);
-@@ -643,34 +644,31 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
- 
- 	/* determine delays */
- 	if (rate <= 400000) {
--		oclk_dly = 0;
--		sclk_dly = 7;
-+		oclk_dly = 180;
-+		sclk_dly = 42;
- 	} else if (rate <= 25000000) {
--		oclk_dly = 0;
--		sclk_dly = 5;
-+		oclk_dly = 180;
-+		sclk_dly = 75;
- 	} else if (rate <= 50000000) {
- 		if (ios->timing == MMC_TIMING_UHS_DDR50) {
--			oclk_dly = 2;
--			sclk_dly = 4;
-+			oclk_dly = 60;
-+			sclk_dly = 120;
- 		} else {
--			oclk_dly = 3;
--			sclk_dly = 5;
-+			oclk_dly = 90;
-+			sclk_dly = 150;
- 		}
-+	} else if (rate <= 100000000) {
-+		oclk_dly = 6;
-+		sclk_dly = 24;
-+	} else if (rate <= 200000000) {
-+		oclk_dly = 3;
-+		sclk_dly = 12;
- 	} else {
--		/* rate > 50000000 */
--		oclk_dly = 2;
--		sclk_dly = 4;
-+		return -EINVAL;
- 	}
- 
--	src_clk = clk_get_rate(clk_get_parent(host->clk_mmc));
--	if (src_clk >= 300000000 && src_clk <= 400000000) {
--		if (oclk_dly)
--			oclk_dly--;
--		if (sclk_dly)
--			sclk_dly--;
--	}
--
--	clk_sunxi_mmc_phase_control(host->clk_mmc, sclk_dly, oclk_dly);
-+	clk_set_phase(host->clk_sample, sclk_dly);
-+	clk_set_phase(host->clk_output, oclk_dly);
- 
- 	return sunxi_mmc_oclk_onoff(host, 1);
- }
-@@ -909,6 +907,18 @@ static int sunxi_mmc_resource_request(struct sunxi_mmc_host *host,
- 		return PTR_ERR(host->clk_mmc);
- 	}
- 
-+	host->clk_output = devm_clk_get(&pdev->dev, "output");
-+	if (IS_ERR(host->clk_output)) {
-+		dev_err(&pdev->dev, "Could not get output clock\n");
-+		return PTR_ERR(host->clk_output);
-+	}
-+
-+	host->clk_sample = devm_clk_get(&pdev->dev, "sample");
-+	if (IS_ERR(host->clk_sample)) {
-+		dev_err(&pdev->dev, "Could not get sample clock\n");
-+		return PTR_ERR(host->clk_sample);
-+	}
-+
- 	host->reset = devm_reset_control_get(&pdev->dev, "ahb");
- 
- 	ret = clk_prepare_enable(host->clk_ahb);
-@@ -923,11 +933,23 @@ static int sunxi_mmc_resource_request(struct sunxi_mmc_host *host,
- 		goto error_disable_clk_ahb;
- 	}
- 
-+	ret = clk_prepare_enable(host->clk_output);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Enable output clk err %d\n", ret);
-+		goto error_disable_clk_mmc;
-+	}
-+
-+	ret = clk_prepare_enable(host->clk_sample);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Enable sample clk err %d\n", ret);
-+		goto error_disable_clk_output;
-+	}
-+
- 	if (!IS_ERR(host->reset)) {
- 		ret = reset_control_deassert(host->reset);
- 		if (ret) {
- 			dev_err(&pdev->dev, "reset err %d\n", ret);
--			goto error_disable_clk_mmc;
-+			goto error_disable_clk_sample;
- 		}
- 	}
- 
-@@ -946,6 +968,10 @@ static int sunxi_mmc_resource_request(struct sunxi_mmc_host *host,
- error_assert_reset:
- 	if (!IS_ERR(host->reset))
- 		reset_control_assert(host->reset);
-+error_disable_clk_sample:
-+	clk_disable_unprepare(host->clk_sample);
-+error_disable_clk_output:
-+	clk_disable_unprepare(host->clk_output);
- error_disable_clk_mmc:
- 	clk_disable_unprepare(host->clk_mmc);
- error_disable_clk_ahb:
--- 
-2.0.1
+On Thu, Jul 17, 2014 at 10:36:48AM +0200, Stefan Assmann wrote:
+> On 16.07.2014 23:23, Mark Brown wrote:
 
+> >Why not just add this to (or create a new) clock driver for the chip?
+
+> Problem is that twl_i2c_write_u8() calls twl_get_regmap() to get the
+> regmap. This requires struct twl_priv to be populated which does not
+> happen until twl_probe has run. That hasn't happened at the point when
+> omap4xxx_dt_clk_init() gets called.
+> Is there a way to defer a clock driver until twl_probe() has run?
+
+Why would probe deferral not work the same way as it does for
+everything, and what does the core SoC clocking have to do with this?
+
+--J/pvEKOcHgREgBce
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTx54xAAoJELSic+t+oim9FW0P/R0z132TlvsROV/JKd8YLyk5
+j7Oms4L+eOU0VNpiR3CVG2VTJmh7jM7cwndNCIMcEDAFz2ZQeVJ6J25yNgyRZQ3V
+PBpqUNmwHtNFhRUcI2s4sT61NTnE9YbTK35klxe1D89yfPPPnAo91JI1Ro+DhC+l
+WO+Z6Zt12IJwJ3tdxL2DDOIfxiB10QqI/MWqg0OLc8rH1Guku7hh/lDY8PDKVl+/
+WL2xqVJJsG4PnfUdDEYk/BaMfcu+ZFkb2sFHZEJW+ssJBhrmUUJxOWpjYvVfhdcg
+ERa3dnZeyNriroxIeBlpbfEHLStUm9L4AIm0S/z4WtZwVOx0crZACLxOAEnpHCp2
+VsTClvTW8i3DN78cjGAbWWKiQ57kYluUMETwdy+3mRsnNmZD5Mr9jKGNynor9D30
+K/R1ahjsZ9B4cOQ2ks2jF5bIi5RHA7tAp7rocDv0syVHostL8wC6M+Lo8QfFkYbS
+Bqj0Y1ARYRtJQwmVHTeWY2kfg4bE1vBNmZORcv+WuOQ2lfZiZ5M6g2ptdQGcXOtM
+6rg2uM628/kRl2tgBT1R8CCWpM3Uw28hfOYE7SVX5kshcd7iyKfP3JNDrexvivjZ
+8S9OBwmHBuNNqHL4nSeYHfDsYd778Bc35CbE9Fr7RZpBXtbhTBWoTUX66/awAveR
+9Op3HRHKSnu4JAb/IOAm
+=mZFi
+-----END PGP SIGNATURE-----
+
+--J/pvEKOcHgREgBce--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
