@@ -1,116 +1,100 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: OF_DYNAMIC node lifecycle
-Date: Wed, 16 Jul 2014 18:44:09 -0600
-Message-ID: <CACxGe6vfOa3dMoE7BYt5YAJ39yA9b0A8SJMRZiXpCsvBfQ5dOQ@mail.gmail.com>
-References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>
- <53A30117.3010100@austin.ibm.com> <20140623144806.1348EC40A60@trevor.secretlab.ca>
- <53A9DB4F.9060708@austin.ibm.com> <20140625202446.77687C40AE6@trevor.secretlab.ca>
- <53AC7C2D.3040604@austin.ibm.com> <20140627124101.367F7C40E5E@trevor.secretlab.ca>
- <53AD8296.6040702@austin.ibm.com> <CACxGe6u5bVwYZjux9F2xzZSxZOSe37DGemCgcYtmiTP-xenQfg@mail.gmail.com>
- <53C6C4BE.6010301@gmail.com> <CACxGe6v8BgEcTRB-ftPVkR6Tqs3GPw_0fVuwFgff_VqawoocGA@mail.gmail.com>
- <CACxGe6scb291V9rjz2P48FxCEtXEEtOkgiQms=nZ_wdOf_cqHA@mail.gmail.com> <53C706D2.7080207@austin.ibm.com>
+From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Thu, 17 Jul 2014 01:20:54 +0000
+Message-ID: <93903d5fdf85427bb8a418894540c122@BN1PR0301MB0772.namprd03.prod.outlook.com>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <5615007.cNNjmu3rBK@wuerfel>
+ <cd73d8a384cc4040a0bbc6afc1f3063d@DM2PR0301MB0783.namprd03.prod.outlook.com>
+ <22032517.gk8PRUMaIU@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53C706D2.7080207-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+In-Reply-To: <22032517.gk8PRUMaIU@wuerfel>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-Cc: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: =?iso-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 5:12 PM, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrote:
-> On 07/16/2014 05:26 PM, Grant Likely wrote:
->> On Wed, Jul 16, 2014 at 2:57 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Wed, Jul 16, 2014 at 12:30 PM, Tyrel Datwyler
->>> <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On 07/15/2014 10:33 PM, Grant Likely wrote:
->>>>> I've got another question about powerpc reconfiguration. I was looking
->>>>> at the dlpar_configure_connector() function in dlpar.c. I see that the
->>>>> function has the ability to process multiple nodes with additional
->>>>> sibling and child nodes. It appears to link them into a detached tree
->>>>> structure, and the function returns a pointer to the first node.
->>>>>
->>>>> All of the callers of that function then call dlpar_attach_node(),
->>>>> which calls of_attach_node(). However, of_attach_node() only handles a
->>>>> single node. It doesn't handle siblings or children. Is this a bug?
->>>>> Does the configure connector ever actually receive more than one node
->>>>> at once?
->>>>
->>>> Yes, it is sometimes the case we will get a tree structure back of more
->>>> than one node. Under the proc interface implementation this just worked.
->>>> With the move to sysfs it appears we have a regression here. What makes
->>>> more sense here, for us to walk the tree calling of_attach_node, or to
->>>> move such tree walking logic into of_attach_node? From what I can tell
->>>> we are the only consumers of of_attach_node.
->>>
->>> That is very shortly going to change. The overlay code also uses
->>> of_attach_node(). I can make of_attach_node() recurse over
->>> descendants, but I'm also considering moving the powerpc code over to
->>> the of_changeset series that Panto and I are working on.
->>>
->>> Either way, the handling of multiple nodes should be common code. I
->>> think the easiest is to put the recursion into of_attach_node(), at
->>> least for fixing the bug. It can be reworked later.
->>
->> On pseries, do notifiers ever fail? ie. Does the reconfig code ever
->> object to a DT change and prevent it from being applied?
->>
-> I cannot think of a time that  I ever saw a notifier fail.
+> > > >
+> > > > Some people wanted the possibility to set the DMA mask as this
+> > > > USB2 CI driver does not do specific Berlin operation and can be
+> reused later.
+> > > > I don't particularly need to call dma_coerce_mask_and_coherent()
+> > > > in my case, as far as I know.
+> > >
+> > > Ok, just remove the call then and rely on the default mask.
+> > >
+> > > > They can maybe give the restrictions they might want to put on the
+> > > > DMA mask.
+> > >
+> > > If the restriction is from the bus, it should get handled
+> > > automatically by the device probe as long as the correct dma-ranges
+> > > property is there (though we have a small bug there at the moment).
+> > > If there is a variation of ci13xxx that can't do 32-bit DMA, that
+> > > should use a different compatible string and pass a fixed mask into
+> > > dma_set_mask_and_coherent() based on the device.
+> > >
+> >
+> > Correct me if my below understanding is wrong please.
+> >
+> > For three chipidea users:
+> > user_a: don't need dma mask
+> > user_b: dma mask value is dma_mask_b
+> > user_c: dma mask value is dma_mask_c
+> >
+> > We don't need to call dma_coerce_mask_and_coherent() at generic
+> > chipidea glue driver, and set dma-ranges as dma_mask_b at user_b's
+> > dts, and set dma-ranges as dma_mask_c at user_c's dts.
+> 
+> The dma-ranges property doesn't just encode a dma-mask for a device, but
+> rather how the children of a bus see the memory address space of the
+> parent.
+> 
+> For traditional reasons we default to assuming that a 32-bit dma_mask is
+> correct, but there may be multiple reasons why this is not true:
+> 
+> - you have a device connected to a bus that is smaller than 32-bit wide
+>   (and that would have a dma-ranges property describing that)
+> - you have a device that has fewer than 32 address lines but is connected
+>   to a 32-bit upstream bus (hence the dma-ranges describe all 32 bit,
+>   but the driver must set a smaller mask)
+> - you have a 64-bit capable device connected to a 32-bit bus: the driver
+>   will ask for a 64-bit mask, but the dma_set_mask() call refuses this
+>   because of the bus capabilities.
+> - you have a 64-bit capable device on a 64-bit capable bus, and the
+>   dma_set_mask call should succeed.
+> 
+> The mask is definitely never "user" specific, but is a combination of the
+> device you have and the bus it is connected to.
+> 
 
-Good to know. I was hoping it wasn't part of the design. I can't think
-of any situation where the kernel would want to inhibit a change to
-the device tree.
+Thanks, arnd.
 
-Can you take a look at the following tree and give it a spin on
-PowerPC. I've reordered the notifiers and hopefully got the powerpc
-fixups right, but I don't have a way to test it...
+For chipidea generic glue layer case, if there are three devices who use this
+driver, and all devices have 32-bit bus, some devices have less 32 address lines.
+For example:
 
-The following changes since commit cd3de83f147601356395b57a8673e9c5ff1e59d1:
+- the device_a doesn't need to use dma_mask
+- the device_b needs dma_mask as 0xfffffffff
+- the device_c needs dma_mask as 0xfffffff0, assume it has only 28 address lines
 
-  Linux 3.16-rc4 (2014-07-06 12:37:51 -0700)
+My questions are:
+- Can we not set dma_mask at driver, and only set dma-ranges at dts for device_b
+and device_c as a solution to cover this different dma mask use case?
 
-are available in the git repository at:
+- If we can't use this solution, would you suggest one?
 
-  git://git.secretlab.ca/git/linux devicetree/next-overlay
+- If we can use this solution, for device_b and device_c, how can we write dma-ranges?
+I can't find any arm platforms use it, only some powerpc platform use it.
+According to the definition from Power_ePAPR_APPROVED_v1.1.pdf, it is
+dma-ranges = <child-bus-address, parent-bus-address, length>
+but I find the powerpc has different way for using dma-ranges. 
 
-for you to fetch changes up to 44ac93bb5583c5f1f85912309fe04045b61a6dd0:
+Peter
 
-  of: Transactional DT support. (2014-07-16 16:44:07 -0600)
 
-----------------------------------------------------------------
-Grant Likely (6):
-      of/platform: Fix of_platform_device_destroy iteration of devices
-      of: Move CONFIG_OF_DYNAMIC code into a separate file
-      of: Make sure attached nodes don't carry along extra children
-      of: Move dynamic node fixups out of powerpc and into common code
-      of: Make OF_DYNAMIC user selectable
-      of: Reorder device tree changes and notifiers
-
-Pantelis Antoniou (5):
-      of: rename of_aliases_mutex to just of_mutex
-      OF: Utility helper functions for dynamic nodes
-      of: Create unlocked versions of node and property add/remove functions
-      of: Make devicetree sysfs update functions consistent.
-      of: Transactional DT support.
-
- Documentation/devicetree/changesets.txt         |  41 ++
- arch/powerpc/kernel/prom.c                      |  70 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c |   2 +-
- drivers/crypto/nx/nx-842.c                      |  30 +-
- drivers/of/Kconfig                              |   2 +-
- drivers/of/Makefile                             |   1 +
- drivers/of/base.c                               | 423 ++++-----------
- drivers/of/device.c                             |   4 +-
- drivers/of/dynamic.c                            | 671 ++++++++++++++++++++++++
- drivers/of/of_private.h                         |  59 ++-
- drivers/of/platform.c                           |  32 +-
- drivers/of/selftest.c                           |  79 +++
- drivers/of/testcase-data/testcases.dtsi         |  10 +
- include/linux/of.h                              |  80 ++-
- include/linux/of_platform.h                     |   7 +-
- 15 files changed, 1067 insertions(+), 444 deletions(-)
- create mode 100644 Documentation/devicetree/changesets.txt
- create mode 100644 drivers/of/dynamic.c
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
