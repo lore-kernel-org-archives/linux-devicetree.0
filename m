@@ -1,68 +1,100 @@
-From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCHv5 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
- code clean
-Date: Fri, 18 Jul 2014 14:12:27 +0900
-Message-ID: <005701cfa246$df97ed40$9ec7c7c0$@samsung.com>
-References: <1403843406-28229-1-git-send-email-cw00.choi@samsung.com>
- <53AFFD69.8060702@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <53AFFD69.8060702-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-language: ko
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Jonathan Cameron' <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Chanwoo Choi' <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v9 0/3] Add ES8328 audio codec
+Date: Fri, 18 Jul 2014 13:29:35 +0800
+Message-ID: <1405661378-28998-1-git-send-email-xobs@kosagi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jonathan Cameron wrote:
-> 
-> On 27/06/14 05:30, Chanwoo Choi wrote:
-> > Changes from v4:
-> > - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
-> >    and remove enum variable of ADC version
-> > - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
-> > - Add reviewed message by Naveen Krishna Chatradhi
-> > - Add functions for ADC clock control
-> >
-> > Changes from v3:
-> > - Add new 'exynos_adc_ops' structure to improve readability according to
-> >   Tomasz Figa comment[1]
-> >   [1] https://lkml.org/lkml/2014/4/16/238
-> > - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
-> > - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
-> >
-> > Changes from v2:
-> > - Check return value of clock function to deal with error exception
-> > - Fix minor coding style to improve readability
-> >
-> > Changes from v1:
-> > - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
-> > - Add a patch about DT binding documentation
-> >
-> > Chanwoo Choi (4):
-> >    iio: adc: exynos_adc: Add exynos_adc_data structure to improve readability
-> >    iio: adc: exynos_adc: Control special clock of ADC to support Exynos3250 ADC
-> >    iio: devicetree: Add DT binding documentation for Exynos3250 ADC
-> >    ARM: dts: Fix wrong compatible string for Exynos3250 ADC
-> >
-> >   .../devicetree/bindings/arm/samsung/exynos-adc.txt |  26 +-
-> >   arch/arm/boot/dts/exynos3250.dtsi                  |   4 +-
-> >   drivers/iio/adc/exynos_adc.c                       | 326 +++++++++++++++------
-> >   3 files changed, 268 insertions(+), 88 deletions(-)
-> >
-> I am happy with this series, but given it touches some exynos bindings, I would
-> like an ack from Kukjin Kim (or according to MAINTAINERS Ben Dooks) before taking it
-> all through IIO.
-> 
-Hi,
+This patchset adds support for the Everest Semi ES8328 audio codec, used in
+the Novena open source laptop.  It also adds support for using the es8328 on
+IMX boards.
 
-Sorry for late response...
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the speaker amps and as well as
+supporting headphone jacks, in addition to the i.MX audmux routing.
 
-The change looks good to me, so please go ahead with my ack on exynos stuff.
+Changes since v8:
+    - For the mclk ratios, move from an array to a lookup table, and rename
+      the variable to be clearer.
+    - Move all CHIPPOWER accesses into DAPM supplies.
+    - Fix sloppy compile problems introduced in v8.
+    - Shut down clocks and supplies on suspend, and enable them on resume.
+    - Remove double set of ES8328_MASTERMODE_MSC.
 
-Acked-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Changes since v7:
+    - We now fetch the regulators in the device-level probe rather than
+      in the ASoC-level probe.
 
-Thanks,
-Kukjin
+Changes since v6:
+    - Minor clarification of AUDMUX in imx-audio-es8328.txt
+    - Use u32 instead of int in imx-es8328.c for int-mux and ext-mux
+    - Bounds checking on mux-int-port and mux-ext-port in imx-es8328.c
+    - Remove NULL checks before calling of_node_put()
+
+Changes since v5:
+    - Removed empty imx_set_frequency function from imx-es8328.c
+    - Move the clock from imx-audio-es8328 to the es8328 codec itself
+    - Add support for 2x (22.5792 MHz) and 1x (11.2896 MHz) source clocks
+    - Restore registers on resume
+    - Document pins for ES8328, including input pins
+
+Changes since v4:
+    - Simplify clock handling and use assigned-clock-parents
+    - Move the codec regulator from the machine driver to the codec
+    - Specify all four regulators, and require their presence
+    - Fix audio recording, such that it enables the PGA
+
+Changes since v3:
+    - Add OF bindings for everest,es8328
+    - Add back in patch to add everest as a vendor prefix
+    - Give clocks more generic names
+    - Document required clocks in DT bindings document
+
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
+
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
+
+Sean Cross (3):
+  devicetree: bindings: Add Everest Semicodunctor
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
+
+ Documentation/devicetree/bindings/sound/es8328.txt |  38 +
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  61 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  60 ++
+ sound/soc/codecs/es8328-spi.c                      |  49 ++
+ sound/soc/codecs/es8328.c                          | 761 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 314 +++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 233 +++++++
+ 12 files changed, 1552 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
+
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
