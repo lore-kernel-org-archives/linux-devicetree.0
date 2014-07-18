@@ -1,84 +1,89 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] ARM: dts: rockchip: add core rk3288 dtsi
-Date: Fri, 18 Jul 2014 11:49:03 +0200
-Message-ID: <1405681459.GZ6IZjzim5@diego>
-References: <4868343.UFgjaXesOn@diego> <14646641.DlFrJR068n@diego> <20140718093551.GE25180@leverpostej>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv6 2/4] iio: adc: exynos_adc: Control special clock of ADC
+ to support Exynos3250 ADC
+Date: Fri, 18 Jul 2014 11:47:42 +0200
+Message-ID: <6485839.CnzmD0SeQj@wuerfel>
+References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
+ <1405663186-26464-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140718093551.GE25180@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1405663186-26464-3-git-send-email-cw00.choi@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, galak@codeaurora.org, ch.naveen@samsung.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Friday 18 July 2014 14:59:44 Chanwoo Choi wrote:
+> This patch control special clock for ADC in Exynos series's FSYS block.
+> If special clock of ADC is registerd on clock list of common clk framework,
+> Exynos ADC drvier have to control this clock.
+> 
+> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
+> - 'adc' clock: bus clock for ADC
+> 
+> Exynos3250 has additional 'sclk_adc' clock as following:
+> - 'sclk_adc' clock: special clock for ADC which provide clock to internal ADC
+> 
+> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_adc' clock
+> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_adc'
+> clock in FSYS_BLK.
 
-Am Freitag, 18. Juli 2014, 10:35:52 schrieb Mark Rutland:
-> > +       cpus {
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +
-> > +               cpu@500 {
-> > +                       device_type = "cpu";
-> > +                       compatible = "arm,cortex-a12";
-> > +                       reg = <0x500>;
-> > +               };
-> > +               cpu@501 {
-> > +                       device_type = "cpu";
-> > +                       compatible = "arm,cortex-a12";
-> > +                       reg = <0x501>;
-> > +               };
-> > +               cpu@502 {
-> > +                       device_type = "cpu";
-> > +                       compatible = "arm,cortex-a12";
-> > +                       reg = <0x502>;
-> > +               };
-> > +               cpu@503 {
-> > +                       device_type = "cpu";
-> > +                       compatible = "arm,cortex-a12";
-> > +                       reg = <0x503>;
-> 
-> I take it that we can only use one of these for the moment? I didn't see
-> the addition of any SMP code.
-> 
-> Or did I miss that?
-> 
-> [...]
-> 
-> > +       timer {
-> > +               compatible = "arm,armv7-timer";
-> > +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-> > IRQ_TYPE_LEVEL_HIGH)>, +                            <GIC_PPI 14
-> > (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>, +                       
-> >     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>, +       
-> >                     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
-> > IRQ_TYPE_LEVEL_HIGH)>; +               clock-frequency = <24000000>;
-> > +       };
-> 
-> Please say you don't need this clock-frequency property.
-> 
-> It's a work-around at best, and you won't be able to use Hyp properly.
-> I'd really like to discourage use of this property, especially as people
-> seem to set it regardless of whether the hardware's correct...
-> 
-> What's the state of CNTFREQ and CNTVOFF, and is there any chance that
-> these are sane?
+Do you know if any of the older ADC blocks have an "sclk" input as well?
 
-Both issues you mention are actually connected - timer-issues in smp context 
-due to CNTVOFF not being set correctly and CNTFREQ currently not being 
-initialized.
+Further, why is it called "sclk_adc" rather than just "sclk"?
 
-I'm very hopeful that both should be resolved in the near future and Will 
-should also be able to tell you more about this :-).
-So for the short-term I guess the clock-frequency is needed, but we should be 
-able to remove it again in the future, once the bootloader is doing the right 
-thing.
+> @@ -199,13 +262,20 @@ static void exynos_adc_v2_start_conv(struct exynos_adc *info,
+>         writel(con1 | ADC_CON_EN_START, ADC_V2_CON1(info->regs));
+>  }
+>  
+> +#define __EXYNOS_ADC_V2_DATA                           \
+> +       .num_channels   = MAX_ADC_V2_CHANNELS,          \
+> +       .init_hw        = exynos_adc_v2_init_hw,        \
+> +       .exit_hw        = exynos_adc_v2_exit_hw,        \
+> +       .clear_irq      = exynos_adc_v2_clear_irq,      \
+> +       .start_conv     = exynos_adc_v2_start_conv,     \
+> +
+>  static struct exynos_adc_data const exynos_adc_v2_data = {
+> -       .num_channels   = MAX_ADC_V2_CHANNELS,
+> +       __EXYNOS_ADC_V2_DATA
+> +};
+>  
+> -       .init_hw        = exynos_adc_v2_init_hw,
+> -       .exit_hw        = exynos_adc_v2_exit_hw,
+> -       .clear_irq      = exynos_adc_v2_clear_irq,
+> -       .start_conv     = exynos_adc_v2_start_conv,
+> +static struct exynos_adc_data const exynos3250_adc_v2_data = {
+> +       __EXYNOS_ADC_V2_DATA
+> +       .needs_sclk = true,
+>  };
 
+I think the macro hurts readability. Please just duplicate the definition
+here.
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  static const struct of_device_id exynos_adc_match[] = {
+> @@ -215,6 +285,9 @@ static const struct of_device_id exynos_adc_match[] = {
+>         }, {
+>                 .compatible = "samsung,exynos-adc-v2",
+>                 .data = (void *)&exynos_adc_v2_data,
+> +       }, {
+> +               .compatible = "samsung,exynos3250-adc-v2",
+> +               .data = (void *)&exynos3250_adc_v2_data,
+>         },
+>         {},
+
+Remove the '(void *)' cast here and mark the structure as 'const'.
+We intentionally use a 'const void *' type here to verify that
+the driver doesn't modify the per-device type data at runtime,
+which would be bad if you ever have multiple device instances.
+
+	Arnd
