@@ -1,74 +1,37 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] ARM: dts: rockchip: add core rk3288 dtsi
-Date: Fri, 18 Jul 2014 10:35:52 +0100
-Message-ID: <20140718093551.GE25180@leverpostej>
-References: <4868343.UFgjaXesOn@diego>
- <14646641.DlFrJR068n@diego>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv6 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and code clean
+Date: Fri, 18 Jul 2014 11:38:27 +0200
+Message-ID: <59765980.V0Hsx6tyKd@wuerfel>
+References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <14646641.DlFrJR068n@diego>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, jic23@kernel.org, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Friday 18 July 2014 14:59:42 Chanwoo Choi wrote:
+> This patchset support Exynos3250 ADC (Analog Digital Converter) because
+> Exynos3250 has additional special clock for ADC IP.
+> 
 
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@500 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a12";
-> +                       reg = <0x500>;
-> +               };
-> +               cpu@501 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a12";
-> +                       reg = <0x501>;
-> +               };
-> +               cpu@502 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a12";
-> +                       reg = <0x502>;
-> +               };
-> +               cpu@503 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a12";
-> +                       reg = <0x503>;
+by coincidence, I have just looked at the same driver in order to
+add support for s3c24xx and s3c64xx, so we can remove the plat-samsung
+adc framework they still use.  Those changes would naturally conflict
+with yours, but I think it makes sense for your patches to come first.
 
-I take it that we can only use one of these for the moment? I didn't see
-the addition of any SMP code.
+I'll comment a bit more on the individual patches. I didn't have
+interest in them earlier, so I didn't comment so far.
 
-Or did I miss that?
+Another aspect that came up is the touchscreen support. Right now,
+there is drivers/input/touchscreen/s3c2410_ts.c which is intimately
+tied to arch/arm/plat-samsung/adc.c. The best way forward (as discussed
+on IRC as few days ago) seems to be to integrate support for that into
+the exynos_adc driver. Can you comment on which parts actually support
+touchscreen? Did touchscreen support get dropped in the exynos hardware,
+or is the driver just missing at the moment?
 
-[...]
-
-> +       timer {
-> +               compatible = "arm,armv7-timer";
-> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +               clock-frequency = <24000000>;
-> +       };
-
-Please say you don't need this clock-frequency property.
-
-It's a work-around at best, and you won't be able to use Hyp properly.
-I'd really like to discourage use of this property, especially as people
-seem to set it regardless of whether the hardware's correct...
-
-What's the state of CNTFREQ and CNTVOFF, and is there any chance that
-these are sane?
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
