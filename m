@@ -1,72 +1,55 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [PATCH v6 09/14] ARM: dts: s6e3fa0: add DT bindings
-Date: Fri, 18 Jul 2014 11:00:08 +0900
-Message-ID: <53C87FA8.3070303@samsung.com>
-References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com>
- <1405587689-1466-10-git-send-email-yj44.cho@samsung.com>
- <20140717103844.GE17877@ulmo>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
+Date: Fri, 18 Jul 2014 11:15:45 +0800
+Message-ID: <53C89161.4080405@atmel.com>
+References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com> <Pine.LNX.4.64.1403302313290.12008@axis700.grange> <53392FC9.9070706@atmel.com> <2360323.ktzTJnrmOX@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140717103844.GE17877@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2360323.ktzTJnrmOX@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Linux Media Mailing List <linux-media@vger.kernel.org>, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Dear Laurent
 
-On 07/17/2014 07:38 PM, Thierry Reding wrote:
-> On Thu, Jul 17, 2014 at 06:01:24PM +0900, YoungJun Cho wrote:
->> This patch adds DT bindings for s6e3fa0 panel.
->> The bindings describes panel resources and display timings.
+On 7/17/2014 7:00 PM, Laurent Pinchart wrote:
+> Hi Josh,
 >
-> The commit message here should preferably say which platform this is
-> used on.
+> What's the status of this patch set ? Do you plan to rebase and resubmit it ?
 
-Although only exynos drm could use this panel now, I think this panel 
-could be used by any platform.
-Do you have any good idea for that?
+Thanks for the reminding.
+yes,  I will rebase it and resubmit the new version for this patch set 
+with the data bus width support.
+Thanks.
 
+Best Regards,
+Josh Wu
 >
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   .../devicetree/bindings/panel/samsung,s6e3fa0.txt  | 46 ++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> On Monday 31 March 2014 17:05:13 Josh Wu wrote:
+>> Dear Guennadi
 >>
->> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> new file mode 100644
->> index 0000000..2cd32f5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> @@ -0,0 +1,46 @@
->> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
->> +
->> +Required properties:
->> +  - compatible: "samsung,s6e3fa0"
->> +  - reg: the virtual channel number of a DSI peripheral
->> +  - vdd3-supply: core voltage supply
->> +  - vci-supply: voltage supply for analog circuits
->> +  - reset-gpios: a GPIO spec for the reset pin
->> +  - det-gpios: a GPIO spec for the OLED detection pin
->> +  - te-gpios: a GPIO spec for the TE pin
->> +  - display-timings: timings for the connected panel as described by [1]
->
-> display-timings should be optional. The panel driver should provide a
-> default mode. And only if you really need to override the default mode
-> you should provide the option of getting an alternative set of values
-> from DT.
-
-Could you explain why this display-timings should be optional?
-Most of DTs regard display-timings as required property.
-
-Thank you.
-Best regards YJ
-
->
-> Thierry
->
+>> On 3/31/2014 5:20 AM, Guennadi Liakhovetski wrote:
+>>> Hi Josh,
+>>>
+>>> Please correct me if I'm wrong, but I don't see how this is going to work
+>>> without the central part - building asynchronous V4L2 data structures from
+>>> the DT, something that your earlier patch
+>> Here you mean Bryan Wu not me, right?   ;-)
+>> Bryan write the patch "[v2] media: soc-camera: OF cameras" in:
+>> https://patchwork.linuxtv.org/patch/22288/.
+>> And I saw Ben Dooks already sent out his patch to support soc-camera OF
+>> now (https://patchwork.linuxtv.org/patch/23304/) which is simpler than
+>> Bryan's.
+>>
+>>> "media: soc-camera: OF cameras"
+>>> was doing, but which you stopped developing after a discussion with Ben
+>>> (added to Cc).
+>> And yes, atmel-isi dt patch should not work without above SoC-Camera of
+>> support patch.
+>> But as the atmel-isi dt binding document and port node can be finalized.
+>> So I think this patch is ready for the mainline.
+>>
+>> BTW: I will test Ben's patch with atmel-isi.
