@@ -1,57 +1,64 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] ARM: at91: remove phy fixup for sama5d3xek boards
-Date: Fri, 18 Jul 2014 16:24:21 +0200
-Message-ID: <53C92E15.4030702@atmel.com>
-References: <1405022394-8311-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v10 5/8] ata: ahci_platform: add a generic AHCI compatible
+Date: Fri, 18 Jul 2014 16:30:38 +0200
+Message-ID: <53C92F8E.5000906@redhat.com>
+References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com> <1405686607-8126-6-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405022394-8311-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1405686607-8126-6-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2014 21:59, Boris BREZILLON :
-> Hello,
-> 
-> This patch removes a board specific hook for sama5d3xek boards from the
-> sama5d3 generic DT board file.
-> 
-> This hook (which register a phy fixup configuring board specific delays
-> in the ksz9021 ethernet phy) is now replaced by the appropriate DT
-> properties definitions in the sama5d3xcm.dtsi file.
-> 
-> Best Regards,
+Hi,
 
-On the whole series:
+On 07/18/2014 02:30 PM, Antoine T=C3=A9nart wrote:
+> The ahci_platform driver is a generic driver using the libahci_platfo=
+rm
+> functions. Add a generic compatible to avoid having an endless list o=
+f
+> compatibles with no differences for the same driver.
+>=20
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
+>
+> ---
+>  drivers/ata/ahci_platform.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.=
+c
+> index 95f9ca82082a..61b15e784020 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -77,6 +77,8 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform=
+_suspend,
+>  			 ahci_platform_resume);
+> =20
+>  static const struct of_device_id ahci_of_match[] =3D {
+> +	{ .compatible =3D "generic-ahci", },
+> +	/* Keep the following compatibles for device tree compatibility */
+>  	{ .compatible =3D "snps,spear-ahci", },
+>  	{ .compatible =3D "snps,exynos5440-ahci", },
+>  	{ .compatible =3D "ibm,476gtr-ahci", },
+>=20
 
+I'm not against this, I've introduced the same for the ehci / uhci plat=
+form
+driver after all, but this should be documented in Documentation/device=
+tree,
+and please make sure to mention in the docs that the correct way to use=
+ this
+inside a dts file is:
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+	compatible =3D "manufacturer,soc-model-ahci", "generic-ahci";
 
+So that we can later add quirks for the specific soc if necessary witho=
+ut
+needing to change the dts.
 
-> Changes since v2:
->  - define 2 phy nodes to handle Ronetix and Embest HW designs
-> 
-> Changes since v1:
->  - fix txc-skew-ps and rxc-skew-ps delays
->  - remove phy address info to handle Ronetix and Embest HW designs
-> 
-> Boris BREZILLON (2):
->   ARM: at91/dt: describe rgmii ethernet phy connected to sama5d3xek
->     boards
->   ARM: at91: remove phy fixup for sama5d3xek boards
-> 
->  arch/arm/boot/dts/sama5d3xcm.dtsi   | 30 ++++++++++++++++++++++++++++++
->  arch/arm/mach-at91/board-dt-sama5.c | 22 ----------------------
->  2 files changed, 30 insertions(+), 22 deletions(-)
-> 
+Regards,
 
-
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
