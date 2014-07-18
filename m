@@ -1,65 +1,97 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 2/8] Documentation: bindings: add the Berlin SATA
- PHY
-Date: Fri, 18 Jul 2014 21:27:28 +0400
-Message-ID: <53C95900.9050200@cogentembedded.com>
-References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com> <1405686607-8126-3-git-send-email-antoine.tenart@free-electrons.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv6 3/4] iio: devicetree: Add DT binding documentation for Exynos3250 ADC
+Date: Fri, 18 Jul 2014 20:48:43 +0200
+Message-ID: <5381273.c6GzlyQ7Ea@wuerfel>
+References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com> <5835825.JtcDoyOP8b@wuerfel> <CAGTfZH3mnPJ72wi7aFYoChe_OeuRVsUVo3KGRRLTV5scwPbO4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1405686607-8126-3-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
-Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGTfZH3mnPJ72wi7aFYoChe_OeuRVsUVo3KGRRLTV5scwPbO4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, naveen krishna <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Saturday 19 July 2014 02:02:09 Chanwoo Choi wrote:
+> On Sat, Jul 19, 2014 at 1:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Saturday 19 July 2014 01:23:15 Chanwoo Choi wrote:
+> >> If don't add new compatible including specific exynos version,
+> >> I would add new 'adc-needs-sclk' property with existing 'exynos-adc-v2'
+> >> compatible name.
 
-On 07/18/2014 04:30 PM, Antoine T=C3=A9nart wrote:
+What I actually meant is using compatible="exynos-adc-v2.1" or similar
+rather than "exynos3250-adc". However, as you already explained, the
+version numbers are apparently just made up, so using "exynos3250-adc"
+is actually better here. If a future exynos7890 uses the same clocks
+as exynos3250, it can simply use the same "exynos3250-adc" string here.
 
-> The Berlin SATA PHY drives the PHY related to the SATA interface. Add
-> the corresponding documentation.
+> >> Dear Naveen, Tomasz,
+> >>
+> >> If existing exynos-adc driver add just one property for 'sclk_adc'
+> >> as following, exynos-adc could not include the exynos version
+> >> in compatible name.
+> >>
+> >> I need your opinion about it.
+> >>
+> >>                 adc: adc@126C0000 {
+> >>                         compatible = "samsung,exynos-adc-v2";
+> >>                         reg = <0x126C0000 0x100>, <0x10020718 0x4>;
+> >>                         interrupts = <0 137 0>;
+> >>                         clock-names = "adc", "sclk_adc";
+> >>                         clocks = <&cmu CLK_TSADC>, <&cmu CLK_SCLK_TSADC>;
+> >> +                        adc-needs-sclk;
+> >>                         #io-channel-cells = <1>;
+> >>                         io-channel-ranges;
+> >>                 }
+> >
+> > How about just making it an optional clock? That would be much
+> > easier because then you can simply see if the clock itself is
+> > there and use it, or otherwise ignore it.
+> 
+> The v1 of this patchset[1] got the clock of 'sclk_adc'  but if the dt node
+> of ADC in dtsi file didn't include 'sclk_adc', print just warning message
+> without stopping probe as following:
+> 
+>  [1] https://lkml.org/lkml/2014/4/10/710
+> 
+> +       info->sclk = devm_clk_get(&pdev->dev, "sclk_adc");
+> +       if (IS_ERR(info->sclk)) {
+> +               dev_warn(&pdev->dev, "failed getting sclk clock, err = %ld\n",
+> +                                                       PTR_ERR(info->sclk));
+> +               info->sclk = NULL;
+> +       }
+> 
+> But, Tomasz Figa suggested the method[2] of this patchset(v6).
+>  [2] https://lkml.org/lkml/2014/4/11/189
 
-> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
->
-> ---
->   .../devicetree/bindings/phy/berlin-sata-phy.txt    | 34 +++++++++++=
-+++++++++++
->   1 file changed, 34 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/berlin-sat=
-a-phy.txt
+Yes, your current version is certainly better than this, but another way
+to address Tomasz' comment would be to change the binding to list the "sclk"
+as optional for any device and make the code silently ignore missing sclk
+entries, like:
 
-> diff --git a/Documentation/devicetree/bindings/phy/berlin-sata-phy.tx=
-t b/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-> new file mode 100644
-> index 000000000000..88f8c23384c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-> @@ -0,0 +1,34 @@
-> +Berlin SATA PHY
-> +---------------
-> +
-> +Required properties:
-> +- compatible: should be "marvell,berlin2q-sata-phy"
-> +- address-cells: should be 1
-> +- size-cells: should be 0
-> +- phy-cells: from the generic PHY bindings, must be 1
 
-    It's "#address-cells", "#size-cells", and "#phy-cells".
+	info->sclk = devm_clk_get(&pdev->dev, "sclk");
+	if (IS_ERR(info->sclk)) {
+		switch (PTR_ERR(info->sclk)) {
+		case -EPROBE_DEFER:
+			/* silently return error so we can retry */
+			return -EPROBE_DEFER:
+		case -ENOENT:
+			/* silently ignore missing optional clk */
+			info->sclk = NULL;
+			break;
+		default:
+			/* any other error: clk is defined by doesn't work  */
+			dev_err(&pdev->dev, "failed getting sclk clock, err = %ld\n",
+				PTR_ERR(info->sclk));
+			return PTR_ERR(info->sclk));
+		}
+	}
 
-> +- reg: address and length of the register
-> +- clocks: reference to the clock entry
-> +
-> +Sub-nodes:
-> +Each PHY should be represented as a sub-node.
+One more comment about the name: Both in the code you use "sclk" as the
+name, so presumably that is the actual name of the clk as known to this
+driver, and it makes sense to use clock-names="sclk" as well, if you want
+to have any name.
 
-    Then "#phy-cells" should also belong to the sub-nodes.
-
-> +
-> +Sub-nodes required properties:
-> +- reg: the PHY number
-
-WBR, Sergei
-
+	Arnd
