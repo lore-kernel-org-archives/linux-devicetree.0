@@ -1,33 +1,67 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v10 3/8] ata: libahci_platform: move port_map parameters
- into the AHCI structure
-Date: Fri, 18 Jul 2014 09:47:30 -0400
-Message-ID: <20140718134730.GA13012@htj.dyndns.org>
-References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
- <1405686607-8126-4-git-send-email-antoine.tenart@free-electrons.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] ARM: at91: at91sam9x5: correct typo error for ohci clock
+Date: Fri, 18 Jul 2014 15:50:56 +0200
+Message-ID: <53C92640.1000609@atmel.com>
+References: <1405307294-17708-1-git-send-email-voice.shen@atmel.com> <20140714081421.5f539287@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405686607-8126-4-git-send-email-antoine.tenart@free-electrons.com>
+In-Reply-To: <20140714081421.5f539287@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Bo Shen <voice.shen@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 18, 2014 at 02:30:02PM +0200, Antoine T=E9nart wrote:
-> @@ -321,6 +321,8 @@ struct ahci_host_priv {
->  	u32			cap;		/* cap to use */
->  	u32			cap2;		/* cap2 to use */
->  	u32			port_map;	/* port map to use */
-> +	u32			force_port_map;	/* force port map */
-> +	u32			mask_port_map;	/* mask out particular bits */
+On 14/07/2014 08:14, Boris BREZILLON :
+> On Mon, 14 Jul 2014 11:08:14 +0800
+> Bo Shen <voice.shen@atmel.com> wrote:
+> 
+>> Correct the typo error for the second "uhphs_clk".
+>>
+>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> 
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-So, ->flags and ->force/mask_port_map are the only input ones, right?
-Can we collect them to one spot and label them as such?
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Thanks.
+> sam9n12 dtsi has the same bug, I'll fix it
 
---=20
-tejun
+Ok, thanks to Voice and you: I try to queue them for 3.16-fixes.
+
+Bye,
+
+> And sorry for the mess when moving sam9n12 and sam9x5 to the CCF, I
+> should have checked my clock definitions more carefully :-(.
+
+I admit that these values are pretty hard to read: the eye get bored
+quite quickly ;-)
+
+Bye,
+
+
+>> ---
+>>  arch/arm/boot/dts/at91sam9x5.dtsi | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+>> index 2ebc421..727d3a4 100644
+>> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+>> @@ -1155,8 +1155,7 @@
+>>  			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+>>  			reg = <0x00600000 0x100000>;
+>>  			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
+>> -			clocks = <&usb>, <&uhphs_clk>, <&udphs_clk>,
+>> -				 <&uhpck>;
+>> +			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
+>>  			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
+>>  			status = "disabled";
+>>  		};
+> 
+> 
+> 
+
+
+-- 
+Nicolas Ferre
