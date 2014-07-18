@@ -1,55 +1,61 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
-Date: Fri, 18 Jul 2014 11:15:45 +0800
-Message-ID: <53C89161.4080405@atmel.com>
-References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com> <Pine.LNX.4.64.1403302313290.12008@axis700.grange> <53392FC9.9070706@atmel.com> <2360323.ktzTJnrmOX@avalon>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Fri, 18 Jul 2014 09:47:24 +0530
+Message-ID: <CAKohpomKzK8pMJs1gv+uXxhd17HtCQyfjSnVYw9KpGz6FwbgDA@mail.gmail.com>
+References: <cover.1404231535.git.viresh.kumar@linaro.org>
+	<20140717093518.486ac244@free-electrons.com>
+	<CAKohpokZXUzXKRWBje7QF_jrvOd5dmfmWQ2Csf3xiMuvT_vPYA@mail.gmail.com>
+	<2399813.Puj1SZWhCh@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2360323.ktzTJnrmOX@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Linux Media Mailing List <linux-media@vger.kernel.org>, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2399813.Puj1SZWhCh@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <rob.herring@linaro.org>, Mike Turquette <mturquette@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Simon Horman <horms@verge.net.au>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Sachin Kamat <spk.linux@gmail.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Laurent
-
-On 7/17/2014 7:00 PM, Laurent Pinchart wrote:
-> Hi Josh,
+On 18 July 2014 06:32, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>> > only support the following cases:
+>> >
+>> >  * One clock for all CPUs
+>> >  * One clock for each CPU
+>>
+>> Yeah, so I also proposed this yesterday that we stick to only these
+>> two implementations for now. And was looking at how would the
+>> cpufreq-generic driver come to know about this.
+>>
+>> So, one way out now is to see if "clocks" property is defined in
+>> multiple cpu nodes, if yes don't compare them and consider separate
+>> clocks for each cpu. We don't have to try matching that to any other
+>> node, as that's a very bad idea. Mike was already very upset with that :)
+>>
+>> @Stephen/Rafael: Does that sound any better? Ofcourse the final thing
+>> is to get bindings to figure out relations between CPUs..
 >
-> What's the status of this patch set ? Do you plan to rebase and resubmit it ?
+> Before I apply anything in this area, I need a clear statement from the ARM
+> people as a group on what the approach is going to be.
 
-Thanks for the reminding.
-yes,  I will rebase it and resubmit the new version for this patch set 
-with the data bus width support.
-Thanks.
+Thanks for your response Rafael.
 
-Best Regards,
-Josh Wu
->
-> On Monday 31 March 2014 17:05:13 Josh Wu wrote:
->> Dear Guennadi
->>
->> On 3/31/2014 5:20 AM, Guennadi Liakhovetski wrote:
->>> Hi Josh,
->>>
->>> Please correct me if I'm wrong, but I don't see how this is going to work
->>> without the central part - building asynchronous V4L2 data structures from
->>> the DT, something that your earlier patch
->> Here you mean Bryan Wu not me, right?   ;-)
->> Bryan write the patch "[v2] media: soc-camera: OF cameras" in:
->> https://patchwork.linuxtv.org/patch/22288/.
->> And I saw Ben Dooks already sent out his patch to support soc-camera OF
->> now (https://patchwork.linuxtv.org/patch/23304/) which is simpler than
->> Bryan's.
->>
->>> "media: soc-camera: OF cameras"
->>> was doing, but which you stopped developing after a discussion with Ben
->>> (added to Cc).
->> And yes, atmel-isi dt patch should not work without above SoC-Camera of
->> support patch.
->> But as the atmel-isi dt binding document and port node can be finalized.
->> So I think this patch is ready for the mainline.
->>
->> BTW: I will test Ben's patch with atmel-isi.
+Mike/Rob/Stephen: I believe Atleast three of you should express your views
+now :)
+
+So, this is what I propose:
+
+- I will start another thread with a new DT binding, something like:
+
+"clocks-ganged" = <&cpu0>
+
+and then we can decide on naming/etc ..
+
+- I will drop the patch which matches clock nodes from DT and introduce
+another one that will just check if "clocks" is mentioned in more than one
+CPU. If yes, then we behave as if all CPUs have separate clock lines.
+
+That will work for Krait/mvebu and all existing users.
+
+Does that sound good?
+
+--
+viresh
