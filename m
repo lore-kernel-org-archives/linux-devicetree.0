@@ -1,60 +1,33 @@
-From: <suravee.suthikulpanit@amd.com>
-Subject: [PATCH] irqchip: gicv2m: Clean up logic for detecting MSI support
-Date: Fri, 18 Jul 2014 08:26:36 -0500
-Message-ID: <1405689996-3601-1-git-send-email-suravee.suthikulpanit@amd.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v10 3/8] ata: libahci_platform: move port_map parameters
+ into the AHCI structure
+Date: Fri, 18 Jul 2014 09:47:30 -0400
+Message-ID: <20140718134730.GA13012@htj.dyndns.org>
+References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1405686607-8126-4-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405686607-8126-4-git-send-email-antoine.tenart@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
-Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Mark Rutland <Mark.Rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+On Fri, Jul 18, 2014 at 02:30:02PM +0200, Antoine T=E9nart wrote:
+> @@ -321,6 +321,8 @@ struct ahci_host_priv {
+>  	u32			cap;		/* cap to use */
+>  	u32			cap2;		/* cap2 to use */
+>  	u32			port_map;	/* port map to use */
+> +	u32			force_port_map;	/* force port map */
+> +	u32			mask_port_map;	/* mask out particular bits */
 
-It's not quite clear that msi-controller is already checked
-by of_msi_chip_add. So, this patch add a note to clarify.
+So, ->flags and ->force/mask_port_map are the only input ones, right?
+Can we collect them to one spot and label them as such?
 
-Also, clean up redundant logic and unnecessary pr_info.
+Thanks.
 
-Cc: Mark Rutland <Mark.Rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>
-Cc: Will Deacon <Will.Deacon@arm.com>
-Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
----
-
-Note: This patch is created against irqchip/gic branch.
-
- drivers/irqchip/irq-gic-v2m.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index e54ca1d..94ed8d6 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -235,15 +235,15 @@ gicv2m_of_init(struct device_node *node, struct device_node *parent)
- 	gic->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
- 	ret = of_pci_msi_chip_add(&gic->msi_chip);
- 	if (ret) {
--		/* MSI is optional and not supported here */
--		pr_info("GICv2m: MSI is not supported.\n");
-+		/*
-+		* Note: msi-controller is checked in of_pci_msi_chip_add().
-+		* MSI support is optional, and enabled only if msi-controller
-+		* is specified. Hence, return 0.
-+		*/
- 		return 0;
- 	}
- 
--	ret = gicv2m_msi_init(node, &gic->v2m_data);
--	if (ret)
--		return ret;
--	return ret;
-+	return gicv2m_msi_init(node, &gic->v2m_data);
- }
- 
- IRQCHIP_DECLARE(arm_gic_400_v2m, "arm,gic-400-v2m", gicv2m_of_init);
--- 
-1.9.0
+--=20
+tejun
