@@ -1,42 +1,135 @@
-From: Markus Niebel <list-09_devicetree-7U5DVgMjAv4@public.gmane.org>
-Subject: [PATCH] DT: Vendor: add prefix for TQ Systems
-Date: Fri, 18 Jul 2014 13:58:37 +0200
-Message-ID: <1405684717-434-1-git-send-email-list-09_devicetree@tqsc.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v10 0/8] ARM: berlin: add AHCI support
+Date: Fri, 18 Jul 2014 14:29:59 +0200
+Message-ID: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+Tejun, Kishon, Sebastian,
 
-Add prefix for TQ Systems GmbH and for TQ Components
-both are needed since the existing PPC device trees use
-tqc but the TQMa53 ARM module uses tq. The tq prefix is better
-since TQ Components was renamed some time ago.
+I looked into the AHCI framework to see how to map PHYs and ports
+information. I see two ways of doing this:
+  - We can attach the ahci_port_priv to the ahci_host_priv structure,
+    but that would require quite a lot of changes since the
+    ahci_port_priv is initialized at the very end (in port_start()) and
+    because ahci_port_priv is currently retrieved from the ata_port
+    structure in libahci functions. We do want to parse the dt ports
+    early in the AHCI initialization to be able to generate the right
+    port_map mask. Tests would be needed to ensure nothing is broken.
+  - We can move the PHY handling to where the ports are handled, moving
+    PHYs from ahci_host_priv to ahci_port_priv. This also would require
+    to perform some tests as PHY operations would be moved from
+    libahci_platform to libahci.
 
-Signed-off-by: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/vendor-prefixes.txt        |    2 ++
- 1 file changed, 2 insertions(+)
+In both cases we do not have time to do this for the next release, as
+the request popped up quite late.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 46a311e..1755bd1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -132,6 +132,8 @@ tlm	Trusted Logic Mobility
- toradex	Toradex AG
- toshiba	Toshiba Corporation
- toumaz	Toumaz
-+tq	TQ Systems GmbH
-+tqc	TQ Components (deprecated, use tq)
- usi	Universal Scientifc Industrial Co., Ltd.
- v3	V3 Semiconductor
- variscite	Variscite Ltd.
--- 
-1.7.9.5
+So as of now:
+  - Either the series is merged as is and changes to the AHCI framework
+    can be made for 3.18, as it's not particularly linked to this
+    series.
+  - Or you really do not want it. Then that would be great if patches
+    1-2 and 7-8 could be merged so that we do not end up with this big
+    series going for yet another cycle... I think Kishon already took
+    patches 1-2.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've done the required modifications so that port_map is not used
+anymore as a mask during the initialization (patch 3).
+
+Thanks,
+
+Antoine
+
+
+Changes since v9:
+        - moved port_map parameters into the AHCI structure
+
+Changes since v8:
+        - stopped reset the controller from the PHY driver
+        - removed fixed array sizes
+        - got rid of the custom to_berlin_sata_phy_priv() macro
+        - added dependency to HAS_IOMEM
+
+Changes since v7:
+        - got back to the each PHY as a sub-node representation
+        - renamed the power bit in the PHY driver
+
+Changes since v6:
+        - added the 'clocks' property and support in the PHY driver
+        - updated the PHY compatible
+
+Changes since v5:
+        - rebased on top of v3.16-rc1
+        - added the 'clocks' property in the sata node
+
+Changes since v4:
+        - updated PHY driver as tristate
+        - handled the case were no SATA port is enabled
+        - updated the compatible to a generic one
+        - cosmetic fixups
+
+Changes since v3:
+        - moved all PHY operations to the PHY driver
+        - removed PHY sub-nodes
+        - removed the custom Berlin AHCI driver and switched to
+          ahci_platform
+        - added multiple PHYs support to the libahci_platform
+
+Changes since v2:
+        - modeled each PHY as a sub-node
+        - cosmetic fixups
+
+Changes since v1:
+        - added a PHY driver, allowing to enable each port
+          individually and removed the 'force-port-map' property
+        - made the drivers a bit less magic :)
+        - wrote a function to select and configure registers in the
+          AHCI driver
+        - removed BG2 / BG2CD nodes
+
+Antoine T=C3=A9nart (8):
+  phy: add a driver for the Berlin SATA PHY
+  Documentation: bindings: add the Berlin SATA PHY
+  ata: libahci_platform: move port_map parameters into the AHCI
+    structure
+  ata: libahci: allow to use multiple PHYs
+  ata: ahci_platform: add a generic AHCI compatible
+  Documentation: bindings: document the sub-nodes AHCI bindings
+  ARM: berlin: add the AHCI node for the BG2Q
+  ARM: berlin: enable the eSATA interface on the BG2Q DMP
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  37 +++
+ .../devicetree/bindings/phy/berlin-sata-phy.txt    |  34 +++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   8 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  39 +++
+ drivers/ata/ahci.h                                 |   9 +-
+ drivers/ata/ahci_da850.c                           |   3 +-
+ drivers/ata/ahci_imx.c                             |   3 +-
+ drivers/ata/ahci_mvebu.c                           |   3 +-
+ drivers/ata/ahci_platform.c                        |   5 +-
+ drivers/ata/ahci_st.c                              |   2 +-
+ drivers/ata/ahci_sunxi.c                           |   2 +-
+ drivers/ata/ahci_xgene.c                           |   2 +-
+ drivers/ata/libahci.c                              |  17 +-
+ drivers/ata/libahci_platform.c                     | 187 ++++++++++---=
+-
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-sata.c                      | 284 +++++++++++++=
+++++++++
+ include/linux/ahci_platform.h                      |   4 +-
+ 18 files changed, 574 insertions(+), 73 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-sata-p=
+hy.txt
+ create mode 100644 drivers/phy/phy-berlin-sata.c
+
+--=20
+1.9.1
+
