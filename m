@@ -1,74 +1,70 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] irqchip: add keystone irq controller ip driver
-Date: Fri, 18 Jul 2014 09:50:59 -0400
-Message-ID: <53C92643.9050406@ti.com>
-References: <1405351677-12108-1-git-send-email-grygorii.strashko@ti.com> <20140718125953.GF24496@titan.lakedaemon.net>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v10 0/8] ARM: berlin: add AHCI support
+Date: Fri, 18 Jul 2014 09:57:58 -0400
+Message-ID: <20140718135758.GB13012@htj.dyndns.org>
+References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140718125953.GF24496@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+(cc'ing Hans who's now maintaining libahci-platform.)
 
-On Friday 18 July 2014 08:59 AM, Jason Cooper wrote:
-> Grygorii,
-> 
-> On Mon, Jul 14, 2014 at 06:27:57PM +0300, Grygorii Strashko wrote:
->> On Keystone SOCs, DSP cores can send interrupts to ARM
->> host using the IRQ controller IP. It provides 28 IRQ
->> signals to ARM. The IRQ handler running on HOST OS can
->> identify DSP signal source by analyzing SRCCx bits in
->> IPCARx registers. This is one of the component used by
->> the IPC mechanism used on Keystone SOCs.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>  .../interrupt-controller/ti,keystone-irq.txt       |   36 +++
->>  drivers/irqchip/Kconfig                            |    7 +
->>  drivers/irqchip/Makefile                           |    1 +
->>  drivers/irqchip/irq-keystone.c                     |  235 ++++++++++++++++++++
->>  4 files changed, 279 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
->>  create mode 100644 drivers/irqchip/irq-keystone.c
->>
+On Fri, Jul 18, 2014 at 02:29:59PM +0200, Antoine T=E9nart wrote:
+> Tejun, Kishon, Sebastian,
+>=20
+> I looked into the AHCI framework to see how to map PHYs and ports
+> information. I see two ways of doing this:
+>   - We can attach the ahci_port_priv to the ahci_host_priv structure,
+>     but that would require quite a lot of changes since the
+>     ahci_port_priv is initialized at the very end (in port_start()) a=
+nd
+>     because ahci_port_priv is currently retrieved from the ata_port
+>     structure in libahci functions. We do want to parse the dt ports
+>     early in the AHCI initialization to be able to generate the right
+>     port_map mask. Tests would be needed to ensure nothing is broken.
+>   - We can move the PHY handling to where the ports are handled, movi=
+ng
+>     PHYs from ahci_host_priv to ahci_port_priv. This also would requi=
+re
+>     to perform some tests as PHY operations would be moved from
+>     libahci_platform to libahci.
 
+I don't get the last part.  Why would it have to be moved from
+libahci_platform to libahci?  Can't we break up the init steps so that
+PHY handling can be put inbetween?  The last time I suggested that,
+Hans seemed to agree.
 
-[..]
+> In both cases we do not have time to do this for the next release, as
+> the request popped up quite late.
+>=20
+> So as of now:
+>   - Either the series is merged as is and changes to the AHCI framewo=
+rk
+>     can be made for 3.18, as it's not particularly linked to this
+>     series.
+>   - Or you really do not want it. Then that would be great if patches
+>     1-2 and 7-8 could be merged so that we do not end up with this bi=
+g
+>     series going for yet another cycle... I think Kishon already took
+>     patches 1-2.
 
->> +
->> +static const struct of_device_id keystone_irq_dt_ids[] = {
->> +	{ .compatible = "ti,keystone-irq", },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, keystone_irq_dt_ids);
->> +
->> +static struct platform_driver keystone_irq_device_driver = {
->> +	.probe		= keystone_irq_probe,
->> +	.remove		= keystone_irq_remove,
->> +	.driver		= {
->> +		.name	= "keystone_irq",
->> +		.owner	= THIS_MODULE,
->> +		.of_match_table	= of_match_ptr(keystone_irq_dt_ids),
->> +	}
->> +};
->> +
->> +module_platform_driver(keystone_irq_device_driver);
-> 
-> My understanding of DSP use-cases is a little sparse, are there
-> legitimate scenarios where you might remove this driver during runtime?
-> Perhaps IRQCHIP_DECLARE() might be better?
-> 
-There is no scenario where driver needs to hotpluged out. Usecase is
-simple. Its really any other IRQCHIP. The difference is really the
-source of interrupts. Instead of peripherals interrupting the host
-OS9linux), here the DSP cores can send interrupts to Host OS.
+I don't wanna take in code which isn't in the shape that it should be.
+Things like this accumulate to become a large maintenance burden over
+time.  Sure, urgent things can slip in and then later be fixed up but
+who are gonna do that here?  You guys already seem to be under time
+pressure as it is.
 
-Hope this clarifies.
+If you guys can figure something out with Hans regarding how to
+proceed on this, I'll be happy take the code as is.
 
-Regards,
-Santosh
+Thanks.
+
+--=20
+tejun
