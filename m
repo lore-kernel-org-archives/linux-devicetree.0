@@ -1,255 +1,82 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv6 2/4] iio: adc: exynos_adc: Control special clock of ADC to
- support Exynos3250 ADC
-Date: Fri, 18 Jul 2014 14:59:44 +0900
-Message-ID: <1405663186-26464-3-git-send-email-cw00.choi@samsung.com>
-References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
+Date: Thu, 17 Jul 2014 23:17:49 -0700
+Message-ID: <CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>
+References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, ch.naveen@samsung.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, mike.turquette@linaro.org, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Nishanth Menon <nm@ti.com>, Sudeep.Holla@arm.com, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, arvind.chauhan@arm.com, Arnd Bergmann <arnd.bergmann@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch control special clock for ADC in Exynos series's FSYS block.
-If special clock of ADC is registerd on clock list of common clk framework,
-Exynos ADC drvier have to control this clock.
+On Thu, Jul 17, 2014 at 10:35 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> Clock lines may or may not be shared among different CPUs on a platform. When
+> clock lines are shared between CPUs, they change DVFS state together.
+>
+> Possible configurations:
+>
+> 1.) All CPUs share a single clock line.
+> 2.) All CPUs have independent clock lines.
+> 3.) CPUs within a group/cluster share clock line but each group/cluster have a
+>     separate line for itself.
+>
+> There is no generic way available today to detect which CPUs share clock lines
+> and so this is an attempt towards that.
+>
+> Much of the information is present in the commit and so no point duplicating it
+> here.
+>
+> These are obviously not finalized yet and this is an attempt to initiate a
+> discussion around this.
+>
+> Please share your valuable feedback.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> I wasn't sure about the path/name of this file, so please don't blast me on that
+> :)
+>
+>  .../devicetree/bindings/cpufreq/cpu_clocks.txt     | 159 +++++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpu_clocks.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpu_clocks.txt b/Documentation/devicetree/bindings/cpufreq/cpu_clocks.txt
+> new file mode 100644
+> index 0000000..30ce9ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpu_clocks.txt
+> @@ -0,0 +1,159 @@
+> +* Generic CPUFreq clock bindings
+> +
+> +Clock lines may or may not be shared among different CPUs on a platform.
+> +
+> +Possible configurations:
+> +1.) All CPUs share a single clock line
+> +2.) All CPUs have independent clock lines
+> +3.) CPUs within a group/cluster share clock line but each group/cluster have a
+> +    separate line for itself
+> +
+> +Optional Properties:
+> +- clock-master: This declares cpu as clock master. Other CPUs can either define
+> +  "clock-ganged" or "clock-master" property, but shouldn't be missing both.
+> +
+> +- clock-ganged: Should have phandle of a cpu declared as "clock-master".
 
-Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
-- 'adc' clock: bus clock for ADC
+Why complicate it by using two properties?
 
-Exynos3250 has additional 'sclk_adc' clock as following:
-- 'sclk_adc' clock: special clock for ADC which provide clock to internal ADC
+If there is no property, then the CPUs are assumed to be controlled
+independently.
 
-Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_adc' clock
-in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_adc'
-clock in FSYS_BLK.
+if there is a clock-master = <phandle> property, then that points at
+the cpu that is the main one controlling clock for the group.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- drivers/iio/adc/exynos_adc.c | 112 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 101 insertions(+), 11 deletions(-)
+There's really no need to label the master -- it will be the only one
+with incoming links but nothing outgoing. And a master without slaves
+is an independently controlled cpu so you should be fine in that
+aspect too.
 
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 00d67fd..b63e882 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -81,9 +81,11 @@
- 
- struct exynos_adc {
- 	struct exynos_adc_data	*data;
-+	struct device		*dev;
- 	void __iomem		*regs;
- 	void __iomem		*enable_reg;
- 	struct clk		*clk;
-+	struct clk		*sclk;
- 	unsigned int		irq;
- 	struct regulator	*vdd;
- 
-@@ -95,6 +97,7 @@ struct exynos_adc {
- 
- struct exynos_adc_data {
- 	int num_channels;
-+	bool needs_sclk;
- 
- 	void (*init_hw)(struct exynos_adc *info);
- 	void (*exit_hw)(struct exynos_adc *info);
-@@ -102,6 +105,66 @@ struct exynos_adc_data {
- 	void (*start_conv)(struct exynos_adc *info, unsigned long addr);
- };
- 
-+static void exynos_adc_unprepare_clk(struct exynos_adc *info)
-+{
-+	if (info->data->needs_sclk)
-+		clk_unprepare(info->sclk);
-+	clk_unprepare(info->clk);
-+}
-+
-+static int exynos_adc_prepare_clk(struct exynos_adc *info)
-+{
-+	int ret;
-+
-+	ret = clk_prepare(info->clk);
-+	if (ret) {
-+		dev_err(info->dev, "failed preparing adc clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (info->data->needs_sclk) {
-+		ret = clk_prepare(info->sclk);
-+		if (ret) {
-+			clk_unprepare(info->clk);
-+			dev_err(info->dev,
-+				"failed preparing sclk_adc clock: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void exynos_adc_disable_clk(struct exynos_adc *info)
-+{
-+	if (info->data->needs_sclk)
-+		clk_disable(info->sclk);
-+	clk_disable(info->clk);
-+}
-+
-+static int exynos_adc_enable_clk(struct exynos_adc *info)
-+{
-+	int ret;
-+
-+	ret = clk_enable(info->clk);
-+	if (ret) {
-+		dev_err(info->dev, "failed enabling adc clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (info->data->needs_sclk) {
-+		ret = clk_enable(info->sclk);
-+		if (ret) {
-+			clk_disable(info->clk);
-+			dev_err(info->dev,
-+				"failed enabling sclk_adc clock: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static void exynos_adc_v1_init_hw(struct exynos_adc *info)
- {
- 	u32 con1;
-@@ -199,13 +262,20 @@ static void exynos_adc_v2_start_conv(struct exynos_adc *info,
- 	writel(con1 | ADC_CON_EN_START, ADC_V2_CON1(info->regs));
- }
- 
-+#define __EXYNOS_ADC_V2_DATA				\
-+	.num_channels	= MAX_ADC_V2_CHANNELS,		\
-+	.init_hw	= exynos_adc_v2_init_hw,	\
-+	.exit_hw	= exynos_adc_v2_exit_hw,	\
-+	.clear_irq	= exynos_adc_v2_clear_irq,	\
-+	.start_conv	= exynos_adc_v2_start_conv,	\
-+
- static struct exynos_adc_data const exynos_adc_v2_data = {
--	.num_channels	= MAX_ADC_V2_CHANNELS,
-+	__EXYNOS_ADC_V2_DATA
-+};
- 
--	.init_hw	= exynos_adc_v2_init_hw,
--	.exit_hw	= exynos_adc_v2_exit_hw,
--	.clear_irq	= exynos_adc_v2_clear_irq,
--	.start_conv	= exynos_adc_v2_start_conv,
-+static struct exynos_adc_data const exynos3250_adc_v2_data = {
-+	__EXYNOS_ADC_V2_DATA
-+	.needs_sclk = true,
- };
- 
- static const struct of_device_id exynos_adc_match[] = {
-@@ -215,6 +285,9 @@ static const struct of_device_id exynos_adc_match[] = {
- 	}, {
- 		.compatible = "samsung,exynos-adc-v2",
- 		.data = (void *)&exynos_adc_v2_data,
-+	}, {
-+		.compatible = "samsung,exynos3250-adc-v2",
-+		.data = (void *)&exynos3250_adc_v2_data,
- 	},
- 	{},
- };
-@@ -376,6 +449,7 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 	}
- 
- 	info->irq = irq;
-+	info->dev = &pdev->dev;
- 
- 	init_completion(&info->completion);
- 
-@@ -386,6 +460,16 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 		return PTR_ERR(info->clk);
- 	}
- 
-+	if (info->data->needs_sclk) {
-+		info->sclk = devm_clk_get(&pdev->dev, "sclk_adc");
-+		if (IS_ERR(info->sclk)) {
-+			dev_err(&pdev->dev,
-+				"failed getting sclk_adc, err = %ld\n",
-+				PTR_ERR(info->sclk));
-+			return PTR_ERR(info->sclk);
-+		}
-+	}
-+
- 	info->vdd = devm_regulator_get(&pdev->dev, "vdd");
- 	if (IS_ERR(info->vdd)) {
- 		dev_err(&pdev->dev, "failed getting regulator, err = %ld\n",
-@@ -397,10 +481,14 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = clk_prepare_enable(info->clk);
-+	ret = exynos_adc_prepare_clk(info);
- 	if (ret)
- 		goto err_disable_reg;
- 
-+	ret = exynos_adc_enable_clk(info);
-+	if (ret)
-+		goto err_unprepare_clk;
-+
- 	platform_set_drvdata(pdev, indio_dev);
- 
- 	indio_dev->name = dev_name(&pdev->dev);
-@@ -443,7 +531,9 @@ err_irq:
- err_disable_clk:
- 	if (info->data->exit_hw)
- 		info->data->exit_hw(info);
--	clk_disable_unprepare(info->clk);
-+	exynos_adc_disable_clk(info);
-+err_unprepare_clk:
-+	exynos_adc_unprepare_clk(info);
- err_disable_reg:
- 	regulator_disable(info->vdd);
- 	return ret;
-@@ -460,7 +550,8 @@ static int exynos_adc_remove(struct platform_device *pdev)
- 	free_irq(info->irq, info);
- 	if (info->data->exit_hw)
- 		info->data->exit_hw(info);
--	clk_disable_unprepare(info->clk);
-+	exynos_adc_disable_clk(info);
-+	exynos_adc_unprepare_clk(info);
- 	regulator_disable(info->vdd);
- 
- 	return 0;
-@@ -474,8 +565,7 @@ static int exynos_adc_suspend(struct device *dev)
- 
- 	if (info->data->exit_hw)
- 		info->data->exit_hw(info);
--
--	clk_disable_unprepare(info->clk);
-+	exynos_adc_disable_clk(info);
- 	regulator_disable(info->vdd);
- 
- 	return 0;
-@@ -491,7 +581,7 @@ static int exynos_adc_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	ret = clk_prepare_enable(info->clk);
-+	ret = exynos_adc_enable_clk(info);
- 	if (ret)
- 		return ret;
- 
--- 
-1.8.0
+
+-Olof
