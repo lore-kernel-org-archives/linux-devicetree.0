@@ -1,101 +1,96 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv6 2/4] iio: adc: exynos_adc: Control special clock of ADC
- to support Exynos3250 ADC
-Date: Fri, 18 Jul 2014 19:00:48 +0900
-Message-ID: <53C8F050.6060104@samsung.com>
-References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
- <1405663186-26464-3-git-send-email-cw00.choi@samsung.com>
- <6485839.CnzmD0SeQj@wuerfel>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: add this series patch to support for rk-pwm and
+ vop-pwm.
+Date: Fri, 18 Jul 2014 12:03:42 +0200
+Message-ID: <20140718100341.GA30497@ulmo>
+References: <1405577294-19336-1-git-send-email-caesar.wang@rock-chips.com>
+ <1405577294-19336-3-git-send-email-caesar.wang@rock-chips.com>
+ <20140717192459.GA4617@gmail.com>
+ <53C8AB34.3050102@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <6485839.CnzmD0SeQj@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, jic23@kernel.org, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53C8AB34.3050102@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: caesar <caesar.wang@rock-chips.com>
+Cc: Beniamino Galvani <b.galvani@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cf@rock-chips.com, addy.ke@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, hj@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On 07/18/2014 06:47 PM, Arnd Bergmann wrote:
-> On Friday 18 July 2014 14:59:44 Chanwoo Choi wrote:
->> This patch control special clock for ADC in Exynos series's FSYS block.
->> If special clock of ADC is registerd on clock list of common clk framework,
->> Exynos ADC drvier have to control this clock.
->>
->> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
->> - 'adc' clock: bus clock for ADC
->>
->> Exynos3250 has additional 'sclk_adc' clock as following:
->> - 'sclk_adc' clock: special clock for ADC which provide clock to internal ADC
->>
->> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_adc' clock
->> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_adc'
->> clock in FSYS_BLK.
-> 
-> Do you know if any of the older ADC blocks have an "sclk" input as well?
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No, I didn't check older ADC blocks. I only checked it on Exynos3250,
-Exynos4210/4212/4412, Exynos5250/5420.
+On Fri, Jul 18, 2014 at 01:05:56PM +0800, caesar wrote:
+> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8818=E6=97=A5 03:24, Beniamino Galvani =
+=E5=86=99=E9=81=93:
+> >On Thu, Jul 17, 2014 at 02:08:14PM +0800, caesar wrote:
+[...]
+> >>@@ -119,9 +185,12 @@ static int rockchip_pwm_probe(struct platform_devi=
+ce *pdev)
+> >>  		return -ENOMEM;
+> >>  	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >>-	pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+> >>-	if (IS_ERR(pc->base))
+> >>-		return PTR_ERR(pc->base);
+> >>+	pc->base =3D of_iomap(np, 0);
+> >>+	if (!pc->base) {
+> >>+		dev_err(&pdev->dev, "failed to map controller\n");
+> >>+		ret =3D -ENOMEM;
+> >>+		goto fail_map;
+> >>+	}
+> >I think that this change is not needed. devm_ioremap_resource()
+> >guarantees an automatic unmapping when the device is destroyed.
+> >
+> >Moreover, when of_iomap() fails you don't need to call iounmap().
+> >
+> >Beniamino
+> VOP-PWM base has be requested for lcdc.
 
-> 
-> Further, why is it called "sclk_adc" rather than just "sclk"?
+Why?
 
-The sclk means 'special clock' in Exynos TRM. Exynos SoC has varisou sclk clocks.
-'sclk_adc' is only used for ADC IP.
+> When I use devm_ioremap_resource(), the vop-pwm will request region fail.
+>=20
+> Example:.931020] rockchip-pwm ff9401a0.pwm: can't request region for
+> resource [mem 0xff9401a0-0xff9401af] /pwm@ff9401a0.
+> So ,I have to charge it.
+>=20
+> I will be simplyfied by having:
+> - pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+> + if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
+> + pc->base =3D devm_ioremap(&pdev->dev, r->start, resource_size(r));
+> + else
+> + pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>=20
+> Maybe, Could you give me better suggestions for it?
 
-> 
->> @@ -199,13 +262,20 @@ static void exynos_adc_v2_start_conv(struct exynos_adc *info,
->>         writel(con1 | ADC_CON_EN_START, ADC_V2_CON1(info->regs));
->>  }
->>  
->> +#define __EXYNOS_ADC_V2_DATA                           \
->> +       .num_channels   = MAX_ADC_V2_CHANNELS,          \
->> +       .init_hw        = exynos_adc_v2_init_hw,        \
->> +       .exit_hw        = exynos_adc_v2_exit_hw,        \
->> +       .clear_irq      = exynos_adc_v2_clear_irq,      \
->> +       .start_conv     = exynos_adc_v2_start_conv,     \
->> +
->>  static struct exynos_adc_data const exynos_adc_v2_data = {
->> -       .num_channels   = MAX_ADC_V2_CHANNELS,
->> +       __EXYNOS_ADC_V2_DATA
->> +};
->>  
->> -       .init_hw        = exynos_adc_v2_init_hw,
->> -       .exit_hw        = exynos_adc_v2_exit_hw,
->> -       .clear_irq      = exynos_adc_v2_clear_irq,
->> -       .start_conv     = exynos_adc_v2_start_conv,
->> +static struct exynos_adc_data const exynos3250_adc_v2_data = {
->> +       __EXYNOS_ADC_V2_DATA
->> +       .needs_sclk = true,
->>  };
-> 
-> I think the macro hurts readability. Please just duplicate the definition
-> here.
+The right thing to do is not have two drivers access the same device.
+Why does lcdc request the PWM register region?
 
-OK, I'll fix it.
+Thierry
 
-> 
->>  static const struct of_device_id exynos_adc_match[] = {
->> @@ -215,6 +285,9 @@ static const struct of_device_id exynos_adc_match[] = {
->>         }, {
->>                 .compatible = "samsung,exynos-adc-v2",
->>                 .data = (void *)&exynos_adc_v2_data,
->> +       }, {
->> +               .compatible = "samsung,exynos3250-adc-v2",
->> +               .data = (void *)&exynos3250_adc_v2_data,
->>         },
->>         {},
-> 
-> Remove the '(void *)' cast here and mark the structure as 'const'.
-> We intentionally use a 'const void *' type here to verify that
-> the driver doesn't modify the per-device type data at runtime,
-> which would be bad if you ever have multiple device instances.
+--tKW2IUtsqtDRztdT
+Content-Type: application/pgp-signature
 
-OK, I'll remove it.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thanks,
-Chanwoo Choi
+iQIcBAEBAgAGBQJTyPD9AAoJEN0jrNd/PrOhvSIQAKDzpV/VZlECy5eDVCbH0Lyr
+xrQOsIpVSibRNX70vj7GA05XwNXlyaBd6ysHawBA8Q1lVhiCzo5BTqKXK3vLlD/F
+sc2s0+0E1pxyjc8OsenfUzppTvpXYlkdLpZMqYqadg2ZEWfPAR+wGdPdHv1odyWi
+H3HQQmEoPHEz7de0svfFwxKEUlWCnIKBe7jxrjPgQfzAttohWBgD/038Gu6h5C3K
+pW3uDPNEwSbRSrSXQ7LOP/NXlLj8dvRlvhaIZszQFR5U8tSHJ7QW6TLCxr3NFrkF
+HB03xkhztj7qptVasTng8wdjcF1XqP0egtWiGvVHThsFWvI35kqAotC8XJcuAH3l
+/khEKBvHpxxTSb9cDI+QDdBIe/HvncMC8KSdkKldbfBTKOqNEdJLtvYpiWaMmKqp
+MmNXUSTxvpPOPOiambvr5+P0MiWlATalmCaBQ5DN0CuDJL43HcghCGdKugc5Xd3t
+rJTW10KOdpsbIpTnLlbokjdhAzu+WUh/eXRXTOGwfyqI0kLhZE5CVQqd6YwPQFU9
+qLo9qIaRFlcJgo93DlCzxyNN8oFuEplhEXXpH6waHhWVBr+pFBasB9QeSbb3sKGa
+QZH6eNCCf702MTczzhqurk1whfzkMowP6U9/q3+/bMc6pldwKE1MJ5NjBNcYrOZ+
+ATpOyk+6eFgf98lYulcx
+=qZs/
+-----END PGP SIGNATURE-----
 
-
+--tKW2IUtsqtDRztdT--
