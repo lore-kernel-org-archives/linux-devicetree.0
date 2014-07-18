@@ -1,55 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv6 1/4] iio: adc: exynos_adc: Add exynos_adc_data structure to improve readability
-Date: Fri, 18 Jul 2014 13:16:53 +0200
-Message-ID: <237819296.s52Lu0h5nW@wuerfel>
-References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com> <6186153.TIYp5NXPIq@wuerfel> <CAHfPSqBDOEH5HurG=rECV=d+MM_YjTEpsiwuTgtNgFgCQ0P2bw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHfPSqBDOEH5HurG=rECV=d+MM_YjTEpsiwuTgtNgFgCQ0P2bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, My self <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Markus Niebel <list-09_devicetree-7U5DVgMjAv4@public.gmane.org>
+Subject: [PATCH] DT: Vendor: add prefix for TQ Systems
+Date: Fri, 18 Jul 2014 13:58:37 +0200
+Message-ID: <1405684717-434-1-git-send-email-list-09_devicetree@tqsc.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 July 2014 15:41:27 Naveen Krishna Ch wrote:
-> >
-> >         {
-> >                 .name           = "s3c24xx-adc",
-> >                 .driver_data    = TYPE_ADCV1,
-> >         }, {
-> >                 .name           = "s3c2443-adc",
-> >                 .driver_data    = TYPE_ADCV11,
-> >         }, {
-> >                 .name           = "s3c2416-adc",
-> >                 .driver_data    = TYPE_ADCV12,
-> >         }, {
-> >                 .name           = "s3c64xx-adc",
-> >                 .driver_data    = TYPE_ADCV2,
-> >         }, {
-> >                 .name           = "samsung-adc-v3",
-> >                 .driver_data    = TYPE_ADCV3,
-> >         }
-> >
-> > Where TYPE_ADCV3 seems to be the same as the new ADC_V1 used in this
-> > driver. Do you have an explanation for that?
-> 
-> As per suggestion from Doug Anderson,
-> I've implemented IIO based ADC driver to work with Exynos5250.
-> keeping the plat-samsung/adc.c unchanged.
-> 
-> Assuming Exynos5250 is the one using the driver for the first time.
-> i've named it v1 and so on.
-> 
-> Now, This seems to cause a lot of confusion.
+From: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
 
-Ah, so the version numbers don't come from Samsung hardware
-documents but are just counting the versions we have drivers
-for?
+Add prefix for TQ Systems GmbH and for TQ Components
+both are needed since the existing PPC device trees use
+tqc but the TQMa53 ARM module uses tq. The tq prefix is better
+since TQ Components was renamed some time ago.
 
-In this case, I guess using the first SoC that had a particular
-version would have been better, and we should probably do that
-when we add support for the older hardware in this driver.
+Signed-off-by: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    2 ++
+ 1 file changed, 2 insertions(+)
 
-	Arnd
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 46a311e..1755bd1 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -132,6 +132,8 @@ tlm	Trusted Logic Mobility
+ toradex	Toradex AG
+ toshiba	Toshiba Corporation
+ toumaz	Toumaz
++tq	TQ Systems GmbH
++tqc	TQ Components (deprecated, use tq)
+ usi	Universal Scientifc Industrial Co., Ltd.
+ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
