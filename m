@@ -1,60 +1,84 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
-Subject: Re: [PATCH v10 5/7] arm: add basic support for Mediatek MT6589 boards
-Date: Fri, 18 Jul 2014 12:47:53 +0200
-Message-ID: <127793649.dTvqVjg5LM@diego>
-References: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com> <1404745988-32558-6-git-send-email-matthias.bgg@gmail.com> <53C8ED0B.5080802@linaro.org>
+From: caesar <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH 2/2] pwm: add this series patch to support for rk-pwm
+ and vop-pwm.
+Date: Fri, 18 Jul 2014 19:04:24 +0800
+Message-ID: <53C8FF38.8010506@rock-chips.com>
+References: <1405577294-19336-1-git-send-email-caesar.wang@rock-chips.com> <1405577294-19336-3-git-send-email-caesar.wang@rock-chips.com> <20140717192459.GA4617@gmail.com> <53C8AB34.3050102@rock-chips.com> <20140718100341.GA30497@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53C8ED0B.5080802-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, anders.berg-M7mHMAq9Yzo@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ak-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.orgd
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140718100341.GA30497@ulmo>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Beniamino Galvani <b.galvani@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cf@rock-chips.com, addy.ke@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, hj@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Thierry,
 
-Am Freitag, 18. Juli 2014, 11:46:51 schrieb Daniel Lezcano:
-> On 07/07/2014 05:13 PM, Matthias Brugger wrote:
-> > This adds a generic devicetree board file and a dtsi for boards
-> > based on MT6589 SoCs from Mediatek.
-> > 
-> > Apart from the generic parts (gic, clocks) the only component
-> > currently supported are the timers.
-> > 
-> > Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > --
-> 
-> I will take this patchset through my tree but this patch touches an area
-> I am not handling.
-> 
-> Olof, Arnd, do you mind to ack this patch ?
+=E4=BA=8E 2014=E5=B9=B407=E6=9C=8818=E6=97=A5 18:03, Thierry Reding =E5=
+=86=99=E9=81=93:
+> On Fri, Jul 18, 2014 at 01:05:56PM +0800, caesar wrote:
+>> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8818=E6=97=A5 03:24, Beniamino Galva=
+ni =E5=86=99=E9=81=93:
+>>> On Thu, Jul 17, 2014 at 02:08:14PM +0800, caesar wrote:
+> [...]
+>>>> @@ -119,9 +185,12 @@ static int rockchip_pwm_probe(struct platform=
+_device *pdev)
+>>>>   		return -ENOMEM;
+>>>>   	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> -	pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>>>> -	if (IS_ERR(pc->base))
+>>>> -		return PTR_ERR(pc->base);
+>>>> +	pc->base =3D of_iomap(np, 0);
+>>>> +	if (!pc->base) {
+>>>> +		dev_err(&pdev->dev, "failed to map controller\n");
+>>>> +		ret =3D -ENOMEM;
+>>>> +		goto fail_map;
+>>>> +	}
+>>> I think that this change is not needed. devm_ioremap_resource()
+>>> guarantees an automatic unmapping when the device is destroyed.
+>>>
+>>> Moreover, when of_iomap() fails you don't need to call iounmap().
+>>>
+>>> Beniamino
+>> VOP-PWM base has be requested for lcdc.
+> Why?
+VOP is  a seperate controllers for rk3288 and genenation SoCs.
+The VOP contains lcdc,pwm......
 
-wouldn't it be easier to just take patches 1,2,3,4 through your tree and let 
-patches 5,6,7 go through arm-soc?
+=46or example :Rk3288 SOC address mapping
 
-There is no compile-time dependency between the two parts, so they will come 
-together nicely in linux-next and during the merge-window.
+lcdc0: lcdc@ff930000                     vop0pwm: pwm@ff9301a0
+reg =3D <0xff930000 0x10000>       reg =3D <0xff9301a0 0x10>;
+offset =3D 0x10000                            offset =3D 0x10
+
+lcdc1: lcdc@ff940000                    vop1pwm: pwm@ff9401a0
+reg =3D <0xff940000 0x10000>      reg =3D <0xff9401a0 0x10>;
+offset =3D 0x10000                           offset =3D 0x10
+
+In a word, lcdc and vop-pwm has shared the map address.
+>> When I use devm_ioremap_resource(), the vop-pwm will request region =
+fail.
+>>
+>> Example:.931020] rockchip-pwm ff9401a0.pwm: can't request region for
+>> resource [mem 0xff9401a0-0xff9401af] /pwm@ff9401a0.
+>> So ,I have to charge it.
+>>
+>> I will be simplyfied by having:
+>> - pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>> + if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
+>> + pc->base =3D devm_ioremap(&pdev->dev, r->start, resource_size(r));
+>> + else
+>> + pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>>
+>> Maybe, Could you give me better suggestions for it?
+> The right thing to do is not have two drivers access the same device.
+> Why does lcdc request the PWM register region?
+>
+> Thierry
+Ditto,
+Maybe,Could you give me a better suggestion to do it?
 
 
-Also in [0] Olof wrote:
-
-----------
-Traditionally we usually take the DT changes through arm-soc, but as
-long as we share the branch we might be ok. We tend to stick them in
-different branches in our tree though, so rockchip will be a little
-mis-sorted this release. Not a big deal, and we can deal with it.
------------
-
-So I'd assume splitting the patchset this way might be a nice solution?
-
-
-Heiko
-
-
-[0] http://www.spinics.net/lists/arm-kernel/msg347053.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
