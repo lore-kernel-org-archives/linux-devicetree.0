@@ -1,32 +1,32 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv6 3/4] iio: devicetree: Add DT binding documentation for Exynos3250 ADC
-Date: Fri, 18 Jul 2014 11:50:23 +0200
-Message-ID: <6104032.PNRl85V92G@wuerfel>
-References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com> <1405663186-26464-4-git-send-email-cw00.choi@samsung.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ARM: zynq: dt: Add GPIO node
+Date: Fri, 18 Jul 2014 11:51:21 +0200
+Message-ID: <f27926ad-5c25-405a-a461-6d7ec7be628b@BL2FFO11FD054.protection.gbl>
+References: <1405018418-23396-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1405663186-26464-4-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: jic23@kernel.org, ch.naveen@samsung.com, kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, kyungmin.park@samsung.com, t.figa@samsung.com, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405018418-23396-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 July 2014 14:59:45 Chanwoo Choi wrote:
->                         Must be "samsung,exynos-adc-v2" for
->                                 future controllers.
+On 07/10/2014 08:53 PM, Soren Brinkmann wrote:
+> Add node describing Zynq's GPIO controller.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+> The GPIO driver and binding documentation is staged in Linus' GPIO tr=
+ee.
+>=20
+> 	S=C3=B6ren
+>=20
+>  arch/arm/boot/dts/zynq-7000.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-It would be good to change 'future controllers' to something else now.
-Presumably that word was used before the actual products were announced,
-but now they are publically known.
+Applied for zynq dt-next when gpio driver is in mainline.
 
-> +                       Must be "samsung,exynos3250-adc-v2" for
-> +                               controllers compatible with ADC of Exynos3250.
-
-Doesn't this version have a specific name as well? The ADC block
-seems to use version numbers, so better put those in here to avoid
-confusion when another Exynos7890 comes out that uses the same
-ADC as exynos3250.
-
-	Arnd
+Thanks,
+Michal
