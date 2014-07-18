@@ -1,82 +1,60 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH v10 4/8] ata: libahci: allow to use multiple PHYs
-Date: Fri, 18 Jul 2014 15:17:45 +0200
-Message-ID: <20140718151745.0b0114a9@ipc1.ka-ro>
-References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
- <1405686607-8126-5-git-send-email-antoine.tenart@free-electrons.com>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [PATCH] irqchip: gicv2m: Clean up logic for detecting MSI support
+Date: Fri, 18 Jul 2014 08:26:36 -0500
+Message-ID: <1405689996-3601-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1405686607-8126-5-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Mark Rutland <Mark.Rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpBbnRvaW5lIFTDqW5hcnQgd3JvdGU6Cj4gVGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24g
-b2YgdGhlIGxpYmFoY2kgZG9lcyBub3QgYWxsb3cgdG8gdXNlIG11bHRpcGxlCj4gUEhZcy4gVGhp
-cyBwYXRjaCBhZGRzIHRoZSBzdXBwb3J0IG9mIG11bHRpcGxlIFBIWXMgYnkgdGhlIGxpYmFoY2kg
-d2hpbGUKPiBrZWVwaW5nIHRoZSBvbGQgYmluZGluZ3MgdmFsaWQgZm9yIGRldmljZSB0cmVlIGNv
-bXBhdGliaWxpdHkuCj4gCj4gVGhpcyBpbnRyb2R1Y2UgYSBuZXcgd2F5IG9mIGRlZmluaW5nIFNB
-VEEgcG9ydHMgaW4gdGhlIGRldmljZSB0cmVlLCB3aXRoCj4gb25lIHBvcnQgcGVyIHN1Yi1ub2Rl
-LiBUaGlzIGFzIHRoZSBhZHZhbnRhZ2Ugb2YgYWxsb3dpbmcgYSBwZXIgcG9ydAo+IGNvbmZpZ3Vy
-YXRpb24uIEJlY2F1c2Ugc29tZSBwb3J0cyBtYXkgYmUgYWNjZXNzaWJsZSBidXQgZGlzYWJsZWQg
-aW4gdGhlCj4gZGV2aWNlIHRyZWUsIHRoZSBwb3J0X21hcCBtYXNrIGlzIGNvbXB1dGVkIGF1dG9t
-YXRpY2FsbHkgd2hlbiB1c2luZwo+IHRoaXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQW50b2luZSBU
-w6luYXJ0IDxhbnRvaW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGRyaXZl
-cnMvYXRhL2FoY2kuaCAgICAgICAgICAgICB8ICAgMyArLQo+ICBkcml2ZXJzL2F0YS9saWJhaGNp
-X3BsYXRmb3JtLmMgfCAxNzkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNDIgaW5zZXJ0aW9ucygrKSwgNDAgZGVsZXRpb25zKC0p
-Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYXRhL2FoY2kuaCBiL2RyaXZlcnMvYXRhL2FoY2ku
-aAo+IGluZGV4IGNiOGQ1ODkyNjg1MS4uYjBlYTdiMDc3ZDZlIDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvYXRhL2FoY2kuaAo+ICsrKyBiL2RyaXZlcnMvYXRhL2FoY2kuaAo+IEBAIC0zMzIsNyArMzMy
-LDggQEAgc3RydWN0IGFoY2lfaG9zdF9wcml2IHsKPiAgCWJvb2wJCQlnb3RfcnVudGltZV9wbTsg
-LyogRGlkIHdlIGRvIHBtX3J1bnRpbWVfZ2V0PyAqLwo+ICAJc3RydWN0IGNsawkJKmNsa3NbQUhD
-SV9NQVhfQ0xLU107IC8qIE9wdGlvbmFsICovCj4gIAlzdHJ1Y3QgcmVndWxhdG9yCSp0YXJnZXRf
-cHdyOwkvKiBPcHRpb25hbCAqLwo+IC0Jc3RydWN0IHBoeQkJKnBoeTsJCS8qIElmIHBsYXRmb3Jt
-IHVzZXMgcGh5ICovCj4gKwlzdHJ1Y3QgcGh5CQkqKnBoeXM7CQkvKiBJZiBwbGF0Zm9ybSB1c2Vz
-IHBoeXMgKi8KPiArCXVuc2lnbmVkCQlucGh5czsJCS8qIE51bWJlciBvZiBwaHlzICovCj4gIAl2
-b2lkCQkJKnBsYXRfZGF0YTsJLyogT3RoZXIgcGxhdGZvcm0gZGF0YSAqLwo+ICAJLyoKPiAgCSAq
-IE9wdGlvbmFsIGFoY2lfc3RhcnRfZW5naW5lIG92ZXJyaWRlLCBpZiBub3Qgc2V0IHRoaXMgZ2V0
-cyBzZXQgdG8gdGhlCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYXRhL2xpYmFoY2lfcGxhdGZvcm0u
-YyBiL2RyaXZlcnMvYXRhL2xpYmFoY2lfcGxhdGZvcm0uYwo+IGluZGV4IGRiOWI5MGQ4NzZkZC4u
-MmMyNDM5YjQxMDFkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvYXRhL2xpYmFoY2lfcGxhdGZvcm0u
-Ywo+ICsrKyBiL2RyaXZlcnMvYXRhL2xpYmFoY2lfcGxhdGZvcm0uYwo+IEBAIC0zOSw2ICszOSw2
-MSBAQCBzdGF0aWMgc3RydWN0IHNjc2lfaG9zdF90ZW1wbGF0ZSBhaGNpX3BsYXRmb3JtX3NodCA9
-IHsKPiAgfTsKPiAgCj4gIC8qKgo+ICsgKiBhaGNpX3BsYXRmb3JtX2VuYWJsZV9waHlzIC0gRW5h
-YmxlIFBIWXMKPiArICogQGhwcml2OiBob3N0IHByaXZhdGUgYXJlYSB0byBzdG9yZSBjb25maWcg
-dmFsdWVzCj4gKyAqCj4gKyAqIFRoaXMgZnVuY3Rpb24gZW5hYmxlcyBhbGwgdGhlIFBIWXMgZm91
-bmQgaW4gaHByaXYtPnBoeXMsIGlmIGFueS4KPiArICogSWYgYSBQSFkgZmFpbHMgdG8gYmUgZW5h
-YmxlZCwgaXQgZGlzYWJsZXMgYWxsIHRoZSBQSFlzIGFscmVhZHkKPiArICogZW5hYmxlZCBpbiBy
-ZXZlcnNlIG9yZGVyIGFuZCByZXR1cm5zIGFuIGVycm9yLgo+ICsgKgo+ICsgKiBSRVRVUk5TOgo+
-ICsgKiAwIG9uIHN1Y2Nlc3Mgb3RoZXJ3aXNlIGEgbmVnYXRpdmUgZXJyb3IgY29kZQo+ICsgKi8K
-PiAraW50IGFoY2lfcGxhdGZvcm1fZW5hYmxlX3BoeXMoc3RydWN0IGFoY2lfaG9zdF9wcml2ICpo
-cHJpdikKPiArewo+ICsJaW50IGksIHJjID0gMDsKPiArCllvdSBzaG91bGRuJ3QgaGF2ZSB0byBp
-bml0aWFsaXplIHJjIGhlcmUsIG9yIGRvZXMgeW91ciBnY2MgZmFsc2VseQpjb21wbGFpbiBhYm91
-dCBhbiB1bmluaXRpYWxpemVkIHZhcmlhYmxlIGlmIHlvdSBkb24ndD8KCj4gKwlmb3IgKGkgPSAw
-OyBpIDwgaHByaXYtPm5waHlzOyBpKyspIHsKPiArCQlyYyA9IHBoeV9pbml0KGhwcml2LT5waHlz
-W2ldKTsKPiArCQlpZiAocmMpCj4gKwkJCWdvdG8gZGlzYWJsZV9waHlzOwo+ICsKPiArCQlyYyA9
-IHBoeV9wb3dlcl9vbihocHJpdi0+cGh5c1tpXSk7Cj4gKwkJaWYgKHJjKSB7Cj4gKwkJCXBoeV9l
-eGl0KGhwcml2LT5waHlzW2ldKTsKPiArCQkJZ290byBkaXNhYmxlX3BoeXM7Cj4gKwkJfQo+ICsJ
-fQo+ICsKPiArCXJldHVybiAwOwo+ICsKPiArZGlzYWJsZV9waHlzOgo+ICsJd2hpbGUgKC0taSA+
-PSAwKSB7Cj4gKwkJcGh5X3Bvd2VyX29mZihocHJpdi0+cGh5c1tpXSk7Cj4gKwkJcGh5X2V4aXQo
-aHByaXYtPnBoeXNbaV0pOwo+ICsJfQo+ICsJcmV0dXJuIHJjOwo+ICt9CgoKTG90aGFyIFdhw59t
-YW5uCi0tIApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwoKS2EtUm8gZWxlY3Ryb25pY3MgR21iSCB8IFBhc2NhbHN0cmHDn2UgMjIgfCBE
-IC0gNTIwNzYgQWFjaGVuClBob25lOiArNDkgMjQwOCAxNDAyLTAgfCBGYXg6ICs0OSAyNDA4IDE0
-MDItMTAKR2VzY2jDpGZ0c2bDvGhyZXI6IE1hdHRoaWFzIEthdXNzZW4KSGFuZGVsc3JlZ2lzdGVy
-ZWludHJhZzogQW10c2dlcmljaHQgQWFjaGVuLCBIUkIgNDk5NgoKd3d3Lmthcm8tZWxlY3Ryb25p
-Y3MuZGUgfCBpbmZvQGthcm8tZWxlY3Ryb25pY3MuZGUKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+
+It's not quite clear that msi-controller is already checked
+by of_msi_chip_add. So, this patch add a note to clarify.
+
+Also, clean up redundant logic and unnecessary pr_info.
+
+Cc: Mark Rutland <Mark.Rutland@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>
+Cc: Will Deacon <Will.Deacon@arm.com>
+Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+---
+
+Note: This patch is created against irqchip/gic branch.
+
+ drivers/irqchip/irq-gic-v2m.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index e54ca1d..94ed8d6 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -235,15 +235,15 @@ gicv2m_of_init(struct device_node *node, struct device_node *parent)
+ 	gic->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
+ 	ret = of_pci_msi_chip_add(&gic->msi_chip);
+ 	if (ret) {
+-		/* MSI is optional and not supported here */
+-		pr_info("GICv2m: MSI is not supported.\n");
++		/*
++		* Note: msi-controller is checked in of_pci_msi_chip_add().
++		* MSI support is optional, and enabled only if msi-controller
++		* is specified. Hence, return 0.
++		*/
+ 		return 0;
+ 	}
+ 
+-	ret = gicv2m_msi_init(node, &gic->v2m_data);
+-	if (ret)
+-		return ret;
+-	return ret;
++	return gicv2m_msi_init(node, &gic->v2m_data);
+ }
+ 
+ IRQCHIP_DECLARE(arm_gic_400_v2m, "arm,gic-400-v2m", gicv2m_of_init);
+-- 
+1.9.0
