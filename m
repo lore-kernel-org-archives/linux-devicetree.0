@@ -1,290 +1,52 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 7/7] ARM: dts: add rk3288 evaluation board
-Date: Fri, 18 Jul 2014 02:21:55 +0200
-Message-ID: <2004020.THrDyKm3fa@diego>
-References: <4868343.UFgjaXesOn@diego>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Fri, 18 Jul 2014 03:02:49 +0200
+Message-ID: <2399813.Puj1SZWhCh@vostro.rjw.lan>
+References: <cover.1404231535.git.viresh.kumar@linaro.org> <20140717093518.486ac244@free-electrons.com> <CAKohpokZXUzXKRWBje7QF_jrvOd5dmfmWQ2Csf3xiMuvT_vPYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4868343.UFgjaXesOn@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpokZXUzXKRWBje7QF_jrvOd5dmfmWQ2Csf3xiMuvT_vPYA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, Simon Horman <horms@verge.net.au>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, Rob Herring <rob.herring@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Sachin Kamat <spk.linux@gmail.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-There exist 2 variants using either the act8846 or rk808 as pmic, while the
-rest of the board stays the same.
+On Thursday, July 17, 2014 01:11:45 PM Viresh Kumar wrote:
+> On 17 July 2014 13:05, Thomas Petazzoni
+> <thomas.petazzoni@free-electrons.com> wrote:
+> > Could you summarize what is the issue with the binding?
+> >
+> > At least for the case where we have one clock per CPU, the DT binding
+> > is really dead simple: each CPU node can carry a "clocks" property, and
+> > a "clock-latency" property. I really don't see why a long discussion is
+> > needed to agree on such a binding.
+> >
+> > Now, if the DT binding problem is related to those cases where you have
+> > siblings, i.e one clock controlling *some* of the CPUs, but not all
+> > CPUs or just one CPU, then maybe we could leave this aside for now,
+> 
+> Yeah, we are stuck on that for now.
+> 
+> > only support the following cases:
+> >
+> >  * One clock for all CPUs
+> >  * One clock for each CPU
+> 
+> Yeah, so I also proposed this yesterday that we stick to only these
+> two implementations for now. And was looking at how would the
+> cpufreq-generic driver come to know about this.
+> 
+> So, one way out now is to see if "clocks" property is defined in
+> multiple cpu nodes, if yes don't compare them and consider separate
+> clocks for each cpu. We don't have to try matching that to any other
+> node, as that's a very bad idea. Mike was already very upset with that :)
+> 
+> @Stephen/Rafael: Does that sound any better? Ofcourse the final thing
+> is to get bindings to figure out relations between CPUs..
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/rk3288-evb-act8846.dts | 134 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3288-evb-rk808.dts   |  18 +++++
- arch/arm/boot/dts/rk3288-evb.dtsi        |  83 +++++++++++++++++++
- 3 files changed, 235 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-evb-act8846.dts
- create mode 100644 arch/arm/boot/dts/rk3288-evb-rk808.dts
- create mode 100644 arch/arm/boot/dts/rk3288-evb.dtsi
+Before I apply anything in this area, I need a clear statement from the ARM
+people as a group on what the approach is going to be.
 
-diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-new file mode 100644
-index 0000000..7d59ff4
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-@@ -0,0 +1,134 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-evb.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3288-evb-act8846", "rockchip,rk3288";
-+};
-+
-+&i2c0 {
-+	hym8563@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hym8563_int>;
-+
-+		#clock-cells = <0>;
-+		clock-output-names = "xin32k";
-+	};
-+
-+	act8846: act8846@5a {
-+		compatible = "active-semi,act8846";
-+		reg = <0x5a>;
-+		status = "okay";
-+
-+		regulators {
-+			vcc_ddr: REG1 {
-+				regulator-name = "VCC_DDR";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_io: REG2 {
-+				regulator-name = "VCC_IO";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_log: REG3 {
-+				regulator-name = "VDD_LOG";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_20: REG4 {
-+				regulator-name = "VCC_20";
-+				regulator-min-microvolt = <2000000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
-+			};
-+
-+			vccio_sd: REG5 {
-+				regulator-name = "VCCIO_SD";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd10_lcd: REG6 {
-+				regulator-name = "VDD10_LCD";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-always-on;
-+			};
-+
-+			vcca_codec: REG7 {
-+				regulator-name = "VCCA_CODEC";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vcca_tp: REG8 {
-+				regulator-name = "VCCA_TP";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vccio_pmu: REG9 {
-+				regulator-name = "VCCIO_PMU";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_10: REG10 {
-+				regulator-name = "VDD_10";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_18: REG11 {
-+				regulator-name = "VCC_18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc18_lcd: REG12 {
-+				regulator-name = "VCC18_LCD";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		hym8563_int: hym8563-int {
-+			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-new file mode 100644
-index 0000000..9a88b6c
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-@@ -0,0 +1,18 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-evb.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3288-evb-rk808", "rockchip,rk3288";
-+};
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-new file mode 100644
-index 0000000..2afd4f2
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -0,0 +1,83 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "rk3288.dtsi"
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+	};
-+
-+	memory {
-+		reg = <0x0 0x80000000>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+
-+		button@0 {
-+			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
-+			linux,code = <116>;
-+			label = "GPIO Key Power";
-+			linux,input-type = <1>;
-+			gpio-key,wakeup = <1>;
-+			debounce-interval = <100>;
-+		};
-+	};
-+
-+	i2c0: i2c@ff650000 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c0_xfer>;
-+		status = "okay";
-+	};
-+
-+	watchdog@ff800000 {
-+		status = "okay";
-+	};
-+
-+	serial@ff180000 {
-+		status = "okay";
-+	};
-+
-+	serial@ff190000 {
-+		status = "okay";
-+	};
-+
-+	serial@ff690000 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&uart2_xfer>;
-+		status = "okay";
-+	};
-+
-+	serial@ff1b0000 {
-+		status = "okay";
-+	};
-+
-+	serial@ff1c0000 {
-+		status = "okay";
-+	};
-+
-+	pinctrl {
-+		buttons {
-+			pwrbtn: pwrbtn {
-+				rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
-+			};
-+		};
-+	};
-+};
--- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rafael
