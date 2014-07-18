@@ -1,44 +1,53 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH] irqchip: gicv2m: Clean up logic for detecting MSI
- support
-Date: Fri, 18 Jul 2014 15:57:08 -0400
-Message-ID: <20140718195708.GH24496@titan.lakedaemon.net>
-References: <1405689996-3601-1-git-send-email-suravee.suthikulpanit@amd.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
+Date: Fri, 18 Jul 2014 14:52:25 -0700
+Message-ID: <CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>
+References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
+	<CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>
+	<CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405689996-3601-1-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: suravee.suthikulpanit@amd.com
-Cc: marc.zyngier@arm.com, mark.rutland@arm.com, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mike Turquette <mike.turquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 18, 2014 at 08:26:36AM -0500, suravee.suthikulpanit@amd.com wrote:
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> 
-> It's not quite clear that msi-controller is already checked
-> by of_msi_chip_add. So, this patch add a note to clarify.
-> 
-> Also, clean up redundant logic and unnecessary pr_info.
-> 
-> Cc: Mark Rutland <Mark.Rutland@arm.com>
-> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
-> Cc: Will Deacon <Will.Deacon@arm.com>
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> ---
-> 
-> Note: This patch is created against irqchip/gic branch.
-> 
->  drivers/irqchip/irq-gic-v2m.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+On Thu, Jul 17, 2014 at 11:40 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 18 July 2014 11:47, Olof Johansson <olof@lixom.net> wrote:
+>> Why complicate it by using two properties?
+>>
+>> If there is no property, then the CPUs are assumed to be controlled
+>> independently.
+>>
+>> if there is a clock-master = <phandle> property, then that points at
+>> the cpu that is the main one controlling clock for the group.
+>>
+>> There's really no need to label the master -- it will be the only one
+>> with incoming links but nothing outgoing. And a master without slaves
+>> is an independently controlled cpu so you should be fine in that
+>> aspect too.
+>
+> I thought so earlier, but then I remembered something I read long back.
+> Don't remember which thread now, but I *might* be wrong..
+>
+> "Bindings are like APIs and new bindings shouldn't break existing stuff.."
+>
+> And:
+>
+>> If there is no property, then the CPUs are assumed to be controlled
+>> independently.
+>
+> seems to break the existing API.
 
-Applied to the unstable branch irqchip/gic-v2m until Marc returns from
-vacation.  Please see my email to MarkR on your previous series
-regarding the re-shuffling of the branches.
+What is the current API that is being broken, in your opinion?
 
-thx,
+> But if that isn't the case, the bindings are very simple & clear to handle.
+> Diff for new bindings:
 
-Jason.
+It's somewhat confusing to see a diff to the patch instead of a new
+version. It seems to remove the cpu 0 entry now?
+
+
+-Olof
