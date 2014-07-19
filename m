@@ -1,44 +1,129 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 00/14] clk: sunxi: Improve MMC clocks support
-Date: Sat, 19 Jul 2014 12:47:38 +0200
-Message-ID: <53CA4CCA.5040303@redhat.com>
-References: <1405588134-2396-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH v4 1/2] dmaengine: add device tree binding documentation for
+ the nbpfaxi driver
+Date: Sat, 19 Jul 2014 12:48:45 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1405588134-2396-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The nbpfaxi dmaengine driver doesn't define any new bindings, it only
+uses standard dmaengine bindings and defines 3 flags for the 3rd parameter
+of the "dmas" property.
 
-On 07/17/2014 11:08 AM, Maxime Ripard wrote:
-> Hi everyone,
->
-> Here is an attempt at improving the MMC clock support in the Allwinner
-> SoCs.
->
-> Until now, the MMC clocks were having a custom phase function that was
-> directly setting an obscure value in the right register, because we
-> were not really having any idea of what these values were.
->
-> Now that we have more informations, we can introduce a common function
-> call to get and set the phase of a particular clock, and use this in
-> both our provider and our client.
->
-> Another issue we had so far on the A13 was that, out of reset, the
-> PLL6 driving the MMC was running too high to be working. We can solve
-> that by adding two new properties in the DT to setup the rate
-> constraints we might have on a clock.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
 
-Looks good to me, thanks for working on this.
+v4: no change, added Arnd's ack - thanks!
 
-Question have you dumped the raw mmc0 clk reg before and after this
-patch set to verify that the end result is the same ?
+ Documentation/devicetree/bindings/dma/nbpfaxi.txt | 61 +++++++++++++++++++++++
+ include/dt-bindings/dma/nbpfaxi.h                 | 20 ++++++++
+ 2 files changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/nbpfaxi.txt
+ create mode 100644 include/dt-bindings/dma/nbpfaxi.h
 
-Regards,
+diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+new file mode 100644
+index 0000000..d5e2522
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+@@ -0,0 +1,61 @@
++* Renesas "Type-AXI" NBPFAXI* DMA controllers
++
++* DMA controller
++
++Required properties
++
++- compatible:	must be one of
++		"renesas,nbpfaxi64dmac1b4"
++		"renesas,nbpfaxi64dmac1b8"
++		"renesas,nbpfaxi64dmac1b16"
++		"renesas,nbpfaxi64dmac4b4"
++		"renesas,nbpfaxi64dmac4b8"
++		"renesas,nbpfaxi64dmac4b16"
++		"renesas,nbpfaxi64dmac8b4"
++		"renesas,nbpfaxi64dmac8b8"
++		"renesas,nbpfaxi64dmac8b16"
++- #dma-cells:	must be 2: the first integer is a terminal number, to which this
++		slave is connected, the second one is flags. Flags is a bitmask
++		with the following bits defined:
++
++#define NBPF_SLAVE_RQ_HIGH	1
++#define NBPF_SLAVE_RQ_LOW	2
++#define NBPF_SLAVE_RQ_LEVEL	4
++
++Optional properties:
++
++You can use dma-channels and dma-requests as described in dma.txt, although they
++won't be used, this information is derived from the compatibility string.
++
++Example:
++
++	dma: dma-controller@48000000 {
++		compatible = "renesas,nbpfaxi64dmac8b4";
++		reg = <0x48000000 0x400>;
++		interrupts = <0 12 0x4
++			      0 13 0x4
++			      0 14 0x4
++			      0 15 0x4
++			      0 16 0x4
++			      0 17 0x4
++			      0 18 0x4
++			      0 19 0x4>;
++		#dma-cells = <2>;
++		dma-channels = <8>;
++		dma-requests = <8>;
++	};
++
++* DMA client
++
++Required properties:
++
++dmas and dma-names are required, as described in dma.txt.
++
++Example:
++
++#include <dt-bindings/dma/nbpfaxi.h>
++
++...
++		dmas = <&dma 0 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)
++			&dma 1 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)>;
++		dma-names = "rx", "tx";
+diff --git a/include/dt-bindings/dma/nbpfaxi.h b/include/dt-bindings/dma/nbpfaxi.h
+new file mode 100644
+index 0000000..c1a5b9e
+--- /dev/null
++++ b/include/dt-bindings/dma/nbpfaxi.h
+@@ -0,0 +1,20 @@
++/*
++ * Copyright (C) 2013-2014 Renesas Electronics Europe Ltd.
++ * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of version 2 of the GNU General Public License as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef DT_BINDINGS_NBPFAXI_H
++#define DT_BINDINGS_NBPFAXI_H
++
++/**
++ * Use "#dma-cells = <2>;" with the second integer defining slave DMA flags:
++ */
++#define NBPF_SLAVE_RQ_HIGH	1
++#define NBPF_SLAVE_RQ_LOW	2
++#define NBPF_SLAVE_RQ_LEVEL	4
++
++#endif
+-- 
+1.9.3
 
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
