@@ -1,210 +1,166 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v2 2/2] pwm: add this patch to support the new pwm of Rockchip SoCs
-Date: Sat, 19 Jul 2014 20:55:29 +0800
-Message-ID: <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com>
-References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, thierry.reding@gmail.com, b.galvani@gmail.com
-Cc: cf@rock-chips.com, huangtao@rock-chips.com, addy.ke@rock-chips.com, xjq@rock-chips.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Caesar Wang <caesar.wang@rock-chips.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
+Date: Sat, 19 Jul 2014 20:16:36 +0530
+Message-ID: <CAKohpokLqrydV3b=innvOWrW9ijXtZwPKdT5Ew65cjMxsY2Mvw@mail.gmail.com>
+References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
+	<CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>
+	<CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>
+	<CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mike Turquette <mike.turquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Suggested-by: Beniamino Galvani <b.galvani@gmail.com>
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
----
- drivers/pwm/pwm-rockchip.c | 97 +++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 79 insertions(+), 18 deletions(-)
+On 19 July 2014 03:22, Olof Johansson <olof@lixom.net> wrote:
+> What is the current API that is being broken, in your opinion?
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index eec2145..3628a1b 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -2,6 +2,7 @@
-  * PWM driver for Rockchip SoCs
-  *
-  * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-+ * Copyright (C) 2014 Caesar Wang <caesar.wang@rock-chips.com>
-  *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License
-@@ -12,6 +13,7 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/time.h>
-@@ -23,14 +25,36 @@
- #define PWM_CTRL_TIMER_EN	(1 << 0)
- #define PWM_CTRL_OUTPUT_EN	(1 << 3)
- 
-+#define RK_PRESCALER		1
- #define PRESCALER		2
- 
-+#define PWM_CONTINUOUS		(1 << 1)
-+#define PWM_DUTY_POSITIVE	(1 << 3)
-+#define PWM_INACTIVE_NEGATIVE	(0 << 4)
-+#define PWM_OUTPUT_LEFT		(0 << 5)
-+#define PWM_LP_DISABLE		(0 << 8)
-+
-+#define RK_PWM_ENABLE		(1 << 0)
-+
-+#define VOP_PWM_CTRL		0x00		/* VOP-PWM Control Register */
-+#define VOP_PWM_CNTR		0x0c
-+
- struct rockchip_pwm_chip {
- 	struct pwm_chip chip;
- 	struct clk *clk;
-+	const struct rockchip_pwm_data *data;
- 	void __iomem *base;
- };
- 
-+struct rockchip_pwm_data {
-+	u32 duty;
-+	u32 period;
-+	u32 reg_cntr;
-+	u32 reg_ctrl;
-+	int prescaler;
-+	u32 enable_conf;
-+};
-+
- static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct pwm_chip *c)
- {
- 	return container_of(c, struct rockchip_pwm_chip, chip);
-@@ -52,20 +76,20 @@ static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * default prescaler value for all practical clock rate values.
- 	 */
- 	div = clk_rate * period_ns;
--	do_div(div, PRESCALER * NSEC_PER_SEC);
-+	do_div(div, pc->data->prescaler * NSEC_PER_SEC);
- 	period = div;
- 
- 	div = clk_rate * duty_ns;
--	do_div(div, PRESCALER * NSEC_PER_SEC);
-+	do_div(div, pc->data->prescaler * NSEC_PER_SEC);
- 	duty = div;
- 
- 	ret = clk_enable(pc->clk);
- 	if (ret)
- 		return ret;
- 
--	writel(period, pc->base + PWM_LRC);
--	writel(duty, pc->base + PWM_HRC);
--	writel(0, pc->base + PWM_CNTR);
-+	writel(period, pc->base + pc->data->period);
-+	writel(duty, pc->base + pc->data->duty);
-+	writel(0, pc->base + pc->data->reg_cntr);
- 
- 	clk_disable(pc->clk);
- 
-@@ -82,9 +106,9 @@ static int rockchip_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	if (ret)
- 		return ret;
- 
--	val = readl_relaxed(pc->base + PWM_CTRL);
--	val |= PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN;
--	writel_relaxed(val, pc->base + PWM_CTRL);
-+	val = readl_relaxed(pc->base + pc->data->reg_ctrl);
-+	val |= pc->data->enable_conf;
-+	writel_relaxed(val, pc->base + pc->data->reg_ctrl);
- 
- 	return 0;
- }
-@@ -94,9 +118,9 @@ static void rockchip_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	u32 val;
- 
--	val = readl_relaxed(pc->base + PWM_CTRL);
--	val &= ~(PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN);
--	writel_relaxed(val, pc->base + PWM_CTRL);
-+	val = readl_relaxed(pc->base + pc->data->reg_ctrl);
-+	val &= ~(pc->data->enable_conf);
-+	writel_relaxed(val, pc->base + pc->data->reg_ctrl);
- 
- 	clk_disable(pc->clk);
- }
-@@ -108,8 +132,47 @@ static const struct pwm_ops rockchip_pwm_ops = {
- 	.owner = THIS_MODULE,
- };
- 
-+static struct rockchip_pwm_data pwm_data_v1 = {
-+	.duty = PWM_HRC,
-+	.period = PWM_LRC,
-+	.reg_cntr = PWM_CNTR,
-+	.reg_ctrl = PWM_CTRL,
-+	.prescaler = PRESCALER,
-+	.enable_conf = PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN,
-+};
-+
-+static struct rockchip_pwm_data pwm_data_v2 = {
-+	.duty = PWM_LRC,
-+	.period = PWM_HRC,
-+	.reg_cntr = PWM_CNTR,
-+	.reg_ctrl = PWM_CTRL,
-+	.prescaler = RK_PRESCALER,
-+	.enable_conf = PWM_OUTPUT_LEFT | PWM_LP_DISABLE | RK_PWM_ENABLE |
-+		PWM_CONTINUOUS | PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE,
-+};
-+
-+static struct rockchip_pwm_data pwm_data_vop = {
-+	.duty = PWM_LRC,
-+	.period = PWM_HRC,
-+	.reg_cntr = VOP_PWM_CNTR,
-+	.reg_ctrl = VOP_PWM_CTRL,
-+	.prescaler = RK_PRESCALER,
-+	.enable_conf = PWM_OUTPUT_LEFT | PWM_LP_DISABLE | RK_PWM_ENABLE |
-+		PWM_CONTINUOUS | PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE,
-+};
-+
-+static const struct of_device_id rockchip_pwm_dt_ids[] = {
-+	{ .compatible = "rockchip,rk2928-pwm", .data = &pwm_data_v1},
-+	{ .compatible = "rockchip,rk3288-pwm", .data = &pwm_data_v2},
-+	{ .compatible = "rockchip,vop-pwm", .data = &pwm_data_vop},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
-+
- static int rockchip_pwm_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id =
-+	    of_match_device(rockchip_pwm_dt_ids, &pdev->dev);
- 	struct rockchip_pwm_chip *pc;
- 	struct resource *r;
- 	int ret;
-@@ -119,7 +182,10 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pc->base = devm_ioremap_resource(&pdev->dev, r);
-+	if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
-+		pc->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
-+	else
-+		pc->base = devm_ioremap_resource(&pdev->dev, r);
- 	if (IS_ERR(pc->base))
- 		return PTR_ERR(pc->base);
- 
-@@ -133,6 +199,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pc);
- 
-+	pc->data = of_id->data;
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &rockchip_pwm_ops;
- 	pc->chip.base = -1;
-@@ -156,12 +223,6 @@ static int rockchip_pwm_remove(struct platform_device *pdev)
- 	return pwmchip_remove(&pc->chip);
- }
- 
--static const struct of_device_id rockchip_pwm_dt_ids[] = {
--	{ .compatible = "rockchip,rk2928-pwm" },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
--
- static struct platform_driver rockchip_pwm_driver = {
- 	.driver = {
- 		.name = "rockchip-pwm",
--- 
-1.9.1
+So, currently the nodes doesn't have any such property. And drivers
+consider all of them as sharing clocks, for eg: cpufreq-cpu0.
+
+Now, if we use those older DT's after the new changes, drivers would
+consider CPUs as having separate clocks. And that would be opposite
+of what currently happens.
+
+Not sure if this counts as broken.
+
+>> But if that isn't the case, the bindings are very simple & clear to handle.
+>> Diff for new bindings:
+>
+> It's somewhat confusing to see a diff to the patch instead of a new
+> version. It seems to remove the cpu 0 entry now?
+
+Not really, I removed an unwanted example. This is how it looks:
+
+
+
+* Generic CPUFreq clock bindings
+
+Clock lines may or may not be shared among different CPUs on a platform.
+
+Possible configurations:
+1.) All CPUs share a single clock line
+2.) All CPUs have independent clock lines
+3.) CPUs within a group/cluster share clock line but each group/cluster have a
+    separate line for itself
+
+Optional Properties:
+- clock-master: Contains phandle of the master cpu controlling clocks.
+
+  Ideally there is nothing like a "master" CPU as any CPU can play with DVFS
+  settings. But we have to choose one cpu out of a group, so that others can
+  point to it.
+
+  If there is no "clock-master" property for a cpu node, it is considered as
+  master. It may or may not have other slave CPUs pointing towards it.
+
+Examples:
+1.) All CPUs share a single clock line
+
+cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        cpu0: cpu@0 {
+                compatible = "arm,cortex-a15";
+                reg = <0>;
+                next-level-cache = <&L2>;
+                operating-points = <
+                        /* kHz    uV */
+                        792000  1100000
+                        396000  950000
+                        198000  850000
+                >;
+                clock-latency = <61036>; /* two CLK32 periods */
+        };
+
+        cpu1: cpu@1 {
+                compatible = "arm,cortex-a15";
+                reg = <1>;
+                next-level-cache = <&L2>;
+                clock-master = <&cpu0>;
+        };
+};
+
+2.) All CPUs have independent clock lines
+cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        cpu0: cpu@0 {
+                compatible = "arm,cortex-a15";
+                reg = <0>;
+                next-level-cache = <&L2>;
+                operating-points = <
+                        /* kHz    uV */
+                        792000  1100000
+                        396000  950000
+                        198000  850000
+                >;
+                clock-latency = <61036>; /* two CLK32 periods */
+        };
+
+        cpu1: cpu@1 {
+                compatible = "arm,cortex-a15";
+                reg = <1>;
+                next-level-cache = <&L2>;
+                operating-points = <
+                        /* kHz    uV */
+                        792000  1100000
+                        396000  950000
+                        198000  850000
+                >;
+                clock-latency = <61036>; /* two CLK32 periods */
+        };
+};
+
+3.) CPUs within a group/cluster share single clock line but each group/cluster
+have a separate line for itself
+
+cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        cpu0: cpu@0 {
+                compatible = "arm,cortex-a15";
+                reg = <0>;
+                next-level-cache = <&L2>;
+                operating-points = <
+                        /* kHz    uV */
+                        792000  1100000
+                        396000  950000
+                        198000  850000
+                >;
+                clock-latency = <61036>; /* two CLK32 periods */
+        };
+
+        cpu1: cpu@1 {
+                compatible = "arm,cortex-a15";
+                reg = <1>;
+                next-level-cache = <&L2>;
+                clock-master = <&cpu0>;
+        };
+
+        cpu2: cpu@100 {
+                compatible = "arm,cortex-a7";
+                reg = <100>;
+                next-level-cache = <&L2>;
+                operating-points = <
+                        /* kHz    uV */
+                        792000  950000
+                        396000  750000
+                        198000  450000
+                >;
+                clock-latency = <61036>; /* two CLK32 periods */
+        };
+
+        cpu3: cpu@101 {
+                compatible = "arm,cortex-a7";
+                reg = <101>;
+                next-level-cache = <&L2>;
+                clock-master = <&cpu2>;
+        };
+};
