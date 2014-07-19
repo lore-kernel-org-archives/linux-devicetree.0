@@ -1,135 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 4/8] dmaengine: rcar-dmac: Add device tree bindings documentation
-Date: Sat, 19 Jul 2014 01:50:21 +0200
-Message-ID: <1405727425-6237-5-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1405727425-6237-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1405727425-6237-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: dmaengine@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, devicetree@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v10 0/8] ARM: berlin: add AHCI support
+Date: Sat, 19 Jul 2014 11:03:39 +0200
+Message-ID: <53CA346B.1050802@gmail.com>
+References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com> <20140718135758.GB13012@htj.dyndns.org>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140718135758.GB13012@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for the R-Car Generation 2 DMA
-Controller (DMAC).
+On 07/18/2014 03:57 PM, Tejun Heo wrote:
+> On Fri, Jul 18, 2014 at 02:29:59PM +0200, Antoine T=E9nart wrote:
+>> In both cases we do not have time to do this for the next release, a=
+s
+>> the request popped up quite late.
+>>
+>> So as of now:
+>>   - Either the series is merged as is and changes to the AHCI framew=
+ork
+>>     can be made for 3.18, as it's not particularly linked to this
+>>     series.
+>>   - Or you really do not want it. Then that would be great if patche=
+s
+>>     1-2 and 7-8 could be merged so that we do not end up with this b=
+ig
+>>     series going for yet another cycle... I think Kishon already too=
+k
+>>     patches 1-2.
+>=20
+> I don't wanna take in code which isn't in the shape that it should be=
+=2E
+> Things like this accumulate to become a large maintenance burden over
+> time.  Sure, urgent things can slip in and then later be fixed up but
+> who are gonna do that here?  You guys already seem to be under time
+> pressure as it is.
+>=20
+> If you guys can figure something out with Hans regarding how to
+> proceed on this, I'll be happy take the code as is.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+I cannot say much about AHCI, but if the PHY driver is fine I can
+take the DT patches adding it to BG2Q and BG2Q-DMP at any time.
 
----
-
-Changes since v1:
-
-- Remove ch15 from interrupt names
----
- .../devicetree/bindings/dma/renesas,rcar-dmac.txt  | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-new file mode 100644
-index 0000000..df0f48b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -0,0 +1,98 @@
-+* Renesas R-Car DMA Controller Device Tree bindings
-+
-+Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
-+controller instances named DMAC capable of serving multiple clients. Channels
-+can be dedicated to specific clients or shared between a large number of
-+clients.
-+
-+DMA clients are connected to the DMAC ports referenced by an 8-bit identifier
-+called MID/RID.
-+
-+Each DMA client is connected to one dedicated port of the DMAC, identified by
-+an 8-bit port number called the MID/RID. A DMA controller can thus serve up to
-+256 clients in total. When the number of hardware channels is lower than the
-+number of clients to be served, channels must be shared between multiple DMA
-+clients. The association of DMA clients to DMAC channels is fully dynamic and
-+not described in these device tree bindings.
-+
-+Required Properties:
-+
-+- compatible: must contain "renesas,rcar-dmac"
-+
-+- reg: base address and length of the registers block for the DMAC
-+
-+- interrupts: interrupt specifiers for the DMAC, one for each entry in
-+  interrupt-names.
-+- interrupt-names: one entry per channel, named "ch%u", where %u is the
-+  channel number ranging from zero to the number of channels minus one.
-+
-+- clock-names: "fck" for the functional clock
-+- clocks: a list of phandle + clock-specifier pairs, one for each entry
-+  in clock-names.
-+- clock-names: must contain "fck" for the functional clock.
-+
-+- #dma-cells: must be <1>, the cell specifies the MID/RID of the DMAC port
-+  connected to the DMA client
-+- dma-channels: number of DMA channels
-+
-+Example: R8A7790 (R-Car H2) SYS-DMACs
-+
-+	dmac0: dma-controller@e6700000 {
-+		compatible = "renesas,rcar-dmac";
-+		reg = <0 0xe6700000 0 0x20000>;
-+		interrupts = <0 197 IRQ_TYPE_LEVEL_HIGH
-+			      0 200 IRQ_TYPE_LEVEL_HIGH
-+			      0 201 IRQ_TYPE_LEVEL_HIGH
-+			      0 202 IRQ_TYPE_LEVEL_HIGH
-+			      0 203 IRQ_TYPE_LEVEL_HIGH
-+			      0 204 IRQ_TYPE_LEVEL_HIGH
-+			      0 205 IRQ_TYPE_LEVEL_HIGH
-+			      0 206 IRQ_TYPE_LEVEL_HIGH
-+			      0 207 IRQ_TYPE_LEVEL_HIGH
-+			      0 208 IRQ_TYPE_LEVEL_HIGH
-+			      0 209 IRQ_TYPE_LEVEL_HIGH
-+			      0 210 IRQ_TYPE_LEVEL_HIGH
-+			      0 211 IRQ_TYPE_LEVEL_HIGH
-+			      0 212 IRQ_TYPE_LEVEL_HIGH
-+			      0 213 IRQ_TYPE_LEVEL_HIGH
-+			      0 214 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				"ch0", "ch1", "ch2", "ch3",
-+				"ch4", "ch5", "ch6", "ch7",
-+				"ch8", "ch9", "ch10", "ch11",
-+				"ch12", "ch13", "ch14";
-+		clocks = <&mstp2_clks R8A7790_CLK_SYS_DMAC0>;
-+		clock-names = "fck";
-+		#dma-cells = <1>;
-+		dma-channels = <15>;
-+	};
-+
-+	dmac1: dma-controller@e6720000 {
-+		compatible = "renesas,rcar-dmac";
-+		reg = <0 0xe6720000 0 0x20000>;
-+		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH
-+			      0 216 IRQ_TYPE_LEVEL_HIGH
-+			      0 217 IRQ_TYPE_LEVEL_HIGH
-+			      0 218 IRQ_TYPE_LEVEL_HIGH
-+			      0 219 IRQ_TYPE_LEVEL_HIGH
-+			      0 308 IRQ_TYPE_LEVEL_HIGH
-+			      0 309 IRQ_TYPE_LEVEL_HIGH
-+			      0 310 IRQ_TYPE_LEVEL_HIGH
-+			      0 311 IRQ_TYPE_LEVEL_HIGH
-+			      0 312 IRQ_TYPE_LEVEL_HIGH
-+			      0 313 IRQ_TYPE_LEVEL_HIGH
-+			      0 314 IRQ_TYPE_LEVEL_HIGH
-+			      0 315 IRQ_TYPE_LEVEL_HIGH
-+			      0 316 IRQ_TYPE_LEVEL_HIGH
-+			      0 317 IRQ_TYPE_LEVEL_HIGH
-+			      0 318 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				"ch0", "ch1", "ch2", "ch3",
-+				"ch4", "ch5", "ch6", "ch7",
-+				"ch8", "ch9", "ch10", "ch11",
-+				"ch12", "ch13", "ch14";
-+		clocks = <&mstp2_clks R8A7790_CLK_SYS_DMAC1>;
-+		clock-names = "fck";
-+		#dma-cells = <1>;
-+		dma-channels = <15>;
-+	};
--- 
-1.8.5.5
+Sebastian
 
