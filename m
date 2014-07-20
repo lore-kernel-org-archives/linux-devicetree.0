@@ -1,38 +1,163 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5] Input: Add driver for Microchip's CAP1106
-Date: Sun, 20 Jul 2014 13:42:21 -0700
-Message-ID: <20140720204221.GC18347@core.coreip.homeip.net>
-References: <1405423859-16121-1-git-send-email-zonque@gmail.com>
+From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: exynos-adc: add support for s3c64xx adc
+Date: Sun, 20 Jul 2014 23:37:07 +0200
+Message-ID: <53CC3683.9090101@gmx.de>
+References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com> <5186890.aLtladpMgD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405423859-16121-1-git-send-email-zonque@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: linux-input@vger.kernel.org, broonie@kernel.org, dh.herrmann@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5186890.aLtladpMgD@wuerfel>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko.stuebner-K3U4GQvHnyU@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 01:30:59PM +0200, Daniel Mack wrote:
-> This patch adds a driver for Microchips CAP1106, an I2C driven, 6-channel
-> capacitive touch sensor.
-> 
-> For now, only the capacitive buttons are supported, and no specific
-> settings that can be tweaked for individual channels, except for the
-> device-wide sensitivity gain. The defaults seem to work just fine out of
-> the box, so I'll leave configurable parameters for someone who's in need
-> of them and who can actually measure the impact. All registers are
-> prepared, however. Many of them are just not used for now.
-> 
-> The implementation does not make any attempt to be compatible to platform
-> data driven boards, but fully depends on CONFIG_OF.
-> 
-> Power management functions are also left for volounteers with the ability
-> to actually test them.
-> 
-> Signed-off-by: Daniel Mack <zonque@gmail.com>
-
-Applied, thank you.
-
--- 
-Dmitry
+Arnd Bergmann schrieb:
+> The ADC in s3c64xx is almost the same as exynosv1, but
+> has a different 'select' method. Adding this here will be
+> helpful to move over the existing s3c64xx platform from the
+> legacy plat-samsung/adc driver to the new exynos-adc.
+>
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> ---
+There are some style issues, see the comments inline.
+> [In reply to Exynos3250 ADC support, adding Heiko and Ben]
+>
+> I spent way too much time this week trying to clean up the
+> old plat-samsung/adc.c driver as preparation for s3c64xx multiplatform
+> support. Eventually I figured out that all that code is much simpler
+> done using the new driver. This adds support for s3c64xx in
+> samsung-adc.c, similar code changes can be done to support the
+> various s3c24xx variants as well.
+>
+> This first patch should be fairly straightforward but is not tested
+> yet. The second patch is more tricky.
+>
+> Both are based on the exynos3250 patches sent by Chanwoo Choi.
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> index 26232f98d8c5..f84e9250429b 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> @@ -11,11 +11,21 @@ New driver handles the following
+>  
+>  Required properties:
+>  - compatible:		Must be "samsung,exynos-adc-v1"
+> -				for exynos4412/5250 controllers.
+> +				for exynos4412/5250 and s5pv210 controllers.
+>  			Must be "samsung,exynos-adc-v2" for
+>  				future controllers.
+>  			Must be "samsung,exynos3250-adc-v2" for
+>  				controllers compatible with ADC of Exynos3250.
+> +			Must be "samsung,s3c2410-adc" for
+> +				the ADC in s3c2410 and compatibles
+> +			Must be "samsung,s3c2416-adc" for
+> +				the ADC in s3c2416 and compatibles
+> +			Must be "samsung,s3c2440-adc" for
+> +				the ADC in s3c2440 and compatibles
+> +			Must be "samsung,s3c2440-adc" for
+> +				the ADC in s3c2440 and compatibles
+> +			Must be "samsung,s3c2443-adc" for
+> +				the ADC in s3c2443 and compatibles
+>  - reg:			Contains ADC register address range (base address and
+>  			length) and the address of the phy enable register.
+>  - interrupts: 		Contains the interrupt information for the timer. The
+> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+> index b63e88247eb2..5f95638513d2 100644
+> --- a/drivers/iio/adc/exynos_adc.c
+> +++ b/drivers/iio/adc/exynos_adc.c
+> @@ -39,12 +39,16 @@
+>  #include <linux/iio/machine.h>
+>  #include <linux/iio/driver.h>
+>  
+> -/* EXYNOS4412/5250 ADC_V1 registers definitions */
+> +/* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
+>  #define ADC_V1_CON(x)		((x) + 0x00)
+> +#define ADC_V1_TSC(x)		((x) + 0x04)
+>  #define ADC_V1_DLY(x)		((x) + 0x08)
+>  #define ADC_V1_DATX(x)		((x) + 0x0C)
+> +#define ADC_V1_DATY(x)		((x) + 0x10)
+> +#define ADC_V1_UPDN(x)		((x) + 0x14)
+>  #define ADC_V1_INTCLR(x)	((x) + 0x18)
+>  #define ADC_V1_MUX(x)		((x) + 0x1c)
+> +#define ADC_V1_CLRINTPNDNUP(x)	((x) + 0x20)
+>  
+>  /* Future ADC_V2 registers definitions */
+>  #define ADC_V2_CON1(x)		((x) + 0x00)
+> @@ -60,6 +64,30 @@
+>  #define ADC_V1_CON_PRSCLV(x)	(((x) & 0xFF) << 6)
+>  #define ADC_V1_CON_STANDBY	(1u << 2)
+>  
+Leave a whitespace around operators below.
+> +#define ADC_S3C2410_CON_SELMUX(x) (((x)&0x7)<<3)
+> +
+> +/* ADCTSC Register Bits */
+> +#define ADC_S3C2443_TSC_UD_SEN		(1<<8)
+> +#define ADC_S3C2410_TSC_YM_SEN		(1<<7)
+> +#define ADC_S3C2410_TSC_YP_SEN		(1<<6)
+> +#define ADC_S3C2410_TSC_XM_SEN		(1<<5)
+> +#define ADC_S3C2410_TSC_XP_SEN		(1<<4)
+> +#define ADC_S3C2410_TSC_PULL_UP_DISABLE	(1<<3)
+> +#define ADC_S3C2410_TSC_AUTO_PST	(1<<2)
+> +#define ADC_S3C2410_TSC_XY_PST(x)	(((x)&0x3)<<0)
+> +
+> +#define ADC_TSC_WAIT4INT (ADC_S3C2410_TSC_YM_SEN | \
+> +			 ADC_S3C2410_TSC_YP_SEN | \
+> +			 ADC_S3C2410_TSC_XP_SEN | \
+> +			 ADC_S3C2410_TSC_XY_PST(3))
+> +
+> +#define ADC_TSC_AUTOPST	(ADC_S3C2410_TSC_YM_SEN | \
+> +			 ADC_S3C2410_TSC_YP_SEN | \
+> +			 ADC_S3C2410_TSC_XP_SEN | \
+> +			 ADC_S3C2410_TSC_AUTO_PST | \
+> +			 ADC_S3C2410_TSC_XY_PST(0))
+> +
+> +
+>  /* Bit definitions for ADC_V2 */
+>  #define ADC_V2_CON1_SOFT_RESET	(1u << 2)
+>  
+> @@ -195,6 +223,26 @@ static void exynos_adc_v1_clear_irq(struct exynos_adc *info)
+>  	writel(1, ADC_V1_INTCLR(info->regs));
+>  }
+>  
+> +static void exynos_adc_s3c64xx_start_conv(struct exynos_adc *info,
+> +				     unsigned long addr)
+This indention could be a bit better.
+> +{
+> +	u32 con1;
+> +
+> +	con1 = readl(ADC_V1_CON(info->regs));
+> +	con1 &= ~ADC_S3C2410_CON_SELMUX(7);
+> +	con1 |= ADC_S3C2410_CON_SELMUX(addr);
+> +	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
+> +}
+> +
+> +static struct exynos_adc_data const exynos_adc_s3c64xx_data = {
+> +	.num_channels	= MAX_ADC_V1_CHANNELS,
+> +
+> +	.init_hw	= exynos_adc_v1_init_hw,
+> +	.exit_hw	= exynos_adc_v1_exit_hw,
+> +	.clear_irq	= exynos_adc_v1_clear_irq,
+> +	.start_conv	= exynos_adc_s3c64xx_start_conv,
+> +};
+> +
+>  static void exynos_adc_v1_start_conv(struct exynos_adc *info,
+>  				     unsigned long addr)
+>  {
+> @@ -280,6 +328,9 @@ static struct exynos_adc_data const exynos3250_adc_v2_data = {
+>  
+>  static const struct of_device_id exynos_adc_match[] = {
+>  	{
+> +		.compatible = "samsung,s3c64100-adc",
+> +		.data = &exynos_adc_s3c64xx_data,
+> +	}, {
+>  		.compatible = "samsung,exynos-adc-v1",
+>  		.data = (void *)&exynos_adc_v1_data,
+>  	}, {
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
