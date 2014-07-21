@@ -1,172 +1,76 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V5 05/12] Documentation: Add DT bindings for panel-lvds
- driver
-Date: Mon, 21 Jul 2014 18:00:05 +0530
-Message-ID: <CAEC9eQOfB3Fqe=uVDtWQsR41qXN9vnzGMgAw7wQBLkSUVFq4bg@mail.gmail.com>
-References: <1405629839-12086-1-git-send-email-ajaykumar.rs@samsung.com>
- <1405629839-12086-6-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQNygvwOGvw6QPGp+=7K9=oC9XvcEf9QSv=JBsEHyhM0wA@mail.gmail.com>
- <20140717224809.GA8875@mithrandir>
- <CAEC9eQMJnae6DaAUd7C5xZkaaaXL+291Qf2pcUd-wrcYXgQx8A@mail.gmail.com>
- <20140721075210.GC8843@ulmo>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH 4/7] ARM: OMAP4+: PRM: register interrupt information
+ from DT
+Date: Mon, 21 Jul 2014 05:31:52 -0700
+Message-ID: <20140721123152.GC18374@atomide.com>
+References: <1402025761-16831-1-git-send-email-nm@ti.com>
+ <1402025761-16831-5-git-send-email-nm@ti.com>
+ <20140721105149.GU18374@atomide.com>
+ <CAGo_u6q2NOxWVG3LOfAyk8qLZss5N6MxCvYkf-yN8c4ec4mftw@mail.gmail.com>
+ <20140721112807.GA18374@atomide.com>
+ <CAGo_u6q21_z-+mTWFD2T36mAXahwZt8-GBH0J3yuy+11CLYbxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140721075210.GC8843@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Javier Martinez Canillas <javier@dowhile0.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGo_u6q21_z-+mTWFD2T36mAXahwZt8-GBH0J3yuy+11CLYbxA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: dt list <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Rajendra Nayak <rnayak@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+* Nishanth Menon <nm@ti.com> [140721 05:11]:
+> On Mon, Jul 21, 2014 at 6:28 AM, Tony Lindgren <tony@atomide.com> wrote:
+> > * Nishanth Menon <nm@ti.com> [140721 04:24]:
+> >> On Mon, Jul 21, 2014 at 5:51 AM, Tony Lindgren <tony@atomide.com> wrote:
+> >> >
+> >> >> +static struct of_device_id omap_prm_dt_match_table[] = {
+> >> >> +     { .compatible = "ti,omap4-prm" },
+> >> >> +     { .compatible = "ti,omap5-prm" },
+> >> >> +     { .compatible = "ti,dra7-prm" },
+> >> >> +     { }
+> >> >> +};
+> >> >> +
+> >> >
+> >> > I'd like to avoid adding more driver like stuff to mach-omap2
+> >> > and parsing compatible flags and dealing with interupts sounds
+> >> > very driver like.. But maybe just the handling can be moved
+> >> > out?
+> >>
+> >> I understand your view, but, Handling of interrupts is already in
+> >> place even now in mach-omap2. Currently the prm devices are handled by
+> >> mach-omap2 and all this does it to prevent hardcoding of irq numbers
+> >> within the current code.
+> >
+> > Yeah but at a cost of no dev entry, no probe etc. I'd rather keep
+> > that SoC specific data around until a driver can deal with it
+> > in a standard way.
+> >
+> >> > Would a simple driver be doable that parses the compatible
+> >> > flags, takes care of the IRQ chaining, and gets some SoC specific
+> >> > function pointers as auxdata?
+> >>
+> >> Tero has been trying to move PRM/CM stuff to a separate drivers of
+> >> thier own. With that there wont be a need for auxdata even. - this
+> >> current logic will get merged with that driver - if and when that is
+> >> ready. I am not actually adding any driver logic here - just reusing
+> >> the logic and providing glue for using dt description instead of
+> >> hardcoded logic that the current mach-omap2 driver does.
+> >
+> > Well how about let's just leave out the non-standard parts for
+> > now, then once the PRM/CM driver can deal with, it can do things
+> > in a normal way?
+> 
+> Broken PRCM interrupt handling for DRA7. but if you like to state
+> which parts are ok, I can probably repost with just those and leave
+> the rest for when ever PRM / CM driver happens to work out (and as a
+> result keep DRA7 daisy chain support broken till then - so probably
+> blocking low power features such as suspend-to-ram till that work is
+> complete.).
 
-On Mon, Jul 21, 2014 at 1:22 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Fri, Jul 18, 2014 at 12:18:05PM +0530, Ajay kumar wrote:
->> Hi Thierry,
->>
->> Thanks for your comments.
->>
->> On Fri, Jul 18, 2014 at 4:18 AM, Thierry Reding
->> <thierry.reding@gmail.com> wrote:
->> > On Fri, Jul 18, 2014 at 02:20:39AM +0530, Ajay kumar wrote:
->> >> +devicetree@vger.kernel.org
->> >>
->> >> On Fri, Jul 18, 2014 at 2:13 AM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
->> >> > Add DT binding documentation for panel-lvds driver.
->> >> >
->> >> > Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->> >> > ---
->> >> >  .../devicetree/bindings/panel/panel-lvds.txt       |   50 ++++++++++++++++++++
->> >> >  1 file changed, 50 insertions(+)
->> >> >  create mode 100644 Documentation/devicetree/bindings/panel/panel-lvds.txt
->> >> >
->> >> > diff --git a/Documentation/devicetree/bindings/panel/panel-lvds.txt b/Documentation/devicetree/bindings/panel/panel-lvds.txt
->> >> > new file mode 100644
->> >> > index 0000000..fdf91da2
->> >> > --- /dev/null
->> >> > +++ b/Documentation/devicetree/bindings/panel/panel-lvds.txt
->> >> > @@ -0,0 +1,50 @@
->> >> > +panel interface for eDP/lvds panels
->> >> > +
->> >> > +Required properties:
->> >> > +  - compatible: "panel-lvds"
->> >
->> > I think I've said this before. I oppose the addition of this binding. We
->> > need to list a device-specific compatible value here, wildcards like
->> > this aren't a good choice. And then if we have that compatible value we
->> > can move most of the optional properties below into a driver.
->> Yes, "panel-lvds" is a wildcard for all lvds panels.
->> And since lvds panels from different vendors have different values
->> for power_up_delay, delay from video_to_backlight etc, I thought its
->> better to pick them up from device tree.
->
-> What I'm saying is that we shouldn't be adding this type of wildcard.
-> Instead the compatible property needs to list the specific type of panel
-> and since the driver will match on that specific compatible, the values
-> for the delays etc. are all implicit and don't have to be listed in
-> device tree.
->
->> >> > +Optional properties:
->> >
->> > If all these properties are optional, then what happens if a device tree
->> > node doesn't contain any of them? Doesn't that turn the driver into one
->> > big no-op?
->> No! We need to provide lcd-supply and backlight-supply.
->
-> What are those? I don't see them described anywhere.
->
->> >> > +       -lcd-enable-gpios:
->> >> > +               panel LCD poweron GPIO.
->> >> > +                       Indicates which GPIO needs to be powered up as output
->> >> > +                       to powerup/enable the switch to the LCD panel.
->> >> > +       -backlight-enable-gpios:
->> >> > +               panel LED enable GPIO.
->> >> > +                       Indicates which GPIO needs to be powered up as output
->> >> > +                       to enable the backlight.
->> >
->> > I've also said before that this really belongs in a backlight driver.
->> > Chances are that you'll want to have a way to set the brightness of the
->> > backlight as well, so simply an enable GPIO won't be good enough.
->> Ok. I can handle this in backlight driver itself (with some minor glitches).
->
-> You can make it work without glitches as well and we've discussed this
-> before.
->
->> But, how do I map bridge functions to panel functions now?
->> The bridge supports (pre_enable, enable, disable and post_disable) which I map
->> with (prepare, enable, disable and unprepare) of the panel, using a sample layer
->> called bridge to panel_binder.
->> Moving out the backlight control from panel means I really don't need
->> those extra
->> panel calls(prepare and unprepare)!
->> Then how to distribute 2 panel calls(enable and disable) across 4 bridge calls?
->
-> The .prepare() and .unprepare() functions are useful irrespective of
-> backlight control. What you want to separate is powering up the panel
-> from enabling the backlight. So .prepare() could be what's doing the
-> power up of the panel (and possibly other initialization required to
-> make it work) and .enable() could be as simple as turning on the
-> backlight.
->
-> What I'm saying is rather than use a backlight-enable-gpios property in
-> the panel, that property should be part of the backlight device and the
-> GPIO can then be toggled by the backlight driver when the backlight is
-> enabled.
->
->> >> > +       -panel-prepare-delay:
->> >> > +               delay value in ms required for panel_prepare process
->> >> > +                       Delay in ms needed for the panel LCD unit to
->> >> > +                       powerup completely.
->> >> > +                       ex: delay needed till eDP panel throws HPD.
->> >> > +                           delay needed so that we cans tart reading edid.
->> >
->> > If the panel signals HPD then we don't need this delay at all and we
->> > should just wait for HPD instead.
->> Not always for HPD, we need to wait for EDID module as well.
->
-> I always thought that HPD signalled readiness from the panel to provide
-> EDID, too. Are there really panels that need additional delays after HPD
-> has been signalled until the EDID can be read? Are there maybe other
-> ways to detect that EDID can't be read?
->
->> >> > +       -panel-enable-delay:
->> >> > +               delay value in ms required for panel_enable process
->> >> > +                       Delay in ms needed for the panel backlight/LED unit
->> >> > +                       to powerup, and delay needed between video_enable and
->> >> > +                       backlight_enable.
->> >> > +       -panel-disable-delay:
->> >> > +               delay value in ms required for panel_disable process
->> >> > +                       Delay in ms needed for the panel backlight/LED unit
->> >> > +                       powerdown, and delay needed between backlight_disable
->> >> > +                       and video_disable.
->> >> > +       -panel-unprepare-delay:
->> >> > +               delay value in ms required for panel_post_disable process
->> >> > +                       Delay in ms needed for the panel LCD unit to
->> >> > +                       to powerdown completely, and the minimum delay needed
->> >> > +                       before powering it on again.
->> >
->> > These delays are all panel specific and they don't vary per board, so
->> > they shouldn't go into the device tree at all.
->> But, fetching them from device tree would allow us to support all lvds
->> panels in this single driver.
->
-> You can do that even without having this data in device tree. My point
-> is that this is redundant information once you know the panel's specific
-> compatible value. Therefore there shouldn't be a need to list this in
-> device tree again.
->
-> Thierry
-I am planning to use panel-simple driver for the lvds panels. Let me test
-using that and if things workout well, then will drop this entire driver.
+Well if Tero is fine with this approach, looks OK for me. At least
+the .dts entries should work in the long run.
 
-Ajay
+Regards,
+
+Tony
