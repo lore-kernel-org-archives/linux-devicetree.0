@@ -1,128 +1,39 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: [PATCH v8 07/11] ARM: brcmstb: add misc. DT bindings for brcmstb
-Date: Mon, 21 Jul 2014 14:08:02 -0700
-Message-ID: <1405976886-27807-8-git-send-email-computersforpeace@gmail.com>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Matt Porter <mporter@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Marc Carino <marc.ceeeee@gmail.com>
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH] Documentation: dts: tcs6507: Fix wrong statement about #gpio-cells
+Date: Mon, 21 Jul 2014 23:17:18 +0200
+Message-ID: <1405977438-15517-1-git-send-email-marek@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, neilb-l3A5Bk7waGM@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marc Carino <marc.ceeeee@gmail.com>
+Update comment about gpio-cells which says not correctly to be set to 0.
+When we want to reference tca6507 gpio #gpio-cells must be set to 2 (it is
+already correct in example).
 
-Document the bindings that the Broadcom STB platform needs
-for proper bootup.
-
-Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 ---
- .../devicetree/bindings/arm/brcm-brcmstb.txt       | 95 ++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+ Documentation/devicetree/bindings/leds/tca6507.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
-new file mode 100644
-index 000000000000..3c436cc4f35d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
-@@ -0,0 +1,95 @@
-+ARM Broadcom STB platforms Device Tree Bindings
-+-----------------------------------------------
-+Boards with Broadcom Brahma15 ARM-based BCMxxxx (generally BCM7xxx variants)
-+SoC shall have the following DT organization:
-+
-+Required root node properties:
-+    - compatible: "brcm,bcm<chip_id>", "brcm,brcmstb"
-+
-+example:
-+/ {
-+    #address-cells = <2>;
-+    #size-cells = <2>;
-+    model = "Broadcom STB (bcm7445)";
-+    compatible = "brcm,bcm7445", "brcm,brcmstb";
-+
-+Further, syscon nodes that map platform-specific registers used for general
-+system control is required:
-+
-+    - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
-+    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
-+    - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
-+
-+example:
-+    rdb {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        compatible = "simple-bus";
-+        ranges = <0 0x00 0xf0000000 0x1000000>;
-+
-+        sun_top_ctrl: syscon@404000 {
-+            compatible = "brcm,bcm7445-sun-top-ctrl", "syscon";
-+            reg = <0x404000 0x51c>;
-+        };
-+
-+        hif_cpubiuctrl: syscon@3e2400 {
-+            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
-+            reg = <0x3e2400 0x5b4>;
-+        };
-+
-+        hif_continuation: syscon@452000 {
-+            compatible = "brcm,bcm7445-hif-continuation", "syscon";
-+            reg = <0x452000 0x100>;
-+        };
-+    };
-+
-+Lastly, nodes that allow for support of SMP initialization and reboot are
-+required:
-+
-+smpboot
-+-------
-+Required properties:
-+
-+    - compatible
-+        The string "brcm,brcmstb-smpboot".
-+
-+    - syscon-cpu
-+        A phandle / integer array property which lets the BSP know the location
-+        of certain CPU power-on registers.
-+
-+        The layout of the property is as follows:
-+            o a phandle to the "hif_cpubiuctrl" syscon node
-+            o offset to the base CPU power zone register
-+            o offset to the base CPU reset register
-+
-+    - syscon-cont
-+        A phandle pointing to the syscon node which describes the CPU boot
-+        continuation registers.
-+            o a phandle to the "hif_continuation" syscon node
-+
-+example:
-+    smpboot {
-+        compatible = "brcm,brcmstb-smpboot";
-+        syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
-+        syscon-cont = <&hif_continuation>;
-+    };
-+
-+reboot
-+-------
-+Required properties
-+
-+    - compatible
-+        The string property "brcm,brcmstb-reboot".
-+
-+    - syscon
-+        A phandle / integer array that points to the syscon node which describes
-+        the general system reset registers.
-+            o a phandle to "sun_top_ctrl"
-+            o offset to the "reset source enable" register
-+            o offset to the "software master reset" register
-+
-+example:
-+    reboot {
-+        compatible = "brcm,brcmstb-reboot";
-+        syscon = <&sun_top_ctrl 0x304 0x308>;
-+    };
+diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
+index d7221b8..bad9102 100644
+--- a/Documentation/devicetree/bindings/leds/tca6507.txt
++++ b/Documentation/devicetree/bindings/leds/tca6507.txt
+@@ -8,7 +8,7 @@ Required properties:
+ 
+ Optional properties:
+ - gpio-controller: allows lines to be used as output-only GPIOs.
+-- #gpio-cells: if present, must be 0.
++- #gpio-cells: if present, must not be 0.
+ 
+ Each led is represented as a sub-node of the ti,tca6507 device.
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
