@@ -1,83 +1,110 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v10 5/7] arm: add basic support for Mediatek MT6589 boards
-Date: Mon, 21 Jul 2014 15:14:16 +0200
-Message-ID: <53CD1228.4050401@linaro.org>
-References: <1404745988-32558-1-git-send-email-matthias.bgg@gmail.com> <1404745988-32558-6-git-send-email-matthias.bgg@gmail.com> <53C8ED0B.5080802@linaro.org> <127793649.dTvqVjg5LM@diego> <53C96DC7.10203@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Mon, 21 Jul 2014 15:22:05 +0200
+Message-ID: <2695740.osZpCPIB8S@avalon>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20140721143428.078b68a4@bbrezillon> <20140721125522.GE15238@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53C96DC7.10203@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko.stuebner@bq.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, tglx@linutronix.de, grant.likely@linaro.org, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, ak@linux.intel.com, hpa@linux.intel.com, akpm@linux-foundation.org, u.kleine-koenig@pengutronix.de, gregkh@linuxfoundation.org, fabf@skynet.be, rostedt@
+Content-Type: multipart/mixed; boundary="===============0480747321=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140721125522.GE15238@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2014 08:56 PM, Daniel Lezcano wrote:
-> On 07/18/2014 12:47 PM, Heiko St=C3=BCbner wrote:
->> Hi Daniel,
->>
->> Am Freitag, 18. Juli 2014, 11:46:51 schrieb Daniel Lezcano:
->>> On 07/07/2014 05:13 PM, Matthias Brugger wrote:
->>>> This adds a generic devicetree board file and a dtsi for boards
->>>> based on MT6589 SoCs from Mediatek.
->>>>
->>>> Apart from the generic parts (gic, clocks) the only component
->>>> currently supported are the timers.
->>>>
->>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>>> --
->>>
->>> I will take this patchset through my tree but this patch touches an=
- area
->>> I am not handling.
->>>
->>> Olof, Arnd, do you mind to ack this patch ?
->>
->> wouldn't it be easier to just take patches 1,2,3,4 through your tree
->> and let
->> patches 5,6,7 go through arm-soc?
->>
->> There is no compile-time dependency between the two parts, so they
->> will come
->> together nicely in linux-next and during the merge-window.
->>
->>
->> Also in [0] Olof wrote:
->>
->> ----------
->> Traditionally we usually take the DT changes through arm-soc, but as
->> long as we share the branch we might be ok. We tend to stick them in
->> different branches in our tree though, so rockchip will be a little
->> mis-sorted this release. Not a big deal, and we can deal with it.
->> -----------
->>
->> So I'd assume splitting the patchset this way might be a nice soluti=
-on?
->>
->>
->> Heiko
->>
->>
->> [0] http://www.spinics.net/lists/arm-kernel/msg347053.html
->
-> Indeed.
->
-> Olof, Arnd ? Will you take the patches 5-6-7 ?
+
+--===============0480747321==
+Content-Type: multipart/signed; boundary="nextPart1692194.q5RyYzooKS"; micalg="pgp-sha1"; protocol="application/pgp-signature"
 
 
-patches 1-4 applied to my tree.
+--nextPart1692194.q5RyYzooKS
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-Thanks
+Hi Thierry,
 
-   -- Daniel
+On Monday 21 July 2014 14:55:23 Thierry Reding wrote:
+> On Mon, Jul 21, 2014 at 02:34:28PM +0200, Boris BREZILLON wrote:
+> > On Mon, 21 Jul 2014 14:16:42 +0200 Laurent Pinchart wrote:
+> >> On Monday 21 July 2014 14:12:47 Thierry Reding wrote:
+> >>> On Mon, Jul 21, 2014 at 11:57:37AM +0200, Boris BREZILLON wrote:
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+[snip]
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> >>>> The new drm_display_info structure should look like this [2] (ex=
+cept
+> >>>> that color_formats and bpc have not be removed yet), and [1] is =
+just
+> >>>> here to show how the video_bus_format enum would look like.
+> >>>>=20
+> >>>> [1] http://code.bulix.org/rfd0yx-86557
+> >>>> [2] http://code.bulix.org/7n03b4-86556
+> >>>=20
+> >>> Quoting from your paste:
+> >>> =09+   const enum video_bus_format *bus_formats;
+> >>> =09+   int nbus_formats;
+> >>>=20
+> >>> Do we really need more than one?
+> >>=20
+> >> We do if we want to replace the color_formats and bpc fields.
+> >=20
+> > Yes, that's what I was about to answer :-).
+>=20
+> Maybe we don't need to replace color_formats and bpc field immediatel=
+y.
+> That could be done in a follow-up patch.
 
+We don't need to replace them right now, but we should at least agree o=
+n how=20
+to replace them. Introducing a new field that would need to be replaced=
+ in the=20
+near future when removing color_formats and bpc would be a waste of tim=
+e.
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--nextPart1692194.q5RyYzooKS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABAgAGBQJTzRP9AAoJEIkPb2GL7hl1CRwIAKsndmFK9LfGyqybt0xELJL3
+0hFgaQ217OVUnQAZIdRsV9ggUykJb8QDkkQ8PB9Wj3ozpTY2GawkPTxTkeEwnhgx
+mTR06286JIpstXd3sXHnHsnxaDZrTqCKShTmp2o3Tjm+5qpuAuS7bghPu5SVdwJG
+NLjnx/77UwBvPfwQ1F6cZne1Qb5GgbckBqYdXeJDcEOHGxH0iJJd/M34LwTjL/AG
+DXONP/ZINX7S/yRLX71kAG/btPNanEc8to70gLRdpkke+M55bsuU+AhDa28uhkpu
+scW+SWJ5ckflZVLMZZ/M6Il+Ub5w39kyx8v//qit4DPeyjyx0FHk/CuuDdfNFWo=
+=BXe8
+-----END PGP SIGNATURE-----
+
+--nextPart1692194.q5RyYzooKS--
+
+
+--===============0480747321==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0480747321==--
