@@ -1,144 +1,128 @@
-Return-Path: <pantelis.antoniou@konsulko.com>
-Return-Path: <pantelis.antoniou@konsulko.com>
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v7 5/9] OF: platform: Add OF notifier handler
-Date: Fri,  4 Jul 2014 19:59:24 +0300
-Message-Id: <1404493168-8980-6-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Return-Path: <kiran.padwal@smartplayin.com>
+Date: Mon, 21 Jul 2014 07:13:22 -0400 (EDT)
+Subject: RE: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
+From: kiran.padwal@smartplayin.com
+MIME-Version: 1.0
+Content-Type: multipart/alternative;boundary="----=_20140721071322000000_82253"
+In-Reply-To: <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
+ <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+Message-ID: <1405941202.870420632@apps.rackspace.com>
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add OF notifier handler needed for creating/destroying platform devices
-according to dynamic runtime changes in the DT live tree.
+------=_20140721071322000000_82253
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/base/platform.c     | 18 ++++++++++---
- drivers/of/platform.c       | 62 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_platform.h | 10 ++++++++
- 3 files changed, 87 insertions(+), 3 deletions(-)
+=0AHi,=0A =0AOn Thursday, July 17, 2014 11:25am, "Ivan T. Ivanov" <iivanov@=
+mm-sol.com> said:=0A=0A=0A=0A> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>=
+=0A> =0A> This is the pinctrl, pinmux, pinconf and gpiolib driver for the=
+=0A> Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.=0A>=
+ =0A> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>=0A> ---=0A> driver=
+s/pinctrl/Kconfig | 12 +=0A> drivers/pinctrl/Makefile | 1 +=0A.=0A[snip]=0A=
+.=0A> diff --git a/drivers/pinctrl/pinctrl-qpnp.c b/drivers/pinctrl/pinctrl=
+-qpnp.c=0A> new file mode 100644=0A> index 0000000..aedc72e=0A> --- /dev/nu=
+ll=0A> +++ b/drivers/pinctrl/pinctrl-qpnp.c=0A.=0A[snip]=0A.=0A> +#define Q=
+PNP_MPP_CS_OUT_40MA 7=0A> +=0A> +/* revision registers base address offsets=
+ */=0A =0Aunused define, can you please remove it=0A=0A> +#define QPNP_REG_=
+DIG_MINOR_REV 0x0=0A> +#define QPNP_REG_DIG_MAJOR_REV 0x1=0A =0Aditto=0A=0A=
+> +#define QPNP_REG_ANA_MINOR_REV 0x2=0A> +=0A> +/* type registers base add=
+ress offsets */=0A> +#define QPNP_REG_TYPE 0x4=0A> +#define QPNP_REG_SUBTYP=
+E 0x5=0A> +=0A> +/* GPIO peripheral type and subtype values */=0A> +#define=
+ QPNP_GPIO_TYPE 0x10=0A> +#define QPNP_GPIO_SUBTYPE_GPIO_4CH 0x1=0A> +#defi=
+ne QPNP_GPIO_SUBTYPE_GPIOC_4CH 0x5=0A> +#define QPNP_GPIO_SUBTYPE_GPIO_8CH =
+0x9=0A> +#define QPNP_GPIO_SUBTYPE_GPIOC_8CH 0xd=0A> +=0A> +/* mpp peripher=
+al type and subtype values */=0A> +#define QPNP_MPP_TYPE 0x11=0A> +#define =
+QPNP_MPP_SUBTYPE_4CH_NO_ANA_OUT 0x3=0A> +#define QPNP_MPP_SUBTYPE_ULT_4CH_N=
+O_ANA_OUT 0x4=0A> +#define QPNP_MPP_SUBTYPE_4CH_NO_SINK 0x5=0A> +#define QP=
+NP_MPP_SUBTYPE_ULT_4CH_NO_SINK 0x6=0A> +#define QPNP_MPP_SUBTYPE_4CH_FULL_F=
+UNC 0x7=0A> +#define QPNP_MPP_SUBTYPE_8CH_FULL_FUNC 0xf=0A> +=0A> +#define =
+QPNP_REG_STATUS1 0x8=0A> +#define QPNP_REG_STATUS1_VAL_MASK 0x1=0A> +#defin=
+e QPNP_REG_STATUS1_GPIO_EN_REV0_MASK 0x2=0A> +#define QPNP_REG_STATUS1_GPIO=
+_EN_MASK 0x80=0A> +#define QPNP_REG_STATUS1_MPP_EN_MASK 0x80=0A> +=0A> +/* =
+control register base address offsets */=0A> +#define QPNP_REG_MODE_CTL 0x4=
+0=0A> +#define QPNP_REG_DIG_VIN_CTL 0x41=0A> +#define QPNP_REG_DIG_PULL_CTL=
+ 0x42=0A =0Aditto=0A=0A> +#define QPNP_REG_DIG_IN_CTL 0x43=0A> +#define QPN=
+P_REG_DIG_OUT_CTL 0x45=0A> +#define QPNP_REG_EN_CTL 0x46=0A> +#define QPNP_=
+REG_AOUT_CTL 0x4b=0A.=0A[snip]=0A.=0A> +#define PM8XXX_MPP_AIN_ABUS3 6=0A> =
++#define PM8XXX_MPP_AIN_ABUS4 7=0A> +=0A> +#endif=0A> --=0A> 1.8.3.2=0A> =
+=0A> --=0A> To unsubscribe from this list: send the line "unsubscribe linux=
+-arm-msm" in=0A> the body of a message to majordomo@vger.kernel.org=0A> Mor=
+e majordomo info at http://vger.kernel.org/majordomo-info.html=0A> =0A =0AR=
+egards,=0A--Kiran
+------=_20140721071322000000_82253
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 9e9227e..ebba70b 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -938,10 +938,22 @@ int __init platform_bus_init(void)
- 
- 	error = device_register(&platform_bus);
- 	if (error)
--		return error;
--	error =  bus_register(&platform_bus_type);
-+		goto err_out;
-+
-+	error = bus_register(&platform_bus_type);
-+	if (error)
-+		goto err_unreg_dev;
-+
-+	error = of_platform_register_reconfig_notifier();
- 	if (error)
--		device_unregister(&platform_bus);
-+		goto err_unreg_bus;
-+
-+	return 0;
-+err_unreg_bus:
-+	bus_unregister(&platform_bus_type);
-+err_unreg_dev:
-+	device_unregister(&platform_bus);
-+err_out:
- 	return error;
- }
- 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 0197725..b5d21e2 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -547,4 +547,66 @@ void of_platform_depopulate(struct device *parent)
- }
- EXPORT_SYMBOL_GPL(of_platform_depopulate);
- 
-+#ifdef CONFIG_OF_DYNAMIC
-+
-+static struct notifier_block platform_of_notifier;
-+
-+static int of_platform_notify(struct notifier_block *nb,
-+				unsigned long action, void *arg)
-+{
-+	struct device_node *dn;
-+	struct platform_device *pdev_parent, *pdev;
-+	bool children_left;
-+
-+	if (action == OF_RECONFIG_DYNAMIC_CREATE_DEV) {
-+
-+		dn = arg;
-+
-+		/* verify that the parent is a bus */
-+		if (!of_match_node(of_default_bus_match_table, dn->parent))
-+			return NOTIFY_OK;	/* not for us */
-+
-+		/* pdev_parent may be NULL when no bus platform device */
-+		pdev_parent = of_find_device_by_node(dn->parent);
-+		pdev = of_platform_device_create(dn, NULL,
-+				pdev_parent ? &pdev_parent->dev : NULL);
-+		of_dev_put(pdev_parent);
-+
-+		if (pdev == NULL) {
-+			pr_err("%s: failed to create for '%s'\n",
-+					__func__, dn->full_name);
-+			/* of_platform_device_create tosses the error code */
-+			return notifier_from_errno(-EINVAL);
-+		}
-+
-+	} else if (action == OF_RECONFIG_DYNAMIC_DESTROY_DEV) {
-+
-+		dn = arg;
-+
-+		/* find our device by node */
-+		pdev = of_find_device_by_node(dn);
-+		if (pdev == NULL)
-+			return NOTIFY_OK;	/* no? not meant for us */
-+
-+		/* unregister takes one ref away */
-+		of_platform_device_destroy(&pdev->dev, &children_left);
-+
-+		/* and put the reference of the find */
-+		of_dev_put(pdev);
-+
-+	} else
-+		return NOTIFY_OK;
-+
-+	return NOTIFY_STOP;
-+}
-+
-+int of_platform_register_reconfig_notifier(void)
-+{
-+	platform_of_notifier.notifier_call = of_platform_notify;
-+	return of_reconfig_notifier_register(&platform_of_notifier);
-+}
-+EXPORT_SYMBOL_GPL(of_platform_register_reconfig_notifier);
-+
-+#endif
-+
- #endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index c2b0627..01fe5d6 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -84,4 +84,14 @@ static inline int of_platform_populate(struct device_node *root,
- static inline void of_platform_depopulate(struct device *parent) { }
- #endif
- 
-+#ifdef CONFIG_OF_DYNAMIC
-+extern int of_platform_register_reconfig_notifier(void);
-+#else
-+static inline int of_platform_register_reconfig_notifier(void)
-+{
-+	return 0;
-+}
-+#endif
-+
-+
- #endif	/* _LINUX_OF_PLATFORM_H */
--- 
-1.7.12
+<font face=3D"arial" size=3D"2"><p style=3D"margin:0;padding:0;font-family:=
+ arial; font-size: 10pt;">Hi,</p>=0A<p style=3D"margin:0;padding:0;font-fam=
+ily: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin:0;padding:0;f=
+ont-family: arial; font-size: 10pt;">On Thursday, July 17, 2014 11:25am, "I=
+van T. Ivanov" &lt;iivanov@mm-sol.com&gt; said:<br /><br /></p>=0A<div id=
+=3D"SafeStyles1405940668">=0A<p style=3D"margin:0;padding:0;font-family: ar=
+ial; font-size: 10pt;">&gt; From: "Ivan T. Ivanov" &lt;iivanov@mm-sol.com&g=
+t;<br />&gt; <br />&gt; This is the pinctrl, pinmux, pinconf and gpiolib dr=
+iver for the<br />&gt; Qualcomm GPIO and MPP sub-function blocks found in t=
+he PMIC chips.<br />&gt; <br />&gt; Signed-off-by: Ivan T. Ivanov &lt;iivan=
+ov@mm-sol.com&gt;<br />&gt; ---<br />&gt; drivers/pinctrl/Kconfig | 12 +<br=
+ />&gt; drivers/pinctrl/Makefile | 1 +</p>=0A<p style=3D"margin:0;padding:0=
+;font-family: arial; font-size: 10pt;">.</p>=0A<p style=3D"margin:0;padding=
+:0;font-family: arial; font-size: 10pt;">[snip]</p>=0A<p style=3D"margin:0;=
+padding:0;font-family: arial; font-size: 10pt;">.<br />&gt; diff --git a/dr=
+ivers/pinctrl/pinctrl-qpnp.c b/drivers/pinctrl/pinctrl-qpnp.c<br />&gt; new=
+ file mode 100644<br />&gt; index 0000000..aedc72e<br />&gt; --- /dev/null<=
+br />&gt; +++ b/drivers/pinctrl/pinctrl-qpnp.c</p>=0A<p style=3D"margin:0;p=
+adding:0;font-family: arial; font-size: 10pt;">.</p>=0A<p style=3D"margin:0=
+;padding:0;font-family: arial; font-size: 10pt;">[snip]</p>=0A<p style=3D"m=
+argin:0;padding:0;font-family: arial; font-size: 10pt;">.</p>=0A<p style=3D=
+"margin:0;padding:0;font-family: arial; font-size: 10pt;">&gt; +#define QPN=
+P_MPP_CS_OUT_40MA 7<br />&gt; +<br />&gt; +/* revision registers base addre=
+ss offsets */</p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font=
+-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin:0;padding:0;font-family: aria=
+l; font-size: 10pt;"><span style=3D"font-family: monospace;">unused define,=
+ can you please remove it</span></p>=0A<p style=3D"margin:0;padding:0;font-=
+family: arial; font-size: 10pt;"><br />&gt; +#define QPNP_REG_DIG_MINOR_REV=
+ 0x0<br />&gt; +#define QPNP_REG_DIG_MAJOR_REV 0x1</p>=0A<p style=3D"margin=
+:0;padding:0;font-family: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D=
+"margin:0;padding:0;font-family: arial; font-size: 10pt;">ditto</p>=0A<p st=
+yle=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;"><br />&gt; =
++#define QPNP_REG_ANA_MINOR_REV 0x2<br />&gt; +<br />&gt; +/* type register=
+s base address offsets */<br />&gt; +#define QPNP_REG_TYPE 0x4<br />&gt; +#=
+define QPNP_REG_SUBTYPE 0x5<br />&gt; +<br />&gt; +/* GPIO peripheral type =
+and subtype values */<br />&gt; +#define QPNP_GPIO_TYPE 0x10<br />&gt; +#de=
+fine QPNP_GPIO_SUBTYPE_GPIO_4CH 0x1<br />&gt; +#define QPNP_GPIO_SUBTYPE_GP=
+IOC_4CH 0x5<br />&gt; +#define QPNP_GPIO_SUBTYPE_GPIO_8CH 0x9<br />&gt; +#d=
+efine QPNP_GPIO_SUBTYPE_GPIOC_8CH 0xd<br />&gt; +<br />&gt; +/* mpp periphe=
+ral type and subtype values */<br />&gt; +#define QPNP_MPP_TYPE 0x11<br />&=
+gt; +#define QPNP_MPP_SUBTYPE_4CH_NO_ANA_OUT 0x3<br />&gt; +#define QPNP_MP=
+P_SUBTYPE_ULT_4CH_NO_ANA_OUT 0x4<br />&gt; +#define QPNP_MPP_SUBTYPE_4CH_NO=
+_SINK 0x5<br />&gt; +#define QPNP_MPP_SUBTYPE_ULT_4CH_NO_SINK 0x6<br />&gt;=
+ +#define QPNP_MPP_SUBTYPE_4CH_FULL_FUNC 0x7<br />&gt; +#define QPNP_MPP_SU=
+BTYPE_8CH_FULL_FUNC 0xf<br />&gt; +<br />&gt; +#define QPNP_REG_STATUS1 0x8=
+<br />&gt; +#define QPNP_REG_STATUS1_VAL_MASK 0x1<br />&gt; +#define QPNP_R=
+EG_STATUS1_GPIO_EN_REV0_MASK 0x2<br />&gt; +#define QPNP_REG_STATUS1_GPIO_E=
+N_MASK 0x80<br />&gt; +#define QPNP_REG_STATUS1_MPP_EN_MASK 0x80<br />&gt; =
++<br />&gt; +/* control register base address offsets */<br />&gt; +#define=
+ QPNP_REG_MODE_CTL 0x40<br />&gt; +#define QPNP_REG_DIG_VIN_CTL 0x41<br />&=
+gt; +#define QPNP_REG_DIG_PULL_CTL 0x42</p>=0A<p style=3D"margin:0;padding:=
+0;font-family: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin:0;p=
+adding:0;font-family: arial; font-size: 10pt;">ditto</p>=0A<p style=3D"marg=
+in:0;padding:0;font-family: arial; font-size: 10pt;"><br />&gt; +#define QP=
+NP_REG_DIG_IN_CTL 0x43<br />&gt; +#define QPNP_REG_DIG_OUT_CTL 0x45<br />&g=
+t; +#define QPNP_REG_EN_CTL 0x46<br />&gt; +#define QPNP_REG_AOUT_CTL 0x4b<=
+/p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;">=
+.</p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;=
+">[snip]</p>=0A<p style=3D"margin:0;padding:0;font-family: arial; font-size=
+: 10pt;">.<br />&gt; +#define PM8XXX_MPP_AIN_ABUS3 6<br />&gt; +#define PM8=
+XXX_MPP_AIN_ABUS4 7<br />&gt; +<br />&gt; +#endif<br />&gt; --<br />&gt; 1.=
+8.3.2<br />&gt; <br />&gt; --<br />&gt; To unsubscribe from this list: send=
+ the line "unsubscribe linux-arm-msm" in<br />&gt; the body of a message to=
+ majordomo@vger.kernel.org<br />&gt; More majordomo info at http://vger.ker=
+nel.org/majordomo-info.html<br />&gt;&nbsp;</p>=0A<p style=3D"margin:0;padd=
+ing:0;font-family: arial; font-size: 10pt;">&nbsp;</p>=0A<p style=3D"margin=
+:0;padding:0;font-family: arial; font-size: 10pt;">Regards,</p>=0A<p style=
+=3D"margin:0;padding:0;font-family: arial; font-size: 10pt;">--Kiran</p>=0A=
+</div></font>
+------=_20140721071322000000_82253--
