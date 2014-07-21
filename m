@@ -1,102 +1,71 @@
-From: Rob Herring <rob.herring@linaro.org>
-Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
-Date: Mon, 21 Jul 2014 12:00:42 -0500
-Message-ID: <CABGGisyDf7xt7CNii_NJ_stvBGNEeiXBMFxNkA2myS8OQ-VCtw@mail.gmail.com>
-References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
- <CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>
- <CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>
- <CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>
- <CAKohpokLqrydV3b=innvOWrW9ijXtZwPKdT5Ew65cjMxsY2Mvw@mail.gmail.com> <53CA8D95.8010108@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+	atmel-hlcdc-dc driver
+Date: Mon, 21 Jul 2014 18:06:30 +0100
+Message-ID: <20140721170630.GG21766@n2100.arm.linux.org.uk>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com> <20140721143428.078b68a4@bbrezillon> <20140721125522.GE15238@ulmo> <2695740.osZpCPIB8S@avalon> <20140721133034.GI15238@ulmo> <20140721154313.1de8bf6f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <53CA8D95.8010108@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mike Turquette <mike.turquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140721154313.1de8bf6f@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Tim Niemeyer <tim.niemeyer-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni@free-el>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 19, 2014 at 10:24 AM, Santosh Shilimkar
-<santosh.shilimkar@ti.com> wrote:
-> Viresh,
->
-> On Saturday 19 July 2014 10:46 AM, Viresh Kumar wrote:
->> On 19 July 2014 03:22, Olof Johansson <olof@lixom.net> wrote:
->>> What is the current API that is being broken, in your opinion?
->>
->> So, currently the nodes doesn't have any such property. And drivers
->> consider all of them as sharing clocks, for eg: cpufreq-cpu0.
->>
->> Now, if we use those older DT's after the new changes, drivers would
->> consider CPUs as having separate clocks. And that would be opposite
->> of what currently happens.
->>
->> Not sure if this counts as broken.
->>
->>>> But if that isn't the case, the bindings are very simple & clear to handle.
->>>> Diff for new bindings:
->>>
->>> It's somewhat confusing to see a diff to the patch instead of a new
->>> version. It seems to remove the cpu 0 entry now?
->>
->> Not really, I removed an unwanted example. This is how it looks:
->>
->>
->>
->> * Generic CPUFreq clock bindings
->>
->> Clock lines may or may not be shared among different CPUs on a platform.
->>
->> Possible configurations:
->> 1.) All CPUs share a single clock line
->> 2.) All CPUs have independent clock lines
->> 3.) CPUs within a group/cluster share clock line but each group/cluster have a
->>     separate line for itself
->>
->> Optional Properties:
->> - clock-master: Contains phandle of the master cpu controlling clocks.
->>
->>   Ideally there is nothing like a "master" CPU as any CPU can play with DVFS
->>   settings. But we have to choose one cpu out of a group, so that others can
->>   point to it.
->>
->>   If there is no "clock-master" property for a cpu node, it is considered as
->>   master. It may or may not have other slave CPUs pointing towards it.
->>
->
-> Sorry for jumping late, but one of the point I was raising as part of your
-> other series was to extend the CPU topology bindings to cover the voltage
-> domain information which is probably what is really needed to let the
-> CPUfreq extract the information. Not sure if it was already discussed.
->
-> After all the CPU clocks, cluster, clock-gating, power domains are pretty much
-> related. So instead of having new binding for CPUFreq, I was wondering whether
-> we can extend the CPU topology binding information to include missing information.
-> Scheduler work anyway needs that information.
->
-> Ref: Documentation/devicetree/bindings/arm/topology.txt
->
-> Does that make sense ?
+On Mon, Jul 21, 2014 at 03:43:13PM +0200, Boris BREZILLON wrote:
+> How about using a list instead of an array ?
+> This way we can add elements to this list when parsing the EDID.
+> 
+> Or we can just define a maximum size for the bus_formats array when
+> retrieving this info from EDID. If I'm correct we have at most 18 bus
+> formats:
+>  - 3 color formats:
+>    * RGB 4:4:4
+>    * YCbCr 4:4:4
+>    * YCbCr 4:4:2
+>  - 6 color depths: 6, 8, 10, 12, 14 and 16 bits per color
 
-To me, but every time I suggest adding things to the topology the ARM
-folks object... I really think we should have built the topology into
-the /cpus hierarchy. Then we could add properties at the correct place
-in the hierarchy where they are common.
+This starts to worry me.  What are we trying to do here - are we trying
+to encode the connection between the CRTC and the encoder, the encoder
+and the connector, or the connector and the device?
 
-I don't really like the proposal here. It just doesn't look like a
-clean description of the h/w.
+The encoder to connector and connector to device is mostly a function of
+the interface spec itself (for example, many HDMI encoders take either a
+RGB or YUV input and can convert it to the HDMI specified colourspaces for
+transmission over the connector.)
 
-Ignoring compatibility, I would like to see something like
-operating-points and/or the clock properties be moved up to /cpus if
-they are shared and be per cpu node when they are not. This of course
-does not work if you have independent OPPs for each cluster with a
-shared clock within cluster.
+If you want to do encoder to connector, what about VGA or some other
+analogue signalling such as TV composite?  It's easy to take this too
+far...
 
-The operating-points binding has obvious shortcomings and this is
-another example. Someone needs to step up with a new binding that
-addresses this and all other issues (e.g. turbo modes, extra per OPP
-data, etc.). I don't really want to see halfway fixes to the binding
-that ignore the other issues (unless there is a really simple
-solution).
+Surely the only one which matters is the CRTC to the encoder - that's
+certainly true of all the setups I've come across so far.  As for that
+interface, CRTCs I've seen can produce a /wide/ range of different
+representations.
 
-Rob
+Some CRTCs (eg, AMBA CLCD) produce R, G, B signals scrunched down on to
+the LSB bits of a LCD data bus (so RGB888 uses 24 bits, RGB444 would
+use the LSB 12 bits of those 24 - rather than outputting the R4 bits on
+a subset of the R8 bits.)
+
+What about RGB565 - where you have differing number of bits for the
+green channel from red/blue?
+
+Then you have red/blue colour swapping at the CRTC (and similar for YUV)
+such as on Dove / Armada.
+
+Then there are some encoders have the ability to almost arbitarily map
+their input pins according to whatever you choose (eg, TDA998x).
+
+This problem isn't as quite as simple as "this is what EDID gives us"
+and "these are the number of bits representing a colour".
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
