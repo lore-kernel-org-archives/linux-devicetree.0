@@ -1,73 +1,86 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv7 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and code clean
-Date: Mon, 21 Jul 2014 10:58:16 +0200
-Message-ID: <4966271.WeZIcVN3eT@wuerfel>
-References: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com> <53CCCB20.50802@samsung.com> <53CCCCA8.1030509@samsung.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Mon, 21 Jul 2014 10:59:12 +0200
+Message-ID: <20140721085908.GI8843@ulmo>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1404751384-5077-7-git-send-email-boris.brezillon@free-electrons.com>
+ <20140714100542.GB9870@ulmo>
+ <20140715120619.7f29c458@bbrezillon>
+ <20140715103136.GA6616@ulmo>
+ <20140718165152.0a9fde09@bbrezillon>
+ <20140718174334.209e99c1@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53CCCCA8.1030509@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, jic23@kernel.org, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7IgncvKP0CVPV/ZZ"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140718174334.209e99c1@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Tim Niemeyer <tim.niemeyer@corscience>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 July 2014 17:17:44 Chanwoo Choi wrote:
-> On 07/21/2014 05:11 PM, Chanwoo Choi wrote:
-> > On 07/21/2014 04:38 PM, Arnd Bergmann wrote:
-> >> On Monday 21 July 2014 11:17:44 Chanwoo Choi wrote:
-> >>>
-> >>> This patchset support Exynos3250 ADC (Analog Digital Converter) because
-> >>> Exynos3250 has additional special clock for ADC IP.
-> >>>
-> >>> Changes from v6:
-> >>> - Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
-> >>> - Use "sclk" clock name instead of "sclk_adc"
-> >>> - Remove un-necessary macro for exyno-adc-data-v2 structure.
-> >>> - Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
-> >>> - Change the number of ADC channels (Exynos3250 has only two channels for ADC)
-> >>>
-> >>
-> >> Looks good to me. Two small requests:
-> >>
-> >> a) if you don't mind, can you add my patch (1/2) to add support for s3c64xx to
-> >>    your series, adding your Signed-off-by line in addition to mine? I think
-> >>    that one was noncontroversial, while the second patch (2/2) need some more
-> >>    work to address the comments and do testing.
-> > 
-> > OK, I'll add this patch.
-> > But, I have a question.
-> > 
-> > Your patch add following compatible string.
-> > "s3c64100-adc" is right?
-> > 
-> >  static const struct of_device_id exynos_adc_match[] = {
-> >  	{
-> > +		.compatible = "samsung,s3c64100-adc",
-> > +		.data = &exynos_adc_s3c64xx_data,
-> > +	}, {
-> 
-> Additionally,
-> Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt has not included
-> "samsung,s3c6410-adc" compatible string. Should I add this string in exynos-adc.txt?
-> 
-> drivers/iio/adc/exynos-adc.c has not includeded following compatible string.
-> Should I add this compatible string on exynos-adc.c?
-> 
-> +			Must be "samsung,s3c2410-adc" for
-> +				the ADC in s3c2410 and compatibles
-> +			Must be "samsung,s3c2416-adc" for
-> +				the ADC in s3c2416 and compatibles
-> +			Must be "samsung,s3c2440-adc" for
-> +				the ADC in s3c2440 and compatibles
-> +			Must be "samsung,s3c2440-adc" for
-> +				the ADC in s3c2440 and compatibles
-> +			Must be "samsung,s3c2443-adc" for
-> +				the ADC in s3c2443 and compatibles
-> 
 
+--7IgncvKP0CVPV/ZZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, please.
+On Fri, Jul 18, 2014 at 05:43:34PM +0200, Boris BREZILLON wrote:
+[...]
+> > > > > > + - atmel,panel: Should contain a phandle with 2 parameters.
+> > > > > > +   The first cell is a phandle to a DRM panel device
+> > > > > > +   The second cell encodes the RGB mode, which can take the fo=
+llowing values:
+> > > > > > +   * 0: RGB444
+> > > > > > +   * 1: RGB565
+> > > > > > +   * 2: RGB666
+> > > > > > +   * 3: RGB888
+> > > > >=20
+> > > > > These are properties of the panel and should be obtained from the=
+ panel
+> > > > > directly rather than an additional cell in this specifier.
+> > > >=20
+> > > > Okay.
+> > > > What's the preferred way of doing this ?
+> > > > What about defining an rgb-mode property in the panel node.
+> > >=20
+> > > There's .bpc in struct drm_display_info, I suspect that it could be u=
+sed
+> > > for this. Alternatively, maybe we could extend the list of color form=
+ats
+> > > that go into drm_display_info.color_formats? RGB444 is already covere=
+d.
+> >=20
+>=20
+> I forgot to ask about bpc meaning. If, as I think, it means "bits per
+> color" then it cannot be used to encode RGB565 where green color is
+> encoded on 6 bits and red and blue are encoded on 5 bits.=20
 
-	Arnd
+Yes, I agree that bps is not a good fit for what you need here.
+
+Thierry
+
+--7IgncvKP0CVPV/ZZ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTzNZcAAoJEN0jrNd/PrOhBCcP/RhGt4elUooEp/AqHD7bMfm+
+RuMS1CvVBknan4436X+X+EzVUcc5UR0BX54Zxi+5+eo9uX3txAEYiZhXILe1AueK
+eWZsQErlsHjT/VMmtBTtXROKxPgPeoFDQbStsWDiTIR68oWQQ8cNCBFzVx1QDprV
+wJYQDvNKRjmM1UTZEkiwQJ97RamcTGfezOSYEWQ+zqMhspigB1YF+8VuIBqvaWUu
+8AI14xB9OVpoys5j5u0fAVvl1K3Sj+jLNo74ESyjw4x6cijp1VdfdiVTCrTPK3E0
+Ipl2gJZjLQURojYxly4VVKL4OAVt7InLEwlZvuEniArEyRNpgW4l4Yj2Gif9HQTR
+Mp2qxev6lT3c+7LJagRPoxanVWDvLIPA5upH6CazE4U8xD2SKB7CFNb7XK+YAPgh
+iYRav6A6M2Sm4tS7z2IxTFPrjPh3SZnj7iPeD/jxJ6WFxx8qfdHKQGOEW02TWN6f
+hXJCrnnmETxEt3ErnhjhdpQj2XLr1suNE9sUN6nk4TyVwrmIxE20xbnOSY6UyCj9
+K2cziINDeQ8oA/kSIxU3F4/APeT+G5XzlM75XeTqO3+M6NI7UXYy/mZdGZb/yYUa
+DtQ4jaU/MWF2g1B4R3LlxQjkqhKOUOgH3AIEdnMU5h740aeLWEpNh8XZPR+GJClL
+mxNZt2Grbm7SiKe3gJiv
+=cl++
+-----END PGP SIGNATURE-----
+
+--7IgncvKP0CVPV/ZZ--
