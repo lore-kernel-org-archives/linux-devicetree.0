@@ -1,51 +1,84 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller
- driver
-Date: Mon, 21 Jul 2014 19:16:16 +0300
-Message-ID: <1405959376.28520.3.camel@iivanov-dev>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
-	 <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-	 <CADsdr6Pwa+Vzugy7_-yWePmT6Wj5bpJRDq=qq2KLdG2woioY4g@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] iio: exynos-adc: add experimental touchscreen support
+Date: Mon, 21 Jul 2014 09:19:32 -0700
+Message-ID: <20140721161932.GA12180@core.coreip.homeip.net>
+References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
+ <5158672.dMAnnUQc7Z@wuerfel>
+ <20140721144442.GB9112@core.coreip.homeip.net>
+ <6569004.FG0IRy8WyL@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CADsdr6Pwa+Vzugy7_-yWePmT6Wj5bpJRDq=qq2KLdG2woioY4g@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: divya ojha <odivya77@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6569004.FG0IRy8WyL@wuerfel>
+Sender: linux-input-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Ben Dooks <ben-linux@fluff.org>, galak@codeaurora.org, ch.naveen@samsung.com, linux-input <linux-input@vger.kernel.org>, heiko.stuebner@bq.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-07-21 at 21:32 +0530, divya ojha wrote:
-> Hi,
+On Mon, Jul 21, 2014 at 05:11:27PM +0200, Arnd Bergmann wrote:
+> On Monday 21 July 2014 07:44:42 Dmitry Torokhov wrote:
+> > > > 
+> > > > It would be nice to actually close the device even if someone is
+> > > > touching screen. Please implement open/close methods and have them set a
+> > > > flag that you would check here.
+> > > 
+> > > Ok. I think it's even better to move the request_irq() into the open function,
+> > > which will avoid the flag and defer the error handling into the actual opening,
+> > > as well as syncing the running irq with the close function.
+> > 
+> > I do not quite like acquiring resources needed in open. I think drivers should
+> > do all resource acquisition in probe() and leave open()/close() to
+> > activate/quiesce devices.
 > 
-> On Thu, Jul 17, 2014 at 8:55 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> >
-> > This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> > Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
-> >
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > ---
-> >  drivers/pinctrl/Kconfig                       |   12 +
-> >  drivers/pinctrl/Makefile                      |    1 +
-> >  drivers/pinctrl/pinctrl-qpnp.c                | 1565 +++++++++++++++++++++++++
-> >  include/dt-bindings/pinctrl/qcom,pm8xxx-mpp.h |   34 +
-> ..
-> +       struct device *dev = qctrl->dev;
-> > +       struct pinctrl_pin_desc *desc, *descs;
-> > +       struct qpnp_padinfo *pad, *pads;
-> > +       int idx, ret, cnt, gps, ais, aos, css;
-> > +       const char **names, *format;
-> > +       unsigned int addr;
-> > +
-> > +       pads = devm_kcalloc(dev, qchip->npads, sizeof(*pads), GFP_KERNEL);
+> Ok, I'll move it back then. I'm not sure what I'm supposed to do
+> in open/close then. Isn't it enough to check info->input->users
+> like this?
 > 
-> when do we free these structures..?
+> static irqreturn_t exynos_ts_isr(int irq, void *dev_id)
+> {
+>         struct exynos_adc *info = dev_id;
+>         struct iio_dev *dev = dev_get_drvdata(info->dev);
+>         u32 x, y;
+>         bool pressed;
+>         int ret;
+> 
+>         while (info->input->users) {
+>                 ret = exynos_read_s3c64xx_ts(dev, &x, &y);
+>                 if (ret == -ETIMEDOUT)
+>                         break;
+> 
+>                 pressed = x & y & ADC_DATX_PRESSED;
+>                 if (!pressed) {
+>                         input_report_key(info->input, BTN_TOUCH, 0);
+>                         input_sync(info->input);
+>                         break;
+>                 }
+> 
+>                 input_report_abs(info->input, ABS_X, x & ADC_DATX_MASK);
+>                 input_report_abs(info->input, ABS_Y, y & ADC_DATY_MASK);
+>                 input_report_key(info->input, BTN_TOUCH, 1);
+>                 input_sync(info->input);
+> 
+>                 msleep(1);
+>         };
+> 
+>         writel(0, ADC_V1_CLRINTPNDNUP(info->regs));
+> 
+>         return IRQ_HANDLED;
+> }
+> 
+> I could do enable_irq()/disable_irq(), but that leaves a small
+> race at startup where we request the irq line and then immediately
+> disable it again.
 
-Good description could be found here[1].
+I think the above (or a separate flag in driver structure) coupled with
+enable/disable IRQ is fine - input core can deal with calls to input_report_*
+on devices that have been properly allocated but have not been registered yet.
 
-Regards,
-Ivan
+drivers/input/keyboard/samsung-keypad.c does similar handling.
 
-[1] Documentation/driver-model/devres.txt
+Thanks.
+
+-- 
+Dmitry
