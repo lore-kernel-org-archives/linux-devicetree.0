@@ -1,81 +1,158 @@
-From: divya ojha <odivya77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
-Date: Mon, 21 Jul 2014 21:32:24 +0530
-Message-ID: <CADsdr6Pwa+Vzugy7_-yWePmT6Wj5bpJRDq=qq2KLdG2woioY4g@mail.gmail.com>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
-	<1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405610748-7583-3-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v6 0/7] ARM generic idle states
+Date: Mon, 21 Jul 2014 17:06:19 +0100
+Message-ID: <1405958786-17243-1-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Chander Kashyap <chander.kashyap@linaro.org>, Geoff
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch is v6 of a previous posting:
 
-On Thu, Jul 17, 2014 at 8:55 PM, Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
-> From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->
-> This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
->
-> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/pinctrl/Kconfig                       |   12 +
->  drivers/pinctrl/Makefile                      |    1 +
->  drivers/pinctrl/pinctrl-qpnp.c                | 1565 +++++++++++++++++++++++++
->  include/dt-bindings/pinctrl/qcom,pm8xxx-mpp.h |   34 +
-..
-+       struct device *dev = qctrl->dev;
-> +       struct pinctrl_pin_desc *desc, *descs;
-> +       struct qpnp_padinfo *pad, *pads;
-> +       int idx, ret, cnt, gps, ais, aos, css;
-> +       const char **names, *format;
-> +       unsigned int addr;
-> +
-> +       pads = devm_kcalloc(dev, qchip->npads, sizeof(*pads), GFP_KERNEL);
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266488.html
 
-when do we free these structures..?
+Patchset has been tested on:
 
-> +       if (!pads)
-> +               return -ENOMEM;
-> +
-> +       descs = devm_kcalloc(dev, qchip->npads, sizeof(*descs), GFP_KERNEL);
+- Juno ARM64 platform and Foundation v8 models (based on Trusted Firmware
+  PSCI implementation available at [1])
+  # Patches to enable idle states on Juno and Foundation models can be made
+    available, current dts are not in the mainline kernel
+- TC2
+- Compile tested on Samsung Exynos
 
-ditto..
+Patch for Exynos CPUidle code depends on patch [2].
 
-> +       if (!descs)
-> +               return -ENOMEM;
-> +
-..
-> +               cnt = qctrl->groups[idx].npins;
-> +               if (!cnt)
-> +                       continue;
-> +
-> +               names = devm_kcalloc(dev, cnt, sizeof(names), GFP_KERNEL);
+[1] https://github.com/ARM-software/arm-trusted-firmware
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/274179.=
+html
 
-ditto..
+Changes in v6:
 
-> +               if (!names)
-> +                       return -ENOMEM;
+- Added ARM64 CPU init idle to CPU operations
+- Removed power-rank property; sorting depends on the cpu-idle-states phand=
+le
+  list order now
+- Added local-timer-stop flag
+- Removed useless TC2 and Exynos DT idle state entry-method bindings
+- Removed RTSM dts update
+- Updated PSCI suspend parameter and DT bindings
+- Updated PSCI parsing code
+- Rebased against 3.16-rc6
 
-> +#define PM8XXX_MPP_AIN_ABUS4                   7
-> +
-> +#endif
-> --
-> 1.8.3.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v5:
+
+- Added power-rank property to implement state sorting, following a number
+  of on/off list review comments
+- Added timer retained bool property
+- Ported TC2 big.LITTLE and Exynos drivers to DT initialization
+- Renamed s/OF/dt/ throughout the patch
+- Incorporated review comments and list discussions in the idle states
+  bindings documents
+- Rebased against 3.16-rc2
+
+Changes in v4:
+
+- States sorting using exit-latency
+- Added cosmetic review comments
+- Dropped RFC
+- Rebased against 3.15
+
+Changes in v3:
+
+- Streamlined the idle states bindings and added them to the series
+  http://www.spinics.net/lists/arm-kernel/msg316299.html
+- Sorting states through min-residency+exit-latency
+- Added debug strings formatting
+- Reworded min-residency-us idle state property
+- Removed power-domain properties from idle states waiting for code
+  examples requiring them to be defined
+
+Changes in v2:
+
+- Moved OF parsing code to drivers/cpuidle
+- Improved states detection and sorting through linked list
+- Split code in generic and ARM64 specific bits
+- Moved idle enter function into ARM64 idle driver
+- Refactored PSCI idle states register function
+- Renamed suspend operations and moved detection to ARM64 idle driver
+- Changed the way CPUIDLE_FLAG_TIMER_STOP is handled
+- Simplified idle state nodes parsing since according to the latest
+  bindings idle state nodes are a flat list, not hierarchical anymore
+- Used min-residency-us to sort the states, to be further discussed
+
+Idle states on most ARM platforms can be characterized by a set of
+parameters that are platform agnostic and describe the HW idle states
+features. So far, CPU idle drivers for ARM platforms required the definitio=
+n
+of parameters through static tables, duplicating control data for different
+platforms. Moreover, the lack of standardization on firmware interfaces
+hampered any standardization effort, resulting in CPU idle drivers for ARM
+platforms containing duplicated code and platform specific power down routi=
+nes.
+
+The introduction of the PSCI firmware interface, and more in general, well
+defined suspend back-ends, allows the definition of generic idle states and
+the respective kernel infrastructure to support them.
+
+Building on top of DT idle states bindings, that standardize idle states
+parameters and corresponding suspend back-ends, this patchset provides code
+that parses DT idle states nodes and builds at run-time the control data
+infrastructure required by the ARM CPU idle drivers.
+
+Idle states define an entry method (eg PSCI), that requires the respective
+ARM64 kernel back-end to be invoked to initialize idle states parameters, s=
+o
+that when the idle driver executes the back-end specific entry method a tab=
+le
+look-up can be carried out to retrieve the corresponding idle state paramet=
+er.
+
+On legacy ARM platforms, the DT idle states are just used to initialize
+states data.
+
+Lorenzo Pieralisi (7):
+  Documentation: arm: define DT idle states bindings
+  drivers: cpuidle: implement DT based idle states infrastructure
+  arm64: kernel: introduce cpu_init_idle CPU operation
+  arm64: add PSCI CPU_SUSPEND based cpu_suspend support
+  drivers: cpuidle: CPU idle ARM64 driver
+  drivers: cpuidle: initialize big.LITTLE driver through DT
+  drivers: cpuidle: initialize Exynos driver through DT
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |   8 +
+ .../devicetree/bindings/arm/idle-states.txt        | 679 +++++++++++++++++=
+++++
+ Documentation/devicetree/bindings/arm/psci.txt     |  14 +-
+ arch/arm/boot/dts/exynos4210.dtsi                  |  11 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |  11 +
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts         |  23 +
+ arch/arm64/include/asm/cpu_ops.h                   |   1 +
+ arch/arm64/include/asm/cpuidle.h                   |  13 +
+ arch/arm64/kernel/Makefile                         |   1 +
+ arch/arm64/kernel/cpuidle.c                        |  27 +
+ arch/arm64/kernel/psci.c                           |  89 +++
+ drivers/cpuidle/Kconfig                            |  13 +
+ drivers/cpuidle/Kconfig.arm                        |   2 +
+ drivers/cpuidle/Kconfig.arm64                      |  14 +
+ drivers/cpuidle/Makefile                           |   5 +
+ drivers/cpuidle/cpuidle-arm64.c                    | 128 ++++
+ drivers/cpuidle/cpuidle-big_little.c               |  43 +-
+ drivers/cpuidle/cpuidle-exynos.c                   |  37 +-
+ drivers/cpuidle/dt_idle_states.c                   | 138 +++++
+ drivers/cpuidle/dt_idle_states.h                   |   5 +
+ 20 files changed, 1227 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
+ create mode 100644 arch/arm64/include/asm/cpuidle.h
+ create mode 100644 arch/arm64/kernel/cpuidle.c
+ create mode 100644 drivers/cpuidle/Kconfig.arm64
+ create mode 100644 drivers/cpuidle/cpuidle-arm64.c
+ create mode 100644 drivers/cpuidle/dt_idle_states.c
+ create mode 100644 drivers/cpuidle/dt_idle_states.h
+
+--=20
+1.9.1
 
 
-Regards
-Divya
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
