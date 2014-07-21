@@ -1,51 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv7 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and code clean
-Date: Mon, 21 Jul 2014 09:38:55 +0200
-Message-ID: <14522743.f6oFhEQVv4@wuerfel>
-References: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 4/4] mfd: pm8921: rename pm8921-core driver
+Date: Mon, 21 Jul 2014 08:46:27 +0100
+Message-ID: <20140721074627.GT30888@lee--X1>
+References: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com>
+ <1405613855-27572-5-git-send-email-svarbanov@mm-sol.com>
+ <CABu_nUQDWbejZcQqFSJMhCokeMJXBcsCpsiJxz4gBsmtKiyivA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, jic23@kernel.org, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABu_nUQDWbejZcQqFSJMhCokeMJXBcsCpsiJxz4gBsmtKiyivA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Prakash Burla <burlaprakash.linuxkernel@gmail.com>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 July 2014 11:17:44 Chanwoo Choi wrote:
-> 
-> This patchset support Exynos3250 ADC (Analog Digital Converter) because
-> Exynos3250 has additional special clock for ADC IP.
-> 
-> Changes from v6:
-> - Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
-> - Use "sclk" clock name instead of "sclk_adc"
-> - Remove un-necessary macro for exyno-adc-data-v2 structure.
-> - Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
-> - Change the number of ADC channels (Exynos3250 has only two channels for ADC)
-> 
+On Fri, 18 Jul 2014, Prakash Burla wrote:
+> On Thu, Jul 17, 2014 at 9:47 PM, Stanimir Varbanov <svarbanov@mm-sol.=
+com> wrote:
+> > The pm8921-core driver presently supports pm8921 and pm8058
+> > Qualcomm PMICs.  To avoid confusion with new generation PMICs
+> > (like pm8941) rename the pm8921-core driver to more
+> > appropriate name pm8xxx-ssbi, which reflects better that
+> > those chips use SSBI interface.
+> >
+> > Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> > ---
+> >  drivers/mfd/Kconfig                          |   14 +++++-----
+> >  drivers/mfd/Makefile                         |    2 +-
+> >  drivers/mfd/{pm8921-core.c =3D> pm8xxx-ssbi.c} |   38 ++++++++++++=
++-------------
+> >  3 files changed, 27 insertions(+), 27 deletions(-)
+> >  rename drivers/mfd/{pm8921-core.c =3D> pm8xxx-ssbi.c} (92%)
+>  .
+>  [Nope]
 
-Looks good to me. Two small requests:
+What does this mean?
 
-a) if you don't mind, can you add my patch (1/2) to add support for s3c64xx to
-   your series, adding your Signed-off-by line in addition to mine? I think
-   that one was noncontroversial, while the second patch (2/2) need some more
-   work to address the comments and do testing.
+> >  MODULE_LICENSE("GPL v2");
+> > -MODULE_DESCRIPTION("PMIC 8921 core driver");
+> > +MODULE_DESCRIPTION("PMIC PM8XXX SSBI driver");
+> >  MODULE_VERSION("1.0");
+> > -MODULE_ALIAS("platform:pm8921-core");
+> > +MODULE_ALIAS("platform:pm8xxx-ssbi");
+>  >How about adding the module author as svarbanov@mm-sol.com/qcom?
+>       MODULE_AUTHOR("SVARBANOV<svarbanov@mm-sol.com>");
 
-b) For the "compatible" string, I think it makes sense to set a fallback to
-   "samsung,exynos-adc-v2" in the case for exynos3250, making the DT
-   representation
+Module author has the same standards as Git author.
 
-	compatible = "samsung,exynos3250-adc", "samsung,exynos-adc-v2";
+MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
 
-   It's not entirely compatible because of the addition of the clock, but
-   since the register layout is the same, I think it still make sense.
-
-Thanks.
-
-For the entire series,
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
