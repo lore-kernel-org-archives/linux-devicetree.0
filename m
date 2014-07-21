@@ -1,192 +1,96 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH v6 6/7] drivers: cpuidle: initialize big.LITTLE driver through DT
-Date: Mon, 21 Jul 2014 17:06:25 +0100
-Message-ID: <1405958786-17243-7-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1405958786-17243-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1405958786-17243-1-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Chander Kashyap <chander.kashyap@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Geoff
+From: pramod gurav <pramod.gurav.etc@gmail.com>
+Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
+Date: Mon, 21 Jul 2014 21:45:29 +0530
+Message-ID: <CAMf-jSmGE9_buYv1EjYPhzQXC4ke8hb7cp1mpGSjvSUhnoDnjg@mail.gmail.com>
+References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
+	<1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+	<CADsdr6Pwa+Vzugy7_-yWePmT6Wj5bpJRDq=qq2KLdG2woioY4g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADsdr6Pwa+Vzugy7_-yWePmT6Wj5bpJRDq=qq2KLdG2woioY4g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: divya ojha <odivya77@gmail.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-With the introduction of DT based idle states, CPUidle drivers for ARM
-can now initialize idle states data through properties in the device tree.
-
-This patch adds code to the big.LITTLE CPUidle driver to dynamically
-initialize idle states data through the updated device tree source file.
-
-Cc: Chander Kashyap <chander.kashyap@linaro.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
----
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 23 ++++++++++++++++
- drivers/cpuidle/Kconfig.arm                |  1 +
- drivers/cpuidle/cpuidle-big_little.c       | 43 +++++++++++++++-----------=
-----
- 3 files changed, 46 insertions(+), 21 deletions(-)
-
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts=
-/vexpress-v2p-ca15_a7.dts
-index a25c262..d61da86 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -38,6 +38,7 @@
- =09=09=09compatible =3D "arm,cortex-a15";
- =09=09=09reg =3D <0>;
- =09=09=09cci-control-port =3D <&cci_control1>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_BIG>;
- =09=09};
-=20
- =09=09cpu1: cpu@1 {
-@@ -45,6 +46,7 @@
- =09=09=09compatible =3D "arm,cortex-a15";
- =09=09=09reg =3D <1>;
- =09=09=09cci-control-port =3D <&cci_control1>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_BIG>;
- =09=09};
-=20
- =09=09cpu2: cpu@2 {
-@@ -52,6 +54,7 @@
- =09=09=09compatible =3D "arm,cortex-a7";
- =09=09=09reg =3D <0x100>;
- =09=09=09cci-control-port =3D <&cci_control2>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_LITTLE>;
- =09=09};
-=20
- =09=09cpu3: cpu@3 {
-@@ -59,6 +62,7 @@
- =09=09=09compatible =3D "arm,cortex-a7";
- =09=09=09reg =3D <0x101>;
- =09=09=09cci-control-port =3D <&cci_control2>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_LITTLE>;
- =09=09};
-=20
- =09=09cpu4: cpu@4 {
-@@ -66,6 +70,25 @@
- =09=09=09compatible =3D "arm,cortex-a7";
- =09=09=09reg =3D <0x102>;
- =09=09=09cci-control-port =3D <&cci_control2>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_LITTLE>;
-+=09=09};
-+
-+=09=09idle-states {
-+=09=09=09CLUSTER_SLEEP_BIG: cluster-sleep-big {
-+=09=09=09=09compatible =3D "arm,idle-state";
-+=09=09=09=09local-timer-stop;
-+=09=09=09=09entry-latency-us =3D <1000>;
-+=09=09=09=09exit-latency-us =3D <700>;
-+=09=09=09=09min-residency-us =3D <3500>;
-+=09=09=09};
-+
-+=09=09=09CLUSTER_SLEEP_LITTLE: cluster-sleep-little {
-+=09=09=09=09compatible =3D "arm,idle-state";
-+=09=09=09=09local-timer-stop;
-+=09=09=09=09entry-latency-us =3D <1000>;
-+=09=09=09=09exit-latency-us =3D <500>;
-+=09=09=09=09min-residency-us =3D <3000>;
-+=09=09=09};
- =09=09};
- =09};
-=20
-diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
-index b6d69e8..a9b089c 100644
---- a/drivers/cpuidle/Kconfig.arm
-+++ b/drivers/cpuidle/Kconfig.arm
-@@ -12,6 +12,7 @@ config ARM_BIG_LITTLE_CPUIDLE
- =09depends on ARCH_VEXPRESS_TC2_PM
- =09select ARM_CPU_SUSPEND
- =09select CPU_IDLE_MULTIPLE_DRIVERS
-+=09select DT_IDLE_STATES
- =09help
- =09  Select this option to enable CPU idle driver for big.LITTLE based
- =09  ARM systems. Driver manages CPUs coordination through MCPM and
-diff --git a/drivers/cpuidle/cpuidle-big_little.c b/drivers/cpuidle/cpuidle=
--big_little.c
-index b45fc62..0a88480 100644
---- a/drivers/cpuidle/cpuidle-big_little.c
-+++ b/drivers/cpuidle/cpuidle-big_little.c
-@@ -24,6 +24,8 @@
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
-=20
-+#include "dt_idle_states.h"
-+
- static int bl_enter_powerdown(struct cpuidle_device *dev,
- =09=09=09      struct cpuidle_driver *drv, int idx);
-=20
-@@ -61,32 +63,12 @@ static struct cpuidle_driver bl_idle_little_driver =3D =
-{
- =09.name =3D "little_idle",
- =09.owner =3D THIS_MODULE,
- =09.states[0] =3D ARM_CPUIDLE_WFI_STATE,
--=09.states[1] =3D {
--=09=09.enter=09=09=09=3D bl_enter_powerdown,
--=09=09.exit_latency=09=09=3D 700,
--=09=09.target_residency=09=3D 2500,
--=09=09.flags=09=09=09=3D CPUIDLE_FLAG_TIME_VALID |
--=09=09=09=09=09  CPUIDLE_FLAG_TIMER_STOP,
--=09=09.name=09=09=09=3D "C1",
--=09=09.desc=09=09=09=3D "ARM little-cluster power down",
--=09},
--=09.state_count =3D 2,
- };
-=20
- static struct cpuidle_driver bl_idle_big_driver =3D {
- =09.name =3D "big_idle",
- =09.owner =3D THIS_MODULE,
- =09.states[0] =3D ARM_CPUIDLE_WFI_STATE,
--=09.states[1] =3D {
--=09=09.enter=09=09=09=3D bl_enter_powerdown,
--=09=09.exit_latency=09=09=3D 500,
--=09=09.target_residency=09=3D 2000,
--=09=09.flags=09=09=09=3D CPUIDLE_FLAG_TIME_VALID |
--=09=09=09=09=09  CPUIDLE_FLAG_TIMER_STOP,
--=09=09.name=09=09=09=3D "C1",
--=09=09.desc=09=09=09=3D "ARM big-cluster power down",
--=09},
--=09.state_count =3D 2,
- };
-=20
- /*
-@@ -165,7 +147,8 @@ static int __init bl_idle_driver_init(struct cpuidle_dr=
-iver *drv, int cpu_id)
-=20
- static int __init bl_idle_init(void)
- {
--=09int ret;
-+=09int ret, i;
-+=09struct cpuidle_driver *drv;
-=20
- =09/*
- =09 * Initialize the driver just for a compliant set of machines
-@@ -187,6 +170,24 @@ static int __init bl_idle_init(void)
- =09if (ret)
- =09=09goto out_uninit_little;
-=20
-+=09 /* Start at index 1, index 0 standard WFI */
-+=09ret =3D dt_init_idle_driver(&bl_idle_big_driver, 1);
-+=09if (ret)
-+=09=09goto out_uninit_big;
-+
-+=09 /* Start at index 1, index 0 standard WFI */
-+=09ret =3D dt_init_idle_driver(&bl_idle_little_driver, 1);
-+=09if (ret)
-+=09=09goto out_uninit_big;
-+
-+=09drv =3D &bl_idle_big_driver;
-+=09for (i =3D 1; i < drv->state_count; i++)
-+=09=09drv->states[i].enter =3D bl_enter_powerdown;
-+
-+=09drv =3D &bl_idle_little_driver;
-+=09for (i =3D 1; i < drv->state_count; i++)
-+=09=09drv->states[i].enter =3D bl_enter_powerdown;
-+
- =09ret =3D cpuidle_register(&bl_idle_little_driver, NULL);
- =09if (ret)
- =09=09goto out_uninit_big;
---=20
-1.9.1
+On Mon, Jul 21, 2014 at 9:32 PM, divya ojha <odivya77@gmail.com> wrote:
+> Hi,
+>
+> On Thu, Jul 17, 2014 at 8:55 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+>> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>>
+>> This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+>> Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
+>>
+>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+>> ---
+>>  drivers/pinctrl/Kconfig                       |   12 +
+>>  drivers/pinctrl/Makefile                      |    1 +
+>>  drivers/pinctrl/pinctrl-qpnp.c                | 1565 +++++++++++++++++++++++++
+>>  include/dt-bindings/pinctrl/qcom,pm8xxx-mpp.h |   34 +
+> ..
+> +       struct device *dev = qctrl->dev;
+>> +       struct pinctrl_pin_desc *desc, *descs;
+>> +       struct qpnp_padinfo *pad, *pads;
+>> +       int idx, ret, cnt, gps, ais, aos, css;
+>> +       const char **names, *format;
+>> +       unsigned int addr;
+>> +
+>> +       pads = devm_kcalloc(dev, qchip->npads, sizeof(*pads), GFP_KERNEL);
+>
+> when do we free these structures..?
+>
+devm_kmalloc is the function that is called in the end. Memory
+allocated with this API will be automatically released after device
+exit.
+Read http://lxr.free-electrons.com/source/drivers/base/devres.c#L774 for more.
 
 
+>> +       if (!pads)
+>> +               return -ENOMEM;
+>> +
+>> +       descs = devm_kcalloc(dev, qchip->npads, sizeof(*descs), GFP_KERNEL);
+>
+> ditto..
+>
+>> +       if (!descs)
+>> +               return -ENOMEM;
+>> +
+> ..
+>> +               cnt = qctrl->groups[idx].npins;
+>> +               if (!cnt)
+>> +                       continue;
+>> +
+>> +               names = devm_kcalloc(dev, cnt, sizeof(names), GFP_KERNEL);
+>
+> ditto..
+>
+>> +               if (!names)
+>> +                       return -ENOMEM;
+>
+>> +#define PM8XXX_MPP_AIN_ABUS4                   7
+>> +
+>> +#endif
+>> --
+>> 1.8.3.2
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+> Regards
+> Divya
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
+-- 
+Thanks and Regards
+Pramod
