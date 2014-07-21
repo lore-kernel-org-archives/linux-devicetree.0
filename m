@@ -1,37 +1,51 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [v3 PATCH 2/6] dt: TI: Describe the ti reset DT entries
-Date: Mon, 21 Jul 2014 00:01:25 -0700
-Message-ID: <20140721070125.GM18374@atomide.com>
-References: <1405615531-15649-1-git-send-email-dmurphy@ti.com>
- <1405615531-15649-2-git-send-email-dmurphy@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv7 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and code clean
+Date: Mon, 21 Jul 2014 09:38:55 +0200
+Message-ID: <14522743.f6oFhEQVv4@wuerfel>
+References: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405615531-15649-2-git-send-email-dmurphy@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, jic23@kernel.org, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-* Dan Murphy <dmurphy@ti.com> [140717 09:47]:
-> +
-> +example:
-> +		prm: prm@4ae06000 {
-> +			compatible = "ti,omap5-prm";
-> +			reg = <0x4ae06000 0x3000>;
-> +
-> +			prm_resets: resets {
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				#reset-cells = <1>;
-> +			};
-> +		};
+On Monday 21 July 2014 11:17:44 Chanwoo Choi wrote:
+> 
+> This patchset support Exynos3250 ADC (Analog Digital Converter) because
+> Exynos3250 has additional special clock for ADC IP.
+> 
+> Changes from v6:
+> - Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
+> - Use "sclk" clock name instead of "sclk_adc"
+> - Remove un-necessary macro for exyno-adc-data-v2 structure.
+> - Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
+> - Change the number of ADC channels (Exynos3250 has only two channels for ADC)
+> 
 
-Probably the way to go with mapping various PRCM registers to separate
-drivers is to provide one or more syscon entries like we already have
-for the SCM. You may want to coordinate this with Tero.
+Looks good to me. Two small requests:
 
-Regards,
+a) if you don't mind, can you add my patch (1/2) to add support for s3c64xx to
+   your series, adding your Signed-off-by line in addition to mine? I think
+   that one was noncontroversial, while the second patch (2/2) need some more
+   work to address the comments and do testing.
 
-Tony
+b) For the "compatible" string, I think it makes sense to set a fallback to
+   "samsung,exynos-adc-v2" in the case for exynos3250, making the DT
+   representation
+
+	compatible = "samsung,exynos3250-adc", "samsung,exynos-adc-v2";
+
+   It's not entirely compatible because of the addition of the clock, but
+   since the register layout is the same, I think it still make sense.
+
+Thanks.
+
+For the entire series,
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+	Arnd
