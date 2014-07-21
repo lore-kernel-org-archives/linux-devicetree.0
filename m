@@ -1,71 +1,145 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
-	atmel-hlcdc-dc driver
-Date: Mon, 21 Jul 2014 18:06:30 +0100
-Message-ID: <20140721170630.GG21766@n2100.arm.linux.org.uk>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com> <20140721143428.078b68a4@bbrezillon> <20140721125522.GE15238@ulmo> <2695740.osZpCPIB8S@avalon> <20140721133034.GI15238@ulmo> <20140721154313.1de8bf6f@bbrezillon>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH RESEND] input: zforce: add regulator handling
+Date: Mon, 21 Jul 2014 10:42:08 -0700
+Message-ID: <20140721174208.GA34322@core.coreip.homeip.net>
+References: <2587208.XYbbI8xJiH@phil>
+ <2184295.fEH4OJRW3F@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140721154313.1de8bf6f@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Tim Niemeyer <tim.niemeyer-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni@free-el>
+In-Reply-To: <2184295.fEH4OJRW3F@diego>
+Sender: linux-input-owner@vger.kernel.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Henrik Rydberg <rydberg@euromail.se>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 21, 2014 at 03:43:13PM +0200, Boris BREZILLON wrote:
-> How about using a list instead of an array ?
-> This way we can add elements to this list when parsing the EDID.
-> 
-> Or we can just define a maximum size for the bus_formats array when
-> retrieving this info from EDID. If I'm correct we have at most 18 bus
-> formats:
->  - 3 color formats:
->    * RGB 4:4:4
->    * YCbCr 4:4:4
->    * YCbCr 4:4:2
->  - 6 color depths: 6, 8, 10, 12, 14 and 16 bits per color
+On Mon, Jul 21, 2014 at 05:20:11PM +0200, Heiko St=FCbner wrote:
+> From: Heiko Stuebner <heiko.stuebner@bq.com>
+>=20
+> It's possible that the controller has an individually switchable powe=
+r supply.
+> Therefore add support to control a supplying regulator.
+>=20
+> As this is not always the case, the regulator is requested as optiona=
+l.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
 
-This starts to worry me.  What are we trying to do here - are we trying
-to encode the connection between the CRTC and the encoder, the encoder
-and the connector, or the connector and the device?
+Applied (with minimal edits to avoid repeated IS_ERR/PTR_ERR), thank
+you.
 
-The encoder to connector and connector to device is mostly a function of
-the interface spec itself (for example, many HDMI encoders take either a
-RGB or YUV input and can convert it to the HDMI specified colourspaces for
-transmission over the connector.)
+> ---
+>  .../bindings/input/touchscreen/zforce_ts.txt       |  4 +++
+>  drivers/input/touchscreen/zforce_ts.c              | 30 ++++++++++++=
+++++++++++
+>  2 files changed, 34 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/zfor=
+ce_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/zforce_=
+ts.txt
+> index 2faf1f1..80c37df 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.t=
+xt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.t=
+xt
+> @@ -9,6 +9,9 @@ Required properties:
+>  - x-size: horizontal resolution of touchscreen
+>  - y-size: vertical resolution of touchscreen
+> =20
+> +Optional properties:
+> +- vdd-supply: Regulator controlling the controller supply
+> +
+>  Example:
+> =20
+>  	i2c@00000000 {
+> @@ -18,6 +21,7 @@ Example:
+>  			compatible =3D "neonode,zforce";
+>  			reg =3D <0x50>;
+>  			interrupts =3D <2 0>;
+> +			vdd-supply =3D <&reg_zforce_vdd>;
+> =20
+>  			gpios =3D <&gpio5 6 0>, /* INT */
+>  				<&gpio5 9 0>; /* RST */
+> diff --git a/drivers/input/touchscreen/zforce_ts.c b/drivers/input/to=
+uchscreen/zforce_ts.c
+> index 01d30ce..39ca962 100644
+> --- a/drivers/input/touchscreen/zforce_ts.c
+> +++ b/drivers/input/touchscreen/zforce_ts.c
+> @@ -29,6 +29,8 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/input/mt.h>
+>  #include <linux/platform_data/zforce_ts.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/delay.h>
+>  #include <linux/of.h>
+>  #include <linux/of_gpio.h>
+> =20
+> @@ -117,6 +119,8 @@ struct zforce_ts {
+>  	const struct zforce_ts_platdata *pdata;
+>  	char			phys[32];
+> =20
+> +	struct regulator	*reg_vdd;
+> +
+>  	bool			suspending;
+>  	bool			suspended;
+>  	bool			boot_complete;
+> @@ -690,6 +694,11 @@ static void zforce_reset(void *data)
+>  	struct zforce_ts *ts =3D data;
+> =20
+>  	gpio_set_value(ts->pdata->gpio_rst, 0);
+> +
+> +	udelay(10);
+> +
+> +	if (!IS_ERR(ts->reg_vdd))
+> +		regulator_disable(ts->reg_vdd);
+>  }
+> =20
+>  static struct zforce_ts_platdata *zforce_parse_dt(struct device *dev=
+)
+> @@ -765,10 +774,31 @@ static int zforce_probe(struct i2c_client *clie=
+nt,
+>  		return ret;
+>  	}
+> =20
+> +	ts->reg_vdd =3D devm_regulator_get_optional(&client->dev, "vdd");
+> +	if (IS_ERR(ts->reg_vdd) && PTR_ERR(ts->reg_vdd) =3D=3D -EPROBE_DEFE=
+R)
+> +		return PTR_ERR(ts->reg_vdd);
+> +
+> +	if (!IS_ERR(ts->reg_vdd)) {
+> +		ret =3D regulator_enable(ts->reg_vdd);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/*
+> +		 * according to datasheet add 100us grace time after regular
+> +		 * regulator enable delay.
+> +		 */
+> +		udelay(100);
+> +	}
+> +
+>  	ret =3D devm_add_action(&client->dev, zforce_reset, ts);
+>  	if (ret) {
+>  		dev_err(&client->dev, "failed to register reset action, %d\n",
+>  			ret);
+> +
+> +		/* hereafter the regulator will be disabled by the action */
+> +		if (!IS_ERR(ts->reg_vdd))
+> +			regulator_disable(ts->reg_vdd);
+> +
+>  		return ret;
+>  	}
+> =20
+> --=20
+> 1.9.0
+>=20
 
-If you want to do encoder to connector, what about VGA or some other
-analogue signalling such as TV composite?  It's easy to take this too
-far...
-
-Surely the only one which matters is the CRTC to the encoder - that's
-certainly true of all the setups I've come across so far.  As for that
-interface, CRTCs I've seen can produce a /wide/ range of different
-representations.
-
-Some CRTCs (eg, AMBA CLCD) produce R, G, B signals scrunched down on to
-the LSB bits of a LCD data bus (so RGB888 uses 24 bits, RGB444 would
-use the LSB 12 bits of those 24 - rather than outputting the R4 bits on
-a subset of the R8 bits.)
-
-What about RGB565 - where you have differing number of bits for the
-green channel from red/blue?
-
-Then you have red/blue colour swapping at the CRTC (and similar for YUV)
-such as on Dove / Armada.
-
-Then there are some encoders have the ability to almost arbitarily map
-their input pins according to whatever you choose (eg, TDA998x).
-
-This problem isn't as quite as simple as "this is what EDID gives us"
-and "these are the number of bits representing a colour".
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+--=20
+Dmitry
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
