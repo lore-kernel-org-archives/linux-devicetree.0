@@ -1,112 +1,71 @@
-From: kiran.padwal@smartplayin.com
-Subject: RE: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
-Date: Mon, 21 Jul 2014 07:29:37 -0400 (EDT)
-Message-ID: <1405942177.790123849@apps.rackspace.com>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
- <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 4/7] ARM: OMAP4+: PRM: register interrupt information
+ from DT
+Date: Mon, 21 Jul 2014 07:08:47 -0500
+Message-ID: <CAGo_u6q21_z-+mTWFD2T36mAXahwZt8-GBH0J3yuy+11CLYbxA@mail.gmail.com>
+References: <1402025761-16831-1-git-send-email-nm@ti.com>
+	<1402025761-16831-5-git-send-email-nm@ti.com>
+	<20140721105149.GU18374@atomide.com>
+	<CAGo_u6q2NOxWVG3LOfAyk8qLZss5N6MxCvYkf-yN8c4ec4mftw@mail.gmail.com>
+	<20140721112807.GA18374@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140721112807.GA18374@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: dt list <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Rajendra Nayak <rnayak@ti.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jul 21, 2014 at 6:28 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Nishanth Menon <nm@ti.com> [140721 04:24]:
+>> On Mon, Jul 21, 2014 at 5:51 AM, Tony Lindgren <tony@atomide.com> wrote:
+>> >
+>> >> +static struct of_device_id omap_prm_dt_match_table[] = {
+>> >> +     { .compatible = "ti,omap4-prm" },
+>> >> +     { .compatible = "ti,omap5-prm" },
+>> >> +     { .compatible = "ti,dra7-prm" },
+>> >> +     { }
+>> >> +};
+>> >> +
+>> >
+>> > I'd like to avoid adding more driver like stuff to mach-omap2
+>> > and parsing compatible flags and dealing with interupts sounds
+>> > very driver like.. But maybe just the handling can be moved
+>> > out?
+>>
+>> I understand your view, but, Handling of interrupts is already in
+>> place even now in mach-omap2. Currently the prm devices are handled by
+>> mach-omap2 and all this does it to prevent hardcoding of irq numbers
+>> within the current code.
+>
+> Yeah but at a cost of no dev entry, no probe etc. I'd rather keep
+> that SoC specific data around until a driver can deal with it
+> in a standard way.
+>
+>> > Would a simple driver be doable that parses the compatible
+>> > flags, takes care of the IRQ chaining, and gets some SoC specific
+>> > function pointers as auxdata?
+>>
+>> Tero has been trying to move PRM/CM stuff to a separate drivers of
+>> thier own. With that there wont be a need for auxdata even. - this
+>> current logic will get merged with that driver - if and when that is
+>> ready. I am not actually adding any driver logic here - just reusing
+>> the logic and providing glue for using dt description instead of
+>> hardcoded logic that the current mach-omap2 driver does.
+>
+> Well how about let's just leave out the non-standard parts for
+> now, then once the PRM/CM driver can deal with, it can do things
+> in a normal way?
 
-On Thursday, July 17, 2014 11:25am, "Ivan T. Ivanov" <iivanov@mm-sol.com> said:
+Broken PRCM interrupt handling for DRA7. but if you like to state
+which parts are ok, I can probably repost with just those and leave
+the rest for when ever PRM / CM driver happens to work out (and as a
+result keep DRA7 daisy chain support broken till then - so probably
+blocking low power features such as suspend-to-ram till that work is
+complete.).
 
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> 
-> This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
-> 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  drivers/pinctrl/Kconfig                       |   12 +
->  drivers/pinctrl/Makefile                      |    1 +
->  drivers/pinctrl/pinctrl-qpnp.c                | 1565 +++++++++++++++++++++++++
-.
-<snip>
-.
-> diff --git a/drivers/pinctrl/pinctrl-qpnp.c b/drivers/pinctrl/pinctrl-qpnp.c
-> new file mode 100644
-> index 0000000..aedc72e
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-qpnp.c
-.
-<snip>
-.
-> +#define QPNP_MPP_CS_OUT_35MA			6
-> +#define QPNP_MPP_CS_OUT_40MA			7
-> +
-> +/* revision registers base address offsets */
-
-unused define, can you please remove it
-
-> +#define QPNP_REG_DIG_MINOR_REV			0x0
-> +#define QPNP_REG_DIG_MAJOR_REV			0x1
-
-ditto
-
-> +#define QPNP_REG_ANA_MINOR_REV			0x2
-> +
-> +/* type registers base address offsets */
-> +#define QPNP_REG_TYPE				0x4
-> +#define QPNP_REG_SUBTYPE			0x5
-> +
-> +/* GPIO peripheral type and subtype values */
-> +#define QPNP_GPIO_TYPE				0x10
-> +#define QPNP_GPIO_SUBTYPE_GPIO_4CH		0x1
-> +#define QPNP_GPIO_SUBTYPE_GPIOC_4CH		0x5
-> +#define QPNP_GPIO_SUBTYPE_GPIO_8CH		0x9
-> +#define QPNP_GPIO_SUBTYPE_GPIOC_8CH		0xd
-> +
-> +/* mpp peripheral type and subtype values */
-> +#define QPNP_MPP_TYPE				0x11
-> +#define QPNP_MPP_SUBTYPE_4CH_NO_ANA_OUT		0x3
-> +#define QPNP_MPP_SUBTYPE_ULT_4CH_NO_ANA_OUT	0x4
-> +#define QPNP_MPP_SUBTYPE_4CH_NO_SINK		0x5
-> +#define QPNP_MPP_SUBTYPE_ULT_4CH_NO_SINK	0x6
-> +#define QPNP_MPP_SUBTYPE_4CH_FULL_FUNC		0x7
-> +#define QPNP_MPP_SUBTYPE_8CH_FULL_FUNC		0xf
-> +
-> +#define QPNP_REG_STATUS1			0x8
-> +#define QPNP_REG_STATUS1_VAL_MASK		0x1
-> +#define QPNP_REG_STATUS1_GPIO_EN_REV0_MASK	0x2
-> +#define QPNP_REG_STATUS1_GPIO_EN_MASK		0x80
-> +#define QPNP_REG_STATUS1_MPP_EN_MASK		0x80
-> +
-> +/* control register base address offsets */
-> +#define QPNP_REG_MODE_CTL			0x40
-> +#define QPNP_REG_DIG_VIN_CTL			0x41
-> +#define QPNP_REG_DIG_PULL_CTL			0x42
-
-ditto
-
-> +#define QPNP_REG_DIG_IN_CTL			0x43
-> +#define QPNP_REG_DIG_OUT_CTL			0x45
-> +#define QPNP_REG_EN_CTL				0x46
-> +#define QPNP_REG_AOUT_CTL			0x4b
-> +#define QPNP_REG_AIN_CTL			0x4a
-> +#define QPNP_REG_SINK_CTL			0x4c
-> +
-.
-<snip>
-.
-> +#define PM8XXX_MPP_AIN_ABUS3			6
-> +#define PM8XXX_MPP_AIN_ABUS4			7
-> +
-> +#endif
-> --
-> 1.8.3.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+-- 
+---
 Regards,
---Kiran
+Nishanth Menon
