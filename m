@@ -1,59 +1,50 @@
-From: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>
-Subject: Re: [RFC Patch V1 22/30] mm, of: Use cpu_to_mem()/numa_mem_id() to
- support memoryless node
-Date: Mon, 21 Jul 2014 10:52:41 -0700
-Message-ID: <20140721175241.GF4156@linux.vnet.ibm.com>
-References: <1405064267-11678-1-git-send-email-jiang.liu@linux.intel.com>
- <1405064267-11678-23-git-send-email-jiang.liu@linux.intel.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm: pxa: add non device-tree timer link to clocksource
+Date: Mon, 21 Jul 2014 20:15:16 +0200
+Message-ID: <87oawivarv.fsf@free.fr>
+References: <1405356724-32207-1-git-send-email-robert.jarzmik@free.fr>
+	<1405356724-32207-4-git-send-email-robert.jarzmik@free.fr>
+	<53CD25A4.7030606@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hotplug-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405064267-11678-23-git-send-email-jiang.liu@linux.intel.com>
-Sender: linux-hotplug-owner@vger.kernel.org
-To: Jiang Liu <jiang.liu@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mel Gorman <mgorman@suse.de>, David Rientjes <rientjes@google.com>, Mike Galbraith <umgwanakikbuti@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Luck <tony.luck@intel.com>, linux-mm@kvack.org, linux-hotplug@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53CD25A4.7030606-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (Daniel Lezcano's message of "Mon,
+	21 Jul 2014 16:37:24 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11.07.2014 [15:37:39 +0800], Jiang Liu wrote:
-> When CONFIG_HAVE_MEMORYLESS_NODES is enabled, cpu_to_node()/numa_node_id()
-> may return a node without memory, and later cause system failure/panic
-> when calling kmalloc_node() and friends with returned node id.
-> So use cpu_to_mem()/numa_mem_id() instead to get the nearest node with
-> memory for the/current cpu.
-> 
-> If CONFIG_HAVE_MEMORYLESS_NODES is disabled, cpu_to_mem()/numa_mem_id()
-> is the same as cpu_to_node()/numa_node_id().
-> 
-> Signed-off-by: Jiang Liu <jiang.liu@linux.intel.com>
-> ---
->  drivers/of/base.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b9864806e9b8..40d4772973ad 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -85,7 +85,7 @@ EXPORT_SYMBOL(of_n_size_cells);
->  #ifdef CONFIG_NUMA
->  int __weak of_node_to_nid(struct device_node *np)
->  {
-> -	return numa_node_id();
-> +	return numa_mem_id();
->  }
->  #endif
+Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-Um, NAK. of_node_to_nid() returns the NUMA node ID for a given device
-tree node. The default should be the physically local NUMA node, not the
-nearest memory-containing node.
+> On 07/14/2014 06:52 PM, Robert Jarzmik wrote:
+>> As clocksource pxa_timer was moved to clocksource framework, the
+>> pxa_timer initialization needs to be a bit amended, to pass the
+>> necessary informations to clocksource, ie :
+>>   - the timer interrupt (mach specific)
+>>   - the timer registers base (ditto)
+>>   - the timer clockrate
+>>
+>> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+>>
+>> ---
+>> Since V2: Arnd's comment : moved extern declaration into .h file
+>> ---
+>
+> Shall I take the patches 4-5 also ?
+Mmm you mean patch 4 I think.
+Then I'd like you too, because it's linked in the serie, and without it the
+former non-DT platforms break, hence I'd like all the serie to go through 1
+tree.
 
-I think the general direction of this patchset is good -- what NUMA
-information do we actually are about at each callsite. But the execution
-is blind and doesn't consider at all what the code is actually doing.
-The changelogs are all identical and don't actually provide any
-information about what errors this (or any) specific patch are
-resolving.
+Yet we'd need Haojian's ack here. Haojian, would you give your blessing on the
+serie and agree that Daniel carries all the patches including patch 4/4 ?
 
-Thanks,
-Nish
+Cheers.
 
+--
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
