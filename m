@@ -1,227 +1,124 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v6 05/14] drm/exynos: dsi: add TE interrupt handler to
- support LCD I80 interface
-Date: Mon, 21 Jul 2014 16:01:03 +0200
-Message-ID: <53CD1D1F.1050109@samsung.com>
-References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com>
- <1405587689-1466-6-git-send-email-yj44.cho@samsung.com>
+From: caesar <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
+ Rockchip SoCs
+Date: Mon, 21 Jul 2014 22:10:04 +0800
+Message-ID: <53CD1F3C.3070000@rock-chips.com>
+References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com> <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com> <20140721085001.GG8843@ulmo> <53CD0E82.6030901@rock-chips.com> <20140721132723.GH15238@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1405587689-1466-6-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140721132723.GH15238@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: heiko@sntech.de, b.galvani@gmail.com, cf@rock-chips.com, huangtao@rock-chips.com, addy.ke@rock-chips.com, xjq@rock-chips.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/17/2014 11:01 AM, YoungJun Cho wrote:
-> To support LCD I80 interface, the DSI host should register
-> TE interrupt handler from the TE GPIO of attached panel.
-> So the panel generates a tearing effect synchronization signal
-> then the DSI host calls the CRTC device manager to trigger
-> to transfer video image.
-> 
 
-This whole patch seems to be a hack.
+=E4=BA=8E 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 21:27, Thierry Reding =E5=
+=86=99=E9=81=93:
+> On Mon, Jul 21, 2014 at 08:58:42PM +0800, caesar wrote:
+>> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 16:50, Thierry Reding =
+=E5=86=99=E9=81=93:
+>>> On Sat, Jul 19, 2014 at 08:55:29PM +0800, Caesar Wang wrote:
+> [...]
+>>>>   	struct rockchip_pwm_chip *pc;
+>>>>   	struct resource *r;
+>>>>   	int ret;
+>>>> @@ -119,7 +182,10 @@ static int rockchip_pwm_probe(struct platform=
+_device *pdev)
+>>>>   		return -ENOMEM;
+>>>>   	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> -	pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>>>> +	if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
+>>>> +		pc->base =3D devm_ioremap(&pdev->dev, r->start, resource_size(r=
+));
+>>>> +	else
+>>>> +		pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>>> Sorry, this still isn't an option. You really shouldn't remap I/O
+>>> regions that other drivers may be using. You hinted at a shared reg=
+ister
+>>> space during the review of the initial version. Can you provide mor=
+e
+>>> detail about what exactly the memory map looks like of the rk3288? =
+Is
+>>> there some kind of technical reference manual that I could look at?=
+ Or
+>>> do you have a device tree extract that shows what the memory map lo=
+oks
+>>> like?
+>>>
+>>> Thierry
+>> Maybe,you can look at the ARM: dts: rk3288:
+>> https://github.com/rkchrome/kernel/blob/master/arch/arm/boot/dts/rk3=
+288.dtsi
+>> There is some lcdc and vop-pwm map address for rk3288.
+>>
+>> ,and you can look at the vop-introduce.pdf and vop-register.pdf in A=
+nnex.
+>>
+>> Maybe,I should put the vop-pwm in lcdc driver,but I don't hope do so=
+ it.
+>>
+>> Could you give a suggestion to solve it? Thanks.
+> It looks like you could turn the lcdc device into an MFD device so th=
+at
+> it can instantiate two devices, one for the display controller, the
+> other for the PWM. Or perhaps it would even work with only a single
+> child device.
+>
+> The device tree would become something like this:
+>
+> 	lcdc@ff930000 {
+> 		compatible =3D "rockchip,rk3288-lcdc";
+> 		...
+>
+> 		pwm@ff9301a0 {
+> 			compatible =3D "rockchip,vop-pwm";
+> 			...
+> 		};
+> 	};
+>
+> And your driver would do something like:
+>
+> 	static const struct resource pwm_resources[] =3D {
+> 		{
+> 			.start =3D 0x1a0,
+> 			.end =3D 0x1af,
+> 			.flags =3D IORESOURCE_MEM,
+> 		},
+> 	};
+>
+> 	static const struct mfd_cell subdevices[] =3D {
+> 		{
+> 			.name =3D "pwm",
+> 			.id =3D 1,
+> 			.of_compatible =3D "rockchip,vop-pwm",
+> 			.num_resources =3D ARRAY_SIZE(pwm_resources),
+> 			.resources =3D pwm_resources,
+> 		},
+> 	};
+>
+> 	static int lcdc_probe(struct platform_device *pdev)
+> 	{
+> 		struct resource *regs;
+> 		...
+>
+> 		regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>
+> 		...
+>
+> 		err =3D mfd_add_devices(&pdev->dev, 0, subdevices, ARRAY_SIZE(subde=
+vices),
+> 				      regs, NULL, NULL);
+> 		...
+> 	}
+>
+> Thierry
 
-I think it is not a good idea to parse property of one device by another
-device's driver.
+Seems resonable.
 
-Especially here TE GPIO belongs to the panel. The panel driver should
-know how to configure it and how to use it or not. The panel driver will
-generate TE signal based on this GPIO, DSI/BTA mechanism or any other
-mechanism provided by the panel.
-TE signal should be delivered to the display controller. The only role
-of DSIM here is that it is between the panel and the display controller
-so it should be used to route this signal to DC.
+I will fix this and the other issues v3,Thanks.
 
-According to specs TE signal should/can be generated by DBI and DSI
-command mode panels, so its handling should be more generic, not Exynos
-specific.
-
-Regards
-Andrzej
-
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 95 ++++++++++++++++++++++++++++++++-
->  1 file changed, 93 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 58bfb2a..4997bfe 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -16,7 +16,9 @@
->  #include <drm/drm_panel.h>
->  
->  #include <linux/clk.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/irq.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/phy/phy.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/component.h>
-> @@ -24,6 +26,7 @@
->  #include <video/mipi_display.h>
->  #include <video/videomode.h>
->  
-> +#include "exynos_drm_crtc.h"
->  #include "exynos_drm_drv.h"
->  
->  /* returns true iff both arguments logically differs */
-> @@ -247,6 +250,7 @@ struct exynos_dsi {
->  	struct clk *bus_clk;
->  	struct regulator_bulk_data supplies[2];
->  	int irq;
-> +	int te_gpio;
->  
->  	u32 pll_clk_rate;
->  	u32 burst_clk_rate;
-> @@ -954,17 +958,89 @@ static irqreturn_t exynos_dsi_irq(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> +static irqreturn_t exynos_dsi_te_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct exynos_dsi *dsi = (struct exynos_dsi *)dev_id;
-> +	struct drm_encoder *encoder = dsi->encoder;
-> +
-> +	if (dsi->state & DSIM_STATE_ENABLED)
-> +		exynos_drm_crtc_te_handler(encoder->crtc);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void exynos_dsi_enable_irq(struct exynos_dsi *dsi)
-> +{
-> +	enable_irq(dsi->irq);
-> +
-> +	if (gpio_is_valid(dsi->te_gpio))
-> +		enable_irq(gpio_to_irq(dsi->te_gpio));
-> +}
-> +
-> +static void exynos_dsi_disable_irq(struct exynos_dsi *dsi)
-> +{
-> +	if (gpio_is_valid(dsi->te_gpio))
-> +		disable_irq(gpio_to_irq(dsi->te_gpio));
-> +
-> +	disable_irq(dsi->irq);
-> +}
-> +
->  static int exynos_dsi_init(struct exynos_dsi *dsi)
->  {
->  	exynos_dsi_enable_clock(dsi);
->  	exynos_dsi_reset(dsi);
-> -	enable_irq(dsi->irq);
-> +	exynos_dsi_enable_irq(dsi);
->  	exynos_dsi_wait_for_reset(dsi);
->  	exynos_dsi_init_link(dsi);
->  
->  	return 0;
->  }
->  
-> +static int exynos_dsi_register_te_irq(struct exynos_dsi *dsi)
-> +{
-> +	int ret;
-> +
-> +	dsi->te_gpio = of_get_named_gpio(dsi->panel_node, "te-gpios", 0);
-> +	if (!gpio_is_valid(dsi->te_gpio)) {
-> +		dev_err(dsi->dev, "no te-gpios specified\n");
-> +		ret = dsi->te_gpio;
-> +		goto out;
-> +	}
-> +
-> +	ret = gpio_request_one(dsi->te_gpio, GPIOF_IN, "te_gpio");
-> +	if (ret) {
-> +		dev_err(dsi->dev, "gpio request failed with %d\n", ret);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * This TE GPIO IRQ should not be set to IRQ_NOAUTOEN, because panel
-> +	 * calls drm_panel_init() first then calls mipi_dsi_attach() in probe().
-> +	 * It means that te_gpio is invalid when exynos_dsi_enable_irq() is
-> +	 * called by drm_panel_init() before panel is attached.
-> +	 */
-> +	ret = request_threaded_irq(gpio_to_irq(dsi->te_gpio),
-> +					exynos_dsi_te_irq_handler, NULL,
-> +					IRQF_TRIGGER_RISING, "TE", dsi);
-> +	if (ret) {
-> +		dev_err(dsi->dev, "request interrupt failed with %d\n", ret);
-> +		gpio_free(dsi->te_gpio);
-> +		goto out;
-> +	}
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static void exynos_dsi_unregister_te_irq(struct exynos_dsi *dsi)
-> +{
-> +	if (gpio_is_valid(dsi->te_gpio)) {
-> +		free_irq(gpio_to_irq(dsi->te_gpio), dsi);
-> +		gpio_free(dsi->te_gpio);
-> +		dsi->te_gpio = -ENOENT;
-> +	}
-> +}
-> +
->  static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
->  				  struct mipi_dsi_device *device)
->  {
-> @@ -978,6 +1054,16 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
->  	if (dsi->connector.dev)
->  		drm_helper_hpd_irq_event(dsi->connector.dev);
->  
-> +	/*
-> +	 * If attached panel device is for command mode one, dsi should
-> +	 * register TE interrupt handler.
-> +	 */
-> +	if (!(dsi->mode_flags & MIPI_DSI_MODE_VIDEO)) {
-> +		int ret = exynos_dsi_register_te_irq(dsi);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -986,6 +1072,8 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
->  {
->  	struct exynos_dsi *dsi = host_to_dsi(host);
->  
-> +	exynos_dsi_unregister_te_irq(dsi);
-> +
->  	dsi->panel_node = NULL;
->  
->  	if (dsi->connector.dev)
-> @@ -1099,7 +1187,7 @@ static void exynos_dsi_poweroff(struct exynos_dsi *dsi)
->  
->  		exynos_dsi_disable_clock(dsi);
->  
-> -		disable_irq(dsi->irq);
-> +		exynos_dsi_disable_irq(dsi);
->  	}
->  
->  	dsi->state &= ~DSIM_STATE_CMD_LPM;
-> @@ -1445,6 +1533,9 @@ static int exynos_dsi_probe(struct platform_device *pdev)
->  		goto err_del_component;
->  	}
->  
-> +	/* To be checked as invalid one */
-> +	dsi->te_gpio = -ENOENT;
-> +
->  	init_completion(&dsi->completed);
->  	spin_lock_init(&dsi->transfer_lock);
->  	INIT_LIST_HEAD(&dsi->transfer_list);
-> 
+Caesar
