@@ -1,65 +1,74 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v10 0/8] ARM: berlin: add AHCI support
-Date: Mon, 21 Jul 2014 11:09:53 +0200
-Message-ID: <20140721090953.GE32208@kwain>
-References: <1405686607-8126-1-git-send-email-antoine.tenart@free-electrons.com>
- <20140718135758.GB13012@htj.dyndns.org>
- <53CA4608.3040208@redhat.com>
- <53CA48F7.5020405@redhat.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH 0/6] thermal: sti: Add new Thermal driver
+Date: Mon, 21 Jul 2014 10:17:53 +0100
+Message-ID: <20140721091753.GV30888@lee--X1>
+References: <1401980819-19962-1-git-send-email-lee.jones@linaro.org>
+ <20140624092309.GD13803@lee--X1>
+ <20140709120823.GA32573@lee--X1>
+ <1404911964.28592.4.camel@rzhang1-toshiba>
+ <20140709134646.GB479@lee--X1>
+ <20140714130824.GA3993@lee--X1>
+ <1405347277.28592.25.camel@rzhang1-toshiba>
+ <20140714142703.GC3993@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53CA48F7.5020405@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140714142703.GC3993@lee--X1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ajitpal.singh@st.com, edubezval@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon, 14 Jul 2014, Lee Jones wrote:
 
-On Sat, Jul 19, 2014 at 12:31:19PM +0200, Hans de Goede wrote:
-> On 07/19/2014 12:18 PM, Hans de Goede wrote:
+> On Mon, 14 Jul 2014, Zhang Rui wrote:
 >=20
-> >The problem is that:
-> >
-> >1) We need to enable resources before we can do ahci_save_initial_co=
-nfig()
-> >2) We must do ahci_save_initial_config() before we can do ata_host_a=
-lloc_pinfo()
-> >3) Therefor we don't have port_info at enable_resources time, which =
-is when we
-> >want to enable the phys (and we cannot just enable the phys elsewher=
-e as
-> >enable_resouces gets used on e.g. resume too).
-> >
-> >So I think it is best to just make the phy pointers an array inside
-> >ahci_host_priv, with a comment that the array indexes must match por=
-t
-> >indexes.
->=20
-> So looking at "[PATCH v10 4/8] ata: libahci: allow to use multiple PH=
-Ys"
-> I see that currently the phy array indexes do not necessarily match t=
-he
-> port indexes. Since you already allocate the phys array at nports siz=
-e,
-> I suggest simply making the array sparse, leaving in NULL entries for
-> unused ports, and adjusting enable / disable_phys to check for NULL
-> pointers. This way we still have a 1:1 way to map ports <-> phys if
-> we want to do something with phys on a per port basis in the future.
->=20
-> Note please also add a check that reg < nports so that we don't use
-> the array out of bounds if there is an error in the dts.
+> > On Mon, 2014-07-14 at 14:08 +0100, Lee Jones wrote:
+> > > On Wed, 09 Jul 2014, Lee Jones wrote:
+> > > > On Wed, 09 Jul 2014, Zhang Rui wrote:
+> > > > > On Wed, 2014-07-09 at 13:08 +0100, Lee Jones wrote:
+> > > > > > On Tue, 24 Jun 2014, Lee Jones wrote:
+> > > > > >=20
+> > > > > > > > I'm re-sending this set, as one of the maintainers' ema=
+il addresses
+> > > > > > > > is incorrect in the MAINTAINERS file.
+> > > > > > > >=20
+> > > > > > > > This patchset adds full support for 2 types of Thermal =
+Controllers
+> > > > > > > > produced by STMicroelectronics.  One is a more traditio=
+nal memory
+> > > > > > > > mapped variant, the other is controlled solely by syste=
+m configuration
+> > > > > > > > registers.
+> > > > > > >=20
+> > > > > > > Any thing from the Thermal guys? Has this set fallen thro=
+ugh the gaps?
+> > > > > >=20
+> > > > > > Anything at all?  It's been well over a month now.
+> > > > > >=20
+> > > > > Well, for the soc thermal drivers, I'd prefer to take them vi=
+a Eduardo,
+> > > > > but as we didn't get any feedback from Eduardo, I will take t=
+hem.
+> > > >=20
+> > > > Thanks Rui.
+> > > >=20
+> > > > So have you taken all 4 "thermal: sti: *" patches?
+> > >=20
+> > > Have you taken these yet?
+> >=20
+> > Not yet. will do tomorrow.
 
-Ok. I'll rework patch 4 along with the other modifications requested,
-and I'll send a new version early this week.
+I waited 7 days and still don't see them?
 
-Antoine
+> Perfect, thanks for the update.
+>=20
+> > >   I notice that these aren't in -next yet.
 
 --=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
