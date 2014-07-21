@@ -1,75 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Mon, 21 Jul 2014 11:32:55 +0200
-Message-ID: <1486972.oIqOcvGYCb@avalon>
-References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
- <20140721085908.GI8843@ulmo> <20140721112438.60452e09@bbrezillon>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: STi: DT: STiH416: Supply Thermal Controller
+ Device Tree nodes
+Date: Mon, 21 Jul 2014 11:33:42 +0200
+Message-ID: <53CCDE76.8060508@st.com>
+References: <1401980819-19962-1-git-send-email-lee.jones@linaro.org> <1401980819-19962-6-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140721112438.60452e09@bbrezillon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401980819-19962-6-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Lee,
 
-On Monday 21 July 2014 11:24:38 Boris BREZILLON wrote:
-> On Mon, 21 Jul 2014 10:59:12 +0200 Thierry Reding wrote:
-> > On Fri, Jul 18, 2014 at 05:43:34PM +0200, Boris BREZILLON wrote:
-> > [...]
-> > 
-> >>>>>>> + - atmel,panel: Should contain a phandle with 2 parameters.
-> >>>>>>> +   The first cell is a phandle to a DRM panel device
-> >>>>>>> +   The second cell encodes the RGB mode, which can take the
-> >>>>>>> following values:
-> >>>>>>> +   * 0: RGB444
-> >>>>>>> +   * 1: RGB565
-> >>>>>>> +   * 2: RGB666
-> >>>>>>> +   * 3: RGB888
-> >>>>>> 
-> >>>>>> These are properties of the panel and should be obtained from
-> >>>>>> the panel directly rather than an additional cell in this specifier.
-> >>>>> 
-> >>>>> Okay.
-> >>>>> What's the preferred way of doing this ?
-> >>>>> What about defining an rgb-mode property in the panel node.
-> >>>> 
-> >>>> There's .bpc in struct drm_display_info, I suspect that it could be
-> >>>> used for this. Alternatively, maybe we could extend the list of color
-> >>>> formats that go into drm_display_info.color_formats? RGB444 is already
-> >>>> covered.
-> >> 
-> >> I forgot to ask about bpc meaning. If, as I think, it means "bits per
-> >> color" then it cannot be used to encode RGB565 where green color is
-> >> encoded on 6 bits and red and blue are encoded on 5 bits.
-> > 
-> > Yes, I agree that bps is not a good fit for what you need here.
-> 
-> Okay, then I think we can replace bpc and color_formats by a bus_formats
-> table containing all supported formats, and use an enum (something
-> similar to v4l2_mbus_pixelcode defined in v4l2-mediabus.h [1]) to list
-> the available formats.
-> 
-> As this implies quite a few changes in crtc core and some drm drivers
-> (nouveau, i915 and radeon), I'd like to be sure this is what both of you
-> had in mind.
+On 06/05/2014 05:06 PM, Lee Jones wrote:
+> We supply two of these.  The first is controlled by the System Configuration
+> registers and the second one provided is a more traditional 'memory mapped'
+> variant.  Each are handled by they own sub-driver.
+>
+> Signed-off-by: Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/stih416.dtsi | 18 ++++++++++++++++++
+>   1 file changed, 18 insertions(+)
+>
 
-I think it is, but just to make sure I understand you correctly, could you 
-just show how the drm_display_info structure would look like ?
+Added to my queue for v3.17.
 
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
