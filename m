@@ -1,119 +1,101 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH RESEND] input: zforce: add regulator handling
-Date: Mon, 21 Jul 2014 17:20:11 +0200
-Message-ID: <2184295.fEH4OJRW3F@diego>
-References: <2587208.XYbbI8xJiH@phil>
+From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Subject: [PATCH v2 00/16] Tegra124 CL-DVFS / DFLL clocksource, plus cpufreq
+Date: Mon, 21 Jul 2014 18:38:46 +0300
+Message-ID: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <2587208.XYbbI8xJiH@phil>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Henrik Rydberg <rydberg@euromail.se>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Paul Walmsley <pwalmsley@nvidia.com>, devicetree@vger.kernel.org, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@bq.com>
+v2 changes:
+- Add new helpers to the regulator framework to obtain the voltage
+  register address etc., as suggested by Mark. Added in patches 1 & 2.
+  They get used in patch 5.
+- Use cpufreq-cpu0 in the cpufreq driver
+- Fixed one bug in patch 8, where deferred probing would attempt to
+  fill the OPP table multiple times and cause a bunch of warnings
 
-It's possible that the controller has an individually switchable power supply.
-Therefore add support to control a supplying regulator.
+Original cover letter:
 
-As this is not always the case, the regulator is requested as optional.
+This series implements the DFLL/CL-DVFS clock source for the fast CPU
+cluster on Tegra124, and a cpufreq driver that uses the DFLL for
+clocking the CPU. Most of this is based on Paul Walmsley's public patch
+set from December 2013, which is available at
+http://comments.gmane.org/gmane.linux.ports.tegra/15273
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
----
- .../bindings/input/touchscreen/zforce_ts.txt       |  4 +++
- drivers/input/touchscreen/zforce_ts.c              | 30 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+The DFLL clock hardware is a voltage-controlled oscillator plus
+control logic that compares the generated output clock with a
+51 MHz reference clock, and can make decisions to either lower
+or raise the DFLL voltage to keep the output rate close to the
+software-requested rate. The voltage changes are done by
+communicating with an off-chip PMIC via either I2C or PWM.
+As the DFLL oscillator is powered via the CPU rail, using
+the DFLL as the CPU clocksource also gives us dynamic CPU
+voltage scaling.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
-index 2faf1f1..80c37df 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
-@@ -9,6 +9,9 @@ Required properties:
- - x-size: horizontal resolution of touchscreen
- - y-size: vertical resolution of touchscreen
- 
-+Optional properties:
-+- vdd-supply: Regulator controlling the controller supply
-+
- Example:
- 
- 	i2c@00000000 {
-@@ -18,6 +21,7 @@ Example:
- 			compatible = "neonode,zforce";
- 			reg = <0x50>;
- 			interrupts = <2 0>;
-+			vdd-supply = <&reg_zforce_vdd>;
- 
- 			gpios = <&gpio5 6 0>, /* INT */
- 				<&gpio5 9 0>; /* RST */
-diff --git a/drivers/input/touchscreen/zforce_ts.c b/drivers/input/touchscreen/zforce_ts.c
-index 01d30ce..39ca962 100644
---- a/drivers/input/touchscreen/zforce_ts.c
-+++ b/drivers/input/touchscreen/zforce_ts.c
-@@ -29,6 +29,8 @@
- #include <linux/sysfs.h>
- #include <linux/input/mt.h>
- #include <linux/platform_data/zforce_ts.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/delay.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- 
-@@ -117,6 +119,8 @@ struct zforce_ts {
- 	const struct zforce_ts_platdata *pdata;
- 	char			phys[32];
- 
-+	struct regulator	*reg_vdd;
-+
- 	bool			suspending;
- 	bool			suspended;
- 	bool			boot_complete;
-@@ -690,6 +694,11 @@ static void zforce_reset(void *data)
- 	struct zforce_ts *ts = data;
- 
- 	gpio_set_value(ts->pdata->gpio_rst, 0);
-+
-+	udelay(10);
-+
-+	if (!IS_ERR(ts->reg_vdd))
-+		regulator_disable(ts->reg_vdd);
- }
- 
- static struct zforce_ts_platdata *zforce_parse_dt(struct device *dev)
-@@ -765,10 +774,31 @@ static int zforce_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
-+	ts->reg_vdd = devm_regulator_get_optional(&client->dev, "vdd");
-+	if (IS_ERR(ts->reg_vdd) && PTR_ERR(ts->reg_vdd) == -EPROBE_DEFER)
-+		return PTR_ERR(ts->reg_vdd);
-+
-+	if (!IS_ERR(ts->reg_vdd)) {
-+		ret = regulator_enable(ts->reg_vdd);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * according to datasheet add 100us grace time after regular
-+		 * regulator enable delay.
-+		 */
-+		udelay(100);
-+	}
-+
- 	ret = devm_add_action(&client->dev, zforce_reset, ts);
- 	if (ret) {
- 		dev_err(&client->dev, "failed to register reset action, %d\n",
- 			ret);
-+
-+		/* hereafter the regulator will be disabled by the action */
-+		if (!IS_ERR(ts->reg_vdd))
-+			regulator_disable(ts->reg_vdd);
-+
- 		return ret;
- 	}
- 
+This series has been tested on the Jetson TK1 (Rev C). Porting this to
+the Venice2 should be simple, though do note that it does not have
+active cooling.
+
+Thanks,
+Tuomas
+
+Paul Walmsley (1):
+  clk: tegra: Add DFLL DVCO reset control for Tegra124
+
+Tuomas Tynkkynen (15):
+  regmap: Add regmap_get_device
+  regulator: Add helpers for low-level register access
+  clk: tegra: Add binding for the Tegra124 DFLL clocksource
+  clk: tegra: Add library for the DFLL clock source (open-loop mode)
+  clk: tegra: Add closed loop support for the DFLL
+  clk: tegra: Add functions for parsing CVB tables
+  clk: tegra: Add Tegra124 DFLL clocksource platform driver
+  clk: tegra: Save/restore CCLKG_BURST_POLICY on suspend
+  clk: tegra: Add the DFLL as a possible parent of the cclk_g clock
+  ARM: tegra: Add the DFLL to Tegra124 device tree
+  ARM: tegra: Enable the DFLL on the Jetson TK1
+  cpufreq: tegra124: Add device tree bindings
+  cpufreq: Add cpufreq driver for Tegra124
+  ARM: tegra: Add entries for cpufreq on Tegra124
+  ARM: tegra: Update defconfig for tegra124-cpufreq
+
+ .../bindings/clock/nvidia,tegra124-dfll.txt        |   69 +
+ .../bindings/cpufreq/tegra124-cpufreq.txt          |   42 +
+ Documentation/power/regulator/consumer.txt         |   35 +
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |    8 +-
+ arch/arm/boot/dts/tegra124.dtsi                    |   31 +
+ arch/arm/configs/tegra_defconfig                   |    1 +
+ arch/arm/mach-tegra/Kconfig                        |    1 +
+ drivers/base/regmap/regmap.c                       |   12 +
+ drivers/clk/tegra/Makefile                         |    3 +
+ drivers/clk/tegra/clk-dfll.c                       | 1735 ++++++++++++++++++++
+ drivers/clk/tegra/clk-dfll.h                       |   55 +
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |    4 +-
+ drivers/clk/tegra/clk-tegra124-dfll-fcpu.c         |  165 ++
+ drivers/clk/tegra/clk-tegra124.c                   |   61 +
+ drivers/clk/tegra/clk.h                            |    3 +
+ drivers/clk/tegra/cvb.c                            |  133 ++
+ drivers/clk/tegra/cvb.h                            |   67 +
+ drivers/cpufreq/Kconfig.arm                        |    1 +
+ drivers/cpufreq/Makefile                           |    1 +
+ drivers/cpufreq/tegra124-cpufreq.c                 |  169 ++
+ drivers/regulator/core.c                           |   71 +
+ include/linux/regmap.h                             |    7 +
+ include/linux/regulator/consumer.h                 |   26 +
+ 23 files changed, 2698 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/tegra124-cpufreq.txt
+ create mode 100644 drivers/clk/tegra/clk-dfll.c
+ create mode 100644 drivers/clk/tegra/clk-dfll.h
+ create mode 100644 drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+ create mode 100644 drivers/clk/tegra/cvb.c
+ create mode 100644 drivers/clk/tegra/cvb.h
+ create mode 100644 drivers/cpufreq/tegra124-cpufreq.c
+
 -- 
-1.9.0
+1.8.1.5
 
