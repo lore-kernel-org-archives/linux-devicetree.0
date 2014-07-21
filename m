@@ -1,85 +1,60 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH] irqchip: add keystone irq controller ip driver
-Date: Mon, 21 Jul 2014 17:20:49 +0300
-Message-ID: <53CD21C1.9010402@ti.com>
-References: <1405351677-12108-1-git-send-email-grygorii.strashko@ti.com> <20140718125953.GF24496@titan.lakedaemon.net> <53C92643.9050406@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
+Date: Mon, 21 Jul 2014 09:40:32 -0400
+Message-ID: <53CD1850.8000904@ti.com>
+References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>	<CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>	<CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>	<CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>	<CAKohpokLqrydV3b=innvOWrW9ijXtZwPKdT5Ew65cjMxsY2Mvw@mail.gmail.com>	<53CA8D95.8010108@ti.com>
+ <CAKohpok-C+JCebjJkZExx6EjBctoyJF7fV71Vjj7bi1TAdXrFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53C92643.9050406@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKohpok-C+JCebjJkZExx6EjBctoyJF7fV71Vjj7bi1TAdXrFQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <rob.herring@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Grant Likely <grant.likely@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Arvind Chauhan <arvind.chauhan@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
-
-On 07/18/2014 04:50 PM, Santosh Shilimkar wrote:
-> On Friday 18 July 2014 08:59 AM, Jason Cooper wrote:
->> Grygorii,
+On Sunday 20 July 2014 08:07 AM, Viresh Kumar wrote:
+> On 19 July 2014 20:54, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
+>> Sorry for jumping late
+> 
+> No, you aren't late. Its just 2 days old thread :)
+> 
+>> but one of the point I was raising as part of your
+>> other series was to extend the CPU topology bindings to cover the voltage
+>> domain information which is probably what is really needed to let the
+>> CPUfreq extract the information. Not sure if it was already discussed.
+> 
+> Not it wasn't.
+> 
+>> After all the CPU clocks, cluster, clock-gating, power domains are pretty much
+>> related. So instead of having new binding for CPUFreq, I was wondering whether
+>> we can extend the CPU topology binding information to include missing information.
+>> Scheduler work anyway needs that information.
 >>
->> On Mon, Jul 14, 2014 at 06:27:57PM +0300, Grygorii Strashko wrote:
->>> On Keystone SOCs, DSP cores can send interrupts to ARM
->>> host using the IRQ controller IP. It provides 28 IRQ
->>> signals to ARM. The IRQ handler running on HOST OS can
->>> identify DSP signal source by analyzing SRCCx bits in
->>> IPCARx registers. This is one of the component used by
->>> the IPC mechanism used on Keystone SOCs.
->>>
->>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>> ---
->>>   .../interrupt-controller/ti,keystone-irq.txt       |   36 +++
->>>   drivers/irqchip/Kconfig                            |    7 +
->>>   drivers/irqchip/Makefile                           |    1 +
->>>   drivers/irqchip/irq-keystone.c                     |  235 ++++++++++++++++++++
->>>   4 files changed, 279 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
->>>   create mode 100644 drivers/irqchip/irq-keystone.c
->>>
-> 
-> 
-> [..]
-> 
->>> +
->>> +static const struct of_device_id keystone_irq_dt_ids[] = {
->>> +	{ .compatible = "ti,keystone-irq", },
->>> +	{},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, keystone_irq_dt_ids);
->>> +
->>> +static struct platform_driver keystone_irq_device_driver = {
->>> +	.probe		= keystone_irq_probe,
->>> +	.remove		= keystone_irq_remove,
->>> +	.driver		= {
->>> +		.name	= "keystone_irq",
->>> +		.owner	= THIS_MODULE,
->>> +		.of_match_table	= of_match_ptr(keystone_irq_dt_ids),
->>> +	}
->>> +};
->>> +
->>> +module_platform_driver(keystone_irq_device_driver);
+>> Ref: Documentation/devicetree/bindings/arm/topology.txt
 >>
->> My understanding of DSP use-cases is a little sparse, are there
->> legitimate scenarios where you might remove this driver during runtime?
->> Perhaps IRQCHIP_DECLARE() might be better?
-
-IRQCHIP_DECLARE() isn't used here, because of two points:
-- all consumers of this driver are initialized at module/driver_initcall time
-  so, we don't need it to be initialized so early
-- Keystone 2 supports DT-only boot and IRQ resolution APIs support probe
-  deferring mechanism now, so we can solve properly any initialization dependencies
-  if needed.
-
->>
-> There is no scenario where driver needs to hotpluged out. Usecase is
-> simple. Its really any other IRQCHIP. The difference is really the
-> source of interrupts. Instead of peripherals interrupting the host
-> OS9linux), here the DSP cores can send interrupts to Host OS.
+>> Does that make sense ?
 > 
-> Hope this clarifies.
-
-Thanks for your review - I'll update and re-send.
+> Yeah it does, but I am not sure what exactly the bindings should look then.
+> So, the most basic step could be moving the new bindings to topology.txt
+> and name clock-master to dvfs-master.
+> 
+> What else?
+> 
+> If its going to be much controversial then we *can* go for just dvfs bindings
+> for now and then update them later.
+> 
+Would be good to get others opinion. As you said if it is controversial then
+it will stall the development.
 
 Regards,
-- grygorii
+Santosh
