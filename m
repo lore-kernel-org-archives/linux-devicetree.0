@@ -1,71 +1,68 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv7 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
- code clean
-Date: Mon, 21 Jul 2014 17:17:44 +0900
-Message-ID: <53CCCCA8.1030509@samsung.com>
-References: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
- <14522743.f6oFhEQVv4@wuerfel> <53CCCB20.50802@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/1] ahci: st: Provide DT bindings for ST's SATA implementation
+Date: Mon, 21 Jul 2014 09:28:36 +0100
+Message-ID: <1405931316-12276-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <53CCCB20.50802@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, jic23@kernel.org, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2014 05:11 PM, Chanwoo Choi wrote:
-> On 07/21/2014 04:38 PM, Arnd Bergmann wrote:
->> On Monday 21 July 2014 11:17:44 Chanwoo Choi wrote:
->>>
->>> This patchset support Exynos3250 ADC (Analog Digital Converter) because
->>> Exynos3250 has additional special clock for ADC IP.
->>>
->>> Changes from v6:
->>> - Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
->>> - Use "sclk" clock name instead of "sclk_adc"
->>> - Remove un-necessary macro for exyno-adc-data-v2 structure.
->>> - Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
->>> - Change the number of ADC channels (Exynos3250 has only two channels for ADC)
->>>
->>
->> Looks good to me. Two small requests:
->>
->> a) if you don't mind, can you add my patch (1/2) to add support for s3c64xx to
->>    your series, adding your Signed-off-by line in addition to mine? I think
->>    that one was noncontroversial, while the second patch (2/2) need some more
->>    work to address the comments and do testing.
-> 
-> OK, I'll add this patch.
-> But, I have a question.
-> 
-> Your patch add following compatible string.
-> "s3c64100-adc" is right?
-> 
->  static const struct of_device_id exynos_adc_match[] = {
->  	{
-> +		.compatible = "samsung,s3c64100-adc",
-> +		.data = &exynos_adc_s3c64xx_data,
-> +	}, {
+Cc: devicetree@vger.kernel.org
+Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Acked-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
 
-Additionally,
-Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt has not included
-"samsung,s3c6410-adc" compatible string. Should I add this string in exynos-adc.txt?
+Hi Tejun,
 
-drivers/iio/adc/exynos-adc.c has not includeded following compatible string.
-Should I add this compatible string on exynos-adc.c?
+This patch has been on the MLs for a few months now.  It documents
+ST's AHCI driver which was accepted by you and now resides in
+Mainline.
 
-+			Must be "samsung,s3c2410-adc" for
-+				the ADC in s3c2410 and compatibles
-+			Must be "samsung,s3c2416-adc" for
-+				the ADC in s3c2416 and compatibles
-+			Must be "samsung,s3c2440-adc" for
-+				the ADC in s3c2440 and compatibles
-+			Must be "samsung,s3c2440-adc" for
-+				the ADC in s3c2440 and compatibles
-+			Must be "samsung,s3c2443-adc" for
-+				the ADC in s3c2443 and compatibles
+Kind regards,
+Lee
 
-Thanks,
-Chanwoo Choi
+ Documentation/devicetree/bindings/ata/ahci-st.txt | 31 +++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/ahci-st.txt
+
+diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
+new file mode 100644
+index 0000000..0574a77
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
+@@ -0,0 +1,31 @@
++STMicroelectronics STi SATA controller
++
++This binding describes a SATA device.
++
++Required properties:
++ - compatible	   : Must be "st,sti-ahci"
++ - reg		   : Physical base addresses and length of register sets
++ - interrupts	   : Interrupt associated with the SATA device
++ - interrupt-names :   Associated name must be; "hostc"
++ - resets	   : The power-down and soft-reset lines of SATA IP
++ - reset-names	   :   Associated names must be; "pwr-dwn" and "sw-rst"
++ - clocks	   : The phandle for the clock
++ - clock-names	   :   Associated name must be; "ahci_clk"
++ - phys		   : The phandle for the PHY device
++ - phy-names	   :   Associated name must be; "ahci_phy"
++
++Example:
++
++	sata0: sata@fe380000 {
++		compatible      = "st,sti-ahci";
++		reg             = <0xfe380000 0x1000>;
++		interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
++		interrupt-names = "hostc";
++		phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
++		phy-names       = "ahci_phy";
++		resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
++				  <&softreset STIH416_SATA0_SOFTRESET>;
++		reset-names     = "pwr-dwn", "sw-rst";
++		clocks	        = <&clk_s_a0_ls CLK_ICN_REG>;
++		clock-names     = "ahci_clk";
++	};
+-- 
+1.8.3.2
