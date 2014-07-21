@@ -1,57 +1,74 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [RFC V2] devicetree: Dialog Semiconductor consolidate existing
- vendor prefixes to standardise on 'dlg'
-Date: Mon, 21 Jul 2014 14:40:02 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B274CB@SW-EX-MBX02.diasemi.com>
-References: <201407151520.s6FFKcjB009745@swsrvapps-01.diasemi.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] iio: exynos-adc: add experimental touchscreen support
+Date: Mon, 21 Jul 2014 07:44:42 -0700
+Message-ID: <20140721144442.GB9112@core.coreip.homeip.net>
+References: <1405663186-26464-1-git-send-email-cw00.choi@samsung.com>
+ <53CBC969.4090704@kernel.org>
+ <20140720202842.GB18347@core.coreip.homeip.net>
+ <5158672.dMAnnUQc7Z@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201407151520.s6FFKcjB009745@swsrvapps-01.diasemi.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, DEVICE
- TREE <devicetree@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guenter Roeck <linux@roeck-us.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jason
- Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonathan Cameron <jic23@kernel.org>, Kumar Gala <galak@codeaurora.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX SH <linux-sh@vger.kernel.org>, Lee
- Jones <lee.jones@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Samuel
-Cc: LKML <linux-kernel@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5158672.dMAnnUQc7Z@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-arm-kernel@lists.infradead.org, Chanwoo Choi <cw00.choi@samsung.com>, ch.naveen@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, heiko.stuebner@bq.com, Ben Dooks <ben-linux@fluff.org>, linux-input <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 21, 2014 at 12:23:58PM +0200, Arnd Bergmann wrote:
+> On Sunday 20 July 2014 13:28:42 Dmitry Torokhov wrote:
+> > On Sun, Jul 20, 2014 at 02:51:37PM +0100, Jonathan Cameron wrote:
+> > > >>+
+> > > >>+    do {
+> > > >>+        ret =exynos_read_s3c64xx_ts(dev, NULL, &x, &y, IIO_CHAN_INFO_RAW);
+> > > >= exynos
+> > > >>+        if (ret == -ETIMEDOUT)
+> > > >>+            break;
+> > > >>+
+> > > >>+        pressed = x & y & ADC_DATX_PRESSED;
+> > > >>+        if (!pressed)
+> > > >>+            break;
+> > > >>+
+> > > >>+        input_report_abs(info->input, ABS_X, x & ADC_DATX_MASK);
+> > > >>+        input_report_abs(info->input, ABS_Y, y & ADC_DATX_MASK);
+> > > >>+        input_report_key(info->input, BTN_TOUCH, 1);
+> > > >>+        input_sync(info->input);
+> > > >>+
+> > > >>+        msleep(1);
+> > > >>+    } while (1);
+> > 
+> > It would be nice to actually close the device even if someone is
+> > touching screen. Please implement open/close methods and have them set a
+> > flag that you would check here.
+> 
+> Ok. I think it's even better to move the request_irq() into the open function,
+> which will avoid the flag and defer the error handling into the actual opening,
+> as well as syncing the running irq with the close function.
 
-On 15 July 2014 16:04, Steve Twiss wrote:
+I do not quite like acquiring resources needed in open. I think drivers should
+do all resource acquisition in probe() and leave open()/close() to
+activate/quiesce devices.
 
->From: Opensource [Steve Twiss] [mailto:stwiss.opensource@diasemi.com]
->Sent: 15 July 2014 16:04
->Subject: [RFC V2] devicetree: Dialog Semiconductor consolidate existing vendor
->prefixes to standardise on 'dlg'
-[...]
->This patch series updates the device tree vendor prefix for
->Dialog Semiconductor.
->Various methods are currently used throughout the kernel: 'diasemi',
->'dialog' and 'dlg'. Others have also been suggested.
->This patch set aims to consolidate the usage of the vendor prefix to
->use a common standard. The prefix 'dlg' is used.
-[...]
+> 
+> > > >>+    /* data from s3c2410_ts driver */
+> > > >>+    info->input->name = "S3C24xx TouchScreen";
+> > > >>+    info->input->id.bustype = BUS_HOST;
+> > > >>+    info->input->id.vendor = 0xDEAD;
+> > > >>+    info->input->id.product = 0xBEEF;
+> > 
+> > You do not need to fill these entries with fake data.
+> 
+> Ok, I wondered about this, but didn't want to change too much from
+> the old driver (I changed the version number).
+> 
+> > > >>+    info->input->id.version = 0x0200;
+> 
+> Do I need this?
 
-Hello all,
+Not really.
 
-Have there been any further thoughts on this? I would like move this issue forwards so
-that this problem this does not keep arising.
+Thanks.
 
->From my point of view, the argument is a simple one: what is the value of existing multiple
-vendor prefixes if they do not work and are not used anywhere?
-
-But, as usual I recognise that the kernel community have different aims and I am willing
-to compromise with my patches in order to move ahead.
-
-Regards,
-Steve
+-- 
+Dmitry
