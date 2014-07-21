@@ -1,78 +1,52 @@
-From: Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [3.8.y.z extended stable] Patch "MIPS: DTS: Fix missing device_type="memory" property in memory nodes" has been added to staging queue
-Date: Mon, 21 Jul 2014 14:21:32 -0700
-Message-ID: <1405977692-720-1-git-send-email-kamal@canonical.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, gaurav.minocha-cmaem7PIVQRC8prJL3GQQw@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, kernel-team-nLRlyDuq1AZFpShjVBNYrg@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: tegra: make tegra_clocks_apply_init_table arch_initcall
+Date: Mon, 21 Jul 2014 15:43:08 -0600
+Message-ID: <53CD896C.3030605@wwwdotorg.org>
+References: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com> <1405437890-6468-3-git-send-email-pdeschrijver@nvidia.com> <20140716071932.GB7978@ulmo> <20140716082740.GK23218@tbergstrom-lnx.Nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140716082740.GK23218-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a note to let you know that I have just added a patch titled
+On 07/16/2014 02:27 AM, Peter De Schrijver wrote:
+> On Wed, Jul 16, 2014 at 09:19:33AM +0200, Thierry Reding wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Tue, Jul 15, 2014 at 06:24:32PM +0300, Peter De Schrijver wrote:
+>> [...]
+>>> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+>>> index d081732..65cde4e 100644
+>>> --- a/drivers/clk/tegra/clk.c
+>>> +++ b/drivers/clk/tegra/clk.c
+>>> @@ -290,10 +290,13 @@ struct clk ** __init tegra_lookup_dt_id(int clk_id,
+>>>  
+>>>  tegra_clk_apply_init_table_func tegra_clk_apply_init_table;
+>>>  
+>>> -void __init tegra_clocks_apply_init_table(void)
+>>> +static int __init tegra_clocks_apply_init_table(void)
+>>>  {
+>>>  	if (!tegra_clk_apply_init_table)
+>>> -		return;
+>>> +		return 0;
+>>
+>> Shouldn't this be an error? Or perhaps WARN()? To make sure this gets
+> 
+> An arch_initcall will be called for every ARM platform I think? In case
+> this gets called on a non-Tegra platform, tegra_clk_apply_init_table will not
+> be set and therefore a silent return 0; seems the most appropriate thing to do
+> to me?
 
-    MIPS: DTS: Fix missing device_type="memory" property in memory nodes
+This is one reason that doing all the initialization from separate
+initcalls sucks. Much better to have a single top-level initialization
+function that calls exactly what is needed, only what is needed, and
+only runs on the correct SoCs.
 
-to the linux-3.8.y-queue branch of the 3.8.y.z extended stable tree 
-which can be found at:
-
- http://kernel.ubuntu.com/git?p=ubuntu/linux.git;a=shortlog;h=refs/heads/linux-3.8.y-queue
-
-This patch is scheduled to be released in version 3.8.13.27.
-
-If you, or anyone else, feels it should not be added to this tree, please 
-reply to this email.
-
-For more information about the 3.8.y.z tree, see
-https://wiki.ubuntu.com/Kernel/Dev/ExtendedStable
-
-Thanks.
--Kamal
-
-------
-
->From 5dd6419bc23ec280abf9865f4bc99db44e353404 Mon Sep 17 00:00:00 2001
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Mon, 26 May 2014 14:42:49 +0100
-Subject: MIPS: DTS: Fix missing device_type="memory" property in memory nodes
-
-commit 1d530fa42a317deca1c4a4780d18e2dbf316e0cb upstream.
-
-A few platforms lack a 'device_type = "memory"' for their memory
-nodes, relying on an old ppc quirk in order to discover its memory.
-Add the missing data so that all parsing code can find memory nodes
-correctly.
-
-Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: gaurav.minocha-cmaem7PIVQRC8prJL3GQQw@public.gmane.org
-Patchwork: https://patchwork.linux-mips.org/patch/6989/
-Signed-off-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-[ kamal: backport to 3.8-stable: only lantiq/dts/easy50712.dts ]
-Signed-off-by: Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
----
- arch/mips/lantiq/dts/easy50712.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
-index 68c1731..de53a1b 100644
---- a/arch/mips/lantiq/dts/easy50712.dts
-+++ b/arch/mips/lantiq/dts/easy50712.dts
-@@ -8,6 +8,7 @@
- 	};
-
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
-
---
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But failing that, I guess you need to say something like
+of_is_compatible(root node, "nvidia Tegra"), but of course the
+definition of "nvidia Tegra" is an ever-growing list of possible values
+that needs to be used from each separate initcall...
