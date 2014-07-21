@@ -1,94 +1,215 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RESEND PATCH 1/1] ARM: DT: STi: STiH416: Add DT node for ST's SATA device
-Date: Mon, 21 Jul 2014 09:32:53 +0100
-Message-ID: <1405931573-12407-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
+ Rockchip SoCs
+Date: Mon, 21 Jul 2014 10:50:03 +0200
+Message-ID: <20140721085001.GG8843@ulmo>
+References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com>
+ <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, b.galvani@gmail.com, cf@rock-chips.com, huangtao@rock-chips.com, addy.ke@rock-chips.com, xjq@rock-chips.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/ata/ahci-st.txt |  2 +-
- arch/arm/boot/dts/stih416-b2020.dts               |  4 ++++
- arch/arm/boot/dts/stih416-b2020e.dts              |  4 ++++
- arch/arm/boot/dts/stih416.dtsi                    | 16 ++++++++++++++++
- 4 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
-index 0574a77..9883542 100644
---- a/Documentation/devicetree/bindings/ata/ahci-st.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
-@@ -21,7 +21,7 @@ Example:
- 		reg             = <0xfe380000 0x1000>;
- 		interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
- 		interrupt-names = "hostc";
--		phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-+		phys	        = <&phy_port0 MIPHY_TYPE_SATA>;
- 		phy-names       = "ahci_phy";
- 		resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
- 				  <&softreset STIH416_SATA0_SOFTRESET>;
-diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
-index c3c2ac6..eb2f246 100644
---- a/arch/arm/boot/dts/stih416-b2020.dts
-+++ b/arch/arm/boot/dts/stih416-b2020.dts
-@@ -23,5 +23,9 @@
- 				st,pcie-tx-pol-inv;
- 			};
- 		};
-+
-+		sata0: sata@fe380000{
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416-b2020e.dts b/arch/arm/boot/dts/stih416-b2020e.dts
-index 80aff0f..99a699e 100644
---- a/arch/arm/boot/dts/stih416-b2020e.dts
-+++ b/arch/arm/boot/dts/stih416-b2020e.dts
-@@ -41,5 +41,9 @@
- 				st,pcie-tx-pol-inv;
- 			};
- 		};
-+
-+		sata0: sata@fe380000{
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 2b98a0a..060dd53 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -258,5 +258,21 @@
- 				reg-names = "sata", "pcie", "syscfg";
- 			};
- 		};
-+
-+		sata0: sata@fe380000 {
-+			compatible      = "st,sti-ahci";
-+			reg             = <0xfe380000 0x1000>;
-+			interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
-+			interrupt-names = "hostc";
-+			phys	        = <&phy_port0 MIPHY_TYPE_SATA>;
-+			phy-names       = "sata-phy";
-+			resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
-+					  <&softreset STIH416_SATA0_SOFTRESET>;
-+			reset-names     = "pwr-dwn", "sw-rst";
-+			clock-names     = "ahci_clk";
-+			clocks	        = <&clk_s_a0_ls CLK_ICN_REG>;
-+
-+			status	        = "disabled";
-+		};
- 	};
- };
--- 
-1.8.3.2
+--PyMzGVE0NRonI6bs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sat, Jul 19, 2014 at 08:55:29PM +0800, Caesar Wang wrote:
+> Suggested-by: Beniamino Galvani <b.galvani@gmail.com>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+>  drivers/pwm/pwm-rockchip.c | 97 +++++++++++++++++++++++++++++++++++++---=
+------
+>  1 file changed, 79 insertions(+), 18 deletions(-)
+
+This patch is missing a proper description. Also "pwm" should be spelled
+"PWM" in prose.
+
+And the subject is somewhat long and generic. How about:
+
+	pwm: rockchip: Add support for RK3288 SoCs
+
+?
+
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+[...]
+> @@ -12,6 +13,7 @@
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/time.h>
+> @@ -23,14 +25,36 @@
+>  #define PWM_CTRL_TIMER_EN	(1 << 0)
+>  #define PWM_CTRL_OUTPUT_EN	(1 << 3)
+> =20
+> +#define RK_PRESCALER		1
+>  #define PRESCALER		2
+
+I don't think there's a need to keep these around now that they're part
+of the rockchip_pwm_data structure.
+
+> +#define PWM_CONTINUOUS		(1 << 1)
+> +#define PWM_DUTY_POSITIVE	(1 << 3)
+> +#define PWM_INACTIVE_NEGATIVE	(0 << 4)
+> +#define PWM_OUTPUT_LEFT		(0 << 5)
+> +#define PWM_LP_DISABLE		(0 << 8)
+> +
+> +#define RK_PWM_ENABLE		(1 << 0)
+
+I think you can drop the RK_ prefix here since none of the above have it
+either and they're used in the same context.
+
+> +
+> +#define VOP_PWM_CTRL		0x00		/* VOP-PWM Control Register */
+> +#define VOP_PWM_CNTR		0x0c
+
+Similarly for these.
+
+> +
+>  struct rockchip_pwm_chip {
+>  	struct pwm_chip chip;
+>  	struct clk *clk;
+> +	const struct rockchip_pwm_data *data;
+>  	void __iomem *base;
+>  };
+> =20
+> +struct rockchip_pwm_data {
+> +	u32 duty;
+> +	u32 period;
+> +	u32 reg_cntr;
+> +	u32 reg_ctrl;
+
+duty and period are register offsets, right? Why don't they have the
+reg_ prefix? Alternatively you could drop the reg_ prefix altogether.
+Yet another alternative would be to introduce a substructure that
+contains the registers, to separate the fields logically:
+
+	struct rockchip_pwm_data {
+		struct {
+			unsigned long duty;
+			unsigned long period;
+			unsigned long cntr;
+			unsigned long ctrl;
+		} regs;
+		...
+	};
+
+As shown, I think it's more natural for register offsets to be unsigned
+long rather than a strictly-sized type.
+
+> +	int prescaler;
+
+unsigned int
+
+> +	u32 enable_conf;
+> +};
+
+For this I think it would be more readable to provide function pointers
+rather than a variable. That is:
+
+	struct rockchip_pwm_data {
+		...
+		int (*enable)(struct pwm_chip *chip, struct pwm_device *pwm);
+		int (*disable)(struct pwm_chip *chip, struct pwm_device *pwm);
+	};
+
+Then you can implement these for each variant of the chip and call them
+=66rom the common rockchip_pwm_enable(), somewhat like this:
+
+	static int rockchip_pwm_enable(struct pwm_chip *chip, struct pwm_device *p=
+wm)
+	{
+		struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+		int ret;
+
+		ret =3D clk_enable(pc->clk);
+		if (ret)
+			return ret;
+
+		ret =3D pc->data->enable(chip, pwm);
+		if (ret)
+			clk_disable(pc->clk);
+
+		return ret;
+	}
+
+And similarly for rockchip_pwm_disable().
+
+> +static struct rockchip_pwm_data pwm_data_v1 =3D {
+
+static const please.
+
+> +static struct rockchip_pwm_data pwm_data_v2 =3D {
+
+Here too.
+
+> +static struct rockchip_pwm_data pwm_data_vop =3D {
+
+And here.
+
+> +	const struct of_device_id *of_id =3D
+
+I don't think the of_ prefix is necessary here.
+
+> +	    of_match_device(rockchip_pwm_dt_ids, &pdev->dev);
+
+And perhaps rather than split this over two lines here you can move this
+assignment somewhere below the variable declarations?
+
+>  	struct rockchip_pwm_chip *pc;
+>  	struct resource *r;
+>  	int ret;
+> @@ -119,7 +182,10 @@ static int rockchip_pwm_probe(struct platform_device=
+ *pdev)
+>  		return -ENOMEM;
+> =20
+>  	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+> +	if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
+> +		pc->base =3D devm_ioremap(&pdev->dev, r->start, resource_size(r));
+> +	else
+> +		pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+
+Sorry, this still isn't an option. You really shouldn't remap I/O
+regions that other drivers may be using. You hinted at a shared register
+space during the review of the initial version. Can you provide more
+detail about what exactly the memory map looks like of the rk3288? Is
+there some kind of technical reference manual that I could look at? Or
+do you have a device tree extract that shows what the memory map looks
+like?
+
+Thierry
+
+--PyMzGVE0NRonI6bs
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTzNQ5AAoJEN0jrNd/PrOhYIgP/AgJfN9Kp928uFt/ImEY0x82
+JZMY64DtTQxxXRB3cRQnjsMGslTCzNpP8iV9EYNLb+VvRfaJyGFi+LtJFi8rDYnk
+kcLtzJexr1XqqgKzBrLkH1ak9QTuNb2LIjZsnYShU5ljNc2Wp3n0K+5tOSs4uBrI
+vAZTdcZ/LX8JSjSq7BCHcMp0lLZo43xKceFXvLYhYDK7sGrfIz9TQ4VL7DILtXFf
+k5TZ0gYmiHr6mvG5O8PkoVMEIdy/LO0u1DXWTFi4bsg9MBZIqH2C+2qYfY64hzVD
+2JthlvEkKqRfX0viQuZ8aqLANSEnp7089F/HZiJiRf0LDVaupzql+OYbg6923EpS
+aOfGcRdgndQ38hfxADzPVdxxV0+tR57yVoPsevrLd/la4+NUJtUTgR1M/WvuZDLl
+n5xxI97bhvV+TpV6EAbyh5BA7KwedUQIPhCBy1PY23Nh5DeHhqibLfsJgJU6RKw1
+E5jBlsWirt4wZeJUwH8eFdbWRbsjUxX3d2oBBee/Ax4ZQOyw58foiYaBOiz+3KxV
+fAf8W/ag8geUh3GgbLFu4vz+PPn6iTzw3E6q9WQ1KBs8HoaUxVzLjFrFm1GMBu7+
+tBCGwe1ZQw63NCr/pZnhlLXPLysGpzSe+i16IvSKIuymnq28oy74V++PRrNR6w3x
+GLKRP5Oc3ggLNLykhgK3
+=rx7n
+-----END PGP SIGNATURE-----
+
+--PyMzGVE0NRonI6bs--
