@@ -1,14 +1,14 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv7 1/4] iio: adc: exynos_adc: Add exynos_adc_data structure to
- improve readability
-Date: Mon, 21 Jul 2014 11:17:45 +0900
-Message-ID: <1405909068-22539-2-git-send-email-cw00.choi@samsung.com>
-References: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [RESEND PATCH] thermal: samsung: Add TMU support for Exynos3250
+ SoC
+Date: Mon, 21 Jul 2014 14:04:56 +0800
+Message-ID: <1405922696.2455.1.camel@rzhang1-toshiba>
+References: <1405641605-3370-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1405909068-22539-1-git-send-email-cw00.choi@samsung.com>
+In-Reply-To: <1405641605-3370-1-git-send-email-cw00.choi@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,368 +18,201 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, ch.naveen@samsung.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Jonghwa Lee <jonghwa3.lee@samsung.com>, kgene.kim@samsung.com, pawel.moll@arm.com, linux-pm@vger.kernel.org, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, amit.daniel@samsung.com, robh+dt@kernel.org, eduardo.valentin@gmail.com, galak@codeaurora.org, ch.naveen@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset add 'exynos_adc_data' structure which includes some functions
-to control ADC operation and specific data according to ADC version (v1 or v2).
+On Fri, 2014-07-18 at 09:00 +0900, Chanwoo Choi wrote:
+> This patch adds the registers, bit fields and compatible strings
+> required to support for the 1 TMU channels on Exynos3250.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> [Add MUX address setting bits by Jonghwa Lee]
+> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Reviewed-by: Amit Daniel Kachhap<amit.daniel@samsung.com>
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Reviewed-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- drivers/iio/adc/exynos_adc.c | 226 ++++++++++++++++++++++++++++---------------
- 1 file changed, 147 insertions(+), 79 deletions(-)
+Eduardo and Amit,
 
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 010578f..dde4ca8 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -39,11 +39,6 @@
- #include <linux/iio/machine.h>
- #include <linux/iio/driver.h>
- 
--enum adc_version {
--	ADC_V1,
--	ADC_V2
--};
--
- /* EXYNOS4412/5250 ADC_V1 registers definitions */
- #define ADC_V1_CON(x)		((x) + 0x00)
- #define ADC_V1_DLY(x)		((x) + 0x08)
-@@ -85,6 +80,7 @@ enum adc_version {
- #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
- 
- struct exynos_adc {
-+	struct exynos_adc_data	*data;
- 	void __iomem		*regs;
- 	void __iomem		*enable_reg;
- 	struct clk		*clk;
-@@ -97,43 +93,139 @@ struct exynos_adc {
- 	unsigned int            version;
- };
- 
--static const struct of_device_id exynos_adc_match[] = {
--	{ .compatible = "samsung,exynos-adc-v1", .data = (void *)ADC_V1 },
--	{ .compatible = "samsung,exynos-adc-v2", .data = (void *)ADC_V2 },
--	{},
-+struct exynos_adc_data {
-+	int num_channels;
-+
-+	void (*init_hw)(struct exynos_adc *info);
-+	void (*exit_hw)(struct exynos_adc *info);
-+	void (*clear_irq)(struct exynos_adc *info);
-+	void (*start_conv)(struct exynos_adc *info, unsigned long addr);
- };
--MODULE_DEVICE_TABLE(of, exynos_adc_match);
- 
--static inline unsigned int exynos_adc_get_version(struct platform_device *pdev)
-+static void exynos_adc_v1_init_hw(struct exynos_adc *info)
- {
--	const struct of_device_id *match;
-+	u32 con1;
- 
--	match = of_match_node(exynos_adc_match, pdev->dev.of_node);
--	return (unsigned int)match->data;
-+	writel(1, info->enable_reg);
-+
-+	/* set default prescaler values and Enable prescaler */
-+	con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
-+
-+	/* Enable 12-bit ADC resolution */
-+	con1 |= ADC_V1_CON_RES;
-+	writel(con1, ADC_V1_CON(info->regs));
-+}
-+
-+static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
-+{
-+	u32 con;
-+
-+	writel(0, info->enable_reg);
-+
-+	con = readl(ADC_V1_CON(info->regs));
-+	con |= ADC_V1_CON_STANDBY;
-+	writel(con, ADC_V1_CON(info->regs));
-+}
-+
-+static void exynos_adc_v1_clear_irq(struct exynos_adc *info)
-+{
-+	writel(1, ADC_V1_INTCLR(info->regs));
- }
- 
--static void exynos_adc_hw_init(struct exynos_adc *info)
-+static void exynos_adc_v1_start_conv(struct exynos_adc *info,
-+				     unsigned long addr)
-+{
-+	u32 con1;
-+
-+	writel(addr, ADC_V1_MUX(info->regs));
-+
-+	con1 = readl(ADC_V1_CON(info->regs));
-+	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
-+}
-+
-+static const struct exynos_adc_data const exynos_adc_v1_data = {
-+	.num_channels	= MAX_ADC_V1_CHANNELS,
-+
-+	.init_hw	= exynos_adc_v1_init_hw,
-+	.exit_hw	= exynos_adc_v1_exit_hw,
-+	.clear_irq	= exynos_adc_v1_clear_irq,
-+	.start_conv	= exynos_adc_v1_start_conv,
-+};
-+
-+static void exynos_adc_v2_init_hw(struct exynos_adc *info)
- {
- 	u32 con1, con2;
- 
--	if (info->version == ADC_V2) {
--		con1 = ADC_V2_CON1_SOFT_RESET;
--		writel(con1, ADC_V2_CON1(info->regs));
-+	writel(1, info->enable_reg);
- 
--		con2 = ADC_V2_CON2_OSEL | ADC_V2_CON2_ESEL |
--			ADC_V2_CON2_HIGHF | ADC_V2_CON2_C_TIME(0);
--		writel(con2, ADC_V2_CON2(info->regs));
-+	con1 = ADC_V2_CON1_SOFT_RESET;
-+	writel(con1, ADC_V2_CON1(info->regs));
- 
--		/* Enable interrupts */
--		writel(1, ADC_V2_INT_EN(info->regs));
--	} else {
--		/* set default prescaler values and Enable prescaler */
--		con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
-+	con2 = ADC_V2_CON2_OSEL | ADC_V2_CON2_ESEL |
-+		ADC_V2_CON2_HIGHF | ADC_V2_CON2_C_TIME(0);
-+	writel(con2, ADC_V2_CON2(info->regs));
- 
--		/* Enable 12-bit ADC resolution */
--		con1 |= ADC_V1_CON_RES;
--		writel(con1, ADC_V1_CON(info->regs));
--	}
-+	/* Enable interrupts */
-+	writel(1, ADC_V2_INT_EN(info->regs));
-+}
-+
-+static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
-+{
-+	u32 con;
-+
-+	writel(0, info->enable_reg);
-+
-+	con = readl(ADC_V2_CON1(info->regs));
-+	con &= ~ADC_CON_EN_START;
-+	writel(con, ADC_V2_CON1(info->regs));
-+}
-+
-+static void exynos_adc_v2_clear_irq(struct exynos_adc *info)
-+{
-+	writel(1, ADC_V2_INT_ST(info->regs));
-+}
-+
-+static void exynos_adc_v2_start_conv(struct exynos_adc *info,
-+				     unsigned long addr)
-+{
-+	u32 con1, con2;
-+
-+	con2 = readl(ADC_V2_CON2(info->regs));
-+	con2 &= ~ADC_V2_CON2_ACH_MASK;
-+	con2 |= ADC_V2_CON2_ACH_SEL(addr);
-+	writel(con2, ADC_V2_CON2(info->regs));
-+
-+	con1 = readl(ADC_V2_CON1(info->regs));
-+	writel(con1 | ADC_CON_EN_START, ADC_V2_CON1(info->regs));
-+}
-+
-+static const struct exynos_adc_data const exynos_adc_v2_data = {
-+	.num_channels	= MAX_ADC_V2_CHANNELS,
-+
-+	.init_hw	= exynos_adc_v2_init_hw,
-+	.exit_hw	= exynos_adc_v2_exit_hw,
-+	.clear_irq	= exynos_adc_v2_clear_irq,
-+	.start_conv	= exynos_adc_v2_start_conv,
-+};
-+
-+static const struct of_device_id exynos_adc_match[] = {
-+	{
-+		.compatible = "samsung,exynos-adc-v1",
-+		.data = &exynos_adc_v1_data,
-+	}, {
-+		.compatible = "samsung,exynos-adc-v2",
-+		.data = &exynos_adc_v2_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, exynos_adc_match);
-+
-+static struct exynos_adc_data *exynos_adc_get_data(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+
-+	match = of_match_node(exynos_adc_match, pdev->dev.of_node);
-+	return (struct exynos_adc_data *)match->data;
- }
- 
- static int exynos_read_raw(struct iio_dev *indio_dev,
-@@ -144,7 +236,6 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
- {
- 	struct exynos_adc *info = iio_priv(indio_dev);
- 	unsigned long timeout;
--	u32 con1, con2;
- 	int ret;
- 
- 	if (mask != IIO_CHAN_INFO_RAW)
-@@ -154,28 +245,15 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
- 	reinit_completion(&info->completion);
- 
- 	/* Select the channel to be used and Trigger conversion */
--	if (info->version == ADC_V2) {
--		con2 = readl(ADC_V2_CON2(info->regs));
--		con2 &= ~ADC_V2_CON2_ACH_MASK;
--		con2 |= ADC_V2_CON2_ACH_SEL(chan->address);
--		writel(con2, ADC_V2_CON2(info->regs));
--
--		con1 = readl(ADC_V2_CON1(info->regs));
--		writel(con1 | ADC_CON_EN_START,
--				ADC_V2_CON1(info->regs));
--	} else {
--		writel(chan->address, ADC_V1_MUX(info->regs));
--
--		con1 = readl(ADC_V1_CON(info->regs));
--		writel(con1 | ADC_CON_EN_START,
--				ADC_V1_CON(info->regs));
--	}
-+	if (info->data->start_conv)
-+		info->data->start_conv(info, chan->address);
- 
- 	timeout = wait_for_completion_timeout
- 			(&info->completion, EXYNOS_ADC_TIMEOUT);
- 	if (timeout == 0) {
- 		dev_warn(&indio_dev->dev, "Conversion timed out! Resetting\n");
--		exynos_adc_hw_init(info);
-+		if (info->data->init_hw)
-+			info->data->init_hw(info);
- 		ret = -ETIMEDOUT;
- 	} else {
- 		*val = info->value;
-@@ -193,13 +271,11 @@ static irqreturn_t exynos_adc_isr(int irq, void *dev_id)
- 	struct exynos_adc *info = (struct exynos_adc *)dev_id;
- 
- 	/* Read value */
--	info->value = readl(ADC_V1_DATX(info->regs)) &
--						ADC_DATX_MASK;
-+	info->value = readl(ADC_V1_DATX(info->regs)) & ADC_DATX_MASK;
-+
- 	/* clear irq */
--	if (info->version == ADC_V2)
--		writel(1, ADC_V2_INT_ST(info->regs));
--	else
--		writel(1, ADC_V1_INTCLR(info->regs));
-+	if (info->data->clear_irq)
-+		info->data->clear_irq(info);
- 
- 	complete(&info->completion);
- 
-@@ -277,6 +353,12 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 
- 	info = iio_priv(indio_dev);
- 
-+	info->data = exynos_adc_get_data(pdev);
-+	if (!info->data) {
-+		dev_err(&pdev->dev, "failed getting exynos_adc_data\n");
-+		return -EINVAL;
-+	}
-+
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(info->regs))
-@@ -319,10 +401,6 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_disable_reg;
- 
--	writel(1, info->enable_reg);
--
--	info->version = exynos_adc_get_version(pdev);
--
- 	platform_set_drvdata(pdev, indio_dev);
- 
- 	indio_dev->name = dev_name(&pdev->dev);
-@@ -331,11 +409,7 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 	indio_dev->info = &exynos_adc_iio_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = exynos_adc_iio_channels;
--
--	if (info->version == ADC_V1)
--		indio_dev->num_channels = MAX_ADC_V1_CHANNELS;
--	else
--		indio_dev->num_channels = MAX_ADC_V2_CHANNELS;
-+	indio_dev->num_channels = info->data->num_channels;
- 
- 	ret = request_irq(info->irq, exynos_adc_isr,
- 					0, dev_name(&pdev->dev), info);
-@@ -349,7 +423,8 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_irq;
- 
--	exynos_adc_hw_init(info);
-+	if (info->data->init_hw)
-+		info->data->init_hw(info);
- 
- 	ret = of_platform_populate(np, exynos_adc_match, NULL, &indio_dev->dev);
- 	if (ret < 0) {
-@@ -366,7 +441,8 @@ err_of_populate:
- err_irq:
- 	free_irq(info->irq, info);
- err_disable_clk:
--	writel(0, info->enable_reg);
-+	if (info->data->exit_hw)
-+		info->data->exit_hw(info);
- 	clk_disable_unprepare(info->clk);
- err_disable_reg:
- 	regulator_disable(info->vdd);
-@@ -382,7 +458,8 @@ static int exynos_adc_remove(struct platform_device *pdev)
- 				exynos_adc_remove_devices);
- 	iio_device_unregister(indio_dev);
- 	free_irq(info->irq, info);
--	writel(0, info->enable_reg);
-+	if (info->data->exit_hw)
-+		info->data->exit_hw(info);
- 	clk_disable_unprepare(info->clk);
- 	regulator_disable(info->vdd);
- 
-@@ -394,19 +471,10 @@ static int exynos_adc_suspend(struct device *dev)
- {
- 	struct iio_dev *indio_dev = dev_get_drvdata(dev);
- 	struct exynos_adc *info = iio_priv(indio_dev);
--	u32 con;
- 
--	if (info->version == ADC_V2) {
--		con = readl(ADC_V2_CON1(info->regs));
--		con &= ~ADC_CON_EN_START;
--		writel(con, ADC_V2_CON1(info->regs));
--	} else {
--		con = readl(ADC_V1_CON(info->regs));
--		con |= ADC_V1_CON_STANDBY;
--		writel(con, ADC_V1_CON(info->regs));
--	}
-+	if (info->data->exit_hw)
-+		info->data->exit_hw(info);
- 
--	writel(0, info->enable_reg);
- 	clk_disable_unprepare(info->clk);
- 	regulator_disable(info->vdd);
- 
-@@ -427,8 +495,8 @@ static int exynos_adc_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	writel(1, info->enable_reg);
--	exynos_adc_hw_init(info);
-+	if (info->data->init_hw)
-+		info->data->init_hw(info);
- 
- 	return 0;
- }
--- 
-1.8.0
+do you have any comments on this?
+
+thanks,
+rui
+
+> ---
+>  .../devicetree/bindings/thermal/exynos-thermal.txt |  1 +
+>  drivers/thermal/samsung/exynos_tmu.c               |  7 +-
+>  drivers/thermal/samsung/exynos_tmu.h               |  3 +-
+>  drivers/thermal/samsung/exynos_tmu_data.c          | 89 ++++++++++++++++++++++
+>  drivers/thermal/samsung/exynos_tmu_data.h          |  7 ++
+>  5 files changed, 105 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> index c949092..ae738f5 100644
+> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> @@ -3,6 +3,7 @@
+>  ** Required properties:
+>  
+>  - compatible : One of the following:
+> +	       "samsung,exynos3250-tmu"
+>  	       "samsung,exynos4412-tmu"
+>  	       "samsung,exynos4210-tmu"
+>  	       "samsung,exynos5250-tmu"
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index d7ca9f4..a2a08ea 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -505,6 +505,10 @@ static irqreturn_t exynos_tmu_irq(int irq, void *id)
+>  
+>  static const struct of_device_id exynos_tmu_match[] = {
+>  	{
+> +		.compatible = "samsung,exynos3250-tmu",
+> +		.data = (void *)EXYNOS3250_TMU_DRV_DATA,
+> +	},
+> +	{
+>  		.compatible = "samsung,exynos4210-tmu",
+>  		.data = (void *)EXYNOS4210_TMU_DRV_DATA,
+>  	},
+> @@ -677,7 +681,8 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>  		goto err_clk_sec;
+>  	}
+>  
+> -	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+> +	if (pdata->type == SOC_ARCH_EXYNOS3250 ||
+> +	    pdata->type == SOC_ARCH_EXYNOS4210 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS4412 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS5250 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS5260 ||
+> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+> index edd08cf..1b4a644 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.h
+> +++ b/drivers/thermal/samsung/exynos_tmu.h
+> @@ -40,7 +40,8 @@ enum calibration_mode {
+>  };
+>  
+>  enum soc_type {
+> -	SOC_ARCH_EXYNOS4210 = 1,
+> +	SOC_ARCH_EXYNOS3250 = 1,
+> +	SOC_ARCH_EXYNOS4210,
+>  	SOC_ARCH_EXYNOS4412,
+>  	SOC_ARCH_EXYNOS5250,
+>  	SOC_ARCH_EXYNOS5260,
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+> index c1d81dc..aa8e0de 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> @@ -90,6 +90,95 @@ struct exynos_tmu_init_data const exynos4210_default_tmu_data = {
+>  };
+>  #endif
+>  
+> +#if defined(CONFIG_SOC_EXYNOS3250)
+> +static const struct exynos_tmu_registers exynos3250_tmu_registers = {
+> +	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
+> +	.triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
+> +	.triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
+> +	.tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
+> +	.test_mux_addr_shift = EXYNOS4412_MUX_ADDR_SHIFT,
+> +	.buf_vref_sel_shift = EXYNOS_TMU_REF_VOLTAGE_SHIFT,
+> +	.buf_vref_sel_mask = EXYNOS_TMU_REF_VOLTAGE_MASK,
+> +	.therm_trip_mode_shift = EXYNOS_TMU_TRIP_MODE_SHIFT,
+> +	.therm_trip_mode_mask = EXYNOS_TMU_TRIP_MODE_MASK,
+> +	.therm_trip_en_shift = EXYNOS_TMU_THERM_TRIP_EN_SHIFT,
+> +	.buf_slope_sel_shift = EXYNOS_TMU_BUF_SLOPE_SEL_SHIFT,
+> +	.buf_slope_sel_mask = EXYNOS_TMU_BUF_SLOPE_SEL_MASK,
+> +	.core_en_shift = EXYNOS_TMU_CORE_EN_SHIFT,
+> +	.tmu_status = EXYNOS_TMU_REG_STATUS,
+> +	.tmu_cur_temp = EXYNOS_TMU_REG_CURRENT_TEMP,
+> +	.threshold_th0 = EXYNOS_THD_TEMP_RISE,
+> +	.threshold_th1 = EXYNOS_THD_TEMP_FALL,
+> +	.tmu_inten = EXYNOS_TMU_REG_INTEN,
+> +	.inten_rise0_shift = EXYNOS_TMU_INTEN_RISE0_SHIFT,
+> +	.inten_rise1_shift = EXYNOS_TMU_INTEN_RISE1_SHIFT,
+> +	.inten_rise2_shift = EXYNOS_TMU_INTEN_RISE2_SHIFT,
+> +	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+> +	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+> +	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
+> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+> +	.intclr_rise_shift = EXYNOS_TMU_RISE_INT_SHIFT,
+> +	.intclr_rise_mask = EXYNOS_TMU_RISE_INT_MASK,
+> +	.intclr_fall_mask = EXYNOS_TMU_FALL_INT_MASK,
+> +	.emul_con = EXYNOS_EMUL_CON,
+> +	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+> +	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+> +	.emul_time_mask = EXYNOS_EMUL_TIME_MASK,
+> +};
+> +
+> +#define EXYNOS3250_TMU_DATA \
+> +	.threshold_falling = 10, \
+> +	.trigger_levels[0] = 70, \
+> +	.trigger_levels[1] = 95, \
+> +	.trigger_levels[2] = 110, \
+> +	.trigger_levels[3] = 120, \
+> +	.trigger_enable[0] = true, \
+> +	.trigger_enable[1] = true, \
+> +	.trigger_enable[2] = true, \
+> +	.trigger_enable[3] = false, \
+> +	.trigger_type[0] = THROTTLE_ACTIVE, \
+> +	.trigger_type[1] = THROTTLE_ACTIVE, \
+> +	.trigger_type[2] = SW_TRIP, \
+> +	.trigger_type[3] = HW_TRIP, \
+> +	.max_trigger_level = 4, \
+> +	.gain = 8, \
+> +	.reference_voltage = 16, \
+> +	.noise_cancel_mode = 4, \
+> +	.cal_type = TYPE_TWO_POINT_TRIMMING, \
+> +	.efuse_value = 55, \
+> +	.min_efuse_value = 40, \
+> +	.max_efuse_value = 100, \
+> +	.first_point_trim = 25, \
+> +	.second_point_trim = 85, \
+> +	.default_temp_offset = 50, \
+> +	.freq_tab[0] = { \
+> +		.freq_clip_max = 800 * 1000, \
+> +		.temp_level = 70, \
+> +	}, \
+> +	.freq_tab[1] = { \
+> +		.freq_clip_max = 400 * 1000, \
+> +		.temp_level = 95, \
+> +	}, \
+> +	.freq_tab_count = 2, \
+> +	.registers = &exynos3250_tmu_registers, \
+> +	.features = (TMU_SUPPORT_EMULATION | \
+> +			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
+> +			TMU_SUPPORT_EMUL_TIME)
+> +#endif
+> +
+> +#if defined(CONFIG_SOC_EXYNOS3250)
+> +struct exynos_tmu_init_data const exynos3250_default_tmu_data = {
+> +	.tmu_data = {
+> +		{
+> +			EXYNOS3250_TMU_DATA,
+> +			.type = SOC_ARCH_EXYNOS3250,
+> +			.test_mux = EXYNOS4412_MUX_ADDR_VALUE,
+> +		},
+> +	},
+> +	.tmu_count = 1,
+> +};
+> +#endif
+> +
+>  #if defined(CONFIG_SOC_EXYNOS4412) || defined(CONFIG_SOC_EXYNOS5250)
+>  static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+>  	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+> index d268981..f0979e5 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+> @@ -148,6 +148,13 @@
+>  #define EXYNOS5440_TMU_TH_RISE4_SHIFT		24
+>  #define EXYNOS5440_EFUSE_SWAP_OFFSET		8
+>  
+> +#if defined(CONFIG_SOC_EXYNOS3250)
+> +extern struct exynos_tmu_init_data const exynos3250_default_tmu_data;
+> +#define EXYNOS3250_TMU_DRV_DATA (&exynos3250_default_tmu_data)
+> +#else
+> +#define EXYNOS3250_TMU_DRV_DATA (NULL)
+> +#endif
+> +
+>  #if defined(CONFIG_CPU_EXYNOS4210)
+>  extern struct exynos_tmu_init_data const exynos4210_default_tmu_data;
+>  #define EXYNOS4210_TMU_DRV_DATA (&exynos4210_default_tmu_data)
