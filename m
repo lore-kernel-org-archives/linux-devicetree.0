@@ -1,99 +1,152 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/6] clk: tegra: make tegra_clocks_apply_init_table
- arch_initcall
-Date: Mon, 21 Jul 2014 23:55:25 +0200
-Message-ID: <20140721215523.GE12076@mithrandir>
-References: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com>
- <1405437890-6468-3-git-send-email-pdeschrijver@nvidia.com>
- <20140716071932.GB7978@ulmo>
- <20140716082740.GK23218@tbergstrom-lnx.Nvidia.com>
- <53CD896C.3030605@wwwdotorg.org>
+Subject: Re: [RESEND PATCH v3 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Tue, 22 Jul 2014 00:04:11 +0200
+Message-ID: <20140721220409.GF12076@mithrandir>
+References: <1404751384-5077-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20140721135410.GA13770@ulmo> <20140721162136.286f5b62@bbrezillon>
+ <6062556.5zQdTSJFua@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5oH/S/bF6lOfqCQb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53CD896C.3030605@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Joseph Lo <josephl@nvidia.com>, Alex Courbot <acourbot@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0577670375=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6062556.5zQdTSJFua@avalon>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Lee Jones <lee.jones@linaro.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Tim Niemeyer <tim.niemeyer@corscience.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---5oH/S/bF6lOfqCQb
+--===============0577670375==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dgjlcl3Tl+kb3YDk"
+Content-Disposition: inline
+
+
+--dgjlcl3Tl+kb3YDk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 21, 2014 at 03:43:08PM -0600, Stephen Warren wrote:
-> On 07/16/2014 02:27 AM, Peter De Schrijver wrote:
-> > On Wed, Jul 16, 2014 at 09:19:33AM +0200, Thierry Reding wrote:
-> >> * PGP Signed by an unknown key
-> >>
-> >> On Tue, Jul 15, 2014 at 06:24:32PM +0300, Peter De Schrijver wrote:
-> >> [...]
-> >>> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> >>> index d081732..65cde4e 100644
-> >>> --- a/drivers/clk/tegra/clk.c
-> >>> +++ b/drivers/clk/tegra/clk.c
-> >>> @@ -290,10 +290,13 @@ struct clk ** __init tegra_lookup_dt_id(int clk=
-_id,
-> >>> =20
-> >>>  tegra_clk_apply_init_table_func tegra_clk_apply_init_table;
-> >>> =20
-> >>> -void __init tegra_clocks_apply_init_table(void)
-> >>> +static int __init tegra_clocks_apply_init_table(void)
-> >>>  {
-> >>>  	if (!tegra_clk_apply_init_table)
-> >>> -		return;
-> >>> +		return 0;
-> >>
-> >> Shouldn't this be an error? Or perhaps WARN()? To make sure this gets
-> >=20
-> > An arch_initcall will be called for every ARM platform I think? In case
-> > this gets called on a non-Tegra platform, tegra_clk_apply_init_table wi=
-ll not
-> > be set and therefore a silent return 0; seems the most appropriate thin=
-g to do
-> > to me?
+On Mon, Jul 21, 2014 at 08:30:31PM +0200, Laurent Pinchart wrote:
+> Hi Boris and Thierry,
 >=20
-> This is one reason that doing all the initialization from separate
-> initcalls sucks. Much better to have a single top-level initialization
-> function that calls exactly what is needed, only what is needed, and
-> only runs on the correct SoCs.
+> On Monday 21 July 2014 16:21:36 Boris BREZILLON wrote:
+> > On Mon, 21 Jul 2014 15:54:12 +0200 Thierry Reding wrote:
+> > > On Mon, Jul 21, 2014 at 03:47:52PM +0200, Laurent Pinchart wrote:
+> > >> On Monday 21 July 2014 15:43:13 Boris BREZILLON wrote:
+> > >>> On Mon, 21 Jul 2014 15:30:35 +0200 Thierry Reding wrote:
+> > >>>> On Mon, Jul 21, 2014 at 03:22:05PM +0200, Laurent Pinchart wrote:
+> > >>>>> On Monday 21 July 2014 14:55:23 Thierry Reding wrote:
+> > >>>>>> On Mon, Jul 21, 2014 at 02:34:28PM +0200, Boris BREZILLON wrote:
+> > >>>>>>> On Mon, 21 Jul 2014 14:16:42 +0200 Laurent Pinchart wrote:
+> > >>>>>>>> On Monday 21 July 2014 14:12:47 Thierry Reding wrote:
 >=20
-> But failing that, I guess you need to say something like
-> of_is_compatible(root node, "nvidia Tegra"), but of course the
-> definition of "nvidia Tegra" is an ever-growing list of possible values
-> that needs to be used from each separate initcall...
+> [snip]
+>=20
+> > >>>>>>>>> Quoting from your paste:
+> > >>>>>>>>> 	+   const enum video_bus_format *bus_formats;
+> > >>>>>>>>> 	+   int nbus_formats;
+> > >>>>>>>>>=20
+> > >>>>>>>>> Do we really need more than one?
+> > >>>>>>>>=20
+> > >>>>>>>> We do if we want to replace the color_formats and bpc fields.
+> > >>>>>>>=20
+> > >>>>>>> Yes, that's what I was about to answer :-).
+> > >>>>>>=20
+> > >>>>>> Maybe we don't need to replace color_formats and bpc field
+> > >>>>>> immediately. That could be done in a follow-up patch.
+> > >>>>>=20
+> > >>>>> We don't need to replace them right now, but we should at least
+> > >>>>> agree on how to replace them. Introducing a new field that would
+> > >>>>> need to be replaced in the near future when removing color_formats
+> > >>>>> and bpc would be a waste of time.
+> > >>>>=20
+> > >>>> Sure. One of the problems I see with replacing color_formats and b=
+pc
+> > >>>> with the above is that some of the bits within color_formats are s=
+et
+> > >>>> when the EDID is parsed. That implies that if they are replaced wi=
+th
+> > >>>> an array of formats, the array would need to be reallocated during
+> > >>>> EDID parsing. That sounds like ugliness.
+> > >>>>=20
+> > >>>> But if you can find a nice way to make it work that'd be great.
+> > >>>=20
+> > >>> How about using a list instead of an array ?
+> > >>> This way we can add elements to this list when parsing the EDID.
+> > >>>=20
+> > >>> Or we can just define a maximum size for the bus_formats array when
+> > >>> retrieving this info from EDID. If I'm correct we have at most 18 b=
+us
+> > >>>=20
+> > >>> formats:
+> > >>>  - 3 color formats:
+> > >>>    * RGB 4:4:4
+> > >>>    * YCbCr 4:4:4
+> > >>>    * YCbCr 4:4:2
+> > >>>  - 6 color depths: 6, 8, 10, 12, 14 and 16 bits per color
+> > >>=20
+> > >> bpc isn't a bitmask, so EDID supports up to three formats only.
+> > >>=20
+> > >> The color_formats field is computed in the drm_add_display_info()
+> > >> function. You could easily turn it into a local variable and allocate
+> > >> and fill the formats array at the end of the function.
+> > >=20
+> > > But you also need to be careful to keep whatever formats the driver m=
+ight
+> > > have set explicitly.
+>=20
+> Do we have drivers that explicitly add formats to the formats parsed from=
+ EDID=20
+> data ? If so, what's the use case ?
 
-FWIW, we have soc_is_tegra() now in include/soc/tegra/common.h which is
-meant to be used for exactly this purpose. I agree that it isn't optimal
-but it's pretty good. It should be easy to refactor this to make it
-callable from a top-level initialization function when a decision
-regarding that has been made.
+Drivers could specifically add them if there's no EDID or if the EDID
+is known to be broken. If the former this is probably irrelevant. In the
+latter maybe a better option would be to ignore the EDID-probed ones
+rather than use the union of those provided by the driver and EDID.
 
 Thierry
 
---5oH/S/bF6lOfqCQb
+--dgjlcl3Tl+kb3YDk
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTzYxLAAoJEN0jrNd/PrOhERgQAJsRZRUQ+9TQKgFfuvk3nMCR
-CASncN/V2m5XRMICNWB/0CauxcV+WsPkD5Vjvgra07bWbarO1hePbKkLidfc7l9B
-0io8Nvw+P9yFXmV52JVuCa7pJJnLs3KWN+msf9rYT9tk7XSFMW5Pnl+e192+ILtH
-oQi0HvQ3zEmB/tGnoE+5SiGvTu9rQl08dV68qVQnTCrHE598Q+zRSXoyEPTHxd8a
-rXIS3TgmICuZccLmTosu3Kv/jdoGpyAWdskvyiUVfVoXiqhGDMYrl4D+kTK2Yq8i
-530pdVfZVZ6yA38HLRr5Mch8rNDSh626xIgQlmWoKXeHOexYTh5f1DQKyjbzROkm
-O0oYIzk/L1gIUuXtzttCr5Fl7hckN5KI/r6g3Jt2v1WovK8Fbq7eEitVXyxEk4+7
-rG0MrA33zc+nM+1VdhDlTFec6GQiXfiKVU+3NV5Gk8+rQHq7NTjTS15E9QzTUF1e
-TyyOJGPbD9nRVtvrW7HGq+u8IFx1C1GuD31pul0+srIa5fsV1aYptq6P0r5BrlkL
-CLL7uXuA5wdil4T1D34Z/0sHA8AYyOWcMFCvkhekSkW5L2+I72LwDPYlcZ5DYNH7
-XHrh821WxGsLqoTRy3VQEAlcgUQ3TZx8veWMl5Zd0g6GQmLL0X4At97anydfFxqN
-58cTrS0O1lw1obOeFv7O
-=bqXL
+iQIcBAEBAgAGBQJTzY5ZAAoJEN0jrNd/PrOhMisP/26n5BeZGFNyryyOXosnLmYX
+KtQrp9JXk7cHNJ2dlyVyzp/bKB61JOQKo5efKwcLCs5PLRg8ioENot3XDQXixTt2
+Sj0VhDDj1K+INvK/jH815fSFXtbsOawipXyyhuZeLD5OOPhts43iKdcQ3izCBe2K
+NpitElZaRrMfyY6M2+r5BcFtgsiNtY9saqCfFzbnLZfTLobCYEEe5zUdWsZ3zJDJ
+rmYGrG3uts6c6WbDsqk2zkG39e+T6Hdk1kifaWczAdwt2g916gkBQN0hYzGcQuMp
+ao/XkTl0gI8MDdHUZeBn1NZWste08AjhG6UvVrtizYJmLoP0c7cuWWOf/F5G1kOy
+Nyf2ZeF4JVrd9PxzXuOFp971skCNjv0pZyjOL2FerhQjUzmcfssoAT3RDJQ8haIq
+thECyXP5M+cQg6TWf8mwtuyI9C8CISViB22bVkO+E34r1AUYeHRfJ7rQo9cCd77f
+nnDrqSofcQXDWMkb62Qo/EWayFlusC5R9/XoP36eI0zSy8MS68+v2zK4mLxnxLAS
+hYElbVeOC/A8v27Qc5gMJRx5WnRCJCFlu/CWQ0lzzqZB5VaAVQGOd8x9aWmPjUQ4
+kP16St5kOn82M9kxaGGGEWY0FJjIyRx3YkGnCHscL0BR1+Ljt5En09iDdFWcmiXI
+mQTm5CyvZY1kjL/DTiGa
+=milW
 -----END PGP SIGNATURE-----
 
---5oH/S/bF6lOfqCQb--
+--dgjlcl3Tl+kb3YDk--
+
+--===============0577670375==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0577670375==--
