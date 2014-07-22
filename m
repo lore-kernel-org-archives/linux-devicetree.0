@@ -1,177 +1,135 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when
- request IRQ
-Date: Tue, 22 Jul 2014 15:42:59 +0800
-Message-ID: <20140722074257.GC21229@dragon>
-References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>
- <20140722062803.GA21229@dragon> <53CE107A.1000000@tqsc.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v6 10/14] drm/panel: add S6E3FA0 driver
+Date: Tue, 22 Jul 2014 09:49:36 +0200
+Message-ID: <20140722074935.GC18258@ulmo>
+References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com>
+ <1405587689-1466-11-git-send-email-yj44.cho@samsung.com>
+ <20140717103645.GD17877@ulmo> <53C87D2F.9000906@samsung.com>
+ <53CCD5A8.6090406@samsung.com> <20140721091917.GK8843@ulmo>
+ <53CCF70A.5010403@samsung.com> <53CDDD61.6000005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53CE107A.1000000-7U5DVgMjAv4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
-Cc: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0130100484=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53CDDD61.6000005@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Tomi Valkeinen <tomi.valkeinen@ti.com>, Paul Mundt <paul.mundt@gmail.com>, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-+ Grant and devicetree list
 
-On Tue, Jul 22, 2014 at 09:19:22AM +0200, Markus Niebel wrote:
-> Am 22.07.2014 08:28, wrote Shawn Guo:
-> > On Wed, Jul 16, 2014 at 03:51:04PM +0200, Markus Niebel wrote:
-> >> From: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
-> >>
-> >> When requesting an GPIO irq for imx Soc two things are missing:
-> >> - there is no check, if the GPIO is already requested
-> >> - there is no check, if the GPIO is configured as input
-> >>
-> >> The first case can lead to reconfiguring the GPIO pin from third
-> >> party while it is used as IRQ pin, second case will (eventually)
-> >> prevent IRQ from being seen by SOC becaus the pin is driven by
-> >> Soc
-> >>
-> >> This patch tries to implement (logic taken roughly from gpio-omap)
-> >> - basic check if gpio already requested
-> >> - if needed requests the gpio and configures as IN.
-> >> - if gpio is already requested it is only verified if pin is IN
-> >> - gpio is locked as irq
-> >>
-> >> Tested on a not mainlined i.MX6 based hardware with pin configured
-> >> by bootloader as OUT HIGH and expecting a low active IRQ.
-> >>
-> >> Signed-off-by: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  drivers/gpio/gpio-mxc.c |   35 +++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 35 insertions(+)
-> >>
-> >> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> >> index db83b3c..4316a38 100644
-> >> --- a/drivers/gpio/gpio-mxc.c
-> >> +++ b/drivers/gpio/gpio-mxc.c
-> >> @@ -175,6 +175,31 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
-> >>  	u32 gpio = port->bgc.gc.base + gpio_idx;
-> >>  	int edge;
-> >>  	void __iomem *reg = port->base;
-> >> +	int ret = 0;
-> >> +
-> >> +	if (!gpiochip_is_requested(&port->bgc.gc, gpio_idx)) {
-> >> +		char label[32];
-> >> +
-> >> +		snprintf(label, 32, "gpio%u-irq", gpio);
-> >> +		ret = gpio_request_one(gpio, GPIOF_DIR_IN, label);
-> > 
-> > I'm not sure it's correct to call gpio_request_one() from .set_irq_type
-> > hook.  It looks like a API usage violation to me.  It should really be
-> > called from client driver.
-> 
-> Thats why it is an RFC. I add Linus Walleij to the cc-list.
-> 
-> Let me describe the problem:
-> 
-> Currently client drivers have simply interrupts and interrupt-parent
-> in their bindings, but no interrupt-gpios. Therefore in this case a
-> client does not know about a dedicated gpio which is to be requested
-> and configured.
+--===============0130100484==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+nBD6E3TurpgldQp"
+Content-Disposition: inline
 
-Okay.  I understand your problem now.  This is an issue in case we
-specify a GPIO to be used as interrupt from device tree.  In non-DT
-world, client driver knows this is an interrupt on GPIO, and therefore
-takes the responsibility to request and configure the GPIO to work as
-interrupt.  But in DT case, client driver does not know whether it's an
-IRQ line or GPIO based interrupt.  The consequence is that GPIO
-subsystem, OF subsystem, client driver, none of the three is requesting
-and configuring the GPIO to be used as interrupt.
 
-This is a common issue instead of i.MX specific, and should be addressed
-globally, I think.
+--+nBD6E3TurpgldQp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
-
-> 
-> > 
-> >> +	} else {
-> >> +		val = readl(port->base + GPIO_GDIR);
-> >> +		if (val & BIT(gpio_idx))
-> >> +			ret = -EINVAL;
-> > 
-> > It says that the GPIO is requested by someone, but we're not really sure
-> > if it's the correct one, i.e. the one is requesting set_irq_type.
-> > 
-> 
-> Yes, but the current situation is even worse (in my eyes): an IRQ can be requested and an
-> independend party can request and configure the gpio as output ...
-> 
-> >> +	}
-> >> +
-> >> +	if (ret) {
-> >> +		dev_err(port->bgc.gc.dev, "unable to set gpio_idx %u as IN\n",
-> >> +			gpio_idx);
-> >> +		return ret;
-> >> +	}
-> > 
-> > Having said that, I'm not sure any above changes is really necessary.
-> > If any, I would say only gpiochip_is_requested() check makes some sense,
-> > but we should just fail out if the GPIO hasn't been requested.  Nothing
-> > more can be done in there.
-> 
-> Going that way as a consequence a reworked device tree binding for gpio irq is needed
-> (just like in the platform data days) when providing a gpio number and the client has
-> to request gpio and irq - correct me if I'm wrong.
-> 
-> Maybe here is something needed with deeper knowledge in the gpio subsystem.
-> 
-> > 
-> >> +
-> >> +	ret = gpio_lock_as_irq(&port->bgc.gc, gpio_idx);
-> >> +	if (ret) {
-> >> +		dev_err(port->bgc.gc.dev, "unable to lock gpio_idx %u for IRQ\n",
-> >> +			gpio_idx);
-> >> +		return ret;
-> >> +	}
-> > 
-> > This and the following changes do make sense to me.
-> > 
-> > Shawn
-> > 
-> >>  
-> >>  	port->both_edges &= ~(1 << gpio_idx);
-> >>  	switch (type) {
-> >> @@ -231,6 +256,15 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static void gpio_irq_shutdown(struct irq_data *d)
-> >> +{
-> >> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> >> +	struct mxc_gpio_port *port = gc->private;
-> >> +	u32 gpio_idx = d->hwirq;
-> >> +
-> >> +	gpio_unlock_as_irq(&port->bgc.gc, gpio_idx);
-> >> +}
-> >> +
-> >>  static void mxc_flip_edge(struct mxc_gpio_port *port, u32 gpio)
-> >>  {
-> >>  	void __iomem *reg = port->base;
-> >> @@ -353,6 +387,7 @@ static void __init mxc_gpio_init_gc(struct mxc_gpio_port *port, int irq_base)
-> >>  	ct->chip.irq_mask = irq_gc_mask_clr_bit;
-> >>  	ct->chip.irq_unmask = irq_gc_mask_set_bit;
-> >>  	ct->chip.irq_set_type = gpio_set_irq_type;
-> >> +	ct->chip.irq_shutdown = gpio_irq_shutdown;
-> >>  	ct->chip.irq_set_wake = gpio_set_wake_irq;
-> >>  	ct->regs.ack = GPIO_ISR;
-> >>  	ct->regs.mask = GPIO_IMR;
-> >> -- 
-> >> 1.7.9.5
+On Tue, Jul 22, 2014 at 12:41:21PM +0900, YoungJun Cho wrote:
+> On 07/21/2014 08:18 PM, Andrzej Hajda wrote:
+> >On 07/21/2014 11:19 AM, Thierry Reding wrote:
+> >>On Mon, Jul 21, 2014 at 10:56:08AM +0200, Andrzej Hajda wrote:
+> >>>On 07/18/2014 03:49 AM, YoungJun Cho wrote:
+> >>>>On 07/17/2014 07:36 PM, Thierry Reding wrote:
+> >>>>>On Thu, Jul 17, 2014 at 06:01:25PM +0900, YoungJun Cho wrote:
+[...]
+> >>>>>>+static void s6e3fa0_read_mtp_id(struct s6e3fa0 *ctx)
+> >>>>>>+{
+> >>>>>>+	unsigned char id[MTP_ID_LEN];
+> >>>>>>+	int ret;
+> >>>>>>+
+> >>>>>>+	s6e3fa0_set_maximum_return_packet_size(ctx, MTP_ID_LEN);
+> >>>>>>+	ret =3D s6e3fa0_dcs_read(ctx, MIPI_DCS_GET_DISPLAY_ID, id, MTP_ID=
+_LEN);
+> >>>>>This also looks like a standard DCS command. I can't find it in eith=
+er
+> >>>>>v1.01 nor v1.02 of the specification, though. Do you know where it's
+> >>>>>specified?
+> >>>>>
+> >>>>Yes, I also can't find it in DCS specification and there is no special
+> >>>>description in panel datasheet.
+> >>>>But as it is declared in "include/video/mipi_display.h", so I think it
+> >>>>is a standard one.
+> >>>
+> >>>On page 9 of the "Introduction of MIPI by Renesas" [2] there is info
+> >>>it is a part of "Nokia I/F command list", I guess it is kind of alpha
+> >>>version of MIPI DCS.
+> >>>
+> >>>[2]: http://wenku.baidu.com/view/658fab68af1ffc4ffe47acbe.html
 > >>
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>That link is the only one which contains "Nokia I/F command list" on the
+> >>internet (that is, according to Google). But since this is already part
+> >>of the mipi_display.h header file we may as well use it.
+> >>
+> >>I wonder if perhaps the READ_DDB_START and READ_DDB_CONTINUE commands
+> >>could be used as a replacement for this display ID.
+> >>
+>=20
+> There is a simple description for "Read DDB Start(A1H)" like below.
+> - This command returns supplier identification and display module model /
+> revision information.
+> - NOTE: This information is not the same what Read IDs(04H) command is
+> returning.
+>=20
+> For reference, Read IDs(04H) description is like below.
+> - This read command returns 24-bit display identification information.
+> - The first read byte identifies the OLED module's manufacturer.
+> - The Second read byte is used to track the OLED module/driver version.
+> - The third read byte identifies the OLED module/driver.
+
+Okay, that explains things a little better. Can you point me to the
+document that this is from?
+
+But what I was trying to say is that if the Read IDs command isn't an
+official DCS command, maybe it would be a better idea to use the DDB
+instead. I assume that even if it isn't the same information it would
+at least be a superset and therefore a suitable replacement.
+
+Thierry
+
+--+nBD6E3TurpgldQp
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTzhePAAoJEN0jrNd/PrOhsUEQAJdwQx63WI8owaraFNfL5oZI
+f2cleQCk9rF8j0bWhtBtRWhInqK8pLog8dFbcJh9fRcrO79GQhnVfs7BbfdJMeKu
+WUTslblQm5aqWGDJdTVBNcEEggqG8YV5imMHKgpBi29mJ2N4qKEQUQwUSE5tgRpO
+xJ0dKrZr4Jze0dtpkky1DJZ9vHJObzVjMhvzIDzXZQvpSmTZcHgVzi6XcZ29xCtf
++HzWlkDrQX8VHENFzM13/f3bky4+pNwX+GZI/i6/XW2AKqF6TcpnbYHgGJxDqKAV
+Nb4FiHiEQt0lzLaWwpyBoDpEkaebYqcA9+BVqGEs/DTpj1Z7qW+2Lv4/mVmC8LPJ
+/gmUwoHGDp/MBUk3YOI60obDd4m4gGQwGEBogJsSl7rZqTA243zvSq9JGS7uNdk7
+MszArcanEUqgAUKAvURCVFRxH+q6PmkeIuDGykvyuakQ68V+mMNgvE0nTTrkA16b
+hc4lM1WmIqnR5RYy5EfxtYaYc1VL/JBZad6+TFmfo2jTSUNaQIl5v6NcMLCBqEpo
+1sL2wFDH9EZGYZ590XIuHNz23JXn9DuXWaYpMh3XX785cA/Ohsz8xMtrCUGKt9Ul
+awnVi5uCkqEDqRBcOjYI5Ds3RMAGIS0ef0YYu+p4hadxZufgMzosuNFV/VzI6SW6
+uuAFor9nWyHqUokmADTr
+=ndVx
+-----END PGP SIGNATURE-----
+
+--+nBD6E3TurpgldQp--
+
+--===============0130100484==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0130100484==--
