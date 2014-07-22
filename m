@@ -1,94 +1,59 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v2 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI
- PMICs
-Date: Tue, 22 Jul 2014 14:51:53 +0300
-Message-ID: <53CE5059.4010107@mm-sol.com>
-References: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com> <1405613855-27572-2-git-send-email-svarbanov@mm-sol.com> <20140722110341.GE8406@lee--X1>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v6 05/14] drm/exynos: dsi: add TE interrupt handler to
+ support LCD I80 interface
+Date: Tue, 22 Jul 2014 20:53:58 +0900
+Message-ID: <53CE50D6.1000209@samsung.com>
+References: <53CE3C45.9010509@samsung.com>
+ <1406026184-29185-1-git-send-email-yj44.cho@samsung.com>
+ <53CE43B3.2080203@gmail.com> <53CE469A.3090701@samsung.com>
+ <53CE47AA.4000200@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140722110341.GE8406@lee--X1>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <53CE47AA.4000200@gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Varka Bhadram <varkabhadram@gmail.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2014 02:03 PM, Lee Jones wrote:
-> On Thu, 17 Jul 2014, Stanimir Varbanov wrote:
-> 
->> From: Josh Cartwright <joshc@codeaurora.org>
+Hi Varka,
+
+On 07/22/2014 08:14 PM, Varka Bhadram wrote:
+> On 07/22/2014 04:40 PM, YoungJun Cho wrote:
+>> Hi Varka,
 >>
->> The Qualcomm SPMI PMIC chips are components used with the
->> Snapdragon 800 series SoC family.  This driver exists
->> largely as a glue mfd component, it exists to be an owner
->> of an SPMI regmap for children devices described in
->> device tree.
+>> This irq handler should be registered in attach() and unregistered in
+>> detach().
 >>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> 
-> Needs to be signed off by the author.
-> 
->> ---
->>  drivers/mfd/Kconfig       |   16 +++++++++++
->>  drivers/mfd/Makefile      |    1 +
->>  drivers/mfd/pm8xxx-spmi.c |   63 +++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 80 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/mfd/pm8xxx-spmi.c
-> 
-> [...]
-> 
->> +++ b/drivers/mfd/pm8xxx-spmi.c
->> @@ -0,0 +1,63 @@
->> +/*
->> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
-> 
-> There should be a '\n' here.
+>> The devm_* APIs are released(freed) in remove(), right?
+>>
+>> Logically the panel could be attached and detached several times after
+>> dsi is probed and not removed.
+>> So I don't use devm_* APIs.
+>
+> You meant to say that in-case of GPIOs also you are following the same
+> thing ..?
+>
+> Means requesting the GPIOs and Releasing several times ..?
+>
 
-OK.
+Yes, this TE gpio is came from panel.
+So it should be refresh whenever a (new) panel is attached.
 
-> 
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/spmi.h>
->> +#include <linux/regmap.h>
->> +#include <linux/of_platform.h>
-> 
-> [...]
-> 
->> +MODULE_DESCRIPTION("PM8XXX SPMI PMIC driver");
->> +MODULE_ALIAS("platform:" KBUILD_MODNAME);
+Thank you.
+Best regards YJ
 
-I will change this to:
-
-MODULE_ALIAS("spmi:pm8xxx-spmi");
-
->> +MODULE_AUTHOR("The Linux Foundation");
-> 
-> The Linux Foundation did not write this patch.
-
-OK, I will change the author or remove the tag completely.
-
-> 
->> +MODULE_LICENSE("GPL v2");
-> 
-> Appart from that:
-> 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> 
-
-Thanks. I will resend the whole patch set with your acks.
-
--- 
-regards,
-Stan
+>>
+>>>
+>>
+>
+>
