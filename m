@@ -1,294 +1,148 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for pci_host_bridge.
-Date: Mon, 21 Jul 2014 21:15:58 -0600
-Message-ID: <CAErSpo65RBeTgzrVefWBfjnZqTPzyz__HnC4bn8riGGDC0GkHg@mail.gmail.com>
-References: <20140708005954.GC22939@google.com> <20140708104655.GC6501@e106497-lin.cambridge.arm.com>
- <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com> <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com> <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
- <20140711141115.GB16321@arm.com> <CAErSpo7C8qzmdp+XgVi2ysXj_NcgvVY7RVfBZ2PHimLzrzANMQ@mail.gmail.com>
- <20140711180151.GH16321@arm.com> <20140714163922.GH1112@arm.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v6 10/14] drm/panel: add S6E3FA0 driver
+Date: Tue, 22 Jul 2014 12:41:21 +0900
+Message-ID: <53CDDD61.6000005@samsung.com>
+References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com>
+ <1405587689-1466-11-git-send-email-yj44.cho@samsung.com>
+ <20140717103645.GD17877@ulmo> <53C87D2F.9000906@samsung.com>
+ <53CCD5A8.6090406@samsung.com> <20140721091917.GK8843@ulmo>
+ <53CCF70A.5010403@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140714163922.GH1112@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53CCF70A.5010403@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Paul Mundt <paul.mundt@gmail.com>, Imre Deak <imre.deak@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 14, 2014 at 10:39 AM, Catalin Marinas
-<catalin.marinas@arm.com> wrote:
-> ...
-> Some more thinking, so I guess we could get away without changing the
-> API. On top of Liviu's tree here:
->
-> http://linux-arm.org/git?p=linux-ld.git;a=shortlog;h=refs/heads/for-upstream/pci_v8
->
-> I reverted "pci: Introduce a domain number for pci_host_bridge.":
->
-> http://linux-arm.org/git?p=linux-ld.git;a=commitdiff;h=b44e1c7d6b01c436f6f55662a1414e925161c9ca
->
-> and added this patch on top (if you agree with the idea, we can split it
-> nicely in arm64, OF and PCI specific parts). What we get is the
-> domain_nr in a generic structure and free the sysdata pointer for the
-> host controller driver.
->
-> ----------------8<----------------------------------------
-> From b32606aa3997fc8a45014a64f99e921eef4872b0 Mon Sep 17 00:00:00 2001
-> From: Catalin Marinas <catalin.marinas@arm.com>
-> Date: Mon, 14 Jul 2014 17:20:01 +0100
-> Subject: [PATCH] pci: Add support for generic domain_nr in pci_bus
->
-> This patch adds domain_nr in struct pci_bus if
-> CONFIG_PCI_DOMAINS_GENERIC is enabled. The default implementation for
-> pci_domain_nr() simply returns bus->domain_nr. For the root bus, the
-> core PCI code calls pci_set_domain_nr(bus, parent_device) while the
-> child buses inherit the domain nr of the parent bus.
->
-> This patch also adds an of_pci_set_domain_nr() implementation which
-> parses the device tree for the "pci-domain" property or sets domain_nr
-> to the next available value (this function could also be implemented
-> entirely in arm64).
->
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Hi,
 
-I like this.  It seems like a reasonable step forward.  I don't really
-like the pci_set_domain_nr() interface because the domain conceptually
-exists before the root bus in the domain, but we can deal with that
-later.
+On 07/21/2014 08:18 PM, Andrzej Hajda wrote:
+> On 07/21/2014 11:19 AM, Thierry Reding wrote:
+>> On Mon, Jul 21, 2014 at 10:56:08AM +0200, Andrzej Hajda wrote:
+>>> On 07/18/2014 03:49 AM, YoungJun Cho wrote:
+>>>> Hi Thierry,
+>>>>
+>>>> Thank you a lot for kind comments.
+>>>>
+>>>> On 07/17/2014 07:36 PM, Thierry Reding wrote:
+>>>>> On Thu, Jul 17, 2014 at 06:01:25PM +0900, YoungJun Cho wrote:
+>>>>> [...]
+>>>>>> diff --git a/drivers/gpu/drm/panel/panel-s6e3fa0.c b/drivers/gpu/drm/panel/panel-s6e3fa0.c
+>>>>> [...]
+>>>>>> +/* Manufacturer Command Set */
+>>>>>> +#define MCS_GLOBAL_PARAMETER	0xb0
+>>>>>> +#define MCS_AID			0xb2
+>>>>>> +#define MCS_ELVSSOPT		0xb6
+>>>>>> +#define MCS_TEMPERATURE_SET	0xb8
+>>>>>> +#define MCS_PENTILE_CTRL	0xc0
+>>>>>> +#define MCS_GAMMA_MODE		0xca
+>>>>>> +#define MCS_VDDM		0xd7
+>>>>>> +#define MCS_ALS			0xe3
+>>>>>> +#define MCS_ERR_FG		0xed
+>>>>>> +#define MCS_KEY_LEV1		0xf0
+>>>>>> +#define MCS_GAMMA_UPDATE	0xf7
+>>>>>> +#define MCS_KEY_LEV2		0xfc
+>>>>>> +#define MCS_RE			0xfe
+>>>>>> +#define MCS_TOUT2_HSYNC		0xff
+>>>>>> +
+>>>>>> +/* Content Adaptive Brightness Control */
+>>>>>> +#define DCS_WRITE_CABC		0x55
+>>>>> Is this not a manufacturer specific command? I couldn't find it in the
+>>>>> DSI or DCS specifications, but it sounds like something standard (also
+>>>>> indicated by the DCS_ prefix). Can you point out the specification for
+>>>>> this?
+>>>>>
+>>>> Andrzej commented before and decided it as DCS one because if the value
+>>>> is less than 0xb0, it is DCS one and the others are MCS one.
+>>>> But still I'm not sure it is correct.
+>>> I would not say 'decided'. I have just stated that according to DCS
+>>> specification
+>>> it should be DCS command (below 0xb0), but it is not present in mipi dcs
+>>> specs.
+>>> On the other side many panels have it [1]:
+>>>
+>>> [1]:
+>>> https://www.google.com/search?q=%22Write+Content+Adaptive+Brightness+Control%22
+>>
+>> Yeah, my search yielded similar results. I wonder if this is perhaps
+>> part of a draft future specification. I'll try to ask around some more
+>> if anybody knows what the status of this is.
+>>
+>>>>>> +static void s6e3fa0_read_mtp_id(struct s6e3fa0 *ctx)
+>>>>>> +{
+>>>>>> +	unsigned char id[MTP_ID_LEN];
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	s6e3fa0_set_maximum_return_packet_size(ctx, MTP_ID_LEN);
+>>>>>> +	ret = s6e3fa0_dcs_read(ctx, MIPI_DCS_GET_DISPLAY_ID, id, MTP_ID_LEN);
+>>>>> This also looks like a standard DCS command. I can't find it in either
+>>>>> v1.01 nor v1.02 of the specification, though. Do you know where it's
+>>>>> specified?
+>>>>>
+>>>> Yes, I also can't find it in DCS specification and there is no special
+>>>> description in panel datasheet.
+>>>> But as it is declared in "include/video/mipi_display.h", so I think it
+>>>> is a standard one.
+>>>
+>>> On page 9 of the "Introduction of MIPI by Renesas" [2] there is info
+>>> it is a part of "Nokia I/F command list", I guess it is kind of alpha
+>>> version of MIPI DCS.
+>>>
+>>> [2]: http://wenku.baidu.com/view/658fab68af1ffc4ffe47acbe.html
+>>
+>> That link is the only one which contains "Nokia I/F command list" on the
+>> internet (that is, according to Google). But since this is already part
+>> of the mipi_display.h header file we may as well use it.
+>>
+>> I wonder if perhaps the READ_DDB_START and READ_DDB_CONTINUE commands
+>> could be used as a replacement for this display ID.
+>>
 
-Tiny nit: please remove the "extern" on the pci_set_domain_nr()
-declaration in include/linux/pci.h; we recently removed all the rest
-(f39d5b72913e).
+There is a simple description for "Read DDB Start(A1H)" like below.
+- This command returns supplier identification and display module model 
+/ revision information.
+- NOTE: This information is not the same what Read IDs(04H) command is 
+returning.
 
-I'd really like to see all this stuff in v3.17, but I'm going to be on
-vacation for the next three weeks and won't be able to do much until
-Aug 11, which is probably going to be in the middle of the merge
-window.  But maybe the series can be integrated in -next via an ARM
-tree or something.  If it helps, you can add my
+For reference, Read IDs(04H) description is like below.
+- This read command returns 24-bit display identification information.
+- The first read byte identifies the OLED module's manufacturer.
+- The Second read byte is used to track the OLED module/driver version.
+- The third read byte identifies the OLED module/driver.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>> Adding Guennadi, Tomi, Paul and Imre on Cc since they were involved with
+>> the original patch that added mipi_display.h. Perhaps they remember what
+>> the origin of this command is.
+>
+>
+> I guess it was PCF8833 used in Nokia 6100 [1][2].
+>
+> [1]: http://www.vintagecomputercables.com/datasheet/PCF8833_1.pdf
+> [2]:
+> http://www.elecfreaks.com/store/download/datasheet/shield/6100_Display_Driver.pdf
+>
 
-for this piece.  I don't remember how many other PCI changes are
-involved; maybe my ack on this will be enough?  Even if we can't get
-it in for the merge window, I'm open to trying to merge it after
-v3.17-rc1 if it's isolated enough.
+Yes, this command is related with Nokia.
 
-Bjorn
+Last Friday, I met panel vendor guy for some issues.
+At the break time, I asked him for about this Read IDs(04H), why it is 
+not included in DCS specification.
+He said that this command was originated by Nokia.
+In feature phone times, most of panel vendors wanted their panels to be 
+used by Nokia and Nokia wanted this command, so most of panel vendors 
+still provide this command traditionally.
 
-> ---
->  arch/arm64/Kconfig           |  3 +++
->  arch/arm64/include/asm/pci.h | 10 ----------
->  arch/arm64/kernel/pci.c      |  5 +++++
->  drivers/of/of_pci.c          | 20 +++++++++++++-------
->  drivers/pci/probe.c          | 11 ++++++++---
->  include/linux/of_pci.h       |  5 +++++
->  include/linux/pci.h          | 15 +++++++++++++++
->  7 files changed, 49 insertions(+), 20 deletions(-)
+Thank you.
+Best regards YJ
+
+> Regards
+> Andrzej
 >
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 48ed631adde2..2c884f7453ba 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -160,6 +160,9 @@ config PCI
->  config PCI_DOMAINS
->         def_bool PCI
+>>
+>> Thierry
+>>
 >
-> +config PCI_DOMAINS_GENERIC
-> +       def_bool PCI
-> +
->  config PCI_SYSCALL
->         def_bool PCI
 >
-> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> index 3f7856e92d66..4f091a5135b7 100644
-> --- a/arch/arm64/include/asm/pci.h
-> +++ b/arch/arm64/include/asm/pci.h
-> @@ -29,16 +29,6 @@ struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus);
->  extern int isa_dma_bridge_buggy;
->
->  #ifdef CONFIG_PCI
-> -static inline int pci_domain_nr(struct pci_bus *bus)
-> -{
-> -       struct pci_host_bridge *bridge = find_pci_host_bridge(bus);
-> -
-> -       if (bridge)
-> -               return bridge->domain_nr;
-> -
-> -       return 0;
-> -}
-> -
->  static inline int pci_proc_domain(struct pci_bus *bus)
->  {
->         return 1;
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 955d6d1cb011..d5ed1afb0d88 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -36,3 +36,8 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
->  {
->         return res->start;
->  }
-> +
-> +void pci_set_domain_nr(struct pci_bus *bus, struct device *parent)
-> +{
-> +       of_pci_set_domain_nr(bus, parent);
-> +}
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index e81402af5cde..54f06b748bf1 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -175,7 +175,7 @@ static atomic_t domain_nr = ATOMIC_INIT(-1);
->  struct pci_host_bridge *
->  of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops, void *host_data)
->  {
-> -       int err, domain, busno;
-> +       int err, busno;
->         struct resource *bus_range;
->         struct pci_bus *root_bus;
->         struct pci_host_bridge *bridge;
-> @@ -186,10 +186,6 @@ of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops, void *host
->         if (!bus_range)
->                 return ERR_PTR(-ENOMEM);
->
-> -       domain = of_alias_get_id(parent->of_node, "pci-domain");
-> -       if (domain == -ENODEV)
-> -               domain = atomic_inc_return(&domain_nr);
-> -
->         err = of_pci_parse_bus_range(parent->of_node, bus_range);
->         if (err) {
->                 dev_info(parent, "No bus range for %s, using default [0-255]\n",
-> @@ -207,8 +203,7 @@ of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops, void *host
->                 goto err_create;
->
->         /* then create the root bus */
-> -       root_bus = pci_create_root_bus_in_domain(parent, domain, busno,
-> -                                               ops, host_data, &res);
-> +       root_bus = pci_create_root_bus(parent, busno, ops, host_data, &res);
->         if (IS_ERR(root_bus)) {
->                 err = PTR_ERR(root_bus);
->                 goto err_create;
-> @@ -225,6 +220,17 @@ err_create:
->  }
->  EXPORT_SYMBOL_GPL(of_create_pci_host_bridge);
->
-> +void of_pci_set_domain_nr(struct pci_bus *bus, struct device *parent)
-> +{
-> +       int domain;
-> +
-> +       domain = of_alias_get_id(parent->of_node, "pci-domain");
-> +       if (domain == -ENODEV)
-> +               domain = atomic_inc_return(&domain_nr);
-> +
-> +       bus->domain_nr = domain;
-> +}
-> +
->  #ifdef CONFIG_PCI_MSI
->
->  static LIST_HEAD(of_pci_msi_chip_list);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2c9266237edc..aa30a9e8915d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -485,7 +485,7 @@ void pci_read_bridge_bases(struct pci_bus *child)
->         }
->  }
->
-> -static struct pci_bus *pci_alloc_bus(void)
-> +static struct pci_bus *pci_alloc_bus(struct pci_bus *parent)
->  {
->         struct pci_bus *b;
->
-> @@ -500,6 +500,10 @@ static struct pci_bus *pci_alloc_bus(void)
->         INIT_LIST_HEAD(&b->resources);
->         b->max_bus_speed = PCI_SPEED_UNKNOWN;
->         b->cur_bus_speed = PCI_SPEED_UNKNOWN;
-> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
-> +       if (parent)
-> +               b->domain_nr = parent->domain_nr;
-> +#endif
->         return b;
->  }
->
-> @@ -670,7 +674,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
->         /*
->          * Allocate a new bus, and inherit stuff from the parent..
->          */
-> -       child = pci_alloc_bus();
-> +       child = pci_alloc_bus(parent);
->         if (!child)
->                 return NULL;
->
-> @@ -1767,13 +1771,14 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->         bridge->dev.parent = parent;
->         bridge->dev.release = pci_release_host_bridge_dev;
->
-> -       b = pci_alloc_bus();
-> +       b = pci_alloc_bus(NULL);
->         if (!b)
->                 goto err_out;
->
->         b->sysdata = sysdata;
->         b->ops = ops;
->         b->number = b->busn_res.start = bus;
-> +       pci_set_domain_nr(b, parent);
->         b2 = pci_find_bus(pci_domain_nr(b), bus);
->         if (b2) {
->                 /* If we already got to this bus through a different bridge, ignore it */
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 71e36d091db2..af16ac40c7a2 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -17,6 +17,7 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
->  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
->  struct pci_host_bridge *of_create_pci_host_bridge(struct device *parent,
->                                         struct pci_ops *ops, void *host_data);
-> +void of_pci_set_domain_nr(struct pci_bus *bus, struct device *parent);
->
->  #else
->  static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
-> @@ -53,6 +54,10 @@ of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops,
->  {
->         return NULL;
->  }
-> +
-> +static inline void of_pci_set_domain_nr(struct pci_bus *bus, struct device *parent)
-> +{
-> +}
->  #endif
->
->  #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d32b4ed1f411..9113f62c5038 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -457,6 +457,9 @@ struct pci_bus {
->         unsigned char   primary;        /* number of primary bridge */
->         unsigned char   max_bus_speed;  /* enum pci_bus_speed */
->         unsigned char   cur_bus_speed;  /* enum pci_bus_speed */
-> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
-> +       int             domain_nr;
-> +#endif
->
->         char            name[48];
->
-> @@ -1292,6 +1295,18 @@ static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
->  static inline int pci_proc_domain(struct pci_bus *bus) { return 0; }
->  #endif /* CONFIG_PCI_DOMAINS */
->
-> +#ifdef CONFIG_PCI_DOMAINS_GENERIC
-> +static inline int pci_domain_nr(struct pci_bus *bus)
-> +{
-> +       return bus->domain_nr;
-> +}
-> +extern void pci_set_domain_nr(struct pci_bus *bus, struct device *parent);
-> +#else
-> +static inline void pci_set_domain_nr(struct pci_bus *bus, struct device *parent)
-> +{
-> +}
-> +#endif
-> +
->  /* some architectures require additional setup to direct VGA traffic */
->  typedef int (*arch_set_vga_state_t)(struct pci_dev *pdev, bool decode,
->                       unsigned int command_bits, u32 flags);
