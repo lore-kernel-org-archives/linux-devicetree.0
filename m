@@ -1,34 +1,73 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: qcom: Make muxing of gpio function explicit
-Date: Tue, 22 Jul 2014 16:33:07 +0200
-Message-ID: <CACRpkdZr6sWNW3Jb2zSmjyLP0h-0b32966f_NQiAE_s17DKFxQ@mail.gmail.com>
-References: <1405128084-15731-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v4 04/11] pwm: add DT bindings documentation for atmel-hlcdc-pwm
+ driver
+Date: Tue, 22 Jul 2014 20:06:11 +0530
+Message-ID: <53CE76DB.7030902@gmail.com>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com> <1406034695-15534-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405128084-15731-1-git-send-email-bjorn.andersson@sonymobile.com>
+In-Reply-To: <1406034695-15534-5-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 12, 2014 at 3:21 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
 
-> Instead of relying on pinmux->disable(), make the gpio function an
-> explicit function for all pins that supports it.
+On Tuesday 22 July 2014 06:41 PM, Boris BREZILLON wrote:
+> The HLCDC IP available in some Atmel SoCs (i.e. sam9x5i.e. at91sam9n12,
+> at91sam9x5 family or sama5d3 family) provide a PWM device.
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> The DT bindings used for this PWM device is following the default 3 cells
+> bindings described in Documentation/devicetree/bindings/pwm/pwm.txt.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>   .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    | 55 ++++++++++++++++++++++
+>   1 file changed, 55 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> new file mode 100644
+> index 0000000..86ad3e2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> @@ -0,0 +1,55 @@
+> +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) PWM driver
+> +
+> +The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
+> +See ../mfd/atmel-hlcdc.txt for more details.
+> +
+> +Required properties:
+> + - compatible: value should be one of the following:
+> +   "atmel,hlcdc-pwm"
+> + - pinctr-names: the pin control state names. Should contain "default".
+> + - pinctrl-0: should contain the pinctrl states described by pinctrl
+> +   default.
+> + - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
+> +   bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
+> +   The first cell encodes the PWM id (0 is the only acceptable value here,
+> +   because the chip only provide one PWM).
+> +   The second cell encodes the PWM period in nanoseconds.
+> +   The third cell encodes the PWM flags (the only supported flag is
+> +   PWM_POLARITY_INVERTED)
 
-Thanks, patch applied!
+It will be readable if:
+Required properties:
+  - compatible	: value should be one of the following: "atmel,hlcdc-pwm"
+  - pinctr-names	: the pin control state names. Should contain "default".
+  - pinctrl-0	: should contain the pinctrl states described by pinctrl default.
+  - #pwm-cells	: should be set to 3. This PWM chip use the default 3 cells
+		  bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
+		  The first cell encodes the PWM id (0 is the only acceptable value here,
+		  because the chip only provide one PWM).
+		  The second cell encodes the PWM period in nanoseconds.
+		  The third cell encodes the PWM flags (the only supported flag is
+		  PWM_POLARITY_INVERTED)
+....
 
-> This fixes the regression that was introduced by removing the disable function
-> from the pinmux ops. I was exploiting the disable function to put the gpio pins
-> "back" into gpio state and this was apparently not the right way to do things.
 
-This is so much cleaner I think.
-
-Please proceed to patch your DTS files for this as needed.
-
-Yours,
-Linus Walleij
+-- 
+Regards,
+Varka Bhadram
