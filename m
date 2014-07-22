@@ -1,45 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 00/11] ARM: brcmstb: Add Broadcom STB SoC support
-Date: Wed, 23 Jul 2014 00:24:23 +0200
-Message-ID: <6456081.JRV4vu9CHq@wuerfel>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <5044348.IEPQPrahyu@wuerfel> <20140722213350.GX2593@beef>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3] ARM: shmobile: r8a7791: link PCI USB devices to USB PHY
+Date: Wed, 23 Jul 2014 02:25:25 +0400
+Message-ID: <201407230225.26798.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140722213350.GX2593@beef>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Sebastian Reichel <sre@kernel.org>, Gregory Fong <gregory.0xf0@gmail.com>, Olof Johansson <olof@lixom.net>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 July 2014 17:33:50 Matt Porter wrote:
-> 
-> > > For the reset of mach-bcm stuff, I'll just send an arm-soc pull request
-> > > soon enough, unless Matt/Arnd/Olof object.
-> > 
-> > I'll wait for Matt to comment before pulling it, otherwise that sounds
-> > fine.
-> 
-> I'm fine with it, but we were asked to have one request for bcm5301x to
-> make life easy for the arm-soc team. If we want each platform to do pull
-> requests directly with arm-soc we should advise Hauke to do the same as
-> well with bcm5301x. I think the chances of Kconfig/Makefile conflicts are
-> relatively low as there's a dwindling amount of code of interest in new
-> platform mach directories like ours.
-> 
-> I would like to see a consistent path for all BCM platform maintainers.
-> 
+Describe the PCI USB devices that are behind the PCI bridges, adding necessary
+links to the USB PHY device.
 
-Ok. Brian, please send the pull request or patches to Matt then.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-	Arnd
+---
+This patch is against 'renesas-devel-v3.16-rc5-20140722' tag of Simon Horman's
+'renesas.git' repo plus R8A7791/Koelsch/Henninger USB PHY support patches posted
+before.  The patch requires the USB PHY driver, and USB HCD generic PHY support
+(also already posted) in order to work.
+
+Changes in version 3:
+- adjusted "phys" properties in the PCI OHCI/EHCI device nodes;
+- resolved rejects.
+
+Changes in version 2:
+- renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
+- changed the PHY specifier in the PCI#1 node to reflect that channel #1 support
+  was dropped;
+- resolved rejects.
+
+ arch/arm/boot/dts/r8a7791.dtsi |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -1030,6 +1030,20 @@
+ 		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+ 				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+ 				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
++
++		usb@0,1 {
++			reg = <0x800 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usb0 0>;
++			phy-names = "usb";
++		};
++
++		usb@0,2 {
++			reg = <0x1000 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usb0 0>;
++			phy-names = "usb";
++		};
+ 	};
+ 
+ 	pci1: pci@ee0d0000 {
+@@ -1050,6 +1064,20 @@
+ 		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+ 				 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+ 				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++
++		usb@0,1 {
++			reg = <0x800 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usb2 0>;
++			phy-names = "usb";
++		};
++
++		usb@0,2 {
++			reg = <0x1000 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usb2 0>;
++			phy-names = "usb";
++		};
+ 	};
+ 
+ 	pciec: pcie@fe000000 {
