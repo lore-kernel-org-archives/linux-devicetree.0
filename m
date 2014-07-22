@@ -1,37 +1,47 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 0/3] Adding ST21NFCB NCI NFC controller support
-Date: Wed, 23 Jul 2014 00:27:07 +0200
-Message-ID: <20140722222707.GB455@zurbaran>
-References: <1401050140-15050-1-git-send-email-christophe-h.ricard@st.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v8 00/11] ARM: brcmstb: Add Broadcom STB SoC support
+Date: Tue, 22 Jul 2014 15:30:53 -0700
+Message-ID: <20140722223053.GH28323@ld-irv-0074>
+References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
+ <5044348.IEPQPrahyu@wuerfel>
+ <20140722213350.GX2593@beef>
+ <6456081.JRV4vu9CHq@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1401050140-15050-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <6456081.JRV4vu9CHq@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Matt Porter <mporter@linaro.org>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Gregory Fong <gregory.0xf0@gmail.com>, Olof Johansson <olof@lixom.net>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
+On Wed, Jul 23, 2014 at 12:24:23AM +0200, Arnd Bergmann wrote:
+> On Tuesday 22 July 2014 17:33:50 Matt Porter wrote:
+> > > > For the reset of mach-bcm stuff, I'll just send an arm-soc pull request
+> > > > soon enough, unless Matt/Arnd/Olof object.
+> > > 
+> > > I'll wait for Matt to comment before pulling it, otherwise that sounds
+> > > fine.
+> > 
+> > I'm fine with it, but we were asked to have one request for bcm5301x to
+> > make life easy for the arm-soc team.
 
-On Sun, May 25, 2014 at 10:35:37PM +0200, Christophe Ricard wrote:
-> Hi,
+That's all news to me; thanks for the explanation.
+
+> > If we want each platform to do pull
+> > requests directly with arm-soc we should advise Hauke to do the same as
+> > well with bcm5301x. I think the chances of Kconfig/Makefile conflicts are
+> > relatively low as there's a dwindling amount of code of interest in new
+> > platform mach directories like ours.
+> > 
+> > I would like to see a consistent path for all BCM platform maintainers.
 > 
-> Please find a new patchset bringing ST21NFCB support in Reader/Writer and P2P mode.
-> 
-> This patchset apply against:
-> 7974728094d35f38775417a26d8f30ea3602496a
-> NFC: st21nfca: Add ISO15693 Reader/Writer support 
-Those 3 and the 4th (code cleanup) applied to nfc-next.
+> Ok. Brian, please send the pull request or patches to Matt then.
 
-Cheers,
-Samuel.
+Sure thing. I'll drop the 'select POWER_RESET_BRCMSTB' and also drop our
+git tree from MAINTAINERS. I'll send v9 of the reboot driver separately,
+targeted at Sebastian (or else to also defer to Matt's tree).
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Brian
