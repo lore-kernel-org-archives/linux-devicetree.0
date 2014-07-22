@@ -1,47 +1,69 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [RFC V2] devicetree: Dialog Semiconductor consolidate existing
- vendor prefixes to standardise on 'dlg'
-Date: Tue, 22 Jul 2014 09:38:28 +0800
-Message-ID: <20140722013827.GM8537@dragon>
-References: <201407151520.s6FFKcjB009745@swsrvapps-01.diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201407151520.s6FFKcjB009745@swsrvapps-01.diasemi.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv8 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and code
+ clean
+Date: Tue, 22 Jul 2014 11:04:52 +0900
+Message-ID: <1405994696-3117-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: ch.naveen@samsung.com, arnd@arndb.de, kgene.kim@samsung.com, kyungmin.park@samsung.com, t.figa@samsung.com, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 15, 2014 at 04:03:31PM +0100, Opensource [Steve Twiss] wrote:
-> From: Opensource [Steve Twiss] <stwiss.opensource@diasemi.com>
-> 
-> This patch series updates the device tree vendor prefix for
-> Dialog Semiconductor.
-> 
-> Various methods are currently used throughout the kernel: 'diasemi',
-> 'dialog' and 'dlg'. Others have also been suggested.
-> 
-> This patch set aims to consolidate the usage of the vendor prefix to
-> use a common standard. The prefix 'dlg' is used.
+This patchset support Exynos3250 ADC (Analog Digital Converter) because
+Exynos3250 has additional special clock for ADC IP.
 
-...
+Changes from v7:
+- Add acked message by Arnd Bergmann
+- Use two compatible string for Exynos3250 ADC as following:
+  : compatible = "samsung,exynos3250-adc", "samsung,exynos-adc-v2;
 
-> Signed-off-by: Opensource [Steve Twiss] <stwiss.opensource@diasemi.com>
+Changes from v6:
+- Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
+- Use "sclk" clock name instead of "sclk_adc"
+- Remove un-necessary macro for exyno-adc-data-v2 structure.
+- Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
+- Change the number of ADC channels (Exynos3250 has only two channels for ADC)
 
-...
+Changes from v5:
+- Add acked message by Kukjin Kim
+- Add reviewed messgae by Tomasz Figa
+- Fix typo (for for -> for)
 
->  arch/arm/boot/dts/imx53-smd.dts                    |  2 +-
->  arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  2 +-
+Changes from v4:
+- Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
+  and remove enum variable of ADC version
+- Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
+- Add reviewed message by Naveen Krishna Chatradhi
+- Add functions for ADC clock control
 
-Acked-by: Shawn Guo <shawn.guo@freescale.com>
+Changes from v3:
+- Add new 'exynos_adc_ops' structure to improve readability according to
+ Tomasz Figa comment[1]
+ [1] https://lkml.org/lkml/2014/4/16/238
+- Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
+- Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
+
+Changes from v2:
+- Check return value of clock function to deal with error exception
+- Fix minor coding style to improve readability
+
+Changes from v1:
+- Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
+- Add a patch about DT binding documentation
+
+Chanwoo Choi (4):
+  iio: adc: exynos_adc: Add exynos_adc_data structure to improve
+    readability
+  iio: adc: exynos_adc: Control special clock of ADC to support
+    Exynos3250 ADC
+  iio: devicetree: Add DT binding documentation for Exynos3250 ADC
+  ARM: dts: Fix wrong compatible string for Exynos3250 ADC
+
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |  25 +-
+ arch/arm/boot/dts/exynos3250.dtsi                  |   5 +-
+ drivers/iio/adc/exynos_adc.c                       | 335 +++++++++++++++------
+ 3 files changed, 275 insertions(+), 90 deletions(-)
+
+-- 
+1.8.0
+
