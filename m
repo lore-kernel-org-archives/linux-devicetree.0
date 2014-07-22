@@ -1,38 +1,39 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] bus: ARM CCN PMU driver
-Date: Tue, 22 Jul 2014 11:11:26 +0100
-Message-ID: <1406023886.25343.48.camel@hornet>
-References: <1405091188-31754-1-git-send-email-pawel.moll@arm.com>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [Re-send PATCH 1/1] arm: dra7xx: Add hwmod data for MDIO and
+ CPSW
+Date: Tue, 22 Jul 2014 15:41:43 +0530
+Message-ID: <53CE38DF.1060305@ti.com>
+References: <1404825399-10330-1-git-send-email-mugunthanvnm@ti.com> <20140717074948.GF18374@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405091188-31754-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20140717074948.GF18374-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnaldo Carvalho de Melo <acme-f8uhVLnGfZaxAyOMLChx1axOck334EZe@public.gmane.org>, Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Kevin, Olof, 
+On Thursday 17 July 2014 01:19 PM, Tony Lindgren wrote:
+> We seem to have this layout WR_SOFT_RESET and WR_CONTROL in the TRM:
+>
+> WR_SOFT_RESET
+> [0]     SOFT_RESET
+>
+> WR_CONTROL
+> [3:2]   MMR_STDBYMODE   0 = force-idle, 1 = no-standby
+> [1:0]   MMR_IDLEMODE    0 = force-idle, 1 = no-idle
+>
+> And so it seems to match what am33xx also has for am33xx_cpgmac_sysc
+> and am33xx TRM for 14.5.9 CONTROL register. So as far as I'm concerned:
+>
+> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Paul,
 
-On Fri, 2014-07-11 at 16:06 +0100, Pawel Moll wrote:
-> Driver providing perf backend for ARM Cache Coherent Network
-> interconnect. Supports counting all hardware events and crosspoint
-> watchpoints.
-> 
-> Currently works with CCN-504 only, although there should be
-> no changes required for CCN-508 (just impossible to test it now).
-> 
-> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Can you pull this patch as Tony acked the patch.
 
-Would you consider taking this through arm-soc tree? There isn't
-anything in MAINTAINERS, but I vaguely remember Arnd proposing this
-directory in the first place...
-
-Cheers!
-
-Pawel
-
+Regards
+Mugunthan V N
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
