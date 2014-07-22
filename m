@@ -1,30 +1,18 @@
 Return-Path: <matthias.bgg@gmail.com>
 MIME-Version: 1.0
-Date: Tue, 22 Jul 2014 18:34:17 +0200
-Message-ID: <CABuKBeLc=Bbpqrksdjoc_0Sx_rVpZLuY1aUY1WtK5Vp20Jiv8g@mail.gmail.com>
-Subject: Re: [GIT PULL v2.1] Mediatek basic support for v3.17
+Date: Tue, 22 Jul 2014 18:25:45 +0200
+Message-ID: <CABuKBe+_Bosow3VeM5geMKHv9LagOik0BL_T+aarQU4pEbRXUQ@mail.gmail.com>
+Subject: [GIT PULL v2] Mediatek basic support for v3.17
 From: Matthias Brugger <matthias.bgg@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Jonathan Cameron <jic23@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Olof Johansson <olof@lixom.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, Linus Walleij <linus.walleij@linaro.org>, ak@linux.intel.com, hpa@linux.intel.com, Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Greg KH <gregkh@linuxfoundation.org>, fabf@skynet.be, rostedt@goodmis.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The patches 1-4 from the v10 series [0] of the patch set have been
-merged by Daniel Lezcano [1]. This pull request has just the remaining
-patches 5-7
+Patches 1-4 from v10 of the patch set have been merged by Daniel Lezcano [0].
+This
 
-There is an Ack from Rob Herring for the SoC device tree binding patch.
-The other two patches lack an Ack from the maintainers.
 
-[0] http://thread.gmane.org/gmane.linux.documentation/25231
-[1] https://lkml.org/lkml/2014/7/21/291
 
----
-
-Changes for v2.1:
-- fix screwed up explanation
-
-Changes for v2:
-- request includes just patches 5-7 from the series
 
 ----------------------------------------------------------------
 The following changes since commit 7171511eaec5bf23fb06078f59784a3a0626b38f:
@@ -44,8 +32,6 @@ This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
 
 Support is quite basic, as the only component working up to now are the
 timers.
-
-Signed-off-by: Matthias Brugger matthias.bgg@gmail.com
 
 ----------------------------------------------------------------
 Matthias Brugger (3):
