@@ -1,190 +1,351 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 9/9] usb: musb: musb_am335x: reinstate module
- loading/unloading support
-Date: Tue, 22 Jul 2014 09:47:04 -0500
-Message-ID: <20140722144704.GA20588@saruman.home>
-References: <1405675890-8802-3-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-4-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-5-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-6-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-7-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-8-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-9-git-send-email-LW@KARO-electronics.de>
- <1405675890-8802-10-git-send-email-LW@KARO-electronics.de>
- <20140718140403.GI24914@saruman.home>
- <20140722094930.0c52bb01@ipc1.ka-ro>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH RESEND v2 1/4] pinctrl: Update Qualcomm pm8xxx GPIO
+ parameters definitions
+Date: Tue, 22 Jul 2014 17:51:02 +0300
+Message-ID: <1406040662.28520.8.camel@iivanov-dev>
+References: <1405610748-7583-5-git-send-email-iivanov@mm-sol.com>
+	 <1405626085-14069-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140722094930.0c52bb01-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1405626085-14069-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2014-07-17 at 22:41 +0300, Ivan T. Ivanov wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> 
+> Available 'power-source' labels differ between chips.
+> Use just VIN0-VIN14 in the input source names.
+> 
+> PM8018, PM8038, PM8058, PM8917, PM8921 pin controller hardware
+> support only one function 'gpio'. Currently GPIO's will
+> support only 'normal' mode. Rest of the modes will be added
+> later, if needed.
+> 
+> We can not use generic drive-strength because Qualcomm hardware
+> define those values as low, medium and high. Use qcom,strength
+> for this.
+> 
+> We can not use generic bias-pull-up because Qualcomm hardware
+> define those values in uA's. Use qcom,pull-up for this.
+> 
+> Add qcom,pm8941-gpio and qcom,pma8084-gpio to chips, which
+> support these DT bindings.
+> 
 
-On Tue, Jul 22, 2014 at 09:49:30AM +0200, Lothar Wa=DFmann wrote:
-> Hi,
->=20
-> Felipe Balbi wrote:
-> > On Fri, Jul 18, 2014 at 11:31:30AM +0200, Lothar Wa=DFmann wrote:
-> > > There is no need to throw the baby out with the bath due to a bad
-> > > failure analysis. The commit:
-> > > 7adb5c876e9c usb: musb: Fix panic upon musb_am335x module removal
-> > > came to a wrong conclusion about the cause of the crash it was
-> > > "fixing". The real culprit was the phy-am335x module that was removed
-> > > from underneath its users that were still referencing data from it.
-> > > After having fixed this in a previous patch, module unloading can be
-> > > reinstated.
-> > >=20
-> > > Another bug with module loading/unloading was the fact, that after
-> > > removing the devices instantiated from DT their 'OF_POPULATED' flag
-> > > was still set, so that re-loading the module after an unload had no
-> > > effect. This is also fixed in this patch.
-> >=20
-> > now this is a good commit log. I still can't see the need for the other
-> > patch adding try_module_get(), though. Another thing, this needs to be
-> > reviewed by DT folks too.
-> >=20
-> Without holding a reference to the phy module, the module may be
-> unloaded when its resources are still in use which may lead to the
-> crash observed in the above stated commit.
->=20
-> > > Signed-off-by: Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> > > ---
-> > >  drivers/usb/musb/musb_am335x.c |   23 ++++++++++++++++++-----
-> > >  1 file changed, 18 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/drivers/usb/musb/musb_am335x.c b/drivers/usb/musb/musb_a=
-m335x.c
-> > > index 164c868..152a6f5 100644
-> > > --- a/drivers/usb/musb/musb_am335x.c
-> > > +++ b/drivers/usb/musb/musb_am335x.c
-> > > @@ -19,6 +19,22 @@ err:
-> > >  	return ret;
-> > >  }
-> > > =20
-> > > +static int of_remove_populated_child(struct device *dev, void *d)
-> > > +{
-> > > +	struct platform_device *pdev =3D to_platform_device(dev);
-> > > +
-> > > +	of_device_unregister(pdev);
-> > > +	of_node_clear_flag(pdev->dev.of_node, OF_POPULATED);
-> >=20
-> > I don't think this should be called by drivers; rather by the bus.
-> >=20
-> Possibly the right thing to do would be to use of_platform_depopulate()
-> in the remove function to pair up with op_platform_populate() in the
-> probe function, but doing this results in a crash in
-> platform_device_del() (called from platform_device_unregister()) when
-> release_resource() is being called on resources that were never
-> properly registered with the device:
-> Unable to handle kernel NULL pointer dereference at virtual address 00000=
-018
-> pgd =3D 8dd64000
-> [00000018] *pgd=3D8ddc2831, *pte=3D00000000, *ppte=3D00000000
-> Internal error: Oops: 17 [#1] PREEMPT ARM
-> Modules linked in: musb_am335x(-) [last unloaded: snd]
-> CPU: 0 PID: 1435 Comm: modprobe Not tainted 3.16.0-rc5-next-20140717-dbg+=
- #13
-> task: 8da00880 ti: 8dda0000 task.ti: 8dda0000
-> PC is at release_resource+0x14/0x7c
-> LR is at release_resource+0x10/0x7c
-> pc : [<8003165c>]    lr : [<80031658>]    psr: a0000013
-> sp : 8dda1ec0  ip : 8dda0000  fp : 00000000
-> r10: 00000000  r9 : 8dda0000  r8 : 8deb7c10
-> r7 : 8deb7c00  r6 : 00000200  r5 : 00000001  r4 : 8deed380
-> r3 : 00000000  r2 : 00000000  r1 : 00000011  r0 : 806772a0
-> Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-> Control: 10c5387d  Table: 8dd64019  DAC: 00000015
-> Process modprobe (pid: 1435, stack limit =3D 0x8dda0238)
-> Stack: (0x8dda1ec0 to 0x8dda2000)
-> 1ec0: 8da00880 8deed380 00000001 802f850c 00000000 8deed380 44e10620 44e1=
-062f
-> 1ee0: 8deb7c00 00000000 80398c5c 00000081 8000e904 802f8848 8deb7c10 8039=
-8d0c
-> 1f00: 00000000 802f3470 8d8d7200 8ddc84b0 8d92e810 7f0f9014 8d92e844 7f0f=
-7010
-> 1f20: 8d92e810 802f8110 802f80f8 802f68f8 7f0f9014 8d92e810 7f0f9014 802f=
-7238
-> 1f40: 7f0f9014 00000000 20000013 802f6764 7f0f9058 8007ec94 00000000 6273=
-756d
-> 1f60: 336d615f 00783533 8da00880 8000e764 00000001 80053ae4 00000058 76f4=
-1000
-> 1f80: 7eb299e8 01290838 00000011 00000081 60000010 0000e854 7eb299e8 0129=
-0838
-> 1fa0: 00000011 8000e740 7eb299e8 01290838 012908a0 00000080 00000000 0000=
-0001
-> 1fc0: 7eb299e8 01290838 00000011 00000081 012908a0 00000000 01290844 0000=
-0000
-> 1fe0: 76eb76f0 7eb2995c 0000a534 76eb76fc 60000010 012908a0 aaaaaaaa aaaa=
-aaaa
-> [<8003165c>] (release_resource) from [<802f850c>] (platform_device_del+0x=
-b4/0xf4)
-> [<802f850c>] (platform_device_del) from [<802f8848>] (platform_device_unr=
-egister+0xc/0x18)
-> [<802f8848>] (platform_device_unregister) from [<80398d0c>] (of_platform_=
-device_destroy+0xb0/0xc8)
-> [<80398d0c>] (of_platform_device_destroy) from [<802f3470>] (device_for_e=
-ach_child+0x34/0x74)
-> [<802f3470>] (device_for_each_child) from [<7f0f7010>] (am335x_child_remo=
-ve+0x10/0x24 [musb_am335x])
-> [<7f0f7010>] (am335x_child_remove [musb_am335x]) from [<802f8110>] (platf=
-orm_drv_remove+0x18/0x1c)
-> [<802f8110>] (platform_drv_remove) from [<802f68f8>] (__device_release_dr=
-iver+0x70/0xc4)
-> [<802f68f8>] (__device_release_driver) from [<802f7238>] (driver_detach+0=
-xb4/0xb8)
-> [<802f7238>] (driver_detach) from [<802f6764>] (bus_remove_driver+0x5c/0x=
-a4)
-> [<802f6764>] (bus_remove_driver) from [<8007ec94>] (SyS_delete_module+0x1=
-20/0x18c)
-> [<8007ec94>] (SyS_delete_module) from [<8000e740>] (ret_fast_syscall+0x0/=
-0x48)
-> Code: e1a04000 e59f0068 eb10bac4 e5943010 (e5932018)=20
-> ---[ end trace 24ca43dfc1a677d6 ]---
->=20
-> The cause for this seems to be calling platform_device_unregister() on
-> a device that was created with device_add() (rather than
-> platform_device_add()).
+Hi Bjorn,  
 
-good, then you found another bug. Let's fix that and use
-of_platform_depopulate().
+Are you ok with these changes? I plan to send next version which
+adds parsing code for new "qcom,strength" and "qcom,pull-up".
 
---=20
-balbi
+Regards,
+Ivan
 
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTznloAAoJEIaOsuA1yqRE+xkP/0fsG4qZzPLRCxTRlkk1cnRT
-VsY5QM1X440mymPg6t7UJe3Xy43B3FE182DCoXgGFYVhdzhpVtntP72Sub9uslzy
-yWOxS5r1qaehTq+nnOY/y1gSH4KNTlHZQZhPXh2nb/UqkPG075tBf5F8eGWUXrRQ
-3YYI8lSg0RGTq/fiH6RgRdf1ZWvC+c5vG5bqWiCpk6846XHZKMTrJA4QxhvtFgRe
-bamqTVb0Y6HoygUDc1WKDofWtpgucZWNvom8qoAK3Fyg0ws2ZUIrAmjdjLlLoXTu
-Z+d5gQrfIVoI6I9X01zeDbfsepBSmYhcy5FMGJ0H5i5w9Zic5rqVj5Dn8vTJOZf7
-VW87xq2g8AihdrPLJbQdaN6SNLAi9KdADGnuuGFXklM0+1qYs/vcFSOxZFGk3qxB
-oRxCzS4kxtaHSJs3ezudze+aIoN90FWpS3tcix0JjiO9azP4N3d9vEXy/YXzTBww
-YaBAyFObCZ7z6htuRzTeDNAYGvPjVjCM2pPJ42UZ4g9MF/F7mPGOW8K5VhOntTlJ
-waIhZ7Ka1dUBNAm3GMiCSHBzykR4OyFG9M0UxpzUAjSIlhX2W17cbcMTuPSziDi3
-lciY0OIb9F1VWkexghobLbUJqA9t7tn1dOGTrnUqhAOULyalr2mvS5i7Nb4VMbU2
-kQeCLR/LywTfR5N8PCsc
-=4IBR
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> ---
+>  .../bindings/pinctrl/qcom,pm8xxx-gpio.txt          | 97 +++++++++++-----------
+>  drivers/pinctrl/pinctrl-pm8xxx-gpio.c              | 34 ++++----
+>  include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h     | 33 ++++----
+>  3 files changed, 81 insertions(+), 83 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pm8xxx-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pm8xxx-gpio.txt
+> index 0035dd8..f17580a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pm8xxx-gpio.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pm8xxx-gpio.txt
+> @@ -12,6 +12,8 @@ Qualcomm.
+>  			"qcom,pm8058-gpio"
+>  			"qcom,pm8917-gpio"
+>  			"qcom,pm8921-gpio"
+> +			"qcom,pm8941-gpio"
+> +			"qcom,pma8084-gpio"
+>  
+>  - reg:
+>  	Usage: required
+> @@ -74,20 +76,14 @@ to specify in a pin configuration subnode:
+>  			gpio1-gpio40 for pm8058
+>  			gpio1-gpio38 for pm8917
+>  			gpio1-gpio44 for pm8921
+> +			gpio1-gpio36 for pm8941
+> +			gpio1-gpio22 for pma8084
+>  
+>  - function:
+> -	Usage: optional
+> +	Usage: mandatory
+>  	Value type: <string>
+>  	Definition: Specify the alternative function to be configured for the
+> -		    specified pins.  Valid values are:
+> -			"normal",
+> -			"paired",
+> -			"func1",
+> -			"func2",
+> -			"dtest1",
+> -			"dtest2",
+> -			"dtest3",
+> -			"dtest4"
+> +		    specified pins.  Valid values is: "gpio"
+>  
+>  - bias-disable:
+>  	Usage: optional
+> @@ -99,18 +95,6 @@ to specify in a pin configuration subnode:
+>  	Value type: <none>
+>  	Definition: The specified pins should be configued as pull down.
+>  
+> -- bias-pull-up:
+> -	Usage: optional
+> -	Value type: <u32> (optional)
+> -	Definition: The specified pins should be configued as pull up. An
+> -		    optional argument can be used to configure the strength.
+> -		    Valid values are; as defined in
+> -		    <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> -		    1: 30uA			(PM8XXX_GPIO_PULL_UP_30)
+> -		    2: 1.5uA			(PM8XXX_GPIO_PULL_UP_1P5)
+> -		    3: 31.5uA			(PM8XXX_GPIO_PULL_UP_31P5)
+> -		    4: 1.5uA + 30uA boost	(PM8XXX_GPIO_PULL_UP_1P5_30)
+> -
+>  - bias-high-impedance:
+>  	Usage: optional
+>  	Value type: <none>
+> @@ -139,47 +123,37 @@ to specify in a pin configuration subnode:
+>  	Definition: Selects the power source for the specified pins. Valid
+>  		    power sources are, as defined in
+>  		    <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> -			0: bb (PM8XXX_GPIO_VIN_BB)
+> +			0: bb (PM8XXX_GPIO_VIN0)
+>  				valid for pm8038, pm8058, pm8917, pm8921
+> -			1: ldo2 (PM8XXX_GPIO_VIN_L2)
+> +			1: ldo2 (PM8XXX_GPIO_VIN1)
+>  				valid for pm8018, pm8038, pm8917,pm8921
+> -			2: ldo3 (PM8XXX_GPIO_VIN_L3)
+> +			2: ldo3 (PM8XXX_GPIO_VIN2)
+>  				valid for pm8038, pm8058, pm8917, pm8921
+> -			3: ldo4 (PM8XXX_GPIO_VIN_L4)
+> +			3: ldo4 (PM8XXX_GPIO_VIN3)
+>  				valid for pm8018, pm8917, pm8921
+> -			4: ldo5 (PM8XXX_GPIO_VIN_L5)
+> +			4: ldo5 (PM8XXX_GPIO_VIN4)
+>  				valid for pm8018, pm8058
+> -			5: ldo6 (PM8XXX_GPIO_VIN_L6)
+> +			5: ldo6 (PM8XXX_GPIO_VIN5)
+>  				valid for pm8018, pm8058
+> -			6: ldo7 (PM8XXX_GPIO_VIN_L7)
+> +			6: ldo7 (PM8XXX_GPIO_VIN6)
+>  				valid for pm8058
+> -			7: ldo8 (PM8XXX_GPIO_VIN_L8)
+> +			7: ldo8 (PM8XXX_GPIO_VIN7)
+>  				valid for pm8018
+> -			8: ldo11 (PM8XXX_GPIO_VIN_L11)
+> +			8: ldo11 (PM8XXX_GPIO_VIN8)
+>  				valid for pm8038
+> -			9: ldo14 (PM8XXX_GPIO_VIN_L14)
+> +			9: ldo14 (PM8XXX_GPIO_VIN9)
+>  				valid for pm8018
+> -			10: ldo15 (PM8XXX_GPIO_VIN_L15)
+> +			10: ldo15 (PM8XXX_GPIO_VIN10)
+>  				valid for pm8038, pm8917, pm8921
+> -			11: ldo17 (PM8XXX_GPIO_VIN_L17)
+> +			11: ldo17 (PM8XXX_GPIO_VIN11)
+>  				valid for pm8038, pm8917, pm8921
+> -			12: smps3 (PM8XXX_GPIO_VIN_S3)
+> +			12: smps3 (PM8XXX_GPIO_VIN12)
+>  				valid for pm8018, pm8058
+> -			13: smps4 (PM8XXX_GPIO_VIN_S4)
+> +			13: smps4 (PM8XXX_GPIO_VIN13)
+>  				valid for pm8921
+> -			14: vph (PM8XXX_GPIO_VIN_VPH)
+> +			14: vph (PM8XXX_GPIO_VIN14)
+>  				valid for pm8018, pm8038, pm8058, pm8917 pm8921
+>  
+> -- drive-strength:
+> -	Usage: optional
+> -	Value type: <u32>
+> -	Definition: Selects the drive strength for the specified pins. Value
+> -		    drive strengths are:
+> -			0: no	(PM8XXX_GPIO_STRENGTH_NO)
+> -			1: high	(PM8XXX_GPIO_STRENGTH_HIGH)
+> -			2: medium	(PM8XXX_GPIO_STRENGTH_MED)
+> -			3: low	(PM8XXX_GPIO_STRENGTH_LOW)
+> -
+>  - drive-push-pull:
+>  	Usage: optional
+>  	Value type: <none>
+> @@ -190,6 +164,28 @@ to specify in a pin configuration subnode:
+>  	Value type: <none>
+>  	Definition: The specified pins are configured in open-drain mode.
+>  
+> +- qcom,pull-up:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: The specified pins should be configued as pull up. An
+> +		    optional argument can be used to configure the strength.
+> +		    Valid values are as defined in
+> +		    <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> +		    1: 30uA			(PM8XXX_GPIO_PULL_UP_30)
+> +		    2: 1.5uA			(PM8XXX_GPIO_PULL_UP_1P5)
+> +		    3: 31.5uA			(PM8XXX_GPIO_PULL_UP_31P5)
+> +		    4: 1.5uA + 30uA boost	(PM8XXX_GPIO_PULL_UP_1P5_30)
+> +
+> +- qcom,strength:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: Selects the drive strength for the specified pins.
+> +		    Valid values are as defined in
+> +		    <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
+> +			0: no	(PM8XXX_GPIO_STRENGTH_NO)
+> +			1: high	(PM8XXX_GPIO_STRENGTH_HIGH)
+> +			2: medium	(PM8XXX_GPIO_STRENGTH_MED)
+> +			3: low	(PM8XXX_GPIO_STRENGTH_LOW)
+>  
+>  Example:
+>  
+> @@ -218,13 +214,14 @@ Example:
+>  		pm8921_gpio_keys: gpio-keys {
+>  			volume-keys {
+>  				pins = "gpio20", "gpio21";
+> -				function = "normal";
+> +				function = "gpio";
+>  
+>  				input-enable;
+>  				bias-pull-up;
+>  				drive-push-pull;
+> -				drive-strength = <PM8XXX_GPIO_STRENGTH_NO>;
+> -				power-source = <PM8XXX_GPIO_VIN_S4>;
+> +
+> +				power-source = <PM8XXX_GPIO_VIN13>;
+> +				qcom,strength = <PM8XXX_GPIO_STRENGTH_NO>;
+>  			};
+>  		};
+>  	};
+> diff --git a/drivers/pinctrl/pinctrl-pm8xxx-gpio.c b/drivers/pinctrl/pinctrl-pm8xxx-gpio.c
+> index 5aaf914..68feb2f 100644
+> --- a/drivers/pinctrl/pinctrl-pm8xxx-gpio.c
+> +++ b/drivers/pinctrl/pinctrl-pm8xxx-gpio.c
+> @@ -95,9 +95,7 @@ static const char * const pm8xxx_gpio_groups[PM8XXX_MAX_GPIOS] = {
+>  };
+>  
+>  static const char * const pm8xxx_gpio_functions[] = {
+> -	"normal", "paired",
+> -	"func1", "func2",
+> -	"dtest1", "dtest2", "dtest3", "dtest4",
+> +	"gpio",
+>  };
+>  
+>  static int pm8xxx_gpio_read(struct pm8xxx_gpio *pctrl, int pin, int bank)
+> @@ -622,9 +620,9 @@ static int pm8xxx_gpio_populate(struct pm8xxx_gpio *pctrl)
+>  static const struct pm8xxx_gpio_data pm8018_gpio_data = {
+>  	.ngpio = 6,
+>  	.power_sources = (int[]) {
+> -		PM8XXX_GPIO_VIN_L4, PM8XXX_GPIO_VIN_L14, PM8XXX_GPIO_VIN_S3,
+> -		PM8XXX_GPIO_VIN_L6, PM8XXX_GPIO_VIN_L2, PM8XXX_GPIO_VIN_L5,
+> -		PM8XXX_GPIO_VIN_L8, PM8XXX_GPIO_VIN_VPH
+> +		PM8XXX_GPIO_VIN3, PM8XXX_GPIO_VIN9, PM8XXX_GPIO_VIN12,
+> +		PM8XXX_GPIO_VIN5, PM8XXX_GPIO_VIN1, PM8XXX_GPIO_VIN4,
+> +		PM8XXX_GPIO_VIN7, PM8XXX_GPIO_VIN14
+>  	},
+>  	.npower_sources = 8,
+>  };
+> @@ -632,9 +630,9 @@ static const struct pm8xxx_gpio_data pm8018_gpio_data = {
+>  static const struct pm8xxx_gpio_data pm8038_gpio_data = {
+>  	.ngpio = 12,
+>  	.power_sources = (int[]) {
+> -		PM8XXX_GPIO_VIN_VPH, PM8XXX_GPIO_VIN_BB, PM8XXX_GPIO_VIN_L11,
+> -		PM8XXX_GPIO_VIN_L15, PM8XXX_GPIO_VIN_L4, PM8XXX_GPIO_VIN_L3,
+> -		PM8XXX_GPIO_VIN_L17
+> +		PM8XXX_GPIO_VIN14, PM8XXX_GPIO_VIN0, PM8XXX_GPIO_VIN8,
+> +		PM8XXX_GPIO_VIN10, PM8XXX_GPIO_VIN3, PM8XXX_GPIO_VIN2,
+> +		PM8XXX_GPIO_VIN11
+>  	},
+>  	.npower_sources = 7,
+>  };
+> @@ -642,18 +640,18 @@ static const struct pm8xxx_gpio_data pm8038_gpio_data = {
+>  static const struct pm8xxx_gpio_data pm8058_gpio_data = {
+>  	.ngpio = 40,
+>  	.power_sources = (int[]) {
+> -		PM8XXX_GPIO_VIN_VPH, PM8XXX_GPIO_VIN_BB, PM8XXX_GPIO_VIN_S3,
+> -		PM8XXX_GPIO_VIN_L3, PM8XXX_GPIO_VIN_L7, PM8XXX_GPIO_VIN_L6,
+> -		PM8XXX_GPIO_VIN_L5, PM8XXX_GPIO_VIN_L2
+> +		PM8XXX_GPIO_VIN14, PM8XXX_GPIO_VIN0, PM8XXX_GPIO_VIN12,
+> +		PM8XXX_GPIO_VIN2, PM8XXX_GPIO_VIN6, PM8XXX_GPIO_VIN5,
+> +		PM8XXX_GPIO_VIN4, PM8XXX_GPIO_VIN1
+>  	},
+>  	.npower_sources = 8,
+>  };
+>  static const struct pm8xxx_gpio_data pm8917_gpio_data = {
+>  	.ngpio = 38,
+>  	.power_sources = (int[]) {
+> -		PM8XXX_GPIO_VIN_VPH, PM8XXX_GPIO_VIN_BB, PM8XXX_GPIO_VIN_S4,
+> -		PM8XXX_GPIO_VIN_L15, PM8XXX_GPIO_VIN_L4, PM8XXX_GPIO_VIN_L3,
+> -		PM8XXX_GPIO_VIN_L17
+> +		PM8XXX_GPIO_VIN14, PM8XXX_GPIO_VIN0, PM8XXX_GPIO_VIN13,
+> +		PM8XXX_GPIO_VIN10, PM8XXX_GPIO_VIN3, PM8XXX_GPIO_VIN2,
+> +		PM8XXX_GPIO_VIN11
+>  	},
+>  	.npower_sources = 7,
+>  };
+> @@ -661,9 +659,9 @@ static const struct pm8xxx_gpio_data pm8917_gpio_data = {
+>  static const struct pm8xxx_gpio_data pm8921_gpio_data = {
+>  	.ngpio = 44,
+>  	.power_sources = (int[]) {
+> -		PM8XXX_GPIO_VIN_VPH, PM8XXX_GPIO_VIN_BB, PM8XXX_GPIO_VIN_S4,
+> -		PM8XXX_GPIO_VIN_L15, PM8XXX_GPIO_VIN_L4, PM8XXX_GPIO_VIN_L3,
+> -		PM8XXX_GPIO_VIN_L17
+> +		PM8XXX_GPIO_VIN14, PM8XXX_GPIO_VIN0, PM8XXX_GPIO_VIN13,
+> +		PM8XXX_GPIO_VIN10, PM8XXX_GPIO_VIN3, PM8XXX_GPIO_VIN2,
+> +		PM8XXX_GPIO_VIN11
+>  	},
+>  	.npower_sources = 7,
+>  };
+> diff --git a/include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h b/include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h
+> index 6b66fff..564fd05 100644
+> --- a/include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h
+> +++ b/include/dt-bindings/pinctrl/qcom,pm8xxx-gpio.h
+> @@ -5,27 +5,30 @@
+>  #ifndef _DT_BINDINGS_PINCTRL_QCOM_PM8XXX_GPIO_H
+>  #define _DT_BINDINGS_PINCTRL_QCOM_PM8XXX_GPIO_H
+>  
+> +/* To be used with "qcom,pull-up = <>" */
+>  #define PM8XXX_GPIO_PULL_UP_30		1
+>  #define PM8XXX_GPIO_PULL_UP_1P5		2
+>  #define PM8XXX_GPIO_PULL_UP_31P5	3
+>  #define PM8XXX_GPIO_PULL_UP_1P5_30	4
+>  
+> -#define PM8XXX_GPIO_VIN_BB		0
+> -#define PM8XXX_GPIO_VIN_L2		1
+> -#define PM8XXX_GPIO_VIN_L3		2
+> -#define PM8XXX_GPIO_VIN_L4		3
+> -#define PM8XXX_GPIO_VIN_L5		4
+> -#define PM8XXX_GPIO_VIN_L6		5
+> -#define PM8XXX_GPIO_VIN_L7		6
+> -#define PM8XXX_GPIO_VIN_L8		7
+> -#define PM8XXX_GPIO_VIN_L11		8
+> -#define PM8XXX_GPIO_VIN_L14		9
+> -#define PM8XXX_GPIO_VIN_L15		10
+> -#define PM8XXX_GPIO_VIN_L17		11
+> -#define PM8XXX_GPIO_VIN_S3		12
+> -#define PM8XXX_GPIO_VIN_S4		13
+> -#define PM8XXX_GPIO_VIN_VPH		14
+> +/* power-source */
+> +#define PM8XXX_GPIO_VIN0		0
+> +#define PM8XXX_GPIO_VIN1		1
+> +#define PM8XXX_GPIO_VIN2		2
+> +#define PM8XXX_GPIO_VIN3		3
+> +#define PM8XXX_GPIO_VIN4		4
+> +#define PM8XXX_GPIO_VIN5		5
+> +#define PM8XXX_GPIO_VIN6		6
+> +#define PM8XXX_GPIO_VIN7		7
+> +#define PM8XXX_GPIO_VIN8		8
+> +#define PM8XXX_GPIO_VIN9		9
+> +#define PM8XXX_GPIO_VIN10		10
+> +#define PM8XXX_GPIO_VIN11		11
+> +#define PM8XXX_GPIO_VIN12		12
+> +#define PM8XXX_GPIO_VIN13		13
+> +#define PM8XXX_GPIO_VIN14		14
+>  
+> +/* To be used with "qcom,strength = <>" */
+>  #define	PM8XXX_GPIO_STRENGTH_NO		0
+>  #define	PM8XXX_GPIO_STRENGTH_HIGH	1
+>  #define	PM8XXX_GPIO_STRENGTH_MED	2
