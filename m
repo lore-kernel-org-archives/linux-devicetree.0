@@ -1,95 +1,174 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 00/11] ARM: brcmstb: Add Broadcom STB SoC support
-Date: Tue, 22 Jul 2014 13:44:31 -0700
-Message-ID: <20140722204431.GG28323@ld-irv-0074>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <5675728.WLk3P96IBM@wuerfel>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 1/4] PCI: designware: Configuration space should be
+ specified in 'reg'
+Date: Tue, 22 Jul 2014 14:53:26 -0600
+Message-ID: <20140722205326.GA25432@google.com>
+References: <1405587643-13808-1-git-send-email-kishon@ti.com>
+ <1405587643-13808-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5675728.WLk3P96IBM@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Matt Porter <mporter@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sebastian Reichel <sre@kernel.org>
+In-Reply-To: <1405587643-13808-2-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-+ Sebastian
-
-On Tue, Jul 22, 2014 at 09:35:45AM +0200, Arnd Bergmann wrote:
-> On Monday 21 July 2014 14:07:55 Brian Norris wrote:
-> > I'm taking over the latest resubmission of this patch series.
-> > There are a few moderate changes for v8 (noted below), but we
-> > are waiting mostly for an Ack for the reboot driver.
-> > 
-> > This patchset contains the board support package for the
-> > Broadcom BCM7445 ARM-based SoC [1]. These changes contain a
-> > minimal set of code needed for a BCM7445-based board to boot
-> > the Linux kernel.
-> > 
-> > These changes heavily leverage the OF/devicetree framework. The
-> > machine is also built into the multi-platform ARMv7 image.
-> > 
-> > Changes are also available here:
-> > 
-> >   https://github.com/brcm/linux/tree/brcmstb-v8
-> >   git://github.com/brcm/linux.git +brcmstb-v8
+On Thu, Jul 17, 2014 at 02:30:40PM +0530, Kishon Vijay Abraham I wrote:
+> The configuration address space has so far been specified in *ranges*,
+> however it should be specified in *reg* making it a platform MEM resource.
+> Hence used 'platform_get_resource_*' API to get configuration address
+> space in the designware driver.
 > 
-> Whole series
+> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Marek Vasut <marex@denx.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Acked-by: Mohit Kumar <mohit.kumar@st.com>
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> ---
+>  .../devicetree/bindings/pci/designware-pcie.txt    |    4 ++++
+>  drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+>  2 files changed, 19 insertions(+), 2 deletions(-)
 > 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index d0d15ee..ed0d9b9 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -2,6 +2,10 @@
+>  
+>  Required properties:
+>  - compatible: should contain "snps,dw-pcie" to identify the core.
+> +- reg: Should contain the configuration address space.
+> +- reg-names: Must be "config" for the PCIe configuration space.
+> +    (The old way of getting the configuration address space from "ranges"
+> +    is deprecated and should be avoided.)
 
-Thanks!
+I'm not a devicetree person, so please excuse my floundering here.
+There doesn't seem to be consistent usage of "reg" or "reg-names".
+Here's what I found in the existing Documentation/devicetree/bindings/pci
+stuff:
 
-> I think we should try to get this merged into 3.17, it's already
-> taken too long and the patches look good.
+  83xx-512x-pci.txt
+    - reg: should contain two address length tuples
+	The first is for the internal pci bridge registers
+	The second is for the pci config space access registers
 
-Yes, it's about time.
+  fsl,imx6q-pcie.txt
+    - reg: base addresse and length of the pcie controller
 
-> Please add the core architecture patches for arch/arm into Russell's
-> patch tracker http://www.arm.linux.org.uk/developer/patches/.
+  host-generic-pci.txt
+    - reg            : The Configuration Space base address and size, as accessed
+		       from the parent bus.
 
-OK, that's unfamiliar to me, but I'll try that out.
+  nvidia,tegra20-pcie.txt
+    - reg: A list of physical base address and length for each set of controller
+      registers. Must contain an entry for each entry in the reg-names property.
+    - reg-names: Must include the following entries:
+      "pads": PADS registers
+      "afi": AFI registers
+      "cs": configuration space region
 
-> For the platform changes in the first patch, I would prefer to have
-> Matt pick up the first patch, but we can also apply it directly into
-> arm-soc if he prefers that.
+  pci-rcar-gen2.txt
+    - reg:  A list of physical regions to access the device: the first is
+	    the operational registers for the OHCI/EHCI controllers and the
+	    second is for the bridge configuration and control registers.
 
-That brings up a question related to PATCH 11 in the series (MAINTAINERS
-update); who will be maintaining arch/arm/mach-bcm/*brcmstb*, and how
-will code go upstream? It seems like Matt and Christian are officially
-mach-bcm maintainers, although I don't know if Christian is still
-involved.
+  ralink,rt3883-pci.txt
+     - reg: specifies the physical base address of the controller and
+       the length of the memory mapped region.
 
-Also, BCM7xxx shares little in common with the rest of mach-bcm, except
-a company name, so we'd really like at least the 'Maintainer' entries
-for the CC. I was planning on a separate git tree too, although it could
-have conflicts if we touch arch/arm/mach-bcm/{Makefile,Kconfig}.
+  rcar-pci.txt
+    - reg: base address and length of the pcie controller registers.
 
-So would we send a separate arm-soc pull request for the arm-soc
-targeted changes (and all future development)?
+  samsung,exynos5440-pcie.txt
+    - reg: base addresses and lengths of the pcie controller,
+	  the phy controller, additional register for the phy controller.
 
-> The reset driver can ideally go through the drivers/power/ maintainers,
-> but if they are not interested in merging it, we can also take that
-> through arm-soc.
+  v3-v360epc-pci.txt
+    - reg: should contain the base address of the V3 adapter.
 
-I don't see much activity from the drivers/power/ maintainers on the
-mailing lists, and I know David Woodhouse at least has been severely
-distracted (I took over for him on driver/mtd/ recently), so I don't
-expect much. (EDIT: I see [1]. Nice!)
+So my questions are:
 
-> See also my one comment on that driver.
+1) Is "reg" the right place for configuration space?  I assume this is
+CAM or ECAM.  Only 83xx-512x-pci.txt, host-generic-pci.txt, and
+nvidia,tegra20-pcie.txt mention using "reg" for config space; all the
+others use "reg" for register space for the PCIe controller itself.
 
-I proposed an additional diff on that patch in response.
+2) Is "config" the correct value for "reg-names"?  Only
+nvidia,tegra20-pcie.txt has something similar, and it wants "cs".
+Should these be the same?
 
-I can strip the drivers/power/reboot/ driver out and send it separately
-to our new drivers/power/ maintainer (thanks Sebastian!), and hope that
-it gets through for 3.17.
+3) Doesn't this add a revlock (kernels with this patch require a new
+device tree that adds "reg" and "reg-names"?  I know both Mohit and
+Jingoo acked this [1,2], so I'm just double-checking that this is
+expected and desired.
 
-For the reset of mach-bcm stuff, I'll just send an arm-soc pull request
-soon enough, unless Matt/Arnd/Olof object.
+Bjorn
 
-Thanks,
-Brian
+[1] http://lkml.kernel.org/r/2CC2A0A4A178534D93D5159BF3BCB6619C5F94EFC8@EAPEX1MAIL1.st.com
+[2] http://marc.info/?l=linux-pci&m=140482389231290&w=2
 
-[1] https://lkml.org/lkml/2014/7/16/539
+
+>  - #address-cells: set to <3>
+>  - #size-cells: set to <2>
+>  - device_type: set to "pci"
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 1eaf4df..0b7b455 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci_regs.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/types.h>
+>  
+>  #include "pcie-designware.h"
+> @@ -396,11 +397,23 @@ static const struct irq_domain_ops msi_domain_ops = {
+>  int __init dw_pcie_host_init(struct pcie_port *pp)
+>  {
+>  	struct device_node *np = pp->dev->of_node;
+> +	struct platform_device *pdev = to_platform_device(pp->dev);
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+> +	struct resource *cfg_res;
+>  	u32 val;
+>  	int i;
+>  
+> +	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> +	if (cfg_res) {
+> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+> +		pp->cfg0_base = cfg_res->start;
+> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+> +	} else {
+> +		dev_err(pp->dev, "missing *config* reg space\n");
+> +	}
+> +
+>  	if (of_pci_range_parser_init(&parser, np)) {
+>  		dev_err(pp->dev, "missing ranges property\n");
+>  		return -EINVAL;
+> @@ -433,6 +446,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>  			of_pci_range_to_resource(&range, np, &pp->cfg);
+>  			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+>  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+> +			pp->cfg0_base = pp->cfg.start;
+> +			pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>  		}
+>  	}
+>  
+> @@ -445,8 +460,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> -	pp->cfg0_base = pp->cfg.start;
+> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>  	pp->mem_base = pp->mem.start;
+>  
+>  	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> -- 
+> 1.7.9.5
+> 
