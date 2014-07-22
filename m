@@ -1,187 +1,177 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RESEND PATCH v3 5/6] devicetree: mfd: max14577: Add device tree
- bindings document
-Date: Tue, 22 Jul 2014 09:41:05 +0200
-Message-ID: <1406014866-17744-6-git-send-email-k.kozlowski@samsung.com>
-References: <1406014866-17744-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1406014866-17744-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when
+ request IRQ
+Date: Tue, 22 Jul 2014 15:42:59 +0800
+Message-ID: <20140722074257.GC21229@dragon>
+References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>
+ <20140722062803.GA21229@dragon> <53CE107A.1000000@tqsc.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53CE107A.1000000-7U5DVgMjAv4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
+Cc: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add document describing device tree bindings for MAX14577 MFD
-drivers: MFD core, extcon, regulator and charger.
++ Grant and devicetree list
 
-Both MAX14577 and MAX77836 chipsets are documented.
+On Tue, Jul 22, 2014 at 09:19:22AM +0200, Markus Niebel wrote:
+> Am 22.07.2014 08:28, wrote Shawn Guo:
+> > On Wed, Jul 16, 2014 at 03:51:04PM +0200, Markus Niebel wrote:
+> >> From: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+> >>
+> >> When requesting an GPIO irq for imx Soc two things are missing:
+> >> - there is no check, if the GPIO is already requested
+> >> - there is no check, if the GPIO is configured as input
+> >>
+> >> The first case can lead to reconfiguring the GPIO pin from third
+> >> party while it is used as IRQ pin, second case will (eventually)
+> >> prevent IRQ from being seen by SOC becaus the pin is driven by
+> >> Soc
+> >>
+> >> This patch tries to implement (logic taken roughly from gpio-omap)
+> >> - basic check if gpio already requested
+> >> - if needed requests the gpio and configures as IN.
+> >> - if gpio is already requested it is only verified if pin is IN
+> >> - gpio is locked as irq
+> >>
+> >> Tested on a not mainlined i.MX6 based hardware with pin configured
+> >> by bootloader as OUT HIGH and expecting a low active IRQ.
+> >>
+> >> Signed-off-by: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  drivers/gpio/gpio-mxc.c |   35 +++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 35 insertions(+)
+> >>
+> >> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> >> index db83b3c..4316a38 100644
+> >> --- a/drivers/gpio/gpio-mxc.c
+> >> +++ b/drivers/gpio/gpio-mxc.c
+> >> @@ -175,6 +175,31 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+> >>  	u32 gpio = port->bgc.gc.base + gpio_idx;
+> >>  	int edge;
+> >>  	void __iomem *reg = port->base;
+> >> +	int ret = 0;
+> >> +
+> >> +	if (!gpiochip_is_requested(&port->bgc.gc, gpio_idx)) {
+> >> +		char label[32];
+> >> +
+> >> +		snprintf(label, 32, "gpio%u-irq", gpio);
+> >> +		ret = gpio_request_one(gpio, GPIOF_DIR_IN, label);
+> > 
+> > I'm not sure it's correct to call gpio_request_one() from .set_irq_type
+> > hook.  It looks like a API usage violation to me.  It should really be
+> > called from client driver.
+> 
+> Thats why it is an RFC. I add Linus Walleij to the cc-list.
+> 
+> Let me describe the problem:
+> 
+> Currently client drivers have simply interrupts and interrupt-parent
+> in their bindings, but no interrupt-gpios. Therefore in this case a
+> client does not know about a dedicated gpio which is to be requested
+> and configured.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/max14577.txt | 146 +++++++++++++++++++++
- 1 file changed, 146 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+Okay.  I understand your problem now.  This is an issue in case we
+specify a GPIO to be used as interrupt from device tree.  In non-DT
+world, client driver knows this is an interrupt on GPIO, and therefore
+takes the responsibility to request and configure the GPIO to work as
+interrupt.  But in DT case, client driver does not know whether it's an
+IRQ line or GPIO based interrupt.  The consequence is that GPIO
+subsystem, OF subsystem, client driver, none of the three is requesting
+and configuring the GPIO to be used as interrupt.
 
-diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-new file mode 100644
-index 000000000000..236264c10b92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-@@ -0,0 +1,146 @@
-+Maxim MAX14577/77836 Multi-Function Device
-+
-+MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-+Battery Charger and SFOUT LDO output for powering USB devices. It is
-+interfaced to host controller using I2C.
-+
-+MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-+
-+
-+Required properties:
-+- compatible : Must be "maxim,max14577" or "maxim,max77836".
-+- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
-+- interrupts : IRQ line for the chip.
-+- interrupt-parent :  The parent interrupt controller.
-+
-+
-+Required nodes:
-+ - charger :
-+	Node for configuring the charger driver.
-+	Required properties:
-+		- compatible : "maxim,max14577-charger"
-+			or "maxim,max77836-charger"
-+		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
-+			Valid values:
-+			- for max14577: 90000 - 950000;
-+			- for max77836: 45000 - 475000;
-+		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
-+			Valid values:
-+			- for max14577: 50000 - 200000;
-+			- for max77836: 5000 - 100000;
-+		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
-+			In an overvoltage condition, INT asserts and charging
-+			stops. Valid values:
-+			- 6000000, 6500000, 7000000, 7500000;
-+		- maxim,constant-uvolt : Battery Constant Voltage in uV;
-+			Valid values:
-+			- 4000000 - 4280000 (step by 20000);
-+			- 4350000;
-+
-+
-+Optional nodes:
-+- max14577-muic/max77836-muic :
-+	Node used only by extcon consumers.
-+	Required properties:
-+		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
-+
-+- regulators :
-+	Required properties:
-+		- compatible : "maxim,max14577-regulator"
-+			or "maxim,max77836-regulator"
-+
-+	May contain a sub-node per regulator from the list below. Each
-+	sub-node should contain the constraints and initialization information
-+	for that regulator. See regulator.txt for a description of standard
-+	properties for these sub-nodes.
-+
-+	List of valid regulator names:
-+	- for max14577: CHARGER, SAFEOUT.
-+	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
-+
-+	The SAFEOUT is a fixed voltage regulator so there is no need to specify
-+	voltages for it.
-+
-+
-+Example:
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+max14577@25 {
-+	compatible = "maxim,max14577";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max14577-muic {
-+		compatible = "maxim,max14577-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max14577-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max14577-charger";
-+
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <450000>;
-+		maxim,eoc-uamp = <50000>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
-+
-+
-+max77836@25 {
-+	compatible = "maxim,max77836";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max77836-muic {
-+		compatible = "maxim,max77836-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max77836-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+		LDO1 {
-+			regulator-name = "LDO1";
-+			regulator-min-microvolt = <2700000>;
-+			regulator-max-microvolt = <2700000>;
-+		};
-+		LDO2 {
-+			regulator-name = "LDO2";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3950000>;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max77836-charger";
-+
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <225000>;
-+		maxim,eoc-uamp = <7500>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
--- 
-1.9.1
+This is a common issue instead of i.MX specific, and should be addressed
+globally, I think.
+
+Shawn
+
+> 
+> > 
+> >> +	} else {
+> >> +		val = readl(port->base + GPIO_GDIR);
+> >> +		if (val & BIT(gpio_idx))
+> >> +			ret = -EINVAL;
+> > 
+> > It says that the GPIO is requested by someone, but we're not really sure
+> > if it's the correct one, i.e. the one is requesting set_irq_type.
+> > 
+> 
+> Yes, but the current situation is even worse (in my eyes): an IRQ can be requested and an
+> independend party can request and configure the gpio as output ...
+> 
+> >> +	}
+> >> +
+> >> +	if (ret) {
+> >> +		dev_err(port->bgc.gc.dev, "unable to set gpio_idx %u as IN\n",
+> >> +			gpio_idx);
+> >> +		return ret;
+> >> +	}
+> > 
+> > Having said that, I'm not sure any above changes is really necessary.
+> > If any, I would say only gpiochip_is_requested() check makes some sense,
+> > but we should just fail out if the GPIO hasn't been requested.  Nothing
+> > more can be done in there.
+> 
+> Going that way as a consequence a reworked device tree binding for gpio irq is needed
+> (just like in the platform data days) when providing a gpio number and the client has
+> to request gpio and irq - correct me if I'm wrong.
+> 
+> Maybe here is something needed with deeper knowledge in the gpio subsystem.
+> 
+> > 
+> >> +
+> >> +	ret = gpio_lock_as_irq(&port->bgc.gc, gpio_idx);
+> >> +	if (ret) {
+> >> +		dev_err(port->bgc.gc.dev, "unable to lock gpio_idx %u for IRQ\n",
+> >> +			gpio_idx);
+> >> +		return ret;
+> >> +	}
+> > 
+> > This and the following changes do make sense to me.
+> > 
+> > Shawn
+> > 
+> >>  
+> >>  	port->both_edges &= ~(1 << gpio_idx);
+> >>  	switch (type) {
+> >> @@ -231,6 +256,15 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +static void gpio_irq_shutdown(struct irq_data *d)
+> >> +{
+> >> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> >> +	struct mxc_gpio_port *port = gc->private;
+> >> +	u32 gpio_idx = d->hwirq;
+> >> +
+> >> +	gpio_unlock_as_irq(&port->bgc.gc, gpio_idx);
+> >> +}
+> >> +
+> >>  static void mxc_flip_edge(struct mxc_gpio_port *port, u32 gpio)
+> >>  {
+> >>  	void __iomem *reg = port->base;
+> >> @@ -353,6 +387,7 @@ static void __init mxc_gpio_init_gc(struct mxc_gpio_port *port, int irq_base)
+> >>  	ct->chip.irq_mask = irq_gc_mask_clr_bit;
+> >>  	ct->chip.irq_unmask = irq_gc_mask_set_bit;
+> >>  	ct->chip.irq_set_type = gpio_set_irq_type;
+> >> +	ct->chip.irq_shutdown = gpio_irq_shutdown;
+> >>  	ct->chip.irq_set_wake = gpio_set_wake_irq;
+> >>  	ct->regs.ack = GPIO_ISR;
+> >>  	ct->regs.mask = GPIO_IMR;
+> >> -- 
+> >> 1.7.9.5
+> >>
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
