@@ -1,62 +1,37 @@
-From: Kamal Mostafa <kamal@canonical.com>
-Subject: [PATCH 3.8 029/116] MIPS: DTS: Fix missing device_type="memory" property in memory nodes
-Date: Tue, 22 Jul 2014 15:20:40 -0700
-Message-ID: <1406067727-19683-30-git-send-email-kamal@canonical.com>
-References: <1406067727-19683-1-git-send-email-kamal@canonical.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1406067727-19683-1-git-send-email-kamal@canonical.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@lists.ubuntu.com
-Cc: Leif Lindholm <leif.lindholm@linaro.org>, Grant Likely <grant.likely@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, gaurav.minocha@alumni.ubc.ca, Ralf Baechle <ralf@linux-mips.org>, Kamal Mostafa <kamal@canonical.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 0/3] Adding ST21NFCB NCI NFC controller support
+Date: Wed, 23 Jul 2014 00:27:07 +0200
+Message-ID: <20140722222707.GB455@zurbaran>
+References: <1401050140-15050-1-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1401050140-15050-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-3.8.13.27 -stable review patch.  If anyone has any objections, please let me know.
+Hi Christophe,
 
-------------------
+On Sun, May 25, 2014 at 10:35:37PM +0200, Christophe Ricard wrote:
+> Hi,
+> 
+> Please find a new patchset bringing ST21NFCB support in Reader/Writer and P2P mode.
+> 
+> This patchset apply against:
+> 7974728094d35f38775417a26d8f30ea3602496a
+> NFC: st21nfca: Add ISO15693 Reader/Writer support 
+Those 3 and the 4th (code cleanup) applied to nfc-next.
 
-From: Leif Lindholm <leif.lindholm@linaro.org>
+Cheers,
+Samuel.
 
-commit 1d530fa42a317deca1c4a4780d18e2dbf316e0cb upstream.
-
-A few platforms lack a 'device_type = "memory"' for their memory
-nodes, relying on an old ppc quirk in order to discover its memory.
-Add the missing data so that all parsing code can find memory nodes
-correctly.
-
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Acked-by: John Crispin <blogic@openwrt.org>
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: gaurav.minocha@alumni.ubc.ca
-Patchwork: https://patchwork.linux-mips.org/patch/6989/
-Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
-[ kamal: backport to 3.8-stable: only lantiq/dts/easy50712.dts ]
-Signed-off-by: Kamal Mostafa <kamal@canonical.com>
----
- arch/mips/lantiq/dts/easy50712.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
-index 68c1731..de53a1b 100644
---- a/arch/mips/lantiq/dts/easy50712.dts
-+++ b/arch/mips/lantiq/dts/easy50712.dts
-@@ -8,6 +8,7 @@
- 	};
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
 -- 
-1.9.1
+Intel Open Source Technology Centre
+http://oss.intel.com/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
