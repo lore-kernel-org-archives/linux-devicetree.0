@@ -1,69 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] iio: adc: exynos_adc: Add support for S3C24xx ADC
-Date: Tue, 22 Jul 2014 10:39:38 +0200
-Message-ID: <5200888.DXoC06U953@wuerfel>
-References: <1405995074-3271-1-git-send-email-cw00.choi@samsung.com> <1405995074-3271-3-git-send-email-cw00.choi@samsung.com>
+From: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] arm: dts: omap3-gta04: Add nand support
+Date: Tue, 22 Jul 2014 11:00:57 +0200
+Message-ID: <CAAfyv35BLu-iU0wURh28S-EyYQ+e5v4iAKAf1dkz=UFASg7LBA@mail.gmail.com>
+References: <1405976727-15166-1-git-send-email-marek@goldelico.com>
+	<1405976727-15166-2-git-send-email-marek@goldelico.com>
+	<20140722062442.GF18374@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1405995074-3271-3-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: jic23@kernel.org, ch.naveen@samsung.com, kgene.kim@samsung.com, kyungmin.park@samsung.com, t.figa@samsung.com, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, heiko.stuebner@bq.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140722062442.GF18374-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 July 2014 11:11:14 Chanwoo Choi wrote:
-> This patch add support for s3c2410/s3c2416/s3c2440/s3c2443 ADC. The s3c24xx
-> is alomost same as ADCv1. But, There are a little difference as following:
-> - ADCMUX register address to select channel
-> - ADCDAT mask (10bit or 12bit ADC resolution according to SoC version)
+On Tue, Jul 22, 2014 at 8:24 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [140721 14:08]:
+>
+> Can you please add the descriptions to all the patches?
+OK thanks for review. I'll send v2.
+> Other than that looks OK to me.
+>
+> Regards,
+>
+> Tony
 
-Very good, thanks for doing this patch!
+BR,
 
-(adding Heiko to Cc, he's probably interested in seeing this as well.
+marek
 
-One comment:
- 
-> @@ -101,12 +107,14 @@ struct exynos_adc {
->  	struct completion	completion;
->  
->  	u32			value;
-> +	u32			value2;
->  	unsigned int            version;
->  };
-> ...
-> @@ -365,7 +448,7 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
->  		ret = -ETIMEDOUT;
->  	} else {
->  		*val = info->value;
-> -		*val2 = 0;
-> +		*val2 = info->value2;
->  		ret = IIO_VAL_INT;
->  	}
->  
-> @@ -377,9 +460,11 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
->  static irqreturn_t exynos_adc_isr(int irq, void *dev_id)
->  {
->  	struct exynos_adc *info = (struct exynos_adc *)dev_id;
-> +	u32 mask = info->data->mask;
->  
->  	/* Read value */
-> -	info->value = readl(ADC_V1_DATX(info->regs)) & ADC_DATX_MASK;
-> +	info->value = readl(ADC_V1_DATX(info->regs)) & mask;
-> +	info->value2 = readl(ADC_V1_DATY(info->regs)) & mask;
->  
->  	/* clear irq */
->  	if (info->data->clear_irq)
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
 
-If I understand it right, this would only be necessary if we want
-to do the touchscreen driver as a separate iio client using the
-in-kernel interfaces. As Jonathan Cameron commented, we probably
-don't want to do that though. Even if we do, it should be a separate
-patch and not mixed in with the s3c24xx support.
-
-Aside from this:
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-	Arnd
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
