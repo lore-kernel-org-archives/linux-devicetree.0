@@ -1,46 +1,67 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 3/3] ARM: shmobile: henninger: enable USB PHY
-Date: Wed, 23 Jul 2014 01:28:12 +0400
-Message-ID: <201407230128.13836.sergei.shtylyov@cogentembedded.com>
-References: <201407230122.49264.sergei.shtylyov@cogentembedded.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] dra7: Add PCIe support
+Date: Tue, 22 Jul 2014 15:33:06 -0600
+Message-ID: <20140722213306.GB25432@google.com>
+References: <1405587643-13808-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201407230122.49264.sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1405587643-13808-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mohit.kumar-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable USB PHY device for the Henninger board.
+On Thu, Jul 17, 2014 at 02:30:39PM +0530, Kishon Vijay Abraham I wrote:
+> Changes from v2:
+> * Added myself as MAINTAINER of pcie dra7xx driver
+> 
+> Changes from v1:
+> * fixed dw_pcie_prog_viewport_io_outbound() to use untranslated address
+> * split dra7xx patch into driver part and documentation part
+> 
+> [1] is split into separate series in order for individual subsystem
+> Maintainers to pick up the patches. This series handles the PCIe
+> support for DRA7.
+> 
+> Rebased to pci -next.
+> 
+> [1] -> https://lkml.org/lkml/2014/5/29/258
+> 
+> Kishon Vijay Abraham I (4):
+>   PCI: designware: Configuration space should be specified in 'reg'
+>   PCI: designware: use untranslated address while programming ATU
+>   Documentation: pci: ti: Add dt binding documentation for PCIe in
+>     DRA7xx
+>   PCI: host: pcie-dra7xx: add support for pcie-dra7xx controller
+> 
+>  .../devicetree/bindings/pci/designware-pcie.txt    |    4 +
+>  Documentation/devicetree/bindings/pci/ti-pci.txt   |   59 +++
+>  MAINTAINERS                                        |    8 +
+>  drivers/pci/host/Kconfig                           |   10 +
+>  drivers/pci/host/Makefile                          |    1 +
+>  drivers/pci/host/pci-dra7xx.c                      |  458 ++++++++++++++++++++
+>  drivers/pci/host/pcie-designware.c                 |   72 ++-
+>  drivers/pci/host/pcie-designware.h                 |    4 +
+>  8 files changed, 600 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
+>  create mode 100644 drivers/pci/host/pci-dra7xx.c
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+I applied these to pci/host-designware for v3.17.  This will not be in my
+first pull request because I'm going on vacation and won't have time to get
+everything through -next and tagged.  But I'm planning a second pull
+request that will include this.
 
----
-Changes in version 3:
-- refreshed the patch.
+Mohit, I applied your ack of "use untranslated address" from the v1 posting
+(your mail of Jul 09) to the corresponding patch here, since Kishon didn't
+carry it forward.  Let me know if that's not OK.
 
- arch/arm/boot/dts/r8a7791-henninger.dts |    4 ++++
- 1 file changed, 4 insertions(+)
+I also squashed the last two patches into one so the DT binding
+documentation goes along with the dra7xx driver addition.
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -253,6 +253,10 @@
- 	pinctrl-names = "default";
- };
- 
-+&usbphy {
-+	status = "okay";
-+};
-+
- &pcie_bus_clk {
- 	status = "okay";
- };
+Bjorn
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
