@@ -1,68 +1,125 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v8 02/11] power: reset: Add reboot driver for brcmstb
-Date: Tue, 22 Jul 2014 23:02:07 +0200
-Message-ID: <5224854.YNJjMxFltp@wuerfel>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com> <62122849.RXJHvac7Iy@wuerfel> <20140722200213.GF28323@ld-irv-0074>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 1/4] PCI: designware: Configuration space should be specified in 'reg'
+Date: Tue, 22 Jul 2014 23:11:14 +0200
+Message-ID: <5462407.z4eX3u12aQ@wuerfel>
+References: <1405587643-13808-1-git-send-email-kishon@ti.com> <1405587643-13808-2-git-send-email-kishon@ti.com> <20140722205326.GA25432@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140722200213.GF28323@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140722205326.GA25432@google.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 July 2014 13:02:13 Brian Norris wrote:
-> How about a third option, where we drop the 'select' statement and
-> set POWER_RESET_BRCMSTB to be 'default y'? Then we don't have to modify
-> the defconfig, and it gives the added bonus of choosing a sane default
-> even if you're not based on the multi_v7_defconfig. i.e.:
+On Tuesday 22 July 2014 14:53:26 Bjorn Helgaas wrote:
+> > @@ -2,6 +2,10 @@
+> >  
+> >  Required properties:
+> >  - compatible: should contain "snps,dw-pcie" to identify the core.
+> > +- reg: Should contain the configuration address space.
+> > +- reg-names: Must be "config" for the PCIe configuration space.
+> > +    (The old way of getting the configuration address space from "ranges"
+> > +    is deprecated and should be avoided.)
 > 
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 58c01aed9752..634de7b7fd28 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -94,7 +94,6 @@ config ARCH_BRCMSTB
->         select MIGHT_HAVE_PCI
->         select HAVE_SMP
->         select HAVE_ARM_ARCH_TIMER
-> -       select POWER_RESET_BRCMSTB
->         select BRCMSTB_GISB_ARB
->         select BRCMSTB_L2_IRQ
->         help
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index fcb9825debe5..ab5d57e2766d 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -23,6 +23,7 @@ config POWER_RESET_AXXIA
->  config POWER_RESET_BRCMSTB
->         bool "Broadcom STB reset driver"
->         depends on POWER_RESET && ARCH_BRCMSTB
-> +       default y
->         help
->           This driver provides restart support for ARM-based Broadcom STB
->           boards.
+> I'm not a devicetree person, so please excuse my floundering here.
+> There doesn't seem to be consistent usage of "reg" or "reg-names".
 
-I don't like this too much. Why do you want to allow disabling the
-driver if you make it 'default y' in the first place?
+I think the above is ok, given the constraints we hae.
 
-We try to avoid 'default y' for user-selectable drivers in general.
-I noticed that in my example, I was missing the default. It should
-have been 
+> Here's what I found in the existing Documentation/devicetree/bindings/pci
+> stuff:
+>
+>   83xx-512x-pci.txt
+>     - reg: should contain two address length tuples
+>         The first is for the internal pci bridge registers
+>         The second is for the pci config space access registers
 
-config POWER_RESET_BRCMSTB
-        bool "Broadcom STB reset driver" if COMPILE_TEST
-        depends on POWER_RESET && ARM
-	default ARCH_BRCMSTB
+This is fine
 
-This way, it always gets selected when ARCH_BRCMSTB is on and
-COMPILE_TEST is off. With COMPILE_TEST enabled, it defaults to
-ARCH_BRCMSTB but can be enabled or disabled for the purpose
-of compile testing.
+>   fsl,imx6q-pcie.txt
+>     - reg: base addresse and length of the pcie controller
+
+This should have included an entry for the config space, it was a
+mistake
+
+>   host-generic-pci.txt
+>     - reg            : The Configuration Space base address and size, as accessed
+>                        from the parent bus.
+
+This is fine.
+
+>   nvidia,tegra20-pcie.txt
+>     - reg: A list of physical base address and length for each set of controller
+>       registers. Must contain an entry for each entry in the reg-names property.
+>     - reg-names: Must include the following entries:
+>       "pads": PADS registers
+>       "afi": AFI registers
+>       "cs": configuration space region
+
+The names are a bit strange, but it's also ok. In general we should mandate
+the order of the entries as well.
+
+>   pci-rcar-gen2.txt
+>     - reg:  A list of physical regions to access the device: the first is
+>             the operational registers for the OHCI/EHCI controllers and the
+>             second is for the bridge configuration and control registers.
+
+This one is wrong, as previously discussed. The first region should
+have been listed in the 'ranges' property, because these are the registers
+of the child nodes (the actual PCI devices) rather than the host controller
+itself.
+
+>   ralink,rt3883-pci.txt
+>      - reg: specifies the physical base address of the controller and
+>        the length of the memory mapped region.
+
+The wording is a bit strange but it seems otherwise correct.
+
+>   rcar-pci.txt
+>     - reg: base address and length of the pcie controller registers.
+
+This is ok
+
+>   samsung,exynos5440-pcie.txt
+>     - reg: base addresses and lengths of the pcie controller,
+>           the phy controller, additional register for the phy controller.
+
+Could be a bit more verbose, but is not wrong. In order to work
+with the "snps,dw-pcie" binding, this will need a reg-names property.
+
+>   v3-v360epc-pci.txt
+>     - reg: should contain the base address of the V3 adapter.
+
+This has the same mistake that the pcie-dw driver has and should
+be fixed by putting the config space in there.
+
+> So my questions are:
+> 
+> 1) Is "reg" the right place for configuration space?  I assume this is
+> CAM or ECAM.  Only 83xx-512x-pci.txt, host-generic-pci.txt, and
+> nvidia,tegra20-pcie.txt mention using "reg" for config space; all the
+> others use "reg" for register space for the PCIe controller itself.
+
+We had long debates about this. The conclusion was that we should
+have put them in 'reg' from the start and not used 'ranges' here.
+
+> 2) Is "config" the correct value for "reg-names"?  Only
+> nvidia,tegra20-pcie.txt has something similar, and it wants "cs".
+> Should these be the same?
+
+It would be better if they were the same, but it's not important.
+The names are private to the device driver, and the register layout
+within this region is driver specific, so we can't use common code
+to parse them anyway.
+
+> 3) Doesn't this add a revlock (kernels with this patch require a new
+> device tree that adds "reg" and "reg-names"?  I know both Mohit and
+> Jingoo acked this [1,2], so I'm just double-checking that this is
+> expected and desired.
+
+My understanding is that the patch still allows the old method as
+a fallback if no reg with the name "config" is present.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
