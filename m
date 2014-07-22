@@ -1,73 +1,52 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v4 04/11] pwm: add DT bindings documentation for atmel-hlcdc-pwm
- driver
-Date: Tue, 22 Jul 2014 20:06:11 +0530
-Message-ID: <53CE76DB.7030902@gmail.com>
-References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com> <1406034695-15534-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 8/9] Documentation: devicetree: Document sclk-jpeg clock for exynos3250 SoC
+Date: Tue, 22 Jul 2014 16:44:38 +0200
+Message-ID: <7786783.sB22HqBgx3@wuerfel>
+References: <1405091990-28567-1-git-send-email-j.anaszewski@samsung.com> <14970063.d648TVkJj8@wuerfel> <53CE72B1.4080706@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406034695-15534-5-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bo Shen <voice.shen@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <53CE72B1.4080706@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "andrzej.p@samsung.com" <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 22 July 2014 16:18:25 Sylwester Nawrocki wrote:
+> 
+> All right, then I would rephrase it to:
+> 
+> - clock-names   : should contain:
+>                    - "jpeg" for the common gate clock,
+>                    - "sclk" for the special clock (only for Exynos3250).
+> - clocks        : should contain the clock specifier and clock ID list
+>                   matching entries in the clock-names property, according
+>                   to the common clock bindings.
+> 
+> I went through documentation of these clocks in various SoCs' datasheets:
+> exynos4210, exynos4212/4412, exynos3250, exynos5250 and I think for all
+> SoCs the "jpeg" clock can be referred as "gating all clocks for the IP".
+> That means there is a single bit in a CMU register masking all the clocks
+> for the IP, I suppose this includes the control bus (APB) clock and the
+> IP functional ("special") clock.
+> 
+> It looks like e.g. exynos4412 also has the SCLK clock, after muxes and
+> a divider, so rate can be configured for this clock.  However there is
+> no separate gate for SCLK as in case of exynos3250. Thus there is no
+> need to to enable/disable the second clock on anything except exynos3250
+> currently.
+> 
+> I think ideally sclk should also be defined for SoCs like exynos4x12,
+> exynos5250, even if now drivers are not touching sclk. All in all the
+> IP functional clock frequency should be normally set to some known value,
+> now we rely on the default divider value which results in divider
+> ratio = 1.
+> It would break backward compatibility though if we now made sclk
+> mandatory. I'm inclined to also specify sclk for exynos4x12, just
+> not sure if it should be optional or mandatory.
 
-On Tuesday 22 July 2014 06:41 PM, Boris BREZILLON wrote:
-> The HLCDC IP available in some Atmel SoCs (i.e. sam9x5i.e. at91sam9n12,
-> at91sam9x5 family or sama5d3 family) provide a PWM device.
->
-> The DT bindings used for this PWM device is following the default 3 cells
-> bindings described in Documentation/devicetree/bindings/pwm/pwm.txt.
->
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->   .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    | 55 ++++++++++++++++++++++
->   1 file changed, 55 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
->
-> diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> new file mode 100644
-> index 0000000..86ad3e2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> @@ -0,0 +1,55 @@
-> +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) PWM driver
-> +
-> +The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
-> +See ../mfd/atmel-hlcdc.txt for more details.
-> +
-> +Required properties:
-> + - compatible: value should be one of the following:
-> +   "atmel,hlcdc-pwm"
-> + - pinctr-names: the pin control state names. Should contain "default".
-> + - pinctrl-0: should contain the pinctrl states described by pinctrl
-> +   default.
-> + - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
-> +   bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
-> +   The first cell encodes the PWM id (0 is the only acceptable value here,
-> +   because the chip only provide one PWM).
-> +   The second cell encodes the PWM period in nanoseconds.
-> +   The third cell encodes the PWM flags (the only supported flag is
-> +   PWM_POLARITY_INVERTED)
+I'd vote for listing it as an optional clock independent of the compatible
+string and changing the driver to just use it when it's provided.
 
-It will be readable if:
-Required properties:
-  - compatible	: value should be one of the following: "atmel,hlcdc-pwm"
-  - pinctr-names	: the pin control state names. Should contain "default".
-  - pinctrl-0	: should contain the pinctrl states described by pinctrl default.
-  - #pwm-cells	: should be set to 3. This PWM chip use the default 3 cells
-		  bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
-		  The first cell encodes the PWM id (0 is the only acceptable value here,
-		  because the chip only provide one PWM).
-		  The second cell encodes the PWM period in nanoseconds.
-		  The third cell encodes the PWM flags (the only supported flag is
-		  PWM_POLARITY_INVERTED)
-....
-
-
--- 
-Regards,
-Varka Bhadram
+	Arnd
