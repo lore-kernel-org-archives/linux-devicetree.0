@@ -1,88 +1,79 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 00/11] ARM: brcmstb: Add Broadcom STB SoC support
-Date: Tue, 22 Jul 2014 17:33:50 -0400
-Message-ID: <20140722213350.GX2593@beef>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <5675728.WLk3P96IBM@wuerfel>
- <20140722204431.GG28323@ld-irv-0074>
- <5044348.IEPQPrahyu@wuerfel>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rk3188-radxarock: add GPIO IR receiver node
+Date: Tue, 22 Jul 2014 23:45:47 +0200
+Message-ID: <3433422.DZFVBm30W2@diego>
+References: <1405253401-15534-1-git-send-email-b.galvani@gmail.com> <2390327.HZxnbJmfOO@diego> <20140714190355.GA16904@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5044348.IEPQPrahyu@wuerfel>
+In-Reply-To: <20140714190355.GA16904-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 22, 2014 at 10:57:17PM +0200, Arnd Bergmann wrote:
-> On Tuesday 22 July 2014 13:44:31 Brian Norris wrote:
-> > > For the platform changes in the first patch, I would prefer to have
-> > > Matt pick up the first patch, but we can also apply it directly into
-> > > arm-soc if he prefers that.
-> > 
-> > That brings up a question related to PATCH 11 in the series (MAINTAINERS
-> > update); who will be maintaining arch/arm/mach-bcm/*brcmstb*, and how
-> > will code go upstream? It seems like Matt and Christian are officially
-> > mach-bcm maintainers, although I don't know if Christian is still
-> > involved.
-> 
-> You have to solve that question together with Matt. From my perspective
-> it would be easier if I only have to deal with one person for mach-bcm,
-> but it's really up to you.
->
-> 
-> > Also, BCM7xxx shares little in common with the rest of mach-bcm, except
-> > a company name, so we'd really like at least the 'Maintainer' entries
-> > for the CC. I was planning on a separate git tree too, although it could
-> > have conflicts if we touch arch/arm/mach-bcm/{Makefile,Kconfig}.
-> > 
-> > So would we send a separate arm-soc pull request for the arm-soc
-> > targeted changes (and all future development)?
-> 
-> You can definitely have the separate MAINTAINERS entry without necessarily
-> becoming a maintainer at the same level. I know Matt is very responsive
-> and can forward your patches to arm-soc if that works for you.
+Am Montag, 14. Juli 2014, 21:04:26 schrieb Beniamino Galvani:
+> On Sun, Jul 13, 2014 at 02:37:40PM +0200, Heiko St=FCbner wrote:
+> > Am Sonntag, 13. Juli 2014, 14:10:01 schrieb Beniamino Galvani:
+> > > This adds a device tree node for the infrared receiver connected =
+to a
+> > > GPIO pin on the Radxa Rock.
+> > >=20
+> > > Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >=20
+> > >  arch/arm/boot/dts/rk3188-radxarock.dts |   13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts
+> > > b/arch/arm/boot/dts/rk3188-radxarock.dts index 19d45b4..1d87bcb 1=
+00644
+> > > --- a/arch/arm/boot/dts/rk3188-radxarock.dts
+> > > +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+> > > @@ -23,6 +23,13 @@
+> > >=20
+> > >  		reg =3D <0x60000000 0x80000000>;
+> > >  =09
+> > >  	};
+> > >=20
+> > > +	ir_recv: ir-receiver {
+> > > +		compatible =3D "gpio-ir-receiver";
+> > > +		gpios =3D <&gpio0 10 1>;
+> > > +		pinctrl-names =3D "default";
+> > > +		pinctrl-0 =3D <&ir_recv_pin>;
+> > > +	};
+> > > +
+> >=20
+> > hmm, on second glance, I'm actually not sure if this shouldn't belo=
+ng in
+> > the soc subnode, like the gpio-keys and leds.
+>=20
+> (adding devicetree mailing list)
+>=20
+> I placed the IR receiver under the root node after looking at what
+> other boards do, for example:
+>=20
+>   imx6dl-hummingboard.dts
+>   imx6qdl-cubox-i.dtsi
+>   dove-cubox.dts
+>=20
+> On the other hand, if gpio-keys and leds are under the soc node
+> probably it makes sense to follow the same rule also for the IR
+> receiver.
 
-We had this discussion wrt Hauke's BCM5301x support. The situation is
-basically the same. To date, every instance of a BCM ARM SoC shares
-nothing more than the company name and in some rare cases a piece of
-licensed IP like the Arasan sdhci or dwc2. I can't recall who asked
-for it, but I think Olof asked to have one pull request for all of
-mach-bcm to keep things simple. So we ended up with:
+your way was the right one actually ... using artificial subnodes is no=
+t=20
+encouraged at all - see comments I received , so the soc node itself al=
+so may=20
+go away.
 
-BROADCOM BCM5301X ARM ARCHICTURE
-M:      Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-L:      linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-S:      Maintained
-F:      arch/arm/mach-bcm/bcm_5301x.c
-F:      arch/arm/boot/dts/bcm5301x.dtsi
-F:      arch/arm/boot/dts/bcm470*
+I'll add the patch to my queue.
 
-which could be a model for BCM7xxx maintainership and Christian and I
-can aggregate this stuff in the mach-bcm tree for pull requests to the
-arm-soc team as we are doing now. bcm2835 is an exception case since
-that was living elsewhere before the new platforms colocated in
-mach-bcm.
 
-> > For the reset of mach-bcm stuff, I'll just send an arm-soc pull request
-> > soon enough, unless Matt/Arnd/Olof object.
-> 
-> I'll wait for Matt to comment before pulling it, otherwise that sounds
-> fine.
-
-I'm fine with it, but we were asked to have one request for bcm5301x to
-make life easy for the arm-soc team. If we want each platform to do pull
-requests directly with arm-soc we should advise Hauke to do the same as
-well with bcm5301x. I think the chances of Kconfig/Makefile conflicts are
-relatively low as there's a dwindling amount of code of interest in new
-platform mach directories like ours.
-
-I would like to see a consistent path for all BCM platform maintainers.
-
--Matt
+Heiko
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
