@@ -1,52 +1,53 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/1] ARM: DT: STi: STiH416: Add DT node for ST's
- SATA device
-Date: Tue, 22 Jul 2014 11:06:54 +0200
-Message-ID: <53CE29AE.3040505@st.com>
-References: <1405931573-12407-1-git-send-email-lee.jones@linaro.org>
+From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
+Subject: [PATCH v4 1/2] usb: doc: udc-xilinx: Add devicetree bindings
+Date: Tue, 22 Jul 2014 14:38:49 +0530
+Message-ID: <4affe9b7-db88-445d-bcc4-7bc69e7259a5@BY2FFO11FD025.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405931573-12407-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, michals@xilinx.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, svemula@xilinx.com, anirudh@xilinx.com, sbhatta@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Add devicetree bindings for Xilinx udc driver.
 
-On 07/21/2014 10:32 AM, Lee Jones wrote:
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/ata/ahci-st.txt |  2 +-
->   arch/arm/boot/dts/stih416-b2020.dts               |  4 ++++
->   arch/arm/boot/dts/stih416-b2020e.dts              |  4 ++++
->   arch/arm/boot/dts/stih416.dtsi                    | 16 ++++++++++++++++
->   4 files changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
-> index 0574a77..9883542 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-st.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
-> @@ -21,7 +21,7 @@ Example:
->   		reg             = <0xfe380000 0x1000>;
->   		interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
->   		interrupt-names = "hostc";
-> -		phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-> +		phys	        = <&phy_port0 MIPHY_TYPE_SATA>;
->   		phy-names       = "ahci_phy";
->   		resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
->   				  <&softreset STIH416_SATA0_SOFTRESET>;
+Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+---
+Changes for v4:
+	- renamed xlnx,axi-usb2-device-4.00.a to xlnx,usb2-device-4.00.a
+Changes for v3:
+        - None
+Changes for v2:
+        - replaced xlnx,include-dma with xlnx,has-builtin-dma
 
-Patch does not apply because this file does not exist in my tree.
-Shouldn't be in a separate patch?
+ .../devicetree/bindings/usb/udc-xilinx.txt         |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/udc-xilinx.txt
 
-Regards,
-Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+new file mode 100644
+index 0000000..47b4e39
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+@@ -0,0 +1,18 @@
++Xilinx USB2 device controller
++
++Required properties:
++- compatible		: Should be "xlnx,usb2-device-4.00.a"
++- reg			: Physical base address and size of the USB2
++			  device registers map.
++- interrupts		: Should contain single irq line of USB2 device
++			  controller
++- xlnx,has-builtin-dma	: if DMA is included
++
++Example:
++ 		axi-usb2-device@42e00000 {
++                        compatible = "xlnx,usb2-device-4.00.a";
++                        interrupts = <0x0 0x39 0x1>;
++                        reg = <0x42e00000 0x10000>;
++                        xlnx,has-builtin-dma;
++                };
++
+-- 
+1.7.4
