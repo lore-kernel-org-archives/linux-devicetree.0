@@ -1,51 +1,41 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Tue, 22 Jul 2014 19:02:08 +0200
-Message-ID: <dc252e61-3179-4f51-90e6-f92929e93d40@BN1AFFO11FD030.protection.gbl>
-References: <1404361654-2894-1-git-send-email-sthokal@xilinx.com>
- <20140716173824.GA24357@google.com>
- <CA+mB=1JupzQy+R14kKAk7mTJR2FcZ+cQv-uXQSB6jEVBW95aGQ@mail.gmail.com>
- <CAErSpo41HwMferWm8q69Sz0t-Cs1WHgwwVp1VKsoxxyvrgQhfQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: tegra: make tegra_clocks_apply_init_table arch_initcall
+Date: Tue, 22 Jul 2014 11:15:21 -0600
+Message-ID: <53CE9C29.5030508@wwwdotorg.org>
+References: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com> <1405437890-6468-3-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo41HwMferWm8q69Sz0t-Cs1WHgwwVp1VKsoxxyvrgQhfQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Srikanth Thokala <sthokal@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1405437890-6468-3-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2014 06:08 PM, Bjorn Helgaas wrote:
-> On Mon, Jul 21, 2014 at 11:10 PM, Srikanth Thokala <sthokal@xilinx.com> wrote:
->> On Wed, Jul 16, 2014 at 11:08 PM, Bjorn Helgaas <bhelgaas@google.com> wrote:
->>> ...
->>> I see I forgot to ask for a MAINTAINERS entry for this driver.  Can
->>> you add one?
->>
->> There was a discussion on this earlier and Michal mentioned it is not
->> required as it is
->> handled by our Xilinx record.
->>
->> Here is the reply from Michal to the MAINTAINERS update comment,
->>
->> < Reply from Michal >
->>
->>> Please also include a MAINTAINERS update for drivers/pci/host/pci-xilinx.c.
->>
->> This should be handle by our record that's why MAINTAINERS update is
->> not necessary.
->> (N: xilinx below)
-> 
-> That's technically true in the sense that get_maintainer.pl will do
-> the right thing, but I often review patches in email (without
-> extracting them), so it's more convenient to just look in MAINTAINERS
-> to see if they have the right acks.  But I guess I can deal with it
-> either way.
+On 07/15/2014 09:24 AM, Peter De Schrijver wrote:
+> tegra_clocks_apply_init_table needs to be called after the udelay loop has
+> been calibrated (see 441f199a37cfd66c5dd8dd45490bd3ea6971117d why that is).
 
-There is also another reason for using just this fragment.
-Because developers and their responsibilities are changing so often
-and I just know who is responsible for it at that time.
+Instead of just the commit ID, can you please mention the commit subject
+too:
 
-Thanks,
-Michal
+441f199a37cf "clk: tegra: defer application of init table"
+
+> On existing Tegra SoCs this was done by calling tegra_clocks_apply_init_table
+> from tegra_dt_init. To make this also work on ARM64, we need to
+> change this into an initcall. tegra_dt_init is called from customize_machine
+> which is an arch_initcall. Therefore this should also work on existing 32bit
+> Tegra SoCs.
+
+I still strongly dislike performing this basic initialization from
+random separate initcalls. I think we should create a single initcall
+for all the Tegra initialization, even if it isn't able to be a machine
+descriptor hook function any more.
+
+That said, discussions re: that are ongoing in other threads, so it's no
+worth reworking this patch yet.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
