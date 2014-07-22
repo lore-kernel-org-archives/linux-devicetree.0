@@ -1,40 +1,64 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v6 05/14] drm/exynos: dsi: add TE interrupt handler to
- support LCD I80 interface
-Date: Tue, 22 Jul 2014 16:44:50 +0530
-Message-ID: <53CE47AA.4000200@gmail.com>
-References: <53CE3C45.9010509@samsung.com> <1406026184-29185-1-git-send-email-yj44.cho@samsung.com> <53CE43B3.2080203@gmail.com> <53CE469A.3090701@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 8/9] Documentation: devicetree: Document sclk-jpeg clock
+ for exynos3250 SoC
+Date: Tue, 22 Jul 2014 13:42:00 +0200
+Message-ID: <53CE4E08.2030407@samsung.com>
+References: <1405091990-28567-1-git-send-email-j.anaszewski@samsung.com>
+ <1405091990-28567-9-git-send-email-j.anaszewski@samsung.com>
+ <20140714095640.GC4980@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53CE469A.3090701@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, thierry.reding@gmail.com, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20140714095640.GC4980@leverpostej>
+Sender: linux-media-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "andrzej.p@samsung.com" <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2014 04:40 PM, YoungJun Cho wrote:
-> Hi Varka,
+On 14/07/14 11:56, Mark Rutland wrote:
+>> diff --git a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+>> > index 937b755..3142745 100644
+>> > --- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+>> > +++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+>> > @@ -3,9 +3,12 @@ Samsung S5P/EXYNOS SoC series JPEG codec
+>> >  Required properties:
+>> >  
+>> >  - compatible	: should be one of:
+>> > -		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg";
+>> > +		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
+>> > +		  "samsung,exynos3250-jpeg";
+>> >  - reg		: address and length of the JPEG codec IP register set;
+>> >  - interrupts	: specifies the JPEG codec IP interrupt;
+>> > -- clocks	: should contain the JPEG codec IP gate clock specifier, from the
+>> > +- clocks	: should contain the JPEG codec IP gate clock specifier and
+>> > +		  for the Exynos3250 SoC additionally the SCLK_JPEG entry; from the
+>> >  		  common clock bindings;
+>> > -- clock-names	: should contain "jpeg" entry.
+>> > +- clock-names	: should contain "jpeg" entry and additionally "sclk-jpeg" entry
+>> > +		  for Exynos3250 SoC
 >
-> This irq handler should be registered in attach() and unregistered in 
-> detach().
->
-> The devm_* APIs are released(freed) in remove(), right?
->
-> Logically the panel could be attached and detached several times after 
-> dsi is probed and not removed.
-> So I don't use devm_* APIs.
+> Please turn this into a list for easier reading, e.g.
+> 
+> - clock-names: should contain:
+>   * "jpeg" for the gate clock.
+>   * "sclk-jpeg" for the SCLK_JPEG clock (only for Exynos3250).
+> 
+> You could also define clocks in terms of clock-names to avoid
+> redundancy.
+> 
+> The SCLK_JPEG name sounds like a global name for the clock. Is there a
+> name for the input line on the JPEG block this is plugged into?
 
-You meant to say that in-case of GPIOs also you are following the same thing ..?
+There is unfortunately no such name for SCLK_JPEG clock in the IP's block
+documentation. For most of the multimedia IPs clocks are documented
+only in the clock controller chapter, hence the names may appear global.
+Probably "gate", "sclk" would be good names, rather than "<IP_NAME>",
+"<IP_NAME>-sclk". But people kept using the latter convention and now
+it's spread all over and it's hard to change it.
+Since now we can't rename "jpeg" and other IPs I'd assume it's best
+to stay with "jpeg", "sclk-jpeg".
 
-Means requesting the GPIOs and Releasing several times ..?
-
->
->>
->
-
-
--- 
+--
 Regards,
-Varka Bhadram.
+Sylwester
