@@ -1,70 +1,128 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv9 4/4] dt: mailbox: add generic bindings
-Date: Wed, 23 Jul 2014 00:27:36 +0530
-Message-ID: <1406055456-29384-1-git-send-email-jaswinder.singh@linaro.org>
-References: <1406055250-29159-1-git-send-email-jaswinder.singh@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406055250-29159-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org, lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, loic.pallardy-qxv4g6HH51o@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn-UYDU3/A3LUY@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [v3 PATCH 4/6] ARM: dts: am4372: Add prcm_resets node
+Date: Tue, 22 Jul 2014 14:01:58 -0500
+Message-ID: <53CEB526.3090101@ti.com>
+References: <1405615531-15649-1-git-send-email-dmurphy@ti.com> <1405615531-15649-4-git-send-email-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1405615531-15649-4-git-send-email-dmurphy@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Murphy, Dan" <dmurphy@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Define generic bindings for the framework clients to
-request mailbox channels.
+Hi Dan,
 
-Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/mailbox/mailbox.txt        | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/mailbox.txt
+On 07/17/2014 11:45 AM, Murphy, Dan wrote:
+> Add the prcm_resets node to the prcm parent node.
+> 
+> Add the am34xx_resets file to define the
+> am34xx reset lines that are handled by this reset
+> framework.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v3 - No changes
+> 
+>  arch/arm/boot/dts/am4372.dtsi        |    7 +++++
+>  arch/arm/boot/dts/am43xx-resets.dtsi |   52 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 59 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am43xx-resets.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index 49fa596..d0aa9c9 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -88,6 +88,12 @@
+>  
+>  			prcm_clockdomains: clockdomains {
+>  			};
+> +
+> +			prcm_resets: resets {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-new file mode 100644
-index 0000000..bb79678
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-@@ -0,0 +1,36 @@
-+* Generic Mailbox Controller and client driver bindings
-+
-+Generic binding to provide a way for Mailbox controller drivers to
-+assign appropriate mailbox channel to client drivers.
-+
-+* Mailbox Controller
-+
-+Required property:
-+- #mbox-cells: Must be at least 1. Number of cells in a mailbox
-+		specifier.
-+
-+Example:
-+	mailbox: mailbox {
-+		...
-+		#mbox-cells = <1>;
-+	};
-+
-+
-+* Mailbox Client
-+
-+Required property:
-+- mboxes: List of phandle and mailbox channel specifiers.
-+
-+Optional property:
-+- mbox-names: List of identifier strings for each mailbox channel
-+		required by the client. The use of this property
-+		is discouraged in favor of using index in list of
-+		'mboxes' while requesting a mailbox.
-+
-+Example:
-+	pwr_cntrl: power {
-+		...
-+		mbox-names = "pwr-ctrl", "rpc";
-+		mboxes = <&mailbox 0
-+			&mailbox 1>;
-+	};
--- 
-1.8.1.2
+Should be corrected as per comment on DT bindings.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +				#reset-cells = <1>;
+> +			};
+>  		};
+>  
+>  		scrm: scrm@44e10000 {
+> @@ -892,3 +898,4 @@
+>  };
+>  
+>  /include/ "am43xx-clocks.dtsi"
+> +/include/ "am43xx-resets.dtsi"
+> diff --git a/arch/arm/boot/dts/am43xx-resets.dtsi b/arch/arm/boot/dts/am43xx-resets.dtsi
+> new file mode 100644
+> index 0000000..ef338ba
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am43xx-resets.dtsi
+> @@ -0,0 +1,52 @@
+> +/*
+> + * Device Tree Source for AM43XX reset data
+> + *
+> + * Copyright (C) 2014 Texas Instruments, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +&prcm_resets {
+> +	icss_rstctrl {
+> +		reg = <0x810>,
+> +			  <0x814>;
+> +
+> +		icss_reset: icss_reset {
+> +			control-bit = <0x01>;
+> +			status-bit = <0x01>;
+> +		};
+> +	};
+> +
+> +	gfx_rstctrl {
+> +		reg = <0x410>,
+> +			  <0x414>;
+> +
+> +		gfx_reset: gfx_reset {
+> +			control-bit = <0x01>;
+> +			status-bit = <0x01>;
+> +		};
+> +	};
+> +
+> +	per_rstctrl {
+> +		reg = <0x2010>,
+> +			  <0x2014>;
+> +
+> +		iva_reset: iva_reset {
+> +			control-bit = <0x01>;
+> +			status-bit = <0x01>;
+> +		};
+
+There's no IVA on AM4372. Looking at the offset, it looks like you were
+defining this for the WkupM3, in which case you got the initial node
+name wrong. The PER rstctrl has the reset management for PRU-ICSS, so
+you also need to correct the icss_rstctrl accordingly.
+
+regards
+Suman
+
+> +	};
+> +
+> +	device_rstctrl {
+> +		reg = <0x4000>,
+> +			  <0x4004>;
+> +
+> +		device_reset: device_reset {
+> +			control-bit = <0x01>;
+> +			status-bit = <0x01>;
+> +		};
+> +	};
+> +
+> +};
+> 
+
