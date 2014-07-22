@@ -1,41 +1,51 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2] bus: ARM CCN PMU driver
-Date: Tue, 22 Jul 2014 09:08:44 -0700
-Message-ID: <CAOesGMijrD6SxAyjvQptmAB8swqcvXNkiVS_nRCtUVtX2vYUFQ@mail.gmail.com>
-References: <1405091188-31754-1-git-send-email-pawel.moll@arm.com>
-	<1406023886.25343.48.camel@hornet>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v4] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Tue, 22 Jul 2014 10:08:54 -0600
+Message-ID: <CAErSpo41HwMferWm8q69Sz0t-Cs1WHgwwVp1VKsoxxyvrgQhfQ@mail.gmail.com>
+References: <1404361654-2894-1-git-send-email-sthokal@xilinx.com>
+ <20140716173824.GA24357@google.com> <CA+mB=1JupzQy+R14kKAk7mTJR2FcZ+cQv-uXQSB6jEVBW95aGQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406023886.25343.48.camel@hornet>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnaldo Carvalho de Melo <acme-f8uhVLnGfZaxAyOMLChx1axOck334EZe@public.gmane.org>, Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+mB=1JupzQy+R14kKAk7mTJR2FcZ+cQv-uXQSB6jEVBW95aGQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 22, 2014 at 3:11 AM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Arnd, Kevin, Olof,
+On Mon, Jul 21, 2014 at 11:10 PM, Srikanth Thokala <sthokal@xilinx.com> wrote:
+> On Wed, Jul 16, 2014 at 11:08 PM, Bjorn Helgaas <bhelgaas@google.com> wrote:
+>> ...
+>> I see I forgot to ask for a MAINTAINERS entry for this driver.  Can
+>> you add one?
 >
-> On Fri, 2014-07-11 at 16:06 +0100, Pawel Moll wrote:
->> Driver providing perf backend for ARM Cache Coherent Network
->> interconnect. Supports counting all hardware events and crosspoint
->> watchpoints.
->>
->> Currently works with CCN-504 only, although there should be
->> no changes required for CCN-508 (just impossible to test it now).
->>
->> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> There was a discussion on this earlier and Michal mentioned it is not
+> required as it is
+> handled by our Xilinx record.
 >
-> Would you consider taking this through arm-soc tree? There isn't
-> anything in MAINTAINERS, but I vaguely remember Arnd proposing this
-> directory in the first place...
+> Here is the reply from Michal to the MAINTAINERS update comment,
+>
+> < Reply from Michal >
+>
+>> Please also include a MAINTAINERS update for drivers/pci/host/pci-xilinx.c.
+>
+> This should be handle by our record that's why MAINTAINERS update is
+> not necessary.
+> (N: xilinx below)
 
-Yeah, drivers/bus lacks an owner and we've normally been the ones
-merging them. Please send a fresh version of the patch over.
+That's technically true in the sense that get_maintainer.pl will do
+the right thing, but I often review patches in email (without
+extracting them), so it's more convenient to just look in MAINTAINERS
+to see if they have the right acks.  But I guess I can deal with it
+either way.
 
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ARM/ZYNQ ARCHITECTURE
+> M:      Michal Simek <michal.simek@xilinx.com>
+> L:      linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> W:      http://wiki.xilinx.com
+> T:      git git://git.xilinx.com/linux-xlnx.git
+> S:      Supported
+> F:      arch/arm/mach-zynq/
+> F:      drivers/cpuidle/cpuidle-zynq.c
+> N:      zynq
+> N:      xilinx
