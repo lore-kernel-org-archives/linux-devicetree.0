@@ -1,84 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3] ARM: shmobile: r8a7791: link PCI USB devices to USB PHY
-Date: Wed, 23 Jul 2014 02:25:25 +0400
-Message-ID: <201407230225.26798.sergei.shtylyov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+From: Kamal Mostafa <kamal@canonical.com>
+Subject: [PATCH 3.8 029/116] MIPS: DTS: Fix missing device_type="memory" property in memory nodes
+Date: Tue, 22 Jul 2014 15:20:40 -0700
+Message-ID: <1406067727-19683-30-git-send-email-kamal@canonical.com>
+References: <1406067727-19683-1-git-send-email-kamal@canonical.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1406067727-19683-1-git-send-email-kamal@canonical.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@lists.ubuntu.com
+Cc: Leif Lindholm <leif.lindholm@linaro.org>, Grant Likely <grant.likely@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, gaurav.minocha@alumni.ubc.ca, Ralf Baechle <ralf@linux-mips.org>, Kamal Mostafa <kamal@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-Describe the PCI USB devices that are behind the PCI bridges, adding necessary
-links to the USB PHY device.
+3.8.13.27 -stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+------------------
 
+From: Leif Lindholm <leif.lindholm@linaro.org>
+
+commit 1d530fa42a317deca1c4a4780d18e2dbf316e0cb upstream.
+
+A few platforms lack a 'device_type = "memory"' for their memory
+nodes, relying on an old ppc quirk in order to discover its memory.
+Add the missing data so that all parsing code can find memory nodes
+correctly.
+
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Acked-by: John Crispin <blogic@openwrt.org>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: gaurav.minocha@alumni.ubc.ca
+Patchwork: https://patchwork.linux-mips.org/patch/6989/
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+[ kamal: backport to 3.8-stable: only lantiq/dts/easy50712.dts ]
+Signed-off-by: Kamal Mostafa <kamal@canonical.com>
 ---
-This patch is against 'renesas-devel-v3.16-rc5-20140722' tag of Simon Horman's
-'renesas.git' repo plus R8A7791/Koelsch/Henninger USB PHY support patches posted
-before.  The patch requires the USB PHY driver, and USB HCD generic PHY support
-(also already posted) in order to work.
+ arch/mips/lantiq/dts/easy50712.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in version 3:
-- adjusted "phys" properties in the PCI OHCI/EHCI device nodes;
-- resolved rejects.
-
-Changes in version 2:
-- renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
-- changed the PHY specifier in the PCI#1 node to reflect that channel #1 support
-  was dropped;
-- resolved rejects.
-
- arch/arm/boot/dts/r8a7791.dtsi |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1030,6 +1030,20 @@
- 		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb@0,1 {
-+			reg = <0x800 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+		};
-+
-+		usb@0,2 {
-+			reg = <0x1000 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+		};
+diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
+index 68c1731..de53a1b 100644
+--- a/arch/mips/lantiq/dts/easy50712.dts
++++ b/arch/mips/lantiq/dts/easy50712.dts
+@@ -8,6 +8,7 @@
  	};
  
- 	pci1: pci@ee0d0000 {
-@@ -1050,6 +1064,20 @@
- 		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb@0,1 {
-+			reg = <0x800 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb2 0>;
-+			phy-names = "usb";
-+		};
-+
-+		usb@0,2 {
-+			reg = <0x1000 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb2 0>;
-+			phy-names = "usb";
-+		};
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
  	};
  
- 	pciec: pcie@fe000000 {
+-- 
+1.9.1
