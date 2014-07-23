@@ -1,165 +1,732 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v3 1/2] media: soc_camera: pxa_camera device-tree support
-Date: Wed, 23 Jul 2014 11:28:06 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1407231126210.30243@axis700.grange>
-References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] rtc: sun6i: Add sun6i RTC driver
+Date: Wed, 23 Jul 2014 11:55:43 +0200
+Message-ID: <20140723095542.GN20328@lukather>
+References: <1405323137-24287-1-git-send-email-wens@csie.org>
+ <1405323137-24287-2-git-send-email-wens@csie.org>
+ <20140718080718.GI20328@lukather>
+ <CAGb2v64K0iZ9e+1bdtkFVv5=t6nmTCTmUKeXLP-GvMaxAxQi+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-media-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CaPKgh3XHpq3rEUV"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64K0iZ9e+1bdtkFVv5=t6nmTCTmUKeXLP-GvMaxAxQi+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
 
-Thanks for an updated patch. One question:
+--CaPKgh3XHpq3rEUV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 29 Jun 2014, Robert Jarzmik wrote:
+Hi,
 
-> Add device-tree support to pxa_camera host driver.
-> 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> 
-> ---
-> Since V1: Mark's review
->           - tmp u32 to long conversion for clock rate
->           - use device-tree clock binding for mclk output clock
->           - wildcard pxa27x becomes pxa270
-> ---
->  drivers/media/platform/soc_camera/pxa_camera.c | 80 +++++++++++++++++++++++++-
->  1 file changed, 78 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/soc_camera/pxa_camera.c b/drivers/media/platform/soc_camera/pxa_camera.c
-> index d4df305..e76c2ab 100644
-> --- a/drivers/media/platform/soc_camera/pxa_camera.c
-> +++ b/drivers/media/platform/soc_camera/pxa_camera.c
-> @@ -34,6 +34,7 @@
->  #include <media/videobuf-dma-sg.h>
->  #include <media/soc_camera.h>
->  #include <media/soc_mediabus.h>
-> +#include <media/v4l2-of.h>
->  
->  #include <linux/videodev2.h>
->  
-> @@ -1650,6 +1651,67 @@ static struct soc_camera_host_ops pxa_soc_camera_host_ops = {
->  	.set_bus_param	= pxa_camera_set_bus_param,
->  };
->  
-> +static int pxa_camera_pdata_from_dt(struct device *dev,
-> +				    struct pxa_camera_dev *pcdev)
-> +{
-> +	int err = 0;
-> +	u32 mclk_rate = 0;
-> +	struct device_node *np = dev->of_node;
-> +	struct v4l2_of_endpoint ep;
-> +
-> +	err = of_property_read_u32(np, "clock-frequency",
-> +				   &mclk_rate);
-> +	if (!err) {
-> +		pcdev->platform_flags |= PXA_CAMERA_MCLK_EN;
-> +		pcdev->mclk = mclk_rate;
-> +	}
-> +
-> +	np = of_graph_get_next_endpoint(np, NULL);
+On Mon, Jul 21, 2014 at 10:46:06PM +0800, Chen-Yu Tsai wrote:
+> Hi,
+>=20
+> On Fri, Jul 18, 2014 at 4:07 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Mon, Jul 14, 2014 at 03:32:13PM +0800, Chen-Yu Tsai wrote:
+> >> This patch introduces the driver for the RTC in the Allwinner A31 and
+> >> A23 SoCs.
+> >>
+> >> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
+> >> RTC in A31/A23 are a separate hardware block, which also contain a few
+> >> controls for the RTC block hardware (a regulator and RTC block GPIO pin
+> >> latches), while also having separate interrupts for the alarms.
+> >
+> > Do you plan on supporting those at some point?
+>=20
+> I haven't seen any devices use the regulator (which has an output pin).
+> I suppose we shouldn't add drivers for things we can't verify.
+> As for the GPIO pin latches, I'll have to experiment some more to figure
+> out what they do exactly.
 
-Isn't an of_node_put() required after this?
+Ok.
 
-Thanks
-Guennadi
+> > It's also worth noting that the first registers are supposed to
+> > control the source of the low frequency oscillator in the SoC, which
+> > will probably be the most troublesome, since we need these clocks very
+> > early on.
+>=20
+> That's true. I suppose the bootloader configures this. IIRC I've seen
+> code for this in boot0 or boot1 from Allwinner. I can't find the equivale=
+nt
+> for our sun4i u-boot though.
 
-> +	if (!np) {
-> +		dev_err(dev, "could not find endpoint\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	err = v4l2_of_parse_endpoint(np, &ep);
-> +	if (err) {
-> +		dev_err(dev, "could not parse endpoint\n");
-> +		return err;
-> +	}
-> +
-> +	switch (ep.bus.parallel.bus_width) {
-> +	case 4:
-> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_4;
-> +		break;
-> +	case 5:
-> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_5;
-> +		break;
-> +	case 8:
-> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_8;
-> +		break;
-> +	case 9:
-> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_9;
-> +		break;
-> +	case 10:
-> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_10;
-> +		break;
-> +	default:
-> +		break;
-> +	};
-> +
-> +	if (ep.bus.parallel.flags & V4L2_MBUS_MASTER)
-> +		pcdev->platform_flags |= PXA_CAMERA_MASTER;
-> +	if (ep.bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> +		pcdev->platform_flags |= PXA_CAMERA_HSP;
-> +	if (ep.bus.parallel.flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> +		pcdev->platform_flags |= PXA_CAMERA_VSP;
-> +	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> +		pcdev->platform_flags |= PXA_CAMERA_PCLK_EN | PXA_CAMERA_PCP;
-> +	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
-> +		pcdev->platform_flags |= PXA_CAMERA_PCLK_EN;
-> +
-> +	return 0;
-> +}
-> +
->  static int pxa_camera_probe(struct platform_device *pdev)
->  {
->  	struct pxa_camera_dev *pcdev;
-> @@ -1676,7 +1738,15 @@ static int pxa_camera_probe(struct platform_device *pdev)
->  	pcdev->res = res;
->  
->  	pcdev->pdata = pdev->dev.platform_data;
-> -	pcdev->platform_flags = pcdev->pdata->flags;
-> +	if (&pdev->dev.of_node && !pcdev->pdata) {
-> +		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev);
-> +	} else {
-> +		pcdev->platform_flags = pcdev->pdata->flags;
-> +		pcdev->mclk = pcdev->pdata->mclk_10khz * 10000;
-> +	}
-> +	if (err < 0)
-> +		return err;
-> +
->  	if (!(pcdev->platform_flags & (PXA_CAMERA_DATAWIDTH_8 |
->  			PXA_CAMERA_DATAWIDTH_9 | PXA_CAMERA_DATAWIDTH_10))) {
->  		/*
-> @@ -1693,7 +1763,6 @@ static int pxa_camera_probe(struct platform_device *pdev)
->  		pcdev->width_flags |= 1 << 8;
->  	if (pcdev->platform_flags & PXA_CAMERA_DATAWIDTH_10)
->  		pcdev->width_flags |= 1 << 9;
-> -	pcdev->mclk = pcdev->pdata->mclk_10khz * 10000;
->  	if (!pcdev->mclk) {
->  		dev_warn(&pdev->dev,
->  			 "mclk == 0! Please, fix your platform data. "
-> @@ -1799,10 +1868,17 @@ static const struct dev_pm_ops pxa_camera_pm = {
->  	.resume		= pxa_camera_resume,
->  };
->  
-> +static const struct of_device_id pxa_camera_of_match[] = {
-> +	{ .compatible = "marvell,pxa270-qci", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, pxa_camera_of_match);
-> +
->  static struct platform_driver pxa_camera_driver = {
->  	.driver		= {
->  		.name	= PXA_CAM_DRV_NAME,
->  		.pm	= &pxa_camera_pm,
-> +		.of_match_table = of_match_ptr(pxa_camera_of_match),
->  	},
->  	.probe		= pxa_camera_probe,
->  	.remove		= pxa_camera_remove,
-> -- 
-> 2.0.0.rc2
-> 
+Do you know what was the bootloader configuring it to?
+
+I don't really know how we can deal with this in a nice way, but I
+guess it's not so urgent.
+
+> >>
+> >> The hardware is different enough to make a different driver for it.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/rtc/sun6i-rtc.txt          |  17 +
+> >>  drivers/rtc/Kconfig                                |   7 +
+> >>  drivers/rtc/Makefile                               |   1 +
+> >>  drivers/rtc/rtc-sun6i.c                            | 466 ++++++++++++=
++++++++++
+> >>  4 files changed, 491 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+> >>  create mode 100644 drivers/rtc/rtc-sun6i.c
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Doc=
+umentation/devicetree/bindings/rtc/sun6i-rtc.txt
+> >> new file mode 100644
+> >> index 0000000..b18927c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+> >> @@ -0,0 +1,17 @@
+> >> +* sun6i Real Time Clock
+> >> +
+> >> +RTC controller for the Allwinner A31
+> >> +
+> >> +Required properties:
+> >> +- compatible : Should be "allwinner,sun6i-a31-rtc"
+> >> +- reg: physical base address of the controller and length of memory m=
+apped
+> >> +  region.
+> >> +- interrupts: IRQ line for the RTC alarm 0.
+> >> +
+> >> +Example:
+> >> +
+> >> +rtc: rtc@01f00000 {
+> >> +     compatible =3D "allwinner,sun6i-a31-rtc";
+> >> +     reg =3D <0x01f00000 0x54>;
+> >> +     interrupts =3D <0 40 4>;
+> >> +};
+> >> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> >> index 0754f5c..5b3910a 100644
+> >> --- a/drivers/rtc/Kconfig
+> >> +++ b/drivers/rtc/Kconfig
+> >> @@ -1167,6 +1167,13 @@ config RTC_DRV_SUN4V
+> >>         If you say Y here you will get support for the Hypervisor
+> >>         based RTC on SUN4V systems.
+> >>
+> >> +config RTC_DRV_SUN6I
+> >> +     tristate "Allwinner sun6i/sun8i RTC"
+> >
+> > I'm half convinced about an exhaustive list here. That IP will also
+> > probably be used by sun9i, and sun10i if it ever exists, etc. And you
+> > exhaustive list won't be anymore.
+> >
+> > I'd rather just mention the A31, like we do for the DT.
+>=20
+> Fixed.
+>=20
+> >> +     depends on MACH_SUN6I || MACH_SUN8I
+> >> +     help
+> >> +       If you say Y here you will get support for the RTC found on
+> >> +       Allwinner A31/A23.
+> >> +
+> >>  config RTC_DRV_SUNXI
+> >>       tristate "Allwinner sun4i/sun7i RTC"
+> >>       depends on ARCH_SUNXI
+> >> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> >> index 70347d0..a47df29 100644
+> >> --- a/drivers/rtc/Makefile
+> >> +++ b/drivers/rtc/Makefile
+> >> @@ -123,6 +123,7 @@ obj-$(CONFIG_RTC_DRV_STARFIRE)    +=3D rtc-starfir=
+e.o
+> >>  obj-$(CONFIG_RTC_DRV_STK17TA8)       +=3D rtc-stk17ta8.o
+> >>  obj-$(CONFIG_RTC_DRV_STMP)   +=3D rtc-stmp3xxx.o
+> >>  obj-$(CONFIG_RTC_DRV_SUN4V)  +=3D rtc-sun4v.o
+> >> +obj-$(CONFIG_RTC_DRV_SUN6I)  +=3D rtc-sun6i.o
+> >>  obj-$(CONFIG_RTC_DRV_SUNXI)  +=3D rtc-sunxi.o
+> >>  obj-$(CONFIG_RTC_DRV_TEGRA)  +=3D rtc-tegra.o
+> >>  obj-$(CONFIG_RTC_DRV_TEST)   +=3D rtc-test.o
+> >> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> >> new file mode 100644
+> >> index 0000000..fabd019
+> >> --- /dev/null
+> >> +++ b/drivers/rtc/rtc-sun6i.c
+> >> @@ -0,0 +1,466 @@
+> >> +/*
+> >> + * An RTC driver for Allwinner A31/A23
+> >> + *
+> >> + * Copyright (c) 2014, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> + *
+> >> + * based on rtc-sunxi.c
+> >> + *
+> >> + * An RTC driver for Allwinner A10/A20
+> >> + *
+> >> + * Copyright (c) 2013, Carlo Caione <carlo.caione-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modi=
+fy
+> >> + * it under the terms of the GNU General Public License as published =
+by
+> >> + * the Free Software Foundation; either version 2 of the License, or
+> >> + * (at your option) any later version.
+> >> + *
+> >> + * This program is distributed in the hope that it will be useful, bu=
+t WITHOUT
+> >> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY=
+ or
+> >> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lice=
+nse for
+> >> + * more details.
+> >> + */
+> >> +
+> >> +#include <linux/delay.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/fs.h>
+> >> +#include <linux/init.h>
+> >> +#include <linux/interrupt.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/rtc.h>
+> >> +#include <linux/types.h>
+> >> +
+> >> +/* Control register */
+> >> +#define SUN6I_LOSC_CTRL                              0x0000
+> >> +#define SUN6I_LOSC_CTRL_ALM_DHMS_ACC         BIT(9)
+> >> +#define SUN6I_LOSC_CTRL_RTC_HMS_ACC          BIT(8)
+> >> +#define SUN6I_LOSC_CTRL_RTC_YMD_ACC          BIT(7)
+> >> +#define SUN6I_LOSC_CTRL_ACC_MASK             (BIT(9) | BIT(8) | BIT(7=
+))
+> >
+> > GENMASK maybe?
+>=20
+> Fixed
+>=20
+> >> +
+> >> +/* RTC */
+> >> +#define SUN6I_RTC_YMD                                0x0010
+> >> +#define SUN6I_RTC_HMS                                0x0014
+> >> +
+> >> +/* Alarm 0 (counter) */
+> >> +#define SUN6I_ALRM_COUNTER                   0x0020
+> >> +#define SUN6I_ALRM_CUR_VAL                   0x0024
+> >> +#define SUN6I_ALRM_EN                                0x0028
+> >> +#define SUN6I_ALRM_EN_CNT_EN                 BIT(0)
+> >> +#define SUN6I_ALRM_IRQ_EN                    0x002c
+> >> +#define SUN6I_ALRM_IRQ_EN_CNT_IRQ_EN         BIT(0)
+> >> +#define SUN6I_ALRM_IRQ_STA                   0x0030
+> >> +#define SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND              BIT(0)
+> >> +
+> >> +/* Alarm 1 (wall clock) */
+> >> +#define SUN6I_ALRM1_EN                               0x0044
+> >> +#define SUN6I_ALRM1_IRQ_EN                   0x0048
+> >> +#define SUN6I_ALRM1_IRQ_STA                  0x004c
+> >> +#define SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND    BIT(0)
+> >> +
+> >> +/* Alarm config */
+> >> +#define SUN6I_ALARM_CONFIG                   0x0050
+> >> +#define SUN6I_ALARM_CONFIG_WAKEUP            BIT(0)
+> >> +
+> >> +/* days / hours are 5 bit wide */
+> >> +#define SUN6I_MASK_DH                                0x0000001f
+> >> +/* seconds / minutes / years are 6 bit wide */
+> >> +#define SUN6I_MASK_SMY                               0x0000003f
+> >> +/* months are 4 bit wide */
+> >> +#define SUN6I_MASK_M                         0x0000000f
+> >> +/* leap year is single bit */
+> >> +#define SUN6I_MASK_LY                                0x00000001
+> >
+> > Ditto
+>=20
+> See below.
+>=20
+> >> +
+> >> +#define SUN6I_GET(x, mask, shift)            (((x) & ((mask) << (shif=
+t))) \
+> >> +                                                     >> (shift))
+> >> +
+> >> +#define SUN6I_SET(x, mask, shift)            (((x) & (mask)) << (shif=
+t))
+> >
+> > Wouldn't it be easier to have the mask already shifted?
+>=20
+> I'll just get rid of these 2 and the masks above, and inline them
+> (in hex format) in the GET/SET macros below. How does that sound?
+
+Sounds good to me.
+
+>=20
+> >> +
+> >> +/*
+> >> + * Get date values
+> >> + */
+> >> +#define SUN6I_DATE_GET_DAY_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
+DH, 0)
+> >> +#define SUN6I_DATE_GET_MON_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
+M, 8)
+> >> +#define SUN6I_DATE_GET_YEAR_VALUE(x)         SUN6I_GET(x, SUN6I_MASK_=
+SMY, 16)
+> >> +
+> >> +/*
+> >> + * Get time values
+> >> + */
+> >> +#define SUN6I_TIME_GET_SEC_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
+SMY, 0)
+> >> +#define SUN6I_TIME_GET_MIN_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
+SMY, 8)
+> >> +#define SUN6I_TIME_GET_HOUR_VALUE(x)         SUN6I_GET(x, SUN6I_MASK_=
+DH, 16)
+> >> +
+> >> +/*
+> >> + * Set date values
+> >> + */
+> >> +#define SUN6I_DATE_SET_DAY_VALUE(x)          SUN6I_DATE_GET_DAY_VALUE=
+(x)
+> >> +#define SUN6I_DATE_SET_MON_VALUE(x)          SUN6I_SET(x, SUN6I_MASK_=
+M, 8)
+> >> +#define SUN6I_DATE_SET_YEAR_VALUE(x)         SUN6I_SET(x, SUN6I_MASK_=
+SMY, 16)
+> >> +#define SUN6I_LEAP_SET_VALUE(x)                      SUN6I_SET(x, SUN=
+6I_MASK_LY, 22)
+> >> +
+> >> +/*
+> >> + * Set time values
+> >> + */
+> >> +#define SUN6I_TIME_SET_SEC_VALUE(x)          SUN6I_TIME_GET_SEC_VALUE=
+(x)
+> >> +#define SUN6I_TIME_SET_MIN_VALUE(x)          SUN6I_SET(x, SUN6I_MASK_=
+SMY, 8)
+> >> +#define SUN6I_TIME_SET_HOUR_VALUE(x)         SUN6I_SET(x, SUN6I_MASK_=
+DH, 16)
+> >> +
+> >> +/*
+> >> + * The year parameter passed to the driver is usually an offset relat=
+ive to
+> >> + * the year 1900. This macro is used to convert this offset to anothe=
+r one
+> >> + * relative to the minimum year allowed by the hardware.
+> >> + *
+> >> + * The year range is 1970 - 2033. This range is selected to match All=
+winner's
+> >> + * driver, even though it is somewhat limited.
+> >> + */
+> >> +#define SUN6I_YEAR_MIN                               1970
+> >> +#define SUN6I_YEAR_MAX                               2033
+> >> +#define SUN6I_YEAR_OFF                               (SUN6I_YEAR_MIN =
+- 1900)
+> >> +
+> >> +struct sun6i_rtc_dev {
+> >> +     struct rtc_device *rtc;
+> >> +     struct device *dev;
+> >> +     void __iomem *base;
+> >> +     int irq;
+> >> +     unsigned long alarm;
+> >> +};
+> >> +
+> >> +static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D (struct sun6i_rtc_dev *) id;
+> >> +     u32 val;
+> >> +
+> >> +     val =3D readl(chip->base + SUN6I_ALRM_IRQ_STA);
+> >> +
+> >> +     if (val & SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND) {
+> >> +             val |=3D SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND;
+> >> +             writel(val, chip->base + SUN6I_ALRM_IRQ_STA);
+> >> +
+> >> +             rtc_update_irq(chip->rtc, 1, RTC_AF | RTC_IRQF);
+> >> +
+> >> +             return IRQ_HANDLED;
+> >> +     }
+> >> +
+> >> +     return IRQ_NONE;
+> >> +}
+> >> +
+> >> +static void sun6i_rtc_setaie(int to, struct sun6i_rtc_dev *chip)
+> >> +{
+> >> +     u32 alrm_val =3D 0;
+> >> +     u32 alrm_irq_val =3D 0;
+> >> +     u32 alrm_wake_val =3D 0;
+> >> +
+> >> +     if (to) {
+> >> +             alrm_val =3D SUN6I_ALRM_EN_CNT_EN;
+> >> +             alrm_irq_val =3D SUN6I_ALRM_IRQ_EN_CNT_IRQ_EN;
+> >> +             alrm_wake_val =3D SUN6I_ALARM_CONFIG_WAKEUP;
+> >> +     } else {
+> >> +             writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND,
+> >> +                             chip->base + SUN6I_ALRM_IRQ_STA);
+> >> +     }
+> >> +
+> >> +     writel(alrm_val, chip->base + SUN6I_ALRM_EN);
+> >> +     writel(alrm_irq_val, chip->base + SUN6I_ALRM_IRQ_EN);
+> >> +     writel(alrm_wake_val, chip->base + SUN6I_ALARM_CONFIG);
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_gettime(struct device *dev, struct rtc_time *rtc=
+_tm)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
+> >> +     u32 date, time;
+> >> +
+> >> +     /*
+> >> +      * read again in case it changes
+> >> +      */
+> >> +     do {
+> >> +             date =3D readl(chip->base + SUN6I_RTC_YMD);
+> >> +             time =3D readl(chip->base + SUN6I_RTC_HMS);
+> >> +     } while ((date !=3D readl(chip->base + SUN6I_RTC_YMD)) ||
+> >> +              (time !=3D readl(chip->base + SUN6I_RTC_HMS)));
+> >> +
+> >> +     rtc_tm->tm_sec  =3D SUN6I_TIME_GET_SEC_VALUE(time);
+> >> +     rtc_tm->tm_min  =3D SUN6I_TIME_GET_MIN_VALUE(time);
+> >> +     rtc_tm->tm_hour =3D SUN6I_TIME_GET_HOUR_VALUE(time);
+> >> +
+> >> +     rtc_tm->tm_mday =3D SUN6I_DATE_GET_DAY_VALUE(date);
+> >> +     rtc_tm->tm_mon  =3D SUN6I_DATE_GET_MON_VALUE(date);
+> >> +     rtc_tm->tm_year =3D SUN6I_DATE_GET_YEAR_VALUE(date);
+> >> +
+> >> +     rtc_tm->tm_mon  -=3D 1;
+> >> +
+> >> +     /*
+> >> +      * switch from (data_year->min)-relative offset to
+> >> +      * a (1900)-relative one
+> >> +      */
+> >
+> > I guess the reference to the structure field is not relevant anymore
+>=20
+> Removed.
+>=20
+> >> +     rtc_tm->tm_year +=3D SUN6I_YEAR_OFF;
+> >> +
+> >> +     return rtc_valid_tm(rtc_tm);
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_getalarm(struct device *dev, struct rtc_wkalrm *=
+wkalrm)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
+> >> +     u32 alrm_st;
+> >> +     u32 alrm_en;
+> >> +
+> >> +     alrm_en =3D readl(chip->base + SUN6I_ALRM_IRQ_EN);
+> >> +     alrm_st =3D readl(chip->base + SUN6I_ALRM_IRQ_STA);
+> >> +     wkalrm->enabled =3D !!(alrm_en & SUN6I_ALRM_EN_CNT_EN);
+> >> +     wkalrm->pending =3D !!(alrm_st & SUN6I_ALRM_EN_CNT_EN);
+> >> +     rtc_time_to_tm(chip->alarm, &wkalrm->time);
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_setalarm(struct device *dev, struct rtc_wkalrm *=
+wkalrm)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
+> >> +     struct rtc_time *alrm_tm =3D &wkalrm->time;
+> >> +     struct rtc_time tm_now;
+> >> +     unsigned long time_now =3D 0;
+> >> +     unsigned long time_set =3D 0;
+> >> +     unsigned long time_gap =3D 0;
+> >> +     int ret =3D 0;
+> >> +
+> >> +     ret =3D sun6i_rtc_gettime(dev, &tm_now);
+> >> +     if (ret < 0) {
+> >> +             dev_err(dev, "Error in getting time\n");
+> >> +             return -EINVAL;
+> >> +     }
+> >> +
+> >> +     rtc_tm_to_time(alrm_tm, &time_set);
+> >> +     rtc_tm_to_time(&tm_now, &time_now);
+> >> +     if (time_set <=3D time_now) {
+> >> +             dev_err(dev, "Date to set in the past\n");
+> >> +             return -EINVAL;
+> >> +     }
+> >> +
+> >> +     time_gap =3D time_set - time_now;
+> >> +
+> >> +     if (time_gap > U32_MAX) {
+> >> +             dev_err(dev, "Date too far in the future\n");
+> >> +             return -EINVAL;
+> >> +     }
+> >> +
+> >> +     sun6i_rtc_setaie(0, chip);
+> >> +     writel(0, chip->base + SUN6I_ALRM_COUNTER);
+> >> +     usleep_range(100, 300);
+> >> +
+> >> +     writel(time_gap, chip->base + SUN6I_ALRM_COUNTER);
+> >> +     chip->alarm =3D time_set;
+> >> +
+> >> +     sun6i_rtc_setaie(wkalrm->enabled, chip);
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_wait(struct sun6i_rtc_dev *chip, int offset,
+> >> +                       unsigned int mask, unsigned int ms_timeout)
+> >> +{
+> >> +     const unsigned long timeout =3D jiffies + msecs_to_jiffies(ms_ti=
+meout);
+> >> +     u32 reg;
+> >> +
+> >> +     do {
+> >> +             reg =3D readl(chip->base + offset);
+> >> +             reg &=3D mask;
+> >> +
+> >> +             if (!reg)
+> >> +                     return 0;
+> >> +
+> >> +     } while (time_before(jiffies, timeout));
+> >> +
+> >> +     return -ETIMEDOUT;
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_settime(struct device *dev, struct rtc_time *rtc=
+_tm)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
+> >> +     u32 date =3D 0;
+> >> +     u32 time =3D 0;
+> >> +     int year;
+> >> +
+> >> +     /*
+> >> +      * the input rtc_tm->tm_year is the offset relative to 1900. We =
+use
+> >> +      * the SUN6I_YEAR_OFF macro to rebase it with respect to the min=
+ year
+> >> +      * allowed by the hardware
+> >> +      */
+> >> +
+> >> +     year =3D rtc_tm->tm_year + 1900;
+> >> +     if (year < SUN6I_YEAR_MIN || year > SUN6I_YEAR_MAX) {
+> >> +             dev_err(dev, "rtc only supports year in range %d - %d\n",
+> >> +                             SUN6I_YEAR_MIN, SUN6I_YEAR_MAX);
+> >> +             return -EINVAL;
+> >> +     }
+> >> +
+> >> +     rtc_tm->tm_year -=3D SUN6I_YEAR_OFF;
+> >> +     rtc_tm->tm_mon +=3D 1;
+> >> +
+> >> +     date =3D SUN6I_DATE_SET_DAY_VALUE(rtc_tm->tm_mday) |
+> >> +             SUN6I_DATE_SET_MON_VALUE(rtc_tm->tm_mon)  |
+> >> +             SUN6I_DATE_SET_YEAR_VALUE(rtc_tm->tm_year);
+> >> +
+> >> +     if (is_leap_year(year))
+> >> +             date |=3D SUN6I_LEAP_SET_VALUE(1);
+> >> +
+> >> +     time =3D SUN6I_TIME_SET_SEC_VALUE(rtc_tm->tm_sec)  |
+> >> +             SUN6I_TIME_SET_MIN_VALUE(rtc_tm->tm_min)  |
+> >> +             SUN6I_TIME_SET_HOUR_VALUE(rtc_tm->tm_hour);
+> >> +
+> >> +     /* Check whether registers are writable */
+> >> +     if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+> >> +                             SUN6I_LOSC_CTRL_ACC_MASK, 50)) {
+> >> +             dev_err(dev, "rtc is still busy.\n");
+> >> +             return -EBUSY;
+> >> +     }
+> >> +
+> >> +     writel(time, chip->base + SUN6I_RTC_HMS);
+> >> +
+> >> +     /*
+> >> +      * After writing the RTC HH-MM-SS register, the
+> >> +      * SUN6I_LOSC_CTRL_RTC_HMS_ACC bit is set and it will not
+> >> +      * be cleared until the real writing operation is finished
+> >> +      */
+> >> +
+> >> +     if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+> >> +                             SUN6I_LOSC_CTRL_RTC_HMS_ACC, 50)) {
+> >> +             dev_err(dev, "Failed to set rtc time.\n");
+> >> +             return -ETIMEDOUT;
+> >> +     }
+> >> +
+> >> +     writel(date, chip->base + SUN6I_RTC_YMD);
+> >> +
+> >> +     /*
+> >> +      * After writing the RTC YY-MM-DD register, the
+> >> +      * SUN6I_LOSC_CTRL_RTC_YMD_ACC bit is set and it will not
+> >> +      * be cleared until the real writing operation is finished
+> >> +      */
+> >> +
+> >> +     if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+> >> +                             SUN6I_LOSC_CTRL_RTC_YMD_ACC, 50)) {
+> >> +             dev_err(dev, "Failed to set rtc time.\n");
+> >> +             return -ETIMEDOUT;
+> >> +     }
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_alarm_irq_enable(struct device *dev, unsigned in=
+t enabled)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
+> >> +
+> >> +     if (!enabled)
+> >> +             sun6i_rtc_setaie(enabled, chip);
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static const struct rtc_class_ops sun6i_rtc_ops =3D {
+> >> +     .read_time              =3D sun6i_rtc_gettime,
+> >> +     .set_time               =3D sun6i_rtc_settime,
+> >> +     .read_alarm             =3D sun6i_rtc_getalarm,
+> >> +     .set_alarm              =3D sun6i_rtc_setalarm,
+> >> +     .alarm_irq_enable       =3D sun6i_rtc_alarm_irq_enable
+> >> +};
+> >> +
+> >> +static const struct of_device_id sun6i_rtc_dt_ids[] =3D {
+> >> +     { .compatible =3D "allwinner,sun6i-a31-rtc" },
+> >> +     { /* sentinel */ },
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
+> >
+> > I guess you can move this down just before the platform_driver
+> > declaration if you don't need it in probe.
+>=20
+> Moved.
+>=20
+> >> +
+> >> +static int sun6i_rtc_probe(struct platform_device *pdev)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip;
+> >> +     struct resource *res;
+> >> +     int ret;
+> >> +
+> >> +     chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+> >> +     if (!chip)
+> >> +             return -ENOMEM;
+> >> +
+> >> +     platform_set_drvdata(pdev, chip);
+> >> +     chip->dev =3D &pdev->dev;
+> >> +
+> >> +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >> +     chip->base =3D devm_ioremap_resource(&pdev->dev, res);
+> >> +     if (IS_ERR(chip->base))
+> >> +             return PTR_ERR(chip->base);
+> >> +
+> >> +     chip->irq =3D platform_get_irq(pdev, 0);
+> >> +     if (chip->irq < 0) {
+> >> +             dev_err(&pdev->dev, "No IRQ resource\n");
+> >> +             return chip->irq;
+> >> +     }
+> >
+> > Newline
+>=20
+> Added.
+>=20
+> >> +     ret =3D devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmi=
+rq,
+> >> +                     0, dev_name(&pdev->dev), chip);
+> >> +     if (ret) {
+> >> +             dev_err(&pdev->dev, "Could not request IRQ\n");
+> >> +             return ret;
+> >> +     }
+> >> +
+> >> +     /* clear the alarm counter value */
+> >> +     writel(0, chip->base + SUN6I_ALRM_COUNTER);
+> >> +
+> >> +     /* disable counter alarm */
+> >> +     writel(0, chip->base + SUN6I_ALRM_EN);
+> >> +
+> >> +     /* disable counter alarm interrupt */
+> >> +     writel(0, chip->base + SUN6I_ALRM_IRQ_EN);
+> >> +
+> >> +     /* disable week alarm */
+> >> +     writel(0, chip->base + SUN6I_ALRM1_EN);
+> >> +
+> >> +     /* disable week alarm interrupt */
+> >> +     writel(0, chip->base + SUN6I_ALRM1_IRQ_EN);
+> >> +
+> >> +     /* clear counter alarm pending interrupts */
+> >> +     writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND, chip->base +
+> >> +                     SUN6I_ALRM_IRQ_STA);
+> >> +
+> >> +     /* clear week alarm pending interrupts */
+> >> +     writel(SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND, chip->base +
+> >> +                     SUN6I_ALRM1_IRQ_STA);
+> >> +
+> >> +     /* disable alarm wakeup */
+> >> +     writel(0, chip->base + SUN6I_ALARM_CONFIG);
+> >> +
+> >> +     chip->rtc =3D rtc_device_register("rtc-sun6i", &pdev->dev,
+> >> +                     &sun6i_rtc_ops, THIS_MODULE);
+> >> +     if (IS_ERR(chip->rtc)) {
+> >> +             dev_err(&pdev->dev, "unable to register device\n");
+> >> +             return PTR_ERR(chip->rtc);
+> >> +     }
+> >> +
+> >> +     dev_info(&pdev->dev, "RTC enabled\n");
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int sun6i_rtc_remove(struct platform_device *pdev)
+> >> +{
+> >> +     struct sun6i_rtc_dev *chip =3D platform_get_drvdata(pdev);
+> >> +
+> >> +     rtc_device_unregister(chip->rtc);
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static struct platform_driver sun6i_rtc_driver =3D {
+> >> +     .probe          =3D sun6i_rtc_probe,
+> >> +     .remove         =3D sun6i_rtc_remove,
+> >> +     .driver         =3D {
+> >> +             .name           =3D "sun6i-rtc",
+> >> +             .owner          =3D THIS_MODULE,
+> >> +             .of_match_table =3D sun6i_rtc_dt_ids,
+> >> +     },
+> >> +};
+> >> +
+> >> +module_platform_driver(sun6i_rtc_driver);
+> >> +
+> >> +MODULE_DESCRIPTION("sun6i RTC driver");
+> >> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
+> >> +MODULE_LICENSE("GPL");
+> >> --
+> >> 2.0.1
+> >>
+> >
+> > Thanks!
+> > Maxime
+>=20
+> Thanks for the review!
+> ChenYu
+
+Thanks for your efforts on this,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--CaPKgh3XHpq3rEUV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTz4aeAAoJEBx+YmzsjxAgtwsP+wcs2vpTbuCeAAPRB887Lavs
+bp8LNPf3eSbf3fbSDzd+/4Kuj6nHStbBU4mMKdL9ZKMYii4nRLYGSH5HTOyu9C29
+az3zF6SBNj+3DTX9j6ZI4YKBOXrODfx1k8ooSOyybQcTVbSJwe4hFyMaq+lO0EaE
+iLxnRV/w9e+LlStX7MAFLMsH5o0/QljHAdnqjt7AtArTC2V37ltyoRNHC8EARd2J
+N0kSYOExa8l5osr8ALRVdO+nTihPerbdr/ZTyjx85FAOjm0C9/kxTPp9sqE8ZF48
+gmNVsb2QwlwtXiKFaEek8gqeMJco33G6xDRtMr9Hj0iweI32YZiGwHQHzZpiaMx+
+LpZO5++GF5Wevouqo/46ovnnOrFe8d97w9yFXpHtouf7W5iHjQENibJVBnqtu5NC
+x2cSaaCXivdJ2mm/Up7Gp1qbED8NQzSMhWmsN2jexxp5e6B1GI1c3ZzbR99HFLh0
+DEVlNf8eefa/m6EslBVScGnoATSVVIaSHBdqRXVtE475simpPYK8CIYpCVS8k/tc
+FkHSQEkkpWeN2BT1UaE2yAABSasXFp+aWIDNcPJOkcnAL0KamP5kwtN9+KzjVdl8
+GgWUwtd8g1kYC9I7bAQs70aZ0rKHlCPa5tq7GEga2L6Hs2ko0X67i9lHX21ZKlTu
+0lS++l1EopGPkB45PRRf
+=4bSE
+-----END PGP SIGNATURE-----
+
+--CaPKgh3XHpq3rEUV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
