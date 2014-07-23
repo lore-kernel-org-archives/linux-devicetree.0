@@ -1,67 +1,49 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v6 2/2] dt-bindings: document Rockchip saradc
-Date: Wed, 23 Jul 2014 23:24:37 +0200
-Message-ID: <8132020.MqcOnlblHg@diego>
-References: <1984475.34C1XMW1q3@diego>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RESEND v2] bus: ARM CCN PMU driver
+Date: Wed, 23 Jul 2014 23:29:33 +0200
+Message-ID: <39594081.3C5fmmXpMJ@wuerfel>
+References: <1406050379-15199-1-git-send-email-pawel.moll@arm.com> <201407232223.39341.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1984475.34C1XMW1q3@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, huangtao@rock-chips.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-iio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, =?utf-8?B?ZWRkaWUo6JSh5p6rKQ==?= <cf@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201407232223.39341.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This add the necessary binding documentation for the saradc found in all recent
-processors from Rockchip.
+On Wednesday 23 July 2014 22:23:38 Arnd Bergmann wrote:
+> On Tuesday 22 July 2014, Pawel Moll wrote:
+> > Driver providing perf backend for ARM Cache Coherent Network
+> > interconnect. Supports counting all hardware events and crosspoint
+> > watchpoints.
+> > 
+> > Currently works with CCN-504 only, although there should be
+> > no changes required for CCN-508 (just impossible to test it now).
+> > 
+> > Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+> 
+> Applied to next/drivers, thanks!
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-changes since v5:
-- remove clock-frquency property as described in patch 1/2
+I'm getting build errors with CONFIG_PERF_EVENTS disabled. 
+Is the patch below the right answer, or should we still load
+the driver and #ifdef the perf-events code?
 
- .../bindings/iio/adc/rockchip-saradc.txt           | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+It seems to me that the driver doesn't do anything besides
+perf events, but I could be missing something.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-new file mode 100644
-index 0000000..5d3ec1d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-@@ -0,0 +1,24 @@
-+Rockchip Successive Approximation Register (SAR) A/D Converter bindings
-+
-+Required properties:
-+- compatible: Should be "rockchip,saradc"
-+- reg: physical base address of the controller and length of memory mapped
-+       region.
-+- interrupts: The interrupt number to the cpu. The interrupt specifier format
-+              depends on the interrupt controller.
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk" for
-+               the peripheral clock.
-+- vref-supply: The regulator supply ADC reference voltage.
-+- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-+
-+Example:
-+	saradc: saradc@2006c000 {
-+		compatible = "rockchip,saradc";
-+		reg = <0x2006c000 0x100>;
-+		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-+		clock-names = "saradc", "apb_pclk";
-+		#io-channel-cells = <1>;
-+		vref-supply = <&vcc18>;
-+	};
--- 
-1.9.0
+	Arnd
+
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 5c0c2764839f..603eb1be4f6a 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -53,6 +53,7 @@ config ARM_CCI
+ config ARM_CCN
+ 	bool "ARM CCN driver support"
+ 	depends on ARM || ARM64
++	depends on PERF_EVENTS
+ 	help
+ 	  PMU (perf) driver supporting the ARM CCN (Cache Coherent Network)
+ 	  interconnect.
