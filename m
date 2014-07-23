@@ -1,31 +1,46 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH RESEND v2 1/4] pinctrl: Update Qualcomm pm8xxx GPIO parameters
- definitions
-Date: Wed, 23 Jul 2014 14:46:45 -0700
-Message-ID: <53D02D45.50000@codeaurora.org>
-References: <1405610748-7583-5-git-send-email-iivanov@mm-sol.com>  <1405626085-14069-1-git-send-email-iivanov@mm-sol.com>  <20140722214643.GH19700@sonymobile.com>  <1406119669.28520.10.camel@iivanov-dev> <1406131556.2585.42.camel@iivanov-dev>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/2] Added dts defintion for Lenovo ix4-300d nas
+Date: Thu, 24 Jul 2014 00:26:40 +0200
+Message-ID: <20140723222640.GA28485@lunn.ch>
+References: <1406117232-5962-1-git-send-email-yahoo@perenite.com>
+ <20140723134534.GF23220@titan.lakedaemon.net>
+ <20140723141443.GC2856@lunn.ch>
+ <47823826-CDE8-47D2-B1B6-B688118CF985@perenite.com>
+ <20140723164958.GH2856@lunn.ch>
+ <9AE6F1AD-9296-47E9-91E2-9E34AA48EBB4@perenite.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1406131556.2585.42.camel@iivanov-dev>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9AE6F1AD-9296-47E9-91E2-9E34AA48EBB4@perenite.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Masson <benoitm@perenite.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, benoitm974 <yahoo@perenite.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/14 09:05, Ivan T. Ivanov wrote:
->
->> both on
->>> pm8xxx and qpnp-pin there are two different HW blocks, one for GPIO and one for
->>> MPP. And if you look in your pinconf_set function you will see that they are
->>> very different.
-> I bet that the hardware blocks are almost identical, just register
-> map is different.
+> Both phy are :
+> marvell,88e1318
 
-The hardware is different and not "almost identical". If it was the same
-then we would have called them all GPIOs or MPPs and not had a distinction.
+I don't have the datasheet for this specific phy model, but i do have
+the datasheet for another similar phy.
+ 
+> example of a minimal reg write that lead MPP24 to shutdown instead
+> of rebooting on original BSP driver
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> XXXXX BasicInit
+
+I'm assuming regOffs is decimal, and data is hex?
+
+> phyAdr 0: regOffs: 16 data: 3
+
+Copper Specific control register. 3 means Polarity Reversal Disable &
+Jabber function disable.
+
+> phyAdr 0: regOffs: 10 data: 830
+
+Reg 10 is the 1000BASE-T Status register, which is read only!
+
+So this is not making much sense. Are we missing some changes to the
+page register? Register 16 of page 3 is the LED control register.
+
+     Andrew
