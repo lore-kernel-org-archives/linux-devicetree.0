@@ -1,149 +1,139 @@
 From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: keystone: add dsp gpio controller driver
-Date: Wed, 23 Jul 2014 21:24:07 +0530
-Message-ID: <53CFDA9F.2010406@gmail.com>
-References: <1406126699-10053-1-git-send-email-grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 1/6] rtc: sun6i: Add sun6i RTC driver
+Date: Wed, 23 Jul 2014 21:32:39 +0530
+Message-ID: <53CFDC9F.9060208@gmail.com>
+References: <1406126338-15062-1-git-send-email-wens@csie.org> <1406126338-15062-2-git-send-email-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406126699-10053-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1406126338-15062-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Wednesday 23 July 2014 08:14 PM, Grygorii Strashko wrote:
+On Wednesday 23 July 2014 08:08 PM, Chen-Yu Tsai wrote:
+> This patch introduces the driver for the RTC in the Allwinner A31 and
+> A23 SoCs.
+>
+> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
+> RTC in A31/A23 are a separate hardware block, which also contain a few
+> controls for the RTC block hardware (a regulator and RTC block GPIO pin
+> latches), while also having separate interrupts for the alarms.
+>
+> The hardware is different enough to make a different driver for it.
+>
+(...)
+
+> +Required properties:
+> +- compatible : Should be "allwinner,sun6i-a31-rtc"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: IRQ line for the RTC alarm 0.
+> +
+
+proper indentation..
+- compatible	: Should be "allwinner,sun6i-a31-rtc"
+- reg		: physical base address of the controller and length of memory mapped
+		  region.
+- interrupts	: IRQ line for the RTC alarm 0.
+....
+
+> +Example:
+> +
 
 (...)
 
 > +
-> +Required Properties:
-> +- compatible: should be "ti,keystone-dsp-gpio"
-> +
-> +- ti,syscon-dev : phandle/offset pair. The phandle to syscon used to
-> +				  access device state control registers and the offset
-> +				  in order to use block of device's specific registers.
-> +
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +
-> +- #gpio-cells : Should be one.
-> +				See gpio.txt in this directory for a of the cells format
-> +
+> +	ret = devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
+> +			0, dev_name(&pdev->dev), chip);
 
-proper indentation for all the properties...
+should match open parenthesis...
 
-> +Please refer to gpio.txt in this directory for details of the common GPIO
-> +bindings used by client devices.
-> +
-> +Example:
-> +	dspgpio0: keystone_dsp_gpio@02620240 {
-> +		compatible = "ti,keystone-dsp-gpio";
-> +		ti,syscon-dev = <&devctrl 0x240>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
-> +
-> +	dsp0: dsp0 {
-> +		compatible = "linux,rproc-user";
-> +		...
-> +		kick-gpio = <&dspgpio0 27>;
-> +	};
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 4a1b511..990871f 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -158,6 +158,14 @@ config GPIO_EP93XX
->   	depends on ARCH_EP93XX
->   	select GPIO_GENERIC
->   
-> +config GPIO_KEYSTONE_DSP
-> +	tristate "Keystone DSP GPIO support"
-> +	depends on ARCH_KEYSTONE
-> +	help
-> +	  Say yes here to support the DSP GPIO driver for Keystone 2. This defines
-> +	  up to 28 GPIOs per each Remote (DSP) core. This is used to send
-> +	  signals from ARM to the Remote (DSP) core.
-> +
->   config GPIO_ZEVIO
->   	bool "LSI ZEVIO SoC memory mapped GPIOs"
->   	depends on ARM && OF_GPIO
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index d10f6a9..15c3389 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_IOP)		+= gpio-iop.o
->   obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
->   obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
->   obj-$(CONFIG_GPIO_KEMPLD)	+= gpio-kempld.o
-> +obj-$(CONFIG_GPIO_KEYSTONE_DSP)	+= gpio-keystone.o
->   obj-$(CONFIG_ARCH_KS8695)	+= gpio-ks8695.o
->   obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
->   obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
-> diff --git a/drivers/gpio/gpio-keystone.c b/drivers/gpio/gpio-keystone.c
-> new file mode 100644
-> index 0000000..7909a1c
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-keystone.c
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Keystone 2 DSP GPIO support.
-> + *
-> + * Copyright (C) 2014 Texas Instruments, Inc.
-> + * Author: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> + *	   Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/gpio.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +
+devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
+		 0, dev_name(&pdev->dev), chip);
 
-includes in alphabetical order..
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Could not request IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	/* clear the alarm counter value */
+> +	writel(0, chip->base + SUN6I_ALRM_COUNTER);
+> +
+> +	/* disable counter alarm */
+> +	writel(0, chip->base + SUN6I_ALRM_EN);
+> +
+> +	/* disable counter alarm interrupt */
+> +	writel(0, chip->base + SUN6I_ALRM_IRQ_EN);
+> +
+> +	/* disable week alarm */
+> +	writel(0, chip->base + SUN6I_ALRM1_EN);
+> +
+> +	/* disable week alarm interrupt */
+> +	writel(0, chip->base + SUN6I_ALRM1_IRQ_EN);
+> +
+> +	/* clear counter alarm pending interrupts */
+> +	writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND, chip->base +
+> +			SUN6I_ALRM_IRQ_STA);
+> +
+> +	/* clear week alarm pending interrupts */
+> +	writel(SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND, chip->base +
+> +			SUN6I_ALRM1_IRQ_STA);
+> +
+> +	/* disable alarm wakeup */
+> +	writel(0, chip->base + SUN6I_ALARM_CONFIG);
+> +
+> +	chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
+> +			&sun6i_rtc_ops, THIS_MODULE);
 
-> +/* 28 bits in IPCGRx are treated as GPIO pins to generate interrupt */
-> +#define GPIOS_PER_BANK		28
-> +#define GPIO_OFFSET		4
+dto....
+
+> +	if (IS_ERR(chip->rtc)) {
+> +		dev_err(&pdev->dev, "unable to register device\n");
+> +		return PTR_ERR(chip->rtc);
+> +	}
 > +
-> +struct keystone_gpio_bank {
-> +	struct gpio_chip	 chip;
-> +	struct device		*dev;
-> +	struct regmap		*devctrl_regs;
-> +	u32			devctrl_offset;
-> +};
-> +#define chip_to_bank(c) \
-> +	container_of(c, struct keystone_gpio_bank, chip)
+> +	dev_info(&pdev->dev, "RTC enabled\n");
 > +
-> +static int keystone_gpio_direction_out(struct gpio_chip *c,
-> +					unsigned ofs, int val)
-> +{
 > +	return 0;
 > +}
 > +
-> +static int keystone_gpio_get(struct gpio_chip *c, unsigned ofs)
+> +static int sun6i_rtc_remove(struct platform_device *pdev)
 > +{
-> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
-> +	int bit = ofs + GPIO_OFFSET;
-> +	int ret;
-> +	u32 val = 0;
+> +	struct sun6i_rtc_dev *chip = platform_get_drvdata(pdev);
 > +
-> +	ret = regmap_read(bank->devctrl_regs, bank->devctrl_offset, &val);
-> +	if (ret < 0)
-> +		dev_dbg(bank->dev, "gpio read failed ret(%d)\n", ret);
-
-If this read fails what will happen...?
-
-we will get the debug message and return (val >> bit) & 1, But this val can be garbage or zero...?
-
+> +	rtc_device_unregister(chip->rtc);
 > +
-> +	return (val >> bit) & 1;
+> +	return 0;
 > +}
+> +
+> +static const struct of_device_id sun6i_rtc_dt_ids[] = {
+> +	{ .compatible = "allwinner,sun6i-a31-rtc" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
+> +
+> +static struct platform_driver sun6i_rtc_driver = {
+> +	.probe		= sun6i_rtc_probe,
+> +	.remove		= sun6i_rtc_remove,
+> +	.driver		= {
+> +		.name		= "sun6i-rtc",
+> +		.owner		= THIS_MODULE,
+
+we can drop owner field....
+
+> +		.of_match_table = sun6i_rtc_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(sun6i_rtc_driver);
+> +
+> +MODULE_DESCRIPTION("sun6i RTC driver");
+> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
 
 -- 
 -Varka Bhadram
