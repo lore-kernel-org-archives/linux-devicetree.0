@@ -1,54 +1,89 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] Added dts defintion for Lenovo ix4-300d nas
-Date: Wed, 23 Jul 2014 16:14:43 +0200
-Message-ID: <20140723141443.GC2856@lunn.ch>
-References: <1406117232-5962-1-git-send-email-yahoo@perenite.com>
- <20140723134534.GF23220@titan.lakedaemon.net>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v2 1/3] usb: dwc3: add ST dwc3 glue layer to manage dwc3
+ HC
+Date: Wed, 23 Jul 2014 15:33:23 +0100
+Message-ID: <20140723143323.GA26565@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1404541530-27856-1-git-send-email-peter.griffin@linaro.org>
+ <1404541530-27856-2-git-send-email-peter.griffin@linaro.org>
+ <20140707124627.GG6407@lee--X1>
+ <20140722091800.GB8233@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20140722145711.GC20588@saruman.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140723134534.GF23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: benoitm974 <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20140722145711.GC20588@saruman.home>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Hi Felipe,
 
+Thanks for reviewing, see my comments inline: -
+
+> > > Just use {read,write}l_relaxed() directly.
+> > 
+> > Ok, unabstracted in v3
 > 
-> > +			};
-> > +
-> > +			serial@12000 {
-> > +				clocks = <&coreclk 0>;
+> no, no... all other glues add their own local helpers for register
+> access. This is good for tracing, it's very easy to add a tracepoint to
+> this sort of function and get very low overhead tracing of every
+> register access.
 
-I don't think you need the clocks property. It should be already set
-in armada-xp.dtsi.
+I've put the IO accessors back in for V3
 
-> > +				adt7473@2e {
-> > +					compatible = "adt7473";
+> > They are just bit setting macros, I've converted them over to use BIT macro now,
+> > so it no longer takes a parameter.
+> 
+> the macros are better, but make them upper case as everybody else.
 
-Please include a vendor prefix here. 
+Fixed in v3.
 
 
-> > +					reg = <0x2e>;
-> > +				};
-> > +
-> > +				pcf8563@51 {
-> > +					compatible = "pcf8563";
+> > I've asked ST how this value was derirved and why. It came from validation. 
+> > The docs don't mention that it is necessary, and removing it
+> > seems to have no ill effects. So I've removed this udelay in v3.
+> 
+> make sure to test with many, many iterations just to make sure.
 
-and a vendor prefix here.
+Yes will do, I've been booting my board all day, and so far no failures.
 
-> > +	/* warning: you need both eth1 & 0 to be initialize for poweroff to shutdown otherwise it reboots */
+> > Ok. Do the DT folks have any comment on this?
+> 
+> look at the child's dr-mode property instead of adding your own.
 
-What do you mean by initialized? Driver loaded? Interface up? 
+Thanks for the hint, now using dr-mode binding in V3 :-)
+ 
+> 
+> > > > +	dwc3_data->glue_base = devm_request_and_ioremap(dev, res);
+> 
+> use devm_ioremap_resource()
 
-> This is a great first version
+Fixed in V3
 
-I agree with Jason, well done.
+> > Your right, this was wrong. It was some legacy code which is
+> > unnecessary and I've removed this in v3.
+> 
+> if you're going for DT, why don't you create the parent and the child
+> from DT as omap/exynos/qcom are doing ?
 
-  Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Now creating parent and child from DT like OMAP in v3
+
+> > > > +	reset_control_assert(dwc3_data->rstc_pwrdn);
+> > > > +
+> > > > +	pinctrl_pm_select_sleep_state(dev);
+> 
+> pinctrl will select sleep and default states automatically for you.
+
+I've left this in v3, as greping around I couldn't see how that could happen automatically.
+
+Also I just double checked with linusw on irc who confirmed that the only state which is 
+ever auto-selected is "default". All other states, as well as going back to default
+state need to be explicitly called.
+
+Hope thats ok.
+
+regards,
+
+Peter.
