@@ -1,172 +1,132 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
-Date: Wed, 23 Jul 2014 21:02:17 +0530
-Message-ID: <53CFD581.5040908@gmail.com>
-References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Thomas Gleixner <tglx@linutronix.de>, santosh.shilimkar@ti.com, Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v5 2/2] serial: 8250_dw: Add support for deferred probing
+Date: Wed, 23 Jul 2014 23:33:07 +0800
+Message-ID: <1406129587-24668-3-git-send-email-wens@csie.org>
+References: <1406129587-24668-1-git-send-email-wens@csie.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1406129587-24668-1-git-send-email-wens@csie.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The 8250_dw driver fails to probe if the specified clock isn't
+registered at probe time. Even if a clock frequency is given,
+the required clock might be gated because it wasn't properly
+enabled.
 
-On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
-> On Keystone SOCs, DSP cores can send interrupts to ARM
-> host using the IRQ controller IP. It provides 28 IRQ
-> signals to ARM. The IRQ handler running on HOST OS can
-> identify DSP signal source by analyzing SRCCx bits in
-> IPCARx registers. This is one of the component used by
-> the IPC mechanism used on Keystone SOCs.
+This happened to me when the device is registered through DT,
+and the clock was part of an MFD, the PRCM found on A31 and A23
+SoCs. Unlike core clocks that are registered with OF_CLK_DECLARE,
+which happen almost immediately after the kernel starts, the
+clocks are registered as sub-devices of the PRCM MFD platform
+device. Even though devices are registered in the order they are
+found in the DT, the drivers are registered in a different,
+arbitrary order. It is possible that the 8250_dw driver is
+registered, and thus associated with the device and probed, before
+the clock driver is registered and probed.
 
-(...)
+8250_dw then reports unable to get the clock, and fails. Without
+a working console, the kernel panics.
 
-> +Required Properties:
-> +- compatible: should be "ti,keystone-irq"
-> +- ti,syscon-dev : phandle and offset pair. The phandle to syscon used to
-> +			access device control registers and the offset inside
-> +			device control registers range.
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode interrupt
-> +					 source should be 1.
-> +- interrupts: interrupt reference to primary interrupt controller
+This patch adds support for deferred probe handling for the clock
+and reset controller. It also fixes the cleanup path if
+serial8250_register_8250_port fails.
 
-proper indentation for the properties
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/tty/serial/8250/8250_dw.c | 41 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 34 insertions(+), 7 deletions(-)
 
-- compatible		: Should be "ti,keystone-irq"
-- ti,syscon-dev		: phandle and offset pair. The phandle to syscon used to
-			  access device control registers and the offset inside
-			  device control registers range.
-
-> +
-> +Please refer to interrupts.txt in this directory for details of the common
-> +Interrupt Controllers bindings used by client devices.
-> +
-
-(...)
-
-> +#include <linux/irq.h>
-> +#include <linux/bitops.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-
-Includes in alphabetical order...
-
-Give one line gap before local includes..
-
-...
-#include <linux/regmap.h>
-
-#include "irqchip.h"
-
-> +#include "irqchip.h"
-> +
-> +
-> +/* The source ID bits start from 4 to 31 (total 28 bits)*/
-> +#define BIT_OFS			4
-> +#define KEYSTONE_N_IRQ		(32 - BIT_OFS)
-> +
-> +struct keystone_irq_device {
-> +	struct device		*dev;
-> +	struct irq_chip		 chip;
-> +	u32			 mask;
-> +	u32			 irq;
-> +	struct irq_domain	*irqd;
-> +	struct regmap		*devctrl_regs;
-> +	u32			devctrl_offset;
-> +};
-> +
-> +static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
-> +{
-> +	int ret;
-> +	u32 val = 0;
-> +
-> +	ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
-> +	if (ret < 0)
-> +		dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
-> +	return val;
-> +}
-> +
-> +static inline void
-> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
-> +	if (ret < 0)
-> +		dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
-
-It can be like
-
-if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
-	dev_dbg(kirq->dev, "irq write failed \n");
-
-> +}
-> +
-> +
-
-(...)
-
-> +}
-> +
-> +static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
-> +				irq_hw_number_t hw)
-
-should match open parenthesis:
-
-static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
-			    irq_hw_number_t hw)
-
-> +{
-> +	struct keystone_irq_device *kirq = h->host_data;
-> +
-> +	irq_set_chip_data(virq, kirq);
-> +	irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
-> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-> +	return 0;
-> +}
-> +
-> +static struct irq_domain_ops keystone_irq_ops = {
-> +	.map	= keystone_irq_map,
-> +	.xlate	= irq_domain_xlate_onecell,
-> +};
-> +
-> +static int keystone_irq_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct keystone_irq_device *kirq;
-> +	int ret;
-> +
-> +	if (np == NULL)
-> +		return -EINVAL;
-
-return -ENODEV??????
-
-(...)
-
-> +static struct platform_driver keystone_irq_device_driver = {
-> +	.probe		= keystone_irq_probe,
-> +	.remove		= keystone_irq_remove,
-> +	.driver		= {
-> +		.name	= "keystone_irq",
-> +		.owner	= THIS_MODULE,
-
-No need to update it. Its done by module_platform_driver()..
-
-> +		.of_match_table	= of_match_ptr(keystone_irq_dt_ids),
-
-This driver is always populate through the dts file. So no need to use
-of_match_ptr....
-
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index 501db2f..4db7987 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -365,8 +365,10 @@ static int dw8250_probe(struct platform_device *pdev)
+ 
+ 	data->usr_reg = DW_UART_USR;
+ 	data->clk = devm_clk_get(&pdev->dev, "baudclk");
+-	if (IS_ERR(data->clk))
++	if (IS_ERR(data->clk) && PTR_ERR(data->clk) != -EPROBE_DEFER)
+ 		data->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(data->clk) && PTR_ERR(data->clk) == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
+ 	if (!IS_ERR(data->clk)) {
+ 		err = clk_prepare_enable(data->clk);
+ 		if (err)
+@@ -377,15 +379,23 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	data->pclk = devm_clk_get(&pdev->dev, "apb_pclk");
++	if (IS_ERR(data->clk) && PTR_ERR(data->clk) == -EPROBE_DEFER) {
++		err = -EPROBE_DEFER;
++		goto err_clk;
++	}
+ 	if (!IS_ERR(data->pclk)) {
+ 		err = clk_prepare_enable(data->pclk);
+ 		if (err) {
+ 			dev_err(&pdev->dev, "could not enable apb_pclk\n");
+-			return err;
++			goto err_clk;
+ 		}
+ 	}
+ 
+ 	data->rst = devm_reset_control_get_optional(&pdev->dev, NULL);
++	if (IS_ERR(data->rst) && PTR_ERR(data->rst) == -EPROBE_DEFER) {
++		err = -EPROBE_DEFER;
++		goto err_pclk;
++	}
+ 	if (!IS_ERR(data->rst))
+ 		reset_control_deassert(data->rst);
+ 
+@@ -403,18 +413,21 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	if (pdev->dev.of_node) {
+ 		err = dw8250_probe_of(&uart.port, data);
+ 		if (err)
+-			return err;
++			goto err_reset;
+ 	} else if (ACPI_HANDLE(&pdev->dev)) {
+ 		err = dw8250_probe_acpi(&uart, data);
+ 		if (err)
+-			return err;
++			goto err_reset;
+ 	} else {
+-		return -ENODEV;
++		err = -ENODEV;
++		goto err_reset;
+ 	}
+ 
+ 	data->line = serial8250_register_8250_port(&uart);
+-	if (data->line < 0)
+-		return data->line;
++	if (data->line < 0) {
++		err = data->line;
++		goto err_reset;
++	}
+ 
+ 	platform_set_drvdata(pdev, data);
+ 
+@@ -422,6 +435,20 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	return 0;
++
++err_reset:
++	if (!IS_ERR(data->rst))
++		reset_control_assert(data->rst);
++
++err_pclk:
++	if (!IS_ERR(data->pclk))
++		clk_disable_unprepare(data->pclk);
++
++err_clk:
++	if (!IS_ERR(data->clk))
++		clk_disable_unprepare(data->clk);
++
++	return err;
+ }
+ 
+ static int dw8250_remove(struct platform_device *pdev)
 -- 
--Varka Bhadram
+2.0.1
+
