@@ -1,49 +1,172 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add dwc3-st.c file to ARCH/STI
- architecture
-Date: Wed, 23 Jul 2014 16:29:02 +0100
-Message-ID: <20140723152902.GK23210@lee--X1>
-References: <1406126915-30601-1-git-send-email-peter.griffin@linaro.org>
- <1406126915-30601-4-git-send-email-peter.griffin@linaro.org>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
+Date: Wed, 23 Jul 2014 21:02:17 +0530
+Message-ID: <53CFD581.5040908@gmail.com>
+References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406126915-30601-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Thomas Gleixner <tglx@linutronix.de>, santosh.shilimkar@ti.com, Jason Cooper <jason@lakedaemon.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Jul 2014, Peter Griffin wrote:
 
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
+> On Keystone SOCs, DSP cores can send interrupts to ARM
+> host using the IRQ controller IP. It provides 28 IRQ
+> signals to ARM. The IRQ handler running on HOST OS can
+> identify DSP signal source by analyzing SRCCx bits in
+> IPCARx registers. This is one of the component used by
+> the IPC mechanism used on Keystone SOCs.
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 702ca10..269ad3b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1325,6 +1325,7 @@ F:	drivers/pinctrl/pinctrl-st.c
->  F:	drivers/media/rc/st_rc.c
->  F:	drivers/i2c/busses/i2c-st.c
->  F:	drivers/tty/serial/st-asc.c
-> +F:	drivers/usb/dwc3/dwc3-st.c
-> =20
->  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
->  M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+(...)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Required Properties:
+> +- compatible: should be "ti,keystone-irq"
+> +- ti,syscon-dev : phandle and offset pair. The phandle to syscon used to
+> +			access device control registers and the offset inside
+> +			device control registers range.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode interrupt
+> +					 source should be 1.
+> +- interrupts: interrupt reference to primary interrupt controller
+
+proper indentation for the properties
+
+- compatible		: Should be "ti,keystone-irq"
+- ti,syscon-dev		: phandle and offset pair. The phandle to syscon used to
+			  access device control registers and the offset inside
+			  device control registers range.
+
+> +
+> +Please refer to interrupts.txt in this directory for details of the common
+> +Interrupt Controllers bindings used by client devices.
+> +
+
+(...)
+
+> +#include <linux/irq.h>
+> +#include <linux/bitops.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+
+Includes in alphabetical order...
+
+Give one line gap before local includes..
+
+...
+#include <linux/regmap.h>
+
+#include "irqchip.h"
+
+> +#include "irqchip.h"
+> +
+> +
+> +/* The source ID bits start from 4 to 31 (total 28 bits)*/
+> +#define BIT_OFS			4
+> +#define KEYSTONE_N_IRQ		(32 - BIT_OFS)
+> +
+> +struct keystone_irq_device {
+> +	struct device		*dev;
+> +	struct irq_chip		 chip;
+> +	u32			 mask;
+> +	u32			 irq;
+> +	struct irq_domain	*irqd;
+> +	struct regmap		*devctrl_regs;
+> +	u32			devctrl_offset;
+> +};
+> +
+> +static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
+> +{
+> +	int ret;
+> +	u32 val = 0;
+> +
+> +	ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
+> +	if (ret < 0)
+> +		dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
+> +	return val;
+> +}
+> +
+> +static inline void
+> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
+> +	if (ret < 0)
+> +		dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
+
+It can be like
+
+if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
+	dev_dbg(kirq->dev, "irq write failed \n");
+
+> +}
+> +
+> +
+
+(...)
+
+> +}
+> +
+> +static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
+> +				irq_hw_number_t hw)
+
+should match open parenthesis:
+
+static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
+			    irq_hw_number_t hw)
+
+> +{
+> +	struct keystone_irq_device *kirq = h->host_data;
+> +
+> +	irq_set_chip_data(virq, kirq);
+> +	irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
+> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+> +	return 0;
+> +}
+> +
+> +static struct irq_domain_ops keystone_irq_ops = {
+> +	.map	= keystone_irq_map,
+> +	.xlate	= irq_domain_xlate_onecell,
+> +};
+> +
+> +static int keystone_irq_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct keystone_irq_device *kirq;
+> +	int ret;
+> +
+> +	if (np == NULL)
+> +		return -EINVAL;
+
+return -ENODEV??????
+
+(...)
+
+> +static struct platform_driver keystone_irq_device_driver = {
+> +	.probe		= keystone_irq_probe,
+> +	.remove		= keystone_irq_remove,
+> +	.driver		= {
+> +		.name	= "keystone_irq",
+> +		.owner	= THIS_MODULE,
+
+No need to update it. Its done by module_platform_driver()..
+
+> +		.of_match_table	= of_match_ptr(keystone_irq_dt_ids),
+
+This driver is always populate through the dts file. So no need to use
+of_match_ptr....
+
+-- 
+-Varka Bhadram
