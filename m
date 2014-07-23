@@ -1,119 +1,107 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
-Date: Wed, 23 Jul 2014 09:24:43 +0200
-Message-ID: <20140723072442.GC15759@ulmo.nvidia.com>
-References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
- <1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>
- <CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
- <20140723065412.GA15759@ulmo.nvidia.com>
- <CAKohponmg24pvnX2Jhfg5LHKKHx3VEm-6a_JXTGhVXY-aj3EOw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohponmg24pvnX2Jhfg5LHKKHx3VEm-6a_JXTGhVXY-aj3EOw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v10 0/3] Add ES8328 audio codec
+Date: Wed, 23 Jul 2014 15:44:10 +0800
+Message-ID: <1406101453-3088-1-git-send-email-xobs@kosagi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds support for the Everest Semi ES8328 audio codec, used in
+the Novena open source laptop.  It also adds support for using the es8328 on
+IMX boards.
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the speaker amps and as well as
+supporting headphone jacks, in addition to the i.MX audmux routing.
 
-On Wed, Jul 23, 2014 at 12:28:21PM +0530, Viresh Kumar wrote:
-> On 23 July 2014 12:24, Thierry Reding <thierry.reding@gmail.com> wrote:
-> > On Wed, Jul 23, 2014 at 10:14:44AM +0530, Viresh Kumar wrote:
-> >> On 21 July 2014 21:09, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
-> >>
-> >> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.a=
-rm
-> >> > index 7364a53..df3c73e 100644
-> >> > --- a/drivers/cpufreq/Kconfig.arm
-> >> > +++ b/drivers/cpufreq/Kconfig.arm
-> >> > @@ -244,6 +244,7 @@ config ARM_SPEAR_CPUFREQ
-> >> >  config ARM_TEGRA_CPUFREQ
-> >> >         bool "TEGRA CPUFreq support"
-> >> >         depends on ARCH_TEGRA
-> >> > +       depends on GENERIC_CPUFREQ_CPU0
-> >>
-> >> Wouldn't this also disturb the existing cpufreq driver for earlier
-> >> tegra platforms? i.e. we don't need cpufreq-cpu0 for them
-> >> atleast as of now.
-> >
-> > Perhaps this should be "select" rather than "depends on"?
->=20
-> Don't know, its not optionaly for tegra124 and so a "depends on"
-> might fit better ?
+Changes since v9:
+    - Minor formatting corrections
+    - Rework DAPM registers in es8328.h.  DAPM widgets use offsets, and the
+      v9 patch turned snd_soc_write() calls into widgets without converting
+      from i2c masks to offsets first.
+    - Rename DAC and ADC PLL to DLL, to reflect latest documentation.
 
-ARM_TEGRA_CPUFREQ is still optional, so the select only applies when the
-Tegra cpufreq driver is enabled. This is mostly just out of convenience,
-though. The Tegra cpufreq driver uses the generic CPU0 cpufreq driver so
-a select will automatically pull in the necessary dependency. With a
-"depends on" the Tegra cpufreq driver only becomes available after
-you've selected GENERIC_CPUFREQ_CPU0, which is somewhat unintuitive.
+Changes since v8:
+    - For the mclk ratios, move from an array to a lookup table, and rename
+      the variable to be clearer.
+    - Move all CHIPPOWER accesses into DAPM supplies.
+    - Fix sloppy compile problems introduced in v8.
+    - Shut down clocks and supplies on suspend, and enable them on resume.
+    - Remove double set of ES8328_MASTERMODE_MSC.
 
-To illustrate with an example: as a user, I want to enable CPU frequency
-scaling on Tegra. So I use menuconfig to navigate to the "CPU Frequency
-scaling" menu (enable it if not available yet) and look for an entry
-that says "Tegra". But I can't find it because it's hidden due to the
-lack of GENERIC_CPUFREQ_CPU0. That the Tegra CPU frequency driver uses a
-generic driver is an implementation detail that users shouldn't have to
-be aware of.
+Changes since v7:
+    - We now fetch the regulators in the device-level probe rather than
+      in the ASoC-level probe.
 
-> >> > +static int tegra124_cpufreq_probe(struct platform_device *pdev)
-> >> > +{
-> >> > +       int ret;
-> >> > +
-> >> > +       cpu_dev =3D get_cpu_device(0);
-> >> > +       if (!cpu_dev)
-> >> > +               return -ENODEV;
-> >> > +
-> >>
-> >> Shouldn't we do a of_node_get() here?
-> >
-> > I think this would need to be get_device() since it's the struct device
-> > that's being used subsequently.
->=20
-> Probably I didn't write it well..
->=20
-> What I meant was after doing a get_cpu_device() we might also need
-> to do  of_node_get(cpu_dev->of_node) as we would be using of_node
-> in further code.
+Changes since v6:
+    - Minor clarification of AUDMUX in imx-audio-es8328.txt
+    - Use u32 instead of int in imx-es8328.c for int-mux and ext-mux
+    - Bounds checking on mux-int-port and mux-ext-port in imx-es8328.c
+    - Remove NULL checks before calling of_node_put()
 
-But we're using cpu_dev->of_node, so we need to make sure cpu_dev
-doesn't go away suddenly. Simply keeping a reference to ->of_node
-won't ensure that.
+Changes since v5:
+    - Removed empty imx_set_frequency function from imx-es8328.c
+    - Move the clock from imx-audio-es8328 to the es8328 codec itself
+    - Add support for 2x (22.5792 MHz) and 1x (11.2896 MHz) source clocks
+    - Restore registers on resume
+    - Document pins for ES8328, including input pins
 
-I guess technically it would be better if get_cpu_device() already
-incremented the reference count on the returned struct device. Currently
-it would theoretically still be possible for the device to disappear
-between the call to get_cpu_device() and a call to get_device().
+Changes since v4:
+    - Simplify clock handling and use assigned-clock-parents
+    - Move the codec regulator from the machine driver to the codec
+    - Specify all four regulators, and require their presence
+    - Fix audio recording, such that it enables the PGA
 
-Thierry
+Changes since v3:
+    - Add OF bindings for everest,es8328
+    - Add back in patch to add everest as a vendor prefix
+    - Give clocks more generic names
+    - Document required clocks in DT bindings document
 
---5G06lTa6Jq83wMTw
-Content-Type: application/pgp-signature
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
 
-iQIcBAEBAgAGBQJTz2M6AAoJEN0jrNd/PrOhQgEP/R2ER7bRQ3snOETkSshpLJxq
-EWO42Cm9FIvxOazNLQE1cswq7Gz9lUkT6RFsi5faAQcjCpRxWYeU8u+XhHiGd+rI
-IgXIC5fhQJm175hOwgXwvPwNF/agyPHzLXCH8M7v5Qykur/70Xdm8Qc5yiGslhTD
-qHEVTeeiDxlD2TnmMhDSTIb3HsGmEXcoQIFFI0pzrMnUzwdIkutuNs88IGblzBE3
-NrD0O9/C6QGW0ohqnKzNAZv6SrRIxNjPPNvBBGDXJA+NgldxOY41Zd/F1iyEbG1f
-COsTcn49Xtx0NpS8G1z34AePCp7BY6Uq1eOH3LxAR6UKTa83sS54hPi2u4T2RSjW
-5CBlfxt+HYJhTEQViVkojix01JJEr4l1hR68AgsljLxJa6W7w+v37nNIGyunEs2z
-MLConmrVLxFxiy39TYpJ07oVtRI4/AHMdRTqXbCsS36O59oBB19S7qQYFN9SMxwH
-03qDhsICLnlZTPSVd5ExYImbw8mviKBM9h2AQs5SlE3AjznIkfB2bFr7VFL7pcbz
-JSjGPa0xEFDaz1YJdag8MKcLZp3ybvuUo8mNK48ucN9QsAm6x8lBhnNca4qr4r+f
-FkxixllgxqPa8CoZMx8LprgH+PZ0xjxLNaXe8m6RLwH5CgfCNAqZXBuohoS+cTpX
-iiJGRUVCNjm/jHaHkGWF
-=BqM+
------END PGP SIGNATURE-----
+Sean Cross (3):
+  devicetree: bindings: Add Everest Semicodunctor
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
 
---5G06lTa6Jq83wMTw--
+ Documentation/devicetree/bindings/sound/es8328.txt |  38 ++
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  61 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  60 ++
+ sound/soc/codecs/es8328-spi.c                      |  49 ++
+ sound/soc/codecs/es8328.c                          | 756 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 314 +++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 233 +++++++
+ 12 files changed, 1547 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
+
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
