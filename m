@@ -1,131 +1,74 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH RESEND v2 1/4] pinctrl: Update Qualcomm pm8xxx GPIO parameters
- definitions
-Date: Wed, 23 Jul 2014 16:47:34 -0700
-Message-ID: <53D04996.2030902@codeaurora.org>
-References: <1405610748-7583-5-git-send-email-iivanov@mm-sol.com> <1405626085-14069-1-git-send-email-iivanov@mm-sol.com> <20140722214643.GH19700@sonymobile.com>
+From: Thomas Petazzoni <mturquette@linaro.org>
+Subject: [PATCHv3 3/7] clk: mvebu: extend clk-cpu for dynamic frequency scaling
+Date: Wed, 23 Jul 2014 16:53:58 -0700
+Message-ID: <20140723235358.6419.26311@quantum>
+References: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140722214643.GH19700@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/14 14:46, Bjorn Andersson wrote:
-> For pm8941 the valid power supply values are:
->  GPIO 1-14
->    0: VPH
->    2: SMPS3
->    3: LDO6
->
->  GPIO 15-18
->   2: SMPS3
->   3: LDO6
->
->  GPIO 19-36
->   0: VPH
->   1: VDD_TORCH
->   2: SPMS3
->   3: LDO6
->
->  MPP 1-8
->   0: VPH
->   1: LDO1
->   2: SPMS3
->   3: LDO6
->
-> For pma8084 the valid power supply values are:
->  GPIO 1-22
->   0: VPH
->   2: SPMS4
->   3: LDO6
->
->  MPP 1-8
->   0: VPH
->   1: LDO1
->   2: SMPS4
->   3: LDO6
->
-> Please add these constants to the table of valid power-source values and use
-> something like I did to translate them to register values - it makes the DT
-> much more readable.
++static int clk_cpu_on_set_rate(struct clk_hw *hwclk, unsigned long rate,
++                              unsigned long parent_rate)
++{
++       u32 reg;
++       unsigned long fabric_div, target_div, cur_rate;
++       struct cpu_clk *cpuclk = to_cpu_clk(hwclk);
++
++       /*
++        * PMU DFS registers are not mapped, Device Tree does not
++        * describes them. We cannot change the frequency dynamically.
++        */
++       if (!cpuclk->pmu_dfs)
++               return -ENODEV;
++
++       cur_rate = __clk_get_rate(hwclk->clk);
++
++       reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL2_OFFSET);
++       fabric_div = (reg >> SYS_CTRL_CLK_DIVIDER_CTRL2_NBCLK_RATIO_SHIFT) &
++               SYS_CTRL_CLK_DIVIDER_MASK;
++
++       /* Frequency is going up */
++       if (rate == 2 * cur_rate)
++               target_div = fabric_div / 2;
++       /* Frequency is going down */
++       else
++               target_div = fabric_div;
++
++       if (target_div == 0)
++               target_div = 1;
++
++       reg = readl(cpuclk->pmu_dfs);
++       reg &= ~(PMU_DFS_RATIO_MASK << PMU_DFS_RATIO_SHIFT);
++       reg |= (target_div << PMU_DFS_RATIO_SHIFT);
++       writel(reg, cpuclk->pmu_dfs);
++
++       reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
++       reg |= (SYS_CTRL_CLK_DIVIDER_CTRL_RESET_ALL <<
++               SYS_CTRL_CLK_DIVIDER_CTRL_RESET_SHIFT);
++       writel(reg, cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
++
++       return mvebu_pmsu_dfs_request(cpuclk->cpu);
++}
++
++static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
++                           unsigned long parent_rate)
++{
++       if (__clk_is_enabled(hwclk->clk))
++               return clk_cpu_on_set_rate(hwclk, rate, parent_rate);
++       else
++               return clk_cpu_off_set_rate(hwclk, rate, parent_rate);
 
-The DT could be similarly readable if we had a bunch of #defines for the
-different VIN settings that resolved to the final register value for
-that pmic. Something like PM8921_GPIO1_14_VPH, PM8921_GPIO19_36_VPH,
-etc. There would be a lot of them, but then the driver could be really
-simple and just jam whatever value is in the DT into the register
-without having to bounce through a mapping table in software to figure
-out the register value. If we did this for the functions also then I
-believe we achieve readability without requiring a bunch of drivers for
-each and every single pmic?
+This is racy. You don't hold the clk_enable lock so it could be enable
+between the conditional check and executing clk_cpu_on_set_rate.
 
->
->>         Value type: <string>
->>         Definition: Specify the alternative function to be configured for the
->> -                   specified pins.  Valid values are:
->> -                       "normal",
->> -                       "paired",
->> -                       "func1",
->> -                       "func2",
->> -                       "dtest1",
->> -                       "dtest2",
->> -                       "dtest3",
->> -                       "dtest4"
->> +                   specified pins.  Valid values is: "gpio"
->>
->>  - bias-disable:
->>         Usage: optional
->> @@ -99,18 +95,6 @@ to specify in a pin configuration subnode:
->>         Value type: <none>
->>         Definition: The specified pins should be configued as pull down.
->>
->> -- bias-pull-up:
->> -       Usage: optional
->> -       Value type: <u32> (optional)
->> -       Definition: The specified pins should be configued as pull up. An
->> -                   optional argument can be used to configure the strength.
->> -                   Valid values are; as defined in
->> -                   <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
->> -                   1: 30uA                     (PM8XXX_GPIO_PULL_UP_30)
->> -                   2: 1.5uA                    (PM8XXX_GPIO_PULL_UP_1P5)
->> -                   3: 31.5uA                   (PM8XXX_GPIO_PULL_UP_31P5)
->> -                   4: 1.5uA + 30uA boost       (PM8XXX_GPIO_PULL_UP_1P5_30)
->> -
-> As described above, I belive we should make this:
->
-> - bias-pull-up:
-> 	Usage: optional
-> 	Value type: <empty>
-> 	Definition: The specified pins should be configured as pull up.
->
-> - qcom,pull-up-strength:
-> 	Usage: optional
-> 	Value type: <u32>
-> 	Definition: Specifies the strength to use for pull up, if selected.
->                     Valid values are; as defined in
->                     <dt-bindings/pinctrl/qcom,pm8xxx-gpio.h>:
->                     1: 30uA                     (PM8XXX_GPIO_PULL_UP_30)
->                     2: 1.5uA                    (PM8XXX_GPIO_PULL_UP_1P5)
->                     3: 31.5uA                   (PM8XXX_GPIO_PULL_UP_31P5)
->                     4: 1.5uA + 30uA boost       (PM8XXX_GPIO_PULL_UP_1P5_30)
-> 		    If this property is ommited 30uA strength will be used if
-> 		    pull up is selected.
+How do you ensure that secondary CPU clocks are not enabled/disabled
+when changing rates?
 
-Why is 30uA special? Just because most drivers use it? I'd prefer we
-always be explicit about which pull-up we want so that nothing is left
-up to the driver implementation.
-
-Also according to the hw folks the 1.5uA + 30uA boost has never been
-used so I say let's drop that feature. If we need it one day we can
-always add a qcom,pull-up-boost or something (I highly doubt we'll need
-it). Doing that allows us to specify this in actual SI units. Maybe even
-allowing us to have a generic pull-up-strength (or
-bias-pull-up-strength) specified in SI units of mA?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Mike
