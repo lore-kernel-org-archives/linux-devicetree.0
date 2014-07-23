@@ -1,79 +1,44 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv8 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
- code clean
-Date: Wed, 23 Jul 2014 10:41:52 +0900
-Message-ID: <53CF12E0.5030903@samsung.com>
-References: <1405994696-3117-1-git-send-email-cw00.choi@samsung.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH] ARM: tegra: apalis t30: fix device tree compatible node
+Date: Wed, 23 Jul 2014 04:23:00 +0200
+Message-ID: <aa2cbaac07707c3d64599d3841b9d6f77567a91f.1406081870.git.marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1405994696-3117-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: swarren@wwwdotorg.org, thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, stefan@agner.ch, marcel@ziswiler.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Jonathan,
+Working on sound support I noticed the Apalis T30 Evaluation board
+device tree missing the more generic Apalis T30 compatible string.
 
-Could you please pick this patchset for 3.17?
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+---
+ arch/arm/boot/dts/tegra30-apalis-eval.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best Regards,
-Chanwoo Choi
-
-On 07/22/2014 11:04 AM, Chanwoo Choi wrote:
-> This patchset support Exynos3250 ADC (Analog Digital Converter) because
-> Exynos3250 has additional special clock for ADC IP.
-> 
-> Changes from v7:
-> - Add acked message by Arnd Bergmann
-> - Use two compatible string for Exynos3250 ADC as following:
->   : compatible = "samsung,exynos3250-adc", "samsung,exynos-adc-v2;
-> 
-> Changes from v6:
-> - Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
-> - Use "sclk" clock name instead of "sclk_adc"
-> - Remove un-necessary macro for exyno-adc-data-v2 structure.
-> - Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
-> - Change the number of ADC channels (Exynos3250 has only two channels for ADC)
-> 
-> Changes from v5:
-> - Add acked message by Kukjin Kim
-> - Add reviewed messgae by Tomasz Figa
-> - Fix typo (for for -> for)
-> 
-> Changes from v4:
-> - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
->   and remove enum variable of ADC version
-> - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
-> - Add reviewed message by Naveen Krishna Chatradhi
-> - Add functions for ADC clock control
-> 
-> Changes from v3:
-> - Add new 'exynos_adc_ops' structure to improve readability according to
->  Tomasz Figa comment[1]
->  [1] https://lkml.org/lkml/2014/4/16/238
-> - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
-> - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
-> 
-> Changes from v2:
-> - Check return value of clock function to deal with error exception
-> - Fix minor coding style to improve readability
-> 
-> Changes from v1:
-> - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
-> - Add a patch about DT binding documentation
-> 
-> Chanwoo Choi (4):
->   iio: adc: exynos_adc: Add exynos_adc_data structure to improve
->     readability
->   iio: adc: exynos_adc: Control special clock of ADC to support
->     Exynos3250 ADC
->   iio: devicetree: Add DT binding documentation for Exynos3250 ADC
->   ARM: dts: Fix wrong compatible string for Exynos3250 ADC
-> 
->  .../devicetree/bindings/arm/samsung/exynos-adc.txt |  25 +-
->  arch/arm/boot/dts/exynos3250.dtsi                  |   5 +-
->  drivers/iio/adc/exynos_adc.c                       | 335 +++++++++++++++------
->  3 files changed, 275 insertions(+), 90 deletions(-)
-> 
+diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
+index 9921433..45d40f0 100644
+--- a/arch/arm/boot/dts/tegra30-apalis-eval.dts
++++ b/arch/arm/boot/dts/tegra30-apalis-eval.dts
+@@ -5,7 +5,7 @@
+ 
+ / {
+ 	model = "Toradex Apalis T30 on Apalis Evaluation Board";
+-	compatible = "toradex,apalis_t30-eval", "nvidia,tegra30";
++	compatible = "toradex,apalis_t30-eval", "toradex,apalis_t30", "nvidia,tegra30";
+ 
+ 	aliases {
+ 		rtc0 = "/i2c@7000c000/rtc@68";
+-- 
+1.7.9.5
