@@ -1,346 +1,554 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH 06/10] of: Make devicetree sysfs update functions consistent.
-Date: Wed, 23 Jul 2014 17:44:20 -0600
-Message-ID: <1406159064-21366-7-git-send-email-grant.likely@linaro.org>
+Subject: [PATCH 03/10] of: Move CONFIG_OF_DYNAMIC code into a separate file
+Date: Wed, 23 Jul 2014 17:44:17 -0600
+Message-ID: <1406159064-21366-4-git-send-email-grant.likely@linaro.org>
 References: <1406159064-21366-1-git-send-email-grant.likely@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1406159064-21366-1-git-send-email-grant.likely@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, Nathan Fontenot <nfont@austin.ibm.com>, Tyrel Datwyler <turtle.in.the.kernel@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-All of the DT modification functions are split into two parts, the first
-part manipulates the DT data structure, and the second part updates
-sysfs, but the code isn't very consistent about how the second half is
-called. They don't all enforce the same rules about when it is valid to
-update sysfs, and there isn't any clarity on locking.
+Split the dynamic device tree code into a separate file to make it
+really clear what features CONFIF_OF_DYNAMIC add to the kernel. Without
+CONFIG_OF_DYNAMIC only properties can be changed, and notifiers do not
+get sent. Enabling it turns on reference counting, notifiers and the
+ability to add and remove nodes.
 
-The transactional DT modification feature that is coming also needs
-access to these functions so that it can perform all the structure
-changes together, and then all the sysfs updates as a second stage
-instead of doing each one at a time.
+v2: Moved of_node_release() into dynamic.c
 
-Fix up the second have by creating a separate __of_*_sysfs() function
-for each of the helpers. The new functions have consistent naming (ie.
-of_node_add() becomes __of_attach_node_sysfs()) and all of them now
-defer if of_init hasn't been called yet.
-
-Callers of the new functions must hold the of_mutex to ensure there are
-no race conditions with of_init(). The mutex ensures that there will
-only ever be one writer to the tree at any given time. There can still
-be any number of readers and the raw_spin_lock is still used to make
-sure access to the data structure is still consistent.
-
-Finally, put the function prototypes into of_private.h so they are
-accessible to the transaction code.
-
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-[grant.likely: Changed suffix from _post to _sysfs to match existing code]
-[grant.likely: Reorganized to eliminate trivial wrappers]
 Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 ---
- drivers/of/base.c       | 96 +++++++++++++++++++++++++------------------------
- drivers/of/dynamic.c    | 12 +++++--
- drivers/of/of_private.h | 10 ++++++
- include/linux/of.h      |  2 --
- 4 files changed, 69 insertions(+), 51 deletions(-)
+ drivers/of/Makefile     |   1 +
+ drivers/of/base.c       | 230 +-----------------------------------------------
+ drivers/of/dynamic.c    | 216 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/of/of_private.h |  18 ++++
+ 4 files changed, 236 insertions(+), 229 deletions(-)
+ create mode 100644 drivers/of/dynamic.c
 
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index 099b1fb00af4..08e6c0f79806 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -1,4 +1,5 @@
+ obj-y = base.o device.o platform.o
++obj-$(CONFIG_OF_DYNAMIC) += dynamic.o
+ obj-$(CONFIG_OF_FLATTREE) += fdt.o
+ obj-$(CONFIG_OF_EARLY_FLATTREE) += fdt_address.o
+ obj-$(CONFIG_OF_PROMTREE) += pdt.o
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b403f9d98461..ad4929cbd876 100644
+index e48a1b90a392..0d8955605738 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -37,10 +37,13 @@ struct device_node *of_chosen;
- struct device_node *of_aliases;
- static struct device_node *of_stdout;
- 
--static struct kset *of_kset;
-+struct kset *of_kset;
- 
- /*
-- * Used to protect the of_aliases, to hold off addition of nodes to sysfs
-+ * Used to protect the of_aliases, to hold off addition of nodes to sysfs.
-+ * This mutex must be held whenever modifications are being made to the
-+ * device tree. The of_{attach,detach}_node() and
-+ * of_{add,remove,update}_property() helpers make sure this happens.
-  */
- DEFINE_MUTEX(of_mutex);
- 
-@@ -127,13 +130,16 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
- 	return name;
+@@ -88,79 +88,7 @@ int __weak of_node_to_nid(struct device_node *np)
  }
+ #endif
  
--static int __of_add_property_sysfs(struct device_node *np, struct property *pp)
-+int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+-#if defined(CONFIG_OF_DYNAMIC)
+-/**
+- *	of_node_get - Increment refcount of a node
+- *	@node:	Node to inc refcount, NULL is supported to
+- *		simplify writing of callers
+- *
+- *	Returns node.
+- */
+-struct device_node *of_node_get(struct device_node *node)
+-{
+-	if (node)
+-		kobject_get(&node->kobj);
+-	return node;
+-}
+-EXPORT_SYMBOL(of_node_get);
+-
+-static inline struct device_node *kobj_to_device_node(struct kobject *kobj)
+-{
+-	return container_of(kobj, struct device_node, kobj);
+-}
+-
+-/**
+- *	of_node_release - release a dynamically allocated node
+- *	@kref:  kref element of the node to be released
+- *
+- *	In of_node_put() this function is passed to kref_put()
+- *	as the destructor.
+- */
+-static void of_node_release(struct kobject *kobj)
+-{
+-	struct device_node *node = kobj_to_device_node(kobj);
+-	struct property *prop = node->properties;
+-
+-	/* We should never be releasing nodes that haven't been detached. */
+-	if (!of_node_check_flag(node, OF_DETACHED)) {
+-		pr_err("ERROR: Bad of_node_put() on %s\n", node->full_name);
+-		dump_stack();
+-		return;
+-	}
+-
+-	if (!of_node_check_flag(node, OF_DYNAMIC))
+-		return;
+-
+-	while (prop) {
+-		struct property *next = prop->next;
+-		kfree(prop->name);
+-		kfree(prop->value);
+-		kfree(prop);
+-		prop = next;
+-
+-		if (!prop) {
+-			prop = node->deadprops;
+-			node->deadprops = NULL;
+-		}
+-	}
+-	kfree(node->full_name);
+-	kfree(node->data);
+-	kfree(node);
+-}
+-
+-/**
+- *	of_node_put - Decrement refcount of a node
+- *	@node:	Node to dec refcount, NULL is supported to
+- *		simplify writing of callers
+- *
+- */
+-void of_node_put(struct device_node *node)
+-{
+-	if (node)
+-		kobject_put(&node->kobj);
+-}
+-EXPORT_SYMBOL(of_node_put);
+-#else
++#ifndef CONFIG_OF_DYNAMIC
+ static void of_node_release(struct kobject *kobj)
  {
- 	int rc;
- 
- 	/* Important: Don't leak passwords */
- 	bool secure = strncmp(pp->name, "security-", 9) == 0;
- 
-+	if (!of_kset || !of_node_is_attached(np))
-+		return 0;
-+
- 	sysfs_bin_attr_init(&pp->attr);
- 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
- 	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-@@ -145,12 +151,15 @@ static int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 	/* Without CONFIG_OF_DYNAMIC, no nodes gets freed */
+@@ -264,25 +192,6 @@ int of_node_add(struct device_node *np)
  	return rc;
  }
  
--static int __of_node_add(struct device_node *np)
-+int __of_attach_node_sysfs(struct device_node *np)
- {
- 	const char *name;
- 	struct property *pp;
- 	int rc;
- 
-+	if (!of_kset)
-+		return 0;
-+
- 	np->kobj.kset = of_kset;
- 	if (!np->parent) {
- 		/* Nodes without parents are new top level trees */
-@@ -172,26 +181,6 @@ static int __of_node_add(struct device_node *np)
- 	return 0;
- }
- 
--int of_node_add(struct device_node *np)
+-#if defined(CONFIG_OF_DYNAMIC)
+-static void of_node_remove(struct device_node *np)
 -{
--	int rc = 0;
+-	struct property *pp;
 -
 -	BUG_ON(!of_node_is_initialized(np));
 -
--	/*
--	 * Grab the mutex here so that in a race condition between of_init() and
--	 * of_node_add(), node addition will still be consistent.
--	 */
--	mutex_lock(&of_mutex);
--	if (of_kset)
--		rc = __of_node_add(np);
--	else
--		/* This scenario may be perfectly valid, but report it anyway */
--		pr_info("of_node_add(%s) before of_init()\n", np->full_name);
--	mutex_unlock(&of_mutex);
--	return rc;
+-	/* only remove properties if on sysfs */
+-	if (of_node_is_attached(np)) {
+-		for_each_property_of_node(np, pp)
+-			sysfs_remove_bin_file(&np->kobj, &pp->attr);
+-		kobject_del(&np->kobj);
+-	}
+-
+-	/* finally remove the kobj_init ref */
+-	of_node_put(np);
 -}
+-#endif
 -
  static int __init of_init(void)
  {
  	struct device_node *np;
-@@ -204,7 +193,7 @@ static int __init of_init(void)
- 		return -ENOMEM;
- 	}
- 	for_each_of_allnodes(np)
--		__of_node_add(np);
-+		__of_attach_node_sysfs(np);
- 	mutex_unlock(&of_mutex);
- 
- 	/* Symlink in /proc as required by userspace ABI */
-@@ -1689,15 +1678,17 @@ int of_add_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	rc = __of_add_property(np, prop);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
--	if (rc)
--		return rc;
- 
--	if (of_node_is_attached(np))
-+	if (!rc)
- 		__of_add_property_sysfs(np, prop);
- 
-+	mutex_unlock(&of_mutex);
-+
- 	return rc;
+@@ -1747,28 +1656,6 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
  }
+ EXPORT_SYMBOL(of_count_phandle_with_args);
  
-@@ -1720,6 +1711,13 @@ int __of_remove_property(struct device_node *np, struct property *prop)
+-#if defined(CONFIG_OF_DYNAMIC)
+-static int of_property_notify(int action, struct device_node *np,
+-			      struct property *prop)
+-{
+-	struct of_prop_reconfig pr;
+-
+-	/* only call notifiers if the node is attached */
+-	if (!of_node_is_attached(np))
+-		return 0;
+-
+-	pr.dn = np;
+-	pr.prop = prop;
+-	return of_reconfig_notify(action, &pr);
+-}
+-#else
+-static int of_property_notify(int action, struct device_node *np,
+-			      struct property *prop)
+-{
+-	return 0;
+-}
+-#endif
+-
+ /**
+  * __of_add_property - Add a property to a node without lock operations
+  */
+@@ -1915,121 +1802,6 @@ int of_update_property(struct device_node *np, struct property *newprop)
  	return 0;
  }
  
-+void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
-+{
-+	/* at early boot, bail here and defer setup to of_init() */
-+	if (of_kset && of_node_is_attached(np))
-+		sysfs_remove_bin_file(&np->kobj, &prop->attr);
-+}
-+
- /**
-  * of_remove_property - Remove a property from a node.
-  *
-@@ -1737,20 +1735,18 @@ int of_remove_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	rc = __of_remove_property(np, prop);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
+-#if defined(CONFIG_OF_DYNAMIC)
+-/*
+- * Support for dynamic device trees.
+- *
+- * On some platforms, the device tree can be manipulated at runtime.
+- * The routines in this section support adding, removing and changing
+- * device tree nodes.
+- */
+-
+-static BLOCKING_NOTIFIER_HEAD(of_reconfig_chain);
+-
+-int of_reconfig_notifier_register(struct notifier_block *nb)
+-{
+-	return blocking_notifier_chain_register(&of_reconfig_chain, nb);
+-}
+-EXPORT_SYMBOL_GPL(of_reconfig_notifier_register);
+-
+-int of_reconfig_notifier_unregister(struct notifier_block *nb)
+-{
+-	return blocking_notifier_chain_unregister(&of_reconfig_chain, nb);
+-}
+-EXPORT_SYMBOL_GPL(of_reconfig_notifier_unregister);
+-
+-int of_reconfig_notify(unsigned long action, void *p)
+-{
+-	int rc;
+-
+-	rc = blocking_notifier_call_chain(&of_reconfig_chain, action, p);
+-	return notifier_to_errno(rc);
+-}
+-
+-/**
+- * of_attach_node - Plug a device node into the tree and global list.
+- */
+-int of_attach_node(struct device_node *np)
+-{
+-	unsigned long flags;
+-	int rc;
+-
+-	rc = of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
 -	if (rc)
 -		return rc;
 -
--	/* at early boot, bail hear and defer setup to of_init() */
--	if (!of_kset)
--		return 0;
-+	if (!rc)
-+		__of_remove_property_sysfs(np, prop);
- 
--	sysfs_remove_bin_file(&np->kobj, &prop->attr);
-+	mutex_unlock(&of_mutex);
- 
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-	np->sibling = np->parent->child;
+-	np->allnext = np->parent->allnext;
+-	np->parent->allnext = np;
+-	np->parent->child = np;
+-	of_node_clear_flag(np, OF_DETACHED);
+-	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-
+-	of_node_add(np);
 -	return 0;
-+	return rc;
- }
- 
- int __of_update_property(struct device_node *np, struct property *newprop,
-@@ -1779,6 +1775,18 @@ int __of_update_property(struct device_node *np, struct property *newprop,
- 	return 0;
- }
- 
-+void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
-+		struct property *oldprop)
-+{
-+	/* At early boot, bail out and defer setup to of_init() */
-+	if (!of_kset)
-+		return;
-+
-+	if (oldprop)
-+		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
-+	__of_add_property_sysfs(np, newprop);
-+}
-+
- /*
-  * of_update_property - Update a property in a node, if the property does
-  * not exist, add it.
-@@ -1801,22 +1809,18 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	rc = __of_update_property(np, newprop, &oldprop);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-}
+-
+-/**
+- * of_detach_node - "Unplug" a node from the device tree.
+- *
+- * The caller must hold a reference to the node.  The memory associated with
+- * the node is not freed until its refcount goes to zero.
+- */
+-int of_detach_node(struct device_node *np)
+-{
+-	struct device_node *parent;
+-	unsigned long flags;
+-	int rc = 0;
+-
+-	rc = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
 -	if (rc)
 -		return rc;
- 
--	/* At early boot, bail out and defer setup to of_init() */
--	if (!of_kset)
--		return 0;
-+	if (!rc)
-+		__of_update_property_sysfs(np, newprop, oldprop);
- 
--	/* Update the sysfs attribute */
--	if (oldprop)
--		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
--	__of_add_property_sysfs(np, newprop);
-+	mutex_unlock(&of_mutex);
- 
--	return 0;
-+	return rc;
- }
- 
- static void of_alias_add(struct alias_prop *ap, struct device_node *np,
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 75fcc66fcefd..c875787fa394 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -41,11 +41,13 @@ void of_node_put(struct device_node *node)
- }
- EXPORT_SYMBOL(of_node_put);
- 
--static void of_node_remove(struct device_node *np)
-+void __of_detach_node_sysfs(struct device_node *np)
- {
- 	struct property *pp;
- 
- 	BUG_ON(!of_node_is_initialized(np));
-+	if (!of_kset)
-+		return;
- 
- 	/* only remove properties if on sysfs */
- 	if (of_node_is_attached(np)) {
-@@ -115,11 +117,13 @@ int of_attach_node(struct device_node *np)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_mutex);
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	__of_attach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	of_node_add(np);
-+	__of_attach_node_sysfs(np);
-+	mutex_unlock(&of_mutex);
- 	return 0;
- }
- 
-@@ -174,11 +178,13 @@ int of_detach_node(struct device_node *np)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_mutex);
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	__of_detach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
+-
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-
+-	if (of_node_check_flag(np, OF_DETACHED)) {
+-		/* someone already detached it */
+-		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-		return rc;
+-	}
+-
+-	parent = np->parent;
+-	if (!parent) {
+-		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-		return rc;
+-	}
+-
+-	if (of_allnodes == np)
+-		of_allnodes = np->allnext;
+-	else {
+-		struct device_node *prev;
+-		for (prev = of_allnodes;
+-		     prev->allnext != np;
+-		     prev = prev->allnext)
+-			;
+-		prev->allnext = np->allnext;
+-	}
+-
+-	if (parent->child == np)
+-		parent->child = np->sibling;
+-	else {
+-		struct device_node *prevsib;
+-		for (prevsib = np->parent->child;
+-		     prevsib->sibling != np;
+-		     prevsib = prevsib->sibling)
+-			;
+-		prevsib->sibling = np->sibling;
+-	}
+-
+-	of_node_set_flag(np, OF_DETACHED);
+-	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-
 -	of_node_remove(np);
-+	__of_detach_node_sysfs(np);
-+	mutex_unlock(&of_mutex);
- 	return rc;
- }
- 
+-	return rc;
+-}
+-#endif /* defined(CONFIG_OF_DYNAMIC) */
+-
+ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+ 			 int id, const char *stem, int stem_len)
+ {
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+new file mode 100644
+index 000000000000..125994330437
+--- /dev/null
++++ b/drivers/of/dynamic.c
+@@ -0,0 +1,216 @@
++/*
++ * Support for dynamic device trees.
++ *
++ * On some platforms, the device tree can be manipulated at runtime.
++ * The routines in this section support adding, removing and changing
++ * device tree nodes.
++ */
++
++#include <linux/of.h>
++#include <linux/spinlock.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/proc_fs.h>
++
++#include "of_private.h"
++
++/**
++ * of_node_get() - Increment refcount of a node
++ * @node:	Node to inc refcount, NULL is supported to simplify writing of
++ *		callers
++ *
++ * Returns node.
++ */
++struct device_node *of_node_get(struct device_node *node)
++{
++	if (node)
++		kobject_get(&node->kobj);
++	return node;
++}
++EXPORT_SYMBOL(of_node_get);
++
++/**
++ * of_node_put() - Decrement refcount of a node
++ * @node:	Node to dec refcount, NULL is supported to simplify writing of
++ *		callers
++ */
++void of_node_put(struct device_node *node)
++{
++	if (node)
++		kobject_put(&node->kobj);
++}
++EXPORT_SYMBOL(of_node_put);
++
++static void of_node_remove(struct device_node *np)
++{
++	struct property *pp;
++
++	BUG_ON(!of_node_is_initialized(np));
++
++	/* only remove properties if on sysfs */
++	if (of_node_is_attached(np)) {
++		for_each_property_of_node(np, pp)
++			sysfs_remove_bin_file(&np->kobj, &pp->attr);
++		kobject_del(&np->kobj);
++	}
++
++	/* finally remove the kobj_init ref */
++	of_node_put(np);
++}
++
++static BLOCKING_NOTIFIER_HEAD(of_reconfig_chain);
++
++int of_reconfig_notifier_register(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&of_reconfig_chain, nb);
++}
++EXPORT_SYMBOL_GPL(of_reconfig_notifier_register);
++
++int of_reconfig_notifier_unregister(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&of_reconfig_chain, nb);
++}
++EXPORT_SYMBOL_GPL(of_reconfig_notifier_unregister);
++
++int of_reconfig_notify(unsigned long action, void *p)
++{
++	int rc;
++
++	rc = blocking_notifier_call_chain(&of_reconfig_chain, action, p);
++	return notifier_to_errno(rc);
++}
++
++int of_property_notify(int action, struct device_node *np,
++		       struct property *prop)
++{
++	struct of_prop_reconfig pr;
++
++	/* only call notifiers if the node is attached */
++	if (!of_node_is_attached(np))
++		return 0;
++
++	pr.dn = np;
++	pr.prop = prop;
++	return of_reconfig_notify(action, &pr);
++}
++
++/**
++ * of_attach_node() - Plug a device node into the tree and global list.
++ */
++int of_attach_node(struct device_node *np)
++{
++	unsigned long flags;
++	int rc;
++
++	rc = of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
++	if (rc)
++		return rc;
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++	np->sibling = np->parent->child;
++	np->allnext = np->parent->allnext;
++	np->parent->allnext = np;
++	np->parent->child = np;
++	of_node_clear_flag(np, OF_DETACHED);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	of_node_add(np);
++	return 0;
++}
++
++/**
++ * of_detach_node() - "Unplug" a node from the device tree.
++ *
++ * The caller must hold a reference to the node.  The memory associated with
++ * the node is not freed until its refcount goes to zero.
++ */
++int of_detach_node(struct device_node *np)
++{
++	struct device_node *parent;
++	unsigned long flags;
++	int rc = 0;
++
++	rc = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
++	if (rc)
++		return rc;
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++
++	if (of_node_check_flag(np, OF_DETACHED)) {
++		/* someone already detached it */
++		raw_spin_unlock_irqrestore(&devtree_lock, flags);
++		return rc;
++	}
++
++	parent = np->parent;
++	if (!parent) {
++		raw_spin_unlock_irqrestore(&devtree_lock, flags);
++		return rc;
++	}
++
++	if (of_allnodes == np)
++		of_allnodes = np->allnext;
++	else {
++		struct device_node *prev;
++		for (prev = of_allnodes;
++		     prev->allnext != np;
++		     prev = prev->allnext)
++			;
++		prev->allnext = np->allnext;
++	}
++
++	if (parent->child == np)
++		parent->child = np->sibling;
++	else {
++		struct device_node *prevsib;
++		for (prevsib = np->parent->child;
++		     prevsib->sibling != np;
++		     prevsib = prevsib->sibling)
++			;
++		prevsib->sibling = np->sibling;
++	}
++
++	of_node_set_flag(np, OF_DETACHED);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	of_node_remove(np);
++	return rc;
++}
++
++/**
++ * of_node_release() - release a dynamically allocated node
++ * @kref: kref element of the node to be released
++ *
++ * In of_node_put() this function is passed to kref_put() as the destructor.
++ */
++void of_node_release(struct kobject *kobj)
++{
++	struct device_node *node = kobj_to_device_node(kobj);
++	struct property *prop = node->properties;
++
++	/* We should never be releasing nodes that haven't been detached. */
++	if (!of_node_check_flag(node, OF_DETACHED)) {
++		pr_err("ERROR: Bad of_node_put() on %s\n", node->full_name);
++		dump_stack();
++		return;
++	}
++
++	if (!of_node_check_flag(node, OF_DYNAMIC))
++		return;
++
++	while (prop) {
++		struct property *next = prop->next;
++		kfree(prop->name);
++		kfree(prop->value);
++		kfree(prop);
++		prop = next;
++
++		if (!prop) {
++			prop = node->deadprops;
++			node->deadprops = NULL;
++		}
++	}
++	kfree(node->full_name);
++	kfree(node->data);
++	kfree(node);
++}
 diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 0f6089722af9..0d99ba8caeed 100644
+index fcc70e74dfe0..c270f2037779 100644
 --- a/drivers/of/of_private.h
 +++ b/drivers/of/of_private.h
-@@ -33,6 +33,8 @@ struct alias_prop {
+@@ -33,4 +33,22 @@ struct alias_prop {
  
  extern struct mutex of_mutex;
  extern struct list_head aliases_lookup;
-+extern struct kset *of_kset;
 +
- 
- static inline struct device_node *kobj_to_device_node(struct kobject *kobj)
- {
-@@ -62,11 +64,19 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags);
- struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags);
- 
- extern int __of_add_property(struct device_node *np, struct property *prop);
-+extern int __of_add_property_sysfs(struct device_node *np,
-+		struct property *prop);
- extern int __of_remove_property(struct device_node *np, struct property *prop);
-+extern void __of_remove_property_sysfs(struct device_node *np,
-+		struct property *prop);
- extern int __of_update_property(struct device_node *np,
- 		struct property *newprop, struct property **oldprop);
-+extern void __of_update_property_sysfs(struct device_node *np,
-+		struct property *newprop, struct property *oldprop);
- 
- extern void __of_attach_node(struct device_node *np);
-+extern int __of_attach_node_sysfs(struct device_node *np);
- extern void __of_detach_node(struct device_node *np);
-+extern void __of_detach_node_sysfs(struct device_node *np);
- 
++static inline struct device_node *kobj_to_device_node(struct kobject *kobj)
++{
++	return container_of(kobj, struct device_node, kobj);
++}
++
++#if defined(CONFIG_OF_DYNAMIC)
++extern int of_property_notify(int action, struct device_node *np,
++			      struct property *prop);
++extern void of_node_release(struct kobject *kobj);
++#else /* CONFIG_OF_DYNAMIC */
++static inline int of_property_notify(int action, struct device_node *np,
++				     struct property *prop)
++{
++	return 0;
++}
++#endif /* CONFIG_OF_DYNAMIC */
++
  #endif /* _LINUX_OF_PRIVATE_H */
-diff --git a/include/linux/of.h b/include/linux/of.h
-index abf829a1f150..705fa12fca7f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -74,8 +74,6 @@ struct of_phandle_args {
- 	uint32_t args[MAX_PHANDLE_ARGS];
- };
- 
--extern int of_node_add(struct device_node *node);
--
- /* initialize a node */
- extern struct kobj_type of_node_ktype;
- static inline void of_node_init(struct device_node *node)
 -- 
 1.9.1
