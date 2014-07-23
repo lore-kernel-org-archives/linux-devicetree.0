@@ -1,58 +1,68 @@
-From: Daniel Jeong <gshark.jeong@gmail.com>
-Subject: [RFC v6 2/2] backlight: device tree: add new tps611xx backlight binding
-Date: Wed, 23 Jul 2014 17:10:52 +0900
-Message-ID: <1406103053-12225-3-git-send-email-gshark.jeong@gmail.com>
-References: <1406103053-12225-1-git-send-email-gshark.jeong@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1406103053-12225-1-git-send-email-gshark.jeong@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: Daniel Jeong <daniel.jeong@ti.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Daniel Jeong <gshark.jeong@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
+Date: Wed, 23 Jul 2014 13:55:57 +0530
+Message-ID: <CAKohponfKzuK+TnQvWcvaT8hRX8XZJWXWGMQw138DCwP=qcx+A@mail.gmail.com>
+References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
+	<1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>
+	<CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
+	<20140723065412.GA15759@ulmo.nvidia.com>
+	<CAKohponmg24pvnX2Jhfg5LHKKHx3VEm-6a_JXTGhVXY-aj3EOw@mail.gmail.com>
+	<20140723072442.GC15759@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140723072442.GC15759@ulmo.nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit is about tps611xx device tree documentation.
+On 23 July 2014 12:54, Thierry Reding <thierry.reding@gmail.com> wrote:
+> ARM_TEGRA_CPUFREQ is still optional, so the select only applies when the
+> Tegra cpufreq driver is enabled. This is mostly just out of convenience,
+> though. The Tegra cpufreq driver uses the generic CPU0 cpufreq driver so
+> a select will automatically pull in the necessary dependency. With a
 
-Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
----
-[v6]
-Nothing changed from v5. Driver files were changed
----
- .../video/backlight/tps611xx-backlight.txt         |   26 ++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+Not necessarily. cpufreq-cpu0 can have few unmet dependency. And so
+there are chances that tegra driver is compiled but cpufreq-cpu0 isn't as
+we didn't mention it as a *hard* dependency.
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-new file mode 100644
-index 0000000..905c61b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-@@ -0,0 +1,26 @@
-+TPS611xx family of backlight driver based on EasyScale.
-+
-+EasyScale is a simple but flexible one pin interface to configure the current.
-+
-+Required properties:
-+- compatible: should contain at least one of
-+  "ti,tps61158"
-+  "ti,tps61161"
-+  "ti,tps61163"
-+  "ti,tps61165"
-+- es-gpio : GPIO for easy-scale communication.(see GPIO binding[0])
-+
-+Optional properties:
-+- rfa-enable: enable request for acknowledge.
-+  If RFA is enabled, the data byte includes the RFA bit and device will wait
-+  and check acknowledge from device.
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible = "ti,tps61163";
-+		es-gpio = <&gpio 45 0>;
-+		rfa-enable;
-+	};
--- 
-1.7.9.5
+And so at boot, there wouldn't be any cpufreq support even when tegra's
+cpufreq driver is available.
 
+Though, menuconfig may give some warnings no such situations.
+
+> "depends on" the Tegra cpufreq driver only becomes available after
+> you've selected GENERIC_CPUFREQ_CPU0, which is somewhat unintuitive.
+>
+> To illustrate with an example: as a user, I want to enable CPU frequency
+> scaling on Tegra. So I use menuconfig to navigate to the "CPU Frequency
+> scaling" menu (enable it if not available yet) and look for an entry
+> that says "Tegra". But I can't find it because it's hidden due to the
+> lack of GENERIC_CPUFREQ_CPU0. That the Tegra CPU frequency driver uses a
+> generic driver is an implementation detail that users shouldn't have to
+> be aware of.
+
+Don't know, the guy compiling out stuff should be knowledgeable enough to
+have a look why tegra cpufreq entry isn't shown in menu. As, probably the
+above problem I mentioned looks to be of more significance than this one,
+atleast to me :)
+
+And, another thing to mention is that CONFIG_TEGRA_CPUFREQ is valid
+for earlier platforms as well and so a select/depends wouldn't be valid for
+earlier platforms. We probably need another Kconfig entry here.
+
+> But we're using cpu_dev->of_node, so we need to make sure cpu_dev
+> doesn't go away suddenly. Simply keeping a reference to ->of_node
+> won't ensure that.
+
+Oh, yeah I completely agree, but don't see that as a normal code style
+people follow. Probably they take cpu for granted, which doesn't look
+right :)
+
+> I guess technically it would be better if get_cpu_device() already
+> incremented the reference count on the returned struct device. Currently
+> it would theoretically still be possible for the device to disappear
+> between the call to get_cpu_device() and a call to get_device().
+
+I agree again.
