@@ -1,41 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
-Date: Wed, 23 Jul 2014 17:27:22 +0200
-Message-ID: <CACRpkdaCfrjNmkuRYVwdDHdt4myNkmTwmJjZU3AQr1SsSKBS3g@mail.gmail.com>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
-	<1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add dwc3-st.c file to ARCH/STI
+ architecture
+Date: Wed, 23 Jul 2014 16:29:02 +0100
+Message-ID: <20140723152902.GK23210@lee--X1>
+References: <1406126915-30601-1-git-send-email-peter.griffin@linaro.org>
+ <1406126915-30601-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406126915-30601-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 17, 2014 at 5:25 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+On Wed, 23 Jul 2014, Peter Griffin wrote:
 
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
->
-> This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
->
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-(...)
-> +static int qpnp_pinctrl_remove(struct platform_device *pdev)
-> +{
-> +       struct qpnp_pinctrl *qctrl = platform_get_drvdata(pdev);
-> +
-> +       pinctrl_unregister(qctrl->ctrl);
-> +
-> +       return gpiochip_remove(&qctrl->chip);
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 
-We're removing the return value from gpiochip_remove() and I
-have dropped the __must_check attribute today, so just remove
-it unconditionally and return 0;
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 702ca10..269ad3b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1325,6 +1325,7 @@ F:	drivers/pinctrl/pinctrl-st.c
+>  F:	drivers/media/rc/st_rc.c
+>  F:	drivers/i2c/busses/i2c-st.c
+>  F:	drivers/tty/serial/st-asc.c
+> +F:	drivers/usb/dwc3/dwc3-st.c
+> =20
+>  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+>  M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
 
-Sorry for short and lame comment on a large patch I should look
-closer at, but atleast it's something.
-
-Yours,
-Linus Walleij
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
