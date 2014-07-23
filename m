@@ -1,49 +1,79 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dts: tcs6507: Fix wrong statement about #gpio-cells
-Date: Tue, 22 Jul 2014 16:41:49 -0700
-Message-ID: <CAK5ve-+7K0maC9J2zfOW1U8=UGwbNPTKUBaQe6GgXyvY6VJhrA@mail.gmail.com>
-References: <1405977438-15517-1-git-send-email-marek@goldelico.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv8 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
+ code clean
+Date: Wed, 23 Jul 2014 10:41:52 +0900
+Message-ID: <53CF12E0.5030903@samsung.com>
+References: <1405994696-3117-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405977438-15517-1-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1405994696-3117-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 21, 2014 at 2:17 PM, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-> Update comment about gpio-cells which says not correctly to be set to 0.
-> When we want to reference tca6507 gpio #gpio-cells must be set to 2 (it is
-> already correct in example).
->
+Dear Jonathan,
 
-Good fix. I applied it
-Thanks,
--Bryan
+Could you please pick this patchset for 3.17?
 
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/leds/tca6507.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
-> index d7221b8..bad9102 100644
-> --- a/Documentation/devicetree/bindings/leds/tca6507.txt
-> +++ b/Documentation/devicetree/bindings/leds/tca6507.txt
-> @@ -8,7 +8,7 @@ Required properties:
->
->  Optional properties:
->  - gpio-controller: allows lines to be used as output-only GPIOs.
-> -- #gpio-cells: if present, must be 0.
-> +- #gpio-cells: if present, must not be 0.
->
->  Each led is represented as a sub-node of the ti,tca6507 device.
->
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Chanwoo Choi
+
+On 07/22/2014 11:04 AM, Chanwoo Choi wrote:
+> This patchset support Exynos3250 ADC (Analog Digital Converter) because
+> Exynos3250 has additional special clock for ADC IP.
+> 
+> Changes from v7:
+> - Add acked message by Arnd Bergmann
+> - Use two compatible string for Exynos3250 ADC as following:
+>   : compatible = "samsung,exynos3250-adc", "samsung,exynos-adc-v2;
+> 
+> Changes from v6:
+> - Use "exynos3250-adc" compatible string instead of "exynos3250-adc-v2"
+> - Use "sclk" clock name instead of "sclk_adc"
+> - Remove un-necessary macro for exyno-adc-data-v2 structure.
+> - Remove '(void *)' cast and mark the exynos-adc-data structure as 'const'
+> - Change the number of ADC channels (Exynos3250 has only two channels for ADC)
+> 
+> Changes from v5:
+> - Add acked message by Kukjin Kim
+> - Add reviewed messgae by Tomasz Figa
+> - Fix typo (for for -> for)
+> 
+> Changes from v4:
+> - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
+>   and remove enum variable of ADC version
+> - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
+> - Add reviewed message by Naveen Krishna Chatradhi
+> - Add functions for ADC clock control
+> 
+> Changes from v3:
+> - Add new 'exynos_adc_ops' structure to improve readability according to
+>  Tomasz Figa comment[1]
+>  [1] https://lkml.org/lkml/2014/4/16/238
+> - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
+> - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
+> 
+> Changes from v2:
+> - Check return value of clock function to deal with error exception
+> - Fix minor coding style to improve readability
+> 
+> Changes from v1:
+> - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
+> - Add a patch about DT binding documentation
+> 
+> Chanwoo Choi (4):
+>   iio: adc: exynos_adc: Add exynos_adc_data structure to improve
+>     readability
+>   iio: adc: exynos_adc: Control special clock of ADC to support
+>     Exynos3250 ADC
+>   iio: devicetree: Add DT binding documentation for Exynos3250 ADC
+>   ARM: dts: Fix wrong compatible string for Exynos3250 ADC
+> 
+>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |  25 +-
+>  arch/arm/boot/dts/exynos3250.dtsi                  |   5 +-
+>  drivers/iio/adc/exynos_adc.c                       | 335 +++++++++++++++------
+>  3 files changed, 275 insertions(+), 90 deletions(-)
+> 
