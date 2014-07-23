@@ -1,79 +1,68 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v5 1/2] serial: 8250_dw: Add optional reset control support
-Date: Wed, 23 Jul 2014 23:33:06 +0800
-Message-ID: <1406129587-24668-2-git-send-email-wens@csie.org>
-References: <1406129587-24668-1-git-send-email-wens@csie.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 2/3] usb: dwc3: dwc3-st: Add st-dwc3 devicetree
+ bindings documentation
+Date: Wed, 23 Jul 2014 16:34:25 +0100
+Message-ID: <20140723153425.GL23210@lee--X1>
+References: <1406126915-30601-1-git-send-email-peter.griffin@linaro.org>
+ <1406126915-30601-3-git-send-email-peter.griffin@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406129587-24668-1-git-send-email-wens@csie.org>
+Content-Disposition: inline
+In-Reply-To: <1406126915-30601-3-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A31 and A23 SoCs have a reset controller
-maintaining the UART in reset by default.
+On Wed, 23 Jul 2014, Peter Griffin wrote:
 
-This patch adds optional reset support to the driver.
+> This patch documents the device tree documentation required for
+> the ST usb3 controller glue layer found in STiH407 devices.
+>=20
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3-st.txt | 69 +++++++++++++=
+++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Docu=
+mentation/devicetree/bindings/usb/dwc3-st.txt
+> new file mode 100644
+> index 0000000..de3fea3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
+> @@ -0,0 +1,69 @@
+> +ST DWC3 glue logic
+> +
+> +This file documents the parameters for the dwc3-st driver.
+> +This driver controls the glue logic used to configure the dwc3 core =
+on
+> +STiH407 based platforms.
+> +
+> +Required properties:
+> + - compatible	: must be "st,stih407-dwc3"
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt | 1 +
- drivers/tty/serial/8250/8250_dw.c                             | 9 +++++++++
- 2 files changed, 10 insertions(+)
+Does this only exist for Cannes?
 
-diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-index 095ac71..7f76214 100644
---- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-@@ -15,6 +15,7 @@ The supplying peripheral clock can also be handled, needing a second property
- 	Required elements: "baudclk", "apb_pclk"
- 
- Optional properties:
-+- resets : phandle to the parent reset controller.
- - reg-shift : quantity to shift the register offsets by.  If this property is
-   not present then the register offsets are not shifted.
- - reg-io-width : the size (in bytes) of the IO accesses that should be
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index affdcb1..501db2f 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -26,6 +26,7 @@
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/clk.h>
-+#include <linux/reset.h>
- #include <linux/pm_runtime.h>
- 
- #include <asm/byteorder.h>
-@@ -60,6 +61,7 @@ struct dw8250_data {
- 	int			line;
- 	struct clk		*clk;
- 	struct clk		*pclk;
-+	struct reset_control	*rst;
- 	struct uart_8250_dma	dma;
- };
- 
-@@ -383,6 +385,10 @@ static int dw8250_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	data->rst = devm_reset_control_get_optional(&pdev->dev, NULL);
-+	if (!IS_ERR(data->rst))
-+		reset_control_deassert(data->rst);
-+
- 	data->dma.rx_chan_id = -1;
- 	data->dma.tx_chan_id = -1;
- 	data->dma.rx_param = data;
-@@ -426,6 +432,9 @@ static int dw8250_remove(struct platform_device *pdev)
- 
- 	serial8250_unregister_port(data->line);
- 
-+	if (!IS_ERR(data->rst))
-+		reset_control_assert(data->rst);
-+
- 	if (!IS_ERR(data->pclk))
- 		clk_disable_unprepare(data->pclk);
- 
--- 
-2.0.1
+> + - reg		: glue logic base address and USB syscfg ctrl register offse=
+t
+> + - reg-names	: should be "reg-glue" and "syscfg-reg"
+> + - st,syscon	: should be phandle to system configuration node which
+> +		  encompasses the glue registers
+
+This should be st,syscfg.  As you have it in the example.
+
+Besides this small issue, I don't see anything controversial so once
+fixed up, you can apply my:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
