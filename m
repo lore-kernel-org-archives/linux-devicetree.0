@@ -1,41 +1,84 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 2/2] Adding lenovo in vendor
-Date: Wed, 23 Jul 2014 13:26:46 -0400
-Message-ID: <20140723172646.GI23220@titan.lakedaemon.net>
-References: <1406117232-5962-1-git-send-email-yahoo@perenite.com>
- <1406117232-5962-2-git-send-email-yahoo@perenite.com>
- <20140723134756.GG23220@titan.lakedaemon.net>
- <20140723151033.GF2856@lunn.ch>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v6 2/7] drivers: cpuidle: implement DT based idle states
+ infrastructure
+Date: Wed, 23 Jul 2014 18:32:04 +0100
+Message-ID: <20140723173204.GB21746@e102568-lin.cambridge.arm.com>
+References: <1405958786-17243-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1405958786-17243-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAJ5Y-eY9YACzk_8LpZ9mnaj4stqOF_uWWt1+tL7nexqZj-ZFyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAJ5Y-eY9YACzk_8LpZ9mnaj4stqOF_uWWt1+tL7nexqZj-ZFyQ@mail.gmail.com>
 Content-Disposition: inline
-In-Reply-To: <20140723151033.GF2856@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: benoitm974 <yahoo@perenite.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, benoitm@perenite.com, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ashwin Chaugule <ashwin.chaugule@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Rob Herring <robh+dt@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 23, 2014 at 05:10:33PM +0200, Andrew Lunn wrote:
-> > > +lenovo	LENOVO
-> >=20
-> > is this their official, registered company name?
->=20
-> http://www.lenovo.com/ww/lenovo/FAQs.html says
->=20
-> 1. What is Lenovo=E2=80=99s stock symbol (ticker)?
-> HKSE: 992.hk
-> ADR (Level I): LNVGY
->=20
-> So i think lenovo is probably the more understandable vendor prefix,
-> even if it is not the official stock ticker.
->=20
-> However there official registered company name appears to be
-> Lenovo Group Limited.
+Hi Ashwin,
 
-Agreed, Benoit, please do 'lenovo  Lenovo Group Limited'
+On Wed, Jul 23, 2014 at 05:34:16PM +0100, Ashwin Chaugule wrote:
+> Hi Lorenzo,
+> 
+> On 21 July 2014 12:06, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> > +/**
+> > + * dt_init_idle_driver() - Parse the DT idle states and initialize the
+> > + *                        idle driver states array
+> > + *
+> > + * @drv:         Pointer to CPU idle driver to be initialized
+> > + * @start_idx:    First idle state index to be initialized
+> > + *
+> > + * On success the states array in the cpuidle driver contains
+> > + * initialized entries in the states array, starting from index start_idx.
+> > + *
+> > + * Return:
+> > + *     0 on success
+> > + *     <0 on failure
+> > + */
+> > +int dt_init_idle_driver(struct cpuidle_driver *drv, unsigned int start_idx)
+> > +{
+> > +       unsigned int i, state_idx = start_idx;
+> > +       struct cpuidle_state *idle_state;
+> > +       struct device_node *state_node, *cpu_node;
+> > +
+> > +
+> > +       if (state_idx >= CPUIDLE_STATE_MAX)
+> > +               return -EINVAL;
+> > +       /*
+> > +        * We get the idle states for the first logical cpu in the
+> > +        * driver mask. The kernel does not check idle states on all
+> > +        * cpus in the driver mask, they are assumed to be the same
+> > +        * by default.
+> > +        */
+> > +       cpu_node = of_cpu_device_node_get(cpumask_first(drv->cpumask));
+> 
+> Is this an assumption for the short term? My understanding from the
+> corresponding ACPI discussions is that the order of idle states may
+> not necessarily be same for all CPUs, even for big.Little?
 
-thx,
+Well, it is more of a problem of the CPUidle infrastructure than related
+to this specific patchset. The idle states for a specific cpumask (ie CPUidle
+driver) are expected to be all the same, same order same data.
 
-Jason.
+Current driver can be used on homegeneous ARM64 SMP systems, but I am fairly
+confident we can extend it for big.LITTLE and also other funky SMP
+configurations, the parsing code only expects all cpus in the mask
+to have the same set of idle states (and so does the CPUidle core), if that's
+not the case, the cpus belong in different CPUidle drivers (ie a CPUidle
+driver is a set of states valid on a cpumask).
+
+So my answer is yes, it is a proper assumption and not only for the
+short term, but in general.
+
+HTH,
+Lorenzo
