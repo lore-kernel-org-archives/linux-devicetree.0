@@ -1,92 +1,165 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2 06/10] ARM: DRA7: hwmod_data: Add mailbox hwmod data
-Date: Wed, 23 Jul 2014 02:24:51 -0700
-Message-ID: <20140723092449.GF22006@atomide.com>
-References: <1405115083-52977-1-git-send-email-s-anna@ti.com>
- <1405115083-52977-7-git-send-email-s-anna@ti.com>
- <20140715133013.GA2605@atomide.com>
- <53C55D68.8050308@ti.com>
- <20140716070708.GC2605@atomide.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v3 1/2] media: soc_camera: pxa_camera device-tree support
+Date: Wed, 23 Jul 2014 11:28:06 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407231126210.30243@axis700.grange>
+References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140716070708.GC2605@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, Dave Gerlach <d-gerlach@ti.com>, Jassi Brar <jaswinder.singh@linaro.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-media-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [140716 00:10]:
-> * Suman Anna <s-anna@ti.com> [140715 09:59]:
-> > Hi Tony,
-> > 
-> > On 07/15/2014 08:30 AM, Tony Lindgren wrote:
-> > > * Suman Anna <s-anna@ti.com> [140711 14:47]:
-> > >> Add the hwmod data for the 13 instances of the system mailbox
-> > >> IP in DRA7 SoC. The patch is needed for performing a soft-reset
-> > >> while configuring the respective mailbox instance, otherwise is
-> > >> a non-essential change for functionality. The modules are smart
-> > >> idled on reset, and the IP module mode is hardware controlled.
-> > >>
-> > >> Cc: Rajendra Nayak <rnayak@ti.com>
-> > >> Cc: Paul Walmsley <paul@pwsan.com>
-> > >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> > >> ---
-> > >>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 305 ++++++++++++++++++++++++++++++
-> > >>  1 file changed, 305 insertions(+)
-> > >>
-> > >> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> > >> index 20b4398..e35f5b1 100644
-> > >> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> > >> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> > >> @@ -939,6 +939,194 @@ static struct omap_hwmod dra7xx_i2c5_hwmod = {
-> > >>  };
-> > >>  
-> > >>  /*
-> > >> + * 'mailbox' class
-> > >> + *
-> > >> + */
-> > >> +
-> > >> +static struct omap_hwmod_class_sysconfig dra7xx_mailbox_sysc = {
-> > >> +	.rev_offs	= 0x0000,
-> > >> +	.sysc_offs	= 0x0010,
-> > >> +	.sysc_flags	= (SYSC_HAS_RESET_STATUS | SYSC_HAS_SIDLEMODE |
-> > >> +			   SYSC_HAS_SOFTRESET),
-> > >> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
-> > >> +	.sysc_fields	= &omap_hwmod_sysc_type2,
-> > >> +};
-> > >> +
-> > >> +static struct omap_hwmod_class dra7xx_mailbox_hwmod_class = {
-> > >> +	.name	= "mailbox",
-> > >> +	.sysc	= &dra7xx_mailbox_sysc,
-> > >> +};
-> > > 
-> > > Hmm I'm seeing just the following MAILBOX_SYSCONFIG in at least
-> > > am57xx TRM:
-> > > 
-> > > 31:4	RESERVED
-> > > 3:2	SIDLEMODE	0 = force-idle 1 = no-idle, 2 = smart-idle, 3 = reserved
-> > > 1	RESERVED
-> > > 0	SOFTRESET
-> > > 
-> > > So it seems that SYSC_HAS_RESET_STATUS above is wrong? Can you guys
-> > > please check.
-> > 
-> > The same SOFTRESET bit is used for both triggering the softreset and
-> > reading the reset done status. Once you write a 1 to trigger a reset,
-> > the bit will be cleared once the reset is done. This is no different
-> > from OMAP4. The logic in _wait_softreset_complete in omap_hwmod.c was
-> > already designed to work with this properly.
+Hi Robert,
+
+Thanks for an updated patch. One question:
+
+On Sun, 29 Jun 2014, Robert Jarzmik wrote:
+
+> Add device-tree support to pxa_camera host driver.
 > 
-> Oh OK, I guess I got it confused with SYSS_HAS_RESET_STATUS. Paul,
-> want to ack this one if no other issues? I can then set this series
-> into a branch against -rc1 that we can all merge in as needed as
-> it seems that the driver changes may need this branch as a base too.
+> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> 
+> ---
+> Since V1: Mark's review
+>           - tmp u32 to long conversion for clock rate
+>           - use device-tree clock binding for mclk output clock
+>           - wildcard pxa27x becomes pxa270
+> ---
+>  drivers/media/platform/soc_camera/pxa_camera.c | 80 +++++++++++++++++++++++++-
+>  1 file changed, 78 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/soc_camera/pxa_camera.c b/drivers/media/platform/soc_camera/pxa_camera.c
+> index d4df305..e76c2ab 100644
+> --- a/drivers/media/platform/soc_camera/pxa_camera.c
+> +++ b/drivers/media/platform/soc_camera/pxa_camera.c
+> @@ -34,6 +34,7 @@
+>  #include <media/videobuf-dma-sg.h>
+>  #include <media/soc_camera.h>
+>  #include <media/soc_mediabus.h>
+> +#include <media/v4l2-of.h>
+>  
+>  #include <linux/videodev2.h>
+>  
+> @@ -1650,6 +1651,67 @@ static struct soc_camera_host_ops pxa_soc_camera_host_ops = {
+>  	.set_bus_param	= pxa_camera_set_bus_param,
+>  };
+>  
+> +static int pxa_camera_pdata_from_dt(struct device *dev,
+> +				    struct pxa_camera_dev *pcdev)
+> +{
+> +	int err = 0;
+> +	u32 mclk_rate = 0;
+> +	struct device_node *np = dev->of_node;
+> +	struct v4l2_of_endpoint ep;
+> +
+> +	err = of_property_read_u32(np, "clock-frequency",
+> +				   &mclk_rate);
+> +	if (!err) {
+> +		pcdev->platform_flags |= PXA_CAMERA_MCLK_EN;
+> +		pcdev->mclk = mclk_rate;
+> +	}
+> +
+> +	np = of_graph_get_next_endpoint(np, NULL);
 
-I have applied these into omap-for-v3.17/mailbox and merged also
-into omap-for-v3.17/soc.
+Isn't an of_node_put() required after this?
 
-Regards,
+Thanks
+Guennadi
 
-Tony
+> +	if (!np) {
+> +		dev_err(dev, "could not find endpoint\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = v4l2_of_parse_endpoint(np, &ep);
+> +	if (err) {
+> +		dev_err(dev, "could not parse endpoint\n");
+> +		return err;
+> +	}
+> +
+> +	switch (ep.bus.parallel.bus_width) {
+> +	case 4:
+> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_4;
+> +		break;
+> +	case 5:
+> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_5;
+> +		break;
+> +	case 8:
+> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_8;
+> +		break;
+> +	case 9:
+> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_9;
+> +		break;
+> +	case 10:
+> +		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_10;
+> +		break;
+> +	default:
+> +		break;
+> +	};
+> +
+> +	if (ep.bus.parallel.flags & V4L2_MBUS_MASTER)
+> +		pcdev->platform_flags |= PXA_CAMERA_MASTER;
+> +	if (ep.bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +		pcdev->platform_flags |= PXA_CAMERA_HSP;
+> +	if (ep.bus.parallel.flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +		pcdev->platform_flags |= PXA_CAMERA_VSP;
+> +	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +		pcdev->platform_flags |= PXA_CAMERA_PCLK_EN | PXA_CAMERA_PCP;
+> +	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
+> +		pcdev->platform_flags |= PXA_CAMERA_PCLK_EN;
+> +
+> +	return 0;
+> +}
+> +
+>  static int pxa_camera_probe(struct platform_device *pdev)
+>  {
+>  	struct pxa_camera_dev *pcdev;
+> @@ -1676,7 +1738,15 @@ static int pxa_camera_probe(struct platform_device *pdev)
+>  	pcdev->res = res;
+>  
+>  	pcdev->pdata = pdev->dev.platform_data;
+> -	pcdev->platform_flags = pcdev->pdata->flags;
+> +	if (&pdev->dev.of_node && !pcdev->pdata) {
+> +		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev);
+> +	} else {
+> +		pcdev->platform_flags = pcdev->pdata->flags;
+> +		pcdev->mclk = pcdev->pdata->mclk_10khz * 10000;
+> +	}
+> +	if (err < 0)
+> +		return err;
+> +
+>  	if (!(pcdev->platform_flags & (PXA_CAMERA_DATAWIDTH_8 |
+>  			PXA_CAMERA_DATAWIDTH_9 | PXA_CAMERA_DATAWIDTH_10))) {
+>  		/*
+> @@ -1693,7 +1763,6 @@ static int pxa_camera_probe(struct platform_device *pdev)
+>  		pcdev->width_flags |= 1 << 8;
+>  	if (pcdev->platform_flags & PXA_CAMERA_DATAWIDTH_10)
+>  		pcdev->width_flags |= 1 << 9;
+> -	pcdev->mclk = pcdev->pdata->mclk_10khz * 10000;
+>  	if (!pcdev->mclk) {
+>  		dev_warn(&pdev->dev,
+>  			 "mclk == 0! Please, fix your platform data. "
+> @@ -1799,10 +1868,17 @@ static const struct dev_pm_ops pxa_camera_pm = {
+>  	.resume		= pxa_camera_resume,
+>  };
+>  
+> +static const struct of_device_id pxa_camera_of_match[] = {
+> +	{ .compatible = "marvell,pxa270-qci", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, pxa_camera_of_match);
+> +
+>  static struct platform_driver pxa_camera_driver = {
+>  	.driver		= {
+>  		.name	= PXA_CAM_DRV_NAME,
+>  		.pm	= &pxa_camera_pm,
+> +		.of_match_table = of_match_ptr(pxa_camera_of_match),
+>  	},
+>  	.probe		= pxa_camera_probe,
+>  	.remove		= pxa_camera_remove,
+> -- 
+> 2.0.0.rc2
+> 
