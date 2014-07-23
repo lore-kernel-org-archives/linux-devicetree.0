@@ -1,190 +1,156 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
-Date: Wed, 23 Jul 2014 21:01:10 +0300
-Message-ID: <53CFF866.6060703@ti.com>
-References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com> <53CFD581.5040908@gmail.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v4 1/2] media: soc_camera: pxa_camera device-tree support
+Date: Wed, 23 Jul 2014 19:17:24 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407231915310.1526@axis700.grange>
+References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
+ <Pine.LNX.4.64.1407231126210.30243@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53CFD581.5040908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1407231126210.30243@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add device-tree support to pxa_camera host driver.
 
-On 07/23/2014 06:32 PM, Varka Bhadram wrote:
-> 
-> On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
->> On Keystone SOCs, DSP cores can send interrupts to ARM
->> host using the IRQ controller IP. It provides 28 IRQ
->> signals to ARM. The IRQ handler running on HOST OS can
->> identify DSP signal source by analyzing SRCCx bits in
->> IPCARx registers. This is one of the component used by
->> the IPC mechanism used on Keystone SOCs.
-> 
-> (...)
-> 
->> +Required Properties:
->> +- compatible: should be "ti,keystone-irq"
->> +- ti,syscon-dev : phandle and offset pair. The phandle to syscon used to
->> +            access device control registers and the offset inside
->> +            device control registers range.
->> +- interrupt-controller : Identifies the node as an interrupt controller
->> +- #interrupt-cells : Specifies the number of cells needed to encode 
->> interrupt
->> +                     source should be 1.
->> +- interrupts: interrupt reference to primary interrupt controller
-> 
-> proper indentation for the properties
-> 
-> - compatible        : Should be "ti,keystone-irq"
-> - ti,syscon-dev        : phandle and offset pair. The phandle to syscon 
-> used to
->                access device control registers and the offset inside
->                device control registers range.
-> 
->> +
->> +Please refer to interrupts.txt in this directory for details of the 
->> common
->> +Interrupt Controllers bindings used by client devices.
->> +
-> 
-> (...)
-> 
->> +#include <linux/irq.h>
->> +#include <linux/bitops.h>
->> +#include <linux/module.h>
->> +#include <linux/moduleparam.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
-> 
-> Includes in alphabetical order...
-> 
-> Give one line gap before local includes..
-> 
-> ...
-> #include <linux/regmap.h>
-> 
-> #include "irqchip.h"
-> 
->> +#include "irqchip.h"
->> +
->> +
->> +/* The source ID bits start from 4 to 31 (total 28 bits)*/
->> +#define BIT_OFS            4
->> +#define KEYSTONE_N_IRQ        (32 - BIT_OFS)
->> +
->> +struct keystone_irq_device {
->> +    struct device        *dev;
->> +    struct irq_chip         chip;
->> +    u32             mask;
->> +    u32             irq;
->> +    struct irq_domain    *irqd;
->> +    struct regmap        *devctrl_regs;
->> +    u32            devctrl_offset;
->> +};
->> +
->> +static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
->> +{
->> +    int ret;
->> +    u32 val = 0;
->> +
->> +    ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
->> +    if (ret < 0)
->> +        dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
->> +    return val;
->> +}
->> +
->> +static inline void
->> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
->> +{
->> +    int ret;
->> +
->> +    ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
->> +    if (ret < 0)
->> +        dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
-> 
-> It can be like
-> 
-> if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
->      dev_dbg(kirq->dev, "irq write failed \n");
-> 
->> +}
->> +
->> +
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+[g.liakhovetski@gmx.de: added of_node_put()]
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+---
 
-Pls, Pay attention that I'd like to see ret code here in case of failure.
+Robert, could you review and test this version, please?
 
-> 
-> (...)
-> 
->> +}
->> +
->> +static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
->> +                irq_hw_number_t hw)
-> 
-> should match open parenthesis:
-> 
-> static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
->                  irq_hw_number_t hw)
-> 
->> +{
->> +    struct keystone_irq_device *kirq = h->host_data;
->> +
->> +    irq_set_chip_data(virq, kirq);
->> +    irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
->> +    set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
->> +    return 0;
->> +}
->> +
->> +static struct irq_domain_ops keystone_irq_ops = {
->> +    .map    = keystone_irq_map,
->> +    .xlate    = irq_domain_xlate_onecell,
->> +};
->> +
->> +static int keystone_irq_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct device_node *np = dev->of_node;
->> +    struct keystone_irq_device *kirq;
->> +    int ret;
->> +
->> +    if (np == NULL)
->> +        return -EINVAL;
-> 
-> return -ENODEV??????
+Thanks
+Guennadi
 
-If probe is executed - the dev is present, but it was created in a wrong/unsupported way
-or dev structure contains wrong data.
+ drivers/media/platform/soc_camera/pxa_camera.c | 81 +++++++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 2 deletions(-)
 
-> 
-> (...)
-> 
->> +static struct platform_driver keystone_irq_device_driver = {
->> +    .probe        = keystone_irq_probe,
->> +    .remove        = keystone_irq_remove,
->> +    .driver        = {
->> +        .name    = "keystone_irq",
->> +        .owner    = THIS_MODULE,
-> 
-> No need to update it. Its done by module_platform_driver()..
-> 
->> +        .of_match_table    = of_match_ptr(keystone_irq_dt_ids),
-> 
-> This driver is always populate through the dts file. So no need to use
-> of_match_ptr....
-> 
-
-Regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/media/platform/soc_camera/pxa_camera.c b/drivers/media/platform/soc_camera/pxa_camera.c
+index d4df305..64dc80c 100644
+--- a/drivers/media/platform/soc_camera/pxa_camera.c
++++ b/drivers/media/platform/soc_camera/pxa_camera.c
+@@ -34,6 +34,7 @@
+ #include <media/videobuf-dma-sg.h>
+ #include <media/soc_camera.h>
+ #include <media/soc_mediabus.h>
++#include <media/v4l2-of.h>
+ 
+ #include <linux/videodev2.h>
+ 
+@@ -1650,6 +1651,68 @@ static struct soc_camera_host_ops pxa_soc_camera_host_ops = {
+ 	.set_bus_param	= pxa_camera_set_bus_param,
+ };
+ 
++static int pxa_camera_pdata_from_dt(struct device *dev,
++				    struct pxa_camera_dev *pcdev)
++{
++	u32 mclk_rate;
++	struct device_node *np = dev->of_node;
++	struct v4l2_of_endpoint ep;
++	int err = of_property_read_u32(np, "clock-frequency",
++				       &mclk_rate);
++	if (!err) {
++		pcdev->platform_flags |= PXA_CAMERA_MCLK_EN;
++		pcdev->mclk = mclk_rate;
++	}
++
++	np = of_graph_get_next_endpoint(np, NULL);
++	if (!np) {
++		dev_err(dev, "could not find endpoint\n");
++		return -EINVAL;
++	}
++
++	err = v4l2_of_parse_endpoint(np, &ep);
++	if (err) {
++		dev_err(dev, "could not parse endpoint\n");
++		goto out;
++	}
++
++	switch (ep.bus.parallel.bus_width) {
++	case 4:
++		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_4;
++		break;
++	case 5:
++		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_5;
++		break;
++	case 8:
++		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_8;
++		break;
++	case 9:
++		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_9;
++		break;
++	case 10:
++		pcdev->platform_flags |= PXA_CAMERA_DATAWIDTH_10;
++		break;
++	default:
++		break;
++	};
++
++	if (ep.bus.parallel.flags & V4L2_MBUS_MASTER)
++		pcdev->platform_flags |= PXA_CAMERA_MASTER;
++	if (ep.bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pcdev->platform_flags |= PXA_CAMERA_HSP;
++	if (ep.bus.parallel.flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pcdev->platform_flags |= PXA_CAMERA_VSP;
++	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pcdev->platform_flags |= PXA_CAMERA_PCLK_EN | PXA_CAMERA_PCP;
++	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
++		pcdev->platform_flags |= PXA_CAMERA_PCLK_EN;
++
++out:
++	of_node_put(np);
++
++	return err;
++}
++
+ static int pxa_camera_probe(struct platform_device *pdev)
+ {
+ 	struct pxa_camera_dev *pcdev;
+@@ -1676,7 +1739,15 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 	pcdev->res = res;
+ 
+ 	pcdev->pdata = pdev->dev.platform_data;
+-	pcdev->platform_flags = pcdev->pdata->flags;
++	if (&pdev->dev.of_node && !pcdev->pdata) {
++		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev);
++	} else {
++		pcdev->platform_flags = pcdev->pdata->flags;
++		pcdev->mclk = pcdev->pdata->mclk_10khz * 10000;
++	}
++	if (err < 0)
++		return err;
++
+ 	if (!(pcdev->platform_flags & (PXA_CAMERA_DATAWIDTH_8 |
+ 			PXA_CAMERA_DATAWIDTH_9 | PXA_CAMERA_DATAWIDTH_10))) {
+ 		/*
+@@ -1693,7 +1764,6 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 		pcdev->width_flags |= 1 << 8;
+ 	if (pcdev->platform_flags & PXA_CAMERA_DATAWIDTH_10)
+ 		pcdev->width_flags |= 1 << 9;
+-	pcdev->mclk = pcdev->pdata->mclk_10khz * 10000;
+ 	if (!pcdev->mclk) {
+ 		dev_warn(&pdev->dev,
+ 			 "mclk == 0! Please, fix your platform data. "
+@@ -1799,10 +1869,17 @@ static const struct dev_pm_ops pxa_camera_pm = {
+ 	.resume		= pxa_camera_resume,
+ };
+ 
++static const struct of_device_id pxa_camera_of_match[] = {
++	{ .compatible = "marvell,pxa270-qci", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, pxa_camera_of_match);
++
+ static struct platform_driver pxa_camera_driver = {
+ 	.driver		= {
+ 		.name	= PXA_CAM_DRV_NAME,
+ 		.pm	= &pxa_camera_pm,
++		.of_match_table = of_match_ptr(pxa_camera_of_match),
+ 	},
+ 	.probe		= pxa_camera_probe,
+ 	.remove		= pxa_camera_remove,
+-- 
+1.9.3
