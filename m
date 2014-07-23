@@ -1,152 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC V2] devicetree: Dialog Semiconductor consolidate existing
- vendor prefixes to standardise on 'dlg'
-Date: Wed, 23 Jul 2014 11:12:54 +0100
-Message-ID: <20140723101254.GH23210@lee--X1>
-References: <201407151520.s6FFKcjB009745@swsrvapps-01.diasemi.com>
- <20140722070927.GC28529@lee--X1>
- <6ED8E3B22081A4459DAC7699F3695FB7D0B2762A@SW-EX-MBX02.diasemi.com>
+From: Andrew Jackson <Andrew.Jackson@arm.com>
+Subject: Re: [PATCH v3] ASoC: tda998x: add a codec to the HDMI
+	transmitter
+Date: Wed, 23 Jul 2014 11:22:06 +0100
+Message-ID: <53CF8CCE.3030205@arm.com>
+References: <20140708114057.5ef3cfd0@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B2762A@SW-EX-MBX02.diasemi.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, LINUX SH <linux-sh@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <Support.Opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.or>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140708114057.5ef3cfd0@armhf>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMyBKdWwgMjAxNCwgT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIHdyb3RlOgoKPiAK
-PiBPbiAyMiBKdWx5IDIwMTQgMDg6MDksIExlZSBKb25lcyB3cm90ZToKPiAKPiA+LS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0KPiA+RnJvbTogTGVlIEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxp
-bmFyby5vcmddCj4gPj4gRnJvbTogT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIDxzdHdpc3Mub3Bl
-bnNvdXJjZUBkaWFzZW1pLmNvbT4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2ggc2VyaWVzIHVwZGF0ZXMg
-dGhlIGRldmljZSB0cmVlIHZlbmRvciBwcmVmaXggZm9yCj4gPj4gRGlhbG9nIFNlbWljb25kdWN0
-b3IuCj4gPj4KPiA+PiBWYXJpb3VzIG1ldGhvZHMgYXJlIGN1cnJlbnRseSB1c2VkIHRocm91Z2hv
-dXQgdGhlIGtlcm5lbDogJ2RpYXNlbWknLAo+ID4+ICdkaWFsb2cnIGFuZCAnZGxnJy4gT3RoZXJz
-IGhhdmUgYWxzbyBiZWVuIHN1Z2dlc3RlZC4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2ggc2V0IGFpbXMg
-dG8gY29uc29saWRhdGUgdGhlIHVzYWdlIG9mIHRoZSB2ZW5kb3IgcHJlZml4IHRvCj4gPj4gdXNl
-IGEgY29tbW9uIHN0YW5kYXJkLiBUaGUgcHJlZml4ICdkbGcnIGlzIHVzZWQuCj4gPj4KPiA+PiBI
-ZXJlIGlzIG15IHdvcmtpbmcgZm9yIGp1c3RpZnlpbmcgdGhpcyBjaGFuZ2U6Cj4gPj4KPiA+PiAu
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpCj4gPj4gCUhhcyB0
-aGUgZm9sbG93aW5nIGVudHJ5Ogo+ID4+IAljb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNjMiOwo+
-ID4+IAlIb3dldmVyIHRoZSBEQTkwNjMgZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgZGV2aWNlIHRy
-ZWUgeWV0IHNvCj4gPj4gCWl0IHdvdWxkIGJlIHNhZmUgdG8gcmVuYW1lIHRoaXMuCj4gPj4KPiA+
-PiAuL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMKPiA+PiAJSGFzIHRoZSBmb2xsb3dp
-bmcgZW50cnk6Cj4gPj4gCWNvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1MyIsICJkaWFsb2csZGE5
-MDUyIjsKPiA+PiAJSG93ZXZlciwgdGhlIGV4aXN0aW5nIGRyaXZlciBmaWxlcyBmb3IgREE5MDUz
-IGRlZmluZSBhIGRpZmZlcmVudAo+ID4+IAljb21wYXRpYmxlIHN0cmluZyB3aXRoIHRoZSAiZGxn
-IiBwcmVmaXguIFNlZSB0aGUgZW50cmllcyBiZWxvdy4KPiA+PiAJTm9uZSBvZiB0aGVzZSB3b3Vs
-ZCBoYXZlIGFsbG93ZWQgdGhlICJkaWFsb2ciIHByZWZpeC4KPiA+PiAJeyAuY29tcGF0aWJsZSA9
-ICJkbGcsZGE5MDUyIiwgLmRhdGEgPSAmZGE5MDUyX2kyY19pZFswXSB9LAo+ID4+IAl7IC5jb21w
-YXRpYmxlID0gImRsZyxkYTkwNTMtYWEiLCAuZGF0YSA9ICZkYTkwNTJfaTJjX2lkWzFdIH0sCj4g
-Pj4gCXsgLmNvbXBhdGlibGUgPSAiZGxnLGRhOTA1My1iYSIsIC5kYXRhID0gJmRhOTA1Ml9pMmNf
-aWRbMl0gfSwKPiA+PiAJeyAuY29tcGF0aWJsZSA9ICJkbGcsZGE5MDUzLWJiIiwgLmRhdGEgPSAm
-ZGE5MDUyX2kyY19pZFszXSB9LAo+ID4+IAl7IC5jb21wYXRpYmxlID0gImRsZyxkYTkwNTMtYmMi
-LCAuZGF0YSA9ICZkYTkwNTJfaTJjX2lkWzRdIH0sCj4gPj4gCUluIHRoaXMgcGFydGljdWxhciBj
-YXNlIHRoZSBjaGFuZ2UgZm9yIERBOTA1MyBkaWQgbm90IG1hdGNoIHVwCj4gPj4gCXdpdGggdGhl
-IGV4cGVjdGVkIGNvbXBhdGliaWxpdHkgc3RyaW5ncyBhbmQgdGhlcmVmb3JlIEkgaGF2ZQo+ID4+
-IAlyZXRhaW5lZCB0aGUgbW9yZSBnZW5lcmFsICJkbGcsZGE5MDUzIiBiZWNhdXNlIEkgZG8gbm90
-IGtub3cKPiA+PiAJd2hpY2ggc2lsaWNvbiB2YXJpYW50ICgtYWEsIC1iYSwgLWJiLCBvciAtYmMp
-IGlzIHRoZSBjb3JyZWN0Cj4gPj4gCW9uZSB0byB1c2UuCj4gPj4KPiA+PiAuL2RldmljZXRyZWUv
-YmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKPiA+PiAJSGFzIHRoZSBmb2xsb3dpbmcg
-ZW50cnk6Cj4gPj4gCWRpYWxvZyxkYTkwNTMgIERBOTA1MzogZmxleGlibGUgc3lzdGVtIGxldmVs
-IFBNSUMgd2l0aCBtdWx0aWNvcmUgc3VwcG9ydAo+ID4+IAlJbnN0ZWFkIG9mIGRlcHJlY2lhdGlu
-ZyB0aGlzICJkaWFsb2ciIGxpbmUgSSBhbSBqdXN0IHJlcGxhY2luZyBpdAo+ID4+IAl3aXRoIGEg
-ImRsZyIgYmVjYXVzZSB0aGUgZXhpc3RpbmcgZHJpdmVyIERBOTA1MyBkb2VzIG5vdCBzdXBwb3J0
-Cj4gPj4gCXRoZSBkaWFsb2cga2V5d29yZC4KPiA+Pgo+ID4+IC4vZHJpdmVycy9tZmQvZGE5MDU1
-LWNvcmUuYwo+ID4+IAlIYXMgdGhlIGZvbGxvd2luZyBlbnRyaWVzIGZvciB0aGUgbWZkIGNlbGxz
-Cj4gPj4gCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LWdwaW8iLCBldGMuLi4KPiA+
-PiAJSW4gdGhpcyBjYXNlLCB0aGUgZHJpdmVyIGRvZXMgbm90IGFjdHVhbGx5IHBhc3MgaW4gYW55
-IHBsYXRmb3JtIGRhdGEKPiA+PiAJdG8gYW55IG9mIHRoZSBtZmQgY2VsbHMgYW5kIHNvIHRoZXkg
-YXJlIG5vdCBhY3R1YWxseSB1c2VkCj4gPj4gCXlldCBpbiB0aGUgZHJpdmVyLiBOb2JvZHkgZWxz
-ZSByZWZlcmVuY2VzIHRoaXMgaW5mb3JtYXRpb24uCj4gPj4KPiA+PiAuL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQKPiA+PiAJSGFzIHRoZSBmb2xsb3dpbmcgdHdvIGVu
-dHJpZXMgaW4gdGhlIGJpbmRpbmcgZmlsZToKPiA+PiAJLSBjb21wYXRpYmxlOgltdXN0IGJlICJk
-aWFzZW1pLGRhOTIxMCIKPiA+PiAJY29tcGF0aWJsZSA9ICJkaWFzZW1pLGRhOTIxMCI7Cj4gPj4g
-CUhvd2V2ZXIgdGhlIERBOTIxMCBkcml2ZXIgZG9lcyBub3Qgc3VwcG9ydCBkZXZpY2UgdHJlZS4K
-PiA+Pgo+ID4+IC4vYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MC1sYWdlci5kdHMKPiA+PiAuL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEta29lbHNjaC5kdHMKPiA+PiAJVGhlc2UgdHdvIGZpbGVz
-IGhhdmUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOgo+ID4+IAljb21wYXRpYmxlID0gImRpYXNlbWks
-ZGE5MjEwIjsKPiA+PiAJVGhlc2UgYm90aCByZWZlcmVuY2UgdGhlICJkaWFzZW1pLGRhOTIxMCIg
-YnV0IHRoZSBkZXZpY2UKPiA+PiAJZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgZGV2aWNlIHRyZWUK
-PiA+Pgo+ID4+IFRoZSByZW1haW5pbmcgZmlsZXMgaW4gdGhlIGtlcm5lbCBJIGhhdmUgZm91bmQg
-Y29ycmVjdGx5IHJlZmVyZW5jZXMKPiA+PiB0aGUgZHJpdmVyIGZpbGVzIGNvbXBhdGliaWxpdHkg
-aW5mb3JtYXRpb24gYW5kIHNvIGRpZCBub3QgbmVlZCB0bwo+ID4+IGJlIGNoYW5nZWQuCj4gPj4K
-PiA+PiAuL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTA1Mi1pMmMudHh0Cj4gPj4gCS0gY29t
-cGF0aWJsZSA6IFNob3VsZCBiZSAiZGxnLGRhOTA1MiIsICJkbGcsZGE5MDUzLWFhIiwKPiA+PiAJ
-CSAiZGxnLGRhOTA1My1hYiIsIG9yICJkbGcsZGE5MDUzLWJiIgo+ID4+Cj4gPj4gLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL21mZC9kYTkwNTUudHh0Cj4gPj4gCWNvbXBhdGlibGUgPSAiZGxnLGRhOTA1
-NS1wbWljIjsKPiA+Pgo+ID4+IC4vYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMtdm9pcGFjLWRtbS02
-NjguZHRzaQo+ID4+IAljb21wYXRpYmxlID0gImRsZyxkYTkwNTMtYWEiLCAiZGxnLGRhOTA1MiI7
-Cj4gPj4KPiA+PiAuL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXFzYi5kdHMKPiA+PiAJY29tcGF0
-aWJsZSA9ICJkbGcsZGE5MDUzLWFhIiwgImRsZyxkYTkwNTIiOwo+ID4+Cj4gPj4gLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3NvdW5kL2RhOTA1NS50eHQKPiA+PiAJLSBjb21wYXRpYmxlOiAiZGxnLGRh
-OTA1NS1jb2RlYyIKPiA+PiAJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LWNvZGVjIjsKPiA+Pgo+
-ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIDxzdHdpc3Mu
-b3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4KPiA+PiAtLS0KPiA+PiBDaGVja3MgcGVyZm9ybWVkIHdp
-dGggbGludXgtbmV4dC9uZXh0LTIwMTQwNzE1L3NjcmlwdHMvY2hlY2twYXRjaC5wbAo+ID4+ICB0
-cml2aWFsLWRldmljZXMudHh0ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgODkg
-bGluZXMgY2hlY2tlZAo+ID4+ICBkYTkyMTAudHh0ICAgICAgICAgICAgICAgIHRvdGFsOiAwIGVy
-cm9ycywgMCB3YXJuaW5ncywgMjEgbGluZXMgY2hlY2tlZAo+ID4+ICB2ZW5kb3ItcHJlZml4ZXMu
-dHh0ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgMTQ5IGxpbmVzIGNoZWNrZWQK
-PiA+PiAgaW14NTMtc21kLmR0cyAgICAgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDIgd2Fybmlu
-Z3MsIDI3OSBsaW5lcyBjaGVja2VkCj4gPj4gIGlteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpIHRv
-dGFsOiAwIGVycm9ycywgMiB3YXJuaW5ncywgMzU3IGxpbmVzIGNoZWNrZWQKPiA+PiAgcjhhNzc5
-MC1sYWdlci5kdHMgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDMgd2FybmluZ3MsIDQwMyBsaW5l
-cyBjaGVja2VkCj4gPj4gIHI4YTc3OTEta29lbHNjaC5kdHMgICAgICAgdG90YWw6IDAgZXJyb3Jz
-LCA0IHdhcm5pbmdzLCA0NjEgbGluZXMgY2hlY2tlZAo+ID4+ICBkYTkwNTUtY29yZS5jICAgICAg
-ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgNDI4IGxpbmVzIGNoZWNrZWQKPiA+
-Pgo+ID4+IFRoaXMgZS1tYWlsIGlzIGluIHJlc3BvbnNlIHRvIHRoZSBwcmV2aW91cyB0aHJlYWRz
-IGhlcmU6Cj4gPj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQvNi8xMS8yNjIKPiA+PiBodHRw
-Oi8vY29tbWVudHMuZ21hbmUub3JnL2dtYW5lLmxpbnV4LnBvcnRzLmFybS5rZXJuZWwvMzQxMzU4
-Cj4gPj4KPiA+PiBDaGFuZ2VzIHNpbmNlIFJGQyBWMQo+ID4+IC0gYWRkaXRpb24gb2YgY2hhbmdl
-cyB0byBEVFMgZmlsZXMgcmVmZXJlbmNpbmcgImRpYXNlbWksZGE5MjEwIgo+ID4+ICAgIGFyY2gv
-YXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRzCj4gPj4gICAgYXJjaC9hcm0vYm9vdC9kdHMv
-cjhhNzc5MS1rb2Vsc2NoLmR0cwo+ID4+Cj4gPj4gVGhpcyBSRkMgVjIgZG9lcyBub3QgYW5zd2Vy
-IHRoZSByZXNwb25zZSB0byBSRkMgVjEgZnJvbSBNYXJrIEJyb3duOgo+ID4+IGh0dHA6Ly93d3cu
-c3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2czNDc2MTUuaHRtbAo+ID4+Cj4gPj4gVGhp
-cyBwYXRjaCBhcHBsaWVzIGFnYWluc3QgbGludXgtbmV4dCBhbmQgbmV4dC0yMDE0MDcxNQo+ID4+
-Cj4gPj4gUmVnYXJkcywKPiA+PiBTdGV2ZSBUd2lzcywgRGlhbG9nIFNlbWljb25kdWN0b3IgTHRk
-Lgo+ID4+Cj4gPj4KPiA+Pgo+ID4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJpdmlh
-bC1kZXZpY2VzLnR4dCAgICB8ICAyICstCj4gPj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jl
-Z3VsYXRvci9kYTkyMTAudHh0ICAgICAgIHwgIDQgKystLQo+ID4+ICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAxICsKPiA+PiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NTMtc21kLmR0cyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ID4+ICBh
-cmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaSAgICAgICB8ICAyICst
-Cj4gPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRzICAgICAgICAgICAgICAg
-IHwgIDIgKy0KPiA+PiAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1rb2Vsc2NoLmR0cyAgICAg
-ICAgICAgICAgfCAgMiArLQo+ID4+ICBkcml2ZXJzL21mZC9kYTkwNTUtY29yZS5jICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKystLS0tLS0tLS0tCj4gPgo+ID5Gb3IgdGhl
-IE1GRCBjaGFuZ2VzOgo+ID4KPiA+ICBBY2tlZC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGlu
-YXJvLm9yZz4KPiA+Cj4gPldoaWNoIHRyZWUgaXMgdGhpcyBwYXRjaCBnb2luZyBpbnRvPyAgRG8g
-eW91IHdhbnQgbWUgdG8gdGFrZSBpdCBhbmQKPiA+c3VwcGx5IGFuIElCIGZvciB0aGUgb3RoZXIg
-TWFpbnRhaW5lcnMgdG8gcHVsbCBmcm9tPwo+IAo+IEhpIExlZSwKPiAKPiBJJ20gbm90IHN1cmUg
-aWYgdGhpcyBxdWVzdGlvbiB3YXMgZm9yIG1lIGRpcmVjdGx5LCBidXQgSSBkbyBub3QgaGF2ZSBh
-bnkKPiBwcmVmZXJlbmNlIHdobyB0YWtlcyB0aGlzIGNoYW5nZSBvciBob3cgaXQgZ2V0cyBwdWxs
-ZWQuIFRoYW5rIHlvdS4KPiAKPiBUaGVyZSB3YXMgYSByZXF1ZXN0IGZyb20gUm9iIEhlcnJpbmcK
-PiBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnMzQ5Mjg5Lmh0bWwK
-PiB0byByZWZvcm1hdCB0aGUgb3JpZ2luYWwgZS1tYWlsIGNvbnRlbnQgYW5kIGFsc28gdG8gZHJv
-cCB0aGUgYW5ub3lpbmcgCj4gIk9wZW5zb3VyY2UiIGFuZCBzcXVhcmUgYnJhY2tldHMgZnJvbSBt
-eSBTaWduZWQtb2ZmLWJ5Ogo+IHNpZ25hdHVyZS4KCi4uLiBhbmQgQXV0aG9yOgoKU28gZm9yIG1l
-IHRvIHRha2UgdGhpcywgSSBuZWVkIHRvIHNlZSBEVCBvciBNYWludGFpbmVyIEFja3MgZm9yIHRo
-ZQpiaW5kaW5ncyBhbmQgRFRTKEkpIGNoYW5nZXMuCgo+IFNvLCB0aGUgZGVjaXNpb24gaXMgdG8g
-dGFrZSB0aGUgcGF0Y2ggaW50byBhbiBpbW11dGFibGUgYnJhbmNoCj4gYW5kIHlvdSBuZWVkIG1l
-IHRvIHJlLWZvcm1hdCB0aGUgZS1tYWlsIGNvbnRlbnQgLS0gSSB3aWxsIHJlc2VuZCAKPiB3aXRo
-IHRob3NlIGNoYW5nZXMuCj4gCj4gUmVnYXJkcywKPiBTdGV2ZQo+IAo+ID4KPiA+PiAgOCBmaWxl
-cyBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkKCi0tIApMZWUgSm9u
-ZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3Jn
-IOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFj
-ZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 07/08/14 10:40, Jean-Francois Moine wrote:
+> This patch adds a CODEC function to the NXP TDA998x HDMI transmitter.
+> 
+> The CODEC handles both I2S and S/PDIF input and does dynamic input
+> switch in the TDA998x I2C driver on start/stop audio streaming.
+> 
+> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+> ---
+
+Shouldn't the patch also capture the current audio rate in tda998x_codec.c:tda_hw_params?  Otherwise, when tda998x_drv.c:tda998x_audio_start invokes tda998x_drv.c:tda998x_configure_audio, the value of 'N' will be calculated incorrectly.
+
+So something similar to:
+
+diff --git a/drivers/gpu/drm/i2c/tda998x_codec.c b/drivers/gpu/drm/i2c/tda998x_codec.c
+index e7f223d..b6c4fb3 100755
+--- a/drivers/gpu/drm/i2c/tda998x_codec.c
++++ b/drivers/gpu/drm/i2c/tda998x_codec.c
+@@ -111,6 +111,7 @@ static int tda_hw_params(struct snd_pcm_substream *substream,
+ 		tda998x_audio_start(priv, 0);
+ 		return 0;
+ 	}
++	priv->params.audio_sample_rate = params_rate(params);
+ 	priv->params.audio_format = dai->id;
+ 	priv->audio_sample_format = params_format(params);
+ 	params.audio_cfg =
+
+
+   Andrew
