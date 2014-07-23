@@ -1,68 +1,89 @@
-From: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
-Date: Wed, 23 Jul 2014 20:52:12 +0200
-Message-ID: <53D0045C.6090605@gmail.com>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <201407231607.21106.marex@denx.de> <20140723141309.GA30324@gondor.apana.org.au> <201407231751.02050.marex@denx.de>
+From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
+Subject: Re: [PATCH v6 2/7] drivers: cpuidle: implement DT based idle states
+ infrastructure
+Date: Wed, 23 Jul 2014 15:08:49 -0400
+Message-ID: <CAJ5Y-eZrFJzG_47OZg2vx=ZgYw0tBDdXNxPJXreJeKoipPh5kw@mail.gmail.com>
+References: <1405958786-17243-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1405958786-17243-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAJ5Y-eY9YACzk_8LpZ9mnaj4stqOF_uWWt1+tL7nexqZj-ZFyQ@mail.gmail.com>
+ <20140723173204.GB21746@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201407231751.02050.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140723173204.GB21746@e102568-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Rob Herring <robh+dt@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit>
 List-Id: devicetree@vger.kernel.org
 
-Le 23/07/2014 17:51, Marek Vasut a =E9crit :
-> On Wednesday, July 23, 2014 at 04:13:09 PM, Herbert Xu wrote:
->> On Wed, Jul 23, 2014 at 04:07:20PM +0200, Marek Vasut wrote:
->>> On Wednesday, July 23, 2014 at 03:57:35 PM, Herbert Xu wrote:
->>>> On Sat, May 24, 2014 at 02:00:03PM +0200, Marek Vasut wrote:
->>>>>> +	}
->>>>>> +#endif
->>>>>> +
->>>>>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
->>>>>> +	err =3D crypto_register_shash(&sunxi_md5_alg);
->>>>>
->>>>> Do not use shash for such device. This is clearly and ahash (and
->>>>> async in general) device. The rule of a thumb here is that you us=
-e
->>>>> sync algos only for devices which have dedicated instructions for
->>>>> computing the transformation. For devices which are attached to s=
-ome
->>>>> kind of bus, you use async algos (ahash etc).
->>>>
->>>> I'm sorry that I didn't catch this earlier but there is no such
->>>> rule.
->>>>
->>>> Unless you need the async interface you should stick to the sync
->>>> interfaces for the sake of simplicity.
->>>>
->>>> We have a number of existing drivers that are synchronous but
->>>> using the async interface.  They should either be converted
->>>> over to the sync interface or made interrupt-driven if possible.
->>>
->>> Sure, but this device is interrupt driven and uses DMA to feed the =
-crypto
->>> engine, therefore async, right ?
+Hi Lorenzo,
+
+On 23 July 2014 13:32, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+>> > +/**
+>> > + * dt_init_idle_driver() - Parse the DT idle states and initialize the
+>> > + *                        idle driver states array
+>> > + *
+>> > + * @drv:         Pointer to CPU idle driver to be initialized
+>> > + * @start_idx:    First idle state index to be initialized
+>> > + *
+>> > + * On success the states array in the cpuidle driver contains
+>> > + * initialized entries in the states array, starting from index start_idx.
+>> > + *
+>> > + * Return:
+>> > + *     0 on success
+>> > + *     <0 on failure
+>> > + */
+>> > +int dt_init_idle_driver(struct cpuidle_driver *drv, unsigned int start_idx)
+>> > +{
+>> > +       unsigned int i, state_idx = start_idx;
+>> > +       struct cpuidle_state *idle_state;
+>> > +       struct device_node *state_node, *cpu_node;
+>> > +
+>> > +
+>> > +       if (state_idx >= CPUIDLE_STATE_MAX)
+>> > +               return -EINVAL;
+>> > +       /*
+>> > +        * We get the idle states for the first logical cpu in the
+>> > +        * driver mask. The kernel does not check idle states on all
+>> > +        * cpus in the driver mask, they are assumed to be the same
+>> > +        * by default.
+>> > +        */
+>> > +       cpu_node = of_cpu_device_node_get(cpumask_first(drv->cpumask));
 >>
->> If it's interrupt-driven, then yes it would certainly make sense to
->> be async.  But all I see is polling in the latest posting, was the
->> first version different?
->=20
-> I stand corrected then, sorry.
->=20
-> Is it possible to use DMA to feed the crypto accelerator, Corentin?
->=20
-> Best regards,
-> Marek Vasut
->=20
+>> Is this an assumption for the short term? My understanding from the
+>> corresponding ACPI discussions is that the order of idle states may
+>> not necessarily be same for all CPUs, even for big.Little?
+>
+> Well, it is more of a problem of the CPUidle infrastructure than related
+> to this specific patchset. The idle states for a specific cpumask (ie CPUidle
+> driver) are expected to be all the same, same order same data.
+>
+> Current driver can be used on homegeneous ARM64 SMP systems, but I am fairly
+> confident we can extend it for big.LITTLE and also other funky SMP
+> configurations, the parsing code only expects all cpus in the mask
+> to have the same set of idle states (and so does the CPUidle core), if that's
+> not the case, the cpus belong in different CPUidle drivers (ie a CPUidle
+> driver is a set of states valid on a cpumask).
+>
+> So my answer is yes, it is a proper assumption and not only for the
+> short term, but in general.
+>
+> HTH,
+> Lorenzo
 
-Yes, DMA is possible and will be implemented soon.
-So if I have well understood, I keep using async interface.
+Ok. Thanks for the explanation. I just had a look at
+drivers/cpuidle/cpuidle-big_little.c. So, you'll need another call to
+cpuidle_register() should there be another cpumask with a different
+set of idle states.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ashwin
