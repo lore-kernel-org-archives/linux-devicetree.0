@@ -1,74 +1,80 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/5] rtc: sun6i: Add sun6i RTC driver
-Date: Wed, 23 Jul 2014 22:37:36 +0800
-Message-ID: <CAGb2v643dOqRae38PBL+Jy0qVZ5Yv3SWA3QmEvRsyjTS=y1kSA@mail.gmail.com>
-References: <1405323137-24287-1-git-send-email-wens@csie.org>
- <1405323137-24287-2-git-send-email-wens@csie.org> <20140718080718.GI20328@lukather>
- <CAGb2v64K0iZ9e+1bdtkFVv5=t6nmTCTmUKeXLP-GvMaxAxQi+g@mail.gmail.com> <20140723095542.GN20328@lukather>
+Subject: [PATCH v2 0/6] ARM: sunxi: RTC support for A31/A23
+Date: Wed, 23 Jul 2014 22:38:52 +0800
+Message-ID: <1406126338-15062-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140723095542.GN20328@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBESX6PAKGQE4YXRQ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 23, 2014 at 5:55 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Mon, Jul 21, 2014 at 10:46:06PM +0800, Chen-Yu Tsai wrote:
->> Hi,
->>
->> On Fri, Jul 18, 2014 at 4:07 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > Hi,
->> >
->> > On Mon, Jul 14, 2014 at 03:32:13PM +0800, Chen-Yu Tsai wrote:
->> >> This patch introduces the driver for the RTC in the Allwinner A31 and
->> >> A23 SoCs.
->> >>
->> >> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
->> >> RTC in A31/A23 are a separate hardware block, which also contain a few
->> >> controls for the RTC block hardware (a regulator and RTC block GPIO pin
->> >> latches), while also having separate interrupts for the alarms.
->> >
->> > Do you plan on supporting those at some point?
->>
->> I haven't seen any devices use the regulator (which has an output pin).
->> I suppose we shouldn't add drivers for things we can't verify.
->> As for the GPIO pin latches, I'll have to experiment some more to figure
->> out what they do exactly.
->
-> Ok.
->
->> > It's also worth noting that the first registers are supposed to
->> > control the source of the low frequency oscillator in the SoC, which
->> > will probably be the most troublesome, since we need these clocks very
->> > early on.
->>
->> That's true. I suppose the bootloader configures this. IIRC I've seen
->> code for this in boot0 or boot1 from Allwinner. I can't find the equivalent
->> for our sun4i u-boot though.
->
-> Do you know what was the bootloader configuring it to?
+Hi everyone,
 
-I checked this some time ago, when I started to look at the sunxi clock code.
-For all the devices (sun6/7/8i) I've checked, the system is configured to use
-the external 32.768k oscillator.
+This is v2 of the sun6i RTC series. This series adds support for
+the RTC in A31 and A23 SoCs. The series applies to sunxi-next.
 
-> I don't really know how we can deal with this in a nice way, but I
-> guess it's not so urgent.
+The A31 has a new RTC block that is separate from the timer block.
+It has separate interrupts for each of the alarms, and a different
+format for the counter alarm. The driver has been tested on the
+A31 Hummingbird, and the A23 tablet I'm using to work on sun8i
+support.
 
-I agree. I will look at the BROM (for sun4/7i) and boot0 (sun6i) for signs of
-when it is configured. Then we can determine if we need to implement it
-somewhere.
+Patch 1 adds the driver for the RTC.
 
-[...]
+Patch 2 is a minor cleanup. This makes rtc-sunxi depend on sun4i or
+sun7i, the 2 platforms the driver is actually used on.
 
+Patch 3 adds the RTC device node to the sun6i DTSI.
+
+Patch 4 adds the RTC device node to the sun8i DTSI.
+
+Patch 5 adds enables rtc-sun6i in the sunxi defconfig.
+
+Patch 6 adds enables rtc-sun6i in the multi_v7 defconfig.
+This patch applies to arm-soc/next/defconfig (e9a86d96)
+
+Changes since v1:
+  - Enable rtc-sun6i in multi_v7_defconfig
+  - Cleanup the time/date GET/SET macros
+  - Use GENMASK for control register mask
+  - Change Kconfig option to show 'A31'
+  - Remove leftover comment from rtc-sun4i
+  - Remove extra newline
+
+
+Cheers
 ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+Chen-Yu Tsai (6):
+  rtc: sun6i: Add sun6i RTC driver
+  rtc: sunxi: Depend on platforms sun4i/sun7i that actually have the rtc
+  ARM: dts: sun6i: add rtc device node
+  ARM: dts: sun8i: add rtc device node
+  ARM: sunxi: Add A31 RTC driver to sunxi_defconfig
+  ARM: sunxi: Add A31 RTC driver to multi_v7_defconfig
+
+ .../devicetree/bindings/rtc/sun6i-rtc.txt          |  17 +
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |   6 +
+ arch/arm/boot/dts/sun8i-a23.dtsi                   |   6 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/sunxi_defconfig                   |   1 +
+ drivers/rtc/Kconfig                                |   9 +-
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-sun6i.c                            | 448 +++++++++++++++++++++
+ 8 files changed, 488 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+ create mode 100644 drivers/rtc/rtc-sun6i.c
+
+-- 
+2.0.1
