@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 04/10] OF: Utility helper functions for dynamic nodes
-Date: Wed, 23 Jul 2014 17:44:18 -0600
-Message-ID: <1406159064-21366-5-git-send-email-grant.likely@linaro.org>
+Subject: [PATCH 02/10] of: rename of_aliases_mutex to just of_mutex
+Date: Wed, 23 Jul 2014 17:44:16 -0600
+Message-ID: <1406159064-21366-3-git-send-email-grant.likely@linaro.org>
 References: <1406159064-21366-1-git-send-email-grant.likely@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1406159064-21366-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -12,182 +12,121 @@ List-Id: devicetree@vger.kernel.org
 
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-Introduce helper functions for working with the live DT tree,
-all of them related to dynamically adding/removing nodes and
-properties.
-
-__of_prop_dup() copies a property dynamically
-__of_node_alloc() creates an empty node
-
-Bug fix about prop->len == 0 by Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>
+We're overloading usage of of_aliases_mutex for sysfs changes,
+so rename to something that is more generic.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-[glikely: Added unittest for of_copy_property and dropped fine-grained allocations]
-[glikely: removed name, type and phandle arguments from __of_node_alloc]
 Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/of/dynamic.c    | 77 +++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/of/of_private.h | 10 +++++++
- drivers/of/selftest.c   | 28 ++++++++++++++++++
- 3 files changed, 115 insertions(+)
+ drivers/of/base.c       | 19 +++++++++----------
+ drivers/of/device.c     |  4 ++--
+ drivers/of/of_private.h |  2 +-
+ 3 files changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 125994330437..e0c4c6e25980 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -214,3 +214,80 @@ void of_node_release(struct kobject *kobj)
- 	kfree(node->data);
- 	kfree(node);
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index b9864806e9b8..e48a1b90a392 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -40,10 +40,9 @@ static struct device_node *of_stdout;
+ static struct kset *of_kset;
+ 
+ /*
+- * Used to protect the of_aliases; but also overloaded to hold off addition of
+- * nodes to sysfs
++ * Used to protect the of_aliases, to hold off addition of nodes to sysfs
+  */
+-DEFINE_MUTEX(of_aliases_mutex);
++DEFINE_MUTEX(of_mutex);
+ 
+ /* use when traversing tree through the allnext, child, sibling,
+  * or parent members of struct device_node.
+@@ -255,13 +254,13 @@ int of_node_add(struct device_node *np)
+ 	 * Grab the mutex here so that in a race condition between of_init() and
+ 	 * of_node_add(), node addition will still be consistent.
+ 	 */
+-	mutex_lock(&of_aliases_mutex);
++	mutex_lock(&of_mutex);
+ 	if (of_kset)
+ 		rc = __of_node_add(np);
+ 	else
+ 		/* This scenario may be perfectly valid, but report it anyway */
+ 		pr_info("of_node_add(%s) before of_init()\n", np->full_name);
+-	mutex_unlock(&of_aliases_mutex);
++	mutex_unlock(&of_mutex);
+ 	return rc;
  }
-+
-+/**
-+ * __of_prop_dup - Copy a property dynamically.
-+ * @prop:	Property to copy
-+ * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
-+ *
-+ * Copy a property by dynamically allocating the memory of both the
-+ * property stucture and the property name & contents. The property's
-+ * flags have the OF_DYNAMIC bit set so that we can differentiate between
-+ * dynamically allocated properties and not.
-+ * Returns the newly allocated property or NULL on out of memory error.
-+ */
-+struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
-+{
-+	struct property *new;
-+
-+	new = kzalloc(sizeof(*new), allocflags);
-+	if (!new)
-+		return NULL;
-+
-+	/*
-+	 * NOTE: There is no check for zero length value.
-+	 * In case of a boolean property This will allocate a value
-+	 * of zero bytes. We do this to work around the use
-+	 * of of_get_property() calls on boolean values.
-+	 */
-+	new->name = kstrdup(prop->name, allocflags);
-+	new->value = kmemdup(prop->value, prop->length, allocflags);
-+	new->length = prop->length;
-+	if (!new->name || !new->value)
-+		goto err_free;
-+
-+	/* mark the property as dynamic */
-+	of_property_set_flag(new, OF_DYNAMIC);
-+
-+	return new;
-+
-+ err_free:
-+	kfree(new->name);
-+	kfree(new->value);
-+	kfree(new);
-+	return NULL;
-+}
-+
-+/**
-+ * __of_node_alloc() - Create an empty device node dynamically.
-+ * @full_name:	Full name of the new device node
-+ * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
-+ *
-+ * Create an empty device tree node, suitable for further modification.
-+ * The node data are dynamically allocated and all the node flags
-+ * have the OF_DYNAMIC & OF_DETACHED bits set.
-+ * Returns the newly allocated node or NULL on out of memory error.
-+ */
-+struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags)
-+{
-+	struct device_node *node;
-+
-+	node = kzalloc(sizeof(*node), allocflags);
-+	if (!node)
-+		return NULL;
-+
-+	node->full_name = kstrdup(full_name, allocflags);
-+	of_node_set_flag(node, OF_DYNAMIC);
-+	of_node_set_flag(node, OF_DETACHED);
-+	if (!node->full_name)
-+		goto err_free;
-+
-+	of_node_init(node);
-+
-+	return node;
-+
-+ err_free:
-+	kfree(node->full_name);
-+	kfree(node);
-+	return NULL;
-+}
+ 
+@@ -289,15 +288,15 @@ static int __init of_init(void)
+ 	struct device_node *np;
+ 
+ 	/* Create the kset, and register existing nodes */
+-	mutex_lock(&of_aliases_mutex);
++	mutex_lock(&of_mutex);
+ 	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+ 	if (!of_kset) {
+-		mutex_unlock(&of_aliases_mutex);
++		mutex_unlock(&of_mutex);
+ 		return -ENOMEM;
+ 	}
+ 	for_each_of_allnodes(np)
+ 		__of_node_add(np);
+-	mutex_unlock(&of_aliases_mutex);
++	mutex_unlock(&of_mutex);
+ 
+ 	/* Symlink in /proc as required by userspace ABI */
+ 	if (of_allnodes)
+@@ -2122,7 +2121,7 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+ 	struct alias_prop *app;
+ 	int id = -ENODEV;
+ 
+-	mutex_lock(&of_aliases_mutex);
++	mutex_lock(&of_mutex);
+ 	list_for_each_entry(app, &aliases_lookup, link) {
+ 		if (strcmp(app->stem, stem) != 0)
+ 			continue;
+@@ -2132,7 +2131,7 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+ 			break;
+ 		}
+ 	}
+-	mutex_unlock(&of_aliases_mutex);
++	mutex_unlock(&of_mutex);
+ 
+ 	return id;
+ }
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index dafb9736ab9b..46d6c75c1404 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -160,7 +160,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	add_uevent_var(env, "OF_COMPATIBLE_N=%d", seen);
+ 
+ 	seen = 0;
+-	mutex_lock(&of_aliases_mutex);
++	mutex_lock(&of_mutex);
+ 	list_for_each_entry(app, &aliases_lookup, link) {
+ 		if (dev->of_node == app->np) {
+ 			add_uevent_var(env, "OF_ALIAS_%d=%s", seen,
+@@ -168,7 +168,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 			seen++;
+ 		}
+ 	}
+-	mutex_unlock(&of_aliases_mutex);
++	mutex_unlock(&of_mutex);
+ }
+ 
+ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
 diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index c270f2037779..1799ed2b3808 100644
+index ff350c8fa7ac..fcc70e74dfe0 100644
 --- a/drivers/of/of_private.h
 +++ b/drivers/of/of_private.h
-@@ -51,4 +51,14 @@ static inline int of_property_notify(int action, struct device_node *np,
- }
- #endif /* CONFIG_OF_DYNAMIC */
+@@ -31,6 +31,6 @@ struct alias_prop {
+ 	char stem[0];
+ };
  
-+/**
-+ * General utilities for working with live trees.
-+ *
-+ * All functions with two leading underscores operate
-+ * without taking node references, so you either have to
-+ * own the devtree lock or work on detached trees only.
-+ */
-+struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags);
-+struct device_node *__of_node_alloc(const char *full_name, gfp_t allocflags);
-+
+-extern struct mutex of_aliases_mutex;
++extern struct mutex of_mutex;
+ extern struct list_head aliases_lookup;
  #endif /* _LINUX_OF_PRIVATE_H */
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 077314eebb95..ee2166f0f36a 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -16,6 +16,8 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- 
-+#include "of_private.h"
-+
- static struct selftest_results {
- 	int passed;
- 	int failed;
-@@ -266,6 +268,31 @@ static void __init of_selftest_property_match_string(void)
- 	selftest(rc == -EILSEQ, "unterminated string; rc=%i", rc);
- }
- 
-+#define propcmp(p1, p2) (((p1)->length == (p2)->length) && \
-+			(p1)->value && (p2)->value && \
-+			!memcmp((p1)->value, (p2)->value, (p1)->length) && \
-+			!strcmp((p1)->name, (p2)->name))
-+static void __init of_selftest_property_copy(void)
-+{
-+#ifdef CONFIG_OF_DYNAMIC
-+	struct property p1 = { .name = "p1", .length = 0, .value = "" };
-+	struct property p2 = { .name = "p2", .length = 5, .value = "abcd" };
-+	struct property *new;
-+
-+	new = __of_prop_dup(&p1, GFP_KERNEL);
-+	selftest(new && propcmp(&p1, new), "empty property didn't copy correctly\n");
-+	kfree(new->value);
-+	kfree(new->name);
-+	kfree(new);
-+
-+	new = __of_prop_dup(&p2, GFP_KERNEL);
-+	selftest(new && propcmp(&p2, new), "non-empty property didn't copy correctly\n");
-+	kfree(new->value);
-+	kfree(new->name);
-+	kfree(new);
-+#endif
-+}
-+
- static void __init of_selftest_parse_interrupts(void)
- {
- 	struct device_node *np;
-@@ -533,6 +560,7 @@ static int __init of_selftest(void)
- 	of_selftest_dynamic();
- 	of_selftest_parse_phandle_with_args();
- 	of_selftest_property_match_string();
-+	of_selftest_property_copy();
- 	of_selftest_parse_interrupts();
- 	of_selftest_parse_interrupts_extended();
- 	of_selftest_match_node();
 -- 
 1.9.1
 
