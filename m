@@ -1,55 +1,58 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
-Date: Wed, 23 Jul 2014 17:51:01 +0200
-Message-ID: <201407231751.02050.marex@denx.de>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <201407231607.21106.marex@denx.de> <20140723141309.GA30324@gondor.apana.org.au>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: zynq: DT: Add CAN node
+Date: Wed, 23 Jul 2014 09:07:02 -0700
+Message-ID: <0a68731a-e0f0-4e19-b9a4-57cec4c8de3b@BN1BFFO11FD048.protection.gbl>
+References: <52d799e17cd3539713625c6f6a6666620f52d692.1406120732.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140723141309.GA30324@gondor.apana.org.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52d799e17cd3539713625c6f6a6666620f52d692.1406120732.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 23, 2014 at 04:13:09 PM, Herbert Xu wrote:
-> On Wed, Jul 23, 2014 at 04:07:20PM +0200, Marek Vasut wrote:
-> > On Wednesday, July 23, 2014 at 03:57:35 PM, Herbert Xu wrote:
-> > > On Sat, May 24, 2014 at 02:00:03PM +0200, Marek Vasut wrote:
-> > > > > +	}
-> > > > > +#endif
-> > > > > +
-> > > > > +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
-> > > > > +	err = crypto_register_shash(&sunxi_md5_alg);
-> > > > 
-> > > > Do not use shash for such device. This is clearly and ahash (and
-> > > > async in general) device. The rule of a thumb here is that you use
-> > > > sync algos only for devices which have dedicated instructions for
-> > > > computing the transformation. For devices which are attached to some
-> > > > kind of bus, you use async algos (ahash etc).
-> > > 
-> > > I'm sorry that I didn't catch this earlier but there is no such
-> > > rule.
-> > > 
-> > > Unless you need the async interface you should stick to the sync
-> > > interfaces for the sake of simplicity.
-> > > 
-> > > We have a number of existing drivers that are synchronous but
-> > > using the async interface.  They should either be converted
-> > > over to the sync interface or made interrupt-driven if possible.
-> > 
-> > Sure, but this device is interrupt driven and uses DMA to feed the crypto
-> > engine, therefore async, right ?
-> 
-> If it's interrupt-driven, then yes it would certainly make sense to
-> be async.  But all I see is polling in the latest posting, was the
-> first version different?
+On Wed, 2014-07-23 at 03:05PM +0200, Michal Simek wrote:
+> Add node describing Zynq's CAN controller.
+>=20
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>=20
+>  arch/arm/boot/dts/zynq-7000.dtsi | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zyn=
+q-7000.dtsi
+> index 366ca6434f54..2287d9b4ed1a 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -71,7 +71,18 @@
+>  			interrupts =3D <0 7 4>;
+>  			interrupt-parent =3D <&intc>;
+>  			clocks =3D <&clkc 12>;
+> -		};
+> +		};
+> +
+> +		can0: can@e0008000 {
+> +			compatible =3D "xlnx,zynq-can-1.0";
+> +			clocks =3D <&clkc 19>, <&clkc 36>;
+> +			clock-names =3D "can_clk", "pclk";
+> +			reg =3D <0xe0008000 0x1000>;
+> +			interrupts =3D <0 28 4>;
+> +			interrupt-parent =3D <&intc>;
+> +			tx-fifo-depth =3D <0x40>;
+> +			rx-fifo-depth =3D <0x40>;
+> +		};
 
-I stand corrected then, sorry.
+What about the second CAN core? You also probably want to add
+'status =3D "disabled"' in the dtsi.
 
-Is it possible to use DMA to feed the crypto accelerator, Corentin?
+	S=C3=B6ren
 
-Best regards,
-Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
