@@ -1,732 +1,152 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] rtc: sun6i: Add sun6i RTC driver
-Date: Wed, 23 Jul 2014 11:55:43 +0200
-Message-ID: <20140723095542.GN20328@lukather>
-References: <1405323137-24287-1-git-send-email-wens@csie.org>
- <1405323137-24287-2-git-send-email-wens@csie.org>
- <20140718080718.GI20328@lukather>
- <CAGb2v64K0iZ9e+1bdtkFVv5=t6nmTCTmUKeXLP-GvMaxAxQi+g@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC V2] devicetree: Dialog Semiconductor consolidate existing
+ vendor prefixes to standardise on 'dlg'
+Date: Wed, 23 Jul 2014 11:12:54 +0100
+Message-ID: <20140723101254.GH23210@lee--X1>
+References: <201407151520.s6FFKcjB009745@swsrvapps-01.diasemi.com>
+ <20140722070927.GC28529@lee--X1>
+ <6ED8E3B22081A4459DAC7699F3695FB7D0B2762A@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CaPKgh3XHpq3rEUV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v64K0iZ9e+1bdtkFVv5=t6nmTCTmUKeXLP-GvMaxAxQi+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B2762A@SW-EX-MBX02.diasemi.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, LINUX SH <linux-sh@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Florian Vaussard <florian.vaussard@epfl.ch>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <Support.Opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.or>
 List-Id: devicetree@vger.kernel.org
 
-
---CaPKgh3XHpq3rEUV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Jul 21, 2014 at 10:46:06PM +0800, Chen-Yu Tsai wrote:
-> Hi,
->=20
-> On Fri, Jul 18, 2014 at 4:07 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Mon, Jul 14, 2014 at 03:32:13PM +0800, Chen-Yu Tsai wrote:
-> >> This patch introduces the driver for the RTC in the Allwinner A31 and
-> >> A23 SoCs.
-> >>
-> >> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
-> >> RTC in A31/A23 are a separate hardware block, which also contain a few
-> >> controls for the RTC block hardware (a regulator and RTC block GPIO pin
-> >> latches), while also having separate interrupts for the alarms.
-> >
-> > Do you plan on supporting those at some point?
->=20
-> I haven't seen any devices use the regulator (which has an output pin).
-> I suppose we shouldn't add drivers for things we can't verify.
-> As for the GPIO pin latches, I'll have to experiment some more to figure
-> out what they do exactly.
-
-Ok.
-
-> > It's also worth noting that the first registers are supposed to
-> > control the source of the low frequency oscillator in the SoC, which
-> > will probably be the most troublesome, since we need these clocks very
-> > early on.
->=20
-> That's true. I suppose the bootloader configures this. IIRC I've seen
-> code for this in boot0 or boot1 from Allwinner. I can't find the equivale=
-nt
-> for our sun4i u-boot though.
-
-Do you know what was the bootloader configuring it to?
-
-I don't really know how we can deal with this in a nice way, but I
-guess it's not so urgent.
-
-> >>
-> >> The hardware is different enough to make a different driver for it.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/rtc/sun6i-rtc.txt          |  17 +
-> >>  drivers/rtc/Kconfig                                |   7 +
-> >>  drivers/rtc/Makefile                               |   1 +
-> >>  drivers/rtc/rtc-sun6i.c                            | 466 ++++++++++++=
-+++++++++
-> >>  4 files changed, 491 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
-> >>  create mode 100644 drivers/rtc/rtc-sun6i.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Doc=
-umentation/devicetree/bindings/rtc/sun6i-rtc.txt
-> >> new file mode 100644
-> >> index 0000000..b18927c
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
-> >> @@ -0,0 +1,17 @@
-> >> +* sun6i Real Time Clock
-> >> +
-> >> +RTC controller for the Allwinner A31
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be "allwinner,sun6i-a31-rtc"
-> >> +- reg: physical base address of the controller and length of memory m=
-apped
-> >> +  region.
-> >> +- interrupts: IRQ line for the RTC alarm 0.
-> >> +
-> >> +Example:
-> >> +
-> >> +rtc: rtc@01f00000 {
-> >> +     compatible =3D "allwinner,sun6i-a31-rtc";
-> >> +     reg =3D <0x01f00000 0x54>;
-> >> +     interrupts =3D <0 40 4>;
-> >> +};
-> >> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> >> index 0754f5c..5b3910a 100644
-> >> --- a/drivers/rtc/Kconfig
-> >> +++ b/drivers/rtc/Kconfig
-> >> @@ -1167,6 +1167,13 @@ config RTC_DRV_SUN4V
-> >>         If you say Y here you will get support for the Hypervisor
-> >>         based RTC on SUN4V systems.
-> >>
-> >> +config RTC_DRV_SUN6I
-> >> +     tristate "Allwinner sun6i/sun8i RTC"
-> >
-> > I'm half convinced about an exhaustive list here. That IP will also
-> > probably be used by sun9i, and sun10i if it ever exists, etc. And you
-> > exhaustive list won't be anymore.
-> >
-> > I'd rather just mention the A31, like we do for the DT.
->=20
-> Fixed.
->=20
-> >> +     depends on MACH_SUN6I || MACH_SUN8I
-> >> +     help
-> >> +       If you say Y here you will get support for the RTC found on
-> >> +       Allwinner A31/A23.
-> >> +
-> >>  config RTC_DRV_SUNXI
-> >>       tristate "Allwinner sun4i/sun7i RTC"
-> >>       depends on ARCH_SUNXI
-> >> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> >> index 70347d0..a47df29 100644
-> >> --- a/drivers/rtc/Makefile
-> >> +++ b/drivers/rtc/Makefile
-> >> @@ -123,6 +123,7 @@ obj-$(CONFIG_RTC_DRV_STARFIRE)    +=3D rtc-starfir=
-e.o
-> >>  obj-$(CONFIG_RTC_DRV_STK17TA8)       +=3D rtc-stk17ta8.o
-> >>  obj-$(CONFIG_RTC_DRV_STMP)   +=3D rtc-stmp3xxx.o
-> >>  obj-$(CONFIG_RTC_DRV_SUN4V)  +=3D rtc-sun4v.o
-> >> +obj-$(CONFIG_RTC_DRV_SUN6I)  +=3D rtc-sun6i.o
-> >>  obj-$(CONFIG_RTC_DRV_SUNXI)  +=3D rtc-sunxi.o
-> >>  obj-$(CONFIG_RTC_DRV_TEGRA)  +=3D rtc-tegra.o
-> >>  obj-$(CONFIG_RTC_DRV_TEST)   +=3D rtc-test.o
-> >> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> >> new file mode 100644
-> >> index 0000000..fabd019
-> >> --- /dev/null
-> >> +++ b/drivers/rtc/rtc-sun6i.c
-> >> @@ -0,0 +1,466 @@
-> >> +/*
-> >> + * An RTC driver for Allwinner A31/A23
-> >> + *
-> >> + * Copyright (c) 2014, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> + *
-> >> + * based on rtc-sunxi.c
-> >> + *
-> >> + * An RTC driver for Allwinner A10/A20
-> >> + *
-> >> + * Copyright (c) 2013, Carlo Caione <carlo.caione-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or modi=
-fy
-> >> + * it under the terms of the GNU General Public License as published =
-by
-> >> + * the Free Software Foundation; either version 2 of the License, or
-> >> + * (at your option) any later version.
-> >> + *
-> >> + * This program is distributed in the hope that it will be useful, bu=
-t WITHOUT
-> >> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY=
- or
-> >> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lice=
-nse for
-> >> + * more details.
-> >> + */
-> >> +
-> >> +#include <linux/delay.h>
-> >> +#include <linux/err.h>
-> >> +#include <linux/fs.h>
-> >> +#include <linux/init.h>
-> >> +#include <linux/interrupt.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/rtc.h>
-> >> +#include <linux/types.h>
-> >> +
-> >> +/* Control register */
-> >> +#define SUN6I_LOSC_CTRL                              0x0000
-> >> +#define SUN6I_LOSC_CTRL_ALM_DHMS_ACC         BIT(9)
-> >> +#define SUN6I_LOSC_CTRL_RTC_HMS_ACC          BIT(8)
-> >> +#define SUN6I_LOSC_CTRL_RTC_YMD_ACC          BIT(7)
-> >> +#define SUN6I_LOSC_CTRL_ACC_MASK             (BIT(9) | BIT(8) | BIT(7=
-))
-> >
-> > GENMASK maybe?
->=20
-> Fixed
->=20
-> >> +
-> >> +/* RTC */
-> >> +#define SUN6I_RTC_YMD                                0x0010
-> >> +#define SUN6I_RTC_HMS                                0x0014
-> >> +
-> >> +/* Alarm 0 (counter) */
-> >> +#define SUN6I_ALRM_COUNTER                   0x0020
-> >> +#define SUN6I_ALRM_CUR_VAL                   0x0024
-> >> +#define SUN6I_ALRM_EN                                0x0028
-> >> +#define SUN6I_ALRM_EN_CNT_EN                 BIT(0)
-> >> +#define SUN6I_ALRM_IRQ_EN                    0x002c
-> >> +#define SUN6I_ALRM_IRQ_EN_CNT_IRQ_EN         BIT(0)
-> >> +#define SUN6I_ALRM_IRQ_STA                   0x0030
-> >> +#define SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND              BIT(0)
-> >> +
-> >> +/* Alarm 1 (wall clock) */
-> >> +#define SUN6I_ALRM1_EN                               0x0044
-> >> +#define SUN6I_ALRM1_IRQ_EN                   0x0048
-> >> +#define SUN6I_ALRM1_IRQ_STA                  0x004c
-> >> +#define SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND    BIT(0)
-> >> +
-> >> +/* Alarm config */
-> >> +#define SUN6I_ALARM_CONFIG                   0x0050
-> >> +#define SUN6I_ALARM_CONFIG_WAKEUP            BIT(0)
-> >> +
-> >> +/* days / hours are 5 bit wide */
-> >> +#define SUN6I_MASK_DH                                0x0000001f
-> >> +/* seconds / minutes / years are 6 bit wide */
-> >> +#define SUN6I_MASK_SMY                               0x0000003f
-> >> +/* months are 4 bit wide */
-> >> +#define SUN6I_MASK_M                         0x0000000f
-> >> +/* leap year is single bit */
-> >> +#define SUN6I_MASK_LY                                0x00000001
-> >
-> > Ditto
->=20
-> See below.
->=20
-> >> +
-> >> +#define SUN6I_GET(x, mask, shift)            (((x) & ((mask) << (shif=
-t))) \
-> >> +                                                     >> (shift))
-> >> +
-> >> +#define SUN6I_SET(x, mask, shift)            (((x) & (mask)) << (shif=
-t))
-> >
-> > Wouldn't it be easier to have the mask already shifted?
->=20
-> I'll just get rid of these 2 and the masks above, and inline them
-> (in hex format) in the GET/SET macros below. How does that sound?
-
-Sounds good to me.
-
->=20
-> >> +
-> >> +/*
-> >> + * Get date values
-> >> + */
-> >> +#define SUN6I_DATE_GET_DAY_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
-DH, 0)
-> >> +#define SUN6I_DATE_GET_MON_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
-M, 8)
-> >> +#define SUN6I_DATE_GET_YEAR_VALUE(x)         SUN6I_GET(x, SUN6I_MASK_=
-SMY, 16)
-> >> +
-> >> +/*
-> >> + * Get time values
-> >> + */
-> >> +#define SUN6I_TIME_GET_SEC_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
-SMY, 0)
-> >> +#define SUN6I_TIME_GET_MIN_VALUE(x)          SUN6I_GET(x, SUN6I_MASK_=
-SMY, 8)
-> >> +#define SUN6I_TIME_GET_HOUR_VALUE(x)         SUN6I_GET(x, SUN6I_MASK_=
-DH, 16)
-> >> +
-> >> +/*
-> >> + * Set date values
-> >> + */
-> >> +#define SUN6I_DATE_SET_DAY_VALUE(x)          SUN6I_DATE_GET_DAY_VALUE=
-(x)
-> >> +#define SUN6I_DATE_SET_MON_VALUE(x)          SUN6I_SET(x, SUN6I_MASK_=
-M, 8)
-> >> +#define SUN6I_DATE_SET_YEAR_VALUE(x)         SUN6I_SET(x, SUN6I_MASK_=
-SMY, 16)
-> >> +#define SUN6I_LEAP_SET_VALUE(x)                      SUN6I_SET(x, SUN=
-6I_MASK_LY, 22)
-> >> +
-> >> +/*
-> >> + * Set time values
-> >> + */
-> >> +#define SUN6I_TIME_SET_SEC_VALUE(x)          SUN6I_TIME_GET_SEC_VALUE=
-(x)
-> >> +#define SUN6I_TIME_SET_MIN_VALUE(x)          SUN6I_SET(x, SUN6I_MASK_=
-SMY, 8)
-> >> +#define SUN6I_TIME_SET_HOUR_VALUE(x)         SUN6I_SET(x, SUN6I_MASK_=
-DH, 16)
-> >> +
-> >> +/*
-> >> + * The year parameter passed to the driver is usually an offset relat=
-ive to
-> >> + * the year 1900. This macro is used to convert this offset to anothe=
-r one
-> >> + * relative to the minimum year allowed by the hardware.
-> >> + *
-> >> + * The year range is 1970 - 2033. This range is selected to match All=
-winner's
-> >> + * driver, even though it is somewhat limited.
-> >> + */
-> >> +#define SUN6I_YEAR_MIN                               1970
-> >> +#define SUN6I_YEAR_MAX                               2033
-> >> +#define SUN6I_YEAR_OFF                               (SUN6I_YEAR_MIN =
-- 1900)
-> >> +
-> >> +struct sun6i_rtc_dev {
-> >> +     struct rtc_device *rtc;
-> >> +     struct device *dev;
-> >> +     void __iomem *base;
-> >> +     int irq;
-> >> +     unsigned long alarm;
-> >> +};
-> >> +
-> >> +static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D (struct sun6i_rtc_dev *) id;
-> >> +     u32 val;
-> >> +
-> >> +     val =3D readl(chip->base + SUN6I_ALRM_IRQ_STA);
-> >> +
-> >> +     if (val & SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND) {
-> >> +             val |=3D SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND;
-> >> +             writel(val, chip->base + SUN6I_ALRM_IRQ_STA);
-> >> +
-> >> +             rtc_update_irq(chip->rtc, 1, RTC_AF | RTC_IRQF);
-> >> +
-> >> +             return IRQ_HANDLED;
-> >> +     }
-> >> +
-> >> +     return IRQ_NONE;
-> >> +}
-> >> +
-> >> +static void sun6i_rtc_setaie(int to, struct sun6i_rtc_dev *chip)
-> >> +{
-> >> +     u32 alrm_val =3D 0;
-> >> +     u32 alrm_irq_val =3D 0;
-> >> +     u32 alrm_wake_val =3D 0;
-> >> +
-> >> +     if (to) {
-> >> +             alrm_val =3D SUN6I_ALRM_EN_CNT_EN;
-> >> +             alrm_irq_val =3D SUN6I_ALRM_IRQ_EN_CNT_IRQ_EN;
-> >> +             alrm_wake_val =3D SUN6I_ALARM_CONFIG_WAKEUP;
-> >> +     } else {
-> >> +             writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND,
-> >> +                             chip->base + SUN6I_ALRM_IRQ_STA);
-> >> +     }
-> >> +
-> >> +     writel(alrm_val, chip->base + SUN6I_ALRM_EN);
-> >> +     writel(alrm_irq_val, chip->base + SUN6I_ALRM_IRQ_EN);
-> >> +     writel(alrm_wake_val, chip->base + SUN6I_ALARM_CONFIG);
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_gettime(struct device *dev, struct rtc_time *rtc=
-_tm)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
-> >> +     u32 date, time;
-> >> +
-> >> +     /*
-> >> +      * read again in case it changes
-> >> +      */
-> >> +     do {
-> >> +             date =3D readl(chip->base + SUN6I_RTC_YMD);
-> >> +             time =3D readl(chip->base + SUN6I_RTC_HMS);
-> >> +     } while ((date !=3D readl(chip->base + SUN6I_RTC_YMD)) ||
-> >> +              (time !=3D readl(chip->base + SUN6I_RTC_HMS)));
-> >> +
-> >> +     rtc_tm->tm_sec  =3D SUN6I_TIME_GET_SEC_VALUE(time);
-> >> +     rtc_tm->tm_min  =3D SUN6I_TIME_GET_MIN_VALUE(time);
-> >> +     rtc_tm->tm_hour =3D SUN6I_TIME_GET_HOUR_VALUE(time);
-> >> +
-> >> +     rtc_tm->tm_mday =3D SUN6I_DATE_GET_DAY_VALUE(date);
-> >> +     rtc_tm->tm_mon  =3D SUN6I_DATE_GET_MON_VALUE(date);
-> >> +     rtc_tm->tm_year =3D SUN6I_DATE_GET_YEAR_VALUE(date);
-> >> +
-> >> +     rtc_tm->tm_mon  -=3D 1;
-> >> +
-> >> +     /*
-> >> +      * switch from (data_year->min)-relative offset to
-> >> +      * a (1900)-relative one
-> >> +      */
-> >
-> > I guess the reference to the structure field is not relevant anymore
->=20
-> Removed.
->=20
-> >> +     rtc_tm->tm_year +=3D SUN6I_YEAR_OFF;
-> >> +
-> >> +     return rtc_valid_tm(rtc_tm);
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_getalarm(struct device *dev, struct rtc_wkalrm *=
-wkalrm)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
-> >> +     u32 alrm_st;
-> >> +     u32 alrm_en;
-> >> +
-> >> +     alrm_en =3D readl(chip->base + SUN6I_ALRM_IRQ_EN);
-> >> +     alrm_st =3D readl(chip->base + SUN6I_ALRM_IRQ_STA);
-> >> +     wkalrm->enabled =3D !!(alrm_en & SUN6I_ALRM_EN_CNT_EN);
-> >> +     wkalrm->pending =3D !!(alrm_st & SUN6I_ALRM_EN_CNT_EN);
-> >> +     rtc_time_to_tm(chip->alarm, &wkalrm->time);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_setalarm(struct device *dev, struct rtc_wkalrm *=
-wkalrm)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
-> >> +     struct rtc_time *alrm_tm =3D &wkalrm->time;
-> >> +     struct rtc_time tm_now;
-> >> +     unsigned long time_now =3D 0;
-> >> +     unsigned long time_set =3D 0;
-> >> +     unsigned long time_gap =3D 0;
-> >> +     int ret =3D 0;
-> >> +
-> >> +     ret =3D sun6i_rtc_gettime(dev, &tm_now);
-> >> +     if (ret < 0) {
-> >> +             dev_err(dev, "Error in getting time\n");
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> >> +     rtc_tm_to_time(alrm_tm, &time_set);
-> >> +     rtc_tm_to_time(&tm_now, &time_now);
-> >> +     if (time_set <=3D time_now) {
-> >> +             dev_err(dev, "Date to set in the past\n");
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> >> +     time_gap =3D time_set - time_now;
-> >> +
-> >> +     if (time_gap > U32_MAX) {
-> >> +             dev_err(dev, "Date too far in the future\n");
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> >> +     sun6i_rtc_setaie(0, chip);
-> >> +     writel(0, chip->base + SUN6I_ALRM_COUNTER);
-> >> +     usleep_range(100, 300);
-> >> +
-> >> +     writel(time_gap, chip->base + SUN6I_ALRM_COUNTER);
-> >> +     chip->alarm =3D time_set;
-> >> +
-> >> +     sun6i_rtc_setaie(wkalrm->enabled, chip);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_wait(struct sun6i_rtc_dev *chip, int offset,
-> >> +                       unsigned int mask, unsigned int ms_timeout)
-> >> +{
-> >> +     const unsigned long timeout =3D jiffies + msecs_to_jiffies(ms_ti=
-meout);
-> >> +     u32 reg;
-> >> +
-> >> +     do {
-> >> +             reg =3D readl(chip->base + offset);
-> >> +             reg &=3D mask;
-> >> +
-> >> +             if (!reg)
-> >> +                     return 0;
-> >> +
-> >> +     } while (time_before(jiffies, timeout));
-> >> +
-> >> +     return -ETIMEDOUT;
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_settime(struct device *dev, struct rtc_time *rtc=
-_tm)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
-> >> +     u32 date =3D 0;
-> >> +     u32 time =3D 0;
-> >> +     int year;
-> >> +
-> >> +     /*
-> >> +      * the input rtc_tm->tm_year is the offset relative to 1900. We =
-use
-> >> +      * the SUN6I_YEAR_OFF macro to rebase it with respect to the min=
- year
-> >> +      * allowed by the hardware
-> >> +      */
-> >> +
-> >> +     year =3D rtc_tm->tm_year + 1900;
-> >> +     if (year < SUN6I_YEAR_MIN || year > SUN6I_YEAR_MAX) {
-> >> +             dev_err(dev, "rtc only supports year in range %d - %d\n",
-> >> +                             SUN6I_YEAR_MIN, SUN6I_YEAR_MAX);
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> >> +     rtc_tm->tm_year -=3D SUN6I_YEAR_OFF;
-> >> +     rtc_tm->tm_mon +=3D 1;
-> >> +
-> >> +     date =3D SUN6I_DATE_SET_DAY_VALUE(rtc_tm->tm_mday) |
-> >> +             SUN6I_DATE_SET_MON_VALUE(rtc_tm->tm_mon)  |
-> >> +             SUN6I_DATE_SET_YEAR_VALUE(rtc_tm->tm_year);
-> >> +
-> >> +     if (is_leap_year(year))
-> >> +             date |=3D SUN6I_LEAP_SET_VALUE(1);
-> >> +
-> >> +     time =3D SUN6I_TIME_SET_SEC_VALUE(rtc_tm->tm_sec)  |
-> >> +             SUN6I_TIME_SET_MIN_VALUE(rtc_tm->tm_min)  |
-> >> +             SUN6I_TIME_SET_HOUR_VALUE(rtc_tm->tm_hour);
-> >> +
-> >> +     /* Check whether registers are writable */
-> >> +     if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
-> >> +                             SUN6I_LOSC_CTRL_ACC_MASK, 50)) {
-> >> +             dev_err(dev, "rtc is still busy.\n");
-> >> +             return -EBUSY;
-> >> +     }
-> >> +
-> >> +     writel(time, chip->base + SUN6I_RTC_HMS);
-> >> +
-> >> +     /*
-> >> +      * After writing the RTC HH-MM-SS register, the
-> >> +      * SUN6I_LOSC_CTRL_RTC_HMS_ACC bit is set and it will not
-> >> +      * be cleared until the real writing operation is finished
-> >> +      */
-> >> +
-> >> +     if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
-> >> +                             SUN6I_LOSC_CTRL_RTC_HMS_ACC, 50)) {
-> >> +             dev_err(dev, "Failed to set rtc time.\n");
-> >> +             return -ETIMEDOUT;
-> >> +     }
-> >> +
-> >> +     writel(date, chip->base + SUN6I_RTC_YMD);
-> >> +
-> >> +     /*
-> >> +      * After writing the RTC YY-MM-DD register, the
-> >> +      * SUN6I_LOSC_CTRL_RTC_YMD_ACC bit is set and it will not
-> >> +      * be cleared until the real writing operation is finished
-> >> +      */
-> >> +
-> >> +     if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
-> >> +                             SUN6I_LOSC_CTRL_RTC_YMD_ACC, 50)) {
-> >> +             dev_err(dev, "Failed to set rtc time.\n");
-> >> +             return -ETIMEDOUT;
-> >> +     }
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_alarm_irq_enable(struct device *dev, unsigned in=
-t enabled)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D dev_get_drvdata(dev);
-> >> +
-> >> +     if (!enabled)
-> >> +             sun6i_rtc_setaie(enabled, chip);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static const struct rtc_class_ops sun6i_rtc_ops =3D {
-> >> +     .read_time              =3D sun6i_rtc_gettime,
-> >> +     .set_time               =3D sun6i_rtc_settime,
-> >> +     .read_alarm             =3D sun6i_rtc_getalarm,
-> >> +     .set_alarm              =3D sun6i_rtc_setalarm,
-> >> +     .alarm_irq_enable       =3D sun6i_rtc_alarm_irq_enable
-> >> +};
-> >> +
-> >> +static const struct of_device_id sun6i_rtc_dt_ids[] =3D {
-> >> +     { .compatible =3D "allwinner,sun6i-a31-rtc" },
-> >> +     { /* sentinel */ },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
-> >
-> > I guess you can move this down just before the platform_driver
-> > declaration if you don't need it in probe.
->=20
-> Moved.
->=20
-> >> +
-> >> +static int sun6i_rtc_probe(struct platform_device *pdev)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip;
-> >> +     struct resource *res;
-> >> +     int ret;
-> >> +
-> >> +     chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> >> +     if (!chip)
-> >> +             return -ENOMEM;
-> >> +
-> >> +     platform_set_drvdata(pdev, chip);
-> >> +     chip->dev =3D &pdev->dev;
-> >> +
-> >> +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >> +     chip->base =3D devm_ioremap_resource(&pdev->dev, res);
-> >> +     if (IS_ERR(chip->base))
-> >> +             return PTR_ERR(chip->base);
-> >> +
-> >> +     chip->irq =3D platform_get_irq(pdev, 0);
-> >> +     if (chip->irq < 0) {
-> >> +             dev_err(&pdev->dev, "No IRQ resource\n");
-> >> +             return chip->irq;
-> >> +     }
-> >
-> > Newline
->=20
-> Added.
->=20
-> >> +     ret =3D devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmi=
-rq,
-> >> +                     0, dev_name(&pdev->dev), chip);
-> >> +     if (ret) {
-> >> +             dev_err(&pdev->dev, "Could not request IRQ\n");
-> >> +             return ret;
-> >> +     }
-> >> +
-> >> +     /* clear the alarm counter value */
-> >> +     writel(0, chip->base + SUN6I_ALRM_COUNTER);
-> >> +
-> >> +     /* disable counter alarm */
-> >> +     writel(0, chip->base + SUN6I_ALRM_EN);
-> >> +
-> >> +     /* disable counter alarm interrupt */
-> >> +     writel(0, chip->base + SUN6I_ALRM_IRQ_EN);
-> >> +
-> >> +     /* disable week alarm */
-> >> +     writel(0, chip->base + SUN6I_ALRM1_EN);
-> >> +
-> >> +     /* disable week alarm interrupt */
-> >> +     writel(0, chip->base + SUN6I_ALRM1_IRQ_EN);
-> >> +
-> >> +     /* clear counter alarm pending interrupts */
-> >> +     writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND, chip->base +
-> >> +                     SUN6I_ALRM_IRQ_STA);
-> >> +
-> >> +     /* clear week alarm pending interrupts */
-> >> +     writel(SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND, chip->base +
-> >> +                     SUN6I_ALRM1_IRQ_STA);
-> >> +
-> >> +     /* disable alarm wakeup */
-> >> +     writel(0, chip->base + SUN6I_ALARM_CONFIG);
-> >> +
-> >> +     chip->rtc =3D rtc_device_register("rtc-sun6i", &pdev->dev,
-> >> +                     &sun6i_rtc_ops, THIS_MODULE);
-> >> +     if (IS_ERR(chip->rtc)) {
-> >> +             dev_err(&pdev->dev, "unable to register device\n");
-> >> +             return PTR_ERR(chip->rtc);
-> >> +     }
-> >> +
-> >> +     dev_info(&pdev->dev, "RTC enabled\n");
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int sun6i_rtc_remove(struct platform_device *pdev)
-> >> +{
-> >> +     struct sun6i_rtc_dev *chip =3D platform_get_drvdata(pdev);
-> >> +
-> >> +     rtc_device_unregister(chip->rtc);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static struct platform_driver sun6i_rtc_driver =3D {
-> >> +     .probe          =3D sun6i_rtc_probe,
-> >> +     .remove         =3D sun6i_rtc_remove,
-> >> +     .driver         =3D {
-> >> +             .name           =3D "sun6i-rtc",
-> >> +             .owner          =3D THIS_MODULE,
-> >> +             .of_match_table =3D sun6i_rtc_dt_ids,
-> >> +     },
-> >> +};
-> >> +
-> >> +module_platform_driver(sun6i_rtc_driver);
-> >> +
-> >> +MODULE_DESCRIPTION("sun6i RTC driver");
-> >> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
-> >> +MODULE_LICENSE("GPL");
-> >> --
-> >> 2.0.1
-> >>
-> >
-> > Thanks!
-> > Maxime
->=20
-> Thanks for the review!
-> ChenYu
-
-Thanks for your efforts on this,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---CaPKgh3XHpq3rEUV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTz4aeAAoJEBx+YmzsjxAgtwsP+wcs2vpTbuCeAAPRB887Lavs
-bp8LNPf3eSbf3fbSDzd+/4Kuj6nHStbBU4mMKdL9ZKMYii4nRLYGSH5HTOyu9C29
-az3zF6SBNj+3DTX9j6ZI4YKBOXrODfx1k8ooSOyybQcTVbSJwe4hFyMaq+lO0EaE
-iLxnRV/w9e+LlStX7MAFLMsH5o0/QljHAdnqjt7AtArTC2V37ltyoRNHC8EARd2J
-N0kSYOExa8l5osr8ALRVdO+nTihPerbdr/ZTyjx85FAOjm0C9/kxTPp9sqE8ZF48
-gmNVsb2QwlwtXiKFaEek8gqeMJco33G6xDRtMr9Hj0iweI32YZiGwHQHzZpiaMx+
-LpZO5++GF5Wevouqo/46ovnnOrFe8d97w9yFXpHtouf7W5iHjQENibJVBnqtu5NC
-x2cSaaCXivdJ2mm/Up7Gp1qbED8NQzSMhWmsN2jexxp5e6B1GI1c3ZzbR99HFLh0
-DEVlNf8eefa/m6EslBVScGnoATSVVIaSHBdqRXVtE475simpPYK8CIYpCVS8k/tc
-FkHSQEkkpWeN2BT1UaE2yAABSasXFp+aWIDNcPJOkcnAL0KamP5kwtN9+KzjVdl8
-GgWUwtd8g1kYC9I7bAQs70aZ0rKHlCPa5tq7GEga2L6Hs2ko0X67i9lHX21ZKlTu
-0lS++l1EopGPkB45PRRf
-=4bSE
------END PGP SIGNATURE-----
-
---CaPKgh3XHpq3rEUV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyMyBKdWwgMjAxNCwgT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIHdyb3RlOgoKPiAK
+PiBPbiAyMiBKdWx5IDIwMTQgMDg6MDksIExlZSBKb25lcyB3cm90ZToKPiAKPiA+LS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0KPiA+RnJvbTogTGVlIEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxp
+bmFyby5vcmddCj4gPj4gRnJvbTogT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIDxzdHdpc3Mub3Bl
+bnNvdXJjZUBkaWFzZW1pLmNvbT4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2ggc2VyaWVzIHVwZGF0ZXMg
+dGhlIGRldmljZSB0cmVlIHZlbmRvciBwcmVmaXggZm9yCj4gPj4gRGlhbG9nIFNlbWljb25kdWN0
+b3IuCj4gPj4KPiA+PiBWYXJpb3VzIG1ldGhvZHMgYXJlIGN1cnJlbnRseSB1c2VkIHRocm91Z2hv
+dXQgdGhlIGtlcm5lbDogJ2RpYXNlbWknLAo+ID4+ICdkaWFsb2cnIGFuZCAnZGxnJy4gT3RoZXJz
+IGhhdmUgYWxzbyBiZWVuIHN1Z2dlc3RlZC4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2ggc2V0IGFpbXMg
+dG8gY29uc29saWRhdGUgdGhlIHVzYWdlIG9mIHRoZSB2ZW5kb3IgcHJlZml4IHRvCj4gPj4gdXNl
+IGEgY29tbW9uIHN0YW5kYXJkLiBUaGUgcHJlZml4ICdkbGcnIGlzIHVzZWQuCj4gPj4KPiA+PiBI
+ZXJlIGlzIG15IHdvcmtpbmcgZm9yIGp1c3RpZnlpbmcgdGhpcyBjaGFuZ2U6Cj4gPj4KPiA+PiAu
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpCj4gPj4gCUhhcyB0
+aGUgZm9sbG93aW5nIGVudHJ5Ogo+ID4+IAljb21wYXRpYmxlID0gImRpYWxvZyxkYTkwNjMiOwo+
+ID4+IAlIb3dldmVyIHRoZSBEQTkwNjMgZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgZGV2aWNlIHRy
+ZWUgeWV0IHNvCj4gPj4gCWl0IHdvdWxkIGJlIHNhZmUgdG8gcmVuYW1lIHRoaXMuCj4gPj4KPiA+
+PiAuL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMKPiA+PiAJSGFzIHRoZSBmb2xsb3dp
+bmcgZW50cnk6Cj4gPj4gCWNvbXBhdGlibGUgPSAiZGlhbG9nLGRhOTA1MyIsICJkaWFsb2csZGE5
+MDUyIjsKPiA+PiAJSG93ZXZlciwgdGhlIGV4aXN0aW5nIGRyaXZlciBmaWxlcyBmb3IgREE5MDUz
+IGRlZmluZSBhIGRpZmZlcmVudAo+ID4+IAljb21wYXRpYmxlIHN0cmluZyB3aXRoIHRoZSAiZGxn
+IiBwcmVmaXguIFNlZSB0aGUgZW50cmllcyBiZWxvdy4KPiA+PiAJTm9uZSBvZiB0aGVzZSB3b3Vs
+ZCBoYXZlIGFsbG93ZWQgdGhlICJkaWFsb2ciIHByZWZpeC4KPiA+PiAJeyAuY29tcGF0aWJsZSA9
+ICJkbGcsZGE5MDUyIiwgLmRhdGEgPSAmZGE5MDUyX2kyY19pZFswXSB9LAo+ID4+IAl7IC5jb21w
+YXRpYmxlID0gImRsZyxkYTkwNTMtYWEiLCAuZGF0YSA9ICZkYTkwNTJfaTJjX2lkWzFdIH0sCj4g
+Pj4gCXsgLmNvbXBhdGlibGUgPSAiZGxnLGRhOTA1My1iYSIsIC5kYXRhID0gJmRhOTA1Ml9pMmNf
+aWRbMl0gfSwKPiA+PiAJeyAuY29tcGF0aWJsZSA9ICJkbGcsZGE5MDUzLWJiIiwgLmRhdGEgPSAm
+ZGE5MDUyX2kyY19pZFszXSB9LAo+ID4+IAl7IC5jb21wYXRpYmxlID0gImRsZyxkYTkwNTMtYmMi
+LCAuZGF0YSA9ICZkYTkwNTJfaTJjX2lkWzRdIH0sCj4gPj4gCUluIHRoaXMgcGFydGljdWxhciBj
+YXNlIHRoZSBjaGFuZ2UgZm9yIERBOTA1MyBkaWQgbm90IG1hdGNoIHVwCj4gPj4gCXdpdGggdGhl
+IGV4cGVjdGVkIGNvbXBhdGliaWxpdHkgc3RyaW5ncyBhbmQgdGhlcmVmb3JlIEkgaGF2ZQo+ID4+
+IAlyZXRhaW5lZCB0aGUgbW9yZSBnZW5lcmFsICJkbGcsZGE5MDUzIiBiZWNhdXNlIEkgZG8gbm90
+IGtub3cKPiA+PiAJd2hpY2ggc2lsaWNvbiB2YXJpYW50ICgtYWEsIC1iYSwgLWJiLCBvciAtYmMp
+IGlzIHRoZSBjb3JyZWN0Cj4gPj4gCW9uZSB0byB1c2UuCj4gPj4KPiA+PiAuL2RldmljZXRyZWUv
+YmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKPiA+PiAJSGFzIHRoZSBmb2xsb3dpbmcg
+ZW50cnk6Cj4gPj4gCWRpYWxvZyxkYTkwNTMgIERBOTA1MzogZmxleGlibGUgc3lzdGVtIGxldmVs
+IFBNSUMgd2l0aCBtdWx0aWNvcmUgc3VwcG9ydAo+ID4+IAlJbnN0ZWFkIG9mIGRlcHJlY2lhdGlu
+ZyB0aGlzICJkaWFsb2ciIGxpbmUgSSBhbSBqdXN0IHJlcGxhY2luZyBpdAo+ID4+IAl3aXRoIGEg
+ImRsZyIgYmVjYXVzZSB0aGUgZXhpc3RpbmcgZHJpdmVyIERBOTA1MyBkb2VzIG5vdCBzdXBwb3J0
+Cj4gPj4gCXRoZSBkaWFsb2cga2V5d29yZC4KPiA+Pgo+ID4+IC4vZHJpdmVycy9tZmQvZGE5MDU1
+LWNvcmUuYwo+ID4+IAlIYXMgdGhlIGZvbGxvd2luZyBlbnRyaWVzIGZvciB0aGUgbWZkIGNlbGxz
+Cj4gPj4gCQkub2ZfY29tcGF0aWJsZSA9ICJkaWFsb2csZGE5MDU1LWdwaW8iLCBldGMuLi4KPiA+
+PiAJSW4gdGhpcyBjYXNlLCB0aGUgZHJpdmVyIGRvZXMgbm90IGFjdHVhbGx5IHBhc3MgaW4gYW55
+IHBsYXRmb3JtIGRhdGEKPiA+PiAJdG8gYW55IG9mIHRoZSBtZmQgY2VsbHMgYW5kIHNvIHRoZXkg
+YXJlIG5vdCBhY3R1YWxseSB1c2VkCj4gPj4gCXlldCBpbiB0aGUgZHJpdmVyLiBOb2JvZHkgZWxz
+ZSByZWZlcmVuY2VzIHRoaXMgaW5mb3JtYXRpb24uCj4gPj4KPiA+PiAuL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcmVndWxhdG9yL2RhOTIxMC50eHQKPiA+PiAJSGFzIHRoZSBmb2xsb3dpbmcgdHdvIGVu
+dHJpZXMgaW4gdGhlIGJpbmRpbmcgZmlsZToKPiA+PiAJLSBjb21wYXRpYmxlOgltdXN0IGJlICJk
+aWFzZW1pLGRhOTIxMCIKPiA+PiAJY29tcGF0aWJsZSA9ICJkaWFzZW1pLGRhOTIxMCI7Cj4gPj4g
+CUhvd2V2ZXIgdGhlIERBOTIxMCBkcml2ZXIgZG9lcyBub3Qgc3VwcG9ydCBkZXZpY2UgdHJlZS4K
+PiA+Pgo+ID4+IC4vYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MC1sYWdlci5kdHMKPiA+PiAuL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEta29lbHNjaC5kdHMKPiA+PiAJVGhlc2UgdHdvIGZpbGVz
+IGhhdmUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOgo+ID4+IAljb21wYXRpYmxlID0gImRpYXNlbWks
+ZGE5MjEwIjsKPiA+PiAJVGhlc2UgYm90aCByZWZlcmVuY2UgdGhlICJkaWFzZW1pLGRhOTIxMCIg
+YnV0IHRoZSBkZXZpY2UKPiA+PiAJZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgZGV2aWNlIHRyZWUK
+PiA+Pgo+ID4+IFRoZSByZW1haW5pbmcgZmlsZXMgaW4gdGhlIGtlcm5lbCBJIGhhdmUgZm91bmQg
+Y29ycmVjdGx5IHJlZmVyZW5jZXMKPiA+PiB0aGUgZHJpdmVyIGZpbGVzIGNvbXBhdGliaWxpdHkg
+aW5mb3JtYXRpb24gYW5kIHNvIGRpZCBub3QgbmVlZCB0bwo+ID4+IGJlIGNoYW5nZWQuCj4gPj4K
+PiA+PiAuL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTA1Mi1pMmMudHh0Cj4gPj4gCS0gY29t
+cGF0aWJsZSA6IFNob3VsZCBiZSAiZGxnLGRhOTA1MiIsICJkbGcsZGE5MDUzLWFhIiwKPiA+PiAJ
+CSAiZGxnLGRhOTA1My1hYiIsIG9yICJkbGcsZGE5MDUzLWJiIgo+ID4+Cj4gPj4gLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21mZC9kYTkwNTUudHh0Cj4gPj4gCWNvbXBhdGlibGUgPSAiZGxnLGRhOTA1
+NS1wbWljIjsKPiA+Pgo+ID4+IC4vYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMtdm9pcGFjLWRtbS02
+NjguZHRzaQo+ID4+IAljb21wYXRpYmxlID0gImRsZyxkYTkwNTMtYWEiLCAiZGxnLGRhOTA1MiI7
+Cj4gPj4KPiA+PiAuL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXFzYi5kdHMKPiA+PiAJY29tcGF0
+aWJsZSA9ICJkbGcsZGE5MDUzLWFhIiwgImRsZyxkYTkwNTIiOwo+ID4+Cj4gPj4gLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NvdW5kL2RhOTA1NS50eHQKPiA+PiAJLSBjb21wYXRpYmxlOiAiZGxnLGRh
+OTA1NS1jb2RlYyIKPiA+PiAJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LWNvZGVjIjsKPiA+Pgo+
+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIDxzdHdpc3Mu
+b3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4KPiA+PiAtLS0KPiA+PiBDaGVja3MgcGVyZm9ybWVkIHdp
+dGggbGludXgtbmV4dC9uZXh0LTIwMTQwNzE1L3NjcmlwdHMvY2hlY2twYXRjaC5wbAo+ID4+ICB0
+cml2aWFsLWRldmljZXMudHh0ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgODkg
+bGluZXMgY2hlY2tlZAo+ID4+ICBkYTkyMTAudHh0ICAgICAgICAgICAgICAgIHRvdGFsOiAwIGVy
+cm9ycywgMCB3YXJuaW5ncywgMjEgbGluZXMgY2hlY2tlZAo+ID4+ICB2ZW5kb3ItcHJlZml4ZXMu
+dHh0ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgMTQ5IGxpbmVzIGNoZWNrZWQK
+PiA+PiAgaW14NTMtc21kLmR0cyAgICAgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDIgd2Fybmlu
+Z3MsIDI3OSBsaW5lcyBjaGVja2VkCj4gPj4gIGlteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpIHRv
+dGFsOiAwIGVycm9ycywgMiB3YXJuaW5ncywgMzU3IGxpbmVzIGNoZWNrZWQKPiA+PiAgcjhhNzc5
+MC1sYWdlci5kdHMgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDMgd2FybmluZ3MsIDQwMyBsaW5l
+cyBjaGVja2VkCj4gPj4gIHI4YTc3OTEta29lbHNjaC5kdHMgICAgICAgdG90YWw6IDAgZXJyb3Jz
+LCA0IHdhcm5pbmdzLCA0NjEgbGluZXMgY2hlY2tlZAo+ID4+ICBkYTkwNTUtY29yZS5jICAgICAg
+ICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5ncywgNDI4IGxpbmVzIGNoZWNrZWQKPiA+
+Pgo+ID4+IFRoaXMgZS1tYWlsIGlzIGluIHJlc3BvbnNlIHRvIHRoZSBwcmV2aW91cyB0aHJlYWRz
+IGhlcmU6Cj4gPj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQvNi8xMS8yNjIKPiA+PiBodHRw
+Oi8vY29tbWVudHMuZ21hbmUub3JnL2dtYW5lLmxpbnV4LnBvcnRzLmFybS5rZXJuZWwvMzQxMzU4
+Cj4gPj4KPiA+PiBDaGFuZ2VzIHNpbmNlIFJGQyBWMQo+ID4+IC0gYWRkaXRpb24gb2YgY2hhbmdl
+cyB0byBEVFMgZmlsZXMgcmVmZXJlbmNpbmcgImRpYXNlbWksZGE5MjEwIgo+ID4+ICAgIGFyY2gv
+YXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRzCj4gPj4gICAgYXJjaC9hcm0vYm9vdC9kdHMv
+cjhhNzc5MS1rb2Vsc2NoLmR0cwo+ID4+Cj4gPj4gVGhpcyBSRkMgVjIgZG9lcyBub3QgYW5zd2Vy
+IHRoZSByZXNwb25zZSB0byBSRkMgVjEgZnJvbSBNYXJrIEJyb3duOgo+ID4+IGh0dHA6Ly93d3cu
+c3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2czNDc2MTUuaHRtbAo+ID4+Cj4gPj4gVGhp
+cyBwYXRjaCBhcHBsaWVzIGFnYWluc3QgbGludXgtbmV4dCBhbmQgbmV4dC0yMDE0MDcxNQo+ID4+
+Cj4gPj4gUmVnYXJkcywKPiA+PiBTdGV2ZSBUd2lzcywgRGlhbG9nIFNlbWljb25kdWN0b3IgTHRk
+Lgo+ID4+Cj4gPj4KPiA+Pgo+ID4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJpdmlh
+bC1kZXZpY2VzLnR4dCAgICB8ICAyICstCj4gPj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jl
+Z3VsYXRvci9kYTkyMTAudHh0ICAgICAgIHwgIDQgKystLQo+ID4+ICAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAxICsKPiA+PiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NTMtc21kLmR0cyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ID4+ICBh
+cmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxhMDIuZHRzaSAgICAgICB8ICAyICst
+Cj4gPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRzICAgICAgICAgICAgICAg
+IHwgIDIgKy0KPiA+PiAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1rb2Vsc2NoLmR0cyAgICAg
+ICAgICAgICAgfCAgMiArLQo+ID4+ICBkcml2ZXJzL21mZC9kYTkwNTUtY29yZS5jICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKystLS0tLS0tLS0tCj4gPgo+ID5Gb3IgdGhl
+IE1GRCBjaGFuZ2VzOgo+ID4KPiA+ICBBY2tlZC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGlu
+YXJvLm9yZz4KPiA+Cj4gPldoaWNoIHRyZWUgaXMgdGhpcyBwYXRjaCBnb2luZyBpbnRvPyAgRG8g
+eW91IHdhbnQgbWUgdG8gdGFrZSBpdCBhbmQKPiA+c3VwcGx5IGFuIElCIGZvciB0aGUgb3RoZXIg
+TWFpbnRhaW5lcnMgdG8gcHVsbCBmcm9tPwo+IAo+IEhpIExlZSwKPiAKPiBJJ20gbm90IHN1cmUg
+aWYgdGhpcyBxdWVzdGlvbiB3YXMgZm9yIG1lIGRpcmVjdGx5LCBidXQgSSBkbyBub3QgaGF2ZSBh
+bnkKPiBwcmVmZXJlbmNlIHdobyB0YWtlcyB0aGlzIGNoYW5nZSBvciBob3cgaXQgZ2V0cyBwdWxs
+ZWQuIFRoYW5rIHlvdS4KPiAKPiBUaGVyZSB3YXMgYSByZXF1ZXN0IGZyb20gUm9iIEhlcnJpbmcK
+PiBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnMzQ5Mjg5Lmh0bWwK
+PiB0byByZWZvcm1hdCB0aGUgb3JpZ2luYWwgZS1tYWlsIGNvbnRlbnQgYW5kIGFsc28gdG8gZHJv
+cCB0aGUgYW5ub3lpbmcgCj4gIk9wZW5zb3VyY2UiIGFuZCBzcXVhcmUgYnJhY2tldHMgZnJvbSBt
+eSBTaWduZWQtb2ZmLWJ5Ogo+IHNpZ25hdHVyZS4KCi4uLiBhbmQgQXV0aG9yOgoKU28gZm9yIG1l
+IHRvIHRha2UgdGhpcywgSSBuZWVkIHRvIHNlZSBEVCBvciBNYWludGFpbmVyIEFja3MgZm9yIHRo
+ZQpiaW5kaW5ncyBhbmQgRFRTKEkpIGNoYW5nZXMuCgo+IFNvLCB0aGUgZGVjaXNpb24gaXMgdG8g
+dGFrZSB0aGUgcGF0Y2ggaW50byBhbiBpbW11dGFibGUgYnJhbmNoCj4gYW5kIHlvdSBuZWVkIG1l
+IHRvIHJlLWZvcm1hdCB0aGUgZS1tYWlsIGNvbnRlbnQgLS0gSSB3aWxsIHJlc2VuZCAKPiB3aXRo
+IHRob3NlIGNoYW5nZXMuCj4gCj4gUmVnYXJkcywKPiBTdGV2ZQo+IAo+ID4KPiA+PiAgOCBmaWxl
+cyBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkKCi0tIApMZWUgSm9u
+ZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3Jn
+IOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFj
+ZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
