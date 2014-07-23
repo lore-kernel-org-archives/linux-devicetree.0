@@ -1,56 +1,54 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Wed, 23 Jul 2014 22:13:09 +0800
-Message-ID: <20140723141309.GA30324@gondor.apana.org.au>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com>
- <201405241400.03456.marex@denx.de>
- <20140723135735.GA30132@gondor.apana.org.au>
- <201407231607.21106.marex@denx.de>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/2] Added dts defintion for Lenovo ix4-300d nas
+Date: Wed, 23 Jul 2014 16:14:43 +0200
+Message-ID: <20140723141443.GC2856@lunn.ch>
+References: <1406117232-5962-1-git-send-email-yahoo@perenite.com>
+ <20140723134534.GF23220@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201407231607.21106.marex@denx.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+In-Reply-To: <20140723134534.GF23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: benoitm974 <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 23, 2014 at 04:07:20PM +0200, Marek Vasut wrote:
-> On Wednesday, July 23, 2014 at 03:57:35 PM, Herbert Xu wrote:
-> > On Sat, May 24, 2014 at 02:00:03PM +0200, Marek Vasut wrote:
-> > > > +	}
-> > > > +#endif
-> > > > +
-> > > > +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
-> > > > +	err = crypto_register_shash(&sunxi_md5_alg);
-> > > 
-> > > Do not use shash for such device. This is clearly and ahash (and async in
-> > > general) device. The rule of a thumb here is that you use sync algos only
-> > > for devices which have dedicated instructions for computing the
-> > > transformation. For devices which are attached to some kind of bus, you
-> > > use async algos (ahash etc).
-> > 
-> > I'm sorry that I didn't catch this earlier but there is no such
-> > rule.
-> > 
-> > Unless you need the async interface you should stick to the sync
-> > interfaces for the sake of simplicity.
-> > 
-> > We have a number of existing drivers that are synchronous but
-> > using the async interface.  They should either be converted
-> > over to the sync interface or made interrupt-driven if possible.
+Hi Benoit,
+
 > 
-> Sure, but this device is interrupt driven and uses DMA to feed the crypto 
-> engine, therefore async, right ?
+> > +			};
+> > +
+> > +			serial@12000 {
+> > +				clocks = <&coreclk 0>;
 
-If it's interrupt-driven, then yes it would certainly make sense to
-be async.  But all I see is polling in the latest posting, was the
-first version different?
+I don't think you need the clocks property. It should be already set
+in armada-xp.dtsi.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> > +				adt7473@2e {
+> > +					compatible = "adt7473";
+
+Please include a vendor prefix here. 
+
+
+> > +					reg = <0x2e>;
+> > +				};
+> > +
+> > +				pcf8563@51 {
+> > +					compatible = "pcf8563";
+
+and a vendor prefix here.
+
+> > +	/* warning: you need both eth1 & 0 to be initialize for poweroff to shutdown otherwise it reboots */
+
+What do you mean by initialized? Driver loaded? Interface up? 
+
+> This is a great first version
+
+I agree with Jason, well done.
+
+  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
