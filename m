@@ -1,207 +1,133 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Added dts defintion for Lenovo ix4-300d nas
-Date: Wed, 23 Jul 2014 17:45:57 +0200
-Message-ID: <53CFD8B5.2030205@gmail.com>
-References: <1406117232-5962-1-git-send-email-yahoo@perenite.com> <20140723134534.GF23220@titan.lakedaemon.net>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140723134534.GF23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, benoitm974 <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Cc: benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/3] usb: dwc3: add ST dwc3 glue layer to manage dwc3
+ HC
+Date: Wed, 23 Jul 2014 16:50:16 +0100
+Message-ID: <20140723155016.GM23210@lee--X1>
+References: <1406126915-30601-1-git-send-email-peter.griffin@linaro.org>
+ <1406126915-30601-2-git-send-email-peter.griffin@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406126915-30601-2-git-send-email-peter.griffin@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2014 03:45 PM, Jason Cooper wrote:
-> Thanks for the patch!  A few minor things:
+On Wed, 23 Jul 2014, Peter Griffin wrote:
 
-Benoit,
-
-I also have some minor remarks just because I stumble over them
-all the time.
-
->> ---
->>   arch/arm/boot/dts/Makefile                     |   1 +
->>   arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts | 267 +++++++++++++++++++++++++
-
-I looked it up and Lenovo names it "ix4-300d", maybe you should
-rename the dts "armada-xp-lenovo-ix4-300d.dts" then.
+> This patch adds the ST glue logic to manage the DWC3 HC
+> on STiH407 SoC family. It manages the powerdown signal,
+> and configures the internal glue logic and syscfg registers.
+>=20
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  drivers/usb/dwc3/Kconfig   |   9 ++
+>  drivers/usb/dwc3/Makefile  |   1 +
+>  drivers/usb/dwc3/dwc3-st.c | 338 +++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 348 insertions(+)
+>  create mode 100644 drivers/usb/dwc3/dwc3-st.c
 
 [...]
->> diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts
->> new file mode 100644
->> index 0000000..e04e7a6
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts
->> @@ -0,0 +1,267 @@
->> +/*
->> + * Device Tree file for LENOVO IX4-300d
 
-It is spelled "Lenovo" and the full name is "Lenovo Iomega ix4-300d".
-As it is the initial commit, we should be more sensitive on the case
-here.
+> +/*
+> + * For all fields in USB2_VBUS_MNGMNT_SEL1
+> + * 2=E2=80=99b00 : Override value from Reg 0x30 is selected
+> + * 2=E2=80=99b01 : utmiotg_<signal_name> from usb3_top is selected
+> + * 2=E2=80=99b10 : pipew_<signal_name> from PIPEW instance is select=
+ed
+> + * 2=E2=80=99b11 : value is 1'b0
+> + */
+> +#define REG30	0x0
+> +#define UTMIOTG	0x1
+> +#define PIPEW	0x2
+> +#define ZERO	0x3
 
->> + * Copyright (C) 2014, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * as published by the Free Software Foundation; either version
->> + * 2 of the License, or (at your option) any later version.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include <dt-bindings/input/input.h>
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include "armada-xp-mv78230.dtsi"
->> +
->> +/ {
->> +	model = "LENOVO IX4-300d";
+Possible register values are usually prefixed with something
+descriptive which identifies them.
 
-Same comment about "Lenovo Iomega ix4-300d"
+USB2_VBUS_ looks appropriate here.
 
->> +	compatible = "lenovo,ix4-300d", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
->> +
->> +	chosen {
->> +		bootargs = "console=ttyS0,115200 earlyprintk";
-
-Consider to add
-
-stdout-path = "/soc/internal-regs/serial@12000";
-
-That way you would not have to fix it up for e.g. Barebox.
-Unfortunately, neither Armada 370 nor XP dtsi define node
-labels yet, so you have to put the full node path.
-
->> +	};
->> +
 [...]
->> +	soc {
->> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
->> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
->> +
->> +		pcie-controller {
->> +			status = "okay";
->> +
->> +			pcie@1,0 {
->> +				/* Port 0, Lane 0 */
->> +				status = "okay";
->> +			};
->> +			pcie@5,0 {
->> +                                /* Port 1, Lane 0 */
->> +                                status = "okay";
->> +                        };
->> +
 
-Any chance you know what is connected to above PCIe ports?
-If so, put a comment above the node itself naming the attached
-device, e.g.
+> +/**
+> + * struct st_dwc3 - st-dwc3 driver private structure
+> + * @dwc3:		platform device pointer
+> + * @dev:		device pointer
+> + * @glue_base		ioaddr for the glue registers
+> + * @regmap		regmap pointer for getting syscfg
+> + * @syscfg_reg_off	usb syscfg control offset
+> + * @dr_mode		drd static host/device config
+> + * @rstc_pwrdn		rest controller for powerdown signal
+> + * @rstc_rst		reset controller for softreset signal
 
-/* USB 3.0 xHCI controller */
-pcie@1,0 {...}
+Some of these have ':', some of them don't.  I suggest you standardise
+to 'all do'.
 
-Also, I saw you have a good impression about the GPIOs used on
-the ix4-300d. If you also know the PERST# GPIOs, add them with
+> + *
 
-reset-gpios = <&gpioN M GPIO_ACTIVE_LOW>;
+Superflous line in comment.
 
-where N, M follow gpio# = (32 * N) + M, i.e. N=1, M=22 for gpio54.
+> + */
+> +
 
->> +		};
->> +
->> +		internal-regs {
->> +			pinctrl {
->> +				poweroff: poweroff {
+Superflous '\n'.
 
-nit: poweroff_pin: poweroff-pin {...}
-like the ones below?
+Take a look how you did the function headers below.
 
->> +                                        marvell,pins = "mpp24";
->> +                                        marvell,function = "gpio";
->> +                                };
->> +
->> +                                power_button_pin: power-button-pin {
->> +                                        marvell,pins = "mpp44";
->> +                                        marvell,function = "gpio";
->> +                                };
->> +
->> +                                reset_button_pin: reset-button-pin {
->> +                                        marvell,pins = "mpp45";
->> +                                        marvell,function = "gpio";
->> +                                };
->> +				select_button_pin: select-button-pin {
->> +                                        marvell,pins = "mpp41";
->> +                                        marvell,function = "gpio";
->> +                                };
->> +
->> +                                scroll_button_pin: scroll-button-pin {
->> +                                        marvell,pins = "mpp42";
->> +                                        marvell,function = "gpio";
->> +                                };
->> +				hdd_led_pin: hdd-led-pin {
->> +					marvell,pins = "mpp26";
->> +					marvell,function = "gpio";
->> +		                };
 [...]
->> +			};
->> +
->> +			serial@12000 {
->> +				clocks = <&coreclk 0>;
 
-As Andrew already said, no need to duplicate the clocks property.
+> +static int st_dwc3_drd_init(struct st_dwc3 *dwc3_data)
+> +{
+> +	u32 val;
+> +	int err;
+> +
+> +	err =3D regmap_read(dwc3_data->regmap, dwc3_data->syscfg_reg_off, &=
+val);
+> +	if (err)
+> +		return err;
+> +
+> +	switch (dwc3_data->dr_mode) {
+> +	case USB_DR_MODE_PERIPHERAL:
+> +		val |=3D USB_SET_PORT_DEVICE;
+> +		dev_dbg(dwc3_data->dev, "Configuring as Device\n");
+> +		break;
+> +
+> +	case USB_DR_MODE_HOST:
+> +		val &=3D USB_HOST_DEFAULT_MASK;
+> +		dev_dbg(dwc3_data->dev, "Configuring as Host\n");
+> +		break;
+> +
+> +	default:
+> +		dev_err(dwc3_data->dev, "Unsupported mode of operation %d\n"
+> +			, dwc3_data->dr_mode);
 
->> +				status = "okay";
->> +			};
-[...]
->> +	spi3 {
->> +                compatible = "spi-gpio";
->> +                status = "okay";
->> +                gpio-sck = <&gpio0 25 0>;
->> +                gpio-mosi = <&gpio1 15 0>; /*gpio 47*/
->> +                cs-gpios = <&gpio0 27 0 >;
-[...]
->> +                num-chipselects = <1>;
->> +                #address-cells = <1>;
->> +                #size-cells = <0>;
->> +
->> +                gpio2: gpio2@0 {
->> +                        compatible = "fairchild,74hc595";
+',' should be on the line above.
 
-Freaky we have a driver for a 74x595 8-bit shift register ;)
+> +		return -EINVAL;
+> +	}
+> +
+> +	return regmap_write(dwc3_data->regmap, dwc3_data->syscfg_reg_off, v=
+al);
+> +}
 
->> +                        gpio-controller;
->> +                        #gpio-cells = <2>;
->> +                        reg = <0>;
->> +                        registers-number = <2>;
->> +                        spi-max-frequency = <100000>;
->> +                };
->> +	};
->> +
->> +	gpio-leds {
->> +                compatible = "gpio-leds";
->> +		pinctrl-0 = <&hdd_led_pin>;
->> +		pinctrl-names = "default";
->> +
->> +		hdd-led {
->> +                        label = "ix4300d:blue:hdd";
+All of this stuff is pretty minor.
 
-Can you get rid of "ix4300d:" or rename it to "ix4-300d:" without
-breaking any userspace stuff? If so, please update all LEDs.
+Once fixed apply my Ack on the next revision:
 
->> +                        gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
->> +                        default-state = "off";
->> +                };
-[...]
->> +	/* warning: you need both eth1 & 0 to be initialize for poweroff to shutdown otherwise it reboots */
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-I don't get the comment.
-
-> This is a great first version
-
-Yup, Thanks!
-
-Sebastian
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
