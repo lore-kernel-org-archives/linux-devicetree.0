@@ -1,58 +1,52 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: zynq: DT: Add CAN node
-Date: Wed, 23 Jul 2014 09:07:02 -0700
-Message-ID: <0a68731a-e0f0-4e19-b9a4-57cec4c8de3b@BN1BFFO11FD048.protection.gbl>
-References: <52d799e17cd3539713625c6f6a6666620f52d692.1406120732.git.michal.simek@xilinx.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller
+ driver
+Date: Wed, 23 Jul 2014 19:11:23 +0300
+Message-ID: <1406131883.2585.45.camel@iivanov-dev>
+References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
+	 <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+	 <CACRpkdaCfrjNmkuRYVwdDHdt4myNkmTwmJjZU3AQr1SsSKBS3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52d799e17cd3539713625c6f6a6666620f52d692.1406120732.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaCfrjNmkuRYVwdDHdt4myNkmTwmJjZU3AQr1SsSKBS3g@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-07-23 at 03:05PM +0200, Michal Simek wrote:
-> Add node describing Zynq's CAN controller.
->=20
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->=20
->  arch/arm/boot/dts/zynq-7000.dtsi | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zyn=
-q-7000.dtsi
-> index 366ca6434f54..2287d9b4ed1a 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -71,7 +71,18 @@
->  			interrupts =3D <0 7 4>;
->  			interrupt-parent =3D <&intc>;
->  			clocks =3D <&clkc 12>;
-> -		};
-> +		};
-> +
-> +		can0: can@e0008000 {
-> +			compatible =3D "xlnx,zynq-can-1.0";
-> +			clocks =3D <&clkc 19>, <&clkc 36>;
-> +			clock-names =3D "can_clk", "pclk";
-> +			reg =3D <0xe0008000 0x1000>;
-> +			interrupts =3D <0 28 4>;
-> +			interrupt-parent =3D <&intc>;
-> +			tx-fifo-depth =3D <0x40>;
-> +			rx-fifo-depth =3D <0x40>;
-> +		};
+On Wed, 2014-07-23 at 17:27 +0200, Linus Walleij wrote:
+> On Thu, Jul 17, 2014 at 5:25 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+> 
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> >
+> > This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> > Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
+> >
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> (...)
+> > +static int qpnp_pinctrl_remove(struct platform_device *pdev)
+> > +{
+> > +       struct qpnp_pinctrl *qctrl = platform_get_drvdata(pdev);
+> > +
+> > +       pinctrl_unregister(qctrl->ctrl);
+> > +
+> > +       return gpiochip_remove(&qctrl->chip);
+> 
+> We're removing the return value from gpiochip_remove() and I
+> have dropped the __must_check attribute today, so just remove
+> it unconditionally and return 0;
 
-What about the second CAN core? You also probably want to add
-'status =3D "disabled"' in the dtsi.
+Yes, I know. Patches are based on v3.16-rc6 tag.
 
-	S=C3=B6ren
+> 
+> Sorry for short and lame comment on a large patch I should look
+> closer at, but atleast it's something.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, 
+Ivan
+
+> 
+> Yours,
+> Linus Walleij
