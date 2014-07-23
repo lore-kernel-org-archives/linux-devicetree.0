@@ -1,328 +1,60 @@
-From: Benoit Masson <yahoo@perenite.com>
-Subject: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
-Date: Wed, 23 Jul 2014 15:52:53 -0700
-Message-ID: <1406155973-13657-1-git-send-email-yahoo@perenite.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benoitm@perenite.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@free-electrons.com, sebastian.hesselbarth@googlemail.com, Benoit Masson <yahoo@perenite.com>
+From: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
+Date: Thu, 24 Jul 2014 00:56:56 +0200
+Message-ID: <94F87063-D717-435B-B7C5-EDAC9B26742C@perenite.com>
+References: <1406154923-13612-1-git-send-email-yahoo@perenite.com> <1406154923-13612-2-git-send-email-yahoo@perenite.com> <20140723224236.GC28485@lunn.ch>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140723224236.GC28485-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
- USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
+No worries, sorry it makes more email for you guys, I've added the colo=
+rs for power and revert order hdd:blue instead of blue:hdd for the hdd =
+led.
 
-http://shop.lenovo.com/fr/fr/servers/network-storage/lenovoemc/ix4-300d/
-Signed-off-by: Benoit Masson <yahoo@perenite.com>
----
- arch/arm/boot/dts/Makefile                      |   3 +-
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 284 ++++++++++++++++++++++++
- 2 files changed, 286 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+=46or the marvell,mv78230-a0-i2c unfortunately i've spend 3 hours tryin=
+g to understand this but it only works with this on the ix4-300d :(. Th=
+ere was multiple patch around this and maybe one broke the auto-detect =
+part of this, I've tried compiling with some 3.10 or lower kernel but n=
+o luck here I still have to put this a0 option.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index adb5ed9..4429495 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -437,8 +437,9 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
- 	armada-xp-axpwifiap.dtb \
- 	armada-xp-db.dtb \
- 	armada-xp-gp.dtb \
--	armada-xp-netgear-rn2120.dtb \
-+	armada-xp-lenovo-ix4-300d.dtb \
- 	armada-xp-matrix.dtb \
-+	armada-xp-netgear-rn2120.dtb \
- 	armada-xp-openblocks-ax3-4.dtb
- dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
- 	dove-cubox.dtb \
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-new file mode 100644
-index 0000000..1f33cbc
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -0,0 +1,284 @@
-+/*
-+ * Device Tree file for Lenovo Iomega ix4-300d
-+ *
-+ * Copyright (C) 2014, Benoit Masson <yahoo@perenite.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "armada-xp-mv78230.dtsi"
-+
-+/ {
-+	model = "Lenovo Iomega ix4-300d";
-+	compatible = "lenovo,ix4-300d", "marvell,armadaxp-mv78230",
-+		     "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+		stdout-path = "/soc/internal-regs/serial@12000";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x20000000>; /* 512MB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
-+			MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-+
-+		pcie-controller {
-+			status = "okay";
-+
-+			/* Quad port sata: Marvell 88SX7042 */
-+			pcie@1,0 {
-+				/* Port 0, Lane 0 */
-+				status = "okay";
-+			};
-+
-+			/* USB 3.0 xHCI controller: NEC D720200F1 */
-+			pcie@5,0 {
-+				/* Port 1, Lane 0 */
-+				status = "okay";
-+			};
-+		};
-+
-+		internal-regs {
-+			pinctrl {
-+				poweroff_pin: poweroff-pin {
-+					marvell,pins = "mpp24";
-+					marvell,function = "gpio";
-+				};
-+
-+				power_button_pin: power-button-pin {
-+					marvell,pins = "mpp44";
-+					marvell,function = "gpio";
-+				};
-+
-+				reset_button_pin: reset-button-pin {
-+					marvell,pins = "mpp45";
-+					marvell,function = "gpio";
-+				};
-+				select_button_pin: select-button-pin {
-+					marvell,pins = "mpp41";
-+					marvell,function = "gpio";
-+				};
-+
-+				scroll_button_pin: scroll-button-pin {
-+					marvell,pins = "mpp42";
-+					marvell,function = "gpio";
-+				};
-+
-+				hdd_led_pin: hdd-led-pin {
-+					marvell,pins = "mpp26";
-+					marvell,function = "gpio";
-+				};
-+			};
-+
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			mdio {
-+				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
-+					reg = <0>;
-+				};
-+
-+				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
-+					reg = <1>;
-+				};
-+			};
-+
-+			ethernet@70000 {
-+				status = "okay";
-+				phy = <&phy0>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			ethernet@74000 {
-+				status = "okay";
-+				phy = <&phy1>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			usb@50000 {
-+				status = "okay";
-+			};
-+
-+			usb@51000 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				compatible = "marvell,mv78230-a0-i2c",
-+					"marvell,mv64xxx-i2c";
-+				clock-frequency = <400000>;
-+				status = "okay";
-+
-+				adt7473@2e {
-+					compatible = "adi,adt7473";
-+					reg = <0x2e>;
-+				};
-+
-+				pcf8563@51 {
-+					compatible = "nxp,pcf8563";
-+					reg = <0x51>;
-+				};
-+
-+			};
-+
-+			nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+
-+				partition@0 {
-+					label = "u-boot";
-+					reg = <0x0000000 0xe0000>;
-+					read-only;
-+				};
-+
-+				partition@e0000 {
-+					label = "u-boot-env";
-+					reg = <0xe0000 0x20000>;
-+					read-only;
-+				};
-+
-+				partition@100000 {
-+					label = "u-boot-env2";
-+					reg = <0x100000 0x20000>;
-+					read-only;
-+				};
-+
-+				partition@120000 {
-+					label = "zImage";
-+					reg = <0x120000 0x400000>;
-+				};
-+
-+				partition@520000 {
-+					label = "initrd";
-+					reg = <0x520000 0x400000>;
-+				};
-+
-+				partition@xE00000 {
-+					label = "boot";
-+					reg = <0xE00000 0x3F200000>;
-+				};
-+
-+				partition@flash {
-+					label = "flash";
-+					reg = <0x0 0x40000000>;
-+				};
-+			};
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&power_button_pin &reset_button_pin
-+			&select_button_pin &scroll_button_pin>;
-+		pinctrl-names = "default";
-+
-+		power-button {
-+			label = "Power Button";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		reset-button {
-+			label = "Reset Button";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		select-button {
-+			label = "Select Button";
-+			linux,code = <BTN_SELECT>;
-+			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		scroll-button {
-+			label = "Scroll Button";
-+			linux,code = <KEY_SCROLLDOWN>;
-+			gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	spi3 {
-+		compatible = "spi-gpio";
-+		status = "okay";
-+		gpio-sck = <&gpio0 25 0>;
-+		gpio-mosi = <&gpio1 15 0>; /*gpio 47*/
-+		cs-gpios = <&gpio0 27 0 >;
-+		num-chipselects = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		gpio2: gpio2@0 {
-+			compatible = "fairchild,74hc595";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			reg = <0>;
-+			registers-number = <2>;
-+			spi-max-frequency = <100000>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&hdd_led_pin>;
-+		pinctrl-names = "default";
-+
-+		hdd-led {
-+			label = "ix4-300d:hdd:blue";
-+			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		power-led {
-+			label = "ix4-300d:power:white";
-+			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
-+			/* init blinking while booting */
-+			linux,default-trigger = "timer";
-+			default-state = "on";
-+		};
-+
-+		sysfail-led {
-+			label = "ix4-300d:sysfail:red";
-+			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		sys-led {
-+			label = "ix4-300d:sys:blue";
-+			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		hddfail-led {
-+			label = "ix4-300d:hddfail:red";
-+			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+	};
-+
-+	/* Warning: you need both eth1 & 0 PHY initialized
-+		(i.e having them up does the tweak)
-+		for poweroff to shutdown otherwise it reboots */
-+	gpio-poweroff {
-+		compatible = "gpio-poweroff";
-+		pinctrl-0 = <&poweroff_pin>;
-+		pinctrl-names = "default";
-+		gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
-+	};
-+};
--- 
-1.9.1
+Benoit
+Le 24 juil. 2014 =E0 00:42, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> a =E9crit :
+
+>> +			i2c@11000 {
+>> +				compatible =3D "marvell,mv78230-a0-i2c",
+>> +					"marvell,mv64xxx-i2c";
+>=20
+> Ah sorry, i missed this first time. Do you really need
+> "marvell,mv78230-a0-i2c"?
+>=20
+> Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt says:
+>=20
+>                     - "marvell,mv78230-a0-i2c"
+>                       * Note: Only use "marvell,mv78230-a0-i2c" for a
+>                         very rare, initial version of the SoC which
+>                         had broken offload support.  Linux
+>                         auto-detects this and sets it appropriately.
+>=20
+> So i don't think you should have this hear.
+>=20
+> Gregory, please could you comment.
+>=20
+>> +		power-led {
+>> +			label =3D "ix4-300d:power";
+>=20
+> It is normal to include the colour, and you did for all the other
+> LEDs.
+>=20
+> 	Andrew
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
