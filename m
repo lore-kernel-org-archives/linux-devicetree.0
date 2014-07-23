@@ -1,40 +1,92 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] Adding lenovo in vendor
-Date: Wed, 23 Jul 2014 17:10:33 +0200
-Message-ID: <20140723151033.GF2856@lunn.ch>
-References: <1406117232-5962-1-git-send-email-yahoo@perenite.com>
- <1406117232-5962-2-git-send-email-yahoo@perenite.com>
- <20140723134756.GG23220@titan.lakedaemon.net>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCHv2 06/10] ARM: DRA7: hwmod_data: Add mailbox hwmod data
+Date: Wed, 23 Jul 2014 10:18:43 -0500
+Message-ID: <53CFD253.9080805@ti.com>
+References: <1405115083-52977-1-git-send-email-s-anna@ti.com> <1405115083-52977-7-git-send-email-s-anna@ti.com> <20140715133013.GA2605@atomide.com> <53C55D68.8050308@ti.com> <20140716070708.GC2605@atomide.com> <20140723092449.GF22006@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140723134756.GG23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: benoitm974 <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140723092449.GF22006@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Paul Walmsley <paul@pwsan.com>, Dave Gerlach <d-gerlach@ti.com>, Jassi Brar <jaswinder.singh@linaro.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > +lenovo	LENOVO
->=20
-> is this their official, registered company name?
+On 07/23/2014 04:24 AM, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [140716 00:10]:
+>> * Suman Anna <s-anna@ti.com> [140715 09:59]:
+>>> Hi Tony,
+>>>
+>>> On 07/15/2014 08:30 AM, Tony Lindgren wrote:
+>>>> * Suman Anna <s-anna@ti.com> [140711 14:47]:
+>>>>> Add the hwmod data for the 13 instances of the system mailbox
+>>>>> IP in DRA7 SoC. The patch is needed for performing a soft-reset
+>>>>> while configuring the respective mailbox instance, otherwise is
+>>>>> a non-essential change for functionality. The modules are smart
+>>>>> idled on reset, and the IP module mode is hardware controlled.
+>>>>>
+>>>>> Cc: Rajendra Nayak <rnayak@ti.com>
+>>>>> Cc: Paul Walmsley <paul@pwsan.com>
+>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>> ---
+>>>>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 305 ++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 305 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>>>> index 20b4398..e35f5b1 100644
+>>>>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>>>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>>>> @@ -939,6 +939,194 @@ static struct omap_hwmod dra7xx_i2c5_hwmod = {
+>>>>>  };
+>>>>>  
+>>>>>  /*
+>>>>> + * 'mailbox' class
+>>>>> + *
+>>>>> + */
+>>>>> +
+>>>>> +static struct omap_hwmod_class_sysconfig dra7xx_mailbox_sysc = {
+>>>>> +	.rev_offs	= 0x0000,
+>>>>> +	.sysc_offs	= 0x0010,
+>>>>> +	.sysc_flags	= (SYSC_HAS_RESET_STATUS | SYSC_HAS_SIDLEMODE |
+>>>>> +			   SYSC_HAS_SOFTRESET),
+>>>>> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>>>>> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+>>>>> +};
+>>>>> +
+>>>>> +static struct omap_hwmod_class dra7xx_mailbox_hwmod_class = {
+>>>>> +	.name	= "mailbox",
+>>>>> +	.sysc	= &dra7xx_mailbox_sysc,
+>>>>> +};
+>>>>
+>>>> Hmm I'm seeing just the following MAILBOX_SYSCONFIG in at least
+>>>> am57xx TRM:
+>>>>
+>>>> 31:4	RESERVED
+>>>> 3:2	SIDLEMODE	0 = force-idle 1 = no-idle, 2 = smart-idle, 3 = reserved
+>>>> 1	RESERVED
+>>>> 0	SOFTRESET
+>>>>
+>>>> So it seems that SYSC_HAS_RESET_STATUS above is wrong? Can you guys
+>>>> please check.
+>>>
+>>> The same SOFTRESET bit is used for both triggering the softreset and
+>>> reading the reset done status. Once you write a 1 to trigger a reset,
+>>> the bit will be cleared once the reset is done. This is no different
+>>> from OMAP4. The logic in _wait_softreset_complete in omap_hwmod.c was
+>>> already designed to work with this properly.
+>>
+>> Oh OK, I guess I got it confused with SYSS_HAS_RESET_STATUS. Paul,
+>> want to ack this one if no other issues? I can then set this series
+>> into a branch against -rc1 that we can all merge in as needed as
+>> it seems that the driver changes may need this branch as a base too.
+> 
+> I have applied these into omap-for-v3.17/mailbox and merged also
+> into omap-for-v3.17/soc.
+> 
 
-http://www.lenovo.com/ww/lenovo/FAQs.html says
+Thank you, Tony.
 
-1. What is Lenovo=E2=80=99s stock symbol (ticker)?
-HKSE: 992.hk
-ADR (Level I): LNVGY
+regards
+Suman
 
-So i think lenovo is probably the more understandable vendor prefix,
-even if it is not the official stock ticker.
-
-However there official registered company name appears to be
-Lenovo Group Limited.
-
-       Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
