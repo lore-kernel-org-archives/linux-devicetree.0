@@ -1,55 +1,81 @@
-From: Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/3] Deterministic UART numbering on Samsung SoCs
-Date: Wed, 23 Jul 2014 07:30:33 +0100
-Message-ID: <CAD8Lp47GpiRabx56u5F+qrY=mx_OOj2dOqfQ6_=4TBe=JskDkQ@mail.gmail.com>
-References: <1403781875-5425-1-git-send-email-t.figa@samsung.com>
-	<20140626113939.GP32514@n2100.arm.linux.org.uk>
-	<53AC0BCC.1010608@samsung.com>
-	<CAD8Lp45MvDLsxehayx8uuGt3w3O0vGskiFjb1vdvtOyOv2nG2w@mail.gmail.com>
-	<20140709142333.503a9e39@alan.etchedpixels.co.uk>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
+Date: Wed, 23 Jul 2014 08:54:13 +0200
+Message-ID: <20140723065412.GA15759@ulmo.nvidia.com>
+References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
+ <1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>
+ <CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140709142333.503a9e39-mUKnrFFms3BCCTY1wZZT65JpZx93mCW/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 9, 2014 at 2:23 PM, One Thousand Gnomes
-<gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org> wrote:
->> I like the sound of going to the standard ttyS notation and only
->> providing ports for ones that exist, but is this userspace-visible
->
-> ttyS is 8250 compatible UARTS.
->
-> If the Samsung is not an 8250 compatible UART then it doesn't belong as
-> ttyS from the kernel perspective.
 
-OK, thanks for pointing that out.
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So we stick with the ttySAC namespace. And by doing that, and sticking
-to the existing and documented behaviour, it seems like we have
-already addressed Russells's concern:
+On Wed, Jul 23, 2014 at 10:14:44AM +0530, Viresh Kumar wrote:
+> On 21 July 2014 21:09, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
+>=20
+> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> > index 7364a53..df3c73e 100644
+> > --- a/drivers/cpufreq/Kconfig.arm
+> > +++ b/drivers/cpufreq/Kconfig.arm
+> > @@ -244,6 +244,7 @@ config ARM_SPEAR_CPUFREQ
+> >  config ARM_TEGRA_CPUFREQ
+> >         bool "TEGRA CPUFreq support"
+> >         depends on ARCH_TEGRA
+> > +       depends on GENERIC_CPUFREQ_CPU0
+>=20
+> Wouldn't this also disturb the existing cpufreq driver for earlier
+> tegra platforms? i.e. we don't need cpufreq-cpu0 for them
+> atleast as of now.
 
-> The problem you're raising is very much the same problem you have when
-> there are multiple USB serial devices connected to the machine - you
-> just get a bunch of /dev/ttyUSB* devices which are unordered (they can
-> change on each boot, or change order if you disconnect and reconnect
-> them.)
+Perhaps this should be "select" rather than "depends on"?
 
-In this case, we have a dedicated namespace and the path information
-is already fully encoded in the device name. The order and number of
-ports are fixed, they can't be disconnected and reconnected. There is
-no real risk of an additional serial controller driver coming to play
-in the ttySAC namespace.
+> > +static int tegra124_cpufreq_probe(struct platform_device *pdev)
+> > +{
+> > +       int ret;
+> > +
+> > +       cpu_dev =3D get_cpu_device(0);
+> > +       if (!cpu_dev)
+> > +               return -ENODEV;
+> > +
+>=20
+> Shouldn't we do a of_node_get() here?
 
-So I think Tomasz's approach is good - although I haven't looked at
-the code in detail.
+I think this would need to be get_device() since it's the struct device
+that's being used subsequently.
 
-Thanks
-Daniel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTz1wTAAoJEN0jrNd/PrOhkXAP/izIcV7uR89IM12bl0i4flPE
+coaTpdmTakTvdjRRJdbeolp2Y6Y0L8yuYYs7/cxtcv6tPzRLwEQgDcyEp7WkmPn+
+mQT4sb5WGmyNyl+q8RiSqUPV9+Wg4ConXjvvTGxA/lQ+11/y3iSSxrrwyOZ9MCB3
+OFP6BlmfTqB0UpvMb+E42cI/U5qJLE1DaQVcuSUvkEj45WQdRnwiYFeF4j/Z0q7t
+IIJpN+Qaxp1QqKPTH9YNeKG5USd3czwvd0rMU4Zh8+s/PeBvEly8Af1wlcI6Lxzr
+IfOmDLLrWP8eMTaYmz4byc7OvJW8bcQbacGV3JoLFPtf9qw7HOZzLcOSI08K1jDb
+WhyACPtIUtnCeaY2F7aq3uywOjeExJkYJQiLA1UON4o/nSd8Gbkos8eIrWL6nyyw
+pHjTx+1RNBXnlKv1G0nNVDsM7s/ot2ykHwiBD1qqhr10c1b/J2/j0+RCXdNwdTF4
+T0tih1pdYUUUlkQ7kSot+V6j1qEnSUnViAsl2EKsAvTR3f9L0HQnLrWbs0c8O+HL
+AcchUwNMpQuqdfk1MK2PgnXcdaByF8iUB4aF7x+aLq82AJoXRgSOr4r1HHLaE9GZ
+6OYFI4rcqgK4REW9mZbjKDMPPkkVw0KeIhFpSgKqbanKB/AkNmQUbYOmupXXNJqw
+UPOzbD3WvUlzgUH+9hr7
+=PCQZ
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
