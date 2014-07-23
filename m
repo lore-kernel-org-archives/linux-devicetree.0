@@ -1,92 +1,76 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv2 06/10] ARM: DRA7: hwmod_data: Add mailbox hwmod data
-Date: Wed, 23 Jul 2014 10:18:43 -0500
-Message-ID: <53CFD253.9080805@ti.com>
-References: <1405115083-52977-1-git-send-email-s-anna@ti.com> <1405115083-52977-7-git-send-email-s-anna@ti.com> <20140715133013.GA2605@atomide.com> <53C55D68.8050308@ti.com> <20140716070708.GC2605@atomide.com> <20140723092449.GF22006@atomide.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1] gpio: keystone: add dsp gpio controller driver
+Date: Wed, 23 Jul 2014 11:25:56 -0400
+Message-ID: <53CFD404.7070704@ti.com>
+References: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com> <CACRpkdYY_a_9G-VLBbv2a22Cg4j0t3Wv4W1h0n6-ccCXgVJXsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140723092449.GF22006@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Paul Walmsley <paul@pwsan.com>, Dave Gerlach <d-gerlach@ti.com>, Jassi Brar <jaswinder.singh@linaro.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYY_a_9G-VLBbv2a22Cg4j0t3Wv4W1h0n6-ccCXgVJXsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Jaswinder Singh <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, Muralidharan Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2014 04:24 AM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [140716 00:10]:
->> * Suman Anna <s-anna@ti.com> [140715 09:59]:
->>> Hi Tony,
->>>
->>> On 07/15/2014 08:30 AM, Tony Lindgren wrote:
->>>> * Suman Anna <s-anna@ti.com> [140711 14:47]:
->>>>> Add the hwmod data for the 13 instances of the system mailbox
->>>>> IP in DRA7 SoC. The patch is needed for performing a soft-reset
->>>>> while configuring the respective mailbox instance, otherwise is
->>>>> a non-essential change for functionality. The modules are smart
->>>>> idled on reset, and the IP module mode is hardware controlled.
->>>>>
->>>>> Cc: Rajendra Nayak <rnayak@ti.com>
->>>>> Cc: Paul Walmsley <paul@pwsan.com>
->>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>> ---
->>>>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 305 ++++++++++++++++++++++++++++++
->>>>>  1 file changed, 305 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>>>> index 20b4398..e35f5b1 100644
->>>>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>>>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>>>> @@ -939,6 +939,194 @@ static struct omap_hwmod dra7xx_i2c5_hwmod = {
->>>>>  };
->>>>>  
->>>>>  /*
->>>>> + * 'mailbox' class
->>>>> + *
->>>>> + */
->>>>> +
->>>>> +static struct omap_hwmod_class_sysconfig dra7xx_mailbox_sysc = {
->>>>> +	.rev_offs	= 0x0000,
->>>>> +	.sysc_offs	= 0x0010,
->>>>> +	.sysc_flags	= (SYSC_HAS_RESET_STATUS | SYSC_HAS_SIDLEMODE |
->>>>> +			   SYSC_HAS_SOFTRESET),
->>>>> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
->>>>> +	.sysc_fields	= &omap_hwmod_sysc_type2,
->>>>> +};
->>>>> +
->>>>> +static struct omap_hwmod_class dra7xx_mailbox_hwmod_class = {
->>>>> +	.name	= "mailbox",
->>>>> +	.sysc	= &dra7xx_mailbox_sysc,
->>>>> +};
->>>>
->>>> Hmm I'm seeing just the following MAILBOX_SYSCONFIG in at least
->>>> am57xx TRM:
->>>>
->>>> 31:4	RESERVED
->>>> 3:2	SIDLEMODE	0 = force-idle 1 = no-idle, 2 = smart-idle, 3 = reserved
->>>> 1	RESERVED
->>>> 0	SOFTRESET
->>>>
->>>> So it seems that SYSC_HAS_RESET_STATUS above is wrong? Can you guys
->>>> please check.
->>>
->>> The same SOFTRESET bit is used for both triggering the softreset and
->>> reading the reset done status. Once you write a 1 to trigger a reset,
->>> the bit will be cleared once the reset is done. This is no different
->>> from OMAP4. The logic in _wait_softreset_complete in omap_hwmod.c was
->>> already designed to work with this properly.
+On Wednesday 23 July 2014 11:10 AM, Linus Walleij wrote:
+> On Wed, Jul 16, 2014 at 12:43 PM, Grygorii Strashko
+> <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+> 
+>> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 >>
->> Oh OK, I guess I got it confused with SYSS_HAS_RESET_STATUS. Paul,
->> want to ack this one if no other issues? I can then set this series
->> into a branch against -rc1 that we can all merge in as needed as
->> it seems that the driver changes may need this branch as a base too.
+>> On Keystone SOCs, ARM host can send interrupts to DSP cores using the
+>> DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
+>> each DSP core. This is one of the component used by the IPC mechanism used
+>> on Keystone SOCs.
+>>
+>> Keystone 2 DSP GPIO controller has specific features:
+>> - each GPIO can be configured only as output pin;
+>> - setting GPIO value to 1 causes IRQ generation on target DSP core;
+>> - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
+>>   pending.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 > 
-> I have applied these into omap-for-v3.17/mailbox and merged also
-> into omap-for-v3.17/soc.
+> Pardon me. How is this GENERAL PURPOSE Input/Output?
 > 
+> It seems very very much SPECIAL PURPOSE to me, it's like
+> you're just shoehorning some IPC mechanism into the GPIO
+> subsystem, and this may be because the datasheet calls it
+> GPIO when it's not.
+>
+> What other stuff than DSP is connected to these lines, and is it
+> really even external lines? Aren't these just polysilicon rails
+> pretty much hammered to be used by the DSP and nothing else.
+>
+> What is the difference between this and a mailbox IRQ line
+> and the kind of stuff handled by drivers/mailbox?
+>
+I will try to answer this. This IP is indeed a GPIO block
+but the IO's are used just OUTPUT lines from Linux
+HOST perspective. These IOs are connected to the DSPs
+as input/IRQ lines. The DSP-ARM host IPC mechanism used on
+Keystone is Linux user-space based and it does as one of the
+component.
 
-Thank you, Tony.
+Its not mailbox since there is no payload etc attached to it.
+GPIO lib does expose the IO's to userspace and thats what is
+being the case here. I think it is a legitimate usecase.
 
-regards
-Suman
+Sometimes the sending signals to another co-processor might
+appear like shoehorning or odd but it just uses standard
+GPIO library and its capabilities as is.
 
+Regards,
+Santosh
+
+
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
