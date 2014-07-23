@@ -1,68 +1,71 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
-Date: Wed, 23 Jul 2014 13:55:57 +0530
-Message-ID: <CAKohponfKzuK+TnQvWcvaT8hRX8XZJWXWGMQw138DCwP=qcx+A@mail.gmail.com>
-References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
-	<1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>
-	<CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
-	<20140723065412.GA15759@ulmo.nvidia.com>
-	<CAKohponmg24pvnX2Jhfg5LHKKHx3VEm-6a_JXTGhVXY-aj3EOw@mail.gmail.com>
-	<20140723072442.GC15759@ulmo.nvidia.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 0/4] dra7: Add PCIe support
+Date: Wed, 23 Jul 2014 13:55:48 +0530
+Message-ID: <53CF718C.1060109@ti.com>
+References: <1405587643-13808-1-git-send-email-kishon@ti.com> <20140722213306.GB25432@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140723072442.GC15759@ulmo.nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140722213306.GB25432@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, mohit.kumar@st.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 23 July 2014 12:54, Thierry Reding <thierry.reding@gmail.com> wrote:
-> ARM_TEGRA_CPUFREQ is still optional, so the select only applies when the
-> Tegra cpufreq driver is enabled. This is mostly just out of convenience,
-> though. The Tegra cpufreq driver uses the generic CPU0 cpufreq driver so
-> a select will automatically pull in the necessary dependency. With a
 
-Not necessarily. cpufreq-cpu0 can have few unmet dependency. And so
-there are chances that tegra driver is compiled but cpufreq-cpu0 isn't as
-we didn't mention it as a *hard* dependency.
 
-And so at boot, there wouldn't be any cpufreq support even when tegra's
-cpufreq driver is available.
+On Wednesday 23 July 2014 03:03 AM, Bjorn Helgaas wrote:
+> On Thu, Jul 17, 2014 at 02:30:39PM +0530, Kishon Vijay Abraham I wrote:
+>> Changes from v2:
+>> * Added myself as MAINTAINER of pcie dra7xx driver
+>>
+>> Changes from v1:
+>> * fixed dw_pcie_prog_viewport_io_outbound() to use untranslated address
+>> * split dra7xx patch into driver part and documentation part
+>>
+>> [1] is split into separate series in order for individual subsystem
+>> Maintainers to pick up the patches. This series handles the PCIe
+>> support for DRA7.
+>>
+>> Rebased to pci -next.
+>>
+>> [1] -> https://lkml.org/lkml/2014/5/29/258
+>>
+>> Kishon Vijay Abraham I (4):
+>>   PCI: designware: Configuration space should be specified in 'reg'
+>>   PCI: designware: use untranslated address while programming ATU
+>>   Documentation: pci: ti: Add dt binding documentation for PCIe in
+>>     DRA7xx
+>>   PCI: host: pcie-dra7xx: add support for pcie-dra7xx controller
+>>
+>>  .../devicetree/bindings/pci/designware-pcie.txt    |    4 +
+>>  Documentation/devicetree/bindings/pci/ti-pci.txt   |   59 +++
+>>  MAINTAINERS                                        |    8 +
+>>  drivers/pci/host/Kconfig                           |   10 +
+>>  drivers/pci/host/Makefile                          |    1 +
+>>  drivers/pci/host/pci-dra7xx.c                      |  458 ++++++++++++++++++++
+>>  drivers/pci/host/pcie-designware.c                 |   72 ++-
+>>  drivers/pci/host/pcie-designware.h                 |    4 +
+>>  8 files changed, 600 insertions(+), 16 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
+>>  create mode 100644 drivers/pci/host/pci-dra7xx.c
+> 
+> I applied these to pci/host-designware for v3.17.  This will not be in my
+> first pull request because I'm going on vacation and won't have time to get
+> everything through -next and tagged.  But I'm planning a second pull
+> request that will include this.
+> 
+> Mohit, I applied your ack of "use untranslated address" from the v1 posting
+> (your mail of Jul 09) to the corresponding patch here, since Kishon didn't
+> carry it forward.  Let me know if that's not OK.
+> 
+> I also squashed the last two patches into one so the DT binding
+> documentation goes along with the dra7xx driver addition.
+> 
 
-Though, menuconfig may give some warnings no such situations.
+Thanks Bjorn.
 
-> "depends on" the Tegra cpufreq driver only becomes available after
-> you've selected GENERIC_CPUFREQ_CPU0, which is somewhat unintuitive.
->
-> To illustrate with an example: as a user, I want to enable CPU frequency
-> scaling on Tegra. So I use menuconfig to navigate to the "CPU Frequency
-> scaling" menu (enable it if not available yet) and look for an entry
-> that says "Tegra". But I can't find it because it's hidden due to the
-> lack of GENERIC_CPUFREQ_CPU0. That the Tegra CPU frequency driver uses a
-> generic driver is an implementation detail that users shouldn't have to
-> be aware of.
-
-Don't know, the guy compiling out stuff should be knowledgeable enough to
-have a look why tegra cpufreq entry isn't shown in menu. As, probably the
-above problem I mentioned looks to be of more significance than this one,
-atleast to me :)
-
-And, another thing to mention is that CONFIG_TEGRA_CPUFREQ is valid
-for earlier platforms as well and so a select/depends wouldn't be valid for
-earlier platforms. We probably need another Kconfig entry here.
-
-> But we're using cpu_dev->of_node, so we need to make sure cpu_dev
-> doesn't go away suddenly. Simply keeping a reference to ->of_node
-> won't ensure that.
-
-Oh, yeah I completely agree, but don't see that as a normal code style
-people follow. Probably they take cpu for granted, which doesn't look
-right :)
-
-> I guess technically it would be better if get_cpu_device() already
-> incremented the reference count on the returned struct device. Currently
-> it would theoretically still be possible for the device to disappear
-> between the call to get_cpu_device() and a call to get_device().
-
-I agree again.
+-Kishon
+> Bjorn
+> 
