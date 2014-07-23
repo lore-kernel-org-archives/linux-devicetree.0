@@ -1,52 +1,105 @@
-From: Andrew Jackson <Andrew.Jackson@arm.com>
-Subject: Re: [PATCH v3] ASoC: tda998x: add a codec to the HDMI
-	transmitter
-Date: Wed, 23 Jul 2014 11:22:06 +0100
-Message-ID: <53CF8CCE.3030205@arm.com>
-References: <20140708114057.5ef3cfd0@armhf>
+From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
+Date: Wed, 23 Jul 2014 14:57:51 +0300
+Message-ID: <53CFA33F.6030307@nvidia.com>
+References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>	<1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com> <CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140708114057.5ef3cfd0@armhf>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/14 10:40, Jean-Francois Moine wrote:
-> This patch adds a CODEC function to the NXP TDA998x HDMI transmitter.
+
+
+On 23/07/14 07:44, Viresh Kumar wrote:
+> On 21 July 2014 21:09, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 > 
-> The CODEC handles both I2S and S/PDIF input and does dynamic input
-> switch in the TDA998x I2C driver on start/stop audio streaming.
+>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>> index 7364a53..df3c73e 100644
+>> --- a/drivers/cpufreq/Kconfig.arm
+>> +++ b/drivers/cpufreq/Kconfig.arm
+>> @@ -244,6 +244,7 @@ config ARM_SPEAR_CPUFREQ
+>>  config ARM_TEGRA_CPUFREQ
+>>         bool "TEGRA CPUFreq support"
+>>         depends on ARCH_TEGRA
+>> +       depends on GENERIC_CPUFREQ_CPU0
 > 
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
-> ---
+> Wouldn't this also disturb the existing cpufreq driver for earlier
+> tegra platforms? i.e. we don't need cpufreq-cpu0 for them
+> atleast as of now.
+> 
+>>         default y
+>>         help
+>>           This adds the CPUFreq driver support for TEGRA SOCs.
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index db6d9a2..3437d24 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -76,6 +76,7 @@ obj-$(CONFIG_ARM_SA1100_CPUFREQ)      += sa1100-cpufreq.o
+>>  obj-$(CONFIG_ARM_SA1110_CPUFREQ)       += sa1110-cpufreq.o
+>>  obj-$(CONFIG_ARM_SPEAR_CPUFREQ)                += spear-cpufreq.o
+>>  obj-$(CONFIG_ARM_TEGRA_CPUFREQ)                += tegra-cpufreq.o
+>> +obj-$(CONFIG_ARM_TEGRA_CPUFREQ)                += tegra124-cpufreq.o
+> 
+> Maybe, you can update the same line if you want.
 
-Shouldn't the patch also capture the current audio rate in tda998x_codec.c:tda_hw_params?  Otherwise, when tda998x_drv.c:tda998x_audio_start invokes tda998x_drv.c:tda998x_configure_audio, the value of 'N' will be calculated incorrectly.
+Oh, right.
 
-So something similar to:
+> 
+>>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ) += vexpress-spc-cpufreq.o
+>>
+>>  ##################################################################################
+>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+> 
+>> +static struct cpufreq_frequency_table *freq_table;
+>> +
+>> +static struct device *cpu_dev;
+>> +static struct clk *cpu_clk;
+>> +static struct clk *pllp_clk;
+>> +static struct clk *pllx_clk;
+>> +static struct clk *dfll_clk;
+> 
+> The routines in this file are going to be called just once at boot, right?
+> In that case we are actually wasting some memory by creating globals.
+> Probably just move all these in a struct and allocate it at runtime.
+> 
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_codec.c b/drivers/gpu/drm/i2c/tda998x_codec.c
-index e7f223d..b6c4fb3 100755
---- a/drivers/gpu/drm/i2c/tda998x_codec.c
-+++ b/drivers/gpu/drm/i2c/tda998x_codec.c
-@@ -111,6 +111,7 @@ static int tda_hw_params(struct snd_pcm_substream *substream,
- 		tda998x_audio_start(priv, 0);
- 		return 0;
- 	}
-+	priv->params.audio_sample_rate = params_rate(params);
- 	priv->params.audio_format = dai->id;
- 	priv->audio_sample_format = params_format(params);
- 	params.audio_cfg =
+Sure.
 
+[...]
+>> +
+>> +       ret = dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table);
+>> +       if (ret)
+>> +               goto out_put_pllp_clk;
+> 
+> Why do you need this? cpufreq-cpu0 also does it and this freq_table is
+> just not getting used at all then.
+> 
 
-   Andrew
+Oops, yes I forgot to remove that part when making the conversion.
+
+>> +
+>> +       pdev = platform_device_register_simple("cpufreq-tegra124", -1, NULL, 0);
+>> +       if (IS_ERR(pdev)) {
+>> +               platform_driver_unregister(&tegra124_cpufreq_platdrv);
+>> +               return PTR_ERR(pdev);
+>> +       }
+> 
+> Why create another unnecessary platform-device/driver here? If
+> of_find_matching_node() passes and you really need to probe cpufreq-cpu0
+> here, then just remove the other two calls and move probe's implementation
+> here only.
+> 
+
+The platform device is required for the deferred probe that can happen if the
+DFLL driver hasn't initialized yet, and module_init() callbacks don't seem to
+respect -EPROBE_DEFER.
+
+[...]
+
+-- 
+nvpublic
