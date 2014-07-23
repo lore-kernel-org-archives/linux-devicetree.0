@@ -1,52 +1,88 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller
- driver
-Date: Wed, 23 Jul 2014 19:11:23 +0300
-Message-ID: <1406131883.2585.45.camel@iivanov-dev>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
-	 <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-	 <CACRpkdaCfrjNmkuRYVwdDHdt4myNkmTwmJjZU3AQr1SsSKBS3g@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when
+ request IRQ
+Date: Wed, 23 Jul 2014 18:14:02 +0200
+Message-ID: <CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
+References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>
+	<20140722062803.GA21229@dragon>
+	<53CE107A.1000000@tqsc.de>
+	<20140722074257.GC21229@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaCfrjNmkuRYVwdDHdt4myNkmTwmJjZU3AQr1SsSKBS3g@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140722074257.GC21229@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>, Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-07-23 at 17:27 +0200, Linus Walleij wrote:
-> On Thu, Jul 17, 2014 at 5:25 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> 
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> >
-> > This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> > Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
-> >
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> (...)
-> > +static int qpnp_pinctrl_remove(struct platform_device *pdev)
-> > +{
-> > +       struct qpnp_pinctrl *qctrl = platform_get_drvdata(pdev);
-> > +
-> > +       pinctrl_unregister(qctrl->ctrl);
-> > +
-> > +       return gpiochip_remove(&qctrl->chip);
-> 
-> We're removing the return value from gpiochip_remove() and I
-> have dropped the __must_check attribute today, so just remove
-> it unconditionally and return 0;
+On Tue, Jul 22, 2014 at 9:42 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Jul 22, 2014 at 09:19:22AM +0200, Markus Niebel wrote:
 
-Yes, I know. Patches are based on v3.16-rc6 tag.
+>> Currently client drivers have simply interrupts and interrupt-parent
+>> in their bindings, but no interrupt-gpios. Therefore in this case a
+>> client does not know about a dedicated gpio which is to be requested
+>> and configured.
+>
+> Okay.  I understand your problem now.  This is an issue in case we
+> specify a GPIO to be used as interrupt from device tree.  In non-DT
+> world, client driver knows this is an interrupt on GPIO, and therefore
+> takes the responsibility to request and configure the GPIO to work as
+> interrupt.  But in DT case, client driver does not know whether it's an
+> IRQ line or GPIO based interrupt.  The consequence is that GPIO
+> subsystem, OF subsystem, client driver, none of the three is requesting
+> and configuring the GPIO to be used as interrupt.
+>
+> This is a common issue instead of i.MX specific, and should be addressed
+> globally, I think.
 
-> 
-> Sorry for short and lame comment on a large patch I should look
-> closer at, but atleast it's something.
+This is very well documented in Documentation/gpio/driver.txt these
+days. Quoting:
 
-Thanks, 
-Ivan
+"
+It is legal for any IRQ consumer to request an IRQ from any irqchip no matter
+if that is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+irq_chip are orthogonal, and offering their services independent of each
+other.
 
-> 
-> Yours,
-> Linus Walleij
+gpiod_to_irq() is just a convenience function to figure out the IRQ for a
+certain GPIO line and should not be relied upon to have been called before
+the IRQ is used.
+
+So always prepare the hardware and make it ready for action in respective
+callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
+been called first.
+
+This orthogonality leads to ambiguities that we need to solve: if there is
+competition inside the subsystem which side is using the resource (a certain
+GPIO line and register for example) it needs to deny certain operations and
+keep track of usage inside of the gpiolib subsystem. This is why the API
+below exists.
+
+
+Locking IRQ usage
+-----------------
+Input GPIOs can be used as IRQ signals. When this happens, a driver is requested
+to mark the GPIO as being used as an IRQ:
+
+        int gpiod_lock_as_irq(struct gpio_desc *desc)
+
+This will prevent the use of non-irq related GPIO APIs until the GPIO IRQ lock
+is released:
+
+        void gpiod_unlock_as_irq(struct gpio_desc *desc)
+
+When implementing an irqchip inside a GPIO driver, these two functions should
+typically be called in the .startup() and .shutdown() callbacks from the
+irqchip.
+"
+
+So: make sure each API can be used orthogonally by just poking
+into the hardware registers. Do not call gpio_request_one().
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
