@@ -1,41 +1,190 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/2] Added dts defintion for Lenovo ix4-300d nas
-Date: Wed, 23 Jul 2014 18:49:58 +0200
-Message-ID: <20140723164958.GH2856@lunn.ch>
-References: <1406117232-5962-1-git-send-email-yahoo@perenite.com>
- <20140723134534.GF23220@titan.lakedaemon.net>
- <20140723141443.GC2856@lunn.ch>
- <47823826-CDE8-47D2-B1B6-B688118CF985@perenite.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
+Date: Wed, 23 Jul 2014 21:01:10 +0300
+Message-ID: <53CFF866.6060703@ti.com>
+References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com> <53CFD581.5040908@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <47823826-CDE8-47D2-B1B6-B688118CF985@perenite.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Masson <benoitm@perenite.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, benoitm974 <yahoo@perenite.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53CFD581.5040908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Well actually the PHY need to be initialized (at least 1 mII reg
-> written), which from marvel LSP driver always occurs, while it
-> doesn't with mainline PHY driver (drivers/net/phy/marvell.c), so the
-> only simple way I found to have at least one PHY reg on both
-> interface written is to have both eth up at OS config level.
+Hi,
 
-Thanks for the information. This sounds like a wake on LAN feature.
-I've seen other Marvell hardware connect a PHY LED output pin to the
-circuit controlling the main power supply. When the PHY detects the
-magic wake-up packet, it 'blinks' the LED so turning the power back
-on.
+On 07/23/2014 06:32 PM, Varka Bhadram wrote:
+> 
+> On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
+>> On Keystone SOCs, DSP cores can send interrupts to ARM
+>> host using the IRQ controller IP. It provides 28 IRQ
+>> signals to ARM. The IRQ handler running on HOST OS can
+>> identify DSP signal source by analyzing SRCCx bits in
+>> IPCARx registers. This is one of the component used by
+>> the IPC mechanism used on Keystone SOCs.
+> 
+> (...)
+> 
+>> +Required Properties:
+>> +- compatible: should be "ti,keystone-irq"
+>> +- ti,syscon-dev : phandle and offset pair. The phandle to syscon used to
+>> +            access device control registers and the offset inside
+>> +            device control registers range.
+>> +- interrupt-controller : Identifies the node as an interrupt controller
+>> +- #interrupt-cells : Specifies the number of cells needed to encode 
+>> interrupt
+>> +                     source should be 1.
+>> +- interrupts: interrupt reference to primary interrupt controller
+> 
+> proper indentation for the properties
+> 
+> - compatible        : Should be "ti,keystone-irq"
+> - ti,syscon-dev        : phandle and offset pair. The phandle to syscon 
+> used to
+>                access device control registers and the offset inside
+>                device control registers range.
+> 
+>> +
+>> +Please refer to interrupts.txt in this directory for details of the 
+>> common
+>> +Interrupt Controllers bindings used by client devices.
+>> +
+> 
+> (...)
+> 
+>> +#include <linux/irq.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/module.h>
+>> +#include <linux/moduleparam.h>
+>> +#include <linux/irqdomain.h>
+>> +#include <linux/irqchip/chained_irq.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/regmap.h>
+> 
+> Includes in alphabetical order...
+> 
+> Give one line gap before local includes..
+> 
+> ...
+> #include <linux/regmap.h>
+> 
+> #include "irqchip.h"
+> 
+>> +#include "irqchip.h"
+>> +
+>> +
+>> +/* The source ID bits start from 4 to 31 (total 28 bits)*/
+>> +#define BIT_OFS            4
+>> +#define KEYSTONE_N_IRQ        (32 - BIT_OFS)
+>> +
+>> +struct keystone_irq_device {
+>> +    struct device        *dev;
+>> +    struct irq_chip         chip;
+>> +    u32             mask;
+>> +    u32             irq;
+>> +    struct irq_domain    *irqd;
+>> +    struct regmap        *devctrl_regs;
+>> +    u32            devctrl_offset;
+>> +};
+>> +
+>> +static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
+>> +{
+>> +    int ret;
+>> +    u32 val = 0;
+>> +
+>> +    ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
+>> +    if (ret < 0)
+>> +        dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
+>> +    return val;
+>> +}
+>> +
+>> +static inline void
+>> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
+>> +{
+>> +    int ret;
+>> +
+>> +    ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
+>> +    if (ret < 0)
+>> +        dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
+> 
+> It can be like
+> 
+> if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
+>      dev_dbg(kirq->dev, "irq write failed \n");
+> 
+>> +}
+>> +
+>> +
 
-My guess is, the register write to the PHY is configuring the LED. Do
-you have the datasheet for the PHY? Can you check this?
+Pls, Pay attention that I'd like to see ret code here in case of failure.
 
-> Probably the best option would be to have a reg-init = <reg offset
-> value> on both phy dts definition but the current armada mii doesn't
-> support this dts config...
+> 
+> (...)
+> 
+>> +}
+>> +
+>> +static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
+>> +                irq_hw_number_t hw)
+> 
+> should match open parenthesis:
+> 
+> static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
+>                  irq_hw_number_t hw)
+> 
+>> +{
+>> +    struct keystone_irq_device *kirq = h->host_data;
+>> +
+>> +    irq_set_chip_data(virq, kirq);
+>> +    irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
+>> +    set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+>> +    return 0;
+>> +}
+>> +
+>> +static struct irq_domain_ops keystone_irq_ops = {
+>> +    .map    = keystone_irq_map,
+>> +    .xlate    = irq_domain_xlate_onecell,
+>> +};
+>> +
+>> +static int keystone_irq_probe(struct platform_device *pdev)
+>> +{
+>> +    struct device *dev = &pdev->dev;
+>> +    struct device_node *np = dev->of_node;
+>> +    struct keystone_irq_device *kirq;
+>> +    int ret;
+>> +
+>> +    if (np == NULL)
+>> +        return -EINVAL;
+> 
+> return -ENODEV??????
 
-Once we understand what is going on here, we can consider adding
-support for this.
+If probe is executed - the dev is present, but it was created in a wrong/unsupported way
+or dev structure contains wrong data.
 
-	Andrew
+> 
+> (...)
+> 
+>> +static struct platform_driver keystone_irq_device_driver = {
+>> +    .probe        = keystone_irq_probe,
+>> +    .remove        = keystone_irq_remove,
+>> +    .driver        = {
+>> +        .name    = "keystone_irq",
+>> +        .owner    = THIS_MODULE,
+> 
+> No need to update it. Its done by module_platform_driver()..
+> 
+>> +        .of_match_table    = of_match_ptr(keystone_irq_dt_ids),
+> 
+> This driver is always populate through the dts file. So no need to use
+> of_match_ptr....
+> 
+
+Regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
