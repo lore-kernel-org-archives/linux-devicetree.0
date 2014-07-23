@@ -1,41 +1,71 @@
-From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
-Date: Wed, 23 Jul 2014 22:17:27 +0300
-Message-ID: <53D00A47.7050203@nvidia.com>
-References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>	<1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>	<CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>	<53CFA33F.6030307@nvidia.com> <CAKohponLh66Ubr6=wY2OZCCrK11KZDj=DmXXqXsGGTHSG45wpA@mail.gmail.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
+Date: Wed, 23 Jul 2014 21:38:35 +0200
+Message-ID: <201407232138.35268.marex@denx.de>
+References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <201407231751.02050.marex@denx.de> <53D0045C.6090605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohponLh66Ubr6=wY2OZCCrK11KZDj=DmXXqXsGGTHSG45wpA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <53D0045C.6090605@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Corentin LABBE <clabbe.montjoie@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday, July 23, 2014 at 08:52:12 PM, Corentin LABBE wrote:
+> Le 23/07/2014 17:51, Marek Vasut a =E9crit :
+> > On Wednesday, July 23, 2014 at 04:13:09 PM, Herbert Xu wrote:
+> >> On Wed, Jul 23, 2014 at 04:07:20PM +0200, Marek Vasut wrote:
+> >>> On Wednesday, July 23, 2014 at 03:57:35 PM, Herbert Xu wrote:
+> >>>> On Sat, May 24, 2014 at 02:00:03PM +0200, Marek Vasut wrote:
+> >>>>>> +	}
+> >>>>>> +#endif
+> >>>>>> +
+> >>>>>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
+> >>>>>> +	err =3D crypto_register_shash(&sunxi_md5_alg);
+> >>>>>=20
+> >>>>> Do not use shash for such device. This is clearly and ahash (an=
+d
+> >>>>> async in general) device. The rule of a thumb here is that you =
+use
+> >>>>> sync algos only for devices which have dedicated instructions f=
+or
+> >>>>> computing the transformation. For devices which are attached to=
+ some
+> >>>>> kind of bus, you use async algos (ahash etc).
+> >>>>=20
+> >>>> I'm sorry that I didn't catch this earlier but there is no such
+> >>>> rule.
+> >>>>=20
+> >>>> Unless you need the async interface you should stick to the sync
+> >>>> interfaces for the sake of simplicity.
+> >>>>=20
+> >>>> We have a number of existing drivers that are synchronous but
+> >>>> using the async interface.  They should either be converted
+> >>>> over to the sync interface or made interrupt-driven if possible.
+> >>>=20
+> >>> Sure, but this device is interrupt driven and uses DMA to feed th=
+e
+> >>> crypto engine, therefore async, right ?
+> >>=20
+> >> If it's interrupt-driven, then yes it would certainly make sense t=
+o
+> >> be async.  But all I see is polling in the latest posting, was the
+> >> first version different?
+> >=20
+> > I stand corrected then, sorry.
+> >=20
+> > Is it possible to use DMA to feed the crypto accelerator, Corentin?
+> >=20
+> > Best regards,
+> > Marek Vasut
+>=20
+> Yes, DMA is possible and will be implemented soon.
+> So if I have well understood, I keep using async interface.
 
+Yeah, in this case, using DMA and async interface combo is the way to g=
+o.
 
-On 23/07/14 19:50, Viresh Kumar wrote:
-> On 23 July 2014 17:27, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
->> The platform device is required for the deferred probe that can happen if the
->> DFLL driver hasn't initialized yet, and module_init() callbacks don't seem to
->> respect -EPROBE_DEFER.
-> 
-> Oh, which call in this file will return EPROBE_DEFER? I couldn't make out
-> which one will depend on DFLL driver.
-> 
-
-It's this:
-
-+static int tegra124_cpufreq_probe(struct platform_device *pdev)
-+{
-[...]
-+
-+	dfll_clk = of_clk_get_by_name(cpu_dev->of_node, "dfll");
-+	if (IS_ERR(dfll_clk)) {
-+		ret = PTR_ERR(dfll_clk);
-+		goto out_put_cpu_clk;
-+	}
-
--- 
-nvpublic
+Best regards,
+Marek Vasut
