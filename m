@@ -1,43 +1,47 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 5/6] ARM: sunxi: Add A31 RTC driver to sunxi_defconfig
-Date: Wed, 23 Jul 2014 22:38:57 +0800
-Message-ID: <1406126338-15062-6-git-send-email-wens@csie.org>
-References: <1406126338-15062-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBBMSX6PAKGQEMNDE5LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1406126338-15062-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 0/3] Add ST dwc3 glue layer driver
+Date: Wed, 23 Jul 2014 15:48:32 +0100
+Message-ID: <1406126915-30601-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a driver for A31's RTC, enable it
-in the default sunxi config.
+This series adds support for the ST glue logic which wraps the DWC3 controller
+on STiH407 SoC family chipsets.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v2
+ - Use dr_mode for host/device static configuration
+ - Manage shared reset signal to usbss to avoid hang if probing before usb3 phy
+ - Remove DT checks and make driver depend on OF
+ - Change some #define to use BIT macro
+ - Make some comments clearer
+ - Use kerneldoc for struct documentation
+ - Remove udelay
+ - Let DT create platform_devices, and remove legacy alloc
+ - Change some logging levels to dev_dbg
+ - Various whitespace and formatting cleanup
+ - Use SIMPLE_DEV_PM_OPS()
+ - Add const to of_device struct
+ - Reorder header files alphabetically
+ - Use devm_ioremap_resource instead of devm_request_and_ioremap
+ - Remove of_match_ptr()
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 7209bfd..0abc2ab 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -93,6 +93,7 @@ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
- CONFIG_RTC_CLASS=y
- # CONFIG_RTC_INTF_SYSFS is not set
- # CONFIG_RTC_INTF_PROC is not set
-+CONFIG_RTC_DRV_SUN6I=y
- CONFIG_RTC_DRV_SUNXI=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_PHY_SUN4I_USB=y
+Peter Griffin (3):
+  usb: dwc3: add ST dwc3 glue layer to manage dwc3 HC
+  usb: dwc3: dwc3-st: Add st-dwc3 devicetree bindings documentation
+  MAINTAINERS: Add dwc3-st.c file to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/usb/dwc3-st.txt |  69 +++++
+ MAINTAINERS                                       |   1 +
+ drivers/usb/dwc3/Kconfig                          |   9 +
+ drivers/usb/dwc3/Makefile                         |   1 +
+ drivers/usb/dwc3/dwc3-st.c                        | 337 ++++++++++++++++++++++
+ 5 files changed, 417 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-st.c
+
 -- 
-2.0.1
+1.9.1
+
