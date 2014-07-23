@@ -1,68 +1,207 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/3] usb: dwc3: dwc3-st: Add st-dwc3 devicetree
- bindings documentation
-Date: Wed, 23 Jul 2014 16:34:25 +0100
-Message-ID: <20140723153425.GL23210@lee--X1>
-References: <1406126915-30601-1-git-send-email-peter.griffin@linaro.org>
- <1406126915-30601-3-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406126915-30601-3-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Added dts defintion for Lenovo ix4-300d nas
+Date: Wed, 23 Jul 2014 17:45:57 +0200
+Message-ID: <53CFD8B5.2030205@gmail.com>
+References: <1406117232-5962-1-git-send-email-yahoo@perenite.com> <20140723134534.GF23220@titan.lakedaemon.net>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140723134534.GF23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, benoitm974 <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Cc: benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Jul 2014, Peter Griffin wrote:
+On 07/23/2014 03:45 PM, Jason Cooper wrote:
+> Thanks for the patch!  A few minor things:
 
-> This patch documents the device tree documentation required for
-> the ST usb3 controller glue layer found in STiH407 devices.
->=20
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3-st.txt | 69 +++++++++++++=
-++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Docu=
-mentation/devicetree/bindings/usb/dwc3-st.txt
-> new file mode 100644
-> index 0000000..de3fea3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-> @@ -0,0 +1,69 @@
-> +ST DWC3 glue logic
-> +
-> +This file documents the parameters for the dwc3-st driver.
-> +This driver controls the glue logic used to configure the dwc3 core =
-on
-> +STiH407 based platforms.
-> +
-> +Required properties:
-> + - compatible	: must be "st,stih407-dwc3"
+Benoit,
 
-Does this only exist for Cannes?
+I also have some minor remarks just because I stumble over them
+all the time.
 
-> + - reg		: glue logic base address and USB syscfg ctrl register offse=
-t
-> + - reg-names	: should be "reg-glue" and "syscfg-reg"
-> + - st,syscon	: should be phandle to system configuration node which
-> +		  encompasses the glue registers
+>> ---
+>>   arch/arm/boot/dts/Makefile                     |   1 +
+>>   arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts | 267 +++++++++++++++++++++++++
 
-This should be st,syscfg.  As you have it in the example.
+I looked it up and Lenovo names it "ix4-300d", maybe you should
+rename the dts "armada-xp-lenovo-ix4-300d.dts" then.
 
-Besides this small issue, I don't see anything controversial so once
-fixed up, you can apply my:
+[...]
+>> diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts
+>> new file mode 100644
+>> index 0000000..e04e7a6
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4300d.dts
+>> @@ -0,0 +1,267 @@
+>> +/*
+>> + * Device Tree file for LENOVO IX4-300d
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+It is spelled "Lenovo" and the full name is "Lenovo Iomega ix4-300d".
+As it is the initial commit, we should be more sensitive on the case
+here.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>> + * Copyright (C) 2014, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * as published by the Free Software Foundation; either version
+>> + * 2 of the License, or (at your option) any later version.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include "armada-xp-mv78230.dtsi"
+>> +
+>> +/ {
+>> +	model = "LENOVO IX4-300d";
+
+Same comment about "Lenovo Iomega ix4-300d"
+
+>> +	compatible = "lenovo,ix4-300d", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyS0,115200 earlyprintk";
+
+Consider to add
+
+stdout-path = "/soc/internal-regs/serial@12000";
+
+That way you would not have to fix it up for e.g. Barebox.
+Unfortunately, neither Armada 370 nor XP dtsi define node
+labels yet, so you have to put the full node path.
+
+>> +	};
+>> +
+[...]
+>> +	soc {
+>> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
+>> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
+>> +
+>> +		pcie-controller {
+>> +			status = "okay";
+>> +
+>> +			pcie@1,0 {
+>> +				/* Port 0, Lane 0 */
+>> +				status = "okay";
+>> +			};
+>> +			pcie@5,0 {
+>> +                                /* Port 1, Lane 0 */
+>> +                                status = "okay";
+>> +                        };
+>> +
+
+Any chance you know what is connected to above PCIe ports?
+If so, put a comment above the node itself naming the attached
+device, e.g.
+
+/* USB 3.0 xHCI controller */
+pcie@1,0 {...}
+
+Also, I saw you have a good impression about the GPIOs used on
+the ix4-300d. If you also know the PERST# GPIOs, add them with
+
+reset-gpios = <&gpioN M GPIO_ACTIVE_LOW>;
+
+where N, M follow gpio# = (32 * N) + M, i.e. N=1, M=22 for gpio54.
+
+>> +		};
+>> +
+>> +		internal-regs {
+>> +			pinctrl {
+>> +				poweroff: poweroff {
+
+nit: poweroff_pin: poweroff-pin {...}
+like the ones below?
+
+>> +                                        marvell,pins = "mpp24";
+>> +                                        marvell,function = "gpio";
+>> +                                };
+>> +
+>> +                                power_button_pin: power-button-pin {
+>> +                                        marvell,pins = "mpp44";
+>> +                                        marvell,function = "gpio";
+>> +                                };
+>> +
+>> +                                reset_button_pin: reset-button-pin {
+>> +                                        marvell,pins = "mpp45";
+>> +                                        marvell,function = "gpio";
+>> +                                };
+>> +				select_button_pin: select-button-pin {
+>> +                                        marvell,pins = "mpp41";
+>> +                                        marvell,function = "gpio";
+>> +                                };
+>> +
+>> +                                scroll_button_pin: scroll-button-pin {
+>> +                                        marvell,pins = "mpp42";
+>> +                                        marvell,function = "gpio";
+>> +                                };
+>> +				hdd_led_pin: hdd-led-pin {
+>> +					marvell,pins = "mpp26";
+>> +					marvell,function = "gpio";
+>> +		                };
+[...]
+>> +			};
+>> +
+>> +			serial@12000 {
+>> +				clocks = <&coreclk 0>;
+
+As Andrew already said, no need to duplicate the clocks property.
+
+>> +				status = "okay";
+>> +			};
+[...]
+>> +	spi3 {
+>> +                compatible = "spi-gpio";
+>> +                status = "okay";
+>> +                gpio-sck = <&gpio0 25 0>;
+>> +                gpio-mosi = <&gpio1 15 0>; /*gpio 47*/
+>> +                cs-gpios = <&gpio0 27 0 >;
+[...]
+>> +                num-chipselects = <1>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                gpio2: gpio2@0 {
+>> +                        compatible = "fairchild,74hc595";
+
+Freaky we have a driver for a 74x595 8-bit shift register ;)
+
+>> +                        gpio-controller;
+>> +                        #gpio-cells = <2>;
+>> +                        reg = <0>;
+>> +                        registers-number = <2>;
+>> +                        spi-max-frequency = <100000>;
+>> +                };
+>> +	};
+>> +
+>> +	gpio-leds {
+>> +                compatible = "gpio-leds";
+>> +		pinctrl-0 = <&hdd_led_pin>;
+>> +		pinctrl-names = "default";
+>> +
+>> +		hdd-led {
+>> +                        label = "ix4300d:blue:hdd";
+
+Can you get rid of "ix4300d:" or rename it to "ix4-300d:" without
+breaking any userspace stuff? If so, please update all LEDs.
+
+>> +                        gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
+>> +                        default-state = "off";
+>> +                };
+[...]
+>> +	/* warning: you need both eth1 & 0 to be initialize for poweroff to shutdown otherwise it reboots */
+
+I don't get the comment.
+
+> This is a great first version
+
+Yup, Thanks!
+
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
