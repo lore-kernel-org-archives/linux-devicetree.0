@@ -1,74 +1,37 @@
-From: Thomas Petazzoni <mturquette@linaro.org>
-Subject: [PATCHv3 3/7] clk: mvebu: extend clk-cpu for dynamic frequency scaling
-Date: Wed, 23 Jul 2014 16:53:58 -0700
-Message-ID: <20140723235358.6419.26311@quantum>
-References: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
+Date: Thu, 24 Jul 2014 05:43:40 +0530
+Message-ID: <CAKohponsS8WJy4qBa=3em9AcxfpfLZR_mx4Ln8N3Q_gBaf52NA@mail.gmail.com>
+References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
+	<1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>
+	<CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
+	<53CFA33F.6030307@nvidia.com>
+	<CAKohponLh66Ubr6=wY2OZCCrK11KZDj=DmXXqXsGGTHSG45wpA@mail.gmail.com>
+	<53D00A47.7050203@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D00A47.7050203-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+static int clk_cpu_on_set_rate(struct clk_hw *hwclk, unsigned long rate,
-+                              unsigned long parent_rate)
-+{
-+       u32 reg;
-+       unsigned long fabric_div, target_div, cur_rate;
-+       struct cpu_clk *cpuclk = to_cpu_clk(hwclk);
-+
-+       /*
-+        * PMU DFS registers are not mapped, Device Tree does not
-+        * describes them. We cannot change the frequency dynamically.
-+        */
-+       if (!cpuclk->pmu_dfs)
-+               return -ENODEV;
-+
-+       cur_rate = __clk_get_rate(hwclk->clk);
-+
-+       reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL2_OFFSET);
-+       fabric_div = (reg >> SYS_CTRL_CLK_DIVIDER_CTRL2_NBCLK_RATIO_SHIFT) &
-+               SYS_CTRL_CLK_DIVIDER_MASK;
-+
-+       /* Frequency is going up */
-+       if (rate == 2 * cur_rate)
-+               target_div = fabric_div / 2;
-+       /* Frequency is going down */
-+       else
-+               target_div = fabric_div;
-+
-+       if (target_div == 0)
-+               target_div = 1;
-+
-+       reg = readl(cpuclk->pmu_dfs);
-+       reg &= ~(PMU_DFS_RATIO_MASK << PMU_DFS_RATIO_SHIFT);
-+       reg |= (target_div << PMU_DFS_RATIO_SHIFT);
-+       writel(reg, cpuclk->pmu_dfs);
-+
-+       reg = readl(cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
-+       reg |= (SYS_CTRL_CLK_DIVIDER_CTRL_RESET_ALL <<
-+               SYS_CTRL_CLK_DIVIDER_CTRL_RESET_SHIFT);
-+       writel(reg, cpuclk->reg_base + SYS_CTRL_CLK_DIVIDER_CTRL_OFFSET);
-+
-+       return mvebu_pmsu_dfs_request(cpuclk->cpu);
-+}
-+
-+static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
-+                           unsigned long parent_rate)
-+{
-+       if (__clk_is_enabled(hwclk->clk))
-+               return clk_cpu_on_set_rate(hwclk, rate, parent_rate);
-+       else
-+               return clk_cpu_off_set_rate(hwclk, rate, parent_rate);
+On 24 July 2014 00:47, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> It's this:
+>
+> +static int tegra124_cpufreq_probe(struct platform_device *pdev)
+> +{
+> [...]
+> +
+> +       dfll_clk = of_clk_get_by_name(cpu_dev->of_node, "dfll");
+> +       if (IS_ERR(dfll_clk)) {
+> +               ret = PTR_ERR(dfll_clk);
+> +               goto out_put_cpu_clk;
+> +       }
 
-This is racy. You don't hold the clk_enable lock so it could be enable
-between the conditional check and executing clk_cpu_on_set_rate.
+This would search for clocks passed via DT, right? Why would we
+get EPROBE_DEFER for that? Sorry for the stupid question.
 
-How do you ensure that secondary CPU clocks are not enabled/disabled
-when changing rates?
-
-Regards,
-Mike
+--
+viresh
