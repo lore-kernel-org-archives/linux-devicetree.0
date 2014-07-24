@@ -1,31 +1,83 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 3/3] MAINTAINERS: Add st-hcd to ARCH/STI architecture
-Date: Thu, 24 Jul 2014 12:00:16 +0100
-Message-ID: <1406199616-10533-4-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 2/3] usb: host: st-hcd: Add st-hcd devicetree bindings documentation.
+Date: Thu, 24 Jul 2014 12:00:15 +0100
+Message-ID: <1406199616-10533-3-git-send-email-peter.griffin@linaro.org>
 References: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406199616-10533-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+This patch documents the device tree documentation required for
+the ST HCD controller found in STMicroelectronics SoCs.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 702ca10..359a64e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1325,6 +1325,7 @@ F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/media/rc/st_rc.c
- F:	drivers/i2c/busses/i2c-st.c
- F:	drivers/tty/serial/st-asc.c
-+F:	drivers/usb/host/st-hcd.c
- 
- ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
- M:	Lennert Buytenhek <kernel@wantstofly.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/st-hcd.txt | 49 ++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/st-hcd.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/st-hcd.txt b/Documentation/devicetree/bindings/usb/st-hcd.txt
+new file mode 100644
+index 0000000..b963be2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/st-hcd.txt
+@@ -0,0 +1,49 @@
++ST HCD (Host Controller Driver) for USB 2.0 and 1.1
++
++The device node has the following properties.
++
++Required properties:
++ - compatible		: must be "st,usb-300x"
++ - reg			: physical base addresses of the controller and length of memory mapped
++			  region
++ - reg-names		: names associated to the reg defines above, should be "ehci" and "ohci"
++ - interrupts		: interrupt numbers to the cpu
++ - interrupt-names	: should be "ehci" and "ohci"
++
++ - pinctrl-names	: a pinctrl state named "default" must be defined
++-  pinctrl-0		: phandle referencing pin configuration of the USB controller
++See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
++
++ - clocks		: phandle list of usb clocks.
++ - clock-names		: should be "ic" for interconnect clock and "ohci" for the 48MHz clock
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++ - resets		: phandle to the powerdown and reset controller for the USB IP
++ - reset-names		: should be "powerdown" and "softreset".
++See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
++See: Documentation/devicetree/bindings/reset/reset.txt
++
++Example:
++
++usb0: usb@fe100000 {
++	compatible	= "st,usb-300x";
++	reg		= <0xfe1ffc00 0x100>,
++			  <0xfe1ffe00 0x100>;
++	reg-names	= "ohci", "ehci";
++
++	interrupts	=  <GIC_SPI 148 IRQ_TYPE_NONE>,
++			   <GIC_SPI 149 IRQ_TYPE_NONE>;
++	interrupt-names	= "ehci", "ohci";
++	pinctrl-names	= "default";
++	pinctrl-0	= <&pinctrl_usb0>;
++	clocks		= <&clk_s_a1_ls CLK_ICN_IF_2>,
++			  <&clockgen_b0 0>;
++	clock-names	= "ic", "ohci";
++
++	resets		= <&powerdown STIH416_USB0_POWERDOWN>,
++			  <&softreset STIH416_USB0_SOFTRESET>;
++	reset-names	= "powerdown", "softreset";
++
++	phys		= <&usb2_phy>;
++	phy-names	= "usb2-phy";
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
