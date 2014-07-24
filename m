@@ -1,59 +1,56 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v4 3/3] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Thu, 24 Jul 2014 14:00:54 +0800
-Message-ID: <20140724060054.GA6545@gondor.apana.org.au>
-References: <1405169953-13695-1-git-send-email-clabbe.montjoie@gmail.com>
- <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv3 3/7] clk: mvebu: extend clk-cpu for dynamic frequency
+ scaling
+Date: Thu, 24 Jul 2014 08:33:25 +0200
+Message-ID: <20140724083325.0c578091@free-electrons.com>
+References: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20140723235358.6419.26311@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: LABBE Corentin <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140723235358.6419.26311@quantum>
+Sender: linux-pm-owner@vger.kernel.org
+Cc: Thomas Petazzoni <mturquette@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.orgMike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 12, 2014 at 02:59:13PM +0200, LABBE Corentin wrote:
->
-> +/* sunxi_hash_init: initialize request context
-> + * Activate the SS, and configure it for MD5 or SHA1
-> + */
-> +int sunxi_hash_init(struct ahash_request *areq)
+Hello,
+
+(Not sure why this e-mail comes with me as the From:, but anyway.)
+
+On Wed, 23 Jul 2014 16:53:58 -0700, Thomas Petazzoni wrote:
+
+> +static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
+> +                           unsigned long parent_rate)
 > +{
-> +	const char *hash_type;
-> +	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
-> +	struct sunxi_req_ctx *op = crypto_ahash_ctx(tfm);
-> +
-> +	mutex_lock(&ss->lock);
-> +
-> +	hash_type = crypto_tfm_alg_name(areq->base.tfm);
-> +
-> +	op->byte_count = 0;
-> +	op->nbwait = 0;
-> +	op->waitbuf = 0;
-> +
-> +	/* Enable and configure SS for MD5 or SHA1 */
-> +	if (strcmp(hash_type, "sha1") == 0)
-> +		op->mode = SS_OP_SHA1;
-> +	else
-> +		op->mode = SS_OP_MD5;
-> +
-> +	writel(op->mode | SS_ENABLED, ss->base + SS_CTL);
-> +	return 0;
+> +       if (__clk_is_enabled(hwclk->clk))
+> +               return clk_cpu_on_set_rate(hwclk, rate, parent_rate);
+> +       else
+> +               return clk_cpu_off_set_rate(hwclk, rate, parent_rate);
+> 
+> This is racy. You don't hold the clk_enable lock so it could be enable
+> between the conditional check and executing clk_cpu_on_set_rate.
 
-The hash driver is completely broken.  You are modifying tfm
-ctx data which is shared by all users of a single tfm.  So
-if two users conduct hashes in parallel they will step all
-over each other.
+Right.
 
-Worse, the unpaired mutex_lock will quickly lead to dead locks.
+> How do you ensure that secondary CPU clocks are not enabled/disabled
+> when changing rates?
 
-You cannot assume that final will be called.
+In practice, this currently cannot happen: we enable the secondary CPU
+clocks before starting the secondary CPUs, and we never ever disable or
+re-enable again those clocks. So with the present code, I believe there
+is no problem. Even when we do CPU hotplug, we don't turn off the CPU
+clocks, simply because they cannot be turned off: the enable/disable
+state is only used here as an indication so that the clock driver knows
+which frequency change strategy it should apply.
 
-Cheers,
+But you're anyway right, I'll send a followup patch adding the lock.
+Would that be OK for you?
+
+Thanks,
+
+Thomas
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
