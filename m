@@ -1,55 +1,50 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Thu, 24 Jul 2014 16:26:45 +0200
-Message-ID: <20140724162645.4e19c26c@bbrezillon>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
-	<53D10C50.50305@aksignal.cz>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
+ ix4-300d NAS
+Date: Thu, 24 Jul 2014 16:29:18 +0200
+Message-ID: <20140724142918.GG28485@lunn.ch>
+References: <1406154923-13612-2-git-send-email-yahoo@perenite.com>
+ <20140723224236.GC28485@lunn.ch>
+ <94F87063-D717-435B-B7C5-EDAC9B26742C@perenite.com>
+ <20140723225841.GD28485@lunn.ch>
+ <10A7C530-7CD2-4ED0-889A-7FAC1922320F@perenite.com>
+ <20140723231535.GK23220@titan.lakedaemon.net>
+ <53D0FA2F.6050209@free-electrons.com>
+ <20140724124520.GV23220@titan.lakedaemon.net>
+ <C2E7C8C1-1198-4785-AB9C-C27B5E27A8D4@perenite.com>
+ <20140724140757.GW23220@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D10C50.50305@aksignal.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jiri.prchal@aksignal.cz
-Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140724140757.GW23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Ji=C5=99=C3=AD,
+> The only outstanding point (Arnd?), is that I think it's ok to have the
+> i2c...a0 compatible string in the dts files, but Andrew seems to think
+> otherwise.  Is that still true Andrew?
 
-=46irst of all, please try to use git format-patch when submitting a
-patch to any kernel mailing list.
+Hi Jason
 
-On Thu, 24 Jul 2014 15:38:24 +0200
-Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz> wrote:
+I can live with i2c...a0 compatible string, but it has minor problems:
 
-> After ROMBOOT tries boot from flash on SPI0 NPCS0, this NPCS0 (PA14) =
-remains set to PERIPH_A.
-> Because of that, this pin is unusable to something else.
-> This patch sets it back to GPIO.
+1) The binding Documentation says not to do it. So we are ignoring our
+   own documentation.
 
-The policy is to leave pins in an unknown state till some peripheral
-need them.
+2) It seems likely that at some point the OEM will swap to B1 revision
+   SoCs. The i2c device then does not require this quirk, but we have
+   hard coded in the DT file that it is required. B1 revision would
+   work, but not optimally.
 
-What are you trying to use this pin for ?
-If you just want to use it as a chip select for an spi device, take a
-look at [1].
+So i would prefer not to explicitly enable the quirk, but determine at
+run time if the quirk is needed for the SoC revision it is running on.
 
-Here the gpio is requested by the spi core when defining the cs-gpios
-property. The gpio controller then request the listed pins to the pin
-controller (pinctrl driver).
+    Andrew
 
-You can explicitly define a new pinctrl state (by defining a new
-pinctrl_spi0_cs0 subnode in your dts file) and reference it in the
-spi0 node, though this is not mandatory.
-
-Best Regards,
-
-Boris
-
-[1]http://lxr.free-electrons.com/source/arch/arm/boot/dts/at91sam9x5ek.=
-dtsi#L85
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
