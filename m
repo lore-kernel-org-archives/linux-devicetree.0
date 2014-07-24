@@ -1,77 +1,44 @@
-From: Darren Etheridge <detheridge@ti.com>
-Subject: Re: [PATCH 0/8] tilcdc-panel: Backlight and GPIO devicetree support
-Date: Thu, 24 Jul 2014 16:25:20 -0500
-Message-ID: <53D179C0.2050100@ti.com>
-References: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>
-Cc: daniel.vetter@ffwll.ch, Russell King <linux@arm.linux.org.uk>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] ARM: dts: Build dtbs for Rockchip boards
+Date: Thu, 24 Jul 2014 15:17:50 -0700
+Message-ID: <1406240270-13278-1-git-send-email-dianders@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2014 09:18 AM, Ezequiel Garcia wrote:
-> Hello all,
->
-> This patchset adds the required changes to support an optional backlight
-> and GPIO for the tilcdc panel driver.
->
-> There was some code to support a backlight, but it was somewhat broken
-> and undocumented. I've followed the nice implementation in panel-simple
-> and added a similar one here.
->
-> The enable GPIO is required to turn on and off devices with such capability.
-> Also here, I've followed panel-simple which looks correct.
->
-> In addition to this there are very minor cosmetic cleanups and a larger
-> error path fix in tilcdc's DRM driver .load error path.
->
-> This patchset applies on top of drm-next branch which contains the latest
-> tilcdc pushed by Guido.
->
-> If at all possible, I'd like to get this merged for v3.17. If a pull request
-> is needed, don't hesitate to ask and I'll prepare one.
->
-> Comments and tests welcome!
->
+This allows the "make dtbs" target to work.
 
-All of the changes seem to make sense and I tested on AM335x-EVM both 
-with and without the addition "backlight = " in the dts for the panel node.
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+This is built upon (ARM: dts: add rk3288 evaluation board) at
+<https://patchwork.kernel.org/patch/4579541/>, which won't actually
+build without the bindings that just landed in today's clk-next.
 
-I see no issues in either case, continued to work as before.
+ arch/arm/boot/dts/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Tested against 3.16-rc6 with this patchset and the earlier patchset from 
-Guido applied.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 82f498b..026f61d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -341,6 +341,11 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8084-mtp.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += \
++	rk3066a-bqcurie2.dtb \
++	rk3188-radxarock.dtb \
++	rk3288-evb-act8846.dtb \
++	rk3288-evb-rk808.dtb
+ dtb-$(CONFIG_ARCH_S3C24XX) += s3c2416-smdk2416.dtb
+ dtb-$(CONFIG_ARCH_S3C64XX) += s3c6410-mini6410.dtb \
+ 	s3c6410-smdk6410.dtb
+-- 
+2.0.0.526.g5318336
 
-Also tested on BeagleBone Black even though it doesn't have a panel, 
-just to make sure nothing changed there.
-
-For the series:
-Tested-by: Darren Etheridge <detheridge@ti.com>
-
-> Ezequiel Garcia (8):
->    drm/tilcdc: Fix the error path in tilcdc_load()
->    drm/tilcdc: panel: Add missing of_node_put
->    drm/tilcdc: panel: Remove unused variable
->    drm/tilcdc: panel: Spurious whitespace removal
->    drm/tilcdc: panel: Use devm_kzalloc to simplify the error path
->    drm/tilcdc: panel: Fix backlight devicetree support
->    drm/tilcdc: panel: Set return value explicitly
->    drm/tilcdc: panel: Add support for enable GPIO
->
->   .../devicetree/bindings/drm/tilcdc/panel.txt       |  7 ++
->   drivers/gpu/drm/tilcdc/tilcdc_drv.c                | 60 +++++++++++++++---
->   drivers/gpu/drm/tilcdc/tilcdc_panel.c              | 74 +++++++++++++++++-----
->   3 files changed, 114 insertions(+), 27 deletions(-)
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
