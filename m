@@ -1,76 +1,168 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v4 3/3] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Thu, 24 Jul 2014 21:38:23 +0800
-Message-ID: <20140724133823.GA9638@gondor.apana.org.au>
-References: <1405169953-13695-1-git-send-email-clabbe.montjoie@gmail.com>
- <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com>
- <20140724060054.GA6545@gondor.apana.org.au>
- <53D0E857.8000405@gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
+ ix4-300d NAS
+Date: Thu, 24 Jul 2014 10:07:57 -0400
+Message-ID: <20140724140757.GW23220@titan.lakedaemon.net>
+References: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
+ <1406154923-13612-2-git-send-email-yahoo@perenite.com>
+ <20140723224236.GC28485@lunn.ch>
+ <94F87063-D717-435B-B7C5-EDAC9B26742C@perenite.com>
+ <20140723225841.GD28485@lunn.ch>
+ <10A7C530-7CD2-4ED0-889A-7FAC1922320F@perenite.com>
+ <20140723231535.GK23220@titan.lakedaemon.net>
+ <53D0FA2F.6050209@free-electrons.com>
+ <20140724124520.GV23220@titan.lakedaemon.net>
+ <C2E7C8C1-1198-4785-AB9C-C27B5E27A8D4@perenite.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53D0E857.8000405@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Corentin LABBE <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+In-Reply-To: <C2E7C8C1-1198-4785-AB9C-C27B5E27A8D4-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 01:04:55PM +0200, Corentin LABBE wrote:
-> Le 24/07/2014 08:00, Herbert Xu a =E9crit :
-> > On Sat, Jul 12, 2014 at 02:59:13PM +0200, LABBE Corentin wrote:
-> >>
-> >> +/* sunxi_hash_init: initialize request context
-> >> + * Activate the SS, and configure it for MD5 or SHA1
-> >> + */
-> >> +int sunxi_hash_init(struct ahash_request *areq)
-> >> +{
-> >> +	const char *hash_type;
-> >> +	struct crypto_ahash *tfm =3D crypto_ahash_reqtfm(areq);
-> >> +	struct sunxi_req_ctx *op =3D crypto_ahash_ctx(tfm);
-> >> +
-> >> +	mutex_lock(&ss->lock);
-> >> +
-> >> +	hash_type =3D crypto_tfm_alg_name(areq->base.tfm);
-> >> +
-> >> +	op->byte_count =3D 0;
-> >> +	op->nbwait =3D 0;
-> >> +	op->waitbuf =3D 0;
-> >> +
-> >> +	/* Enable and configure SS for MD5 or SHA1 */
-> >> +	if (strcmp(hash_type, "sha1") =3D=3D 0)
-> >> +		op->mode =3D SS_OP_SHA1;
-> >> +	else
-> >> +		op->mode =3D SS_OP_MD5;
-> >> +
-> >> +	writel(op->mode | SS_ENABLED, ss->base + SS_CTL);
-> >> +	return 0;
-> >=20
-> > The hash driver is completely broken.  You are modifying tfm
-> > ctx data which is shared by all users of a single tfm.  So
-> > if two users conduct hashes in parallel they will step all
-> > over each other.
+Benoit,
+
+Please try to avoid top-posting.  I've re-flowed it, below.
+
+Arnd, Andrew, question for both of you below.
+
+On Thu, Jul 24, 2014 at 03:40:42PM +0200, Benoit Masson wrote:
+> Le 24 juil. 2014 =E0 14:45, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> a =E9=
+crit :
 >=20
-> So where can I store data for each request ?
+> > On Thu, Jul 24, 2014 at 02:21:03PM +0200, Gregory CLEMENT wrote:
+> >> On 24/07/2014 01:15, Jason Cooper wrote:
+> >>> On Thu, Jul 24, 2014 at 01:11:12AM +0200, Benoit Masson wrote:
+> >>>> Le 24 juil. 2014 =E0 00:58, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> a =E9cr=
+it :
+> >>>>=20
+> >>>>>> For the marvell,mv78230-a0-i2c unfortunately i've spend 3 hour=
+s
+> >>>>>> trying to understand this but it only works with this on the
+> >>>>>> ix4-300d :(. There was multiple patch around this and maybe on=
+e
+> >>>>>> broke the auto-detect part of this, I've tried compiling with =
+some
+> >>>>>> 3.10 or lower kernel but no luck here I still have to put this=
+ a0
+> >>>>>> option.
+> >>>>>=20
+> >>>>> Lets first confirm you have an a0 SoC.
+> >>>>>=20
+> >>>>> At boot time, it should print:
+> >>>>>=20
+> >>>>> pr_info("MVEBU SoC ID=3D0x%X, Rev=3D0x%X\n", soc_dev_id, soc_re=
+v);
+> >>>>>=20
+> >>>>> What revision do you have?
+> >>>>>=20
+> >>>>> If the auto detect code really is broken, Gregory will likely t=
+ake a
+> >>>>> look.
+> >>>>=20
+> >>>> I sure do,
+> >>>>=20
+> >>>> confirmed by u-boot  output below:
+> >>>>=20
+> >>>> U-Boot 2009.08 (Mar 04 2013 - 11:13:04) Marvell version:  2.3.2 =
+PQ
+> >>>> U-Boot Addressing:
+> >>>>       Code:..00600000:006BFFF0
+> >>>>       BSS:..00708EC0
+> >>>>       Stack:..0x5fff70
+> >>>>       PageTable:.0x8e0000
+> >>>>       Heap address:.0x900000:0xe00000
+> >>>> Board: DB-78230-BP rev 2.0 Wistron
+> >>>> SoC:   MV78230 A0
+> >>>>=20
+> >>>> From kernel I get:
+> >>>>=20
+> >>>> mvebu-soc-id: MVEBU SoC ID=3D0x7823, Rev=3D0x1
+> >>>=20
+> >>> Well, isn't that a peach?  :)  Gregory?
+> >>=20
+> >> A peach?? For me it is either a fruit or a princess, so I am puzzl=
+ed!
+> >=20
+> > Doc Holiday quote from the movie Tombstone.  The full quote was "We=
+ll,
+> > isn't that a peach of a hand?" while sitting at the poker table.
+> >=20
+> >> Well about the issue, we patch the device tree for the i2c quirk o=
+nly for
+> >> the openblock AX3.
+> >=20
+> > Ahhh, that's right.  I need to slow down and dig a bit more. :(
 
-Well, first of all you need to stop storing state in the hardware.
-After each operation the hardware may be used by some other user
-for a completely different hash request.  So leaving the hash state
-in the hardware is a no-no.
+^^^^^ This is the important bit.
 
-If your hardware supports exporting the hash state then you just
-have to export it after each operation and reimporting before the
-next one.
+> >=20
+> >> If I remember well it was because the device tree was already writ=
+ten
+> >> for this board before we found there was an issue with the A0 vers=
+ion
+> >> of the CPU.=20
+> >=20
+> > No, it's because we didn't think any manufacturers would be silly e=
+nough
+> > to use the a0 in production.  That assumption worked out well. :-P
+> >=20
+> >> The rule was that for new boards then they have to set the marvell=
+,mv78230-a0-i2c
+> >> compatible string. I also didn't expect that we found "new" produc=
+t using the A0 version.
+> >>=20
+> >> We have 3 options now:
+> >>=20
+> >> - remove the check on the openblock AX3 board and always try to ap=
+ply the quirck for A0 version
+> >> - add a check for this new board in the mvebu_dt_init function
+> >> - let the compatible string marvell,mv78230-a0-i2c in this dts
+> >>=20
+> >> I would prefer the option 1 but I fear that Arnd would prefer the =
+2 other options.
+> >=20
+> > I like option 1 and 3.  Option 3 is a *correct* description of the
+> > hardware, and should be done.  Option 1 makes Linux user-friendly f=
+or boards
+> > that are exactly the same, but changed out SoC stepping mid-product=
+ion.
+> >=20
+> > Option 2 needs to be undone.  We shouldn't need to change compiled =
+code
+> > for every new board that comes along.  Which was the whole point of=
+ DT,
+> > right?
+> >=20
+> So I'm a bit puzzled now. First email from Jason mention that the
+> final patch was doe in 3.16rc3 and indeed I made my dts using 3.15,
+> now I'm on 3.16 mainline, but didn't tested since to remove the a0
+> compatible string. Should I give it a try or from Gregory's email
+> understand that the patch was only for ax3 board ?
 
-If your hardware is incapable of exporting partial hash state then
-you will have to use a software fallback for init/update.  If your
-hardware is incapable of importing partial hash state then you will
-also have to do finup/final using a software fallback.
+Ignore what I said before about the patch.  It doesn't apply to your
+board.  We need to fix the quirk to trigger on SoC revision, not board
+compatible, as it currently does.
 
-Cheers,
---=20
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The only outstanding point (Arnd?), is that I think it's ok to have the
+i2c...a0 compatible string in the dts files, but Andrew seems to think
+otherwise.  Is that still true Andrew?
+
+> Feel free as long as the device is still opened, uart connected, to
+> send me your test as I'll soon have to turn into a production NAS ...
+
+Hopefully, we'll hear from one of them today, and we can merge your
+patch as-is with the minor comment reformatting.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
