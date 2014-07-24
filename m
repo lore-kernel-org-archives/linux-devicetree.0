@@ -1,113 +1,52 @@
-From: Markus Niebel <list-09_linux_arm@tqsc.de>
-Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when request
- IRQ
-Date: Thu, 24 Jul 2014 10:12:56 +0200
-Message-ID: <53D0C008.70305@tqsc.de>
-References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>	<20140722062803.GA21229@dragon>	<53CE107A.1000000@tqsc.de>	<20140722074257.GC21229@dragon>
- <CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] Add Freescale ASRC driver
+Date: Thu, 24 Jul 2014 16:35:27 +0800
+Message-ID: <cover.1406189745.git.nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawn.guo@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Niebel <Markus.Niebel@tq-group.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 23.07.2014 18:14, wrote Linus Walleij:
-> On Tue, Jul 22, 2014 at 9:42 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
->> On Tue, Jul 22, 2014 at 09:19:22AM +0200, Markus Niebel wrote:
-> 
->>> Currently client drivers have simply interrupts and interrupt-parent
->>> in their bindings, but no interrupt-gpios. Therefore in this case a
->>> client does not know about a dedicated gpio which is to be requested
->>> and configured.
->>
->> Okay.  I understand your problem now.  This is an issue in case we
->> specify a GPIO to be used as interrupt from device tree.  In non-DT
->> world, client driver knows this is an interrupt on GPIO, and therefore
->> takes the responsibility to request and configure the GPIO to work as
->> interrupt.  But in DT case, client driver does not know whether it's an
->> IRQ line or GPIO based interrupt.  The consequence is that GPIO
->> subsystem, OF subsystem, client driver, none of the three is requesting
->> and configuring the GPIO to be used as interrupt.
->>
->> This is a common issue instead of i.MX specific, and should be addressed
->> globally, I think.
-> 
-> This is very well documented in Documentation/gpio/driver.txt these
-> days. Quoting:
-> 
+This series of patches add Freescale ASRC module driver support along
+with the extra request in imx-sdma structure required by SDMA Device
+to Device script.
 
-Sorry for not carefully reading the docs and many thanks for the helpful comments.
+The previous version has been in the maillist for nearly six months
+without any comment and reply. So I decide to drop the SDMA part's
+change since this series focus on ASRC support (Later, we can send
+SDMA part separately.) so that ASRC driver may get upstream first.
 
-> "
-> It is legal for any IRQ consumer to request an IRQ from any irqchip no matter
-> if that is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
-> irq_chip are orthogonal, and offering their services independent of each
-> other.
-> 
-> gpiod_to_irq() is just a convenience function to figure out the IRQ for a
-> certain GPIO line and should not be relied upon to have been called before
-> the IRQ is used.
-> 
-> So always prepare the hardware and make it ready for action in respective
-> callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
-> been called first.
-> 
+Changelog
+v2:
+ * PATCH-1: Dropped the change to SDMA driver.
+ * PATCH-2: Dropped useless member in private data structures.
+ * PATCH-2: Refined some comments in fsl_asrc_dma.c driver.
+ * PATCH-2: Refined commit comments.
 
-So a gpio driver is responsible to read status of gpio lines and flag any gpio line 
-currently configured as out (base on the information read from hardware registers) 
-on driver probe time - correct? If yes is the driver allowed to call 
-gpiod_get_direction() to have the FLAG_IS_OUT set in the gpiolib layer?
+Nicolin Chen (2):
+  ARM: imx: Add the secondary request into the structure for imx-sdma
+  ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform drivers
 
-> This orthogonality leads to ambiguities that we need to solve: if there is
-> competition inside the subsystem which side is using the resource (a certain
-> GPIO line and register for example) it needs to deny certain operations and
-> keep track of usage inside of the gpiolib subsystem. This is why the API
-> below exists.
-> 
-> 
-> Locking IRQ usage
-> -----------------
-> Input GPIOs can be used as IRQ signals. When this happens, a driver is requested
-> to mark the GPIO as being used as an IRQ:
-> 
->         int gpiod_lock_as_irq(struct gpio_desc *desc)
-> 
-> This will prevent the use of non-irq related GPIO APIs until the GPIO IRQ lock
-> is released:
-> 
->         void gpiod_unlock_as_irq(struct gpio_desc *desc)
-> 
-> When implementing an irqchip inside a GPIO driver, these two functions should
-> typically be called in the .startup() and .shutdown() callbacks from the
-> irqchip.
-> "
-> 
-> So: make sure each API can be used orthogonally by just poking
-> into the hardware registers. Do not call gpio_request_one().
+ .../devicetree/bindings/sound/fsl,asrc.txt         |   62 ++
+ include/linux/platform_data/dma-imx.h              |    1 +
+ sound/soc/fsl/Kconfig                              |    9 +
+ sound/soc/fsl/Makefile                             |    2 +
+ sound/soc/fsl/fsl_asrc.c                           | 1031 ++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.h                           |  461 +++++++++
+ sound/soc/fsl/fsl_asrc_dma.c                       |  384 ++++++++
+ 7 files changed, 1950 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
+ create mode 100644 sound/soc/fsl/fsl_asrc.c
+ create mode 100644 sound/soc/fsl/fsl_asrc.h
+ create mode 100644 sound/soc/fsl/fsl_asrc_dma.c
 
-Makes sense.
+-- 
+1.8.4
 
-Thanks again
-
-Markus
-
-> 
-> Yours,
-> Linus Walleij
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
