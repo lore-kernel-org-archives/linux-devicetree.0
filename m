@@ -1,46 +1,87 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v1] gpio: keystone: add dsp gpio controller driver
-Date: Thu, 24 Jul 2014 10:21:27 -0400
-Message-ID: <53D11667.8050807@ti.com>
-References: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com>	<CACRpkdYY_a_9G-VLBbv2a22Cg4j0t3Wv4W1h0n6-ccCXgVJXsA@mail.gmail.com>	<53CFD404.7070704@ti.com> <CACRpkdYdUKmR+bZo374AqepDXfsZqBwJ88e4is90-UoUBWdJrA@mail.gmail.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] usb: host: st-hcd: Add USB HCD support for STi
+ SoCs
+Date: Thu, 24 Jul 2014 10:26:47 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1407241019530.1146-100000@iolanthe.rowland.org>
+References: <5967609.vndF2bDyS1@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYdUKmR+bZo374AqepDXfsZqBwJ88e4is90-UoUBWdJrA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Suman Anna <s-anna@ti.com>, Jaswinder Singh <jaswinder.singh@linaro.org>, Alexander Shiyan <shc_work@mail.ru>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ivan.khoronzhuk@ti.com, Muralidharan Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5967609.vndF2bDyS1@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 24 July 2014 10:12 AM, Linus Walleij wrote:
-> On Wed, Jul 23, 2014 at 5:25 PM, Santosh Shilimkar
-> <santosh.shilimkar@ti.com> wrote:
+On Thu, 24 Jul 2014, Arnd Bergmann wrote:
+
+> > > The way you do this apparently is to create a device that encapsulates
+> > > the OHCI and the EHCI and then goes on to create child devices that
+> > > are bound to the real drivers.
+> > 
+> > Yes, although this isn't the first driver to take that approach USB_HCD_BCMA
+> > (bcma-hcd.c) and USB_HCD_SSB (ssb-hcd.c) do much the same thing.
 > 
->> I will try to answer this. This IP is indeed a GPIO block
->> but the IO's are used just OUTPUT lines from Linux
->> HOST perspective. These IOs are connected to the DSPs
->> as input/IRQ lines.
+> I just had a look at them, and I think the case is different here:
 > 
-> So the DSP is another discrete IC, and could be something
-> different, so this is board-level information?
+> For the two bcma driver, there is a discoverable bus (bcma) rather than
+> the platform bus, and it only exposes one device, so the bcma-hcd driver
+> is actually needed so we get two device that can be bound to the regular
+> drivers.
 > 
-> I'm really worrying whether this is general purpose or not :-/
+> For the ssb-hcd driver, it's less clear and that one could be
+> reworked into two separate drivers.
 > 
-Am not sure I follow you. This IP is completely controlled
-by Linux OS to generate output signals. How does it matter
-whether its connected to a peripheral or a discrete IC. For
-example instead of DSP if I connected these lines to an
-external PMIC, which considers these as input lines to
-perform some actions. Isn't that GPIO usecase as per you ?
-Given that this IP only output functionality is used but
-that shouldn't matter. We have seen SOCs where GPIOs
-are just used as input to form a Matrix Keyboard.
+> > > The way it should be done however is to put the two host controllers
+> > > into DT directly and describe their resources (phy, clock, reset, ...)
+> > > using the DT bindings for those.
+> > 
+> > I'm of course happy to change it if required. I see looking through that a lot 
+> > of other platforms do it the way you describe with a
+> > 
+> > ehci-<platname>.c and ohci-<platname>.c
+> 
+> Right. We are trying to  gradually move some of them over to use the
+> generic *hci-platform.c drivers though.
+> 
+> > > Depending on what kind of special requirements the ST version has,
+> > > this can be done either by using the generic ohci/ehci bindings
+> > > with extensions where necessary, or by creating a new binding and
+> > > new driver files that use 'ohci_init_driver'/'ehci_init_driver'
+> > > to inherit from the common code.
+> > > 
+> > > The first of the two approaches is preferred.
+> > 
+> > We don't have anything particularly special, just a couple of reset lines,
+> > clock, phy, etc.
+> 
+> Ok, good. Please see Documentation/devicetree/bindings/usb/usb-?hci.txt
+> then. You might actually be able to just use the existing drivers
+> without new code by just adding the proper DT nodes that follow these
+> bindings.
+> 
+> > > > +   pdev->dev.parent = &parent->dev;
+> > > > +   pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> > > > +   pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> > > 
+> > > This is something we shouldn't ever do these days, the DMA settings
+> > > should come directly from DT without driver interaction.
+> > 
+> > Ok, I'll wait to hear the outcome of Greg/Alans views before either fixing
+> > it or starting over.
+> 
+> Ok.
 
-May be I am missing your point.
+As far as I'm concerned, any of these approaches is okay although
+putting everything into DT is the most desirable, because it will
+minimize the code size.
 
-Regards,
-Santosh
+Mostly what's at issue here is the design preferences of the people at 
+Linaro and all others who work on architecture-specific stuff.
 
+Alan Stern
 
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
