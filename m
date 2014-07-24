@@ -1,162 +1,111 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCHv4 4/5] of/mtd/nand: add generic binding and helper for
- NAND_BBT_NO_OOB_BBM
-Date: Wed, 23 Jul 2014 19:06:27 -0700
-Message-ID: <20140724020627.GD3711@ld-irv-0074>
-References: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-2-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-4-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-5-git-send-email-LW@KARO-electronics.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1402579245-13377-5-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, linux-mtd@lists.infradead.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@freescale.com>, linux-kernel@vger.kernel.org, Huang
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v11 0/3] Add ES8328 audio codec
+Date: Thu, 24 Jul 2014 10:15:37 +0800
+Message-ID: <1406168140-15961-1-git-send-email-xobs@kosagi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(BTW, that's a mighty CC list you have! I'm not sure all CC'd parties
-are interested in this series; e.g., Russel and the ARM list seem
-unrelated)
+This patchset adds support for the Everest Semi ES8328 audio codec, used in
+the Novena open source laptop.  It also adds support for using the es8328 on
+IMX boards.
 
-Hi Lothar,
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the speaker amps and as well as
+supporting headphone jacks, in addition to the i.MX audmux routing.
 
-Sorry for the delay on this. I get busy enough that I can't/don't reply
-to everything quickly...
+Changes since v10:
+    - Minor documentation reformatting
+    - Minor spacing reformatting in sound/soc/fsl/imx-audio-es8328.c
 
-On Thu, Jun 12, 2014 at 03:20:44PM +0200, Lothar Wa=DFmann wrote:
-> add a boolean property 'nand-no-oob-bbm' and helper function to be
-> able to set the NAND_BBT_NO_OOB_BBM flag in DT capable NAND drivers
-> and use it for i.MX and MXS nand drivers.
+Changes since v9:
+    - Minor formatting corrections
+    - Rework DAPM registers in es8328.h.  DAPM widgets use offsets, and the
+      v9 patch turned snd_soc_write() calls into widgets without converting
+      from i2c masks to offsets first.
+    - Rename DAC and ADC PLL to DLL, to reflect latest documentation.
 
-If I'm understanding your previous conversations with Huang correctly,
-you *must* use NAND_BBT_NO_OOB_BBM if you're going to use the
-fsl,no-blockmark-swap option. Correct? If so, then you might not need
-a separate 'nand-no-oob-bbm' binding; your driver should imply from
-'fsl,no-blockmark-swap' that it must also enable NAND_BBT_NO_OOB_BBM.
+Changes since v8:
+    - For the mclk ratios, move from an array to a lookup table, and rename
+      the variable to be clearer.
+    - Move all CHIPPOWER accesses into DAPM supplies.
+    - Fix sloppy compile problems introduced in v8.
+    - Shut down clocks and supplies on suspend, and enable them on resume.
+    - Remove double set of ES8328_MASTERMODE_MSC.
 
-Also, as I noted in [1], I don't really like exposing a ton of
-individual boolean DT properties like this. (At least this property is
-orthogonal to the bad block table; I was a little off-base in [1].)
+Changes since v7:
+    - We now fetch the regulators in the device-level probe rather than
+      in the ASoC-level probe.
 
-Brian
+Changes since v6:
+    - Minor clarification of AUDMUX in imx-audio-es8328.txt
+    - Use u32 instead of int in imx-es8328.c for int-mux and ext-mux
+    - Bounds checking on mux-int-port and mux-ext-port in imx-es8328.c
+    - Remove NULL checks before calling of_node_put()
 
-[1] http://lists.infradead.org/pipermail/linux-mtd/2014-July/054764.html
+Changes since v5:
+    - Removed empty imx_set_frequency function from imx-es8328.c
+    - Move the clock from imx-audio-es8328 to the es8328 codec itself
+    - Add support for 2x (22.5792 MHz) and 1x (11.2896 MHz) source clocks
+    - Restore registers on resume
+    - Document pins for ES8328, including input pins
 
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
-> ---
->  Documentation/devicetree/bindings/mtd/nand.txt |    1 +
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.c         |    3 +++
->  drivers/mtd/nand/mxc_nand.c                    |    2 ++
->  drivers/of/of_mtd.c                            |   12 ++++++++++++
->  include/linux/of_mtd.h                         |    6 ++++++
->  5 files changed, 24 insertions(+)
-> =
+Changes since v4:
+    - Simplify clock handling and use assigned-clock-parents
+    - Move the codec regulator from the machine driver to the codec
+    - Specify all four regulators, and require their presence
+    - Fix audio recording, such that it enables the PGA
 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentati=
-on/devicetree/bindings/mtd/nand.txt
-> index b53f92e..e46bfbe 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> @@ -5,6 +5,7 @@
->    "soft_bch".
->  - nand-bus-width : 8 or 16 bus width if not present 8
->  - nand-on-flash-bbt: boolean to enable on flash bbt option if not presen=
-t false
-> +- nand-no-oob-bbm: boolean to disable writing bad block markers to flash
->  =
+Changes since v3:
+    - Add OF bindings for everest,es8328
+    - Add back in patch to add everest as a vendor prefix
+    - Give clocks more generic names
+    - Document required clocks in DT bindings document
 
->  - nand-ecc-strength: integer representing the number of bits to correct
->  		     per ECC step.
-> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gp=
-mi-nand/gpmi-nand.c
-> index 959cb9b..37537b4 100644
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> @@ -1724,6 +1724,9 @@ static int gpmi_nand_init(struct gpmi_nand_data *th=
-is)
->  	if (of_get_nand_on_flash_bbt(this->dev->of_node)) {
->  		chip->bbt_options |=3D NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
->  =
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
 
-> +		if (of_get_nand_no_oob_bbm(this->dev->of_node))
-> +			chip->bbt_options |=3D NAND_BBT_NO_OOB_BBM;
-> +
->  		if (of_property_read_bool(this->dev->of_node,
->  						"fsl,no-blockmark-swap"))
->  			this->swap_block_mark =3D false;
-> diff --git a/drivers/mtd/nand/mxc_nand.c b/drivers/mtd/nand/mxc_nand.c
-> index dba262b..bb54a2a 100644
-> --- a/drivers/mtd/nand/mxc_nand.c
-> +++ b/drivers/mtd/nand/mxc_nand.c
-> @@ -1496,6 +1496,8 @@ static int mxcnd_probe(struct platform_device *pdev)
->  		this->bbt_md =3D &bbt_mirror_descr;
->  		/* update flash based bbt */
->  		this->bbt_options |=3D NAND_BBT_USE_FLASH;
-> +		if (of_get_nand_no_oob_bbm(pdev->dev.of_node))
-> +			this->bbt_options |=3D NAND_BBT_NO_OOB_BBM;
->  	}
->  =
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
 
->  	init_completion(&host->op_completion);
-> diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
-> index b7361ed..d947acc 100644
-> --- a/drivers/of/of_mtd.c
-> +++ b/drivers/of/of_mtd.c
-> @@ -117,3 +117,15 @@ bool of_get_nand_on_flash_bbt(struct device_node *np)
->  	return of_property_read_bool(np, "nand-on-flash-bbt");
->  }
->  EXPORT_SYMBOL_GPL(of_get_nand_on_flash_bbt);
-> +
-> +/**
-> + * of_get_nand_no_oob_bbm - Get nand no oob bbm for given device_node
-> + * @np:	Pointer to the given device_node
-> + *
-> + * return true if present, false otherwise
-> + */
-> +bool of_get_nand_no_oob_bbm(struct device_node *np)
-> +{
-> +	return of_property_read_bool(np, "nand-no-oob-bbm");
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_nand_no_oob_bbm);
-> diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
-> index e266caa..6ece1a9 100644
-> --- a/include/linux/of_mtd.h
-> +++ b/include/linux/of_mtd.h
-> @@ -17,6 +17,7 @@ int of_get_nand_ecc_step_size(struct device_node *np);
->  int of_get_nand_ecc_strength(struct device_node *np);
->  int of_get_nand_bus_width(struct device_node *np);
->  bool of_get_nand_on_flash_bbt(struct device_node *np);
-> +bool of_get_nand_no_oob_bbm(struct device_node *np);
->  =
+Sean Cross (3):
+  devicetree: bindings: Add Everest Semicodunctor
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
 
->  #else /* CONFIG_OF_MTD */
->  =
+ Documentation/devicetree/bindings/sound/es8328.txt |  38 ++
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  60 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  60 ++
+ sound/soc/codecs/es8328-spi.c                      |  49 ++
+ sound/soc/codecs/es8328.c                          | 756 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 314 +++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 232 +++++++
+ 12 files changed, 1545 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
 
-> @@ -45,6 +46,11 @@ static inline bool of_get_nand_on_flash_bbt(struct dev=
-ice_node *np)
->  	return false;
->  }
->  =
+-- 
+2.0.0
 
-> +static inline bool of_get_nand_no_oob_bbm(struct device_node *np)
-> +{
-> +	return false;
-> +}
-> +
->  #endif /* CONFIG_OF_MTD */
->  =
-
->  #endif /* __LINUX_OF_MTD_H */
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
