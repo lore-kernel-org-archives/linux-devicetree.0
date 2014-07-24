@@ -1,74 +1,24 @@
-From: Barry Song <21cnbao@gmail.com>
-Subject: Re: [PATCH v5 3/4] ARM: dts: sirf: fix the pwm-cells and clocks
-Date: Thu, 24 Jul 2014 17:53:05 +0800
-Message-ID: <CAGsJ_4xy7c7+tN114YQyE3cQ4EOyJ5bdGPUwXvZjJqpd0qYG1w@mail.gmail.com>
-References: <1405475714-10006-1-git-send-email-huayi.li@csr.com> <1405475714-10006-4-git-send-email-huayi.li@csr.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
+Date: Thu, 24 Jul 2014 10:54:01 +0100
+Message-ID: <20140724095401.GA30816@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1405005486-26355-1-git-send-email-peter.griffin@linaro.org>
+ <1405005486-26355-2-git-send-email-peter.griffin@linaro.org>
+ <20140711082013.GH11948@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1405475714-10006-4-git-send-email-huayi.li@csr.com>
+Content-Disposition: inline
+In-Reply-To: <20140711082013.GH11948@lee--X1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Huayi Li <huayi.li@csr.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rongjun Ying <rongjun.ying@csr.com>, Barry Song <barry.song@csr.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-07-16 9:55 GMT+08:00 Huayi Li <huayi.li@csr.com>:
-> This patch adds missed pwm-cells, clock-names and signal source
-> clock for PWM module.
->
-> Signed-off-by: Huayi Li <huayi.li@csr.com>
+Hi Lee,
 
-Reviewed-by: Barry Song <Baohua.Song@csr.com>
+Thanks for reviewing. All your review comments have been fixed in v2.
 
-> ---
->  arch/arm/boot/dts/atlas6.dtsi | 8 ++++++--
->  arch/arm/boot/dts/prima2.dtsi | 8 ++++++--
->  2 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/atlas6.dtsi b/arch/arm/boot/dts/atlas6.dtsi
-> index bb22842..d424a69 100644
-> --- a/arch/arm/boot/dts/atlas6.dtsi
-> +++ b/arch/arm/boot/dts/atlas6.dtsi
-> @@ -638,10 +638,14 @@
->                                  };
->                         };
->
-> -                       pwm@b0130000 {
-> +                       pwm: pwm@b0130000 {
->                                 compatible = "sirf,prima2-pwm";
-> +                               #pwm-cells = <2>;
->                                 reg = <0xb0130000 0x10000>;
-> -                               clocks = <&clks 21>;
-> +                               clocks = <&clks 21>, <&clks 1>, <&clks 2>,
-> +                                       <&clks 3>, <&clks 0>, <&clks 4>;
-> +                               clock-names = "pwmc", "sigsrc0", "sigsrc1",
-> +                                       "sigsrc2", "sigsrc3", "sigsrc4";
->                         };
->
->                         efusesys@b0140000 {
-> diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-> index 963b7e5..68bb0c4 100644
-> --- a/arch/arm/boot/dts/prima2.dtsi
-> +++ b/arch/arm/boot/dts/prima2.dtsi
-> @@ -646,10 +646,14 @@
->                                  };
->                         };
->
-> -                       pwm@b0130000 {
-> +                       pwm: pwm@b0130000 {
->                                 compatible = "sirf,prima2-pwm";
-> +                               #pwm-cells = <2>;
->                                 reg = <0xb0130000 0x10000>;
-> -                               clocks = <&clks 21>;
-> +                               clocks = <&clks 21>, <&clks 1>, <&clks 2>,
-> +                                       <&clks 3>, <&clks 0>, <&clks 4>;
-> +                               clock-names = "pwmc", "sigsrc0", "sigsrc1",
-> +                                       "sigsrc2", "sigsrc3", "sigsrc4";
->                         };
->
->                         efusesys@b0140000 {
-> --
-> 1.9.3
->
+regards,
 
--barry
+Peter.
