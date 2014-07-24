@@ -1,99 +1,106 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1] gpio: keystone: add dsp gpio controller driver
-Date: Thu, 24 Jul 2014 17:23:07 +0200
-Message-ID: <CACRpkdbBeySnCBD4H2bBmievHYyPabL8sKXKiBp-D6PtNTV9YQ@mail.gmail.com>
-References: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com>
-	<CACRpkdYY_a_9G-VLBbv2a22Cg4j0t3Wv4W1h0n6-ccCXgVJXsA@mail.gmail.com>
-	<53CFD404.7070704@ti.com>
-	<CACRpkdYdUKmR+bZo374AqepDXfsZqBwJ88e4is90-UoUBWdJrA@mail.gmail.com>
-	<53D11667.8050807@ti.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
+Date: Thu, 24 Jul 2014 19:20:14 +0300
+Message-ID: <53D1323E.1010703@ti.com>
+References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com> <53CFD581.5040908@gmail.com> <53CFF866.6060703@ti.com> <53D05A4F.5080905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <53D11667.8050807@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Suman Anna <s-anna@ti.com>, Jaswinder Singh <jaswinder.singh@linaro.org>, Alexander Shiyan <shc_work@mail.ru>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ivan.khoronzhuk@ti.com, Muralidharan Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D05A4F.5080905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 4:21 PM, Santosh Shilimkar
-<santosh.shilimkar@ti.com> wrote:
-> On Thursday 24 July 2014 10:12 AM, Linus Walleij wrote:
->> On Wed, Jul 23, 2014 at 5:25 PM, Santosh Shilimkar
->> <santosh.shilimkar@ti.com> wrote:
+On 07/24/2014 03:58 AM, Varka Bhadram wrote:
+> 
+> On Wednesday 23 July 2014 11:31 PM, Grygorii Strashko wrote:
+>> Hi,
 >>
->>> I will try to answer this. This IP is indeed a GPIO block
->>> but the IO's are used just OUTPUT lines from Linux
->>> HOST perspective. These IOs are connected to the DSPs
->>> as input/IRQ lines.
->>
->> So the DSP is another discrete IC, and could be something
->> different, so this is board-level information?
->>
->> I'm really worrying whether this is general purpose or not :-/
->>
-> Am not sure I follow you. This IP is completely controlled
-> by Linux OS to generate output signals. How does it matter
-> whether its connected to a peripheral or a discrete IC.
+>> On 07/23/2014 06:32 PM, Varka Bhadram wrote:
+>>> On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
+>>>> On Keystone SOCs, DSP cores can send interrupts to ARM
+>>>> host using the IRQ controller IP. It provides 28 IRQ
+>>>> signals to ARM. The IRQ handler running on HOST OS can
+>>>> identify DSP signal source by analyzing SRCCx bits in
+>>>> IPCARx registers. This is one of the component used by
+>>>> the IPC mechanism used on Keystone SOCs.
+>>> (...)
 
-What matters to me is whether it is general purpose or
-not, and what the use case is.
+[...]
 
-The Kconfig symbol is called GPIO_KEYSTONE_DSP
-not GPIO_KEYSTONE. That does not sound very general
-purpose at all. Why is "DSP" at the end of that config
-option if it is general purpose?
+>>>> +static inline void
+>>>> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
+>>>> +{
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
+>>>> +    if (ret < 0)
+>>>> +        dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
+>>> It can be like
+>>>
+>>> if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
+>>>       dev_dbg(kirq->dev, "irq write failed \n");
+>>>
+>>>> +}
+>>>> +
+>>>> +
+>> Pls, Pay attention that I'd like to see ret code here in case of failure.
+> 
+> What we have to do with ret code... ?
 
-And we know the Keystone
-already has another GPIO block, selected from the
-Kconfig symbol GPIO_DAVINCI. Probably that is the
-only real GPIO on this system.
+Print it :)
 
-And the use case doesn't seem to be exactly for
-things like driving leds, reading keys, bit-banging SPI
-or MMC card detect or other such common cases.
-It seems to be to trigger IRQs on another processor and
-nothing else. Not general purpose.
+> In case of failure only this debug message will be printed.
 
-If writing bit such and such in some register has the
-effect of pulling a bit high or low in some other IP
-is not GPIO. It should be part of the driver for that
-other IP block.
+Yep. And that exactly what I need.
 
-Further you wrote:
+> 
+>>> (...)
+>>>
+>>>> +
+>>>> +static struct irq_domain_ops keystone_irq_ops = {
+>>>> +    .map    = keystone_irq_map,
+>>>> +    .xlate    = irq_domain_xlate_onecell,
+>>>> +};
+>>>> +
+>>>> +static int keystone_irq_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    struct device_node *np = dev->of_node;
+>>>> +    struct keystone_irq_device *kirq;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (np == NULL)
+>>>> +        return -EINVAL;
+>>> return -ENODEV??????
+>> If probe is executed - the dev is present, but it was created in a 
+>> wrong/unsupported way
+>> or dev structure contains wrong data.
+> 
+> Here we are trying to get the device tree node , but that is not present 
+> we may return the
+> error code saying that NO DEVICE is present....
 
-> The DSP-ARM host IPC mechanism used on
-> Keystone is Linux user-space based and it does as
-> one of the component.
+1) Even in case of DT boot device can be creating using platform_device_register()
+   (by mistake, multiplatform build)
 
-And given that it's already hinted that this is actually
-only there to aid some userspace driver I'm even *less*
-interested in having it in the GPIO subsystem.
+2) I've checked current Kernel code and found that
+- if drivers are DT compatible only then they return
+  -EINVAL -or- -ENOENT
+See, for example:
+ - irq-imgpdc.c
+ - gpio-tb10x.c
 
-Shoehorning this into the GPIO subsystem just seems
-like some convenient way to keep that DSP driver code
-in userspace instead of writing a proper kernel driver
-for the DSP.
+> 
+>>> (...)
 
-Like someone wants to avoid things like this:
-drivers/staging/tidspbridge
-drivers/remoteproc/omap_remoteproc.c
-drivers/remoteproc/da8xx_remoteproc.c
+Regards,
+-grygorii
+ 
 
-As a community maintainer, naturally doing such real
-kernel drivers is way better than trying to sneak something
-in under the radar, and now I'm worried that this is what
-is actually attempted by this driver, so I'm concerned.
-
-> Given that this IP only output functionality is used but
-> that shouldn't matter. We have seen SOCs where GPIOs
-> are just used as input to form a Matrix Keyboard.
-
-Yes, that is common. And that is for example done with
-GPIO_DAVINCI which has lines out to open space
-and general purposes.
-
-This is not GPIO, this is DSPIO IMO.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
