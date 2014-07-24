@@ -1,166 +1,102 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v3 4/4] mfd: pm8921: rename pm8921-core driver
-Date: Thu, 24 Jul 2014 15:45:21 +0300
-Message-ID: <1406205921-7452-5-git-send-email-svarbanov@mm-sol.com>
-References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
+Date: Thu, 24 Jul 2014 15:01:13 +0200
+Message-ID: <5967609.vndF2bDyS1@wuerfel>
+References: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
+ <11018717.Ey5qEJxGNJ@wuerfel>
+ <20140724122254.GA15266@griffinp-ThinkPad-X1-Carbon-2nd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140724122254.GA15266@griffinp-ThinkPad-X1-Carbon-2nd>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-The pm8921-core driver presently supports pm8921 and pm8058
-Qualcomm PMICs.  To avoid confusion with new generation PMICs
-(like pm8941) rename the pm8921-core driver to more
-appropriate name pm8xxx-ssbi, which reflects better that
-those chips use SSBI interface.
+On Thursday 24 July 2014 13:22:54 Peter Griffin wrote:
+> Thanks for reviewing, see my comments below: -
+> 
+> > Unfortunately, this seems to be done in a rather strange way,
+> > I suspect you'll have to start over, but I'll let Alan and Greg
+> > weigh in.
+> > 
+> > > +
+> > > +struct st_hcd_dev {
+> > > +   int port_nr;
+> > > +   struct platform_device *ehci_device;
+> > > +   struct platform_device *ohci_device;
+> > > +   struct clk *ic_clk;
+> > > +   struct clk *ohci_clk;
+> > > +   struct reset_control *pwr;
+> > > +   struct reset_control *rst;
+> > > +   struct phy *phy;
+> > > +};
+> > 
+> > The way you do this apparently is to create a device that encapsulates
+> > the OHCI and the EHCI and then goes on to create child devices that
+> > are bound to the real drivers.
+> 
+> Yes, although this isn't the first driver to take that approach USB_HCD_BCMA
+> (bcma-hcd.c) and USB_HCD_SSB (ssb-hcd.c) do much the same thing.
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/Kconfig                          |   14 +++++-----
- drivers/mfd/Makefile                         |    2 +-
- drivers/mfd/{pm8921-core.c => pm8xxx-ssbi.c} |   38 +++++++++++++-------------
- 3 files changed, 27 insertions(+), 27 deletions(-)
- rename drivers/mfd/{pm8921-core.c => pm8xxx-ssbi.c} (92%)
+I just had a look at them, and I think the case is different here:
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 122e2d9..884bc32 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -507,8 +507,8 @@ config UCB1400_CORE
- config MFD_PM8XXX
- 	tristate
- 
--config MFD_PM8921_CORE
--	tristate "Qualcomm PM8921 PMIC chip"
-+config MFD_PM8XXX_SSBI
-+	tristate "Qualcomm PM8XXX SSBI PMICs"
- 	depends on (ARM || HEXAGON)
- 	select IRQ_DOMAIN
- 	select MFD_CORE
-@@ -516,13 +516,13 @@ config MFD_PM8921_CORE
- 	select REGMAP
- 	help
- 	  If you say yes to this option, support will be included for the
--	  built-in PM8921 PMIC chip.
-+	  built-in PM8921 and PM8058 PMIC chips.
- 
--	  This is required if your board has a PM8921 and uses its features,
--	  such as: MPPs, GPIOs, regulators, interrupts, and PWM.
-+	  This is required if your board has a PM8921 or PM8058 and uses
-+	  its features, such as: MPPs, GPIOs, regulators, interrupts, and PWM.
- 
--	  Say M here if you want to include support for PM8921 chip as a module.
--	  This will build a module called "pm8921-core".
-+	  Say M here if you want to include support for PM8921 or PM8058 chip
-+	  as a module. This will build a module called "pm8xxx-ssbi".
- 
- config MFD_PM8XXX_SPMI
- 	tristate "Qualcomm PM8XXX SPMI PMICs"
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 93d82cc..d332085 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -152,7 +152,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
- 
- obj-$(CONFIG_MFD_CS5535)	+= cs5535-mfd.o
- obj-$(CONFIG_MFD_OMAP_USB_HOST)	+= omap-usb-host.o omap-usb-tll.o
--obj-$(CONFIG_MFD_PM8921_CORE) 	+= pm8921-core.o ssbi.o
-+obj-$(CONFIG_MFD_PM8XXX_SSBI) 	+= pm8xxx-ssbi.o ssbi.o
- obj-$(CONFIG_MFD_PM8XXX_SPMI)	+= pm8xxx-spmi.o
- obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
- obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
-diff --git a/drivers/mfd/pm8921-core.c b/drivers/mfd/pm8xxx-ssbi.c
-similarity index 92%
-rename from drivers/mfd/pm8921-core.c
-rename to drivers/mfd/pm8xxx-ssbi.c
-index 9595138..102d7fb 100644
---- a/drivers/mfd/pm8921-core.c
-+++ b/drivers/mfd/pm8xxx-ssbi.c
-@@ -277,14 +277,14 @@ static const struct regmap_config ssbi_regmap_config = {
- 	.reg_write = ssbi_reg_write
- };
- 
--static const struct of_device_id pm8921_id_table[] = {
-+static const struct of_device_id pm8xxx_id_table[] = {
- 	{ .compatible = "qcom,pm8058", },
- 	{ .compatible = "qcom,pm8921", },
- 	{ }
- };
--MODULE_DEVICE_TABLE(of, pm8921_id_table);
-+MODULE_DEVICE_TABLE(of, pm8xxx_id_table);
- 
--static int pm8921_probe(struct platform_device *pdev)
-+static int pm8xxx_probe(struct platform_device *pdev)
- {
- 	struct regmap *regmap;
- 	int irq, rc;
-@@ -354,18 +354,18 @@ static int pm8921_probe(struct platform_device *pdev)
- 	return rc;
- }
- 
--static int pm8921_remove_child(struct device *dev, void *unused)
-+static int pm8xxx_remove_child(struct device *dev, void *unused)
- {
- 	platform_device_unregister(to_platform_device(dev));
- 	return 0;
- }
- 
--static int pm8921_remove(struct platform_device *pdev)
-+static int pm8xxx_remove(struct platform_device *pdev)
- {
- 	int irq = platform_get_irq(pdev, 0);
- 	struct pm_irq_chip *chip = platform_get_drvdata(pdev);
- 
--	device_for_each_child(&pdev->dev, NULL, pm8921_remove_child);
-+	device_for_each_child(&pdev->dev, NULL, pm8xxx_remove_child);
- 	irq_set_chained_handler(irq, NULL);
- 	irq_set_handler_data(irq, NULL);
- 	irq_domain_remove(chip->irqdomain);
-@@ -373,29 +373,29 @@ static int pm8921_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static struct platform_driver pm8921_driver = {
--	.probe		= pm8921_probe,
--	.remove		= pm8921_remove,
-+static struct platform_driver pm8xxx_driver = {
-+	.probe		= pm8xxx_probe,
-+	.remove		= pm8xxx_remove,
- 	.driver		= {
--		.name	= "pm8921-core",
-+		.name	= "pm8xxx-ssbi",
- 		.owner	= THIS_MODULE,
--		.of_match_table = pm8921_id_table,
-+		.of_match_table = pm8xxx_id_table,
- 	},
- };
- 
--static int __init pm8921_init(void)
-+static int __init pm8xxx_init(void)
- {
--	return platform_driver_register(&pm8921_driver);
-+	return platform_driver_register(&pm8xxx_driver);
- }
--subsys_initcall(pm8921_init);
-+subsys_initcall(pm8xxx_init);
- 
--static void __exit pm8921_exit(void)
-+static void __exit pm8xxx_exit(void)
- {
--	platform_driver_unregister(&pm8921_driver);
-+	platform_driver_unregister(&pm8xxx_driver);
- }
--module_exit(pm8921_exit);
-+module_exit(pm8xxx_exit);
- 
- MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("PMIC 8921 core driver");
-+MODULE_DESCRIPTION("PMIC PM8XXX SSBI driver");
- MODULE_VERSION("1.0");
--MODULE_ALIAS("platform:pm8921-core");
-+MODULE_ALIAS("platform:pm8xxx-ssbi");
--- 
-1.7.0.4
+For the two bcma driver, there is a discoverable bus (bcma) rather than
+the platform bus, and it only exposes one device, so the bcma-hcd driver
+is actually needed so we get two device that can be bound to the regular
+drivers.
+
+For the ssb-hcd driver, it's less clear and that one could be
+reworked into two separate drivers.
+
+> > The way it should be done however is to put the two host controllers
+> > into DT directly and describe their resources (phy, clock, reset, ...)
+> > using the DT bindings for those.
+> 
+> I'm of course happy to change it if required. I see looking through that a lot 
+> of other platforms do it the way you describe with a
+> 
+> ehci-<platname>.c and ohci-<platname>.c
+
+Right. We are trying to  gradually move some of them over to use the
+generic *hci-platform.c drivers though.
+
+> > Depending on what kind of special requirements the ST version has,
+> > this can be done either by using the generic ohci/ehci bindings
+> > with extensions where necessary, or by creating a new binding and
+> > new driver files that use 'ohci_init_driver'/'ehci_init_driver'
+> > to inherit from the common code.
+> > 
+> > The first of the two approaches is preferred.
+> 
+> We don't have anything particularly special, just a couple of reset lines,
+> clock, phy, etc.
+
+Ok, good. Please see Documentation/devicetree/bindings/usb/usb-?hci.txt
+then. You might actually be able to just use the existing drivers
+without new code by just adding the proper DT nodes that follow these
+bindings.
+
+> > > +   pdev->dev.parent = &parent->dev;
+> > > +   pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> > > +   pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> > 
+> > This is something we shouldn't ever do these days, the DMA settings
+> > should come directly from DT without driver interaction.
+> 
+> Ok, I'll wait to hear the outcome of Greg/Alans views before either fixing
+> it or starting over.
+
+Ok.
+
+	Arnd
