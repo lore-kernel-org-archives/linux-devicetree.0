@@ -1,72 +1,103 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 14/16] cpufreq: Add cpufreq driver for Tegra124
-Date: Thu, 24 Jul 2014 11:10:04 +0200
-Message-ID: <20140724091002.GA3811@ulmo.nvidia.com>
-References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
- <1405957142-19416-15-git-send-email-ttynkkynen@nvidia.com>
- <CAKohpomQthJ_XE-HhzW07Q4aVtxQVy97iaL0Vy6Q4Lhw22A=VA@mail.gmail.com>
- <53CFA33F.6030307@nvidia.com>
- <CAKohponLh66Ubr6=wY2OZCCrK11KZDj=DmXXqXsGGTHSG45wpA@mail.gmail.com>
- <53D00A47.7050203@nvidia.com>
- <CAKohponsS8WJy4qBa=3em9AcxfpfLZR_mx4Ln8N3Q_gBaf52NA@mail.gmail.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v11 0/8] ARM: berlin: add AHCI support
+Date: Thu, 24 Jul 2014 11:17:22 +0200
+Message-ID: <1406193450-17283-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohponsS8WJy4qBa=3em9AcxfpfLZR_mx4Ln8N3Q_gBaf52NA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Changes since v10:
+	- made a 1:1 relation between PHYs and ports numbers
+	- added a SoC specific compatible when using 'generic-ahci'
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v9:
+        - moved port_map parameters into the AHCI structure
 
-On Thu, Jul 24, 2014 at 05:43:40AM +0530, Viresh Kumar wrote:
-> On 24 July 2014 00:47, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
-> > It's this:
-> >
-> > +static int tegra124_cpufreq_probe(struct platform_device *pdev)
-> > +{
-> > [...]
-> > +
-> > +       dfll_clk =3D of_clk_get_by_name(cpu_dev->of_node, "dfll");
-> > +       if (IS_ERR(dfll_clk)) {
-> > +               ret =3D PTR_ERR(dfll_clk);
-> > +               goto out_put_cpu_clk;
-> > +       }
->=20
-> This would search for clocks passed via DT, right? Why would we
-> get EPROBE_DEFER for that? Sorry for the stupid question.
+Changes since v8:
+        - stopped reset the controller from the PHY driver
+        - removed fixed array sizes
+        - got rid of the custom to_berlin_sata_phy_priv() macro
+        - added dependency to HAS_IOMEM
 
-of_clk_get_by_name() can return -EPROBE_DEFER, which will happen if the
-clock provider hasn't been registered yet.
+Changes since v7:
+        - got back to the each PHY as a sub-node representation
+        - renamed the power bit in the PHY driver
 
-Thierry
+Changes since v6:
+        - added the 'clocks' property and support in the PHY driver
+        - updated the PHY compatible
 
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature
+Changes since v5:
+        - rebased on top of v3.16-rc1
+        - added the 'clocks' property in the sata node
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes since v4:
+        - updated PHY driver as tristate
+        - handled the case were no SATA port is enabled
+        - updated the compatible to a generic one
+        - cosmetic fixups
 
-iQIcBAEBAgAGBQJT0M1qAAoJEN0jrNd/PrOh86YQAI3S6c9lir6DHUekyi7REuFx
-7joUQ8un74bTj+c6jDOxHq14qConR0AXcvb3tOT8N696hBddSYeWfLv87iMEsQsA
-xhZjd3dcgm/9jL1eHzjuCY9GrO7kMu6fGlKm854kTP2BPeWhp93X+aQzEtdw1qja
-KdlXfZKvx6kObrDacZIqq88Ru0jZ+ZebJiKCvpkJac0lQ5AFV3voFKtQXjWdLcnJ
-ebDZ4qhqixhernnpFzhWUxUoTZOFYevSlMI9T4XOubWEgcEn/lXjwI8N3KnGnpKe
-zejX8qBWOmYAfsAxvHjIoC2PPjZdW9U81sOTQUl0H1vDhsV/pki7qSTFVrGcO7Bh
-YoTg7YzUi81g5klG94dZ9nwEkLEzmJJWioHVvXx2cH52WPFqSRnL6NSc9huB2rZS
-B8qNYtLLGBxFItSe5VR4XnbofzNQkUcbMRxDmRK7740K5OcdByoPb4NsGYRH9zCJ
-yqI10am7VkO1+94sjBDUq0qcYeDCTjN5+3ujpyG6LnTFaEtpZa40dfB7tPwRCD3g
-AB5zuGhL83U9wTkfm+lSfYMRtn+tDjO5H4vJ7AQpMXAsQoWT3pWDCzFfX/nYviQZ
-GST6mlKYRcBVVBELwwYkgkmZTNEQXiW9uEvorIG3iENSMsZ4338RrTynztMdLg0h
-Ei2gFch/Zy8Nj2NkhXBQ
-=kWfZ
------END PGP SIGNATURE-----
+Changes since v3:
+        - moved all PHY operations to the PHY driver
+        - removed PHY sub-nodes
+        - removed the custom Berlin AHCI driver and switched to
+          ahci_platform
+        - added multiple PHYs support to the libahci_platform
 
---wRRV7LY7NUeQGEoC--
+Changes since v2:
+        - modeled each PHY as a sub-node
+        - cosmetic fixups
+
+Changes since v1:
+        - added a PHY driver, allowing to enable each port
+          individually and removed the 'force-port-map' property
+        - made the drivers a bit less magic :)
+        - wrote a function to select and configure registers in the
+          AHCI driver
+        - removed BG2 / BG2CD nodes
+
+Antoine T=C3=A9nart (8):
+  phy: add a driver for the Berlin SATA PHY
+  Documentation: bindings: add the Berlin SATA PHY
+  ata: libahci_platform: move port_map parameters into the AHCI
+    structure
+  ata: libahci: allow to use multiple PHYs
+  ata: ahci_platform: add a generic AHCI compatible
+  Documentation: bindings: document the sub-nodes AHCI bindings
+  ARM: berlin: add the AHCI node for the BG2Q
+  ARM: berlin: enable the eSATA interface on the BG2Q DMP
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  41 +++
+ .../devicetree/bindings/phy/berlin-sata-phy.txt    |  34 +++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   8 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  39 +++
+ drivers/ata/ahci.h                                 |  13 +-
+ drivers/ata/ahci_da850.c                           |   3 +-
+ drivers/ata/ahci_imx.c                             |   3 +-
+ drivers/ata/ahci_mvebu.c                           |   3 +-
+ drivers/ata/ahci_platform.c                        |   5 +-
+ drivers/ata/ahci_st.c                              |   2 +-
+ drivers/ata/ahci_sunxi.c                           |   2 +-
+ drivers/ata/ahci_xgene.c                           |   2 +-
+ drivers/ata/libahci.c                              |  17 +-
+ drivers/ata/libahci_platform.c                     | 198 ++++++++++---=
+-
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-sata.c                      | 284 +++++++++++++=
+++++++++
+ include/linux/ahci_platform.h                      |   4 +-
+ 18 files changed, 593 insertions(+), 73 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-sata-p=
+hy.txt
+ create mode 100644 drivers/phy/phy-berlin-sata.c
+
+--=20
+1.9.1
+
