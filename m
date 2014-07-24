@@ -1,85 +1,41 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
- existing vendor prefixes to standardise on 'dlg'
-Date: Thu, 24 Jul 2014 21:43:32 +0200
-Message-ID: <1406231012.21800.13.camel@paszta.hi.pengutronix.de>
-References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v4 1/2] media: soc_camera: pxa_camera device-tree support
+Date: Thu, 24 Jul 2014 23:03:22 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407242301030.11084@axis700.grange>
+References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
+ <Pine.LNX.4.64.1407231126210.30243@axis700.grange>
+ <Pine.LNX.4.64.1407231915310.1526@axis700.grange> <8761invo7p.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Guenter Roeck <linux@roeck-us.net>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Simon
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <8761invo7p.fsf@free.fr>
+Sender: linux-media-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 24.07.2014, 16:46 +0100 schrieb Opensource [Steve
-Twiss]:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> This patch series updates the device tree vendor prefix for
-> Dialog Semiconductor.
-> 
-> Various methods are currently used throughout the kernel: 'diasemi',
-> 'dialog' and 'dlg'. Others have also been suggested.
-> 
-> This patch set aims to consolidate the usage of the vendor prefix to
-> use a common standard. The prefix 'dlg' is used.
-> 
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> ---
-> Checks performed with linux-next/next-20140715/scripts/checkpatch.pl
->  trivial-devices.txt       total: 0 errors, 0 warnings, 89 lines checked
->  da9210.txt                total: 0 errors, 0 warnings, 21 lines checked
->  vendor-prefixes.txt       total: 0 errors, 0 warnings, 149 lines checked
->  imx53-smd.dts             total: 0 errors, 2 warnings, 279 lines checked
->  imx6qdl-phytec-pfla02.dtsi total: 0 errors, 2 warnings, 357 lines checked
->  r8a7790-lager.dts         total: 0 errors, 3 warnings, 403 lines checked
->  r8a7791-koelsch.dts       total: 0 errors, 4 warnings, 461 lines checked
->  da9055-core.c             total: 0 errors, 0 warnings, 428 lines checked
-> 
-> This is a resend according to requests for e-mail reformatting and removal
-> of '[]' in From: and Signed-off-by: tags. There are no patch alterations
-> from RFC V2.
-> 
-> I am requesting Acks for the bindings and DTS(I) changes in this patch
-> specifically the two remaining files r8a7790-lager.dts and r8a7791-koelsch.dts
-> In a previous reply SHMobile was identified as needing to Ack this patch
-> before it could proceed.
-> - http://www.spinics.net/lists/arm-kernel/msg349289.html
-> - https://lkml.org/lkml/2014/6/11/273
-> 
-> If there are problems with this request, can I get a quick explanation in
-> the reply so I can fix it and move forwards please?
-> 
-> Please see this thread for latest comments:
-> http://www.spinics.net/lists/arm-kernel/msg349809.html
-> 
-> Acked-by the following people so far:
-> 
-> - Rob Herring
->   http://www.spinics.net/lists/arm-kernel/msg349289.html
-> 
-> - Lee Jones
->   For the MFD changes:
->   http://www.spinics.net/lists/arm-kernel/msg349457.html
-> 
-> - Shawn Guo
->   arch/arm/boot/dts/imx53-smd.dts                    |  2 +-
->   arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  2 +-
+(re-adding Cc)
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+On Wed, 23 Jul 2014, Robert Jarzmik wrote:
 
-regards
-Philipp
+> Guennadi Liakhovetski <g.liakhovetski@gmx.de> writes:
+> 
+> > Add device-tree support to pxa_camera host driver.
+> >
+> > Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> > [g.liakhovetski@gmx.de: added of_node_put()]
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > ---
+> >
+> > Robert, could you review and test this version, please?
+> Review +1.
+> Tested and works fine, so good to go.
+
+Thanks for a quick test! One question: to test this you also needed a 
+version of Ben's "soc_camera: add support for dt binding soc_camera 
+drivers" patch, right? Did you use the last version from Ben or my amended 
+version, that I sent yesterday? If you didn't use my version, would it be 
+possible for you to test it and reply with your tested-by if all looks ok?
+
+Thanks
+Guennadi
