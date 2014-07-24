@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 04/11] ARM: dts: zynq: Update deprecated xuartps clock names
-Date: Fri, 25 Jul 2014 01:00:13 +0200
-Message-ID: <1406242820-20140-5-git-send-email-afaerber@suse.de>
+Subject: [PATCH v2 02/11] Documentation: devicetree: Adapteva boards
+Date: Fri, 25 Jul 2014 01:00:11 +0200
+Message-ID: <1406242820-20140-3-git-send-email-afaerber@suse.de>
 References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -18,26 +18,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Andreas Olofsson <andreas@adapteva.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Andreas Olofsson <andreas@adapteva.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QXZvaWRzIGRlcHJlY2F0aW9uIHdhcm5pbmcgbWVzc2FnZXMuCgpTaWduZWQtb2ZmLWJ5OiBBbmRy
-ZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogdjI6IE5ldwogCiBhcmNoL2FybS9i
-b290L2R0cy96eW5xLTcwMDAuZHRzaSB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
-aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy96
-eW5xLTcwMDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCmluZGV4IDc2
-MGJiYzQuLjhmZDgyNmEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5k
-dHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCkBAIC0xMDgsNyArMTA4
-LDcgQEAKIAkJCWNvbXBhdGlibGUgPSAieGxueCx4dWFydHBzIjsKIAkJCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7CiAJCQljbG9ja3MgPSA8JmNsa2MgMjM+LCA8JmNsa2MgNDA+OwotCQkJY2xvY2stbmFt
-ZXMgPSAicmVmX2NsayIsICJhcGVyX2NsayI7CisJCQljbG9jay1uYW1lcyA9ICJ1YXJ0X2NsayIs
-ICJwY2xrIjsKIAkJCXJlZyA9IDwweEUwMDAwMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0g
-PDAgMjcgND47CiAJCX07CkBAIC0xMTcsNyArMTE3LDcgQEAKIAkJCWNvbXBhdGlibGUgPSAieGxu
-eCx4dWFydHBzIjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCQljbG9ja3MgPSA8JmNsa2Mg
-MjQ+LCA8JmNsa2MgNDE+OwotCQkJY2xvY2stbmFtZXMgPSAicmVmX2NsayIsICJhcGVyX2NsayI7
-CisJCQljbG9jay1uYW1lcyA9ICJ1YXJ0X2NsayIsICJwY2xrIjsKIAkJCXJlZyA9IDwweEUwMDAx
-MDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPDAgNTAgND47CiAJCX07Ci0tIAoxLjkuMwoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+V2UncmUgYWJvdXQgdG8gYWRkIGEgZGV2aWNlIHRyZWUgZm9yIHRoZSBQYXJhbGxlbGxhIGJvYXJk
+LgoKQ2M6IEFuZHJlYXMgT2xvZnNzb24gPGFuZHJlYXNAYWRhcHRldmEuY29tPgpTaWduZWQtb2Zm
+LWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogdjI6IE5ldwogCiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FkYXB0ZXZhLnR4dCB8IDcgKysr
+KysrKwogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYWRhcHRldmEudHh0CgpkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hZGFwdGV2YS50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FkYXB0ZXZhLnR4dApu
+ZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi4xZDhhZjllCi0tLSAvZGV2L251bGwK
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hZGFwdGV2YS50eHQK
+QEAgLTAsMCArMSw3IEBACitBZGFwdGV2YSBQbGF0Zm9ybXMgRGV2aWNlIFRyZWUgQmluZGluZ3MK
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorCitQYXJhbGxlbGxhIGJv
+YXJkCisKK1JlcXVpcmVkIHJvb3Qgbm9kZSBwcm9wZXJ0aWVzOgorICAgIC0gY29tcGF0aWJsZSA9
+ICJhZGFwdGV2YSxwYXJhbGxlbGxhIjsKLS0gCjEuOS4zCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
