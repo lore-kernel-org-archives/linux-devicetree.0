@@ -1,21 +1,15 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCHv4 4/5] of/mtd/nand: add generic binding and helper for
- NAND_BBT_NO_OOB_BBM
-Date: Thu, 24 Jul 2014 00:47:53 -0700
-Message-ID: <20140724074753.GJ23883@brian-ubuntu>
-References: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-2-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-4-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-5-git-send-email-LW@KARO-electronics.de>
- <20140724020627.GD3711@ld-irv-0074>
- <20140724084915.703a1fa0@ipc1.ka-ro>
+From: Markus Niebel <list-09_linux_arm@tqsc.de>
+Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when request
+ IRQ
+Date: Thu, 24 Jul 2014 10:12:56 +0200
+Message-ID: <53D0C008.70305@tqsc.de>
+References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>	<20140722062803.GA21229@dragon>	<53CE107A.1000000@tqsc.de>	<20140722074257.GC21229@dragon>
+ <CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140724084915.703a1fa0@ipc1.ka-ro>
+In-Reply-To: <CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,74 +19,95 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, linux-mtd@lists.infradead.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@freescale.com>, linux-kernel@vger.kernel.org, Huang
+To: Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawn.guo@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Niebel <Markus.Niebel@tq-group.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 08:49:15AM +0200, Lothar Wa=DFmann wrote:
-> Brian Norris wrote:
-> > On Thu, Jun 12, 2014 at 03:20:44PM +0200, Lothar Wa=DFmann wrote:
-> > > add a boolean property 'nand-no-oob-bbm' and helper function to be
-> > > able to set the NAND_BBT_NO_OOB_BBM flag in DT capable NAND drivers
-> > > and use it for i.MX and MXS nand drivers.
-> > =
+Am 23.07.2014 18:14, wrote Linus Walleij:
+> On Tue, Jul 22, 2014 at 9:42 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
+>> On Tue, Jul 22, 2014 at 09:19:22AM +0200, Markus Niebel wrote:
+> 
+>>> Currently client drivers have simply interrupts and interrupt-parent
+>>> in their bindings, but no interrupt-gpios. Therefore in this case a
+>>> client does not know about a dedicated gpio which is to be requested
+>>> and configured.
+>>
+>> Okay.  I understand your problem now.  This is an issue in case we
+>> specify a GPIO to be used as interrupt from device tree.  In non-DT
+>> world, client driver knows this is an interrupt on GPIO, and therefore
+>> takes the responsibility to request and configure the GPIO to work as
+>> interrupt.  But in DT case, client driver does not know whether it's an
+>> IRQ line or GPIO based interrupt.  The consequence is that GPIO
+>> subsystem, OF subsystem, client driver, none of the three is requesting
+>> and configuring the GPIO to be used as interrupt.
+>>
+>> This is a common issue instead of i.MX specific, and should be addressed
+>> globally, I think.
+> 
+> This is very well documented in Documentation/gpio/driver.txt these
+> days. Quoting:
+> 
 
-> > If I'm understanding your previous conversations with Huang correctly,
-> > you *must* use NAND_BBT_NO_OOB_BBM if you're going to use the
-> > fsl,no-blockmark-swap option. Correct? If so, then you might not need
-> > a separate 'nand-no-oob-bbm' binding; your driver should imply from
-> > 'fsl,no-blockmark-swap' that it must also enable NAND_BBT_NO_OOB_BBM.
-> > =
+Sorry for not carefully reading the docs and many thanks for the helpful comments.
 
-> no-blockmark-swap implies NO_OOB_BBM but NO_OOB_BBM may also be used
-> independent from no-blockmark-swap.
+> "
+> It is legal for any IRQ consumer to request an IRQ from any irqchip no matter
+> if that is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+> irq_chip are orthogonal, and offering their services independent of each
+> other.
+> 
+> gpiod_to_irq() is just a convenience function to figure out the IRQ for a
+> certain GPIO line and should not be relied upon to have been called before
+> the IRQ is used.
+> 
+> So always prepare the hardware and make it ready for action in respective
+> callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
+> been called first.
+> 
 
-Why would you want NO_OOB_BBM without no-blockmark-swap? If the block is
-bad, why do you care what's written to it? (For that matter, why is it
-ever important to use NO_OOB_BBM? At worst, the extra BB marks are
-useless / written to the wrong place.)
+So a gpio driver is responsible to read status of gpio lines and flag any gpio line 
+currently configured as out (base on the information read from hardware registers) 
+on driver probe time - correct? If yes is the driver allowed to call 
+gpiod_get_direction() to have the FLAG_IS_OUT set in the gpiolib layer?
 
-> IMO writing a bad block marker to flash (which is prevented by
-> the NAND_BBT_NO_OOB_BBM flag) is a misinterpretation of the purpose of
-> the BB mark in the first place. The manufacturer guarantees that blocks
-> which are initially bad will have at least one zero bit in the position
-> of the BB mark. That's all to it.
+> This orthogonality leads to ambiguities that we need to solve: if there is
+> competition inside the subsystem which side is using the resource (a certain
+> GPIO line and register for example) it needs to deny certain operations and
+> keep track of usage inside of the gpiolib subsystem. This is why the API
+> below exists.
+> 
+> 
+> Locking IRQ usage
+> -----------------
+> Input GPIOs can be used as IRQ signals. When this happens, a driver is requested
+> to mark the GPIO as being used as an IRQ:
+> 
+>         int gpiod_lock_as_irq(struct gpio_desc *desc)
+> 
+> This will prevent the use of non-irq related GPIO APIs until the GPIO IRQ lock
+> is released:
+> 
+>         void gpiod_unlock_as_irq(struct gpio_desc *desc)
+> 
+> When implementing an irqchip inside a GPIO driver, these two functions should
+> typically be called in the .startup() and .shutdown() callbacks from the
+> irqchip.
+> "
+> 
+> So: make sure each API can be used orthogonally by just poking
+> into the hardware registers. Do not call gpio_request_one().
 
-Yes, it is a misinterpretation, and it's really irrelevant in many cases
-whether or not the BB mark is written to each block's OOB. But it does
-still provide some resilience in case the on-flash table ever gets
-completely corrupted -- nand_bbt will rescan the flash for BB marks on
-the next boot (and this will be totally broken--with or without
-NO_OOB_BBM--for hardware like yours). Or to put it another way, it
-supports some legacy scenarios without (AFAICT) any real negative
-effects.
+Makes sense.
 
-> There is no guarantee, that you will even be able to write any
-> deterministic data to a block that has turned bad due to wearout or
-> other flash defects.
+Thanks again
 
-Certainly. But that's not an argument against attempting.
+Markus
 
-> It is rather bogus to rely on data written to a
-> known bad block to reflect the state of the block.
-
-We don't "rely" on this. If the BBT (and its mirrors) never completely
-fails, these marks are never used.
-
-> > Also, as I noted in [1], I don't really like exposing a ton of
-> > individual boolean DT properties like this. (At least this property is
-> > orthogonal to the bad block table; I was a little off-base in [1].)
-> > =
-
-> How else should this information be conveyed to the flash drivers?
-
-I'm not convinced the NO_OOB_BBM DT property is actually necessary at
-all.
-
-I was more concerned about bad block *table* properties, where I see
-that at least some users (e.g. ST Micro's BCH NAND driver) expect a
-different BBT format than the default, and we might begin to see extra
-boolean flags for random bits of differentiation. This is apparently
-still just a theoretical concern, though.
-
-Brian
+> 
+> Yours,
+> Linus Walleij
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
