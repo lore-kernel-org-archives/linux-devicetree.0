@@ -1,71 +1,86 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv3 3/7] clk: mvebu: extend clk-cpu for dynamic frequency
- scaling
-Date: Thu, 24 Jul 2014 20:24:32 +0200
-Message-ID: <20140724202432.6d242c82@free-electrons.com>
-References: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20140723235358.6419.26311@quantum>
-	<20140724083325.0c578091@free-electrons.com>
-	<20140724175251.3823.74667@quantum>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v1] gpio: keystone: add dsp gpio controller driver
+Date: Thu, 24 Jul 2014 13:52:51 -0500
+Message-ID: <53D15603.5030001@ti.com>
+References: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com>	<CACRpkdYY_a_9G-VLBbv2a22Cg4j0t3Wv4W1h0n6-ccCXgVJXsA@mail.gmail.com>	<CAJe_ZhdnjyjvEsvK2u7SgS1hJ2fpsXh+=ViGhzakRd+c4ReBaw@mail.gmail.com>	<53D140EC.9020609@ti.com> <CAJe_ZhfCdrgaVEZ5h=+Ko7U3RW2M9QRd3T4=_JzYxKxv+brZFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140724175251.3823.74667@quantum>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAJe_ZhfCdrgaVEZ5h=+Ko7U3RW2M9QRd3T4=_JzYxKxv+brZFg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Alexander Shiyan <shc_work@mail.ru>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ivan.khoronzhuk@ti.com, Muralidharan Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mike Turquette,
+Hi,
 
-On Thu, 24 Jul 2014 10:52:51 -0700, Mike Turquette wrote:
+On 07/24/2014 01:12 PM, Jassi Brar wrote:
+> On 24 July 2014 22:52, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
+>> On Thursday 24 July 2014 01:19 PM, Jassi Brar wrote:
+>>> On 23 July 2014 20:40, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>> On Wed, Jul 16, 2014 at 12:43 PM, Grygorii Strashko
+>>>> <grygorii.strashko@ti.com> wrote:
+>>>>
+>>>>> From: Murali Karicheri <m-karicheri2@ti.com>
+>>>>>
+>>>>> On Keystone SOCs, ARM host can send interrupts to DSP cores using the
+>>>>> DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
+>>>>> each DSP core. This is one of the component used by the IPC mechanism used
+>>>>> on Keystone SOCs.
+>>>>>
+>>>>> Keystone 2 DSP GPIO controller has specific features:
+>>>>> - each GPIO can be configured only as output pin;
+>>>>> - setting GPIO value to 1 causes IRQ generation on target DSP core;
+>>>>> - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
+>>>>>   pending.
+>>>>>
+>>>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>>
+>>>> Pardon me. How is this GENERAL PURPOSE Input/Output?
+>>>>
+>>>> It seems very very much SPECIAL PURPOSE to me, it's like
+>>>> you're just shoehorning some IPC mechanism into the GPIO
+>>>> subsystem, and this may be because the datasheet calls it
+>>>> GPIO when it's not.
+>>>>
+>>>> What other stuff than DSP is connected to these lines, and is it
+>>>> really even external lines? Aren't these just polysilicon rails
+>>>> pretty much hammered to be used by the DSP and nothing else.
+>>>>
+>>>> What is the difference between this and a mailbox IRQ line
+>>>> and the kind of stuff handled by drivers/mailbox?
+>>>>
+>>>> I'd like Suman and Jassi to have a look at this to see if it's
+>>>> actually a mailbox before we proceed.
+>>>>
+>>> The controller seems like most others, only incapable of reading
+>>> signals (output only).
+>>>  The userspace driving those signals to communicate with a DSP isn't
+>>> enough to call it a mailbox usecase, because on a different board the
+>>> userspace may drive those signals to control LEDs :)
+>>>
+>> Exactly !!
+>> And that was my point. Thanks for echo.
+>>
+> Yeah but if the AP and DSP are within the same package (i.e, the
+> 'pins' can't be used for any other purpose on any board), one might
+> sell it as a mailbox. However, since the mailbox protocol driver would
+> be in userspace, I think it is justified to expose that as GPIO
+> otherwise we'll have to add another interface for userspace to control
+> the DSP.
 
-> > > This is racy. You don't hold the clk_enable lock so it could be enable
-> > > between the conditional check and executing clk_cpu_on_set_rate.
-> > 
-> > Right.
-> > 
-> > > How do you ensure that secondary CPU clocks are not enabled/disabled
-> > > when changing rates?
-> > 
-> > In practice, this currently cannot happen: we enable the secondary CPU
-> > clocks before starting the secondary CPUs, and we never ever disable or
-> > re-enable again those clocks. So with the present code, I believe there
-> > is no problem. Even when we do CPU hotplug, we don't turn off the CPU
-> > clocks, simply because they cannot be turned off: the enable/disable
-> > state is only used here as an indication so that the clock driver knows
-> > which frequency change strategy it should apply.
-> > 
-> > But you're anyway right, I'll send a followup patch adding the lock.
-> > Would that be OK for you?
-> 
-> Sounds good. Can you also fix up the changelog in patch #2? After that
-> I am happy with this series. I guess Jason will take it in and send it
-> for his PR?
+If all these pins or a group of pins are collectively being used to
+denote a message to the DSP, then I can see the argument for this being
+a mailbox platform driver. It then probably would need to be
+supplemented by some other protocol driver to expose the necessary
+functionality to userspace. Otherwise, I agree with Jassi in general.
 
-The fixup for the commit log in patch #2 cannot be done, because the
-commit has already been merged in arm-soc, if I understood correctly.
-Jason said:
+That said, having two different drivers for different GPIO IP instances
+within the same SoC doesn't make sense. There should be a single driver
+for all the GPIO IPs in keystone, output/input only are properties of
+the instance and the driver should handle that IMHO.
 
-"""
-> The commit log of this commit was not adjusted consequently, and this
-> is my fault. Jason, is it still time to change this commit log?  
-
-If there are no code changes, I'd prefer not to.  We're rather late in
-the game.
-
-Even though it's not ideal, the commit in question does have a Link: tag
-pointing at the patch email on which this conversation is based.  So a
-frustrated future developer won't be frustrated long. :)
-"""
-
-I'll do the lock patch.
-
-Thanks!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+regards
+Suman
