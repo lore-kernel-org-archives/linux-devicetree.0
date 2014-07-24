@@ -1,42 +1,59 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
- ix4-300d NAS
-Date: Thu, 24 Jul 2014 07:00:51 +0300
-Message-ID: <20140724040051.GL2478@tarshish>
-References: <1406155973-13657-1-git-send-email-yahoo@perenite.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v4 3/3] crypto: Add Allwinner Security System crypto
+ accelerator
+Date: Thu, 24 Jul 2014 14:00:54 +0800
+Message-ID: <20140724060054.GA6545@gondor.apana.org.au>
+References: <1405169953-13695-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1406155973-13657-1-git-send-email-yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
+In-Reply-To: <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: LABBE Corentin <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+On Sat, Jul 12, 2014 at 02:59:13PM +0200, LABBE Corentin wrote:
+>
+> +/* sunxi_hash_init: initialize request context
+> + * Activate the SS, and configure it for MD5 or SHA1
+> + */
+> +int sunxi_hash_init(struct ahash_request *areq)
+> +{
+> +	const char *hash_type;
+> +	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
+> +	struct sunxi_req_ctx *op = crypto_ahash_ctx(tfm);
+> +
+> +	mutex_lock(&ss->lock);
+> +
+> +	hash_type = crypto_tfm_alg_name(areq->base.tfm);
+> +
+> +	op->byte_count = 0;
+> +	op->nbwait = 0;
+> +	op->waitbuf = 0;
+> +
+> +	/* Enable and configure SS for MD5 or SHA1 */
+> +	if (strcmp(hash_type, "sha1") == 0)
+> +		op->mode = SS_OP_SHA1;
+> +	else
+> +		op->mode = SS_OP_MD5;
+> +
+> +	writel(op->mode | SS_ENABLED, ss->base + SS_CTL);
+> +	return 0;
 
-On Wed, Jul 23, 2014 at 03:52:53PM -0700, Benoit Masson wrote:
-> The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
->  USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
-> 
-> http://shop.lenovo.com/fr/fr/servers/network-storage/lenovoemc/ix4-300d/
+The hash driver is completely broken.  You are modifying tfm
+ctx data which is shared by all users of a single tfm.  So
+if two users conduct hashes in parallel they will step all
+over each other.
 
-I guess most users would prefer an English URL:
-http://shop.lenovo.com/us/en/servers/network-storage/lenovoemc/ix4-300d/
+Worse, the unpaired mutex_lock will quickly lead to dead locks.
 
-Also, the accepted convention is to add a blank line between the commit log 
-body and the Signed-off-by line.
+You cannot assume that final will be called.
 
-> Signed-off-by: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-
-baruch
-
+Cheers,
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
