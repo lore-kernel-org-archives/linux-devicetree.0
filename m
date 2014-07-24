@@ -1,61 +1,50 @@
-From: Corentin LABBE <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v4 3/3] crypto: Add Allwinner Security System crypto accelerator
-Date: Thu, 24 Jul 2014 13:04:55 +0200
-Message-ID: <53D0E857.8000405@gmail.com>
-References: <1405169953-13695-1-git-send-email-clabbe.montjoie@gmail.com> <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com> <20140724060054.GA6545@gondor.apana.org.au>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add st-hcd to ARCH/STI architecture
+Date: Thu, 24 Jul 2014 12:14:42 +0100
+Message-ID: <20140724111442.GA7063@lee--X1>
+References: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
+ <1406199616-10533-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20140724060054.GA6545@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406199616-10533-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 24/07/2014 08:00, Herbert Xu a =E9crit :
-> On Sat, Jul 12, 2014 at 02:59:13PM +0200, LABBE Corentin wrote:
->>
->> +/* sunxi_hash_init: initialize request context
->> + * Activate the SS, and configure it for MD5 or SHA1
->> + */
->> +int sunxi_hash_init(struct ahash_request *areq)
->> +{
->> +	const char *hash_type;
->> +	struct crypto_ahash *tfm =3D crypto_ahash_reqtfm(areq);
->> +	struct sunxi_req_ctx *op =3D crypto_ahash_ctx(tfm);
->> +
->> +	mutex_lock(&ss->lock);
->> +
->> +	hash_type =3D crypto_tfm_alg_name(areq->base.tfm);
->> +
->> +	op->byte_count =3D 0;
->> +	op->nbwait =3D 0;
->> +	op->waitbuf =3D 0;
->> +
->> +	/* Enable and configure SS for MD5 or SHA1 */
->> +	if (strcmp(hash_type, "sha1") =3D=3D 0)
->> +		op->mode =3D SS_OP_SHA1;
->> +	else
->> +		op->mode =3D SS_OP_MD5;
->> +
->> +	writel(op->mode | SS_ENABLED, ss->base + SS_CTL);
->> +	return 0;
->=20
-> The hash driver is completely broken.  You are modifying tfm
-> ctx data which is shared by all users of a single tfm.  So
-> if two users conduct hashes in parallel they will step all
-> over each other.
+On Thu, 24 Jul 2014, Peter Griffin wrote:
 
-So where can I store data for each request ?
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 
->=20
-> Worse, the unpaired mutex_lock will quickly lead to dead locks.
->=20
-> You cannot assume that final will be called.
+I Acked, this already.  Please carry them forward through revisions.
 
-An user reported an equivalent problem when using openssl speed test wi=
-th cryptodev.
-Does cryptoqueue is a good answer to that problem since the device coul=
-d handle only one transformation at a time ?
-And perhaps with cryptoqueue,  my first question is useless.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 702ca10..359a64e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1325,6 +1325,7 @@ F:	drivers/pinctrl/pinctrl-st.c
+>  F:	drivers/media/rc/st_rc.c
+>  F:	drivers/i2c/busses/i2c-st.c
+>  F:	drivers/tty/serial/st-asc.c
+> +F:	drivers/usb/host/st-hcd.c
+> =20
+>  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+>  M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
