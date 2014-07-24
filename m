@@ -1,62 +1,43 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 08/11] ARM: dts: zynq: Add VDMA to Parallella
-Date: Fri, 25 Jul 2014 01:00:17 +0200
-Message-ID: <1406242820-20140-9-git-send-email-afaerber@suse.de>
+Subject: [PATCH v2 04/11] ARM: dts: zynq: Update deprecated xuartps clock names
+Date: Fri, 25 Jul 2014 01:00:13 +0200
+Message-ID: <1406242820-20140-5-git-send-email-afaerber@suse.de>
 References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1406242820-20140-1-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Michal Simek <michal.simek@xilinx.com>
-Cc: Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Andreas Olofsson <andreas@adapteva.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
- v2: New
-=20
- arch/arm/boot/dts/zynq-parallella.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/=
-zynq-parallella.dts
-index e60a0a9..8beaacc 100644
---- a/arch/arm/boot/dts/zynq-parallella.dts
-+++ b/arch/arm/boot/dts/zynq-parallella.dts
-@@ -32,6 +32,31 @@
- 		bootargs =3D "console=3DttyPS0,115200 earlyprintk root=3D/dev/mmcblk=
-0p2 rootfstype=3Dext4 rw rootwait";
- 		linux,stdout-path =3D "/amba/serial@e0001000";
- 	};
-+
-+	fpga {
-+		compatible =3D "simple-bus";
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		ranges;
-+
-+		axi_vdma: axi-vdma@43000000 {
-+			compatible =3D "xlnx,axi-vdma-1.00.a";
-+			reg =3D <0x43000000 0x1000>;
-+			#dma-cells =3D <1>;
-+			xlnx,num-fstores =3D <3>;
-+			xlnx,include-sg =3D <0>;
-+			xlnx,flush-fsync =3D <2>;
-+
-+			dma-channel@43000000 {
-+				compatible =3D "xlnx,axi-vdma-mm2s-channel";
-+				interrupt-parent =3D <&intc>;
-+				interrupts =3D <0 59 4>;
-+				xlnx,datawidth =3D <64>;
-+				xlnx,include-dre =3D <0>;
-+				xlnx,genlock-mode =3D <0>;
-+			};
-+		};
-+	};
- };
-=20
- &dmac_s {
---=20
-1.9.3
+QXZvaWRzIGRlcHJlY2F0aW9uIHdhcm5pbmcgbWVzc2FnZXMuCgpTaWduZWQtb2ZmLWJ5OiBBbmRy
+ZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogdjI6IE5ldwogCiBhcmNoL2FybS9i
+b290L2R0cy96eW5xLTcwMDAuZHRzaSB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
+aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy96
+eW5xLTcwMDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCmluZGV4IDc2
+MGJiYzQuLjhmZDgyNmEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5k
+dHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCkBAIC0xMDgsNyArMTA4
+LDcgQEAKIAkJCWNvbXBhdGlibGUgPSAieGxueCx4dWFydHBzIjsKIAkJCXN0YXR1cyA9ICJkaXNh
+YmxlZCI7CiAJCQljbG9ja3MgPSA8JmNsa2MgMjM+LCA8JmNsa2MgNDA+OwotCQkJY2xvY2stbmFt
+ZXMgPSAicmVmX2NsayIsICJhcGVyX2NsayI7CisJCQljbG9jay1uYW1lcyA9ICJ1YXJ0X2NsayIs
+ICJwY2xrIjsKIAkJCXJlZyA9IDwweEUwMDAwMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0g
+PDAgMjcgND47CiAJCX07CkBAIC0xMTcsNyArMTE3LDcgQEAKIAkJCWNvbXBhdGlibGUgPSAieGxu
+eCx4dWFydHBzIjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCQljbG9ja3MgPSA8JmNsa2Mg
+MjQ+LCA8JmNsa2MgNDE+OwotCQkJY2xvY2stbmFtZXMgPSAicmVmX2NsayIsICJhcGVyX2NsayI7
+CisJCQljbG9jay1uYW1lcyA9ICJ1YXJ0X2NsayIsICJwY2xrIjsKIAkJCXJlZyA9IDwweEUwMDAx
+MDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPDAgNTAgND47CiAJCX07Ci0tIAoxLjkuMwoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
