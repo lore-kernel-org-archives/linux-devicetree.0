@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 06/11] ARM: dts: zynq: Add DMAC for Parallella
-Date: Fri, 25 Jul 2014 01:00:15 +0200
-Message-ID: <1406242820-20140-7-git-send-email-afaerber@suse.de>
+Subject: [PATCH v2 08/11] ARM: dts: zynq: Add VDMA to Parallella
+Date: Fri, 25 Jul 2014 01:00:17 +0200
+Message-ID: <1406242820-20140-9-git-send-email-afaerber@suse.de>
 References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -17,54 +17,46 @@ Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
  v2: New
 =20
- arch/arm/boot/dts/zynq-7000.dtsi      | 17 +++++++++++++++++
- arch/arm/boot/dts/zynq-parallella.dts |  4 ++++
- 2 files changed, 21 insertions(+)
+ arch/arm/boot/dts/zynq-parallella.dts | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-=
-7000.dtsi
-index eed3df0..1a70277 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -223,6 +223,23 @@
- 			};
- 		};
-=20
-+		dmac_s: dmac@f8003000 {
-+			compatible =3D "arm,pl330", "arm,primecell";
-+			reg =3D <0xf8003000 0x1000>;
-+			status =3D "disabled";
-+			interrupt-parent =3D <&intc>;
-+			interrupts =3D <0 13 4>,
-+			             <0 14 4>, <0 15 4>,
-+			             <0 16 4>, <0 17 4>,
-+			             <0 40 4>, <0 41 4>,
-+			             <0 42 4>, <0 43 4>;
-+			#dma-cells =3D <1>;
-+			#dma-channels =3D <8>;
-+			#dma-requests =3D <4>;
-+			clocks =3D <&clkc 27>;
-+			clock-names =3D "apb_pclk";
-+		};
-+
- 		devcfg: devcfg@f8007000 {
- 			compatible =3D "xlnx,zynq-devcfg-1.0";
- 			reg =3D <0xf8007000 0x100>;
 diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/=
 zynq-parallella.dts
-index 56f68ea..e60a0a9 100644
+index e60a0a9..8beaacc 100644
 --- a/arch/arm/boot/dts/zynq-parallella.dts
 +++ b/arch/arm/boot/dts/zynq-parallella.dts
-@@ -34,6 +34,10 @@
+@@ -32,6 +32,31 @@
+ 		bootargs =3D "console=3DttyPS0,115200 earlyprintk root=3D/dev/mmcblk=
+0p2 rootfstype=3Dext4 rw rootwait";
+ 		linux,stdout-path =3D "/amba/serial@e0001000";
  	};
++
++	fpga {
++		compatible =3D "simple-bus";
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++		ranges;
++
++		axi_vdma: axi-vdma@43000000 {
++			compatible =3D "xlnx,axi-vdma-1.00.a";
++			reg =3D <0x43000000 0x1000>;
++			#dma-cells =3D <1>;
++			xlnx,num-fstores =3D <3>;
++			xlnx,include-sg =3D <0>;
++			xlnx,flush-fsync =3D <2>;
++
++			dma-channel@43000000 {
++				compatible =3D "xlnx,axi-vdma-mm2s-channel";
++				interrupt-parent =3D <&intc>;
++				interrupts =3D <0 59 4>;
++				xlnx,datawidth =3D <64>;
++				xlnx,include-dre =3D <0>;
++				xlnx,genlock-mode =3D <0>;
++			};
++		};
++	};
  };
 =20
-+&dmac_s {
-+	status =3D "okay";
-+};
-+
- &gem0 {
- 	status =3D "okay";
- 	phy-mode =3D "rgmii-id";
+ &dmac_s {
 --=20
 1.9.3
