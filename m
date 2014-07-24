@@ -1,123 +1,74 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
- ix4-300d NAS
-Date: Thu, 24 Jul 2014 08:45:20 -0400
-Message-ID: <20140724124520.GV23220@titan.lakedaemon.net>
-References: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
- <1406154923-13612-2-git-send-email-yahoo@perenite.com>
- <20140723224236.GC28485@lunn.ch>
- <94F87063-D717-435B-B7C5-EDAC9B26742C@perenite.com>
- <20140723225841.GD28485@lunn.ch>
- <10A7C530-7CD2-4ED0-889A-7FAC1922320F@perenite.com>
- <20140723231535.GK23220@titan.lakedaemon.net>
- <53D0FA2F.6050209@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53D0FA2F.6050209-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH v3 0/4] Support for Qualcomm QPNP PMIC's
+Date: Thu, 24 Jul 2014 15:45:17 +0300
+Message-ID: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 02:21:03PM +0200, Gregory CLEMENT wrote:
-> On 24/07/2014 01:15, Jason Cooper wrote:
-> > On Thu, Jul 24, 2014 at 01:11:12AM +0200, Benoit Masson wrote:
-> >> Le 24 juil. 2014 =E0 00:58, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> a =E9crit=
- :
-> >>
-> >>>> For the marvell,mv78230-a0-i2c unfortunately i've spend 3 hours
-> >>>> trying to understand this but it only works with this on the
-> >>>> ix4-300d :(. There was multiple patch around this and maybe one
-> >>>> broke the auto-detect part of this, I've tried compiling with so=
-me
-> >>>> 3.10 or lower kernel but no luck here I still have to put this a=
-0
-> >>>> option.
-> >>>
-> >>> Lets first confirm you have an a0 SoC.
-> >>>
-> >>> At boot time, it should print:
-> >>>
-> >>> pr_info("MVEBU SoC ID=3D0x%X, Rev=3D0x%X\n", soc_dev_id, soc_rev)=
-;
-> >>>
-> >>> What revision do you have?
-> >>>
-> >>> If the auto detect code really is broken, Gregory will likely tak=
-e a
-> >>> look.
-> >>
-> >> I sure do,
-> >>
-> >> confirmed by u-boot  output below:
-> >>
-> >> U-Boot 2009.08 (Mar 04 2013 - 11:13:04) Marvell version:  2.3.2 PQ
-> >> U-Boot Addressing:
-> >>        Code:..00600000:006BFFF0
-> >>        BSS:..00708EC0
-> >>        Stack:..0x5fff70
-> >>        PageTable:.0x8e0000
-> >>        Heap address:.0x900000:0xe00000
-> >> Board: DB-78230-BP rev 2.0 Wistron
-> >> SoC:   MV78230 A0
-> >>
-> >> From kernel I get:
-> >>
-> >> mvebu-soc-id: MVEBU SoC ID=3D0x7823, Rev=3D0x1
-> >=20
-> > Well, isn't that a peach?  :)  Gregory?
->=20
-> A peach?? For me it is either a fruit or a princess, so I am puzzled!
+Hello all,
 
-Doc Holiday quote from the movie Tombstone.  The full quote was "Well,
-isn't that a peach of a hand?" while sitting at the poker table.
+Changes since v2:
+ - 1/4 - added new line, signed-off-by / acked-by and module_authors.
+ - 3/4 - the subject has been changed.
 
-> Well about the issue, we patch the device tree for the i2c quirk only=
- for
-> the openblock AX3.
+The previous v2 can be found at [1].
 
-Ahhh, that's right.  I need to slow down and dig a bit more. :(
+I'm still waiting Acks for:
+ - 4/4 from Qualcomm folks.
+ - 2/4 and 3/4 from DT folks.
 
-> If I remember well it was because the device tree was already written
-> for this board before we found there was an issue with the A0 version
-> of the CPU.=20
+The patchset is ready to merge version and also it can be treated as an
+intermediate step until we find a solution for non-translatable peripheral
+addresses.
 
-No, it's because we didn't think any manufacturers would be silly enoug=
-h
-to use the a0 in production.  That assumption worked out well. :-P
+regards,
+Stan
 
-> The rule was that for new boards then they have to set the marvell,mv=
-78230-a0-i2c
-> compatible string. I also didn't expect that we found "new" product u=
-sing the A0 version.
->=20
-> We have 3 options now:
->=20
-> - remove the check on the openblock AX3 board and always try to apply=
- the quirck for A0 version
-> - add a check for this new board in the mvebu_dt_init function
-> - let the compatible string marvell,mv78230-a0-i2c in this dts
->=20
-> I would prefer the option 1 but I fear that Arnd would prefer the 2 o=
-ther options.
+[1] https://lkml.org/lkml/2014/7/17/877
 
-I like option 1 and 3.  Option 3 is a *correct* description of the
-hardware, and should be done.  Option 1 makes Linux user-friendly for b=
-oards
-that are exactly the same, but changed out SoC stepping mid-production.
+--------------------------------------------------------------------------------
 
-Option 2 needs to be undone.  We shouldn't need to change compiled code
-for every new board that comes along.  Which was the whole point of DT,
-right?
+Hello everyone,
 
-thx,
+Here is the continuation of patch sets sent recently about Qualcomm
+QPNP SPMI PMICs.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The previous version of the patch set can be found at [1].
+
+Changes since v1:
+ - removed completely custom *of* parser
+ - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
+ - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
+
+Removing of the custom *of* parser leads to that that the *reg* devicetree
+property cannot exist and therefore cannot be parsed to get PMIC peripheral
+resources. I took this step aside because no one from mfd drivers does this
+parsing. This will lead to inconvenience in the peripheral drivers to define
+internally the SPMI base addresses depending on the compatible property
+i.e. PMIC version. 
+
+Comments are welcome!
+
+[1] https://lkml.org/lkml/2014/7/8/428
+
+Josh Cartwright (1):
+  mfd: pm8xxx-spmi: add support for Qualcomm SPMI PMICs
+
+Stanimir Varbanov (3):
+  mfd: pm8xxx-spmi: document DT bindings for Qualcomm SPMI PMICs
+  ARM: dts: qcom: add pm8941 and pm8841 PMICs device nodes
+  mfd: pm8921: rename pm8921-core driver
+
+ .../devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt   |   49 +++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |   37 +++++++++++
+ drivers/mfd/Kconfig                                |   30 +++++++--
+ drivers/mfd/Makefile                               |    3 +-
+ drivers/mfd/pm8xxx-spmi.c                          |   65 ++++++++++++++++++++
+ drivers/mfd/{pm8921-core.c => pm8xxx-ssbi.c}       |   38 ++++++------
+ 6 files changed, 195 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt
+ create mode 100644 drivers/mfd/pm8xxx-spmi.c
+ rename drivers/mfd/{pm8921-core.c => pm8xxx-ssbi.c} (92%)
