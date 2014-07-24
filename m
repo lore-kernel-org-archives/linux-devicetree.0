@@ -1,102 +1,35 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/3] usb: host: st-hcd: Add USB HCD support for STi SoCs
-Date: Thu, 24 Jul 2014 15:01:13 +0200
-Message-ID: <5967609.vndF2bDyS1@wuerfel>
-References: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
- <11018717.Ey5qEJxGNJ@wuerfel>
- <20140724122254.GA15266@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 1/2] ARM: imx: Add the secondary request into the
+ structure for imx-sdma
+Date: Thu, 24 Jul 2014 21:30:04 +0800
+Message-ID: <20140724133002.GC6827@dragon>
+References: <cover.1406189745.git.nicoleotsuka@gmail.com>
+ <e47c36814695fd8c88ef063a9771cf097a128ec0.1406189745.git.nicoleotsuka@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140724122254.GA15266@griffinp-ThinkPad-X1-Carbon-2nd>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, srinivas.kandagatla@gmail.com, lee.jones@linaro.org, maxime.coquelin@st.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e47c36814695fd8c88ef063a9771cf097a128ec0.1406189745.git.nicoleotsuka@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, timur@tabi.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, b02247@freescale.com, b42378@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 24 July 2014 13:22:54 Peter Griffin wrote:
-> Thanks for reviewing, see my comments below: -
+On Thu, Jul 24, 2014 at 04:35:28PM +0800, Nicolin Chen wrote:
+> SDMA supports device to device (per_2_per) scripts to handle DMA transfering
+> between two peripheral devices. The per_2_per script, however, needs two dma
+> requests from two sides while the current structure only defined one request.
 > 
-> > Unfortunately, this seems to be done in a rather strange way,
-> > I suspect you'll have to start over, but I'll let Alan and Greg
-> > weigh in.
-> > 
-> > > +
-> > > +struct st_hcd_dev {
-> > > +   int port_nr;
-> > > +   struct platform_device *ehci_device;
-> > > +   struct platform_device *ohci_device;
-> > > +   struct clk *ic_clk;
-> > > +   struct clk *ohci_clk;
-> > > +   struct reset_control *pwr;
-> > > +   struct reset_control *rst;
-> > > +   struct phy *phy;
-> > > +};
-> > 
-> > The way you do this apparently is to create a device that encapsulates
-> > the OHCI and the EHCI and then goes on to create child devices that
-> > are bound to the real drivers.
+> So this patch just simply adds the secondary request so as to let SDMA and
+> its user to add its implementation later.
 > 
-> Yes, although this isn't the first driver to take that approach USB_HCD_BCMA
-> (bcma-hcd.c) and USB_HCD_SSB (ssb-hcd.c) do much the same thing.
-
-I just had a look at them, and I think the case is different here:
-
-For the two bcma driver, there is a discoverable bus (bcma) rather than
-the platform bus, and it only exposes one device, so the bcma-hcd driver
-is actually needed so we get two device that can be bound to the regular
-drivers.
-
-For the ssb-hcd driver, it's less clear and that one could be
-reworked into two separate drivers.
-
-> > The way it should be done however is to put the two host controllers
-> > into DT directly and describe their resources (phy, clock, reset, ...)
-> > using the DT bindings for those.
+> [ Both change in the SDMA driver and its users like Freescale ASRC ASoC driver
+>   should be taken along with this change in order to truly support per_2_per
+>   sciprts. However, we here make an expediency by adding this first so that
+>   we can add either side later since this patch won't break any function and
+>   meanwhile it can make merge window more smoothly: we don't need to apply the
+>   change inside dmaengine branch via ASoC tree any more. -- Nicolin ]
 > 
-> I'm of course happy to change it if required. I see looking through that a lot 
-> of other platforms do it the way you describe with a
-> 
-> ehci-<platname>.c and ohci-<platname>.c
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-Right. We are trying to  gradually move some of them over to use the
-generic *hci-platform.c drivers though.
-
-> > Depending on what kind of special requirements the ST version has,
-> > this can be done either by using the generic ohci/ehci bindings
-> > with extensions where necessary, or by creating a new binding and
-> > new driver files that use 'ohci_init_driver'/'ehci_init_driver'
-> > to inherit from the common code.
-> > 
-> > The first of the two approaches is preferred.
-> 
-> We don't have anything particularly special, just a couple of reset lines,
-> clock, phy, etc.
-
-Ok, good. Please see Documentation/devicetree/bindings/usb/usb-?hci.txt
-then. You might actually be able to just use the existing drivers
-without new code by just adding the proper DT nodes that follow these
-bindings.
-
-> > > +   pdev->dev.parent = &parent->dev;
-> > > +   pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-> > > +   pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> > 
-> > This is something we shouldn't ever do these days, the DMA settings
-> > should come directly from DT without driver interaction.
-> 
-> Ok, I'll wait to hear the outcome of Greg/Alans views before either fixing
-> it or starting over.
-
-Ok.
-
-	Arnd
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
