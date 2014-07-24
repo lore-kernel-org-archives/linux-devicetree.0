@@ -1,83 +1,123 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] usb: host: st-hcd: Add USB HCD support for STi
- SoCs
-Date: Thu, 24 Jul 2014 13:22:54 +0100
-Message-ID: <20140724122254.GA15266@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
- <1406199616-10533-2-git-send-email-peter.griffin@linaro.org>
- <11018717.Ey5qEJxGNJ@wuerfel>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
+ ix4-300d NAS
+Date: Thu, 24 Jul 2014 08:45:20 -0400
+Message-ID: <20140724124520.GV23220@titan.lakedaemon.net>
+References: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
+ <1406154923-13612-2-git-send-email-yahoo@perenite.com>
+ <20140723224236.GC28485@lunn.ch>
+ <94F87063-D717-435B-B7C5-EDAC9B26742C@perenite.com>
+ <20140723225841.GD28485@lunn.ch>
+ <10A7C530-7CD2-4ED0-889A-7FAC1922320F@perenite.com>
+ <20140723231535.GK23220@titan.lakedaemon.net>
+ <53D0FA2F.6050209@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <11018717.Ey5qEJxGNJ@wuerfel>
+In-Reply-To: <53D0FA2F.6050209-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thu, Jul 24, 2014 at 02:21:03PM +0200, Gregory CLEMENT wrote:
+> On 24/07/2014 01:15, Jason Cooper wrote:
+> > On Thu, Jul 24, 2014 at 01:11:12AM +0200, Benoit Masson wrote:
+> >> Le 24 juil. 2014 =E0 00:58, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> a =E9crit=
+ :
+> >>
+> >>>> For the marvell,mv78230-a0-i2c unfortunately i've spend 3 hours
+> >>>> trying to understand this but it only works with this on the
+> >>>> ix4-300d :(. There was multiple patch around this and maybe one
+> >>>> broke the auto-detect part of this, I've tried compiling with so=
+me
+> >>>> 3.10 or lower kernel but no luck here I still have to put this a=
+0
+> >>>> option.
+> >>>
+> >>> Lets first confirm you have an a0 SoC.
+> >>>
+> >>> At boot time, it should print:
+> >>>
+> >>> pr_info("MVEBU SoC ID=3D0x%X, Rev=3D0x%X\n", soc_dev_id, soc_rev)=
+;
+> >>>
+> >>> What revision do you have?
+> >>>
+> >>> If the auto detect code really is broken, Gregory will likely tak=
+e a
+> >>> look.
+> >>
+> >> I sure do,
+> >>
+> >> confirmed by u-boot  output below:
+> >>
+> >> U-Boot 2009.08 (Mar 04 2013 - 11:13:04) Marvell version:  2.3.2 PQ
+> >> U-Boot Addressing:
+> >>        Code:..00600000:006BFFF0
+> >>        BSS:..00708EC0
+> >>        Stack:..0x5fff70
+> >>        PageTable:.0x8e0000
+> >>        Heap address:.0x900000:0xe00000
+> >> Board: DB-78230-BP rev 2.0 Wistron
+> >> SoC:   MV78230 A0
+> >>
+> >> From kernel I get:
+> >>
+> >> mvebu-soc-id: MVEBU SoC ID=3D0x7823, Rev=3D0x1
+> >=20
+> > Well, isn't that a peach?  :)  Gregory?
+>=20
+> A peach?? For me it is either a fruit or a princess, so I am puzzled!
 
-Thanks for reviewing, see my comments below: -
+Doc Holiday quote from the movie Tombstone.  The full quote was "Well,
+isn't that a peach of a hand?" while sitting at the poker table.
 
-> Unfortunately, this seems to be done in a rather strange way,
-> I suspect you'll have to start over, but I'll let Alan and Greg
-> weigh in.
-> 
-> > +
-> > +struct st_hcd_dev {
-> > +	int port_nr;
-> > +	struct platform_device *ehci_device;
-> > +	struct platform_device *ohci_device;
-> > +	struct clk *ic_clk;
-> > +	struct clk *ohci_clk;
-> > +	struct reset_control *pwr;
-> > +	struct reset_control *rst;
-> > +	struct phy *phy;
-> > +};
-> 
-> The way you do this apparently is to create a device that encapsulates
-> the OHCI and the EHCI and then goes on to create child devices that
-> are bound to the real drivers.
+> Well about the issue, we patch the device tree for the i2c quirk only=
+ for
+> the openblock AX3.
 
-Yes, although this isn't the first driver to take that approach USB_HCD_BCMA
-(bcma-hcd.c) and USB_HCD_SSB (ssb-hcd.c) do much the same thing.
+Ahhh, that's right.  I need to slow down and dig a bit more. :(
 
-> 
-> The way it should be done however is to put the two host controllers
-> into DT directly and describe their resources (phy, clock, reset, ...)
-> using the DT bindings for those.
+> If I remember well it was because the device tree was already written
+> for this board before we found there was an issue with the A0 version
+> of the CPU.=20
 
-I'm of course happy to change it if required. I see looking through that a lot 
-of other platforms do it the way you describe with a
+No, it's because we didn't think any manufacturers would be silly enoug=
+h
+to use the a0 in production.  That assumption worked out well. :-P
 
-ehci-<platname>.c and ohci-<platname>.c 
-> 
-> Depending on what kind of special requirements the ST version has,
-> this can be done either by using the generic ohci/ehci bindings
-> with extensions where necessary, or by creating a new binding and
-> new driver files that use 'ohci_init_driver'/'ehci_init_driver'
-> to inherit from the common code.
-> 
-> The first of the two approaches is preferred.
+> The rule was that for new boards then they have to set the marvell,mv=
+78230-a0-i2c
+> compatible string. I also didn't expect that we found "new" product u=
+sing the A0 version.
+>=20
+> We have 3 options now:
+>=20
+> - remove the check on the openblock AX3 board and always try to apply=
+ the quirck for A0 version
+> - add a check for this new board in the mvebu_dt_init function
+> - let the compatible string marvell,mv78230-a0-i2c in this dts
+>=20
+> I would prefer the option 1 but I fear that Arnd would prefer the 2 o=
+ther options.
 
-We don't have anything particularly special, just a couple of reset lines,
-clock, phy, etc.
-> 
-> > +	pdev->dev.parent = &parent->dev;
-> > +	pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-> > +	pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> 
-> This is something we shouldn't ever do these days, the DMA settings
-> should come directly from DT without driver interaction.
+I like option 1 and 3.  Option 3 is a *correct* description of the
+hardware, and should be done.  Option 1 makes Linux user-friendly for b=
+oards
+that are exactly the same, but changed out SoC stepping mid-production.
 
-Ok, I'll wait to hear the outcome of Greg/Alans views before either fixing
-it or starting over.
+Option 2 needs to be undone.  We shouldn't need to change compiled code
+for every new board that comes along.  Which was the whole point of DT,
+right?
 
-regards,
+thx,
 
-Peter.
+Jason.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
