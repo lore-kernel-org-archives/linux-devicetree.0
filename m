@@ -1,42 +1,75 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt: add vendor prefix for Lattice Semiconductor
-Date: Thu, 24 Jul 2014 12:45:42 -0500
-Message-ID: <CAL_Jsq+ikdKFu37B1-_z8kN5wgvQhx4c+EdA0FA+XFvwDSniXg@mail.gmail.com>
-References: <20140724162146.22284.32664.stgit@localhost>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCHv3 3/7] clk: mvebu: extend clk-cpu for dynamic frequency
+ scaling
+Date: Thu, 24 Jul 2014 10:52:51 -0700
+Message-ID: <20140724175251.3823.74667@quantum>
+References: <1404920715-19834-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20140723235358.6419.26311@quantum>
+ <20140724083325.0c578091@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140724162146.22284.32664.stgit@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140724083325.0c578091@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 11:21 AM, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org> wrote:
-> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 46a311e..69deec1 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -70,6 +70,7 @@ isl   Intersil
->  karo   Ka-Ro electronics GmbH
->  keymile        Keymile GmbH
->  lacie  LaCie
-> +lattice        Lattice Semiconductor
->  lantiq Lantiq Semiconductor
+Quoting Thomas Petazzoni (2014-07-23 23:33:25)
+> Hello,
+> 
+> (Not sure why this e-mail comes with me as the From:, but anyway.)
+> 
+> On Wed, 23 Jul 2014 16:53:58 -0700, Thomas Petazzoni wrote:
+> 
+> > +static int clk_cpu_set_rate(struct clk_hw *hwclk, unsigned long rate,
+> > +                           unsigned long parent_rate)
+> > +{
+> > +       if (__clk_is_enabled(hwclk->clk))
+> > +               return clk_cpu_on_set_rate(hwclk, rate, parent_rate);
+> > +       else
+> > +               return clk_cpu_off_set_rate(hwclk, rate, parent_rate);
+> > 
+> > This is racy. You don't hold the clk_enable lock so it could be enable
+> > between the conditional check and executing clk_cpu_on_set_rate.
+> 
+> Right.
+> 
+> > How do you ensure that secondary CPU clocks are not enabled/disabled
+> > when changing rates?
+> 
+> In practice, this currently cannot happen: we enable the secondary CPU
+> clocks before starting the secondary CPUs, and we never ever disable or
+> re-enable again those clocks. So with the present code, I believe there
+> is no problem. Even when we do CPU hotplug, we don't turn off the CPU
+> clocks, simply because they cannot be turned off: the enable/disable
+> state is only used here as an indication so that the clock driver knows
+> which frequency change strategy it should apply.
+> 
+> But you're anyway right, I'll send a followup patch adding the lock.
+> Would that be OK for you?
 
-Care to try that alphabetical order thing again? With that fixed:
+Sounds good. Can you also fix up the changelog in patch #2? After that
+I am happy with this series. I guess Jason will take it in and send it
+for his PR?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Thanks,
+Mike
 
->  lg     LG Corporation
->  linux  Linux-specific binding
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> 
+> Thomas
+> -- 
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
