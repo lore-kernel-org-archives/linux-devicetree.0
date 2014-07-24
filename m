@@ -1,74 +1,42 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v3 0/4] Support for Qualcomm QPNP PMIC's
-Date: Thu, 24 Jul 2014 15:45:17 +0300
-Message-ID: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] Adding Lenovo - Lenovo Group Ltd. to the
+ vendor-prefixes list.
+Date: Thu, 24 Jul 2014 07:45:45 -0500
+Message-ID: <CAL_JsqJxZ75zCn4++949FQvEtXjk0K6kNj58O+UqVcqU20Pduw@mail.gmail.com>
+References: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Masson <yahoo@perenite.com>
+Cc: benoitm@perenite.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, sebastian.hesselbarth@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello all,
+On Wed, Jul 23, 2014 at 5:35 PM, Benoit Masson <yahoo@perenite.com> wrote:
+> Lenovo Group Ltd. (stylized as lenovo) is a Chinese multinational computer technology company with headquarters in Beijing, China, and Morrisville, North Carolina, United States.
+>
+> http://www.lenovo.com/
+> Signed-off-by: Benoit Masson <yahoo@perenite.com>
 
-Changes since v2:
- - 1/4 - added new line, signed-off-by / acked-by and module_authors.
- - 3/4 - the subject has been changed.
+Acked-by: Rob Herring <robh@kernel.org>
 
-The previous v2 can be found at [1].
-
-I'm still waiting Acks for:
- - 4/4 from Qualcomm folks.
- - 2/4 and 3/4 from DT folks.
-
-The patchset is ready to merge version and also it can be treated as an
-intermediate step until we find a solution for non-translatable peripheral
-addresses.
-
-regards,
-Stan
-
-[1] https://lkml.org/lkml/2014/7/17/877
-
---------------------------------------------------------------------------------
-
-Hello everyone,
-
-Here is the continuation of patch sets sent recently about Qualcomm
-QPNP SPMI PMICs.
-
-The previous version of the patch set can be found at [1].
-
-Changes since v1:
- - removed completely custom *of* parser
- - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
- - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
-
-Removing of the custom *of* parser leads to that that the *reg* devicetree
-property cannot exist and therefore cannot be parsed to get PMIC peripheral
-resources. I took this step aside because no one from mfd drivers does this
-parsing. This will lead to inconvenience in the peripheral drivers to define
-internally the SPMI base addresses depending on the compatible property
-i.e. PMIC version. 
-
-Comments are welcome!
-
-[1] https://lkml.org/lkml/2014/7/8/428
-
-Josh Cartwright (1):
-  mfd: pm8xxx-spmi: add support for Qualcomm SPMI PMICs
-
-Stanimir Varbanov (3):
-  mfd: pm8xxx-spmi: document DT bindings for Qualcomm SPMI PMICs
-  ARM: dts: qcom: add pm8941 and pm8841 PMICs device nodes
-  mfd: pm8921: rename pm8921-core driver
-
- .../devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt   |   49 +++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi                |   37 +++++++++++
- drivers/mfd/Kconfig                                |   30 +++++++--
- drivers/mfd/Makefile                               |    3 +-
- drivers/mfd/pm8xxx-spmi.c                          |   65 ++++++++++++++++++++
- drivers/mfd/{pm8921-core.c => pm8xxx-ssbi.c}       |   38 ++++++------
- 6 files changed, 195 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx-spmi.txt
- create mode 100644 drivers/mfd/pm8xxx-spmi.c
- rename drivers/mfd/{pm8921-core.c => pm8xxx-ssbi.c} (92%)
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 46a311e..ae09892 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -71,6 +71,7 @@ karo  Ka-Ro electronics GmbH
+>  keymile        Keymile GmbH
+>  lacie  LaCie
+>  lantiq Lantiq Semiconductor
+> +lenovo Lenovo Group Ltd.
+>  lg     LG Corporation
+>  linux  Linux-specific binding
+>  lsi    LSI Corp. (LSI Logic)
+> --
+> 1.9.1
+>
