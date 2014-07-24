@@ -1,180 +1,85 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
-Date: Thu, 24 Jul 2014 06:28:55 +0530
-Message-ID: <53D05A4F.5080905@gmail.com>
-References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com> <53CFD581.5040908@gmail.com> <53CFF866.6060703@ti.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto
+ accelerator
+Date: Thu, 24 Jul 2014 09:40:57 +0800
+Message-ID: <20140724014057.GA2448@gondor.apana.org.au>
+References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com>
+ <201407231751.02050.marex@denx.de>
+ <53D0045C.6090605@gmail.com>
+ <201407232138.35268.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53CFF866.6060703@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Thomas Gleixner <tglx@linutronix.de>, santosh.shilimkar@ti.com, Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201407232138.35268.marex@denx.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Marek Vasut <marex@denx.de>
+Cc: Corentin LABBE <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 23, 2014 at 09:38:35PM +0200, Marek Vasut wrote:
+> On Wednesday, July 23, 2014 at 08:52:12 PM, Corentin LABBE wrote:
+> > Le 23/07/2014 17:51, Marek Vasut a =E9crit :
+> > > On Wednesday, July 23, 2014 at 04:13:09 PM, Herbert Xu wrote:
+> > >> On Wed, Jul 23, 2014 at 04:07:20PM +0200, Marek Vasut wrote:
+> > >>> On Wednesday, July 23, 2014 at 03:57:35 PM, Herbert Xu wrote:
+> > >>>> On Sat, May 24, 2014 at 02:00:03PM +0200, Marek Vasut wrote:
+> > >>>>>> +	}
+> > >>>>>> +#endif
+> > >>>>>> +
+> > >>>>>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
+> > >>>>>> +	err =3D crypto_register_shash(&sunxi_md5_alg);
+> > >>>>>=20
+> > >>>>> Do not use shash for such device. This is clearly and ahash (=
+and
+> > >>>>> async in general) device. The rule of a thumb here is that yo=
+u use
+> > >>>>> sync algos only for devices which have dedicated instructions=
+ for
+> > >>>>> computing the transformation. For devices which are attached =
+to some
+> > >>>>> kind of bus, you use async algos (ahash etc).
+> > >>>>=20
+> > >>>> I'm sorry that I didn't catch this earlier but there is no suc=
+h
+> > >>>> rule.
+> > >>>>=20
+> > >>>> Unless you need the async interface you should stick to the sy=
+nc
+> > >>>> interfaces for the sake of simplicity.
+> > >>>>=20
+> > >>>> We have a number of existing drivers that are synchronous but
+> > >>>> using the async interface.  They should either be converted
+> > >>>> over to the sync interface or made interrupt-driven if possibl=
+e.
+> > >>>=20
+> > >>> Sure, but this device is interrupt driven and uses DMA to feed =
+the
+> > >>> crypto engine, therefore async, right ?
+> > >>=20
+> > >> If it's interrupt-driven, then yes it would certainly make sense=
+ to
+> > >> be async.  But all I see is polling in the latest posting, was t=
+he
+> > >> first version different?
+> > >=20
+> > > I stand corrected then, sorry.
+> > >=20
+> > > Is it possible to use DMA to feed the crypto accelerator, Corenti=
+n?
+> > >=20
+> > > Best regards,
+> > > Marek Vasut
+> >=20
+> > Yes, DMA is possible and will be implemented soon.
+> > So if I have well understood, I keep using async interface.
+>=20
+> Yeah, in this case, using DMA and async interface combo is the way to=
+ go.
 
-On Wednesday 23 July 2014 11:31 PM, Grygorii Strashko wrote:
-> Hi,
->
-> On 07/23/2014 06:32 PM, Varka Bhadram wrote:
->> On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
->>> On Keystone SOCs, DSP cores can send interrupts to ARM
->>> host using the IRQ controller IP. It provides 28 IRQ
->>> signals to ARM. The IRQ handler running on HOST OS can
->>> identify DSP signal source by analyzing SRCCx bits in
->>> IPCARx registers. This is one of the component used by
->>> the IPC mechanism used on Keystone SOCs.
->> (...)
->>
->>> +Required Properties:
->>> +- compatible: should be "ti,keystone-irq"
->>> +- ti,syscon-dev : phandle and offset pair. The phandle to syscon used to
->>> +            access device control registers and the offset inside
->>> +            device control registers range.
->>> +- interrupt-controller : Identifies the node as an interrupt controller
->>> +- #interrupt-cells : Specifies the number of cells needed to encode
->>> interrupt
->>> +                     source should be 1.
->>> +- interrupts: interrupt reference to primary interrupt controller
->> proper indentation for the properties
->>
->> - compatible        : Should be "ti,keystone-irq"
->> - ti,syscon-dev        : phandle and offset pair. The phandle to syscon
->> used to
->>                 access device control registers and the offset inside
->>                 device control registers range.
->>
->>> +
->>> +Please refer to interrupts.txt in this directory for details of the
->>> common
->>> +Interrupt Controllers bindings used by client devices.
->>> +
->> (...)
->>
->>> +#include <linux/irq.h>
->>> +#include <linux/bitops.h>
->>> +#include <linux/module.h>
->>> +#include <linux/moduleparam.h>
->>> +#include <linux/irqdomain.h>
->>> +#include <linux/irqchip/chained_irq.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/mfd/syscon.h>
->>> +#include <linux/regmap.h>
->> Includes in alphabetical order...
->>
->> Give one line gap before local includes..
->>
->> ...
->> #include <linux/regmap.h>
->>
->> #include "irqchip.h"
->>
->>> +#include "irqchip.h"
->>> +
->>> +
->>> +/* The source ID bits start from 4 to 31 (total 28 bits)*/
->>> +#define BIT_OFS            4
->>> +#define KEYSTONE_N_IRQ        (32 - BIT_OFS)
->>> +
->>> +struct keystone_irq_device {
->>> +    struct device        *dev;
->>> +    struct irq_chip         chip;
->>> +    u32             mask;
->>> +    u32             irq;
->>> +    struct irq_domain    *irqd;
->>> +    struct regmap        *devctrl_regs;
->>> +    u32            devctrl_offset;
->>> +};
->>> +
->>> +static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
->>> +{
->>> +    int ret;
->>> +    u32 val = 0;
->>> +
->>> +    ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
->>> +    if (ret < 0)
->>> +        dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
->>> +    return val;
->>> +}
->>> +
->>> +static inline void
->>> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
->>> +{
->>> +    int ret;
->>> +
->>> +    ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
->>> +    if (ret < 0)
->>> +        dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
->> It can be like
->>
->> if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
->>       dev_dbg(kirq->dev, "irq write failed \n");
->>
->>> +}
->>> +
->>> +
-> Pls, Pay attention that I'd like to see ret code here in case of failure.
-
-What we have to do with ret code... ?
-In case of failure only this debug message will be printed.
-
->> (...)
->>
->>> +}
->>> +
->>> +static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
->>> +                irq_hw_number_t hw)
->> should match open parenthesis:
->>
->> static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
->>                   irq_hw_number_t hw)
->>
->>> +{
->>> +    struct keystone_irq_device *kirq = h->host_data;
->>> +
->>> +    irq_set_chip_data(virq, kirq);
->>> +    irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
->>> +    set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
->>> +    return 0;
->>> +}
->>> +
->>> +static struct irq_domain_ops keystone_irq_ops = {
->>> +    .map    = keystone_irq_map,
->>> +    .xlate    = irq_domain_xlate_onecell,
->>> +};
->>> +
->>> +static int keystone_irq_probe(struct platform_device *pdev)
->>> +{
->>> +    struct device *dev = &pdev->dev;
->>> +    struct device_node *np = dev->of_node;
->>> +    struct keystone_irq_device *kirq;
->>> +    int ret;
->>> +
->>> +    if (np == NULL)
->>> +        return -EINVAL;
->> return -ENODEV??????
-> If probe is executed - the dev is present, but it was created in a wrong/unsupported way
-> or dev structure contains wrong data.
-
-Here we are trying to get the device tree node , but that is not present we may return the
-error code saying that NO DEVICE is present....
-
->> (...)
->>
->>> +static struct platform_driver keystone_irq_device_driver = {
->>> +    .probe        = keystone_irq_probe,
->>> +    .remove        = keystone_irq_remove,
->>> +    .driver        = {
->>> +        .name    = "keystone_irq",
->>> +        .owner    = THIS_MODULE,
->> No need to update it. Its done by module_platform_driver()..
->>
->>> +        .of_match_table    = of_match_ptr(keystone_irq_dt_ids),
->> This driver is always populate through the dts file. So no need to use
->> of_match_ptr....
->>
-
--- 
--Varka Bhadram
+OK fair enough.
+--=20
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
