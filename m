@@ -1,66 +1,180 @@
-From: Mike Turquette <mike.turquette@linaro.org>
-Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
-Date: Wed, 23 Jul 2014 17:33:14 -0700
-Message-ID: <20140724003314.6419.51564@quantum>
-References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
- <CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>
- <CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>
- <CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>
- <CAKohpokLqrydV3b=innvOWrW9ijXtZwPKdT5Ew65cjMxsY2Mvw@mail.gmail.com>
- <53CA8D95.8010108@ti.com>
- <CAKohpok-C+JCebjJkZExx6EjBctoyJF7fV71Vjj7bi1TAdXrFQ@mail.gmail.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v2] irqchip: add keystone irq controller ip driver
+Date: Thu, 24 Jul 2014 06:28:55 +0530
+Message-ID: <53D05A4F.5080905@gmail.com>
+References: <1406126430-9978-1-git-send-email-grygorii.strashko@ti.com> <53CFD581.5040908@gmail.com> <53CFF866.6060703@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpok-C+JCebjJkZExx6EjBctoyJF7fV71Vjj7bi1TAdXrFQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Grant Likely <grant.likely@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53CFF866.6060703@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Thomas Gleixner <tglx@linutronix.de>, santosh.shilimkar@ti.com, Jason Cooper <jason@lakedaemon.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, ivan.khoronzhuk@ti.com, m-karicheri2@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Viresh Kumar (2014-07-20 05:07:32)
-> On 19 July 2014 20:54, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
-> > Sorry for jumping late
-> 
-> No, you aren't late. Its just 2 days old thread :)
-> 
-> > but one of the point I was raising as part of your
-> > other series was to extend the CPU topology bindings to cover the voltage
-> > domain information which is probably what is really needed to let the
-> > CPUfreq extract the information. Not sure if it was already discussed.
-> 
-> Not it wasn't.
-> 
-> > After all the CPU clocks, cluster, clock-gating, power domains are pretty much
-> > related. So instead of having new binding for CPUFreq, I was wondering whether
-> > we can extend the CPU topology binding information to include missing information.
-> > Scheduler work anyway needs that information.
-> >
-> > Ref: Documentation/devicetree/bindings/arm/topology.txt
-> >
-> > Does that make sense ?
-> 
-> Yeah it does, but I am not sure what exactly the bindings should look then.
-> So, the most basic step could be moving the new bindings to topology.txt
-> and name clock-master to dvfs-master.
-> 
-> What else?
 
-If we're going to model the hardware then the binding should not use the
-CPU phandles in "clock-master" or "dvfs-master". The correct thing to
-model for a given CPU is which clock consumes. It's not accurate to say
-that one CPU is the "master", at least not in this context.
+On Wednesday 23 July 2014 11:31 PM, Grygorii Strashko wrote:
+> Hi,
+>
+> On 07/23/2014 06:32 PM, Varka Bhadram wrote:
+>> On Wednesday 23 July 2014 08:10 PM, Grygorii Strashko wrote:
+>>> On Keystone SOCs, DSP cores can send interrupts to ARM
+>>> host using the IRQ controller IP. It provides 28 IRQ
+>>> signals to ARM. The IRQ handler running on HOST OS can
+>>> identify DSP signal source by analyzing SRCCx bits in
+>>> IPCARx registers. This is one of the component used by
+>>> the IPC mechanism used on Keystone SOCs.
+>> (...)
+>>
+>>> +Required Properties:
+>>> +- compatible: should be "ti,keystone-irq"
+>>> +- ti,syscon-dev : phandle and offset pair. The phandle to syscon used to
+>>> +            access device control registers and the offset inside
+>>> +            device control registers range.
+>>> +- interrupt-controller : Identifies the node as an interrupt controller
+>>> +- #interrupt-cells : Specifies the number of cells needed to encode
+>>> interrupt
+>>> +                     source should be 1.
+>>> +- interrupts: interrupt reference to primary interrupt controller
+>> proper indentation for the properties
+>>
+>> - compatible        : Should be "ti,keystone-irq"
+>> - ti,syscon-dev        : phandle and offset pair. The phandle to syscon
+>> used to
+>>                 access device control registers and the offset inside
+>>                 device control registers range.
+>>
+>>> +
+>>> +Please refer to interrupts.txt in this directory for details of the
+>>> common
+>>> +Interrupt Controllers bindings used by client devices.
+>>> +
+>> (...)
+>>
+>>> +#include <linux/irq.h>
+>>> +#include <linux/bitops.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/moduleparam.h>
+>>> +#include <linux/irqdomain.h>
+>>> +#include <linux/irqchip/chained_irq.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_platform.h>
+>>> +#include <linux/mfd/syscon.h>
+>>> +#include <linux/regmap.h>
+>> Includes in alphabetical order...
+>>
+>> Give one line gap before local includes..
+>>
+>> ...
+>> #include <linux/regmap.h>
+>>
+>> #include "irqchip.h"
+>>
+>>> +#include "irqchip.h"
+>>> +
+>>> +
+>>> +/* The source ID bits start from 4 to 31 (total 28 bits)*/
+>>> +#define BIT_OFS            4
+>>> +#define KEYSTONE_N_IRQ        (32 - BIT_OFS)
+>>> +
+>>> +struct keystone_irq_device {
+>>> +    struct device        *dev;
+>>> +    struct irq_chip         chip;
+>>> +    u32             mask;
+>>> +    u32             irq;
+>>> +    struct irq_domain    *irqd;
+>>> +    struct regmap        *devctrl_regs;
+>>> +    u32            devctrl_offset;
+>>> +};
+>>> +
+>>> +static inline u32 keystone_irq_readl(struct keystone_irq_device *kirq)
+>>> +{
+>>> +    int ret;
+>>> +    u32 val = 0;
+>>> +
+>>> +    ret = regmap_read(kirq->devctrl_regs, kirq->devctrl_offset, &val);
+>>> +    if (ret < 0)
+>>> +        dev_dbg(kirq->dev, "irq read failed ret(%d)\n", ret);
+>>> +    return val;
+>>> +}
+>>> +
+>>> +static inline void
+>>> +keystone_irq_writel(struct keystone_irq_device *kirq, u32 value)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    ret = regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value);
+>>> +    if (ret < 0)
+>>> +        dev_dbg(kirq->dev, "irq write failed ret(%d)\n", ret);
+>> It can be like
+>>
+>> if (!regmap_write(kirq->devctrl_regs, kirq->devctrl_offset, value))
+>>       dev_dbg(kirq->dev, "irq write failed \n");
+>>
+>>> +}
+>>> +
+>>> +
+> Pls, Pay attention that I'd like to see ret code here in case of failure.
 
-A previous approach tried to compare struct clk pointers, which is a bad
-idea since those are just cookies and should not be deref'd by drivers.
-However a similar approach would be to compare the phandle, right?
+What we have to do with ret code... ?
+In case of failure only this debug message will be printed.
 
-Regards,
-Mike
+>> (...)
+>>
+>>> +}
+>>> +
+>>> +static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
+>>> +                irq_hw_number_t hw)
+>> should match open parenthesis:
+>>
+>> static int keystone_irq_map(struct irq_domain *h, unsigned int virq,
+>>                   irq_hw_number_t hw)
+>>
+>>> +{
+>>> +    struct keystone_irq_device *kirq = h->host_data;
+>>> +
+>>> +    irq_set_chip_data(virq, kirq);
+>>> +    irq_set_chip_and_handler(virq, &kirq->chip, handle_level_irq);
+>>> +    set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static struct irq_domain_ops keystone_irq_ops = {
+>>> +    .map    = keystone_irq_map,
+>>> +    .xlate    = irq_domain_xlate_onecell,
+>>> +};
+>>> +
+>>> +static int keystone_irq_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct device *dev = &pdev->dev;
+>>> +    struct device_node *np = dev->of_node;
+>>> +    struct keystone_irq_device *kirq;
+>>> +    int ret;
+>>> +
+>>> +    if (np == NULL)
+>>> +        return -EINVAL;
+>> return -ENODEV??????
+> If probe is executed - the dev is present, but it was created in a wrong/unsupported way
+> or dev structure contains wrong data.
 
-> 
-> If its going to be much controversial then we *can* go for just dvfs bindings
-> for now and then update them later.
-> 
-> Doesn't make sense? :)
+Here we are trying to get the device tree node , but that is not present we may return the
+error code saying that NO DEVICE is present....
+
+>> (...)
+>>
+>>> +static struct platform_driver keystone_irq_device_driver = {
+>>> +    .probe        = keystone_irq_probe,
+>>> +    .remove        = keystone_irq_remove,
+>>> +    .driver        = {
+>>> +        .name    = "keystone_irq",
+>>> +        .owner    = THIS_MODULE,
+>> No need to update it. Its done by module_platform_driver()..
+>>
+>>> +        .of_match_table    = of_match_ptr(keystone_irq_dt_ids),
+>> This driver is always populate through the dts file. So no need to use
+>> of_match_ptr....
+>>
+
+-- 
+-Varka Bhadram
