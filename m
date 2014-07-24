@@ -1,206 +1,85 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2] gpio: keystone: add dsp gpio controller driver
-Date: Thu, 24 Jul 2014 14:15:19 -0500
-Message-ID: <53D15B47.6020802@ti.com>
-References: <1406126699-10053-1-git-send-email-grygorii.strashko@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
+ existing vendor prefixes to standardise on 'dlg'
+Date: Thu, 24 Jul 2014 21:43:32 +0200
+Message-ID: <1406231012.21800.13.camel@paszta.hi.pengutronix.de>
+References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1406126699-10053-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Strashko, Grygorii" <grygorii.strashko@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "varkabhadram@gmail.com" <varkabhadram@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Guenter Roeck <linux@roeck-us.net>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Simon
 List-Id: devicetree@vger.kernel.org
 
-Grygorii,
-
-On 07/23/2014 09:44 AM, Strashko, Grygorii wrote:
-> From: Murali Karicheri <m-karicheri2@ti.com>
+Am Donnerstag, den 24.07.2014, 16:46 +0100 schrieb Opensource [Steve
+Twiss]:
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
 > 
-> On Keystone SOCs, ARM host can send interrupts to DSP cores using the
-> DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
-> each DSP core. This is one of the component used by the IPC mechanism used
-> on Keystone SOCs.
+> This patch series updates the device tree vendor prefix for
+> Dialog Semiconductor.
 > 
-> Keystone 2 DSP GPIO controller has specific features:
-> - each GPIO can be configured only as output pin;
-> - setting GPIO value to 1 causes IRQ generation on target DSP core;
-> - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
->   pending.
+> Various methods are currently used throughout the kernel: 'diasemi',
+> 'dialog' and 'dlg'. Others have also been suggested.
 > 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> This patch set aims to consolidate the usage of the vendor prefix to
+> use a common standard. The prefix 'dlg' is used.
+> 
+> 
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
 > ---
-> Changes in v2:
-> - minor comments applied
+> Checks performed with linux-next/next-20140715/scripts/checkpatch.pl
+>  trivial-devices.txt       total: 0 errors, 0 warnings, 89 lines checked
+>  da9210.txt                total: 0 errors, 0 warnings, 21 lines checked
+>  vendor-prefixes.txt       total: 0 errors, 0 warnings, 149 lines checked
+>  imx53-smd.dts             total: 0 errors, 2 warnings, 279 lines checked
+>  imx6qdl-phytec-pfla02.dtsi total: 0 errors, 2 warnings, 357 lines checked
+>  r8a7790-lager.dts         total: 0 errors, 3 warnings, 403 lines checked
+>  r8a7791-koelsch.dts       total: 0 errors, 4 warnings, 461 lines checked
+>  da9055-core.c             total: 0 errors, 0 warnings, 428 lines checked
 > 
-> v1:
->  https://lkml.org/lkml/2014/7/16/170
+> This is a resend according to requests for e-mail reformatting and removal
+> of '[]' in From: and Signed-off-by: tags. There are no patch alterations
+> from RFC V2.
 > 
->  .../devicetree/bindings/gpio/gpio-keystone.txt     |   43 ++++++
->  drivers/gpio/Kconfig                               |    8 ++
->  drivers/gpio/Makefile                              |    1 +
->  drivers/gpio/gpio-keystone.c                       |  138 ++++++++++++++++++++
->  4 files changed, 190 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-keystone.txt
->  create mode 100644 drivers/gpio/gpio-keystone.c
+> I am requesting Acks for the bindings and DTS(I) changes in this patch
+> specifically the two remaining files r8a7790-lager.dts and r8a7791-koelsch.dts
+> In a previous reply SHMobile was identified as needing to Ack this patch
+> before it could proceed.
+> - http://www.spinics.net/lists/arm-kernel/msg349289.html
+> - https://lkml.org/lkml/2014/6/11/273
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
-> new file mode 100644
-> index 0000000..d412711
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
-> @@ -0,0 +1,43 @@
-> +Keystone 2 DSP GPIO controller bindings
-> +
-> +HOST OS userland running on ARM can send interrupts to DSP cores using
-> +the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
-> +This is one of the component used by the IPC mechanism used on Keystone SOCs.
-> +
-> +For example TCI6638K2K SoC has 8 DSP GPIO controllers:
-> + - 8 for C66x CorePacx CPUs 0-7
-> +
-> +Keystone 2 DSP GPIO controller has specific features:
-> +- each GPIO can be configured only as output pin;
-> +- setting GPIO value to 1 causes IRQ generation on target DSP core;
-> +- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-> +  pending.
-> +
-> +Required Properties:
-> +- compatible: should be "ti,keystone-dsp-gpio"
-> +
-> +- ti,syscon-dev : phandle/offset pair. The phandle to syscon used to
-> +				  access device state control registers and the offset
-> +				  in order to use block of device's specific registers.
-> +
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +
-> +- #gpio-cells : Should be one.
-> +				See gpio.txt in this directory for a of the cells format
-> +
-> +Please refer to gpio.txt in this directory for details of the common GPIO
-> +bindings used by client devices.
-> +
-> +Example:
-> +	dspgpio0: keystone_dsp_gpio@02620240 {
-> +		compatible = "ti,keystone-dsp-gpio";
-> +		ti,syscon-dev = <&devctrl 0x240>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
+> If there are problems with this request, can I get a quick explanation in
+> the reply so I can fix it and move forwards please?
+> 
+> Please see this thread for latest comments:
+> http://www.spinics.net/lists/arm-kernel/msg349809.html
+> 
+> Acked-by the following people so far:
+> 
+> - Rob Herring
+>   http://www.spinics.net/lists/arm-kernel/msg349289.html
+> 
+> - Lee Jones
+>   For the MFD changes:
+>   http://www.spinics.net/lists/arm-kernel/msg349457.html
+> 
+> - Shawn Guo
+>   arch/arm/boot/dts/imx53-smd.dts                    |  2 +-
+>   arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  2 +-
 
-Mismatch? Conflicts with "Should be one".
-
-> +	};
-> +
-> +	dsp0: dsp0 {
-> +		compatible = "linux,rproc-user";
-> +		...
-> +		kick-gpio = <&dspgpio0 27>;
-> +	};
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 4a1b511..990871f 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -158,6 +158,14 @@ config GPIO_EP93XX
->  	depends on ARCH_EP93XX
->  	select GPIO_GENERIC
->  
-> +config GPIO_KEYSTONE_DSP
-> +	tristate "Keystone DSP GPIO support"
-> +	depends on ARCH_KEYSTONE
-> +	help
-> +	  Say yes here to support the DSP GPIO driver for Keystone 2. This defines
-> +	  up to 28 GPIOs per each Remote (DSP) core. This is used to send
-> +	  signals from ARM to the Remote (DSP) core.
-> +
->  config GPIO_ZEVIO
->  	bool "LSI ZEVIO SoC memory mapped GPIOs"
->  	depends on ARM && OF_GPIO
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index d10f6a9..15c3389 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_IOP)		+= gpio-iop.o
->  obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
->  obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
->  obj-$(CONFIG_GPIO_KEMPLD)	+= gpio-kempld.o
-> +obj-$(CONFIG_GPIO_KEYSTONE_DSP)	+= gpio-keystone.o
->  obj-$(CONFIG_ARCH_KS8695)	+= gpio-ks8695.o
->  obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
->  obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
-> diff --git a/drivers/gpio/gpio-keystone.c b/drivers/gpio/gpio-keystone.c
-> new file mode 100644
-> index 0000000..7909a1c
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-keystone.c
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Keystone 2 DSP GPIO support.
-> + *
-> + * Copyright (C) 2014 Texas Instruments, Inc.
-> + * Author: Murali Karicheri <m-karicheri2@ti.com>
-> + *	   Grygorii Strashko <grygorii.strashko@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/gpio.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +
-> +/* 28 bits in IPCGRx are treated as GPIO pins to generate interrupt */
-> +#define GPIOS_PER_BANK		28
-> +#define GPIO_OFFSET		4
-> +
-> +struct keystone_gpio_bank {
-> +	struct gpio_chip	 chip;
-> +	struct device		*dev;
-> +	struct regmap		*devctrl_regs;
-> +	u32			devctrl_offset;
-> +};
-> +#define chip_to_bank(c) \
-> +	container_of(c, struct keystone_gpio_bank, chip)
-> +
-> +static int keystone_gpio_direction_out(struct gpio_chip *c,
-> +					unsigned ofs, int val)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int keystone_gpio_get(struct gpio_chip *c, unsigned ofs)
-> +{
-> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
-> +	int bit = ofs + GPIO_OFFSET;
-> +	int ret;
-> +	u32 val = 0;
-> +
-> +	ret = regmap_read(bank->devctrl_regs, bank->devctrl_offset, &val);
-> +	if (ret < 0)
-> +		dev_dbg(bank->dev, "gpio read failed ret(%d)\n", ret);
-> +
-> +	return (val >> bit) & 1;
-> +}
-> +
-> +static void keystone_gpio_set(struct gpio_chip *c, unsigned ofs, int val)
-> +{
-> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
-> +	int bit = ofs + GPIO_OFFSET;
-> +	int ret;
-> +
-> +	if (!val)
-> +		return;
-> +
-> +	ret = regmap_write(bank->devctrl_regs, bank->devctrl_offset,
-> +			   BIT(bit) | 1);
-
-What is this ORing with 1 for?
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
 regards
-Suman
-
-[snip]
-
+Philipp
