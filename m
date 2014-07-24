@@ -1,31 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1] gpio: keystone: add dsp gpio controller driver
-Date: Thu, 24 Jul 2014 16:12:24 +0200
-Message-ID: <CACRpkdYdUKmR+bZo374AqepDXfsZqBwJ88e4is90-UoUBWdJrA@mail.gmail.com>
-References: <1405507426-18992-1-git-send-email-grygorii.strashko@ti.com>
-	<CACRpkdYY_a_9G-VLBbv2a22Cg4j0t3Wv4W1h0n6-ccCXgVJXsA@mail.gmail.com>
-	<53CFD404.7070704@ti.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] usb: host: st-hcd: Add USB HCD support for STi
+ SoCs
+Date: Thu, 24 Jul 2014 15:14:12 +0100
+Message-ID: <20140724141412.GA21823@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1406199616-10533-1-git-send-email-peter.griffin@linaro.org>
+ <11018717.Ey5qEJxGNJ@wuerfel>
+ <20140724122254.GA15266@griffinp-ThinkPad-X1-Carbon-2nd>
+ <5967609.vndF2bDyS1@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <53CFD404.7070704@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Suman Anna <s-anna@ti.com>, Jaswinder Singh <jaswinder.singh@linaro.org>, Alexander Shiyan <shc_work@mail.ru>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ivan.khoronzhuk@ti.com, Muralidharan Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5967609.vndF2bDyS1@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 23, 2014 at 5:25 PM, Santosh Shilimkar
-<santosh.shilimkar@ti.com> wrote:
+Hi Arnd,
 
-> I will try to answer this. This IP is indeed a GPIO block
-> but the IO's are used just OUTPUT lines from Linux
-> HOST perspective. These IOs are connected to the DSPs
-> as input/IRQ lines.
 
-So the DSP is another discrete IC, and could be something
-different, so this is board-level information?
+<snip>
+> > 
+> > I'm of course happy to change it if required. I see looking through that a lot 
+> > of other platforms do it the way you describe with a
+> > 
+> > ehci-<platname>.c and ohci-<platname>.c
+> 
+> Right. We are trying to  gradually move some of them over to use the
+> generic *hci-platform.c drivers though.
 
-I'm really worrying whether this is general purpose or not :-/
+Right, ok I understand.
+ 
+> > > Depending on what kind of special requirements the ST version has,
+> > > this can be done either by using the generic ohci/ehci bindings
+> > > with extensions where necessary, or by creating a new binding and
+> > > new driver files that use 'ohci_init_driver'/'ehci_init_driver'
+> > > to inherit from the common code.
+> > > 
+> > > The first of the two approaches is preferred.
+> > 
+> > We don't have anything particularly special, just a couple of reset lines,
+> > clock, phy, etc.
+> 
+> Ok, good. Please see Documentation/devicetree/bindings/usb/usb-?hci.txt
+> then. You might actually be able to just use the existing drivers
+> without new code by just adding the proper DT nodes that follow these
+> bindings.
 
-Yours,
-Linus Walleij
+The only issues I can see with the generic versions are: -
+1) We also have a powerdown line in addition to the reset line both of which are 
+exposed via reset controller API, so I would need to add that into ehci-platform
+and ohci-platform.
+
+2) We have a magic poke in st_ehci_configure_bus of the current driver to configure
+the AHB to ST bus protocol convertor IP. I'm not quite sure where I could hook that
+in (sorry... slightly pulling back on my "nothing special comment" a bit ;-).
+
+3) We also set the rate of the ohci clock, which the generic driver doesn't do.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
