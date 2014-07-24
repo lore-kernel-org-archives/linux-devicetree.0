@@ -1,48 +1,52 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
- ix4-300d NAS
-Date: Thu, 24 Jul 2014 16:29:18 +0200
-Message-ID: <20140724142918.GG28485@lunn.ch>
-References: <1406154923-13612-2-git-send-email-yahoo@perenite.com>
- <20140723224236.GC28485@lunn.ch>
- <94F87063-D717-435B-B7C5-EDAC9B26742C@perenite.com>
- <20140723225841.GD28485@lunn.ch>
- <10A7C530-7CD2-4ED0-889A-7FAC1922320F@perenite.com>
- <20140723231535.GK23220@titan.lakedaemon.net>
- <53D0FA2F.6050209@free-electrons.com>
- <20140724124520.GV23220@titan.lakedaemon.net>
- <C2E7C8C1-1198-4785-AB9C-C27B5E27A8D4@perenite.com>
- <20140724140757.GW23220@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: dove: add DT LCD controllers
+Date: Thu, 24 Jul 2014 15:45:00 +0100
+Message-ID: <E1XAKGS-0004WE-8h@rmk-PC.arm.linux.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140724140757.GW23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> The only outstanding point (Arnd?), is that I think it's ok to have the
-> i2c...a0 compatible string in the dts files, but Andrew seems to think
-> otherwise.  Is that still true Andrew?
+Add the DT fragment for the Marvell Dove LCD controllers.
 
-Hi Jason
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+Jason,
 
-I can live with i2c...a0 compatible string, but it has minor problems:
+David Airlie has taken the Armada DRM changes into his tree, so the DT
+bits can now be queued for the next merge window.
 
-1) The binding Documentation says not to do it. So we are ignoring our
-   own documentation.
+ arch/arm/boot/dts/dove.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-2) It seems likely that at some point the OEM will swap to B1 revision
-   SoCs. The i2c device then does not require this quirk, but we have
-   hard coded in the DT file that it is required. B1 revision would
-   work, but not optimally.
-
-So i would prefer not to explicitly enable the quirk, but determine at
-run time if the quirk is needed for the SoC revision it is running on.
-
-    Andrew
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 3b891dd20993..a5441d5482a6 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -630,6 +630,20 @@
+ 				reg = <0xe8400 0x0c>;
+ 				ngpios = <8>;
+ 			};
++
++			lcd1: lcd-controller@810000 {
++				compatible = "marvell,dove-lcd";
++				reg = <0x810000 0x1000>;
++				interrupts = <46>;
++				status = "disabled";
++			};
++
++			lcd0: lcd-controller@820000 {
++				compatible = "marvell,dove-lcd";
++				reg = <0x820000 0x1000>;
++				interrupts = <47>;
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+1.8.3.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
