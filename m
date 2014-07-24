@@ -1,41 +1,77 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v4 1/2] media: soc_camera: pxa_camera device-tree support
-Date: Thu, 24 Jul 2014 23:03:22 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1407242301030.11084@axis700.grange>
-References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
- <Pine.LNX.4.64.1407231126210.30243@axis700.grange>
- <Pine.LNX.4.64.1407231915310.1526@axis700.grange> <8761invo7p.fsf@free.fr>
+From: Darren Etheridge <detheridge@ti.com>
+Subject: Re: [PATCH 0/8] tilcdc-panel: Backlight and GPIO devicetree support
+Date: Thu, 24 Jul 2014 16:25:20 -0500
+Message-ID: <53D179C0.2050100@ti.com>
+References: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <8761invo7p.fsf@free.fr>
-Sender: linux-media-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1405088334-11215-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>
+Cc: daniel.vetter@ffwll.ch, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-(re-adding Cc)
+On 07/11/2014 09:18 AM, Ezequiel Garcia wrote:
+> Hello all,
+>
+> This patchset adds the required changes to support an optional backlight
+> and GPIO for the tilcdc panel driver.
+>
+> There was some code to support a backlight, but it was somewhat broken
+> and undocumented. I've followed the nice implementation in panel-simple
+> and added a similar one here.
+>
+> The enable GPIO is required to turn on and off devices with such capability.
+> Also here, I've followed panel-simple which looks correct.
+>
+> In addition to this there are very minor cosmetic cleanups and a larger
+> error path fix in tilcdc's DRM driver .load error path.
+>
+> This patchset applies on top of drm-next branch which contains the latest
+> tilcdc pushed by Guido.
+>
+> If at all possible, I'd like to get this merged for v3.17. If a pull request
+> is needed, don't hesitate to ask and I'll prepare one.
+>
+> Comments and tests welcome!
+>
 
-On Wed, 23 Jul 2014, Robert Jarzmik wrote:
+All of the changes seem to make sense and I tested on AM335x-EVM both 
+with and without the addition "backlight = " in the dts for the panel node.
 
-> Guennadi Liakhovetski <g.liakhovetski@gmx.de> writes:
-> 
-> > Add device-tree support to pxa_camera host driver.
-> >
-> > Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> > [g.liakhovetski@gmx.de: added of_node_put()]
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > ---
-> >
-> > Robert, could you review and test this version, please?
-> Review +1.
-> Tested and works fine, so good to go.
+I see no issues in either case, continued to work as before.
 
-Thanks for a quick test! One question: to test this you also needed a 
-version of Ben's "soc_camera: add support for dt binding soc_camera 
-drivers" patch, right? Did you use the last version from Ben or my amended 
-version, that I sent yesterday? If you didn't use my version, would it be 
-possible for you to test it and reply with your tested-by if all looks ok?
+Tested against 3.16-rc6 with this patchset and the earlier patchset from 
+Guido applied.
 
-Thanks
-Guennadi
+Also tested on BeagleBone Black even though it doesn't have a panel, 
+just to make sure nothing changed there.
+
+For the series:
+Tested-by: Darren Etheridge <detheridge@ti.com>
+
+> Ezequiel Garcia (8):
+>    drm/tilcdc: Fix the error path in tilcdc_load()
+>    drm/tilcdc: panel: Add missing of_node_put
+>    drm/tilcdc: panel: Remove unused variable
+>    drm/tilcdc: panel: Spurious whitespace removal
+>    drm/tilcdc: panel: Use devm_kzalloc to simplify the error path
+>    drm/tilcdc: panel: Fix backlight devicetree support
+>    drm/tilcdc: panel: Set return value explicitly
+>    drm/tilcdc: panel: Add support for enable GPIO
+>
+>   .../devicetree/bindings/drm/tilcdc/panel.txt       |  7 ++
+>   drivers/gpu/drm/tilcdc/tilcdc_drv.c                | 60 +++++++++++++++---
+>   drivers/gpu/drm/tilcdc/tilcdc_panel.c              | 74 +++++++++++++++++-----
+>   3 files changed, 114 insertions(+), 27 deletions(-)
+>
