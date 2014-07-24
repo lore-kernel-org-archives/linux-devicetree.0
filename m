@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 10/11] ARM: dts: zynq: Add SPDIF for Parallella
-Date: Fri, 25 Jul 2014 01:00:19 +0200
-Message-ID: <1406242820-20140-11-git-send-email-afaerber@suse.de>
+Subject: [PATCH v2 11/11] ARM: dts: zynq: Add AXI clkgen for Parallella
+Date: Fri, 25 Jul 2014 01:00:20 +0200
+Message-ID: <1406242820-20140-12-git-send-email-afaerber@suse.de>
 References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -17,35 +17,27 @@ Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
  v2: New
 =20
- arch/arm/boot/dts/zynq-parallella.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/zynq-parallella.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/=
 zynq-parallella.dts
-index 8beaacc..65fbd8b 100644
+index 65fbd8b..d2eefad 100644
 --- a/arch/arm/boot/dts/zynq-parallella.dts
 +++ b/arch/arm/boot/dts/zynq-parallella.dts
-@@ -56,6 +56,21 @@
- 				xlnx,genlock-mode =3D <0>;
+@@ -57,6 +57,13 @@
  			};
  		};
-+
-+		audio_clock: audio-clock {
-+			compatible =3D "fixed-clock";
-+			#clock-cells =3D <0>;
-+			clock-frequency =3D <12288000>;
-+		};
-+
-+		axi-spdif-tx@0x75c00000 {
-+			compatible =3D "adi,axi-spdif-tx-1.00.a";
-+			reg =3D <0x75c00000 0x1000>;
-+			clocks =3D <&clkc 15>, <&audio_clock>;
-+			clock-names =3D "axi", "ref";
-+			dmas =3D <&dmac_s 0>;
-+			dma-names =3D "tx";
-+		};
- 	};
- };
 =20
++		axi_clkgen: axi-clkgen@66000000 {
++			compatible =3D "adi,axi-clkgen-1.00.a";
++			reg =3D <0x66000000 0x10000>;
++			#clock-cells =3D <0>;
++			clocks =3D <&clkc 17>;
++		};
++
+ 		audio_clock: audio-clock {
+ 			compatible =3D "fixed-clock";
+ 			#clock-cells =3D <0>;
 --=20
 1.9.3
