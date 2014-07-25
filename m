@@ -1,59 +1,58 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 12:32:38 +0200
-Message-ID: <53D23246.1010300@aksignal.cz>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>	<53D10C50.50305@aksignal.cz>	<20140724162645.4e19c26c@bbrezillon>	<53D12103.3020103@aksignal.cz>	<20140724175848.44f5da10@bbrezillon>	<53D1F5D0.1080006@aksignal.cz>	<20140725095319.16a8465c@bbrezillon>	<53D214E1.4050105@aksignal.cz>	<20140725104553.403921b1@bbrezillon>	<53D21B3F.7060006@aksignal.cz>	<20140725110124.3f0dce6c@bbrezillon>	<53D21FCF.7010402@aksignal.cz>	<20140725113110.70c4aa41@bbrezillon>	<53D22C26.4030208@aksignal.cz> <20140725121804.18b05a5d@bbrezillon>
-Reply-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
+From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
+ specification
+Date: Fri, 25 Jul 2014 12:32:43 +0200
+Message-ID: <53D2324B.4070602@suse.de>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-10-git-send-email-afaerber@suse.de> <53D20A61.1050506@metafoo.de> <53D21066.8000905@monstr.eu> <20140725101815.GO17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140725121804.18b05a5d@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140725101815.GO17528@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Michal Simek <monstr@monstr.eu>, Lars-Peter Clausen <lars@metafoo.de>, Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
+Am 25.07.2014 12:18, schrieb Mark Brown:
+> On Fri, Jul 25, 2014 at 10:08:06AM +0200, Michal Simek wrote:
+>=20
+>> All these patches have been added through your tree that's why I
+>> think you should take this fix through his tree.
+>=20
+> If someone could send me patches I'll take a look at them.
 
-Dne 25.7.2014 v 12:18 Boris BREZILLON napsal(a):
->> / # devmem 0xfffff408
->> 0xF0E04018
->> / # devmem 0xfffff418
->> 0xE0C04000
->> / # devmem 0xfffff438
->> 0x00C04000
->> / # devmem 0xfffff43c
->> 0x13FFD7FB
->> / # devmem 0xfffff458
->> 0x00000000
->> / # devmem 0xfffff468
->> 0xFF223B4E
->> / # devmem 0xfffff470
->> 0x0F000000
->> / # devmem 0xfffff474
->> 0x00000000
->> / # devmem 0xfffff498
->> 0xFFFFFFFF
->>
->> I get thought if is possible that in time of probe fm25 (it's first) is not configured PA14 (it 's last)?
->
-> Oh, nice catch!
-> I think you've found the origin of this bug.
-> Indeed each device is instantiated sequentially and thus when the first
-> device is probed (CS0) the last one has not requested it's cs_gpio yet
-> (and PA14 is still assigned to periph A).
->
-> Declaring cs-pins and referencing them in pinctrl-0 solves the issue
-> because in this case all CS pins are requested during controller probe.
->
-So, what would be the right fix up? I my patch it's not good idea since some other driver can request pin for other 
-peripheral earlier than spi. In board dts it could be new investigating for someone else who don't know this issue. I 
-think the best way would be request all cs in early spi init since cs depends on each other and must be all of them in 
-right state before any communication on bus. They are part of bus, like miso, mosi, clk, not part of chips. Also they 
-are defined in parent spi node, not in child chip node.
-Am I right?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I used scripts/get_maintainer.pl --nogit-fallback. If you were not
+CC'ed and need to be, please submit a MAINTAINERS patch. :)
+
+Maybe this works for you?
+https://patchwork.kernel.org/patch/4620191/
+
+Otherwise I can resend with Ab/Rb.
+
+Andreas
+
+- --=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJT0jJLAAoJEPou0S0+fgE/od0QAItNVBWohkpacvB5M+Oh0x5H
+40aYXWOPVrAHRfXlh5SsSQyba/2P6q719meJL3FseU7Jj+rbkPnICf3q5KWgN3Vb
+iXoO+UQPn/gvredRql9g5eUj0xeh6j3bIAmEYmmme3opg0siKV1Gd6D9vEezjL8x
+M3xroJ05EbhjAd1UrgW/xEINAfDExLXbUQhsbls1tzL7WL9Cx4Obi7/KWiAVATMU
+RPNQiz8zyVXoJq0i596fAKX+EPaID2ztr26IQtpH+vOJOpRhtQeX+B+HBxTm89yO
+mg7ZnklhXFFaAYhXKEm1itMbi8OnCUzDuk5hPklCJF+WgzBbyq29erx53VaRQAij
+jrebNU4UB0/si7Gnl/XwvRMDUaVDkF6OaeeSjwKZvk0R6o02lperM51gKOgsDdC9
+G9VPb9AoNvbebEaNvonU22gB81RWg1MFkW7XF1Enj0C+xINePG86TXpWNiNUPfdV
+QAyYhwrAlePV4tKYqnyDd1d8orPs5TySVt3tuloUTB17IpYXM7OWj7db5so5V6O2
+99m2rrcMCP5SxDiuB0LUbKxrBoIhGH2kZ0k476Xb/YOYgpBskOxFLqZ+ptzZDW7K
+a3frjJ98QKjb5z9fZ1qZBzbegggAEvXlhpIgcaWAkT1wV3vmZhQjycpDHNWuahsu
+ybMjvgNj/YiougCN+7bf
+=3Dzr8g
+-----END PGP SIGNATURE-----
