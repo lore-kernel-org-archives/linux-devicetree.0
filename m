@@ -1,176 +1,85 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCHv6 1/5] mmc: dw_mmc: modify the dt-binding for removing
- slot-node and supports-highspeed
-Date: Fri, 25 Jul 2014 14:11:52 +0200
-Message-ID: <53D24988.9010208@suse.de>
-References: <1406250713-22604-1-git-send-email-jh80.chung@samsung.com> <1406250713-22604-2-git-send-email-jh80.chung@samsung.com>
+From: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
+Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when request
+ IRQ
+Date: Fri, 25 Jul 2014 14:52:05 +0200
+Message-ID: <53D252F5.2060601@tqsc.de>
+References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>	<20140722062803.GA21229@dragon>	<53CE107A.1000000@tqsc.de>	<20140722074257.GC21229@dragon>	<CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>	<53D0C008.70305@tqsc.de> <CACRpkdarH_-2uW55C5bAUxM1ESgSb6tJAWc4UqEoWr8uc_kQRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1406250713-22604-2-git-send-email-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdarH_-2uW55C5bAUxM1ESgSb6tJAWc4UqEoWr8uc_kQRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+Am 25.07.2014 13:38, wrote Linus Walleij:
+> On Thu, Jul 24, 2014 at 10:12 AM, Markus Niebel
+> <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org> wrote:
+>> Am 23.07.2014 18:14, wrote Linus Walleij:
+> 
+>>> So always prepare the hardware and make it ready for action in respective
+>>> callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
+>>> been called first.
+>>>
+>>
+>> So a gpio driver is responsible to read status of gpio lines and flag any gpio line
+>> currently configured as out (base on the information read from hardware registers)
+>> on driver probe time - correct?
+> 
+> I don't think anyone reads that information explicitly to set up
+> these flags.
+> 
+> Drivers just leave the pins in their power-on maiden state without
+> trying to figure out how they're set-up. But as you say, if you call
+> gpiod_get_direction() on them, the flag gets set up indeed.
+> 
+> So usually these flags are set by code, calling
+> gpiod_[get/set]_direction().
+> Then they do get flagged as outputs or inputs.
+> 
+>> If yes is the driver allowed to call
+>> gpiod_get_direction() to have the FLAG_IS_OUT set in the gpiolib layer?
+> 
+> I don't know if it'd be a good idea to loop over all gpios in a new
+> irqchip and fetch the direction just to get the flags right, so far
+> we haven't done that and I don't know what the usecase would be.
+> 
 
-Am 25.07.2014 03:11, schrieb Jaehoon Chung:
-> Almost Soc is used the slot per a host.
+I've came to a situation where it would have been helpful to know - bootloader
+configured a pin as output and linux tried to configure the pin as IRQ input.
+*YES I KNOW THIS IS NOT CORRECT* but it took some time to see, what happened.
 
-Something's very wrong with this sentence. What are you trying to say?
-Almost all SoCs use one slot only per host controller device?
+> If we need that we should do it in gpiolib for all drivers don't you
+> think?
 
-> Don't use the slot-node and deprecated the "supports-highsped" proper=
-ty.
+A pragmatic / lean solution would be to deny the IRQ configuration when
+seeing the pin configured as output in hardware and print out an error
+on the gpio driver level.
 
-s/deprecated/deprecate/ ?
-s/highsped/highspeed/
+> 
+> But then we need a rationale for doing it, other than it's nice :-)
+> It is already called on-the-fly by debugfs when a user needs that
+> info.
 
-> Instead, use the cap-mmc/sd-highspeed.
->=20
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Reviewed-by: Tushar Behera <trblinux@gmail.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
-> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
-> ---
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 +++++-----=
--------
->  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 +++++-----=
+See above, I think an error on a misconfigured system would be enough.
+Maybe the documentation for gpio drivers should have a hint for driver
+implementors.
+
+So first step would be to convert the driver to the irqchip helper and then
+add calls to gpiod_[un]lock_as_irq at the right places.
+
+Will try to do that after my holiday.
+
+> 
+> Yours,
+> Linus Walleij
+> 
+Yours,
+
+Markus Niebel
 --
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 +++++-----=
---
->  3 files changed, 15 insertions(+), 26 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt=
- b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> index 532b1d4..9308325 100644
-> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> @@ -46,13 +46,14 @@ Required Properties:
->        - if CIU clock divider value is 0 (that is divide by 1), both =
-tx and rx
->          phase shift clocks should be 0.
-> =20
-> -Required properties for a slot:
-> +Required properties for a slot (Deprecated - Recommend to use one sl=
-ot per a host):
-
-"per host"
-
-> =20
->  * gpios: specifies a list of gpios used for command, clock and data =
-bus. The
->    first gpio is the command line and the second gpio is the clock li=
-ne. The
->    rest of the gpios (depending on the bus-width property) are the da=
-ta lines in
->    no particular order. The format of the gpio specifier depends on t=
-he gpio
->    controller.
-> + (Deprecated - Refer to Documentaion/devicetree/binding/pinctrl/sams=
-ung-pinctrl.txt)
-
-"Documentation/"
-
-Nit: Is the indentation intentional? (parenthesis not aligned with text=
-)
-
-> =20
->  Example:
-> =20
-> @@ -69,21 +70,13 @@ Example:
-> =20
->  	dwmmc0@12200000 {
->  		num-slots =3D <1>;
-> -		supports-highspeed;
-> +		cap-mmc-highspeed;
-> +		cap-sd-highspeed;
->  		broken-cd;
->  		fifo-depth =3D <0x80>;
->  		card-detect-delay =3D <200>;
->  		samsung,dw-mshc-ciu-div =3D <3>;
->  		samsung,dw-mshc-sdr-timing =3D <2 3>;
->  		samsung,dw-mshc-ddr-timing =3D <1 2>;
-> -
-> -		slot@0 {
-> -			reg =3D <0>;
-> -			bus-width =3D <8>;
-> -			gpios =3D <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
-> -				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
-> -				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
-> -				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
-> -				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
-> -		};
-> +		bus-width =3D <8>;
->  	};
-> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/D=
-ocumentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> index e5bc49f..3b35449 100644
-> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> @@ -34,13 +34,11 @@ Example:
->  		num-slots =3D <1>;
->  		vmmc-supply =3D <&ldo12>;
->  		fifo-depth =3D <0x100>;
-> -		supports-highspeed;
->  		pinctrl-names =3D "default";
->  		pinctrl-0 =3D <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
-> -		slot@0 {
-> -			reg =3D <0>;
-> -			bus-width =3D <4>;
-> -			disable-wp;
-> -			cd-gpios =3D <&gpio10 3 0>;
-> -		};
-> +		bus-width =3D <4>;
-> +		disable-wp;
-> +		cd-gpios =3D <&gpio10 3 0>;
-> +		cap-mmc-highspeed;
-> +		cap-sd-highspeed;
->  	};
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.t=
-xt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> index 2d4a725..346c609 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> @@ -67,7 +67,8 @@ Optional properties:
->  * card-detect-delay: Delay in milli-seconds before detecting card af=
-ter card
->    insert event. The default value is 0.
-> =20
-> -* supports-highspeed: Enables support for high speed cards (up to 50=
-MHz)
-> +* supports-highspeed (DEPRECATED): Enables support for high speed ca=
-rds (up to 50MHz)
-> +			   (use "cap-mmc-highspeed" or "cap-sd-highspeed" instead)
-> =20
->  * broken-cd: as documented in mmc core bindings.
-> =20
-> @@ -98,14 +99,11 @@ board specific portions as listed below.
->  		clock-frequency =3D <400000000>;
->  		clock-freq-min-max =3D <400000 200000000>;
->  		num-slots =3D <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		fifo-depth =3D <0x80>;
->  		card-detect-delay =3D <200>;
->  		vmmc-supply =3D <&buck8>;
-> -
-> -		slot@0 {
-> -			reg =3D <0>;
-> -			bus-width =3D <8>;
-> -		};
-> +		bus-width =3D <8>;
-> +		cap-mmc-highspeed;
-> +		cap-sd-highspeed;
->  	};
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
