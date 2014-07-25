@@ -1,82 +1,77 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v4 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform
- drivers
-Date: Fri, 25 Jul 2014 14:13:10 +0530
-Message-ID: <53D2189E.4030108@gmail.com>
-References: <cover.1406271541.git.nicoleotsuka@gmail.com> <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka@gmail.com> <53D208A9.3040903@gmail.com> <20140725075755.GA29564@MrMyself>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dma: imx-sdma: Add a new DMATYPE for Shared Peripheral
+ ASRC
+Date: Fri, 25 Jul 2014 14:09:12 +0530
+Message-ID: <20140725083912.GK8181@intel.com>
+References: <1402889465-23797-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140725075755.GA29564@MrMyself>
+Content-Disposition: inline
+In-Reply-To: <1402889465-23797-1-git-send-email-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, timur@tabi.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, shawn.guo@linaro.org, b02247@freescale.com, b42378@freescale.com, tklauser@distanz.ch
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: s.hauer@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, dan.j.williams@intel.com, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/25/2014 01:27 PM, Nicolin Chen wrote:
-> Hi Varka,
->
-> Thank you for the comments!
->
-> On Fri, Jul 25, 2014 at 01:05:05PM +0530, Varka Bhadram wrote:
->> On 07/25/2014 12:49 PM, Nicolin Chen wrote:
->> (...)
->>
->>> +static const struct platform_device_id fsl_asrc_devtype[] = {
->>> +	{
->>> +		.name = "imx35-asrc",
->>> +		.driver_data = IMX35_ASRC,
->>> +	}, {
->>> +		.name = "imx53-asrc",
->>> +		.driver_data = IMX53_ASRC,
->>> +	}, {
->>> +		/* sentinel */
->>> +	}
->>> +};
->>> +MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
->>> +
->> where are you using fsl_asrc_devtype,,,?
->>
->>> +static const struct of_device_id fsl_asrc_ids[] = {
->>> +	{
->>> +		.compatible = "fsl,imx35-asrc",
->>> +		.data = &fsl_asrc_devtype[IMX35_ASRC],
->> Ya here ... but what is the use...?
-> I got your point. I will drop all these and move ids behind probe/remove()
-> as you suggested at the first place and then use of_device_is_compatible()
-> inside the probe() instead.
->
->>> +	asrc_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
->>> +			"mem", regs, &fsl_asrc_regmap_config);
->> devm_regmap_init_mmio_clk(&pdev->dev,
->> 			  "mem", regs,
->> 			  &fsl_asrc_regmap_config);
-> I'll refine to
->
->   devm_regmap_init_mmio_clk(&pdev->dev, "mem", regs,
->                             &fsl_asrc_regmap_config);
->
->>> +	if (IS_ERR(asrc_priv->regmap)) {
->>> +		dev_err(&pdev->dev, "failed to init regmap\n");
->>> +		return PTR_ERR(asrc_priv->regmap);
->>> +	}
->>> +
->>> +	irq = platform_get_irq(pdev, 0);
->>> +	if (irq < 0) {
->>> +		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
->>> +		return irq;
->>> +	}
->>> +
->>> +	ret = devm_request_irq(&pdev->dev, irq, fsl_asrc_isr, 0,
->>> +			       asrc_priv->name, asrc_priv);
->> same...
-> Sorry I don't see any problem with this devm_request_irq()...
+On Mon, Jun 16, 2014 at 11:31:05AM +0800, Nicolin Chen wrote:
+> Shared Peripheral ASRC, running on SPBA, needs to use shp sciprts for
+> DMA transfer. So this patch just adds a new DMATYPE for it.
 
-Ohhh... This is the problem with my email client... Sorry...
-
-Thanks...
+Applied, thanks
 
 -- 
-Regards,
-Varka Bhadram.
+~Vinod
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
+>  drivers/dma/imx-sdma.c                                 | 5 +++++
+>  include/linux/platform_data/dma-imx.h                  | 1 +
+>  3 files changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> index ee9be99..d2e91f1 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+> @@ -47,6 +47,7 @@ The full ID of peripheral types can be found below.
+>  	20	ASRC
+>  	21	ESAI
+>  	22	SSI Dual FIFO	(needs firmware ver >= 2)
+> +	23	Shared ASRC
+>  
+>  The third cell specifies the transfer priority as below.
+>  
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index fc04add..85561dc 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -745,6 +745,11 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
+>  		per_2_per = sdma->script_addrs->per_2_per_addr;
+>  		break;
+> +	case IMX_DMATYPE_ASRC_SP:
+> +		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
+> +		emi_2_per = sdma->script_addrs->mcu_2_shp_addr;
+> +		per_2_per = sdma->script_addrs->per_2_per_addr;
+> +		break;
+>  	case IMX_DMATYPE_MSHC:
+>  		per_2_emi = sdma->script_addrs->mshc_2_mcu_addr;
+>  		emi_2_per = sdma->script_addrs->mcu_2_mshc_addr;
+> diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
+> index bcbc6c3..7aa0e89 100644
+> --- a/include/linux/platform_data/dma-imx.h
+> +++ b/include/linux/platform_data/dma-imx.h
+> @@ -40,6 +40,7 @@ enum sdma_peripheral_type {
+>  	IMX_DMATYPE_ASRC,	/* ASRC */
+>  	IMX_DMATYPE_ESAI,	/* ESAI */
+>  	IMX_DMATYPE_SSI_DUAL,	/* SSI Dual FIFO */
+> +	IMX_DMATYPE_ASRC_SP,	/* Shared ASRC */
+>  };
+>  
+>  enum imx_dma_prio {
+> -- 
+> 1.8.4
+> 
+
+-- 
