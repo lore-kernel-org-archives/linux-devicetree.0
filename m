@@ -1,52 +1,76 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 10:37:31 +0200
-Message-ID: <53D2174B.4020403@aksignal.cz>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com> <53D10C50.50305@aksignal.cz> <20140724162645.4e19c26c@bbrezillon> <53D12103.3020103@aksignal.cz> <20140724175848.44f5da10@bbrezillon> <53D1F5D0.1080006@aksignal.cz> <20140725083053.GD9532@piout.net>
-Reply-To: jiri.prchal@aksignal.cz
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: add driver for the flash in Lattice machxo2 FPGAs
+Date: Fri, 25 Jul 2014 14:07:33 +0530
+Message-ID: <53D2174D.80909@gmail.com>
+References: <20140724162225.22308.66538.stgit@localhost> <53D1D8ED.4010209@gmail.com> <53D20F51.2090705@parkeon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140725083053.GD9532@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, Bo Shen <voice.shen@atmel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D20F51.2090705-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/25/2014 01:33 PM, Martin Fuzzey wrote:
 
+(...)
 
-Dne 25.7.2014 v 10:30 Alexandre Belloni napsal(a):
-> Hi,
->
-> On 25/07/2014 at 08:14:40 +0200, Ji=C5=99=C3=AD Prchal wrote :
->> I'm using custom board. My spi node:
->> 			spi0: spi@f0000000 {
->
-> You should override the pinctrl here as you are using gpios for the c=
-s.
-> 				pinctrl-0 =3D <&pinctrl_spi0_custom>;
->
->> 				status =3D "okay";
->> 				cs-gpios =3D <&pioA 23 0
->> 					    &pioA 22 0
->> 					    &pioC 29 0
->> 					    &pioA 14 0>;
+> +
+>>> +static void machxo2_lock(struct machxo2 *machxo2)
+>>> +{
+>>> +    if (!mutex_trylock(&machxo2->lock)) {
+>>> +        dev_dbg(machxo2->dev, "wait for %s from %pf\n",
+>>> +                __func__, __builtin_return_address(0));
+>>> +
+>>
+>> dev_dbg(machxo2->dev, "wait for %s from %pf\n",
+>>     __func__, __builtin_return_address(0));
 >>
 >
-> 		pinctrl@fffff400 {
-> 				spi0 {
-> 					 pinctrl_spi0_custom: spi0-custom {
-> 							 atmel,pins =3D
-> 									 <AT91_PIOA 23 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>,
-> 									 <AT91_PIOA 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>,
-> 									 <AT91_PIOC 29 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>,
-> 									 <AT91_PIOA 14 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-> 					 };
-> 				};
-> 		};
+> Sorry, not understanding here.
+> You want the second line to be LESS intented??
 >
-Of course, it's the way, but in all other drivers, for example LEDS, it=
-'s not needed. And in other way, if I will not=20
-use PA14 at all, the pin will goes down every spi transfer.
+> Coding style (chapter 2) says:
+>     Descendants are always substantially shorter than the parent and
+>     are placed substantially to the right
+>
+> Idem for the others
+
+this is the problem with my email client sorry.. 2nd line should start exactly
+below 'm' in machxo2->dev...
+  
+dev_dbg(machxo2->dev, "wait for %s from %pf\n",
+	__func__, __builtin_return_address(0));
+
+>
+>> +static int machxo2_transceive(
+>>> +            struct machxo2 *machxo2,
+>>> +            const void *send_buf, unsigned send_len,
+>>> +            void *recv_buf, unsigned recv_len)
+>>
+(...)
+
+>>> +struct machxo2 *machxo2_create(struct device *dev,
+>>> +            struct machxo2_busops *busops);
+>>> +
+>>
+>> struct machxo2 *machxo2_create(struct device *dev,
+>>                    struct machxo2_busops *busops);
+>>
+>>
+> Same again - is it just too much indenting?
+> I don't see anything wrong here
+>
+same...
+
+
+-- 
+Regards,
+Varka Bhadram.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
