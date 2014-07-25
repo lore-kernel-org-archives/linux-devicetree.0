@@ -1,381 +1,225 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2 1/4] ARM: dts: exynos5250: max77686 is Snow only
-Date: Fri, 25 Jul 2014 14:28:02 +0900
-Message-ID: <08fe01cfa7c9$341cc700$9c565500$@samsung.com>
-References: <1405704009-8430-1-git-send-email-afaerber@suse.de>
- <1405704009-8430-2-git-send-email-afaerber@suse.de>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH v3 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and
+ platform drivers
+Date: Fri, 25 Jul 2014 13:30:52 +0800
+Message-ID: <20140725053051.GB29136@MrMyself>
+References: <cover.1406259578.git.nicoleotsuka@gmail.com>
+ <f4ff79269a1680f9ce128e0e98fea926d3a41834.1406259578.git.nicoleotsuka@gmail.com>
+ <53D1DC0B.1000905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1405704009-8430-2-git-send-email-afaerber@suse.de>
-Content-language: ko
+Content-Disposition: inline
+In-Reply-To: <53D1DC0B.1000905@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?'Andreas_F=C3=A4rber'?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org
-Cc: 'Stephan van Schaik' <stephan@synkhronix.com>, 'Vincent Palatin' <vpalatin@chromium.org>, 'Doug Anderson' <dianders@chromium.org>, 'Ben Dooks' <ben-linux@fluff.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Russell King' <linux@arm.linux.org.uk>, "'moderated list:ARM/SAMSUNG ARM A...'" <linux-arm-kernel@lists.infradead.org>, "'open list:OPEN FIRMWARE AND...'" <devicetree@vger.kernel.org>, 'open list' <linux-kernel@vger.kernel.org>
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, timur@tabi.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, shawn.guo@linaro.org, b02247@freescale.com, b42378@freescale.com, tklauser@distanz.ch
 List-Id: devicetree@vger.kernel.org
 
-Andreas F=C3=A4rber wrote:
->=20
-> Move it from exynos5250-cros-common.dtsi to exynos5250-snow.dts.
-> Spring does not need it, it uses an s5m8767 instead.
->=20
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
+Hi Varka,
 
-Hi Andreas,
+On Fri, Jul 25, 2014 at 09:54:43AM +0530, Varka Bhadram wrote:
+> On 07/25/2014 09:33 AM, Nicolin Chen wrote:
+> >The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+> >signal associated with an input clock into a signal associated with a different
+> >output clock. The driver currently works as a Front End of DPCM with other Back
+> >Ends DAI links such as ESAI<->CS42888 and SSI<->WM8962 and SAI. It converts the
+> >original sample rate to a common rate supported by Back Ends for playback while
+> >converts the common rate of Back Ends to a desired rate for capture. It has 3
+> >pairs to support three different substreams within totally 10 channels.
+> >
+> (...)
+> 
+> >+Required properties:
+> >+
+> >+  - compatible : Compatible list, must contain "fsl,imx35-asrc" or
+> >+    "fsl,imx53-asrc".
+> >+
+> >+  - reg : Offset and length of the register set for the device.
+> >+
+> >+  - interrupts : Contains the spdif interrupt.
+> >+
+> >+  - dmas : Generic dma devicetree binding as described in
+> >+	   Documentation/devicetree/bindings/dma/dma.txt.
+> >+
+> >+  - dma-names : Six dmas have to be defined: "rxa", "rxb", "rxc", "txa", "txb",
+> >+		and "txc".
+> >+
+> >+  - clocks : Contains an entry for each entry in clock-names.
+> >+
+> >+  - clock-names : Includes the following entries:
+> >+	"mem"		Peripheral access clock to access registers.
+> >+	"ipg"		Peripheral clock to driver module.
+> >+	"asrck_<0-f>"	Clock sources for input and output clock.
+> >+
+> >+   - big-endian : If this property is absent, the native endian mode will
+> >+		  be in use as default, or the big endian mode will be in use
+> >+		  for all the device registers.
+> >+
+> >+   - fsl,asrc-rate : Defines a mutual sample rate used by Back End DAI link.
+> >+
+> >+   - fsl,asrc-width : Defines a mutual sample width used by Back End DAI link.
+> >+
+> 
+> indentation for the properties....
+> 
+> - compatible		: Should be "fsl,imx35-asrc" or "fsl,imx53-asrc".
+> - reg			: Offset and length of the register set for the device.
+> ....
+> 
+> (...)
+> 
+> >+
+> >+static const struct platform_device_id fsl_asrc_devtype[] = {
+> >+	{
+> >+		.name = "imx35-asrc",
+> >+		.driver_data = IMX35_ASRC,
+> >+	}, {
+> >+		.name = "imx53-asrc",
+> >+		.driver_data = IMX53_ASRC,
+> >+	}, {
+> >+		/* sentinel */
+> >+	}
+> >+};
+> >+MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
+> >+
+> >+static const struct of_device_id fsl_asrc_ids[] = {
+> >+	{
+> >+		.compatible = "fsl,imx35-asrc",
+> >+		.data = &fsl_asrc_devtype[IMX35_ASRC],
+> >+	}, {
+> >+		.compatible = "fsl,imx53-asrc",
+> >+		.data = &fsl_asrc_devtype[IMX53_ASRC],
+> >+	}, {
+> >+		/* sentinel */
+> >+	}
+> >+};
+> >+MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
+> >+
+> 
+> move these ids after probe/remove... every driver follows same thing...
+> 
+> >+static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
+> >+{
+> >+	struct fsl_asrc *asrc_priv = (struct fsl_asrc *)dev_id;
+> >+	struct device *dev = &asrc_priv->pdev->dev;
+> >+	enum asrc_pair_index index;
+> >+	u32 status;
+> >+
+> >+	regmap_read(asrc_priv->regmap, REG_ASRSTR, &status);
+> >+
+> >+	/* Clean overload error */
+> >+	regmap_write(asrc_priv->regmap, REG_ASRSTR, ASRSTR_AOLE);
+> >+
+> >+	/*
+> >+	 * We here use dev_dbg() for all exceptions because ASRC itself does
+> >+	 * not care if FIFO overflowed or underrun while a warning in the
+> >+	 * interrupt would result a ridged conversion.
+> >+	 */
+> >+	for (index = ASRC_PAIR_A; index < ASRC_PAIR_MAX_NUM; index++) {
+> >+		if (!asrc_priv->pair[index])
+> >+			continue;
+> >+
+> >+		if (status & ASRSTR_ATQOL) {
+> >+			asrc_priv->pair[index]->error |= ASRC_TASK_Q_OVERLOAD;
+> >+			dev_dbg(dev, "ASRC Task Queue FIFO overload");
+> 
+> missed terminating new line (\n)...
+> 
+> >+		}
+> >+
+> >+		if (status & ASRSTR_AOOL(index)) {
+> >+			asrc_priv->pair[index]->error |= ASRC_OUTPUT_TASK_OVERLOAD;
+> >+			pair_dbg("Output Task Overload");
+> 
+> same
+> 
+> >+		}
+> >+
+> >+		if (status & ASRSTR_AIOL(index)) {
+> >+			asrc_priv->pair[index]->error |= ASRC_INPUT_TASK_OVERLOAD;
+> >+			pair_dbg("Input Task Overload");
+> 
+> same
+> 
+> >+		}
+> >+
+> >+		if (status & ASRSTR_AODO(index)) {
+> >+			asrc_priv->pair[index]->error |= ASRC_OUTPUT_BUFFER_OVERFLOW;
+> >+			pair_dbg("Output Data Buffer has overflowed");
+> 
+> same
+> 
+> >+		}
+> >+
+> >+		if (status & ASRSTR_AIDU(index)) {
+> >+			asrc_priv->pair[index]->error |= ASRC_INPUT_BUFFER_UNDERRUN;
+> >+			pair_dbg("Input Data Buffer has underflowed");
+> 
+> same..
+> 
+> >+		}
+> >+	}
+> >+
+> >+	return IRQ_HANDLED;
+> >+}
+> >+
+> 
+> (...)
+> 
+> >+/**
+> >+ * Configure input and output thresholds
+> >+ */
+> >+static int fsl_asrc_set_watermarks(struct fsl_asrc_pair *pair, u32 in, u32 out)
+> >+{
+> 
+> static void for function..?
+> 
+> >+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+> >+	enum asrc_pair_index index = pair->index;
+> >+
+> >+	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR(index),
+> >+			   ASRMCRi_EXTTHRSHi_MASK |
+> >+			   ASRMCRi_INFIFO_THRESHOLD_MASK |
+> >+			   ASRMCRi_OUTFIFO_THRESHOLD_MASK,
+> >+			   ASRMCRi_EXTTHRSHi |
+> >+			   ASRMCRi_INFIFO_THRESHOLD(in) |
+> >+			   ASRMCRi_OUTFIFO_THRESHOLD(out));
+> >+
+> >+	return 0;
+> >+}
+> 
+> (...)
+> 
+> >+static const struct dev_pm_ops fsl_asrc_pm = {
+> >+	SET_RUNTIME_PM_OPS(fsl_asrc_runtime_suspend, fsl_asrc_runtime_resume, NULL)
+> >+	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
+> >+};
+> >+
+> 
+> move device ids to here...
 
-I think this should be reviewed by chrome guys.
+I'll fix them all in v4.
 
+Thank you,
+Nicolin
 
-Doug, can you have a look this series for exynos5250-chromebook?
-I'm not sure exynos5250-cros-common is still useful for exynos5250-spri=
-ng...
+---
 
-- Kukjin
-
->  v2: New (Doug Anderson)
->=20
->  arch/arm/boot/dts/exynos5250-cros-common.dtsi | 151 ----------------=
----------
->  arch/arm/boot/dts/exynos5250-snow.dts         | 155 ++++++++++++++++=
-++++++++++
->  2 files changed, 155 insertions(+), 151 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5250-cros-common.dtsi b/arch/arm=
-/boot/dts/exynos5250-cros-
-> common.dtsi
-> index 89ac90f..61128d1 100644
-> --- a/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> @@ -27,163 +27,12 @@
->  		i2c2_bus: i2c2-bus {
->  			samsung,pin-pud =3D <0>;
->  		};
-> -
-> -		max77686_irq: max77686-irq {
-> -			samsung,pins =3D "gpx3-2";
-> -			samsung,pin-function =3D <0>;
-> -			samsung,pin-pud =3D <0>;
-> -			samsung,pin-drv =3D <0>;
-> -		};
->  	};
->=20
->  	i2c@12C60000 {
->  		status =3D "okay";
->  		samsung,i2c-sda-delay =3D <100>;
->  		samsung,i2c-max-bus-freq =3D <378000>;
-> -
-> -		max77686@09 {
-> -			compatible =3D "maxim,max77686";
-> -			interrupt-parent =3D <&gpx3>;
-> -			interrupts =3D <2 0>;
-> -			pinctrl-names =3D "default";
-> -			pinctrl-0 =3D <&max77686_irq>;
-> -			wakeup-source;
-> -			reg =3D <0x09>;
-> -			#clock-cells =3D <1>;
-> -
-> -			voltage-regulators {
-> -				ldo1_reg: LDO1 {
-> -					regulator-name =3D "P1.0V_LDO_OUT1";
-> -					regulator-min-microvolt =3D <1000000>;
-> -					regulator-max-microvolt =3D <1000000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo2_reg: LDO2 {
-> -					regulator-name =3D "P1.8V_LDO_OUT2";
-> -					regulator-min-microvolt =3D <1800000>;
-> -					regulator-max-microvolt =3D <1800000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo3_reg: LDO3 {
-> -					regulator-name =3D "P1.8V_LDO_OUT3";
-> -					regulator-min-microvolt =3D <1800000>;
-> -					regulator-max-microvolt =3D <1800000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo7_reg: LDO7 {
-> -					regulator-name =3D "P1.1V_LDO_OUT7";
-> -					regulator-min-microvolt =3D <1100000>;
-> -					regulator-max-microvolt =3D <1100000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo8_reg: LDO8 {
-> -					regulator-name =3D "P1.0V_LDO_OUT8";
-> -					regulator-min-microvolt =3D <1000000>;
-> -					regulator-max-microvolt =3D <1000000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo10_reg: LDO10 {
-> -					regulator-name =3D "P1.8V_LDO_OUT10";
-> -					regulator-min-microvolt =3D <1800000>;
-> -					regulator-max-microvolt =3D <1800000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo12_reg: LDO12 {
-> -					regulator-name =3D "P3.0V_LDO_OUT12";
-> -					regulator-min-microvolt =3D <3000000>;
-> -					regulator-max-microvolt =3D <3000000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo14_reg: LDO14 {
-> -					regulator-name =3D "P1.8V_LDO_OUT14";
-> -					regulator-min-microvolt =3D <1800000>;
-> -					regulator-max-microvolt =3D <1800000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo15_reg: LDO15 {
-> -					regulator-name =3D "P1.0V_LDO_OUT15";
-> -					regulator-min-microvolt =3D <1000000>;
-> -					regulator-max-microvolt =3D <1000000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				ldo16_reg: LDO16 {
-> -					regulator-name =3D "P1.8V_LDO_OUT16";
-> -					regulator-min-microvolt =3D <1800000>;
-> -					regulator-max-microvolt =3D <1800000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				buck1_reg: BUCK1 {
-> -					regulator-name =3D "vdd_mif";
-> -					regulator-min-microvolt =3D <950000>;
-> -					regulator-max-microvolt =3D <1300000>;
-> -					regulator-always-on;
-> -					regulator-boot-on;
-> -				};
-> -
-> -				buck2_reg: BUCK2 {
-> -					regulator-name =3D "vdd_arm";
-> -					regulator-min-microvolt =3D <850000>;
-> -					regulator-max-microvolt =3D <1350000>;
-> -					regulator-always-on;
-> -					regulator-boot-on;
-> -				};
-> -
-> -				buck3_reg: BUCK3 {
-> -					regulator-name =3D "vdd_int";
-> -					regulator-min-microvolt =3D <900000>;
-> -					regulator-max-microvolt =3D <1200000>;
-> -					regulator-always-on;
-> -					regulator-boot-on;
-> -				};
-> -
-> -				buck4_reg: BUCK4 {
-> -					regulator-name =3D "vdd_g3d";
-> -					regulator-min-microvolt =3D <850000>;
-> -					regulator-max-microvolt =3D <1300000>;
-> -					regulator-always-on;
-> -					regulator-boot-on;
-> -				};
-> -
-> -				buck5_reg: BUCK5 {
-> -					regulator-name =3D "P1.8V_BUCK_OUT5";
-> -					regulator-min-microvolt =3D <1800000>;
-> -					regulator-max-microvolt =3D <1800000>;
-> -					regulator-always-on;
-> -					regulator-boot-on;
-> -				};
-> -
-> -				buck6_reg: BUCK6 {
-> -					regulator-name =3D "P1.35V_BUCK_OUT6";
-> -					regulator-min-microvolt =3D <1350000>;
-> -					regulator-max-microvolt =3D <1350000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				buck7_reg: BUCK7 {
-> -					regulator-name =3D "P2.0V_BUCK_OUT7";
-> -					regulator-min-microvolt =3D <2000000>;
-> -					regulator-max-microvolt =3D <2000000>;
-> -					regulator-always-on;
-> -				};
-> -
-> -				buck8_reg: BUCK8 {
-> -					regulator-name =3D "P2.85V_BUCK_OUT8";
-> -					regulator-min-microvolt =3D <2850000>;
-> -					regulator-max-microvolt =3D <2850000>;
-> -					regulator-always-on;
-> -				};
-> -			};
-> -		};
->  	};
->=20
->  	i2c@12C70000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dt=
-s/exynos5250-snow.dts
-> index c682c88..0f867a3 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -344,4 +344,159 @@
->  	};
->  };
->=20
-> +&i2c_0 {
-> +	max77686@09 {
-> +		compatible =3D "maxim,max77686";
-> +		interrupt-parent =3D <&gpx3>;
-> +		interrupts =3D <2 0>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&max77686_irq>;
-> +		wakeup-source;
-> +		reg =3D <0x09>;
-> +		#clock-cells =3D <1>;
-> +
-> +		voltage-regulators {
-> +			ldo1_reg: LDO1 {
-> +				regulator-name =3D "P1.0V_LDO_OUT1";
-> +				regulator-min-microvolt =3D <1000000>;
-> +				regulator-max-microvolt =3D <1000000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo2_reg: LDO2 {
-> +				regulator-name =3D "P1.8V_LDO_OUT2";
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo3_reg: LDO3 {
-> +				regulator-name =3D "P1.8V_LDO_OUT3";
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo7_reg: LDO7 {
-> +				regulator-name =3D "P1.1V_LDO_OUT7";
-> +				regulator-min-microvolt =3D <1100000>;
-> +				regulator-max-microvolt =3D <1100000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo8_reg: LDO8 {
-> +				regulator-name =3D "P1.0V_LDO_OUT8";
-> +				regulator-min-microvolt =3D <1000000>;
-> +				regulator-max-microvolt =3D <1000000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo10_reg: LDO10 {
-> +				regulator-name =3D "P1.8V_LDO_OUT10";
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo12_reg: LDO12 {
-> +				regulator-name =3D "P3.0V_LDO_OUT12";
-> +				regulator-min-microvolt =3D <3000000>;
-> +				regulator-max-microvolt =3D <3000000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo14_reg: LDO14 {
-> +				regulator-name =3D "P1.8V_LDO_OUT14";
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo15_reg: LDO15 {
-> +				regulator-name =3D "P1.0V_LDO_OUT15";
-> +				regulator-min-microvolt =3D <1000000>;
-> +				regulator-max-microvolt =3D <1000000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo16_reg: LDO16 {
-> +				regulator-name =3D "P1.8V_LDO_OUT16";
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck1_reg: BUCK1 {
-> +				regulator-name =3D "vdd_mif";
-> +				regulator-min-microvolt =3D <950000>;
-> +				regulator-max-microvolt =3D <1300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck2_reg: BUCK2 {
-> +				regulator-name =3D "vdd_arm";
-> +				regulator-min-microvolt =3D <850000>;
-> +				regulator-max-microvolt =3D <1350000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck3_reg: BUCK3 {
-> +				regulator-name =3D "vdd_int";
-> +				regulator-min-microvolt =3D <900000>;
-> +				regulator-max-microvolt =3D <1200000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck4_reg: BUCK4 {
-> +				regulator-name =3D "vdd_g3d";
-> +				regulator-min-microvolt =3D <850000>;
-> +				regulator-max-microvolt =3D <1300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck5_reg: BUCK5 {
-> +				regulator-name =3D "P1.8V_BUCK_OUT5";
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck6_reg: BUCK6 {
-> +				regulator-name =3D "P1.35V_BUCK_OUT6";
-> +				regulator-min-microvolt =3D <1350000>;
-> +				regulator-max-microvolt =3D <1350000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck7_reg: BUCK7 {
-> +				regulator-name =3D "P2.0V_BUCK_OUT7";
-> +				regulator-min-microvolt =3D <2000000>;
-> +				regulator-max-microvolt =3D <2000000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck8_reg: BUCK8 {
-> +				regulator-name =3D "P2.85V_BUCK_OUT8";
-> +				regulator-min-microvolt =3D <2850000>;
-> +				regulator-max-microvolt =3D <2850000>;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl_0 {
-> +	max77686_irq: max77686-irq {
-> +		samsung,pins =3D "gpx3-2";
-> +		samsung,pin-function =3D <0>;
-> +		samsung,pin-pud =3D <0>;
-> +		samsung,pin-drv =3D <0>;
-> +	};
-> +};
-> +
->  #include "cros-ec-keyboard.dtsi"
-> --
-> 1.9.3
+> 
+> >+static struct platform_driver fsl_asrc_driver = {
+> >+	.probe = fsl_asrc_probe,
+> >+	.driver = {
+> >+		.name = "fsl-asrc",
+> >+		.of_match_table = fsl_asrc_ids,
+> >+		.pm = &fsl_asrc_pm,
+> >+	},
+> >+};
+> >+module_platform_driver(fsl_asrc_driver);
+> 
+> Thanks...
+> 
+> -- 
+> Regards,
+> Varka Bhadram.
+> 
