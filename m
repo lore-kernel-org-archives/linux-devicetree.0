@@ -1,166 +1,90 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] rtc: sun6i: Add sun6i RTC driver
-Date: Fri, 25 Jul 2014 15:57:06 +0800
-Message-ID: <CAGb2v6746P-9rtW3gjUS3ttkZeqW6gNbunXHiSidNag1gCmk0A@mail.gmail.com>
-References: <1406126338-15062-1-git-send-email-wens@csie.org>
- <1406126338-15062-2-git-send-email-wens@csie.org> <53CFDC9F.9060208@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and
+ platform drivers
+Date: Fri, 25 Jul 2014 15:57:56 +0800
+Message-ID: <20140725075755.GA29564@MrMyself>
+References: <cover.1406271541.git.nicoleotsuka@gmail.com>
+ <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka@gmail.com>
+ <53D208A9.3040903@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ43ZCPAKGQEUGSPCRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <53CFDC9F.9060208-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53D208A9.3040903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 12:02 AM, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> On Wednesday 23 July 2014 08:08 PM, Chen-Yu Tsai wrote:
->>
->> This patch introduces the driver for the RTC in the Allwinner A31 and
->> A23 SoCs.
->>
->> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
->> RTC in A31/A23 are a separate hardware block, which also contain a few
->> controls for the RTC block hardware (a regulator and RTC block GPIO pin
->> latches), while also having separate interrupts for the alarms.
->>
->> The hardware is different enough to make a different driver for it.
->>
+Hi Varka,
+
+Thank you for the comments!
+
+On Fri, Jul 25, 2014 at 01:05:05PM +0530, Varka Bhadram wrote:
+> On 07/25/2014 12:49 PM, Nicolin Chen wrote:
 > (...)
->
->
->> +Required properties:
->> +- compatible : Should be "allwinner,sun6i-a31-rtc"
->> +- reg: physical base address of the controller and length of memory
->> mapped
->> +  region.
->> +- interrupts: IRQ line for the RTC alarm 0.
->> +
->
->
-> proper indentation..
-> - compatible    : Should be "allwinner,sun6i-a31-rtc"
->
-> - reg           : physical base address of the controller and length of
-> memory mapped
->                   region.
->
-> - interrupts    : IRQ line for the RTC alarm 0.
-> ....
->
->> +Example:
->> +
->
->
-> (...)
->
->
->> +
->> +       ret = devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
->> +                       0, dev_name(&pdev->dev), chip);
->
->
-> should match open parenthesis...
->
->
-> devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
->                  0, dev_name(&pdev->dev), chip);
+> 
+> >+static const struct platform_device_id fsl_asrc_devtype[] = {
+> >+	{
+> >+		.name = "imx35-asrc",
+> >+		.driver_data = IMX35_ASRC,
+> >+	}, {
+> >+		.name = "imx53-asrc",
+> >+		.driver_data = IMX53_ASRC,
+> >+	}, {
+> >+		/* sentinel */
+> >+	}
+> >+};
+> >+MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
+> >+
+> 
+> where are you using fsl_asrc_devtype,,,?
+> 
+> >+static const struct of_device_id fsl_asrc_ids[] = {
+> >+	{
+> >+		.compatible = "fsl,imx35-asrc",
+> >+		.data = &fsl_asrc_devtype[IMX35_ASRC],
+> 
+> Ya here ... but what is the use...?
 
-ok.
+I got your point. I will drop all these and move ids behind probe/remove()
+as you suggested at the first place and then use of_device_is_compatible()
+inside the probe() instead.
 
->> +       if (ret) {
->> +               dev_err(&pdev->dev, "Could not request IRQ\n");
->> +               return ret;
->> +       }
->> +
->> +       /* clear the alarm counter value */
->> +       writel(0, chip->base + SUN6I_ALRM_COUNTER);
->> +
->> +       /* disable counter alarm */
->> +       writel(0, chip->base + SUN6I_ALRM_EN);
->> +
->> +       /* disable counter alarm interrupt */
->> +       writel(0, chip->base + SUN6I_ALRM_IRQ_EN);
->> +
->> +       /* disable week alarm */
->> +       writel(0, chip->base + SUN6I_ALRM1_EN);
->> +
->> +       /* disable week alarm interrupt */
->> +       writel(0, chip->base + SUN6I_ALRM1_IRQ_EN);
->> +
->> +       /* clear counter alarm pending interrupts */
->> +       writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND, chip->base +
->> +                       SUN6I_ALRM_IRQ_STA);
->> +
->> +       /* clear week alarm pending interrupts */
->> +       writel(SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND, chip->base +
->> +                       SUN6I_ALRM1_IRQ_STA);
->> +
->> +       /* disable alarm wakeup */
->> +       writel(0, chip->base + SUN6I_ALARM_CONFIG);
->> +
->> +       chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
->> +                       &sun6i_rtc_ops, THIS_MODULE);
+> >+	asrc_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
+> >+			"mem", regs, &fsl_asrc_regmap_config);
+> 
+> devm_regmap_init_mmio_clk(&pdev->dev,
+> 			  "mem", regs,
+> 			  &fsl_asrc_regmap_config);
+
+I'll refine to
+
+ devm_regmap_init_mmio_clk(&pdev->dev, "mem", regs,
+                           &fsl_asrc_regmap_config);
+
+> 
+> >+	if (IS_ERR(asrc_priv->regmap)) {
+> >+		dev_err(&pdev->dev, "failed to init regmap\n");
+> >+		return PTR_ERR(asrc_priv->regmap);
+> >+	}
+> >+
+> >+	irq = platform_get_irq(pdev, 0);
+> >+	if (irq < 0) {
+> >+		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
+> >+		return irq;
+> >+	}
+> >+
+> >+	ret = devm_request_irq(&pdev->dev, irq, fsl_asrc_isr, 0,
+> >+			       asrc_priv->name, asrc_priv);
 >
->
-> dto....
+> same...
 
-ok.
+Sorry I don't see any problem with this devm_request_irq()...
 
->> +       if (IS_ERR(chip->rtc)) {
->> +               dev_err(&pdev->dev, "unable to register device\n");
->> +               return PTR_ERR(chip->rtc);
->> +       }
->> +
->> +       dev_info(&pdev->dev, "RTC enabled\n");
->> +
->> +       return 0;
->> +}
->> +
->> +static int sun6i_rtc_remove(struct platform_device *pdev)
->> +{
->> +       struct sun6i_rtc_dev *chip = platform_get_drvdata(pdev);
->> +
->> +       rtc_device_unregister(chip->rtc);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct of_device_id sun6i_rtc_dt_ids[] = {
->> +       { .compatible = "allwinner,sun6i-a31-rtc" },
->> +       { /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
->> +
->> +static struct platform_driver sun6i_rtc_driver = {
->> +       .probe          = sun6i_rtc_probe,
->> +       .remove         = sun6i_rtc_remove,
->> +       .driver         = {
->> +               .name           = "sun6i-rtc",
->> +               .owner          = THIS_MODULE,
->
->
-> we can drop owner field....
-
-May I ask why this is not needed? Seems most if not all drivers
-set it.
-
-Thanks.
-
->> +               .of_match_table = sun6i_rtc_dt_ids,
->> +       },
->> +};
->> +
->> +module_platform_driver(sun6i_rtc_driver);
->> +
->> +MODULE_DESCRIPTION("sun6i RTC driver");
->> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
+Thank you,
+Nicolin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
