@@ -1,170 +1,66 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] rtc: sun6i: Add sun6i RTC driver
-Date: Fri, 25 Jul 2014 16:13:54 +0800
-Message-ID: <CAGb2v67t+-++zjK11Ty7k0f1yo1dDjSsa1JTx97SzRjzUrBVdw@mail.gmail.com>
-References: <1406126338-15062-1-git-send-email-wens@csie.org>
- <1406126338-15062-2-git-send-email-wens@csie.org> <53CFDC9F.9060208@gmail.com>
- <CAGb2v6746P-9rtW3gjUS3ttkZeqW6gNbunXHiSidNag1gCmk0A@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBV5DZCPAKGQEMF6SBGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v6746P-9rtW3gjUS3ttkZeqW6gNbunXHiSidNag1gCmk0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM: zynq: DT: Clarify Xilinx Zynq platform
+Date: Fri, 25 Jul 2014 10:15:18 +0200
+Message-ID: <7153c8eded88751e7637f08f2bfe9cb6a65036e7.1406275971.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-17748-1406276118-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 25, 2014 at 3:57 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Thu, Jul 24, 2014 at 12:02 AM, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> On Wednesday 23 July 2014 08:08 PM, Chen-Yu Tsai wrote:
->>>
->>> This patch introduces the driver for the RTC in the Allwinner A31 and
->>> A23 SoCs.
->>>
->>> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
->>> RTC in A31/A23 are a separate hardware block, which also contain a few
->>> controls for the RTC block hardware (a regulator and RTC block GPIO pin
->>> latches), while also having separate interrupts for the alarms.
->>>
->>> The hardware is different enough to make a different driver for it.
->>>
->> (...)
->>
->>
->>> +Required properties:
->>> +- compatible : Should be "allwinner,sun6i-a31-rtc"
->>> +- reg: physical base address of the controller and length of memory
->>> mapped
->>> +  region.
->>> +- interrupts: IRQ line for the RTC alarm 0.
->>> +
->>
->>
->> proper indentation..
->> - compatible    : Should be "allwinner,sun6i-a31-rtc"
->>
->> - reg           : physical base address of the controller and length of
->> memory mapped
->>                   region.
->>
->> - interrupts    : IRQ line for the RTC alarm 0.
->> ....
->>
->>> +Example:
->>> +
->>
->>
->> (...)
->>
->>
->>> +
->>> +       ret = devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
->>> +                       0, dev_name(&pdev->dev), chip);
->>
->>
->> should match open parenthesis...
->>
->>
->> devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
->>                  0, dev_name(&pdev->dev), chip);
->
-> ok.
->
->>> +       if (ret) {
->>> +               dev_err(&pdev->dev, "Could not request IRQ\n");
->>> +               return ret;
->>> +       }
->>> +
->>> +       /* clear the alarm counter value */
->>> +       writel(0, chip->base + SUN6I_ALRM_COUNTER);
->>> +
->>> +       /* disable counter alarm */
->>> +       writel(0, chip->base + SUN6I_ALRM_EN);
->>> +
->>> +       /* disable counter alarm interrupt */
->>> +       writel(0, chip->base + SUN6I_ALRM_IRQ_EN);
->>> +
->>> +       /* disable week alarm */
->>> +       writel(0, chip->base + SUN6I_ALRM1_EN);
->>> +
->>> +       /* disable week alarm interrupt */
->>> +       writel(0, chip->base + SUN6I_ALRM1_IRQ_EN);
->>> +
->>> +       /* clear counter alarm pending interrupts */
->>> +       writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND, chip->base +
->>> +                       SUN6I_ALRM_IRQ_STA);
->>> +
->>> +       /* clear week alarm pending interrupts */
->>> +       writel(SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND, chip->base +
->>> +                       SUN6I_ALRM1_IRQ_STA);
->>> +
->>> +       /* disable alarm wakeup */
->>> +       writel(0, chip->base + SUN6I_ALARM_CONFIG);
->>> +
->>> +       chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
->>> +                       &sun6i_rtc_ops, THIS_MODULE);
->>
->>
->> dto....
->
-> ok.
->
->>> +       if (IS_ERR(chip->rtc)) {
->>> +               dev_err(&pdev->dev, "unable to register device\n");
->>> +               return PTR_ERR(chip->rtc);
->>> +       }
->>> +
->>> +       dev_info(&pdev->dev, "RTC enabled\n");
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int sun6i_rtc_remove(struct platform_device *pdev)
->>> +{
->>> +       struct sun6i_rtc_dev *chip = platform_get_drvdata(pdev);
->>> +
->>> +       rtc_device_unregister(chip->rtc);
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static const struct of_device_id sun6i_rtc_dt_ids[] = {
->>> +       { .compatible = "allwinner,sun6i-a31-rtc" },
->>> +       { /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
->>> +
->>> +static struct platform_driver sun6i_rtc_driver = {
->>> +       .probe          = sun6i_rtc_probe,
->>> +       .remove         = sun6i_rtc_remove,
->>> +       .driver         = {
->>> +               .name           = "sun6i-rtc",
->>> +               .owner          = THIS_MODULE,
->>
->>
->> we can drop owner field....
->
-> May I ask why this is not needed? Seems most if not all drivers
-> set it.
->
-> Thanks.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-Never mind. I figured it out. Sorry for the noise.
+--=_mimegpg-monstr-desktop-17748-1406276118-0001
 
->>> +               .of_match_table = sun6i_rtc_dt_ids,
->>> +       },
->>> +};
->>> +
->>> +module_platform_driver(sun6i_rtc_driver);
->>> +
->>> +MODULE_DESCRIPTION("sun6i RTC driver");
->>> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
->>> +MODULE_LICENSE("GPL");
+ep107 was emulation platform and compatible string
+have been changed long time ago.
+
+"ARM: zynq: dts: split up device tree"
+(sha1: e06f1a9ed7ebff170ba05d2606d079fb36c6a52d)
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+
+ Documentation/devicetree/bindings/arm/xilinx.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
+index 6f1ed830b4f7..1f7995357888 100644
+--- a/Documentation/devicetree/bindings/arm/xilinx.txt
++++ b/Documentation/devicetree/bindings/arm/xilinx.txt
+@@ -1,7 +1,7 @@
+-Xilinx Zynq EP107 Emulation Platform board
++Xilinx Zynq Platforms Device Tree Bindings
+
+-This board is an emulation platform for the Zynq product which is
+-based on an ARM Cortex A9 processor.
++Boards with Zynq-7000 SOC based on an ARM Cortex A9 processor
++shall have the following properties.
+
+ Required root node properties:
+-    - compatible = "xlnx,zynq-ep107";
++    - compatible = "xlnx,zynq-7000";
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-17748-1406276118-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlPSEhYACgkQykllyylKDCEtPwCfZ/gYyLnKoTWv6fVrUQ2R8zkk
+NnEAn0zHHK8ptHZkSvFhb9/MbIOPmST6
+=gqx3
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-17748-1406276118-0001--
