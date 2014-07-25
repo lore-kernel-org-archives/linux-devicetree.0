@@ -1,81 +1,57 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: RE: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Fri, 25 Jul 2014 03:49:23 +0000
-Message-ID: <dc23839c-7a69-4674-9d92-80a1d68e9b23@BY2FFO11FD003.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] Add Freescale ASRC driver
+Date: Fri, 25 Jul 2014 12:03:57 +0800
+Message-ID: <cover.1406259578.git.nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1406242820-20140-1-git-send-email-afaerber@suse.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Michal Simek <michals@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Andreas Olofsson <andreas@adapteva.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQW5kcmVh
-cyBGw6RyYmVyIFttYWlsdG86YWZhZXJiZXJAc3VzZS5kZV0NCj5TZW50OiBGcmlkYXksIEp1bHkg
-MjUsIDIwMTQgNDozMCBBTQ0KPlRvOiBNaWNoYWwgU2ltZWsNCj5DYzogQW5kcmVhcyBPbG9mc3Nv
-bjsgTWF0dGVvIFZpdDsgU2VhbiBSaWNrZXJkOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsN
-Cj5saW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7IEFuZHJlYXMNCj5Gw6RyYmVyOyBQdW5uYWlhaCBDaG91ZGFyeSBLYWxsdXJp
-OyBMYXJzLVBldGVyIENsYXVzZW4NCj5TdWJqZWN0OiBbUEFUQ0ggdjIgMDAvMTFdIEFSTTogZHRz
-OiB6eW5xOiBQcmVwYXJlIFBhcmFsbGVsbGENCj4NCj5IZWxsbywNCj4NCj5UaGlzIHBhdGNoIHNl
-cmllcyBhZGRzIGFuIGluaXRpYWwgZGV2aWNlIHRyZWUgZm9yIHRoZSBQYXJhbGxlbGxhIGJvYXJk
-Lg0KPlVBUlQsIFNEIGNhcmQsIEV0aGVybmV0IGFyZSBlbmFibGVkLg0KPk5vdCB5ZXQgZW5hYmxl
-ZCBhcmUgSERNSSwgUVNQSSBmbGFzaCBhbmQgMnggVVNCLg0KPg0KPnYyIGFkZHMgc29tZSBTUEkg
-YW5kIEZQR0EgcGllY2VzIGFuZCB0aWRpZXMgdGhlIGRldmljZSB0cmVlIHdpdGggYQ0KPmNvbXBh
-dGlibGUgc3RyaW5nIGFuZCBtYXRjaGluZyBkb2N1bWVudGF0aW9uLg0KPg0KPk5vdCBoYXZpbmcg
-YWxsIHBpZWNlcyBmb3IgdGVzdGluZyBhbGwgb2YgdGhpcyAobW9zdCBub3RhYmx5IEknbSBtaXNz
-aW5nDQo+QURJIEFEVjc1MTMgYW5kIEFYSS1IRE1JIHN1cHBvcnQgZm9yIFZETUEgYW5kIGF4aS1j
-bGtnZW4sIGFzIHdlbGwgYXMNCj50aGUgMjVRMTI4QSBmbGFzaCBjaGlwIGZvciBRU1BJKSwgSSd2
-ZSBrZXB0IG5ldyB0aGluZ3MgaW4gc2VwYXJhdGUgcGF0Y2hlcw0KPnNvIHRoYXQgd2UgY2FuIG1h
-a2UgcHJvZ3Jlc3Mgb24gdGhlIGJhc2ljIHZlcnNpb24gYW5kIHBvc3NpYmx5IHNxdWFzaA0KPmZ1
-cnRoZXIgY2hlcnJ5LXBpY2tlZCBwaWVjZXMuDQo+DQo+UHVubmFpYWggQ2hvdWRhcnkgS2FsbHVy
-aSBoYWQgcmVjZW50bHkgcHJvcG9zZWQgdG8gZXh0ZW5kIHRoZSBDaGlwaWRlYQ0KPlVTQiBkcml2
-ZXIgZm9yIFp5bnE7IGl0IGtlcHQgY29tcGxhaW5pbmcgYWJvdXQgdGhlIFBIWSB0aG91Z2gsIGFu
-ZCBJDQo+aGF2ZW4ndCBzcG90dGVkIGEgcmV2aXNlZCB2ZXJzaW9uIGJhc2VkIG9uIHRoZSBnZW5l
-cmljIGRyaXZlciB5ZXQuDQo+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC80NDM0
-NjgxLw0KDQpUaGUgcGxhbiBpcywgZ28gd2l0aCBnZW5lcmljIGNoaXAgaWRlYSBkcml2ZXIgd2hp
-Y2ggaXMgY3VycmVudGx5IHVuZGVyIHJldmlldy4gDQpodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xp
-c3RzL2xpbnV4LXVzYi9tc2cxMDk1NzYuaHRtbA0KDQpTbywgcGxlYXNlIHdhaXQgc29tZSBtb3Jl
-IHRpbWUgZm9yIGV4dGVuZGluZyB0aGUgQ2hpcCBpZGVhIGRyaXZlciBzdXBwb3J0DQogdG8genlu
-cS4NCg0KUHVubmFpYWgNCj4NCj5NeSByZWJhc2luZyB3b3JrIGJyYW5jaCBpcyBoZXJlOg0KPmh0
-dHBzOi8vZ2l0aHViLmNvbS9hZmFlcmJlci9saW51eC9jb21taXRzL3BhcmFsbGVsbGEtbmV4dA0K
-Pg0KPlJlZ2FyZHMsDQo+QW5kcmVhcw0KPg0KPkNjOiBQdW5uYWlhaCBDaG91ZGFyeSBLYWxsdXJp
-IDxwdW5uYWlhQHhpbGlueC5jb20+IChVU0IpDQo+Q2M6IExhcnMtUGV0ZXIgQ2xhdXNlbiA8bGFy
-c0BtZXRhZm9vLmRlPiAoSERNSSkNCj4NCj5BbmRyZWFzIEbDpHJiZXIgKDExKToNCj4gIERvY3Vt
-ZW50YXRpb246IGRldmljZXRyZWU6IEFkYXB0ZXZhIHZlbmRvciBwcmVmaXgNCj4gIERvY3VtZW50
-YXRpb246IGRldmljZXRyZWU6IEFkYXB0ZXZhIGJvYXJkcw0KPiAgQVJNOiBkdHM6IHp5bnE6IEFk
-ZCBQYXJhbGxlbGxhIGRldmljZSB0cmVlDQo+ICBBUk06IGR0czogenlucTogVXBkYXRlIGRlcHJl
-Y2F0ZWQgeHVhcnRwcyBjbG9jayBuYW1lcw0KPiAgQVJNOiBkdHM6IHp5bnE6IEFkZCBRU1BJIGZv
-ciBQYXJhbGxlbGxhDQo+ICBBUk06IGR0czogenlucTogQWRkIERNQUMgZm9yIFBhcmFsbGVsbGEN
-Cj4gIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IEZpeCBYaWxpbnggVkRNQSBzcGVjaWZpY2F0
-aW9uDQo+ICBBUk06IGR0czogenlucTogQWRkIFZETUEgdG8gUGFyYWxsZWxsYQ0KPiAgRG9jdW1l
-bnRhdGlvbjogZGV2aWNldHJlZTogRml4IEFESSBBWEkgU1BESUYgc3BlY2lmaWNhdGlvbg0KPiAg
-QVJNOiBkdHM6IHp5bnE6IEFkZCBTUERJRiBmb3IgUGFyYWxsZWxsYQ0KPiAgQVJNOiBkdHM6IHp5
-bnE6IEFkZCBBWEkgY2xrZ2VuIGZvciBQYXJhbGxlbGxhDQo+DQo+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vYWRhcHRldmEudHh0IHwgICA3ICsrDQo+IC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGlsaW54X3ZkbWEudHh0IHwgICAyICstDQo+IC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxheGktc3BkaWYtdHgudHh0IHwgICAyICstDQo+
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgICAx
-ICsNCj4gYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDQgKy0NCj4gYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgICAgICAgICAgICAg
-ICAgICAgfCAgNTggKysrKysrKysrLQ0KPiBhcmNoL2FybS9ib290L2R0cy96eW5xLXBhcmFsbGVs
-bGEuZHRzICAgICAgICAgICAgICB8IDExOQ0KPisrKysrKysrKysrKysrKysrKysrKw0KPiA3IGZp
-bGVzIGNoYW5nZWQsIDE4OCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hZGFwdGV2
-YS50eHQNCj4gY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtcGFyYWxs
-ZWxsYS5kdHMNCj4NCj4tLQ0KPjEuOS4zDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+This series of patches add Freescale ASRC module driver support along
+with the extra request in imx-sdma structure required by SDMA Device
+to Device script.
+
+The previous version has been in the maillist for nearly six months
+without any comment and reply. So I decide to drop the SDMA part's
+change since this series focus on ASRC support (Later, we can send
+SDMA part separately.) so that ASRC driver may get upstream first.
+
+Changelog
+v3:
+ * PATCH-1: Added an Acked-by from Shawn Guo
+ * PATCH-2: Dropped THIS_MODULE as Tobias suggests
+ * PATCH-2: Use dma_coerce_mask_and_coherent() in fsl_asrc_dma_pcm_new()
+ * PATCH-2: Added substream check in fsl_asrc_dma_pcm_new()
+v2:
+ * PATCH-1: Dropped the change to SDMA driver.
+ * PATCH-2: Dropped useless member in private data structures.
+ * PATCH-2: Refined some comments in fsl_asrc_dma.c driver.
+ * PATCH-2: Refined commit comments.
+
+Nicolin Chen (2):
+  ARM: imx: Add the secondary request into the structure for imx-sdma
+  ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform drivers
+
+ .../devicetree/bindings/sound/fsl,asrc.txt         |   62 ++
+ include/linux/platform_data/dma-imx.h              |    1 +
+ sound/soc/fsl/Kconfig                              |    9 +
+ sound/soc/fsl/Makefile                             |    2 +
+ sound/soc/fsl/fsl_asrc.c                           | 1030 ++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.h                           |  461 +++++++++
+ sound/soc/fsl/fsl_asrc_dma.c                       |  386 ++++++++
+ 7 files changed, 1951 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
+ create mode 100644 sound/soc/fsl/fsl_asrc.c
+ create mode 100644 sound/soc/fsl/fsl_asrc.h
+ create mode 100644 sound/soc/fsl/fsl_asrc_dma.c
+
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
