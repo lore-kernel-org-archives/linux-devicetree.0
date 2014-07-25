@@ -1,98 +1,38 @@
-From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
-Date: Fri, 25 Jul 2014 10:47:31 +0000
-Message-ID: <2bb3733f-f6db-4953-b3f2-8d76203d7c91@BY2FFO11FD002.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <1406242820-20140-6-git-send-email-afaerber@suse.de>
- <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl>
- <53D20E5B.9070501@monstr.eu> <53D21887.2020305@suse.de>
- <53D2258B.9000609@xilinx.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: ARC fails to boot on linux-next of 20140711
+Date: Fri, 25 Jul 2014 11:02:45 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-next-owner@vger.kernel.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Sender: linux-next-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-next <linux-next@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Anton Kolesov <Anton.Kolesov@synopsys.com>, lkml <linux-kernel@vger.kernel.org>, greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFyaW5pIEthdGFr
-YW0NCj4gU2VudDogRnJpZGF5LCBKdWx5IDI1LCAyMDE0IDQ6MDEgUE0NCj4gVG86ICdNaWNoYWwg
-U2ltZWsnOyBBbmRyZWFzIEbDpHJiZXI7IG1vbnN0ckBtb25zdHIuZXU7IFNvcmVuIEJyaW5rbWFu
-bg0KPiBDYzogTWljaGFsIFNpbWVrOyBBbmRyZWFzIE9sb2Zzc29uOyBNYXR0ZW8gVml0OyBTZWFu
-IFJpY2tlcmQ7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBS
-b2IgSGVycmluZzsgUGF3ZWwgTW9sbDsgTWFyayBSdXRsYW5kOyBJYW4NCj4gQ2FtcGJlbGw7IEt1
-bWFyIEdhbGE7IFJ1c3NlbGwgS2luZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHYyIDA1LzExXSBB
-Uk06IGR0czogenlucTogQWRkIFFTUEkgZm9yIFBhcmFsbGVsbGENCj4gDQo+IEhpLA0KPiANCj4g
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IE1pY2hhbCBTaW1layBbbWFp
-bHRvOm1pY2hhbC5zaW1la0B4aWxpbnguY29tXQ0KPiA+IFNlbnQ6IEZyaWRheSwgSnVseSAyNSwg
-MjAxNCAzOjA4IFBNDQo+ID4gVG86IEFuZHJlYXMgRsOkcmJlcjsgbW9uc3RyQG1vbnN0ci5ldTsg
-U29yZW4gQnJpbmttYW5uDQo+ID4gQ2M6IEhhcmluaSBLYXRha2FtOyBNaWNoYWwgU2ltZWs7IEFu
-ZHJlYXMgT2xvZnNzb247IE1hdHRlbyBWaXQ7IFNlYW4NCj4gPiBSaWNrZXJkOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsNCj4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZzsgUGF3ZWwg
-TW9sbDsgTWFyayBSdXRsYW5kOyBJYW4NCj4gPiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgUnVzc2Vs
-bCBLaW5nDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNS8xMV0gQVJNOiBkdHM6IHp5bnE6
-IEFkZCBRU1BJIGZvciBQYXJhbGxlbGxhDQo+ID4NCj4gPiBPbiAwNy8yNS8yMDE0IDEwOjQyIEFN
-LCBBbmRyZWFzIEbDpHJiZXIgd3JvdGU6DQo+ID4gPiBBbSAyNS4wNy4yMDE0IDA5OjU5LCBzY2hy
-aWViIE1pY2hhbCBTaW1lazoNCj4gPiA+PiBPbiAwNy8yNS8yMDE0IDAxOjE4IEFNLCBTw7ZyZW4g
-QnJpbmttYW5uIHdyb3RlOg0KPiA+ID4+PiBPbiBGcmksIDIwMTQtMDctMjUgYXQgMDE6MDBBTSAr
-MDIwMCwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOg0KPiA+ID4+Pj4gUHJlcGFyZSBTUEkwIGFuZCBT
-UEkxIHdoaWxlIGF0IGl0Lg0KPiA+ID4NCj4gPiA+PiBQYXRjaCBzdWJqZWN0IGlzIGluY29ycmVj
-dC4gWW91IGFyZSBhZGRpbmcgU1BJIGFuZCBRU1BJLg0KPiA+ID4NCj4gPiA+IFllcywgaXQgb3Jp
-Z2luYWxseSBhZGRlZCBvbmx5IFFTUEksIGJ1dCBJIGNvbnNpZGVyZWQgaXQgYSBnb29kIGRlZWQg
-dG8NCj4gPiA+IGFkZCBTUEkgYXMgd2VsbCB3aGlsZSBhbHJlYWR5IHJlYWRpbmcgdGhhdCBwYXJ0
-IG9mIHRoZSBUUk0uIDopDQo+ID4gPg0KPiA+ID4+Pj4NCj4gPiA+Pj4+IFNpZ25lZC1vZmYtYnk6
-IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4gLS0tIHYyOiBOZXcNCj4gPiA+Pj4+
-DQo+ID4gPj4+PiBhcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSAgICAgIHwgMzcNCj4g
-PiA+Pj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPj4+PiBhcmNo
-L2FybS9ib290L2R0cy96eW5xLXBhcmFsbGVsbGEuZHRzIHwgIDQgKysrKyAyIGZpbGVzDQo+ID4g
-Pj4+PiBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspDQo+ID4gPj4+Pg0KPiA+ID4+Pj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpDQo+ID4gPj4+PiBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIGluZGV4IDhmZDgyNmEuLmVlZDNkZjANCj4gPiA+
-Pj4+IDEwMDY0NCAtLS0gYS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSArKysNCj4g
-PiA+Pj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgQEAgLTEyMiw2ICsxMjIs
-MzAgQEANCj4gPiA+Pj4+IGludGVycnVwdHMgPSA8MCA1MCA0PjsgfTsNCj4gPiA+Pj4+DQo+ID4g
-Pj4+PiArCQlzcGkwOiBzcGlAZTAwMDYwMDAgeyArCQkJY29tcGF0aWJsZSA9DQo+ID4gInhsbngs
-enlucS1zcGktcjFwNiI7DQo+ID4gPj4+PiArCQkJcmVnID0gPDB4ZTAwMDYwMDAgMHgxMDAwPjsg
-Kw0KPiAJc3RhdHVzDQo+ID4gPSAiZGlzYWJsZWQiOyArDQo+ID4gPj4+PiBpbnRlcnJ1cHQtcGFy
-ZW50ID0gPCZpbnRjPjsgKwkJCWludGVycnVwdHMgPSA8MCAyNiA0PjsNCj4gPiArDQo+ID4gPj4+
-PiBjbG9ja3MgPSA8JmNsa2MgMjU+LCA8JmNsa2MgMzQ+OyArCQkJY2xvY2stbmFtZXMNCj4gPQ0K
-PiA+ICJyZWZfY2xrIiwNCj4gPiA+Pj4+ICJwY2xrIjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+
-OyArCQkJI3NpemUtDQo+ID4gY2VsbHMgPSA8MD47ICsJCX07DQo+ID4gPj4+PiArICsJCXNwaTE6
-IHNwaUBlMDAwNzAwMCB7ICsJCQljb21wYXRpYmxlID0NCj4gPiA+Pj4+ICJ4bG54LHp5bnEtc3Bp
-LXIxcDYiOyArCQkJcmVnID0gPDB4ZTAwMDcwMDAgMHgxMDAwPjsgKw0KPiA+IAkJCXN0YXR1cw0K
-PiA+ID4+Pj4gPSAiZGlzYWJsZWQiOyArCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47ICsN
-Cj4gPiAJCWludGVycnVwdHMgPQ0KPiA+ID4+Pj4gPDAgNDkgND47ICsJCQljbG9ja3MgPSA8JmNs
-a2MgMjY+LCA8JmNsa2MgMzU+OyArDQo+ID4gCQljbG9jay1uYW1lcw0KPiA+ID4+Pj4gPSAicmVm
-X2NsayIsICJwY2xrIjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OyArDQo+ID4gCQkjc2l6ZS1j
-ZWxscw0KPiA+ID4+Pj4gPSA8MD47ICsJCX07ICsNCj4gPiA+Pj4gVW50aWwgaGVyZSB0aGluZ3Mg
-bG9vayBnb29kLg0KPiA+ID4+Pg0KPiA+ID4+Pj4gZ2VtMDogZXRoZXJuZXRAZTAwMGIwMDAgeyBj
-b21wYXRpYmxlID0gImNkbnMsZ2VtIjsgcmVnID0NCj4gPiA+Pj4+IDwweGUwMDBiMDAwIDB4NDAw
-MD47IEBAIC0xNDAsNiArMTY0LDE5IEBAIGNsb2NrLW5hbWVzID0gInBjbGsiLA0KPiA+ID4+Pj4g
-ImhjbGsiLCAidHhfY2xrIjsgfTsNCj4gPiA+Pj4+DQo+ID4gPj4+PiArCQlxc3BpOiBxc3BpQGUw
-MDBkMDAwIHsgKw0KPiAJY29tcGF0aWJsZSA9DQo+ID4gPj4+PiAieGxueCx6eW5xLXNwaS1yMXA2
-IjsgKwkJCXJlZyA9IDwweGUwMDBkMDAwIDB4MTAwMD47ICsNCj4gPiAJCQlzdGF0dXMNCj4gPiA+
-Pj4+ID0gImRpc2FibGVkIjsgKwkJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+OyArDQo+ID4g
-CQlpbnRlcnJ1cHRzID0NCj4gPiA+Pj4+IDwwIDE5IDQ+OyArCQkJY2xvY2tzID0gPCZjbGtjIDEw
-PiwgPCZjbGtjIDQzPjsgKw0KPiA+IAkJY2xvY2stbmFtZXMNCj4gPiA+Pj4+ID0gInJlZl9jbGsi
-LCAicGNsayI7ICsJCQludW0tY3MgPSA8MT47ICsNCj4gPiAJI2FkZHJlc3MtY2VsbHMgPQ0KPiA+
-ID4+Pj4gPDE+OyArCQkJI3NpemUtY2VsbHMgPSA8MD47ICsJCX07ICsNCj4gPiA+Pj4gSSdtIG5v
-dCBzdXJlIHdoYXQgdGhlIHN0YXR1cyBvZiB0aGlzIGRyaXZlciBpcy4gSSB0aGluayBRU1BJIGlz
-DQo+ID4gPj4+IHN0aWxsIHVuZGVyIHJldmlldyBvbiB0aGUgbWFpbGluZyBsaXN0cyBhbmQgSSBk
-b24ndCB0aGluayB3ZQ0KPiA+ID4+PiBzaG91bGQgYWRkIHRoaXMgeWV0Lg0KPiA+ID4NCj4gPiA+
-PiBEcml2ZXIgZm9yIHFzcGkgaXMgbm90IGluIHRoZSBtYWlubGluZSB5ZXQgYnV0IGl0IGRvZXNu
-J3QgbWVhbiB0aGF0DQo+ID4gPj4gdGhpcyBmcmFnbWVudCB3b24ndCB3b3JrLiBIYXJpbmk6IENh
-biB5b3UgcGxlYXNlIGNvcnJlY3QgbWUgaWYgSSBhbQ0KPiA+ID4+IHdyb25nPw0KPiA+ID4NCj4g
-DQo+IEl0IGNhbiBiZSBhZGRlZCBidXQgaXQgd2lsbCBoYXZlIHRvIGJlIGRpc2FibGVkIGFzIHRo
-ZXJlIGlzIG5vIHFzcGkgZHJpdmVyDQo+IGF0IHRoZSBtb21lbnQgaW4gbWFpbmxpbmUuDQo+IA0K
-DQpUaGUgY2FkZW5jZSBzcGkgZHJpdmVyIGNhbid0IGJlIHVzZWQgZm9yIHFzcGkgZGlyZWN0bHku
-DQpJdOKAmXMgYmV0dGVyIG5vdCB0byBhZGQgcXNwaSBub3cuIE9uY2UgcXNwaSBkcml2ZXIgaXMg
-aW4gbWFpbmxpbmUsIHFzcGkNCmNhbiBiZSBhZGRlZCB3aXRoIHRoZSBjb3JyZXNwb25kaW5nIGNv
-bXBhdGliaWxpdHkgc3RyaW5nLg0KDQpSZWdhcmRzLA0KSGFyaW5pDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Grant,
+
+linux-next has a series for arc_uart (via tty tree) which converts it to generic
+earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
+/chose/bootargs
+
+2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console 
+
+This relied on prev commit of yours (from linux next of 20140711), which seem to
+have disappeared now.
+
+2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
+specified in /chosen 
+2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
+/chosen/stdout-path 
+
+Is there a specific reason for dropping these patches (or perhaps a merge to be
+merged). I cherry-picked both but still doesn't work.
+
+Can you please advise next step forward, before I go off debugging with those
+patches in.
+
+Thx,
+-Vineet
