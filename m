@@ -1,240 +1,115 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/6] soc: add driver for the ARM RealView
-Date: Fri, 25 Jul 2014 15:23:47 +0200
-Message-ID: <1406294628-16079-6-git-send-email-linus.walleij@linaro.org>
+Subject: [PATCH 2/6] leds: add device tree bindings for syscon LEDs
+Date: Fri, 25 Jul 2014 15:23:44 +0200
+Message-ID: <1406294628-16079-3-git-send-email-linus.walleij@linaro.org>
 References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1406294628-16079-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a SoC driver to be used by the ARM RealView
-reference boards. We create the "versatile" directory to hold
-the different ARM reference designs as per the pattern of the
-clk directory layout. The driver utilze the syscon to get to
-the register needed. After this we can use sysfs to get at
-some SoC properties on RealView DT variants like this:
+This adds the device tree bindings used by syscon-based LEDs.
 
-> cd /sysbus/soc/devices/soc0
-> ls
-board         family        machine       power         subsystem
-build         fpga          manufacturer  soc_id        uevent
-> cat family
-Versatile
-> cat fpga
-Multi-layer AXI
-> cat board
-HBI-0147
-> cat build
-03
-
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/soc/Kconfig                  |   1 +
- drivers/soc/Makefile                 |   1 +
- drivers/soc/versatile/Kconfig        |  10 +++
- drivers/soc/versatile/Makefile       |   1 +
- drivers/soc/versatile/soc-realview.c | 144 +++++++++++++++++++++++++++++++++++
- 5 files changed, 157 insertions(+)
- create mode 100644 drivers/soc/versatile/Kconfig
- create mode 100644 drivers/soc/versatile/Makefile
- create mode 100644 drivers/soc/versatile/soc-realview.c
+ .../devicetree/bindings/leds/leds-syscon.txt       | 83 ++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-syscon.txt
 
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index c8543855aa82..6ed3590253cf 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -1,5 +1,6 @@
- menu "SOC (System On Chip) specific Drivers"
- 
- source "drivers/soc/qcom/Kconfig"
-+source "drivers/soc/versatile/Kconfig"
- 
- endmenu
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 0f7c44793b29..9e9d0b6b63d3 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -3,3 +3,4 @@
- #
- 
- obj-$(CONFIG_ARCH_QCOM)		+= qcom/
-+obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
-diff --git a/drivers/soc/versatile/Kconfig b/drivers/soc/versatile/Kconfig
+diff --git a/Documentation/devicetree/bindings/leds/leds-syscon.txt b/Documentation/devicetree/bindings/leds/leds-syscon.txt
 new file mode 100644
-index 000000000000..bf5ee9c85330
+index 000000000000..460b9c3d1bd3
 --- /dev/null
-+++ b/drivers/soc/versatile/Kconfig
-@@ -0,0 +1,10 @@
-+#
-+# ARM Versatile SoC drivers
-+#
-+config SOC_REALVIEW
-+	bool "SoC bus device for the ARM RealView platforms"
-+	depends on ARCH_REALVIEW
-+	select SOC_BUS
-+	help
-+	  Include support for the SoC bus on the ARM RealView platforms
-+	  providing some sysfs information about the ASIC variant.
-diff --git a/drivers/soc/versatile/Makefile b/drivers/soc/versatile/Makefile
-new file mode 100644
-index 000000000000..ad547435648e
---- /dev/null
-+++ b/drivers/soc/versatile/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_SOC_REALVIEW)	+= soc-realview.o
-diff --git a/drivers/soc/versatile/soc-realview.c b/drivers/soc/versatile/soc-realview.c
-new file mode 100644
-index 000000000000..cea8ea3491d2
---- /dev/null
-+++ b/drivers/soc/versatile/soc-realview.c
-@@ -0,0 +1,144 @@
-+/*
-+ * Copyright (C) 2014 Linaro Ltd.
-+ *
-+ * Author: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2, as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/sys_soc.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/of.h>
++++ b/Documentation/devicetree/bindings/leds/leds-syscon.txt
+@@ -0,0 +1,83 @@
++Device Tree Bindings for Syscon LEDs
 +
-+/* System ID in syscon */
-+#define REALVIEW_SYS_ID_OFFSET 0x00
++Required properties:
++- compatible : must be "syscon-leds".
++- regmap : a phandle to a syscon node containing a regmap
 +
-+static const struct of_device_id realview_soc_of_match[] = {
-+	{ .compatible = "arm,realview-eb-soc",	},
-+	{ .compatible = "arm,realview-pb1176-soc", },
-+	{ .compatible = "arm,realview-pb11mp-soc", },
-+	{ .compatible = "arm,realview-pba8-soc", },
-+	{ .compatible = "arm,realview-pbx-soc", },
++Each LED is represented as a sub-node of the syscon-leds device. Each
++node's name represents the name of the corresponding LED.
++
++LED sub-node properties:
++- offset : register offset to the register controlling this LED
++- mask : bit mask for the bit controlling this LED in the register
++  typically 0x01, 0x02, 0x04 ...
++- label : (optional)
++  see Documentation/devicetree/bindings/leds/common.txt
++- linux,default-trigger : (optional)
++  see Documentation/devicetree/bindings/leds/common.txt
++- default-state: (optional) The initial state of the LED. Valid
++  values are "on", "off", and "keep". If the LED is already on or off
++  and the default-state property is set the to same value, then no
++  glitch should be produced where the LED momentarily turns off (or
++  on). The "keep" setting will keep the LED at whatever its current
++  state is, without producing a glitch.  The default is off if this
++  property is not present.
++
++Example:
++
++leds: leds@08 {
++	compatible = "syscon-leds";
++	regmap = <&syscon>;
++
++	led@bit0 {
++		offset = <0x08>;
++		mask = <0x01>;
++		label = "versatile:0";
++		linux,default-trigger = "heartbeat";
++		default-state = "on";
++	};
++	led@bit1 {
++		offset = <0x08>;
++		mask = <0x02>;
++		label = "versatile:1";
++		linux,default-trigger = "mmc0";
++		default-state = "off";
++	};
++	led@bit2 {
++		offset = <0x08>;
++		mask = <0x04>;
++		label = "versatile:2";
++		linux,default-trigger = "cpu0";
++		default-state = "off";
++	};
++	led@bit3 {
++		offset = <0x08>;
++		mask = <0x08>;
++		label = "versatile:3";
++		default-state = "off";
++	};
++	led@bit4 {
++		offset = <0x08>;
++		mask = <0x10>;
++		label = "versatile:4";
++		default-state = "off";
++	};
++	led@bit5 {
++		offset = <0x08>;
++		mask = <0x20>;
++		label = "versatile:5";
++		default-state = "off";
++	};
++	led@bit6 {
++		offset = <0x08>;
++		mask = <0x40>;
++		label = "versatile:6";
++		default-state = "off";
++	};
++	led@bit7 {
++		offset = <0x08>;
++		mask = <0x80>;
++		label = "versatile:7";
++		default-state = "off";
++	};
 +};
-+
-+static u32 realview_coreid;
-+
-+static const char *realview_board_str(u32 id)
-+{
-+	switch ((id >> 16) & 0xfff) {
-+	case 0x0147:
-+		return "HBI-0147";
-+	default:
-+		return "Unknown";
-+	}
-+}
-+
-+static const char *realview_arch_str(u32 id)
-+{
-+	switch ((id >> 8) & 0xf) {
-+	case 0x05:
-+		return "Multi-layer AXI";
-+	default:
-+		return "Unknown";
-+	}
-+}
-+
-+static ssize_t realview_get_manf(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	return sprintf(buf, "%02x\n", realview_coreid >> 24);
-+}
-+
-+static struct device_attribute realview_manf_attr =
-+	__ATTR(manufacturer,  S_IRUGO, realview_get_manf,  NULL);
-+
-+static ssize_t realview_get_board(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	return sprintf(buf, "%s\n", realview_board_str(realview_coreid));
-+}
-+
-+static struct device_attribute realview_board_attr =
-+	__ATTR(board,  S_IRUGO, realview_get_board,  NULL);
-+
-+static ssize_t realview_get_arch(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	return sprintf(buf, "%s\n", realview_arch_str(realview_coreid));
-+}
-+
-+static struct device_attribute realview_arch_attr =
-+	__ATTR(fpga,  S_IRUGO, realview_get_arch,  NULL);
-+
-+static ssize_t realview_get_build(struct device *dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%02x\n", (realview_coreid & 0xFF));
-+}
-+
-+static struct device_attribute realview_build_attr =
-+	__ATTR(build,  S_IRUGO, realview_get_build,  NULL);
-+
-+static int realview_soc_probe(struct platform_device *pdev)
-+{
-+	static struct regmap *syscon_regmap;
-+	struct soc_device *soc_dev;
-+	struct soc_device_attribute *soc_dev_attr;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	syscon_regmap = syscon_regmap_lookup_by_phandle(np, "regmap");
-+	if (IS_ERR(syscon_regmap))
-+		return PTR_ERR(syscon_regmap);
-+
-+	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-+	if (!soc_dev_attr)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_string(np, "compatible",
-+				      &soc_dev_attr->soc_id);
-+	if (ret)
-+		return -EINVAL;
-+
-+	soc_dev_attr->machine = "RealView";
-+	soc_dev_attr->family = "Versatile";
-+	soc_dev = soc_device_register(soc_dev_attr);
-+	if (IS_ERR(soc_dev)) {
-+		kfree(soc_dev_attr);
-+		return -ENODEV;
-+	}
-+	ret = regmap_read(syscon_regmap, REALVIEW_SYS_ID_OFFSET,
-+			  &realview_coreid);
-+	if (ret)
-+		return -ENODEV;
-+
-+	device_create_file(soc_device_to_device(soc_dev), &realview_manf_attr);
-+	device_create_file(soc_device_to_device(soc_dev), &realview_board_attr);
-+	device_create_file(soc_device_to_device(soc_dev), &realview_arch_attr);
-+	device_create_file(soc_device_to_device(soc_dev), &realview_build_attr);
-+
-+	dev_info(&pdev->dev, "RealView Syscon Core ID: 0x%08x\n",
-+		 realview_coreid);
-+	/* FIXME: add attributes for SoC to sysfs */
-+	return 0;
-+}
-+
-+static struct platform_driver realview_soc_driver = {
-+	.probe = realview_soc_probe,
-+	.driver = {
-+		.name = "realview-soc",
-+		.of_match_table = realview_soc_of_match,
-+	},
-+};
-+module_platform_driver(realview_soc_driver);
 -- 
 1.9.3
 
