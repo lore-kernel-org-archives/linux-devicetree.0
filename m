@@ -1,8 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 2/6] rtc: sunxi: Depend on platforms
- sun4i/sun7i that actually have the rtc
-Date: Fri, 25 Jul 2014 17:13:24 +0800
-Message-ID: <1406279608-489-3-git-send-email-wens@csie.org>
+Subject: [PATCH v3 3/6] ARM: dts: sun6i: add rtc device node
+Date: Fri, 25 Jul 2014 17:13:25 +0800
+Message-ID: <1406279608-489-4-git-send-email-wens@csie.org>
 References: <1406279608-489-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -20,28 +19,30 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have Kconfig options for individual sunxi platforms, let
-the rtc-sunxi driver depend on the platforms that actually have this
-hardware, sun4i and sun7i.
+Now that we have a driver for sun6i's rtc hardware, add a device node
+for it so we can use it.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/rtc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index dde2b57..f933b4b 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1176,7 +1176,7 @@ config RTC_DRV_SUN6I
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 44b07e5..6a16019 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -779,6 +779,12 @@
+ 			interrupts = <1 9 0xf04>;
+ 		};
  
- config RTC_DRV_SUNXI
- 	tristate "Allwinner sun4i/sun7i RTC"
--	depends on ARCH_SUNXI
-+	depends on MACH_SUN4I || MACH_SUN7I
- 	help
- 	  If you say Y here you will get support for the RTC found on
- 	  Allwinner A10/A20.
++		rtc: rtc@01f00000 {
++			compatible = "allwinner,sun6i-a31-rtc";
++			reg = <0x01f00000 0x54>;
++			interrupts = <0 40 4>;
++		};
++
+ 		nmi_intc: interrupt-controller@01f00c0c {
+ 			compatible = "allwinner,sun6i-a31-sc-nmi";
+ 			interrupt-controller;
 -- 
 2.0.1
