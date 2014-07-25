@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 8/8] ARM: dts: Build dtbs for Rockchip boards
-Date: Fri, 25 Jul 2014 23:49:40 +0200
-Message-ID: <1406324980-2450-9-git-send-email-heiko@sntech.de>
+Subject: [PATCH v3 1/8] dt-bindings: arm: add cortex-a12 and cortex-a17 cpu compatible properties
+Date: Fri, 25 Jul 2014 23:49:33 +0200
+Message-ID: <1406324980-2450-2-git-send-email-heiko@sntech.de>
 References: <1406324980-2450-1-git-send-email-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1406324980-2450-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,32 +10,28 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZh
 Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+As announced parts from ARM they will probably be used in socs shortly.
 
-This allows the "make dtbs" target to work.
-
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index adb5ed9..637deca 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -318,6 +318,11 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8084-mtp.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += \
-+	rk3066a-bqcurie2.dtb \
-+	rk3188-radxarock.dtb \
-+	rk3288-evb-act8846.dtb \
-+	rk3288-evb-rk808.dtb
- dtb-$(CONFIG_ARCH_S3C24XX) += s3c2416-smdk2416.dtb
- dtb-$(CONFIG_ARCH_S3C64XX) += s3c6410-mini6410.dtb \
- 	s3c6410-smdk6410.dtb
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 1fe72a0..bc6dc17 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -152,7 +152,9 @@ nodes to be present and contain the properties described below.
+ 			    "arm,cortex-a7"
+ 			    "arm,cortex-a8"
+ 			    "arm,cortex-a9"
++			    "arm,cortex-a12"
+ 			    "arm,cortex-a15"
++			    "arm,cortex-a17"
+ 			    "arm,cortex-a53"
+ 			    "arm,cortex-a57"
+ 			    "arm,cortex-m0"
 -- 
 1.9.0
 
