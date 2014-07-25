@@ -1,58 +1,112 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] ARM: dts: rockchip: add core rk3288 dtsi
-Date: Fri, 25 Jul 2014 21:45:11 +0200
-Message-ID: <1698904.IucsPH3YuJ@diego>
-References: <4868343.UFgjaXesOn@diego> <CAD=FV=X9Ym_1-mweR2fBNwPhfbMVUu+EKO+qsY=te+=-pUDhcw@mail.gmail.com> <20140725193906.22930.61548@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140725193906.22930.61548@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH 1/3] ARM: dts: Add DT changes for display on snow
+Date: Sat, 26 Jul 2014 01:14:22 +0530
+Message-ID: <1406317464-7525-2-git-send-email-ajaykumar.rs@samsung.com>
+References: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, dianders@chromium.org, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 25. Juli 2014, 12:39:06 schrieb Mike Turquette:
-> Quoting Doug Anderson (2014-07-24 16:06:34)
-> 
-> > > +       xin24m: xin24m {
-> > > +               compatible = "fixed-clock";
-> > > +               clock-frequency = <24000000>;
-> > > +               #clock-cells = <0>;
-> > > +       };
-> > 
-> > I'm no expert, but strangely every other .dts seems to have the clocks
-> > under a "clocks" node.  That seems to contradict the suggestion made
-> > previously that things should not be on the top level, though.
-> 
-> That usually happens when there is a clock controller (e.g. "clocks")
-> that has multiple clock signals coming out of it. Typically this is for
-> a clock generator IP within a SoC or other chip.
-> 
-> However for a single board-level clock such as an osc then it is common
-> to put it at a top-level for that board since these can change from
-> board to board.
+Add DT nodes for ptn3460 bridge chip and panel-simple panel.
+Add backlight enable pin and backlight power supply for pwm-backlight.
+Also add bridge phandle needed by dp to enable display on snow.
 
-All Rockchip manuals I have (from rk3066 forward) state that the oscillator 
-used here must be 24MHz, so I guess it should be ok in the main dtsi files.
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250-snow.dts |   40 +++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
-In the very unlikely case that a hw designer ignored every piece of 
-documentation I guess they could simply reset the clock-frequency value in 
-their board dts.
-
-> 
-> > Also, _I think_ device tree suggests a more generic name for the node
-> > like "oscillator".  You could use "xin24m" as an output name, I think.
-> > Mike could correct me if I'm wrong.
-> 
-> You are correct.
-
-I'll rename it.
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index 6c36d41..f57f993 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -270,7 +270,7 @@
+ 					dcdc3 {
+ 						ti,enable-ext-control;
+ 					};
+-					fet1 {
++					fet1: fet1 {
+ 						regulator-name = "vcd_led";
+ 						ti,overcurrent-wait = <3>;
+ 					};
+@@ -293,7 +293,7 @@
+ 						regulator-always-on;
+ 						ti,overcurrent-wait = <3>;
+ 					};
+-					fet6 {
++					fet6: fet6 {
+ 						regulator-name = "lcd_vdd";
+ 						ti,overcurrent-wait = <3>;
+ 					};
+@@ -342,6 +342,15 @@
+ 			pinctrl-0 = <&max98095_en>;
+ 			pinctrl-names = "default";
+ 		};
++
++		ptn3460: ptn3460-bridge@20 {
++			compatible = "nxp,ptn3460";
++			reg = <0x20>;
++			powerdown-gpios = <&gpy2 5 0>;
++			reset-gpios = <&gpx1 5 0>;
++			edid-emulation = <5>;
++			panel = <&panel>;
++		};
+ 	};
+ 
+ 	i2s0: i2s@03830000 {
+@@ -389,11 +398,13 @@
+ 		vdd_pll-supply = <&ldo8_reg>;
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm 0 1000000 0>;
+ 		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
+ 		default-brightness-level = <7>;
++		enable-gpios = <&gpx3 0 0>;
++		power-supply = <&fet1>;
+ 		pinctrl-0 = <&pwm0_out>;
+ 		pinctrl-names = "default";
+ 	};
+@@ -403,6 +414,12 @@
+ 		samsung,invert-vclk;
+ 	};
+ 
++	panel: panel-simple {
++		compatible = "simple-panel";
++		power-supply = <&fet6>;
++		backlight = <&backlight>;
++	};
++
+ 	dp-controller@145B0000 {
+ 		status = "okay";
+ 		pinctrl-names = "default";
+@@ -414,21 +431,6 @@
+ 		samsung,link-rate = <0x0a>;
+ 		samsung,lane-count = <2>;
+ 		samsung,hpd-gpio = <&gpx0 7 0>;
+-
+-		display-timings {
+-			native-mode = <&timing1>;
+-
+-			timing1: timing@1 {
+-				clock-frequency = <70589280>;
+-				hactive = <1366>;
+-				vactive = <768>;
+-				hfront-porch = <40>;
+-				hback-porch = <40>;
+-				hsync-len = <32>;
+-				vback-porch = <10>;
+-				vfront-porch = <12>;
+-				vsync-len = <6>;
+-			};
+-		};
++		bridge = <&ptn3460>;
+ 	};
+ };
+-- 
+1.7.9.5
