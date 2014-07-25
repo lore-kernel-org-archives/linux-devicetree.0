@@ -1,208 +1,62 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2] gpio: keystone: add dsp gpio controller driver
-Date: Fri, 25 Jul 2014 18:44:50 +0300
-Message-ID: <53D27B72.2060709@ti.com>
-References: <1406126699-10053-1-git-send-email-grygorii.strashko@ti.com> <53D15B47.6020802@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] ARM: zynq: DT: Add CAN node
+Date: Fri, 25 Jul 2014 08:00:17 -0700
+Message-ID: <bed4104c-c177-4c6d-bffe-3535b9c0d354@BN1AFFO11FD029.protection.gbl>
+References: <56bf20294d106e0fc9c23a70cd991a50b441d0aa.1406271138.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D15B47.6020802@ti.com>
+Content-Disposition: inline
+In-Reply-To: <56bf20294d106e0fc9c23a70cd991a50b441d0aa.1406271138.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "varkabhadram@gmail.com" <varkabhadram@gmail.com>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, Appana Durga Kedareswara Rao <appanad@xilinx.com>, monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/24/2014 10:15 PM, Suman Anna wrote:
-> Grygorii,
-> 
-> On 07/23/2014 09:44 AM, Strashko, Grygorii wrote:
->> From: Murali Karicheri <m-karicheri2@ti.com>
->>
->> On Keystone SOCs, ARM host can send interrupts to DSP cores using the
->> DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
->> each DSP core. This is one of the component used by the IPC mechanism used
->> on Keystone SOCs.
->>
->> Keystone 2 DSP GPIO controller has specific features:
->> - each GPIO can be configured only as output pin;
->> - setting GPIO value to 1 causes IRQ generation on target DSP core;
->> - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
->>    pending.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->> Changes in v2:
->> - minor comments applied
->>
->> v1:
->>   https://lkml.org/lkml/2014/7/16/170
->>
->>   .../devicetree/bindings/gpio/gpio-keystone.txt     |   43 ++++++
->>   drivers/gpio/Kconfig                               |    8 ++
->>   drivers/gpio/Makefile                              |    1 +
->>   drivers/gpio/gpio-keystone.c                       |  138 ++++++++++++++++++++
->>   4 files changed, 190 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-keystone.txt
->>   create mode 100644 drivers/gpio/gpio-keystone.c
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
->> new file mode 100644
->> index 0000000..d412711
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
->> @@ -0,0 +1,43 @@
->> +Keystone 2 DSP GPIO controller bindings
->> +
->> +HOST OS userland running on ARM can send interrupts to DSP cores using
->> +the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
->> +This is one of the component used by the IPC mechanism used on Keystone SOCs.
->> +
->> +For example TCI6638K2K SoC has 8 DSP GPIO controllers:
->> + - 8 for C66x CorePacx CPUs 0-7
->> +
->> +Keystone 2 DSP GPIO controller has specific features:
->> +- each GPIO can be configured only as output pin;
->> +- setting GPIO value to 1 causes IRQ generation on target DSP core;
->> +- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
->> +  pending.
->> +
->> +Required Properties:
->> +- compatible: should be "ti,keystone-dsp-gpio"
->> +
->> +- ti,syscon-dev : phandle/offset pair. The phandle to syscon used to
->> +				  access device state control registers and the offset
->> +				  in order to use block of device's specific registers.
->> +
->> +- gpio-controller : Marks the device node as a gpio controller.
->> +
->> +- #gpio-cells : Should be one.
->> +				See gpio.txt in this directory for a of the cells format
->> +
->> +Please refer to gpio.txt in this directory for details of the common GPIO
->> +bindings used by client devices.
->> +
->> +Example:
->> +	dspgpio0: keystone_dsp_gpio@02620240 {
->> +		compatible = "ti,keystone-dsp-gpio";
->> +		ti,syscon-dev = <&devctrl 0x240>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
-> 
-> Mismatch? Conflicts with "Should be one".
+On Fri, 2014-07-25 at 08:52AM +0200, Michal Simek wrote:
+> Add node describing Zynq's CAN controller.
+>=20
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>=20
+> Changes in v2:
+> - Add can1
+> - Enable can0 for zc702
+> - Use status property
+>=20
+>  arch/arm/boot/dts/zynq-7000.dtsi | 26 +++++++++++++++++++++++++-
+>  arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zyn=
+q-7000.dtsi
+> index 366ca6434f54..983148111e3a 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -71,7 +71,31 @@
+>  			interrupts =3D <0 7 4>;
+>  			interrupt-parent =3D <&intc>;
+>  			clocks =3D <&clkc 12>;
+> -		};
+> +		};
+> +
+> +		can0: can@e0008000 {
+> +			compatible =3D "xlnx,zynq-can-1.0";
+> +			status =3D "disabled";
+> +			clocks =3D <&clkc 19>, <&clkc 36>;
+> +			clock-names =3D "can_clk", "pclk";
+> +			reg =3D <0xe0008000 0x1000>;
+> +			interrupts =3D <0 28 4>;
+> +			interrupt-parent =3D <&intc>;
+> +			tx-fifo-depth =3D <0x40>;
+> +			rx-fifo-depth =3D <0x40>;
+> +		};
+> +
+> +		can1: can@e0009000 {
+> +			compatible =3D "xlnx,zynq-can-1.0";
+> +			status =3D "disabled";
+> +			clocks =3D <&clkc 19>, <&clkc 36>;
+The clocks for CAN1 must be outputs 20 and 37 of the clkc.
 
-You are right.
-> 
->> +	};
->> +
->> +	dsp0: dsp0 {
->> +		compatible = "linux,rproc-user";
->> +		...
->> +		kick-gpio = <&dspgpio0 27>;
->> +	};
->> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->> index 4a1b511..990871f 100644
->> --- a/drivers/gpio/Kconfig
->> +++ b/drivers/gpio/Kconfig
->> @@ -158,6 +158,14 @@ config GPIO_EP93XX
->>   	depends on ARCH_EP93XX
->>   	select GPIO_GENERIC
->>   
->> +config GPIO_KEYSTONE_DSP
->> +	tristate "Keystone DSP GPIO support"
->> +	depends on ARCH_KEYSTONE
->> +	help
->> +	  Say yes here to support the DSP GPIO driver for Keystone 2. This defines
->> +	  up to 28 GPIOs per each Remote (DSP) core. This is used to send
->> +	  signals from ARM to the Remote (DSP) core.
->> +
->>   config GPIO_ZEVIO
->>   	bool "LSI ZEVIO SoC memory mapped GPIOs"
->>   	depends on ARM && OF_GPIO
->> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
->> index d10f6a9..15c3389 100644
->> --- a/drivers/gpio/Makefile
->> +++ b/drivers/gpio/Makefile
->> @@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_IOP)		+= gpio-iop.o
->>   obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
->>   obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
->>   obj-$(CONFIG_GPIO_KEMPLD)	+= gpio-kempld.o
->> +obj-$(CONFIG_GPIO_KEYSTONE_DSP)	+= gpio-keystone.o
->>   obj-$(CONFIG_ARCH_KS8695)	+= gpio-ks8695.o
->>   obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
->>   obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
->> diff --git a/drivers/gpio/gpio-keystone.c b/drivers/gpio/gpio-keystone.c
->> new file mode 100644
->> index 0000000..7909a1c
->> --- /dev/null
->> +++ b/drivers/gpio/gpio-keystone.c
->> @@ -0,0 +1,138 @@
->> +/*
->> + * Keystone 2 DSP GPIO support.
->> + *
->> + * Copyright (C) 2014 Texas Instruments, Inc.
->> + * Author: Murali Karicheri <m-karicheri2@ti.com>
->> + *	   Grygorii Strashko <grygorii.strashko@ti.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/gpio.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->> +
->> +/* 28 bits in IPCGRx are treated as GPIO pins to generate interrupt */
->> +#define GPIOS_PER_BANK		28
->> +#define GPIO_OFFSET		4
->> +
->> +struct keystone_gpio_bank {
->> +	struct gpio_chip	 chip;
->> +	struct device		*dev;
->> +	struct regmap		*devctrl_regs;
->> +	u32			devctrl_offset;
->> +};
->> +#define chip_to_bank(c) \
->> +	container_of(c, struct keystone_gpio_bank, chip)
->> +
->> +static int keystone_gpio_direction_out(struct gpio_chip *c,
->> +					unsigned ofs, int val)
->> +{
->> +	return 0;
->> +}
->> +
->> +static int keystone_gpio_get(struct gpio_chip *c, unsigned ofs)
->> +{
->> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
->> +	int bit = ofs + GPIO_OFFSET;
->> +	int ret;
->> +	u32 val = 0;
->> +
->> +	ret = regmap_read(bank->devctrl_regs, bank->devctrl_offset, &val);
->> +	if (ret < 0)
->> +		dev_dbg(bank->dev, "gpio read failed ret(%d)\n", ret);
->> +
->> +	return (val >> bit) & 1;
->> +}
->> +
->> +static void keystone_gpio_set(struct gpio_chip *c, unsigned ofs, int val)
->> +{
->> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
->> +	int bit = ofs + GPIO_OFFSET;
->> +	int ret;
->> +
->> +	if (!val)
->> +		return;
->> +
->> +	ret = regmap_write(bank->devctrl_regs, bank->devctrl_offset,
->> +			   BIT(bit) | 1);
-> 
-> What is this ORing with 1 for?
-
-This is lock/trigger bit. Once set - Configured GPIO values will be physically applied.
-
-Regards,
--grygorii
+	S=C3=B6ren
