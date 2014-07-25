@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 2/8] ARM: rockchip: clarify usability of DEBUG_RK3X_UART debug_ll options
-Date: Fri, 25 Jul 2014 23:49:34 +0200
-Message-ID: <1406324980-2450-3-git-send-email-heiko@sntech.de>
+Subject: [PATCH v3 5/8] ARM: rockchip: enable support for RK3288 SoCs
+Date: Fri, 25 Jul 2014 23:49:37 +0200
+Message-ID: <1406324980-2450-6-git-send-email-heiko@sntech.de>
 References: <1406324980-2450-1-git-send-email-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1406324980-2450-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,56 +10,41 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZh
 Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The debug uart settings from the DEBUG_RK3X_UART options are usable on
-all Rockchip SoCs from the rk30xx and rk31xx series but not on the
-new rk3288 SoCs. Thus clarify their use to prevent confusion.
+Enable HAVE_ARM_ARCH_TIMER and add a rockchip,rk3288 compatible.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/Kconfig.debug | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/mach-rockchip/Kconfig    | 1 +
+ arch/arm/mach-rockchip/rockchip.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 8f90595..a8dbf5e 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -582,7 +582,7 @@ choice
- 		  on Rockchip based platforms.
+diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchip/Kconfig
+index e4564c2..d168669 100644
+--- a/arch/arm/mach-rockchip/Kconfig
++++ b/arch/arm/mach-rockchip/Kconfig
+@@ -6,6 +6,7 @@ config ARCH_ROCKCHIP
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_GIC
+ 	select CACHE_L2X0
++	select HAVE_ARM_ARCH_TIMER
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select DW_APB_TIMER_OF
+diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/rockchip.c
+index 968cc34..8ab9e0e 100644
+--- a/arch/arm/mach-rockchip/rockchip.c
++++ b/arch/arm/mach-rockchip/rockchip.c
+@@ -29,6 +29,7 @@ static const char * const rockchip_board_dt_compat[] = {
+ 	"rockchip,rk3066a",
+ 	"rockchip,rk3066b",
+ 	"rockchip,rk3188",
++	"rockchip,rk3288",
+ 	NULL,
+ };
  
- 	config DEBUG_RK3X_UART0
--		bool "Kernel low-level debugging messages via Rockchip RK3X UART0"
-+		bool "Kernel low-level debugging messages via Rockchip RK30/RK31 UART0"
- 		depends on ARCH_ROCKCHIP
- 		select DEBUG_UART_8250
- 		help
-@@ -590,7 +590,7 @@ choice
- 		  on Rockchip based platforms.
- 
- 	config DEBUG_RK3X_UART1
--		bool "Kernel low-level debugging messages via Rockchip RK3X UART1"
-+		bool "Kernel low-level debugging messages via Rockchip RK30/RK31 UART1"
- 		depends on ARCH_ROCKCHIP
- 		select DEBUG_UART_8250
- 		help
-@@ -598,7 +598,7 @@ choice
- 		  on Rockchip based platforms.
- 
- 	config DEBUG_RK3X_UART2
--		bool "Kernel low-level debugging messages via Rockchip RK3X UART2"
-+		bool "Kernel low-level debugging messages via Rockchip RK30/RK31 UART2"
- 		depends on ARCH_ROCKCHIP
- 		select DEBUG_UART_8250
- 		help
-@@ -606,7 +606,7 @@ choice
- 		  on Rockchip based platforms.
- 
- 	config DEBUG_RK3X_UART3
--		bool "Kernel low-level debugging messages via Rockchip RK3X UART3"
-+		bool "Kernel low-level debugging messages via Rockchip RK30/RK31 UART3"
- 		depends on ARCH_ROCKCHIP
- 		select DEBUG_UART_8250
- 		help
 -- 
 1.9.0
 
