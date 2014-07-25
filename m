@@ -1,59 +1,209 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
- specification
-Date: Fri, 25 Jul 2014 11:18:15 +0100
-Message-ID: <20140725101815.GO17528@sirena.org.uk>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <1406242820-20140-10-git-send-email-afaerber@suse.de>
- <53D20A61.1050506@metafoo.de>
- <53D21066.8000905@monstr.eu>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: [PATCH v3 3/3] media: atmel-isi: add primary DT support
+Date: Fri, 25 Jul 2014 18:20:00 +0800
+Message-ID: <1406283600-32084-1-git-send-email-josh.wu@atmel.com>
+References: <1406283219-32015-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XgWkusiZDs53F1ax"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53D21066.8000905-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1406283219-32015-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, g.liakhovetski@gmx.de
+Cc: m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, laurent.pinchart@ideasonboard.com, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, ben.dooks@codethink.co.uk, Josh Wu <josh.wu@atmel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch add the DT support for Atmel ISI driver.
+It use the same v4l2 DT interface that defined in video-interfaces.txt.
 
---XgWkusiZDs53F1ax
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Josh Wu <josh.wu@atmel.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+v2 -> v3:
+  add bus-width property support.
+  add error handling when calling atmel_isi_probe_dt().
 
-On Fri, Jul 25, 2014 at 10:08:06AM +0200, Michal Simek wrote:
+v1 -> v2:
+  refine the binding document.
+  add port node description.
+  removed the optional property.
 
-> All these patches have been added through your tree that's why I think
-> you should take this fix through his tree.
+ .../devicetree/bindings/media/atmel-isi.txt        | 51 +++++++++++++++++
+ drivers/media/platform/soc_camera/atmel-isi.c      | 64 +++++++++++++++++++++-
+ 2 files changed, 113 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
 
-If someone could send me patches I'll take a look at them.
-
---XgWkusiZDs53F1ax
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT0i7kAAoJELSic+t+oim9Vg8P/jssSes7qvXYuLx6KaEy7v75
-RWXTm9EsaEUIZUvP9GBMSjx6yg7zItAVNjWxdQYTuM10ioUXa1E4zpHRBwZitqvx
-YmRX1gJjMiSidgYOxoeu86KgVIXKzPqZGdK97GrmTRwbMQhRQQpuLxRzEX3DkDn6
-DlljmWJ+xyKDPM6wtUnm6kGryFAYUGoLrGg/IAPd+WrcYOXTDziTcKaBXSkcFrcR
-no7CAAhfRqi+DoP557+o8w9nNDwe0smY9FWROQ5kBC9PtOEnqtoB2kqDZlJUIDHK
-gBRKKWTEZSgQTqaOLbTIwCrfMGlKaZrNIiGMPqO+NvOtVzzzyRzCY8iqF6RUoVXp
-+61HaWhpARNEtMsC2dZioMuTnT+AAijT3SYPcD6MuZSK+Tcq95tblHvtWgCl5V8j
-5uZVTFB6mo4fulytayKShKniyZBWdd002BUoPPhheEFdp3TUN+I3hwNEuukgZtr2
-nhxg7BRA3wG5plqqqsJ91RIr6LaJ01C94csEGIPtO4TuyL513FltZfG5AaL0DpBq
-q3pbWcyv/gfbZKyn+CrrHcUDNORZbuu2pb/UxJT8PojN6VNXdyfDUtOen73TstRx
-S8Q8bZoftEBiEqFdyo99MO0vDYwerZ1hE5uKgiqDZlZ2rHOFo2TeFokRc2MJeiiP
-Dtvf78DCQQLZiiQmT5HX
-=TiQH
------END PGP SIGNATURE-----
-
---XgWkusiZDs53F1ax--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+new file mode 100644
+index 0000000..17e71b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+@@ -0,0 +1,51 @@
++Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
++----------------------------------------------
++
++Required properties:
++- compatible: must be "atmel,at91sam9g45-isi"
++- reg: physical base address and length of the registers set for the device;
++- interrupts: should contain IRQ line for the ISI;
++- clocks: list of clock specifiers, corresponding to entries in
++          the clock-names property;
++- clock-names: must contain "isi_clk", which is the isi peripherial clock.
++
++ISI supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++	isi: isi@f0034000 {
++		compatible = "atmel,at91sam9g45-isi";
++		reg = <0xf0034000 0x4000>;
++		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
++
++		clocks = <&isi_clk>;
++		clock-names = "isi_clk";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_isi>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			isi_0: endpoint {
++				remote-endpoint = <&ov2640_0>;
++				bus-width = <8>;
++			};
++		};
++	};
++
++	i2c1: i2c@f0018000 {
++		ov2640: camera@0x30 {
++			compatible = "omnivision,ov2640";
++			reg = <0x30>;
++
++			port {
++				ov2640_0: endpoint {
++					remote-endpoint = <&isi_0>;
++					bus-width = <8>;
++				};
++			};
++		};
++	};
+diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+index 74af560..ca4e43e 100644
+--- a/drivers/media/platform/soc_camera/atmel-isi.c
++++ b/drivers/media/platform/soc_camera/atmel-isi.c
+@@ -25,6 +25,7 @@
+ #include <media/atmel-isi.h>
+ #include <media/soc_camera.h>
+ #include <media/soc_mediabus.h>
++#include <media/v4l2-of.h>
+ #include <media/videobuf2-dma-contig.h>
+ 
+ #define MAX_BUFFER_NUM			32
+@@ -33,6 +34,7 @@
+ #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
+ #define MIN_FRAME_RATE			15
+ #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
++#define ISI_DEFAULT_MCLK_FREQ		25000000
+ 
+ /* Frame buffer descriptor */
+ struct fbd {
+@@ -883,6 +885,50 @@ static int atmel_isi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int atmel_isi_probe_dt(struct atmel_isi *isi,
++			struct platform_device *pdev)
++{
++	struct device_node *np= pdev->dev.of_node;
++	struct v4l2_of_endpoint ep;
++	int err;
++
++	/* Default settings for ISI */
++	isi->pdata.full_mode = 1;
++	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
++	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
++
++	np = of_graph_get_next_endpoint(np, NULL);
++	if (!np) {
++		dev_err(&pdev->dev, "Could not find the endpoint\n");
++		return -EINVAL;
++	}
++
++	err = v4l2_of_parse_endpoint(np, &ep);
++	if (err) {
++		dev_err(&pdev->dev, "Could not parse the endpoint\n");
++		goto err_probe_dt;
++	}
++
++	switch (ep.bus.parallel.bus_width) {
++	case 8:
++		isi->pdata.data_width_flags = ISI_DATAWIDTH_8;
++		break;
++	case 10:
++		isi->pdata.data_width_flags = ISI_DATAWIDTH_10;
++		break;
++	default:
++		dev_err(&pdev->dev, "Not supported bus width: %d\n",
++				ep.bus.parallel.bus_width);
++		err = -EINVAL;
++		goto err_probe_dt;
++	}
++
++err_probe_dt:
++	of_node_put(np);
++
++	return err;
++}
++
+ static int atmel_isi_probe(struct platform_device *pdev)
+ {
+ 	unsigned int irq;
+@@ -894,7 +940,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
+ 	struct isi_platform_data *pdata;
+ 
+ 	pdata = dev->platform_data;
+-	if (!pdata || !pdata->data_width_flags) {
++	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
+ 		dev_err(&pdev->dev,
+ 			"No config available for Atmel ISI\n");
+ 		return -EINVAL;
+@@ -910,7 +956,14 @@ static int atmel_isi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(isi->pclk))
+ 		return PTR_ERR(isi->pclk);
+ 
+-	memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
++	if (pdata) {
++		memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
++	} else {
++		ret = atmel_isi_probe_dt(isi, pdev);
++		if (ret)
++			return ret;
++	}
++
+ 	isi->active = NULL;
+ 	spin_lock_init(&isi->lock);
+ 	INIT_LIST_HEAD(&isi->video_buffer_list);
+@@ -1012,11 +1065,18 @@ err_alloc_ctx:
+ 	return ret;
+ }
+ 
++static const struct of_device_id atmel_isi_of_match[] = {
++	{ .compatible = "atmel,at91sam9g45-isi" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
++
+ static struct platform_driver atmel_isi_driver = {
+ 	.remove		= atmel_isi_remove,
+ 	.driver		= {
+ 		.name = "atmel_isi",
+ 		.owner = THIS_MODULE,
++		.of_match_table = atmel_isi_of_match,
+ 	},
+ };
+ 
+-- 
+1.9.1
