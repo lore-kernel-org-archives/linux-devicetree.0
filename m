@@ -1,99 +1,208 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] ARM: dts: zynq: Add VDMA to Parallella
-Date: Fri, 25 Jul 2014 07:49:47 -0700
-Message-ID: <f0a06d6e-e10a-48c1-91a3-fc99f4a772b4@BN1AFFO11FD044.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <1406242820-20140-9-git-send-email-afaerber@suse.de>
- <b4c4e060-2efb-4b82-be12-32c00897ec93@BY2FFO11FD023.protection.gbl>
- <53D22799.8050903@suse.de>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2] gpio: keystone: add dsp gpio controller driver
+Date: Fri, 25 Jul 2014 18:44:50 +0300
+Message-ID: <53D27B72.2060709@ti.com>
+References: <1406126699-10053-1-git-send-email-grygorii.strashko@ti.com> <53D15B47.6020802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53D22799.8050903-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53D15B47.6020802@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Cc: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "varkabhadram@gmail.com" <varkabhadram@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-07-25 at 11:47AM +0200, Andreas F=C3=A4rber wrote:
-> Hi S=C3=B6ren,
->=20
-> Am 25.07.2014 01:22, schrieb S=C3=B6ren Brinkmann:
-> > On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
-> >> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> >> ---
-> >>  v2: New
-> >> =20
-> >>  arch/arm/boot/dts/zynq-parallella.dts | 25 ++++++++++++++++++++++=
-+++
-> >>  1 file changed, 25 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot=
-/dts/zynq-parallella.dts
-> >> index e60a0a9..8beaacc 100644
-> >> --- a/arch/arm/boot/dts/zynq-parallella.dts
-> >> +++ b/arch/arm/boot/dts/zynq-parallella.dts
-> >> @@ -32,6 +32,31 @@
-> >>  		bootargs =3D "console=3DttyPS0,115200 earlyprintk root=3D/dev/m=
-mcblk0p2 rootfstype=3Dext4 rw rootwait";
-> >>  		linux,stdout-path =3D "/amba/serial@e0001000";
-> >>  	};
-> >> +
-> >> +	fpga {
-> > Do you really want FPGA components in this DT?
-> > If somebody tries booting with this DT without programming with a
-> > corresponding bitstream, the whole system might hang.
-> > Just something to consider.
->=20
-> Well, that's related to a question that remained unanswered on v1:
-> whether we may need to turn this into a .dtsi to cope with variations=
-=2E
->=20
-> The Parallella has an on-board =C2=B5HDMI connector, and two bitstrea=
-ms are
-> delivered - one for HDMI and one for headless usage. In my testing I =
-am
-> using the original HDMI bitstream but serial console for lack of
-> upstream HDMI drivers. Do you think we need to provide
-> zynq-parallella-hdmi.dts and zynq-parallella-headless.dts? (It gets
-> worse if at some point we need to handle variations of the on-board
-> Epiphany chip plus the bitstreams - at least the Z7010 vs. Z7020 does=
-n't
-> affect DT AFAICT.)
->=20
-> Since, as noted in the cover letter, these FPGA patches are not yet
-> fully testable, I wouldn't mind deferring them, but wanted to get the=
-m
-> out for review early.
->=20
-> http://www.parallella.org/2014/07/14/new-parallella-product-offerings=
-/
-> indicates there will be a new variation in gen2 without USB/HDMI. Wou=
-ld
-> it be valid to #include a .dts (rather than .dtsi) to override status
-> and keep number of Parallella files low?
+On 07/24/2014 10:15 PM, Suman Anna wrote:
+> Grygorii,
+> 
+> On 07/23/2014 09:44 AM, Strashko, Grygorii wrote:
+>> From: Murali Karicheri <m-karicheri2@ti.com>
+>>
+>> On Keystone SOCs, ARM host can send interrupts to DSP cores using the
+>> DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
+>> each DSP core. This is one of the component used by the IPC mechanism used
+>> on Keystone SOCs.
+>>
+>> Keystone 2 DSP GPIO controller has specific features:
+>> - each GPIO can be configured only as output pin;
+>> - setting GPIO value to 1 causes IRQ generation on target DSP core;
+>> - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
+>>    pending.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>> Changes in v2:
+>> - minor comments applied
+>>
+>> v1:
+>>   https://lkml.org/lkml/2014/7/16/170
+>>
+>>   .../devicetree/bindings/gpio/gpio-keystone.txt     |   43 ++++++
+>>   drivers/gpio/Kconfig                               |    8 ++
+>>   drivers/gpio/Makefile                              |    1 +
+>>   drivers/gpio/gpio-keystone.c                       |  138 ++++++++++++++++++++
+>>   4 files changed, 190 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-keystone.txt
+>>   create mode 100644 drivers/gpio/gpio-keystone.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
+>> new file mode 100644
+>> index 0000000..d412711
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-keystone.txt
+>> @@ -0,0 +1,43 @@
+>> +Keystone 2 DSP GPIO controller bindings
+>> +
+>> +HOST OS userland running on ARM can send interrupts to DSP cores using
+>> +the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
+>> +This is one of the component used by the IPC mechanism used on Keystone SOCs.
+>> +
+>> +For example TCI6638K2K SoC has 8 DSP GPIO controllers:
+>> + - 8 for C66x CorePacx CPUs 0-7
+>> +
+>> +Keystone 2 DSP GPIO controller has specific features:
+>> +- each GPIO can be configured only as output pin;
+>> +- setting GPIO value to 1 causes IRQ generation on target DSP core;
+>> +- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
+>> +  pending.
+>> +
+>> +Required Properties:
+>> +- compatible: should be "ti,keystone-dsp-gpio"
+>> +
+>> +- ti,syscon-dev : phandle/offset pair. The phandle to syscon used to
+>> +				  access device state control registers and the offset
+>> +				  in order to use block of device's specific registers.
+>> +
+>> +- gpio-controller : Marks the device node as a gpio controller.
+>> +
+>> +- #gpio-cells : Should be one.
+>> +				See gpio.txt in this directory for a of the cells format
+>> +
+>> +Please refer to gpio.txt in this directory for details of the common GPIO
+>> +bindings used by client devices.
+>> +
+>> +Example:
+>> +	dspgpio0: keystone_dsp_gpio@02620240 {
+>> +		compatible = "ti,keystone-dsp-gpio";
+>> +		ti,syscon-dev = <&devctrl 0x240>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+> 
+> Mismatch? Conflicts with "Should be one".
 
-=46or these FPGA devices, it would be nice if it was possible to includ=
-e
-a dts file. I think there were problems with that, but don't know what
-the current status of that is. Then it would be possible to have the SO=
-C
-dtsi a board dts and systems with FPGA components can include the board
-dts.
-I also heard that some people are getting upset with all the includes
-going on in the dts files.
+You are right.
+> 
+>> +	};
+>> +
+>> +	dsp0: dsp0 {
+>> +		compatible = "linux,rproc-user";
+>> +		...
+>> +		kick-gpio = <&dspgpio0 27>;
+>> +	};
+>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+>> index 4a1b511..990871f 100644
+>> --- a/drivers/gpio/Kconfig
+>> +++ b/drivers/gpio/Kconfig
+>> @@ -158,6 +158,14 @@ config GPIO_EP93XX
+>>   	depends on ARCH_EP93XX
+>>   	select GPIO_GENERIC
+>>   
+>> +config GPIO_KEYSTONE_DSP
+>> +	tristate "Keystone DSP GPIO support"
+>> +	depends on ARCH_KEYSTONE
+>> +	help
+>> +	  Say yes here to support the DSP GPIO driver for Keystone 2. This defines
+>> +	  up to 28 GPIOs per each Remote (DSP) core. This is used to send
+>> +	  signals from ARM to the Remote (DSP) core.
+>> +
+>>   config GPIO_ZEVIO
+>>   	bool "LSI ZEVIO SoC memory mapped GPIOs"
+>>   	depends on ARM && OF_GPIO
+>> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+>> index d10f6a9..15c3389 100644
+>> --- a/drivers/gpio/Makefile
+>> +++ b/drivers/gpio/Makefile
+>> @@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_IOP)		+= gpio-iop.o
+>>   obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
+>>   obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
+>>   obj-$(CONFIG_GPIO_KEMPLD)	+= gpio-kempld.o
+>> +obj-$(CONFIG_GPIO_KEYSTONE_DSP)	+= gpio-keystone.o
+>>   obj-$(CONFIG_ARCH_KS8695)	+= gpio-ks8695.o
+>>   obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
+>>   obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
+>> diff --git a/drivers/gpio/gpio-keystone.c b/drivers/gpio/gpio-keystone.c
+>> new file mode 100644
+>> index 0000000..7909a1c
+>> --- /dev/null
+>> +++ b/drivers/gpio/gpio-keystone.c
+>> @@ -0,0 +1,138 @@
+>> +/*
+>> + * Keystone 2 DSP GPIO support.
+>> + *
+>> + * Copyright (C) 2014 Texas Instruments, Inc.
+>> + * Author: Murali Karicheri <m-karicheri2@ti.com>
+>> + *	   Grygorii Strashko <grygorii.strashko@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +/* 28 bits in IPCGRx are treated as GPIO pins to generate interrupt */
+>> +#define GPIOS_PER_BANK		28
+>> +#define GPIO_OFFSET		4
+>> +
+>> +struct keystone_gpio_bank {
+>> +	struct gpio_chip	 chip;
+>> +	struct device		*dev;
+>> +	struct regmap		*devctrl_regs;
+>> +	u32			devctrl_offset;
+>> +};
+>> +#define chip_to_bank(c) \
+>> +	container_of(c, struct keystone_gpio_bank, chip)
+>> +
+>> +static int keystone_gpio_direction_out(struct gpio_chip *c,
+>> +					unsigned ofs, int val)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static int keystone_gpio_get(struct gpio_chip *c, unsigned ofs)
+>> +{
+>> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
+>> +	int bit = ofs + GPIO_OFFSET;
+>> +	int ret;
+>> +	u32 val = 0;
+>> +
+>> +	ret = regmap_read(bank->devctrl_regs, bank->devctrl_offset, &val);
+>> +	if (ret < 0)
+>> +		dev_dbg(bank->dev, "gpio read failed ret(%d)\n", ret);
+>> +
+>> +	return (val >> bit) & 1;
+>> +}
+>> +
+>> +static void keystone_gpio_set(struct gpio_chip *c, unsigned ofs, int val)
+>> +{
+>> +	struct keystone_gpio_bank *bank = chip_to_bank(c);
+>> +	int bit = ofs + GPIO_OFFSET;
+>> +	int ret;
+>> +
+>> +	if (!val)
+>> +		return;
+>> +
+>> +	ret = regmap_write(bank->devctrl_regs, bank->devctrl_offset,
+>> +			   BIT(bit) | 1);
+> 
+> What is this ORing with 1 for?
 
-And the next question would be: How many dts files do you really want
-in the upstream kernel tree? Since we deal with FPGAs, there is
-virtually and infinite number of different systems that you could
-create relatively easily.
+This is lock/trigger bit. Once set - Configured GPIO values will be physically applied.
 
-	S=C3=B6ren
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+-grygorii
