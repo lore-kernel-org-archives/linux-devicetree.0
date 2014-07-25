@@ -1,83 +1,58 @@
-From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
-Date: Fri, 25 Jul 2014 10:31:08 +0000
-Message-ID: <7aabd35a-0b4a-4d03-9976-ef3926929ddc@BL2FFO11FD027.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <1406242820-20140-6-git-send-email-afaerber@suse.de>
- <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl>
- <53D20E5B.9070501@monstr.eu> <53D21887.2020305@suse.de>
- <53D2258B.9000609@xilinx.com>
+From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
+Date: Fri, 25 Jul 2014 12:32:38 +0200
+Message-ID: <53D23246.1010300@aksignal.cz>
+References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>	<53D10C50.50305@aksignal.cz>	<20140724162645.4e19c26c@bbrezillon>	<53D12103.3020103@aksignal.cz>	<20140724175848.44f5da10@bbrezillon>	<53D1F5D0.1080006@aksignal.cz>	<20140725095319.16a8465c@bbrezillon>	<53D214E1.4050105@aksignal.cz>	<20140725104553.403921b1@bbrezillon>	<53D21B3F.7060006@aksignal.cz>	<20140725110124.3f0dce6c@bbrezillon>	<53D21FCF.7010402@aksignal.cz>	<20140725113110.70c4aa41@bbrezillon>	<53D22C26.4030208@aksignal.cz> <20140725121804.18b05a5d@bbrezillon>
+Reply-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D2258B.9000609-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20140725121804.18b05a5d@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWljaGFsIFNpbWVr
-IFttYWlsdG86bWljaGFsLnNpbWVrQHhpbGlueC5jb21dDQo+IFNlbnQ6IEZyaWRheSwgSnVseSAy
-NSwgMjAxNCAzOjA4IFBNDQo+IFRvOiBBbmRyZWFzIEbDpHJiZXI7IG1vbnN0ckBtb25zdHIuZXU7
-IFNvcmVuIEJyaW5rbWFubg0KPiBDYzogSGFyaW5pIEthdGFrYW07IE1pY2hhbCBTaW1lazsgQW5k
-cmVhcyBPbG9mc3NvbjsgTWF0dGVvIFZpdDsgU2Vhbg0KPiBSaWNrZXJkOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9sbDsgTWFy
-ayBSdXRsYW5kOyBJYW4NCj4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFJ1c3NlbGwgS2luZw0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzExXSBBUk06IGR0czogenlucTogQWRkIFFTUEkgZm9y
-IFBhcmFsbGVsbGENCj4gDQo+IE9uIDA3LzI1LzIwMTQgMTA6NDIgQU0sIEFuZHJlYXMgRsOkcmJl
-ciB3cm90ZToNCj4gPiBBbSAyNS4wNy4yMDE0IDA5OjU5LCBzY2hyaWViIE1pY2hhbCBTaW1lazoN
-Cj4gPj4gT24gMDcvMjUvMjAxNCAwMToxOCBBTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToNCj4g
-Pj4+IE9uIEZyaSwgMjAxNC0wNy0yNSBhdCAwMTowMEFNICswMjAwLCBBbmRyZWFzIEbDpHJiZXIg
-d3JvdGU6DQo+ID4+Pj4gUHJlcGFyZSBTUEkwIGFuZCBTUEkxIHdoaWxlIGF0IGl0Lg0KPiA+DQo+
-ID4+IFBhdGNoIHN1YmplY3QgaXMgaW5jb3JyZWN0LiBZb3UgYXJlIGFkZGluZyBTUEkgYW5kIFFT
-UEkuDQo+ID4NCj4gPiBZZXMsIGl0IG9yaWdpbmFsbHkgYWRkZWQgb25seSBRU1BJLCBidXQgSSBj
-b25zaWRlcmVkIGl0IGEgZ29vZCBkZWVkIHRvDQo+ID4gYWRkIFNQSSBhcyB3ZWxsIHdoaWxlIGFs
-cmVhZHkgcmVhZGluZyB0aGF0IHBhcnQgb2YgdGhlIFRSTS4gOikNCj4gPg0KPiA+Pj4+DQo+ID4+
-Pj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiAtLS0g
-djI6IE5ldw0KPiA+Pj4+DQo+ID4+Pj4gYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kg
-ICAgICB8IDM3DQo+ID4+Pj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4g
-Pj4+PiBhcmNoL2FybS9ib290L2R0cy96eW5xLXBhcmFsbGVsbGEuZHRzIHwgIDQgKysrKyAyIGZp
-bGVzDQo+ID4+Pj4gY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPiA+Pj4+DQo+ID4+Pj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpDQo+ID4+Pj4gYi9hcmNo
-L2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSBpbmRleCA4ZmQ4MjZhLi5lZWQzZGYwDQo+ID4+
-Pj4gMTAwNjQ0IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpICsrKw0KPiA+
-Pj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgQEAgLTEyMiw2ICsxMjIsMzAg
-QEANCj4gPj4+PiBpbnRlcnJ1cHRzID0gPDAgNTAgND47IH07DQo+ID4+Pj4NCj4gPj4+PiArCQlz
-cGkwOiBzcGlAZTAwMDYwMDAgeyArCQkJY29tcGF0aWJsZSA9DQo+ICJ4bG54LHp5bnEtc3BpLXIx
-cDYiOw0KPiA+Pj4+ICsJCQlyZWcgPSA8MHhlMDAwNjAwMCAweDEwMDA+OyArCQkJc3RhdHVzDQo+
-ID0gImRpc2FibGVkIjsgKw0KPiA+Pj4+IGludGVycnVwdC1wYXJlbnQgPSA8JmludGM+OyArCQkJ
-aW50ZXJydXB0cyA9IDwwIDI2IDQ+Ow0KPiArDQo+ID4+Pj4gY2xvY2tzID0gPCZjbGtjIDI1Piwg
-PCZjbGtjIDM0PjsgKwkJCWNsb2NrLW5hbWVzID0NCj4gInJlZl9jbGsiLA0KPiA+Pj4+ICJwY2xr
-IjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OyArCQkJI3NpemUtDQo+IGNlbGxzID0gPDA+OyAr
-CQl9Ow0KPiA+Pj4+ICsgKwkJc3BpMTogc3BpQGUwMDA3MDAwIHsgKwkJCWNvbXBhdGlibGUgPQ0K
-PiA+Pj4+ICJ4bG54LHp5bnEtc3BpLXIxcDYiOyArCQkJcmVnID0gPDB4ZTAwMDcwMDAgMHgxMDAw
-PjsgKw0KPiAJCQlzdGF0dXMNCj4gPj4+PiA9ICJkaXNhYmxlZCI7ICsJCQlpbnRlcnJ1cHQtcGFy
-ZW50ID0gPCZpbnRjPjsgKw0KPiAJCWludGVycnVwdHMgPQ0KPiA+Pj4+IDwwIDQ5IDQ+OyArCQkJ
-Y2xvY2tzID0gPCZjbGtjIDI2PiwgPCZjbGtjIDM1PjsgKw0KPiAJCWNsb2NrLW5hbWVzDQo+ID4+
-Pj4gPSAicmVmX2NsayIsICJwY2xrIjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OyArDQo+IAkJ
-I3NpemUtY2VsbHMNCj4gPj4+PiA9IDwwPjsgKwkJfTsgKw0KPiA+Pj4gVW50aWwgaGVyZSB0aGlu
-Z3MgbG9vayBnb29kLg0KPiA+Pj4NCj4gPj4+PiBnZW0wOiBldGhlcm5ldEBlMDAwYjAwMCB7IGNv
-bXBhdGlibGUgPSAiY2RucyxnZW0iOyByZWcgPQ0KPiA+Pj4+IDwweGUwMDBiMDAwIDB4NDAwMD47
-IEBAIC0xNDAsNiArMTY0LDE5IEBAIGNsb2NrLW5hbWVzID0gInBjbGsiLA0KPiA+Pj4+ICJoY2xr
-IiwgInR4X2NsayI7IH07DQo+ID4+Pj4NCj4gPj4+PiArCQlxc3BpOiBxc3BpQGUwMDBkMDAwIHsg
-KwkJCWNvbXBhdGlibGUgPQ0KPiA+Pj4+ICJ4bG54LHp5bnEtc3BpLXIxcDYiOyArCQkJcmVnID0g
-PDB4ZTAwMGQwMDAgMHgxMDAwPjsgKw0KPiAJCQlzdGF0dXMNCj4gPj4+PiA9ICJkaXNhYmxlZCI7
-ICsJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsgKw0KPiAJCWludGVycnVwdHMgPQ0KPiA+
-Pj4+IDwwIDE5IDQ+OyArCQkJY2xvY2tzID0gPCZjbGtjIDEwPiwgPCZjbGtjIDQzPjsgKw0KPiAJ
-CWNsb2NrLW5hbWVzDQo+ID4+Pj4gPSAicmVmX2NsayIsICJwY2xrIjsgKwkJCW51bS1jcyA9IDwx
-PjsgKw0KPiAJI2FkZHJlc3MtY2VsbHMgPQ0KPiA+Pj4+IDwxPjsgKwkJCSNzaXplLWNlbGxzID0g
-PDA+OyArCQl9OyArDQo+ID4+PiBJJ20gbm90IHN1cmUgd2hhdCB0aGUgc3RhdHVzIG9mIHRoaXMg
-ZHJpdmVyIGlzLiBJIHRoaW5rIFFTUEkgaXMNCj4gPj4+IHN0aWxsIHVuZGVyIHJldmlldyBvbiB0
-aGUgbWFpbGluZyBsaXN0cyBhbmQgSSBkb24ndCB0aGluayB3ZQ0KPiA+Pj4gc2hvdWxkIGFkZCB0
-aGlzIHlldC4NCj4gPg0KPiA+PiBEcml2ZXIgZm9yIHFzcGkgaXMgbm90IGluIHRoZSBtYWlubGlu
-ZSB5ZXQgYnV0IGl0IGRvZXNuJ3QgbWVhbiB0aGF0DQo+ID4+IHRoaXMgZnJhZ21lbnQgd29uJ3Qg
-d29yay4gSGFyaW5pOiBDYW4geW91IHBsZWFzZSBjb3JyZWN0IG1lIGlmIEkgYW0NCj4gPj4gd3Jv
-bmc/DQo+ID4NCg0KSXQgY2FuIGJlIGFkZGVkIGJ1dCBpdCB3aWxsIGhhdmUgdG8gYmUgZGlzYWJs
-ZWQgYXMgdGhlcmUgaXMgbm8gcXNwaSBkcml2ZXINCmF0IHRoZSBtb21lbnQgaW4gbWFpbmxpbmUu
-DQoNClJlZ2FyZHMsDQpIYXJpbmkNCg==
+
+
+Dne 25.7.2014 v 12:18 Boris BREZILLON napsal(a):
+>> / # devmem 0xfffff408
+>> 0xF0E04018
+>> / # devmem 0xfffff418
+>> 0xE0C04000
+>> / # devmem 0xfffff438
+>> 0x00C04000
+>> / # devmem 0xfffff43c
+>> 0x13FFD7FB
+>> / # devmem 0xfffff458
+>> 0x00000000
+>> / # devmem 0xfffff468
+>> 0xFF223B4E
+>> / # devmem 0xfffff470
+>> 0x0F000000
+>> / # devmem 0xfffff474
+>> 0x00000000
+>> / # devmem 0xfffff498
+>> 0xFFFFFFFF
+>>
+>> I get thought if is possible that in time of probe fm25 (it's first) is not configured PA14 (it 's last)?
+>
+> Oh, nice catch!
+> I think you've found the origin of this bug.
+> Indeed each device is instantiated sequentially and thus when the first
+> device is probed (CS0) the last one has not requested it's cs_gpio yet
+> (and PA14 is still assigned to periph A).
+>
+> Declaring cs-pins and referencing them in pinctrl-0 solves the issue
+> because in this case all CS pins are requested during controller probe.
+>
+So, what would be the right fix up? I my patch it's not good idea since some other driver can request pin for other 
+peripheral earlier than spi. In board dts it could be new investigating for someone else who don't know this issue. I 
+think the best way would be request all cs in early spi init since cs depends on each other and must be all of them in 
+right state before any communication on bus. They are part of bus, like miso, mosi, clk, not part of chips. Also they 
+are defined in parent spi node, not in child chip node.
+Am I right?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
