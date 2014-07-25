@@ -1,125 +1,115 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 08:14:40 +0200
-Message-ID: <53D1F5D0.1080006@aksignal.cz>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>	<53D10C50.50305@aksignal.cz>	<20140724162645.4e19c26c@bbrezillon>	<53D12103.3020103@aksignal.cz> <20140724175848.44f5da10@bbrezillon>
-Reply-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform
+ drivers
+Date: Fri, 25 Jul 2014 11:47:42 +0530
+Message-ID: <53D1F686.30600@gmail.com>
+References: <cover.1406259578.git.nicoleotsuka@gmail.com> <f4ff79269a1680f9ce128e0e98fea926d3a41834.1406259578.git.nicoleotsuka@gmail.com> <53D1DC0B.1000905@gmail.com> <20140725055447.GC29136@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140724175848.44f5da10@bbrezillon>
+In-Reply-To: <20140725055447.GC29136@MrMyself>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Nicolin,
 
-
-Dne 24.7.2014 v 17:58 Boris BREZILLON napsal(a):
-> On Thu, 24 Jul 2014 17:06:43 +0200
-> Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
+On 07/25/2014 11:24 AM, Nicolin Chen wrote:
+> Hi Varka,
 >
->> Hi,
+>     Regarding a point you suggested.
+>
+> On Fri, Jul 25, 2014 at 09:54:43AM +0530, Varka Bhadram wrote:
+>> On 07/25/2014 09:33 AM, Nicolin Chen wrote:
+>> (...)
 >>
->> Dne 24.7.2014 v 16:26 Boris BREZILLON napsal(a):
->>> Hello Ji=C5=99=C3=AD,
->>>
->>> First of all, please try to use git format-patch when submitting a
->>> patch to any kernel mailing list.
->> Sorry for that.
->>>
->>> On Thu, 24 Jul 2014 15:38:24 +0200
->>> Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
->>>
->>>> After ROMBOOT tries boot from flash on SPI0 NPCS0, this NPCS0 (PA1=
-4) remains set to PERIPH_A.
->>>> Because of that, this pin is unusable to something else.
->>>> This patch sets it back to GPIO.
->>>
->>> The policy is to leave pins in an unknown state till some periphera=
-l
->>> need them.
->>>
->>> What are you trying to use this pin for ?
->> For chip select, but #3. And when SPI communicate with cs0 (PA22), i=
-t goes down too (PA14), so 2 devices on bus were
->> selected.
+>>> +
+>>> +static const struct platform_device_id fsl_asrc_devtype[] = {
+>>> +	{
+>>> +		.name = "imx35-asrc",
+>>> +		.driver_data = IMX35_ASRC,
+>>> +	}, {
+>>> +		.name = "imx53-asrc",
+>>> +		.driver_data = IMX53_ASRC,
+>>> +	}, {
+>>> +		/* sentinel */
+>>> +	}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
+>>> +
+>>> +static const struct of_device_id fsl_asrc_ids[] = {
+>>> +	{
+>>> +		.compatible = "fsl,imx35-asrc",
+>>> +		.data = &fsl_asrc_devtype[IMX35_ASRC],
+>>> +	}, {
+>>> +		.compatible = "fsl,imx53-asrc",
+>>> +		.data = &fsl_asrc_devtype[IMX53_ASRC],
+>>> +	}, {
+>>> +		/* sentinel */
+>>> +	}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
+>>> +
+>> move these ids after probe/remove... every driver follows same thing...
+> Hmm.. fsl_asrc_ids is called in probe(), so it's probably not a good choice
+> to put them after probe/remove. And actually not every driver does so.
+> For example drivers/i2c/busses/i2c-s3c2410.c
 >
-> Are you using a 9x5ek board or a custom one, in the latter case could
-> you paste your spi0 node definition ?
-I'm using custom board. My spi node:
-			spi0: spi@f0000000 {
-				status =3D "okay";
-				cs-gpios =3D <&pioA 23 0
-					    &pioA 22 0
-					    &pioC 29 0
-					    &pioA 14 0>;
+> I think it should be okay to put here if it contains data.
 
-				fm25@0 {
-					compatible =3D "cypress,fm25";
-					spi-max-frequency =3D <40000000>;
-					reg =3D <0>;
-					pagesize =3D <256>;
-					size =3D <131072>;
-					address-width =3D <24>;
-				};
-				/* ADC */
-				spidev@1 {
-					compatible =3D "spidev";
-					reg =3D <1>;
-					spi-max-frequency =3D <1000000>;
-				};
-				/* IO expander for busaddr */
-				spidev@2 {
-					compatible =3D "spidev";
-					reg =3D <2>;
-					label =3D "busaddr";
-					spi-max-frequency =3D <10000000>;
-				};
-				/* audio codec */
-				codec: codec@3 {
-					compatible =3D "ti,tlv320aic3x";
-					spi-max-frequency =3D <1000000>;
-					reg =3D <3>;
-				};
-			};
+You are using these ids in the probe .Tt should be above the probe() so
+we can see of_match_device() directly...
+and also one more thing that the interrupt handler also would be immediately
+above the probe()
 
-This does not work without patch, because of 2 chips selected at one ti=
-me because of PA14 is periph_a. Probably ROMBOOT=20
-changes that.
->
->>> If you just want to use it as a chip select for an spi device, take=
- a
->>> look at [1].
->> At [1] it's OK until as cs0 is for example PA22 and cs1 is PA14.
->
-> If you want PA14 to control cs1 and PA22 to control cs0 (both
-> configured as GPIOs), you'll have the following definition:
->
-> cs-gpios =3D <&pioA 22 0>, <&pioA 14 0>, <0>, <0>;
-See my node.
->
->>>
->>> Here the gpio is requested by the spi core when defining the cs-gpi=
-os
->>> property. The gpio controller then request the listed pins to the p=
-in
->>> controller (pinctrl driver).
->> GPIO is not set in driver as GPIO, at least I didn't find it.
->
-> Take a look at [1], which is set as the gpio_request_enable callback,
-> called by pinctrl core when a gpio is requested.
-But is this called from spi driver when requesting gpios as cs?
->
->
-> [1]http://lxr.free-electrons.com/source/drivers/pinctrl/pinctrl-at91.=
-c#L665
->
->
+ex:
+static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
+{
+...
+}
+
+device ids..
+
+your_probe()
+{
+...
+}
+
+your_remove()
+{
+...
+}
+
+Now every driver that is coming following this style...
+
+If your not using device ids in probe then it would be like
+
+static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
+{
+...
+}
+
+your_probe()
+{
+...
+}
+
+your_remove()
+{
+...
+}
+
+device ids..
+
+Thanks...
+
+-- 
+Regards,
+Varka Bhadram.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
