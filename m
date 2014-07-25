@@ -1,161 +1,81 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform
- drivers
-Date: Fri, 25 Jul 2014 13:05:05 +0530
-Message-ID: <53D208A9.3040903@gmail.com>
-References: <cover.1406271541.git.nicoleotsuka@gmail.com> <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka@gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 04/11] ARM: dts: zynq: Update deprecated xuartps clock
+ names
+Date: Fri, 25 Jul 2014 09:38:31 +0200
+Message-ID: <53D20977.2050605@monstr.eu>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-5-git-send-email-afaerber@suse.de> <82ab6426-211e-451e-99c3-df40dbea817e@BN1AFFO11FD039.protection.gbl> <53D1931C.7080409@suse.de> <50aad941-92d9-428a-a708-77040e24b651@BY2FFO11FD008.protection.gbl>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="R2bCpt5LAqnCgcvOlv8FB43VRvEwqhIVe"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50aad941-92d9-428a-a708-77040e24b651@BY2FFO11FD008.protection.gbl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 07/25/2014 12:49 PM, Nicolin Chen wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--R2bCpt5LAqnCgcvOlv8FB43VRvEwqhIVe
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-(...)
+On 07/25/2014 01:24 AM, S=C3=B6ren Brinkmann wrote:
+> On Fri, 2014-07-25 at 01:13AM +0200, Andreas F=C3=A4rber wrote:
+>> Am 25.07.2014 01:09, schrieb S=C3=B6ren Brinkmann:
+>>> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
+>>>> Avoids deprecation warning messages.
+>>>
+>>> A patch that updates those names is already in armsoc.
+>>
+>> Which tree/branch should I base this series on then? It seemed the
+>> Xilinx branches were all heavily outdated some days ago, so this is
+>> against vanilla v3.16-rc6.
 
-> +
-> +	div[IN] = clk_get_rate(clk) / inrate;
-> +	if (div[IN] == 0) {
-> +		pair_err("failed to support input sample rate %dHz by asrck_%x",
-> +				inrate, clk_index[ideal ? OUT : IN]);
+I have updated that branches. From my experience none is looking
+at these branches and I mainly use them for communication
+with arm-soc where sign tags are used which you can see them there.
 
-Ohhhhh... missed terminating new line...
+>=20
+> That is something for the maintainers to answer. But in general, you're=
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	clk = asrc_priv->asrck_clk[clk_index[OUT]];
-> +
-> +	/* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
-> +	if (ideal)
-> +		div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
-> +	else
-> +		div[OUT] = clk_get_rate(clk) / outrate;
-> +
-> +	if (div[OUT] == 0) {
-> +		pair_err("failed to support output sample rate %dHz by asrck_%x",
-> +				outrate, clk_index[OUT]);
+> adding a lot of stuff that is not yet upstream, AFAIK. Some is still
+> under review I think (like QSPI), others are just staged for the next
+> merge window and parts are still in flight. Michal hopefully has a
+> better overview.
+> This particular patch can simply be omitted I think.
 
-same..
+There are several options and I think the best is arm-soc tree
+where you can see what have been accepted.
+And also I believe all arm-soc trees are added to linux-next.
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	
+That's why I would use linux-next or arm-soc.
 
-(...)
+Thanks,
+Michal
 
-> +static int fsl_asrc_init(struct fsl_asrc *asrc_priv)
-> +{
-> +	/* Halt ASRC internal FP when input FIFO needs data for pair A, B, C */
-> +	regmap_write(asrc_priv->regmap, REG_ASRCTR, ASRCTR_ASRCEN);
-> +
-> +	/* Disable interrupt by default */
-> +	regmap_write(asrc_priv->regmap, REG_ASRIER, 0x0);
-> +
-> +	/* Apply recommended settings for parameters from Reference Manual */
-> +	regmap_write(asrc_priv->regmap, REG_ASRPM1, 0x7fffff);
-> +	regmap_write(asrc_priv->regmap, REG_ASRPM2, 0x255555);
-> +	regmap_write(asrc_priv->regmap, REG_ASRPM3, 0xff7280);
-> +	regmap_write(asrc_priv->regmap, REG_ASRPM4, 0xff7280);
-> +	regmap_write(asrc_priv->regmap, REG_ASRPM5, 0xff7280);
-> +
-> +	/* Base address for task queue FIFO. Set to 0x7C */
-> +	regmap_update_bits(asrc_priv->regmap, REG_ASRTFR1,
-> +			   ASRTFR1_TF_BASE_MASK, ASRTFR1_TF_BASE(0xfc));
-> +
-> +	/* Set the processing clock for 76KHz to 133M */
-> +	regmap_write(asrc_priv->regmap, REG_ASR76K, 0x06D6);
-> +
-> +	/* Set the processing clock for 56KHz to 133M */
-> +	regmap_write(asrc_priv->regmap, REG_ASR56K, 0x0947);
-
-No where we are checking the return value here, but return zero...?
-
-check the regmap_write return value then return or implement this to void...
-
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * Interrupt handler for ASRC
-> + */
-> +
-
-(...)
-
-> +static const struct platform_device_id fsl_asrc_devtype[] = {
-> +	{
-> +		.name = "imx35-asrc",
-> +		.driver_data = IMX35_ASRC,
-> +	}, {
-> +		.name = "imx53-asrc",
-> +		.driver_data = IMX53_ASRC,
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
-> +
-
-where are you using fsl_asrc_devtype,,,?
-
-> +static const struct of_device_id fsl_asrc_ids[] = {
-> +	{
-> +		.compatible = "fsl,imx35-asrc",
-> +		.data = &fsl_asrc_devtype[IMX35_ASRC],
-
-Ya here ... but what is the use...?
-
-> +	}, {
-> +		.compatible = "fsl,imx53-asrc",
-> +		.data = &fsl_asrc_devtype[IMX53_ASRC],
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-> +
-
-(...)
-
-> +	asrc_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
-> +			"mem", regs, &fsl_asrc_regmap_config);
-
-devm_regmap_init_mmio_clk(&pdev->dev,
-			  "mem", regs,
-			  &fsl_asrc_regmap_config);
-
-> +	if (IS_ERR(asrc_priv->regmap)) {
-> +		dev_err(&pdev->dev, "failed to init regmap\n");
-> +		return PTR_ERR(asrc_priv->regmap);
-> +	}
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
-> +		return irq;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, irq, fsl_asrc_isr, 0,
-> +			       asrc_priv->name, asrc_priv);
-
-same...
-
-Thanks...
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
--- 
-Regards,
-Varka Bhadram.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--R2bCpt5LAqnCgcvOlv8FB43VRvEwqhIVe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlPSCXgACgkQykllyylKDCHDkQCeKJx4viqtHZFus/SZhQ23sUYt
+R1gAnR7Zmsg5fpnjYqTcVc95k6jRZf9D
+=5o7C
+-----END PGP SIGNATURE-----
+
+--R2bCpt5LAqnCgcvOlv8FB43VRvEwqhIVe--
