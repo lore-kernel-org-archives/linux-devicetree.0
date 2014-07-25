@@ -1,121 +1,59 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 12:18:04 +0200
-Message-ID: <20140725121804.18b05a5d@bbrezillon>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
-	<53D10C50.50305@aksignal.cz>
-	<20140724162645.4e19c26c@bbrezillon>
-	<53D12103.3020103@aksignal.cz>
-	<20140724175848.44f5da10@bbrezillon>
-	<53D1F5D0.1080006@aksignal.cz>
-	<20140725095319.16a8465c@bbrezillon>
-	<53D214E1.4050105@aksignal.cz>
-	<20140725104553.403921b1@bbrezillon>
-	<53D21B3F.7060006@aksignal.cz>
-	<20140725110124.3f0dce6c@bbrezillon>
-	<53D21FCF.7010402@aksignal.cz>
-	<20140725113110.70c4aa41@bbrezillon>
-	<53D22C26.4030208@aksignal.cz>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
+ specification
+Date: Fri, 25 Jul 2014 11:18:15 +0100
+Message-ID: <20140725101815.GO17528@sirena.org.uk>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+ <1406242820-20140-10-git-send-email-afaerber@suse.de>
+ <53D20A61.1050506@metafoo.de>
+ <53D21066.8000905@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D22C26.4030208@aksignal.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jiri.prchal@aksignal.cz
-Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XgWkusiZDs53F1ax"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53D21066.8000905-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Jul 2014 12:06:30 +0200
-Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz> wrote:
 
->=20
->=20
-> Dne 25.7.2014 v 11:31 Boris BREZILLON napsal(a):
-> > On Fri, 25 Jul 2014 11:13:51 +0200
-> > Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz> wrote:
-> >
-> >
-> >>>
-> >>> Every thing seems in place.
-> >>> Could you enable CONFIG_DEBUG_PINCTRL and grep on "enable pin" ?
-> >> / # dmesg | grep "enable pin"
-> >> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 1=
-01 as GPIO
-> >> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 1=
-01 as PIOD5 0x20
-> >> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 1=
-00 as GPIO
-> >> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 1=
-00 as PIOD4 0x10
-> >> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 2=
-3 as GPIO
-> >> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 2=
-3 as PIOA23 0x800000
-> >> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 2=
-2 as GPIO
-> >> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 2=
-2 as PIOA22 0x400000
-> >> [    1.242187] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 9=
-3 as GPIO
-> >> [    1.242187] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 9=
-3 as PIOC29 0x20000000
-> >> [    1.246093] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 1=
-4 as GPIO
-> >> [    1.246093] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 1=
-4 as PIOA14 0x4000
-> >
-> >
-> > Okay, this cleary shows that PA14 pin is muxed as a GPIO (or at lea=
-st
-> > the driver think it is).
-> >
-> >
-> > Could you launch these commands (you'll need the devmem tool) and
-> > paste the results ?
-> >
-> > #devmem 0xfffff408
-> > #devmem 0xfffff418
-> > #devmem 0xfffff438
-> > #devmem 0xfffff43c
-> > #devmem 0xfffff458
-> > #devmem 0xfffff468
-> > #devmem 0xfffff470
-> > #devmem 0xfffff474
-> > #devmem 0xfffff498
-> >
-> / # devmem 0xfffff408
-> 0xF0E04018
-> / # devmem 0xfffff418
-> 0xE0C04000
-> / # devmem 0xfffff438
-> 0x00C04000
-> / # devmem 0xfffff43c
-> 0x13FFD7FB
-> / # devmem 0xfffff458
-> 0x00000000
-> / # devmem 0xfffff468
-> 0xFF223B4E
-> / # devmem 0xfffff470
-> 0x0F000000
-> / # devmem 0xfffff474
-> 0x00000000
-> / # devmem 0xfffff498
-> 0xFFFFFFFF
->=20
-> I get thought if is possible that in time of probe fm25 (it's first) =
-is not configured PA14 (it 's last)?
+--XgWkusiZDs53F1ax
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Oh, nice catch!
-I think you've found the origin of this bug.
-Indeed each device is instantiated sequentially and thus when the first
-device is probed (CS0) the last one has not requested it's cs_gpio yet
-(and PA14 is still assigned to periph A).
+On Fri, Jul 25, 2014 at 10:08:06AM +0200, Michal Simek wrote:
 
-Declaring cs-pins and referencing them in pinctrl-0 solves the issue
-because in this case all CS pins are requested during controller probe.
+> All these patches have been added through your tree that's why I think
+> you should take this fix through his tree.
 
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+If someone could send me patches I'll take a look at them.
+
+--XgWkusiZDs53F1ax
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT0i7kAAoJELSic+t+oim9Vg8P/jssSes7qvXYuLx6KaEy7v75
+RWXTm9EsaEUIZUvP9GBMSjx6yg7zItAVNjWxdQYTuM10ioUXa1E4zpHRBwZitqvx
+YmRX1gJjMiSidgYOxoeu86KgVIXKzPqZGdK97GrmTRwbMQhRQQpuLxRzEX3DkDn6
+DlljmWJ+xyKDPM6wtUnm6kGryFAYUGoLrGg/IAPd+WrcYOXTDziTcKaBXSkcFrcR
+no7CAAhfRqi+DoP557+o8w9nNDwe0smY9FWROQ5kBC9PtOEnqtoB2kqDZlJUIDHK
+gBRKKWTEZSgQTqaOLbTIwCrfMGlKaZrNIiGMPqO+NvOtVzzzyRzCY8iqF6RUoVXp
++61HaWhpARNEtMsC2dZioMuTnT+AAijT3SYPcD6MuZSK+Tcq95tblHvtWgCl5V8j
+5uZVTFB6mo4fulytayKShKniyZBWdd002BUoPPhheEFdp3TUN+I3hwNEuukgZtr2
+nhxg7BRA3wG5plqqqsJ91RIr6LaJ01C94csEGIPtO4TuyL513FltZfG5AaL0DpBq
+q3pbWcyv/gfbZKyn+CrrHcUDNORZbuu2pb/UxJT8PojN6VNXdyfDUtOen73TstRx
+S8Q8bZoftEBiEqFdyo99MO0vDYwerZ1hE5uKgiqDZlZ2rHOFo2TeFokRc2MJeiiP
+Dtvf78DCQQLZiiQmT5HX
+=TiQH
+-----END PGP SIGNATURE-----
+
+--XgWkusiZDs53F1ax--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
