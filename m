@@ -1,199 +1,53 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/6] power: reset: driver for the Versatile syscon reboot
-Date: Fri, 25 Jul 2014 15:23:45 +0200
-Message-ID: <1406294628-16079-4-git-send-email-linus.walleij@linaro.org>
-References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when
+ request IRQ
+Date: Fri, 25 Jul 2014 15:52:02 +0200
+Message-ID: <CACRpkdZckrmsG+mOKoZWVH=QqyV0FmDsqUMkbbyi2YJiGFZ5dw@mail.gmail.com>
+References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>
+	<20140722062803.GA21229@dragon>
+	<53CE107A.1000000@tqsc.de>
+	<20140722074257.GC21229@dragon>
+	<CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
+	<53D0C008.70305@tqsc.de>
+	<CACRpkdarH_-2uW55C5bAUxM1ESgSb6tJAWc4UqEoWr8uc_kQRQ@mail.gmail.com>
+	<53D252F5.2060601@tqsc.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406294628-16079-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <53D252F5.2060601-7U5DVgMjAv4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver enabled us to drive the reboot of the Versatile family
-of ARM reference boards. Even though only the RealView boards are
-supported initially, these boards all have the same procedure for
-reboot:
+On Fri, Jul 25, 2014 at 2:52 PM, Markus Niebel
+<list-09_linux_arm-7U5DVgMjAv4@public.gmane.org> wrote:
+> Am 25.07.2014 13:38, wrote Linus Walleij:
 
-- Write a magic value into an unlocking register
-- Write another magic value into a reset control register
+>> I don't know if it'd be a good idea to loop over all gpios in a new
+>> irqchip and fetch the direction just to get the flags right, so far
+>> we haven't done that and I don't know what the usecase would be.
+>
+> I've came to a situation where it would have been helpful to know - bootloader
+> configured a pin as output and linux tried to configure the pin as IRQ input.
+> *YES I KNOW THIS IS NOT CORRECT* but it took some time to see, what happened.
 
-The driver will be reusable for Versatile and possibly also the
-Integrator family of reference boards.
+Hm, maybe we should call gpiod_get_direction() first in
+gpio_lock_as_irq(), so we check the hardware and know there that the
+flag is correctly set here?
 
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/power/reset/Kconfig                |   9 +++
- drivers/power/reset/Makefile               |   1 +
- drivers/power/reset/arm-versatile-reboot.c | 121 +++++++++++++++++++++++++++++
- 3 files changed, 131 insertions(+)
- create mode 100644 drivers/power/reset/arm-versatile-reboot.c
+>> If we need that we should do it in gpiolib for all drivers don't you
+>> think?
+>
+> A pragmatic / lean solution would be to deny the IRQ configuration when
+> seeing the pin configured as output in hardware and print out an error
+> on the gpio driver level.
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index bdcf5173e377..3dde8fd5e3a0 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -58,6 +58,15 @@ config POWER_RESET_SUN6I
- 	help
- 	  Reboot support for the Allwinner A31 SoCs.
- 
-+config POWER_RESET_VERSATILE
-+	bool "ARM Versatile family reboot driver"
-+	depends on ARM
-+	depends on MFD_SYSCON
-+	depends on OF
-+	help
-+	  Power off and restart support for ARM Versatile family of
-+	  reference boards.
-+
- config POWER_RESET_VEXPRESS
- 	bool "ARM Versatile Express power-off and reset driver"
- 	depends on ARM || ARM64
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index dde2e8bbac53..5b2ec9521dc6 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
- obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
-+obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
- obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
- obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
- obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
-diff --git a/drivers/power/reset/arm-versatile-reboot.c b/drivers/power/reset/arm-versatile-reboot.c
-new file mode 100644
-index 000000000000..b2fca4678970
---- /dev/null
-+++ b/drivers/power/reset/arm-versatile-reboot.c
-@@ -0,0 +1,121 @@
-+/*
-+ * Copyright (C) 2014 Linaro Ltd.
-+ *
-+ * Author: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2, as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/init.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <asm/system_misc.h>
-+
-+#define REALVIEW_SYS_LOCK_OFFSET	0x20
-+#define REALVIEW_SYS_LOCK_VAL		0xA05F
-+#define REALVIEW_SYS_RESETCTL_OFFSET	0x40
-+
-+/*
-+ * We detect the different syscon types from the compatible strings.
-+ */
-+enum versatile_reboot {
-+	REALVIEW_REBOOT_EB,
-+	REALVIEW_REBOOT_PB1176,
-+	REALVIEW_REBOOT_PB11MP,
-+	REALVIEW_REBOOT_PBA8,
-+	REALVIEW_REBOOT_PBX,
-+};
-+
-+/* Pointer to the system controller */
-+static struct regmap *syscon_regmap;
-+static enum versatile_reboot versatile_reboot_type;
-+
-+static const struct of_device_id versatile_reboot_of_match[] = {
-+	{
-+		.compatible = "arm,realview-eb-reboot",
-+		.data = (void *)REALVIEW_REBOOT_EB,
-+	},
-+	{
-+		.compatible = "arm,realview-pb1176-reboot",
-+		.data = (void *)REALVIEW_REBOOT_PB1176,
-+	},
-+	{
-+		.compatible = "arm,realview-pb11mp-reboot",
-+		.data = (void *)REALVIEW_REBOOT_PB11MP,
-+	},
-+	{
-+		.compatible = "arm,realview-pba8-reboot",
-+		.data = (void *)REALVIEW_REBOOT_PBA8,
-+	},
-+	{
-+		.compatible = "arm,realview-pbx-reboot",
-+		.data = (void *)REALVIEW_REBOOT_PBX,
-+	},
-+};
-+
-+static void versatile_reboot(enum reboot_mode mode, const char *cmd)
-+{
-+	/* Unlock the reset register */
-+	regmap_write(syscon_regmap, REALVIEW_SYS_LOCK_OFFSET,
-+		     REALVIEW_SYS_LOCK_VAL);
-+	/* Then hit reset on the different machines */
-+	switch (versatile_reboot_type) {
-+	case REALVIEW_REBOOT_EB:
-+		regmap_write(syscon_regmap,
-+			     REALVIEW_SYS_RESETCTL_OFFSET, 0x0008);
-+		break;
-+	case REALVIEW_REBOOT_PB1176:
-+		regmap_write(syscon_regmap,
-+			     REALVIEW_SYS_RESETCTL_OFFSET, 0x0100);
-+		break;
-+	case REALVIEW_REBOOT_PB11MP:
-+	case REALVIEW_REBOOT_PBA8:
-+		regmap_write(syscon_regmap, REALVIEW_SYS_RESETCTL_OFFSET,
-+			     0x0000);
-+		regmap_write(syscon_regmap, REALVIEW_SYS_RESETCTL_OFFSET,
-+			     0x0004);
-+		break;
-+	case REALVIEW_REBOOT_PBX:
-+		regmap_write(syscon_regmap, REALVIEW_SYS_RESETCTL_OFFSET,
-+			     0x00f0);
-+		regmap_write(syscon_regmap, REALVIEW_SYS_RESETCTL_OFFSET,
-+			     0x00f4);
-+		break;
-+	}
-+	dsb();
-+}
-+
-+static int versatile_reboot_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *reboot_id;
-+	struct device_node *np;
-+
-+	np = of_find_matching_node_and_match(NULL, versatile_reboot_of_match,
-+						 &reboot_id);
-+	if (!np)
-+		return -ENODEV;
-+	versatile_reboot_type = (enum versatile_reboot)reboot_id->data;
-+
-+	syscon_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+							"regmap");
-+	if (IS_ERR(syscon_regmap))
-+		return PTR_ERR(syscon_regmap);
-+
-+	arm_pm_restart = versatile_reboot;
-+	dev_info(&pdev->dev, "versatile reboot driver registered\n");
-+	return 0;
-+}
-+
-+static struct platform_driver versatile_reboot_driver = {
-+	.probe = versatile_reboot_probe,
-+	.driver = {
-+		.name = "realview-reboot",
-+		.of_match_table = versatile_reboot_of_match,
-+	},
-+};
-+module_platform_driver(versatile_reboot_driver);
--- 
-1.9.3
+I guess that is what I'm suggesting, not sure if I follow
+correctly.
 
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
