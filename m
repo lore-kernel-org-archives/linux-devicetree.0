@@ -1,71 +1,66 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v5 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU
- DAI and platform drivers
-Date: Fri, 25 Jul 2014 19:28:08 +0800
-Message-ID: <20140725112807.GA29852@MrMyself>
-References: <cover.1406276436.git.nicoleotsuka@gmail.com>
- <2288e61e600e28448905e32dd4f74a954110248f.1406276436.git.nicoleotsuka@gmail.com>
- <53D240B3.8060203@gmail.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v5 1/2] can: m_can: add device tree binding documentation
+Date: Fri, 25 Jul 2014 19:53:53 +0800
+Message-ID: <CAA+hA=QNDGrO679GBi5oR=KnLZbBh9A+A12QfCG-=Ak_D78rAw@mail.gmail.com>
+References: <1405503050-16796-1-git-send-email-b29396@freescale.com>
+	<53C64E51.9050606@pengutronix.de>
+	<20140716104054.GB20184@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <53D240B3.8060203@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, b42378@freescale.com, timur@tabi.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, linux-kernel@vger.kernel.org, rdunlap@infradead.org, b02247@freescale.com, lgirdwood@gmail.com, robh+dt@kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org, galak@codeaurora.org, grant.likely@linaro.org, tklauser@distanz.ch, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20140716104054.GB20184@shlinux1.ap.freescale.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, socketcan@hartkopp.net, varkabhadram@gmail.com, linux-can@vger.kernel.org, robh+dt@kernel.org, wg@grandegger.com, grant.likely@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Varka,
+Ping...
 
-On Fri, Jul 25, 2014 at 05:04:11PM +0530, Varka Bhadram wrote:
-> On 07/25/2014 02:16 PM, Nicolin Chen wrote:
-> >The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
-> >signal associated with an input clock into a signal associated with a different
-> >output clock. The driver currently works as a Front End of DPCM with other Back
-> >Ends DAI links such as ESAI<->CS42888 and SSI<->WM8962 and SAI. It converts the
-> >original sample rate to a common rate supported by Back Ends for playback while
-> >converts the common rate of Back Ends to a desired rate for capture. It has 3
-> >pairs to support three different substreams within totally 10 channels.
-> >
-> >Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> >---
-> >  .../devicetree/bindings/sound/fsl,asrc.txt         |  60 ++
-> >  sound/soc/fsl/Kconfig                              |   9 +
-> >  sound/soc/fsl/Makefile                             |   2 +
-> >  sound/soc/fsl/fsl_asrc.c                           | 992 +++++++++++++++++++++
-> >  sound/soc/fsl/fsl_asrc.h                           | 461 ++++++++++
-> >  sound/soc/fsl/fsl_asrc_dma.c                       | 386 ++++++++
-> >  6 files changed, 1910 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> >  create mode 100644 sound/soc/fsl/fsl_asrc.c
-> >  create mode 100644 sound/soc/fsl/fsl_asrc.h
-> >  create mode 100644 sound/soc/fsl/fsl_asrc_dma.c
-> >
-> >
-> check patch warnings on this patch...
-
-[...]
-
-./scripts/checkpatch.pl --max-line-length=128 0002-ASoC-fsl_a....patch
-total: 0 errors, 0 warnings, 1928 lines checked
-
-0002-ASoC....patch has no obvious style problems and is ready for submission
-
-[...]
-
-I think there's no need to be so strict by wrapping all lines inside
-80 characters, especially for those that will be less readable if being
-wrapped and for those in header file.
-
-Thank you
-Nicolin
+On Wed, Jul 16, 2014 at 6:40 PM, Dong Aisheng <b29396@freescale.com> wrote:
+> On Wed, Jul 16, 2014 at 12:05:05PM +0200, Marc Kleine-Budde wrote:
+>> On 07/16/2014 11:30 AM, Dong Aisheng wrote:
+>> > add M_CAN device tree binding documentation
+>> >
+>> > Cc: Wolfgang Grandegger <wg@grandegger.com>
+>> > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+>> > Cc: Mark Rutland <mark.rutland@arm.com>
+>> > Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+>> > Cc: Varka Bhadram <varkabhadram@gmail.com>
+>> > Signed-off-by: Dong Aisheng <b29396@freescale.com>
+>> > ---
+>> > Changes since v4:
+>> > - change the name of board dtsi to board dts which is more common
+>> >
+>> > Changes since v3:
+>> > - change mram-cfg property name to bosch,mram-cfg
+>> > - indent change
+>> > ---
+>> >  .../devicetree/bindings/net/can/m_can.txt          |   67 ++++++++++++++++++++
+>> >  1 files changed, 67 insertions(+), 0 deletions(-)
+>> >  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+>>
+>> I'll apply this series once we've got an Ack for the DT folks.
+>>
+>
+> Okay, thanks!
+>
+> Copy Grant, Rob and Mark in case they have comments.
+>
+> Regards
+> Dong Aisheng
+>
+>> Marc
+>>
+>> --
+>> Pengutronix e.K.                  | Marc Kleine-Budde           |
+>> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+>> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+>> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+>>
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
