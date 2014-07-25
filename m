@@ -1,129 +1,98 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
-Date: Fri, 25 Jul 2014 12:43:09 +0200
-Message-ID: <53D234BD.2040005@suse.de>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-6-git-send-email-afaerber@suse.de> <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl> <53D20E5B.9070501@monstr.eu> <53D21887.2020305@suse.de> <53D2258B.9000609@xilinx.com> <7aabd35a-0b4a-4d03-9976-ef3926929ddc@BL2FFO11FD027.protection.gbl>
+From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
+Date: Fri, 25 Jul 2014 10:47:31 +0000
+Message-ID: <2bb3733f-f6db-4953-b3f2-8d76203d7c91@BY2FFO11FD002.protection.gbl>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+ <1406242820-20140-6-git-send-email-afaerber@suse.de>
+ <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl>
+ <53D20E5B.9070501@monstr.eu> <53D21887.2020305@suse.de>
+ <53D2258B.9000609@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7aabd35a-0b4a-4d03-9976-ef3926929ddc-xjCwUguQ558+FoeucOxqwGYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Harini,
-
-Am 25.07.2014 12:31, schrieb Harini Katakam:
->> -----Original Message-----
->> From: Michal Simek [mailto:michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org]
->> Sent: Friday, July 25, 2014 3:08 PM
->> To: Andreas F=C3=A4rber; monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org; Soren Brinkmann
->> Cc: Harini Katakam; Michal Simek; Andreas Olofsson; Matteo Vit; Sean
->> Rickerd; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM9gwCICpdfJQ@public.gmane.org=
-d.org;
->> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rob Herring; Pawel Moll; Mark Rutland;=
- Ian
->> Campbell; Kumar Gala; Russell King
->> Subject: Re: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallell=
-a
->>
->> On 07/25/2014 10:42 AM, Andreas F=C3=A4rber wrote:
->>> Am 25.07.2014 09:59, schrieb Michal Simek:
->>>> On 07/25/2014 01:18 AM, S=C3=B6ren Brinkmann wrote:
->>>>> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
->>>>>> Prepare SPI0 and SPI1 while at it.
->>>
->>>> Patch subject is incorrect. You are adding SPI and QSPI.
->>>
->>> Yes, it originally added only QSPI, but I considered it a good deed=
- to
->>> add SPI as well while already reading that part of the TRM. :)
->>>
->>>>>>
->>>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> --- v2: Ne=
-w
->>>>>>
->>>>>> arch/arm/boot/dts/zynq-7000.dtsi      | 37
->>>>>> +++++++++++++++++++++++++++++++++++
->>>>>> arch/arm/boot/dts/zynq-parallella.dts |  4 ++++ 2 files
->>>>>> changed, 41 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi
->>>>>> b/arch/arm/boot/dts/zynq-7000.dtsi index 8fd826a..eed3df0
->>>>>> 100644 --- a/arch/arm/boot/dts/zynq-7000.dtsi +++
->>>>>> b/arch/arm/boot/dts/zynq-7000.dtsi @@ -122,6 +122,30 @@
->>>>>> interrupts =3D <0 50 4>; };
->>>>>>
->>>>>> +		spi0: spi@e0006000 { +			compatible =3D
->> "xlnx,zynq-spi-r1p6";
->>>>>> +			reg =3D <0xe0006000 0x1000>; +			status
->> =3D "disabled"; +
->>>>>> interrupt-parent =3D <&intc>; +			interrupts =3D <0 26 4>;
->> +
->>>>>> clocks =3D <&clkc 25>, <&clkc 34>; +			clock-names =3D
->> "ref_clk",
->>>>>> "pclk"; +			#address-cells =3D <1>; +			#size-
->> cells =3D <0>; +		};
->>>>>> + +		spi1: spi@e0007000 { +			compatible =3D
->>>>>> "xlnx,zynq-spi-r1p6"; +			reg =3D <0xe0007000 0x1000>; +
->> 			status
->>>>>> =3D "disabled"; +			interrupt-parent =3D <&intc>; +
->> 		interrupts =3D
->>>>>> <0 49 4>; +			clocks =3D <&clkc 26>, <&clkc 35>; +
->> 		clock-names
->>>>>> =3D "ref_clk", "pclk"; +			#address-cells =3D <1>; +
->> 		#size-cells
->>>>>> =3D <0>; +		}; +
->>>>> Until here things look good.
->>>>>
->>>>>> gem0: ethernet@e000b000 { compatible =3D "cdns,gem"; reg =3D
->>>>>> <0xe000b000 0x4000>; @@ -140,6 +164,19 @@ clock-names =3D "pclk"=
-,
->>>>>> "hclk", "tx_clk"; };
->>>>>>
->>>>>> +		qspi: qspi@e000d000 { +			compatible =3D
->>>>>> "xlnx,zynq-spi-r1p6"; +			reg =3D <0xe000d000 0x1000>; +
->> 			status
->>>>>> =3D "disabled"; +			interrupt-parent =3D <&intc>; +
->> 		interrupts =3D
->>>>>> <0 19 4>; +			clocks =3D <&clkc 10>, <&clkc 43>; +
->> 		clock-names
->>>>>> =3D "ref_clk", "pclk"; +			num-cs =3D <1>; +
->> 	#address-cells =3D
->>>>>> <1>; +			#size-cells =3D <0>; +		}; +
->>>>> I'm not sure what the status of this driver is. I think QSPI is
->>>>> still under review on the mailing lists and I don't think we
->>>>> should add this yet.
->>>
->>>> Driver for qspi is not in the mainline yet but it doesn't mean tha=
-t
->>>> this fragment won't work. Harini: Can you please correct me if I a=
-m
->>>> wrong?
->>>
->=20
-> It can be added but it will have to be disabled as there is no qspi d=
-river
-> at the moment in mainline.
-
-Did you read the actual patch? It's using the upstream SPI driver for
-now, and it's disabled for anything but the new board I'm adding.
-
-https://patchwork.kernel.org/patch/4620201/
-
-Wouldn't a dedicated QSPI driver only result in a compatible string
-being prepended before the SPI compatible string?
-
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFyaW5pIEthdGFr
+YW0NCj4gU2VudDogRnJpZGF5LCBKdWx5IDI1LCAyMDE0IDQ6MDEgUE0NCj4gVG86ICdNaWNoYWwg
+U2ltZWsnOyBBbmRyZWFzIEbDpHJiZXI7IG1vbnN0ckBtb25zdHIuZXU7IFNvcmVuIEJyaW5rbWFu
+bg0KPiBDYzogTWljaGFsIFNpbWVrOyBBbmRyZWFzIE9sb2Zzc29uOyBNYXR0ZW8gVml0OyBTZWFu
+IFJpY2tlcmQ7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBS
+b2IgSGVycmluZzsgUGF3ZWwgTW9sbDsgTWFyayBSdXRsYW5kOyBJYW4NCj4gQ2FtcGJlbGw7IEt1
+bWFyIEdhbGE7IFJ1c3NlbGwgS2luZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHYyIDA1LzExXSBB
+Uk06IGR0czogenlucTogQWRkIFFTUEkgZm9yIFBhcmFsbGVsbGENCj4gDQo+IEhpLA0KPiANCj4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IE1pY2hhbCBTaW1layBbbWFp
+bHRvOm1pY2hhbC5zaW1la0B4aWxpbnguY29tXQ0KPiA+IFNlbnQ6IEZyaWRheSwgSnVseSAyNSwg
+MjAxNCAzOjA4IFBNDQo+ID4gVG86IEFuZHJlYXMgRsOkcmJlcjsgbW9uc3RyQG1vbnN0ci5ldTsg
+U29yZW4gQnJpbmttYW5uDQo+ID4gQ2M6IEhhcmluaSBLYXRha2FtOyBNaWNoYWwgU2ltZWs7IEFu
+ZHJlYXMgT2xvZnNzb247IE1hdHRlbyBWaXQ7IFNlYW4NCj4gPiBSaWNrZXJkOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZzsNCj4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZzsgUGF3ZWwg
+TW9sbDsgTWFyayBSdXRsYW5kOyBJYW4NCj4gPiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgUnVzc2Vs
+bCBLaW5nDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNS8xMV0gQVJNOiBkdHM6IHp5bnE6
+IEFkZCBRU1BJIGZvciBQYXJhbGxlbGxhDQo+ID4NCj4gPiBPbiAwNy8yNS8yMDE0IDEwOjQyIEFN
+LCBBbmRyZWFzIEbDpHJiZXIgd3JvdGU6DQo+ID4gPiBBbSAyNS4wNy4yMDE0IDA5OjU5LCBzY2hy
+aWViIE1pY2hhbCBTaW1lazoNCj4gPiA+PiBPbiAwNy8yNS8yMDE0IDAxOjE4IEFNLCBTw7ZyZW4g
+QnJpbmttYW5uIHdyb3RlOg0KPiA+ID4+PiBPbiBGcmksIDIwMTQtMDctMjUgYXQgMDE6MDBBTSAr
+MDIwMCwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOg0KPiA+ID4+Pj4gUHJlcGFyZSBTUEkwIGFuZCBT
+UEkxIHdoaWxlIGF0IGl0Lg0KPiA+ID4NCj4gPiA+PiBQYXRjaCBzdWJqZWN0IGlzIGluY29ycmVj
+dC4gWW91IGFyZSBhZGRpbmcgU1BJIGFuZCBRU1BJLg0KPiA+ID4NCj4gPiA+IFllcywgaXQgb3Jp
+Z2luYWxseSBhZGRlZCBvbmx5IFFTUEksIGJ1dCBJIGNvbnNpZGVyZWQgaXQgYSBnb29kIGRlZWQg
+dG8NCj4gPiA+IGFkZCBTUEkgYXMgd2VsbCB3aGlsZSBhbHJlYWR5IHJlYWRpbmcgdGhhdCBwYXJ0
+IG9mIHRoZSBUUk0uIDopDQo+ID4gPg0KPiA+ID4+Pj4NCj4gPiA+Pj4+IFNpZ25lZC1vZmYtYnk6
+IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4gLS0tIHYyOiBOZXcNCj4gPiA+Pj4+
+DQo+ID4gPj4+PiBhcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSAgICAgIHwgMzcNCj4g
+PiA+Pj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPj4+PiBhcmNo
+L2FybS9ib290L2R0cy96eW5xLXBhcmFsbGVsbGEuZHRzIHwgIDQgKysrKyAyIGZpbGVzDQo+ID4g
+Pj4+PiBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspDQo+ID4gPj4+Pg0KPiA+ID4+Pj4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpDQo+ID4gPj4+PiBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIGluZGV4IDhmZDgyNmEuLmVlZDNkZjANCj4gPiA+
+Pj4+IDEwMDY0NCAtLS0gYS9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSArKysNCj4g
+PiA+Pj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgQEAgLTEyMiw2ICsxMjIs
+MzAgQEANCj4gPiA+Pj4+IGludGVycnVwdHMgPSA8MCA1MCA0PjsgfTsNCj4gPiA+Pj4+DQo+ID4g
+Pj4+PiArCQlzcGkwOiBzcGlAZTAwMDYwMDAgeyArCQkJY29tcGF0aWJsZSA9DQo+ID4gInhsbngs
+enlucS1zcGktcjFwNiI7DQo+ID4gPj4+PiArCQkJcmVnID0gPDB4ZTAwMDYwMDAgMHgxMDAwPjsg
+Kw0KPiAJc3RhdHVzDQo+ID4gPSAiZGlzYWJsZWQiOyArDQo+ID4gPj4+PiBpbnRlcnJ1cHQtcGFy
+ZW50ID0gPCZpbnRjPjsgKwkJCWludGVycnVwdHMgPSA8MCAyNiA0PjsNCj4gPiArDQo+ID4gPj4+
+PiBjbG9ja3MgPSA8JmNsa2MgMjU+LCA8JmNsa2MgMzQ+OyArCQkJY2xvY2stbmFtZXMNCj4gPQ0K
+PiA+ICJyZWZfY2xrIiwNCj4gPiA+Pj4+ICJwY2xrIjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+
+OyArCQkJI3NpemUtDQo+ID4gY2VsbHMgPSA8MD47ICsJCX07DQo+ID4gPj4+PiArICsJCXNwaTE6
+IHNwaUBlMDAwNzAwMCB7ICsJCQljb21wYXRpYmxlID0NCj4gPiA+Pj4+ICJ4bG54LHp5bnEtc3Bp
+LXIxcDYiOyArCQkJcmVnID0gPDB4ZTAwMDcwMDAgMHgxMDAwPjsgKw0KPiA+IAkJCXN0YXR1cw0K
+PiA+ID4+Pj4gPSAiZGlzYWJsZWQiOyArCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47ICsN
+Cj4gPiAJCWludGVycnVwdHMgPQ0KPiA+ID4+Pj4gPDAgNDkgND47ICsJCQljbG9ja3MgPSA8JmNs
+a2MgMjY+LCA8JmNsa2MgMzU+OyArDQo+ID4gCQljbG9jay1uYW1lcw0KPiA+ID4+Pj4gPSAicmVm
+X2NsayIsICJwY2xrIjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OyArDQo+ID4gCQkjc2l6ZS1j
+ZWxscw0KPiA+ID4+Pj4gPSA8MD47ICsJCX07ICsNCj4gPiA+Pj4gVW50aWwgaGVyZSB0aGluZ3Mg
+bG9vayBnb29kLg0KPiA+ID4+Pg0KPiA+ID4+Pj4gZ2VtMDogZXRoZXJuZXRAZTAwMGIwMDAgeyBj
+b21wYXRpYmxlID0gImNkbnMsZ2VtIjsgcmVnID0NCj4gPiA+Pj4+IDwweGUwMDBiMDAwIDB4NDAw
+MD47IEBAIC0xNDAsNiArMTY0LDE5IEBAIGNsb2NrLW5hbWVzID0gInBjbGsiLA0KPiA+ID4+Pj4g
+ImhjbGsiLCAidHhfY2xrIjsgfTsNCj4gPiA+Pj4+DQo+ID4gPj4+PiArCQlxc3BpOiBxc3BpQGUw
+MDBkMDAwIHsgKw0KPiAJY29tcGF0aWJsZSA9DQo+ID4gPj4+PiAieGxueCx6eW5xLXNwaS1yMXA2
+IjsgKwkJCXJlZyA9IDwweGUwMDBkMDAwIDB4MTAwMD47ICsNCj4gPiAJCQlzdGF0dXMNCj4gPiA+
+Pj4+ID0gImRpc2FibGVkIjsgKwkJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+OyArDQo+ID4g
+CQlpbnRlcnJ1cHRzID0NCj4gPiA+Pj4+IDwwIDE5IDQ+OyArCQkJY2xvY2tzID0gPCZjbGtjIDEw
+PiwgPCZjbGtjIDQzPjsgKw0KPiA+IAkJY2xvY2stbmFtZXMNCj4gPiA+Pj4+ID0gInJlZl9jbGsi
+LCAicGNsayI7ICsJCQludW0tY3MgPSA8MT47ICsNCj4gPiAJI2FkZHJlc3MtY2VsbHMgPQ0KPiA+
+ID4+Pj4gPDE+OyArCQkJI3NpemUtY2VsbHMgPSA8MD47ICsJCX07ICsNCj4gPiA+Pj4gSSdtIG5v
+dCBzdXJlIHdoYXQgdGhlIHN0YXR1cyBvZiB0aGlzIGRyaXZlciBpcy4gSSB0aGluayBRU1BJIGlz
+DQo+ID4gPj4+IHN0aWxsIHVuZGVyIHJldmlldyBvbiB0aGUgbWFpbGluZyBsaXN0cyBhbmQgSSBk
+b24ndCB0aGluayB3ZQ0KPiA+ID4+PiBzaG91bGQgYWRkIHRoaXMgeWV0Lg0KPiA+ID4NCj4gPiA+
+PiBEcml2ZXIgZm9yIHFzcGkgaXMgbm90IGluIHRoZSBtYWlubGluZSB5ZXQgYnV0IGl0IGRvZXNu
+J3QgbWVhbiB0aGF0DQo+ID4gPj4gdGhpcyBmcmFnbWVudCB3b24ndCB3b3JrLiBIYXJpbmk6IENh
+biB5b3UgcGxlYXNlIGNvcnJlY3QgbWUgaWYgSSBhbQ0KPiA+ID4+IHdyb25nPw0KPiA+ID4NCj4g
+DQo+IEl0IGNhbiBiZSBhZGRlZCBidXQgaXQgd2lsbCBoYXZlIHRvIGJlIGRpc2FibGVkIGFzIHRo
+ZXJlIGlzIG5vIHFzcGkgZHJpdmVyDQo+IGF0IHRoZSBtb21lbnQgaW4gbWFpbmxpbmUuDQo+IA0K
+DQpUaGUgY2FkZW5jZSBzcGkgZHJpdmVyIGNhbid0IGJlIHVzZWQgZm9yIHFzcGkgZGlyZWN0bHku
+DQpJdOKAmXMgYmV0dGVyIG5vdCB0byBhZGQgcXNwaSBub3cuIE9uY2UgcXNwaSBkcml2ZXIgaXMg
+aW4gbWFpbmxpbmUsIHFzcGkNCmNhbiBiZSBhZGRlZCB3aXRoIHRoZSBjb3JyZXNwb25kaW5nIGNv
+bXBhdGliaWxpdHkgc3RyaW5nLg0KDQpSZWdhcmRzLA0KSGFyaW5pDQo=
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
