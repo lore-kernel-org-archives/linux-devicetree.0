@@ -1,80 +1,91 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCHv6 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk to
- host's quirk
-Date: Fri, 25 Jul 2014 10:11:53 +0900
-Message-ID: <1406250713-22604-6-git-send-email-jh80.chung@samsung.com>
-References: <1406250713-22604-1-git-send-email-jh80.chung@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1406250713-22604-1-git-send-email-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-mmc <linux-mmc@vger.kernel.org>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jaehoon Chung <jh80.chung@samsung.com>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH v2 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU
+ DAI and platform drivers
+Date: Fri, 25 Jul 2014 10:05:22 +0800
+Message-ID: <20140725020520.GA29136@MrMyself>
+References: <cover.1406189745.git.nicoleotsuka@gmail.com>
+ <2c74a11776ffcc017c80dc31be4a8313755be8f5.1406189745.git.nicoleotsuka@gmail.com>
+ <20140724152045.GA3384@distanz.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20140724152045.GA3384@distanz.ch>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tobias Klauser <tklauser@distanz.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, b42378@freescale.com, timur@tabi.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, linux-kernel@vger.kernel.org, rdunlap@infradead.org, b02247@freescale.com, lgirdwood@gmail.com, robh+dt@kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org, galak@codeaurora.org, grant.likely@linaro.org, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Replaced the "disable-wp" into host's quirks.
-(Because the slot-node is removed at dt-file.)
+Hi Tobias,
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
-Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
----
- drivers/mmc/host/dw_mmc.c  |   12 +++++-------
- include/linux/mmc/dw_mmc.h |    6 ++----
- 2 files changed, 7 insertions(+), 11 deletions(-)
+On Thu, Jul 24, 2014 at 05:20:45PM +0200, Tobias Klauser wrote:
+> On 2014-07-24 at 10:35:29 +0200, Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> > The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+> > signal associated with an input clock into a signal associated with a different
+> > output clock. The driver currently works as a Front End of DPCM with other Back
+> > Ends DAI links such as ESAI<->CS42888 and SSI<->WM8962 and SAI. It converts the
+> > original sample rate to a common rate supported by Back Ends for playback while
+> > converts the common rate of Back Ends to a desired rate for capture. It has 3
+> > pairs to support three different substreams within totally 10 channels.
+> > 
+> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > ---
+> 
+> [...]
+> 
+> > --- /dev/null
+> > +++ b/sound/soc/fsl/fsl_asrc.c
+> > @@ -0,0 +1,1031 @@
+> 
+> [...]
+> 
+> > +static struct platform_driver fsl_asrc_driver = {
+> > +	.probe = fsl_asrc_probe,
+> > +	.driver = {
+> > +		.name = "fsl-asrc",
+> > +		.owner = THIS_MODULE,
+> 
+> Not necessary, this will be set by module_platform_driver (or
+> the expansion of platform_driver_register, respectively).
+> 
+> > +		.of_match_table = fsl_asrc_ids,
+> > +		.pm = &fsl_asrc_pm,
+> > +	},
+> > +};
+> > +module_platform_driver(fsl_asrc_driver);
+> 
+> [...]
+> 
+> > --- /dev/null
+> > +++ b/sound/soc/fsl/fsl_asrc_dma.c
+> > @@ -0,0 +1,384 @@
+> 
+> [...]
+> 
+> > +static int fsl_asrc_dma_pcm_new(struct snd_soc_pcm_runtime *rtd)
+> > +{
+> > +	struct snd_card *card = rtd->card->snd_card;
+> > +	struct snd_pcm_substream *substream;
+> > +	struct snd_pcm *pcm = rtd->pcm;
+> > +	u64 dma_mask = DMA_BIT_MASK(32);
+> > +	int ret, i;
+> > +
+> > +	if (!card->dev->dma_mask)
+> > +		card->dev->dma_mask = &dma_mask;
+> 
+> dma_mask will go out of scope after fsl_asrc_dma_pcm_new returns,
+> resulting in a stray pointer in card->dev->dma_mask.
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 1ac227c..4a4f66f 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -997,7 +997,7 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
- 	int gpio_ro = mmc_gpio_get_ro(mmc);
- 
- 	/* Use platform get_ro function, else try on board write protect */
--	if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
-+	if (slot->host->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
- 		read_only = 0;
- 	else if (!IS_ERR_VALUE(gpio_ro))
- 		read_only = gpio_ro;
-@@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
- static struct dw_mci_of_slot_quirks {
- 	char *quirk;
- 	int id;
--} of_slot_quirks[] = {
--	{
--		.quirk	= "disable-wp",
--		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
--	},
--};
-+} of_slot_quirks[] = {};
- 
- static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
- {
-@@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
- 	{
- 		.quirk	= "broken-cd",
- 		.id	= DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
-+	}, {
-+		.quirk	= "disable-wp",
-+		.id	= DW_MCI_QUIRK_NO_WRITE_PROTECT,
- 	},
- };
- 
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index babaea9..8b4b2d8 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -213,10 +213,8 @@ struct dw_mci_dma_ops {
- #define DW_MCI_QUIRK_HIGHSPEED			BIT(2)
- /* Unreliable card detection */
- #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
--
--/* Slot level quirks */
--/* This slot has no write protect */
--#define DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT	BIT(0)
-+/* No write protect */
-+#define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
- 
- struct dma_pdata;
- 
--- 
-1.7.9.5
+Will fix them in v3.
+
+Thank you
+Nicolin
