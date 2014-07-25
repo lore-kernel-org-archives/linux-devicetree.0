@@ -1,86 +1,142 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 11:31:10 +0200
-Message-ID: <20140725113110.70c4aa41@bbrezillon>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
-	<53D10C50.50305@aksignal.cz>
-	<20140724162645.4e19c26c@bbrezillon>
-	<53D12103.3020103@aksignal.cz>
-	<20140724175848.44f5da10@bbrezillon>
-	<53D1F5D0.1080006@aksignal.cz>
-	<20140725095319.16a8465c@bbrezillon>
-	<53D214E1.4050105@aksignal.cz>
-	<20140725104553.403921b1@bbrezillon>
-	<53D21B3F.7060006@aksignal.cz>
-	<20140725110124.3f0dce6c@bbrezillon>
-	<53D21FCF.7010402@aksignal.cz>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
+Date: Fri, 25 Jul 2014 11:38:19 +0200
+Message-ID: <1cf9126b-c5e4-4ae7-a294-071584857d6c@BN1AFFO11FD052.protection.gbl>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+ <1406242820-20140-6-git-send-email-afaerber@suse.de>
+ <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl>
+ <53D20E5B.9070501@monstr.eu> <53D21887.2020305@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D21FCF.7010402-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0815254082321563887=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53D21887.2020305@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, monstr@monstr.eu, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Harini Katakam <harinik@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Andreas Olofsson <andreas@adapteva.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Jul 2014 11:13:51 +0200
-Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
+--===============0815254082321563887==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="P3EDFoVLsodiaKB4S45t2vbFuD8Oj7mDl"
+
+--P3EDFoVLsodiaKB4S45t2vbFuD8Oj7mDl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 07/25/2014 10:42 AM, Andreas F=C3=A4rber wrote:
+> Am 25.07.2014 09:59, schrieb Michal Simek:
+>> On 07/25/2014 01:18 AM, S=C3=B6ren Brinkmann wrote:
+>>> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
+>>>> Prepare SPI0 and SPI1 while at it.
+>=20
+>> Patch subject is incorrect. You are adding SPI and QSPI.
+>=20
+> Yes, it originally added only QSPI, but I considered it a good deed to
+> add SPI as well while already reading that part of the TRM. :)
+>=20
+>>>>
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de> --- v2: New
+>>>>
+>>>> arch/arm/boot/dts/zynq-7000.dtsi      | 37
+>>>> +++++++++++++++++++++++++++++++++++=20
+>>>> arch/arm/boot/dts/zynq-parallella.dts |  4 ++++ 2 files
+>>>> changed, 41 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> b/arch/arm/boot/dts/zynq-7000.dtsi index 8fd826a..eed3df0
+>>>> 100644 --- a/arch/arm/boot/dts/zynq-7000.dtsi +++
+>>>> b/arch/arm/boot/dts/zynq-7000.dtsi @@ -122,6 +122,30 @@=20
+>>>> interrupts =3D <0 50 4>; };
+>>>>
+>>>> +		spi0: spi@e0006000 { +			compatible =3D "xlnx,zynq-spi-r1p6";=20
+>>>> +			reg =3D <0xe0006000 0x1000>; +			status =3D "disabled"; +
+>>>> interrupt-parent =3D <&intc>; +			interrupts =3D <0 26 4>; +
+>>>> clocks =3D <&clkc 25>, <&clkc 34>; +			clock-names =3D "ref_clk",
+>>>> "pclk"; +			#address-cells =3D <1>; +			#size-cells =3D <0>; +		};=20
+>>>> + +		spi1: spi@e0007000 { +			compatible =3D
+>>>> "xlnx,zynq-spi-r1p6"; +			reg =3D <0xe0007000 0x1000>; +			status
+>>>> =3D "disabled"; +			interrupt-parent =3D <&intc>; +			interrupts =3D=
+
+>>>> <0 49 4>; +			clocks =3D <&clkc 26>, <&clkc 35>; +			clock-names
+>>>> =3D "ref_clk", "pclk"; +			#address-cells =3D <1>; +			#size-cells
+>>>> =3D <0>; +		}; +
+>>> Until here things look good.
+>>>
+>>>> gem0: ethernet@e000b000 { compatible =3D "cdns,gem"; reg =3D
+>>>> <0xe000b000 0x4000>; @@ -140,6 +164,19 @@ clock-names =3D "pclk",
+>>>> "hclk", "tx_clk"; };
+>>>>
+>>>> +		qspi: qspi@e000d000 { +			compatible =3D
+>>>> "xlnx,zynq-spi-r1p6"; +			reg =3D <0xe000d000 0x1000>; +			status
+>>>> =3D "disabled"; +			interrupt-parent =3D <&intc>; +			interrupts =3D=
+
+>>>> <0 19 4>; +			clocks =3D <&clkc 10>, <&clkc 43>; +			clock-names
+>>>> =3D "ref_clk", "pclk"; +			num-cs =3D <1>; +			#address-cells =3D
+>>>> <1>; +			#size-cells =3D <0>; +		}; +
+>>> I'm not sure what the status of this driver is. I think QSPI is
+>>> still under review on the mailing lists and I don't think we
+>>> should add this yet.
+>=20
+>> Driver for qspi is not in the mainline yet but it doesn't mean that
+>> this fragment won't work. Harini: Can you please correct me if I am
+>> wrong?
+>=20
+> It did seem to find the flash chip (cf. parallella-next branch), but I
+> didn't find a driver capable of handling its ID. The downstream tree
+> was using m25p80; I tried both micron,n25q128a11 and ...a13 based on
+> U-Boot output.
+>=20
+>> I would prefer to send two separate patches.
+>=20
+> Will do.
+>=20
+>> 1. just add SPI to zynq
+>=20
+> As I don't have any of the other Zynq boards, can you please advise
+> whether either of them should be enabled for some board?
+
+we don't have them enabled for any board in default configuration
+that's why just adding nodes with status =3D "disabled" is fine.
+
+Thanks,
+Michal
 
 
-> >
-> > Every thing seems in place.
-> > Could you enable CONFIG_DEBUG_PINCTRL and grep on "enable pin" ?
-> / # dmesg | grep "enable pin"
-> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 101 =
-as GPIO
-> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 101 =
-as PIOD5 0x20
-> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 100 =
-as GPIO
-> [    0.968750] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 100 =
-as PIOD4 0x10
-> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 23 a=
-s GPIO
-> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 23 a=
-s PIOA23 0x800000
-> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 22 a=
-s GPIO
-> [    1.238281] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 22 a=
-s PIOA22 0x400000
-> [    1.242187] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 93 a=
-s GPIO
-> [    1.242187] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 93 a=
-s PIOC29 0x20000000
-> [    1.246093] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 14 a=
-s GPIO
-> [    1.246093] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable pin 14 a=
-s PIOA14 0x4000
+--P3EDFoVLsodiaKB4S45t2vbFuD8Oj7mDl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlPSJYsACgkQykllyylKDCET8QCgmv7LcnzTey3z3oBd9klwizIx
+vZQAnRnpQDPJEZEM10QUYZeaDt3U17F8
+=0FNN
+-----END PGP SIGNATURE-----
+
+--P3EDFoVLsodiaKB4S45t2vbFuD8Oj7mDl--
 
 
-Okay, this cleary shows that PA14 pin is muxed as a GPIO (or at least
-the driver think it is).
+--===============0815254082321563887==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Could you launch these commands (you'll need the devmem tool) and
-paste the results ?
-
-#devmem 0xfffff408
-#devmem 0xfffff418
-#devmem 0xfffff438
-#devmem 0xfffff43c
-#devmem 0xfffff458
-#devmem 0xfffff468
-#devmem 0xfffff470
-#devmem 0xfffff474
-#devmem 0xfffff498
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============0815254082321563887==--
