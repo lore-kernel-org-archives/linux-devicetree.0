@@ -1,54 +1,34 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Fri, 25 Jul 2014 09:29:09 -0500
-Message-ID: <CAL_JsqKqCeU0zs+rS1vxsOeh=Kuw_-gaVHtGU76Lb6TchCTytw@mail.gmail.com>
-References: <cover.1404231535.git.viresh.kumar@linaro.org> <20140717093518.486ac244@free-electrons.com>
- <CAKohpokZXUzXKRWBje7QF_jrvOd5dmfmWQ2Csf3xiMuvT_vPYA@mail.gmail.com>
- <2399813.Puj1SZWhCh@vostro.rjw.lan> <CAKohpomKzK8pMJs1gv+uXxhd17HtCQyfjSnVYw9KpGz6FwbgDA@mail.gmail.com>
- <CAKohpo=HKUkGRK4NX7E59z5QthcKbZKETB-DuP10xj3x+vdHaQ@mail.gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] dmaengine: mpc512x: add device tree binding
+ document and DMA channel lookup
+Date: Fri, 25 Jul 2014 19:55:59 +0530
+Message-ID: <20140725142559.GU8181@intel.com>
+References: <1403693580-9449-1-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=HKUkGRK4NX7E59z5QthcKbZKETB-DuP10xj3x+vdHaQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <rob.herring@linaro.org>, Mike Turquette <mturquette@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Thomas P Abraham <thomas.ab@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Sachin Kamat <spk.linux@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403693580-9449-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 5:48 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 18 July 2014 09:47, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>> Before I apply anything in this area, I need a clear statement from the ARM
->>> people as a group on what the approach is going to be.
->
-> @Rafael: The only patch which has blocked this set is:
->
-> cpufreq: cpu0: Extend support beyond CPU0
->
-> This is about finding which CPUs share clock line..
->
-> Other patches are sort of independent of this one and cpufreq-cpu0 would
-> continue to work for existing platforms if we apply these patches.
->
-> I was wondering if you would like to apply other patches leaving this one?
-> I will then rebase stuff again and send non-controversial patches for 3.17.
-> So, that we get something in 3.17 and the last change can be merged during
-> rc's as well once we finalize on bindings..
->
->> Mike/Rob/Stephen: I believe Atleast three of you should express your views
->> now :)
->
-> Any idea on how can we get some temporary solution for 3.17 as we didn't
-> conclude anything yet on bindings ?
+On Wed, Jun 25, 2014 at 02:52:57PM +0400, Alexander Popov wrote:
+> This patch series introduces a device tree binding document for
+> the MPC512x DMA controller and adds device tree based DMA channel lookup
+> for it.
+> 
+> This version contains the improved device tree binding document:
+> #dma-cells is made a required property, as it must be according
+> dma/dma.txt document.
 
-A temporary solution would have to be NOT in DT because once you add
-something into DT you are stuck with it for some time. You could
-simply support independent clocks by looking at the platform type, but
-that is still risky since you may want to define the OPP in DT
-differently for the 2 cases.
+Applied, thanks
 
-The other problem with temporary solutions is once they are accepted,
-people loose motivation to create the permanent solution. "Can you
-take this now and I'll fix the issues later" is a red flag to
-maintainers.
+-- 
+~Vinod
 
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
