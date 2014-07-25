@@ -1,153 +1,100 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 10:33:22 +0200
-Message-ID: <53D21652.7050808@aksignal.cz>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>	<53D10C50.50305@aksignal.cz>	<20140724162645.4e19c26c@bbrezillon>	<53D12103.3020103@aksignal.cz>	<20140724175848.44f5da10@bbrezillon>	<53D1F5D0.1080006@aksignal.cz> <20140725095319.16a8465c@bbrezillon>
-Reply-To: jiri.prchal@aksignal.cz
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 06/11] ARM: dts: zynq: Add DMAC for Parallella
+Date: Fri, 25 Jul 2014 10:36:03 +0200
+Message-ID: <42796bf5-b27c-4009-894d-9462c85e2bc2@BY2FFO11FD025.protection.gbl>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+ <1406242820-20140-7-git-send-email-afaerber@suse.de>
+ <bc390439-9a5b-43a1-a70c-a4c6517a6cb6@BN1AFFO11FD005.protection.gbl>
+ <53D20F2A.5020209@monstr.eu> <53D21458.3060403@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140725095319.16a8465c@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="jh01ixvfH45lwgIFL8FIOO8wMdfQKlnbu"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D21458.3060403-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I changed manually .config,
-now it's there:
-[    1.195312] spi spi0.0: gpio_request: 23
-[    1.195312] spi spi0.1: gpio_request: 22
-[    1.199218] spi spi0.2: gpio_request: 93
-[    1.203125] spi spi0.3: gpio_request: 14
+--jh01ixvfH45lwgIFL8FIOO8wMdfQKlnbu
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-But still not working.
-
-Dne 25.7.2014 v 09:53 Boris BREZILLON napsal(a):
-> On Fri, 25 Jul 2014 08:14:40 +0200
-> Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz> wrote:
->
->>
->>
->> Dne 24.7.2014 v 17:58 Boris BREZILLON napsal(a):
->>> On Thu, 24 Jul 2014 17:06:43 +0200
->>> Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz> wrote:
->>>
->>>> Hi,
+On 07/25/2014 10:24 AM, Andreas F=C3=A4rber wrote:
+> Am 25.07.2014 10:02, schrieb Michal Simek:
+>> On 07/25/2014 01:28 AM, S=C3=B6ren Brinkmann wrote:
+>>> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>>> ---
+>>>>  v2: New
+>>>> =20
+>>>>  arch/arm/boot/dts/zynq-7000.dtsi      | 17 +++++++++++++++++
+>>>>  arch/arm/boot/dts/zynq-parallella.dts |  4 ++++
+>>>>  2 files changed, 21 insertions(+)
 >>>>
->>>> Dne 24.7.2014 v 16:26 Boris BREZILLON napsal(a):
->>>>> Hello Ji=C5=99=C3=AD,
->>>>>
->>>>> First of all, please try to use git format-patch when submitting =
-a
->>>>> patch to any kernel mailing list.
->>>> Sorry for that.
->>>>>
->>>>> On Thu, 24 Jul 2014 15:38:24 +0200
->>>>> Ji=C5=99=C3=AD Prchal <jiri.prchal@aksignal.cz> wrote:
->>>>>
->>>>>> After ROMBOOT tries boot from flash on SPI0 NPCS0, this NPCS0 (P=
-A14) remains set to PERIPH_A.
->>>>>> Because of that, this pin is unusable to something else.
->>>>>> This patch sets it back to GPIO.
->>>>>
->>>>> The policy is to leave pins in an unknown state till some periphe=
-ral
->>>>> need them.
->>>>>
->>>>> What are you trying to use this pin for ?
->>>> For chip select, but #3. And when SPI communicate with cs0 (PA22),=
- it goes down too (PA14), so 2 devices on bus were
->>>> selected.
->>>
->>> Are you using a 9x5ek board or a custom one, in the latter case cou=
+>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zy=
+nq-7000.dtsi
+>>>> index eed3df0..1a70277 100644
+>>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> @@ -223,6 +223,23 @@
+>>>>  			};
+>>>>  		};
+>>>> =20
+>>>> +		dmac_s: dmac@f8003000 {
+>>>> +			compatible =3D "arm,pl330", "arm,primecell";
+>>>> +			reg =3D <0xf8003000 0x1000>;
+>>>> +			status =3D "disabled";
+>>> I think for this IP we can omit the 'status' property since it is alw=
+ays
+>>> enabled. I don't see a reason to override it in each board DT.
+>>
+>> Done this change myself
+>=20
+> Fine with me, but allow me to point out that the TRM documents the DMAC=
+
+> being mapped as DMAC S at the above address, and as DMAC NS at F800_400=
+0
+> (secure vs. non-secure, ch. 4.6, p. 116). Not sure how this would be
+> handled driver-wise if not through alternative dt nodes?
+
+Kernel on zynq runs in secure world. All the sw on zynq from beginning ru=
+ns in secure world.
+I haven't had any time to look at switching kernel to NS.
+That's why having dmac in this dts as default configuration in secure wor=
 ld
->>> you paste your spi0 node definition ?
->> I'm using custom board. My spi node:
->> 			spi0: spi@f0000000 {
->> 				status =3D "okay";
->> 				cs-gpios =3D <&pioA 23 0
->> 					    &pioA 22 0
->> 					    &pioC 29 0
->> 					    &pioA 14 0>;
->>
->> 				fm25@0 {
->> 					compatible =3D "cypress,fm25";
->> 					spi-max-frequency =3D <40000000>;
->> 					reg =3D <0>;
->> 					pagesize =3D <256>;
->> 					size =3D <131072>;
->> 					address-width =3D <24>;
->> 				};
->> 				/* ADC */
->> 				spidev@1 {
->> 					compatible =3D "spidev";
->> 					reg =3D <1>;
->> 					spi-max-frequency =3D <1000000>;
->> 				};
->> 				/* IO expander for busaddr */
->> 				spidev@2 {
->> 					compatible =3D "spidev";
->> 					reg =3D <2>;
->> 					label =3D "busaddr";
->> 					spi-max-frequency =3D <10000000>;
->> 				};
->> 				/* audio codec */
->> 				codec: codec@3 {
->> 					compatible =3D "ti,tlv320aic3x";
->> 					spi-max-frequency =3D <1000000>;
->> 					reg =3D <3>;
->> 				};
->> 			};
->>
->> This does not work without patch, because of 2 chips selected at one=
- time because of PA14 is periph_a. Probably ROMBOOT
->> changes that.
->
-> Yes, boot code stored in ROM probably mux PA14 to periph A function,
-> but with your definition PA 14 should be set GPIO mode when the codec
-> device is created.
->
-> I don't see any obvious error in your definition, could you add a tra=
-ce
-> there [1] to see if the gpio is successfully requested ?
-> Could you also paste the content of /sys/kernel/debug/gpio ?
->
->>>
->>>>> If you just want to use it as a chip select for an spi device, ta=
-ke a
->>>>> look at [1].
->>>> At [1] it's OK until as cs0 is for example PA22 and cs1 is PA14.
->>>
->>> If you want PA14 to control cs1 and PA22 to control cs0 (both
->>> configured as GPIOs), you'll have the following definition:
->>>
->>> cs-gpios =3D <&pioA 22 0>, <&pioA 14 0>, <0>, <0>;
->> See my node.
->>>
->>>>>
->>>>> Here the gpio is requested by the spi core when defining the cs-g=
-pios
->>>>> property. The gpio controller then request the listed pins to the=
- pin
->>>>> controller (pinctrl driver).
->>>> GPIO is not set in driver as GPIO, at least I didn't find it.
->>>
->>> Take a look at [1], which is set as the gpio_request_enable callbac=
-k,
->>> called by pinctrl core when a gpio is requested.
->> But is this called from spi driver when requesting gpios as cs?
->
-> Yes, it's part of the gpio_request process:
-> gpio_request calls request method on at91 gpio_chip which in turn
-> calls pinctrl_request_gpio which then calls the gpio_request_enable
-> method I previously mentioned.
->
->
-> Best Regards,
->
-> Boris
->
-> [1]http://lxr.free-electrons.com/source/drivers/spi/spi-atmel.c#L1031
->
+is fine.
+
+It is not about how driver will handle - driver shouldn't care.
+It is how users will handle that kernel runs in non secure
+and how to change DTS to reflect this.
+Bootloader can do this change for example. Or if there is an option
+to detect at run time by kernel that we are in NS than kernel itself can
+patch dmac node and use different address.
+Definitely bootloader or setup correct address by user is preferred way.
+
+Thanks,
+Michal
+
+
+
+--jh01ixvfH45lwgIFL8FIOO8wMdfQKlnbu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlPSFvMACgkQykllyylKDCEUXgCeIXT9RPLa3QdhcsmyGTuM2W33
+qOoAoJIVvtNryqXw7SIve1LYgxgj53h+
+=2/77
+-----END PGP SIGNATURE-----
+
+--jh01ixvfH45lwgIFL8FIOO8wMdfQKlnbu--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
