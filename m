@@ -1,116 +1,68 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
-Date: Fri, 25 Jul 2014 10:42:47 +0200
-Message-ID: <53D21887.2020305@suse.de>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-6-git-send-email-afaerber@suse.de> <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl> <53D20E5B.9070501@monstr.eu>
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/2] Add Freescale ASRC driver
+Date: Fri, 25 Jul 2014 16:46:17 +0800
+Message-ID: <cover.1406276436.git.nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D20E5B.9070501@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Harini Katakam <harinik@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+This series of patches add Freescale ASRC module driver support along
+with the extra request in imx-sdma structure required by SDMA Device
+to Device script.
 
-Am 25.07.2014 09:59, schrieb Michal Simek:
-> On 07/25/2014 01:18 AM, S=C3=B6ren Brinkmann wrote:
->> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
->>> Prepare SPI0 and SPI1 while at it.
->=20
-> Patch subject is incorrect. You are adding SPI and QSPI.
+The previous version has been in the maillist for nearly six months
+without any comment and reply. So I decide to drop the SDMA part's
+change since this series focus on ASRC support (Later, we can send
+SDMA part separately.) so that ASRC driver may get upstream first.
 
-Yes, it originally added only QSPI, but I considered it a good deed to
-add SPI as well while already reading that part of the TRM. :)
+Changelog
+v5: (All follow Varka's suggestions)
+ * PATCH-2: Added missing '\n' to pair_err() calls.
+ * PATCH-2: Return the final regmap_write() for fsl_asrc_init().
+ * PATCH-2: Dropped fsl_asrc_devtype and use simple ids behind fsl_asrc_pm.
+ * PATCH-2: Use of_device_is_compatible() to differ compatible directly.
+ * PATCH-2: Fixed indentation for devm_regmap_init_mmio_clk() call.
+v4: (All follow Varka's suggestions)
+ * PATCH-2: Added '\n' to dev_dbg() inside fsl_asrc_isr().
+ * PATCH-2: Added indentations to DT binding document.
+ * PATCH-2: Redefined fsl_asrc_set_watermarks() as void type.
+ * PATCH-2: Put fsl_asrc_isr() and fsl_asrc_ids before probe()
+v3:
+ * PATCH-1: Added an Acked-by from Shawn Guo
+ * PATCH-2: Dropped THIS_MODULE as Tobias suggests
+ * PATCH-2: Use dma_coerce_mask_and_coherent() in fsl_asrc_dma_pcm_new()
+ * PATCH-2: Added substream check in fsl_asrc_dma_pcm_new()
+v2:
+ * PATCH-1: Dropped the change to SDMA driver.
+ * PATCH-2: Dropped useless member in private data structures.
+ * PATCH-2: Refined some comments in fsl_asrc_dma.c driver.
+ * PATCH-2: Refined commit comments.
 
->>>=20
->>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de> --- v2: New
->>>=20
->>> arch/arm/boot/dts/zynq-7000.dtsi      | 37
->>> +++++++++++++++++++++++++++++++++++=20
->>> arch/arm/boot/dts/zynq-parallella.dts |  4 ++++ 2 files
->>> changed, 41 insertions(+)
->>>=20
->>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi
->>> b/arch/arm/boot/dts/zynq-7000.dtsi index 8fd826a..eed3df0
->>> 100644 --- a/arch/arm/boot/dts/zynq-7000.dtsi +++
->>> b/arch/arm/boot/dts/zynq-7000.dtsi @@ -122,6 +122,30 @@=20
->>> interrupts =3D <0 50 4>; };
->>>=20
->>> +		spi0: spi@e0006000 { +			compatible =3D "xlnx,zynq-spi-r1p6";=20
->>> +			reg =3D <0xe0006000 0x1000>; +			status =3D "disabled"; +
->>> interrupt-parent =3D <&intc>; +			interrupts =3D <0 26 4>; +
->>> clocks =3D <&clkc 25>, <&clkc 34>; +			clock-names =3D "ref_clk",
->>> "pclk"; +			#address-cells =3D <1>; +			#size-cells =3D <0>; +		};=20
->>> + +		spi1: spi@e0007000 { +			compatible =3D
->>> "xlnx,zynq-spi-r1p6"; +			reg =3D <0xe0007000 0x1000>; +			status
->>> =3D "disabled"; +			interrupt-parent =3D <&intc>; +			interrupts =3D
->>> <0 49 4>; +			clocks =3D <&clkc 26>, <&clkc 35>; +			clock-names
->>> =3D "ref_clk", "pclk"; +			#address-cells =3D <1>; +			#size-cells
->>> =3D <0>; +		}; +
->> Until here things look good.
->>=20
->>> gem0: ethernet@e000b000 { compatible =3D "cdns,gem"; reg =3D
->>> <0xe000b000 0x4000>; @@ -140,6 +164,19 @@ clock-names =3D "pclk",
->>> "hclk", "tx_clk"; };
->>>=20
->>> +		qspi: qspi@e000d000 { +			compatible =3D
->>> "xlnx,zynq-spi-r1p6"; +			reg =3D <0xe000d000 0x1000>; +			status
->>> =3D "disabled"; +			interrupt-parent =3D <&intc>; +			interrupts =3D
->>> <0 19 4>; +			clocks =3D <&clkc 10>, <&clkc 43>; +			clock-names
->>> =3D "ref_clk", "pclk"; +			num-cs =3D <1>; +			#address-cells =3D
->>> <1>; +			#size-cells =3D <0>; +		}; +
->> I'm not sure what the status of this driver is. I think QSPI is
->> still under review on the mailing lists and I don't think we
->> should add this yet.
->=20
-> Driver for qspi is not in the mainline yet but it doesn't mean that
-> this fragment won't work. Harini: Can you please correct me if I am
-> wrong?
+Nicolin Chen (2):
+  ARM: imx: Add the secondary request into the structure for imx-sdma
+  ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform drivers
 
-It did seem to find the flash chip (cf. parallella-next branch), but I
-didn't find a driver capable of handling its ID. The downstream tree
-was using m25p80; I tried both micron,n25q128a11 and ...a13 based on
-U-Boot output.
+ .../devicetree/bindings/sound/fsl,asrc.txt         |  60 ++
+ include/linux/platform_data/dma-imx.h              |   1 +
+ sound/soc/fsl/Kconfig                              |   9 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/fsl_asrc.c                           | 992 +++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.h                           | 461 ++++++++++
+ sound/soc/fsl/fsl_asrc_dma.c                       | 386 ++++++++
+ 7 files changed, 1911 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
+ create mode 100644 sound/soc/fsl/fsl_asrc.c
+ create mode 100644 sound/soc/fsl/fsl_asrc.h
+ create mode 100644 sound/soc/fsl/fsl_asrc_dma.c
 
-> I would prefer to send two separate patches.
+-- 
+1.8.4
 
-Will do.
-
-> 1. just add SPI to zynq
-
-As I don't have any of the other Zynq boards, can you please advise
-whether either of them should be enabled for some board?
-
-> 2. if Harini confirms that it is working I think that make sense to
-> enable at least simple mode for qspi. That's why not a problem to
-> add it too. It means qspi patch with enabling for your board as
-> second patch.
-
-Thanks,
-Andreas
-
-- --=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJT0hiHAAoJEPou0S0+fgE/DQwP/1zkv0tkOemDedPDa9dVu/77
-0Qc9LTsbBsbn6STakd2z1+Iz2qoy4dePjsGd3hYVgHV6S6MnEiSDTqKjGXmX4Dqu
-ALxksCLi0wezlQuEN2H110eivMGJ8DBz0qCq0t1acN5Y4YhF9tiCNQARF6XoAwcK
-6FtGic/qVC92byGosbD4Y/SvZpJPuk+gACyIhUYEJTS/jKwB68jm5pZZbdGrVsB+
-H4B9tGc+qs4bumdmbzxPXp66HyOqKsfRT0P/S6N0nvkqvNaWyM+MAmB4VDW3dnJJ
-2ApbNJaPCoKtMHTQ2vnWstOVM4smsYJsszBF1zBIwUYgwW4q2Nv3vvjI23746m+x
-gq7Tlqa5yIuPe/9+f6ek4dbZWQ7Zj+xw68taLvFkw9+4HvFd9qul/BxryFGTkErH
-mZkEuQqTq1oppLGS+2ld+/VXt452UKF80Potra/Qt6D/LUA2UBcEIjoLpYxndjqz
-3QrVNsw625LCyvJdYovO3FLHJ69U9VyZ4/8edDQzVvhD6/pcQp75W6mchWkxGnyS
-jZVwKsIKVAWC9k6N6ZOLC5A8KOHRGGY5SOOpOLUQkfTviI5r2eAY5CvX8HOqx9s9
-+tVphTMSLc5rC26ePdMwqAWbax4xt1kmWSiSUZ8cOnKvaUpWEPsAfQNMDsBfWiLN
-aMQyrzdYs+nuCoIksVfN
-=3Dh5eC
------END PGP SIGNATURE-----
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
