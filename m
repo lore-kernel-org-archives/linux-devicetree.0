@@ -1,36 +1,81 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] ARM: rockchip: enable support for RK3288 SoCs
-Date: Thu, 24 Jul 2014 20:50:57 -0700
-Message-ID: <CAD=FV=X3Fxeh7T7Hy0X3ptMjMW0Gcua0aFV4iVCYT8yG0yD44g@mail.gmail.com>
-References: <4868343.UFgjaXesOn@diego>
-	<4818373.bUUc3kJllt@diego>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
+Date: Fri, 25 Jul 2014 03:49:23 +0000
+Message-ID: <dc23839c-7a69-4674-9d92-80a1d68e9b23@BY2FFO11FD003.protection.gbl>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4818373.bUUc3kJllt@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Michal Simek <michals@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Andreas Olofsson <andreas@adapteva.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
-
-On Thu, Jul 17, 2014 at 5:21 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
-rote:
-> Enable HAVE_ARM_ARCH_TIMER and add a rockchip,rk3288 compatible.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/mach-rockchip/Kconfig    | 1 +
->  arch/arm/mach-rockchip/rockchip.c | 1 +
->  2 files changed, 2 insertions(+)
-
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcmVhcywNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQW5kcmVh
+cyBGw6RyYmVyIFttYWlsdG86YWZhZXJiZXJAc3VzZS5kZV0NCj5TZW50OiBGcmlkYXksIEp1bHkg
+MjUsIDIwMTQgNDozMCBBTQ0KPlRvOiBNaWNoYWwgU2ltZWsNCj5DYzogQW5kcmVhcyBPbG9mc3Nv
+bjsgTWF0dGVvIFZpdDsgU2VhbiBSaWNrZXJkOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsN
+Cj5saW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IEFuZHJlYXMNCj5Gw6RyYmVyOyBQdW5uYWlhaCBDaG91ZGFyeSBLYWxsdXJp
+OyBMYXJzLVBldGVyIENsYXVzZW4NCj5TdWJqZWN0OiBbUEFUQ0ggdjIgMDAvMTFdIEFSTTogZHRz
+OiB6eW5xOiBQcmVwYXJlIFBhcmFsbGVsbGENCj4NCj5IZWxsbywNCj4NCj5UaGlzIHBhdGNoIHNl
+cmllcyBhZGRzIGFuIGluaXRpYWwgZGV2aWNlIHRyZWUgZm9yIHRoZSBQYXJhbGxlbGxhIGJvYXJk
+Lg0KPlVBUlQsIFNEIGNhcmQsIEV0aGVybmV0IGFyZSBlbmFibGVkLg0KPk5vdCB5ZXQgZW5hYmxl
+ZCBhcmUgSERNSSwgUVNQSSBmbGFzaCBhbmQgMnggVVNCLg0KPg0KPnYyIGFkZHMgc29tZSBTUEkg
+YW5kIEZQR0EgcGllY2VzIGFuZCB0aWRpZXMgdGhlIGRldmljZSB0cmVlIHdpdGggYQ0KPmNvbXBh
+dGlibGUgc3RyaW5nIGFuZCBtYXRjaGluZyBkb2N1bWVudGF0aW9uLg0KPg0KPk5vdCBoYXZpbmcg
+YWxsIHBpZWNlcyBmb3IgdGVzdGluZyBhbGwgb2YgdGhpcyAobW9zdCBub3RhYmx5IEknbSBtaXNz
+aW5nDQo+QURJIEFEVjc1MTMgYW5kIEFYSS1IRE1JIHN1cHBvcnQgZm9yIFZETUEgYW5kIGF4aS1j
+bGtnZW4sIGFzIHdlbGwgYXMNCj50aGUgMjVRMTI4QSBmbGFzaCBjaGlwIGZvciBRU1BJKSwgSSd2
+ZSBrZXB0IG5ldyB0aGluZ3MgaW4gc2VwYXJhdGUgcGF0Y2hlcw0KPnNvIHRoYXQgd2UgY2FuIG1h
+a2UgcHJvZ3Jlc3Mgb24gdGhlIGJhc2ljIHZlcnNpb24gYW5kIHBvc3NpYmx5IHNxdWFzaA0KPmZ1
+cnRoZXIgY2hlcnJ5LXBpY2tlZCBwaWVjZXMuDQo+DQo+UHVubmFpYWggQ2hvdWRhcnkgS2FsbHVy
+aSBoYWQgcmVjZW50bHkgcHJvcG9zZWQgdG8gZXh0ZW5kIHRoZSBDaGlwaWRlYQ0KPlVTQiBkcml2
+ZXIgZm9yIFp5bnE7IGl0IGtlcHQgY29tcGxhaW5pbmcgYWJvdXQgdGhlIFBIWSB0aG91Z2gsIGFu
+ZCBJDQo+aGF2ZW4ndCBzcG90dGVkIGEgcmV2aXNlZCB2ZXJzaW9uIGJhc2VkIG9uIHRoZSBnZW5l
+cmljIGRyaXZlciB5ZXQuDQo+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC80NDM0
+NjgxLw0KDQpUaGUgcGxhbiBpcywgZ28gd2l0aCBnZW5lcmljIGNoaXAgaWRlYSBkcml2ZXIgd2hp
+Y2ggaXMgY3VycmVudGx5IHVuZGVyIHJldmlldy4gDQpodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xp
+c3RzL2xpbnV4LXVzYi9tc2cxMDk1NzYuaHRtbA0KDQpTbywgcGxlYXNlIHdhaXQgc29tZSBtb3Jl
+IHRpbWUgZm9yIGV4dGVuZGluZyB0aGUgQ2hpcCBpZGVhIGRyaXZlciBzdXBwb3J0DQogdG8genlu
+cS4NCg0KUHVubmFpYWgNCj4NCj5NeSByZWJhc2luZyB3b3JrIGJyYW5jaCBpcyBoZXJlOg0KPmh0
+dHBzOi8vZ2l0aHViLmNvbS9hZmFlcmJlci9saW51eC9jb21taXRzL3BhcmFsbGVsbGEtbmV4dA0K
+Pg0KPlJlZ2FyZHMsDQo+QW5kcmVhcw0KPg0KPkNjOiBQdW5uYWlhaCBDaG91ZGFyeSBLYWxsdXJp
+IDxwdW5uYWlhQHhpbGlueC5jb20+IChVU0IpDQo+Q2M6IExhcnMtUGV0ZXIgQ2xhdXNlbiA8bGFy
+c0BtZXRhZm9vLmRlPiAoSERNSSkNCj4NCj5BbmRyZWFzIEbDpHJiZXIgKDExKToNCj4gIERvY3Vt
+ZW50YXRpb246IGRldmljZXRyZWU6IEFkYXB0ZXZhIHZlbmRvciBwcmVmaXgNCj4gIERvY3VtZW50
+YXRpb246IGRldmljZXRyZWU6IEFkYXB0ZXZhIGJvYXJkcw0KPiAgQVJNOiBkdHM6IHp5bnE6IEFk
+ZCBQYXJhbGxlbGxhIGRldmljZSB0cmVlDQo+ICBBUk06IGR0czogenlucTogVXBkYXRlIGRlcHJl
+Y2F0ZWQgeHVhcnRwcyBjbG9jayBuYW1lcw0KPiAgQVJNOiBkdHM6IHp5bnE6IEFkZCBRU1BJIGZv
+ciBQYXJhbGxlbGxhDQo+ICBBUk06IGR0czogenlucTogQWRkIERNQUMgZm9yIFBhcmFsbGVsbGEN
+Cj4gIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IEZpeCBYaWxpbnggVkRNQSBzcGVjaWZpY2F0
+aW9uDQo+ICBBUk06IGR0czogenlucTogQWRkIFZETUEgdG8gUGFyYWxsZWxsYQ0KPiAgRG9jdW1l
+bnRhdGlvbjogZGV2aWNldHJlZTogRml4IEFESSBBWEkgU1BESUYgc3BlY2lmaWNhdGlvbg0KPiAg
+QVJNOiBkdHM6IHp5bnE6IEFkZCBTUERJRiBmb3IgUGFyYWxsZWxsYQ0KPiAgQVJNOiBkdHM6IHp5
+bnE6IEFkZCBBWEkgY2xrZ2VuIGZvciBQYXJhbGxlbGxhDQo+DQo+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vYWRhcHRldmEudHh0IHwgICA3ICsrDQo+IC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGlsaW54X3ZkbWEudHh0IHwgICAyICstDQo+IC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxheGktc3BkaWYtdHgudHh0IHwgICAyICstDQo+
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgICAx
+ICsNCj4gYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDQgKy0NCj4gYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgICAgICAgICAgICAg
+ICAgICAgfCAgNTggKysrKysrKysrLQ0KPiBhcmNoL2FybS9ib290L2R0cy96eW5xLXBhcmFsbGVs
+bGEuZHRzICAgICAgICAgICAgICB8IDExOQ0KPisrKysrKysrKysrKysrKysrKysrKw0KPiA3IGZp
+bGVzIGNoYW5nZWQsIDE4OCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hZGFwdGV2
+YS50eHQNCj4gY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtcGFyYWxs
+ZWxsYS5kdHMNCj4NCj4tLQ0KPjEuOS4zDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
