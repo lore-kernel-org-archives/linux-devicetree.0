@@ -1,54 +1,62 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v3 1/9] [media] s5p-jpeg: Document sclk-jpeg clock for
- Exynos3250 SoC
-Date: Fri, 25 Jul 2014 16:20:45 +0200
-Message-ID: <1406298053-30184-2-git-send-email-s.nawrocki@samsung.com>
-References: <1406298053-30184-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1406298053-30184-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, j.anaszewski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dmaengine: add a driver for AMBA AXI NBPF DMAC
+ IP cores
+Date: Fri, 25 Jul 2014 19:46:21 +0530
+Message-ID: <20140725141621.GT8181@intel.com>
+References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
+ <Pine.LNX.4.64.1407191243360.3062@axis700.grange>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1407191243360.3062-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
+On Sat, Jul 19, 2014 at 12:48:51PM +0200, Guennadi Liakhovetski wrote:
+> This patch adds a driver for NBPF DMAC IP cores from Renesas, designed for
+> the AMBA AXI bus.
+> 
 
-JPEG IP on Exynos3250 SoC requires enabling two clock gates
-for its operation. This patch documents this requirement.
+> +struct nbpf_desc {
+> +	struct dma_async_tx_descriptor async_tx;
+> +	bool user_wait;
+sounds odd?
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
----
- .../bindings/media/exynos-jpeg-codec.txt           |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> +static int nbpf_chan_probe(struct nbpf_device *nbpf, int n)
+> +{
+> +	struct dma_device *dma_dev = &nbpf->dma_dev;
+> +	struct nbpf_channel *chan = nbpf->chan + n;
+> +	int ret;
+> +
+> +	chan->nbpf = nbpf;
+> +	chan->base = nbpf->base + NBPF_REG_CHAN_OFFSET + NBPF_REG_CHAN_SIZE * n;
+> +	INIT_LIST_HEAD(&chan->desc_page);
+> +	spin_lock_init(&chan->lock);
+> +	chan->dma_chan.device = dma_dev;
+> +	dma_cookie_init(&chan->dma_chan);
+> +	nbpf_chan_prepare_default(chan);
+> +
+> +	dev_dbg(dma_dev->dev, "%s(): channel %d: -> %p\n", __func__, n, chan->base);
+> +
+> +	snprintf(chan->name, sizeof(chan->name), "nbpf %d", n);
+> +
+> +	ret = devm_request_threaded_irq(dma_dev->dev, chan->irq,
+> +			nbpf_chan_irq, nbpf_chan_irqt, IRQF_SHARED,
+> +			chan->name, chan);
+devm_request_irq and friends arent apt here. You are in .remove and get an
+irq, what prevents that race? You need to run free_irq and synchronize_irq()
+to ensure everything is proper before freeing up.
 
-diff --git a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-index 937b755..bf52ed4 100644
---- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-+++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-@@ -3,9 +3,13 @@ Samsung S5P/EXYNOS SoC series JPEG codec
- Required properties:
+Also why threaded_irq when dmaengine API mandates you to use tasklet? The
+callback is supposed to be invoked from a tasklet.
 
- - compatible	: should be one of:
--		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg";
-+		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
-+		  "samsung,exynos3250-jpeg";
- - reg		: address and length of the JPEG codec IP register set;
- - interrupts	: specifies the JPEG codec IP interrupt;
--- clocks	: should contain the JPEG codec IP gate clock specifier, from the
--		  common clock bindings;
--- clock-names	: should contain "jpeg" entry.
-+- clock-names   : should contain:
-+		   - "jpeg" for the core gate clock,
-+		   - "sclk" for the special clock (optional).
-+- clocks	: should contain the clock specifier and clock ID list
-+		  matching entries in the clock-names property; from
-+		  the common clock bindings.
+Thanks
+-- 
+~Vinod
 --
-1.7.9.5
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
