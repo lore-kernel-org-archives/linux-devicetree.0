@@ -1,43 +1,125 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] Adding selftest testdata dynamically into live tree
-Date: Fri, 25 Jul 2014 00:10:58 -0600
-Message-ID: <20140725061058.6BCBCC4063E@trevor.secretlab.ca>
-References: <1405577379-4587-1-git-send-email-gaurav.minocha.os@gmail.com>
-	<20140725055304.5C61EC4063E@trevor.secretlab.ca>
+From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
+Date: Fri, 25 Jul 2014 08:14:40 +0200
+Message-ID: <53D1F5D0.1080006@aksignal.cz>
+References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>	<53D10C50.50305@aksignal.cz>	<20140724162645.4e19c26c@bbrezillon>	<53D12103.3020103@aksignal.cz> <20140724175848.44f5da10@bbrezillon>
+Reply-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140725055304.5C61EC4063E-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <20140724175848.44f5da10@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Jul 2014 23:53:04 -0600, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 16 Jul 2014 23:09:39 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > This patch attaches selftest's device tree data (required by /drivers/of/selftest.c)
-> > dynamically into live device tree. First, it links selftest device tree data into the
-> > kernel image and then iterates over all the nodes and attaches them into the live tree.
-> > Once the testcases are complete, it removes the data attached.
-> > 
-> > This patch will remove the manual process of addition and removal of selftest device
-> > tree data into the machine's dts file. Also, it can be build as a loadable kernel
-> > module by setting the config symbol OF_SELFTEST=m.
-> > 
-> > Tested successfully with current selftest's testcases.
-> > 
-> > Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Merged, thanks. I've run tested on QEMU PowerPC pseries and ARM
-> Versatile Express models. One of the testcases fails on powerpc, but
-> that is a problem with the testcase itself, and not with this code.
 
-I have however removed the ability to build it as a module for now.
-There are other patches in my tree that conflict and I didn't want to
-deal with the merge conflict. I'll get you to re-add the module feature
-on top of the new tree when I push it out.
 
-g.
+Dne 24.7.2014 v 17:58 Boris BREZILLON napsal(a):
+> On Thu, 24 Jul 2014 17:06:43 +0200
+> Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
+>
+>> Hi,
+>>
+>> Dne 24.7.2014 v 16:26 Boris BREZILLON napsal(a):
+>>> Hello Ji=C5=99=C3=AD,
+>>>
+>>> First of all, please try to use git format-patch when submitting a
+>>> patch to any kernel mailing list.
+>> Sorry for that.
+>>>
+>>> On Thu, 24 Jul 2014 15:38:24 +0200
+>>> Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
+>>>
+>>>> After ROMBOOT tries boot from flash on SPI0 NPCS0, this NPCS0 (PA1=
+4) remains set to PERIPH_A.
+>>>> Because of that, this pin is unusable to something else.
+>>>> This patch sets it back to GPIO.
+>>>
+>>> The policy is to leave pins in an unknown state till some periphera=
+l
+>>> need them.
+>>>
+>>> What are you trying to use this pin for ?
+>> For chip select, but #3. And when SPI communicate with cs0 (PA22), i=
+t goes down too (PA14), so 2 devices on bus were
+>> selected.
+>
+> Are you using a 9x5ek board or a custom one, in the latter case could
+> you paste your spi0 node definition ?
+I'm using custom board. My spi node:
+			spi0: spi@f0000000 {
+				status =3D "okay";
+				cs-gpios =3D <&pioA 23 0
+					    &pioA 22 0
+					    &pioC 29 0
+					    &pioA 14 0>;
 
+				fm25@0 {
+					compatible =3D "cypress,fm25";
+					spi-max-frequency =3D <40000000>;
+					reg =3D <0>;
+					pagesize =3D <256>;
+					size =3D <131072>;
+					address-width =3D <24>;
+				};
+				/* ADC */
+				spidev@1 {
+					compatible =3D "spidev";
+					reg =3D <1>;
+					spi-max-frequency =3D <1000000>;
+				};
+				/* IO expander for busaddr */
+				spidev@2 {
+					compatible =3D "spidev";
+					reg =3D <2>;
+					label =3D "busaddr";
+					spi-max-frequency =3D <10000000>;
+				};
+				/* audio codec */
+				codec: codec@3 {
+					compatible =3D "ti,tlv320aic3x";
+					spi-max-frequency =3D <1000000>;
+					reg =3D <3>;
+				};
+			};
+
+This does not work without patch, because of 2 chips selected at one ti=
+me because of PA14 is periph_a. Probably ROMBOOT=20
+changes that.
+>
+>>> If you just want to use it as a chip select for an spi device, take=
+ a
+>>> look at [1].
+>> At [1] it's OK until as cs0 is for example PA22 and cs1 is PA14.
+>
+> If you want PA14 to control cs1 and PA22 to control cs0 (both
+> configured as GPIOs), you'll have the following definition:
+>
+> cs-gpios =3D <&pioA 22 0>, <&pioA 14 0>, <0>, <0>;
+See my node.
+>
+>>>
+>>> Here the gpio is requested by the spi core when defining the cs-gpi=
+os
+>>> property. The gpio controller then request the listed pins to the p=
+in
+>>> controller (pinctrl driver).
+>> GPIO is not set in driver as GPIO, at least I didn't find it.
+>
+> Take a look at [1], which is set as the gpio_request_enable callback,
+> called by pinctrl core when a gpio is requested.
+But is this called from spi driver when requesting gpios as cs?
+>
+>
+> [1]http://lxr.free-electrons.com/source/drivers/pinctrl/pinctrl-at91.=
+c#L665
+>
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
