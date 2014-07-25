@@ -1,82 +1,62 @@
-From: Srikanth Thokala <srikanth.thokala@xilinx.com>
-Subject: RE: [PATCH v2 07/11] Documentation: devicetree: Fix Xilinx VDMA
- specification
-Date: Fri, 25 Jul 2014 12:51:41 +0000
-Message-ID: <32b0ee01-c15a-47eb-94c5-a60ca5016b85@BY2FFO11FD024.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <1406242820-20140-8-git-send-email-afaerber@suse.de>
- <53D20C19.5000306@monstr.eu> <53D21983.8060901@suse.de>
- <53D225F2.4070504@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53D225F2.4070504@xilinx.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, "monstr@monstr.eu" <monstr@monstr.eu>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andreas Olofsson <andreas@adapteva.com>, Vinod Koul <vinod.koul@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/6] ARM RealView DeviceTree support v4
+Date: Fri, 25 Jul 2014 15:23:42 +0200
+Message-ID: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNo
-YWwgU2ltZWsgW21haWx0bzptaWNoYWwuc2ltZWtAeGlsaW54LmNvbV0NCj4gU2VudDogRnJpZGF5
-LCBKdWx5IDI1LCAyMDE0IDM6MTAgUE0NCj4gVG86IEFuZHJlYXMgRsOkcmJlcjsgbW9uc3RyQG1v
-bnN0ci5ldTsgU3Jpa2FudGggVGhva2FsYQ0KPiBDYzogVmlub2QgS291bDsgTWljaGFsIFNpbWVr
-OyBBbmRyZWFzIE9sb2Zzc29uOyBNYXR0ZW8gVml0OyBTZWFuIFJpY2tlcmQ7DQo+IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9s
-bDsgTWFyayBSdXRsYW5kOyBJYW4gQ2FtcGJlbGw7DQo+IEt1bWFyIEdhbGENCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2MiAwNy8xMV0gRG9jdW1lbnRhdGlvbjogZGV2aWNldHJlZTogRml4IFhpbGlu
-eCBWRE1BDQo+IHNwZWNpZmljYXRpb24NCj4NCj4gSGkgQW5kcmVhcywNCj4NCj4gT24gMDcvMjUv
-MjAxNCAxMDo0NiBBTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOg0KPiA+IEhpIE1pY2hhbCwNCj4g
-Pg0KPiA+IEFtIDI1LjA3LjIwMTQgMDk6NDksIHNjaHJpZWIgTWljaGFsIFNpbWVrOg0KPiA+PiBP
-biAwNy8yNS8yMDE0IDAxOjAwIEFNLCBBbmRyZWFzIEbDpHJiZXIgd3JvdGU6DQo+ID4+PiBUaGUg
-c3BlY2lmaWNhdGlvbiByZXF1aXJlcyB4bG54LGRhdGEtd2lkdGgsIGJ1dCBleGFtcGxlIGFuZCBk
-cml2ZXINCj4gPj4+IHVzZSB4bG54LGRhdGF3aWR0aC4gQ2hhbmdlIHRoZSBzcGVjaWZpY2F0aW9u
-IHRvIG1hdGNoIHRoZSBpbXBsZW1lbnRhdGlvbi4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5
-OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+DQo+ID4+PiAtLS0NCj4gPj4+ICB2
-MjogTmV3DQo+ID4+Pg0KPiA+Pj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-bWEveGlsaW54L3hpbGlueF92ZG1hLnR4dCB8IDIgKy0NCj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0DQo+
-ID4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlu
-eF92ZG1hLnR4dA0KPiA+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1h
-L3hpbGlueC94aWxpbnhfdmRtYS50eHQNCj4gPj4+IGluZGV4IDE0MDVlZDAuLmU0YzRkNDcgMTAw
-NjQ0DQo+ID4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hp
-bGlueC94aWxpbnhfdmRtYS50eHQNCj4gPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF92ZG1hLnR4dA0KPiA+Pj4gQEAgLTI1LDcgKzI1
-LDcgQEAgUmVxdWlyZWQgY2hpbGQgbm9kZSBwcm9wZXJ0aWVzOg0KPiA+Pj4gIC0gY29tcGF0aWJs
-ZTogSXQgc2hvdWxkIGJlIGVpdGhlciAieGxueCxheGktdmRtYS1tbTJzLWNoYW5uZWwiIG9yDQo+
-ID4+PiAgICJ4bG54LGF4aS12ZG1hLXMybW0tY2hhbm5lbCIuDQo+ID4+PiAgLSBpbnRlcnJ1cHRz
-OiBTaG91bGQgY29udGFpbiBwZXIgY2hhbm5lbCBWRE1BIGludGVycnVwdHMuDQo+ID4+PiAtLSB4
-bG54LGRhdGEtd2lkdGg6IFNob3VsZCBjb250YWluIHRoZSBzdHJlYW0gZGF0YSB3aWR0aCwgdGFr
-ZQ0KPiA+Pj4gdmFsdWVzDQo+ID4+PiArLSB4bG54LGRhdGF3aWR0aDogU2hvdWxkIGNvbnRhaW4g
-dGhlIHN0cmVhbSBkYXRhIHdpZHRoLCB0YWtlIHZhbHVlcw0KPiA+Pj4gICB7MzIsNjQuLi4xMDI0
-fS4NCj4gPg0KPiA+IEJUVyBJIGp1c3Qgbm90aWNlIHRoYXQgdGhpcyB2YWx1ZXMgc3BlY2lmaWNh
-dGlvbiBpcyBhbWJpZ3VvdXMgYXMgdG8NCj4gPiB3aGV0aGVyIDk2IGlzIGEgdmFsaWQgdmFsdWUg
-b3Igb25seSBwb3dlcnMgb2YgMiBsaWtlIDEyOC4gTWF5YmUgeW91DQo+ID4gd2FudCB0byBjbGFy
-aWZ5IHRoYXQgaW4gYSBmb2xsb3ctdXAgcGF0Y2g/DQo+DQo+IHJlYWxseSBhcHByZWNpYXRlIHlv
-dXIgaGVscCBmb3IgaW1wcm92aW5nIHRoaXMuDQo+IFNyaWthbnRoIFQ6IENhbiB5b3UgcGxlYXNl
-IGxvb2sgYXQgaXQ/DQoNCkl0IHNob3VsZCBiZSBvbmx5IHBvd2VyIG9mIDIuICBJIGNvdWxkIHNl
-bmQgYSBwYXRjaCwgYnV0IGl0IGlzIGRlc2lnbi1zcGVjaWZpYyBhbmQNCnRoZSBkZXNpZ24gd2ls
-bCBub3QgYWxsb3cgdG8gdGFrZSB0aGUgaW50ZXJtZWRpYXRlIHZhbHVlcyBhbmQgc28gdGhlIGRl
-dmljZS10cmVlDQpzY3JpcHQuICBTbywgSSBmZWVsIGl0IHNob3VsZCBiZSBmaW5lIHRvIGtlZXAg
-dGhpcyB3YXkuDQoNClRoYW5rcyBmb3IgdGhpcyBwYXRjaC4NCg0KU3Jpa2FudGgNCg0KPg0KPiBU
-aGFua3MsDQo+IE1pY2hhbA0KPg0KPg0KDQoNCg0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1l
-bnRzIGFyZSBpbnRlbmRlZCBmb3IgdGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1lZCByZWNpcGllbnQo
-cykgYW5kIGNvbnRhaW4ocykgY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIHRoYXQgbWF5IGJlIHBy
-b3ByaWV0YXJ5LCBwcml2aWxlZ2VkIG9yIGNvcHlyaWdodGVkIHVuZGVyIGFwcGxpY2FibGUgbGF3
-LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBkbyBub3QgcmVhZCwgY29w
-eSwgb3IgZm9yd2FyZCB0aGlzIGVtYWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFjaG1lbnRzLiBEZWxl
-dGUgdGhpcyBlbWFpbCBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgaW1tZWRpYXRlbHkuDQoN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+As it says, now that v3.16 has settled and my infrastructure is
+in place, I've updated the RealView DeviceTree patch. Starting
+to look good: we can now push almost everything down into
+different driver subsystems, have a look.
+
+Linus Walleij (6):
+  leds: add a driver for syscon-based LEDs
+  leds: add device tree bindings for syscon LEDs
+  power: reset: driver for the Versatile syscon reboot
+  power: reset: DT bindings for the Versatile reset driver
+  soc: add driver for the ARM RealView
+  ARM: realview: basic device tree implementation
+
+ Documentation/devicetree/bindings/arm/arm-boards   |  66 ++++++
+ Documentation/devicetree/bindings/arm/gic.txt      |   1 +
+ .../devicetree/bindings/leds/leds-syscon.txt       |  83 +++++++
+ .../bindings/reset/arm-versatile-reboot.txt        |  18 ++
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/arm-realview-pb1176.dts          | 240 +++++++++++++++++++++
+ arch/arm/mach-realview/Kconfig                     |  13 ++
+ arch/arm/mach-realview/Makefile                    |   1 +
+ arch/arm/mach-realview/realview-dt.c               |  72 +++++++
+ drivers/irqchip/irq-gic.c                          |   1 +
+ drivers/leds/Kconfig                               |  10 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-syscon.c                         | 152 +++++++++++++
+ drivers/power/reset/Kconfig                        |   9 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/arm-versatile-reboot.c         | 121 +++++++++++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/versatile/Kconfig                      |  10 +
+ drivers/soc/versatile/Makefile                     |   1 +
+ drivers/soc/versatile/soc-realview.c               | 144 +++++++++++++
+ 21 files changed, 947 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-syscon.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/arm-versatile-reboot.txt
+ create mode 100644 arch/arm/boot/dts/arm-realview-pb1176.dts
+ create mode 100644 arch/arm/mach-realview/realview-dt.c
+ create mode 100644 drivers/leds/leds-syscon.c
+ create mode 100644 drivers/power/reset/arm-versatile-reboot.c
+ create mode 100644 drivers/soc/versatile/Kconfig
+ create mode 100644 drivers/soc/versatile/Makefile
+ create mode 100644 drivers/soc/versatile/soc-realview.c
+
+-- 
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
