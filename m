@@ -1,41 +1,62 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
- existing vendor prefixes to standardise on 'dlg'
-Date: Fri, 25 Jul 2014 08:00:02 +0100
-Message-ID: <20140725070002.GH7063@lee--X1>
-References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/2] Add Freescale ASRC driver
+Date: Fri, 25 Jul 2014 15:19:05 +0800
+Message-ID: <cover.1406271541.git.nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, LINUX SH <linux-sh@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Guenter Roeck <linux@roeck-us.net>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Simon
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyNCBKdWwgMjAxNCwgT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIHdyb3RlOgoKPiBG
-cm9tOiBTdGV2ZSBUd2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+Cj4gCj4gVGhp
-cyBwYXRjaCBzZXJpZXMgdXBkYXRlcyB0aGUgZGV2aWNlIHRyZWUgdmVuZG9yIHByZWZpeCBmb3IK
-PiBEaWFsb2cgU2VtaWNvbmR1Y3Rvci4KPiAKPiBWYXJpb3VzIG1ldGhvZHMgYXJlIGN1cnJlbnRs
-eSB1c2VkIHRocm91Z2hvdXQgdGhlIGtlcm5lbDogJ2RpYXNlbWknLAo+ICdkaWFsb2cnIGFuZCAn
-ZGxnJy4gT3RoZXJzIGhhdmUgYWxzbyBiZWVuIHN1Z2dlc3RlZC4KPiAKPiBUaGlzIHBhdGNoIHNl
-dCBhaW1zIHRvIGNvbnNvbGlkYXRlIHRoZSB1c2FnZSBvZiB0aGUgdmVuZG9yIHByZWZpeCB0bwo+
-IHVzZSBhIGNvbW1vbiBzdGFuZGFyZC4gVGhlIHByZWZpeCAnZGxnJyBpcyB1c2VkLgo+IAo+IAo+
-IFNpZ25lZC1vZmYtYnk6IFN0ZXZlIFR3aXNzIDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNv
-bT4KCkRpZG4ndCBJIEFjayB0aGUgTUZEIHBhcnRzIGFscmVhZHk/CgotLSAKTGVlIEpvbmVzCkxp
-bmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIg
-T3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29r
-IHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+This series of patches add Freescale ASRC module driver support along
+with the extra request in imx-sdma structure required by SDMA Device
+to Device script.
+
+The previous version has been in the maillist for nearly six months
+without any comment and reply. So I decide to drop the SDMA part's
+change since this series focus on ASRC support (Later, we can send
+SDMA part separately.) so that ASRC driver may get upstream first.
+
+Changelog
+v4: (All follow Varka's suggestions)
+ * PATCH-2: Added '\n' to dev_dbg() inside fsl_asrc_isr().
+ * PATCH-2: Added indentations to DT binding document.
+ * PATCH-2: Redefined fsl_asrc_set_watermarks() as void type.
+ * PATCH-2: Put fsl_asrc_isr() and fsl_asrc_ids before probe()
+v3:
+ * PATCH-1: Added an Acked-by from Shawn Guo
+ * PATCH-2: Dropped THIS_MODULE as Tobias suggests
+ * PATCH-2: Use dma_coerce_mask_and_coherent() in fsl_asrc_dma_pcm_new()
+ * PATCH-2: Added substream check in fsl_asrc_dma_pcm_new()
+v2:
+ * PATCH-1: Dropped the change to SDMA driver.
+ * PATCH-2: Dropped useless member in private data structures.
+ * PATCH-2: Refined some comments in fsl_asrc_dma.c driver.
+ * PATCH-2: Refined commit comments.
+
+Nicolin Chen (2):
+  ARM: imx: Add the secondary request into the structure for imx-sdma
+  ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform drivers
+
+ .../devicetree/bindings/sound/fsl,asrc.txt         |   60 ++
+ include/linux/platform_data/dma-imx.h              |    1 +
+ sound/soc/fsl/Kconfig                              |    9 +
+ sound/soc/fsl/Makefile                             |    2 +
+ sound/soc/fsl/fsl_asrc.c                           | 1032 ++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.h                           |  461 +++++++++
+ sound/soc/fsl/fsl_asrc_dma.c                       |  386 ++++++++
+ 7 files changed, 1951 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
+ create mode 100644 sound/soc/fsl/fsl_asrc.c
+ create mode 100644 sound/soc/fsl/fsl_asrc.h
+ create mode 100644 sound/soc/fsl/fsl_asrc_dma.c
+
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
