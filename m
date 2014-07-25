@@ -1,108 +1,41 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: zynq: DT: Add CAN node
-Date: Fri, 25 Jul 2014 08:52:36 +0200
-Message-ID: <56bf20294d106e0fc9c23a70cd991a50b441d0aa.1406271138.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-7974-1406271156-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
+ existing vendor prefixes to standardise on 'dlg'
+Date: Fri, 25 Jul 2014 08:00:02 +0100
+Message-ID: <20140725070002.GH7063@lee--X1>
+References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, LINUX SH <linux-sh@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Shawn Guo <shawn.guo@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Guenter Roeck <linux@roeck-us.net>, DEVICE TREE <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Martin Fuzzey <mfuzzey@parkeon.com>, Support Opensource <support.opensource@diasemi.com>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Simon
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
-
---=_mimegpg-monstr-desktop-7974-1406271156-0001
-
-Add node describing Zynq's CAN controller.
-
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-
-Changes in v2:
-- Add can1
-- Enable can0 for zc702
-- Use status property
-
- arch/arm/boot/dts/zynq-7000.dtsi | 26 +++++++++++++++++++++++++-
- arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 366ca6434f54..983148111e3a 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -71,7 +71,31 @@
- 			interrupts = <0 7 4>;
- 			interrupt-parent = <&intc>;
- 			clocks = <&clkc 12>;
--		};
-+		};
-+
-+		can0: can@e0008000 {
-+			compatible = "xlnx,zynq-can-1.0";
-+			status = "disabled";
-+			clocks = <&clkc 19>, <&clkc 36>;
-+			clock-names = "can_clk", "pclk";
-+			reg = <0xe0008000 0x1000>;
-+			interrupts = <0 28 4>;
-+			interrupt-parent = <&intc>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
-+
-+		can1: can@e0009000 {
-+			compatible = "xlnx,zynq-can-1.0";
-+			status = "disabled";
-+			clocks = <&clkc 19>, <&clkc 36>;
-+			clock-names = "can_clk", "pclk";
-+			reg = <0xe0009000 0x1000>;
-+			interrupts = <0 51 4>;
-+			interrupt-parent = <&intc>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
-
- 		gpio0: gpio@e000a000 {
- 			compatible = "xlnx,zynq-gpio-1.0";
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 5e09cee33d42..835c3089c61c 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -29,6 +29,10 @@
-
- };
-
-+&can0 {
-+	status = "okay";
-+};
-+
- &gem0 {
- 	status = "okay";
- 	phy-mode = "rgmii";
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-7974-1406271156-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlPR/rQACgkQykllyylKDCGRtACdE/dKfw8wL0OHWM6nz3FaqM+o
-wPQAnineIwS5v6b207C4R6Acyd8ZIudG
-=gl9I
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-7974-1406271156-0001--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAyNCBKdWwgMjAxNCwgT3BlbnNvdXJjZSBbU3RldmUgVHdpc3NdIHdyb3RlOgoKPiBG
+cm9tOiBTdGV2ZSBUd2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+Cj4gCj4gVGhp
+cyBwYXRjaCBzZXJpZXMgdXBkYXRlcyB0aGUgZGV2aWNlIHRyZWUgdmVuZG9yIHByZWZpeCBmb3IK
+PiBEaWFsb2cgU2VtaWNvbmR1Y3Rvci4KPiAKPiBWYXJpb3VzIG1ldGhvZHMgYXJlIGN1cnJlbnRs
+eSB1c2VkIHRocm91Z2hvdXQgdGhlIGtlcm5lbDogJ2RpYXNlbWknLAo+ICdkaWFsb2cnIGFuZCAn
+ZGxnJy4gT3RoZXJzIGhhdmUgYWxzbyBiZWVuIHN1Z2dlc3RlZC4KPiAKPiBUaGlzIHBhdGNoIHNl
+dCBhaW1zIHRvIGNvbnNvbGlkYXRlIHRoZSB1c2FnZSBvZiB0aGUgdmVuZG9yIHByZWZpeCB0bwo+
+IHVzZSBhIGNvbW1vbiBzdGFuZGFyZC4gVGhlIHByZWZpeCAnZGxnJyBpcyB1c2VkLgo+IAo+IAo+
+IFNpZ25lZC1vZmYtYnk6IFN0ZXZlIFR3aXNzIDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNv
+bT4KCkRpZG4ndCBJIEFjayB0aGUgTUZEIHBhcnRzIGFscmVhZHk/CgotLSAKTGVlIEpvbmVzCkxp
+bmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIg
+T3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29r
+IHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
