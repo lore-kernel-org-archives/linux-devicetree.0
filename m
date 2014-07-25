@@ -1,145 +1,84 @@
-From: caesar <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
- Rockchip SoCs
-Date: Fri, 25 Jul 2014 18:29:38 +0800
-Message-ID: <53D23192.4000908@rock-chips.com>
-References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com> <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com> <20140721085001.GG8843@ulmo> <53CD0E82.6030901@rock-chips.com> <20140721132723.GH15238@ulmo>
+From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
+Date: Fri, 25 Jul 2014 10:31:08 +0000
+Message-ID: <7aabd35a-0b4a-4d03-9976-ef3926929ddc@BL2FFO11FD027.protection.gbl>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+ <1406242820-20140-6-git-send-email-afaerber@suse.de>
+ <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl>
+ <53D20E5B.9070501@monstr.eu> <53D21887.2020305@suse.de>
+ <53D2258B.9000609@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140721132723.GH15238@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D2258B.9000609-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
-
-
-
-=E5=9C=A8 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 21:27, Thierry Reding =E5=
-=86=99=E9=81=93:
-> On Mon, Jul 21, 2014 at 08:58:42PM +0800, caesar wrote:
->> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 16:50, Thierry Reding =
-=E5=86=99=E9=81=93:
->>> On Sat, Jul 19, 2014 at 08:55:29PM +0800, Caesar Wang wrote:
-> [...]
->>>>   	struct rockchip_pwm_chip *pc;
->>>>   	struct resource *r;
->>>>   	int ret;
->>>> @@ -119,7 +182,10 @@ static int rockchip_pwm_probe(struct platform=
-_device *pdev)
->>>>   		return -ENOMEM;
->>>>   	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> -	pc->base =3D devm_ioremap_resource(&pdev->dev, r);
->>>> +	if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
->>>> +		pc->base =3D devm_ioremap(&pdev->dev, r->start, resource_size(r=
-));
->>>> +	else
->>>> +		pc->base =3D devm_ioremap_resource(&pdev->dev, r);
->>> Sorry, this still isn't an option. You really shouldn't remap I/O
->>> regions that other drivers may be using. You hinted at a shared reg=
-ister
->>> space during the review of the initial version. Can you provide mor=
-e
->>> detail about what exactly the memory map looks like of the rk3288? =
-Is
->>> there some kind of technical reference manual that I could look at?=
- Or
->>> do you have a device tree extract that shows what the memory map lo=
-oks
->>> like?
->>>
->>> Thierry
->> Maybe,you can look at the ARM: dts: rk3288:
->> https://github.com/rkchrome/kernel/blob/master/arch/arm/boot/dts/rk3=
-288.dtsi
->> There is some lcdc and vop-pwm map address for rk3288.
->>
->> ,and you can look at the vop-introduce.pdf and vop-register.pdf in A=
-nnex.
->>
->> Maybe,I should put the vop-pwm in lcdc driver,but I don't hope do so=
- it.
->>
->> Could you give a suggestion to solve it? Thanks.
-> It looks like you could turn the lcdc device into an MFD device so th=
-at
-> it can instantiate two devices, one for the display controller, the
-> other for the PWM. Or perhaps it would even work with only a single
-> child device.
->
-> The device tree would become something like this:
->
-> 	lcdc@ff930000 {
-> 		compatible =3D "rockchip,rk3288-lcdc";
-> 		...
->
-> 		pwm@ff9301a0 {
-> 			compatible =3D "rockchip,vop-pwm";
-> 			...
-> 		};
-> 	};
->
-> And your driver would do something like:
->
-> 	static const struct resource pwm_resources[] =3D {
-> 		{
-> 			.start =3D 0x1a0,
-> 			.end =3D 0x1af,
-> 			.flags =3D IORESOURCE_MEM,
-> 		},
-> 	};
->
-> 	static const struct mfd_cell subdevices[] =3D {
-> 		{
-> 			.name =3D "pwm",
-> 			.id =3D 1,
-> 			.of_compatible =3D "rockchip,vop-pwm",
-> 			.num_resources =3D ARRAY_SIZE(pwm_resources),
-> 			.resources =3D pwm_resources,
-> 		},
-> 	};
->
-> 	static int lcdc_probe(struct platform_device *pdev)
-> 	{
-> 		struct resource *regs;
-> 		...
->
-> 		regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->
-> 		...
->
-> 		err =3D mfd_add_devices(&pdev->dev, 0, subdevices, ARRAY_SIZE(subde=
-vices),
-> 				      regs, NULL, NULL);
-> 		...
-> 	}
->
-> Thierry
-Sorry,I might a little trouble for the changes.
-
-The driver changes only for lcdc? If that is the case,I suddenly don't=20
-know how to do it ?
-
-Maybe,I didn't say it clearly.
-
-lcdc0: lcdc@ff930000                   |     vop0pwm: pwm@ff9301a0
-reg =3D <0xff930000 0x10000>     |      reg =3D <0xff9301a0 0x10>;
-
-The lcdc has to add resource's address  from  0xff930000 to 0xff93ffff.
-
-When the  pwm driver is loading vop0pwm. the "devm_ioremap_resource()"=20
-will be used in probe();
-
-I think it will be occur a fail. because the resource [mem=20
-0xff9301a0-0xff9301af] has be requested by lcdc.
-=3D>rockchip-pwm ff9301a0.pwm: can't request region for resource [mem=20
-0xff9301a0-0xff9301af]
-
-If I do the changes in pwm driver,do you have a other suggestion for=20
-it?    thanks.:-)
-
-
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWljaGFsIFNpbWVr
+IFttYWlsdG86bWljaGFsLnNpbWVrQHhpbGlueC5jb21dDQo+IFNlbnQ6IEZyaWRheSwgSnVseSAy
+NSwgMjAxNCAzOjA4IFBNDQo+IFRvOiBBbmRyZWFzIEbDpHJiZXI7IG1vbnN0ckBtb25zdHIuZXU7
+IFNvcmVuIEJyaW5rbWFubg0KPiBDYzogSGFyaW5pIEthdGFrYW07IE1pY2hhbCBTaW1lazsgQW5k
+cmVhcyBPbG9mc3NvbjsgTWF0dGVvIFZpdDsgU2Vhbg0KPiBSaWNrZXJkOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9sbDsgTWFy
+ayBSdXRsYW5kOyBJYW4NCj4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFJ1c3NlbGwgS2luZw0KPiBT
+dWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzExXSBBUk06IGR0czogenlucTogQWRkIFFTUEkgZm9y
+IFBhcmFsbGVsbGENCj4gDQo+IE9uIDA3LzI1LzIwMTQgMTA6NDIgQU0sIEFuZHJlYXMgRsOkcmJl
+ciB3cm90ZToNCj4gPiBBbSAyNS4wNy4yMDE0IDA5OjU5LCBzY2hyaWViIE1pY2hhbCBTaW1lazoN
+Cj4gPj4gT24gMDcvMjUvMjAxNCAwMToxOCBBTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToNCj4g
+Pj4+IE9uIEZyaSwgMjAxNC0wNy0yNSBhdCAwMTowMEFNICswMjAwLCBBbmRyZWFzIEbDpHJiZXIg
+d3JvdGU6DQo+ID4+Pj4gUHJlcGFyZSBTUEkwIGFuZCBTUEkxIHdoaWxlIGF0IGl0Lg0KPiA+DQo+
+ID4+IFBhdGNoIHN1YmplY3QgaXMgaW5jb3JyZWN0LiBZb3UgYXJlIGFkZGluZyBTUEkgYW5kIFFT
+UEkuDQo+ID4NCj4gPiBZZXMsIGl0IG9yaWdpbmFsbHkgYWRkZWQgb25seSBRU1BJLCBidXQgSSBj
+b25zaWRlcmVkIGl0IGEgZ29vZCBkZWVkIHRvDQo+ID4gYWRkIFNQSSBhcyB3ZWxsIHdoaWxlIGFs
+cmVhZHkgcmVhZGluZyB0aGF0IHBhcnQgb2YgdGhlIFRSTS4gOikNCj4gPg0KPiA+Pj4+DQo+ID4+
+Pj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiAtLS0g
+djI6IE5ldw0KPiA+Pj4+DQo+ID4+Pj4gYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kg
+ICAgICB8IDM3DQo+ID4+Pj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4g
+Pj4+PiBhcmNoL2FybS9ib290L2R0cy96eW5xLXBhcmFsbGVsbGEuZHRzIHwgIDQgKysrKyAyIGZp
+bGVzDQo+ID4+Pj4gY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPiA+Pj4+DQo+ID4+Pj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpDQo+ID4+Pj4gYi9hcmNo
+L2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSBpbmRleCA4ZmQ4MjZhLi5lZWQzZGYwDQo+ID4+
+Pj4gMTAwNjQ0IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpICsrKw0KPiA+
+Pj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgQEAgLTEyMiw2ICsxMjIsMzAg
+QEANCj4gPj4+PiBpbnRlcnJ1cHRzID0gPDAgNTAgND47IH07DQo+ID4+Pj4NCj4gPj4+PiArCQlz
+cGkwOiBzcGlAZTAwMDYwMDAgeyArCQkJY29tcGF0aWJsZSA9DQo+ICJ4bG54LHp5bnEtc3BpLXIx
+cDYiOw0KPiA+Pj4+ICsJCQlyZWcgPSA8MHhlMDAwNjAwMCAweDEwMDA+OyArCQkJc3RhdHVzDQo+
+ID0gImRpc2FibGVkIjsgKw0KPiA+Pj4+IGludGVycnVwdC1wYXJlbnQgPSA8JmludGM+OyArCQkJ
+aW50ZXJydXB0cyA9IDwwIDI2IDQ+Ow0KPiArDQo+ID4+Pj4gY2xvY2tzID0gPCZjbGtjIDI1Piwg
+PCZjbGtjIDM0PjsgKwkJCWNsb2NrLW5hbWVzID0NCj4gInJlZl9jbGsiLA0KPiA+Pj4+ICJwY2xr
+IjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OyArCQkJI3NpemUtDQo+IGNlbGxzID0gPDA+OyAr
+CQl9Ow0KPiA+Pj4+ICsgKwkJc3BpMTogc3BpQGUwMDA3MDAwIHsgKwkJCWNvbXBhdGlibGUgPQ0K
+PiA+Pj4+ICJ4bG54LHp5bnEtc3BpLXIxcDYiOyArCQkJcmVnID0gPDB4ZTAwMDcwMDAgMHgxMDAw
+PjsgKw0KPiAJCQlzdGF0dXMNCj4gPj4+PiA9ICJkaXNhYmxlZCI7ICsJCQlpbnRlcnJ1cHQtcGFy
+ZW50ID0gPCZpbnRjPjsgKw0KPiAJCWludGVycnVwdHMgPQ0KPiA+Pj4+IDwwIDQ5IDQ+OyArCQkJ
+Y2xvY2tzID0gPCZjbGtjIDI2PiwgPCZjbGtjIDM1PjsgKw0KPiAJCWNsb2NrLW5hbWVzDQo+ID4+
+Pj4gPSAicmVmX2NsayIsICJwY2xrIjsgKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OyArDQo+IAkJ
+I3NpemUtY2VsbHMNCj4gPj4+PiA9IDwwPjsgKwkJfTsgKw0KPiA+Pj4gVW50aWwgaGVyZSB0aGlu
+Z3MgbG9vayBnb29kLg0KPiA+Pj4NCj4gPj4+PiBnZW0wOiBldGhlcm5ldEBlMDAwYjAwMCB7IGNv
+bXBhdGlibGUgPSAiY2RucyxnZW0iOyByZWcgPQ0KPiA+Pj4+IDwweGUwMDBiMDAwIDB4NDAwMD47
+IEBAIC0xNDAsNiArMTY0LDE5IEBAIGNsb2NrLW5hbWVzID0gInBjbGsiLA0KPiA+Pj4+ICJoY2xr
+IiwgInR4X2NsayI7IH07DQo+ID4+Pj4NCj4gPj4+PiArCQlxc3BpOiBxc3BpQGUwMDBkMDAwIHsg
+KwkJCWNvbXBhdGlibGUgPQ0KPiA+Pj4+ICJ4bG54LHp5bnEtc3BpLXIxcDYiOyArCQkJcmVnID0g
+PDB4ZTAwMGQwMDAgMHgxMDAwPjsgKw0KPiAJCQlzdGF0dXMNCj4gPj4+PiA9ICJkaXNhYmxlZCI7
+ICsJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsgKw0KPiAJCWludGVycnVwdHMgPQ0KPiA+
+Pj4+IDwwIDE5IDQ+OyArCQkJY2xvY2tzID0gPCZjbGtjIDEwPiwgPCZjbGtjIDQzPjsgKw0KPiAJ
+CWNsb2NrLW5hbWVzDQo+ID4+Pj4gPSAicmVmX2NsayIsICJwY2xrIjsgKwkJCW51bS1jcyA9IDwx
+PjsgKw0KPiAJI2FkZHJlc3MtY2VsbHMgPQ0KPiA+Pj4+IDwxPjsgKwkJCSNzaXplLWNlbGxzID0g
+PDA+OyArCQl9OyArDQo+ID4+PiBJJ20gbm90IHN1cmUgd2hhdCB0aGUgc3RhdHVzIG9mIHRoaXMg
+ZHJpdmVyIGlzLiBJIHRoaW5rIFFTUEkgaXMNCj4gPj4+IHN0aWxsIHVuZGVyIHJldmlldyBvbiB0
+aGUgbWFpbGluZyBsaXN0cyBhbmQgSSBkb24ndCB0aGluayB3ZQ0KPiA+Pj4gc2hvdWxkIGFkZCB0
+aGlzIHlldC4NCj4gPg0KPiA+PiBEcml2ZXIgZm9yIHFzcGkgaXMgbm90IGluIHRoZSBtYWlubGlu
+ZSB5ZXQgYnV0IGl0IGRvZXNuJ3QgbWVhbiB0aGF0DQo+ID4+IHRoaXMgZnJhZ21lbnQgd29uJ3Qg
+d29yay4gSGFyaW5pOiBDYW4geW91IHBsZWFzZSBjb3JyZWN0IG1lIGlmIEkgYW0NCj4gPj4gd3Jv
+bmc/DQo+ID4NCg0KSXQgY2FuIGJlIGFkZGVkIGJ1dCBpdCB3aWxsIGhhdmUgdG8gYmUgZGlzYWJs
+ZWQgYXMgdGhlcmUgaXMgbm8gcXNwaSBkcml2ZXINCmF0IHRoZSBtb21lbnQgaW4gbWFpbmxpbmUu
+DQoNClJlZ2FyZHMsDQpIYXJpbmkNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
