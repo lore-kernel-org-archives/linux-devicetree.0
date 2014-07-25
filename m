@@ -1,86 +1,87 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/16] regulator: Add helpers for low-level register
- access
-Date: Fri, 25 Jul 2014 18:48:30 +0100
-Message-ID: <20140725174830.GB17528@sirena.org.uk>
-References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
- <1405957142-19416-3-git-send-email-ttynkkynen@nvidia.com>
+From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+Subject: Re: [PATCH 00/10] of: Core devicetree changeset support
+Date: Fri, 25 Jul 2014 13:10:15 -0500
+Message-ID: <53D29D87.4060708@austin.ibm.com>
+References: <1406159064-21366-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zQkbmZdDtNfaM5TR"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1405957142-19416-3-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406159064-21366-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/23/2014 06:44 PM, Grant Likely wrote:
+> Hi all,
+> 
+> This is a rollup of all the patches that I queued up today for
+> linux-next for the devicetree changeset and overlay work. I'm reposting
+> these patches because some have been significantly changed since their
+> first posting. None of the code is actually live yet, but the test cases
+> are there.
+> 
+> There is one significant functional change which may affect pseries. The
+> OF_DYNAMIC code has been changed to emit notifiers after applying a
+> change to the tree instead of before. I think I've got all they users
+> taken care of correctly, but I'd like to see some testing. I don't have
+> access to pseries (and I can't get the QEMU pseries model to boot reliably)
+> 
+> Nathan/Tyrel, can you give it a spin? The changes can be found in my git tree:
 
---zQkbmZdDtNfaM5TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Grant,
 
-On Mon, Jul 21, 2014 at 06:38:48PM +0300, Tuomas Tynkkynen wrote:
+I was able to do some sniff testing by adding/removing memory, cpus, and pci
+devices and it appears that all device tree nodes and properties were updated
+properly.
 
-> Add helper functions that allow regulator consumers to obtain low-level
-> details about the regulator hardware, like the voltage selector register
-> address and such. These details can be useful when configuring hardware
-> or firmware that want to do low-level access to regulators, with no
-> involvement from the kernel.
+I would still like to try doing live partition migration where we can update
+many pieces of the device tree. I'll be out next week, will try to get
+on that when I return.
 
-Applied, thanks.  I've also created a signed tag for this one:
+-Nathan
 
-The following changes since commit 7171511eaec5bf23fb06078f59784a3a0626b38f:
+> 
+>   git://git.secretlab.ca/git/linux devicetree/next
+> 
+> Grant Likely (8):
+>       of/platform: Fix of_platform_device_destroy iteration of devices
+>       of: Move CONFIG_OF_DYNAMIC code into a separate file
+>       of: Make devicetree sysfs update functions consistent.
+>       of: Make sure attached nodes don't carry along extra children
+>       of: Move dynamic node fixups out of powerpc and into common code
+>       of: Reorder device tree changes and notifiers
+>       of: Add todo tasklist for Devicetree
+>       Merge branch 'devicetree/next-overlay' into devicetree/next
+> 
+> Pantelis Antoniou (4):
+>       of: rename of_aliases_mutex to just of_mutex
+>       OF: Utility helper functions for dynamic nodes
+>       of: Create unlocked versions of node and property add/remove functions
+>       of: Transactional DT support.
+> 
+>  Documentation/devicetree/changesets.txt         |  40 ++
+>  Documentation/devicetree/todo.txt               |  11 +
+>  arch/powerpc/kernel/prom.c                      |  70 ---
+>  arch/powerpc/platforms/pseries/hotplug-memory.c |   2 +-
+>  drivers/crypto/nx/nx-842.c                      |  30 +-
+>  drivers/of/Makefile                             |   1 +
+>  drivers/of/base.c                               | 423 ++++-----------
+>  drivers/of/device.c                             |   4 +-
+>  drivers/of/dynamic.c                            | 660 ++++++++++++++++++++++++
+>  drivers/of/of_private.h                         |  59 ++-
+>  drivers/of/platform.c                           |  32 +-
+>  drivers/of/selftest.c                           |  79 +++
+>  drivers/of/testcase-data/testcases.dtsi         |  10 +
+>  include/linux/of.h                              |  80 ++-
+>  include/linux/of_platform.h                     |   7 +-
+>  15 files changed, 1065 insertions(+), 443 deletions(-)
+>  create mode 100644 Documentation/devicetree/changesets.txt
+>  create mode 100644 Documentation/devicetree/todo.txt
+>  create mode 100644 drivers/of/dynamic.c
+> 
 
-  Linux 3.16-rc1 (2014-06-15 17:45:28 -1000)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/getreg
-
-for you to fetch changes up to 04eca28cde52cdf9eb91e127cc358ad79a8ec53b:
-
-  regulator: Add helpers for low-level register access (2014-07-25 18:43:48 +0100)
-
-----------------------------------------------------------------
-regulator: Allow clients to retrieve voltage selection register
-information
-
-Some systems have embedded controllers that can automatically manage the
-voltage of a regulator.  Help client drivers support this in a generic
-fashion by providing access to the register information we have in the
-framework.
-
-----------------------------------------------------------------
-Tuomas Tynkkynen (1):
-      regulator: Add helpers for low-level register access
-
- Documentation/power/regulator/consumer.txt | 35 +++++++++++++++
- drivers/regulator/core.c                   | 71 ++++++++++++++++++++++++++++++
- include/linux/regulator/consumer.h         | 26 +++++++++++
- 3 files changed, 132 insertions(+)
-
---zQkbmZdDtNfaM5TR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT0phqAAoJELSic+t+oim98jYP/ROiXmfOX8whSlYCzUPrJuv7
-BPyGJcWQarxfMiGfSkz7bw16BNliJjCuxxyMlUFc14fFiQGLYJptGEkHVjMUghgl
-LGfMlFC3W3Xml8cD8NN5X8k6HfsC18z0xIktb+kkDLkXnvAqs4FbJlp7uaFr72D8
-mm6iZ4QidjxGkfoCuUb+mbzAfZWuqqcLLuzed0zckXElXwoPaCf+2uFUDabiY6ap
-QFvncNoBjUm4/O1gNSVeP2m/Ab4MwVJSQxJPDnVqYKtUFFZV/3DZJhXUiZIpDiW8
-0GDqgD7bn1X0fyGGSSByFd9TYsoC2xSSpXvahcQ4632RV9rtV9an3egR8nBuI/8x
-fUaZ1PKtO0ri+++IuaAjuL9P/1tgW2mzlzxHqzoXxgjQhLBMOTKDx/aWKBAenj0j
-hSbC7daldZaWY6j51YgwHBs/SMcUYqW3D0XAeu+BvzqnaLB/IW+F6QM0IBV6S0js
-t/l4CeLmoKz/O0lX5hbv4/UDRtgYwDm5zbZG8yapjxC3CK/0Mlh64cUyhqzWW2IB
-cfLtXzyc9C2vqns+GAjO5yROG+dkMM80pEBNtfcNM7CxS6sQpxODWg8QfGzEKBD7
-5ehykCWhtRs5E4KyHiIvtdmiRhg0r5Deho6bHR1DG4KOkHrCRQF05BpR9TPko+iA
-rmNH8zXNGQmiclf+iIKm
-=fMkx
------END PGP SIGNATURE-----
-
---zQkbmZdDtNfaM5TR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
