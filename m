@@ -1,53 +1,96 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when
- request IRQ
-Date: Fri, 25 Jul 2014 15:52:02 +0200
-Message-ID: <CACRpkdZckrmsG+mOKoZWVH=QqyV0FmDsqUMkbbyi2YJiGFZ5dw@mail.gmail.com>
-References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>
-	<20140722062803.GA21229@dragon>
-	<53CE107A.1000000@tqsc.de>
-	<20140722074257.GC21229@dragon>
-	<CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>
-	<53D0C008.70305@tqsc.de>
-	<CACRpkdarH_-2uW55C5bAUxM1ESgSb6tJAWc4UqEoWr8uc_kQRQ@mail.gmail.com>
-	<53D252F5.2060601@tqsc.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6] leds: add device tree bindings for syscon LEDs
+Date: Fri, 25 Jul 2014 09:07:02 -0500
+Message-ID: <CAL_Jsq+-G68wjBLDbELHRDFcGYRa65-Hx9WoD6HypXNjJKVDvA@mail.gmail.com>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org> <1406294628-16079-3-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D252F5.2060601-7U5DVgMjAv4@public.gmane.org>
+In-Reply-To: <1406294628-16079-3-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 25, 2014 at 2:52 PM, Markus Niebel
-<list-09_linux_arm-7U5DVgMjAv4@public.gmane.org> wrote:
-> Am 25.07.2014 13:38, wrote Linus Walleij:
-
->> I don't know if it'd be a good idea to loop over all gpios in a new
->> irqchip and fetch the direction just to get the flags right, so far
->> we haven't done that and I don't know what the usecase would be.
+On Fri, Jul 25, 2014 at 8:23 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> This adds the device tree bindings used by syscon-based LEDs.
 >
-> I've came to a situation where it would have been helpful to know - bootloader
-> configured a pin as output and linux tried to configure the pin as IRQ input.
-> *YES I KNOW THIS IS NOT CORRECT* but it took some time to see, what happened.
-
-Hm, maybe we should call gpiod_get_direction() first in
-gpio_lock_as_irq(), so we check the hardware and know there that the
-flag is correctly set here?
-
->> If we need that we should do it in gpiolib for all drivers don't you
->> think?
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/leds/leds-syscon.txt       | 83 ++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-syscon.txt
 >
-> A pragmatic / lean solution would be to deny the IRQ configuration when
-> seeing the pin configured as output in hardware and print out an error
-> on the gpio driver level.
+> diff --git a/Documentation/devicetree/bindings/leds/leds-syscon.txt b/Documentation/devicetree/bindings/leds/leds-syscon.txt
+> new file mode 100644
+> index 000000000000..460b9c3d1bd3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-syscon.txt
+> @@ -0,0 +1,83 @@
+> +Device Tree Bindings for Syscon LEDs
+> +
+> +Required properties:
+> +- compatible : must be "syscon-leds".
 
-I guess that is what I'm suggesting, not sure if I follow
-correctly.
+Not really happy with the name... More below.
 
-Yours,
-Linus Walleij
+> +- regmap : a phandle to a syscon node containing a regmap
+> +
+> +Each LED is represented as a sub-node of the syscon-leds device. Each
+> +node's name represents the name of the corresponding LED.
+> +
+> +LED sub-node properties:
+> +- offset : register offset to the register controlling this LED
+> +- mask : bit mask for the bit controlling this LED in the register
+> +  typically 0x01, 0x02, 0x04 ...
+
+This would be a single bit, right? What about inverted bits (i.e. 0 is
+on or 1 is on)?
+
+> +- label : (optional)
+
+Please group all required and optional properties under those headings.
+
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger : (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- default-state: (optional) The initial state of the LED. Valid
+> +  values are "on", "off", and "keep". If the LED is already on or off
+> +  and the default-state property is set the to same value, then no
+> +  glitch should be produced where the LED momentarily turns off (or
+> +  on). The "keep" setting will keep the LED at whatever its current
+> +  state is, without producing a glitch.  The default is off if this
+> +  property is not present.
+> +
+> +Example:
+> +
+> +leds: leds@08 {
+> +       compatible = "syscon-leds";
+> +       regmap = <&syscon>;
+> +
+> +       led@bit0 {
+
+Perhaps we can define a way to express unit address as offset+bit like
+<offset>_<bit> or <offset>.<bit>.
+
+I think we should get rid of the leds node and put this within the
+syscon device node and each node here should have a compatible
+property. I think the compatible should be something like
+"register-bit-led" (perhaps someone has a better name) as syscon is
+somewhat linux specific term and you could use this binding for any
+LEDs that have a single register bit control.
+
+Rob
+
+> +               offset = <0x08>;
+> +               mask = <0x01>;
+> +               label = "versatile:0";
+> +               linux,default-trigger = "heartbeat";
+> +               default-state = "on";
+> +       };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
