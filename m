@@ -1,154 +1,166 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 09:53:19 +0200
-Message-ID: <20140725095319.16a8465c@bbrezillon>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
-	<53D10C50.50305@aksignal.cz>
-	<20140724162645.4e19c26c@bbrezillon>
-	<53D12103.3020103@aksignal.cz>
-	<20140724175848.44f5da10@bbrezillon>
-	<53D1F5D0.1080006@aksignal.cz>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] rtc: sun6i: Add sun6i RTC driver
+Date: Fri, 25 Jul 2014 15:57:06 +0800
+Message-ID: <CAGb2v6746P-9rtW3gjUS3ttkZeqW6gNbunXHiSidNag1gCmk0A@mail.gmail.com>
+References: <1406126338-15062-1-git-send-email-wens@csie.org>
+ <1406126338-15062-2-git-send-email-wens@csie.org> <53CFDC9F.9060208@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D1F5D0.1080006-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ43ZCPAKGQEUGSPCRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <53CFDC9F.9060208-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Jul 2014 08:14:40 +0200
-Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
+On Thu, Jul 24, 2014 at 12:02 AM, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> On Wednesday 23 July 2014 08:08 PM, Chen-Yu Tsai wrote:
+>>
+>> This patch introduces the driver for the RTC in the Allwinner A31 and
+>> A23 SoCs.
+>>
+>> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
+>> RTC in A31/A23 are a separate hardware block, which also contain a few
+>> controls for the RTC block hardware (a regulator and RTC block GPIO pin
+>> latches), while also having separate interrupts for the alarms.
+>>
+>> The hardware is different enough to make a different driver for it.
+>>
+> (...)
+>
+>
+>> +Required properties:
+>> +- compatible : Should be "allwinner,sun6i-a31-rtc"
+>> +- reg: physical base address of the controller and length of memory
+>> mapped
+>> +  region.
+>> +- interrupts: IRQ line for the RTC alarm 0.
+>> +
+>
+>
+> proper indentation..
+> - compatible    : Should be "allwinner,sun6i-a31-rtc"
+>
+> - reg           : physical base address of the controller and length of
+> memory mapped
+>                   region.
+>
+> - interrupts    : IRQ line for the RTC alarm 0.
+> ....
+>
+>> +Example:
+>> +
+>
+>
+> (...)
+>
+>
+>> +
+>> +       ret = devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
+>> +                       0, dev_name(&pdev->dev), chip);
+>
+>
+> should match open parenthesis...
+>
+>
+> devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
+>                  0, dev_name(&pdev->dev), chip);
 
->=20
->=20
-> Dne 24.7.2014 v 17:58 Boris BREZILLON napsal(a):
-> > On Thu, 24 Jul 2014 17:06:43 +0200
-> > Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
-> >
-> >> Hi,
-> >>
-> >> Dne 24.7.2014 v 16:26 Boris BREZILLON napsal(a):
-> >>> Hello Ji=C5=99=C3=AD,
-> >>>
-> >>> First of all, please try to use git format-patch when submitting =
-a
-> >>> patch to any kernel mailing list.
-> >> Sorry for that.
-> >>>
-> >>> On Thu, 24 Jul 2014 15:38:24 +0200
-> >>> Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
-> >>>
-> >>>> After ROMBOOT tries boot from flash on SPI0 NPCS0, this NPCS0 (P=
-A14) remains set to PERIPH_A.
-> >>>> Because of that, this pin is unusable to something else.
-> >>>> This patch sets it back to GPIO.
-> >>>
-> >>> The policy is to leave pins in an unknown state till some periphe=
-ral
-> >>> need them.
-> >>>
-> >>> What are you trying to use this pin for ?
-> >> For chip select, but #3. And when SPI communicate with cs0 (PA22),=
- it goes down too (PA14), so 2 devices on bus were
-> >> selected.
-> >
-> > Are you using a 9x5ek board or a custom one, in the latter case cou=
-ld
-> > you paste your spi0 node definition ?
-> I'm using custom board. My spi node:
-> 			spi0: spi@f0000000 {
-> 				status =3D "okay";
-> 				cs-gpios =3D <&pioA 23 0
-> 					    &pioA 22 0
-> 					    &pioC 29 0
-> 					    &pioA 14 0>;
->=20
-> 				fm25@0 {
-> 					compatible =3D "cypress,fm25";
-> 					spi-max-frequency =3D <40000000>;
-> 					reg =3D <0>;
-> 					pagesize =3D <256>;
-> 					size =3D <131072>;
-> 					address-width =3D <24>;
-> 				};
-> 				/* ADC */
-> 				spidev@1 {
-> 					compatible =3D "spidev";
-> 					reg =3D <1>;
-> 					spi-max-frequency =3D <1000000>;
-> 				};
-> 				/* IO expander for busaddr */
-> 				spidev@2 {
-> 					compatible =3D "spidev";
-> 					reg =3D <2>;
-> 					label =3D "busaddr";
-> 					spi-max-frequency =3D <10000000>;
-> 				};
-> 				/* audio codec */
-> 				codec: codec@3 {
-> 					compatible =3D "ti,tlv320aic3x";
-> 					spi-max-frequency =3D <1000000>;
-> 					reg =3D <3>;
-> 				};
-> 			};
->=20
-> This does not work without patch, because of 2 chips selected at one =
-time because of PA14 is periph_a. Probably ROMBOOT=20
-> changes that.
+ok.
 
-Yes, boot code stored in ROM probably mux PA14 to periph A function,
-but with your definition PA 14 should be set GPIO mode when the codec
-device is created.
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Could not request IRQ\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       /* clear the alarm counter value */
+>> +       writel(0, chip->base + SUN6I_ALRM_COUNTER);
+>> +
+>> +       /* disable counter alarm */
+>> +       writel(0, chip->base + SUN6I_ALRM_EN);
+>> +
+>> +       /* disable counter alarm interrupt */
+>> +       writel(0, chip->base + SUN6I_ALRM_IRQ_EN);
+>> +
+>> +       /* disable week alarm */
+>> +       writel(0, chip->base + SUN6I_ALRM1_EN);
+>> +
+>> +       /* disable week alarm interrupt */
+>> +       writel(0, chip->base + SUN6I_ALRM1_IRQ_EN);
+>> +
+>> +       /* clear counter alarm pending interrupts */
+>> +       writel(SUN6I_ALRM_IRQ_STA_CNT_IRQ_PEND, chip->base +
+>> +                       SUN6I_ALRM_IRQ_STA);
+>> +
+>> +       /* clear week alarm pending interrupts */
+>> +       writel(SUN6I_ALRM1_IRQ_STA_WEEK_IRQ_PEND, chip->base +
+>> +                       SUN6I_ALRM1_IRQ_STA);
+>> +
+>> +       /* disable alarm wakeup */
+>> +       writel(0, chip->base + SUN6I_ALARM_CONFIG);
+>> +
+>> +       chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
+>> +                       &sun6i_rtc_ops, THIS_MODULE);
+>
+>
+> dto....
 
-I don't see any obvious error in your definition, could you add a trace
-there [1] to see if the gpio is successfully requested ?
-Could you also paste the content of /sys/kernel/debug/gpio ?
+ok.
 
-> >
-> >>> If you just want to use it as a chip select for an spi device, ta=
-ke a
-> >>> look at [1].
-> >> At [1] it's OK until as cs0 is for example PA22 and cs1 is PA14.
-> >
-> > If you want PA14 to control cs1 and PA22 to control cs0 (both
-> > configured as GPIOs), you'll have the following definition:
-> >
-> > cs-gpios =3D <&pioA 22 0>, <&pioA 14 0>, <0>, <0>;
-> See my node.
-> >
-> >>>
-> >>> Here the gpio is requested by the spi core when defining the cs-g=
-pios
-> >>> property. The gpio controller then request the listed pins to the=
- pin
-> >>> controller (pinctrl driver).
-> >> GPIO is not set in driver as GPIO, at least I didn't find it.
-> >
-> > Take a look at [1], which is set as the gpio_request_enable callbac=
-k,
-> > called by pinctrl core when a gpio is requested.
-> But is this called from spi driver when requesting gpios as cs?
+>> +       if (IS_ERR(chip->rtc)) {
+>> +               dev_err(&pdev->dev, "unable to register device\n");
+>> +               return PTR_ERR(chip->rtc);
+>> +       }
+>> +
+>> +       dev_info(&pdev->dev, "RTC enabled\n");
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int sun6i_rtc_remove(struct platform_device *pdev)
+>> +{
+>> +       struct sun6i_rtc_dev *chip = platform_get_drvdata(pdev);
+>> +
+>> +       rtc_device_unregister(chip->rtc);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct of_device_id sun6i_rtc_dt_ids[] = {
+>> +       { .compatible = "allwinner,sun6i-a31-rtc" },
+>> +       { /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
+>> +
+>> +static struct platform_driver sun6i_rtc_driver = {
+>> +       .probe          = sun6i_rtc_probe,
+>> +       .remove         = sun6i_rtc_remove,
+>> +       .driver         = {
+>> +               .name           = "sun6i-rtc",
+>> +               .owner          = THIS_MODULE,
+>
+>
+> we can drop owner field....
 
-Yes, it's part of the gpio_request process:
-gpio_request calls request method on at91 gpio_chip which in turn
-calls pinctrl_request_gpio which then calls the gpio_request_enable
-method I previously mentioned.
+May I ask why this is not needed? Seems most if not all drivers
+set it.
 
+Thanks.
 
-Best Regards,
-
-Boris
-
-[1]http://lxr.free-electrons.com/source/drivers/spi/spi-atmel.c#L1031
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +               .of_match_table = sun6i_rtc_dt_ids,
+>> +       },
+>> +};
+>> +
+>> +module_platform_driver(sun6i_rtc_driver);
+>> +
+>> +MODULE_DESCRIPTION("sun6i RTC driver");
+>> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
+>> +MODULE_LICENSE("GPL");
