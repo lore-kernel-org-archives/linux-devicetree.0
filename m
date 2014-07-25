@@ -1,249 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 6/6 v4] ARM: realview: basic device tree implementation
-Date: Fri, 25 Jul 2014 16:24:02 +0100
-Message-ID: <20140725152401.GA21830@leverpostej>
-References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
- <1406294628-16079-7-git-send-email-linus.walleij@linaro.org>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 1/4] ARM: dts: exynos5250: max77686 is Snow only
+Date: Fri, 25 Jul 2014 17:30:12 +0200
+Message-ID: <53D27804.40601@suse.de>
+References: <1405704009-8430-1-git-send-email-afaerber@suse.de>	<1405704009-8430-2-git-send-email-afaerber@suse.de>	<08fe01cfa7c9$341cc700$9c565500$@samsung.com>	<CAD=FV=VUkU7HWjwCKO=WOrKosUtmv3YE_8pxc5uoQg0cHr-AKQ@mail.gmail.com>
+ <CAD=FV=VeBP=1CiKesp738anZzSJNZCGkg68RBUUCyJ5U6_Y75w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406294628-16079-7-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD=FV=VeBP=1CiKesp738anZzSJNZCGkg68RBUUCyJ5U6_Y75w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LKML <linux-kernel@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Fri, Jul 25, 2014 at 02:23:48PM +0100, Linus Walleij wrote:
-> This implements basic device tree boot support for the RealView
-> platforms, with a basic device tree for ARM PB1176 as an example.
->
-> The implementation is done with a new DT-specific board file
-> using only pre-existing bindings for the basic IRQ, timer and
-> serial port drivers. A new compatible type is added to the GIC
-> for the ARM1176.
->
-> This implementation uses the MFD syscon handle from day one to
-> access the system controller registers, and register the devices
-> using the SoC bus.
->
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v3->v4:
-> - Switch the LEDs to usa a new syscon-LEDs driver so we can
->   use the syscon as a hub for all these registers
-> - Split out the SoC driver to its own file in drivers/soc
-> ChangeLog v2->v3:
-> - Rename uart@0x12345678 to serial@0x12345678 in DTS file
-> - Drop static remapping for the LEDs, using my new invention
->   syscon-leds instead
-> - Drop the hunk selecting ARM_DMA_MEM_BUFFERABLE for the DT
->   version of the RealView platform. We think this is a local
->   optimization we can live without.
-> - Split off the reset driver to a separate syscon-based reset
->   driver in drivers/power/reset, add separate device tree
->   bindings for this driver.
-> - To make sure the reset driver is always available for this
->   system a few extra select statements are needed in Kconfig
-> - Split off the SoC bus driver to an easily identifiable chunk
->   inside the mach-realview/realview-dt.c file. This *can* be
->   spun off as a separate driver under drivers/soc for example
->   but we need some separate discussion on this subject.
-> - Augment the SoC driver to display some system info so it's
->   clear why this driver is there.
-> - Drop surplus string "with device tree" from machine
->   description in the DTS file.
-> - Move the new GIC compatible string in alphabetic order.
-> ChangeLog v1->v2:
-> - Adjust timer clock names to be the same as the example in the
->   device tree binding.
-> - Remove all memory fixup code - this should be handled by the
->   device tree specification of memory areas or by special MM hacks
->   for the RealView PBX.
-> - Fix the documentation around syscon to specify that it can be in
->   any node, need not be the root node.
-> - Switch device tree license to the BSD license, taken from
->   arch/powerpc/boot/dts/p1024rdb_32b.dts
-> - Add a hunk for the new compatible string to
->   Documentation/devicetree/bindings/arm/gic.txt
-> - Move the clocks out of the SoC node, certainly the xtal is not
->   sitting on the SoC...
-> - Sort the selects in Kconfig alphabetically
-> - Use IS_ENABLED() for the l2x0 code snippet
-> - Instead of checking the board variant in the reset routine to
->   figure out how to tweak the reset controller, have a compatible
->   string for each syscon variant, map it to an enum that provides a
->   unique type ID and that way figure out how to handle it in a maybe
->   more elegant way.
-> - Open issue: what do to with the l2x0 stuff?
-> ---
->  Documentation/devicetree/bindings/arm/arm-boards |  66 +++++++
->  Documentation/devicetree/bindings/arm/gic.txt    |   1 +
->  arch/arm/boot/dts/Makefile                       |   1 +
->  arch/arm/boot/dts/arm-realview-pb1176.dts        | 240 +++++++++++++++++++++++
->  arch/arm/mach-realview/Kconfig                   |  13 ++
->  arch/arm/mach-realview/Makefile                  |   1 +
->  arch/arm/mach-realview/realview-dt.c             |  72 +++++++
->  drivers/irqchip/irq-gic.c                        |   1 +
->  8 files changed, 395 insertions(+)
->  create mode 100644 arch/arm/boot/dts/arm-realview-pb1176.dts
->  create mode 100644 arch/arm/mach-realview/realview-dt.c
->
-> diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
-> index 3509707f9320..d2399e6f1378 100644
-> --- a/Documentation/devicetree/bindings/arm/arm-boards
-> +++ b/Documentation/devicetree/bindings/arm/arm-boards
-> @@ -86,3 +86,69 @@ Interrupt controllers:
->         compatible = "arm,versatile-sic";
->         interrupt-controller;
->         #interrupt-cells = <1>;
-> +
-> +
-> +ARM RealView Boards
-> +-------------------
-> +The RealView boards cover tailored evaluation boards that are used to explore
-> +the ARM11 and Cortex A-8 and Cortex A-9 processors.
-> +
-> +Required properties (in root node):
-> +       /* RealView Emulation Baseboard */
-> +       compatible = "arm,realview-eb";
-> +        /* RealView Platform Baseboard for ARM1176JZF-S */
-> +       compatible = "arm,realview-pb1176";
-> +       /* RealView Platform Baseboard for ARM11 MPCore */
-> +       compatible = "arm,realview-pb11mp";
-> +       /* RealView Platform Baseboard for Cortex A-8 */
-> +       compatible = "arm,realview-pba8";
-> +       /* RealView Platform Baseboard Explore for Cortex A-9 */
-> +       compatible = "arm,realview-pbx";
-> +
-> +Required nodes:
-> +
-> +- soc: some node of the RealView platforms must be the SoC
-> +  node that contain the SoC-specific devices, withe the compatible
-> +  string set to one of these tuples:
-> +   "simple-bus", "arm,realview-eb-soc"
-> +   "simple-bus", "arm,realview-pb1176-soc"
-> +   "simple-bus", "arm,realview-pb11mp-soc"
-> +   "simple-bus", "arm,realview-pba8-soc"
-> +   "simple-bus", "arm,realview-pbx-soc"
-
-If you have simple-bus in a compatible list, it should come last. The
-list is meant to go from most specific to least specific.
-
-That'll need to be swapped in the example and dts too.
-
-[...]
-
-> +       soc {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "simple-bus", "arm,realview-pb1176-soc";
-> +               regmap = <&syscon>;
-> +               ranges;
-> +
-> +               syscon: syscon@10000000 {
-> +                       compatible = "arm,realview-pb1176-syscon", "syscon";
-> +                       reg = <0x10000000 0x1000>;
-> +               };
-> +
-> +               reboot: reboot@0x40 {
-> +                       compatible = "arm,realview-pb1176-reboot";
-> +                       regmap = <&syscon>;
-> +               };
-
-What's the @0x40 for?
-
-Why don't we just have a property on the arm,realview-pb1176-syscon node
-to say it can do reset (or just assume that it can)?
-
-This looks like a leak of Linux internals, this isn't really a device.
-
-[...]
-
-> +               /* Primary DevChip GIC synthesized with the CPU */
-> +               intc_dc1176: interrupt-controller@10120000 {
-> +                       compatible = "arm,arm1176jzf-gic";
-
-As far as I am aware, the JZF flags haven nothing to do with the GIC
-implementation. I think they can be dropped from this string (following
-the example of "arm,arm1176-pmu").
-
-> +                       #interrupt-cells = <3>;
-> +                       #address-cells = <1>;
-> +                       interrupt-controller;
-> +                       reg = <0x10121000 0x1000>,
-> +                             <0x10120000 0x100>;
-> +               };
-> +
-> +               /* This GIC on the board is cascaded off the DevChip GIC */
-> +               intc_pb1176: interrupt-controller@10040000 {
-> +                       compatible = "arm,arm1176jzf-gic";
-
-And this isn't part of the CPU, so that string doesn't look right. I'd
-at least like to see an additional string earlier in the list
-
-> +                       #interrupt-cells = <3>;
-> +                       #address-cells = <1>;
-> +                       interrupt-controller;
-> +                       reg = <0x10041000 0x1000>,
-> +                             <0x10040000 0x100>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 31 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-
-[...]
-
-> +static void __init realview_dt_init_machine(void)
-> +{
-> +       int ret;
-> +
-> +#if IS_ENABLED(CONFIG_CACHE_L2X0)
-> +       if (of_machine_is_compatible("arm,realview-eb"))
-> +               /*
-> +                * 1MB (128KB/way), 8-way associativity,
-> +                * evmon/parity/share enabled
-> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
-> +                */
-> +               l2x0_of_init(0x00790000, 0xfe000fff);
-> +       else if (of_machine_is_compatible("arm,realview-pb1176"))
-> +               /*
-> +                * 128Kb (16Kb/way) 8-way associativity.
-> +                * evmon/parity/share enabled.
-> +                */
-> +               l2x0_of_init(0x00730000, 0xfe000fff);
-> +       else if (of_machine_is_compatible("arm,realview-pb11mp"))
-> +               /*
-> +                * 1MB (128KB/way), 8-way associativity,
-> +                * evmon/parity/share enabled
-> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
-> +                */
-> +               l2x0_of_init(0x00730000, 0xfe000fff);
-> +       else if (of_machine_is_compatible("arm,realview-pbx"))
-> +               /*
-> +                * 16KB way size, 8-way associativity, parity disabled
-> +                * Bits:  .. 0 0 0 0 1 00 1 0 1 001 0 000 0 .... .... ....
-> +                */
-> +               l2x0_of_init(0x02520000, 0xc0000fff);
-> +#endif
-
-Are these just copied form what we already have for non-DT?
-
-Do we know that these are all necessary?
-
-> +DT_MACHINE_START(REALVIEW_DT, "ARM RealView Machine (Device Tree Support)")
-
-As a general point, we seem to have so many different ways of formatting
-this, and we should standardise.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRG91ZywKCkFtIDI1LjA3LjIwMTQgMTc6MTMsIHNjaHJpZWIgRG91ZyBBbmRlcnNvbjoKPiBP
+biBGcmksIEp1bCAyNSwgMjAxNCBhdCA4OjA4IEFNLCBEb3VnIEFuZGVyc29uIDxkaWFuZGVyc0Bj
+aHJvbWl1bS5vcmc+IHdyb3RlOgo+PiBPbiBUaHUsIEp1bCAyNCwgMjAxNCBhdCAxMDoyOCBQTSwg
+S3VramluIEtpbSA8a2dlbmUua2ltQHNhbXN1bmcuY29tPiB3cm90ZToKPj4+IEFuZHJlYXMgRsOk
+cmJlciB3cm90ZToKPj4+Pgo+Pj4+IE1vdmUgaXQgZnJvbSBleHlub3M1MjUwLWNyb3MtY29tbW9u
+LmR0c2kgdG8gZXh5bm9zNTI1MC1zbm93LmR0cy4KPj4+PiBTcHJpbmcgZG9lcyBub3QgbmVlZCBp
+dCwgaXQgdXNlcyBhbiBzNW04NzY3IGluc3RlYWQuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBB
+bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4+Pj4gLS0tCj4+Pgo+Pj4gRG91Zywg
+Y2FuIHlvdSBoYXZlIGEgbG9vayB0aGlzIHNlcmllcyBmb3IgZXh5bm9zNTI1MC1jaHJvbWVib29r
+Pwo+Pj4gSSdtIG5vdCBzdXJlIGV4eW5vczUyNTAtY3Jvcy1jb21tb24gaXMgc3RpbGwgdXNlZnVs
+IGZvciBleHlub3M1MjUwLXNwcmluZy4uLgo+Pgo+PiBSaWdodC4gIFRoZSBjdXJyZW50IHN1Z2dl
+c3Rpb24gaXMgdG8gcmV3b3JrIHRvIGp1c3QgZHVwbGljYXRlIHRoaW5ncwo+PiBhbmQgZG9uJ3Qg
+dXNlIGV4eW5vczUyNTAtY3Jvcy1jb21tb24uCj4gCj4gT2gsIGl0IGFjdHVhbGx5IGxvb2tzIGxp
+a2UgeW91ciBwYXRjaCBzZXJpZXMgZW5kcyB1cCB0aGVyZSwgYnV0IHRoZQo+IGZpcnN0IHBhdGNo
+IGNvbmZ1c2VkIG1lLgoKTlAsIGd1ZXNzIHlvdSBqdXN0IHN0YXJ0ZWQgcmVhZGluZyBpbiB0aGUg
+bWlkZGxlLiA7KQoKPiAgV2h5IG1vdmUganVzdCB0aGUgbWF4aW0gUE1JQyBmaXJzdD8KClJldmll
+dyBvZiB0aGUgbW92ZW1lbnRzIHN1cmVseSBpcyBlYXNpZXIgdGhpcyB3YXksIGFuZCBpdCBkaWQg
+bm90IHlldApzZWVtIGEgZG9uZSBkZWFsIHRoYXQgd2Ugd291bGQgZHJvcCAtY3Jvcy1jb21tb24u
+IFRoZSBtZXJnZSBwYXRjaCBuaWNlbHkKc2hvd3Mgd2hpY2ggY29tbW9uIHBhcnRzIG5lZWQgdG8g
+YmUgY29waWVkIGludG8gc3ByaW5nLgoKPiAgTW92ZQo+IGV2ZXJ5dGhpbmcgYXQgb25jZSBhbmQg
+YmUgZG9uZSB3aXRoIHRoZSBjb21tb24gZmlsZSwgdGhlbiBkbwo+IGNsZWFudXAuLi4KCklmIGV2
+ZXJ5b25lIGFncmVlcyB0aGF0IHdlIHdhbnQgdG8gcHJvY2VlZCB0aGF0IHdheSwgd2UgY2FuIGVh
+c2lseQpzcXVhc2ggcGF0Y2hlcyAxKzIuIFNlcGFyYXRpbmcgaXMgYWx3YXlzIGhhcmRlci4KCkNo
+ZWVycywKQW5kcmVhcwoKLS0gClNVU0UgTElOVVggUHJvZHVjdHMgR21iSCwgTWF4ZmVsZHN0ci4g
+NSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55CkdGOiBKZWZmIEhhd24sIEplbm5pZmVyIEd1aWxk
+LCBGZWxpeCBJbWVuZMO2cmZmZXI7IEhSQiAxNjc0NiBBRyBOw7xybmJlcmcKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
