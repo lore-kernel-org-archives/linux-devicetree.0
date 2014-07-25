@@ -1,110 +1,107 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] ARM: zynq: DT: Add CAN node
-Date: Fri, 25 Jul 2014 08:47:05 +0200
-Message-ID: <53D1FD69.4020109@monstr.eu>
-References: <52d799e17cd3539713625c6f6a6666620f52d692.1406120732.git.michal.simek@xilinx.com> <20140723160702.GA14564@xsjandreislx> <2fe3a869-d17c-4521-a5c1-7c347ae34726@BN1BFFO11FD060.protection.gbl> <d973d7c8-30e7-458e-9d57-15da917cde04@BL2FFO11FD030.protection.gbl>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7"
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] ARM: zynq: DT: Add CAN node
+Date: Fri, 25 Jul 2014 08:52:36 +0200
+Message-ID: <56bf20294d106e0fc9c23a70cd991a50b441d0aa.1406271138.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-7974-1406271156-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d973d7c8-30e7-458e-9d57-15da917cde04-xjCwUguQ55/6NczZJL2rHmYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-On 07/24/2014 05:55 PM, S=C3=B6ren Brinkmann wrote:
-> On Thu, 2014-07-24 at 08:44AM +0200, Michal Simek wrote:
->> On 07/23/2014 06:07 PM, S=C3=B6ren Brinkmann wrote:
->>> On Wed, 2014-07-23 at 03:05PM +0200, Michal Simek wrote:
->>>> Add node describing Zynq's CAN controller.
->>>>
->>>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>
->>>>  arch/arm/boot/dts/zynq-7000.dtsi | 13 ++++++++++++-
->>>>  1 file changed, 12 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zy=
-nq-7000.dtsi
->>>> index 366ca6434f54..2287d9b4ed1a 100644
->>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
->>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
->>>> @@ -71,7 +71,18 @@
->>>>  			interrupts =3D <0 7 4>;
->>>>  			interrupt-parent =3D <&intc>;
->>>>  			clocks =3D <&clkc 12>;
->>>> -		};
->>>> +		};
->>>> +
->>>> +		can0: can@e0008000 {
->>>> +			compatible =3D "xlnx,zynq-can-1.0";
->>>> +			clocks =3D <&clkc 19>, <&clkc 36>;
->>>> +			clock-names =3D "can_clk", "pclk";
->>>> +			reg =3D <0xe0008000 0x1000>;
->>>> +			interrupts =3D <0 28 4>;
->>>> +			interrupt-parent =3D <&intc>;
->>>> +			tx-fifo-depth =3D <0x40>;
->>>> +			rx-fifo-depth =3D <0x40>;
->>>> +		};
->>>
->>> What about the second CAN core? You also probably want to add
->>> 'status =3D "disabled"' in the dtsi.
->>
->> Second can core - yes.
->>
->> I can add status =3D "disabled" but then question is if make
->> sense to change status for any zynq dts file. Or just
->> keep enable both.
->>
->> In our repo is enabled can0 on zc702.
->>
->> What do you think?
->=20
-> Well, it should be enabled on boards that have CAN pinned out. Does any=
+--=_mimegpg-monstr-desktop-7974-1406271156-0001
 
-> of our boards have that?
+Add node describing Zynq's CAN controller.
 
-I have checked and only can0 for zc702 should be enabled.
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
 
-Let me send v2.
+Changes in v2:
+- Add can1
+- Enable can0 for zc702
+- Use status property
 
-Thanks,
-Michal
+ arch/arm/boot/dts/zynq-7000.dtsi | 26 +++++++++++++++++++++++++-
+ arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 366ca6434f54..983148111e3a 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -71,7 +71,31 @@
+ 			interrupts = <0 7 4>;
+ 			interrupt-parent = <&intc>;
+ 			clocks = <&clkc 12>;
+-		};
++		};
++
++		can0: can@e0008000 {
++			compatible = "xlnx,zynq-can-1.0";
++			status = "disabled";
++			clocks = <&clkc 19>, <&clkc 36>;
++			clock-names = "can_clk", "pclk";
++			reg = <0xe0008000 0x1000>;
++			interrupts = <0 28 4>;
++			interrupt-parent = <&intc>;
++			tx-fifo-depth = <0x40>;
++			rx-fifo-depth = <0x40>;
++		};
++
++		can1: can@e0009000 {
++			compatible = "xlnx,zynq-can-1.0";
++			status = "disabled";
++			clocks = <&clkc 19>, <&clkc 36>;
++			clock-names = "can_clk", "pclk";
++			reg = <0xe0009000 0x1000>;
++			interrupts = <0 51 4>;
++			interrupt-parent = <&intc>;
++			tx-fifo-depth = <0x40>;
++			rx-fifo-depth = <0x40>;
++		};
+
+ 		gpio0: gpio@e000a000 {
+ 			compatible = "xlnx,zynq-gpio-1.0";
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index 5e09cee33d42..835c3089c61c 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -29,6 +29,10 @@
+
+ };
+
++&can0 {
++	status = "okay";
++};
++
+ &gem0 {
+ 	status = "okay";
+ 	phy-mode = "rgmii";
+--
+1.8.2.3
 
 
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--=_mimegpg-monstr-desktop-7974-1406271156-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEARECAAYFAlPR/WkACgkQykllyylKDCGX/gCcCjJARrrn/xJCXlPGj13j+4Yi
-wTYAn1KUNeiNGW+Itpu8VOtdxNL/zsPI
-=AwwV
+iEYEABECAAYFAlPR/rQACgkQykllyylKDCGRtACdE/dKfw8wL0OHWM6nz3FaqM+o
+wPQAnineIwS5v6b207C4R6Acyd8ZIudG
+=gl9I
 -----END PGP SIGNATURE-----
 
---WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7--
+--=_mimegpg-monstr-desktop-7974-1406271156-0001--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
