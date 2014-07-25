@@ -1,76 +1,76 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v8 6/9] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 25 Jul 2014 16:42:42 +0100
-Message-ID: <20140725154242.GN24268@arm.com>
-References: <CAErSpo75ovmGoeSHKJN0nckGDy-0gpn8kLPfHQ79CtcXxhPydw@mail.gmail.com>
- <20140708224847.GC4980@e106497-lin.cambridge.arm.com>
- <CAErSpo5rBt0iF2HGeDD-UH6_sPCoC647VCw0Q1v_0Rdpvcir-w@mail.gmail.com>
- <20140710094758.GA6501@e106497-lin.cambridge.arm.com>
- <CAErSpo5ZNCY31NztT0cLFbRVsBZqMsZ0LbTFNOTQCZUU3F7qJA@mail.gmail.com>
- <20140711141115.GB16321@arm.com>
- <CAErSpo7C8qzmdp+XgVi2ysXj_NcgvVY7RVfBZ2PHimLzrzANMQ@mail.gmail.com>
- <20140711180151.GH16321@arm.com>
- <20140714163922.GH1112@arm.com>
- <CAErSpo65RBeTgzrVefWBfjnZqTPzyz__HnC4bn8riGGDC0GkHg@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 6/6 v4] ARM: realview: basic device tree implementation
+Date: Fri, 25 Jul 2014 16:50:10 +0100
+Message-ID: <20140725155010.GP21766@n2100.arm.linux.org.uk>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org> <1406294628-16079-7-git-send-email-linus.walleij@linaro.org> <20140725152401.GA21830@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAErSpo65RBeTgzrVefWBfjnZqTPzyz__HnC4bn8riGGDC0GkHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20140725152401.GA21830@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 22, 2014 at 04:15:58AM +0100, Bjorn Helgaas wrote:
-> On Mon, Jul 14, 2014 at 10:39 AM, Catalin Marinas
-> <catalin.marinas@arm.com> wrote:
-> > From b32606aa3997fc8a45014a64f99e921eef4872b0 Mon Sep 17 00:00:00 2001
-> > From: Catalin Marinas <catalin.marinas@arm.com>
-> > Date: Mon, 14 Jul 2014 17:20:01 +0100
-> > Subject: [PATCH] pci: Add support for generic domain_nr in pci_bus
-> >
-> > This patch adds domain_nr in struct pci_bus if
-> > CONFIG_PCI_DOMAINS_GENERIC is enabled. The default implementation for
-> > pci_domain_nr() simply returns bus->domain_nr. For the root bus, the
-> > core PCI code calls pci_set_domain_nr(bus, parent_device) while the
-> > child buses inherit the domain nr of the parent bus.
-> >
-> > This patch also adds an of_pci_set_domain_nr() implementation which
-> > parses the device tree for the "pci-domain" property or sets domain_nr
-> > to the next available value (this function could also be implemented
-> > entirely in arm64).
-> >
-> > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+On Fri, Jul 25, 2014 at 04:24:02PM +0100, Mark Rutland wrote:
+> Hi Linus,
 > 
-> I like this.  It seems like a reasonable step forward.  I don't really
-> like the pci_set_domain_nr() interface because the domain conceptually
-> exists before the root bus in the domain, but we can deal with that
-> later.
-
-That's just the name I came up with. Maybe something like
-pci_assign_domain_to_bus()?
-
-> I'd really like to see all this stuff in v3.17, but I'm going to be on
-> vacation for the next three weeks and won't be able to do much until
-> Aug 11, which is probably going to be in the middle of the merge
-> window.  But maybe the series can be integrated in -next via an ARM
-> tree or something.  If it helps, you can add my
+> On Fri, Jul 25, 2014 at 02:23:48PM +0100, Linus Walleij wrote:
+> > +static void __init realview_dt_init_machine(void)
+> > +{
+> > +       int ret;
+> > +
+> > +#if IS_ENABLED(CONFIG_CACHE_L2X0)
+> > +       if (of_machine_is_compatible("arm,realview-eb"))
+> > +               /*
+> > +                * 1MB (128KB/way), 8-way associativity,
+> > +                * evmon/parity/share enabled
+> > +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
+> > +                */
+> > +               l2x0_of_init(0x00790000, 0xfe000fff);
+> > +       else if (of_machine_is_compatible("arm,realview-pb1176"))
+> > +               /*
+> > +                * 128Kb (16Kb/way) 8-way associativity.
+> > +                * evmon/parity/share enabled.
+> > +                */
+> > +               l2x0_of_init(0x00730000, 0xfe000fff);
+> > +       else if (of_machine_is_compatible("arm,realview-pb11mp"))
+> > +               /*
+> > +                * 1MB (128KB/way), 8-way associativity,
+> > +                * evmon/parity/share enabled
+> > +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
+> > +                */
+> > +               l2x0_of_init(0x00730000, 0xfe000fff);
+> > +       else if (of_machine_is_compatible("arm,realview-pbx"))
+> > +               /*
+> > +                * 16KB way size, 8-way associativity, parity disabled
+> > +                * Bits:  .. 0 0 0 0 1 00 1 0 1 001 0 000 0 .... .... ....
+> > +                */
+> > +               l2x0_of_init(0x02520000, 0xc0000fff);
+> > +#endif
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Are these just copied form what we already have for non-DT?
 > 
-> for this piece.  I don't remember how many other PCI changes are
-> involved; maybe my ack on this will be enough?  Even if we can't get
-> it in for the merge window, I'm open to trying to merge it after
-> v3.17-rc1 if it's isolated enough.
+> Do we know that these are all necessary?
 
-Thanks for the Ack but I think Liviu needs to address a few more things
-with the OF part of his PCIe patches and it's unlikely that they are
-ready for 3.17. My "deadline" is for 3.18 to get the generic (and arm64)
-PCIe support in.
+It is necessary to provide the cache sizes on Realview because the
+older L2C210/L2C220 do not have a method of encoding that information
+in the register - and given that ARM doesn't seem to like shipping
+Linux compatible boot loaders on their eval hardware, we can't really
+say that it should be dealt with there.
 
-(I'm off for two weeks starting now as well).
+I toyed with the idea of adding the standard cache size specifications
+to the L2C code, it sounds like there's a reason to do that now.
+
+Let's not mess around with adding stuff like the above to work around
+the L2 code not parsing the appropriate specs from DT, let's do the
+right thing and add bindings to allow DT to provide the cache geometry.
 
 -- 
-Catalin
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
