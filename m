@@ -1,192 +1,101 @@
-From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] mtd: add driver for the flash in Lattice machxo2 FPGAs
-Date: Fri, 25 Jul 2014 10:03:29 +0200
-Message-ID: <53D20F51.2090705@parkeon.com>
-References: <20140724162225.22308.66538.stgit@localhost> <53D1D8ED.4010209@gmail.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Fri, 25 Jul 2014 10:07:38 +0200
+Message-ID: <20140725080738.GA9756@kwain>
+References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1405499166-6726-8-git-send-email-antoine.tenart@free-electrons.com>
+ <20140725021853.GA11052@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D1D8ED.4010209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140725021853.GA11052-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi and thank you for your review.
+Hi Peter,
 
-On 25/07/14 06:11, Varka Bhadram wrote:
-> On 07/24/2014 09:52 PM, Martin Fuzzey wrote:
->> This driver provides two MTD devices, one for the configuration data
->> (FPGA bitstream) and another for the general purpose user flash.
->>
->> Both behave as normal MTD devices bit the configuration one has
->> some extra sysfs entries to synchronize updating.
->>
->> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
->> +#include <linux/delay.h>
->> +#include <linux/slab.h>
->> +#include <linux/module.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mutex.h>
->> +#include <linux/of.h>
->
-> Includes in alphabetical order...
->
-Ok done for V2
->> +
->> +static void machxo2_lock(struct machxo2 *machxo2)
->> +{
->> +    if (!mutex_trylock(&machxo2->lock)) {
->> +        dev_dbg(machxo2->dev, "wait for %s from %pf\n",
->> +                __func__, __builtin_return_address(0));
->> +
->
-> dev_dbg(machxo2->dev, "wait for %s from %pf\n",
->     __func__, __builtin_return_address(0));
->
+On Fri, Jul 25, 2014 at 10:18:54AM +0800, Peter Chen wrote:
+> On Wed, Jul 16, 2014 at 10:26:01AM +0200, Antoine T=E9nart wrote:
+> > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> > and DMA mask, to support USB2 ChipIdea controllers that don't need
+> > specific functions.
+>=20
+> You may need to indicate it is a generic usb2 glue layer driver at bo=
+th
+> subject and context.
 
-Sorry, not understanding here.
-You want the second line to be LESS intented??
+"USB2 ChipIdea driver for ci13xxx" seemed quite generic to me.
 
-Coding style (chapter 2) says:
-     Descendants are always substantially shorter than the parent and
-     are placed substantially to the right
+> >=20
+> > Needed for the Marvell Berlin SoCs USB controllers.
+>=20
+> You can say it is tested at Marvell Berlin SoCs USB controllers.
 
-Idem for the others
+Ok, I'll explicitly say it.
 
-> +static int machxo2_transceive(
->> +            struct machxo2 *machxo2,
->> +            const void *send_buf, unsigned send_len,
->> +            void *recv_buf, unsigned recv_len)
->
-> static int machxo2_transceive(struct machxo2 *machxo2,
->                   const void *send_buf, unsigned send_len,
->                   void *recv_buf, unsigned recv_len)
->
-Ok done for V2
+> > +
+> > +static int ci_hdrc_usb2_dt_probe(struct device *dev,
+> > +				    struct ci_hdrc_platform_data *ci_pdata,
+> > +				    struct ci_hdrc_usb2_priv *priv)
+> > +{
+> > +	u32 mask;
+> > +	int ret;
+> > +
+> > +	priv->clk =3D devm_clk_get(dev, NULL);
+> > +	if (!IS_ERR(priv->clk)) {
+> > +		ret =3D clk_prepare_enable(priv->clk);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable the clock: %d\n", ret);
+> > +			return ret;
+> > +		}
+> > +	}
+>=20
+> The clk API may be needed for both DT and non-DT cases.
 
->
->> +static const struct spi_device_id machxo2_spi_device_id[] = {
->> +    {
->> +        .name = "machxo2",
->> +    }, {
->> +        /* sentinel */
->> +    }
->> +};
->> +MODULE_DEVICE_TABLE(spi, machxo2_spi_device_id);
->> +
->> +static const struct of_device_id machxo2_dt_ids[] = {
->> +    { .compatible = "lattice,machxo2"},
->> +    { /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, machxo2_dt_ids);
->> +
->
-> move the device ids after probe()/remove()...
->
-Ok done for V2
+Yes sure, I'll move this to the ci_hdrc_usb2_probe().
 
->> +
->> +static int  machxo2_spi_transceive(
->> +            struct device *dev,
->> +            const void *send_buf, unsigned send_len,
->> +            void *recv_buf, unsigned recv_len)
->
-> proper alignment...
->
-> static int  machxo2_spi_transceive(struct device *dev,
->                    const void *send_buf, unsigned send_len,
->                    void *recv_buf, unsigned recv_len)
->
-Ok done for V2
+>=20
+> > +
+> > +	ci_pdata->phy =3D of_phy_get(dev->of_node, 0);
+> > +	if (IS_ERR(ci_pdata->phy)) {
+> > +		if (PTR_ERR(ci_pdata->phy) =3D=3D -EPROBE_DEFER)
+> > +			return -EPROBE_DEFER;
+> > +
+> > +		/* PHY is optional */
+> > +		ci_pdata->phy =3D NULL;
+> > +	}
+> > +
+> > +	if (of_property_read_u32(dev->of_node, "dma-mask", &mask))
+> > +		priv->dma_mask =3D mask;
+> > +
+> According to discussion, you may not need dma_mask in driver any more=
+,
+> and use below API for both DT and non-DT case.
+>=20
+>         err =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32=
+));
+>         if (err)
+>         	                handle error;
 
->
->> +static struct spi_driver machxo2_spi_driver = {
->> +    .id_table = machxo2_spi_device_id,
->> +    .driver = {
->> +        .name    = "machxo2",
->> +        .owner    = THIS_MODULE,
->
-> we can drop owner field...
->
-Ok done for V2
+This would only be needed in non-dt cases, as the DMA mask is configure=
+d
+in drivers/of/platform.c otherwise.
 
->> +        .of_match_table = machxo2_dt_ids,
->> +    },
->> +    .probe        = machxo2_spi_probe,
->> +    .remove        = machxo2_spi_remove,
->> +};
->> +
->> +
->> +static int __init machxo2_init(void)
->> +{
->> +    return spi_register_driver(&machxo2_spi_driver);
->> +}
->> +subsys_initcall(machxo2_init);
->> +
->> +static void __exit machxo2_exit(void)
->> +{
->> +    spi_unregister_driver(&machxo2_spi_driver);
->> +}
->> +module_exit(machxo2_exit);
->> +
->
-> module_spi_driver()...?
->
-Yes, done for V2
+Thanks!
 
->> +struct machxo2;
->> +struct machxo2_busops {
->> +    int (*transceive)(
->> +            struct device *dev,
->> +            const void *send_buf, unsigned send_len,
->> +            void *recv_buf, unsigned recv_len);
->> +};
->> +
->
-> proper indentation...
->
-> int (*transceive)(struct device *dev,
->           const void *send_buf, unsigned send_len,
->           void *recv_buf, unsigned recv_len);
->
-Ok, done for V2
+Antoine
 
->> +struct machxo2 *machxo2_create(struct device *dev,
->> +            struct machxo2_busops *busops);
->> +
->
-> struct machxo2 *machxo2_create(struct device *dev,
->                    struct machxo2_busops *busops);
->
->
-Same again - is it just too much indenting?
-I don't see anything wrong here
-
->
-> This patch has coding style problems.. run checkpatch on this patch..
->
-I did, before submission (with the 3.6.16-rc6 checkpatch).
-The only thing it complained about was one Kconfig which I couldn't see 
-a way to improve
-
-WARNING: please write a paragraph that describes the config symbol fully
-#202: FILE: drivers/mtd/devices/Kconfig:148:
-+config MTD_MACHXO2_SPI
-
-total: 0 errors, 1 warnings, 1248 lines checked
-
-/tmp/fpga-machxo2 has style problems, please review.
-
-If any of these errors are false positives, please report
-them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-
-Regards,
-
-Martin
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
