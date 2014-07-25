@@ -1,89 +1,139 @@
-From: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and
- platform drivers
-Date: Fri, 25 Jul 2014 15:57:56 +0800
-Message-ID: <20140725075755.GA29564@MrMyself>
-References: <cover.1406271541.git.nicoleotsuka@gmail.com>
- <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka@gmail.com>
- <53D208A9.3040903@gmail.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] ARM: dts: zynq: Add QSPI for Parallella
+Date: Fri, 25 Jul 2014 09:59:23 +0200
+Message-ID: <53D20E5B.9070501@monstr.eu>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-6-git-send-email-afaerber@suse.de> <ddb38ce5-9e31-4c94-967c-7784c7fba75c@BN1BFFO11FD028.protection.gbl>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="62IjmugcpLSFa0WUUCoDlp5ueHdjeO3qO"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53D208A9.3040903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <ddb38ce5-9e31-4c94-967c-7784c7fba75c-fm2tX0oQAVwpSWDJVTaHWOhlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Varka,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--62IjmugcpLSFa0WUUCoDlp5ueHdjeO3qO
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for the comments!
+On 07/25/2014 01:18 AM, S=C3=B6ren Brinkmann wrote:
+> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
+>> Prepare SPI0 and SPI1 while at it.
 
-On Fri, Jul 25, 2014 at 01:05:05PM +0530, Varka Bhadram wrote:
-> On 07/25/2014 12:49 PM, Nicolin Chen wrote:
-> (...)
-> 
-> >+static const struct platform_device_id fsl_asrc_devtype[] = {
-> >+	{
-> >+		.name = "imx35-asrc",
-> >+		.driver_data = IMX35_ASRC,
-> >+	}, {
-> >+		.name = "imx53-asrc",
-> >+		.driver_data = IMX53_ASRC,
-> >+	}, {
-> >+		/* sentinel */
-> >+	}
-> >+};
-> >+MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
-> >+
-> 
-> where are you using fsl_asrc_devtype,,,?
-> 
-> >+static const struct of_device_id fsl_asrc_ids[] = {
-> >+	{
-> >+		.compatible = "fsl,imx35-asrc",
-> >+		.data = &fsl_asrc_devtype[IMX35_ASRC],
-> 
-> Ya here ... but what is the use...?
+Patch subject is incorrect. You are adding SPI and QSPI.
 
-I got your point. I will drop all these and move ids behind probe/remove()
-as you suggested at the first place and then use of_device_is_compatible()
-inside the probe() instead.
+>>
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>> ---
+>>  v2: New
+>> =20
+>>  arch/arm/boot/dts/zynq-7000.dtsi      | 37 ++++++++++++++++++++++++++=
++++++++++
+>>  arch/arm/boot/dts/zynq-parallella.dts |  4 ++++
+>>  2 files changed, 41 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq=
+-7000.dtsi
+>> index 8fd826a..eed3df0 100644
+>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>> @@ -122,6 +122,30 @@
+>>  			interrupts =3D <0 50 4>;
+>>  		};
+>> =20
+>> +		spi0: spi@e0006000 {
+>> +			compatible =3D "xlnx,zynq-spi-r1p6";
+>> +			reg =3D <0xe0006000 0x1000>;
+>> +			status =3D "disabled";
+>> +			interrupt-parent =3D <&intc>;
+>> +			interrupts =3D <0 26 4>;
+>> +			clocks =3D <&clkc 25>, <&clkc 34>;
+>> +			clock-names =3D "ref_clk", "pclk";
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +		};
+>> +
+>> +		spi1: spi@e0007000 {
+>> +			compatible =3D "xlnx,zynq-spi-r1p6";
+>> +			reg =3D <0xe0007000 0x1000>;
+>> +			status =3D "disabled";
+>> +			interrupt-parent =3D <&intc>;
+>> +			interrupts =3D <0 49 4>;
+>> +			clocks =3D <&clkc 26>, <&clkc 35>;
+>> +			clock-names =3D "ref_clk", "pclk";
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +		};
+>> +
+> Until here things look good.
+>=20
+>>  		gem0: ethernet@e000b000 {
+>>  			compatible =3D "cdns,gem";
+>>  			reg =3D <0xe000b000 0x4000>;
+>> @@ -140,6 +164,19 @@
+>>  			clock-names =3D "pclk", "hclk", "tx_clk";
+>>  		};
+>> =20
+>> +		qspi: qspi@e000d000 {
+>> +			compatible =3D "xlnx,zynq-spi-r1p6";
+>> +			reg =3D <0xe000d000 0x1000>;
+>> +			status =3D "disabled";
+>> +			interrupt-parent =3D <&intc>;
+>> +			interrupts =3D <0 19 4>;
+>> +			clocks =3D <&clkc 10>, <&clkc 43>;
+>> +			clock-names =3D "ref_clk", "pclk";
+>> +			num-cs =3D <1>;
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +		};
+>> +
+> I'm not sure what the status of this driver is. I think QSPI is still
+> under review on the mailing lists and I don't think we should add this
+> yet.
 
-> >+	asrc_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
-> >+			"mem", regs, &fsl_asrc_regmap_config);
-> 
-> devm_regmap_init_mmio_clk(&pdev->dev,
-> 			  "mem", regs,
-> 			  &fsl_asrc_regmap_config);
+Driver for qspi is not in the mainline yet but it doesn't mean
+that this fragment won't work.
+Harini: Can you please correct me if I am wrong?
 
-I'll refine to
+I would prefer to send two separate patches.
 
- devm_regmap_init_mmio_clk(&pdev->dev, "mem", regs,
-                           &fsl_asrc_regmap_config);
+1. just add SPI to zynq
+2. if Harini confirms that it is working I think that make sense to enabl=
+e
+at least simple mode for qspi. That's why not a problem to add it too.
+It means qspi patch with enabling for your board as second patch.
 
-> 
-> >+	if (IS_ERR(asrc_priv->regmap)) {
-> >+		dev_err(&pdev->dev, "failed to init regmap\n");
-> >+		return PTR_ERR(asrc_priv->regmap);
-> >+	}
-> >+
-> >+	irq = platform_get_irq(pdev, 0);
-> >+	if (irq < 0) {
-> >+		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
-> >+		return irq;
-> >+	}
-> >+
-> >+	ret = devm_request_irq(&pdev->dev, irq, fsl_asrc_isr, 0,
-> >+			       asrc_priv->name, asrc_priv);
->
-> same...
+Thanks,
+Michal
 
-Sorry I don't see any problem with this devm_request_irq()...
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
-Thank you,
-Nicolin
+
+
+--62IjmugcpLSFa0WUUCoDlp5ueHdjeO3qO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlPSDlsACgkQykllyylKDCEgoACgkcsPE8fDliCVFTLRmD1XhFXD
+A+0An1N1irkJY/4BGIlsw61O9x8XJVBM
+=K5+N
+-----END PGP SIGNATURE-----
+
+--62IjmugcpLSFa0WUUCoDlp5ueHdjeO3qO--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
