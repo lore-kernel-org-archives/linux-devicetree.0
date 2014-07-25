@@ -1,37 +1,54 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: dove: add DT LCD controllers
-Date: Thu, 24 Jul 2014 20:10:57 -0400
-Message-ID: <20140725001057.GB23220@titan.lakedaemon.net>
-References: <E1XAKGS-0004WE-8h@rmk-PC.arm.linux.org.uk>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH RESEND v2 1/4] pinctrl: Update Qualcomm pm8xxx GPIO parameters
+ definitions
+Date: Thu, 24 Jul 2014 17:23:13 -0700
+Message-ID: <53D1A371.1000108@codeaurora.org>
+References: <1405610748-7583-5-git-send-email-iivanov@mm-sol.com> <1405626085-14069-1-git-send-email-iivanov@mm-sol.com> <20140722214643.GH19700@sonymobile.com> <53D04996.2030902@codeaurora.org> <CACRpkdbNqNO8Hy5XndWs4gLBGWR+2_VaQveBUaeREUeVXv27dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1XAKGS-0004WE-8h-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbNqNO8Hy5XndWs4gLBGWR+2_VaQveBUaeREUeVXv27dQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 03:45:00PM +0100, Russell King wrote:
-> Add the DT fragment for the Marvell Dove LCD controllers.
-> 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> ---
-> Jason,
-> 
-> David Airlie has taken the Armada DRM changes into his tree, so the DT
-> bits can now be queued for the next merge window.
-> 
->  arch/arm/boot/dts/dove.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+On 07/24/14 08:40, Linus Walleij wrote:
+> On Thu, Jul 24, 2014 at 1:47 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>
+>>> Please add these constants to the table of valid power-source values and use
+>>> something like I did to translate them to register values - it makes the DT
+>>> much more readable.
+>> The DT could be similarly readable if we had a bunch of #defines for the
+>> different VIN settings that resolved to the final register value for
+>> that pmic. Something like PM8921_GPIO1_14_VPH, PM8921_GPIO19_36_VPH,
+>> etc. There would be a lot of them, but then the driver could be really
+>> simple and just jam whatever value is in the DT into the register
+>> without having to bounce through a mapping table in software to figure
+>> out the register value. If we did this for the functions also then I
+>> believe we achieve readability without requiring a bunch of drivers for
+>> each and every single pmic?
+> Not sure but it sounds like you want to make the device tree a jam table,
+> (know about individual register offsets, sequences etc). That has been
+> throrougly NACKed in the past, because DT is not Open Firmware.
+>
+> The exception is pinctrl-single which is restricted to single register
+> per pin use cases and is still a point of contention...
+>
 
-Applied to mvebu/dt with Sebastian's Ack.
+I'm not proposing a jam table. I'm proposing that we make the
+function/source property convenient to the driver by having the actual
+function field value encoded there instead of some string that has to be
+translated through a table in a driver. There's still going to be
+shifting and masking of bits in the driver to put the value in the right
+place in the register, but we avoid needing N number of drivers for each
+pmic just to translate strings into integers (for functions) and
+integers into other integers (for the power source). From what I can
+tell there isn't any benefit to having the function property be a string
+vs. a #define number besides having a human readable string in pinctrl
+debugfs. Is there some other benefit?
 
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
