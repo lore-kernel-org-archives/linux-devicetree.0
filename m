@@ -1,57 +1,59 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: exynos5250: Fold common ChromeOS parts
- into Snow
-Date: Fri, 25 Jul 2014 19:02:34 +0200
-Message-ID: <CABxcv=nDsKSdDtVZKpcTP+=3pbeTswJRCUvvXVx98p+1Zzz0Bg@mail.gmail.com>
-References: <1405704009-8430-1-git-send-email-afaerber@suse.de>
-	<1405704009-8430-4-git-send-email-afaerber@suse.de>
-	<CABxcv=kP2PCcNCtM1WUXx5wGG4m-jdw-P1dw0boaSwdJpoX=jQ@mail.gmail.com>
-	<CAD=FV=V-7+Jj7b8-fQL1PiQhNmhiGOPJzitGd__OUQLDteO_8g@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 01/16] regmap: Add regmap_get_device
+Date: Fri, 25 Jul 2014 18:34:00 +0100
+Message-ID: <20140725173400.GZ17528@sirena.org.uk>
+References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com>
+ <1405957142-19416-2-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=V-7+Jj7b8-fQL1PiQhNmhiGOPJzitGd__OUQLDteO_8g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="w41lMVNXnOw3ZHPk"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1405957142-19416-2-git-send-email-ttynkkynen@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Paul Walmsley <pwalmsley@nvidia.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
 
-On Fri, Jul 25, 2014 at 6:43 PM, Doug Anderson <dianders@chromium.org> =
-wrote:
-> Javier,
->
-> On Fri, Jul 25, 2014 at 9:35 AM, Javier Martinez Canillas
-> <javier@dowhile0.org> wrote:
->> Hello Andreas,
->>
->> On Fri, Jul 18, 2014 at 7:20 PM, Andreas F=C3=A4rber <afaerber@suse.=
-de> wrote:
->>>
->>> +       memory {
->>> +               reg =3D <0x40000000 0x80000000>;
->>> +       };
->>> +
->>> +       chosen {
->>> +       };
->>> +
->>
->> Is there a reason for an empty chosen node? Same for the Spring DTS.
->
-> I know that the bootloader (U-Boot) fills this in.  I'd have to doubl=
-e
-> check how the bootloader handles the node not being there to begin
-> with.
+--w41lMVNXnOw3ZHPk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, U-Boot fills this but if the node does not exist in the FDT, it
-creates one. Take a look at fdt_chosen() in common/fdt_support.c [0].
+On Mon, Jul 21, 2014 at 06:38:47PM +0300, Tuomas Tynkkynen wrote:
+> Add a new function regmap_get_device to obtain the underlying struct
+> device from a regmap.
 
-So I think it's better to just remove it since is empty.
+I've applied this...
 
-Best regards,
-Javier
+> +struct device *regmap_get_device(struct regmap *map)
+> +{
+> +	return map->dev;
+> +}
+> +
 
-[0]: https://chromium.googlesource.com/chromiumos/third_party/u-boot/+/=
-master/common/fdt_support.c#215
+...plus a followup exporting the symbol so it can be used from modules.
+
+--w41lMVNXnOw3ZHPk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT0pUFAAoJELSic+t+oim9+KAP/RQuuZn2h04DaqFGmgTxw3iw
+8ZcctSQ/V5rJckcCGyGgmNeC7N3x3fIjCUc6rAf+sI4y7o8CoWvLvTE7Rlp9tIx9
+pZ90IgiSOH8nz+N+RjBe4yk35pePuGN3bE+AtlLW3p7AOr47WX8RCtcAJ2pVKs5+
+Qre9QFSAD09fLHKsiW1q0uSf6xWBBNgHpfMzPq003O0zRZvDp7xsGNH5Lz1VSSQg
+NKln7o10n0DmD6nskitiaR3/26f8NEXDm726Bj9z5sothK9j4nz1DubxlPhqHmFl
+EmTGxosU3+iNsxl+hEO5Z1tMpetk2MoWqb50qCCFGUVkhl/b98BBLgvr+zlNtTrz
+QMnCs/l8QJ/tGt44sEKVutctcLnxU/tjnt+7OAcI9KbyvTOjqeS/ntvMebf3rUoC
+ct3ZnRBPnQajAdjNSsXcgR5Xd+jsZEKk2hQPIgViR4ndPWvq33g5gdqRqWhMoxWx
+66xuXBmoIvToJgmDYVZULk50r93887SY1tYw1txNa3TAyhRiHpGRtAll7wxoHAgz
+PTdVkI771vLn8dyzftVzsj95KbHFQi3KKhacCYreUprTCTDxbd3U5ycjZ2kS5mOz
+IOo2l2CjEzydolBiaP/N7Bcir2oCt0cUpGI84O8zcBJoGhKkoWosMcYbHdf/Glnp
+GfNojqxnfKEYyBDvUR6L
+=E4/F
+-----END PGP SIGNATURE-----
+
+--w41lMVNXnOw3ZHPk--
