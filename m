@@ -1,62 +1,54 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dmaengine: add a driver for AMBA AXI NBPF DMAC
- IP cores
-Date: Fri, 25 Jul 2014 19:46:21 +0530
-Message-ID: <20140725141621.GT8181@intel.com>
-References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
- <Pine.LNX.4.64.1407191243360.3062@axis700.grange>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Fri, 25 Jul 2014 09:29:09 -0500
+Message-ID: <CAL_JsqKqCeU0zs+rS1vxsOeh=Kuw_-gaVHtGU76Lb6TchCTytw@mail.gmail.com>
+References: <cover.1404231535.git.viresh.kumar@linaro.org> <20140717093518.486ac244@free-electrons.com>
+ <CAKohpokZXUzXKRWBje7QF_jrvOd5dmfmWQ2Csf3xiMuvT_vPYA@mail.gmail.com>
+ <2399813.Puj1SZWhCh@vostro.rjw.lan> <CAKohpomKzK8pMJs1gv+uXxhd17HtCQyfjSnVYw9KpGz6FwbgDA@mail.gmail.com>
+ <CAKohpo=HKUkGRK4NX7E59z5QthcKbZKETB-DuP10xj3x+vdHaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1407191243360.3062-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=HKUkGRK4NX7E59z5QthcKbZKETB-DuP10xj3x+vdHaQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <rob.herring@linaro.org>, Mike Turquette <mturquette@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Thomas P Abraham <thomas.ab@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Sachin Kamat <spk.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 19, 2014 at 12:48:51PM +0200, Guennadi Liakhovetski wrote:
-> This patch adds a driver for NBPF DMAC IP cores from Renesas, designed for
-> the AMBA AXI bus.
-> 
+On Thu, Jul 24, 2014 at 5:48 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 18 July 2014 09:47, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>> Before I apply anything in this area, I need a clear statement from the ARM
+>>> people as a group on what the approach is going to be.
+>
+> @Rafael: The only patch which has blocked this set is:
+>
+> cpufreq: cpu0: Extend support beyond CPU0
+>
+> This is about finding which CPUs share clock line..
+>
+> Other patches are sort of independent of this one and cpufreq-cpu0 would
+> continue to work for existing platforms if we apply these patches.
+>
+> I was wondering if you would like to apply other patches leaving this one?
+> I will then rebase stuff again and send non-controversial patches for 3.17.
+> So, that we get something in 3.17 and the last change can be merged during
+> rc's as well once we finalize on bindings..
+>
+>> Mike/Rob/Stephen: I believe Atleast three of you should express your views
+>> now :)
+>
+> Any idea on how can we get some temporary solution for 3.17 as we didn't
+> conclude anything yet on bindings ?
 
-> +struct nbpf_desc {
-> +	struct dma_async_tx_descriptor async_tx;
-> +	bool user_wait;
-sounds odd?
+A temporary solution would have to be NOT in DT because once you add
+something into DT you are stuck with it for some time. You could
+simply support independent clocks by looking at the platform type, but
+that is still risky since you may want to define the OPP in DT
+differently for the 2 cases.
 
-> +static int nbpf_chan_probe(struct nbpf_device *nbpf, int n)
-> +{
-> +	struct dma_device *dma_dev = &nbpf->dma_dev;
-> +	struct nbpf_channel *chan = nbpf->chan + n;
-> +	int ret;
-> +
-> +	chan->nbpf = nbpf;
-> +	chan->base = nbpf->base + NBPF_REG_CHAN_OFFSET + NBPF_REG_CHAN_SIZE * n;
-> +	INIT_LIST_HEAD(&chan->desc_page);
-> +	spin_lock_init(&chan->lock);
-> +	chan->dma_chan.device = dma_dev;
-> +	dma_cookie_init(&chan->dma_chan);
-> +	nbpf_chan_prepare_default(chan);
-> +
-> +	dev_dbg(dma_dev->dev, "%s(): channel %d: -> %p\n", __func__, n, chan->base);
-> +
-> +	snprintf(chan->name, sizeof(chan->name), "nbpf %d", n);
-> +
-> +	ret = devm_request_threaded_irq(dma_dev->dev, chan->irq,
-> +			nbpf_chan_irq, nbpf_chan_irqt, IRQF_SHARED,
-> +			chan->name, chan);
-devm_request_irq and friends arent apt here. You are in .remove and get an
-irq, what prevents that race? You need to run free_irq and synchronize_irq()
-to ensure everything is proper before freeing up.
+The other problem with temporary solutions is once they are accepted,
+people loose motivation to create the permanent solution. "Can you
+take this now and I'll fix the issues later" is a red flag to
+maintainers.
 
-Also why threaded_irq when dmaengine API mandates you to use tasklet? The
-callback is supposed to be invoked from a tasklet.
-
-Thanks
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
