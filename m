@@ -1,79 +1,76 @@
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
-Subject: [PATCH 3/3] ARM: dts: Add DT changes for display on peach_pi
-Date: Sat, 26 Jul 2014 01:14:24 +0530
-Message-ID: <1406317464-7525-4-git-send-email-ajaykumar.rs@samsung.com>
-References: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Mike Turquette <mike.turquette@linaro.org>
+Subject: Re: [RFC] cpufreq: Add bindings for CPU clock sharing topology
+Date: Fri, 25 Jul 2014 13:02:14 -0700
+Message-ID: <20140725200214.22930.56323@quantum>
+References: <7e097b71342c9f5f63b07ff2e135eb7beb626aab.1405661369.git.viresh.kumar@linaro.org>
+ <CAOesGMhTkTEXp99gpU8cZBwYmiXpsySG5zMn6oSyo_Mf5PAiUg@mail.gmail.com>
+ <CAKohpo=MmoALOHg-=7cf0jm=OJO57TWQZQXqkRwhRwU-DGPMmA@mail.gmail.com>
+ <CAOesGMhuNzVtUkaUjF+JjNgHcgf08WiM0DG-kzwtcyUxkK_zow@mail.gmail.com>
+ <CAKohpokLqrydV3b=innvOWrW9ijXtZwPKdT5Ew65cjMxsY2Mvw@mail.gmail.com>
+ <53CA8D95.8010108@ti.com>
+ <CAKohpok-C+JCebjJkZExx6EjBctoyJF7fV71Vjj7bi1TAdXrFQ@mail.gmail.com>
+ <20140724003314.6419.51564@quantum>
+ <CABGGisxHxdTyh500ey+KVLV3EnfYZvtsCV=Nt4Nqu7p6KJOwdA@mail.gmail.com>
+ <CAKohpo=CqhA-TOfJh3U0G+tEMqvn_tiyWK=Yd6yNdAoDYQ-1BA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=CqhA-TOfJh3U0G+tEMqvn_tiyWK=Yd6yNdAoDYQ-1BA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <rob.herring@linaro.org>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Olof Johansson <olof@lixom.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Grant Likely <grant.likely@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arvind Chauhan <arvind.chauhan@arm.com>, Arnd Bergmann <arnd.bergmann@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for panel-simple "auo,b133htn01" panel.
-Add backlight enable pin and backlight power supply for pwm-backlight.
-Also add panel phandle needed by dp to enable display on peach_pi.
+Quoting Viresh Kumar (2014-07-24 03:39:31)
+> On 24 July 2014 07:54, Rob Herring <rob.herring@linaro.org> wrote:
+> 
+> >> A previous approach tried to compare struct clk pointers, which is a bad
+> >> idea since those are just cookies and should not be deref'd by drivers.
+> >> However a similar approach would be to compare the phandle, right?
+> 
+> Yeah. So what's the right way then?
+> 
+> > I think there needs to be a way to query whether a rate change for a
+> > clock affects other children. As pointed out previously, the clock to
+> > a core may not be shared, but it's parent that can change rates could
+> > be shared. This could be done with functions
+> > clk_get_parent_rate_change to return the clock in heirarchy which can
+> > change rates, and clk_is_parent_clk which tells if one clock is a
+> > child of another clock. It's been a while since I've looked at the
+> > clock api. It could also be done by experiment. Change the rate for
+> > core 0 and see if core 1's rate is changed and still equal. There's
+> > probably some ordering issue with doing that though.
+> 
+> But Mike sort of Nak'd that as well earlier :)
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
----
- arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+Sorry for being NAKy. Pushing more query functions into the clk api will
+be a bad thing in the long term. First there are races: if a driver
+queries the clock framework and then calls another clk.h api function
+based on that result, we would need to lock the whole block of code
+since the query may be invalid immediately after the result is returned.
 
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index f3ee48b..5342638 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -28,11 +28,13 @@
- 		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 0 1000000 0>;
- 		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
- 		default-brightness-level = <7>;
-+		enable-gpios = <&gpx2 2 0>;
-+		power-supply = <&tps65090_fet1>;
- 		pinctrl-0 = <&pwm0_out>;
- 		pinctrl-names = "default";
- 	};
-@@ -98,6 +100,12 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	panel: panel-simple {
-+		compatible = "auo,b133htn01", "simple-panel";
-+		power-supply = <&tps65090_fet6>;
-+		backlight = <&backlight>;
-+	};
- };
- 
- &dp {
-@@ -111,22 +119,7 @@
- 	samsung,link-rate = <0x0a>;
- 	samsung,lane-count = <2>;
- 	samsung,hpd-gpio = <&gpx2 6 0>;
--
--	display-timings {
--		native-mode = <&timing1>;
--
--		timing1: timing@1 {
--			clock-frequency = <150660000>;
--			hactive = <1920>;
--			vactive = <1080>;
--			hfront-porch = <60>;
--			hback-porch = <172>;
--			hsync-len = <80>;
--			vback-porch = <25>;
--			vfront-porch = <10>;
--			vsync-len = <10>;
--		};
--	};
-+	panel = <&panel>;
- };
- 
- &fimd {
--- 
-1.7.9.5
+Secondly, it is common for hardware to be designed with various use case
+configurations already known. From a software point of view this is
+"compile-time" info since we already know what OPPs we want to run at,
+how we want to multiplex our clock outputs, etc. Often we know exactly
+what we want to do from a hardware integration standpoint, and by trying
+to have some algorithmic approach in software where we walk the tree and
+figure stuff out dynamically is just going to make life hard for us.
+
+I also think this whole push to consolidate every cpufreq machine driver
+into cpufreq-cpu0 is complete madness. Machine drivers exist for a
+reason. Now with this big push to remove cpufreq drivers we are just
+pushing more and more logic into the clock framework (see some recent
+patch series introducing "cpu clocks" as clock providers, which
+essentially do what the old cpufreq machine drivers used to do).
+
+So my opinion is to figure out how to specify the shared-clock versus
+independent-clock parameter it DT. I think the big issue here is the
+topology semantics around the cpus node, and I'll stay out of that
+stuff. But let's please not introduce a random API for a single merge
+window and let's also not over-consolidate machine driver code just for
+the sake of having fewer C files.
+
+Regards,
+Mike
