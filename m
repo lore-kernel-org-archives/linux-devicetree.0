@@ -1,58 +1,121 @@
-From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
- specification
-Date: Fri, 25 Jul 2014 12:32:43 +0200
-Message-ID: <53D2324B.4070602@suse.de>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-10-git-send-email-afaerber@suse.de> <53D20A61.1050506@metafoo.de> <53D21066.8000905@monstr.eu> <20140725101815.GO17528@sirena.org.uk>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] rtc: sun6i: Add sun6i RTC driver
+Date: Fri, 25 Jul 2014 16:06:01 +0530
+Message-ID: <53D23311.5000402@gmail.com>
+References: <1406279608-489-1-git-send-email-wens@csie.org> <1406279608-489-2-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140725101815.GO17528@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Michal Simek <monstr@monstr.eu>, Lars-Peter Clausen <lars@metafoo.de>, Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDSMVOGBSIFRB27GZCPAKGQEAZHXKXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1406279608-489-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On 07/25/2014 02:43 PM, Chen-Yu Tsai wrote:
+> This patch introduces the driver for the RTC in the Allwinner A31 and
+> A23 SoCs.
+>
+> Unlike the RTC found in A10/A20 SoCs, which was part of the timer, the
+> RTC in A31/A23 are a separate hardware block, which also contain a few
+> controls for the RTC block hardware (a regulator and RTC block GPIO pin
+> latches), while also having separate interrupts for the alarms.
+>
+> The hardware is different enough to make a different driver for it.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>   .../devicetree/bindings/rtc/sun6i-rtc.txt          |  17 +
+>   drivers/rtc/Kconfig                                |   7 +
+>   drivers/rtc/Makefile                               |   1 +
+>   drivers/rtc/rtc-sun6i.c                            | 447 +++++++++++++++++++++
+>   4 files changed, 472 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+>   create mode 100644 drivers/rtc/rtc-sun6i.c
+>
+(....)
 
-Am 25.07.2014 12:18, schrieb Mark Brown:
-> On Fri, Jul 25, 2014 at 10:08:06AM +0200, Michal Simek wrote:
->=20
->> All these patches have been added through your tree that's why I
->> think you should take this fix through his tree.
->=20
-> If someone could send me patches I'll take a look at them.
+> +static int sun6i_rtc_settime(struct device *dev, struct rtc_time *rtc_tm)
+> +{
+> +	struct sun6i_rtc_dev *chip = dev_get_drvdata(dev);
+> +	u32 date = 0;
+> +	u32 time = 0;
+> +	int year;
+> +
+> +	year = rtc_tm->tm_year + 1900;
+> +	if (year < SUN6I_YEAR_MIN || year > SUN6I_YEAR_MAX) {
+> +		dev_err(dev, "rtc only supports year in range %d - %d\n",
+> +				SUN6I_YEAR_MIN, SUN6I_YEAR_MAX);
 
-I used scripts/get_maintainer.pl --nogit-fallback. If you were not
-CC'ed and need to be, please submit a MAINTAINERS patch. :)
+dev_err(dev, "rtc only supports year in range %d - %d\n",
+	SUN6I_YEAR_MIN, SUN6I_YEAR_MAX);
 
-Maybe this works for you?
-https://patchwork.kernel.org/patch/4620191/
+> +		return -EINVAL;
+> +	}
+> +
+> +	rtc_tm->tm_year -= SUN6I_YEAR_OFF;
+> +	rtc_tm->tm_mon += 1;
+> +
+> +	date = SUN6I_DATE_SET_DAY_VALUE(rtc_tm->tm_mday) |
+> +		SUN6I_DATE_SET_MON_VALUE(rtc_tm->tm_mon)  |
+> +		SUN6I_DATE_SET_YEAR_VALUE(rtc_tm->tm_year);
+> +
+> +	if (is_leap_year(year))
+> +		date |= SUN6I_LEAP_SET_VALUE(1);
+> +
+> +	time = SUN6I_TIME_SET_SEC_VALUE(rtc_tm->tm_sec)  |
+> +		SUN6I_TIME_SET_MIN_VALUE(rtc_tm->tm_min)  |
+> +		SUN6I_TIME_SET_HOUR_VALUE(rtc_tm->tm_hour);
+> +
+> +	/* Check whether registers are writable */
+> +	if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+> +				SUN6I_LOSC_CTRL_ACC_MASK, 50)) {
 
-Otherwise I can resend with Ab/Rb.
+if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+		   SUN6I_LOSC_CTRL_ACC_MASK, 50)
 
-Andreas
+> +		dev_err(dev, "rtc is still busy.\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	writel(time, chip->base + SUN6I_RTC_HMS);
+> +
+> +	/*
+> +	 * After writing the RTC HH-MM-SS register, the
+> +	 * SUN6I_LOSC_CTRL_RTC_HMS_ACC bit is set and it will not
+> +	 * be cleared until the real writing operation is finished
+> +	 */
+> +
+> +	if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+> +				SUN6I_LOSC_CTRL_RTC_HMS_ACC, 50)) {
 
-- --=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+same..
 
-iQIcBAEBAgAGBQJT0jJLAAoJEPou0S0+fgE/od0QAItNVBWohkpacvB5M+Oh0x5H
-40aYXWOPVrAHRfXlh5SsSQyba/2P6q719meJL3FseU7Jj+rbkPnICf3q5KWgN3Vb
-iXoO+UQPn/gvredRql9g5eUj0xeh6j3bIAmEYmmme3opg0siKV1Gd6D9vEezjL8x
-M3xroJ05EbhjAd1UrgW/xEINAfDExLXbUQhsbls1tzL7WL9Cx4Obi7/KWiAVATMU
-RPNQiz8zyVXoJq0i596fAKX+EPaID2ztr26IQtpH+vOJOpRhtQeX+B+HBxTm89yO
-mg7ZnklhXFFaAYhXKEm1itMbi8OnCUzDuk5hPklCJF+WgzBbyq29erx53VaRQAij
-jrebNU4UB0/si7Gnl/XwvRMDUaVDkF6OaeeSjwKZvk0R6o02lperM51gKOgsDdC9
-G9VPb9AoNvbebEaNvonU22gB81RWg1MFkW7XF1Enj0C+xINePG86TXpWNiNUPfdV
-QAyYhwrAlePV4tKYqnyDd1d8orPs5TySVt3tuloUTB17IpYXM7OWj7db5so5V6O2
-99m2rrcMCP5SxDiuB0LUbKxrBoIhGH2kZ0k476Xb/YOYgpBskOxFLqZ+ptzZDW7K
-a3frjJ98QKjb5z9fZ1qZBzbegggAEvXlhpIgcaWAkT1wV3vmZhQjycpDHNWuahsu
-ybMjvgNj/YiougCN+7bf
-=3Dzr8g
------END PGP SIGNATURE-----
+> +		dev_err(dev, "Failed to set rtc time.\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	writel(date, chip->base + SUN6I_RTC_YMD);
+> +
+> +	/*
+> +	 * After writing the RTC YY-MM-DD register, the
+> +	 * SUN6I_LOSC_CTRL_RTC_YMD_ACC bit is set and it will not
+> +	 * be cleared until the real writing operation is finished
+> +	 */
+> +
+> +	if (sun6i_rtc_wait(chip, SUN6I_LOSC_CTRL,
+> +				SUN6I_LOSC_CTRL_RTC_YMD_ACC, 50)) {
+
+same...
+
+
+-- 
+Regards,
+Varka Bhadram.
