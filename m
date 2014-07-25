@@ -1,42 +1,95 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 1/2] media: soc_camera: pxa_camera device-tree support
-Date: Sat, 26 Jul 2014 00:18:44 +0200
-Message-ID: <87oawdccaj.fsf@free.fr>
-References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
-	<Pine.LNX.4.64.1407231126210.30243@axis700.grange>
-	<Pine.LNX.4.64.1407231915310.1526@axis700.grange>
-	<8761invo7p.fsf@free.fr>
-	<Pine.LNX.4.64.1407242301030.11084@axis700.grange>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v8 00/13] Add Maxim 77802 PMIC support
+Date: Fri, 25 Jul 2014 15:31:40 -0700
+Message-ID: <20140725223140.4791.61816@quantum>
+References: <1405337769-3741-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1405337769-3741-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Guennadi Liakhovetski <g.liakhovetski@gmx.de> writes:
+Quoting Javier Martinez Canillas (2014-07-14 04:35:56)
+> This series are based on drivers added by Simon Glass to the Chrome OS
+> kernel and adds support for the Maxim 77802 Power Management IC, their
+> regulators, clocks, RTC and i2c interface.
+> 
+> This is a v8 of the patch-set that addresses issues pointed out in v7.
+> Individual changes are added on each patch but the biggest changes are:
+> 
+> * Patches 1-7 from v7 are not included since those were improvements to
+> the max77686 mfd driver and can be applied independently. Lee Jones said
+> that he is going to pick them from the posted v7 series.
+> 
+> I've created a patchwork bundle with 1-7 from v7 to make it easy to apply:
+> 
+> https://patchwork.kernel.org/bundle/javier/max77686-improvements/
+> 
+> * The Dynamic Voltage Scaling support has been removed since that can be
+> added in a follow up series and shouldn't block the minimum PMIC support.
+> 
+> The patch-set has been tested on both Daisy/Snow (max77686) and Peach
+> Pit (max77802) Chromebooks and it's composed of the following patches:
+> 
+> [PATCH v8 01/13] mfd: max77686: Add Maxim 77802 PMIC support
+> [PATCH v8 02/13] mfd: max77802: Add DT binding documentation
+> [PATCH v8 03/13] regulator: Add driver for Maxim 77802 PMIC regulators
+> [PATCH v8 04/13] clk: max77686: Add DT include for MAX77686 PMIC clock
+> [PATCH v8 05/13] clk: Add generic driver for Maxim PMIC clocks
+> [PATCH v8 06/13] clk: max77686: Convert to the generic max clock driver
+> [PATCH v8 07/13] clk: max77686: Improve Maxim 77686 PMIC clocks binding
+> [PATCH v8 08/13] clk: Add driver for Maxim 77802 PMIC clocks
+> [PATCH v8 09/13] clk: max77802: Add DT binding documentation
 
-> Thanks for a quick test! One question: to test this you also needed a 
-> version of Ben's "soc_camera: add support for dt binding soc_camera 
-> drivers" patch, right?
-Yes.
+For patches 4-9:
 
-> Did you use the last version from Ben or my amended version, that I sent
-> yesterday?
-Ben's version.
+Acked-by: Mike Turquette <mturquette@linaro.org>
 
-> If you didn't use my version, would it be possible for you to test it and
-> reply with your tested-by if all looks ok?
-Of course, as soon as I find it. And yes, linux-media periodically drops me from
-the list members, so I didn't receive it ...
+Regards,
+Mike
 
-You must be speaking of "[PATCH v6 4/6] soc_camera: add support for dt binding
-soc_camera drivers" ... If you could send it to me by mail I wouldn't have to
-fight with Google, spinics and others, and I'll concentrate on the testing side
-:)
-
-Cheers.
-
--- 
-Robert
+> [PATCH v8 10/13] rtc: max77686: Allow the max77686 rtc to wakeup the system
+> [PATCH v8 11/13] rtc: max77686: Remove dead code for SMPL and WTSR
+> [PATCH v8 12/13] rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+> [PATCH v8 13/13] ARM: dts: Add max77802 to exynos5420-peach-pit and exynos5800-peach-pi
+> 
+> Patch 01/13 extend the max77686 mfd driver to also support the max77802
+> PMIC and patch 02/13 adds the DT binding documentation for this PMIC.
+> 
+> Patch 03/13 adds support for the regulators found in the PMIC.
+> 
+> Patch 04/13 to 07/13 are improvements and refactoring to the max77686 clock
+> driver to avoid code duplication when adding max77802 clocks support in patch
+> 08/13. Patch 09/13 adds the DT binding document for the max77802 clock driver.
+> 
+> Patches 10/13 and 11/13 are improvements to max77686 RTC driver and patch
+> 12/13 adds support for the RTC found in the max77802 PMIC.
+> 
+> Finally patch 13/13 adds the required device node to the Peach Pit and Pi
+> exynos5 based boards.
+> 
+> Since there are cross-subsystems dependencies, I think that the best way to
+> sort this out is if relevant maintainers ack the patches so 01/13 to 012/13
+> can be merged through the mfd tree. The patches and the relevant acks are:
+> 
+> Patch 03/13 (regulator - Mark Brown)
+> Patches 04/13 to 09/13 (clk - Mike Turquette)
+> Patches 10/13 to 12/13 (rtc - Alessandro Zummo)
+> 
+> Patch 13/13 is only a DTS change so it can be picked by Kukjin Kim once the
+> other patches are picked by Lee Jones.
+> 
+> Since we are in 3.16-rc5 already, it would be great if I can get your acks
+> or feedback since I was hoping this series to make it to 3.17. This is due
+> other series that were already posted depend on this one.
+> 
+> Also, the series have been reviewed and tested by Samsung folks and most of
+> the patches already collected Reviewed-by and Tested-by tags.
+> 
+> Thanks a lot and best regards,
+> Javier
+> 
