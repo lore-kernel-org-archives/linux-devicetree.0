@@ -1,64 +1,37 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 0/8] ARM: rockchip: add initial support for rk3288
-Date: Fri, 25 Jul 2014 23:49:32 +0200
-Message-ID: <1406324980-2450-1-git-send-email-heiko@sntech.de>
+Subject: [PATCH v3 4/8] ARM: Kconfig: set default gpio number for rockchip SoCs
+Date: Fri, 25 Jul 2014 23:49:36 +0200
+Message-ID: <1406324980-2450-5-git-send-email-heiko@sntech.de>
+References: <1406324980-2450-1-git-send-email-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406324980-2450-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds the initial support for Rockchip rk3288 socs including
-debug uart and devicetree files for the rk3288 evaluation board and
-enables these boards to boot into an initramfs.
+The new rk3288 needs a bigger gpio space, as it has 9 gpio banks.
 
-Boards using uboot need an updated bootloader, which must start the timer
-supplying the architected timer, while the coreboot bootloader already does
-this. It also depends on the patch
-    "irqchip: gic: Add binding probe for ARM GIC400"
-which should have made it into the irqchip tree today.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-changes since v2:
-- address more comments from Doug Anderson
-  - move pinctrl settings to the main dtsi
-  - use aliases when enabling nodes in the the evb dtsi
-  - call xin24m osciallator and use clock-output-names
-  - a lot of formatting and other minor cleanups
-changes since v1:
-- adress comments from Olof Johansson and Doug Anderson
-  - remove soc parent-node
-  - clarify cortex-a9 debug-uart descriptions
-  - a lot of dts changes
-
-Doug Anderson (1):
-  ARM: dts: Build dtbs for Rockchip boards
-
-Heiko Stuebner (7):
-  dt-bindings: arm: add cortex-a12 and cortex-a17 cpu compatible
-    properties
-  ARM: rockchip: clarify usability of DEBUG_RK3X_UART debug_ll options
-  ARM: rockchip: add debug uart used by rk3288
-  ARM: Kconfig: set default gpio number for rockchip SoCs
-  ARM: rockchip: enable support for RK3288 SoCs
-  ARM: dts: rockchip: add core rk3288 dtsi
-  ARM: dts: add rk3288 evaluation board
-
- Documentation/devicetree/bindings/arm/cpus.txt |   2 +
- arch/arm/Kconfig                               |   1 +
- arch/arm/Kconfig.debug                         |  20 +-
- arch/arm/boot/dts/Makefile                     |   5 +
- arch/arm/boot/dts/rk3288-evb-act8846.dts       | 134 ++++++
- arch/arm/boot/dts/rk3288-evb-rk808.dts         |  18 +
- arch/arm/boot/dts/rk3288-evb.dtsi              |  74 ++++
- arch/arm/boot/dts/rk3288.dtsi                  | 575 +++++++++++++++++++++++++
- arch/arm/mach-rockchip/Kconfig                 |   1 +
- arch/arm/mach-rockchip/rockchip.c              |   1 +
- 10 files changed, 826 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm/boot/dts/rk3288-evb-act8846.dts
- create mode 100644 arch/arm/boot/dts/rk3288-evb-rk808.dts
- create mode 100644 arch/arm/boot/dts/rk3288-evb.dtsi
- create mode 100644 arch/arm/boot/dts/rk3288.dtsi
-
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 245058b..b3ba139 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1558,6 +1558,7 @@ config ARCH_NR_GPIO
+ 	default 416 if ARCH_SUNXI
+ 	default 392 if ARCH_U8500
+ 	default 352 if ARCH_VT8500
++	default 288 if ARCH_ROCKCHIP
+ 	default 264 if MACH_H4700
+ 	default 0
+ 	help
 -- 
 1.9.0
 
