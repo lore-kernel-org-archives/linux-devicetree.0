@@ -1,2041 +1,494 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v4 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and platform drivers
-Date: Fri, 25 Jul 2014 15:19:07 +0800
-Message-ID: <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka@gmail.com>
-References: <cover.1406271541.git.nicoleotsuka@gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dma: at_xdmac: creation of the atmel eXtended
+ DMA Controller driver
+Date: Fri, 25 Jul 2014 12:46:31 +0530
+Message-ID: <20140725071631.GH8181@intel.com>
+References: <1404825096-15724-1-git-send-email-ludovic.desroches@atmel.com>
+ <1404825096-15724-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1406271541.git.nicoleotsuka@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, timur@tabi.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, shawn.guo@linaro.org, b02247@freescale.com, b42378@freescale.com, tklauser@distanz.ch, varkabhadram@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404825096-15724-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
-signal associated with an input clock into a signal associated with a different
-output clock. The driver currently works as a Front End of DPCM with other Back
-Ends DAI links such as ESAI<->CS42888 and SSI<->WM8962 and SAI. It converts the
-original sample rate to a common rate supported by Back Ends for playback while
-converts the common rate of Back Ends to a desired rate for capture. It has 3
-pairs to support three different substreams within totally 10 channels.
+On Tue, Jul 08, 2014 at 03:11:35PM +0200, Ludovic Desroches wrote:
+> New atmel DMA controller known as XDMAC, introduced with SAMA5D4
+> devices.
+Didnt check, but how much is delta b/w X/H Dmacs?
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- .../devicetree/bindings/sound/fsl,asrc.txt         |   60 ++
- sound/soc/fsl/Kconfig                              |    9 +
- sound/soc/fsl/Makefile                             |    2 +
- sound/soc/fsl/fsl_asrc.c                           | 1032 ++++++++++++++++++++
- sound/soc/fsl/fsl_asrc.h                           |  461 +++++++++
- sound/soc/fsl/fsl_asrc_dma.c                       |  386 ++++++++
- 6 files changed, 1950 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,asrc.txt
- create mode 100644 sound/soc/fsl/fsl_asrc.c
- create mode 100644 sound/soc/fsl/fsl_asrc.h
- create mode 100644 sound/soc/fsl/fsl_asrc_dma.c
+> +/* Call with lock hold. */
+> +static void at_xdmac_start_xfer(struct at_xdmac_chan *atchan,
+> +				struct at_xdmac_desc *first)
+> +{
+> +	struct at_xdmac	*atxdmac = to_at_xdmac(atchan->chan.device);
+> +	u32		reg;
+> +
+> +	dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, first);
+> +
+> +	if (at_xdmac_chan_is_enabled(atchan)) {
+> +		dev_err(chan2dev(&atchan->chan),
+> +			"BUG: Attempted to start a non-idle channel\n");
+This shouldnt be BUG though. Your tasklet is always supposed to start and if
+nothing to silent just return!
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-new file mode 100644
-index 0000000..0beaf8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-@@ -0,0 +1,60 @@
-+Freescale Asynchronous Sample Rate Converter (ASRC) Controller
-+
-+The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
-+signal associated with an input clock into a signal associated with a different
-+output clock. The driver currently works as a Front End of DPCM with other Back
-+Ends Audio controller such as ESAI, SSI and SAI. It has three pairs to support
-+three substreams within totally 10 channels.
-+
-+Required properties:
-+
-+  - compatible		: Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
-+
-+  - reg			: Offset and length of the register set for the device.
-+
-+  - interrupts		: Contains the spdif interrupt.
-+
-+  - dmas		: Generic dma devicetree binding as described in
-+			  Documentation/devicetree/bindings/dma/dma.txt.
-+
-+  - dma-names		: Contains "rxa", "rxb", "rxc", "txa", "txb" and "txc".
-+
-+  - clocks		: Contains an entry for each entry in clock-names.
-+
-+  - clock-names		: Contains the following entries
-+	"mem"		  Peripheral access clock to access registers.
-+	"ipg"		  Peripheral clock to driver module.
-+	"asrck_<0-f>"	  Clock sources for input and output clock.
-+
-+   - big-endian		: If this property is absent, the native endian mode
-+			  will be in use as default, or the big endian mode
-+			  will be in use for all the device registers.
-+
-+   - fsl,asrc-rate	: Defines a mutual sample rate used by DPCM Back Ends.
-+
-+   - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
-+
-+Example:
-+
-+asrc: asrc@02034000 {
-+	compatible = "fsl,imx53-asrc";
-+	reg = <0x02034000 0x4000>;
-+	interrupts = <0 50 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clks 107>, <&clks 107>, <&clks 0>,
-+	       <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
-+	       <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
-+	       <&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
-+	       <&clks 107>, <&clks 0>, <&clks 0>;
-+	clock-names = "mem", "ipg", "asrck0",
-+		"asrck_1", "asrck_2", "asrck_3", "asrck_4",
-+		"asrck_5", "asrck_6", "asrck_7", "asrck_8",
-+		"asrck_9", "asrck_a", "asrck_b", "asrck_c",
-+		"asrck_d", "asrck_e", "asrck_f";
-+	dmas = <&sdma 17 23 1>, <&sdma 18 23 1>, <&sdma 19 23 1>,
-+	     <&sdma 20 23 1>, <&sdma 21 23 1>, <&sdma 22 23 1>;
-+	dma-names = "rxa", "rxb", "rxc",
-+		"txa", "txb", "txc";
-+	fsl,asrc-rate  = <48000>;
-+	fsl,asrc-width = <16>;
-+	status = "okay";
-+};
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 2d60e37..e06fbfe 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -2,6 +2,15 @@ menu "SoC Audio for Freescale CPUs"
- 
- comment "Common SoC Audio options for Freescale CPUs:"
- 
-+config SND_SOC_FSL_ASRC
-+	tristate "Asynchronous Sample Rate Converter (ASRC) module support"
-+	select REGMAP_MMIO
-+	help
-+	  Say Y if you want to add Asynchronous Sample Rate Converter (ASRC)
-+	  support for the Freescale CPUs.
-+	  This option is only useful for out-of-tree drivers since
-+	  in-tree drivers select it automatically.
-+
- config SND_SOC_FSL_SAI
- 	tristate "Synchronous Audio Interface (SAI) module support"
- 	select REGMAP_MMIO
-diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-index ce49570..ff7ee2c 100644
---- a/sound/soc/fsl/Makefile
-+++ b/sound/soc/fsl/Makefile
-@@ -11,6 +11,7 @@ snd-soc-p1022-rdk-objs := p1022_rdk.o
- obj-$(CONFIG_SND_SOC_P1022_RDK) += snd-soc-p1022-rdk.o
- 
- # Freescale SSI/DMA/SAI/SPDIF Support
-+snd-soc-fsl-asrc-objs := fsl_asrc.o fsl_asrc_dma.o
- snd-soc-fsl-sai-objs := fsl_sai.o
- snd-soc-fsl-ssi-y := fsl_ssi.o
- snd-soc-fsl-ssi-$(CONFIG_DEBUG_FS) += fsl_ssi_dbg.o
-@@ -18,6 +19,7 @@ snd-soc-fsl-spdif-objs := fsl_spdif.o
- snd-soc-fsl-esai-objs := fsl_esai.o
- snd-soc-fsl-utils-objs := fsl_utils.o
- snd-soc-fsl-dma-objs := fsl_dma.o
-+obj-$(CONFIG_SND_SOC_FSL_ASRC) += snd-soc-fsl-asrc.o
- obj-$(CONFIG_SND_SOC_FSL_SAI) += snd-soc-fsl-sai.o
- obj-$(CONFIG_SND_SOC_FSL_SSI) += snd-soc-fsl-ssi.o
- obj-$(CONFIG_SND_SOC_FSL_SPDIF) += snd-soc-fsl-spdif.o
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-new file mode 100644
-index 0000000..8b516e9
---- /dev/null
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -0,0 +1,1032 @@
-+/*
-+ * Freescale ASRC ALSA SoC Digital Audio Interface (DAI) driver
-+ *
-+ * Copyright (C) 2014 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Nicolin Chen <nicoleotsuka@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2. This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_data/dma-imx.h>
-+#include <linux/pm_runtime.h>
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/pcm_params.h>
-+
-+#include "fsl_asrc.h"
-+
-+#define IDEAL_RATIO_DECIMAL_DEPTH 26
-+
-+#define pair_err(fmt, ...) \
-+	dev_err(&asrc_priv->pdev->dev, "Pair %c: " fmt, 'A' + index, ##__VA_ARGS__)
-+
-+#define pair_dbg(fmt, ...) \
-+	dev_dbg(&asrc_priv->pdev->dev, "Pair %c: " fmt, 'A' + index, ##__VA_ARGS__)
-+
-+/* Sample rates are aligned with that defined in pcm.h file */
-+static const u8 process_option[][8][2] = {
-+	/* 32kHz 44.1kHz 48kHz   64kHz   88.2kHz 96kHz   176kHz  192kHz */
-+	{{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},},	/* 5512Hz */
-+	{{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},},	/* 8kHz */
-+	{{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},},	/* 11025Hz */
-+	{{0, 1}, {0, 1}, {0, 1}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},},	/* 16kHz */
-+	{{0, 1}, {0, 1}, {0, 1}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},},	/* 22050Hz */
-+	{{0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 0}, {0, 0}, {0, 0},},	/* 32kHz */
-+	{{0, 2}, {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 0}, {0, 0},},	/* 44.1kHz */
-+	{{0, 2}, {0, 2}, {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 0}, {0, 0},},	/* 48kHz */
-+	{{1, 2}, {0, 2}, {0, 2}, {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 0},},	/* 64kHz */
-+	{{1, 2}, {1, 2}, {1, 2}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1},},	/* 88.2kHz */
-+	{{1, 2}, {1, 2}, {1, 2}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1},},	/* 96kHz */
-+	{{2, 2}, {2, 2}, {2, 2}, {2, 1}, {2, 1}, {2, 1}, {2, 1}, {2, 1},},	/* 176kHz */
-+	{{2, 2}, {2, 2}, {2, 2}, {2, 1}, {2, 1}, {2, 1}, {2, 1}, {2, 1},},	/* 192kHz */
-+};
-+
-+/* Corresponding to process_option */
-+static int supported_input_rate[] = {
-+	5512, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000, 88200,
-+	96000, 176400, 192000,
-+};
-+
-+static int supported_asrc_rate[] = {
-+	32000, 44100, 48000, 64000, 88200, 96000, 176400, 192000,
-+};
-+
-+/* Device types for different compatible */
-+enum fsl_asrc_type {
-+	IMX35_ASRC,
-+	IMX53_ASRC,
-+};
-+
-+/**
-+ * The following tables map the relationship between asrc_inclk/asrc_outclk in
-+ * fsl_asrc.h and the registers of ASRCSR
-+ */
-+static unsigned char input_clk_map_imx35[] = {
-+	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+};
-+
-+static unsigned char output_clk_map_imx35[] = {
-+	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+};
-+
-+/* i.MX53 uses the same map for input and output */
-+static unsigned char input_clk_map_imx53[] = {
-+/*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
-+	0x0, 0x1, 0x2, 0x7, 0x4, 0x5, 0x6, 0x3, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xe, 0xd,
-+};
-+
-+static unsigned char output_clk_map_imx53[] = {
-+/*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
-+	0x8, 0x9, 0xa, 0x7, 0xc, 0x5, 0x6, 0xb, 0x0, 0x1, 0x2, 0x3, 0x4, 0xf, 0xe, 0xd,
-+};
-+
-+static unsigned char *clk_map[2];
-+
-+/**
-+ * Request ASRC pair
-+ *
-+ * It assigns pair by the order of A->C->B because allocation of pair B,
-+ * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
-+ * while pair A and pair C are comparatively independent.
-+ */
-+static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-+{
-+	enum asrc_pair_index index = ASRC_INVALID_PAIR;
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	struct device *dev = &asrc_priv->pdev->dev;
-+	unsigned long lock_flags;
-+	int i, ret = 0;
-+
-+	spin_lock_irqsave(&asrc_priv->lock, lock_flags);
-+
-+	for (i = ASRC_PAIR_A; i < ASRC_PAIR_MAX_NUM; i++) {
-+		if (asrc_priv->pair[i] != NULL)
-+			continue;
-+
-+		index = i;
-+
-+		if (i != ASRC_PAIR_B)
-+			break;
-+	}
-+
-+	if (index == ASRC_INVALID_PAIR) {
-+		dev_err(dev, "all pairs are busy now\n");
-+		ret = -EBUSY;
-+	} else if (asrc_priv->channel_avail < channels) {
-+		dev_err(dev, "can't afford required channels: %d\n", channels);
-+		ret = -EINVAL;
-+	} else {
-+		asrc_priv->channel_avail -= channels;
-+		asrc_priv->pair[index] = pair;
-+		pair->channels = channels;
-+		pair->index = index;
-+	}
-+
-+	spin_unlock_irqrestore(&asrc_priv->lock, lock_flags);
-+
-+	return ret;
-+}
-+
-+/**
-+ * Release ASRC pair
-+ *
-+ * It clears the resource from asrc_priv and releases the occupied channels.
-+ */
-+static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
-+{
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+	unsigned long lock_flags;
-+
-+	/* Make sure the pair is disabled */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_MASK(index), 0);
-+
-+	spin_lock_irqsave(&asrc_priv->lock, lock_flags);
-+
-+	asrc_priv->channel_avail += pair->channels;
-+	asrc_priv->pair[index] = NULL;
-+	pair->error = 0;
-+
-+	spin_unlock_irqrestore(&asrc_priv->lock, lock_flags);
-+}
-+
-+/**
-+ * Configure input and output thresholds
-+ */
-+static void fsl_asrc_set_watermarks(struct fsl_asrc_pair *pair, u32 in, u32 out)
-+{
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR(index),
-+			   ASRMCRi_EXTTHRSHi_MASK |
-+			   ASRMCRi_INFIFO_THRESHOLD_MASK |
-+			   ASRMCRi_OUTFIFO_THRESHOLD_MASK,
-+			   ASRMCRi_EXTTHRSHi |
-+			   ASRMCRi_INFIFO_THRESHOLD(in) |
-+			   ASRMCRi_OUTFIFO_THRESHOLD(out));
-+}
-+
-+/**
-+ * Calculate the total divisor between asrck clock rate and sample rate
-+ *
-+ * It follows the formula clk_rate = samplerate * (2 ^ prescaler) * divider
-+ */
-+static u32 fsl_asrc_cal_asrck_divisor(struct fsl_asrc_pair *pair, u32 div)
-+{
-+	u32 ps;
-+
-+	/* Calculate the divisors: prescaler [2^0, 2^7], divder [1, 8] */
-+	for (ps = 0; div > 8; ps++)
-+		div >>= 1;
-+
-+	return ((div - 1) << ASRCDRi_AxCPi_WIDTH) | ps;
-+}
-+
-+/**
-+ * Calculate and set the ratio for Ideal Ratio mode only
-+ *
-+ * The ratio is a 32-bit fixed point value with 26 fractional bits.
-+ */
-+static int fsl_asrc_set_ideal_ratio(struct fsl_asrc_pair *pair,
-+				    int inrate, int outrate)
-+{
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+	unsigned long ratio;
-+	int i;
-+
-+	if (!outrate) {
-+		pair_err("output rate should not be zero\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Calculate the intergal part of the ratio */
-+	ratio = (inrate / outrate) << IDEAL_RATIO_DECIMAL_DEPTH;
-+
-+	/* ... and then the 26 depth decimal part */
-+	inrate %= outrate;
-+
-+	for (i = 1; i <= IDEAL_RATIO_DECIMAL_DEPTH; i++) {
-+		inrate <<= 1;
-+
-+		if (inrate < outrate)
-+			continue;
-+
-+		ratio |= 1 << (IDEAL_RATIO_DECIMAL_DEPTH - i);
-+		inrate -= outrate;
-+
-+		if (!inrate)
-+			break;
-+	}
-+
-+	regmap_write(asrc_priv->regmap, REG_ASRIDRL(index), ratio);
-+	regmap_write(asrc_priv->regmap, REG_ASRIDRH(index), ratio >> 24);
-+
-+	return 0;
-+}
-+
-+/**
-+ * Configure the assigned ASRC pair
-+ *
-+ * It configures those ASRC registers according to a configuration instance
-+ * of struct asrc_config which includes in/output sample rate, width, channel
-+ * and clock settings.
-+ */
-+static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
-+{
-+	struct asrc_config *config = pair->config;
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+	u32 inrate = config->input_sample_rate, indiv;
-+	u32 outrate = config->output_sample_rate, outdiv;
-+	bool ideal = config->inclk == INCLK_NONE;
-+	u32 clk_index[2], div[2];
-+	int in, out, channels;
-+	struct clk *clk;
-+
-+	if (!config) {
-+		pair_err("invalid pair config\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Validate channels */
-+	if (config->channel_num < 1 || config->channel_num > 10) {
-+		pair_err("does not support %d channels\n", config->channel_num);
-+		return -EINVAL;
-+	}
-+
-+	/* Validate output width */
-+	if (config->output_word_width == ASRC_WIDTH_8_BIT) {
-+		pair_err("does not support 8bit width output\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Validate input and output sample rates */
-+	for (in = 0; in < ARRAY_SIZE(supported_input_rate); in++)
-+		if (inrate == supported_input_rate[in])
-+			break;
-+
-+	if (in == ARRAY_SIZE(supported_input_rate)) {
-+		pair_err("unsupported input sample rate: %dHz\n", inrate);
-+		return -EINVAL;
-+	}
-+
-+	for (out = 0; out < ARRAY_SIZE(supported_asrc_rate); out++)
-+		if (outrate == supported_asrc_rate[out])
-+			break;
-+
-+	if (out == ARRAY_SIZE(supported_asrc_rate)) {
-+		pair_err("unsupported output sample rate: %dHz\n", outrate);
-+		return -EINVAL;
-+	}
-+
-+	/* Validate input and output clock sources */
-+	clk_index[IN] = clk_map[IN][config->inclk];
-+	clk_index[OUT] = clk_map[OUT][config->outclk];
-+
-+	/* We only have output clock for ideal ratio mode */
-+	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
-+
-+	div[IN] = clk_get_rate(clk) / inrate;
-+	if (div[IN] == 0) {
-+		pair_err("failed to support input sample rate %dHz by asrck_%x",
-+				inrate, clk_index[ideal ? OUT : IN]);
-+		return -EINVAL;
-+	}
-+
-+	clk = asrc_priv->asrck_clk[clk_index[OUT]];
-+
-+	/* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
-+	if (ideal)
-+		div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
-+	else
-+		div[OUT] = clk_get_rate(clk) / outrate;
-+
-+	if (div[OUT] == 0) {
-+		pair_err("failed to support output sample rate %dHz by asrck_%x",
-+				outrate, clk_index[OUT]);
-+		return -EINVAL;
-+	}
-+
-+	/* Set the channel number */
-+	channels = config->channel_num;
-+
-+	if (asrc_priv->channel_bits < 4)
-+		channels /= 2;
-+
-+	/* Update channels for current pair */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCNCR,
-+			   ASRCNCR_ANCi_MASK(index, asrc_priv->channel_bits),
-+			   ASRCNCR_ANCi(index, channels, asrc_priv->channel_bits));
-+
-+	/* Default setting: Automatic selection for processing mode */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ATSi_MASK(index), ASRCTR_ATS(index));
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_USRi_MASK(index), 0);
-+
-+	/* Set the input and output clock sources */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCSR,
-+			   ASRCSR_AICSi_MASK(index) | ASRCSR_AOCSi_MASK(index),
-+			   ASRCSR_AICS(index, clk_index[IN]) |
-+			   ASRCSR_AOCS(index, clk_index[OUT]));
-+
-+	/* Calculate the input clock divisors */
-+	indiv = fsl_asrc_cal_asrck_divisor(pair, div[IN]);
-+	outdiv = fsl_asrc_cal_asrck_divisor(pair, div[OUT]);
-+
-+	/* Suppose indiv and outdiv includes prescaler, so add its MASK too */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCDR(index),
-+			   ASRCDRi_AOCPi_MASK(index) | ASRCDRi_AICPi_MASK(index) |
-+			   ASRCDRi_AOCDi_MASK(index) | ASRCDRi_AICDi_MASK(index),
-+			   ASRCDRi_AOCP(index, outdiv) | ASRCDRi_AICP(index, indiv));
-+
-+	/* Implement word_width configurations */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR1(index),
-+			   ASRMCR1i_OW16_MASK | ASRMCR1i_IWD_MASK,
-+			   ASRMCR1i_OW16(config->output_word_width) |
-+			   ASRMCR1i_IWD(config->input_word_width));
-+
-+	/* Enable BUFFER STALL */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR(index),
-+			   ASRMCRi_BUFSTALLi_MASK, ASRMCRi_BUFSTALLi);
-+
-+	/* Set default thresholds for input and output FIFO */
-+	fsl_asrc_set_watermarks(pair, ASRC_INPUTFIFO_THRESHOLD,
-+				ASRC_INPUTFIFO_THRESHOLD);
-+
-+	/* Configure the followings only for Ideal Ratio mode */
-+	if (!ideal)
-+		return 0;
-+
-+	/* Clear ASTSx bit to use Ideal Ratio mode */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ATSi_MASK(index), 0);
-+
-+	/* Enable Ideal Ratio mode */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_IDRi_MASK(index) | ASRCTR_USRi_MASK(index),
-+			   ASRCTR_IDR(index) | ASRCTR_USR(index));
-+
-+	/* Apply configurations for pre- and post-processing */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCFG,
-+			   ASRCFG_PREMODi_MASK(index) |	ASRCFG_POSTMODi_MASK(index),
-+			   ASRCFG_PREMOD(index, process_option[in][out][0]) |
-+			   ASRCFG_POSTMOD(index, process_option[in][out][1]));
-+
-+	return fsl_asrc_set_ideal_ratio(pair, inrate, outrate);
-+}
-+
-+/**
-+ * Start the assigned ASRC pair
-+ *
-+ * It enables the assigned pair and makes it stopped at the stall level.
-+ */
-+static void fsl_asrc_start_pair(struct fsl_asrc_pair *pair)
-+{
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+	int reg, retry = 10, i;
-+
-+	/* Enable the current pair */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_MASK(index), ASRCTR_ASRCE(index));
-+
-+	/* Wait for status of initialization */
-+	do {
-+		udelay(5);
-+		regmap_read(asrc_priv->regmap, REG_ASRCFG, &reg);
-+		reg &= ASRCFG_INIRQi_MASK(index);
-+	} while (!reg && --retry);
-+
-+	/* Make the input fifo to ASRC STALL level */
-+	regmap_read(asrc_priv->regmap, REG_ASRCNCR, &reg);
-+	for (i = 0; i < pair->channels * 4; i++)
-+		regmap_write(asrc_priv->regmap, REG_ASRDI(index), 0);
-+
-+	/* Enable overload interrupt */
-+	regmap_write(asrc_priv->regmap, REG_ASRIER, ASRIER_AOLIE);
-+}
-+
-+/**
-+ * Stop the assigned ASRC pair
-+ */
-+static void fsl_asrc_stop_pair(struct fsl_asrc_pair *pair)
-+{
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+
-+	/* Stop the current pair */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_MASK(index), 0);
-+}
-+
-+/**
-+ * Get DMA channel according to the pair and direction.
-+ */
-+struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir)
-+{
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	enum asrc_pair_index index = pair->index;
-+	char name[4];
-+
-+	sprintf(name, "%cx%c", dir == IN ? 'r' : 't', index + 'a');
-+
-+	return dma_request_slave_channel(&asrc_priv->pdev->dev, name);
-+}
-+EXPORT_SYMBOL_GPL(fsl_asrc_get_dma_channel);
-+
-+static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
-+				  struct snd_pcm_hw_params *params,
-+				  struct snd_soc_dai *dai)
-+{
-+	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
-+	int width = snd_pcm_format_width(params_format(params));
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+	unsigned int channels = params_channels(params);
-+	unsigned int rate = params_rate(params);
-+	struct asrc_config config;
-+	int word_width, ret;
-+
-+	ret = fsl_asrc_request_pair(channels, pair);
-+	if (ret) {
-+		dev_err(dai->dev, "fail to request asrc pair\n");
-+		return ret;
-+	}
-+
-+	pair->config = &config;
-+
-+	if (width == 16)
-+		width = ASRC_WIDTH_16_BIT;
-+	else
-+		width = ASRC_WIDTH_24_BIT;
-+
-+	if (asrc_priv->asrc_width == 16)
-+		word_width = ASRC_WIDTH_16_BIT;
-+	else
-+		word_width = ASRC_WIDTH_24_BIT;
-+
-+	config.pair = pair->index;
-+	config.channel_num = channels;
-+	config.inclk = INCLK_NONE;
-+	config.outclk = OUTCLK_ASRCK1_CLK;
-+
-+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+		config.input_word_width   = width;
-+		config.output_word_width  = word_width;
-+		config.input_sample_rate  = rate;
-+		config.output_sample_rate = asrc_priv->asrc_rate;
-+	} else {
-+		config.input_word_width   = word_width;
-+		config.output_word_width  = width;
-+		config.input_sample_rate  = asrc_priv->asrc_rate;
-+		config.output_sample_rate = rate;
-+	}
-+
-+	ret = fsl_asrc_config_pair(pair);
-+	if (ret) {
-+		dev_err(dai->dev, "fail to config asrc pair\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dai_hw_free(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+
-+	if (pair)
-+		fsl_asrc_release_pair(pair);
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dai_trigger(struct snd_pcm_substream *substream, int cmd,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		fsl_asrc_start_pair(pair);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		fsl_asrc_stop_pair(pair);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_dai_ops fsl_asrc_dai_ops = {
-+	.hw_params    = fsl_asrc_dai_hw_params,
-+	.hw_free      = fsl_asrc_dai_hw_free,
-+	.trigger      = fsl_asrc_dai_trigger,
-+};
-+
-+static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
-+
-+	snd_soc_dai_init_dma_data(dai, &asrc_priv->dma_params_tx,
-+				  &asrc_priv->dma_params_rx);
-+
-+	return 0;
-+}
-+
-+#define FSL_ASRC_RATES		 SNDRV_PCM_RATE_8000_192000
-+#define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
-+				 SNDRV_PCM_FMTBIT_S16_LE | \
-+				 SNDRV_PCM_FORMAT_S20_3LE)
-+
-+static struct snd_soc_dai_driver fsl_asrc_dai = {
-+	.probe = fsl_asrc_dai_probe,
-+	.playback = {
-+		.stream_name = "ASRC-Playback",
-+		.channels_min = 1,
-+		.channels_max = 10,
-+		.rates = FSL_ASRC_RATES,
-+		.formats = FSL_ASRC_FORMATS,
-+	},
-+	.capture = {
-+		.stream_name = "ASRC-Capture",
-+		.channels_min = 1,
-+		.channels_max = 10,
-+		.rates = FSL_ASRC_RATES,
-+		.formats = FSL_ASRC_FORMATS,
-+	},
-+	.ops = &fsl_asrc_dai_ops,
-+};
-+
-+static const struct snd_soc_component_driver fsl_asrc_component = {
-+	.name = "fsl-asrc-dai",
-+};
-+
-+static bool fsl_asrc_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case REG_ASRCTR:
-+	case REG_ASRIER:
-+	case REG_ASRCNCR:
-+	case REG_ASRCFG:
-+	case REG_ASRCSR:
-+	case REG_ASRCDR1:
-+	case REG_ASRCDR2:
-+	case REG_ASRSTR:
-+	case REG_ASRPM1:
-+	case REG_ASRPM2:
-+	case REG_ASRPM3:
-+	case REG_ASRPM4:
-+	case REG_ASRPM5:
-+	case REG_ASRTFR1:
-+	case REG_ASRCCR:
-+	case REG_ASRDOA:
-+	case REG_ASRDOB:
-+	case REG_ASRDOC:
-+	case REG_ASRIDRHA:
-+	case REG_ASRIDRLA:
-+	case REG_ASRIDRHB:
-+	case REG_ASRIDRLB:
-+	case REG_ASRIDRHC:
-+	case REG_ASRIDRLC:
-+	case REG_ASR76K:
-+	case REG_ASR56K:
-+	case REG_ASRMCRA:
-+	case REG_ASRFSTA:
-+	case REG_ASRMCRB:
-+	case REG_ASRFSTB:
-+	case REG_ASRMCRC:
-+	case REG_ASRFSTC:
-+	case REG_ASRMCR1A:
-+	case REG_ASRMCR1B:
-+	case REG_ASRMCR1C:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool fsl_asrc_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case REG_ASRSTR:
-+	case REG_ASRDIA:
-+	case REG_ASRDIB:
-+	case REG_ASRDIC:
-+	case REG_ASRDOA:
-+	case REG_ASRDOB:
-+	case REG_ASRDOC:
-+	case REG_ASRFSTA:
-+	case REG_ASRFSTB:
-+	case REG_ASRFSTC:
-+	case REG_ASRCFG:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool fsl_asrc_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case REG_ASRCTR:
-+	case REG_ASRIER:
-+	case REG_ASRCNCR:
-+	case REG_ASRCFG:
-+	case REG_ASRCSR:
-+	case REG_ASRCDR1:
-+	case REG_ASRCDR2:
-+	case REG_ASRSTR:
-+	case REG_ASRPM1:
-+	case REG_ASRPM2:
-+	case REG_ASRPM3:
-+	case REG_ASRPM4:
-+	case REG_ASRPM5:
-+	case REG_ASRTFR1:
-+	case REG_ASRCCR:
-+	case REG_ASRDIA:
-+	case REG_ASRDIB:
-+	case REG_ASRDIC:
-+	case REG_ASRIDRHA:
-+	case REG_ASRIDRLA:
-+	case REG_ASRIDRHB:
-+	case REG_ASRIDRLB:
-+	case REG_ASRIDRHC:
-+	case REG_ASRIDRLC:
-+	case REG_ASR76K:
-+	case REG_ASR56K:
-+	case REG_ASRMCRA:
-+	case REG_ASRMCRB:
-+	case REG_ASRMCRC:
-+	case REG_ASRMCR1A:
-+	case REG_ASRMCR1B:
-+	case REG_ASRMCR1C:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static struct regmap_config fsl_asrc_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+
-+	.max_register = REG_ASRMCR1C,
-+	.readable_reg = fsl_asrc_readable_reg,
-+	.volatile_reg = fsl_asrc_volatile_reg,
-+	.writeable_reg = fsl_asrc_writeable_reg,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+/**
-+ * Initialize ASRC registers with a default configurations
-+ */
-+static int fsl_asrc_init(struct fsl_asrc *asrc_priv)
-+{
-+	/* Halt ASRC internal FP when input FIFO needs data for pair A, B, C */
-+	regmap_write(asrc_priv->regmap, REG_ASRCTR, ASRCTR_ASRCEN);
-+
-+	/* Disable interrupt by default */
-+	regmap_write(asrc_priv->regmap, REG_ASRIER, 0x0);
-+
-+	/* Apply recommended settings for parameters from Reference Manual */
-+	regmap_write(asrc_priv->regmap, REG_ASRPM1, 0x7fffff);
-+	regmap_write(asrc_priv->regmap, REG_ASRPM2, 0x255555);
-+	regmap_write(asrc_priv->regmap, REG_ASRPM3, 0xff7280);
-+	regmap_write(asrc_priv->regmap, REG_ASRPM4, 0xff7280);
-+	regmap_write(asrc_priv->regmap, REG_ASRPM5, 0xff7280);
-+
-+	/* Base address for task queue FIFO. Set to 0x7C */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRTFR1,
-+			   ASRTFR1_TF_BASE_MASK, ASRTFR1_TF_BASE(0xfc));
-+
-+	/* Set the processing clock for 76KHz to 133M */
-+	regmap_write(asrc_priv->regmap, REG_ASR76K, 0x06D6);
-+
-+	/* Set the processing clock for 56KHz to 133M */
-+	regmap_write(asrc_priv->regmap, REG_ASR56K, 0x0947);
-+
-+	return 0;
-+}
-+
-+/**
-+ * Interrupt handler for ASRC
-+ */
-+static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
-+{
-+	struct fsl_asrc *asrc_priv = (struct fsl_asrc *)dev_id;
-+	struct device *dev = &asrc_priv->pdev->dev;
-+	enum asrc_pair_index index;
-+	u32 status;
-+
-+	regmap_read(asrc_priv->regmap, REG_ASRSTR, &status);
-+
-+	/* Clean overload error */
-+	regmap_write(asrc_priv->regmap, REG_ASRSTR, ASRSTR_AOLE);
-+
-+	/*
-+	 * We here use dev_dbg() for all exceptions because ASRC itself does
-+	 * not care if FIFO overflowed or underrun while a warning in the
-+	 * interrupt would result a ridged conversion.
-+	 */
-+	for (index = ASRC_PAIR_A; index < ASRC_PAIR_MAX_NUM; index++) {
-+		if (!asrc_priv->pair[index])
-+			continue;
-+
-+		if (status & ASRSTR_ATQOL) {
-+			asrc_priv->pair[index]->error |= ASRC_TASK_Q_OVERLOAD;
-+			dev_dbg(dev, "ASRC Task Queue FIFO overload\n");
-+		}
-+
-+		if (status & ASRSTR_AOOL(index)) {
-+			asrc_priv->pair[index]->error |= ASRC_OUTPUT_TASK_OVERLOAD;
-+			pair_dbg("Output Task Overload\n");
-+		}
-+
-+		if (status & ASRSTR_AIOL(index)) {
-+			asrc_priv->pair[index]->error |= ASRC_INPUT_TASK_OVERLOAD;
-+			pair_dbg("Input Task Overload\n");
-+		}
-+
-+		if (status & ASRSTR_AODO(index)) {
-+			asrc_priv->pair[index]->error |= ASRC_OUTPUT_BUFFER_OVERFLOW;
-+			pair_dbg("Output Data Buffer has overflowed\n");
-+		}
-+
-+		if (status & ASRSTR_AIDU(index)) {
-+			asrc_priv->pair[index]->error |= ASRC_INPUT_BUFFER_UNDERRUN;
-+			pair_dbg("Input Data Buffer has underflowed\n");
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct platform_device_id fsl_asrc_devtype[] = {
-+	{
-+		.name = "imx35-asrc",
-+		.driver_data = IMX35_ASRC,
-+	}, {
-+		.name = "imx53-asrc",
-+		.driver_data = IMX53_ASRC,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
-+
-+static const struct of_device_id fsl_asrc_ids[] = {
-+	{
-+		.compatible = "fsl,imx35-asrc",
-+		.data = &fsl_asrc_devtype[IMX35_ASRC],
-+	}, {
-+		.compatible = "fsl,imx53-asrc",
-+		.data = &fsl_asrc_devtype[IMX53_ASRC],
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-+
-+static int fsl_asrc_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *of_id =
-+		of_match_device(fsl_asrc_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
-+	struct fsl_asrc *asrc_priv;
-+	enum fsl_asrc_type devtype;
-+	struct resource *res;
-+	void __iomem *regs;
-+	int irq, ret, i;
-+	char tmp[16];
-+
-+	asrc_priv = devm_kzalloc(&pdev->dev, sizeof(*asrc_priv), GFP_KERNEL);
-+	if (!asrc_priv)
-+		return -ENOMEM;
-+
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
-+	devtype = pdev->id_entry->driver_data;
-+
-+	switch (devtype) {
-+	case IMX35_ASRC:
-+		asrc_priv->channel_bits = 3;
-+		clk_map[IN] = input_clk_map_imx35;
-+		clk_map[OUT] = output_clk_map_imx35;
-+		break;
-+	case IMX53_ASRC:
-+		asrc_priv->channel_bits = 4;
-+		clk_map[IN] = input_clk_map_imx53;
-+		clk_map[OUT] = output_clk_map_imx53;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "unsupported device type\n");
-+		return -EINVAL;
-+	}
-+
-+	asrc_priv->pdev = pdev;
-+	strcpy(asrc_priv->name, np->name);
-+
-+	/* Get the addresses and IRQ */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	asrc_priv->paddr = res->start;
-+
-+	/* Register regmap and let it prepare core clock */
-+	if (of_property_read_bool(np, "big-endian"))
-+		fsl_asrc_regmap_config.val_format_endian = REGMAP_ENDIAN_BIG;
-+
-+	asrc_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
-+			"mem", regs, &fsl_asrc_regmap_config);
-+	if (IS_ERR(asrc_priv->regmap)) {
-+		dev_err(&pdev->dev, "failed to init regmap\n");
-+		return PTR_ERR(asrc_priv->regmap);
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
-+		return irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, irq, fsl_asrc_isr, 0,
-+			       asrc_priv->name, asrc_priv);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to claim irq %u: %d\n", irq, ret);
-+		return ret;
-+	}
-+
-+	asrc_priv->mem_clk = devm_clk_get(&pdev->dev, "mem");
-+	if (IS_ERR(asrc_priv->mem_clk)) {
-+		dev_err(&pdev->dev, "failed to get mem clock\n");
-+		return PTR_ERR(asrc_priv->ipg_clk);
-+	}
-+
-+	asrc_priv->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-+	if (IS_ERR(asrc_priv->ipg_clk)) {
-+		dev_err(&pdev->dev, "failed to get ipg clock\n");
-+		return PTR_ERR(asrc_priv->ipg_clk);
-+	}
-+
-+	for (i = 0; i < ASRC_CLK_MAX_NUM; i++) {
-+		sprintf(tmp, "asrck_%x", i);
-+		asrc_priv->asrck_clk[i] = devm_clk_get(&pdev->dev, tmp);
-+		if (IS_ERR(asrc_priv->asrck_clk[i])) {
-+			dev_err(&pdev->dev, "failed to get %s clock\n", tmp);
-+			return PTR_ERR(asrc_priv->asrck_clk[i]);
-+		}
-+	}
-+
-+	ret = fsl_asrc_init(asrc_priv);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to init asrc %d\n", ret);
-+		return -EINVAL;
-+	}
-+
-+	asrc_priv->channel_avail = 10;
-+
-+	ret = of_property_read_u32(np, "fsl,asrc-rate",
-+				   &asrc_priv->asrc_rate);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to get output rate\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(np, "fsl,asrc-width",
-+				   &asrc_priv->asrc_width);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to get output width\n");
-+		return -EINVAL;
-+	}
-+
-+	if (asrc_priv->asrc_width != 16 && asrc_priv->asrc_width != 24) {
-+		dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
-+		asrc_priv->asrc_width = 24;
-+	}
-+
-+	platform_set_drvdata(pdev, asrc_priv);
-+	pm_runtime_enable(&pdev->dev);
-+	spin_lock_init(&asrc_priv->lock);
-+
-+	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_asrc_component,
-+					      &fsl_asrc_dai, 1);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register ASoC DAI\n");
-+		return ret;
-+	}
-+
-+	ret = devm_snd_soc_register_platform(&pdev->dev, &fsl_asrc_platform);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register ASoC platform\n");
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "driver registered\n");
-+
-+	return 0;
-+}
-+
-+#if CONFIG_PM_RUNTIME
-+static int fsl_asrc_runtime_resume(struct device *dev)
-+{
-+	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
-+	int i;
-+
-+	clk_prepare_enable(asrc_priv->mem_clk);
-+	clk_prepare_enable(asrc_priv->ipg_clk);
-+	for (i = 0; i < ASRC_CLK_MAX_NUM; i++)
-+		clk_prepare_enable(asrc_priv->asrck_clk[i]);
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_runtime_suspend(struct device *dev)
-+{
-+	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < ASRC_CLK_MAX_NUM; i++)
-+		clk_disable_unprepare(asrc_priv->asrck_clk[i]);
-+	clk_disable_unprepare(asrc_priv->ipg_clk);
-+	clk_disable_unprepare(asrc_priv->mem_clk);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM_RUNTIME */
-+
-+#if CONFIG_PM_SLEEP
-+static int fsl_asrc_suspend(struct device *dev)
-+{
-+	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
-+
-+	regcache_cache_only(asrc_priv->regmap, true);
-+	regcache_mark_dirty(asrc_priv->regmap);
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_resume(struct device *dev)
-+{
-+	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
-+	u32 asrctr;
-+
-+	/* Stop all pairs provisionally */
-+	regmap_read(asrc_priv->regmap, REG_ASRCTR, &asrctr);
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_ALL_MASK, 0);
-+
-+	/* Restore all registers */
-+	regcache_cache_only(asrc_priv->regmap, false);
-+	regcache_sync(asrc_priv->regmap);
-+
-+	/* Restart enabled pairs */
-+	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_ALL_MASK, asrctr);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static const struct dev_pm_ops fsl_asrc_pm = {
-+	SET_RUNTIME_PM_OPS(fsl_asrc_runtime_suspend, fsl_asrc_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
-+};
-+
-+static struct platform_driver fsl_asrc_driver = {
-+	.probe = fsl_asrc_probe,
-+	.driver = {
-+		.name = "fsl-asrc",
-+		.of_match_table = fsl_asrc_ids,
-+		.pm = &fsl_asrc_pm,
-+	},
-+};
-+module_platform_driver(fsl_asrc_driver);
-+
-+MODULE_DESCRIPTION("Freescale ASRC ASoC driver");
-+MODULE_AUTHOR("Nicolin Chen <nicoleotsuka@gmail.com>");
-+MODULE_ALIAS("platform:fsl-asrc");
-+MODULE_LICENSE("GPL v2");
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-new file mode 100644
-index 0000000..a3f211f
---- /dev/null
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -0,0 +1,461 @@
-+/*
-+ * fsl_asrc.h - Freescale ASRC ALSA SoC header file
-+ *
-+ * Copyright (C) 2014 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Nicolin Chen <nicoleotsuka@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2. This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#ifndef _FSL_ASRC_H
-+#define _FSL_ASRC_H
-+
-+#define IN	0
-+#define OUT	1
-+
-+#define ASRC_DMA_BUFFER_NUM		2
-+#define ASRC_INPUTFIFO_THRESHOLD	32
-+#define ASRC_OUTPUTFIFO_THRESHOLD	32
-+#define ASRC_FIFO_THRESHOLD_MIN		0
-+#define ASRC_FIFO_THRESHOLD_MAX		63
-+#define ASRC_DMA_BUFFER_SIZE		(1024 * 48 * 4)
-+#define ASRC_MAX_BUFFER_SIZE		(1024 * 48)
-+#define ASRC_OUTPUT_LAST_SAMPLE		8
-+
-+#define IDEAL_RATIO_RATE		1000000
-+
-+#define REG_ASRCTR			0x00
-+#define REG_ASRIER			0x04
-+#define REG_ASRCNCR			0x0C
-+#define REG_ASRCFG			0x10
-+#define REG_ASRCSR			0x14
-+
-+#define REG_ASRCDR1			0x18
-+#define REG_ASRCDR2			0x1C
-+#define REG_ASRCDR(i)			((i < 2) ? REG_ASRCDR1 : REG_ASRCDR2)
-+
-+#define REG_ASRSTR			0x20
-+#define REG_ASRRA			0x24
-+#define REG_ASRRB			0x28
-+#define REG_ASRRC			0x2C
-+#define REG_ASRPM1			0x40
-+#define REG_ASRPM2			0x44
-+#define REG_ASRPM3			0x48
-+#define REG_ASRPM4			0x4C
-+#define REG_ASRPM5			0x50
-+#define REG_ASRTFR1			0x54
-+#define REG_ASRCCR			0x5C
-+
-+#define REG_ASRDIA			0x60
-+#define REG_ASRDOA			0x64
-+#define REG_ASRDIB			0x68
-+#define REG_ASRDOB			0x6C
-+#define REG_ASRDIC			0x70
-+#define REG_ASRDOC			0x74
-+#define REG_ASRDI(i)			(REG_ASRDIA + (i << 3))
-+#define REG_ASRDO(i)			(REG_ASRDOA + (i << 3))
-+#define REG_ASRDx(x, i)			(x == IN ? REG_ASRDI(i) : REG_ASRDO(i))
-+
-+#define REG_ASRIDRHA			0x80
-+#define REG_ASRIDRLA			0x84
-+#define REG_ASRIDRHB			0x88
-+#define REG_ASRIDRLB			0x8C
-+#define REG_ASRIDRHC			0x90
-+#define REG_ASRIDRLC			0x94
-+#define REG_ASRIDRH(i)			(REG_ASRIDRHA + (i << 3))
-+#define REG_ASRIDRL(i)			(REG_ASRIDRLA + (i << 3))
-+
-+#define REG_ASR76K			0x98
-+#define REG_ASR56K			0x9C
-+
-+#define REG_ASRMCRA			0xA0
-+#define REG_ASRFSTA			0xA4
-+#define REG_ASRMCRB			0xA8
-+#define REG_ASRFSTB			0xAC
-+#define REG_ASRMCRC			0xB0
-+#define REG_ASRFSTC			0xB4
-+#define REG_ASRMCR(i)			(REG_ASRMCRA + (i << 3))
-+#define REG_ASRFST(i)			(REG_ASRFSTA + (i << 3))
-+
-+#define REG_ASRMCR1A			0xC0
-+#define REG_ASRMCR1B			0xC4
-+#define REG_ASRMCR1C			0xC8
-+#define REG_ASRMCR1(i)			(REG_ASRMCR1A + (i << 2))
-+
-+
-+/* REG0 0x00 REG_ASRCTR */
-+#define ASRCTR_ATSi_SHIFT(i)		(20 + i)
-+#define ASRCTR_ATSi_MASK(i)		(1 << ASRCTR_ATSi_SHIFT(i))
-+#define ASRCTR_ATS(i)			(1 << ASRCTR_ATSi_SHIFT(i))
-+#define ASRCTR_USRi_SHIFT(i)		(14 + (i << 1))
-+#define ASRCTR_USRi_MASK(i)		(1 << ASRCTR_USRi_SHIFT(i))
-+#define ASRCTR_USR(i)			(1 << ASRCTR_USRi_SHIFT(i))
-+#define ASRCTR_IDRi_SHIFT(i)		(13 + (i << 1))
-+#define ASRCTR_IDRi_MASK(i)		(1 << ASRCTR_IDRi_SHIFT(i))
-+#define ASRCTR_IDR(i)			(1 << ASRCTR_IDRi_SHIFT(i))
-+#define ASRCTR_SRST_SHIFT		4
-+#define ASRCTR_SRST_MASK		(1 << ASRCTR_SRST_SHIFT)
-+#define ASRCTR_SRST			(1 << ASRCTR_SRST_SHIFT)
-+#define ASRCTR_ASRCEi_SHIFT(i)		(1 + i)
-+#define ASRCTR_ASRCEi_MASK(i)		(1 << ASRCTR_ASRCEi_SHIFT(i))
-+#define ASRCTR_ASRCE(i)			(1 << ASRCTR_ASRCEi_SHIFT(i))
-+#define ASRCTR_ASRCEi_ALL_MASK		(0x7 << ASRCTR_ASRCEi_SHIFT(0))
-+#define ASRCTR_ASRCEN_SHIFT		0
-+#define ASRCTR_ASRCEN_MASK		(1 << ASRCTR_ASRCEN_SHIFT)
-+#define ASRCTR_ASRCEN			(1 << ASRCTR_ASRCEN_SHIFT)
-+
-+/* REG1 0x04 REG_ASRIER */
-+#define ASRIER_AFPWE_SHIFT		7
-+#define ASRIER_AFPWE_MASK		(1 << ASRIER_AFPWE_SHIFT)
-+#define ASRIER_AFPWE			(1 << ASRIER_AFPWE_SHIFT)
-+#define ASRIER_AOLIE_SHIFT		6
-+#define ASRIER_AOLIE_MASK		(1 << ASRIER_AOLIE_SHIFT)
-+#define ASRIER_AOLIE			(1 << ASRIER_AOLIE_SHIFT)
-+#define ASRIER_ADOEi_SHIFT(i)		(3 + i)
-+#define ASRIER_ADOEi_MASK(i)		(1 << ASRIER_ADOEi_SHIFT(i))
-+#define ASRIER_ADOE(i)			(1 << ASRIER_ADOEi_SHIFT(i))
-+#define ASRIER_ADIEi_SHIFT(i)		(0 + i)
-+#define ASRIER_ADIEi_MASK(i)		(1 << ASRIER_ADIEi_SHIFT(i))
-+#define ASRIER_ADIE(i)			(1 << ASRIER_ADIEi_SHIFT(i))
-+
-+/* REG2 0x0C REG_ASRCNCR */
-+#define ASRCNCR_ANCi_SHIFT(i, b)	(b * i)
-+#define ASRCNCR_ANCi_MASK(i, b)		(((1 << b) - 1) << ASRCNCR_ANCi_SHIFT(i, b))
-+#define ASRCNCR_ANCi(i, v, b)		((v << ASRCNCR_ANCi_SHIFT(i, b)) & ASRCNCR_ANCi_MASK(i, b))
-+
-+/* REG3 0x10 REG_ASRCFG */
-+#define ASRCFG_INIRQi_SHIFT(i)		(21 + i)
-+#define ASRCFG_INIRQi_MASK(i)		(1 << ASRCFG_INIRQi_SHIFT(i))
-+#define ASRCFG_INIRQi			(1 << ASRCFG_INIRQi_SHIFT(i))
-+#define ASRCFG_NDPRi_SHIFT(i)		(18 + i)
-+#define ASRCFG_NDPRi_MASK(i)		(1 << ASRCFG_NDPRi_SHIFT(i))
-+#define ASRCFG_NDPRi			(1 << ASRCFG_NDPRi_SHIFT(i))
-+#define ASRCFG_POSTMODi_SHIFT(i)	(8 + (i << 2))
-+#define ASRCFG_POSTMODi_WIDTH		2
-+#define ASRCFG_POSTMODi_MASK(i)		(((1 << ASRCFG_POSTMODi_WIDTH) - 1) << ASRCFG_POSTMODi_SHIFT(i))
-+#define ASRCFG_POSTMOD(i, v)		((v) << ASRCFG_POSTMODi_SHIFT(i))
-+#define ASRCFG_POSTMODi_UP(i)		(0 << ASRCFG_POSTMODi_SHIFT(i))
-+#define ASRCFG_POSTMODi_DCON(i)		(1 << ASRCFG_POSTMODi_SHIFT(i))
-+#define ASRCFG_POSTMODi_DOWN(i)		(2 << ASRCFG_POSTMODi_SHIFT(i))
-+#define ASRCFG_PREMODi_SHIFT(i)		(6 + (i << 2))
-+#define ASRCFG_PREMODi_WIDTH		2
-+#define ASRCFG_PREMODi_MASK(i)		(((1 << ASRCFG_PREMODi_WIDTH) - 1) << ASRCFG_PREMODi_SHIFT(i))
-+#define ASRCFG_PREMOD(i, v)		((v) << ASRCFG_PREMODi_SHIFT(i))
-+#define ASRCFG_PREMODi_UP(i)		(0 << ASRCFG_PREMODi_SHIFT(i))
-+#define ASRCFG_PREMODi_DCON(i)		(1 << ASRCFG_PREMODi_SHIFT(i))
-+#define ASRCFG_PREMODi_DOWN(i)		(2 << ASRCFG_PREMODi_SHIFT(i))
-+#define ASRCFG_PREMODi_BYPASS(i)	(3 << ASRCFG_PREMODi_SHIFT(i))
-+
-+/* REG4 0x14 REG_ASRCSR */
-+#define ASRCSR_AxCSi_WIDTH		4
-+#define ASRCSR_AxCSi_MASK		((1 << ASRCSR_AxCSi_WIDTH) - 1)
-+#define ASRCSR_AOCSi_SHIFT(i)		(12 + (i << 2))
-+#define ASRCSR_AOCSi_MASK(i)		(((1 << ASRCSR_AxCSi_WIDTH) - 1) << ASRCSR_AOCSi_SHIFT(i))
-+#define ASRCSR_AOCS(i, v)		((v) << ASRCSR_AOCSi_SHIFT(i))
-+#define ASRCSR_AICSi_SHIFT(i)		(i << 2)
-+#define ASRCSR_AICSi_MASK(i)		(((1 << ASRCSR_AxCSi_WIDTH) - 1) << ASRCSR_AICSi_SHIFT(i))
-+#define ASRCSR_AICS(i, v)		((v) << ASRCSR_AICSi_SHIFT(i))
-+
-+/* REG5&6 0x18 & 0x1C REG_ASRCDR1 & ASRCDR2 */
-+#define ASRCDRi_AxCPi_WIDTH		3
-+#define ASRCDRi_AICPi_SHIFT(i)		(0 + (i % 2) * 6)
-+#define ASRCDRi_AICPi_MASK(i)		(((1 << ASRCDRi_AxCPi_WIDTH) - 1) << ASRCDRi_AICPi_SHIFT(i))
-+#define ASRCDRi_AICP(i, v)		((v) << ASRCDRi_AICPi_SHIFT(i))
-+#define ASRCDRi_AICDi_SHIFT(i)		(3 + (i % 2) * 6)
-+#define ASRCDRi_AICDi_MASK(i)		(((1 << ASRCDRi_AxCPi_WIDTH) - 1) << ASRCDRi_AICDi_SHIFT(i))
-+#define ASRCDRi_AICD(i, v)		((v) << ASRCDRi_AICDi_SHIFT(i))
-+#define ASRCDRi_AOCPi_SHIFT(i)		((i < 2) ? 12 + i * 6 : 6)
-+#define ASRCDRi_AOCPi_MASK(i)		(((1 << ASRCDRi_AxCPi_WIDTH) - 1) << ASRCDRi_AOCPi_SHIFT(i))
-+#define ASRCDRi_AOCP(i, v)		((v) << ASRCDRi_AOCPi_SHIFT(i))
-+#define ASRCDRi_AOCDi_SHIFT(i)		((i < 2) ? 15 + i * 6 : 9)
-+#define ASRCDRi_AOCDi_MASK(i)		(((1 << ASRCDRi_AxCPi_WIDTH) - 1) << ASRCDRi_AOCDi_SHIFT(i))
-+#define ASRCDRi_AOCD(i, v)		((v) << ASRCDRi_AOCDi_SHIFT(i))
-+
-+/* REG7 0x20 REG_ASRSTR */
-+#define ASRSTR_DSLCNT_SHIFT		21
-+#define ASRSTR_DSLCNT_MASK		(1 << ASRSTR_DSLCNT_SHIFT)
-+#define ASRSTR_DSLCNT			(1 << ASRSTR_DSLCNT_SHIFT)
-+#define ASRSTR_ATQOL_SHIFT		20
-+#define ASRSTR_ATQOL_MASK		(1 << ASRSTR_ATQOL_SHIFT)
-+#define ASRSTR_ATQOL			(1 << ASRSTR_ATQOL_SHIFT)
-+#define ASRSTR_AOOLi_SHIFT(i)		(17 + i)
-+#define ASRSTR_AOOLi_MASK(i)		(1 << ASRSTR_AOOLi_SHIFT(i))
-+#define ASRSTR_AOOL(i)			(1 << ASRSTR_AOOLi_SHIFT(i))
-+#define ASRSTR_AIOLi_SHIFT(i)		(14 + i)
-+#define ASRSTR_AIOLi_MASK(i)		(1 << ASRSTR_AIOLi_SHIFT(i))
-+#define ASRSTR_AIOL(i)			(1 << ASRSTR_AIOLi_SHIFT(i))
-+#define ASRSTR_AODOi_SHIFT(i)		(11 + i)
-+#define ASRSTR_AODOi_MASK(i)		(1 << ASRSTR_AODOi_SHIFT(i))
-+#define ASRSTR_AODO(i)			(1 << ASRSTR_AODOi_SHIFT(i))
-+#define ASRSTR_AIDUi_SHIFT(i)		(8 + i)
-+#define ASRSTR_AIDUi_MASK(i)		(1 << ASRSTR_AIDUi_SHIFT(i))
-+#define ASRSTR_AIDU(i)			(1 << ASRSTR_AIDUi_SHIFT(i))
-+#define ASRSTR_FPWT_SHIFT		7
-+#define ASRSTR_FPWT_MASK		(1 << ASRSTR_FPWT_SHIFT)
-+#define ASRSTR_FPWT			(1 << ASRSTR_FPWT_SHIFT)
-+#define ASRSTR_AOLE_SHIFT		6
-+#define ASRSTR_AOLE_MASK		(1 << ASRSTR_AOLE_SHIFT)
-+#define ASRSTR_AOLE			(1 << ASRSTR_AOLE_SHIFT)
-+#define ASRSTR_AODEi_SHIFT(i)		(3 + i)
-+#define ASRSTR_AODFi_MASK(i)		(1 << ASRSTR_AODEi_SHIFT(i))
-+#define ASRSTR_AODF(i)			(1 << ASRSTR_AODEi_SHIFT(i))
-+#define ASRSTR_AIDEi_SHIFT(i)		(0 + i)
-+#define ASRSTR_AIDEi_MASK(i)		(1 << ASRSTR_AIDEi_SHIFT(i))
-+#define ASRSTR_AIDE(i)			(1 << ASRSTR_AIDEi_SHIFT(i))
-+
-+/* REG10 0x54 REG_ASRTFR1 */
-+#define ASRTFR1_TF_BASE_WIDTH		7
-+#define ASRTFR1_TF_BASE_SHIFT		6
-+#define ASRTFR1_TF_BASE_MASK		(((1 << ASRTFR1_TF_BASE_WIDTH) - 1) << ASRTFR1_TF_BASE_SHIFT)
-+#define ASRTFR1_TF_BASE(i)		((i) << ASRTFR1_TF_BASE_SHIFT)
-+
-+/*
-+ * REG22 0xA0 REG_ASRMCRA
-+ * REG24 0xA8 REG_ASRMCRB
-+ * REG26 0xB0 REG_ASRMCRC
-+ */
-+#define ASRMCRi_ZEROBUFi_SHIFT		23
-+#define ASRMCRi_ZEROBUFi_MASK		(1 << ASRMCRi_ZEROBUFi_SHIFT)
-+#define ASRMCRi_ZEROBUFi		(1 << ASRMCRi_ZEROBUFi_SHIFT)
-+#define ASRMCRi_EXTTHRSHi_SHIFT		22
-+#define ASRMCRi_EXTTHRSHi_MASK		(1 << ASRMCRi_EXTTHRSHi_SHIFT)
-+#define ASRMCRi_EXTTHRSHi		(1 << ASRMCRi_EXTTHRSHi_SHIFT)
-+#define ASRMCRi_BUFSTALLi_SHIFT		21
-+#define ASRMCRi_BUFSTALLi_MASK		(1 << ASRMCRi_BUFSTALLi_SHIFT)
-+#define ASRMCRi_BUFSTALLi		(1 << ASRMCRi_BUFSTALLi_SHIFT)
-+#define ASRMCRi_BYPASSPOLYi_SHIFT	20
-+#define ASRMCRi_BYPASSPOLYi_MASK	(1 << ASRMCRi_BYPASSPOLYi_SHIFT)
-+#define ASRMCRi_BYPASSPOLYi		(1 << ASRMCRi_BYPASSPOLYi_SHIFT)
-+#define ASRMCRi_OUTFIFO_THRESHOLD_WIDTH	6
-+#define ASRMCRi_OUTFIFO_THRESHOLD_SHIFT	12
-+#define ASRMCRi_OUTFIFO_THRESHOLD_MASK	(((1 << ASRMCRi_OUTFIFO_THRESHOLD_WIDTH) - 1) << ASRMCRi_OUTFIFO_THRESHOLD_SHIFT)
-+#define ASRMCRi_OUTFIFO_THRESHOLD(v)	(((v) << ASRMCRi_OUTFIFO_THRESHOLD_SHIFT) & ASRMCRi_OUTFIFO_THRESHOLD_MASK)
-+#define ASRMCRi_RSYNIFi_SHIFT		11
-+#define ASRMCRi_RSYNIFi_MASK		(1 << ASRMCRi_RSYNIFi_SHIFT)
-+#define ASRMCRi_RSYNIFi			(1 << ASRMCRi_RSYNIFi_SHIFT)
-+#define ASRMCRi_RSYNOFi_SHIFT		10
-+#define ASRMCRi_RSYNOFi_MASK		(1 << ASRMCRi_RSYNOFi_SHIFT)
-+#define ASRMCRi_RSYNOFi			(1 << ASRMCRi_RSYNOFi_SHIFT)
-+#define ASRMCRi_INFIFO_THRESHOLD_WIDTH	6
-+#define ASRMCRi_INFIFO_THRESHOLD_SHIFT	0
-+#define ASRMCRi_INFIFO_THRESHOLD_MASK	(((1 << ASRMCRi_INFIFO_THRESHOLD_WIDTH) - 1) << ASRMCRi_INFIFO_THRESHOLD_SHIFT)
-+#define ASRMCRi_INFIFO_THRESHOLD(v)	(((v) << ASRMCRi_INFIFO_THRESHOLD_SHIFT) & ASRMCRi_INFIFO_THRESHOLD_MASK)
-+
-+/*
-+ * REG23 0xA4 REG_ASRFSTA
-+ * REG25 0xAC REG_ASRFSTB
-+ * REG27 0xB4 REG_ASRFSTC
-+ */
-+#define ASRFSTi_OAFi_SHIFT		23
-+#define ASRFSTi_OAFi_MASK		(1 << ASRFSTi_OAFi_SHIFT)
-+#define ASRFSTi_OAFi			(1 << ASRFSTi_OAFi_SHIFT)
-+#define ASRFSTi_OUTPUT_FIFO_WIDTH	7
-+#define ASRFSTi_OUTPUT_FIFO_SHIFT	12
-+#define ASRFSTi_OUTPUT_FIFO_MASK	(((1 << ASRFSTi_OUTPUT_FIFO_WIDTH) - 1) << ASRFSTi_OUTPUT_FIFO_SHIFT)
-+#define ASRFSTi_IAEi_SHIFT		11
-+#define ASRFSTi_IAEi_MASK		(1 << ASRFSTi_OAFi_SHIFT)
-+#define ASRFSTi_IAEi			(1 << ASRFSTi_OAFi_SHIFT)
-+#define ASRFSTi_INPUT_FIFO_WIDTH	7
-+#define ASRFSTi_INPUT_FIFO_SHIFT	0
-+#define ASRFSTi_INPUT_FIFO_MASK		((1 << ASRFSTi_INPUT_FIFO_WIDTH) - 1)
-+
-+/* REG28 0xC0 & 0xC4 & 0xC8 REG_ASRMCR1i */
-+#define ASRMCR1i_IWD_WIDTH		3
-+#define ASRMCR1i_IWD_SHIFT		9
-+#define ASRMCR1i_IWD_MASK		(((1 << ASRMCR1i_IWD_WIDTH) - 1) << ASRMCR1i_IWD_SHIFT)
-+#define ASRMCR1i_IWD(v)			((v) << ASRMCR1i_IWD_SHIFT)
-+#define ASRMCR1i_IMSB_SHIFT		8
-+#define ASRMCR1i_IMSB_MASK		(1 << ASRMCR1i_IMSB_SHIFT)
-+#define ASRMCR1i_IMSB_MSB		(1 << ASRMCR1i_IMSB_SHIFT)
-+#define ASRMCR1i_IMSB_LSB		(0 << ASRMCR1i_IMSB_SHIFT)
-+#define ASRMCR1i_OMSB_SHIFT		2
-+#define ASRMCR1i_OMSB_MASK		(1 << ASRMCR1i_OMSB_SHIFT)
-+#define ASRMCR1i_OMSB_MSB		(1 << ASRMCR1i_OMSB_SHIFT)
-+#define ASRMCR1i_OMSB_LSB		(0 << ASRMCR1i_OMSB_SHIFT)
-+#define ASRMCR1i_OSGN_SHIFT		1
-+#define ASRMCR1i_OSGN_MASK		(1 << ASRMCR1i_OSGN_SHIFT)
-+#define ASRMCR1i_OSGN			(1 << ASRMCR1i_OSGN_SHIFT)
-+#define ASRMCR1i_OW16_SHIFT		0
-+#define ASRMCR1i_OW16_MASK		(1 << ASRMCR1i_OW16_SHIFT)
-+#define ASRMCR1i_OW16(v)		((v) << ASRMCR1i_OW16_SHIFT)
-+
-+
-+enum asrc_pair_index {
-+	ASRC_INVALID_PAIR = -1,
-+	ASRC_PAIR_A = 0,
-+	ASRC_PAIR_B = 1,
-+	ASRC_PAIR_C = 2,
-+};
-+
-+#define ASRC_PAIR_MAX_NUM	(ASRC_PAIR_C + 1)
-+
-+enum asrc_inclk {
-+	INCLK_NONE = 0x03,
-+	INCLK_ESAI_RX = 0x00,
-+	INCLK_SSI1_RX = 0x01,
-+	INCLK_SSI2_RX = 0x02,
-+	INCLK_SSI3_RX = 0x07,
-+	INCLK_SPDIF_RX = 0x04,
-+	INCLK_MLB_CLK = 0x05,
-+	INCLK_PAD = 0x06,
-+	INCLK_ESAI_TX = 0x08,
-+	INCLK_SSI1_TX = 0x09,
-+	INCLK_SSI2_TX = 0x0a,
-+	INCLK_SSI3_TX = 0x0b,
-+	INCLK_SPDIF_TX = 0x0c,
-+	INCLK_ASRCK1_CLK = 0x0f,
-+};
-+
-+enum asrc_outclk {
-+	OUTCLK_NONE = 0x03,
-+	OUTCLK_ESAI_TX = 0x00,
-+	OUTCLK_SSI1_TX = 0x01,
-+	OUTCLK_SSI2_TX = 0x02,
-+	OUTCLK_SSI3_TX = 0x07,
-+	OUTCLK_SPDIF_TX = 0x04,
-+	OUTCLK_MLB_CLK = 0x05,
-+	OUTCLK_PAD = 0x06,
-+	OUTCLK_ESAI_RX = 0x08,
-+	OUTCLK_SSI1_RX = 0x09,
-+	OUTCLK_SSI2_RX = 0x0a,
-+	OUTCLK_SSI3_RX = 0x0b,
-+	OUTCLK_SPDIF_RX = 0x0c,
-+	OUTCLK_ASRCK1_CLK = 0x0f,
-+};
-+
-+#define ASRC_CLK_MAX_NUM	16
-+
-+enum asrc_word_width {
-+	ASRC_WIDTH_24_BIT = 0,
-+	ASRC_WIDTH_16_BIT = 1,
-+	ASRC_WIDTH_8_BIT = 2,
-+};
-+
-+struct asrc_config {
-+	enum asrc_pair_index pair;
-+	unsigned int channel_num;
-+	unsigned int buffer_num;
-+	unsigned int dma_buffer_size;
-+	unsigned int input_sample_rate;
-+	unsigned int output_sample_rate;
-+	enum asrc_word_width input_word_width;
-+	enum asrc_word_width output_word_width;
-+	enum asrc_inclk inclk;
-+	enum asrc_outclk outclk;
-+};
-+
-+struct asrc_req {
-+	unsigned int chn_num;
-+	enum asrc_pair_index index;
-+};
-+
-+struct asrc_querybuf {
-+	unsigned int buffer_index;
-+	unsigned int input_length;
-+	unsigned int output_length;
-+	unsigned long input_offset;
-+	unsigned long output_offset;
-+};
-+
-+struct asrc_convert_buffer {
-+	void *input_buffer_vaddr;
-+	void *output_buffer_vaddr;
-+	unsigned int input_buffer_length;
-+	unsigned int output_buffer_length;
-+};
-+
-+struct asrc_status_flags {
-+	enum asrc_pair_index index;
-+	unsigned int overload_error;
-+};
-+
-+enum asrc_error_status {
-+	ASRC_TASK_Q_OVERLOAD		= 0x01,
-+	ASRC_OUTPUT_TASK_OVERLOAD	= 0x02,
-+	ASRC_INPUT_TASK_OVERLOAD	= 0x04,
-+	ASRC_OUTPUT_BUFFER_OVERFLOW	= 0x08,
-+	ASRC_INPUT_BUFFER_UNDERRUN	= 0x10,
-+};
-+
-+struct dma_block {
-+	dma_addr_t dma_paddr;
-+	void *dma_vaddr;
-+	unsigned int length;
-+};
-+
-+/**
-+ * fsl_asrc_pair: ASRC Pair private data
-+ *
-+ * @asrc_priv: pointer to its parent module
-+ * @config: configuration profile
-+ * @error: error record
-+ * @index: pair index (ASRC_PAIR_A, ASRC_PAIR_B, ASRC_PAIR_C)
-+ * @channels: occupied channel number
-+ * @desc: input and output dma descriptors
-+ * @dma_chan: inputer and output DMA channels
-+ * @dma_data: private dma data
-+ * @pos: hardware pointer position
-+ * @private: pair private area
-+ */
-+struct fsl_asrc_pair {
-+	struct fsl_asrc *asrc_priv;
-+	struct asrc_config *config;
-+	unsigned int error;
-+
-+	enum asrc_pair_index index;
-+	unsigned int channels;
-+
-+	struct dma_async_tx_descriptor *desc[2];
-+	struct dma_chan *dma_chan[2];
-+	struct imx_dma_data dma_data;
-+	unsigned int pos;
-+
-+	void *private;
-+};
-+
-+/**
-+ * fsl_asrc_pair: ASRC private data
-+ *
-+ * @dma_params_rx: DMA parameters for receive channel
-+ * @dma_params_tx: DMA parameters for transmit channel
-+ * @pdev: platform device pointer
-+ * @regmap: regmap handler
-+ * @paddr: physical address to the base address of registers
-+ * @mem_clk: clock source to access register
-+ * @ipg_clk: clock source to drive peripheral
-+ * @asrck_clk: clock sources to driver ASRC internal logic
-+ * @lock: spin lock for resource protection
-+ * @pair: pair pointers
-+ * @channel_bits: width of ASRCNCR register for each pair
-+ * @channel_avail: non-occupied channel numbers
-+ * @asrc_rate: default sample rate for ASoC Back-Ends
-+ * @asrc_width: default sample width for ASoC Back-Ends
-+ * @name: driver name
-+ */
-+struct fsl_asrc {
-+	struct snd_dmaengine_dai_dma_data dma_params_rx;
-+	struct snd_dmaengine_dai_dma_data dma_params_tx;
-+	struct platform_device *pdev;
-+	struct regmap *regmap;
-+	unsigned long paddr;
-+	struct clk *mem_clk;
-+	struct clk *ipg_clk;
-+	struct clk *asrck_clk[ASRC_CLK_MAX_NUM];
-+	spinlock_t lock;
-+
-+	struct fsl_asrc_pair *pair[ASRC_PAIR_MAX_NUM];
-+	unsigned int channel_bits;
-+	unsigned int channel_avail;
-+
-+	int asrc_rate;
-+	int asrc_width;
-+
-+	char name[32];
-+};
-+
-+extern struct snd_soc_platform_driver fsl_asrc_platform;
-+struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
-+#endif /* _FSL_ASRC_H */
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-new file mode 100644
-index 0000000..5b1e73e
---- /dev/null
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -0,0 +1,386 @@
-+/*
-+ * Freescale ASRC ALSA SoC Platform (DMA) driver
-+ *
-+ * Copyright (C) 2014 Freescale Semiconductor, Inc.
-+ *
-+ * Author: Nicolin Chen <nicoleotsuka@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2. This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <linux/dma-mapping.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/dma-imx.h>
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/pcm_params.h>
-+
-+#include "fsl_asrc.h"
-+
-+#define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
-+
-+static struct snd_pcm_hardware snd_imx_hardware = {
-+	.info = SNDRV_PCM_INFO_INTERLEAVED |
-+		SNDRV_PCM_INFO_BLOCK_TRANSFER |
-+		SNDRV_PCM_INFO_MMAP |
-+		SNDRV_PCM_INFO_MMAP_VALID |
-+		SNDRV_PCM_INFO_PAUSE |
-+		SNDRV_PCM_INFO_RESUME,
-+	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
-+	.period_bytes_min = 128,
-+	.period_bytes_max = 65535, /* Limited by SDMA engine */
-+	.periods_min = 2,
-+	.periods_max = 255,
-+	.fifo_size = 0,
-+};
-+
-+static bool filter(struct dma_chan *chan, void *param)
-+{
-+	if (!imx_dma_is_general_purpose(chan))
-+		return false;
-+
-+	chan->private = param;
-+
-+	return true;
-+}
-+
-+static void fsl_asrc_dma_complete(void *arg)
-+{
-+	struct snd_pcm_substream *substream = arg;
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+
-+	pair->pos += snd_pcm_lib_period_bytes(substream);
-+	if (pair->pos >= snd_pcm_lib_buffer_bytes(substream))
-+		pair->pos = 0;
-+
-+	snd_pcm_period_elapsed(substream);
-+}
-+
-+static int fsl_asrc_dma_prepare_and_submit(struct snd_pcm_substream *substream)
-+{
-+	u8 dir = substream->stream == SNDRV_PCM_STREAM_PLAYBACK ? OUT : IN;
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+	struct device *dev = rtd->platform->dev;
-+	unsigned long flags = DMA_CTRL_ACK;
-+
-+	/* Prepare and submit Front-End DMA channel */
-+	if (!substream->runtime->no_period_wakeup)
-+		flags |= DMA_PREP_INTERRUPT;
-+
-+	pair->pos = 0;
-+	pair->desc[!dir] = dmaengine_prep_dma_cyclic(
-+			pair->dma_chan[!dir], runtime->dma_addr,
-+			snd_pcm_lib_buffer_bytes(substream),
-+			snd_pcm_lib_period_bytes(substream),
-+			dir == OUT ? DMA_TO_DEVICE : DMA_FROM_DEVICE, flags);
-+	if (!pair->desc[!dir]) {
-+		dev_err(dev, "failed to prepare slave DMA for Front-End\n");
-+		return -ENOMEM;
-+	}
-+
-+	pair->desc[!dir]->callback = fsl_asrc_dma_complete;
-+	pair->desc[!dir]->callback_param = substream;
-+
-+	dmaengine_submit(pair->desc[!dir]);
-+
-+	/* Prepare and submit Back-End DMA channel */
-+	pair->desc[dir] = dmaengine_prep_dma_cyclic(
-+			pair->dma_chan[dir], 0xffff, 64, 64, DMA_DEV_TO_DEV, 0);
-+	if (!pair->desc[dir]) {
-+		dev_err(dev, "failed to prepare slave DMA for Back-End\n");
-+		return -ENOMEM;
-+	}
-+
-+	dmaengine_submit(pair->desc[dir]);
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dma_trigger(struct snd_pcm_substream *substream, int cmd)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+	int ret;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		ret = fsl_asrc_dma_prepare_and_submit(substream);
-+		if (ret)
-+			return ret;
-+		dma_async_issue_pending(pair->dma_chan[IN]);
-+		dma_async_issue_pending(pair->dma_chan[OUT]);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		dmaengine_terminate_all(pair->dma_chan[OUT]);
-+		dmaengine_terminate_all(pair->dma_chan[IN]);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dma_hw_params(struct snd_pcm_substream *substream,
-+				  struct snd_pcm_hw_params *params)
-+{
-+	enum dma_slave_buswidth buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	struct snd_dmaengine_dai_dma_data *dma_params_fe = NULL;
-+	struct snd_dmaengine_dai_dma_data *dma_params_be = NULL;
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+	struct dma_slave_config config_fe, config_be;
-+	enum asrc_pair_index index = pair->index;
-+	struct device *dev = rtd->platform->dev;
-+	int stream = substream->stream;
-+	struct imx_dma_data *tmp_data;
-+	struct snd_soc_dpcm *dpcm;
-+	struct dma_chan *tmp_chan;
-+	struct device *dev_be;
-+	u8 dir = tx ? OUT : IN;
-+	dma_cap_mask_t mask;
-+	int ret;
-+
-+	/* Fetch the Back-End dma_data from DPCM */
-+	list_for_each_entry(dpcm, &rtd->dpcm[stream].be_clients, list_be) {
-+		struct snd_soc_pcm_runtime *be = dpcm->be;
-+		struct snd_pcm_substream *substream_be;
-+		struct snd_soc_dai *dai = be->cpu_dai;
-+
-+		if (dpcm->fe != rtd)
-+			continue;
-+
-+		substream_be = snd_soc_dpcm_get_substream(be, stream);
-+		dma_params_be = snd_soc_dai_get_dma_data(dai, substream_be);
-+		dev_be = dai->dev;
-+		break;
-+	}
-+
-+	if (!dma_params_be) {
-+		dev_err(dev, "failed to get the substream of Back-End\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Override dma_data of the Front-End and config its dmaengine */
-+	dma_params_fe = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
-+	dma_params_fe->addr = asrc_priv->paddr + REG_ASRDx(!dir, index);
-+	dma_params_fe->maxburst = dma_params_be->maxburst;
-+
-+	pair->dma_chan[!dir] = fsl_asrc_get_dma_channel(pair, !dir);
-+	if (!pair->dma_chan[!dir]) {
-+		dev_err(dev, "failed to request DMA channel\n");
-+		return -EINVAL;
-+	}
-+
-+	memset(&config_fe, 0, sizeof(config_fe));
-+	ret = snd_dmaengine_pcm_prepare_slave_config(substream, params, &config_fe);
-+	if (ret) {
-+		dev_err(dev, "failed to prepare DMA config for Front-End\n");
-+		return ret;
-+	}
-+
-+	ret = dmaengine_slave_config(pair->dma_chan[!dir], &config_fe);
-+	if (ret) {
-+		dev_err(dev, "failed to config DMA channel for Front-End\n");
-+		return ret;
-+	}
-+
-+	/* Request and config DMA channel for Back-End */
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+	dma_cap_set(DMA_CYCLIC, mask);
-+
-+	/* Get DMA request of Back-End */
-+	tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
-+	tmp_data = tmp_chan->private;
-+	pair->dma_data.dma_request = tmp_data->dma_request;
-+	dma_release_channel(tmp_chan);
-+
-+	/* Get DMA request of Front-End */
-+	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-+	tmp_data = tmp_chan->private;
-+	pair->dma_data.dma_request2 = tmp_data->dma_request;
-+	pair->dma_data.peripheral_type = tmp_data->peripheral_type;
-+	pair->dma_data.priority = tmp_data->priority;
-+	dma_release_channel(tmp_chan);
-+
-+	pair->dma_chan[dir] = dma_request_channel(mask, filter, &pair->dma_data);
-+	if (!pair->dma_chan[dir]) {
-+		dev_err(dev, "failed to request DMA channel for Back-End\n");
-+		return -EINVAL;
-+	}
-+
-+	if (asrc_priv->asrc_width == 16)
-+		buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+	else
-+		buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+
-+	config_be.direction = DMA_DEV_TO_DEV;
-+	config_be.src_addr_width = buswidth;
-+	config_be.src_maxburst = dma_params_be->maxburst;
-+	config_be.dst_addr_width = buswidth;
-+	config_be.dst_maxburst = dma_params_be->maxburst;
-+
-+	if (tx) {
-+		config_be.src_addr = asrc_priv->paddr + REG_ASRDO(index);
-+		config_be.dst_addr = dma_params_be->addr;
-+	} else {
-+		config_be.dst_addr = asrc_priv->paddr + REG_ASRDI(index);
-+		config_be.src_addr = dma_params_be->addr;
-+	}
-+
-+	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
-+	if (ret) {
-+		dev_err(dev, "failed to config DMA channel for Back-End\n");
-+		return ret;
-+	}
-+
-+	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+
-+	snd_pcm_set_runtime_buffer(substream, NULL);
-+
-+	if (pair->dma_chan[IN])
-+		dma_release_channel(pair->dma_chan[IN]);
-+
-+	if (pair->dma_chan[OUT])
-+		dma_release_channel(pair->dma_chan[OUT]);
-+
-+	pair->dma_chan[IN] = NULL;
-+	pair->dma_chan[OUT] = NULL;
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct device *dev = rtd->platform->dev;
-+	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
-+	struct fsl_asrc_pair *pair;
-+
-+	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
-+	if (!pair) {
-+		dev_err(dev, "failed to allocate pair\n");
-+		return -ENOMEM;
-+	}
-+
-+	pair->asrc_priv = asrc_priv;
-+
-+	runtime->private_data = pair;
-+
-+	snd_pcm_hw_constraint_integer(substream->runtime,
-+				      SNDRV_PCM_HW_PARAM_PERIODS);
-+	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
-+
-+	return 0;
-+}
-+
-+static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-+
-+	if (pair && asrc_priv->pair[pair->index] == pair)
-+		asrc_priv->pair[pair->index] = NULL;
-+
-+	kfree(pair);
-+
-+	return 0;
-+}
-+
-+static snd_pcm_uframes_t fsl_asrc_dma_pcm_pointer(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct fsl_asrc_pair *pair = runtime->private_data;
-+
-+	return bytes_to_frames(substream->runtime, pair->pos);
-+}
-+
-+static struct snd_pcm_ops fsl_asrc_dma_pcm_ops = {
-+	.ioctl		= snd_pcm_lib_ioctl,
-+	.hw_params	= fsl_asrc_dma_hw_params,
-+	.hw_free	= fsl_asrc_dma_hw_free,
-+	.trigger	= fsl_asrc_dma_trigger,
-+	.open		= fsl_asrc_dma_startup,
-+	.close		= fsl_asrc_dma_shutdown,
-+	.pointer	= fsl_asrc_dma_pcm_pointer,
-+};
-+
-+static int fsl_asrc_dma_pcm_new(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_card *card = rtd->card->snd_card;
-+	struct snd_pcm_substream *substream;
-+	struct snd_pcm *pcm = rtd->pcm;
-+	int ret, i;
-+
-+	ret = dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_err(card->dev, "failed to set DMA mask\n");
-+		return ret;
-+	}
-+
-+	for (i = SNDRV_PCM_STREAM_PLAYBACK; i <= SNDRV_PCM_STREAM_LAST; i++) {
-+		substream = pcm->streams[i].substream;
-+		if (!substream)
-+			continue;
-+
-+		ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV, pcm->card->dev,
-+				FSL_ASRC_DMABUF_SIZE, &substream->dma_buffer);
-+		if (ret) {
-+			dev_err(card->dev, "failed to allocate DMA buffer\n");
-+			goto err;
-+		}
-+	}
-+
-+	return 0;
-+
-+err:
-+	if (--i == 0 && pcm->streams[i].substream)
-+		snd_dma_free_pages(&pcm->streams[i].substream->dma_buffer);
-+
-+	return ret;
-+}
-+
-+static void fsl_asrc_dma_pcm_free(struct snd_pcm *pcm)
-+{
-+	struct snd_pcm_substream *substream;
-+	int i;
-+
-+	for (i = SNDRV_PCM_STREAM_PLAYBACK; i <= SNDRV_PCM_STREAM_LAST; i++) {
-+		substream = pcm->streams[i].substream;
-+		if (!substream)
-+			continue;
-+
-+		snd_dma_free_pages(&substream->dma_buffer);
-+		substream->dma_buffer.area = NULL;
-+		substream->dma_buffer.addr = 0;
-+	}
-+}
-+
-+struct snd_soc_platform_driver fsl_asrc_platform = {
-+	.ops		= &fsl_asrc_dma_pcm_ops,
-+	.pcm_new	= fsl_asrc_dma_pcm_new,
-+	.pcm_free	= fsl_asrc_dma_pcm_free,
-+};
-+EXPORT_SYMBOL_GPL(fsl_asrc_platform);
+
+> +
+> +static dma_cookie_t at_xdmac_tx_submit(struct dma_async_tx_descriptor *tx)
+> +{
+> +	struct at_xdmac_desc	*desc = txd_to_at_desc(tx);
+> +	struct at_xdmac_chan	*atchan = to_at_xdmac_chan(tx->chan);
+> +	dma_cookie_t		cookie;
+> +	unsigned long		flags;
+> +
+> +	spin_lock_irqsave(&atchan->lock, flags);
+> +	cookie = dma_cookie_assign(tx);
+> +
+> +	dev_vdbg(chan2dev(tx->chan), "%s: atchan 0x%p, add desc 0x%p to xfers_list\n",
+> +		 __func__, atchan, desc);
+> +	list_add_tail(&desc->xfer_node, &atchan->xfers_list);
+> +	if (list_is_singular(&atchan->xfers_list))
+> +		at_xdmac_start_xfer(atchan, desc);
+so you dont start if list has more than 1 descriptors, why?
+
+> +
+> +	spin_unlock_irqrestore(&atchan->lock, flags);
+> +	return cookie;
+> +}
+> +
+> +static struct at_xdmac_desc *at_xdmac_alloc_desc(struct dma_chan *chan,
+> +						 gfp_t gfp_flags)
+why do we need last argument?
+
+> +{
+> +	struct at_xdmac_desc	*desc;
+> +	struct at_xdmac		*atxdmac = to_at_xdmac(chan->device);
+> +	dma_addr_t		phys;
+> +
+> +	desc = dma_pool_alloc(atxdmac->at_xdmac_desc_pool, gfp_flags, &phys);
+> +	if (desc) {
+> +		memset(desc, 0, sizeof(*desc));
+> +		INIT_LIST_HEAD(&desc->descs_list);
+> +		dma_async_tx_descriptor_init(&desc->tx_dma_desc, chan);
+> +		desc->tx_dma_desc.tx_submit = at_xdmac_tx_submit;
+> +		desc->tx_dma_desc.phys = phys;
+> +	}
+> +
+> +	return desc;
+> +}
+> +
+> +/* Call must be protected by lock. */
+> +static struct at_xdmac_desc *at_xdmac_get_desc(struct at_xdmac_chan *atchan)
+> +{
+> +	struct at_xdmac_desc *desc;
+> +
+> +	if (list_empty(&atchan->free_descs_list)) {
+> +		desc = at_xdmac_alloc_desc(&atchan->chan, GFP_ATOMIC);
+GFP_NOWAIT pls
+
+> +static struct dma_async_tx_descriptor *
+> +at_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+> +			 size_t len, unsigned long flags)
+> +{
+> +	struct at_xdmac_chan 	*atchan = to_at_xdmac_chan(chan);
+> +	struct at_xdmac_desc	*first = NULL, *prev = NULL;
+> +	size_t			remaining_size = len, xfer_size = 0, ublen;
+> +	dma_addr_t		src_addr = src, dst_addr = dest;
+> +	u32			dwidth;
+> +	/*
+> +	 * WARNING: The channel configuration is set here since there is no
+> +	 * dmaengine_slave_config call in this case. Moreover we don't know the
+> +	 * direction, it involves we can't dynamically set the source and dest
+> +	 * interface so we have to use the same one. Only interface 0 allows EBI
+> +	 * access. Hopefully we can access DDR through both ports (at least on
+> +	 * SAMA5D4x), so we can use the same interface for source and dest,
+> +	 * that solves the fact we don't know the direction.
+and why do you need slave config for memcpy?
+
+> +static enum dma_status
+> +at_xdmac_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+> +		struct dma_tx_state *txstate)
+> +{
+> +	struct at_xdmac_chan 	*atchan = to_at_xdmac_chan(chan);
+> +	struct at_xdmac		*atxdmac = to_at_xdmac(atchan->chan.device);
+> +	struct at_xdmac_desc	*desc, *_desc;
+> +	unsigned long		flags;
+> +	enum dma_status		ret;
+> +	int			residue;
+> +	u32			cur_nda;
+> +
+> +	ret = dma_cookie_status(chan, cookie, txstate);
+> +	if (ret == DMA_COMPLETE)
+> +		return ret;
+> +
+> +	spin_lock_irqsave(&atchan->lock, flags);
+> +
+> +	desc = list_first_entry(&atchan->xfers_list, struct at_xdmac_desc, xfer_node);
+> +
+> +	if (!desc->active_xfer)
+> +		dev_err(chan2dev(chan),
+> +			"something goes wrong, there is no active transfer\n");
+We can query resiude even when tx_submit hasnt been invoked. You need to
+return the full length in that case.
+> +
+> +	residue = desc->xfer_size;
+
+Also do check if txsate is NULL, in case just bail out here.
+
+> +
+> +	/* Flush FIFO. */
+> +	at_xdmac_write(atxdmac, AT_XDMAC_GSWF, atchan->mask);
+> +	while (!(at_xdmac_chan_read(atchan, AT_XDMAC_CIS) & AT_XDMAC_CIS_FIS));
+> +		cpu_relax();
+> +
+> +	cur_nda = at_xdmac_chan_read(atchan, AT_XDMAC_CNDA) & 0xfffffffc;
+> +	/*
+> +	 * Remove size of all microblocks already transferred and the current
+> +	 * one. Then add the remaining size to transfer of the current
+> +	 * microblock.
+> +	 */
+> +	list_for_each_entry_safe(desc, _desc, &desc->descs_list, desc_node) {
+> +		residue -= (desc->lld.mbr_ubc & 0xffffff) << atchan->dwidth;
+> +		if ((desc->lld.mbr_nda & 0xfffffffc) == cur_nda)
+> +			break;
+> +	}
+> +	residue += at_xdmac_chan_read(atchan, AT_XDMAC_CUBC) << atchan->dwidth;
+> +
+> +	spin_unlock_irqrestore(&atchan->lock, flags);
+> +
+> +	dma_set_residue(txstate, residue);
+> +
+> +	dev_dbg(chan2dev(chan),
+> +		 "%s: desc=0x%p, tx_dma_desc.phys=0x%08x, tx_status=%d, cookie=%d, residue=%d\n",
+> +		 __func__, desc, desc->tx_dma_desc.phys, ret, cookie, residue);
+> +
+> +	return ret;
+> +}
+> +
+> +static void at_xdmac_terminate_xfer(struct at_xdmac_chan *atchan,
+> +				    struct at_xdmac_desc *desc)
+> +{
+> +	dev_dbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+> +
+> +	/*
+> +	 * It's necessary to remove the transfer before calling the callback
+> +	 * because some devices can call dma_engine_terminate_all causing to do
+> +	 * dma_cookie_complete two times on the same cookie.
+why would terminate call dma_cookie_complete?
+
+> +	 */
+> +	list_del(&desc->xfer_node);
+> +	list_splice_init(&desc->descs_list, &atchan->free_descs_list);
+shouldnt you move all the desc in active list in one shot ?
+
+> +static void at_xdmac_tasklet(unsigned long data)
+> +{
+> +	struct at_xdmac_chan	*atchan = (struct at_xdmac_chan *)data;
+> +	struct at_xdmac_desc	*desc;
+> +	u32			error_mask;
+> +
+> +	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
+> +		 __func__, atchan->status);
+> +
+> +	error_mask = AT_XDMAC_CIS_RBEIS
+> +		     | AT_XDMAC_CIS_WBEIS
+> +		     | AT_XDMAC_CIS_ROIS;
+> +
+> +	if (at_xdmac_chan_is_cyclic(atchan)) {
+> +		at_xdmac_handle_cyclic(atchan);
+> +	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
+> +		   || (atchan->status & error_mask)) {
+> +		struct dma_async_tx_descriptor  *txd;
+> +
+> +		if (atchan->status & AT_XDMAC_CIS_RBEIS)
+> +			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
+> +		else if (atchan->status & AT_XDMAC_CIS_WBEIS)
+> +			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
+> +		else if (atchan->status & AT_XDMAC_CIS_ROIS)
+> +			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+> +
+> +		desc = list_first_entry(&atchan->xfers_list,
+> +					struct at_xdmac_desc,
+> +					xfer_node);
+> +		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+> +		BUG_ON(!desc->active_xfer);
+> +
+> +		txd = &desc->tx_dma_desc;
+> +
+> +		at_xdmac_terminate_xfer(atchan, desc);
+why terminate here? This looks wrong
+
+> +static int at_xdmac_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+> +			    unsigned long arg)
+> +{
+> +	struct at_xdmac_desc	*desc, *_desc;
+> +	struct at_xdmac_chan	*atchan = to_at_xdmac_chan(chan);
+> +	struct at_xdmac		*atxdmac = to_at_xdmac(atchan->chan.device);
+> +	unsigned long		flags;
+> +	int			ret = 0;
+> +
+> +	dev_dbg(chan2dev(chan), "%s: cmd=%d\n", __func__, cmd);
+> +
+> +	spin_lock_irqsave(&atchan->lock, flags);
+> +
+> +	switch (cmd) {
+> +	case DMA_PAUSE:
+> +		at_xdmac_write(atxdmac, AT_XDMAC_GRWS, atchan->mask);
+> +		set_bit(AT_XDMAC_CHAN_IS_PAUSED, &atchan->status);
+> +		break;
+empty line here pls
+
+> +	case DMA_RESUME:
+> +		if (!at_xdmac_chan_is_paused(atchan))
+> +			break;
+> +
+> +		at_xdmac_write(atxdmac, AT_XDMAC_GRWR, atchan->mask);
+> +		clear_bit(AT_XDMAC_CHAN_IS_PAUSED, &atchan->status);
+> +		break;
+> +	case DMA_TERMINATE_ALL:
+> +		at_xdmac_write(atxdmac, AT_XDMAC_GIE, atchan->mask);
+> +		at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
+> +		while (at_xdmac_read(atxdmac, AT_XDMAC_GS) & atchan->mask)
+> +			cpu_relax();
+> +
+> +		/* Cancel all pending transfers. */
+> +		list_for_each_entry_safe(desc, _desc, &atchan->xfers_list, xfer_node)
+> +			at_xdmac_terminate_xfer(atchan, desc);
+> +
+> +		clear_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status);
+> +		break;
+> +	case DMA_SLAVE_CONFIG:
+> +		ret = at_xdmac_set_slave_config(chan,
+> +				(struct dma_slave_config *)arg);
+> +		break;
+> +	default:
+> +		dev_err(chan2dev(chan),
+> +			"unmanaged or unknown dma control cmd: %d\n", cmd);
+> +		ret = -ENXIO;
+> +	}
+> +
+> +	spin_unlock_irqrestore(&atchan->lock, flags);
+> +
+> +	return ret;
+> +}
+
+> +static int atmel_xdmac_resume_noirq(struct device *dev)
+> +{
+> +	struct platform_device	*pdev = to_platform_device(dev);
+> +	struct at_xdmac		*atxdmac = platform_get_drvdata(pdev);
+> +	struct at_xdmac_chan	*atchan;
+> +	struct dma_chan		*chan, *_chan;
+> +	int			i;
+> +
+> +	clk_prepare_enable(atxdmac->clk);
+> +
+> +	/* Clear pending interrupts. */
+> +	for (i = 0; i < atxdmac->dma.chancnt; i++) {
+> +		atchan = &atxdmac->chan[i];
+> +		while (at_xdmac_chan_read(atchan, AT_XDMAC_CIS))
+> +			cpu_relax();
+> +	}
+> +
+> +	at_xdmac_write(atxdmac, AT_XDMAC_GIE, atxdmac->save_gim);
+> +	at_xdmac_write(atxdmac, AT_XDMAC_GE, atxdmac->save_gs);
+> +	list_for_each_entry_safe(chan, _chan, &atxdmac->dma.channels, device_node) {
+> +		atchan = to_at_xdmac_chan(chan);
+> +		at_xdmac_chan_write(atchan, AT_XDMAC_CC, atchan->cfg);
+> +		if (at_xdmac_chan_is_cyclic(atchan)) {
+> +			at_xdmac_chan_write(atchan, AT_XDMAC_CNDA, atchan->save_cnda);
+> +			at_xdmac_chan_write(atchan, AT_XDMAC_CNDC, atchan->save_cndc);
+> +			at_xdmac_chan_write(atchan, AT_XDMAC_CIE, atchan->save_cim);
+> +			at_xdmac_write(atxdmac, AT_XDMAC_GE, atchan->mask);
+> +		}
+> +	}
+> +	return 0;
+> +}
+why noirq variants?
+
+> +
+> +static int at_xdmac_probe(struct platform_device *pdev)
+> +{
+> +	struct resource	*res;
+> +	struct at_xdmac	*atxdmac;
+> +	int		irq, size, nr_channels, i, ret;
+> +	void __iomem	*base;
+> +	u32		reg;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	/*
+> +	 * Read number of xdmac channels, read helper function can't be used
+> +	 * since atxdmac is not yet allocated and we need to know the number
+> +	 * of channels to do the allocation.
+> +	 */
+> +	reg = readl_relaxed(base + AT_XDMAC_GTYPE);
+> +	nr_channels = AT_XDMAC_NB_CH(reg);
+> +	if (nr_channels > AT_XDMAC_MAX_CHAN) {
+> +		dev_err(&pdev->dev, "invalid number of channels (%u)\n",
+> +			nr_channels);
+> +		return -EINVAL;
+> +	}
+> +
+> +	size = sizeof(*atxdmac);
+> +	size += nr_channels * sizeof(struct at_xdmac_chan);
+> +	atxdmac = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
+devm_kmalloc_array/devm_kcalloc pls
+
+> +	if (!atxdmac) {
+> +		dev_err(&pdev->dev, "can't allocate at_xdmac structure\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	atxdmac->regs = base;
+> +	atxdmac->irq = irq;
+> +
+> +	ret = devm_request_irq(&pdev->dev, atxdmac->irq, at_xdmac_interrupt, 0,
+> +			       "at_xdmac", atxdmac);
+and this can invoke your irq handler and you may not be ready. Second this
+cause races with tasklet, so usualy recommednation is to use regular
+request_irq()
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "can't request irq\n");
+> +		return ret;
+> +	}
+> +
+> +	atxdmac->clk = devm_clk_get(&pdev->dev, "dma_clk");
+> +	if (IS_ERR(atxdmac->clk)) {
+> +		dev_err(&pdev->dev, "can't get dma_clk\n");
+> +		return PTR_ERR(atxdmac->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(atxdmac->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "can't prepare or enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	atxdmac->at_xdmac_desc_pool =
+> +		dmam_pool_create(dev_name(&pdev->dev), &pdev->dev,
+> +				sizeof(struct at_xdmac_desc), 4, 0);
+> +	if (!atxdmac->at_xdmac_desc_pool) {
+> +		dev_err(&pdev->dev, "no memory for descriptors dma pool\n");
+> +		ret = -ENOMEM;
+> +		goto err_clk_disable;
+> +	}
+> +
+> +	dma_cap_set(DMA_CYCLIC, atxdmac->dma.cap_mask);
+> +	dma_cap_set(DMA_MEMCPY, atxdmac->dma.cap_mask);
+> +	dma_cap_set(DMA_SLAVE, atxdmac->dma.cap_mask);
+> +	atxdmac->dma.dev				= &pdev->dev;
+> +	atxdmac->dma.device_alloc_chan_resources	= at_xdmac_alloc_chan_resources;
+> +	atxdmac->dma.device_free_chan_resources		= at_xdmac_free_chan_resources;
+> +	atxdmac->dma.device_tx_status			= at_xdmac_tx_status;
+> +	atxdmac->dma.device_issue_pending		= at_xdmac_issue_pending;
+> +	atxdmac->dma.device_prep_dma_cyclic		= at_xdmac_prep_dma_cyclic;
+> +	atxdmac->dma.device_prep_dma_memcpy		= at_xdmac_prep_dma_memcpy;
+> +	atxdmac->dma.device_prep_slave_sg		= at_xdmac_prep_slave_sg;
+> +	atxdmac->dma.device_control			= at_xdmac_control;
+> +	atxdmac->dma.chancnt				= nr_channels;
+no caps, pls do implement that as you have cyclic dma too
+> +
+> +	/* Disable all chans and interrupts. */
+> +	at_xdmac_off(atxdmac);
+> +
+> +	/* Init channels. */
+> +	INIT_LIST_HEAD(&atxdmac->dma.channels);
+> +	for (i = 0; i < nr_channels; i++) {
+> +		struct at_xdmac_chan *atchan = &atxdmac->chan[i];
+> +
+> +		atchan->chan.device = &atxdmac->dma;
+> +		list_add_tail(&atchan->chan.device_node,
+> +			      &atxdmac->dma.channels);
+> +
+> +		atchan->ch_regs = at_xdmac_chan_reg_base(atxdmac, i);
+> +		atchan->mask = 1 << i;
+> +
+> +		spin_lock_init(&atchan->lock);
+> +		INIT_LIST_HEAD(&atchan->xfers_list);
+> +		INIT_LIST_HEAD(&atchan->free_descs_list);
+> +		tasklet_init(&atchan->tasklet, at_xdmac_tasklet,
+> +			     (unsigned long)atchan);
+> +
+> +		/* Clear pending interrupts. */
+> +		while (at_xdmac_chan_read(atchan, AT_XDMAC_CIS))
+> +			cpu_relax();
+> +	}
+> +	platform_set_drvdata(pdev, atxdmac);
+> +
+> +	ret = dma_async_device_register(&atxdmac->dma);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "fail to register DMA engine device\n");
+> +		goto err_clk_disable;
+> +	}
+> +
+> +	ret = of_dma_controller_register(pdev->dev.of_node,
+> +					 at_xdmac_xlate, atxdmac);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not register of dma controller\n");
+> +		goto err_dma_unregister;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "%d channels, mapped at 0x%p\n",
+> +		 nr_channels, atxdmac->regs);
+> +
+> +	return 0;
+> +
+> +err_dma_unregister:
+> +	dma_async_device_unregister(&atxdmac->dma);
+> +err_clk_disable:
+> +	clk_disable_unprepare(atxdmac->clk);
+> +	return ret;
+> +}
+> +
+> +static int at_xdmac_remove(struct platform_device *pdev)
+> +{
+> +	struct at_xdmac	*atxdmac = (struct at_xdmac*)platform_get_drvdata(pdev);
+> +	int		i;
+> +
+> +	at_xdmac_off(atxdmac);
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +	dma_async_device_unregister(&atxdmac->dma);
+> +	clk_disable_unprepare(atxdmac->clk);
+> +
+> +	synchronize_irq(atxdmac->irq);
+> +
+> +	for (i = 0; i < atxdmac->dma.chancnt; i++) {
+> +		struct at_xdmac_chan *atchan = &atxdmac->chan[i];
+> +
+> +		tasklet_kill(&atchan->tasklet);
+> +		at_xdmac_free_chan_resources(&atchan->chan);
+> +	}
+and you can still get irq!
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops atmel_xdmac_dev_pm_ops = {
+> +	.prepare	= atmel_xdmac_prepare,
+> +	.suspend_noirq	= atmel_xdmac_suspend_noirq,
+> +	.resume_noirq	= atmel_xdmac_resume_noirq,
+> +};
+no ifdef CONFIG_PM?
+You might want to make them late_suspend and early_resume to allow
+clients suspending first
+
+Thanks
 -- 
-1.8.4
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
