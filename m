@@ -1,85 +1,113 @@
-From: Peter Chen <Peter.Chen@freescale.com>
-Subject: RE: [PATCH v3 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Fri, 25 Jul 2014 08:22:40 +0000
-Message-ID: <055ba866a1ac4d9385360bf51ab73f80@BN1PR0301MB0772.namprd03.prod.outlook.com>
-References: <1405499166-6726-1-git-send-email-antoine.tenart@free-electrons.com>
- <1405499166-6726-8-git-send-email-antoine.tenart@free-electrons.com>
- <20140725021853.GA11052@shlinux1.ap.freescale.net>
- <20140725080738.GA9756@kwain>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2 06/11] ARM: dts: zynq: Add DMAC for Parallella
+Date: Fri, 25 Jul 2014 10:24:56 +0200
+Message-ID: <53D21458.3060403@suse.de>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-7-git-send-email-afaerber@suse.de> <bc390439-9a5b-43a1-a70c-a4c6517a6cb6@BN1AFFO11FD005.protection.gbl> <53D20F2A.5020209@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140725080738.GA9756@kwain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "balbi@ti.com" <balbi@ti.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "zmxu@marvell.com" <zmxu@marvell.com>, "jszhang@marvell.com" <jszhang@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="bNn3waVKE2oPMQrASwt2Ex7jJpIplHmh6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D20F2A.5020209-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=20
->=20
-> On Fri, Jul 25, 2014 at 10:18:54AM +0800, Peter Chen wrote:
-> > On Wed, Jul 16, 2014 at 10:26:01AM +0200, Antoine T=E9nart wrote:
-> > > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock =
-and
-> > > DMA mask, to support USB2 ChipIdea controllers that don't need
-> > > specific functions.
-> >
-> > You may need to indicate it is a generic usb2 glue layer driver at
-> > both subject and context.
->=20
-> "USB2 ChipIdea driver for ci13xxx" seemed quite generic to me.
->=20
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--bNn3waVKE2oPMQrASwt2Ex7jJpIplHmh6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-ok
+Am 25.07.2014 10:02, schrieb Michal Simek:
+> On 07/25/2014 01:28 AM, S=C3=B6ren Brinkmann wrote:
+>> On Fri, 2014-07-25 at 01:00AM +0200, Andreas F=C3=A4rber wrote:
+>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>> ---
+>>>  v2: New
+>>> =20
+>>>  arch/arm/boot/dts/zynq-7000.dtsi      | 17 +++++++++++++++++
+>>>  arch/arm/boot/dts/zynq-parallella.dts |  4 ++++
+>>>  2 files changed, 21 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zyn=
+q-7000.dtsi
+>>> index eed3df0..1a70277 100644
+>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>> @@ -223,6 +223,23 @@
+>>>  			};
+>>>  		};
+>>> =20
+>>> +		dmac_s: dmac@f8003000 {
+>>> +			compatible =3D "arm,pl330", "arm,primecell";
+>>> +			reg =3D <0xf8003000 0x1000>;
+>>> +			status =3D "disabled";
+>> I think for this IP we can omit the 'status' property since it is alwa=
+ys
+>> enabled. I don't see a reason to override it in each board DT.
+>=20
+> Done this change myself
 
-> > >
-> > > Needed for the Marvell Berlin SoCs USB controllers.
-> >
-> > You can say it is tested at Marvell Berlin SoCs USB controllers.
->=20
-> Ok, I'll explicitly say it.
->=20
-> > > +
-> > > +static int ci_hdrc_usb2_dt_probe(struct device *dev,
-> > > +				    struct ci_hdrc_platform_data *ci_pdata,
-> > > +				    struct ci_hdrc_usb2_priv *priv) {
-> > > +	u32 mask;
-> > > +	int ret;
-> > > +
-> > > +	priv->clk =3D devm_clk_get(dev, NULL);
-> > > +	if (!IS_ERR(priv->clk)) {
-> > > +		ret =3D clk_prepare_enable(priv->clk);
-> > > +		if (ret) {
-> > > +			dev_err(dev, "failed to enable the clock: %d\n", ret);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> >
-> > The clk API may be needed for both DT and non-DT cases.
->=20
-> Yes sure, I'll move this to the ci_hdrc_usb2_probe().
->=20
-=20
-> > > +
-> > > +	if (of_property_read_u32(dev->of_node, "dma-mask", &mask))
-> > > +		priv->dma_mask =3D mask;
-> > > +
-> > According to discussion, you may not need dma_mask in driver any mo=
-re,
-> > and use below API for both DT and non-DT case.
-> >
-> >         err =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(=
-32));
-> >         if (err)
-> >         	                handle error;
->=20
-> This would only be needed in non-dt cases, as the DMA mask is configu=
-red
-> in drivers/of/platform.c otherwise.
->=20
-=20
-Get it, thanks.
+Fine with me, but allow me to point out that the TRM documents the DMAC
+being mapped as DMAC S at the above address, and as DMAC NS at F800_4000
+(secure vs. non-secure, ch. 4.6, p. 116). Not sure how this would be
+handled driver-wise if not through alternative dt nodes?
 
-Peter
+>>> +			interrupt-parent =3D <&intc>;
+>>> +			interrupts =3D <0 13 4>,
+>>> +			             <0 14 4>, <0 15 4>,
+>>> +			             <0 16 4>, <0 17 4>,
+>>> +			             <0 40 4>, <0 41 4>,
+>>> +			             <0 42 4>, <0 43 4>;
+>>> +			#dma-cells =3D <1>;
+>>> +			#dma-channels =3D <8>;
+>>> +			#dma-requests =3D <4>;
+>>> +			clocks =3D <&clkc 27>;
+>>> +			clock-names =3D "apb_pclk";
+>>> +		};
+>>> +
+>>
+>> Acked-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>=20
+>=20
+> Applied to zynq/dt branch.
+> https://github.com/Xilinx/linux-xlnx/commits/zynq/dt
+
+Thanks,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=BC=
+rnberg
+
+
+--bNn3waVKE2oPMQrASwt2Ex7jJpIplHmh6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJT0hRbAAoJEPou0S0+fgE/MoYP/1OohCtpcJ04S1kEq6U5/fHO
++Ol+e6CgP93xZNF6g9OYXOflV2NyaDZXJS53EsV0lmzDaj9RsRJy4BQoivaDLoR/
+zA2idki/x6SHbSvUzEqjLdOS9wnzdX1DVhkLFh+Y1N35knowRra9yDnG7Ky5h7f9
+RAKHXPDgxpetWholtx+Gfas35fZU06fjwzsCK4zA/WUDfyAl674Wkle5+3JTHcD7
+Scw/JevImZCfU/QuF9y0UGdjNzu9yK0U4sfDulgDBLkz7887vL6Dfz8BC1a5fAwS
+ooyPqcP4ZvX2Cmf+2zEmXa/r1Vm6uHj93741tcvCdJUzVBZF8hlRs9+2iZwnjBDF
+jKS/nk02CJ72/g30O8FQZe4lG5grPRgHEvCaFnlq/O9vQQYrYGeO00bHed8lyZh1
+f5orljd/MSMSvll7LlDI1ehxAji24+t7UPndRpYlW3n+k6FGkIIUVBKwWPM2pl0y
+2tb+YTblbR2x0lpwgV9if8qmvG7G0o4G9tvusI7f4+W8JLLJIhidrHaEBV79MQsW
+BeSzKSfE/ePNTTpmt50vseayE68RJrM3ny1cHUxlMVfehFbsZgfU9+9ROd0tQTzc
+XGn/w+tI9NsF0nQ/gHpQQrgJ8oCPyJrjLchYQjyWS4o9PfMCF3L1sIOZAsvYir1E
+mOhLafH40aBzPmLpMC/6
+=REdR
+-----END PGP SIGNATURE-----
+
+--bNn3waVKE2oPMQrASwt2Ex7jJpIplHmh6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
