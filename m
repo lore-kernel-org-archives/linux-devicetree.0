@@ -1,52 +1,68 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v4 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU
- DAI and platform drivers
-Date: Fri, 25 Jul 2014 16:42:50 +0800
-Message-ID: <20140725084249.GB29564@MrMyself>
-References: <cover.1406271541.git.nicoleotsuka@gmail.com>
- <69b75ae4b0335cd3c9bedad67f57aaba13c0048c.1406271541.git.nicoleotsuka@gmail.com>
- <53D208A9.3040903@gmail.com> <20140725075755.GA29564@MrMyself>
- <53D2189E.4030108@gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
+Date: Fri, 25 Jul 2014 10:50:14 +0200
+Message-ID: <20140725085014.GE9532@piout.net>
+References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
+ <53D10C50.50305@aksignal.cz>
+ <20140724162645.4e19c26c@bbrezillon>
+ <53D12103.3020103@aksignal.cz>
+ <20140724175848.44f5da10@bbrezillon>
+ <53D1F5D0.1080006@aksignal.cz>
+ <20140725083053.GD9532@piout.net>
+ <20140725103645.7fbf5b63@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53D2189E.4030108@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, b42378@freescale.com, timur@tabi.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, linux-kernel@vger.kernel.org, rdunlap@infradead.org, b02247@freescale.com, lgirdwood@gmail.com, robh+dt@kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org, galak@codeaurora.org, grant.likely@linaro.org, tklauser@distanz.ch, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <20140725103645.7fbf5b63@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 25, 2014 at 02:13:10PM +0530, Varka Bhadram wrote:
-> On 07/25/2014 01:27 PM, Nicolin Chen wrote:
-> >>>+	if (IS_ERR(asrc_priv->regmap)) {
-> >>>+		dev_err(&pdev->dev, "failed to init regmap\n");
-> >>>+		return PTR_ERR(asrc_priv->regmap);
-> >>>+	}
-> >>>+
-> >>>+	irq = platform_get_irq(pdev, 0);
-> >>>+	if (irq < 0) {
-> >>>+		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
-> >>>+		return irq;
-> >>>+	}
-> >>>+
-> >>>+	ret = devm_request_irq(&pdev->dev, irq, fsl_asrc_isr, 0,
-> >>>+			       asrc_priv->name, asrc_priv);
-> >>same...
-> >Sorry I don't see any problem with this devm_request_irq()...
-> 
-> Ohhh... This is the problem with my email client... Sorry...
+On 25/07/2014 at 10:36:45 +0200, Boris Brezillon wrote :
+> Hi Alexandre,
+>=20
+> On Fri, 25 Jul 2014 10:30:54 +0200
+> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>=20
+> > Hi,
+> >=20
+> > On 25/07/2014 at 08:14:40 +0200, Ji=C5=99=C3=AD Prchal wrote :
+> > > I'm using custom board. My spi node:
+> > > 			spi0: spi@f0000000 {
+> >=20
+> > You should override the pinctrl here as you are using gpios for the=
+ cs.
+> > 				pinctrl-0 =3D <&pinctrl_spi0_custom>;
+>=20
+> I guess you meant:
+> 			pinctrl-0 <&pinctrl_spi0 &pinctrl_spi0_custom>;
+>=20
 
-No problem. I appreciate your carefulness :)
+Sure, you are right
 
-Thank you,
-Nicolin
+> I suggested the same thing, however I'm pretty sure this is not the
+> source of the problem. As I said, gpio_request already mux the
+> associated pin to GPIO function.
+>=20
+> Best Regards,
+>=20
+> Boris
+>=20
+>=20
+> --=20
+> Boris Brezillon, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
