@@ -1,85 +1,82 @@
-From: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
-Subject: Re: [[RFC PATCH]] gpio: gpio-mxc: make sure gpio is input when request
- IRQ
-Date: Fri, 25 Jul 2014 14:52:05 +0200
-Message-ID: <53D252F5.2060601@tqsc.de>
-References: <1405518664-31313-1-git-send-email-list-09_linux_arm@tqsc.de>	<20140722062803.GA21229@dragon>	<53CE107A.1000000@tqsc.de>	<20140722074257.GC21229@dragon>	<CACRpkdYxOv+k2Sazm83sA=LwKUv5yMzag44A=Ez8pNQHRO3V6A@mail.gmail.com>	<53D0C008.70305@tqsc.de> <CACRpkdarH_-2uW55C5bAUxM1ESgSb6tJAWc4UqEoWr8uc_kQRQ@mail.gmail.com>
+From: Srikanth Thokala <srikanth.thokala@xilinx.com>
+Subject: RE: [PATCH v2 07/11] Documentation: devicetree: Fix Xilinx VDMA
+ specification
+Date: Fri, 25 Jul 2014 12:51:41 +0000
+Message-ID: <32b0ee01-c15a-47eb-94c5-a60ca5016b85@BY2FFO11FD024.protection.gbl>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+ <1406242820-20140-8-git-send-email-afaerber@suse.de>
+ <53D20C19.5000306@monstr.eu> <53D21983.8060901@suse.de>
+ <53D225F2.4070504@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdarH_-2uW55C5bAUxM1ESgSb6tJAWc4UqEoWr8uc_kQRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53D225F2.4070504@xilinx.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, "monstr@monstr.eu" <monstr@monstr.eu>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andreas Olofsson <andreas@adapteva.com>, Vinod Koul <vinod.koul@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 25.07.2014 13:38, wrote Linus Walleij:
-> On Thu, Jul 24, 2014 at 10:12 AM, Markus Niebel
-> <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org> wrote:
->> Am 23.07.2014 18:14, wrote Linus Walleij:
-> 
->>> So always prepare the hardware and make it ready for action in respective
->>> callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
->>> been called first.
->>>
->>
->> So a gpio driver is responsible to read status of gpio lines and flag any gpio line
->> currently configured as out (base on the information read from hardware registers)
->> on driver probe time - correct?
-> 
-> I don't think anyone reads that information explicitly to set up
-> these flags.
-> 
-> Drivers just leave the pins in their power-on maiden state without
-> trying to figure out how they're set-up. But as you say, if you call
-> gpiod_get_direction() on them, the flag gets set up indeed.
-> 
-> So usually these flags are set by code, calling
-> gpiod_[get/set]_direction().
-> Then they do get flagged as outputs or inputs.
-> 
->> If yes is the driver allowed to call
->> gpiod_get_direction() to have the FLAG_IS_OUT set in the gpiolib layer?
-> 
-> I don't know if it'd be a good idea to loop over all gpios in a new
-> irqchip and fetch the direction just to get the flags right, so far
-> we haven't done that and I don't know what the usecase would be.
-> 
-
-I've came to a situation where it would have been helpful to know - bootloader
-configured a pin as output and linux tried to configure the pin as IRQ input.
-*YES I KNOW THIS IS NOT CORRECT* but it took some time to see, what happened.
-
-> If we need that we should do it in gpiolib for all drivers don't you
-> think?
-
-A pragmatic / lean solution would be to deny the IRQ configuration when
-seeing the pin configured as output in hardware and print out an error
-on the gpio driver level.
-
-> 
-> But then we need a rationale for doing it, other than it's nice :-)
-> It is already called on-the-fly by debugfs when a user needs that
-> info.
-
-See above, I think an error on a misconfigured system would be enough.
-Maybe the documentation for gpio drivers should have a hint for driver
-implementors.
-
-So first step would be to convert the driver to the irqchip helper and then
-add calls to gpiod_[un]lock_as_irq at the right places.
-
-Will try to do that after my holiday.
-
-> 
-> Yours,
-> Linus Walleij
-> 
-Yours,
-
-Markus Niebel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcmVhcywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNo
+YWwgU2ltZWsgW21haWx0bzptaWNoYWwuc2ltZWtAeGlsaW54LmNvbV0NCj4gU2VudDogRnJpZGF5
+LCBKdWx5IDI1LCAyMDE0IDM6MTAgUE0NCj4gVG86IEFuZHJlYXMgRsOkcmJlcjsgbW9uc3RyQG1v
+bnN0ci5ldTsgU3Jpa2FudGggVGhva2FsYQ0KPiBDYzogVmlub2QgS291bDsgTWljaGFsIFNpbWVr
+OyBBbmRyZWFzIE9sb2Zzc29uOyBNYXR0ZW8gVml0OyBTZWFuIFJpY2tlcmQ7DQo+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
+IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9s
+bDsgTWFyayBSdXRsYW5kOyBJYW4gQ2FtcGJlbGw7DQo+IEt1bWFyIEdhbGENCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2MiAwNy8xMV0gRG9jdW1lbnRhdGlvbjogZGV2aWNldHJlZTogRml4IFhpbGlu
+eCBWRE1BDQo+IHNwZWNpZmljYXRpb24NCj4NCj4gSGkgQW5kcmVhcywNCj4NCj4gT24gMDcvMjUv
+MjAxNCAxMDo0NiBBTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOg0KPiA+IEhpIE1pY2hhbCwNCj4g
+Pg0KPiA+IEFtIDI1LjA3LjIwMTQgMDk6NDksIHNjaHJpZWIgTWljaGFsIFNpbWVrOg0KPiA+PiBP
+biAwNy8yNS8yMDE0IDAxOjAwIEFNLCBBbmRyZWFzIEbDpHJiZXIgd3JvdGU6DQo+ID4+PiBUaGUg
+c3BlY2lmaWNhdGlvbiByZXF1aXJlcyB4bG54LGRhdGEtd2lkdGgsIGJ1dCBleGFtcGxlIGFuZCBk
+cml2ZXINCj4gPj4+IHVzZSB4bG54LGRhdGF3aWR0aC4gQ2hhbmdlIHRoZSBzcGVjaWZpY2F0aW9u
+IHRvIG1hdGNoIHRoZSBpbXBsZW1lbnRhdGlvbi4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5
+OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+DQo+ID4+PiAtLS0NCj4gPj4+ICB2
+MjogTmV3DQo+ID4+Pg0KPiA+Pj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+bWEveGlsaW54L3hpbGlueF92ZG1hLnR4dCB8IDIgKy0NCj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwg
+MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0DQo+
+ID4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlu
+eF92ZG1hLnR4dA0KPiA+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1h
+L3hpbGlueC94aWxpbnhfdmRtYS50eHQNCj4gPj4+IGluZGV4IDE0MDVlZDAuLmU0YzRkNDcgMTAw
+NjQ0DQo+ID4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hp
+bGlueC94aWxpbnhfdmRtYS50eHQNCj4gPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF92ZG1hLnR4dA0KPiA+Pj4gQEAgLTI1LDcgKzI1
+LDcgQEAgUmVxdWlyZWQgY2hpbGQgbm9kZSBwcm9wZXJ0aWVzOg0KPiA+Pj4gIC0gY29tcGF0aWJs
+ZTogSXQgc2hvdWxkIGJlIGVpdGhlciAieGxueCxheGktdmRtYS1tbTJzLWNoYW5uZWwiIG9yDQo+
+ID4+PiAgICJ4bG54LGF4aS12ZG1hLXMybW0tY2hhbm5lbCIuDQo+ID4+PiAgLSBpbnRlcnJ1cHRz
+OiBTaG91bGQgY29udGFpbiBwZXIgY2hhbm5lbCBWRE1BIGludGVycnVwdHMuDQo+ID4+PiAtLSB4
+bG54LGRhdGEtd2lkdGg6IFNob3VsZCBjb250YWluIHRoZSBzdHJlYW0gZGF0YSB3aWR0aCwgdGFr
+ZQ0KPiA+Pj4gdmFsdWVzDQo+ID4+PiArLSB4bG54LGRhdGF3aWR0aDogU2hvdWxkIGNvbnRhaW4g
+dGhlIHN0cmVhbSBkYXRhIHdpZHRoLCB0YWtlIHZhbHVlcw0KPiA+Pj4gICB7MzIsNjQuLi4xMDI0
+fS4NCj4gPg0KPiA+IEJUVyBJIGp1c3Qgbm90aWNlIHRoYXQgdGhpcyB2YWx1ZXMgc3BlY2lmaWNh
+dGlvbiBpcyBhbWJpZ3VvdXMgYXMgdG8NCj4gPiB3aGV0aGVyIDk2IGlzIGEgdmFsaWQgdmFsdWUg
+b3Igb25seSBwb3dlcnMgb2YgMiBsaWtlIDEyOC4gTWF5YmUgeW91DQo+ID4gd2FudCB0byBjbGFy
+aWZ5IHRoYXQgaW4gYSBmb2xsb3ctdXAgcGF0Y2g/DQo+DQo+IHJlYWxseSBhcHByZWNpYXRlIHlv
+dXIgaGVscCBmb3IgaW1wcm92aW5nIHRoaXMuDQo+IFNyaWthbnRoIFQ6IENhbiB5b3UgcGxlYXNl
+IGxvb2sgYXQgaXQ/DQoNCkl0IHNob3VsZCBiZSBvbmx5IHBvd2VyIG9mIDIuICBJIGNvdWxkIHNl
+bmQgYSBwYXRjaCwgYnV0IGl0IGlzIGRlc2lnbi1zcGVjaWZpYyBhbmQNCnRoZSBkZXNpZ24gd2ls
+bCBub3QgYWxsb3cgdG8gdGFrZSB0aGUgaW50ZXJtZWRpYXRlIHZhbHVlcyBhbmQgc28gdGhlIGRl
+dmljZS10cmVlDQpzY3JpcHQuICBTbywgSSBmZWVsIGl0IHNob3VsZCBiZSBmaW5lIHRvIGtlZXAg
+dGhpcyB3YXkuDQoNClRoYW5rcyBmb3IgdGhpcyBwYXRjaC4NCg0KU3Jpa2FudGgNCg0KPg0KPiBU
+aGFua3MsDQo+IE1pY2hhbA0KPg0KPg0KDQoNCg0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1l
+bnRzIGFyZSBpbnRlbmRlZCBmb3IgdGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1lZCByZWNpcGllbnQo
+cykgYW5kIGNvbnRhaW4ocykgY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIHRoYXQgbWF5IGJlIHBy
+b3ByaWV0YXJ5LCBwcml2aWxlZ2VkIG9yIGNvcHlyaWdodGVkIHVuZGVyIGFwcGxpY2FibGUgbGF3
+LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBkbyBub3QgcmVhZCwgY29w
+eSwgb3IgZm9yd2FyZCB0aGlzIGVtYWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFjaG1lbnRzLiBEZWxl
+dGUgdGhpcyBlbWFpbCBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgaW1tZWRpYXRlbHkuDQoN
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
