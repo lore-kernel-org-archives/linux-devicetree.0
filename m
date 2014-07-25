@@ -1,124 +1,111 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v3 2/2] ASoC: fsl_asrc: Add ASRC ASoC CPU DAI and
- platform drivers
-Date: Fri, 25 Jul 2014 14:09:23 +0800
-Message-ID: <20140725060920.GA29433@MrMyself>
-References: <cover.1406259578.git.nicoleotsuka@gmail.com>
- <f4ff79269a1680f9ce128e0e98fea926d3a41834.1406259578.git.nicoleotsuka@gmail.com>
- <53D1DC0B.1000905@gmail.com> <20140725055447.GC29136@MrMyself>
- <53D1F686.30600@gmail.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] ARM: zynq: DT: Add CAN node
+Date: Fri, 25 Jul 2014 08:47:05 +0200
+Message-ID: <53D1FD69.4020109@monstr.eu>
+References: <52d799e17cd3539713625c6f6a6666620f52d692.1406120732.git.michal.simek@xilinx.com> <20140723160702.GA14564@xsjandreislx> <2fe3a869-d17c-4521-a5c1-7c347ae34726@BN1BFFO11FD060.protection.gbl> <d973d7c8-30e7-458e-9d57-15da917cde04@BL2FFO11FD030.protection.gbl>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53D1F686.30600@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, timur@tabi.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, shawn.guo@linaro.org, b02247@freescale.com, b42378@freescale.com, tklauser@distanz.ch
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d973d7c8-30e7-458e-9d57-15da917cde04-xjCwUguQ55/6NczZJL2rHmYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 25, 2014 at 11:47:42AM +0530, Varka Bhadram wrote:
-> Hi Nicolin,
-> 
-> On 07/25/2014 11:24 AM, Nicolin Chen wrote:
-> >Hi Varka,
-> >
-> >    Regarding a point you suggested.
-> >
-> >On Fri, Jul 25, 2014 at 09:54:43AM +0530, Varka Bhadram wrote:
-> >>On 07/25/2014 09:33 AM, Nicolin Chen wrote:
-> >>(...)
-> >>
-> >>>+
-> >>>+static const struct platform_device_id fsl_asrc_devtype[] = {
-> >>>+	{
-> >>>+		.name = "imx35-asrc",
-> >>>+		.driver_data = IMX35_ASRC,
-> >>>+	}, {
-> >>>+		.name = "imx53-asrc",
-> >>>+		.driver_data = IMX53_ASRC,
-> >>>+	}, {
-> >>>+		/* sentinel */
-> >>>+	}
-> >>>+};
-> >>>+MODULE_DEVICE_TABLE(platform, fsl_asrc_devtype);
-> >>>+
-> >>>+static const struct of_device_id fsl_asrc_ids[] = {
-> >>>+	{
-> >>>+		.compatible = "fsl,imx35-asrc",
-> >>>+		.data = &fsl_asrc_devtype[IMX35_ASRC],
-> >>>+	}, {
-> >>>+		.compatible = "fsl,imx53-asrc",
-> >>>+		.data = &fsl_asrc_devtype[IMX53_ASRC],
-> >>>+	}, {
-> >>>+		/* sentinel */
-> >>>+	}
-> >>>+};
-> >>>+MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-> >>>+
-> >>move these ids after probe/remove... every driver follows same thing...
-> >Hmm.. fsl_asrc_ids is called in probe(), so it's probably not a good choice
-> >to put them after probe/remove. And actually not every driver does so.
-> >For example drivers/i2c/busses/i2c-s3c2410.c
-> >
-> >I think it should be okay to put here if it contains data.
-> 
-> You are using these ids in the probe .Tt should be above the probe() so
-> we can see of_match_device() directly...
-> and also one more thing that the interrupt handler also would be immediately
-> above the probe()
-> 
-> ex:
-> static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
-> {
-> ...
-> }
-> 
-> device ids..
-> 
-> your_probe()
-> {
-> ...
-> }
-> 
-> your_remove()
-> {
-> ...
-> }
-> 
-> Now every driver that is coming following this style...
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I see....
+On 07/24/2014 05:55 PM, S=C3=B6ren Brinkmann wrote:
+> On Thu, 2014-07-24 at 08:44AM +0200, Michal Simek wrote:
+>> On 07/23/2014 06:07 PM, S=C3=B6ren Brinkmann wrote:
+>>> On Wed, 2014-07-23 at 03:05PM +0200, Michal Simek wrote:
+>>>> Add node describing Zynq's CAN controller.
+>>>>
+>>>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>
+>>>>  arch/arm/boot/dts/zynq-7000.dtsi | 13 ++++++++++++-
+>>>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zy=
+nq-7000.dtsi
+>>>> index 366ca6434f54..2287d9b4ed1a 100644
+>>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> @@ -71,7 +71,18 @@
+>>>>  			interrupts =3D <0 7 4>;
+>>>>  			interrupt-parent =3D <&intc>;
+>>>>  			clocks =3D <&clkc 12>;
+>>>> -		};
+>>>> +		};
+>>>> +
+>>>> +		can0: can@e0008000 {
+>>>> +			compatible =3D "xlnx,zynq-can-1.0";
+>>>> +			clocks =3D <&clkc 19>, <&clkc 36>;
+>>>> +			clock-names =3D "can_clk", "pclk";
+>>>> +			reg =3D <0xe0008000 0x1000>;
+>>>> +			interrupts =3D <0 28 4>;
+>>>> +			interrupt-parent =3D <&intc>;
+>>>> +			tx-fifo-depth =3D <0x40>;
+>>>> +			rx-fifo-depth =3D <0x40>;
+>>>> +		};
+>>>
+>>> What about the second CAN core? You also probably want to add
+>>> 'status =3D "disabled"' in the dtsi.
+>>
+>> Second can core - yes.
+>>
+>> I can add status =3D "disabled" but then question is if make
+>> sense to change status for any zynq dts file. Or just
+>> keep enable both.
+>>
+>> In our repo is enabled can0 on zc702.
+>>
+>> What do you think?
+>=20
+> Well, it should be enabled on boards that have CAN pinned out. Does any=
 
-Will follow this style.
+> of our boards have that?
 
-Thank you!
-Nicolin
+I have checked and only can0 for zc702 should be enabled.
 
----
-> 
-> If your not using device ids in probe then it would be like
-> 
-> static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
-> {
-> ...
-> }
-> 
-> your_probe()
-> {
-> ...
-> }
-> 
-> your_remove()
-> {
-> ...
-> }
-> 
-> device ids..
-> 
-> Thanks...
-> 
-> -- 
-> Regards,
-> Varka Bhadram.
-> 
+Let me send v2.
+
+Thanks,
+Michal
+
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlPR/WkACgkQykllyylKDCGX/gCcCjJARrrn/xJCXlPGj13j+4Yi
+wTYAn1KUNeiNGW+Itpu8VOtdxNL/zsPI
+=AwwV
+-----END PGP SIGNATURE-----
+
+--WXnXmPW2X6Nq76pbWQfkukS3wHp8qVaF7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
