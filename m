@@ -1,77 +1,72 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Subject: Re: [PATCH] ARM: at91: at91sam9x5: sets NPCS0 (PA14) back to GPIO
-Date: Fri, 25 Jul 2014 10:54:23 +0200
-Message-ID: <53D21B3F.7060006@aksignal.cz>
-References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>	<53D10C50.50305@aksignal.cz>	<20140724162645.4e19c26c@bbrezillon>	<53D12103.3020103@aksignal.cz>	<20140724175848.44f5da10@bbrezillon>	<53D1F5D0.1080006@aksignal.cz>	<20140725095319.16a8465c@bbrezillon>	<53D214E1.4050105@aksignal.cz> <20140725104553.403921b1@bbrezillon>
-Reply-To: jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org
+Date: Fri, 25 Jul 2014 10:54:36 +0200
+Message-ID: <20140725085436.GF9532@piout.net>
+References: <1405074175-22444-1-git-send-email-voice.shen@atmel.com>
+ <53D10C50.50305@aksignal.cz>
+ <20140724162645.4e19c26c@bbrezillon>
+ <53D12103.3020103@aksignal.cz>
+ <20140724175848.44f5da10@bbrezillon>
+ <53D1F5D0.1080006@aksignal.cz>
+ <20140725083053.GD9532@piout.net>
+ <53D2174B.4020403@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140725104553.403921b1@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53D2174B.4020403@aksignal.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal@aksignal.cz>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, Bo Shen <voice.shen@atmel.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Here it is:
-cat /sys/kernel/debug/gpio
-GPIOs 0-31, platform/fffff400.gpio, fffff400.gpio:
-[in20] GPIOfffff400.gpio3: [gpio] set
-[spi0.3] GPIOfffff400.gpio14: [gpio] set
-[in19] GPIOfffff400.gpio21: [gpio] set
-[spi0.1] GPIOfffff400.gpio22: [gpio] set
-[spi0.0] GPIOfffff400.gpio23: [gpio] set
-[in18] GPIOfffff400.gpio28: [gpio] set
-[out20] GPIOfffff400.gpio29: [gpio] clear
-[out18] GPIOfffff400.gpio30: [gpio] clear
-[out19] GPIOfffff400.gpio31: [gpio] clear
+On 25/07/2014 at 10:37:31 +0200, Ji=C5=99=C3=AD Prchal wrote :
+>=20
+>=20
+> Dne 25.7.2014 v 10:30 Alexandre Belloni napsal(a):
+> >Hi,
+> >
+> >On 25/07/2014 at 08:14:40 +0200, Ji=C5=99=C3=AD Prchal wrote :
+> >>I'm using custom board. My spi node:
+> >>			spi0: spi@f0000000 {
+> >
+> >You should override the pinctrl here as you are using gpios for the =
+cs.
+> >				pinctrl-0 =3D <&pinctrl_spi0_custom>;
+> >
+> >>				status =3D "okay";
+> >>				cs-gpios =3D <&pioA 23 0
+> >>					    &pioA 22 0
+> >>					    &pioC 29 0
+> >>					    &pioA 14 0>;
+> >>
+> >
+> >		pinctrl@fffff400 {
+> >				spi0 {
+> >					 pinctrl_spi0_custom: spi0-custom {
+> >							 atmel,pins =3D
+> >									 <AT91_PIOA 23 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>,
+> >									 <AT91_PIOA 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>,
+> >									 <AT91_PIOC 29 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>,
+> >									 <AT91_PIOA 14 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+> >					 };
+> >				};
+> >		};
+> >
+> Of course, it's the way, but in all other drivers, for example LEDS,
+> it's not needed. And in other way, if I will not use PA14 at all,
+> the pin will goes down every spi transfer.
 
-GPIOs 32-50, platform/fffff600.gpio, fffff600.gpio:
-[blue] GPIOfffff600.gpio12: [gpio] set
-[gsm_on] GPIOfffff600.gpio13: [gpio] clear
-[yellow] GPIOfffff600.gpio14: [gpio] clear
-[gsm_rst] GPIOfffff600.gpio15: [gpio] clear
-[green] GPIOfffff600.gpio16: [gpio] clear
-[red] GPIOfffff600.gpio18: [gpio] clear
+You must not assumed that the pins are muxed to their default state
+which is gpio and you should set the pinctrl accordingly for each
+device.
 
-GPIOs 64-95, platform/fffff800.gpio, fffff800.gpio:
-[in17] GPIOfffff800.gpio16: [gpio] set
-[in13] GPIOfffff800.gpio18: [gpio] set
-[in14] GPIOfffff800.gpio20: [gpio] set
-[por] GPIOfffff800.gpio25: [gpio] clear
-[out16] GPIOfffff800.gpio26: [gpio] clear
-[out15] GPIOfffff800.gpio28: [gpio] clear
-[spi0.2] GPIOfffff800.gpio29: [gpio] set
-[out17] GPIOfffff800.gpio30: [gpio] clear
-
-GPIOs 96-117, platform/fffffa00.gpio, fffffa00.gpio:
-[nand_enable] GPIOfffffa00.gpio4: [gpio] set
-[nand_rdy] GPIOfffffa00.gpio5: [gpio] set
-[atmel_usba_udc] GPIOfffffa00.gpio21: [gpio] clear
+If you don't use PA14 at all, then you don't really care about its
+state...
 
 
-Dne 25.7.2014 v 10:45 Boris BREZILLON napsal(a):
-> On Fri, 25 Jul 2014 10:27:13 +0200
-> Ji=C5=99=C3=AD Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
->
-> [...]
->>
->>
->>> Could you also paste the content of /sys/kernel/debug/gpio ?
->> The /sys/kernel/debug/ is empty.
->
-> You have to enable CONFIG_DEBUG_FS in your config and then mount the
-> debug file system:
->
-> #mount -t debugfs dbg /sys/kernel/debug
->
->
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
