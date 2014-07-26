@@ -1,23 +1,22 @@
-From: Benoit Masson <yahoo@perenite.com>
-Subject: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
-Date: Sat, 26 Jul 2014 16:47:16 -0700
-Message-ID: <1406418436-61452-1-git-send-email-yahoo@perenite.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benoitm@perenite.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@free-electrons.com, sebastian.hesselbarth@googlemail.com, Benoit Masson <yahoo@perenite.com>
+From: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] V3 ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
+Date: Sat, 26 Jul 2014 16:48:10 -0700
+Message-ID: <1406418490-61502-1-git-send-email-yahoo@perenite.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
  USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
 
 http://shop.lenovo.com/us/en/servers/network-storage/lenovoemc/ix4-300d/
-
-Signed-off-by: Benoit Masson <yahoo@perenite.com>
+Signed-off-by: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
 ---
  arch/arm/boot/dts/Makefile                      |   3 +-
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 286 ++++++++++++++++++++++++
- 2 files changed, 288 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 285 ++++++++++++++++++++++++
+ 2 files changed, 287 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
@@ -37,14 +36,14 @@ index adb5ed9..4429495 100644
  	dove-cubox.dtb \
 diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
 new file mode 100644
-index 0000000..cee0ef4
+index 0000000..c82a8e3
 --- /dev/null
 +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -0,0 +1,286 @@
+@@ -0,0 +1,285 @@
 +/*
 + * Device Tree file for Lenovo Iomega ix4-300d
 + *
-+ * Copyright (C) 2014, Benoit Masson <yahoo@perenite.com>
++ * Copyright (C) 2014, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU General Public License
@@ -160,8 +159,7 @@ index 0000000..cee0ef4
 +			};
 +
 +			i2c@11000 {
-+				compatible = "marvell,mv78230-a0-i2c",
-+					"marvell,mv64xxx-i2c";
++				compatible = "marvell,mv64xxx-i2c";
 +				clock-frequency = <400000>;
 +				status = "okay";
 +
@@ -329,3 +327,8 @@ index 0000000..cee0ef4
 +};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
