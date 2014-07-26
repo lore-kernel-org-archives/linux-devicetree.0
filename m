@@ -1,12 +1,13 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 00/15] ARM: dts: rockchip: collected changes for existing
- boards
-Date: Sun, 27 Jul 2014 01:18:16 +0200
-Message-ID: <1406416711-28006-1-git-send-email-heiko@sntech.de>
+Subject: [PATCH v2 07/15] ARM: dts: rockchip: remove address from pinctrl nodes
+Date: Sun, 27 Jul 2014 01:18:23 +0200
+Message-ID: <1406416711-28006-8-git-send-email-heiko@sntech.de>
+References: <1406416711-28006-1-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1406416711-28006-1-git-send-email-heiko@sntech.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,42 +21,40 @@ To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicet
 Cc: Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-These are collected dtsi changes to bring the existing dts files in line with
-what the rk3288 does and add support for drivers that made it into a tree recently.
+The pincontroller uses the GRF and PMU syscons nowadays, so should not
+contain an address in its device node.
 
-changes since v1:
-- adapt to suggestions received for rk3288
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 2 +-
+ arch/arm/boot/dts/rk3188.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Beniamino Galvani (3):
-  ARM: dts: add i2c and regulator nodes to rk3188-radxarock
-  ARM: dts: rockchip: add pwm nodes
-  ARM: dts: rk3188-radxarock: add GPIO IR receiver node
-
-Heiko Stuebner (12):
-  ARM: dts: rockchip: add cru nodes and update device clocks to use it
-  ARM: dts: rockchip: move oscillator input clock into main dtsi
-  arm: dts: rockchip: remove obsolete clock gate definitions
-  ARM: dts: rockchip: remove soc subnodes
-  ARM: dts: rockchip: add handles for shared nodes that don't have one
-    yet
-  ARM: dts: uses handles to reference nodes for changes
-  ARM: dts: rockchip: remove address from pinctrl nodes
-  ARM: dts: rockchip: oder nodes by register address
-  ARM: dts: add rk3066 and rk3188 i2c device nodes and pinctrl settings
-  ARM: dts: rockchip: add tps65910 regulator for bqcurie2
-  ARM: dts: rk3188-radxarock: enable sd-card slot
-  ARM: dts: rockchip: add both clocks to uart nodes
-
- arch/arm/boot/dts/rk3066a-bqcurie2.dts | 210 +++++++++-----
- arch/arm/boot/dts/rk3066a-clocks.dtsi  | 299 -------------------
- arch/arm/boot/dts/rk3066a.dtsi         | 515 +++++++++++++++++++++------------
- arch/arm/boot/dts/rk3188-clocks.dtsi   | 289 ------------------
- arch/arm/boot/dts/rk3188-radxarock.dts | 216 +++++++++++---
- arch/arm/boot/dts/rk3188.dtsi          | 442 ++++++++++++++++++----------
- arch/arm/boot/dts/rk3xxx.dtsi          | 348 ++++++++++++++--------
- 7 files changed, 1176 insertions(+), 1143 deletions(-)
- delete mode 100644 arch/arm/boot/dts/rk3066a-clocks.dtsi
- delete mode 100644 arch/arm/boot/dts/rk3188-clocks.dtsi
-
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 460932b2..3198394 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -86,7 +86,7 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
+-	pinctrl: pinctrl@20008000 {
++	pinctrl: pinctrl {
+ 		compatible = "rockchip,rk3066a-pinctrl";
+ 		rockchip,grf = <&grf>;
+ 		#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 4a9f702..dd7f61f 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -74,7 +74,7 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
+-	pinctrl: pinctrl@20008000 {
++	pinctrl: pinctrl {
+ 		compatible = "rockchip,rk3188-pinctrl";
+ 		rockchip,grf = <&grf>;
+ 		rockchip,pmu = <&pmu>;
 -- 
 2.0.1
