@@ -1,117 +1,231 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Enabling OF selftest to run without machine's devicetree
-Date: Sat, 26 Jul 2014 12:48:50 -0700
-Message-ID: <1406404130-27289-1-git-send-email-gaurav.minocha.os@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v3 3/3] media: atmel-isi: add primary DT support
+Date: Sat, 26 Jul 2014 21:57:20 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407262147100.24257@axis700.grange>
+References: <1406283219-32015-1-git-send-email-josh.wu@atmel.com>
+ <1406283600-32084-1-git-send-email-josh.wu@atmel.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1406283600-32084-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, laurent.pinchart@ideasonboard.com, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, ben.dooks@codethink.co.uk, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If there is no devicetree present, this patch adds the selftest
-data as a live devicetree. It also removes the same after the
-testcase execution is complete.
+Hi Josh,
 
-Tested with and without machine's devicetree.
+Thanks for a prompt update! A couple of minor questions:
 
-Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/fdt.c      |    3 +++
- drivers/of/selftest.c |   34 ++++++++++++++++++++++++++++++----
- 2 files changed, 33 insertions(+), 4 deletions(-)
+On Fri, 25 Jul 2014, Josh Wu wrote:
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index b777d8f..18088c0 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -366,6 +366,9 @@ void of_fdt_unflatten_tree(unsigned long *blob,
- 			struct device_node **mynodes)
- {
- 	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+
-+	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-+	of_alias_scan(&kernel_tree_alloc);
- }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- 
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 3a1c5b5..34c9899 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -16,6 +16,7 @@
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-+#include <linux/proc_fs.h>
- 
- static struct selftest_results {
- 	int passed;
-@@ -25,6 +26,7 @@ static struct selftest_results {
- #define NO_OF_NODES 2
- static struct device_node *nodes[NO_OF_NODES];
- static int last_node_index;
-+static bool selftest_live_tree;
- 
- #define selftest(result, fmt, ...) { \
- 	if (!(result)) { \
-@@ -595,7 +597,7 @@ static int attach_node_and_children(struct device_node *np)
- static int __init selftest_data_add(void)
- {
- 	void *selftest_data;
--	struct device_node *selftest_data_node;
-+	struct device_node *selftest_data_node, *np;
- 	extern uint8_t __dtb_testcases_begin[];
- 	extern uint8_t __dtb_testcases_end[];
- 	const int size = __dtb_testcases_end - __dtb_testcases_begin;
-@@ -614,10 +616,31 @@ static int __init selftest_data_add(void)
- 			"not running tests\n", __func__);
- 		return -ENOMEM;
- 	}
--	of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
- 
--	/* attach the sub-tree to live tree */
--	return attach_node_and_children(selftest_data_node);
-+	if (!of_allnodes) {
-+		/* enabling flag for removing nodes */
-+		selftest_live_tree = true;
-+
-+		of_fdt_unflatten_tree(selftest_data, &of_allnodes);
-+		if (!of_allnodes) {
-+			pr_warn("%s: No tree to attach; not running tests\n",
-+				__func__);
-+			return -ENODATA;
-+		}
-+
-+		for_each_of_allnodes(np)
-+			of_node_add(np);
-+
-+		/* Symlink in /proc as required by userspace ABI */
-+		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-+
-+		return 0;
-+	} else {
-+		of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
-+
-+		/* attach the sub-tree to live tree */
-+		return attach_node_and_children(selftest_data_node);
-+	}
- }
- 
- /**
-@@ -646,6 +669,9 @@ static void selftest_data_remove(void)
- 	struct device_node *np;
- 	struct property *prop;
- 
-+	if (selftest_live_tree)
-+		return detach_node_and_children(of_allnodes);
-+
- 	while (last_node_index >= 0) {
- 		if (nodes[last_node_index]) {
- 			np = of_find_node_by_path(nodes[last_node_index]->full_name);
--- 
-1.7.9.5
+> This patch add the DT support for Atmel ISI driver.
+> It use the same v4l2 DT interface that defined in video-interfaces.txt.
+> 
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> v2 -> v3:
+>   add bus-width property support.
+>   add error handling when calling atmel_isi_probe_dt().
+> 
+> v1 -> v2:
+>   refine the binding document.
+>   add port node description.
+>   removed the optional property.
+> 
+>  .../devicetree/bindings/media/atmel-isi.txt        | 51 +++++++++++++++++
+>  drivers/media/platform/soc_camera/atmel-isi.c      | 64 +++++++++++++++++++++-
+>  2 files changed, 113 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> new file mode 100644
+> index 0000000..17e71b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> @@ -0,0 +1,51 @@
+> +Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+> +----------------------------------------------
+> +
+> +Required properties:
+> +- compatible: must be "atmel,at91sam9g45-isi"
+> +- reg: physical base address and length of the registers set for the device;
+> +- interrupts: should contain IRQ line for the ISI;
+> +- clocks: list of clock specifiers, corresponding to entries in
+> +          the clock-names property;
+> +- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+> +
+> +ISI supports a single port node with parallel bus. It should contain one
+> +'port' child node with child 'endpoint' node. Please refer to the bindings
+> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +	isi: isi@f0034000 {
+> +		compatible = "atmel,at91sam9g45-isi";
+> +		reg = <0xf0034000 0x4000>;
+> +		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+> +
+> +		clocks = <&isi_clk>;
+> +		clock-names = "isi_clk";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_isi>;
+> +
+> +		port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			isi_0: endpoint {
+> +				remote-endpoint = <&ov2640_0>;
+> +				bus-width = <8>;
+> +			};
+> +		};
+> +	};
+> +
+> +	i2c1: i2c@f0018000 {
+> +		ov2640: camera@0x30 {
+> +			compatible = "omnivision,ov2640";
+> +			reg = <0x30>;
+> +
+> +			port {
+> +				ov2640_0: endpoint {
+> +					remote-endpoint = <&isi_0>;
+> +					bus-width = <8>;
+> +				};
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+> index 74af560..ca4e43e 100644
+> --- a/drivers/media/platform/soc_camera/atmel-isi.c
+> +++ b/drivers/media/platform/soc_camera/atmel-isi.c
+> @@ -25,6 +25,7 @@
+>  #include <media/atmel-isi.h>
+>  #include <media/soc_camera.h>
+>  #include <media/soc_mediabus.h>
+> +#include <media/v4l2-of.h>
+>  #include <media/videobuf2-dma-contig.h>
+>  
+>  #define MAX_BUFFER_NUM			32
+> @@ -33,6 +34,7 @@
+>  #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
+>  #define MIN_FRAME_RATE			15
+>  #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
+> +#define ISI_DEFAULT_MCLK_FREQ		25000000
+>  
+>  /* Frame buffer descriptor */
+>  struct fbd {
+> @@ -883,6 +885,50 @@ static int atmel_isi_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int atmel_isi_probe_dt(struct atmel_isi *isi,
+> +			struct platform_device *pdev)
+> +{
+> +	struct device_node *np= pdev->dev.of_node;
+> +	struct v4l2_of_endpoint ep;
+> +	int err;
+> +
+> +	/* Default settings for ISI */
+> +	isi->pdata.full_mode = 1;
+> +	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
+> +	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
+> +
+> +	np = of_graph_get_next_endpoint(np, NULL);
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "Could not find the endpoint\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = v4l2_of_parse_endpoint(np, &ep);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Could not parse the endpoint\n");
+> +		goto err_probe_dt;
+> +	}
+> +
+> +	switch (ep.bus.parallel.bus_width) {
+> +	case 8:
+> +		isi->pdata.data_width_flags = ISI_DATAWIDTH_8;
+> +		break;
+> +	case 10:
+> +		isi->pdata.data_width_flags = ISI_DATAWIDTH_10;
+> +		break;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Wouldn't it be natural, if bus_width=10 is specified in DT to enable both 
+ISI_DATAWIDTH_8 and ISI_DATAWIDTH_10?
+
+> +	default:
+> +		dev_err(&pdev->dev, "Not supported bus width: %d\n",
+
+Wouldn't "Unsupported" be better?
+
+> +				ep.bus.parallel.bus_width);
+> +		err = -EINVAL;
+> +		goto err_probe_dt;
+> +	}
+> +
+> +err_probe_dt:
+> +	of_node_put(np);
+> +
+> +	return err;
+> +}
+> +
+>  static int atmel_isi_probe(struct platform_device *pdev)
+>  {
+>  	unsigned int irq;
+> @@ -894,7 +940,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
+>  	struct isi_platform_data *pdata;
+>  
+>  	pdata = dev->platform_data;
+> -	if (!pdata || !pdata->data_width_flags) {
+> +	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
+>  		dev_err(&pdev->dev,
+>  			"No config available for Atmel ISI\n");
+>  		return -EINVAL;
+> @@ -910,7 +956,14 @@ static int atmel_isi_probe(struct platform_device *pdev)
+>  	if (IS_ERR(isi->pclk))
+>  		return PTR_ERR(isi->pclk);
+>  
+> -	memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
+> +	if (pdata) {
+> +		memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
+> +	} else {
+> +		ret = atmel_isi_probe_dt(isi, pdev);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	isi->active = NULL;
+>  	spin_lock_init(&isi->lock);
+>  	INIT_LIST_HEAD(&isi->video_buffer_list);
+> @@ -1012,11 +1065,18 @@ err_alloc_ctx:
+>  	return ret;
+>  }
+>  
+> +static const struct of_device_id atmel_isi_of_match[] = {
+> +	{ .compatible = "atmel,at91sam9g45-isi" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
+> +
+>  static struct platform_driver atmel_isi_driver = {
+>  	.remove		= atmel_isi_remove,
+>  	.driver		= {
+>  		.name = "atmel_isi",
+>  		.owner = THIS_MODULE,
+> +		.of_match_table = atmel_isi_of_match,
+
+I think you're supposed to use of_match_ptr() here for your driver to be 
+usable both with and without DT?
+
+Thanks
+Guennadi
+
+>  	},
+>  };
+>  
+> -- 
+> 1.9.1
+> 
