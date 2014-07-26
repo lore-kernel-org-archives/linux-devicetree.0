@@ -1,76 +1,65 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: ARC fails to boot on linux-next of 20140711
-Date: Sat, 26 Jul 2014 06:53:29 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA230753C4B7DE0@IN01WEMBXA.internal.synopsys.com>
-References: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
-	<CAL_JsqJ2q0RSvXQW03RqwwBi_TKQ7Zt6DsUbsUruzh5oqYi5Cg@mail.gmail.com>
- <20140726053344.95800C40C93@trevor.secretlab.ca>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] Migrate PXA27x platforms to clock framework
+Date: Sat, 26 Jul 2014 10:52:49 +0200
+Message-ID: <87k370o61q.fsf@free.fr>
+References: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr>
+	<87k376vadk.fsf@free.fr> <20140726004212.4791.52407@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20140726004212.4791.52407@quantum> (Mike Turquette's message of
+	"Fri, 25 Jul 2014 17:42:12 -0700")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-next <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anton Kolesov <Anton.Kolesov-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 26 July 2014 11:03 AM, Grant Likely wrote:
-> On Fri, 25 Jul 2014 09:15:22 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Jul 25, 2014 at 6:02 AM, Vineet Gupta
->> <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
->>> Hi Grant,
->>>
->>> linux-next has a series for arc_uart (via tty tree) which converts it to generic
->>> earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
->>> /chose/bootargs
->>>
->>> 2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console
->>>
->>> This relied on prev commit of yours (from linux next of 20140711), which seem to
->>> have disappeared now.
->>>
->>> 2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
->>> specified in /chosen
->>> 2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
->>> /chosen/stdout-path
->>>
->>> Is there a specific reason for dropping these patches (or perhaps a merge to be
->>> merged). I cherry-picked both but still doesn't work.
->>>
->>> Can you please advise next step forward, before I go off debugging with those
->>> patches in.
->> There's an issue that if you have stdout-path and "earlycon" on the
->> command line, the kernel will switch to tty0 and disable the earlycon.
->>
->> This is the "fix", but I don't like adding the DT dependency into generic code:
-> Yes, I'm not fond of it either. I've not been able to test it though and
-> work out a proper bug fix. As far as I can understand, the earlycon code
-> only works on aarch64, correct? I haven't been able to get an aarch64
-> boot working in QEMU yet.
+Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+
+> Quoting Robert Jarzmik (2014-07-21 11:23:51)
+>> Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
+>> 
+>> > This is the second opus of this serie.
+>> 
+>> Ping ?
 >
-> g.
-
-Well generic earlycon works on ARC too (as it stands today in linux-next). std-out
-based console is broken because the relevant core/of fixes from you are no longer
-present there. Can we get those back please !
-
--Vineet
-
+> Hi Robert,
 >
->> @@ -2382,7 +2386,7 @@ void register_console(struct console *newcon)
->>                 if (newcon->setup == NULL ||
->>                     newcon->setup(newcon, NULL) == 0) {
->>                         newcon->flags |= CON_ENABLED;
->> -                       if (newcon->device) {
->> +                       if (newcon->device  && !of_stdout) {
->>                                 newcon->flags |= CON_CONSDEV;
->>                                 preferred_console = 0;
->>                         }
->>
->> Rob
->
+> Overall the series looks good to me. The only problem I see is that
+> somewhere in the use of the PARENTS() macro there is a section mismatch
+> introduced. I spent about 5 minutes looking at it and gave up. This
+> problem introduces 26 section mismatch warnings building
+> colibri_pxa270_defconfig.
+OK Mike, I'll fix this. This is probably because pxa27x_clocks array is not
+__init, and it references parents which are __init. I was lazy letting
+pxa27x_clocks not __init because I reuse the internal fields "hw" and "gate->hw"
+later (hence I didn't leave the __init).
+This is a bit dirty and I'll launder it.
 
+Moreover, I have one fix which I had fixed wrt boot ordering : the
+postcore_init() must die. The reason behind is that I have no guarantee of
+ordering between clocks init and clocksource init, and clocksource relies on
+clocks.
+
+The right way will be AFAIK to call the core clocks init :
+ - within the device-tree initialization function : pxa27x_dt_clocks_init()
+ calls pxa27x_clocks_init9)
+ - directly from pxa27x_init() or pxa_timer_init() in non-device tree setup
+
+> Once those are fixed up then I will be happy to take this series. Do you
+> want me to take all six patches through the clk tree, including the
+> arm/arm stuff?
+I would feel more comfortable if :
+ - you take the 4 first ones (3 clock ones + 1 arm pxa header bit definitions)
+ - Haojian takes the last 2 ones (pxa ones)
+
+I will check that taking only the first 4 ones doesn't break anything, in case
+there is a merge window hipcup.
+
+Cheers.
+
+-- 
+Robert
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
