@@ -1,56 +1,95 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH] scsi: ibmvscsi: ibmvscsi.c:  Cleaning up missing null-terminate in conjunction with strncpy
-Date: Sat, 26 Jul 2014 16:40:02 +0200
-Message-ID: <1406385602-3561-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "James E.J. Bottomley" <JBottomley-bzQdu9zFT3WakBO8gow8eQ@public.gmane.org>
-Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: ARC fails to boot on linux-next of 20140711
+Date: Sat, 26 Jul 2014 10:50:55 -0600
+Message-ID: <20140726165055.D3E64C43E0B@trevor.secretlab.ca>
+References: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
+	<CAL_JsqJ2q0RSvXQW03RqwwBi_TKQ7Zt6DsUbsUruzh5oqYi5Cg@mail.gmail.com>
+	<C2D7FE5348E1B147BCA15975FBA230753C4B7DD5@IN01WEMBXA.internal.synopsys.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA230753C4B7DD5@IN01WEMBXA.internal.synopsys.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <robherring2@gmail.com>
+Cc: linux-next <linux-next@vger.kernel.org>, Anton Kolesov <Anton.Kolesov@synopsys.com>, lkml <linux-kernel@vger.kernel.org>, greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Replacing strncpy with strlcpy to avoid strings that lacks null terminate.
+On Sat, 26 Jul 2014 06:52:36 +0000, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+> Hi Rob,
+> 
+> On Friday 25 July 2014 07:45 PM, Rob Herring wrote:
+> > On Fri, Jul 25, 2014 at 6:02 AM, Vineet Gupta
+> > <Vineet.Gupta1@synopsys.com> wrote:
+> >> > Hi Grant,
+> >> >
+> >> > linux-next has a series for arc_uart (via tty tree) which converts it to generic
+> >> > earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
+> >> > /chose/bootargs
+> >> >
+> >> > 2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console
+> >> >
+> >> > This relied on prev commit of yours (from linux next of 20140711), which seem to
+> >> > have disappeared now.
+> >> >
+> >> > 2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
+> >> > specified in /chosen
+> >> > 2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
+> >> > /chosen/stdout-path
+> >> >
+> >> > Is there a specific reason for dropping these patches (or perhaps a merge to be
+> >> > merged). I cherry-picked both but still doesn't work.
+> >> >
+> >> > Can you please advise next step forward, before I go off debugging with those
+> >> > patches in.
+> > There's an issue that if you have stdout-path and "earlycon" on the
+> > command line, the kernel will switch to tty0 and disable the earlycon.
+> >
+> > This is the "fix", but I don't like adding the DT dependency into generic code:
+> >
+> > @@ -2382,7 +2386,7 @@ void register_console(struct console *newcon)
+> >                 if (newcon->setup == NULL ||
+> >                     newcon->setup(newcon, NULL) == 0) {
+> >                         newcon->flags |= CON_ENABLED;
+> > -                       if (newcon->device) {
+> > +                       if (newcon->device  && !of_stdout) {
+> >                                 newcon->flags |= CON_CONSDEV;
+> >                                 preferred_console = 0;
+> >                         }
+> 
+> The DT settings relevant for ARC, which enable generic-earlycon and
+> console-with-stdout-path are as follows
+> 
+>         chosen {
+>                 bootargs = "earlycon";
+>                 stdout-path = &arcuart0;
+>         };
+> 
+> ....
+>                 arcuart0: serial@c0fc1000 {
+>                         compatible = "snps,arc-uart";
+> 
+> And it works w/o above hunk, provided the 2 patches from Grant exist in linux-next
+> which they don't at the moment. I'm pretty confused how the hunk above comes into
+> picture.
+> 
+> And if not then I will have to get the ARC std-out patch reverted in tty-next as
+> it is broken.
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
----
- drivers/scsi/ibmvscsi/ibmvscsi.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+You need to revert it anyway, the dependency chain is broken. Just
+because something is in linux-next doesn't mean it will be merged.
+Dependencies must always be in the branch to which you commit.
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index 7b23f21..b0f5d0a 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -261,7 +261,7 @@ static void gather_partition_info(void)
- 
- 	ppartition_name = of_get_property(rootdn, "ibm,partition-name", NULL);
- 	if (ppartition_name)
--		strncpy(partition_name, ppartition_name,
-+		strlcpy(partition_name, ppartition_name,
- 				sizeof(partition_name));
- 	p_number_ptr = of_get_property(rootdn, "ibm,partition-no", NULL);
- 	if (p_number_ptr)
-@@ -277,7 +277,7 @@ static void set_adapter_info(struct ibmvscsi_host_data *hostdata)
- 	dev_info(hostdata->dev, "SRP_VERSION: %s\n", SRP_VERSION);
- 	strcpy(hostdata->madapter_info.srp_version, SRP_VERSION);
- 
--	strncpy(hostdata->madapter_info.partition_name, partition_name,
-+	strlcpy(hostdata->madapter_info.partition_name, partition_name,
- 			sizeof(hostdata->madapter_info.partition_name));
- 
- 	hostdata->madapter_info.partition_number =
-@@ -1280,8 +1280,7 @@ static void send_mad_capabilities(struct ibmvscsi_host_data *hostdata)
- 
- 	location = of_get_property(of_node, "ibm,loc-code", NULL);
- 	location = location ? location : dev_name(hostdata->dev);
--	strncpy(hostdata->caps.loc, location, sizeof(hostdata->caps.loc));
--	hostdata->caps.loc[sizeof(hostdata->caps.loc) - 1] = '\0';
-+	strlcpy(hostdata->caps.loc, location, sizeof(hostdata->caps.loc));
- 
- 	req->common.type = cpu_to_be32(VIOSRP_CAPABILITIES_TYPE);
- 	req->buffer = cpu_to_be64(hostdata->caps_addr);
--- 
-1.7.10.4
+If that doesn't happen (like here) then bisecting is broken and the
+dependencies may not actually get merged.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When this happens, what you're supposed to do is tell the maintainers
+what commits the patch depends on so that it can be applied to the
+correct tree. In this case I could take it through my devicetree branch
+that contains the console patches.
+
+If a patch depends on commits in several branches then it is a bit more
+complex. What we usually do is create a new branch that merges in each
+branch that is depended on, and then apply the commit on top of that.
+
+As for the console patches, I'm only going to be putting them back if I
+can devise a good fix for the earlycon duplication issue.
+
+g.
