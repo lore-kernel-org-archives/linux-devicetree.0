@@ -1,78 +1,39 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 01/11] mmc: sh_mmcif: Document DT bindings
-Date: Sat, 26 Jul 2014 11:39:35 +0200
-Message-ID: <CAPDyKFrsYdQqtiw02WONgZpFDdjfPSuNkm8AAp8VEJmvyjF3xQ@mail.gmail.com>
-References: <1405464321-4723-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1405464321-4723-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] media: soc_camera: pxa_camera device-tree support
+Date: Sat, 26 Jul 2014 14:51:10 +0200
+Message-ID: <87fvhonv0h.fsf@free.fr>
+References: <1404051600-20838-1-git-send-email-robert.jarzmik@free.fr>
+	<Pine.LNX.4.64.1407231126210.30243@axis700.grange>
+	<Pine.LNX.4.64.1407231915310.1526@axis700.grange>
+	<8761invo7p.fsf@free.fr>
+	<Pine.LNX.4.64.1407242301030.11084@axis700.grange>
+	<87oawdccaj.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1405464321-4723-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Ian Molton <ian.molton@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87oawdccaj.fsf-GANU6spQydw@public.gmane.org> (Robert Jarzmik's message of "Sat, 26
+	Jul 2014 00:18:44 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 July 2014 00:45, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> The sh-mmcif driver implements DT support but the bindings are not
-> documented. Document them.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
+> Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org> writes:
+>> If you didn't use my version, would it be possible for you to test it and
+>> reply with your tested-by if all looks ok?
+> Of course, as soon as I find it. And yes, linux-media periodically drops me from
+> the list members, so I didn't receive it ...
 
-Thanks! Applied for next.
+OK, found and tested, is works good.
+Please take my :
+Tested-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 
-Kind regards
-Uffe
+Cheers.
 
-> ---
->  .../devicetree/bindings/mmc/renesas,mmcif.txt      | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> new file mode 100644
-> index 0000000..299081f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> @@ -0,0 +1,32 @@
-> +* Renesas Multi Media Card Interface (MMCIF) Controller
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the MMCIF device.
-> +
-> +
-> +Required properties:
-> +
-> +- compatible: must contain one of the following
-> +       - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
-> +       - "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
-> +       - "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
-> +       - "renesas,sh-mmcif" for the generic MMCIF
-> +
-> +- clocks: reference to the functional clock
-> +
-> +- dmas: reference to the DMA channels, one per channel name listed in the
-> +  dma-names property.
-> +- dma-names: must contain "tx" for the transmit DMA channel and "rx" for the
-> +  receive DMA channel.
-> +
-> +
-> +Example: R8A7790 (R-Car H2) MMCIF0
-> +
-> +       mmcif0: mmc@ee200000 {
-> +               compatible = "renesas,mmcif-r8a7790", "renesas,sh-mmcif";
-> +               reg = <0 0xee200000 0 0x80>;
-> +               interrupts = <0 169 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&mstp3_clks R8A7790_CLK_MMCIF0>;
-> +               dmas = <&dmac0 0xd1>, <&dmac0 0xd2>;
-> +               dma-names = "tx", "rx";
-> +       };
-> --
-> 1.8.5.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
