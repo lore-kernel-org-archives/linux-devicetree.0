@@ -1,146 +1,102 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Enabling OF selftest to run without machine's devicetree
-Date: Sat, 26 Jul 2014 15:17:29 -0700
-Message-ID: <CA+rpMb+pPZykJ7-XurVSSOaTPGNji9zG7FtVB+m6-gNiOHM4Jw@mail.gmail.com>
-References: <1406404130-27289-1-git-send-email-gaurav.minocha.os@gmail.com>
-	<CAL_JsqJXqoyCRcMdS83zPr7prY52GgbAd1y+tgVn5f6Q+=CwxQ@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 05/15] ARM: dts: rockchip: add handles for shared nodes
+ that don't have one yet
+Date: Sun, 27 Jul 2014 01:18:21 +0200
+Message-ID: <1406416711-28006-6-git-send-email-heiko@sntech.de>
+References: <1406416711-28006-1-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJXqoyCRcMdS83zPr7prY52GgbAd1y+tgVn5f6Q+=CwxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1406416711-28006-1-git-send-email-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicetree@vger.kernel.org, b.galvani@gmail.com, max.schwarz@online.de
+Cc: Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 26, 2014 at 2:11 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sat, Jul 26, 2014 at 2:48 PM, Gaurav Minocha
-> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> If there is no devicetree present, this patch adds the selftest
->> data as a live devicetree. It also removes the same after the
->> testcase execution is complete.
->>
->> Tested with and without machine's devicetree.
->>
->> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/of/fdt.c      |    3 +++
->>  drivers/of/selftest.c |   34 ++++++++++++++++++++++++++++++----
->>  2 files changed, 33 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index b777d8f..18088c0 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -366,6 +366,9 @@ void of_fdt_unflatten_tree(unsigned long *blob,
->>                         struct device_node **mynodes)
->>  {
->>         __unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
->> +
->> +       /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
->> +       of_alias_scan(&kernel_tree_alloc);
->>  }
->>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
->>
->> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
->> index 3a1c5b5..34c9899 100644
->> --- a/drivers/of/selftest.c
->> +++ b/drivers/of/selftest.c
->> @@ -16,6 +16,7 @@
->>  #include <linux/mutex.h>
->>  #include <linux/slab.h>
->>  #include <linux/device.h>
->> +#include <linux/proc_fs.h>
->>
->>  static struct selftest_results {
->>         int passed;
->> @@ -25,6 +26,7 @@ static struct selftest_results {
->>  #define NO_OF_NODES 2
->>  static struct device_node *nodes[NO_OF_NODES];
->>  static int last_node_index;
->> +static bool selftest_live_tree;
->>
->>  #define selftest(result, fmt, ...) { \
->>         if (!(result)) { \
->> @@ -595,7 +597,7 @@ static int attach_node_and_children(struct device_node *np)
->>  static int __init selftest_data_add(void)
->>  {
->>         void *selftest_data;
->> -       struct device_node *selftest_data_node;
->> +       struct device_node *selftest_data_node, *np;
->>         extern uint8_t __dtb_testcases_begin[];
->>         extern uint8_t __dtb_testcases_end[];
->>         const int size = __dtb_testcases_end - __dtb_testcases_begin;
->> @@ -614,10 +616,31 @@ static int __init selftest_data_add(void)
->>                         "not running tests\n", __func__);
->>                 return -ENOMEM;
->>         }
->> -       of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
->
-> Can't you keep this factored out and just do "of_allnodes =
-> selftest_data_node;"?
->
-I tried to do that in first place, but of_alias_scan() called from
-of_fdt_unflatten_tree(..)
-needs of_allnodes. So, had to call it separately.
+Some nodes that are changed in the dtsi hierarchy do not have handles yet.
+As it was suggested in the rk3288 submission to do subsequent nodes changes
+through such handle-references, add the missing ones.
 
->>
->> -       /* attach the sub-tree to live tree */
->> -       return attach_node_and_children(selftest_data_node);
->> +       if (!of_allnodes) {
->> +               /* enabling flag for removing nodes */
->> +               selftest_live_tree = true;
->
-> If you save the selftest_data_node ptr, then you could test for
-> (selftest_data_node == of_allnodes) instead of this bool. You may want
-> the pointer for some other reason later although I can't think of one
-> right now.
->
-Yes, this can be done if I make selftest_data_node global, will update
-in next patch.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 2 +-
+ arch/arm/boot/dts/rk3188.dtsi  | 2 +-
+ arch/arm/boot/dts/rk3xxx.dtsi  | 8 ++++----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
->> +
->> +               of_fdt_unflatten_tree(selftest_data, &of_allnodes);
->> +               if (!of_allnodes) {
->> +                       pr_warn("%s: No tree to attach; not running tests\n",
->> +                               __func__);
->> +                       return -ENODATA;
->> +               }
->> +
->> +               for_each_of_allnodes(np)
->> +                       of_node_add(np);
->> +
->> +               /* Symlink in /proc as required by userspace ABI */
->> +               proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
->> +
->> +               return 0;
->> +       } else {
->> +               of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
->> +
->> +               /* attach the sub-tree to live tree */
->> +               return attach_node_and_children(selftest_data_node);
->> +       }
->>  }
->>
->>  /**
->> @@ -646,6 +669,9 @@ static void selftest_data_remove(void)
->>         struct device_node *np;
->>         struct property *prop;
->>
->> +       if (selftest_live_tree)
->> +               return detach_node_and_children(of_allnodes);
->> +
->>         while (last_node_index >= 0) {
->>                 if (nodes[last_node_index]) {
->>                         np = of_find_node_by_path(nodes[last_node_index]->full_name);
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 4ad8f59..ecf722e 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -86,7 +86,7 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
+-	pinctrl@20008000 {
++	pinctrl: pinctrl@20008000 {
+ 		compatible = "rockchip,rk3066a-pinctrl";
+ 		rockchip,grf = <&grf>;
+ 		#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 038d9d4..7b631ec 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -82,7 +82,7 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
+-	pinctrl@20008000 {
++	pinctrl: pinctrl@20008000 {
+ 		compatible = "rockchip,rk3188-pinctrl";
+ 		rockchip,grf = <&grf>;
+ 		rockchip,pmu = <&pmu>;
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index f70addd..10e7586 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -57,14 +57,14 @@
+ 		cache-level = <2>;
+ 	};
+ 
+-	global-timer@1013c200 {
++	global_timer: global-timer@1013c200 {
+ 		compatible = "arm,cortex-a9-global-timer";
+ 		reg = <0x1013c200 0x20>;
+ 		interrupts = <GIC_PPI 11 0x304>;
+ 		clocks = <&cru CORE_PERI>;
+ 	};
+ 
+-	local-timer@1013c600 {
++	local_timer: local-timer@1013c600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0x1013c600 0x20>;
+ 		interrupts = <GIC_PPI 13 0x304>;
+@@ -111,7 +111,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	dwmmc@10214000 {
++	mmc0: dwmmc@10214000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x10214000 0x1000>;
+ 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+@@ -124,7 +124,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	dwmmc@10218000 {
++	mmc1: dwmmc@10218000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x10218000 0x1000>;
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.0.1
