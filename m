@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 07/15] ARM: dts: rockchip: remove address from pinctrl nodes
-Date: Sun, 27 Jul 2014 01:18:23 +0200
-Message-ID: <1406416711-28006-8-git-send-email-heiko@sntech.de>
+Subject: [PATCH v2 08/15] ARM: dts: rockchip: order nodes by register address
+Date: Sun, 27 Jul 2014 01:18:24 +0200
+Message-ID: <1406416711-28006-9-git-send-email-heiko@sntech.de>
 References: <1406416711-28006-1-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,40 +21,203 @@ To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicet
 Cc: Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-The pincontroller uses the GRF and PMU syscons nowadays, so should not
-contain an address in its device node.
+To create some sort of ordering of nodes, they are suggested to be ordered by
+their register address.
 
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 2 +-
- arch/arm/boot/dts/rk3188.dtsi  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/rk3066a.dtsi | 48 +++++++++++------------
+ arch/arm/boot/dts/rk3xxx.dtsi  | 86 +++++++++++++++++++++---------------------
+ 2 files changed, 67 insertions(+), 67 deletions(-)
 
 diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 460932b2..3198394 100644
+index 3198394..21b87de 100644
 --- a/arch/arm/boot/dts/rk3066a.dtsi
 +++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -86,7 +86,7 @@
+@@ -40,30 +40,6 @@
+ 		};
+ 	};
+ 
+-	timer@20038000 {
+-		compatible = "snps,dw-apb-timer-osc";
+-		reg = <0x20038000 0x100>;
+-		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru SCLK_TIMER0>, <&cru PCLK_TIMER0>;
+-		clock-names = "timer", "pclk";
+-	};
+-
+-	timer@2003a000 {
+-		compatible = "snps,dw-apb-timer-osc";
+-		reg = <0x2003a000 0x100>;
+-		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru SCLK_TIMER1>, <&cru PCLK_TIMER1>;
+-		clock-names = "timer", "pclk";
+-	};
+-
+-	timer@2000e000 {
+-		compatible = "snps,dw-apb-timer-osc";
+-		reg = <0x2000e000 0x100>;
+-		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru SCLK_TIMER2>, <&cru PCLK_TIMER2>;
+-		clock-names = "timer", "pclk";
+-	};
+-
+ 	sram: sram@10080000 {
+ 		compatible = "mmio-sram";
+ 		reg = <0x10080000 0x10000>;
+@@ -86,6 +62,30 @@
  		#reset-cells = <1>;
  	};
  
--	pinctrl: pinctrl@20008000 {
-+	pinctrl: pinctrl {
++	timer@2000e000 {
++		compatible = "snps,dw-apb-timer-osc";
++		reg = <0x2000e000 0x100>;
++		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_TIMER2>, <&cru PCLK_TIMER2>;
++		clock-names = "timer", "pclk";
++	};
++
++	timer@20038000 {
++		compatible = "snps,dw-apb-timer-osc";
++		reg = <0x20038000 0x100>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_TIMER0>, <&cru PCLK_TIMER0>;
++		clock-names = "timer", "pclk";
++	};
++
++	timer@2003a000 {
++		compatible = "snps,dw-apb-timer-osc";
++		reg = <0x2003a000 0x100>;
++		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_TIMER1>, <&cru PCLK_TIMER1>;
++		clock-names = "timer", "pclk";
++	};
++
+ 	pinctrl: pinctrl {
  		compatible = "rockchip,rk3066a-pinctrl";
  		rockchip,grf = <&grf>;
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 4a9f702..dd7f61f 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -74,7 +74,7 @@
- 		#reset-cells = <1>;
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 10e7586..ad204da 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -27,29 +27,6 @@
+ 		clock-output-names = "xin24m";
  	};
  
--	pinctrl: pinctrl@20008000 {
-+	pinctrl: pinctrl {
- 		compatible = "rockchip,rk3188-pinctrl";
- 		rockchip,grf = <&grf>;
- 		rockchip,pmu = <&pmu>;
+-	scu@1013c000 {
+-		compatible = "arm,cortex-a9-scu";
+-		reg = <0x1013c000 0x100>;
+-	};
+-
+-	pmu: pmu@20004000 {
+-		compatible = "rockchip,rk3066-pmu", "syscon";
+-		reg = <0x20004000 0x100>;
+-	};
+-
+-	grf: grf@20008000 {
+-		compatible = "syscon";
+-		reg = <0x20008000 0x200>;
+-	};
+-
+-	gic: interrupt-controller@1013d000 {
+-		compatible = "arm,cortex-a9-gic";
+-		interrupt-controller;
+-		#interrupt-cells = <3>;
+-		reg = <0x1013d000 0x1000>,
+-		      <0x1013c100 0x0100>;
+-	};
+-
+ 	L2: l2-cache-controller@10138000 {
+ 		compatible = "arm,pl310-cache";
+ 		reg = <0x10138000 0x1000>;
+@@ -57,6 +34,11 @@
+ 		cache-level = <2>;
+ 	};
+ 
++	scu@1013c000 {
++		compatible = "arm,cortex-a9-scu";
++		reg = <0x1013c000 0x100>;
++	};
++
+ 	global_timer: global-timer@1013c200 {
+ 		compatible = "arm,cortex-a9-global-timer";
+ 		reg = <0x1013c200 0x20>;
+@@ -71,6 +53,14 @@
+ 		clocks = <&cru CORE_PERI>;
+ 	};
+ 
++	gic: interrupt-controller@1013d000 {
++		compatible = "arm,cortex-a9-gic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = <0x1013d000 0x1000>,
++		      <0x1013c100 0x0100>;
++	};
++
+ 	uart0: serial@10124000 {
+ 		compatible = "snps,dw-apb-uart";
+ 		reg = <0x10124000 0x400>;
+@@ -91,26 +81,6 @@
+ 		status = "disabled";
+ 	};
+ 
+-	uart2: serial@20064000 {
+-		compatible = "snps,dw-apb-uart";
+-		reg = <0x20064000 0x400>;
+-		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+-		reg-shift = <2>;
+-		reg-io-width = <1>;
+-		clocks = <&cru SCLK_UART2>;
+-		status = "disabled";
+-	};
+-
+-	uart3: serial@20068000 {
+-		compatible = "snps,dw-apb-uart";
+-		reg = <0x20068000 0x400>;
+-		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-		reg-shift = <2>;
+-		reg-io-width = <1>;
+-		clocks = <&cru SCLK_UART3>;
+-		status = "disabled";
+-	};
+-
+ 	mmc0: dwmmc@10214000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x10214000 0x1000>;
+@@ -136,4 +106,34 @@
+ 
+ 		status = "disabled";
+ 	};
++
++	pmu: pmu@20004000 {
++		compatible = "rockchip,rk3066-pmu", "syscon";
++		reg = <0x20004000 0x100>;
++	};
++
++	grf: grf@20008000 {
++		compatible = "syscon";
++		reg = <0x20008000 0x200>;
++	};
++
++	uart2: serial@20064000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x20064000 0x400>;
++		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <1>;
++		clocks = <&cru SCLK_UART2>;
++		status = "disabled";
++	};
++
++	uart3: serial@20068000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x20068000 0x400>;
++		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <1>;
++		clocks = <&cru SCLK_UART3>;
++		status = "disabled";
++	};
+ };
 -- 
 2.0.1
