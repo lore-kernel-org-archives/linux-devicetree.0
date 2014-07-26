@@ -1,121 +1,137 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: ARC fails to boot on linux-next of 20140711
-Date: Sat, 26 Jul 2014 15:10:28 -0500
-Message-ID: <CAL_JsqLR65PcLhoQR6VaQvrLLbPOR1tLx9oLEinYkkATSKxbKQ@mail.gmail.com>
-References: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
- <CAL_JsqJ2q0RSvXQW03RqwwBi_TKQ7Zt6DsUbsUruzh5oqYi5Cg@mail.gmail.com>
- <C2D7FE5348E1B147BCA15975FBA230753C4B7DD5@IN01WEMBXA.internal.synopsys.com> <20140726165055.D3E64C43E0B@trevor.secretlab.ca>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Enabling OF selftest to run without machine's devicetree
+Date: Sat, 26 Jul 2014 16:11:25 -0500
+Message-ID: <CAL_JsqJXqoyCRcMdS83zPr7prY52GgbAd1y+tgVn5f6Q+=CwxQ@mail.gmail.com>
+References: <1406404130-27289-1-git-send-email-gaurav.minocha.os@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140726165055.D3E64C43E0B@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-next <linux-next@vger.kernel.org>, Anton Kolesov <Anton.Kolesov@synopsys.com>, lkml <linux-kernel@vger.kernel.org>, greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406404130-27289-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 26, 2014 at 11:50 AM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
-> On Sat, 26 Jul 2014 06:52:36 +0000, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
->> Hi Rob,
->>
->> On Friday 25 July 2014 07:45 PM, Rob Herring wrote:
->> > On Fri, Jul 25, 2014 at 6:02 AM, Vineet Gupta
->> > <Vineet.Gupta1@synopsys.com> wrote:
->> >> > Hi Grant,
->> >> >
->> >> > linux-next has a series for arc_uart (via tty tree) which converts it to generic
->> >> > earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
->> >> > /chose/bootargs
->> >> >
->> >> > 2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console
->> >> >
->> >> > This relied on prev commit of yours (from linux next of 20140711), which seem to
->> >> > have disappeared now.
->> >> >
->> >> > 2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
->> >> > specified in /chosen
->> >> > 2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
->> >> > /chosen/stdout-path
->> >> >
->> >> > Is there a specific reason for dropping these patches (or perhaps a merge to be
->> >> > merged). I cherry-picked both but still doesn't work.
->> >> >
->> >> > Can you please advise next step forward, before I go off debugging with those
->> >> > patches in.
->> > There's an issue that if you have stdout-path and "earlycon" on the
->> > command line, the kernel will switch to tty0 and disable the earlycon.
->> >
->> > This is the "fix", but I don't like adding the DT dependency into generic code:
->> >
->> > @@ -2382,7 +2386,7 @@ void register_console(struct console *newcon)
->> >                 if (newcon->setup == NULL ||
->> >                     newcon->setup(newcon, NULL) == 0) {
->> >                         newcon->flags |= CON_ENABLED;
->> > -                       if (newcon->device) {
->> > +                       if (newcon->device  && !of_stdout) {
->> >                                 newcon->flags |= CON_CONSDEV;
->> >                                 preferred_console = 0;
->> >                         }
->>
->> The DT settings relevant for ARC, which enable generic-earlycon and
->> console-with-stdout-path are as follows
->>
->>         chosen {
->>                 bootargs = "earlycon";
->>                 stdout-path = &arcuart0;
->>         };
->>
->> ....
->>                 arcuart0: serial@c0fc1000 {
->>                         compatible = "snps,arc-uart";
->>
->> And it works w/o above hunk, provided the 2 patches from Grant exist in linux-next
->> which they don't at the moment. I'm pretty confused how the hunk above comes into
->> picture.
->>
->> And if not then I will have to get the ARC std-out patch reverted in tty-next as
->> it is broken.
+On Sat, Jul 26, 2014 at 2:48 PM, Gaurav Minocha
+<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> If there is no devicetree present, this patch adds the selftest
+> data as a live devicetree. It also removes the same after the
+> testcase execution is complete.
 >
-> You need to revert it anyway, the dependency chain is broken. Just
-> because something is in linux-next doesn't mean it will be merged.
-> Dependencies must always be in the branch to which you commit.
+> Tested with and without machine's devicetree.
 >
-> If that doesn't happen (like here) then bisecting is broken and the
-> dependencies may not actually get merged.
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/fdt.c      |    3 +++
+>  drivers/of/selftest.c |   34 ++++++++++++++++++++++++++++++----
+>  2 files changed, 33 insertions(+), 4 deletions(-)
 >
-> When this happens, what you're supposed to do is tell the maintainers
-> what commits the patch depends on so that it can be applied to the
-> correct tree. In this case I could take it through my devicetree branch
-> that contains the console patches.
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index b777d8f..18088c0 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -366,6 +366,9 @@ void of_fdt_unflatten_tree(unsigned long *blob,
+>                         struct device_node **mynodes)
+>  {
+>         __unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
+> +
+> +       /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+> +       of_alias_scan(&kernel_tree_alloc);
+>  }
+>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
 >
-> If a patch depends on commits in several branches then it is a bit more
-> complex. What we usually do is create a new branch that merges in each
-> branch that is depended on, and then apply the commit on top of that.
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index 3a1c5b5..34c9899 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/slab.h>
+>  #include <linux/device.h>
+> +#include <linux/proc_fs.h>
 >
-> As for the console patches, I'm only going to be putting them back if I
-> can devise a good fix for the earlycon duplication issue.
+>  static struct selftest_results {
+>         int passed;
+> @@ -25,6 +26,7 @@ static struct selftest_results {
+>  #define NO_OF_NODES 2
+>  static struct device_node *nodes[NO_OF_NODES];
+>  static int last_node_index;
+> +static bool selftest_live_tree;
+>
+>  #define selftest(result, fmt, ...) { \
+>         if (!(result)) { \
+> @@ -595,7 +597,7 @@ static int attach_node_and_children(struct device_node *np)
+>  static int __init selftest_data_add(void)
+>  {
+>         void *selftest_data;
+> -       struct device_node *selftest_data_node;
+> +       struct device_node *selftest_data_node, *np;
+>         extern uint8_t __dtb_testcases_begin[];
+>         extern uint8_t __dtb_testcases_end[];
+>         const int size = __dtb_testcases_end - __dtb_testcases_begin;
+> @@ -614,10 +616,31 @@ static int __init selftest_data_add(void)
+>                         "not running tests\n", __func__);
+>                 return -ENOMEM;
+>         }
+> -       of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
 
-There is also a simple work-around. You have to specify the console
-when you use earlycon. For example, you can add "earlycon
-console=ttyAMA0" instead of just earlycon. To summarize, this is the
-state of combinations of console params:
+Can't you keep this factored out and just do "of_allnodes =
+selftest_data_node;"?
 
-Working:
-stdout-path
-console=blah
-stdout-path + console=blah
-earlycon=blah
+>
+> -       /* attach the sub-tree to live tree */
+> -       return attach_node_and_children(selftest_data_node);
+> +       if (!of_allnodes) {
+> +               /* enabling flag for removing nodes */
+> +               selftest_live_tree = true;
 
-Not working:
-stdout-path + earlycon
+If you save the selftest_data_node ptr, then you could test for
+(selftest_data_node == of_allnodes) instead of this bool. You may want
+the pointer for some other reason later although I can't think of one
+right now.
 
-Also, it is a developer only feature which is new. You will be aware
-of an issue because the earlycon starts output and then stops on
-switching to tty0 versus complete silence which could be anything.
-There are other landmines in this area already. For example, setting
-earlycon on ARM will break the boot because an ioremap is attempted
-before paging_init. This is nothing new, but has always been the case
-if the 8250 driver was enabled.
-
-Rob
+> +
+> +               of_fdt_unflatten_tree(selftest_data, &of_allnodes);
+> +               if (!of_allnodes) {
+> +                       pr_warn("%s: No tree to attach; not running tests\n",
+> +                               __func__);
+> +                       return -ENODATA;
+> +               }
+> +
+> +               for_each_of_allnodes(np)
+> +                       of_node_add(np);
+> +
+> +               /* Symlink in /proc as required by userspace ABI */
+> +               proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+> +
+> +               return 0;
+> +       } else {
+> +               of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
+> +
+> +               /* attach the sub-tree to live tree */
+> +               return attach_node_and_children(selftest_data_node);
+> +       }
+>  }
+>
+>  /**
+> @@ -646,6 +669,9 @@ static void selftest_data_remove(void)
+>         struct device_node *np;
+>         struct property *prop;
+>
+> +       if (selftest_live_tree)
+> +               return detach_node_and_children(of_allnodes);
+> +
+>         while (last_node_index >= 0) {
+>                 if (nodes[last_node_index]) {
+>                         np = of_find_node_by_path(nodes[last_node_index]->full_name);
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
