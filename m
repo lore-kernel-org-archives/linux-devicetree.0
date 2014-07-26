@@ -1,8 +1,8 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 09/15] ARM: dts: add rk3066 and rk3188 i2c device nodes and
- pinctrl settings
-Date: Sun, 27 Jul 2014 01:18:25 +0200
-Message-ID: <1406416711-28006-10-git-send-email-heiko@sntech.de>
+Subject: [PATCH v2 01/15] ARM: dts: rockchip: add cru nodes and update device
+ clocks to use it
+Date: Sun, 27 Jul 2014 01:18:17 +0200
+Message-ID: <1406416711-28006-2-git-send-email-heiko@sntech.de>
 References: <1406416711-28006-1-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,278 +22,266 @@ To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicet
 Cc: Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-The core controller settings themself are identical, only the compatible and
-pinctrl settings differ.
+This adds a node for the clock and reset unit on rk3188 and rk3066 SoCs and
+also updates the device nodes retrieve their clocks from there, instead of
+the previous gate clock nodes.
 
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Max Schwarz <max.schwarz@online.de>
+Tested-by: Max Schwarz <max.schwarz@online.de>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 60 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3188.dtsi  | 65 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3xxx.dtsi  | 84 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 209 insertions(+)
+ arch/arm/boot/dts/rk3066a.dtsi | 28 +++++++++++++++++++---------
+ arch/arm/boot/dts/rk3188.dtsi  | 18 ++++++++++++++----
+ arch/arm/boot/dts/rk3xxx.dtsi  | 16 ++++++++--------
+ 3 files changed, 41 insertions(+), 21 deletions(-)
 
 diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 21b87de..18e802c 100644
+index 4387cfd..15c81d2 100644
 --- a/arch/arm/boot/dts/rk3066a.dtsi
 +++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -179,6 +179,41 @@
- 			bias-disable;
+@@ -15,6 +15,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/clock/rk3066a-cru.h>
+ #include "rk3xxx.dtsi"
+ #include "rk3066a-clocks.dtsi"
+ 
+@@ -45,7 +46,7 @@
+ 			compatible = "snps,dw-apb-timer-osc";
+ 			reg = <0x20038000 0x100>;
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_gates1 0>, <&clk_gates7 7>;
++			clocks = <&cru SCLK_TIMER0>, <&cru PCLK_TIMER0>;
+ 			clock-names = "timer", "pclk";
  		};
  
-+		i2c0 {
-+			i2c0_xfer: i2c0-xfer {
-+				rockchip,pins = <RK_GPIO2 28 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO2 29 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c1 {
-+			i2c1_xfer: i2c1-xfer {
-+				rockchip,pins = <RK_GPIO2 30 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO2 31 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c2 {
-+			i2c2_xfer: i2c2-xfer {
-+				rockchip,pins = <RK_GPIO3 0 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO3 1 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c3 {
-+			i2c3_xfer: i2c3-xfer {
-+				rockchip,pins = <RK_GPIO3 2 RK_FUNC_2 &pcfg_pull_none>,
-+						<RK_GPIO3 3 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c4 {
-+			i2c4_xfer: i2c4-xfer {
-+				rockchip,pins = <RK_GPIO3 4 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO3 5 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		uart0 {
- 			uart0_xfer: uart0-xfer {
- 				rockchip,pins = <RK_GPIO1 0 RK_FUNC_1 &pcfg_pull_default>,
-@@ -292,6 +327,31 @@
- 	};
- };
+@@ -53,7 +54,7 @@
+ 			compatible = "snps,dw-apb-timer-osc";
+ 			reg = <0x2003a000 0x100>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_gates1 1>, <&clk_gates7 8>;
++			clocks = <&cru SCLK_TIMER1>, <&cru PCLK_TIMER1>;
+ 			clock-names = "timer", "pclk";
+ 		};
  
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_xfer>;
-+};
+@@ -61,7 +62,7 @@
+ 			compatible = "snps,dw-apb-timer-osc";
+ 			reg = <0x2000e000 0x100>;
+ 			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_gates1 2>, <&clk_gates7 9>;
++			clocks = <&cru SCLK_TIMER2>, <&cru PCLK_TIMER2>;
+ 			clock-names = "timer", "pclk";
+ 		};
+ 
+@@ -78,6 +79,15 @@
+ 			};
+ 		};
+ 
++		cru: clock-controller@20000000 {
++			compatible = "rockchip,rk3066a-cru";
++			reg = <0x20000000 0x1000>;
++			rockchip,grf = <&grf>;
 +
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_xfer>;
-+};
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
 +
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_xfer>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_xfer>;
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_xfer>;
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4>;
+ 		pinctrl@20008000 {
+ 			compatible = "rockchip,rk3066a-pinctrl";
+ 			rockchip,grf = <&grf>;
+@@ -89,7 +99,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x20034000 0x100>;
+ 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 9>;
++				clocks = <&cru PCLK_GPIO0>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -102,7 +112,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x2003c000 0x100>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 10>;
++				clocks = <&cru PCLK_GPIO1>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -115,7 +125,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x2003e000 0x100>;
+ 				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 11>;
++				clocks = <&cru PCLK_GPIO2>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -128,7 +138,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x20080000 0x100>;
+ 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 12>;
++				clocks = <&cru PCLK_GPIO3>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -141,7 +151,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x20084000 0x100>;
+ 				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 13>;
++				clocks = <&cru PCLK_GPIO4>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -154,7 +164,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x2000a000 0x100>;
+ 				interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 15>;
++				clocks = <&cru PCLK_GPIO6>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
 diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index dd7f61f..ba1193c 100644
+index 238c996..bf0741a 100644
 --- a/arch/arm/boot/dts/rk3188.dtsi
 +++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -147,6 +147,41 @@
- 			bias-disable;
+@@ -15,6 +15,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/clock/rk3188-cru.h>
+ #include "rk3xxx.dtsi"
+ #include "rk3188-clocks.dtsi"
+ 
+@@ -74,6 +75,15 @@
+ 			};
  		};
  
-+		i2c0 {
-+			i2c0_xfer: i2c0-xfer {
-+				rockchip,pins = <RK_GPIO1 24 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 25 RK_FUNC_1 &pcfg_pull_none>;
-+			};
++		cru: clock-controller@20000000 {
++			compatible = "rockchip,rk3188-cru";
++			reg = <0x20000000 0x1000>;
++			rockchip,grf = <&grf>;
++
++			#clock-cells = <1>;
++			#reset-cells = <1>;
 +		};
 +
-+		i2c1 {
-+			i2c1_xfer: i2c1-xfer {
-+				rockchip,pins = <RK_GPIO1 26 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 27 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c2 {
-+			i2c2_xfer: i2c2-xfer {
-+				rockchip,pins = <RK_GPIO1 28 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 29 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c3 {
-+			i2c3_xfer: i2c3-xfer {
-+				rockchip,pins = <RK_GPIO3 14 RK_FUNC_2 &pcfg_pull_none>,
-+						<RK_GPIO3 15 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c4 {
-+			i2c4_xfer: i2c4-xfer {
-+				rockchip,pins = <RK_GPIO1 30 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 31 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		uart0 {
- 			uart0_xfer: uart0-xfer {
- 				rockchip,pins = <RK_GPIO1 0 RK_FUNC_1 &pcfg_pull_up>,
-@@ -272,6 +307,36 @@
- 	interrupts = <GIC_PPI 13 0xf04>;
- };
+ 		pinctrl@20008000 {
+ 			compatible = "rockchip,rk3188-pinctrl";
+ 			rockchip,grf = <&grf>;
+@@ -87,7 +97,7 @@
+ 				compatible = "rockchip,rk3188-gpio-bank0";
+ 				reg = <0x2000a000 0x100>;
+ 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 9>;
++				clocks = <&cru PCLK_GPIO0>;
  
-+&i2c0 {
-+	compatible = "rockchip,rk3188-i2c";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_xfer>;
-+};
-+
-+&i2c1 {
-+	compatible = "rockchip,rk3188-i2c";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_xfer>;
-+};
-+
-+&i2c2 {
-+	compatible = "rockchip,rk3188-i2c";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_xfer>;
-+};
-+
-+&i2c3 {
-+	compatible = "rockchip,rk3188-i2c";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_xfer>;
-+};
-+
-+&i2c4 {
-+	compatible = "rockchip,rk3188-i2c";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_xfer>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_xfer>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -100,7 +110,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x2003c000 0x100>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 10>;
++				clocks = <&cru PCLK_GPIO1>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -113,7 +123,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x2003e000 0x100>;
+ 				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 11>;
++				clocks = <&cru PCLK_GPIO2>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+@@ -126,7 +136,7 @@
+ 				compatible = "rockchip,gpio-bank";
+ 				reg = <0x20080000 0x100>;
+ 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk_gates8 12>;
++				clocks = <&cru PCLK_GPIO3>;
+ 
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
 diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index ad204da..d3fa4d1 100644
+index 2adf1cc9e..b47d5fe 100644
 --- a/arch/arm/boot/dts/rk3xxx.dtsi
 +++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -20,6 +20,14 @@
- / {
- 	interrupt-parent = <&gic>;
+@@ -60,14 +60,14 @@
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x1013c200 0x20>;
+ 			interrupts = <GIC_PPI 11 0x304>;
+-			clocks = <&dummy150m>;
++			clocks = <&cru CORE_PERI>;
+ 		};
  
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+	};
-+
- 	xin24m: oscillator {
- 		compatible = "fixed-clock";
- 		clock-frequency = <24000000>;
-@@ -117,6 +125,82 @@
- 		reg = <0x20008000 0x200>;
- 	};
+ 		local-timer@1013c600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x1013c600 0x20>;
+ 			interrupts = <GIC_PPI 13 0x304>;
+-			clocks = <&dummy150m>;
++			clocks = <&cru CORE_PERI>;
+ 		};
  
-+	i2c0: i2c@2002d000 {
-+		compatible = "rockchip,rk3066-i2c";
-+		reg = <0x2002d000 0x1000>;
-+		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rockchip,grf = <&grf>;
-+		rockchip,bus-index = <0>;
-+
-+		clock-names = "i2c";
-+		clocks = <&cru PCLK_I2C0>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c1: i2c@2002f000 {
-+		compatible = "rockchip,rk3066-i2c";
-+		reg = <0x2002f000 0x1000>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rockchip,grf = <&grf>;
-+
-+		clocks = <&cru PCLK_I2C1>;
-+		clock-names = "i2c";
-+
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@20056000 {
-+		compatible = "rockchip,rk3066-i2c";
-+		reg = <0x20056000 0x1000>;
-+		interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rockchip,grf = <&grf>;
-+
-+		clocks = <&cru PCLK_I2C2>;
-+		clock-names = "i2c";
-+
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@2005a000 {
-+		compatible = "rockchip,rk3066-i2c";
-+		reg = <0x2005a000 0x1000>;
-+		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rockchip,grf = <&grf>;
-+
-+		clocks = <&cru PCLK_I2C3>;
-+		clock-names = "i2c";
-+
-+		status = "disabled";
-+	};
-+
-+	i2c4: i2c@2005e000 {
-+		compatible = "rockchip,rk3066-i2c";
-+		reg = <0x2005e000 0x1000>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rockchip,grf = <&grf>;
-+
-+		clocks = <&cru PCLK_I2C4>;
-+		clock-names = "i2c";
-+
-+		status = "disabled";
-+	};
-+
- 	uart2: serial@20064000 {
- 		compatible = "snps,dw-apb-uart";
- 		reg = <0x20064000 0x400>;
+ 		uart0: serial@10124000 {
+@@ -76,7 +76,7 @@
+ 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <1>;
+-			clocks = <&clk_gates1 8>;
++			clocks = <&cru SCLK_UART0>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -86,7 +86,7 @@
+ 			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <1>;
+-			clocks = <&clk_gates1 10>;
++			clocks = <&cru SCLK_UART1>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -96,7 +96,7 @@
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <1>;
+-			clocks = <&clk_gates1 12>;
++			clocks = <&cru SCLK_UART2>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -106,7 +106,7 @@
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <1>;
+-			clocks = <&clk_gates1 14>;
++			clocks = <&cru SCLK_UART3>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -117,7 +117,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			clocks = <&clk_gates5 10>, <&clk_gates2 11>;
++			clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
+ 			clock-names = "biu", "ciu";
+ 
+ 			status = "disabled";
+@@ -130,7 +130,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			clocks = <&clk_gates5 11>, <&clk_gates2 13>;
++			clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>;
+ 			clock-names = "biu", "ciu";
+ 
+ 			status = "disabled";
 -- 
 2.0.1
