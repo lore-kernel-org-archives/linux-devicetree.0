@@ -1,39 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH ] ARM: pxa: fix section mismatch warning for pxa_timer_nodt_init
-Date: Sat, 26 Jul 2014 20:50:36 +0200
-Message-ID: <12220413.BdRleC0Xf5@wuerfel>
-References: <1405356724-32207-1-git-send-email-robert.jarzmik@free.fr> <53CD25A4.7030606@linaro.org> <87oawivarv.fsf@free.fr>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [RESEND][PATCHv2 0/3] Fix for buggy u-boot memory banks
+Date: Sat, 26 Jul 2014 21:03:56 +0200
+Message-ID: <53D3FB9C.9080908@suse.de>
+References: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87oawivarv.fsf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laura Abbott <lauraa@codeaurora.org>
+Cc: Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-commit a38b1f60b5245a3 ("ARM: pxa: Add non device-tree timer link to
-clocksource") introduced a harmless section mismatch warning for
-all pxa platforms, by introducing a new pxa_timer_init() function
-that is not marked __init but that calls pxa_timer_nodt_init(),
-which is. The function is only called at init time, so it is safe
-to also annotate it this way.
+Hi Laura,
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Daniel, please apply on top of Robert's patch series.
+Am 15.07.2014 19:03, schrieb Laura Abbott:
+> This is a resend of the series to fix the uboot bug exposed by the re=
+moval
+> of meminfo. I haven't gotten any acks though.
+>=20
+> Please help with review/acks. Grant/Rob, I'd still like this to go th=
+rough
+> the devicetree tree if possible.
 
-diff --git a/arch/arm/mach-pxa/generic.c b/arch/arm/mach-pxa/generic.c
-index 630fa916bbc6..04b013fbc98f 100644
---- a/arch/arm/mach-pxa/generic.c
-+++ b/arch/arm/mach-pxa/generic.c
-@@ -61,7 +61,7 @@ EXPORT_SYMBOL(get_clock_tick_rate);
- /*
-  * For non device-tree builds, keep legacy timer init
-  */
--void pxa_timer_init(void)
-+void __init pxa_timer_init(void)
- {
- 	pxa_timer_nodt_init(IRQ_OST0, io_p2v(0x40a00000),
- 			    get_clock_tick_rate());
+Sorry for the delay in testing.
+
+With this v2 applied on top of kgene's for-next branch (plus
+https://patchwork.kernel.org/patch/4297431/ as build fix) I get:
+
+[    9.699985] Unhandled fault: asynchronous external abort (0x211) at
+0x00000000
+
+Same for v1 that had worked okay before, so it's not your series, but i=
+t
+may explain why you haven't heard on v2 from the others yet.
+
+Regards,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
