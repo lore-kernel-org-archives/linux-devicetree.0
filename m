@@ -1,76 +1,37 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [RESEND][PATCHv2 0/3] Fix for buggy u-boot memory banks
-Date: Sun, 27 Jul 2014 07:39:48 +0200
-Message-ID: <53D490A4.1060302@suse.de>
-References: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org>	<53D3FB9C.9080908@suse.de> <CAK5sBcFeaHrLLoSYCvrSMBX+eGYWoGPrCH0Uxy3Ao2OAYXoTNA@mail.gmail.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 1/3] Documentation: devicetree: Document exynos5410 PMU
+Date: Sun, 27 Jul 2014 14:22:03 +0200
+Message-ID: <1406463725-4208-2-git-send-email-afaerber@suse.de>
+References: <1406463725-4208-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK5sBcFeaHrLLoSYCvrSMBX+eGYWoGPrCH0Uxy3Ao2OAYXoTNA@mail.gmail.com>
+In-Reply-To: <1406463725-4208-1-git-send-email-afaerber@suse.de>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <spk.linux@gmail.com>, Laura Abbott <lauraa@codeaurora.org>
-Cc: Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: linux-samsung-soc@vger.kernel.org
+Cc: Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 27.07.2014 06:28, schrieb Sachin Kamat:
->=20
->=20
-> On Sunday, July 27, 2014, Andreas F=C3=A4rber <afaerber@suse.de
-> <mailto:afaerber@suse.de>> wrote:
->=20
->     Hi Laura,
->=20
->     Am 15.07.2014 19:03, schrieb Laura Abbott:
->     > This is a resend of the series to fix the uboot bug exposed by =
-the
->     removal
->     > of meminfo. I haven't gotten any acks though.
->     >
->     > Please help with review/acks. Grant/Rob, I'd still like this to=
- go
->     through
->     > the devicetree tree if possible.
->=20
->     Sorry for the delay in testing.
->=20
->     With this v2 applied on top of kgene's for-next branch (plus
->     https://patchwork.kernel.org/patch/4297431/ as build fix) I get:
->=20
->     [    9.699985] Unhandled fault: asynchronous external abort (0x21=
-1) at
->     0x00000000
->=20
->=20
-> If this is on Arndale octa board,
+We will start using "samsung,exynos5410-pmu".
 
-It is, sorry, that was the board that prompted the series.
+Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+---
+ Documentation/devicetree/bindings/arm/samsung/pmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> please try disabling MCPM option.
-
-Interestingly without MCPM I then get:
-
-drivers/built-in.o: In function `bl_enter_powerdown':
-/home/andreas/linux/drivers/cpuidle/cpuidle-big_little.c:134: undefined
-reference to `mcpm_cpu_powered_up'
-drivers/built-in.o: In function `bl_powerdown_finisher':
-/home/andreas/linux/drivers/cpuidle/cpuidle-big_little.c:104: undefined
-reference to `mcpm_set_entry_vector'
-/home/andreas/linux/drivers/cpuidle/cpuidle-big_little.c:111: undefined
-reference to `mcpm_cpu_suspend'
-Makefile:885: recipe for target 'vmlinux' failed
-make: *** [vmlinux] Error 1
-
-ARM_BIG_LITTLE_CPUIDLE seems to be lacking a dependency on MCPM.
-
-Together they resolved the issue, thanks!
-
-Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
-
-Cheers,
-Andreas
-
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Do=
+cumentation/devicetree/bindings/arm/samsung/pmu.txt
+index 2a4ab046a8a1..fe14d8118093 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+@@ -7,6 +7,7 @@ Properties:
+ 		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
+ 		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+ 		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
++		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
+ 		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+ 		second value must be always "syscon".
+=20
 --=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+1.9.3
