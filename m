@@ -1,42 +1,61 @@
-From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Sun, 27 Jul 2014 22:52:54 +0800
-Message-ID: <20140727145254.GA2932@gondor.apana.org.au>
-References: <1405169953-13695-1-git-send-email-clabbe.montjoie@gmail.com>
- <1405169953-13695-4-git-send-email-clabbe.montjoie@gmail.com>
- <20140724060054.GA6545@gondor.apana.org.au>
- <53D0E857.8000405@gmail.com>
- <20140724133823.GA9638@gondor.apana.org.au>
- <53D3B4B6.3000100@gmail.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Sun, 27 Jul 2014 20:22:19 +0200
+Message-ID: <53D5435B.8030305@suse.de>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53D3B4B6.3000100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: inki.dae@samsung.com, thierry.reding@gmail.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 26, 2014 at 04:01:26PM +0200, Corentin LABBE wrote:
->
-> Even if it is undocumented, the hardware seems to support it.
-> Since crypto_ahash_ctx is for a tfm, does ahash_request_ctx is the good place to store data ?
-> (after a call to crypto_ahash_set_reqsize in cra_init)
+Hi Ajay,
 
-Yes any hash state-related data should go into the request context.
+Am 25.07.2014 21:22, schrieb Ajay Kumar:
+> This series is based on exynos-drm-next branch of Inki Dae's tree at:
+> git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
+>=20
+> I have tested this after adding few DT changes for exynos5250-snow,
+> exynos5420-peach-pit and exynos5800-peach-pi boards.
 
-> I have also seen export/import function, does I need to use it ?
+I'm trying to test this with a modified exynos5250-spring DT based off
+kgene's for-next branch due to DT, and I run into the following:
 
-Absolutely.
+  CC      drivers/gpu/drm/bridge/ptn3460.o
+drivers/gpu/drm/bridge/ptn3460.c: In function =E2=80=98ptn3460_post_enc=
+oder_init=E2=80=99:
+drivers/gpu/drm/bridge/ptn3460.c:275:2: error: implicit declaration of
+function =E2=80=98drm_connector_register=E2=80=99 [-Werror=3Dimplicit-f=
+unction-declaration]
+  drm_connector_register(&ptn_bridge->connector);
+  ^
+cc1: some warnings being treated as errors
+scripts/Makefile.build:257: recipe for target
+'drivers/gpu/drm/bridge/ptn3460.o' failed
+make[4]: *** [drivers/gpu/drm/bridge/ptn3460.o] Error 1
+scripts/Makefile.build:404: recipe for target 'drivers/gpu/drm/bridge'
+failed
+make[3]: *** [drivers/gpu/drm/bridge] Error 2
+make[3]: *** Warte auf noch nicht beendete Prozesse...
+scripts/Makefile.build:404: recipe for target 'drivers/gpu/drm' failed
+make[2]: *** [drivers/gpu/drm] Error 2
+scripts/Makefile.build:404: recipe for target 'drivers/gpu' failed
+make[1]: *** [drivers/gpu] Error 2
+Makefile:899: recipe for target 'drivers' failed
+make: *** [drivers] Error 2
 
-Cheers,
--- 
-Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any hint which prerequisite I'm missing? Didn't spot it in Inki's tree,
+and it must be new since v4.
+
+Thanks,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
