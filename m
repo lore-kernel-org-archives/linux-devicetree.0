@@ -1,48 +1,52 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Fixing OF Selftest build error
-Date: Sun, 27 Jul 2014 08:35:15 -0600
-Message-ID: <20140727143515.1D2D3C40603@trevor.secretlab.ca>
-References: <1406343458-24746-1-git-send-email-gaurav.minocha.os@gmail.com>
+Subject: Re: [PATCH 00/10] of: Core devicetree changeset support
+Date: Sun, 27 Jul 2014 08:43:31 -0600
+Message-ID: <20140727144331.73789C40603@trevor.secretlab.ca>
+References: <1406159064-21366-1-git-send-email-grant.likely@linaro.org>
+	<53D29D87.4060708@austin.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406343458-24746-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <53D29D87.4060708-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Jul 2014 19:57:38 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch is to fix following error while compiling OF selftests.
-> "drivers/of/selftest.c:617:2: error: implicit declaration of function
-> 'of_fdt_unflatten_tree'"
+On Fri, 25 Jul 2014 13:10:15 -0500, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrote:
+> On 07/23/2014 06:44 PM, Grant Likely wrote:
+> > Hi all,
+> > 
+> > This is a rollup of all the patches that I queued up today for
+> > linux-next for the devicetree changeset and overlay work. I'm reposting
+> > these patches because some have been significantly changed since their
+> > first posting. None of the code is actually live yet, but the test cases
+> > are there.
+> > 
+> > There is one significant functional change which may affect pseries. The
+> > OF_DYNAMIC code has been changed to emit notifiers after applying a
+> > change to the tree instead of before. I think I've got all they users
+> > taken care of correctly, but I'd like to see some testing. I don't have
+> > access to pseries (and I can't get the QEMU pseries model to boot reliably)
+> > 
+> > Nathan/Tyrel, can you give it a spin? The changes can be found in my git tree:
 > 
-> Now, it selects OF_FLATTREE config symbol if OF_SELFTEST is
-> enabled.
+> Grant,
 > 
-> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> I was able to do some sniff testing by adding/removing memory, cpus, and pci
+> devices and it appears that all device tree nodes and properties were updated
+> properly.
+> 
+> I would still like to try doing live partition migration where we can update
+> many pieces of the device tree. I'll be out next week, will try to get
+> on that when I return.
 
-Applied, thanks.
+Thanks Nathan,
+
+In the mean time, all this stuff is in Linux next. I would really like
+to merge it for v3.17. I expect the merge window will open next weekend.
+Let me know once you've been able to do the migration test. I can hold
+off sending Linus a pull request until wk2 of the merge window if you
+need the extra time.
 
 g.
-
-> ---
->  drivers/of/Kconfig |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 4e4f6f3..d559752 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -11,6 +11,7 @@ config OF_SELFTEST
->  	tristate "Device Tree Runtime self tests"
->  	depends on OF_IRQ
->  	select OF_DYNAMIC
-> +	select OF_FLATTREE
->  	help
->  	  This option builds in test cases for the device tree infrastructure
->  	  that are executed once at boot time, and the results dumped to the
-> -- 
-> 1.7.9.5
-> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
