@@ -1,190 +1,76 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
- Rockchip SoCs
-Date: Sat, 26 Jul 2014 21:59:35 -0700
-Message-ID: <CAD=FV=XLjYQYmHxp3HBdwVmt6Wa7y-LEnsFKobsgVfFCp2-rRg@mail.gmail.com>
-References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com>
-	<1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com>
-	<20140721085001.GG8843@ulmo>
-	<53CD0E82.6030901@rock-chips.com>
-	<20140721132723.GH15238@ulmo>
-	<53D23192.4000908@rock-chips.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [RESEND][PATCHv2 0/3] Fix for buggy u-boot memory banks
+Date: Sun, 27 Jul 2014 07:39:48 +0200
+Message-ID: <53D490A4.1060302@suse.de>
+References: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org>	<53D3FB9C.9080908@suse.de> <CAK5sBcFeaHrLLoSYCvrSMBX+eGYWoGPrCH0Uxy3Ao2OAYXoTNA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <53D23192.4000908@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: caesar <caesar.wang@rock-chips.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK5sBcFeaHrLLoSYCvrSMBX+eGYWoGPrCH0Uxy3Ao2OAYXoTNA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <spk.linux@gmail.com>, Laura Abbott <lauraa@codeaurora.org>
+Cc: Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-caesar,
+Am 27.07.2014 06:28, schrieb Sachin Kamat:
+>=20
+>=20
+> On Sunday, July 27, 2014, Andreas F=C3=A4rber <afaerber@suse.de
+> <mailto:afaerber@suse.de>> wrote:
+>=20
+>     Hi Laura,
+>=20
+>     Am 15.07.2014 19:03, schrieb Laura Abbott:
+>     > This is a resend of the series to fix the uboot bug exposed by =
+the
+>     removal
+>     > of meminfo. I haven't gotten any acks though.
+>     >
+>     > Please help with review/acks. Grant/Rob, I'd still like this to=
+ go
+>     through
+>     > the devicetree tree if possible.
+>=20
+>     Sorry for the delay in testing.
+>=20
+>     With this v2 applied on top of kgene's for-next branch (plus
+>     https://patchwork.kernel.org/patch/4297431/ as build fix) I get:
+>=20
+>     [    9.699985] Unhandled fault: asynchronous external abort (0x21=
+1) at
+>     0x00000000
+>=20
+>=20
+> If this is on Arndale octa board,
 
-On Fri, Jul 25, 2014 at 3:29 AM, caesar <caesar.wang@rock-chips.com> wr=
-ote:
-> Hi Thierry,
->
->
->
->
-> =E5=9C=A8 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 21:27, Thierry Reding =E5=
-=86=99=E9=81=93:
->>
->> On Mon, Jul 21, 2014 at 08:58:42PM +0800, caesar wrote:
->>
->>> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 16:50, Thierry Reding=
- =E5=86=99=E9=81=93:
->>>>
->>>> On Sat, Jul 19, 2014 at 08:55:29PM +0800, Caesar Wang wrote:
->>
->> [...]
->>>>>
->>>>>         struct rockchip_pwm_chip *pc;
->>>>>         struct resource *r;
->>>>>         int ret;
->>>>> @@ -119,7 +182,10 @@ static int rockchip_pwm_probe(struct
->>>>> platform_device *pdev)
->>>>>                 return -ENOMEM;
->>>>>         r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>> -       pc->base =3D devm_ioremap_resource(&pdev->dev, r);
->>>>> +       if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
->>>>> +               pc->base =3D devm_ioremap(&pdev->dev, r->start,
->>>>> resource_size(r));
->>>>> +       else
->>>>> +               pc->base =3D devm_ioremap_resource(&pdev->dev, r)=
-;
->>>>
->>>> Sorry, this still isn't an option. You really shouldn't remap I/O
->>>> regions that other drivers may be using. You hinted at a shared re=
-gister
->>>> space during the review of the initial version. Can you provide mo=
-re
->>>> detail about what exactly the memory map looks like of the rk3288?=
- Is
->>>> there some kind of technical reference manual that I could look at=
-? Or
->>>> do you have a device tree extract that shows what the memory map l=
-ooks
->>>> like?
->>>>
->>>> Thierry
->>>
->>> Maybe,you can look at the ARM: dts: rk3288:
->>>
->>> https://github.com/rkchrome/kernel/blob/master/arch/arm/boot/dts/rk=
-3288.dtsi
->>> There is some lcdc and vop-pwm map address for rk3288.
->>>
->>> ,and you can look at the vop-introduce.pdf and vop-register.pdf in =
-Annex.
->>>
->>> Maybe,I should put the vop-pwm in lcdc driver,but I don't hope do s=
-o it.
->>>
->>> Could you give a suggestion to solve it? Thanks.
->>
->> It looks like you could turn the lcdc device into an MFD device so t=
-hat
->> it can instantiate two devices, one for the display controller, the
->> other for the PWM. Or perhaps it would even work with only a single
->> child device.
->>
->> The device tree would become something like this:
->>
->>         lcdc@ff930000 {
->>                 compatible =3D "rockchip,rk3288-lcdc";
->>                 ...
->>
->>                 pwm@ff9301a0 {
->>                         compatible =3D "rockchip,vop-pwm";
->>                         ...
->>                 };
->>         };
->>
->> And your driver would do something like:
->>
->>         static const struct resource pwm_resources[] =3D {
->>                 {
->>                         .start =3D 0x1a0,
->>                         .end =3D 0x1af,
->>                         .flags =3D IORESOURCE_MEM,
->>                 },
->>         };
->>
->>         static const struct mfd_cell subdevices[] =3D {
->>                 {
->>                         .name =3D "pwm",
->>                         .id =3D 1,
->>                         .of_compatible =3D "rockchip,vop-pwm",
->>                         .num_resources =3D ARRAY_SIZE(pwm_resources)=
-,
->>                         .resources =3D pwm_resources,
->>                 },
->>         };
->>
->>         static int lcdc_probe(struct platform_device *pdev)
->>         {
->>                 struct resource *regs;
->>                 ...
->>
->>                 regs =3D platform_get_resource(pdev, IORESOURCE_MEM,=
- 0);
->>
->>                 ...
->>
->>                 err =3D mfd_add_devices(&pdev->dev, 0, subdevices,
->> ARRAY_SIZE(subdevices),
->>                                       regs, NULL, NULL);
->>                 ...
->>         }
->>
->> Thierry
->
-> Sorry,I might a little trouble for the changes.
->
-> The driver changes only for lcdc? If that is the case,I suddenly don'=
-t know
-> how to do it ?
->
-> Maybe,I didn't say it clearly.
->
-> lcdc0: lcdc@ff930000                   |     vop0pwm: pwm@ff9301a0
-> reg =3D <0xff930000 0x10000>     |      reg =3D <0xff9301a0 0x10>;
->
-> The lcdc has to add resource's address  from  0xff930000 to 0xff93fff=
-f.
->
-> When the  pwm driver is loading vop0pwm. the "devm_ioremap_resource()=
-" will
-> be used in probe();
->
-> I think it will be occur a fail. because the resource [mem
-> 0xff9301a0-0xff9301af] has be requested by lcdc.
-> =3D>rockchip-pwm ff9301a0.pwm: can't request region for resource [mem
-> 0xff9301a0-0xff9301af]
->
-> If I do the changes in pwm driver,do you have a other suggestion for =
-it?
-> thanks.:-)
+It is, sorry, that was the board that prompted the series.
 
-Sorry if this is stupid (and I haven't tried it), but does "ranges"
-help solve this problem?  AKA:
+> please try disabling MCPM option.
 
-         lcdc@ff930000 {
-                 compatible =3D "rockchip,rk3288-lcdc";
-                 reg =3D <0xff930000 0x10000>;
-                 #address-cells =3D <2>;
-                 #size-cells =3D <1>;
-                 ranges =3D <0 0xff9301a0 0x10>;
-                 ...
+Interestingly without MCPM I then get:
 
-                 pwm@0,0 {
-                         compatible =3D "rockchip,vop-pwm";
-                         reg =3D <0 0 0x10>;
-                        ...
-                 };
-         };
+drivers/built-in.o: In function `bl_enter_powerdown':
+/home/andreas/linux/drivers/cpuidle/cpuidle-big_little.c:134: undefined
+reference to `mcpm_cpu_powered_up'
+drivers/built-in.o: In function `bl_powerdown_finisher':
+/home/andreas/linux/drivers/cpuidle/cpuidle-big_little.c:104: undefined
+reference to `mcpm_set_entry_vector'
+/home/andreas/linux/drivers/cpuidle/cpuidle-big_little.c:111: undefined
+reference to `mcpm_cpu_suspend'
+Makefile:885: recipe for target 'vmlinux' failed
+make: *** [vmlinux] Error 1
 
-Does that avoid the failure?  The lcdc driver would need to call
-of_platform_populate() to make the PWM show up.
+ARM_BIG_LITTLE_CPUIDLE seems to be lacking a dependency on MCPM.
+
+Together they resolved the issue, thanks!
+
+Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
+
+Cheers,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
