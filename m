@@ -1,348 +1,190 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] V3 ARM: mvebu: Added dts defintion for Lenovo Iomega
- ix4-300d NAS
-Date: Sun, 27 Jul 2014 03:55:09 +0200
-Message-ID: <20140727015509.GB31974@lunn.ch>
-References: <1406418490-61502-1-git-send-email-yahoo@perenite.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
+ Rockchip SoCs
+Date: Sat, 26 Jul 2014 21:59:35 -0700
+Message-ID: <CAD=FV=XLjYQYmHxp3HBdwVmt6Wa7y-LEnsFKobsgVfFCp2-rRg@mail.gmail.com>
+References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com>
+	<1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com>
+	<20140721085001.GG8843@ulmo>
+	<53CD0E82.6030901@rock-chips.com>
+	<20140721132723.GH15238@ulmo>
+	<53D23192.4000908@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406418490-61502-1-git-send-email-yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Cc: benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <53D23192.4000908@rock-chips.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: caesar <caesar.wang@rock-chips.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 26, 2014 at 04:48:10PM -0700, Benoit Masson wrote:
-> The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
->  USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
-> 
-> http://shop.lenovo.com/us/en/servers/network-storage/lenovoemc/ix4-300d/
-> Signed-off-by: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                      |   3 +-
->  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 285 ++++++++++++++++++++++++
->  2 files changed, 287 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index adb5ed9..4429495 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -437,8 +437,9 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
->  	armada-xp-axpwifiap.dtb \
->  	armada-xp-db.dtb \
->  	armada-xp-gp.dtb \
-> -	armada-xp-netgear-rn2120.dtb \
-> +	armada-xp-lenovo-ix4-300d.dtb \
->  	armada-xp-matrix.dtb \
-> +	armada-xp-netgear-rn2120.dtb \
->  	armada-xp-openblocks-ax3-4.dtb
->  dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
->  	dove-cubox.dtb \
-> diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-> new file mode 100644
-> index 0000000..c82a8e3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-> @@ -0,0 +1,285 @@
-> +/*
-> + * Device Tree file for Lenovo Iomega ix4-300d
-> + *
-> + * Copyright (C) 2014, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "armada-xp-mv78230.dtsi"
-> +
-> +/ {
-> +	model = "Lenovo Iomega ix4-300d";
-> +	compatible = "lenovo,ix4-300d", "marvell,armadaxp-mv78230",
-> +		     "marvell,armadaxp", "marvell,armada-370-xp";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlyprintk";
-> +		stdout-path = "/soc/internal-regs/serial@12000";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0 0x00000000 0 0x20000000>; /* 512MB */
-> +	};
-> +
-> +	soc {
-> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
-> +			MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-> +
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			/* Quad port sata: Marvell 88SX7042 */
-> +			pcie@1,0 {
-> +				/* Port 0, Lane 0 */
-> +				status = "okay";
-> +			};
-> +
-> +			/* USB 3.0 xHCI controller: NEC D720200F1 */
-> +			pcie@5,0 {
-> +				/* Port 1, Lane 0 */
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		internal-regs {
-> +			pinctrl {
-> +				poweroff_pin: poweroff-pin {
-> +					marvell,pins = "mpp24";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				power_button_pin: power-button-pin {
-> +					marvell,pins = "mpp44";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				reset_button_pin: reset-button-pin {
-> +					marvell,pins = "mpp45";
-> +					marvell,function = "gpio";
-> +				};
-> +				select_button_pin: select-button-pin {
-> +					marvell,pins = "mpp41";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				scroll_button_pin: scroll-button-pin {
-> +					marvell,pins = "mpp42";
-> +					marvell,function = "gpio";
-> +				};
-> +
-> +				hdd_led_pin: hdd-led-pin {
-> +					marvell,pins = "mpp26";
-> +					marvell,function = "gpio";
-> +				};
-> +			};
-> +
-> +			serial@12000 {
-> +				status = "okay";
-> +			};
-> +
-> +			mdio {
-> +				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
-> +					reg = <0>;
-> +				};
-> +
-> +				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			ethernet@70000 {
-> +				status = "okay";
-> +				phy = <&phy0>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			ethernet@74000 {
-> +				status = "okay";
-> +				phy = <&phy1>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			usb@50000 {
-> +				status = "okay";
-> +			};
-> +
-> +			usb@51000 {
-> +				status = "okay";
-> +			};
-> +
-> +			i2c@11000 {
-> +				compatible = "marvell,mv64xxx-i2c";
+caesar,
 
-O.K, this version is good.
+On Fri, Jul 25, 2014 at 3:29 AM, caesar <caesar.wang@rock-chips.com> wr=
+ote:
+> Hi Thierry,
+>
+>
+>
+>
+> =E5=9C=A8 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 21:27, Thierry Reding =E5=
+=86=99=E9=81=93:
+>>
+>> On Mon, Jul 21, 2014 at 08:58:42PM +0800, caesar wrote:
+>>
+>>> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8821=E6=97=A5 16:50, Thierry Reding=
+ =E5=86=99=E9=81=93:
+>>>>
+>>>> On Sat, Jul 19, 2014 at 08:55:29PM +0800, Caesar Wang wrote:
+>>
+>> [...]
+>>>>>
+>>>>>         struct rockchip_pwm_chip *pc;
+>>>>>         struct resource *r;
+>>>>>         int ret;
+>>>>> @@ -119,7 +182,10 @@ static int rockchip_pwm_probe(struct
+>>>>> platform_device *pdev)
+>>>>>                 return -ENOMEM;
+>>>>>         r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>> -       pc->base =3D devm_ioremap_resource(&pdev->dev, r);
+>>>>> +       if (!strcmp(of_id->compatible, "rockchip,vop-pwm"))
+>>>>> +               pc->base =3D devm_ioremap(&pdev->dev, r->start,
+>>>>> resource_size(r));
+>>>>> +       else
+>>>>> +               pc->base =3D devm_ioremap_resource(&pdev->dev, r)=
+;
+>>>>
+>>>> Sorry, this still isn't an option. You really shouldn't remap I/O
+>>>> regions that other drivers may be using. You hinted at a shared re=
+gister
+>>>> space during the review of the initial version. Can you provide mo=
+re
+>>>> detail about what exactly the memory map looks like of the rk3288?=
+ Is
+>>>> there some kind of technical reference manual that I could look at=
+? Or
+>>>> do you have a device tree extract that shows what the memory map l=
+ooks
+>>>> like?
+>>>>
+>>>> Thierry
+>>>
+>>> Maybe,you can look at the ARM: dts: rk3288:
+>>>
+>>> https://github.com/rkchrome/kernel/blob/master/arch/arm/boot/dts/rk=
+3288.dtsi
+>>> There is some lcdc and vop-pwm map address for rk3288.
+>>>
+>>> ,and you can look at the vop-introduce.pdf and vop-register.pdf in =
+Annex.
+>>>
+>>> Maybe,I should put the vop-pwm in lcdc driver,but I don't hope do s=
+o it.
+>>>
+>>> Could you give a suggestion to solve it? Thanks.
+>>
+>> It looks like you could turn the lcdc device into an MFD device so t=
+hat
+>> it can instantiate two devices, one for the display controller, the
+>> other for the PWM. Or perhaps it would even work with only a single
+>> child device.
+>>
+>> The device tree would become something like this:
+>>
+>>         lcdc@ff930000 {
+>>                 compatible =3D "rockchip,rk3288-lcdc";
+>>                 ...
+>>
+>>                 pwm@ff9301a0 {
+>>                         compatible =3D "rockchip,vop-pwm";
+>>                         ...
+>>                 };
+>>         };
+>>
+>> And your driver would do something like:
+>>
+>>         static const struct resource pwm_resources[] =3D {
+>>                 {
+>>                         .start =3D 0x1a0,
+>>                         .end =3D 0x1af,
+>>                         .flags =3D IORESOURCE_MEM,
+>>                 },
+>>         };
+>>
+>>         static const struct mfd_cell subdevices[] =3D {
+>>                 {
+>>                         .name =3D "pwm",
+>>                         .id =3D 1,
+>>                         .of_compatible =3D "rockchip,vop-pwm",
+>>                         .num_resources =3D ARRAY_SIZE(pwm_resources)=
+,
+>>                         .resources =3D pwm_resources,
+>>                 },
+>>         };
+>>
+>>         static int lcdc_probe(struct platform_device *pdev)
+>>         {
+>>                 struct resource *regs;
+>>                 ...
+>>
+>>                 regs =3D platform_get_resource(pdev, IORESOURCE_MEM,=
+ 0);
+>>
+>>                 ...
+>>
+>>                 err =3D mfd_add_devices(&pdev->dev, 0, subdevices,
+>> ARRAY_SIZE(subdevices),
+>>                                       regs, NULL, NULL);
+>>                 ...
+>>         }
+>>
+>> Thierry
+>
+> Sorry,I might a little trouble for the changes.
+>
+> The driver changes only for lcdc? If that is the case,I suddenly don'=
+t know
+> how to do it ?
+>
+> Maybe,I didn't say it clearly.
+>
+> lcdc0: lcdc@ff930000                   |     vop0pwm: pwm@ff9301a0
+> reg =3D <0xff930000 0x10000>     |      reg =3D <0xff9301a0 0x10>;
+>
+> The lcdc has to add resource's address  from  0xff930000 to 0xff93fff=
+f.
+>
+> When the  pwm driver is loading vop0pwm. the "devm_ioremap_resource()=
+" will
+> be used in probe();
+>
+> I think it will be occur a fail. because the resource [mem
+> 0xff9301a0-0xff9301af] has be requested by lcdc.
+> =3D>rockchip-pwm ff9301a0.pwm: can't request region for resource [mem
+> 0xff9301a0-0xff9301af]
+>
+> If I do the changes in pwm driver,do you have a other suggestion for =
+it?
+> thanks.:-)
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Sorry if this is stupid (and I haven't tried it), but does "ranges"
+help solve this problem?  AKA:
 
-	  Andrew
+         lcdc@ff930000 {
+                 compatible =3D "rockchip,rk3288-lcdc";
+                 reg =3D <0xff930000 0x10000>;
+                 #address-cells =3D <2>;
+                 #size-cells =3D <1>;
+                 ranges =3D <0 0xff9301a0 0x10>;
+                 ...
 
-> +				clock-frequency = <400000>;
-> +				status = "okay";
-> +
-> +				adt7473@2e {
-> +					compatible = "adi,adt7473";
-> +					reg = <0x2e>;
-> +				};
-> +
-> +				pcf8563@51 {
-> +					compatible = "nxp,pcf8563";
-> +					reg = <0x51>;
-> +				};
-> +
-> +			};
-> +
-> +			nand@d0000 {
-> +				status = "okay";
-> +				num-cs = <1>;
-> +				marvell,nand-keep-config;
-> +				marvell,nand-enable-arbiter;
-> +				nand-on-flash-bbt;
-> +
-> +				partition@0 {
-> +					label = "u-boot";
-> +					reg = <0x0000000 0xe0000>;
-> +					read-only;
-> +				};
-> +
-> +				partition@e0000 {
-> +					label = "u-boot-env";
-> +					reg = <0xe0000 0x20000>;
-> +					read-only;
-> +				};
-> +
-> +				partition@100000 {
-> +					label = "u-boot-env2";
-> +					reg = <0x100000 0x20000>;
-> +					read-only;
-> +				};
-> +
-> +				partition@120000 {
-> +					label = "zImage";
-> +					reg = <0x120000 0x400000>;
-> +				};
-> +
-> +				partition@520000 {
-> +					label = "initrd";
-> +					reg = <0x520000 0x400000>;
-> +				};
-> +
-> +				partition@xE00000 {
-> +					label = "boot";
-> +					reg = <0xE00000 0x3F200000>;
-> +				};
-> +
-> +				partition@flash {
-> +					label = "flash";
-> +					reg = <0x0 0x40000000>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-0 = <&power_button_pin &reset_button_pin
-> +			&select_button_pin &scroll_button_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		power-button {
-> +			label = "Power Button";
-> +			linux,code = <KEY_POWER>;
-> +			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		reset-button {
-> +			label = "Reset Button";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		select-button {
-> +			label = "Select Button";
-> +			linux,code = <BTN_SELECT>;
-> +			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		scroll-button {
-> +			label = "Scroll Button";
-> +			linux,code = <KEY_SCROLLDOWN>;
-> +			gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	spi3 {
-> +		compatible = "spi-gpio";
-> +		status = "okay";
-> +		gpio-sck = <&gpio0 25 0>;
-> +		gpio-mosi = <&gpio1 15 0>; /*gpio 47*/
-> +		cs-gpios = <&gpio0 27 0 >;
-> +		num-chipselects = <1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		gpio2: gpio2@0 {
-> +			compatible = "fairchild,74hc595";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			reg = <0>;
-> +			registers-number = <2>;
-> +			spi-max-frequency = <100000>;
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&hdd_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		hdd-led {
-> +			label = "ix4-300d:hdd:blue";
-> +			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		power-led {
-> +			label = "ix4-300d:power:white";
-> +			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
-> +			/* init blinking while booting */
-> +			linux,default-trigger = "timer";
-> +			default-state = "on";
-> +		};
-> +
-> +		sysfail-led {
-> +			label = "ix4-300d:sysfail:red";
-> +			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		sys-led {
-> +			label = "ix4-300d:sys:blue";
-> +			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +		hddfail-led {
-> +			label = "ix4-300d:hddfail:red";
-> +			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +
-> +	};
-> +
-> +	/* 
-> +	 * Warning: you need both eth1 & 0 PHY initialized (i.e having
-> +	 * them up does the tweak) for poweroff to shutdown otherwise it
-> +	 * reboots 
-> +	 */
-> +	gpio-poweroff {
-> +		compatible = "gpio-poweroff";
-> +		pinctrl-0 = <&poweroff_pin>;
-> +		pinctrl-names = "default";
-> +		gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+                 pwm@0,0 {
+                         compatible =3D "rockchip,vop-pwm";
+                         reg =3D <0 0 0x10>;
+                        ...
+                 };
+         };
+
+Does that avoid the failure?  The lcdc driver would need to call
+of_platform_populate() to make the PWM show up.
