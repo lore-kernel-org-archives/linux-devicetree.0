@@ -1,240 +1,334 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: adc: exynos_adc: Add support for S3C24xx ADC
-Date: Sun, 27 Jul 2014 22:35:57 +0200
-Message-ID: <53D562AD.4090706@gmx.de>
-References: <1405995074-3271-1-git-send-email-cw00.choi@samsung.com> <1405995074-3271-3-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405995074-3271-3-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] V4 ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
+Date: Sun, 27 Jul 2014 16:30:39 -0700
+Message-ID: <1406503839-4662-1-git-send-email-yahoo@perenite.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Chanwoo Choi schrieb:
-> This patch add support for s3c2410/s3c2416/s3c2440/s3c2443 ADC. The s3c24xx
-> is alomost same as ADCv1. But, There are a little difference as following:
-> - ADCMUX register address to select channel
-> - ADCDAT mask (10bit or 12bit ADC resolution according to SoC version)
-Hi, just some style issues: better separate things like 10bit with a space to 10 bit, there are some instances of this type in your code. Another issue inline.
->
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/samsung/exynos-adc.txt | 10 ++-
->  drivers/iio/adc/exynos_adc.c                       | 89 +++++++++++++++++++++-
->  2 files changed, 96 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> index b6e3989..fe34c76 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> @@ -11,11 +11,19 @@ New driver handles the following
->  
->  Required properties:
->  - compatible:		Must be "samsung,exynos-adc-v1"
-> -				for exynos4412/5250 controllers.
-> +				for exynos4412/5250 and s5pv210 controllers.
->  			Must be "samsung,exynos-adc-v2" for
->  				future controllers.
->  			Must be "samsung,exynos3250-adc" for
->  				controllers compatible with ADC of Exynos3250.
-> +			Must be "samsung,s3c2410-adc" for
-> +				the ADC in s3c2410 and compatibles
-> +			Must be "samsung,s3c2416-adc" for
-> +				the ADC in s3c2416 and compatibles
-> +			Must be "samsung,s3c2440-adc" for
-> +				the ADC in s3c2440 and compatibles
-> +			Must be "samsung,s3c2443-adc" for
-> +				the ADC in s3c2443 and compatibles
->  			Must be "samsung,s3c6410-adc" for
->  				the ADC in s3c6410 and compatibles
->  - reg:			Contains ADC register address range (base address and
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index 05bdd2f12..7d28032 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -51,6 +51,9 @@
->  #define ADC_V1_MUX(x)		((x) + 0x1c)
->  #define ADC_V1_CLRINTPNDNUP(x)	((x) + 0x20)
->  
-> +/* S3C2410 ADC registers definitions */
-> +#define ADC_S3C2410_MUX(x)	((x) + 0x18)
-> +
->  /* Future ADC_V2 registers definitions */
->  #define ADC_V2_CON1(x)		((x) + 0x00)
->  #define ADC_V2_CON2(x)		((x) + 0x04)
-> @@ -67,6 +70,8 @@
->  
->  /* Bit definitions for S3C2410 ADC */
->  #define ADC_S3C2410_CON_SELMUX(x) (((x) & 7) <<3)
-> +#define ADC_S3C2410_DATX_MASK	0x3FF
-> +#define ADC_S3C2416_CON_RES_SEL	(1 << 3)
-Since it is done this way in this driver, better use (1u << 3) here.
->  
->  /* Bit definitions for ADC_V2 */
->  #define ADC_V2_CON1_SOFT_RESET	(1u << 2)
-> @@ -84,6 +89,7 @@
->  
->  /* Bit definitions common for ADC_V1 and ADC_V2 */
->  #define ADC_CON_EN_START	(1u << 0)
-> +#define ADC_CON_EN_START_MASK	(0x3 << 0)
->  #define ADC_DATX_MASK		0xFFF
->  
->  #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
-> @@ -101,12 +107,14 @@ struct exynos_adc {
->  	struct completion	completion;
->  
->  	u32			value;
-> +	u32			value2;
->  	unsigned int            version;
->  };
->  
->  struct exynos_adc_data {
->  	int num_channels;
->  	bool needs_sclk;
-> +	u32 mask;
->  
->  	void (*init_hw)(struct exynos_adc *info);
->  	void (*exit_hw)(struct exynos_adc *info);
-> @@ -217,6 +225,17 @@ static void exynos_adc_v1_start_conv(struct exynos_adc *info,
->  
->  static const struct exynos_adc_data const exynos_adc_v1_data = {
->  	.num_channels	= MAX_ADC_V1_CHANNELS,
-> +	.mask		= ADC_DATX_MASK, /* 12bit ADC resolution */
-> +
-> +	.init_hw	= exynos_adc_v1_init_hw,
-> +	.exit_hw	= exynos_adc_v1_exit_hw,
-> +	.clear_irq	= exynos_adc_v1_clear_irq,
-> +	.start_conv	= exynos_adc_v1_start_conv,
-> +};
-> +
-> +static struct exynos_adc_data const exynos_adc_s3c24xx_data = {
-> +	.num_channels	= MAX_ADC_V1_CHANNELS,
-> +	.mask		= ADC_S3C2410_DATX_MASK, /* 10bit ADC resolution */
->  
->  	.init_hw	= exynos_adc_v1_init_hw,
->  	.exit_hw	= exynos_adc_v1_exit_hw,
-> @@ -224,6 +243,55 @@ static const struct exynos_adc_data const exynos_adc_v1_data = {
->  	.start_conv	= exynos_adc_v1_start_conv,
->  };
->  
-> +static void exynos_adc_s3c2416_start_conv(struct exynos_adc *info,
-> +					  unsigned long addr)
-> +{
-> +	u32 con1;
-> +
-> +	/* Enable 12bit ADC resolution */
-> +	con1 = readl(ADC_V1_CON(info->regs));
-> +	con1 |= ADC_S3C2416_CON_RES_SEL;
-> +	writel(con1, ADC_V1_CON(info->regs));
-> +
-> +	/* Select channel for S3C2416 */
-> +	writel(addr, ADC_S3C2410_MUX(info->regs));
-> +
-> +	con1 = readl(ADC_V1_CON(info->regs));
-> +	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
-> +}
-> +
-> +static struct exynos_adc_data const exynos_adc_s3c2416_data = {
-> +	.num_channels	= MAX_ADC_V1_CHANNELS,
-> +	.mask		= ADC_DATX_MASK, /* 12bit ADC resolution */
-> +
-> +	.init_hw	= exynos_adc_v1_init_hw,
-> +	.exit_hw	= exynos_adc_v1_exit_hw,
-> +	.clear_irq	= exynos_adc_v1_clear_irq,
-> +	.start_conv	= exynos_adc_s3c2416_start_conv,
-> +};
-> +
-> +static void exynos_adc_s3c2443_start_conv(struct exynos_adc *info,
-> +					  unsigned long addr)
-> +{
-> +	u32 con1;
-> +
-> +	/* Select channel for S3C2433 */
-> +	writel(addr, ADC_S3C2410_MUX(info->regs));
-> +
-> +	con1 = readl(ADC_V1_CON(info->regs));
-> +	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
-> +}
-> +
-> +static struct exynos_adc_data const exynos_adc_s3c2443_data = {
-> +	.num_channels	= MAX_ADC_V1_CHANNELS,
-> +	.mask		= ADC_S3C2410_DATX_MASK, /* 10bit ADC resolution */
-> +
-> +	.init_hw	= exynos_adc_v1_init_hw,
-> +	.exit_hw	= exynos_adc_v1_exit_hw,
-> +	.clear_irq	= exynos_adc_v1_clear_irq,
-> +	.start_conv	= exynos_adc_s3c2443_start_conv,
-> +};
-> +
->  static void exynos_adc_s3c64xx_start_conv(struct exynos_adc *info,
->  					  unsigned long addr)
->  {
-> @@ -237,6 +305,7 @@ static void exynos_adc_s3c64xx_start_conv(struct exynos_adc *info,
->  
->  static struct exynos_adc_data const exynos_adc_s3c64xx_data = {
->  	.num_channels	= MAX_ADC_V1_CHANNELS,
-> +	.mask		= ADC_DATX_MASK, /* 12bit ADC resolution */
->  
->  	.init_hw	= exynos_adc_v1_init_hw,
->  	.exit_hw	= exynos_adc_v1_exit_hw,
-> @@ -293,6 +362,7 @@ static void exynos_adc_v2_start_conv(struct exynos_adc *info,
->  
->  static const struct exynos_adc_data const exynos_adc_v2_data = {
->  	.num_channels	= MAX_ADC_V2_CHANNELS,
-> +	.mask		= ADC_DATX_MASK, /* 12bit ADC resolution */
->  
->  	.init_hw	= exynos_adc_v2_init_hw,
->  	.exit_hw	= exynos_adc_v2_exit_hw,
-> @@ -302,6 +372,7 @@ static const struct exynos_adc_data const exynos_adc_v2_data = {
->  
->  static const struct exynos_adc_data const exynos3250_adc_data = {
->  	.num_channels	= MAX_EXYNOS3250_ADC_CHANNELS,
-> +	.mask		= ADC_DATX_MASK, /* 12bit ADC resolution */
->  	.needs_sclk	= true,
->  
->  	.init_hw	= exynos_adc_v2_init_hw,
-> @@ -312,6 +383,18 @@ static const struct exynos_adc_data const exynos3250_adc_data = {
->  
->  static const struct of_device_id exynos_adc_match[] = {
->  	{
-> +		.compatible = "samsung,s3c2410-adc",
-> +		.data = &exynos_adc_s3c24xx_data,
-> +	}, {
-> +		.compatible = "samsung,s3c2416-adc",
-> +		.data = &exynos_adc_s3c2416_data,
-> +	}, {
-> +		.compatible = "samsung,s3c2440-adc",
-> +		.data = &exynos_adc_s3c24xx_data,
-> +	}, {
-> +		.compatible = "samsung,s3c2443-adc",
-> +		.data = &exynos_adc_s3c2443_data,
-> +	}, {
->  		.compatible = "samsung,s3c6410-adc",
->  		.data = &exynos_adc_s3c64xx_data,
->  	}, {
-> @@ -365,7 +448,7 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
->  		ret = -ETIMEDOUT;
->  	} else {
->  		*val = info->value;
-> -		*val2 = 0;
-> +		*val2 = info->value2;
->  		ret = IIO_VAL_INT;
->  	}
->  
-> @@ -377,9 +460,11 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
->  static irqreturn_t exynos_adc_isr(int irq, void *dev_id)
->  {
->  	struct exynos_adc *info = (struct exynos_adc *)dev_id;
-> +	u32 mask = info->data->mask;
->  
->  	/* Read value */
-> -	info->value = readl(ADC_V1_DATX(info->regs)) & ADC_DATX_MASK;
-> +	info->value = readl(ADC_V1_DATX(info->regs)) & mask;
-> +	info->value2 = readl(ADC_V1_DATY(info->regs)) & mask;
->  
->  	/* clear irq */
->  	if (info->data->clear_irq)
+The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
+ USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
+
+http://shop.lenovo.com/us/en/servers/network-storage/lenovoemc/ix4-300d/
+Signed-off-by: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                      |   3 +-
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 285 ++++++++++++++++++++++++
+ 2 files changed, 287 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index adb5ed9..4429495 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -437,8 +437,9 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+ 	armada-xp-axpwifiap.dtb \
+ 	armada-xp-db.dtb \
+ 	armada-xp-gp.dtb \
+-	armada-xp-netgear-rn2120.dtb \
++	armada-xp-lenovo-ix4-300d.dtb \
+ 	armada-xp-matrix.dtb \
++	armada-xp-netgear-rn2120.dtb \
+ 	armada-xp-openblocks-ax3-4.dtb
+ dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
+ 	dove-cubox.dtb \
+diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+new file mode 100644
+index 0000000..6d5782b
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+@@ -0,0 +1,285 @@
++/*
++ * Device Tree file for Lenovo Iomega ix4-300d
++ *
++ * Copyright (C) 2014, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++#include "armada-xp-mv78230.dtsi"
++
++/ {
++	model = "Lenovo Iomega ix4-300d";
++	compatible = "lenovo,ix4-300d", "marvell,armadaxp-mv78230",
++		     "marvell,armadaxp", "marvell,armada-370-xp";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++		stdout-path = "/soc/internal-regs/serial@12000";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0 0x00000000 0 0x20000000>; /* 512MB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
++			MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
++
++		pcie-controller {
++			status = "okay";
++
++			/* Quad port sata: Marvell 88SX7042 */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++
++			/* USB 3.0 xHCI controller: NEC D720200F1 */
++			pcie@5,0 {
++				/* Port 1, Lane 0 */
++				status = "okay";
++			};
++		};
++
++		internal-regs {
++			pinctrl {
++				poweroff_pin: poweroff-pin {
++					marvell,pins = "mpp24";
++					marvell,function = "gpio";
++				};
++
++				power_button_pin: power-button-pin {
++					marvell,pins = "mpp44";
++					marvell,function = "gpio";
++				};
++
++				reset_button_pin: reset-button-pin {
++					marvell,pins = "mpp45";
++					marvell,function = "gpio";
++				};
++				select_button_pin: select-button-pin {
++					marvell,pins = "mpp41";
++					marvell,function = "gpio";
++				};
++
++				scroll_button_pin: scroll-button-pin {
++					marvell,pins = "mpp42";
++					marvell,function = "gpio";
++				};
++
++				hdd_led_pin: hdd-led-pin {
++					marvell,pins = "mpp26";
++					marvell,function = "gpio";
++				};
++			};
++
++			serial@12000 {
++				status = "okay";
++			};
++
++			mdio {
++				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++					reg = <0>;
++				};
++
++				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
++					reg = <1>;
++				};
++			};
++
++			ethernet@70000 {
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii-id";
++			};
++
++			ethernet@74000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "rgmii-id";
++			};
++
++			usb@50000 {
++				status = "okay";
++			};
++
++			usb@51000 {
++				status = "okay";
++			};
++
++			i2c@11000 {
++				compatible = "marvell,mv64xxx-i2c";
++				clock-frequency = <400000>;
++				status = "okay";
++
++				adt7473@2e {
++					compatible = "adi,adt7473";
++					reg = <0x2e>;
++				};
++
++				pcf8563@51 {
++					compatible = "nxp,pcf8563";
++					reg = <0x51>;
++				};
++
++			};
++
++			nand@d0000 {
++				status = "okay";
++				num-cs = <1>;
++				marvell,nand-keep-config;
++				marvell,nand-enable-arbiter;
++				nand-on-flash-bbt;
++
++				partition@0 {
++					label = "u-boot";
++					reg = <0x0000000 0xe0000>;
++					read-only;
++				};
++
++				partition@e0000 {
++					label = "u-boot-env";
++					reg = <0xe0000 0x20000>;
++					read-only;
++				};
++
++				partition@100000 {
++					label = "u-boot-env2";
++					reg = <0x100000 0x20000>;
++					read-only;
++				};
++
++				partition@120000 {
++					label = "zImage";
++					reg = <0x120000 0x400000>;
++				};
++
++				partition@520000 {
++					label = "initrd";
++					reg = <0x520000 0x400000>;
++				};
++
++				partition@xE00000 {
++					label = "boot";
++					reg = <0xE00000 0x3F200000>;
++				};
++
++				partition@flash {
++					label = "flash";
++					reg = <0x0 0x40000000>;
++				};
++			};
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-0 = <&power_button_pin &reset_button_pin
++			&select_button_pin &scroll_button_pin>;
++		pinctrl-names = "default";
++
++		power-button {
++			label = "Power Button";
++			linux,code = <KEY_POWER>;
++			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
++		};
++
++		reset-button {
++			label = "Reset Button";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
++		};
++
++		select-button {
++			label = "Select Button";
++			linux,code = <BTN_SELECT>;
++			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
++		};
++
++		scroll-button {
++			label = "Scroll Button";
++			linux,code = <KEY_SCROLLDOWN>;
++			gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	spi3 {
++		compatible = "spi-gpio";
++		status = "okay";
++		gpio-sck = <&gpio0 25 GPIO_ACTIVE_LOW>;
++		gpio-mosi = <&gpio1 15 GPIO_ACTIVE_LOW>; /*gpio 47*/
++		cs-gpios = <&gpio0 27 GPIO_ACTIVE_LOW>;
++		num-chipselects = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpio_spi: gpio_spi@0 {
++			compatible = "fairchild,74hc595";
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0>;
++			registers-number = <2>;
++			spi-max-frequency = <100000>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&hdd_led_pin>;
++		pinctrl-names = "default";
++
++		hdd-led {
++			label = "ix4-300d:hdd:blue";
++			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		power-led {
++			label = "ix4-300d:power:white";
++			gpios = <&gpio_spi 1 GPIO_ACTIVE_LOW>;
++			/* init blinking while booting */
++			linux,default-trigger = "timer";
++			default-state = "on";
++		};
++
++		sysfail-led {
++			label = "ix4-300d:sysfail:red";
++			gpios = <&gpio_spi 2 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		sys-led {
++			label = "ix4-300d:sys:blue";
++			gpios = <&gpio_spi 3 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		hddfail-led {
++			label = "ix4-300d:hddfail:red";
++			gpios = <&gpio_spi 4 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++	};
++
++	/* 
++	 * Warning: you need both eth1 & 0 PHY initialized (i.e having
++	 * them up does the tweak) for poweroff to shutdown otherwise it
++	 * reboots 
++	 */
++	gpio-poweroff {
++		compatible = "gpio-poweroff";
++		pinctrl-0 = <&poweroff_pin>;
++		pinctrl-names = "default";
++		gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
++	};
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
