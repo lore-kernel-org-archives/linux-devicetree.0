@@ -1,98 +1,42 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2] ARM: zynq: DT: Add CAN node
-Date: Mon, 28 Jul 2014 11:18:05 +0200
-Message-ID: <53D6154D.3060107@monstr.eu>
-References: <56bf20294d106e0fc9c23a70cd991a50b441d0aa.1406271138.git.michal.simek@xilinx.com> <20140725150017.GE16049@xsjandreislx>
-Reply-To: monstr@monstr.eu
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH 0/2] ARM: dts: dra72-evm: Add i2c1 and tps65917 nodes
+Date: Mon, 28 Jul 2014 14:52:11 +0530
+Message-ID: <53D61643.4070005@ti.com>
+References: <1406528334-4415-1-git-send-email-j-keerthy@ti.com> <53D5EE21.1040000@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140725150017.GE16049@xsjandreislx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org, Appana Durga Kedareswara Rao <appanad@xilinx.com>, monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53D5EE21.1040000@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>, nm@ti.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 07/25/2014 05:00 PM, S=C3=B6ren Brinkmann wrote:
-> On Fri, 2014-07-25 at 08:52AM +0200, Michal Simek wrote:
->> Add node describing Zynq's CAN controller.
+On Monday 28 July 2014 12:00 PM, Lokesh Vutla wrote:
+> On Monday 28 July 2014 11:48 AM, Keerthy wrote:
+>> The patch series adds i2c1 and tps65917 and related nodes.
+>> The patch series is boot tested on DRA72-EVM.
 >>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
+>> Thanks to Lokesh <lokeshvutla@ti.com> for testing the series.
+
+Correcting the 'to' list.
+
+> For booting, this is dependent on recent hwmod fix patch series posted by me:
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg108001.html
+>
+> Boot log for this series can be found here:
+> http://paste.ubuntu.com/7881545/
+
+Thanks Lokesh!
+
+> Thanks and regards,
+> Lokesh
+>> Keerthy J (2):
+>>    ARM: dts: dra72-evm: Enable I2C1 node
+>>    ARM: dts: dra72-evm: Add tps65917 PMIC node
 >>
->> Changes in v2:
->> - Add can1
->> - Enable can0 for zc702
->> - Use status property
+>>   arch/arm/boot/dts/dra72-evm.dts |  120 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 120 insertions(+)
 >>
->>  arch/arm/boot/dts/zynq-7000.dtsi | 26 +++++++++++++++++++++++++-
->>  arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
->>  2 files changed, 29 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq=
--7000.dtsi
->> index 366ca6434f54..983148111e3a 100644
->> --- a/arch/arm/boot/dts/zynq-7000.dtsi
->> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
->> @@ -71,7 +71,31 @@
->>  			interrupts =3D <0 7 4>;
->>  			interrupt-parent =3D <&intc>;
->>  			clocks =3D <&clkc 12>;
->> -		};
->> +		};
->> +
->> +		can0: can@e0008000 {
->> +			compatible =3D "xlnx,zynq-can-1.0";
->> +			status =3D "disabled";
->> +			clocks =3D <&clkc 19>, <&clkc 36>;
->> +			clock-names =3D "can_clk", "pclk";
->> +			reg =3D <0xe0008000 0x1000>;
->> +			interrupts =3D <0 28 4>;
->> +			interrupt-parent =3D <&intc>;
->> +			tx-fifo-depth =3D <0x40>;
->> +			rx-fifo-depth =3D <0x40>;
->> +		};
->> +
->> +		can1: can@e0009000 {
->> +			compatible =3D "xlnx,zynq-can-1.0";
->> +			status =3D "disabled";
->> +			clocks =3D <&clkc 19>, <&clkc 36>;
-> The clocks for CAN1 must be outputs 20 and 37 of the clkc.
 
-Fixed in v3.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlPWFU0ACgkQykllyylKDCEoEQCfdKTpPsRBtasvFXr/Q6+JTkHt
-kpQAnRCKDqobBbVt2k9cHcvbYcVJPue6
-=Ziyw
------END PGP SIGNATURE-----
-
---huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM--
