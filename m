@@ -1,40 +1,60 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: adc: exynos_adc: Add support for S3C24xx ADC
-Date: Mon, 28 Jul 2014 20:18:02 +0900
-Message-ID: <53D6316A.2010007@samsung.com>
-References: <1405995074-3271-1-git-send-email-cw00.choi@samsung.com>
- <1405995074-3271-3-git-send-email-cw00.choi@samsung.com>
- <5954793.q4YDWmuNDB@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5954793.q4YDWmuNDB@wuerfel>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Benoit Masson <benoitm@perenite.com>
+Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
+Date: Mon, 28 Jul 2014 13:17:56 +0200
+Message-ID: <78E68BC6-1D2C-4B75-93BA-5414A358B90D@perenite.com>
+References: <1406418436-61452-1-git-send-email-yahoo@perenite.com> <5442226.1WCY4fjGCy@wuerfel> <78788908-DDB5-46F8-83C1-FAE312D7BFB2@perenite.com> <6028388.mjACYPxFta@wuerfel>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6028388.mjACYPxFta@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Benoit Masson <yahoo@perenite.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, jason@lakedaemon.net, gregory.clement@free-electrons.com, sebastian.hesselbarth@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2014 09:59 PM, Arnd Bergmann wrote:
-> On Tuesday 22 July 2014 11:11:14 Chanwoo Choi wrote:
->> This patch add support for s3c2410/s3c2416/s3c2440/s3c2443 ADC. The s3c24xx
->> is alomost same as ADCv1. But, There are a little difference as following:
->> - ADCMUX register address to select channel
->> - ADCDAT mask (10bit or 12bit ADC resolution according to SoC version)
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>
-> 
-> While looking at the driver again to see if the touchscreen patch needs
-> an update for this, I noticed that the s3c24xx variants don't have the
-> ADC_V1_INTCLR and ADC_V1_CLRINTPNDNUP registers, so I assume your patch
-> will have to be updated not to acknowledge the interrupts.
-> 
-> It's possible that writing to the missing registers is harmless though and
-> that you don't need that change.
 
-OK, I'll remove the function pointer of clear_irq for s3c24xx.
+Le 28 juil. 2014 =E0 13:02, Arnd Bergmann <arnd@arndb.de> a =E9crit :
 
-Best Regards,
-Chanwoo Choi
+> On Monday 28 July 2014 12:50:47 Benoit Masson wrote:
+>>>=20
+>>> It should still list both "marvell,mv78230-i2c" and "marvell,mv64xx=
+x-i2c",
+>>> as the generic name may not be enough to describe the register layo=
+ut
+>>> correctly.
+>>=20
+>> I tend to disagree since the dts include the armada-xp.dtsi, which a=
+lready declare
+>>=20
+>> "i2c0: i2c@11000 {
+>>                                compatible =3D "marvell,mv78230-i2c",=
+ "marvell,mv64xxx-i2c";
+>>                                reg =3D <0x11000 0x100>;
+>>                        };
+>> "
+>>=20
+>> I tested the dts on the device and it does inherits the i2c declarat=
+ion, did I miss something here ?
+>>=20
+>=20
+> Inheriting from armada-xp.dtsi is fine, but if you manually set
+> "marvell,mv64xxx-i2c", that will override the old setting
+> and drop the "marvell,mv78230-i2c" part, which is bad because
+> it may break things later if it turns out that the mv78230
+> variant is not completely compatible with the old
+> mv64xxx variant.
+
+Ok then does this mean I can simply remove the "compatible" line to onl=
+y inherits from armada-xp-dtsi ?
+
+"i2c@11000 {
+                                clock-frequency =3D <400000>;
+                                status =3D "okay";
+"
+
+Would this be enough ?
+
+Benoit
+>=20
+> 	Arnd
