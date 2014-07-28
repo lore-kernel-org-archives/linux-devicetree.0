@@ -1,96 +1,27 @@
-From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
- specification
-Date: Mon, 28 Jul 2014 14:28:12 +0200
-Message-ID: <53D641DC.4020804@suse.de>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-10-git-send-email-afaerber@suse.de> <53D20A61.1050506@metafoo.de> <53D21066.8000905@monstr.eu> <20140725101815.GO17528@sirena.org.uk> <53D2324B.4070602@suse.de> <20140725103905.GP17528@sirena.org.uk> <53D63746.3000905@suse.de> <20140728122042.GR17528@sirena.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dma: Add Xilinx AXI DMA DT Binding Documentation
+Date: Mon, 28 Jul 2014 14:28:14 +0200
+Message-ID: <5511649.HfVoeApiug@wuerfel>
+References: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="6QqR6FuGNcK35Uj4Dv97DxmKABTHoLefr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140728122042.GR17528@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Simek <monstr@monstr.eu>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406549869-24422-1-git-send-email-sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---6QqR6FuGNcK35Uj4Dv97DxmKABTHoLefr
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Monday 28 July 2014 17:47:48 Srikanth Thokala wrote:
+> Device-tree binding documentation of Xilinx DMA Engine
+> 
+> Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-Am 28.07.2014 14:20, schrieb Mark Brown:
-> On Mon, Jul 28, 2014 at 01:43:02PM +0200, Andreas F=E4rber wrote:
->> Am 25.07.2014 12:39, schrieb Mark Brown:
->>> On Fri, Jul 25, 2014 at 12:32:43PM +0200, Andreas F=E4rber wrote:
->=20
->>>> Maybe this works for you?
->>>> https://patchwork.kernel.org/patch/4620191/
->=20
->>>> Otherwise I can resend with Ab/Rb.
->=20
->>> Documentation/SubmittingPatches.
->=20
->> Not helpful here, nor is
->> Documentation/devicetree/bindings/submitting-patches.txt. It's separat=
-e
->> from code changes, sent via git-send-email, has a Sob, went to LKML an=
-d
->> LAKML and DTML. I could add a Fixes: header and CC trivial for this
->> one-line fix IIUC.
->=20
-> It's telling you that the kernel process is to review patches sent via
-> e-mail, not random links to web appliations - notice the context to
-> which I'm replying, I'm saying that sending a link to something on the
-> web isn't a good way of submitting a patch.
->=20
->> Doesn't tell me which patches I should CC you on in the future though.=
+Looks ok to me,
 
->> Therefore my request to fix the false negative in MAINTAINERS so that =
-me
->> and other kernel newbies don't run into it again.
->=20
-> Feel free to submit patches if you want to see changes.
-
-Dude, this patch *was* submitted and has been reviewed by two people.
-Don't pretend I didn't follow the SubmittingPatches workflow.
-
-The link I gave you contains an mbox-format link that can be used with
-wget and git-am to *apply* the patch if you apparently missed it on the
-mailing lists.
-
-I will *re*-submit it for your convenience.
-
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnbe=
-rg
-
-
---6QqR6FuGNcK35Uj4Dv97DxmKABTHoLefr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJT1kHdAAoJEPou0S0+fgE/84YP/0gh8qqQhaOOWXVD22Lb4ib9
-I1CQ1weeLcc3MIVMWTyS9PqmvrsScfKMNbJ5X+HxKETN1uj/i62d25yVSlntxntJ
-//1QJwlH3JchSqHs3j9TkrpWU4f4QQY4J5P0k2ppKmyAChlZQLuszmsl51CBJX7A
-wEtmPj4141ZGq40dbBheN2vgpkWGSJmmVvy+6kunhuPpVEXOSRP0225N2wQ+sAq8
-5twkbHAXGsd1qIjrT7TnF6YAAFSFWnEBx5PxUWH6HbqE4WojEDTcdlM3T0dl9kcI
-teXJrI1h++j+RfRJYh6qXpzR9NvrLfpJl5ZqBE8vzQgNcDqu3TcwPanNUukq2ng9
-8hrnXRQQKA/v1qgsH7dB/BgBFDNOT1KgvA12KOAY2ZDBq/NiEFNuOOEy7o+H0Y0N
-aEf8qkjZjHmr9y+/UV2jE7dkwvTA05lhmq7CKT8/0A3+DgscranORrZuk/y5sKp5
-pPC+nvvdoGu2Eg6N4/M8PVgMZcctQT1nb89kS2QOTLUBsAJbwU+35d1pyUN1MOo4
-+q3a5piZP1yg3jvNYrj3NP4xRrfGIa1JyiKrtIrU7atWjyu+8UyjzKb2B+bEMIq5
-6NBLoXPjJCXbr+9IahiyamQfYIsNGKAHhnkcZO9lSf9jrvjKU1UjX+uiOfyTj68p
-b/Fa5Osz1gOqKrYc1CVm
-=Ashm
------END PGP SIGNATURE-----
-
---6QqR6FuGNcK35Uj4Dv97DxmKABTHoLefr--
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
