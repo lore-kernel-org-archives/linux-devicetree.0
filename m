@@ -1,40 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega
- ix4-300d NAS
-Date: Mon, 28 Jul 2014 13:37:32 +0200
-Message-ID: <9654351.pgAIO1YYYY@wuerfel>
-References: <1406418436-61452-1-git-send-email-yahoo@perenite.com>
- <6028388.mjACYPxFta@wuerfel>
- <78E68BC6-1D2C-4B75-93BA-5414A358B90D@perenite.com>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
+ specification
+Date: Mon, 28 Jul 2014 13:43:02 +0200
+Message-ID: <53D63746.3000905@suse.de>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-10-git-send-email-afaerber@suse.de> <53D20A61.1050506@metafoo.de> <53D21066.8000905@monstr.eu> <20140725101815.GO17528@sirena.org.uk> <53D2324B.4070602@suse.de> <20140725103905.GP17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <78E68BC6-1D2C-4B75-93BA-5414A358B90D@perenite.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Masson <benoitm@perenite.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, jason@lakedaemon.net, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, sebastian.hesselbarth@googlemail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, gregory.clement@free-electrons.com, Benoit Masson <yahoo@perenite.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="lXpipEJAHPj3Osqm7UqSajc2j4sEL3FuC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140725103905.GP17528@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Simek <monstr@monstr.eu>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 28 July 2014 13:17:56 Benoit Masson wrote:
-> 
-> Ok then does this mean I can simply remove the "compatible" line to only inherits from armada-xp-dtsi ?
-> 
-> "i2c@11000 {
->                                 clock-frequency = <400000>;
->                                 status = "okay";
-> "
-> 
-> Would this be enough ?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lXpipEJAHPj3Osqm7UqSajc2j4sEL3FuC
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
-Yes, this looks ideal.
+Mark,
 
-	Arnd
+Am 25.07.2014 12:39, schrieb Mark Brown:
+> On Fri, Jul 25, 2014 at 12:32:43PM +0200, Andreas F=E4rber wrote:
+>=20
+>> I used scripts/get_maintainer.pl --nogit-fallback. If you were not
+>> CC'ed and need to be, please submit a MAINTAINERS patch. :)
+>=20
+> You need to think about what you're doing when you use get_maintainer,
+> it gives both false positives and false negatives.
+>=20
+>> Maybe this works for you?
+>> https://patchwork.kernel.org/patch/4620191/
+>=20
+>> Otherwise I can resend with Ab/Rb.
+>=20
+> Documentation/SubmittingPatches.
+
+Not helpful here, nor is
+Documentation/devicetree/bindings/submitting-patches.txt. It's separate
+from code changes, sent via git-send-email, has a Sob, went to LKML and
+LAKML and DTML. I could add a Fixes: header and CC trivial for this
+one-line fix IIUC.
+Doesn't tell me which patches I should CC you on in the future though.
+Therefore my request to fix the false negative in MAINTAINERS so that me
+and other kernel newbies don't run into it again.
+
+I'll simply interpret your reply as "yes, please resend with
+broonie@kernel.org CC'ed" then.
+
+Regards,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnbe=
+rg
+
+
+--lXpipEJAHPj3Osqm7UqSajc2j4sEL3FuC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJT1jdMAAoJEPou0S0+fgE/08AP/3WgEGNL6KIH0QPeI89i8vFj
+yWeouN29Q/wibvlAI/876TBCtWCsZv7or+/BFsAXmUuNIqgx83ri5Uaf0q9VcGSN
+p4FF5/UQQtPfArGXd6wfCt7KZEecM/OmZ8hcnrZ9xrOAvtn6kkrbuvjTMfiV6UYh
+xEhuUN3J6kbvxwgaTD+TwbL6DUwaiL4eLhsGGLM8SdXgZ50SD4OakPgiDeujBhMx
+5WFVMoBnLaHEKBrixQA5Huv59CN4sEBN6AoXpDHr0Cb26BpFNN+DCpabcMrcgssO
+k4wupoqox8Wmj3ahF/LQhuvntxoLIlcLyAmrFVtJmttm9cW1sg0QXWRZyPri/cDv
+9/UhPcPJaQJ79SFvMbOyyNzYSFV0XbFNPUxmzgS6cTzyYedGEgWLElwcVa/Fh3X6
+Ygos1Xk5iP6bm7rh5SXBqLLaaoFxqW6pdo+x3qTnwKq2NFH+UkJ49vYovHSjoWPp
+m3eJkM7M6rtrZ+5K+9CclD6z5sIWk6Sx1oGxJ0CN3ykXgpirOX1P1UM0sOfZrcG6
+LFcWzqTI65q5uVZGucXwbWKpvjppSWj/LxBPTr0VgcEF5QjT5Gowx3iyYUDPN4gA
+P9HUxOGov2+RGpTIbMTrETCpOAnFs0m0NNPrpmjGgIBxrC0Y2qgMVid+YQh+YDm+
+v1c+jumAfThKU4IJGrpg
+=smt/
+-----END PGP SIGNATURE-----
+
+--lXpipEJAHPj3Osqm7UqSajc2j4sEL3FuC--
