@@ -1,78 +1,47 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv9 4/4] dt: mailbox: add generic bindings
-Date: Mon, 28 Jul 2014 07:50:08 -0600
-Message-ID: <20140728135008.1E8C4C408A9@trevor.secretlab.ca>
-References: <1406055250-29159-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406055456-29384-1-git-send-email-jaswinder.singh@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406055456-29384-1-git-send-email-jaswinder.singh@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ks.giri@samsung.com, arnd@arndb.de, ijc@hellion.org.uk, mark.rutland@arm.com, robh@kernel.org, pawel.moll@arm.com, courtney.cavin@sonymobile.com, mporter@linaro.org, slapdau@yahoo.com.au, lftan.linux@gmail.com, loic.pallardy@st.com, s-anna@ti.com, ashwin.chaugule@linaro.org, bjorn@kryo.se, patches@linaro.org, t.takinishi@jp.fujitsu.com, broonie@linaro.org, khilman@linaro.org, mollie.wu@linaro.org, andy.green@linaro.org, lee.jones@linaro.org, Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks
+ handled by clock_ops domain
+Date: Mon, 28 Jul 2014 08:05:33 -0600
+Message-ID: <20140728140533.6E916C4116F@trevor.secretlab.ca>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+	<1402592023-13416-1-git-send-email-grygorii.strashko@ti.com>
+	<1402592023-13416-3-git-send-email-grygorii.strashko@ti.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1402592023-13416-3-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: geert+renesas@glider.be
+Cc: laurent.pinchart@ideasonboard.com, ulf.hansson@linaro.org, khilman@linaro.org, mturquette@linaro.org, tomasz.figa@gmail.com, ben.dooks@codethink.co.uk, horms@verge.net.au, magnus.damm@gmail.com, rjw@rjwysocki.net, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Jul 2014 00:27:36 +0530, Jassi Brar <jaswinder.singh@linaro.org> wrote:
-> Define generic bindings for the framework clients to
-> request mailbox channels.
+On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+> Use "clkops-clocks" property to specify clocks handled by
+> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
+> set of clocks will be handled by Runtime PM through clock_ops
+> Pm domain.
 > 
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/of/of_clk.c |    7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
+> index 35f5e9f..5f9b90e 100644
+> --- a/drivers/of/of_clk.c
+> +++ b/drivers/of/of_clk.c
+> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct device_node *np,
+>  	struct clk *clk;
+>  	int error;
+>  
+> -	for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
+> -		if (!clk_may_runtime_pm(clk)) {
+> -			clk_put(clk);
+> -			continue;
+> -		}
+> +	for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
+> +		     !IS_ERR(clk); i++) {
 
-Looks okay to me.
+This really looks like an ABI break to me. What happens to all the
+existing platforms who don't have this new clkops-clocks in their device
+tree?
 
 g.
-
-> ---
->  .../devicetree/bindings/mailbox/mailbox.txt        | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/mailbox.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-> new file mode 100644
-> index 0000000..bb79678
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-> @@ -0,0 +1,36 @@
-> +* Generic Mailbox Controller and client driver bindings
-> +
-> +Generic binding to provide a way for Mailbox controller drivers to
-> +assign appropriate mailbox channel to client drivers.
-> +
-> +* Mailbox Controller
-> +
-> +Required property:
-> +- #mbox-cells: Must be at least 1. Number of cells in a mailbox
-> +		specifier.
-> +
-> +Example:
-> +	mailbox: mailbox {
-> +		...
-> +		#mbox-cells = <1>;
-> +	};
-> +
-> +
-> +* Mailbox Client
-> +
-> +Required property:
-> +- mboxes: List of phandle and mailbox channel specifiers.
-> +
-> +Optional property:
-> +- mbox-names: List of identifier strings for each mailbox channel
-> +		required by the client. The use of this property
-> +		is discouraged in favor of using index in list of
-> +		'mboxes' while requesting a mailbox.
-> +
-> +Example:
-> +	pwr_cntrl: power {
-> +		...
-> +		mbox-names = "pwr-ctrl", "rpc";
-> +		mboxes = <&mailbox 0
-> +			&mailbox 1>;
-> +	};
-> -- 
-> 1.8.1.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
