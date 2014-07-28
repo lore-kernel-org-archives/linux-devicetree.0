@@ -1,28 +1,41 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] V3 ARM: mvebu: Added dts defintion for Lenovo Iomega
- ix4-300d NAS
-Date: Mon, 28 Jul 2014 15:28:17 +0200
-Message-ID: <20140728132817.GD2891@lunn.ch>
-References: <1406418490-61502-1-git-send-email-yahoo@perenite.com>
- <20140727015509.GB31974@lunn.ch>
- <20140728133005.GO23220@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140728133005.GO23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH/RFC v4 07/21] of: add of_node_ncmp wrapper
+Date: Mon, 28 Jul 2014 07:41:00 -0600
+Message-ID: <20140728134100.86C07C408A9@trevor.secretlab.ca>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+	<1405087464-13762-8-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1405087464-13762-8-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-> Benoit, this is still in V4.  If Andrew agrees, I'll just remove the
-> line when I apply V4.
+On Fri, 11 Jul 2014 16:04:10 +0200, Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+> The wrapper for strnicmp is required for checking whether a node has
+> expected prefix.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Michal Simek <monstr@monstr.eu>
+> ---
+>  include/linux/of.h |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 692b56c..9a53eea 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -199,6 +199,7 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+>  #define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
+>  #define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
+>  #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
+> +#define of_node_ncmp(s1, s2, n)		strnicmp((s1), (s2), (n))
+>  #endif
 
-I'm wrong, Arnd is right.
+Don't forget to add an of_node_ncmp() define to
+arch/sparc/include/asm/prom.h. Sparc has its own rules.
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
