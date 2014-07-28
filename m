@@ -1,56 +1,49 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Mon, 28 Jul 2014 18:17:53 +0200
-Message-ID: <53D677B1.2000700@suse.de>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [LINUX PATCH] ARM: zynq: DT: Remove DMA from board DTs
+Date: Mon, 28 Jul 2014 09:24:03 -0700
+Message-ID: <1406564643-10417-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406242820-20140-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars-Peter,
+The DMA engine is enabled for all DTs that derive from zynq-7000.dtsi.
+There is no need to override the 'status' property in board DTs.
 
-Am 25.07.2014 01:00, schrieb Andreas F=C3=A4rber:
-> most notably I'm missing=20
-> ADI ADV7513 and AXI-HDMI support
-[...]
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> (HDMI)
+Cc: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+When the 'status' property was removed from the DMA node, this had been
+overlooked.
 
-Could you please enlighten us what the status of upstreaming
-ADV7511/ADV7513 support is? It is declared "work in progress" here:
+	S=C3=B6ren
 
-http://wiki.analog.com/resources/tools-software/linux-drivers/drm/adv75=
-11
+ arch/arm/boot/dts/zynq-parallella.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-I see some adv7511 V4L bits in drivers/media/i2c/adv7511.c, but no
-drivers/gpu/drm/i2c/adv7511_{core,audio}.c as on the xcomm_zynq branch,
-nor any devicetree documentation. Patchwork doesn't show any recent
-submissions to LKML.
-
-Is any major rework needed for you to get the 3.14.12 based driver upst=
-ream?
-
-AXI SPDIF I found in 3.16, as you noticed; what about AXI HDMI? [*]
-Is there any work ongoing to get that upstream as well?
-
-Any pointers appreciated.
-
-Thanks,
-Andreas
-
-[*]
-http://wiki.analog.com/resources/tools-software/linux-drivers/platforms=
-/zynq
-
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/=
+zynq-parallella.dts
+index 1595138ec499..41afd9da6876 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -34,10 +34,6 @@
+ 	};
+ };
+=20
+-&dmac_s {
+-	status =3D "okay";
+-};
+-
+ &gem0 {
+ 	status =3D "okay";
+ 	phy-mode =3D "rgmii-id";
 --=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+2.0.1.1.gfbfc394
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
