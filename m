@@ -1,158 +1,78 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
-Date: Tue, 29 Jul 2014 00:38:59 +0200
-Message-ID: <20140728223859.GA3214@piout.net>
-References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz>
- <20140728122103.GR9532@piout.net>
- <53D64ADA.1000102@aksignal.cz>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 0/6] Migrate PXA27x platforms to clock framework
+Date: Mon, 28 Jul 2014 16:55:47 -0700
+Message-ID: <20140728235547.4906.20868@quantum>
+References: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr>
+ <87k376vadk.fsf@free.fr> <20140726004212.4791.52407@quantum>
+ <87k370o61q.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53D64ADA.1000102-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87k370o61q.fsf@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-(Adding Mark in Cc:)
-
-On 28/07/2014 at 15:06:34 +0200, Ji=C5=99=C3=AD Prchal wrote :
-> >>+#define DRIVER_NAME "atmel-spi"
-> >>+
+Quoting Robert Jarzmik (2014-07-26 01:52:49)
+> Mike Turquette <mturquette@linaro.org> writes:
+> 
+> > Quoting Robert Jarzmik (2014-07-21 11:23:51)
+> >> Robert Jarzmik <robert.jarzmik@free.fr> writes:
+> >> 
+> >> > This is the second opus of this serie.
+> >> 
+> >> Ping ?
 > >
-> >This is not really related to the issue solved by that patch, maybe =
-it
-> >could go in another patch ?
-> Probably yes, but is used for this patch, I based it upon spi-efm32.
+> > Hi Robert,
 > >
+> > Overall the series looks good to me. The only problem I see is that
+> > somewhere in the use of the PARENTS() macro there is a section mismatch
+> > introduced. I spent about 5 minutes looking at it and gave up. This
+> > problem introduces 26 section mismatch warnings building
+> > colibri_pxa270_defconfig.
+> OK Mike, I'll fix this. This is probably because pxa27x_clocks array is not
+> __init, and it references parents which are __init. I was lazy letting
+> pxa27x_clocks not __init because I reuse the internal fields "hw" and "gate->hw"
+> later (hence I didn't leave the __init).
+> This is a bit dirty and I'll launder it.
+> 
+> Moreover, I have one fix which I had fixed wrt boot ordering : the
+> postcore_init() must die. The reason behind is that I have no guarantee of
+> ordering between clocks init and clocksource init, and clocksource relies on
+> clocks.
+> 
+> The right way will be AFAIK to call the core clocks init :
+>  - within the device-tree initialization function : pxa27x_dt_clocks_init()
+>  calls pxa27x_clocks_init9)
+>  - directly from pxa27x_init() or pxa_timer_init() in non-device tree setup
+> 
+> > Once those are fixed up then I will be happy to take this series. Do you
+> > want me to take all six patches through the clk tree, including the
+> > arm/arm stuff?
+> I would feel more comfortable if :
+>  - you take the 4 first ones (3 clock ones + 1 arm pxa header bit definitions)
+>  - Haojian takes the last 2 ones (pxa ones)
+> 
+> I will check that taking only the first 4 ones doesn't break anything, in case
+> there is a merge window hipcup.
 
-Yeah, I wouldn't use it anyway, see my comment below.
+Sounds good.
 
-> >>  	asd->csr =3D csr;
-> >>@@ -1290,6 +1276,15 @@ static int atmel_spi_probe(struct platform_d=
-evice *pdev)
-> >>  	int			ret;
-> >>  	struct spi_master	*master;
-> >>  	struct atmel_spi	*as;
-> >>+	struct device_node *np =3D pdev->dev.of_node;
-> >>+	int num_cs, i;
-> >>+
-> >>+	if (!np)
-> >>+		return -EINVAL;
-> >>+
-> >>+	num_cs =3D of_gpio_named_count(np, "cs-gpios");
-> >>+	if (num_cs < 0)
-> >>+		return num_cs;
-> >>
-> >
-> >This driver can still be probed without DT, this will break here, pl=
-ease
-> >don't assume that DT is present.
-> Yes, but I copied it from spi-efm32 and looked at others, is almost t=
-he same.
+Regards,
+Mike
 
-Maybe it is similar in other drivers but at91 platforms can still be
-booted without DT, This will fail with:
-atmel_spi: probe of atmel_spi.0 failed with error -22
-
-The efm32 only supports DT, it doesn't have board files/platform data.
-
-> >
-> >
-> >>  	/* Select default pin state */
-> >>  	pinctrl_pm_select_default_state(&pdev->dev);
-> >>@@ -1308,7 +1303,7 @@ static int atmel_spi_probe(struct platform_de=
-vice *pdev)
-> >>
-> >>  	/* setup spi core then atmel-specific driver state */
-> >>  	ret =3D -ENOMEM;
-> >>-	master =3D spi_alloc_master(&pdev->dev, sizeof(*as));
-> >>+	master =3D spi_alloc_master(&pdev->dev, sizeof(*as) + num_cs * si=
-zeof(unsigned));
-> >>  	if (!master)
-> >>  		goto out_free;
-> >>
-> >>@@ -1317,7 +1312,7 @@ static int atmel_spi_probe(struct platform_de=
-vice *pdev)
-> >>  	master->bits_per_word_mask =3D SPI_BPW_RANGE_MASK(8, 16);
-> >>  	master->dev.of_node =3D pdev->dev.of_node;
-> >>  	master->bus_num =3D pdev->id;
-> >>-	master->num_chipselect =3D master->dev.of_node ? 0 : 4;
-> >>+	master->num_chipselect =3D num_cs;
-> >
-> >My guess is that you don't need to change that part.
-> I think I need it. What about 3 cs?
-
-This will be taken care of by the spi core, in of_spi_register_master()=
-:
-
-	nb =3D of_gpio_named_count(np, "cs-gpios");
-	master->num_chipselect =3D max_t(int, nb, master->num_chipselect);
-
-
-> >
-> >>  	master->setup =3D atmel_spi_setup;
-> >>  	master->transfer_one_message =3D atmel_spi_transfer_one_message;
-> >>  	master->cleanup =3D atmel_spi_cleanup;
-> >>@@ -1325,6 +1320,25 @@ static int atmel_spi_probe(struct platform_d=
-evice *pdev)
-> >>
-> >>  	as =3D spi_master_get_devdata(master);
-> >>
-> >>+	for (i =3D 0; i < master->num_chipselect; ++i) {
-> >>+		ret =3D of_get_named_gpio(np, "cs-gpios", i);
-> >
-> >Again, DT maybe not be compiled in or that driver may be probed from
-> >platform data.
-> Is another way how to do it? I see cs-gpios in master struct, but whe=
-re it gets filled.
-> >
-
-It is filled when registering the master, here when calling
-devm_spi_register_master(). It may be too late at that point.
-
-> >>+		if (ret < 0) {
-> >>+			dev_err(&pdev->dev, "failed to get csgpio#%u (%d)\n",
-> >>+				i, ret);
-> >>+			goto out_free;
-> >>+		}
-> >>+		as->csgpio[i] =3D ret;
-> >>+		dev_dbg(&pdev->dev, "csgpio#%u =3D %u\n", i, as->csgpio[i]);
-> >>+		ret =3D devm_gpio_request_one(&pdev->dev, as->csgpio[i],
-> >>+					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
-
-Maybe you could use the CS number ifor the label here instead of
-DRIVER_NAME, at least, use pdev->dev->name and completely drop
-DRIVER_NAME.
-
-> >>+		if (ret < 0) {
-> >>+			dev_err(&pdev->dev,
-> >>+				"failed to configure csgpio#%u (%d)\n",
-> >>+				i, ret);
-> >>+			goto out_free;
-> >>+		}
-> >>+	}
-> >>+
-
-Mark: maybe it would make sense to do devm_gpio_request_one() in
-of_spi_register_master(), after of_get_named_gpio.
-
-While this solves the particular issue Ji=C5=99=C3=AD is seeing, this w=
-ill not
-solve the case where PA14 (CS0) is not used by the spi driver at all. I=
-t
-will remained muxed as CS0 and toggle when the spi master needs to
-access CS0 until another driver muxes it to something else. I still
-believe we should explicitly ask pinctrl to mux them as gpios.
-
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Cheers.
+> 
+> -- 
+> Robert
