@@ -1,106 +1,74 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
- Rockchip SoCs
-Date: Mon, 28 Jul 2014 09:58:22 -0700
-Message-ID: <CAOesGMgPDOQ0Z5b+d8nCiT4q_OGcYfv0zCb1naZVAqapaOtnPw@mail.gmail.com>
-References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com>
-	<1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com>
-	<20140721085001.GG8843@ulmo>
-	<53CD0E82.6030901@rock-chips.com>
-	<20140721132723.GH15238@ulmo>
-	<53D23192.4000908@rock-chips.com>
-	<CAD=FV=XLjYQYmHxp3HBdwVmt6Wa7y-LEnsFKobsgVfFCp2-rRg@mail.gmail.com>
-	<53D50601.1020106@rock-chips.com>
-	<CAD=FV=UvF58NiY76FMi-TPVzsaWRJsR-M5HnHc7MRAWjwjY1jw@mail.gmail.com>
-	<53D631B6.1050603@rock-chips.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks
+ handled by clock_ops domain
+Date: Mon, 28 Jul 2014 20:47:48 +0300
+Message-ID: <53D68CC4.1010704@ti.com>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>	<1402592023-13416-1-git-send-email-grygorii.strashko@ti.com>	<1402592023-13416-3-git-send-email-grygorii.strashko@ti.com> <20140728140533.6E916C4116F@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D631B6.1050603-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20140728140533.6E916C4116F-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: caesar <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 4:19 AM, caesar <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wr=
-ote:
-> Doug,
-> =E5=9C=A8 2014=E5=B9=B407=E6=9C=8828=E6=97=A5 12:01, Doug Anderson =E5=
-=86=99=E9=81=93:
->
->> Caesar,
->>
->> On Sun, Jul 27, 2014 at 7:00 AM, caesar <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> wrote:
->>>
->>> /*I think will be show the faill log:->
->>>
->>> * rockchip-pwm ff9301a0.pwm: can't request region for resource [mem
->>> 0xff9301a0-0xff93019f]
->>> */
->>>
->>> pc->base =3D devm_ioremap_resource(dev, regs);
->>
->> Did you actually code this up and try it and get this error?
->
-> Yeah.
->
->> I hadn't
->> tried it but I researched other dts files and it looked as if there
->> was one example that was doing this.  ...but perhaps it wasn't
->> actually doing the ioremap_resource on both ranges.
->>
->> I'd imagine that this is _probably_ equivalent to what Thierry was
->> suggesting, so if it didn't work then maybe Thierry's won't work
->> either?
->>
->> I don't have any other great suggestions other than doing two memory
->> ranges for lcdc:
->>
->>           lcdc@ff930000 {
->>                   compatible =3D "rockchip,rk3288-lcdc";
->>                   reg =3D <0xff930000 0x1a0>, <0xff9301b0 0xfe50>;
->>                   ...
->>           };
->>           pwm@ff9301a0 {
->>                   compatible =3D "rockchip,vop-pwm";
->>                   reg =3D <0xff9301a0 0x10>;
->>                   ...
->>           };
->>
->> ...but I am certainly nowhere near an expert on this stuff...
->>
->> -Doug
->>
->>
->>
-> I has solve in lcdc driver,but I always feel awkward. I think a good =
-way to
-> solve in pwm driver.
-> Unfortunately that  so far ,I have not a good idle in pwm driver.
->
-> Maybe,I  let do it that way in lcdc driver.
+Hi Grant.
 
-I think there's an easier way to do this, by not focusing _too_ much
-on the device tree:
+On 07/28/2014 05:05 PM, Grant Likely wrote:
+> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+>> Use "clkops-clocks" property to specify clocks handled by
+>> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
+>> set of clocks will be handled by Runtime PM through clock_ops
+>> Pm domain.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/of/of_clk.c |    7 ++-----
+>>   1 file changed, 2 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
+>> index 35f5e9f..5f9b90e 100644
+>> --- a/drivers/of/of_clk.c
+>> +++ b/drivers/of/of_clk.c
+>> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct device_node *np,
+>>   	struct clk *clk;
+>>   	int error;
+>>   
+>> -	for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
+>> -		if (!clk_may_runtime_pm(clk)) {
+>> -			clk_put(clk);
+>> -			continue;
+>> -		}
+>> +	for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
+>> +		     !IS_ERR(clk); i++) {
+> 
+> This really looks like an ABI break to me. What happens to all the
+> existing platforms who don't have this new clkops-clocks in their device
+> tree?
 
-* Define a platform_data structure for the PWM driver, which contains
-readl/writel accessors as well as the device type (i.e. what you use
-the compatible field and the lookup table for today).
-* Populate the platform_device in the clcd driver, and register that
-* Make the PWM driver probe as a regular platform device if pdata is pa=
-ssed
-* Make a readl/writel wrapper that either falls back to native
-readl/writel when there aren't any passed in, or make the DT code fill
-in the pdata with the native versions in that case.
+Agree. This patch as is will break such platforms.
+As possible solution for above problem - the NULL can be used as clock's prefix
+by default and platform code can configure new value of clock's prefix during
+initialization.
+In addition, to make this solution full the of_clk_get_by_name() will
+need to be modified too.
 
-Going full MFD on this seems overkill, unless there is also a shared
-interrupt that needs to be handled.
+But note pls, this is pure RFC patches which I did to find out the answer on questions:
+- What is better: maintain Runtime PM clocks configuration in DT or in code?
 
--Olof
+- Where and when to call of_clk_register_runtime_pm_clocks()?
+  Bus notifier/ platform core/ device drivers
+
+Also, May be platform dependent solution [1] can be acceptable for now?
+
+[1] https://lkml.org/lkml/2014/7/25/630
+
+Best regards,
+-grygorii
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
