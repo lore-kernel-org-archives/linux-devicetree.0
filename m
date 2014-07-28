@@ -1,45 +1,63 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [v2] input: drv260x: Add TI drv260x haptics driver
-Date: Mon, 28 Jul 2014 10:43:34 -0700
-Message-ID: <20140728174334.GD8982@core.coreip.homeip.net>
-References: <1406566403-1436-1-git-send-email-dmurphy@ti.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
+ controller
+Date: Mon, 28 Jul 2014 20:01:36 +0200
+Message-ID: <20140728180136.GB7100@pd.tnic>
+References: <64d65965-45a3-41c3-9b04-9743b8b1e49c@BL2FFO11FD025.protection.gbl>
+ <20140728113446.GA5350@pd.tnic>
+ <CAGnW=BaEn7mjW3fmCcuyqgsgG=L_j_1zwK9kXAsx9GsBbOXXfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1406566403-1436-1-git-send-email-dmurphy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAGnW=BaEn7mjW3fmCcuyqgsgG=L_j_1zwK9kXAsx9GsBbOXXfA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: punnaiah choudary kalluri <punnaia@xilinx.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-edac@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Punnaiah Choudary <kpc528@gmail.com>, anirudh@xilinx.com, svemula@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On Mon, Jul 28, 2014 at 10:53:26PM +0530, punnaiah choudary kalluri wrote:
+> I can agree with you that we can use shorter names.But ZYNQ has
+> programmable logic next to processing system where one can add soft
+> memory controller in the same system and may use different driver. So,
+> the edac driver for zynq may include multiple drivers for different
+> memory controllers in the same file. In this case it is difficult to
+> maintain generic macros as you suggested above.
 
-On Mon, Jul 28, 2014 at 11:53:23AM -0500, Dan Murphy wrote:
-> Add the TI drv260x haptics/vibrator driver.
-> This device uses the input force feedback
-> to produce a wave form to driver an
-> ERM or LRA actuator device.
-> 
-> The initial driver supports the devices
-> real time playback mode.  But the device
-> has additional wave patterns in ROM.
+So?
 
-As it presented the device appears to be a memoryless device, however
-you present it to the rest of the system as if it can support playback
-of multiple effects simultaneously, which is incorrect.
+You can still shorten them a bit - the current names are awfully long.
+SYNPS_DDRC_ECC_ is too much information, for example. We know it is DDR
+and we know it is about ECC. So do SYNPS and ZYNQ or OTHER or whatever
+you wanna call it prefix and then the rest. I.e.,
 
-My guess that you need to engage the memoryless input library to schedule
-handling multiple effects for your device, including ramping up, ramping
-down, stopping playback when effects runs out, etc.
+    SYNPS_<reg>_<bits*>
+    ZYNQ_<reg>_bits*>
+
+You can even use single letter prefixes like S_ and Z_ and add a comment
+explaining what those mean. Still much more readable than the long
+repeating prefixes currently.
+
+> Also the current edac framework for edac memory controllers is
+> expecting the mc_num from the driver while allocating the memory
+> controller instance using the edac_mc_alloc function. This requirement
+> mandates that if the system contains two different memory controllers
+> then the corresponding edac drivers should be in single file.
+
+So you're telling me that you want one edac driver for *two* memory
+controllers which can be present on a single system *at* *the* *same*
+*time*? Is that it?
+
+How exactly is that topology supposed to look like, work, etc, etc? What
+kind of error reporting do you imagine you want to do with EDAC?
+
+IOW, more info would be appreciated.
 
 Thanks.
- 
--- 
-Dmitry
 
-P.S. If you are using devm_ there is devm_input_allocate_dveice().
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
