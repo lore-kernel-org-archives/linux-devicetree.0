@@ -1,80 +1,167 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCHv7 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk to
- host's quirk
-Date: Mon, 28 Jul 2014 11:29:39 +0900
-Message-ID: <1406514579-3769-6-git-send-email-jh80.chung@samsung.com>
-References: <1406514579-3769-1-git-send-email-jh80.chung@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1406514579-3769-1-git-send-email-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-mmc <linux-mmc@vger.kernel.org>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, afaerber@suse.de, Jaehoon Chung <jh80.chung@samsung.com>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Enabling OF selftest to run without machine's devicetree
+Date: Sun, 27 Jul 2014 20:28:34 -0700
+Message-ID: <CA+rpMbJmCQ7YfJ7c+hjOmdfAdTHtTuH34mEWGH9Xo=rYJFDgKg@mail.gmail.com>
+References: <1406404130-27289-1-git-send-email-gaurav.minocha.os@gmail.com>
+	<CAL_JsqJXqoyCRcMdS83zPr7prY52GgbAd1y+tgVn5f6Q+=CwxQ@mail.gmail.com>
+	<CA+rpMb+pPZykJ7-XurVSSOaTPGNji9zG7FtVB+m6-gNiOHM4Jw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+rpMb+pPZykJ7-XurVSSOaTPGNji9zG7FtVB+m6-gNiOHM4Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replaced the "disable-wp" into host's quirks.
-(Because the slot-node is removed at dt-file.)
+On Sat, Jul 26, 2014 at 3:17 PM, Gaurav Minocha
+<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sat, Jul 26, 2014 at 2:11 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sat, Jul 26, 2014 at 2:48 PM, Gaurav Minocha
+>> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> If there is no devicetree present, this patch adds the selftest
+>>> data as a live devicetree. It also removes the same after the
+>>> testcase execution is complete.
+>>>
+>>> Tested with and without machine's devicetree.
+>>>
+>>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  drivers/of/fdt.c      |    3 +++
+>>>  drivers/of/selftest.c |   34 ++++++++++++++++++++++++++++++----
+>>>  2 files changed, 33 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>> index b777d8f..18088c0 100644
+>>> --- a/drivers/of/fdt.c
+>>> +++ b/drivers/of/fdt.c
+>>> @@ -366,6 +366,9 @@ void of_fdt_unflatten_tree(unsigned long *blob,
+>>>                         struct device_node **mynodes)
+>>>  {
+>>>         __unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
+>>> +
+>>> +       /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+>>> +       of_alias_scan(&kernel_tree_alloc);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+>>>
+>>> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+>>> index 3a1c5b5..34c9899 100644
+>>> --- a/drivers/of/selftest.c
+>>> +++ b/drivers/of/selftest.c
+>>> @@ -16,6 +16,7 @@
+>>>  #include <linux/mutex.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/device.h>
+>>> +#include <linux/proc_fs.h>
+>>>
+>>>  static struct selftest_results {
+>>>         int passed;
+>>> @@ -25,6 +26,7 @@ static struct selftest_results {
+>>>  #define NO_OF_NODES 2
+>>>  static struct device_node *nodes[NO_OF_NODES];
+>>>  static int last_node_index;
+>>> +static bool selftest_live_tree;
+>>>
+>>>  #define selftest(result, fmt, ...) { \
+>>>         if (!(result)) { \
+>>> @@ -595,7 +597,7 @@ static int attach_node_and_children(struct device_node *np)
+>>>  static int __init selftest_data_add(void)
+>>>  {
+>>>         void *selftest_data;
+>>> -       struct device_node *selftest_data_node;
+>>> +       struct device_node *selftest_data_node, *np;
+>>>         extern uint8_t __dtb_testcases_begin[];
+>>>         extern uint8_t __dtb_testcases_end[];
+>>>         const int size = __dtb_testcases_end - __dtb_testcases_begin;
+>>> @@ -614,10 +616,31 @@ static int __init selftest_data_add(void)
+>>>                         "not running tests\n", __func__);
+>>>                 return -ENOMEM;
+>>>         }
+>>> -       of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
+>>
+>> Can't you keep this factored out and just do "of_allnodes =
+>> selftest_data_node;"?
+>>
+> I tried to do that in first place, but of_alias_scan() called from
+> of_fdt_unflatten_tree(..)
+> needs of_allnodes. So, had to call it separately.
+>
+Actually, it's possible if rather than calling of_alias_scan from
+of_fdt_unflatten_tree, I write a wrapper and export it as below.
+So, I will be able to call of_fdt_alias_scan explicitly.
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
-Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
----
- drivers/mmc/host/dw_mmc.c  |   12 +++++-------
- include/linux/mmc/dw_mmc.h |    6 ++----
- 2 files changed, 7 insertions(+), 11 deletions(-)
+of_fdt_alias_scan()
+{
+     of_alias_scan(&kernel_tree_alloc);
+}
+EXPORT_SYMBOL(of_fdt_alias_scan)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 1ac227c..4a4f66f 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -997,7 +997,7 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
- 	int gpio_ro = mmc_gpio_get_ro(mmc);
- 
- 	/* Use platform get_ro function, else try on board write protect */
--	if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
-+	if (slot->host->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
- 		read_only = 0;
- 	else if (!IS_ERR_VALUE(gpio_ro))
- 		read_only = gpio_ro;
-@@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
- static struct dw_mci_of_slot_quirks {
- 	char *quirk;
- 	int id;
--} of_slot_quirks[] = {
--	{
--		.quirk	= "disable-wp",
--		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
--	},
--};
-+} of_slot_quirks[] = {};
- 
- static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
- {
-@@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
- 	{
- 		.quirk	= "broken-cd",
- 		.id	= DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
-+	}, {
-+		.quirk	= "disable-wp",
-+		.id	= DW_MCI_QUIRK_NO_WRITE_PROTECT,
- 	},
- };
- 
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index babaea9..8b4b2d8 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -213,10 +213,8 @@ struct dw_mci_dma_ops {
- #define DW_MCI_QUIRK_HIGHSPEED			BIT(2)
- /* Unreliable card detection */
- #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
--
--/* Slot level quirks */
--/* This slot has no write protect */
--#define DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT	BIT(0)
-+/* No write protect */
-+#define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
- 
- struct dma_pdata;
- 
--- 
-1.7.9.5
+OR
+
+directly export of_alias_scan() and
+kernel_tree_alloc(u64 size, u64 align)
+
+please let me know if I should follow either of the above
+approach in my next patch.
+
+>>>
+>>> -       /* attach the sub-tree to live tree */
+>>> -       return attach_node_and_children(selftest_data_node);
+>>> +       if (!of_allnodes) {
+>>> +               /* enabling flag for removing nodes */
+>>> +               selftest_live_tree = true;
+>>
+>> If you save the selftest_data_node ptr, then you could test for
+>> (selftest_data_node == of_allnodes) instead of this bool. You may want
+>> the pointer for some other reason later although I can't think of one
+>> right now.
+>>
+> Yes, this can be done if I make selftest_data_node global, will update
+> in next patch.
+>
+>>> +
+>>> +               of_fdt_unflatten_tree(selftest_data, &of_allnodes);
+>>> +               if (!of_allnodes) {
+>>> +                       pr_warn("%s: No tree to attach; not running tests\n",
+>>> +                               __func__);
+>>> +                       return -ENODATA;
+>>> +               }
+>>> +
+>>> +               for_each_of_allnodes(np)
+>>> +                       of_node_add(np);
+>>> +
+>>> +               /* Symlink in /proc as required by userspace ABI */
+>>> +               proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+>>> +
+>>> +               return 0;
+>>> +       } else {
+>>> +               of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
+>>> +
+>>> +               /* attach the sub-tree to live tree */
+>>> +               return attach_node_and_children(selftest_data_node);
+>>> +       }
+>>>  }
+>>>
+>>>  /**
+>>> @@ -646,6 +669,9 @@ static void selftest_data_remove(void)
+>>>         struct device_node *np;
+>>>         struct property *prop;
+>>>
+>>> +       if (selftest_live_tree)
+>>> +               return detach_node_and_children(of_allnodes);
+>>> +
+>>>         while (last_node_index >= 0) {
+>>>                 if (nodes[last_node_index]) {
+>>>                         np = of_find_node_by_path(nodes[last_node_index]->full_name);
+>>> --
+>>> 1.7.9.5
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
