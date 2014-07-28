@@ -1,60 +1,80 @@
-From: Benoit Masson <benoitm@perenite.com>
-Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
-Date: Mon, 28 Jul 2014 13:17:56 +0200
-Message-ID: <78E68BC6-1D2C-4B75-93BA-5414A358B90D@perenite.com>
-References: <1406418436-61452-1-git-send-email-yahoo@perenite.com> <5442226.1WCY4fjGCy@wuerfel> <78788908-DDB5-46F8-83C1-FAE312D7BFB2@perenite.com> <6028388.mjACYPxFta@wuerfel>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6028388.mjACYPxFta@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Benoit Masson <yahoo@perenite.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, jason@lakedaemon.net, gregory.clement@free-electrons.com, sebastian.hesselbarth@googlemail.com
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: adc: exynos_adc: add support for s3c64xx adc
+Date: Mon, 28 Jul 2014 20:18:43 +0900
+Message-ID: <53D63193.1020506@samsung.com>
+References: <1405995074-3271-1-git-send-email-cw00.choi@samsung.com>
+ <1405995074-3271-2-git-send-email-cw00.choi@samsung.com>
+ <53D549A2.1000900@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <53D549A2.1000900-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/28/2014 03:49 AM, Hartmut Knaack wrote:
+> Chanwoo Choi schrieb:
+>> From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>
+>> The ADC in s3c64xx is almost the same as exynosv1, but
+>> has a different 'select' method. Adding this here will be
+>> helpful to move over the existing s3c64xx platform from the
+>> legacy plat-samsung/adc driver to the new exynos-adc.
+>>
+>> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |  2 ++
+>>  drivers/iio/adc/exynos_adc.c                       | 32 +++++++++++++++++++++-
+>>  2 files changed, 33 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> index 6d34891..b6e3989 100644
+>> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> @@ -16,6 +16,8 @@ Required properties:
+>>  				future controllers.
+>>  			Must be "samsung,exynos3250-adc" for
+>>  				controllers compatible with ADC of Exynos3250.
+>> +			Must be "samsung,s3c6410-adc" for
+>> +				the ADC in s3c6410 and compatibles
+>>  - reg:			Contains ADC register address range (base address and
+>>  			length) and the address of the phy enable register.
+>>  - interrupts: 		Contains the interrupt information for the timer. The
+>> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+>> index 87e0895..05bdd2f12 100644
+>> --- a/drivers/iio/adc/exynos_adc.c
+>> +++ b/drivers/iio/adc/exynos_adc.c
+>> @@ -40,12 +40,16 @@
+>>  #include <linux/iio/machine.h>
+>>  #include <linux/iio/driver.h>
+>>  
+>> -/* EXYNOS4412/5250 ADC_V1 registers definitions */
+>> +/* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
+>>  #define ADC_V1_CON(x)		((x) + 0x00)
+>> +#define ADC_V1_TSC(x)		((x) + 0x04)
+>>  #define ADC_V1_DLY(x)		((x) + 0x08)
+>>  #define ADC_V1_DATX(x)		((x) + 0x0C)
+>> +#define ADC_V1_DATY(x)		((x) + 0x10)
+>> +#define ADC_V1_UPDN(x)		((x) + 0x14)
+>>  #define ADC_V1_INTCLR(x)	((x) + 0x18)
+>>  #define ADC_V1_MUX(x)		((x) + 0x1c)
+>> +#define ADC_V1_CLRINTPNDNUP(x)	((x) + 0x20)
+>>  
+>>  /* Future ADC_V2 registers definitions */
+>>  #define ADC_V2_CON1(x)		((x) + 0x00)
+>> @@ -61,6 +65,9 @@
+>>  #define ADC_V1_CON_PRSCLV(x)	(((x) & 0xFF) << 6)
+>>  #define ADC_V1_CON_STANDBY	(1u << 2)
+>>  
+>> +/* Bit definitions for S3C2410 ADC */
+>> +#define ADC_S3C2410_CON_SELMUX(x) (((x) & 7) <<3)
+> There is a whitespace missing.
 
-Le 28 juil. 2014 =E0 13:02, Arnd Bergmann <arnd@arndb.de> a =E9crit :
+OK, I'll fix it.
 
-> On Monday 28 July 2014 12:50:47 Benoit Masson wrote:
->>>=20
->>> It should still list both "marvell,mv78230-i2c" and "marvell,mv64xx=
-x-i2c",
->>> as the generic name may not be enough to describe the register layo=
-ut
->>> correctly.
->>=20
->> I tend to disagree since the dts include the armada-xp.dtsi, which a=
-lready declare
->>=20
->> "i2c0: i2c@11000 {
->>                                compatible =3D "marvell,mv78230-i2c",=
- "marvell,mv64xxx-i2c";
->>                                reg =3D <0x11000 0x100>;
->>                        };
->> "
->>=20
->> I tested the dts on the device and it does inherits the i2c declarat=
-ion, did I miss something here ?
->>=20
->=20
-> Inheriting from armada-xp.dtsi is fine, but if you manually set
-> "marvell,mv64xxx-i2c", that will override the old setting
-> and drop the "marvell,mv78230-i2c" part, which is bad because
-> it may break things later if it turns out that the mv78230
-> variant is not completely compatible with the old
-> mv64xxx variant.
-
-Ok then does this mean I can simply remove the "compatible" line to onl=
-y inherits from armada-xp-dtsi ?
-
-"i2c@11000 {
-                                clock-frequency =3D <400000>;
-                                status =3D "okay";
-"
-
-Would this be enough ?
-
-Benoit
->=20
-> 	Arnd
+Best Regards,
+Chanwoo Choi
