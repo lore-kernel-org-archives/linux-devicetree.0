@@ -1,315 +1,142 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v7 8/9] of: spi: Export single device registration method and accessors
-Date: Fri,  4 Jul 2014 19:59:27 +0300
-Message-Id: <1404493168-8980-9-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 3/4] of: of_reconfig_get_state_change() of notifier helper.
+Date: Mon, 28 Jul 2014 23:06:48 +0300
+Message-Id: <1406578009-30154-4-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1406578009-30154-1-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1406578009-30154-1-git-send-email-pantelis.antoniou@konsulko.com>
 To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Dynamically inserting spi device nodes requires the use of a single
-device registration method. Rework and export it.
-
-Methods to lookup a device/master using a device node are added
-as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
+Introduce of_reconfig_get_state_change() which allows an of notifier
+to query about device state changes.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/spi/spi.c | 256 +++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 158 insertions(+), 98 deletions(-)
+ drivers/of/dynamic.c | 96 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h   |  1 +
+ 2 files changed, 97 insertions(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index d4f9670..cd98bf2 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1200,6 +1200,123 @@ err_init_queue:
- /*-------------------------------------------------------------------------*/
- 
- #if defined(CONFIG_OF)
-+
-+static struct spi_device *
-+of_register_spi_device(struct spi_master *master, struct device_node *node)
-+{
-+	struct spi_device *spi;
-+	struct device_node *nc;
-+	int rc;
-+	u32 value;
-+
-+	/* Alloc an spi_device */
-+	spi = spi_alloc_device(master);
-+	if (!spi) {
-+		dev_err(&master->dev, "spi_device alloc error for %s\n",
-+			nc->full_name);
-+		rc = -ENOMEM;
-+		goto err_out;
-+	}
-+
-+	/* Select device driver */
-+	rc = of_modalias_node(nc, spi->modalias,
-+				sizeof(spi->modalias));
-+	if (rc < 0) {
-+		dev_err(&master->dev, "cannot find modalias for %s\n",
-+			nc->full_name);
-+		goto err_out;
-+	}
-+
-+	/* Device address */
-+	rc = of_property_read_u32(nc, "reg", &value);
-+	if (rc) {
-+		dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
-+			nc->full_name, rc);
-+		goto err_out;
-+	}
-+	spi->chip_select = value;
-+
-+	/* Mode (clock phase/polarity/etc.) */
-+	if (of_find_property(nc, "spi-cpha", NULL))
-+		spi->mode |= SPI_CPHA;
-+	if (of_find_property(nc, "spi-cpol", NULL))
-+		spi->mode |= SPI_CPOL;
-+	if (of_find_property(nc, "spi-cs-high", NULL))
-+		spi->mode |= SPI_CS_HIGH;
-+	if (of_find_property(nc, "spi-3wire", NULL))
-+		spi->mode |= SPI_3WIRE;
-+	if (of_find_property(nc, "spi-lsb-first", NULL))
-+		spi->mode |= SPI_LSB_FIRST;
-+
-+	/* Device DUAL/QUAD mode */
-+	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
-+		switch (value) {
-+		case 1:
-+			break;
-+		case 2:
-+			spi->mode |= SPI_TX_DUAL;
-+			break;
-+		case 4:
-+			spi->mode |= SPI_TX_QUAD;
-+			break;
-+		default:
-+			dev_warn(&master->dev,
-+				"spi-tx-bus-width %d not supported\n",
-+				value);
-+			break;
-+		}
-+	}
-+
-+	if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
-+		switch (value) {
-+		case 1:
-+			break;
-+		case 2:
-+			spi->mode |= SPI_RX_DUAL;
-+			break;
-+		case 4:
-+			spi->mode |= SPI_RX_QUAD;
-+			break;
-+		default:
-+			dev_warn(&master->dev,
-+				"spi-rx-bus-width %d not supported\n",
-+				value);
-+			break;
-+		}
-+	}
-+
-+	/* Device speed */
-+	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
-+	if (rc) {
-+		dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
-+			nc->full_name, rc);
-+		goto err_out;
-+	}
-+	spi->max_speed_hz = value;
-+
-+	/* IRQ */
-+	spi->irq = irq_of_parse_and_map(nc, 0);
-+
-+	/* Store a pointer to the node in the device structure */
-+	of_node_get(nc);
-+	spi->dev.of_node = nc;
-+
-+	/* Register the new device */
-+	request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
-+	rc = spi_add_device(spi);
-+	if (rc) {
-+		dev_err(&master->dev, "spi_device register error %s\n",
-+			nc->full_name);
-+		goto err_out;
-+	}
-+
-+	return spi;
-+
-+err_out:
-+	spi_dev_put(spi);
-+	return ERR_PTR(rc);
-+}
-+
- /**
-  * of_register_spi_devices() - Register child devices onto the SPI bus
-  * @master:	Pointer to spi_master device
-@@ -1209,120 +1326,63 @@ err_init_queue:
-  */
- static void of_register_spi_devices(struct spi_master *master)
- {
--	struct spi_device *spi;
- 	struct device_node *nc;
--	int rc;
--	u32 value;
-+	struct spi_device *spi;
- 
- 	if (!master->dev.of_node)
- 		return;
- 
- 	for_each_available_child_of_node(master->dev.of_node, nc) {
--		/* Alloc an spi_device */
--		spi = spi_alloc_device(master);
--		if (!spi) {
--			dev_err(&master->dev, "spi_device alloc error for %s\n",
-+		spi = of_register_spi_device(master, nc);
-+		if (IS_ERR(spi))
-+			dev_warn(&master->dev, "Failed to create SPI device for %s\n",
- 				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
-+	}
-+}
- 
--		/* Select device driver */
--		if (of_modalias_node(nc, spi->modalias,
--				     sizeof(spi->modalias)) < 0) {
--			dev_err(&master->dev, "cannot find modalias for %s\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
-+static int of_dev_node_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
- 
--		/* Device address */
--		rc = of_property_read_u32(nc, "reg", &value);
--		if (rc) {
--			dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
--				nc->full_name, rc);
--			spi_dev_put(spi);
--			continue;
--		}
--		spi->chip_select = value;
--
--		/* Mode (clock phase/polarity/etc.) */
--		if (of_find_property(nc, "spi-cpha", NULL))
--			spi->mode |= SPI_CPHA;
--		if (of_find_property(nc, "spi-cpol", NULL))
--			spi->mode |= SPI_CPOL;
--		if (of_find_property(nc, "spi-cs-high", NULL))
--			spi->mode |= SPI_CS_HIGH;
--		if (of_find_property(nc, "spi-3wire", NULL))
--			spi->mode |= SPI_3WIRE;
--		if (of_find_property(nc, "spi-lsb-first", NULL))
--			spi->mode |= SPI_LSB_FIRST;
--
--		/* Device DUAL/QUAD mode */
--		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
--			switch (value) {
--			case 1:
--				break;
--			case 2:
--				spi->mode |= SPI_TX_DUAL;
--				break;
--			case 4:
--				spi->mode |= SPI_TX_QUAD;
--				break;
--			default:
--				dev_warn(&master->dev,
--					 "spi-tx-bus-width %d not supported\n",
--					 value);
--				break;
--			}
--		}
-+/* bah; the match functions differ just by const-ness */
-+static int of_dev_node_match_const(struct device *dev, const void *data)
-+{
-+	return dev->of_node == data;
-+}
- 
--		if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
--			switch (value) {
--			case 1:
--				break;
--			case 2:
--				spi->mode |= SPI_RX_DUAL;
--				break;
--			case 4:
--				spi->mode |= SPI_RX_QUAD;
--				break;
--			default:
--				dev_warn(&master->dev,
--					 "spi-rx-bus-width %d not supported\n",
--					 value);
--				break;
--			}
--		}
-+/* must call put_device() when done with returned spi_device device */
-+struct spi_device *of_find_spi_device_by_node(struct device_node *node)
-+{
-+	struct device *dev;
- 
--		/* Device speed */
--		rc = of_property_read_u32(nc, "spi-max-frequency", &value);
--		if (rc) {
--			dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
--				nc->full_name, rc);
--			spi_dev_put(spi);
--			continue;
--		}
--		spi->max_speed_hz = value;
-+	dev = bus_find_device(&spi_bus_type, NULL, node,
-+					 of_dev_node_match);
-+	if (!dev)
-+		return NULL;
- 
--		/* IRQ */
--		spi->irq = irq_of_parse_and_map(nc, 0);
-+	return to_spi_device(dev);
-+}
-+EXPORT_SYMBOL(of_find_spi_device_by_node);
- 
--		/* Store a pointer to the node in the device structure */
--		of_node_get(nc);
--		spi->dev.of_node = nc;
-+/* forward decl */
-+static struct class spi_master_class;
- 
--		/* Register the new device */
--		request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
--		rc = spi_add_device(spi);
--		if (rc) {
--			dev_err(&master->dev, "spi_device register error %s\n",
--				nc->full_name);
--			spi_dev_put(spi);
--		}
-+/* the spi masters are not using spi_bus, so we find it with another way */
-+struct spi_master *of_find_spi_master_by_node(struct device_node *node)
-+{
-+	struct device *dev;
- 
--	}
-+	dev = class_find_device(&spi_master_class, NULL, node,
-+				of_dev_node_match_const);
-+	if (!dev)
-+		return NULL;
-+
-+	/* reference got in class_find_device */
-+	return container_of(dev, struct spi_master, dev);
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 73c1c4a..87fb684 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -82,6 +82,102 @@ int of_reconfig_notify(unsigned long action, void *p)
+ 	return notifier_to_errno(rc);
  }
-+EXPORT_SYMBOL(of_find_spi_master_by_node);
+ 
++/*
++ * of_reconfig_get_state_change()	- Returns new state of device
++ * @action	- action of the of notifier
++ * @arg		- argument of the of notifier
++ *
++ * Returns the new state of a device based on the notifier used.
++ * Returns 0 on device going from enabled to disabled, 1 on device
++ * going from disabled to enabled and -1 on no change.
++ */
++int of_reconfig_get_state_change(unsigned long action, void *arg)
++{
++	struct device_node *dn;
++	struct property *prop, *old_prop;
++	struct of_prop_reconfig *pr;
++	int is_status, status_state, old_status_state, prev_state, new_state;
 +
- #else
- static void of_register_spi_devices(struct spi_master *master) { }
- #endif
++	/* figure out if a device should be created or destroyed */
++	dn = NULL;
++	prop = old_prop = NULL;
++	switch (action) {
++	case OF_RECONFIG_ATTACH_NODE:
++	case OF_RECONFIG_DETACH_NODE:
++		dn = arg;
++		prop = of_find_property(dn, "status", NULL);
++		break;
++	case OF_RECONFIG_ADD_PROPERTY:
++	case OF_RECONFIG_REMOVE_PROPERTY:
++		pr = arg;
++		dn = pr->dn;
++		prop = pr->prop;
++		break;
++	case OF_RECONFIG_UPDATE_PROPERTY:
++		pr = arg;
++		dn = pr->dn;
++		prop = pr->prop;
++		old_prop = pr->old_prop;
++		break;
++	default:
++		return -1;	/* don't care */
++	}
++
++	is_status = 0;
++	status_state = -1;
++	old_status_state = -1;
++	prev_state = -1;
++	new_state = -1;
++
++	if (prop && !strcmp(prop->name, "status")) {
++		is_status = 1;
++		status_state = !strcmp(prop->value, "okay") ||
++			       !strcmp(prop->value, "ok");
++		if (old_prop)
++			old_status_state = !strcmp(old_prop->value, "okay") ||
++					   !strcmp(old_prop->value, "ok");
++	}
++
++	switch (action) {
++	case OF_RECONFIG_ATTACH_NODE:
++		prev_state = 0;
++		/* -1 & 0 status either missing or okay */
++		new_state = status_state != 0;
++		break;
++	case OF_RECONFIG_DETACH_NODE:
++		/* -1 & 0 status either missing or okay */
++		prev_state = status_state != 0;
++		new_state = 0;
++		break;
++	case OF_RECONFIG_ADD_PROPERTY:
++		if (is_status) {
++			/* no status property -> enabled (legacy) */
++			prev_state = 1;
++			new_state = status_state;
++		}
++		break;
++	case OF_RECONFIG_REMOVE_PROPERTY:
++		if (is_status) {
++			prev_state = status_state;
++			/* no status property -> enabled (legacy) */
++			new_state = 1;
++		}
++		break;
++	case OF_RECONFIG_UPDATE_PROPERTY:
++		if (is_status) {
++			prev_state = old_status_state != 0;
++			new_state = status_state != 0;
++		}
++		break;
++	}
++
++	if (prev_state == new_state)
++		return -1;
++
++	return new_state;
++}
++EXPORT_SYMBOL_GPL(of_reconfig_get_state_change);
++
+ int of_property_notify(int action, struct device_node *np,
+ 		       struct property *prop, struct property *oldprop)
+ {
+diff --git a/include/linux/of.h b/include/linux/of.h
+index bf38c2f..bbf3a8d0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -327,6 +327,7 @@ struct of_prop_reconfig {
+ extern int of_reconfig_notifier_register(struct notifier_block *);
+ extern int of_reconfig_notifier_unregister(struct notifier_block *);
+ extern int of_reconfig_notify(unsigned long, void *);
++extern int of_reconfig_get_state_change(unsigned long action, void *arg);
+ 
+ extern int of_attach_node(struct device_node *);
+ extern int of_detach_node(struct device_node *);
 -- 
 1.7.12
