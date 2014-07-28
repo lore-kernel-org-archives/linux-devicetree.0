@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 5/6] ARM: sunxi: Add A31 RTC driver to sunxi_defconfig
-Date: Mon, 28 Jul 2014 16:21:00 +0800
-Message-ID: <1406535661-25072-6-git-send-email-wens@csie.org>
+Subject: [PATCH v4 2/6] rtc: sunxi: Depend on platforms
+ sun4i/sun7i that actually have the rtc
+Date: Mon, 28 Jul 2014 16:20:57 +0800
+Message-ID: <1406535661-25072-3-git-send-email-wens@csie.org>
 References: <1406535661-25072-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,25 +20,28 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a driver for A31's RTC, enable it
-in the default sunxi config.
+Now that we have Kconfig options for individual sunxi platforms, let
+the rtc-sunxi driver depend on the platforms that actually have this
+hardware, sun4i and sun7i.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/rtc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 7209bfd..0abc2ab 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -93,6 +93,7 @@ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
- CONFIG_RTC_CLASS=y
- # CONFIG_RTC_INTF_SYSFS is not set
- # CONFIG_RTC_INTF_PROC is not set
-+CONFIG_RTC_DRV_SUN6I=y
- CONFIG_RTC_DRV_SUNXI=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_PHY_SUN4I_USB=y
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index dde2b57..f933b4b 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1176,7 +1176,7 @@ config RTC_DRV_SUN6I
+ 
+ config RTC_DRV_SUNXI
+ 	tristate "Allwinner sun4i/sun7i RTC"
+-	depends on ARCH_SUNXI
++	depends on MACH_SUN4I || MACH_SUN7I
+ 	help
+ 	  If you say Y here you will get support for the RTC found on
+ 	  Allwinner A10/A20.
 -- 
 2.0.1
