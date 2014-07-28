@@ -1,41 +1,48 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH/RFC v4 07/21] of: add of_node_ncmp wrapper
-Date: Mon, 28 Jul 2014 07:41:00 -0600
-Message-ID: <20140728134100.86C07C408A9@trevor.secretlab.ca>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
-	<1405087464-13762-8-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1405087464-13762-8-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Simek <monstr@monstr.eu>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 1/2] Adding Lenovo - Lenovo Group Ltd. to the
+ vendor-prefixes list.
+Date: Mon, 28 Jul 2014 09:43:47 -0400
+Message-ID: <20140728134347.GP23220@titan.lakedaemon.net>
+References: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406154923-13612-1-git-send-email-yahoo@perenite.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Masson <yahoo@perenite.com>
+Cc: benoitm@perenite.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, gregory.clement@free-electrons.com, sebastian.hesselbarth@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jul 2014 16:04:10 +0200, Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
-> The wrapper for strnicmp is required for checking whether a node has
-> expected prefix.
+Benoit,
+
+On Wed, Jul 23, 2014 at 03:35:22PM -0700, Benoit Masson wrote:
+> Lenovo Group Ltd. (stylized as lenovo) is a Chinese multinational
+> computer technology company with headquarters in Beijing, China, and
+> Morrisville, North Carolina, United States.
 > 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Michal Simek <monstr@monstr.eu>
+> http://www.lenovo.com/
+> Signed-off-by: Benoit Masson <yahoo@perenite.com>
 > ---
->  include/linux/of.h |    1 +
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
 >  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 692b56c..9a53eea 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -199,6 +199,7 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
->  #define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
->  #define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
->  #define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
-> +#define of_node_ncmp(s1, s2, n)		strnicmp((s1), (s2), (n))
->  #endif
 
-Don't forget to add an of_node_ncmp() define to
-arch/sparc/include/asm/prom.h. Sparc has its own rules.
+Applied to mvebu/dt with a few minor style changes to the commit log.
 
-g.
+  - Added a blank line between the URL and the S-o-B.
+  - Reflowed the paragraph to wrap at >80 chars
+  - Changed subject to match other changes to vendor-prefixes.txt
+
+The Subject line now reads:
+
+  of: Add Lenovo Group Ltd. to the vendor-prefixes list.
+
+You can view the patch here:
+
+  http://git.infradead.org/linux-mvebu.git/commitdiff/74e025501bb834000b3c7eceab69383806520a36
+
+Next, it'll go to arm-soc.  Then, Linus' tree.
+
+thx,
+
+Jason.
