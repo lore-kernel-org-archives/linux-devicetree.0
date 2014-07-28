@@ -1,43 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Mon, 28 Jul 2014 15:02:52 +0200
-Message-ID: <8258903.Rn4s07GKGV@wuerfel>
-References: <1406131381-25577-1-git-send-email-sthokal@xilinx.com> <CA+mB=1JhDF=BBXcyTbgVB8S7qH=Mb1JH78HLL4pA9OBH19hQvA@mail.gmail.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v3] Documentation: devicetree: Fix ADI AXI SPDIF specification
+Date: Mon, 28 Jul 2014 15:05:03 +0200
+Message-ID: <1406552704-6736-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+mB=1JhDF=BBXcyTbgVB8S7qH=Mb1JH78HLL4pA9OBH19hQvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 28 July 2014 18:04:34 Srikanth Thokala wrote:
-> Hi Arnd and Rob,
-> 
-> I discussed with Bjorn and we believe this patch is in good shape to
-> apply.  And Bjorn requires ACKs to apply this patch.  So, could you
-> guys please review this patch and provided your ACKs to this patch.
+The specification requires compatible =3D "adi,axi-spdif-1.00.a" but
+driver and example and file name indicate "adi,axi-spdif-tx-1.00.a".
+Change the specification to match the implementation.
 
-Looks great for the most part. I've looked through the whole driver
-again, and I have two small issues remaining:
+Acked-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Reviewed-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+=46ixes: d7b528eff927 ("dt: Add bindings documentation for the ADI AXI-=
+SPDIF audio controller")
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ v2 -> v3:
+ * Added Fixes header
+ * CC broonie (Mark Brown)
+=20
+ v2: New
+=20
+ Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-a) Please clarify in the changeset description why there is no support
-   for PCI I/O space. 
+diff --git a/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.t=
+xt b/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
+index 46f344965313..4eb7997674a0 100644
+--- a/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
++++ b/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
+@@ -1,7 +1,7 @@
+ ADI AXI-SPDIF controller
+=20
+ Required properties:
+- - compatible : Must be "adi,axi-spdif-1.00.a"
++ - compatible : Must be "adi,axi-spdif-tx-1.00.a"
+  - reg : Must contain SPDIF core's registers location and length
+  - clocks : Pairs of phandle and specifier referencing the controller'=
+s clocks.
+    The controller expects two clocks, the clock used for the AXI inter=
+face and
+--=20
+1.9.3
 
-b) I think you should use the 'msi-parent' property, and the
-   of_pci_find_msi_chip_by_node() to find the msi_chip for the
-   PCI controller. This will make it possible to forward MSIs
-   to the main interrupt controller in the system, which is more
-   efficient. See the pcie-mvebu driver for an example of this.
-
-Other than these:
-
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
