@@ -1,86 +1,158 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
- specification
-Date: Mon, 28 Jul 2014 22:28:31 +0100
-Message-ID: <20140728212831.GF17528@sirena.org.uk>
-References: <53D20A61.1050506@metafoo.de>
- <53D21066.8000905@monstr.eu>
- <20140725101815.GO17528@sirena.org.uk>
- <53D2324B.4070602@suse.de>
- <20140725103905.GP17528@sirena.org.uk>
- <53D63746.3000905@suse.de>
- <20140728122042.GR17528@sirena.org.uk>
- <53D641DC.4020804@suse.de>
- <20140728134420.GU17528@sirena.org.uk>
- <53D66EC2.1050408@suse.de>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
+Date: Tue, 29 Jul 2014 00:38:59 +0200
+Message-ID: <20140728223859.GA3214@piout.net>
+References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz>
+ <20140728122103.GR9532@piout.net>
+ <53D64ADA.1000102@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o7PcwBx7JqiqHVZr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53D66EC2.1050408@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Simek <monstr@monstr.eu>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <53D64ADA.1000102-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+(Adding Mark in Cc:)
 
---o7PcwBx7JqiqHVZr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 28/07/2014 at 15:06:34 +0200, Ji=C5=99=C3=AD Prchal wrote :
+> >>+#define DRIVER_NAME "atmel-spi"
+> >>+
+> >
+> >This is not really related to the issue solved by that patch, maybe =
+it
+> >could go in another patch ?
+> Probably yes, but is used for this patch, I based it upon spi-efm32.
+> >
 
-On Mon, Jul 28, 2014 at 05:39:46PM +0200, Andreas F=E4rber wrote:
+Yeah, I wouldn't use it anyway, see my comment below.
 
-> Similarly, your statement about false negatives didn't really help in
-> resolving the not-CC'ed problem. I now know to CC you if I ever have
-> something for adi,axi-spdif-tx.txt again, but the next person might make
-> you grumpy again and potentially demotivates new contributors, so
-> certainly worth fixing.
+> >>  	asd->csr =3D csr;
+> >>@@ -1290,6 +1276,15 @@ static int atmel_spi_probe(struct platform_d=
+evice *pdev)
+> >>  	int			ret;
+> >>  	struct spi_master	*master;
+> >>  	struct atmel_spi	*as;
+> >>+	struct device_node *np =3D pdev->dev.of_node;
+> >>+	int num_cs, i;
+> >>+
+> >>+	if (!np)
+> >>+		return -EINVAL;
+> >>+
+> >>+	num_cs =3D of_gpio_named_count(np, "cs-gpios");
+> >>+	if (num_cs < 0)
+> >>+		return num_cs;
+> >>
+> >
+> >This driver can still be probed without DT, this will break here, pl=
+ease
+> >don't assume that DT is present.
+> Yes, but I copied it from spi-efm32 and looked at others, is almost t=
+he same.
 
-> Regmap, SPI, regulators, touchscreen MAINTAINERS entries seem unrelated.
-> Should your "SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEMENT (ASoC)"
-> MAINTAINERS entry get an
-> F: Documentation/devicetree/bindings/sound/
-> or is the "ANALOG DEVICES Inc ASOC DRIVERS" entry missing a line
-> F: sound/soc/adi/
-> F: Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
-> (which would then still not CC you)
-> or is a new MAINTAINERS section needed that CCs specifically Lars-Peter
-> and you on the latter?
+Maybe it is similar in other drivers but at91 platforms can still be
+booted without DT, This will fail with:
+atmel_spi: probe of atmel_spi.0 failed with error -22
 
-What you're really talking about is making MAINTAINERS complete which is
-a very big job; even if only looking at the DT bindings you'd need to go
-through every binding and make sure that MAINTAINERS says the same
-things as it does for the matching driver code, and where there are
-missing entries add them.  In the immediate case both bits are missing.
+The efm32 only supports DT, it doesn't have board files/platform data.
 
-Really as with so much else it's much better advice to ask people to
-look and think about what they're doing; it's the same thing as ensuring
-that commit logs match the standard style for the thing being edited
-(especially the subject lines) and that if there's people who normally
-apply patches and work on the code they're included.
+> >
+> >
+> >>  	/* Select default pin state */
+> >>  	pinctrl_pm_select_default_state(&pdev->dev);
+> >>@@ -1308,7 +1303,7 @@ static int atmel_spi_probe(struct platform_de=
+vice *pdev)
+> >>
+> >>  	/* setup spi core then atmel-specific driver state */
+> >>  	ret =3D -ENOMEM;
+> >>-	master =3D spi_alloc_master(&pdev->dev, sizeof(*as));
+> >>+	master =3D spi_alloc_master(&pdev->dev, sizeof(*as) + num_cs * si=
+zeof(unsigned));
+> >>  	if (!master)
+> >>  		goto out_free;
+> >>
+> >>@@ -1317,7 +1312,7 @@ static int atmel_spi_probe(struct platform_de=
+vice *pdev)
+> >>  	master->bits_per_word_mask =3D SPI_BPW_RANGE_MASK(8, 16);
+> >>  	master->dev.of_node =3D pdev->dev.of_node;
+> >>  	master->bus_num =3D pdev->id;
+> >>-	master->num_chipselect =3D master->dev.of_node ? 0 : 4;
+> >>+	master->num_chipselect =3D num_cs;
+> >
+> >My guess is that you don't need to change that part.
+> I think I need it. What about 3 cs?
 
---o7PcwBx7JqiqHVZr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This will be taken care of by the spi core, in of_spi_register_master()=
+:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+	nb =3D of_gpio_named_count(np, "cs-gpios");
+	master->num_chipselect =3D max_t(int, nb, master->num_chipselect);
 
-iQIcBAEBAgAGBQJT1sB3AAoJELSic+t+oim9nGMQAJldHc0eVY6J/0zVFEGcyr/r
-G3170S0fEioNmr/smd2jVOrH9008+WoDgjjWj5ItletMBLjABwy/sO2p0wMRwEq3
-gGhBQ90PKllBiCWuYnY5beLsWEs5Bbn7xzV546jUjR0fBKRUymhN3NA/07Rkgkj0
-CveBt8mkkfKNQ/Pe1wSsI//mdSPFAMBjEkUCHXWMkHTenwaGdrg50H6bp2R/rWr1
-3EOv4Zgar+/advNzDiG4QYeyGgdPy5A8H2Z1Qi2J3CJpKmnguqwgdtNg6w10OlXN
-zNvUNLoLEbHjbe10rM/9yRqCDYSe+yEkNeBjci02lvK8ggqwON4ZQ0ZSOHiRUv/J
-Gqhw+NNwT6x7EDrIRUMaBVwK9vusMcANzX/7QKymJM+JXrEndA1XO/mRYepS9b2/
-EI22C0iYpCsus61OMOuIT7tw7Zjy//sRmKYcpwER7s0BF5kgHzrIgilj1F1wcVfE
-kh/Cmk+sEA55aDM8hi0Pt8JqkX1WK6xomHJdsVO03zx+BoCTvdISEc2RLriChivM
-5eeuWwWTWLhcHJPUO1d7aaKfO7Z2vrDCH4Hrq30kl9f322ZvSvsRCn4qfXbhObfw
-tl2n5T/e9d4EnvVL+OOVenNKyx8UvexVhq6x3EXIFLeLqMp/xh19JbaGs8rpftpC
-gHT9qv3dpRYno4NKGRnw
-=vbZm
------END PGP SIGNATURE-----
 
---o7PcwBx7JqiqHVZr--
+> >
+> >>  	master->setup =3D atmel_spi_setup;
+> >>  	master->transfer_one_message =3D atmel_spi_transfer_one_message;
+> >>  	master->cleanup =3D atmel_spi_cleanup;
+> >>@@ -1325,6 +1320,25 @@ static int atmel_spi_probe(struct platform_d=
+evice *pdev)
+> >>
+> >>  	as =3D spi_master_get_devdata(master);
+> >>
+> >>+	for (i =3D 0; i < master->num_chipselect; ++i) {
+> >>+		ret =3D of_get_named_gpio(np, "cs-gpios", i);
+> >
+> >Again, DT maybe not be compiled in or that driver may be probed from
+> >platform data.
+> Is another way how to do it? I see cs-gpios in master struct, but whe=
+re it gets filled.
+> >
+
+It is filled when registering the master, here when calling
+devm_spi_register_master(). It may be too late at that point.
+
+> >>+		if (ret < 0) {
+> >>+			dev_err(&pdev->dev, "failed to get csgpio#%u (%d)\n",
+> >>+				i, ret);
+> >>+			goto out_free;
+> >>+		}
+> >>+		as->csgpio[i] =3D ret;
+> >>+		dev_dbg(&pdev->dev, "csgpio#%u =3D %u\n", i, as->csgpio[i]);
+> >>+		ret =3D devm_gpio_request_one(&pdev->dev, as->csgpio[i],
+> >>+					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
+
+Maybe you could use the CS number ifor the label here instead of
+DRIVER_NAME, at least, use pdev->dev->name and completely drop
+DRIVER_NAME.
+
+> >>+		if (ret < 0) {
+> >>+			dev_err(&pdev->dev,
+> >>+				"failed to configure csgpio#%u (%d)\n",
+> >>+				i, ret);
+> >>+			goto out_free;
+> >>+		}
+> >>+	}
+> >>+
+
+Mark: maybe it would make sense to do devm_gpio_request_one() in
+of_spi_register_master(), after of_get_named_gpio.
+
+While this solves the particular issue Ji=C5=99=C3=AD is seeing, this w=
+ill not
+solve the case where PA14 (CS0) is not used by the spi driver at all. I=
+t
+will remained muxed as CS0 and toggle when the spi master needs to
+access CS0 until another driver muxes it to something else. I still
+believe we should explicitly ask pinctrl to mux them as gpios.
+
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
