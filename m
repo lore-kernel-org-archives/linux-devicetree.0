@@ -1,87 +1,94 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Enabling OF selftest to run without machine's devicetree
-Date: Mon, 28 Jul 2014 08:16:25 -0700
-Message-ID: <CA+rpMbJiR+NVRUFr6x67QZWXx0GMtLAZkmmQHLA5KDX6jkKSbQ@mail.gmail.com>
-References: <1406404130-27289-1-git-send-email-gaurav.minocha.os@gmail.com>
-	<CAL_JsqJXqoyCRcMdS83zPr7prY52GgbAd1y+tgVn5f6Q+=CwxQ@mail.gmail.com>
-	<CA+rpMb+pPZykJ7-XurVSSOaTPGNji9zG7FtVB+m6-gNiOHM4Jw@mail.gmail.com>
-	<CA+rpMbJmCQ7YfJ7c+hjOmdfAdTHtTuH34mEWGH9Xo=rYJFDgKg@mail.gmail.com>
-	<CAL_JsqKG2a=8zvRfjuP_VEM_+W8wfnmjK8PUqW6w_cZsA7dvDQ@mail.gmail.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH RFC v4 1/2] Devicetree: Add pl353 smc controller devicetree binding information
+Date: Mon, 28 Jul 2014 20:57:15 +0530
+Message-ID: <f9cb28fc-6a68-42b8-bdc0-9ad0941de977@BN1AFFO11FD013.protection.gbl>
+References: <1406561236-29207-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKG2a=8zvRfjuP_VEM_+W8wfnmjK8PUqW6w_cZsA7dvDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1406561236-29207-1-git-send-email-punnaia@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, anirudh@xilinx.com, svemula@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 8:00 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sun, Jul 27, 2014 at 10:28 PM, Gaurav Minocha
-> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Jul 26, 2014 at 3:17 PM, Gaurav Minocha
->> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Sat, Jul 26, 2014 at 2:11 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Sat, Jul 26, 2014 at 2:48 PM, Gaurav Minocha
->>>> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> If there is no devicetree present, this patch adds the selftest
->>>>> data as a live devicetree. It also removes the same after the
->>>>> testcase execution is complete.
->
-> [...]
->
->>>>> @@ -614,10 +616,31 @@ static int __init selftest_data_add(void)
->>>>>                         "not running tests\n", __func__);
->>>>>                 return -ENOMEM;
->>>>>         }
->>>>> -       of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
->>>>
->>>> Can't you keep this factored out and just do "of_allnodes =
->>>> selftest_data_node;"?
->>>>
->>> I tried to do that in first place, but of_alias_scan() called from
->>> of_fdt_unflatten_tree(..)
->>> needs of_allnodes. So, had to call it separately.
->
-> No, it is not or I'm missing some change. Or it is a bug? It is called
-> from unflatten_device_tree which is the early boot version.
->
-So, there are two functions unflatten_device_tree and of_fdt_unflatten_tree.
-In of_fdt_unflatten_tree, I added a call to of_alias_scan().
-Yes, unflatten_device_tree is the early boot version it already
-calls of_alias_scan().
+Add pl353 static memory controller devicetree binding information.
 
-I myself was in doubt to call of_alias_scan from of_fdt_unflatten_tree.
-Though it works fine, may be I'm not aware of a testcase in
-which it might fail. So, calling explicitly in another option as
-mentioned earlier.
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+Changes in v4:
+ - none
+Changes in v3:
+ - none
+Changes in v2:
+ - modified timing binding info as per onfi timing parameters
+ - add suffix nano second as timing unit
+ - modified the clock names as per the IP spec
+---
+ .../bindings/memory-controllers/pl353-smc.txt      |   53 ++++++++++++++++++++
+ 1 files changed, 53 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
 
->> Actually, it's possible if rather than calling of_alias_scan from
->> of_fdt_unflatten_tree, I write a wrapper and export it as below.
->> So, I will be able to call of_fdt_alias_scan explicitly.
->>
->> of_fdt_alias_scan()
->> {
->>      of_alias_scan(&kernel_tree_alloc);
->> }
->> EXPORT_SYMBOL(of_fdt_alias_scan)
->
-> I prefer to keep this internal to the DT code. Plus of_fdt_* functions
-> operate on a flat tree and of_alias_scan operates on unflattened tree.
->
->>
->> OR
->>
->> directly export of_alias_scan() and
->> kernel_tree_alloc(u64 size, u64 align)
->>
->> please let me know if I should follow either of the above
->> approach in my next patch.
->
-> Perhaps as you had it is fine.
->
-> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+new file mode 100644
+index 0000000..c1f011d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+@@ -0,0 +1,53 @@
++Device tree bindings for ARM PL353 static memory controller
++
++PL353 static memory controller supports two kinds of memory
++interfaces.i.e NAND and SRAM/NOR interfaces.
++The actual devices are instantiated from the child nodes of pl353 smc node.
++
++Required properties:
++- compatible		: Should be "arm,pl353-smc-r2p1"
++- reg			: Controller registers map and length.
++- clock-names		: List of input clock names - "memclk", "aclk"
++			  (See clock bindings for details).
++- clocks		: Clock phandles (see clock bindings for details).
++- address-cells	: Address cells, must be 1.
++- size-cells		: Size cells. Must be 1.
++
++Child nodes:
++ For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
++supported as child nodes.
++
++Mandatory timing properties for child nodes:
++- nand-tRC-ns	: Read cycle time.
++- nand-tWC-ns	: Write cycle time.
++- nand-tREA-ns	: re_n assertion delay.
++- nand-tWP-ns	: we_n de-assertion delay.
++- nand-tCLR-ns	: Status read time
++- nand-tAR-ns	: ID read time
++- nand-tRR-ns	: busy to re_n
++
++for nand partition information please refer the below file
++Documentation/devicetree/bindings/mtd/partition.txt
++
++Example:
++	pl353smcc_0: pl353smcc@e000e000 {
++			compatible = "arm,pl353-smcc-r2p1"
++			clock-names = "memclk", "aclk";
++			clocks = <&clkc 11>, <&clkc 44>;
++			reg = <0xe000e000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			nand_0: nand@e1000000 {
++				compatible = "arm,pl353-nand-r2p1"
++				reg = <0xe1000000 0x1000000>;
++				nand-tRC-ns = <40>;
++				nand-tWC-ns = <40>;
++				nand-tREA-ns = <10>;
++				nand-tWP-ns = <20>;
++				nand-tCLR-ns = <20>;
++				nand-tAR-ns = <20>;
++				nand-tRR-ns = <40>;
++				(...)
++			};
++	};
+-- 
+1.7.4
+
+
