@@ -1,242 +1,75 @@
-From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
-Date: Mon, 28 Jul 2014 15:06:34 +0200
-Message-ID: <53D64ADA.1000102@aksignal.cz>
-References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz> <20140728122103.GR9532@piout.net>
-Reply-To: jiri.prchal@aksignal.cz
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140728122103.GR9532@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@atmel.com, voice.shen@atmel.com
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC Patch V1 22/30] mm, of: Use cpu_to_mem()/numa_mem_id() to
+ support memoryless node
+Date: Mon, 28 Jul 2014 07:30:40 -0600
+Message-ID: <20140728133040.854F5C4095E@trevor.secretlab.ca>
+References: <1405064267-11678-1-git-send-email-jiang.liu@linux.intel.com>
+	<1405064267-11678-23-git-send-email-jiang.liu@linux.intel.com>
+	<20140721175241.GF4156@linux.vnet.ibm.com>
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20140721175241.GF4156@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>, Jiang Liu <jiang.liu@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mel Gorman <mgorman@suse.de>, David Rientjes <rientjes@google.com>, Mike Galbraith <umgwanakikbuti@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Luck <tony.luck@intel.com>, linux-mm@kvack.org, linux-hotplug@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 21 Jul 2014 10:52:41 -0700, Nishanth Aravamudan <nacc@linux.vnet.ibm.com> wrote:
+> On 11.07.2014 [15:37:39 +0800], Jiang Liu wrote:
+> > When CONFIG_HAVE_MEMORYLESS_NODES is enabled, cpu_to_node()/numa_node_id()
+> > may return a node without memory, and later cause system failure/panic
+> > when calling kmalloc_node() and friends with returned node id.
+> > So use cpu_to_mem()/numa_mem_id() instead to get the nearest node with
+> > memory for the/current cpu.
+> > 
+> > If CONFIG_HAVE_MEMORYLESS_NODES is disabled, cpu_to_mem()/numa_mem_id()
+> > is the same as cpu_to_node()/numa_node_id().
+> > 
+> > Signed-off-by: Jiang Liu <jiang.liu@linux.intel.com>
+> > ---
+> >  drivers/of/base.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index b9864806e9b8..40d4772973ad 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -85,7 +85,7 @@ EXPORT_SYMBOL(of_n_size_cells);
+> >  #ifdef CONFIG_NUMA
+> >  int __weak of_node_to_nid(struct device_node *np)
+> >  {
+> > -	return numa_node_id();
+> > +	return numa_mem_id();
+> >  }
+> >  #endif
+> 
+> Um, NAK. of_node_to_nid() returns the NUMA node ID for a given device
+> tree node. The default should be the physically local NUMA node, not the
+> nearest memory-containing node.
 
-Dne 28.7.2014 v 14:21 Alexandre Belloni napsal(a):
-> Hi,
->
-> Thank you for that patch, a few questions/comments below.
->
-> On 28/07/2014 at 13:43:40 +0200, Jiri Prchal wrote :
->> This fix problem with PA14 set as periph A left from ROMBOOT and need it
->> to be set to gpio before spi bus communicate with chip on CS0 on other
->> gpio. As I reported a week ago.
->> Request all csgpios in spi_probe since cs depends on each other and must
->> be all of them in right state before any communication on bus. They are
->> part of bus, like miso, mosi, clk, not part of chips, they are defined
->> in parent spi node, not in child chip node.
->> Csgpio moved to atmel_spi struct as part of master bus.
->>
->> Signed-off-by: Jiri Prchal <jiri.prchal@aksignal.cz>
->> ---
->>   drivers/spi/spi-atmel.c | 68 +++++++++++++++++++++++++++++--------------------
->>   1 file changed, 41 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
->> index 92a6f0d..1fb7bb9 100644
->> --- a/drivers/spi/spi-atmel.c
->> +++ b/drivers/spi/spi-atmel.c
->> @@ -22,11 +22,14 @@
->>   #include <linux/platform_data/atmel.h>
->>   #include <linux/platform_data/dma-atmel.h>
->>   #include <linux/of.h>
->> +#include <linux/of_gpio.h>
->>
->>   #include <linux/io.h>
->>   #include <linux/gpio.h>
->>   #include <linux/pinctrl/consumer.h>
->>
->> +#define DRIVER_NAME "atmel-spi"
->> +
->
-> This is not really related to the issue solved by that patch, maybe it
-> could go in another patch ?
-Probably yes, but is used for this patch, I based it upon spi-efm32.
->
->>   /* SPI register offsets */
->>   #define SPI_CR					0x0000
->>   #define SPI_MR					0x0004
->> @@ -242,11 +245,13 @@ struct atmel_spi {
->>
->>   	bool			keep_cs;
->>   	bool			cs_active;
->> +
->> +	/* chip selects */
->> +	unsigned int		csgpio[];
->>   };
->>
->>   /* Controller-specific per-slave state */
->>   struct atmel_spi_device {
->> -	unsigned int		npcs_pin;
->>   	u32			csr;
->>   };
->>
->> @@ -312,7 +317,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
->>   		}
->>
->>   		mr = spi_readl(as, MR);
->> -		gpio_set_value(asd->npcs_pin, active);
->> +		gpio_set_value(as->csgpio[spi->chip_select], active);
->>   	} else {
->>   		u32 cpol = (spi->mode & SPI_CPOL) ? SPI_BIT(CPOL) : 0;
->>   		int i;
->> @@ -329,18 +334,16 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
->>   		mr = spi_readl(as, MR);
->>   		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
->>   		if (spi->chip_select != 0)
->> -			gpio_set_value(asd->npcs_pin, active);
->> +			gpio_set_value(as->csgpio[spi->chip_select], active);
->>   		spi_writel(as, MR, mr);
->>   	}
->>
->>   	dev_dbg(&spi->dev, "activate %u%s, mr %08x\n",
->> -			asd->npcs_pin, active ? " (high)" : "",
->> -			mr);
->> +		as->csgpio[spi->chip_select], active ? " (high)" : "", mr);
->>   }
->>
->>   static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
->>   {
->> -	struct atmel_spi_device *asd = spi->controller_state;
->>   	unsigned active = spi->mode & SPI_CS_HIGH;
->>   	u32 mr;
->>
->> @@ -354,11 +357,10 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
->>   	}
->>
->>   	dev_dbg(&spi->dev, "DEactivate %u%s, mr %08x\n",
->> -			asd->npcs_pin, active ? " (low)" : "",
->> -			mr);
->> +		as->csgpio[spi->chip_select], active ? " (low)" : "", mr);
->>
->>   	if (atmel_spi_is_v2(as) || spi->chip_select != 0)
->> -		gpio_set_value(asd->npcs_pin, !active);
->> +		gpio_set_value(as->csgpio[spi->chip_select], !active);
->>   }
->>
->>   static void atmel_spi_lock(struct atmel_spi *as) __acquires(&as->lock)
->> @@ -989,8 +991,6 @@ static int atmel_spi_setup(struct spi_device *spi)
->>   	struct atmel_spi_device	*asd;
->>   	u32			csr;
->>   	unsigned int		bits = spi->bits_per_word;
->> -	unsigned int		npcs_pin;
->> -	int			ret;
->>
->>   	as = spi_master_get_devdata(spi->master);
->>
->> @@ -1017,27 +1017,13 @@ static int atmel_spi_setup(struct spi_device *spi)
->>   	csr |= SPI_BF(DLYBS, 0);
->>   	csr |= SPI_BF(DLYBCT, 0);
->>
->> -	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
->> -	npcs_pin = (unsigned int)spi->controller_data;
->> -
->> -	if (gpio_is_valid(spi->cs_gpio))
->> -		npcs_pin = spi->cs_gpio;
->> -
->>   	asd = spi->controller_state;
->>   	if (!asd) {
->>   		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
->>   		if (!asd)
->>   			return -ENOMEM;
->>
->> -		ret = gpio_request(npcs_pin, dev_name(&spi->dev));
->> -		if (ret) {
->> -			kfree(asd);
->> -			return ret;
->> -		}
->> -
->> -		asd->npcs_pin = npcs_pin;
->>   		spi->controller_state = asd;
->> -		gpio_direction_output(npcs_pin, !(spi->mode & SPI_CS_HIGH));
->>   	}
->>
->>   	asd->csr = csr;
->> @@ -1290,6 +1276,15 @@ static int atmel_spi_probe(struct platform_device *pdev)
->>   	int			ret;
->>   	struct spi_master	*master;
->>   	struct atmel_spi	*as;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	int num_cs, i;
->> +
->> +	if (!np)
->> +		return -EINVAL;
->> +
->> +	num_cs = of_gpio_named_count(np, "cs-gpios");
->> +	if (num_cs < 0)
->> +		return num_cs;
->>
->
-> This driver can still be probed without DT, this will break here, please
-> don't assume that DT is present.
-Yes, but I copied it from spi-efm32 and looked at others, is almost the same.
->
->
->>   	/* Select default pin state */
->>   	pinctrl_pm_select_default_state(&pdev->dev);
->> @@ -1308,7 +1303,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
->>
->>   	/* setup spi core then atmel-specific driver state */
->>   	ret = -ENOMEM;
->> -	master = spi_alloc_master(&pdev->dev, sizeof(*as));
->> +	master = spi_alloc_master(&pdev->dev, sizeof(*as) + num_cs * sizeof(unsigned));
->>   	if (!master)
->>   		goto out_free;
->>
->> @@ -1317,7 +1312,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
->>   	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 16);
->>   	master->dev.of_node = pdev->dev.of_node;
->>   	master->bus_num = pdev->id;
->> -	master->num_chipselect = master->dev.of_node ? 0 : 4;
->> +	master->num_chipselect = num_cs;
->
-> My guess is that you don't need to change that part.
-I think I need it. What about 3 cs?
->
->>   	master->setup = atmel_spi_setup;
->>   	master->transfer_one_message = atmel_spi_transfer_one_message;
->>   	master->cleanup = atmel_spi_cleanup;
->> @@ -1325,6 +1320,25 @@ static int atmel_spi_probe(struct platform_device *pdev)
->>
->>   	as = spi_master_get_devdata(master);
->>
->> +	for (i = 0; i < master->num_chipselect; ++i) {
->> +		ret = of_get_named_gpio(np, "cs-gpios", i);
->
-> Again, DT maybe not be compiled in or that driver may be probed from
-> platform data.
-Is another way how to do it? I see cs-gpios in master struct, but where it gets filled.
->
->> +		if (ret < 0) {
->> +			dev_err(&pdev->dev, "failed to get csgpio#%u (%d)\n",
->> +				i, ret);
->> +			goto out_free;
->> +		}
->> +		as->csgpio[i] = ret;
->> +		dev_dbg(&pdev->dev, "csgpio#%u = %u\n", i, as->csgpio[i]);
->> +		ret = devm_gpio_request_one(&pdev->dev, as->csgpio[i],
->> +					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
->> +		if (ret < 0) {
->> +			dev_err(&pdev->dev,
->> +				"failed to configure csgpio#%u (%d)\n",
->> +				i, ret);
->> +			goto out_free;
->> +		}
->> +	}
->> +
->>   	/*
->>   	 * Scratch buffer is used for throwaway rx and tx data.
->>   	 * It's coherent to minimize dcache pollution.
->> --
->> 1.9.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+That description doesn't match the code. This patch only changes the
+default implementation of of_node_to_nid() which doesn't take the device
+node into account *at all* when returning a node ID. Just look at the
+diff.
+
+I think this patch is correct, and it doesn't affect the override
+versions provided by powerpc and sparc.
+
+g.
+
+> 
+> I think the general direction of this patchset is good -- what NUMA
+> information do we actually are about at each callsite. But the execution
+> is blind and doesn't consider at all what the code is actually doing.
+> The changelogs are all identical and don't actually provide any
+> information about what errors this (or any) specific patch are
+> resolving.
+> 
+> Thanks,
+> Nish
+> 
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
