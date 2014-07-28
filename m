@@ -1,36 +1,35 @@
-From: simon@mungewell.org
-Subject: Re: [v2] input: drv260x: Add TI drv260x haptics driver
-Date: Mon, 28 Jul 2014 13:59:34 -0400
-Message-ID: <5adf0339146a7b655a77053195aa892c.squirrel@mungewell.org>
-References: <1406566403-1436-1-git-send-email-dmurphy@ti.com>
-    <20140728174334.GD8982@core.coreip.homeip.net>
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: Re: [RESEND][PATCHv2 0/3] Fix for buggy u-boot memory banks
+Date: Mon, 28 Jul 2014 11:56:42 -0700
+Message-ID: <53D69CEA.3060206@codeaurora.org>
+References: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org> <CAL_JsqJv2_UHxHGFF=nFKQRiEwfFtH_7PhMPS=W=APyzc-yiTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20140728174334.GD8982@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?iso-8859-1?Q?=22Michal_Mal=FD=22?= <madcatxster@devoid-pointer.net>, Elias Vanderstuyft <elias.vds@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJv2_UHxHGFF=nFKQRiEwfFtH_7PhMPS=W=APyzc-yiTQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 7/26/2014 2:20 PM, Rob Herring wrote:
+> On Tue, Jul 15, 2014 at 12:03 PM, Laura Abbott <lauraa@codeaurora.org> wrote:
+>> Hi,
+>>
+>> This is a resend of the series to fix the uboot bug exposed by the removal
+>> of meminfo. I haven't gotten any acks though.
+> 
+> Is the bug with ATAGs that get converted to DT in the decompressor or
+> u-boot puts the wrong info in DT directly?
+> 
 
->> The initial driver supports the devices
->> real time playback mode.  But the device
->> has additional wave patterns in ROM.
->
-> As it presented the device appears to be a memoryless device, however
-> you present it to the rest of the system as if it can support playback
-> of multiple effects simultaneously, which is incorrect.
->
-> My guess that you need to engage the memoryless input library to schedule
-> handling multiple effects for your device, including ramping up, ramping
-> down, stopping playback when effects runs out, etc.
+I believe it's u-boot putting the wrong info in DT directly. See
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266782.html
 
-Hi Dan,
-Elias and Michal (cc'ed) are working on a kernel/userland library to
-handle sending multiple force feedback signals to 'simple' devices,
-perhaps you should engage with them.
+Thanks,
+Laura
 
-Simon
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
