@@ -1,69 +1,45 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v8 00/13] Add Maxim 77802 PMIC support
-Date: Mon, 28 Jul 2014 11:29:06 +0200
-Message-ID: <53D617E2.3070803@collabora.co.uk>
-References: <1405337769-3741-1-git-send-email-javier.martinez@collabora.co.uk> <20140725223140.4791.61816@quantum>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
+ existing vendor prefixes to standardise on 'dlg'
+Date: Mon, 28 Jul 2014 09:53:56 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B28E95@SW-EX-MBX02.diasemi.com>
+References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+ <20140725070002.GH7063@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140725223140.4791.61816@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Tushar Behera <trblinux@gmail.com>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140725070002.GH7063@lee--X1>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: DEVICE TREE <devicetree@vger.kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, LINUX SH <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Support Opensource <Support.Opensource@diasemi.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mike,
-
-On 07/26/2014 12:31 AM, Mike Turquette wrote:
-> Quoting Javier Martinez Canillas (2014-07-14 04:35:56)
->> This series are based on drivers added by Simon Glass to the Chrome OS
->> kernel and adds support for the Maxim 77802 Power Management IC, their
->> regulators, clocks, RTC and i2c interface.
->> 
->> This is a v8 of the patch-set that addresses issues pointed out in v7.
->> Individual changes are added on each patch but the biggest changes are:
->> 
->> * Patches 1-7 from v7 are not included since those were improvements to
->> the max77686 mfd driver and can be applied independently. Lee Jones said
->> that he is going to pick them from the posted v7 series.
->> 
->> I've created a patchwork bundle with 1-7 from v7 to make it easy to apply:
->> 
->> https://patchwork.kernel.org/bundle/javier/max77686-improvements/
->> 
->> * The Dynamic Voltage Scaling support has been removed since that can be
->> added in a follow up series and shouldn't block the minimum PMIC support.
->> 
->> The patch-set has been tested on both Daisy/Snow (max77686) and Peach
->> Pit (max77802) Chromebooks and it's composed of the following patches:
->> 
->> [PATCH v8 01/13] mfd: max77686: Add Maxim 77802 PMIC support
->> [PATCH v8 02/13] mfd: max77802: Add DT binding documentation
->> [PATCH v8 03/13] regulator: Add driver for Maxim 77802 PMIC regulators
->> [PATCH v8 04/13] clk: max77686: Add DT include for MAX77686 PMIC clock
->> [PATCH v8 05/13] clk: Add generic driver for Maxim PMIC clocks
->> [PATCH v8 06/13] clk: max77686: Convert to the generic max clock driver
->> [PATCH v8 07/13] clk: max77686: Improve Maxim 77686 PMIC clocks binding
->> [PATCH v8 08/13] clk: Add driver for Maxim 77802 PMIC clocks
->> [PATCH v8 09/13] clk: max77802: Add DT binding documentation
-> 
-> For patches 4-9:
-> 
-> Acked-by: Mike Turquette <mturquette@linaro.org>
-> 
-
-Thanks a lot for your ack!
-
-Since the merge window is just around the corner, Lee merged the mfd max77686
-headers changes to split the dependencies around kernel releases.
-
-So after the merge windows, I'll resend the clock driver (and the other drivers
-fwiw) as a separate series so you can merge it through your tree for 3.18.
-
-> Regards,
-> Mike
-> 
-
-Best regards,
-Javier
+T24gMjUgSnVseSAyMDE0IDA4OjAwLCBMZWUgSm9uZXMgd3JvdGU6DQoNCj5PbiBUaHUsIDI0IEp1
+bCAyMDE0LCBPcGVuc291cmNlIFtTdGV2ZSBUd2lzc10gd3JvdGU6DQo+PiBGcm9tOiBTdGV2ZSBU
+d2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+Pg0KPj4gVGhpcyBwYXRjaCBz
+ZXJpZXMgdXBkYXRlcyB0aGUgZGV2aWNlIHRyZWUgdmVuZG9yIHByZWZpeCBmb3INCj4+IERpYWxv
+ZyBTZW1pY29uZHVjdG9yLg0KPj4NCj4+IFZhcmlvdXMgbWV0aG9kcyBhcmUgY3VycmVudGx5IHVz
+ZWQgdGhyb3VnaG91dCB0aGUga2VybmVsOiAnZGlhc2VtaScsDQo+PiAnZGlhbG9nJyBhbmQgJ2Rs
+ZycuIE90aGVycyBoYXZlIGFsc28gYmVlbiBzdWdnZXN0ZWQuDQo+Pg0KPj4gVGhpcyBwYXRjaCBz
+ZXQgYWltcyB0byBjb25zb2xpZGF0ZSB0aGUgdXNhZ2Ugb2YgdGhlIHZlbmRvciBwcmVmaXggdG8N
+Cj4+IHVzZSBhIGNvbW1vbiBzdGFuZGFyZC4gVGhlIHByZWZpeCAnZGxnJyBpcyB1c2VkLg0KPj4N
+Cj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBTdGV2ZSBUd2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlh
+c2VtaS5jb20+DQo+DQo+RGlkbid0IEkgQWNrIHRoZSBNRkQgcGFydHMgYWxyZWFkeT8NCj4NCg0K
+WWVzIC0tIGNlcnRhaW5seS4NCiAoSSBzaG91bGQgaGF2ZSBwdXQgdGhlbSBpbiB0aGUgbWFpbiBi
+b2R5IG9mIHRoZSBlLW1haWwgc2hvdWxkbid0IEkgLi4/KQ0KDQpJIGp1c3QgbmVlZCB0aGUgU0hN
+b2JpbGUgcmVzcG9uc2VzIG5vdy4NCkkgd2lsbCB0cnkgdG8gbWFrZSBjb250YWN0IHdpdGggdGhv
+c2UgZ3V5cyB0aGlzIHdlZWsuDQoNCkkgaGF2ZSB0aGUgZm9sbG93aW5nIEFja3Mgc28gZmFyLg0K
+DQo+RnJvbTogUm9iIEhlcnJpbmcgb24gMjEgSnVseSAyMDE0IDE2OjQzDQo+SSdtIG9rYXkgd2l0
+aCB0aGlzLCBidXQgaXQgYWxzbyBuZWVkcyBhY2tzIGZyb20gaS5NWCBhbmQgU0hNb2JpbGUNCj5m
+b2xrcyBhcyBpdCBjb3VsZCBicmVhayBvdXQgb2YgdHJlZSB1c2Vycy4NCj4gIEFja2VkLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KDQo+RnJvbTogU2hhd24gR3VvIG9uIDIyIEp1
+bHkgMjAxNCAwMjozOA0KPmFyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5kdHMgICAgICAgICAg
+ICAgICAgICAgIHwgIDIgKy0NCj5hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXBoeXRlYy1wZmxh
+MDIuZHRzaSAgICAgICB8ICAyICstDQo+ICBBY2tlZC1ieTogU2hhd24gR3VvIDxzaGF3bi5ndW9A
+ZnJlZXNjYWxlLmNvbT4NCg0KPkZyb206IExlZSBKb25lcyBvbiAyMiBKdWx5IDIwMTQgMDg6MDkN
+Cj5Gb3IgdGhlIE1GRCBjaGFuZ2VzOg0KPiAgQWNrZWQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVz
+QGxpbmFyby5vcmc+DQoNCmFuZA0KDQo+RnJvbTogUGhpbGlwcCBaYWJlbCBvbiAyNCBKdWx5IDIw
+MTQgMjA6NDQNCj4gIEFja2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
+LmRlPg0KDQpSZWdhcmRzLA0KU3RldmUNCg0K
