@@ -1,62 +1,86 @@
-From: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
-Date: Mon, 28 Jul 2014 12:50:47 +0200
-Message-ID: <78788908-DDB5-46F8-83C1-FAE312D7BFB2@perenite.com>
-References: <1406418436-61452-1-git-send-email-yahoo@perenite.com> <20140727015244.GA31974@lunn.ch> <5442226.1WCY4fjGCy@wuerfel>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5442226.1WCY4fjGCy@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: exynos_adc: Add support for S3C24xx ADC
+Date: Mon, 28 Jul 2014 20:03:33 +0900
+Message-ID: <53D62E05.3080803@samsung.com>
+References: <1405995074-3271-1-git-send-email-cw00.choi@samsung.com>
+ <1405995074-3271-3-git-send-email-cw00.choi@samsung.com>
+ <53D562AD.4090706@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <53D562AD.4090706-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/28/2014 05:35 AM, Hartmut Knaack wrote:
+> Chanwoo Choi schrieb:
+>> This patch add support for s3c2410/s3c2416/s3c2440/s3c2443 ADC. The s3c24xx
+>> is alomost same as ADCv1. But, There are a little difference as following:
+>> - ADCMUX register address to select channel
+>> - ADCDAT mask (10bit or 12bit ADC resolution according to SoC version)
+> Hi, just some style issues: better separate things like 10bit with a space to 10 bit, there are some instances of this type in your code. Another issue inline.
 
-Le 28 juil. 2014 =E0 10:49, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> a =E9crit :
+OK I'll fix it.
 
-> On Sunday 27 July 2014 03:52:44 Andrew Lunn wrote:
->> Hi Benoit
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/arm/samsung/exynos-adc.txt | 10 ++-
+>>  drivers/iio/adc/exynos_adc.c                       | 89 +++++++++++++++++++++-
+>>  2 files changed, 96 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> index b6e3989..fe34c76 100644
+>> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> @@ -11,11 +11,19 @@ New driver handles the following
+>>  
+>>  Required properties:
+>>  - compatible:		Must be "samsung,exynos-adc-v1"
+>> -				for exynos4412/5250 controllers.
+>> +				for exynos4412/5250 and s5pv210 controllers.
+>>  			Must be "samsung,exynos-adc-v2" for
+>>  				future controllers.
+>>  			Must be "samsung,exynos3250-adc" for
+>>  				controllers compatible with ADC of Exynos3250.
+>> +			Must be "samsung,s3c2410-adc" for
+>> +				the ADC in s3c2410 and compatibles
+>> +			Must be "samsung,s3c2416-adc" for
+>> +				the ADC in s3c2416 and compatibles
+>> +			Must be "samsung,s3c2440-adc" for
+>> +				the ADC in s3c2440 and compatibles
+>> +			Must be "samsung,s3c2443-adc" for
+>> +				the ADC in s3c2443 and compatibles
+>>  			Must be "samsung,s3c6410-adc" for
+>>  				the ADC in s3c6410 and compatibles
+>>  - reg:			Contains ADC register address range (base address and
+>> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+>> index 05bdd2f12..7d28032 100644
+>> --- a/drivers/iio/adc/exynos_adc.c
+>> +++ b/drivers/iio/adc/exynos_adc.c
+>> @@ -51,6 +51,9 @@
+>>  #define ADC_V1_MUX(x)		((x) + 0x1c)
+>>  #define ADC_V1_CLRINTPNDNUP(x)	((x) + 0x20)
+>>  
+>> +/* S3C2410 ADC registers definitions */
+>> +#define ADC_S3C2410_MUX(x)	((x) + 0x18)
+>> +
+>>  /* Future ADC_V2 registers definitions */
+>>  #define ADC_V2_CON1(x)		((x) + 0x00)
+>>  #define ADC_V2_CON2(x)		((x) + 0x04)
+>> @@ -67,6 +70,8 @@
+>>  
+>>  /* Bit definitions for S3C2410 ADC */
+>>  #define ADC_S3C2410_CON_SELMUX(x) (((x) & 7) <<3)
+>> +#define ADC_S3C2410_DATX_MASK	0x3FF
+>> +#define ADC_S3C2416_CON_RES_SEL	(1 << 3)
+> Since it is done this way in this driver, better use (1u << 3) here.
 
-Hi Arnd,
+OK, I'll fix it.
 
->>=20
->>> +                     i2c@11000 {
->>> +                             compatible =3D "marvell,mv78230-a0-i2=
-c",
->>> +                                     "marvell,mv64xxx-i2c";
->>=20
->> The point of my patches is that you don't need the
->> "marvell,mv78230-a0-i2c". It will work out at runtime if the SoC is =
-A0
->> stepping and automatically enable the workaround. Please test with
->> only "marvell,mv64xxx-i2c";
->>=20
->=20
-> It should still list both "marvell,mv78230-i2c" and "marvell,mv64xxx-=
-i2c",
-> as the generic name may not be enough to describe the register layout
-> correctly.
-
-I tend to disagree since the dts include the armada-xp.dtsi, which alre=
-ady declare
-
-"i2c0: i2c@11000 {
-				compatible =3D "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
-				reg =3D <0x11000 0x100>;
-			};
-"
-
-I tested the dts on the device and it does inherits the i2c declaration=
-, did I miss something here ?
-
-Benoit
-
-> 	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Chanwoo Choi
