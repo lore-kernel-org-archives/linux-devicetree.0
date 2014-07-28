@@ -1,113 +1,132 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: ARC fails to boot on linux-next of 20140711
-Date: Mon, 28 Jul 2014 04:38:38 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA230753C4B8155@IN01WEMBXA.internal.synopsys.com>
-References: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
-	<CAL_JsqJ2q0RSvXQW03RqwwBi_TKQ7Zt6DsUbsUruzh5oqYi5Cg@mail.gmail.com>
-	<C2D7FE5348E1B147BCA15975FBA230753C4B7DD5@IN01WEMBXA.internal.synopsys.com>
- <20140726165055.D3E64C43E0B@trevor.secretlab.ca>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCHv4 5/5] mtd: gpmi: prevent creating a new BBT when
+ blockmark swapping is disabled
+Date: Sun, 27 Jul 2014 22:29:06 -0700
+Message-ID: <20140728052906.GA3095@norris-Latitude-E6410>
+References: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-2-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-4-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-5-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-6-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
-Cc: linux-next <linux-next@vger.kernel.org>, Anton Kolesov <Anton.Kolesov@synopsys.com>, lkml <linux-kernel@vger.kernel.org>, greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1402579245-13377-6-git-send-email-LW@KARO-electronics.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, linux-mtd@lists.infradead.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@freescale.com>, linux-kernel@vger.kernel.org, Huang
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 26 July 2014 10:21 PM, Grant Likely wrote:
-> On Sat, 26 Jul 2014 06:52:36 +0000, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
->> Hi Rob,
->>
->> On Friday 25 July 2014 07:45 PM, Rob Herring wrote:
->>> On Fri, Jul 25, 2014 at 6:02 AM, Vineet Gupta
->>> <Vineet.Gupta1@synopsys.com> wrote:
->>>>> Hi Grant,
->>>>>
->>>>> linux-next has a series for arc_uart (via tty tree) which converts it to generic
->>>>> earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
->>>>> /chose/bootargs
->>>>>
->>>>> 2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console
->>>>>
->>>>> This relied on prev commit of yours (from linux next of 20140711), which seem to
->>>>> have disappeared now.
->>>>>
->>>>> 2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
->>>>> specified in /chosen
->>>>> 2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
->>>>> /chosen/stdout-path
->>>>>
->>>>> Is there a specific reason for dropping these patches (or perhaps a merge to be
->>>>> merged). I cherry-picked both but still doesn't work.
->>>>>
->>>>> Can you please advise next step forward, before I go off debugging with those
->>>>> patches in.
->>> There's an issue that if you have stdout-path and "earlycon" on the
->>> command line, the kernel will switch to tty0 and disable the earlycon.
->>>
->>> This is the "fix", but I don't like adding the DT dependency into generic code:
->>>
->>> @@ -2382,7 +2386,7 @@ void register_console(struct console *newcon)
->>>                 if (newcon->setup == NULL ||
->>>                     newcon->setup(newcon, NULL) == 0) {
->>>                         newcon->flags |= CON_ENABLED;
->>> -                       if (newcon->device) {
->>> +                       if (newcon->device  && !of_stdout) {
->>>                                 newcon->flags |= CON_CONSDEV;
->>>                                 preferred_console = 0;
->>>                         }
->> The DT settings relevant for ARC, which enable generic-earlycon and
->> console-with-stdout-path are as follows
->>
->>         chosen {
->>                 bootargs = "earlycon";
->>                 stdout-path = &arcuart0;
->>         };
->>
->> ....
->>                 arcuart0: serial@c0fc1000 {
->>                         compatible = "snps,arc-uart";
->>
->> And it works w/o above hunk, provided the 2 patches from Grant exist in linux-next
->> which they don't at the moment. I'm pretty confused how the hunk above comes into
->> picture.
->>
->> And if not then I will have to get the ARC std-out patch reverted in tty-next as
->> it is broken.
-> You need to revert it anyway, the dependency chain is broken. Just
-> because something is in linux-next doesn't mean it will be merged.
-> Dependencies must always be in the branch to which you commit.
->
-> If that doesn't happen (like here) then bisecting is broken and the
-> dependencies may not actually get merged.
->
-> When this happens, what you're supposed to do is tell the maintainers
-> what commits the patch depends on so that it can be applied to the
-> correct tree. In this case I could take it through my devicetree branch
-> that contains the console patches.
+Hi Lothar,
 
-I understand all of that. Actually 9 out of 10 of my changes were for switching to
-earlycon for which corresponding core changes from Rob were already in mainline.
-When reviewing my code, Rob pointed me to your on going work on use of stdout-path
-so my mistake was to pile that up in the same series vs. asking you to add that
-patch in ur tree for precisely the multi dependency reason.
+On Thu, Jun 12, 2014 at 03:20:45PM +0200, Lothar Wa=DFmann wrote:
+> Without blockmark swapping, there is no use in creating a BBT from
+> scratch, so use a BBT descriptor with NAND_BBT_CREATE unset in this
+> case.
 
-> If a patch depends on commits in several branches then it is a bit more
-> complex. What we usually do is create a new branch that merges in each
-> branch that is depended on, and then apply the commit on top of that.
->
-> As for the console patches, I'm only going to be putting them back if I
-> can devise a good fix for the earlycon duplication issue.
+I'm curious: what is your plan if there is no BBT available on your
+device, or if it ever gets corrupted? IIUC, nand_bbt will just assume
+you have no bad blocks, and it will never write a bad block table to
+flash. This also means no subsequent discoverable bad blocks can be
+recorded across power cycles, I believe.
 
-If you have an internal branch for this work, can you please add the patch below
-to it so that we don't forget abt it.
+Maybe you don't want to specify your own nand_bbt_descr's at all, but
+you just need to set:
 
-https://lkml.org/lkml/2014/6/24/127
+	chip->bbt_options |=3D NAND_BBT_CREATE_EMPTY | NAND_BBT_NO_OOB;
 
-I'll ask Greg to revert it from tty tree !
+(Note: there's a little bit of fuzziness about NAND_BBT_* flags, where
+some are targeted for the nand_chip::bbt_options field, and others
+belong in struct nand_bbt_descr::options.)
 
-Thx,
--Vineet
+But if for some reason we need to keep this patch, a comment below:
 
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
+> ---
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c |   28 ++++++++++++++++++++++++++=
++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> =
+
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gp=
+mi-nand/gpmi-nand.c
+> index 37537b4..fc710d7 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> @@ -43,6 +43,29 @@ static struct nand_bbt_descr gpmi_bbt_descr =3D {
+>  	.pattern	=3D scan_ff_pattern
+>  };
+>  =
+
+> +static uint8_t bbt_pattern[] =3D {'B', 'b', 't', '0' };
+> +static uint8_t mirror_pattern[] =3D {'1', 't', 'b', 'B' };
+> +
+> +static struct nand_bbt_descr bbt_main_no_oob_descr =3D {
+> +	.options =3D NAND_BBT_LASTBLOCK | NAND_BBT_WRITE |
+> +	NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP |
+> +	NAND_BBT_NO_OOB,
+
+Please indent the above two lines a bit, preferably matching the
+indentation of NAND_BBT_LASTBLOCK. It should be clear that this is a
+continuation of the '.options' initialization.
+
+> +	.len =3D 4,
+> +	.veroffs =3D 4,
+> +	.maxblocks =3D NAND_BBT_SCAN_MAXBLOCKS,
+> +	.pattern =3D bbt_pattern,
+> +};
+> +
+> +static struct nand_bbt_descr bbt_mirror_no_oob_descr =3D {
+> +	.options =3D NAND_BBT_LASTBLOCK | NAND_BBT_WRITE |
+> +	NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP |
+> +	NAND_BBT_NO_OOB,
+
+Same here.
+
+> +	.len =3D 4,
+> +	.veroffs =3D 4,
+> +	.maxblocks =3D NAND_BBT_SCAN_MAXBLOCKS,
+> +	.pattern =3D mirror_pattern,
+> +};
+> +
+>  /*
+>   * We may change the layout if we can get the ECC info from the datashee=
+t,
+>   * else we will use all the (page + OOB).
+> @@ -1728,8 +1751,11 @@ static int gpmi_nand_init(struct gpmi_nand_data *t=
+his)
+>  			chip->bbt_options |=3D NAND_BBT_NO_OOB_BBM;
+>  =
+
+>  		if (of_property_read_bool(this->dev->of_node,
+> -						"fsl,no-blockmark-swap"))
+> +						"fsl,no-blockmark-swap")) {
+>  			this->swap_block_mark =3D false;
+> +			chip->bbt_td =3D &bbt_main_no_oob_descr;
+> +			chip->bbt_md =3D &bbt_mirror_no_oob_descr;
+
+My initial recommendation for this patch and the previous patch means
+that you could just drop both patches and replace them with the
+following:
+
+			/* Comment here to explain why... */
+			chip->bbt_options |=3D NAND_BBT_CREATE_EMPTY |
+					     NAND_BBT_NO_OOB |
+					     NAND_BBT_NO_OOB_BBM;
+> +		}
+>  	}
+>  	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
+>  		this->swap_block_mark ? "en" : "dis");
+
+Brian
