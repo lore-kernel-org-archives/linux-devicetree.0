@@ -1,43 +1,86 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH 32/35] irq: intc: minor improvement to omap_irq_pending()
-Date: Mon, 28 Jul 2014 16:16:20 -0500
-Message-ID: <1406582183-696-33-git-send-email-balbi@ti.com>
-References: <1406582183-696-1-git-send-email-balbi@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
+ specification
+Date: Mon, 28 Jul 2014 22:28:31 +0100
+Message-ID: <20140728212831.GF17528@sirena.org.uk>
+References: <53D20A61.1050506@metafoo.de>
+ <53D21066.8000905@monstr.eu>
+ <20140725101815.GO17528@sirena.org.uk>
+ <53D2324B.4070602@suse.de>
+ <20140725103905.GP17528@sirena.org.uk>
+ <53D63746.3000905@suse.de>
+ <20140728122042.GR17528@sirena.org.uk>
+ <53D641DC.4020804@suse.de>
+ <20140728134420.GU17528@sirena.org.uk>
+ <53D66EC2.1050408@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o7PcwBx7JqiqHVZr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406582183-696-1-git-send-email-balbi@ti.com>
+Content-Disposition: inline
+In-Reply-To: <53D66EC2.1050408@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, bcousson@baylibre.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Simek <monstr@monstr.eu>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We already hold the number of Pending registers
-in omap_nr_pending. Let's use that instead.
 
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
- drivers/irqchip/irq-omap-intc.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+--o7PcwBx7JqiqHVZr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/irqchip/irq-omap-intc.c b/drivers/irqchip/irq-omap-intc.c
-index 30f5fa0..c9ba502 100644
---- a/drivers/irqchip/irq-omap-intc.c
-+++ b/drivers/irqchip/irq-omap-intc.c
-@@ -175,11 +175,10 @@ static void __init omap_irq_soft_reset(void)
- 
- int omap_irq_pending(void)
- {
--	int irq;
-+	int i;
- 
--	for (irq = 0; irq < omap_nr_irqs; irq += 32)
--		if (intc_readl(INTC_PENDING_IRQ0 +
--					((irq >> 5) << 5)))
-+	for (i = 0; i < omap_nr_pending; i++)
-+		if (intc_readl(INTC_PENDING_IRQ0 + (0x20 * i)))
- 			return 1;
- 	return 0;
- }
--- 
-2.0.1.563.g66f467c
+On Mon, Jul 28, 2014 at 05:39:46PM +0200, Andreas F=E4rber wrote:
+
+> Similarly, your statement about false negatives didn't really help in
+> resolving the not-CC'ed problem. I now know to CC you if I ever have
+> something for adi,axi-spdif-tx.txt again, but the next person might make
+> you grumpy again and potentially demotivates new contributors, so
+> certainly worth fixing.
+
+> Regmap, SPI, regulators, touchscreen MAINTAINERS entries seem unrelated.
+> Should your "SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEMENT (ASoC)"
+> MAINTAINERS entry get an
+> F: Documentation/devicetree/bindings/sound/
+> or is the "ANALOG DEVICES Inc ASOC DRIVERS" entry missing a line
+> F: sound/soc/adi/
+> F: Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
+> (which would then still not CC you)
+> or is a new MAINTAINERS section needed that CCs specifically Lars-Peter
+> and you on the latter?
+
+What you're really talking about is making MAINTAINERS complete which is
+a very big job; even if only looking at the DT bindings you'd need to go
+through every binding and make sure that MAINTAINERS says the same
+things as it does for the matching driver code, and where there are
+missing entries add them.  In the immediate case both bits are missing.
+
+Really as with so much else it's much better advice to ask people to
+look and think about what they're doing; it's the same thing as ensuring
+that commit logs match the standard style for the thing being edited
+(especially the subject lines) and that if there's people who normally
+apply patches and work on the code they're included.
+
+--o7PcwBx7JqiqHVZr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT1sB3AAoJELSic+t+oim9nGMQAJldHc0eVY6J/0zVFEGcyr/r
+G3170S0fEioNmr/smd2jVOrH9008+WoDgjjWj5ItletMBLjABwy/sO2p0wMRwEq3
+gGhBQ90PKllBiCWuYnY5beLsWEs5Bbn7xzV546jUjR0fBKRUymhN3NA/07Rkgkj0
+CveBt8mkkfKNQ/Pe1wSsI//mdSPFAMBjEkUCHXWMkHTenwaGdrg50H6bp2R/rWr1
+3EOv4Zgar+/advNzDiG4QYeyGgdPy5A8H2Z1Qi2J3CJpKmnguqwgdtNg6w10OlXN
+zNvUNLoLEbHjbe10rM/9yRqCDYSe+yEkNeBjci02lvK8ggqwON4ZQ0ZSOHiRUv/J
+Gqhw+NNwT6x7EDrIRUMaBVwK9vusMcANzX/7QKymJM+JXrEndA1XO/mRYepS9b2/
+EI22C0iYpCsus61OMOuIT7tw7Zjy//sRmKYcpwER7s0BF5kgHzrIgilj1F1wcVfE
+kh/Cmk+sEA55aDM8hi0Pt8JqkX1WK6xomHJdsVO03zx+BoCTvdISEc2RLriChivM
+5eeuWwWTWLhcHJPUO1d7aaKfO7Z2vrDCH4Hrq30kl9f322ZvSvsRCn4qfXbhObfw
+tl2n5T/e9d4EnvVL+OOVenNKyx8UvexVhq6x3EXIFLeLqMp/xh19JbaGs8rpftpC
+gHT9qv3dpRYno4NKGRnw
+=vbZm
+-----END PGP SIGNATURE-----
+
+--o7PcwBx7JqiqHVZr--
