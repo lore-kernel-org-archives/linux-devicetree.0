@@ -1,41 +1,45 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v11 4/8] ata: libahci: allow to use multiple PHYs
-Date: Mon, 28 Jul 2014 13:27:24 -0400
-Message-ID: <20140728172724.GA7462@htj.dyndns.org>
-References: <1406193450-17283-1-git-send-email-antoine.tenart@free-electrons.com>
- <1406193450-17283-5-git-send-email-antoine.tenart@free-electrons.com>
- <53D62624.6070502@redhat.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v2] input: drv260x: Add TI drv260x haptics driver
+Date: Mon, 28 Jul 2014 10:43:34 -0700
+Message-ID: <20140728174334.GD8982@core.coreip.homeip.net>
+References: <1406566403-1436-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53D62624.6070502@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1406566403-1436-1-git-send-email-dmurphy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 12:29:56PM +0200, Hans de Goede wrote:
-...
-> > +		if (!enabled_ports) {
-> > +			dev_warn(dev, "No port enabled\n");
-> > +			return ERR_PTR(-ENODEV);
-> 
-> This should be:
-> 			rc = -ENODEV;
-> 			goto err_out;
-> 
-> Sorry for not catching that sooner.
-> 
-> Other then that the entire series looks good and is:
-> 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
+Hi Dan,
 
-Antoine, can you please post an updated version of this patch?  No
-need to repost the whole series.  Also, how should the series be
-routed?
+On Mon, Jul 28, 2014 at 11:53:23AM -0500, Dan Murphy wrote:
+> Add the TI drv260x haptics/vibrator driver.
+> This device uses the input force feedback
+> to produce a wave form to driver an
+> ERM or LRA actuator device.
+> 
+> The initial driver supports the devices
+> real time playback mode.  But the device
+> has additional wave patterns in ROM.
+
+As it presented the device appears to be a memoryless device, however
+you present it to the rest of the system as if it can support playback
+of multiple effects simultaneously, which is incorrect.
+
+My guess that you need to engage the memoryless input library to schedule
+handling multiple effects for your device, including ramping up, ramping
+down, stopping playback when effects runs out, etc.
 
 Thanks.
-
+ 
 -- 
-tejun
+Dmitry
+
+P.S. If you are using devm_ there is devm_input_allocate_dveice().
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
