@@ -1,73 +1,152 @@
-From: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] V4 ARM: mvebu: Added dts defintion for Lenovo Iomega ix4-300d NAS
-Date: Mon, 28 Jul 2014 16:13:59 +0200
-Message-ID: <02CE8576-5CD8-4AA5-971E-85CBC8CE05D3@perenite.com>
-References: <1406503839-4662-1-git-send-email-yahoo@perenite.com> <20140728140805.GQ23220@titan.lakedaemon.net>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140728140805.GQ23220-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 RESEND 1/4] drivers: of: add automated assignment of
+ reserved regions to client devices
+Date: Mon, 28 Jul 2014 08:15:16 -0600
+Message-ID: <20140728141516.3CA98C408EA@trevor.secretlab.ca>
+References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
+	<1405326487-15346-2-git-send-email-m.szyprowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405326487-15346-2-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, Jon Medhurst <tixy@linaro.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, "Aneesh Kumar K.V." <aneesh.kumar@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 14 Jul 2014 10:28:04 +0200, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> This patch adds code for automated assignment of reserved memory regions
+> to struct device. reserved_mem->ops->device_init()/device_cleanup()
+> callbacks are called to perform reserved memory driver specific
+> initialization and cleanup
+> 
+> Based on previous code provided by Josh Cartwright <joshc@codeaurora.org>
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Le 28 juil. 2014 =E0 16:08, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> a =E9cr=
-it :
+Applied, thanks
 
-> Benoit,
->=20
-> On Sun, Jul 27, 2014 at 04:30:39PM -0700, Benoit Masson wrote:
->> The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
->> USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
->>=20
->> http://shop.lenovo.com/us/en/servers/network-storage/lenovoemc/ix4-3=
-00d/
->> Signed-off-by: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
->> ---
->> arch/arm/boot/dts/Makefile                      |   3 +-
->> arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 285 ++++++++++++++=
-++++++++++
->> 2 files changed, 287 insertions(+), 1 deletion(-)
->> create mode 100644 arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
->=20
-> I've applied this to mvebu/dt with a few minor fixups.
->=20
->  - Insert empty line between URL and S-o-B
->  - Removed i2c compatible property
->  - Removed trailing whitespace from multi-line comment at end of file
->=20
-> Also, traditionally, the 'V4' goes inside the square brackets, eg
->=20
->  [ PATCH V4 2/2 ] ...
->=20
-> This is done because 'git am ...' automagically removes everything
-> between the square brackets and then takes the rest of the subject li=
-ne
-> to be the first line of the commit message.
->=20
-> Well done!
+g.
 
-Thanks Jason and all for supporting this and following up long discussi=
-ons on A0 stepping ... !
-
-Just one question is how would you link this patch to the quirk a0 patc=
-h since this patch can't work without it ...
-
->=20
-> You can view the commit here:
->=20
->  http://git.infradead.org/linux-mvebu.git/commitdiff/40c2da45366171bd=
-c9ad1968489aaae190248383
->=20
-> thx,
->=20
-> Jason.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/of/of_reserved_mem.c    | 70 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_reserved_mem.h |  7 +++++
+>  2 files changed, 77 insertions(+)
+> 
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 632aae861375..59fb12e84e6b 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -206,8 +206,16 @@ void __init fdt_init_reserved_mem(void)
+>  	for (i = 0; i < reserved_mem_count; i++) {
+>  		struct reserved_mem *rmem = &reserved_mem[i];
+>  		unsigned long node = rmem->fdt_node;
+> +		int len;
+> +		const __be32 *prop;
+>  		int err = 0;
+>  
+> +		prop = of_get_flat_dt_prop(node, "phandle", &len);
+> +		if (!prop)
+> +			prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
+> +		if (prop)
+> +			rmem->phandle = of_read_number(prop, len/4);
+> +
+>  		if (rmem->size == 0)
+>  			err = __reserved_mem_alloc_size(node, rmem->name,
+>  						 &rmem->base, &rmem->size);
+> @@ -215,3 +223,65 @@ void __init fdt_init_reserved_mem(void)
+>  			__reserved_mem_init_node(rmem);
+>  	}
+>  }
+> +
+> +static inline struct reserved_mem *__find_rmem(struct device_node *node)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!node->phandle)
+> +		return NULL;
+> +
+> +	for (i = 0; i < reserved_mem_count; i++)
+> +		if (reserved_mem[i].phandle == node->phandle)
+> +			return &reserved_mem[i];
+> +	return NULL;
+> +}
+> +
+> +/**
+> + * of_reserved_mem_device_init() - assign reserved memory region to given device
+> + *
+> + * This function assign memory region pointed by "memory-region" device tree
+> + * property to the given device.
+> + */
+> +void of_reserved_mem_device_init(struct device *dev)
+> +{
+> +	struct reserved_mem *rmem;
+> +	struct device_node *np;
+> +
+> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> +	if (!np)
+> +		return;
+> +
+> +	rmem = __find_rmem(np);
+> +	of_node_put(np);
+> +
+> +	if (!rmem || !rmem->ops || !rmem->ops->device_init)
+> +		return;
+> +
+> +	rmem->ops->device_init(rmem, dev);
+> +	dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
+> +}
+> +
+> +/**
+> + * of_reserved_mem_device_release() - release reserved memory device structures
+> + *
+> + * This function releases structures allocated for memory region handling for
+> + * the given device.
+> + */
+> +void of_reserved_mem_device_release(struct device *dev)
+> +{
+> +	struct reserved_mem *rmem;
+> +	struct device_node *np;
+> +
+> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> +	if (!np)
+> +		return;
+> +
+> +	rmem = __find_rmem(np);
+> +	of_node_put(np);
+> +
+> +	if (!rmem || !rmem->ops || !rmem->ops->device_release)
+> +		return;
+> +
+> +	rmem->ops->device_release(rmem, dev);
+> +}
+> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+> index 4669ddfdd5af..5b5efae09135 100644
+> --- a/include/linux/of_reserved_mem.h
+> +++ b/include/linux/of_reserved_mem.h
+> @@ -8,6 +8,7 @@ struct reserved_mem_ops;
+>  struct reserved_mem {
+>  	const char			*name;
+>  	unsigned long			fdt_node;
+> +	unsigned long			phandle;
+>  	const struct reserved_mem_ops	*ops;
+>  	phys_addr_t			base;
+>  	phys_addr_t			size;
+> @@ -27,10 +28,16 @@ typedef int (*reservedmem_of_init_fn)(struct reserved_mem *rmem);
+>  	_OF_DECLARE(reservedmem, name, compat, init, reservedmem_of_init_fn)
+>  
+>  #ifdef CONFIG_OF_RESERVED_MEM
+> +void of_reserved_mem_device_init(struct device *dev);
+> +void of_reserved_mem_device_release(struct device *dev);
+> +
+>  void fdt_init_reserved_mem(void);
+>  void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+>  			       phys_addr_t base, phys_addr_t size);
+>  #else
+> +static inline void of_reserved_mem_device_init(struct device *dev) { }
+> +static inline void of_reserved_mem_device_release(struct device *pdev) { }
+> +
+>  static inline void fdt_init_reserved_mem(void) { }
+>  static inline void fdt_reserved_mem_save_node(unsigned long node,
+>  		const char *uname, phys_addr_t base, phys_addr_t size) { }
+> -- 
+> 1.9.2
+> 
