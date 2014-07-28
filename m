@@ -1,56 +1,89 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH RFC v4 0/4] Add arm pl353 smc nand driver for xilinx zynq soc
-Date: Mon, 28 Jul 2014 21:01:36 +0530
-Message-ID: <5d452894-346b-45e7-afe4-28c67c59e563@BY2FFO11FD019.protection.gbl>
+From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2 09/11] Documentation: devicetree: Fix ADI AXI SPDIF
+ specification
+Date: Mon, 28 Jul 2014 17:39:46 +0200
+Message-ID: <53D66EC2.1050408@suse.de>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de> <1406242820-20140-10-git-send-email-afaerber@suse.de> <53D20A61.1050506@metafoo.de> <53D21066.8000905@monstr.eu> <20140725101815.GO17528@sirena.org.uk> <53D2324B.4070602@suse.de> <20140725103905.GP17528@sirena.org.uk> <53D63746.3000905@suse.de> <20140728122042.GR17528@sirena.org.uk> <53D641DC.4020804@suse.de> <20140728134420.GU17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, svemula@xilinx.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, anirudh@xilinx.com, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="k0CjAvVJUkGbaXStHfnhCSKuL7nVI8vip"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140728134420.GU17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Vit <matteo.vit-WGsyu9ztxDWovDFt+AQlJdBPR1lH4CV8@public.gmane.org>, Sean Rickerd <srickerd-IBi9RG/b67k@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following patches add arm pl353 static memory controller driver for
-xilinx zynq soc. The arm pl353 smc supports two interfaces i.e nand and
-nor/sram memory interfaces. The current implementation supports only a
-single SMC instance and nand specific configuration.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--k0CjAvVJUkGbaXStHfnhCSKuL7nVI8vip
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-xilinx zynq TRM link:
-http://www.xilinx.com/support/documentation/user_guides/ug585-Zynq-7000-TRM.pdf
+Am 28.07.2014 15:44, schrieb Mark Brown:
+> On Mon, Jul 28, 2014 at 02:28:12PM +0200, Andreas F=E4rber wrote:
+>=20
+>> I will *re*-submit it for your convenience.
+>=20
+> Which is what I originally requested when I got CCed into the thread -
+> I'm being grumpy because instead of getting the patch sent to me as
+> requested I got sent a link to patchwork.
 
-ARM pl353 smc TRM link:
-http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
-DDI0380G_smc_pl350_series_r2p1_trm.pdf
+Hindsight, had you simply replied with "Yes, please." instead of the
+non-telling "Documentation/SubmittingPatches.", you would've spared
+yourself keystrokes and us four mailing list messages. ;)
 
-Punnaiah Choudary Kalluri (4):
-  nand: pl353: Add basic driver for arm pl353 smc nand interface
-  nand: pl353: Add software ecc support
-  nand: pl353: Add ONDIE ECC support
-  Documentation: nand: pl353: Add documentation for controller and
-    driver
+Similarly, your statement about false negatives didn't really help in
+resolving the not-CC'ed problem. I now know to CC you if I ever have
+something for adi,axi-spdif-tx.txt again, but the next person might make
+you grumpy again and potentially demotivates new contributors, so
+certainly worth fixing.
 
- Documentation/mtd/nand/pl353-nand.txt |   92 +++
- drivers/mtd/nand/Kconfig              |    7 +
- drivers/mtd/nand/Makefile             |    1 +
- drivers/mtd/nand/pl353_nand.c         | 1147 +++++++++++++++++++++++++++++++++
- 4 files changed, 1247 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/mtd/nand/pl353-nand.txt
- create mode 100644 drivers/mtd/nand/pl353_nand.c
+Regmap, SPI, regulators, touchscreen MAINTAINERS entries seem unrelated.
+Should your "SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEMENT (ASoC)"
+MAINTAINERS entry get an
+F: Documentation/devicetree/bindings/sound/
+or is the "ANALOG DEVICES Inc ASOC DRIVERS" entry missing a line
+F: sound/soc/adi/
+F: Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
+(which would then still not CC you)
+or is a new MAINTAINERS section needed that CCs specifically Lars-Peter
+and you on the latter?
 
--- 
-1.7.4
+Regards,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnbe=
+rg
 
 
+--k0CjAvVJUkGbaXStHfnhCSKuL7nVI8vip
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJT1m7CAAoJEPou0S0+fgE/50gP/0wo9o1Q1gZsa4mUCfvpAWqq
+l3kbaua1x960mqSGk4irjKx2dK9sbYt3nfoxZj0sY9oVhIy9SW65vccDR7dwwQau
+rYn4qYLNeZppp0pusxxE3YWbSY1vI/qLjfUfy751ru0kz9jQ6Ssf5r+QQu9CGRBe
+cVInJTpfmymh9I9vjajmBztceGWAbP1ptFp2WxTU/PERsfrYrjsxQpVNMnjF5RSR
+jGO0v3gmBFU8owUnJofdkDkfmHKbzRXZVjMpXo7O3VujuGz03mWrGKvL3Hxsw7QQ
+sSF6WpBVXGeK6FprV0yk8qA0JLnE+/08YEGM4fXmWRB3DIWl+VILgrS66ULbEtAu
+xGYri4CIvyPEXB9MgJINWMQcNVWqx2b1mwqyEQIaYbzB6uqvkQSal3r74qSLR0sq
+pVbeLmmkuYXCXeav+Pi7CJvUIMnu9jdEGpkZ9oy0ESc609lazA314KQX7OiVhI3P
+nXq/pCQi8F4hBXW4IcgGLEnEu/NmvvxtnvfPJBTA+UqtmKzd7eP47Xsd4Jk52MKZ
+L/kp/sfLvSLQ4hNDCEUSWr9vY4eWhw/sH8clwf2McJQTwrzvZxvcAbDitloml8l6
+x8T2/giCaI3NxmkDuNjB9IfL8B84qa4WTcwUsvKRgTscQ5PzYTa6qYlfTPIeSj1w
+OIPvTduihl1hWe2Yc7BE
+=068Q
+-----END PGP SIGNATURE-----
+
+--k0CjAvVJUkGbaXStHfnhCSKuL7nVI8vip--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
