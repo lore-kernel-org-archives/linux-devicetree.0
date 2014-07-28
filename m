@@ -1,12 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 6/6] ARM: sunxi: Add A31 RTC driver to multi_v7_defconfig
-Date: Mon, 28 Jul 2014 16:21:01 +0800
-Message-ID: <1406535661-25072-7-git-send-email-wens@csie.org>
+Subject: [PATCH v4 5/6] ARM: sunxi: Add A31 RTC driver to sunxi_defconfig
+Date: Mon, 28 Jul 2014 16:21:00 +0800
+Message-ID: <1406535661-25072-6-git-send-email-wens@csie.org>
 References: <1406535661-25072-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4MP3CPAKGQEX34RCTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4EP3CPAKGQETNCQOSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1406535661-25072-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,24 +20,24 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Varka Bhadram <varkabhadra
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a driver for A31's RTC, enable it
-in multi_v7_defconfig.
+in the default sunxi config.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
+ arch/arm/configs/sunxi_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index a62ca27..130dd8d 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -346,6 +346,7 @@ CONFIG_RTC_DRV_TPS65910=y
- CONFIG_RTC_DRV_EM3027=y
- CONFIG_RTC_DRV_PL031=y
- CONFIG_RTC_DRV_VT8500=y
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index 7209bfd..0abc2ab 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -93,6 +93,7 @@ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+ CONFIG_RTC_CLASS=y
+ # CONFIG_RTC_INTF_SYSFS is not set
+ # CONFIG_RTC_INTF_PROC is not set
 +CONFIG_RTC_DRV_SUN6I=y
  CONFIG_RTC_DRV_SUNXI=y
- CONFIG_RTC_DRV_MV=y
- CONFIG_RTC_DRV_TEGRA=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_PHY_SUN4I_USB=y
 -- 
 2.0.1
