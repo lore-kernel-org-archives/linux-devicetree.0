@@ -1,73 +1,284 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Enabling OF selftest to run without machine's devicetree
-Date: Mon, 28 Jul 2014 10:00:20 -0500
-Message-ID: <CAL_JsqKG2a=8zvRfjuP_VEM_+W8wfnmjK8PUqW6w_cZsA7dvDQ@mail.gmail.com>
-References: <1406404130-27289-1-git-send-email-gaurav.minocha.os@gmail.com>
- <CAL_JsqJXqoyCRcMdS83zPr7prY52GgbAd1y+tgVn5f6Q+=CwxQ@mail.gmail.com>
- <CA+rpMb+pPZykJ7-XurVSSOaTPGNji9zG7FtVB+m6-gNiOHM4Jw@mail.gmail.com> <CA+rpMbJmCQ7YfJ7c+hjOmdfAdTHtTuH34mEWGH9Xo=rYJFDgKg@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
+Date: Mon, 28 Jul 2014 17:06:53 +0200
+Message-ID: <20140728170653.087dfbfd@bbrezillon>
+References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+rpMbJmCQ7YfJ7c+hjOmdfAdTHtTuH34mEWGH9Xo=rYJFDgKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 27, 2014 at 10:28 PM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sat, Jul 26, 2014 at 3:17 PM, Gaurav Minocha
-> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Jul 26, 2014 at 2:11 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Sat, Jul 26, 2014 at 2:48 PM, Gaurav Minocha
->>> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> If there is no devicetree present, this patch adds the selftest
->>>> data as a live devicetree. It also removes the same after the
->>>> testcase execution is complete.
+Hello Jiri,
 
-[...]
+The least you can do when someone helps you debugging something is to
+keep him in Cc of the following versions of your patch...
 
->>>> @@ -614,10 +616,31 @@ static int __init selftest_data_add(void)
->>>>                         "not running tests\n", __func__);
->>>>                 return -ENOMEM;
->>>>         }
->>>> -       of_fdt_unflatten_tree(selftest_data, &selftest_data_node);
->>>
->>> Can't you keep this factored out and just do "of_allnodes =
->>> selftest_data_node;"?
->>>
->> I tried to do that in first place, but of_alias_scan() called from
->> of_fdt_unflatten_tree(..)
->> needs of_allnodes. So, had to call it separately.
+On Mon, 28 Jul 2014 13:43:40 +0200
+Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org> wrote:
 
-No, it is not or I'm missing some change. Or it is a bug? It is called
-from unflatten_device_tree which is the early boot version.
+> This fix problem with PA14 set as periph A left from ROMBOOT and need it
+> to be set to gpio before spi bus communicate with chip on CS0 on other
+> gpio. As I reported a week ago.
+> Request all csgpios in spi_probe since cs depends on each other and must
+> be all of them in right state before any communication on bus. They are
+> part of bus, like miso, mosi, clk, not part of chips, they are defined
+> in parent spi node, not in child chip node.
+> Csgpio moved to atmel_spi struct as part of master bus.
+> 
+> Signed-off-by: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+> ---
+>  drivers/spi/spi-atmel.c | 68 +++++++++++++++++++++++++++++--------------------
+>  1 file changed, 41 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+> index 92a6f0d..1fb7bb9 100644
+> --- a/drivers/spi/spi-atmel.c
+> +++ b/drivers/spi/spi-atmel.c
+> @@ -22,11 +22,14 @@
+>  #include <linux/platform_data/atmel.h>
+>  #include <linux/platform_data/dma-atmel.h>
+>  #include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  
+>  #include <linux/io.h>
+>  #include <linux/gpio.h>
+>  #include <linux/pinctrl/consumer.h>
+>  
+> +#define DRIVER_NAME "atmel-spi"
+> +
+>  /* SPI register offsets */
+>  #define SPI_CR					0x0000
+>  #define SPI_MR					0x0004
+> @@ -242,11 +245,13 @@ struct atmel_spi {
+>  
+>  	bool			keep_cs;
+>  	bool			cs_active;
+> +
+> +	/* chip selects */
+> +	unsigned int		csgpio[];
 
-> Actually, it's possible if rather than calling of_alias_scan from
-> of_fdt_unflatten_tree, I write a wrapper and export it as below.
-> So, I will be able to call of_fdt_alias_scan explicitly.
+Do you really need to store these gpio ids in atmel_spi struct (they
+are already stored in the spi_master).
+
+>  };
+>  
+>  /* Controller-specific per-slave state */
+>  struct atmel_spi_device {
+> -	unsigned int		npcs_pin;
+
+Keep this field to handle both DT and non-DT cases.
+
+>  	u32			csr;
+>  };
+>  
+> @@ -312,7 +317,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+>  		}
+>  
+>  		mr = spi_readl(as, MR);
+> -		gpio_set_value(asd->npcs_pin, active);
+> +		gpio_set_value(as->csgpio[spi->chip_select], active);
+
+Drop this change.
+
+>  	} else {
+>  		u32 cpol = (spi->mode & SPI_CPOL) ? SPI_BIT(CPOL) : 0;
+>  		int i;
+> @@ -329,18 +334,16 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+>  		mr = spi_readl(as, MR);
+>  		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
+>  		if (spi->chip_select != 0)
+> -			gpio_set_value(asd->npcs_pin, active);
+> +			gpio_set_value(as->csgpio[spi->chip_select], active);
+
+Ditto.
+
+>  		spi_writel(as, MR, mr);
+>  	}
+>  
+>  	dev_dbg(&spi->dev, "activate %u%s, mr %08x\n",
+> -			asd->npcs_pin, active ? " (high)" : "",
+> -			mr);
+> +		as->csgpio[spi->chip_select], active ? " (high)" : "", mr);
+
+Ditto.
+
+>  }
+>  
+>  static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
+>  {
+> -	struct atmel_spi_device *asd = spi->controller_state;
+>  	unsigned active = spi->mode & SPI_CS_HIGH;
+>  	u32 mr;
+>  
+> @@ -354,11 +357,10 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
+>  	}
+>  
+>  	dev_dbg(&spi->dev, "DEactivate %u%s, mr %08x\n",
+> -			asd->npcs_pin, active ? " (low)" : "",
+> -			mr);
+> +		as->csgpio[spi->chip_select], active ? " (low)" : "", mr);
+>  
+>  	if (atmel_spi_is_v2(as) || spi->chip_select != 0)
+> -		gpio_set_value(asd->npcs_pin, !active);
+> +		gpio_set_value(as->csgpio[spi->chip_select], !active);
+
+Ditto.
+
+>  }
+>  
+>  static void atmel_spi_lock(struct atmel_spi *as) __acquires(&as->lock)
+> @@ -989,8 +991,6 @@ static int atmel_spi_setup(struct spi_device *spi)
+>  	struct atmel_spi_device	*asd;
+>  	u32			csr;
+>  	unsigned int		bits = spi->bits_per_word;
+> -	unsigned int		npcs_pin;
+> -	int			ret;
+>  
+>  	as = spi_master_get_devdata(spi->master);
+>  
+> @@ -1017,27 +1017,13 @@ static int atmel_spi_setup(struct spi_device *spi)
+>  	csr |= SPI_BF(DLYBS, 0);
+>  	csr |= SPI_BF(DLYBCT, 0);
+>  
+> -	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
+> -	npcs_pin = (unsigned int)spi->controller_data;
+> -
+> -	if (gpio_is_valid(spi->cs_gpio))
+> -		npcs_pin = spi->cs_gpio;
+> -
+
+Keep this block and just add:
+
+	else {
+		ret = gpio_request(npcs_pin, dev_name(&spi->dev));
+		if (ret) {
+			kfree(asd);
+			return ret;
+		}
+		gpio_direction_output(npcs_pin,
+				      !(spi->mode & SPI_CS_HIGH));
+	}
+		
+
+>  	asd = spi->controller_state;
+>  	if (!asd) {
+>  		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
+>  		if (!asd)
+>  			return -ENOMEM;
+>  
+> -		ret = gpio_request(npcs_pin, dev_name(&spi->dev));
+> -		if (ret) {
+> -			kfree(asd);
+> -			return ret;
+> -		}
+> -
+> -		asd->npcs_pin = npcs_pin;
+
+Keep this line.
+
+>  		spi->controller_state = asd;
+> -		gpio_direction_output(npcs_pin, !(spi->mode & SPI_CS_HIGH));
+>  	}
+>  
+>  	asd->csr = csr;
+> @@ -1290,6 +1276,15 @@ static int atmel_spi_probe(struct platform_device *pdev)
+>  	int			ret;
+>  	struct spi_master	*master;
+>  	struct atmel_spi	*as;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int num_cs, i;
+> +
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	num_cs = of_gpio_named_count(np, "cs-gpios");
+> +	if (num_cs < 0)
+> +		return num_cs;
+
+As stated by Alexandre, you cannot do this, because it will break
+non-DT board support.
+
+This should do the trick:
+
+	int num_cs = 0;
+
+	if (np) {
+		num_cs = of_gpio_named_count(np, "cs-gpios");
+		if (num_cs < 0)
+			return num_cs;
+	}
+
+>  
+>  	/* Select default pin state */
+>  	pinctrl_pm_select_default_state(&pdev->dev);
+> @@ -1308,7 +1303,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
+>  
+>  	/* setup spi core then atmel-specific driver state */
+>  	ret = -ENOMEM;
+> -	master = spi_alloc_master(&pdev->dev, sizeof(*as));
+> +	master = spi_alloc_master(&pdev->dev, sizeof(*as) + num_cs * sizeof(unsigned));
+
+Drop this change.
+
+>  	if (!master)
+>  		goto out_free;
+>  
+> @@ -1317,7 +1312,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
+>  	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 16);
+>  	master->dev.of_node = pdev->dev.of_node;
+>  	master->bus_num = pdev->id;
+> -	master->num_chipselect = master->dev.of_node ? 0 : 4;
+> +	master->num_chipselect = num_cs;
+>  	master->setup = atmel_spi_setup;
+>  	master->transfer_one_message = atmel_spi_transfer_one_message;
+>  	master->cleanup = atmel_spi_cleanup;
+> @@ -1325,6 +1320,25 @@ static int atmel_spi_probe(struct platform_device *pdev)
+>  
+>  	as = spi_master_get_devdata(master);
 >
-> of_fdt_alias_scan()
-> {
->      of_alias_scan(&kernel_tree_alloc);
-> }
-> EXPORT_SYMBOL(of_fdt_alias_scan)
+> +	for (i = 0; i < master->num_chipselect; ++i) {
+> +		ret = of_get_named_gpio(np, "cs-gpios", i);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "failed to get csgpio#%u (%d)\n",
+> +				i, ret);
+> +			goto out_free;
+> +		}
+> +		as->csgpio[i] = ret;
+> +		dev_dbg(&pdev->dev, "csgpio#%u = %u\n", i, as->csgpio[i]);
+> +		ret = devm_gpio_request_one(&pdev->dev, as->csgpio[i],
+> +					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
 
-I prefer to keep this internal to the DT code. Plus of_fdt_* functions
-operate on a flat tree and of_alias_scan operates on unflattened tree.
+Are you sure we always want to initialize this gpio to high ?
+What if SPI_CS_HIGH is set ?
 
->
-> OR
->
-> directly export of_alias_scan() and
-> kernel_tree_alloc(u64 size, u64 align)
->
-> please let me know if I should follow either of the above
-> approach in my next patch.
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev,
+> +				"failed to configure csgpio#%u (%d)\n",
+> +				i, ret);
+> +			goto out_free;
+> +		}
+> +	}
+> +
 
-Perhaps as you had it is fine.
+You could move this block in a dt specific function (how about
+naming it of_atmel_spi_init ?) and test np availability before calling
+this function.
 
-Rob
+My suggestions are far from perfect, but at least it fixes the DT case
+and keep the non-DT in a working state.
+
+Best Regards,
+
+Boris
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
