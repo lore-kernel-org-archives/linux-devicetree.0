@@ -1,103 +1,141 @@
-From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] dma: Add Xilinx AXI DMA DT Binding Documentation
-Date: Mon, 28 Jul 2014 17:47:48 +0530
-Message-ID: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 2/5] ARM: dts: exynos5410: Prepare ODROID-XU device tree
+Date: Mon, 28 Jul 2014 14:18:09 +0200
+Message-ID: <1406549892-5558-3-git-send-email-afaerber@suse.de>
+References: <1406549892-5558-1-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406549892-5558-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hakjoo Kim <ruppi.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
+Cc: Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation of Xilinx DMA Engine
+Derived from exynos5410-smdk5410.dts.
 
-Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
-Changes in v3:
-- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
-  to match the implementation.
+ arch/arm/boot/dts/Makefile                |  1 +
+ arch/arm/boot/dts/exynos5410-odroidxu.dts | 86 +++++++++++++++++++++++=
+++++++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos5410-odroidxu.dts
 
-Changes in v2:
-None
----
- .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |   65 ++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 80a781f76e88..13fb64eeee10 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -77,6 +77,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) +=3D exynos4210-origen.dtb =
+\
+ 	exynos5250-smdk5250.dtb \
+ 	exynos5250-snow.dtb \
+ 	exynos5260-xyref5260.dtb \
++	exynos5410-odroidxu.dtb \
+ 	exynos5410-smdk5410.dtb \
+ 	exynos5420-arndale-octa.dtb \
+ 	exynos5420-peach-pit.dtb \
+diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/=
+dts/exynos5410-odroidxu.dts
 new file mode 100644
-index 0000000..18e8bcc
+index 000000000000..b67112bf062a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-@@ -0,0 +1,65 @@
-+Xilinx AXI DMA engine, it does transfers between memory and AXI4 stream
-+target devices. It can be configured to have one channel or two channels.
-+If configured as two channels, one is to transmit to the device and another
-+is to receive from the device.
++++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+@@ -0,0 +1,86 @@
++/*
++ * Hardkernel ODROID-XU device tree source
++ *
++ * Copyright (c) 2014 SUSE LINUX Products GmbH
++ *
++ * Based on exynos5410-smdk5410.dts:
++ *
++ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
 +
-+Required properties:
-+- compatible: Should be "xlnx,axi-dma-1.00.a"
-+- #dma-cells: Should be <1>, see "dmas" property below
-+- reg: Should contain DMA registers location and length.
-+- dma-channel child node: Should have atleast one channel and can have upto
-+	two channels per device. This node specifies the properties of each
-+	DMA channel (see child node properties below).
++/dts-v1/;
++#include "exynos5410.dtsi"
++/ {
++	model =3D "ODROID-XU based on EXYNOS5410";
++	compatible =3D "hardkernel,odroid-xu", "samsung,exynos5410", "samsung=
+,exynos5";
 +
-+Optional properties:
-+- xlnx,include-sg: Tells whether configured for Scatter-mode in
-+	the hardware.
++	memory {
++		reg =3D <0x40000000 0x80000000>;
++	};
 +
-+Required child node properties:
-+- compatible: It should be either "xlnx,axi-dma-mm2s-channel" or
-+	"xlnx,axi-dma-s2mm-channel".
-+- interrupts: Should contain per channel DMA interrupts.
-+- xlnx,datawidth: Should contain the stream data width, take values
-+	{32,64...1024}.
++	chosen {
++		bootargs =3D "console=3DttySAC2,115200";
++	};
 +
-+Option child node properties:
-+- xlnx,include-dre: Tells whether hardware is configured for Data
-+	Realignment Engine.
++	fin_pll: xxti {
++		compatible =3D "fixed-clock";
++		clock-frequency =3D <24000000>;
++		clock-output-names =3D "fin_pll";
++		#clock-cells =3D <0>;
++	};
 +
-+Example:
-+++++++++
++	firmware@02037000 {
++		compatible =3D "samsung,secure-firmware";
++		reg =3D <0x02037000 0x1000>;
++	};
 +
-+axi_dma_0: axidma@40400000 {
-+	compatible = "xlnx,axi-dma-1.00.a";
-+	#dma_cells = <1>;
-+	reg = < 0x40400000 0x10000 >;
-+	dma-channel@40400000 {
-+		compatible = "xlnx,axi-dma-mm2s-channel";
-+		interrupts = < 0 59 4 >;
-+		xlnx,datawidth = <0x40>;
-+	} ;
-+	dma-channel@40400030 {
-+		compatible = "xlnx,axi-dma-s2mm-channel";
-+		interrupts = < 0 58 4 >;
-+		xlnx,datawidth = <0x40>;
-+	} ;
-+} ;
++};
 +
++&mmc_0 {
++	status =3D "okay";
++	num-slots =3D <1>;
++	supports-highspeed;
++	broken-cd;
++	card-detect-delay =3D <200>;
++	samsung,dw-mshc-ciu-div =3D <3>;
++	samsung,dw-mshc-sdr-timing =3D <2 3>;
++	samsung,dw-mshc-ddr-timing =3D <1 2>;
 +
-+* DMA client
++	slot@0 {
++		reg =3D <0>;
++		bus-width =3D <8>;
++	};
++};
 +
-+Required properties:
-+- dmas: a list of <[DMA device phandle] [Channel ID]> pairs,
-+	where Channel ID is '0' for write/tx and '1' for read/rx
-+	channel.
-+- dma-names: a list of DMA channel names, one per "dmas" entry
++&mmc_2 {
++	status =3D "okay";
++	num-slots =3D <1>;
++	supports-highspeed;
++	card-detect-delay =3D <200>;
++	samsung,dw-mshc-ciu-div =3D <3>;
++	samsung,dw-mshc-sdr-timing =3D <2 3>;
++	samsung,dw-mshc-ddr-timing =3D <1 2>;
 +
-+Example:
-+++++++++
++	slot@0 {
++		reg =3D <0>;
++		bus-width =3D <4>;
++		disable-wp;
++	};
++};
 +
-+dmatest_0: dmatest@0 {
-+	compatible ="xlnx,axi-dma-test-1.00.a";
-+	dmas = <&axi_dma_0 0
-+		&axi_dma_0 1>;
-+	dma-names = "dma0", "dma1";
-+} ;
--- 
-1.7.9.5
++&uart0 {
++	status =3D "okay";
++};
++
++&uart1 {
++	status =3D "okay";
++};
++
++&uart2 {
++	status =3D "okay";
++};
+--=20
+1.9.3
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
