@@ -1,77 +1,81 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 00/35] arm: omap: move intc to drivers/irqchip/
-Date: Mon, 28 Jul 2014 16:19:34 -0500
-Message-ID: <20140728211934.GK7667@saruman.home>
-References: <1406582183-696-1-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: "Murphy, Dan" <dmurphy@ti.com>
+Subject: Re: [v2] input: drv260x: Add TI drv260x haptics driver
+Date: Mon, 28 Jul 2014 21:21:26 +0000
+Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DB1A79@DFLE09.ent.ti.com>
+References: <1406566403-1436-1-git-send-email-dmurphy@ti.com>
+    <20140728174334.GD8982@core.coreip.homeip.net>
+ <5adf0339146a7b655a77053195aa892c.squirrel@mungewell.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BFVE2HhgxTpCzM8t"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406582183-696-1-git-send-email-balbi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, bcousson@baylibre.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: "simon@mungewell.org" <simon@mungewell.org>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?iso-8859-1?Q?Michal_Mal=FD?= <madcatxster@devoid-pointer.net>, Elias Vanderstuyft <elias.vds@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---BFVE2HhgxTpCzM8t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dmitry
 
-hi,
+On 07/28/2014 12:59 PM, simon@mungewell.org wrote:
+> 
+>>> The initial driver supports the devices
+>>> real time playback mode.  But the device
+>>> has additional wave patterns in ROM.
+>>
+>> As it presented the device appears to be a memoryless device, however
+>> you present it to the rest of the system as if it can support playback
+>> of multiple effects simultaneously, which is incorrect.
+>>
+>> My guess that you need to engage the memoryless input library to schedule
+>> handling multiple effects for your device, including ramping up, ramping
+>> down, stopping playback when effects runs out, etc.
+> 
+> Hi Dan,
+> Elias and Michal (cc'ed) are working on a kernel/userland library to
+> handle sending multiple force feedback signals to 'simple' devices,
+> perhaps you should engage with them.
+> 
+> Simon
+> 
+> 
 
-On Mon, Jul 28, 2014 at 04:15:48PM -0500, Felipe Balbi wrote:
-> Hi folks,
->=20
-> here's another rebase of the original series moving INTC
-> to drivers.
->=20
-> There aren't many changes, only some fixes here and there
-> because of recent changes to irq_domain and irqchip.
->=20
-> I have also added a patch to enable INTC address space
-> protection so that only privileged modes can access
-> INTC's address space.
->=20
-> Patches tested on top of v3.17-rc7 with a beagle bone black,
+OK I looked at the memless devices and got it to work.
+Don't know why replay.length is always 0 but at least I got the
+magnitude.  It seems that the input framework expects the user space
+to manage the on/off of the vibrator in RUMBLE mode.  Unless
+I missed something while going through the code.
 
-meant v3.16-rc7
+This family of devices has the ability to do real time playback,
+play an index in a pre-programmed library and have feedback waveforms programmed
+into the device to be played.
 
-> the only plataform I have which still uses INTC.
->=20
-> Tony, if you can run your PM test cases on your side, I'd
-> be really glad.
+The RTP mode is covered in this patch set.  But I am also interested in
+setting the pre-programmed libraries as well as setting my own custom waveform.
 
-for convenience, a branch with all these patches on top of v3.16-rc7 is
-available at [1]:
+I believe the custom is handled via the FF_PERIODIC with the waveform being FF_CUSTOM.
+I am not really a big fan of mixing the FF_CUSTOM in the periodic.  This could be broken
+out so that the driver can handle the custom waveforms.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git omap-fix-intc
+But I am not sure with the existing framework we can set a library or index of the 
+library. (Short of adding sysfs nodes which I don't want to do)
 
---=20
-balbi
+My thought would be to add FF_LIBRARY as a force feedback type and create a structure like
 
---BFVE2HhgxTpCzM8t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+struct ff_library {
+	__u16 library;
+	__u16 index;
+};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+to be able to program the driver to play a certain library/index combo when play is called.
+Of course the driver would have to set the max libraries and max indices within the library.
 
-iQIcBAEBAgAGBQJT1r5mAAoJEIaOsuA1yqREoa8P/3yFDVndFOB2BFsMZAdgPvtm
-+4JZSk94bhyD+LI9ztStBgwHJwRN3YJE6DJjXEx0RUrcdtxa7nUKBTN/bH0OqRp/
-MZmHT3ixsMaIOFuwICW+UocQdrNCBCewlsuoqa8S72WedfAu6SWuHEi4GML4+sb0
-Py6+8Cd/74FWaB5bXmKQvnhNbHaIwsfM7Do4N8SwIKumH/FTdnzrMZmyzTU+tMKw
-nuYoR+uzaMS1408DXsOStfg+z9vWXYEJvdfKblyQ90YIkjLFtpnWgvw5S3xmAlXu
-zEE6Xo13vXvY0ki5Fae1ipaVz2qrxIECOanj184sq7EGyxTX7gA0BFA2xtvjuJL3
-/JXLDChRPYUm18aomba4p/6mgB0qal66if2yxICiSDgqzeL64NkJStxlXfRUh8qb
-AaFeZEjiI25rgVW3XPow8ixfT0Ae06TpBIT3unJMxHPmATHyApLwFqdJ/Hzp9HPu
-2l15XjsW1uiAnbMJAoka2VUX9x/IZRKFDm4LqyFgASy6eD5xC62uR5BuadwdJu8j
-W4BIHKIYrZbgRRVPVwyKBmzqOk/H5tQN57R/Wjt0ep+4sQ3uQeh0RC/m0LvDtAdo
-2aMKP02mNuR5k+i+XD9DKT6yOnncoLJrz1xcqXGSZzl512fSlhaVrVq6xhIx3Pdz
-l0opTxUaA3AY27npsCRz
-=Gfk1
------END PGP SIGNATURE-----
+Let me know if this is something we can add and I can RFC a patch for it.
 
---BFVE2HhgxTpCzM8t--
+Dan
+
+P.S.  Got the P.S. will use devm as suggested.
+
+-- 
+------------------
+Dan Murphy
