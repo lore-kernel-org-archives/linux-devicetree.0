@@ -1,38 +1,39 @@
-From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dma: Add Xilinx AXI DMA DT Binding Documentation
-Date: Mon, 28 Jul 2014 18:07:03 +0530
-Message-ID: <CA+mB=1+cx5VwZZ4iA2UHLjtjJ8tpdXvZCNsZGiB2rNi7SMxW7w@mail.gmail.com>
-References: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
-	<5511649.HfVoeApiug@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5511649.HfVoeApiug@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv2 0/3] iio: adc: exynos_adc: Add support for s3c64xx/s3c24xx ADC
+Date: Mon, 28 Jul 2014 21:43:59 +0900
+Message-ID: <1406551442-15186-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: ch.naveen@samsung.com, arnd@arndb.de, kgene.kim@samsung.com, kyungmin.park@samsung.com, heiko@sntech.de, knaack.h@gmx.de, t.figa@samsung.com, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 5:58 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 28 July 2014 17:47:48 Srikanth Thokala wrote:
->> Device-tree binding documentation of Xilinx DMA Engine
->>
->> Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->
-> Looks ok to me,
->
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+This patch add support for s3c64xx/s3c24xx ADC. s3c64xx/s3c24xx is alomost same
+as ADCv1. But, s3c64xx/s3c24xx has a little difference from ADCv1 as following:
+- ADCMUX register address to select channel
+- ADCDAT mask (10bit or 12bit ADC resolution according to SoC version)
+- s3c24xx/s3c64xx has not included ADC_PHY enable register
 
-Thanks Arnd.
+Changes from v1:
+- Fix minor coding style.
+- Remove the sentence which reading DATY register.
+- Add ARCH_S3C24XX / ARCH_S3C64XX dependency for EXYNOS_ADC to Kconfig.
+- Remove the function pointer of 'clear_irq' for s3c24xx becase s3c24xx
+  has not included ADC_V1_INTCLR register.
+- Remove un-necessary white-space in dt-binding documentation
 
-Srikanth
+Arnd Bergmann (1):
+  iio: adc: exynos_adc: add support for s3c64xx adc
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chanwoo Choi (2):
+  iio: adc: exynos_adc: Add support for s3c24xx ADC
+  dt-bindings: samsung: exynos_adc: Remove un-necessary white-sapce
+
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |  20 ++-
+ drivers/iio/adc/Kconfig                            |   2 +-
+ drivers/iio/adc/exynos_adc.c                       | 137 +++++++++++++++++++--
+ 3 files changed, 144 insertions(+), 15 deletions(-)
+
+-- 
+1.8.0
+
