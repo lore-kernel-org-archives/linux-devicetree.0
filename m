@@ -1,75 +1,61 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC Patch V1 22/30] mm, of: Use cpu_to_mem()/numa_mem_id() to
- support memoryless node
-Date: Mon, 28 Jul 2014 07:30:40 -0600
-Message-ID: <20140728133040.854F5C4095E@trevor.secretlab.ca>
-References: <1405064267-11678-1-git-send-email-jiang.liu@linux.intel.com>
-	<1405064267-11678-23-git-send-email-jiang.liu@linux.intel.com>
-	<20140721175241.GF4156@linux.vnet.ibm.com>
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <20140721175241.GF4156@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Nishanth Aravamudan <nacc@linux.vnet.ibm.com>, Jiang Liu <jiang.liu@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mel Gorman <mgorman@suse.de>, David Rientjes <rientjes@google.com>, Mike Galbraith <umgwanakikbuti@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Luck <tony.luck@intel.com>, linux-mm@kvack.org, linux-hotplug@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/2] V3 ARM: mvebu: Added dts defintion for Lenovo
+ Iomega ix4-300d NAS
+Date: Mon, 28 Jul 2014 09:30:05 -0400
+Message-ID: <20140728133005.GO23220@titan.lakedaemon.net>
+References: <1406418490-61502-1-git-send-email-yahoo@perenite.com>
+ <20140727015509.GB31974@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140727015509.GB31974-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Jul 2014 10:52:41 -0700, Nishanth Aravamudan <nacc@linux.vnet.ibm.com> wrote:
-> On 11.07.2014 [15:37:39 +0800], Jiang Liu wrote:
-> > When CONFIG_HAVE_MEMORYLESS_NODES is enabled, cpu_to_node()/numa_node_id()
-> > may return a node without memory, and later cause system failure/panic
-> > when calling kmalloc_node() and friends with returned node id.
-> > So use cpu_to_mem()/numa_mem_id() instead to get the nearest node with
-> > memory for the/current cpu.
+Andrew,
+
+On Sun, Jul 27, 2014 at 03:55:09AM +0200, Andrew Lunn wrote:
+> On Sat, Jul 26, 2014 at 04:48:10PM -0700, Benoit Masson wrote:
+> > The Lenovo Iomega ix4-300d is a 4-Bay sata NAS with dual Gb,
+> >  USB2.0 & 3.0, powered by a Marvell Armada XP MV78230 dual core CPU.
 > > 
-> > If CONFIG_HAVE_MEMORYLESS_NODES is disabled, cpu_to_mem()/numa_mem_id()
-> > is the same as cpu_to_node()/numa_node_id().
-> > 
-> > Signed-off-by: Jiang Liu <jiang.liu@linux.intel.com>
+> > http://shop.lenovo.com/us/en/servers/network-storage/lenovoemc/ix4-300d/
+> > Signed-off-by: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
 > > ---
-> >  drivers/of/base.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  arch/arm/boot/dts/Makefile                      |   3 +-
+> >  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 285 ++++++++++++++++++++++++
+> >  2 files changed, 287 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
 > > 
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index b9864806e9b8..40d4772973ad 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -85,7 +85,7 @@ EXPORT_SYMBOL(of_n_size_cells);
-> >  #ifdef CONFIG_NUMA
-> >  int __weak of_node_to_nid(struct device_node *np)
-> >  {
-> > -	return numa_node_id();
-> > +	return numa_mem_id();
-> >  }
-> >  #endif
+...
+> > diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+> > new file mode 100644
+> > index 0000000..c82a8e3
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+...
+> > +			i2c@11000 {
+> > +				compatible = "marvell,mv64xxx-i2c";
 > 
-> Um, NAK. of_node_to_nid() returns the NUMA node ID for a given device
-> tree node. The default should be the physically local NUMA node, not the
-> nearest memory-containing node.
+> O.K, this version is good.
 
-That description doesn't match the code. This patch only changes the
-default implementation of of_node_to_nid() which doesn't take the device
-node into account *at all* when returning a node ID. Just look at the
-diff.
+Is it?  As Arnd mentioned against the previous version, this overrides
+the default compatible property inherited from the dtsi.  Since this is
+also compatible with "marvell,mv78230-i2c", I think we should just
+delete this line.
 
-I think this patch is correct, and it doesn't affect the override
-versions provided by powerpc and sparc.
+Benoit, this is still in V4.  If Andrew agrees, I'll just remove the
+line when I apply V4.
 
-g.
+> Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-> 
-> I think the general direction of this patchset is good -- what NUMA
-> information do we actually are about at each callsite. But the execution
-> is blind and doesn't consider at all what the code is actually doing.
-> The changelogs are all identical and don't actually provide any
-> information about what errors this (or any) specific patch are
-> resolving.
-> 
-> Thanks,
-> Nish
-> 
+thx,
 
+Jason.
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
