@@ -1,107 +1,98 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v3] ARM: zynq: DT: Add CAN node
-Date: Mon, 28 Jul 2014 11:17:31 +0200
-Message-ID: <e3f45b291bb1247787d1092dbe191e852e1758f3.1406539042.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-23289-1406539051-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2] ARM: zynq: DT: Add CAN node
+Date: Mon, 28 Jul 2014 11:18:05 +0200
+Message-ID: <53D6154D.3060107@monstr.eu>
+References: <56bf20294d106e0fc9c23a70cd991a50b441d0aa.1406271138.git.michal.simek@xilinx.com> <20140725150017.GE16049@xsjandreislx>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140725150017.GE16049@xsjandreislx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Appana Durga Kedareswara Rao <appanad@xilinx.com>, monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, Appana Durga Kedareswara Rao <appanad@xilinx.com>, monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---=_mimegpg-monstr-desktop-23289-1406539051-0001
+On 07/25/2014 05:00 PM, S=C3=B6ren Brinkmann wrote:
+> On Fri, 2014-07-25 at 08:52AM +0200, Michal Simek wrote:
+>> Add node describing Zynq's CAN controller.
+>>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>
+>> Changes in v2:
+>> - Add can1
+>> - Enable can0 for zc702
+>> - Use status property
+>>
+>>  arch/arm/boot/dts/zynq-7000.dtsi | 26 +++++++++++++++++++++++++-
+>>  arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
+>>  2 files changed, 29 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq=
+-7000.dtsi
+>> index 366ca6434f54..983148111e3a 100644
+>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>> @@ -71,7 +71,31 @@
+>>  			interrupts =3D <0 7 4>;
+>>  			interrupt-parent =3D <&intc>;
+>>  			clocks =3D <&clkc 12>;
+>> -		};
+>> +		};
+>> +
+>> +		can0: can@e0008000 {
+>> +			compatible =3D "xlnx,zynq-can-1.0";
+>> +			status =3D "disabled";
+>> +			clocks =3D <&clkc 19>, <&clkc 36>;
+>> +			clock-names =3D "can_clk", "pclk";
+>> +			reg =3D <0xe0008000 0x1000>;
+>> +			interrupts =3D <0 28 4>;
+>> +			interrupt-parent =3D <&intc>;
+>> +			tx-fifo-depth =3D <0x40>;
+>> +			rx-fifo-depth =3D <0x40>;
+>> +		};
+>> +
+>> +		can1: can@e0009000 {
+>> +			compatible =3D "xlnx,zynq-can-1.0";
+>> +			status =3D "disabled";
+>> +			clocks =3D <&clkc 19>, <&clkc 36>;
+> The clocks for CAN1 must be outputs 20 and 37 of the clkc.
 
-Add node describing Zynq's CAN controller.
+Fixed in v3.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-
-Changes in v3:
-- Fix clocks description for can1
-
-Changes in v2:
-- Add can1
-- Enable can0 for zc702
-- Use status property
-
- arch/arm/boot/dts/zynq-7000.dtsi | 26 +++++++++++++++++++++++++-
- arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index ef11dab30446..6cc83d4c6c76 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -71,7 +71,31 @@
- 			interrupts = <0 7 4>;
- 			interrupt-parent = <&intc>;
- 			clocks = <&clkc 12>;
--		};
-+		};
-+
-+		can0: can@e0008000 {
-+			compatible = "xlnx,zynq-can-1.0";
-+			status = "disabled";
-+			clocks = <&clkc 19>, <&clkc 36>;
-+			clock-names = "can_clk", "pclk";
-+			reg = <0xe0008000 0x1000>;
-+			interrupts = <0 28 4>;
-+			interrupt-parent = <&intc>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
-+
-+		can1: can@e0009000 {
-+			compatible = "xlnx,zynq-can-1.0";
-+			status = "disabled";
-+			clocks = <&clkc 20>, <&clkc 37>;
-+			clock-names = "can_clk", "pclk";
-+			reg = <0xe0009000 0x1000>;
-+			interrupts = <0 51 4>;
-+			interrupt-parent = <&intc>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
-
- 		gpio0: gpio@e000a000 {
- 			compatible = "xlnx,zynq-gpio-1.0";
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 5e09cee33d42..835c3089c61c 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -29,6 +29,10 @@
-
- };
-
-+&can0 {
-+	status = "okay";
-+};
-+
- &gem0 {
- 	status = "okay";
- 	phy-mode = "rgmii";
---
-1.8.2.3
+Thanks,
+Michal
 
 
---=_mimegpg-monstr-desktop-23289-1406539051-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEABECAAYFAlPWFSsACgkQykllyylKDCGfPwCdG6iDKZzIgahhjQmgWkR7eI8t
-QgQAn2tQzEYKKFaEVyf9/q1iLCwrsfB+
-=WMwn
+iEYEARECAAYFAlPWFU0ACgkQykllyylKDCEoEQCfdKTpPsRBtasvFXr/Q6+JTkHt
+kpQAnRCKDqobBbVt2k9cHcvbYcVJPue6
+=Ziyw
 -----END PGP SIGNATURE-----
 
---=_mimegpg-monstr-desktop-23289-1406539051-0001--
+--huVTxpfoiL588CpDP2Kr4j20BO6l4vfQM--
