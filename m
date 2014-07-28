@@ -1,173 +1,236 @@
-Return-Path: <atull@opensource.altera.com>
-From: Alan Tull <atull@opensource.altera.com>
-Subject: [RFC PATCH 3/3] fpga sysfs interface
-Date: Thu, 31 Jul 2014 16:59:04 -0500
-Message-ID: <1406843944-7780-4-git-send-email-atull@opensource.altera.com>
-In-Reply-To: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
-References: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-kernel@vger.kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, Alan Tull <atull@opensource.altera.com>
+Return-Path: <hns@goldelico.com>
+Subject: Re: [PATCH 3/3] arm: dts: Add gta04a5 model
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: multipart/alternative; boundary=Apple-Mail-231-921931317
+From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAOf5uw=Fm9FXEH5ESqDC8pGjMbn5VQ1+MyPJVXSqGh_9+JRLHw@mail.gmail.com>
+Date: Mon, 28 Jul 2014 22:12:57 +0200
+Message-Id: <04AA9B1D-55F0-4F92-9696-E374808DC899@goldelico.com>
+References: <1406577213-9642-1-git-send-email-marek@goldelico.com> <1406577213-9642-4-git-send-email-marek@goldelico.com> <CAOf5uwk=ctww=pP4Ae+1C6i-oOtiYTv2NJbj1GpuPwVSKXB4Hw@mail.gmail.com> <CAAfyv35jvhzvjCKMwrpa=RQ1JkfcmthCsGDzwLW9Y6bq3Ww_fg@mail.gmail.com> <CAOf5uw=Fm9FXEH5ESqDC8pGjMbn5VQ1+MyPJVXSqGh_9+JRLHw@mail.gmail.com>
+To: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Marek Belisko <marek.belisko@gmail.com>, pawel.moll@arm.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Benoit Cousson <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add basic sysfs interface.  Only exports two files:
 
-/sys/class/fpga_manager/fpga0/name
-   Name of low level driver.
+--Apple-Mail-231-921931317
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-/sys/class/fpga_manager/fpga0/status
-   status of fpga framework as returned by core
-   fpga-mgr.c's fpga_mgr_ops_framework_status
-   function or by the low level driver's status
-   function.
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
- drivers/fpga/Kconfig     |    7 +++++
- drivers/fpga/Makefile    |    1 +
- drivers/fpga/fpga-mgr.c  |    2 ++
- drivers/fpga/sysfs.c     |   68 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/fpga-mgr.h |   12 ++++++++
- 5 files changed, 90 insertions(+)
- create mode 100644 drivers/fpga/sysfs.c
+Am 28.07.2014 um 22:04 schrieb Michael Trimarchi:
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 9a2c25b..113b8b4 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -17,4 +17,11 @@ config FPGA_MGR_BUS
- 	help
- 	  FPGA Manager Bus interface.  Allows loading FPGA images
- 	  from Device Tree or from other drivers.
-+
-+config FPGA_MGR_SYSFS
-+	bool "FPGA Manager SysFS Interface"
-+	depends on FPGA
-+	depends on SYSFS
-+	help
-+	  FPGA Manager SysFS interface.
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index e39911f..cad3d8c 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -7,5 +7,6 @@ fpga-mgr-core-y += fpga-mgr.o
- # Core FPGA Manager Framework
- obj-$(CONFIG_FPGA)			+= fpga-mgr-core.o
- obj-$(CONFIG_FPGA_MGR_BUS)		+= bus.o
-+obj-$(CONFIG_FPGA_MGR_SYSFS)		+= sysfs.o
- 
- # FPGA Manager Drivers
-diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
-index 32888d6..e5d1a09 100644
---- a/drivers/fpga/fpga-mgr.c
-+++ b/drivers/fpga/fpga-mgr.c
-@@ -402,6 +402,8 @@ static int __init fpga_mgr_dev_init(void)
- 	if (IS_ERR(fpga_mgr_class))
- 		return PTR_ERR(fpga_mgr_class);
- 
-+	fpga_mgr_sysfs_init(fpga_mgr_class);
-+
- 	ret = alloc_chrdev_region(&fpga_mgr_dev, 0, FPGA_MAX_MINORS,
- 				  "fpga_manager");
- 	if (ret) {
-diff --git a/drivers/fpga/sysfs.c b/drivers/fpga/sysfs.c
-new file mode 100644
-index 0000000..58971b3
---- /dev/null
-+++ b/drivers/fpga/sysfs.c
-@@ -0,0 +1,68 @@
-+/*
-+ * FPGA Manager SysFS Interface
-+ *
-+ *  Copyright (C) 2013-2014 Altera Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/fs.h>
-+#include <linux/slab.h>
-+#include <linux/fpga-mgr.h>
-+
-+/*
-+ * class attributes
-+ */
-+static ssize_t fpga_mgr_name_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct fpga_manager *mgr = dev_get_drvdata(dev);
-+
-+	return fpga_mgr_name(mgr, buf);
-+}
-+
-+static ssize_t fpga_mgr_status_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct fpga_manager *mgr = dev_get_drvdata(dev);
-+
-+	return fpga_mgr_status_get(mgr, buf);
-+}
-+
-+static DEVICE_ATTR(name, S_IRUGO, fpga_mgr_name_show, NULL);
-+static DEVICE_ATTR(status, S_IRUGO, fpga_mgr_status_show, NULL);
-+
-+static struct attribute *fpga_mgr_attrs[] = {
-+	&dev_attr_name.attr,
-+	&dev_attr_status.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group fpga_mgr_group = {
-+	.attrs = fpga_mgr_attrs,
-+};
-+
-+const struct attribute_group *fpga_mgr_groups[] = {
-+	&fpga_mgr_group,
-+	NULL,
-+};
-+
-+void fpga_mgr_sysfs_init(struct class *fpga_mgr_class)
-+{
-+	fpga_mgr_class->dev_groups = fpga_mgr_groups;
-+}
-+EXPORT_SYMBOL_GPL(fpga_mgr_sysfs_init);
-+
-+MODULE_DESCRIPTION("FPGA Manager framework driver sysfs interface");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/fpga-mgr.h b/include/linux/fpga-mgr.h
-index 35d3380..86eeff5 100644
---- a/include/linux/fpga-mgr.h
-+++ b/include/linux/fpga-mgr.h
-@@ -105,6 +105,18 @@ struct fpga_manager {
- 
- #if IS_ENABLED(CONFIG_FPGA)
- 
-+#ifdef CONFIG_FPGA_MGR_SYSFS
-+
-+void fpga_mgr_sysfs_init(struct class *fpga_mgr_class);
-+
-+#else
-+
-+static inline void fpga_mgr_sysfs_init(struct class *fpga_mgr_class)
-+{
-+}
-+
-+#endif /* CONFIG_FPGA_MGR_SYSFS */
-+
- struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
- 					    const char *mgr_property,
- 					    int *ret);
--- 
-1.7.9.5
+> Hi
+>=20
+> Il 28/lug/2014 22:02 "Belisko Marek" <marek.belisko@gmail.com> ha =
+scritto:
+> >
+> > Hi Michael,
+> >
+> > On Mon, Jul 28, 2014 at 9:56 PM, Michael Trimarchi
+> > <michael@amarulasolutions.com> wrote:
+> > > Hi Marek
+> > >
+> > > Il 28/lug/2014 21:54 "Marek Belisko" <marek@goldelico.com> ha =
+scritto:
+> > >
+> > >
+> > >>
+> > >> Add model a5 which have additional jack detection.
+> > >>
+> > >> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> > >> ---
+> > >>  arch/arm/boot/dts/Makefile          |  1 +
+> > >>  arch/arm/boot/dts/omap3-gta04a5.dts | 17 +++++++++++++++++
+> > >>  2 files changed, 18 insertions(+)
+> > >>  create mode 100644 arch/arm/boot/dts/omap3-gta04a5.dts
+> > >>
+> > >> diff --git a/arch/arm/boot/dts/Makefile =
+b/arch/arm/boot/dts/Makefile
+> > >> index 7d45fde..576c595 100644
+> > >> --- a/arch/arm/boot/dts/Makefile
+> > >> +++ b/arch/arm/boot/dts/Makefile
+> > >> @@ -285,6 +285,7 @@ dtb-$(CONFIG_ARCH_OMAP3) +=3D =
+am3517-craneboard.dtb \
+> > >>         omap3-evm-37xx.dtb \
+> > >>         omap3-gta04a3.dtb \
+> > >>         omap3-gta04a4.dtb \
+> > >> +       omap3-gta04a5.dtb \
+> > >>         omap3-igep0020.dtb \
+> > >>         omap3-igep0030.dtb \
+> > >>         omap3-ldp.dtb \
+> > >> diff --git a/arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> b/arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> new file mode 100644
+> > >> index 0000000..210317c3
+> > >> --- /dev/null
+> > >> +++ b/arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> @@ -0,0 +1,17 @@
+> > >> +/*
+> > >> + * Copyright (C) 2014 H. Nikolaus Schaller <hns@goldelico.com>
+> > >> + *
+> > >> + * This program is free software; you can redistribute it and/or =
+modify
+> > >> + * it under the terms of the GNU General Public License version =
+2 as
+> > >> + * published by the Free Software Foundation.
+> > >> + */
+> > >> +
+> > >> +#include "omap3-gta04.dtsi"
+> > >> +
+> > >> +/ {
+> > >> +       model =3D "Goldelico GTA04A5;
+> > >> +
+> > >> +       sound {
+> > >> +               ti,jack-det-gpio =3D <&twl_gpio 2 0>;    /* =
+GTA04A5 only */
+> > >> +       };
+> > >> +};
+> > >> --
+> > >> 1.9.1
+> > >>
+> > >
+> > > Can we have only one dts with status enabled/disabled?
+> > Do you mean to define this node it gta04.dtsi disabled and enable =
+only
+> > for a5 model?
+> > >
+>=20
+> This should be possible in the bootloader
+>=20
+
+Yes,
+the boot loader either loads gta04a3.dtb gta04.dtb or gta05.dtb
+depending on board revision.
+
+Therefore we have multiple device tree files to represent such hardware
+differences. Like Gumstix Overo variants (using a  =
+omap3-overo-base.dtsi)
+
+And, this difference is not the only one. Other are to come later.
+
+Unfortunately we were recommend to submit only DT nodes that already
+have drivers. Therefore, the "big picture" of the device variants =
+support
+may not yet be visible from this patch.
+
+I hope this gives a little background.
+
+BR,
+Nikolaus
+
+
+
+
+
+
+--Apple-Mail-231-921931317
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space; =
+"><br><div><div>Am 28.07.2014 um 22:04 schrieb Michael =
+Trimarchi:</div><br class=3D"Apple-interchange-newline"><blockquote =
+type=3D"cite"><p dir=3D"ltr">Hi</p><p dir=3D"ltr">Il 28/lug/2014 22:02 =
+"Belisko Marek" &lt;<a =
+href=3D"mailto:marek.belisko@gmail.com">marek.belisko@gmail.com</a>&gt; =
+ha scritto:<br>
+&gt;<br>
+&gt; Hi Michael,<br>
+&gt;<br>
+&gt; On Mon, Jul 28, 2014 at 9:56 PM, Michael Trimarchi<br>
+&gt; &lt;<a =
+href=3D"mailto:michael@amarulasolutions.com">michael@amarulasolutions.com<=
+/a>&gt; wrote:<br>
+&gt; &gt; Hi Marek<br>
+&gt; &gt;<br>
+&gt; &gt; Il 28/lug/2014 21:54 "Marek Belisko" &lt;<a =
+href=3D"mailto:marek@goldelico.com">marek@goldelico.com</a>&gt; ha =
+scritto:<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; Add model a5 which have additional jack detection.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; Signed-off-by: Marek Belisko &lt;<a =
+href=3D"mailto:marek@goldelico.com">marek@goldelico.com</a>&gt;<br>
+&gt; &gt;&gt; ---<br>
+&gt; &gt;&gt; &nbsp;arch/arm/boot/dts/Makefile &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp;| &nbsp;1 +<br>
+&gt; &gt;&gt; &nbsp;arch/arm/boot/dts/omap3-gta04a5.dts | 17 =
++++++++++++++++++<br>
+&gt; &gt;&gt; &nbsp;2 files changed, 18 insertions(+)<br>
+&gt; &gt;&gt; &nbsp;create mode 100644 =
+arch/arm/boot/dts/omap3-gta04a5.dts<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; diff --git a/arch/arm/boot/dts/Makefile =
+b/arch/arm/boot/dts/Makefile<br>
+&gt; &gt;&gt; index 7d45fde..576c595 100644<br>
+&gt; &gt;&gt; --- a/arch/arm/boot/dts/Makefile<br>
+&gt; &gt;&gt; +++ b/arch/arm/boot/dts/Makefile<br>
+&gt; &gt;&gt; @@ -285,6 +285,7 @@ dtb-$(CONFIG_ARCH_OMAP3) +=3D =
+am3517-craneboard.dtb \<br>
+&gt; &gt;&gt; &nbsp; &nbsp; &nbsp; &nbsp; omap3-evm-37xx.dtb \<br>
+&gt; &gt;&gt; &nbsp; &nbsp; &nbsp; &nbsp; omap3-gta04a3.dtb \<br>
+&gt; &gt;&gt; &nbsp; &nbsp; &nbsp; &nbsp; omap3-gta04a4.dtb \<br>
+&gt; &gt;&gt; + &nbsp; &nbsp; &nbsp; omap3-gta04a5.dtb \<br>
+&gt; &gt;&gt; &nbsp; &nbsp; &nbsp; &nbsp; omap3-igep0020.dtb \<br>
+&gt; &gt;&gt; &nbsp; &nbsp; &nbsp; &nbsp; omap3-igep0030.dtb \<br>
+&gt; &gt;&gt; &nbsp; &nbsp; &nbsp; &nbsp; omap3-ldp.dtb \<br>
+&gt; &gt;&gt; diff --git a/arch/arm/boot/dts/omap3-gta04a5.dts<br>
+&gt; &gt;&gt; b/arch/arm/boot/dts/omap3-gta04a5.dts<br>
+&gt; &gt;&gt; new file mode 100644<br>
+&gt; &gt;&gt; index 0000000..210317c3<br>
+&gt; &gt;&gt; --- /dev/null<br>
+&gt; &gt;&gt; +++ b/arch/arm/boot/dts/omap3-gta04a5.dts<br>
+&gt; &gt;&gt; @@ -0,0 +1,17 @@<br>
+&gt; &gt;&gt; +/*<br>
+&gt; &gt;&gt; + * Copyright (C) 2014 H. Nikolaus Schaller &lt;<a =
+href=3D"mailto:hns@goldelico.com">hns@goldelico.com</a>&gt;<br>
+&gt; &gt;&gt; + *<br>
+&gt; &gt;&gt; + * This program is free software; you can redistribute it =
+and/or modify<br>
+&gt; &gt;&gt; + * it under the terms of the GNU General Public License =
+version 2 as<br>
+&gt; &gt;&gt; + * published by the Free Software Foundation.<br>
+&gt; &gt;&gt; + */<br>
+&gt; &gt;&gt; +<br>
+&gt; &gt;&gt; +#include "omap3-gta04.dtsi"<br>
+&gt; &gt;&gt; +<br>
+&gt; &gt;&gt; +/ {<br>
+&gt; &gt;&gt; + &nbsp; &nbsp; &nbsp; model =3D "Goldelico GTA04A5;<br>
+&gt; &gt;&gt; +<br>
+&gt; &gt;&gt; + &nbsp; &nbsp; &nbsp; sound {<br>
+&gt; &gt;&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+ti,jack-det-gpio =3D &lt;&amp;twl_gpio 2 0&gt;; &nbsp; &nbsp;/* GTA04A5 =
+only */<br>
+&gt; &gt;&gt; + &nbsp; &nbsp; &nbsp; };<br>
+&gt; &gt;&gt; +};<br>
+&gt; &gt;&gt; --<br>
+&gt; &gt;&gt; 1.9.1<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Can we have only one dts with status enabled/disabled?<br>
+&gt; Do you mean to define this node it gta04.dtsi disabled and enable =
+only<br>
+&gt; for a5 model?<br>
+&gt; &gt;</p><p dir=3D"ltr">This should be possible in the =
+bootloader</p></blockquote><br></div><div>Yes,</div><div>the boot loader =
+either loads gta04a3.dtb gta04.dtb or gta05.dtb</div><div>depending on =
+board revision.</div><div><br></div><div>Therefore we have multiple =
+device tree files to represent such hardware</div><div>differences. Like =
+Gumstix Overo variants (using a&nbsp;&nbsp;omap3-overo-base.dtsi<span =
+class=3D"Apple-style-span" style=3D"font-family: sans-serif; =
+font-weight: bold; font-size: small; =
+">)</span></div><div><br></div><div>And, this difference is not the only =
+one. Other are to come later.</div><div><br></div><div>Unfortunately we =
+were recommend to submit only DT nodes that already</div><div>have =
+drivers. Therefore, the "big picture" of the device variants =
+support</div><div>may not&nbsp;yet be visible from this =
+patch.</div><div><br></div><div>I hope this gives a little =
+background.</div><div><br></div><div>BR,</div><div>Nikolaus</div><div><br>=
+</div><div><br></div><div><br></div><div><br></div><br></body></html>=
+
+--Apple-Mail-231-921931317--
