@@ -1,72 +1,78 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v3 2/4] mfd: pm8xxx-spmi: document DT bindings for Qualcomm
- SPMI PMICs
-Date: Tue, 29 Jul 2014 15:23:29 -0700
-Message-ID: <53D81EE1.7040309@codeaurora.org>
-References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com> <1406205921-7452-3-git-send-email-svarbanov@mm-sol.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 1/2] rcar_can: document device tree bindings
+Date: Wed, 30 Jul 2014 02:51:08 +0400
+Message-ID: <201407300251.09436.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1406205921-7452-3-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
-> Document DT bindings used to describe the Qualcomm SPMI PMICs.
-> Currently the SPMI PMICs supported are pm8941, pm8841 and pma8084.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Document the R-Car CAN device tree bindings.
 
-(...)
-> +Required properties for peripheral child nodes:
-> +- compatible:      Should contain "qcom,pm8xxx-xxx", where "xxx" is
-> +                   peripheral name. The "pm8xxx" can be any of supported PMICs,
-> +                   see example below.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I don't think that this binding document should be imposing any formatting
-restrictions on the compatible strings for QPNP peripheral drivers.  The
-QPNP peripheral drivers in the downstream msm-3.10 tree [1] do not specify
-per-PMIC compatible strings.  This is because ideally, a given QPNP
-peripheral represents a hardware block that is identical in interface and
-operation between PMICs.
+---
+The patch is against the 'linux-can-next.git' repo.
 
-These peripheral drivers determine the base address for a given device
-instance via device tree reg and reg-names properties.  In order for this
-to continue to work with the pm8xxx-spmi driver, some mechanism will need
-to be introduced which creates resource structs for the
-non-memory-mappable SPMI base addresses.  One possible solution is
-currently being discussed in another thread [2].  This document will need
-to be updated to show the child node reg property scheme once a solution
-is reached.
+Changes in version 2:
+- new patch, split from the driver's device tree support patch;
+- adjusted "clocks" property to refer to 3 clocks instead of 1;
+- added mandatory "clock-names" property;
+- renamed the "clock-select" property to "renesas,can-clock-select".
 
-(...)
-> +Example:
-> +
-> +	pm8941@0 {
-> +		compatible = "qcom,pm8941";
-> +		reg = <0x0 SPMI_USID>;
-> +
-> +		rtc {
-> +			compatible = "qcom,pm8941-rtc";
-> +			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "alarm";
-> +		};
-> +	};
+ Documentation/devicetree/bindings/net/can/rcar_can.txt |   43 +++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-Can you please expand your example to include the second SID for the
-PM8941 chip?  That way, it will be clear that each PMIC needs two DT
-nodes; one for each SID.
-
-Thanks,
-David Collins
-
-[1]: https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/?h=msm-3.10
-
-[2]: https://lkml.org/lkml/2014/7/29/252
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+===================================================================
+--- /dev/null
++++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -0,0 +1,43 @@
++Renesas R-Car CAN controller Device Tree Bindings
++-------------------------------------------------
++
++Required properties:
++- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
++	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
++	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
++	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
++- reg: physical base address and size of the R-Car CAN register map.
++- interrupts: interrupt specifier for the sole interrupt.
++- clocks: phandles and clock specifiers for 3 CAN clock inputs.
++- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
++- pinctrl-0: pin control group to be used for this controller.
++- pinctrl-names: must be "default".
++
++Optional properties:
++- renesas,can-clock-select: R-Car CAN Clock Source Select. Valid values are:
++			    <0x0> (default) : Peripheral clock (clkp1)
++			    <0x1> : Peripheral clock (clkp2)
++			    <0x3> : Externally input clock
++
++Example
++-------
++
++SoC common .dtsi file:
++
++	can0: can@e6e80000 {
++		compatible = "renesas,can-r8a7791";
++		reg = <0 0xe6e80000 0 0x1000>;
++		interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp9_clks R8A7791_CLK_RCAN0>,
++		       	 <&cpg_clocks R8A7791_CLK_RCAN>, <&can_clk>;
++		clock-names = "clkp1", "clkp2", "can_clk";
++		status = "disabled";
++	};
++
++Board specific .dts file:
++
++&can0 {
++	pinctrl-0 = <&can0_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
