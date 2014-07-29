@@ -1,78 +1,104 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: rockchip: add rk3188 dma controllers
-Date: Tue, 29 Jul 2014 23:55:08 +0400
-Message-ID: <53D7FC1C.10607@cogentembedded.com>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <1406661128-7614-5-git-send-email-heiko@sntech.de>
+From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] Documentation: dt: bindings: sound: Add bindings file for CS35L32
+Date: Tue, 29 Jul 2014 15:02:43 -0500
+Message-ID: <1406664163-10506-2-git-send-email-brian.austin@cirrus.com>
+References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406661128-7614-5-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1406664163-10506-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch adds the devicetree bindings file for the Cirrus Logic CS35L32 Boosted Amplifier
 
-On 07/29/2014 11:12 PM, Heiko Stuebner wrote:
+Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs35l32.txt          |   69 ++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l32.txt
 
-> Add both the cpu and peripheral pl330 dma controllers present in rk31=
-88 socs.
-> The first dma controller can change between secure and non-secure mod=
-e and is
-> left by the bootloader in secure mode, which gets added here.
-
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->   arch/arm/boot/dts/rk3xxx.dtsi | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx=
-=2Edtsi
-> index c6f0561..a6c2860 100644
-> --- a/arch/arm/boot/dts/rk3xxx.dtsi
-> +++ b/arch/arm/boot/dts/rk3xxx.dtsi
-> @@ -28,6 +28,33 @@
->   		i2c4 =3D &i2c4;
->   	};
->
-> +	amba {
-> +		compatible =3D "arm,amba-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges;
-> +
-> +		dmac1: dma@20018000 {
-
-    The ePAPR standard [1] says:
-
-The name of a node should be somewhat generic, reflecting the function =
-of the=20
-device and not its precise programming model. If appropriate, the name =
-should=20
-be one of the following choices:
-
-[...]
-    =95 dma-controller
-
-> +			compatible =3D "arm,pl330", "arm,primecell";
-> +			reg =3D <0x20018000 0x4000>;
-> +			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells =3D <1>;
-> +			clocks =3D <&cru ACLK_DMA1>;
-> +			clock-names =3D "apb_pclk";
-> +		};
-[...]
-
-[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.=
-pdf
-
-WBR, Sergei
+diff --git a/Documentation/devicetree/bindings/sound/cs35l32.txt b/Documentation/devicetree/bindings/sound/cs35l32.txt
+new file mode 100644
+index 0000000..d3a8a51
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l32.txt
+@@ -0,0 +1,69 @@
++CS35L32 audio CODEC
++
++Required properties:
++
++  - compatible : "cirrus,cs35l32"
++
++  - reg : the I2C address of the device for I2C. Address is determined by the level
++  of the AD0 pin. Level 0 is 0x40 while Level 1 is 0x41.
++
++  - VA-supply : power supply for the device,
++  as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Optional properties:
++
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++  deasserted before communication to the codec starts.
++
++  - cirrus,boost-manager : Boost voltage control.
++  0 = Automatically managed.  Boost-converter output voltage is the higher
++  of the two: Class G or adaptive LED voltage.
++  1 = Automatically managed irrespective of audio, adapting for low-power
++  dissipation when LEDs are ON, and operating in Fixed-Boost Bypass Mode
++  if LEDs are OFF (VBST = VP).
++  2 = (Default) Boost voltage fixed in Bypass Mode (VBST = VP).
++  3 = Boost voltage fixed at 5 V.
++
++  - cirrus,sdout-datacfg : Data configuration for dual CS35L32 applications only.
++  Determines the data packed in a two-CS35L32 configuration.
++  0 = Left/right channels VMON[11:0], IMON[11:0], VPMON[7:0].
++  1 = Left/right channels VMON[11:0], IMON[11:0], STATUS.
++  2 = (Default) left/right channels VMON[15:0], IMON [15:0].
++  3 = Left/right channels VPMON[7:0], STATUS.
++
++  - cirrus,sdout-share : SDOUT sharing. Determines whether one or two CS35L32
++  devices are on board sharing SDOUT.
++  0 = (Default) One IC.
++  1 = Two IC's.
++
++  - cirrus,gain-manager : Audio-gain management when LEDs are active.
++  0 = (Default) Automatically reduces audio volume once by 3 dB, only if needed
++  to avoid thermal shutdown or current limiting the boost converter.
++  If the condition persists, the CS35L32 examine s ILED_MNG and responds accordingly.
++  Audio recovers to original volume automatically at the end of the LED event.
++  1 = User controls volume (nonautomatic).
++
++  - cirrus,battery-recovery : Low battery nominal recovery threshold, rising VP.
++  0 = 3.1V
++  1 = 3.2V
++  2 = 3.3V (Default)
++  3 = 3.4V
++
++  - cirrus,battery-threshold : Low battery nominal threshold, falling VP.
++  0 = 3.1V
++  1 = 3.2V
++  2 = 3.3V
++  3 = 3.4V (Default)
++  4 = 3.5V
++  5 = 3.6V
++
++Example:
++
++codec: codec@40 {
++	compatible = "cirrus,cs35l32";
++	reg = <0x40>;
++	reset-gpios = <&gpio 10 0>;
++	cirrus,boost-manager = <0x03>;
++	cirrus,sdout-datacfg = <0x02>;
++	VA-supply = <&reg_audio>;
++};
+-- 
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
