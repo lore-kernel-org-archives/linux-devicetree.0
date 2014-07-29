@@ -1,78 +1,188 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 0/6] Migrate PXA27x platforms to clock framework
-Date: Mon, 28 Jul 2014 16:55:47 -0700
-Message-ID: <20140728235547.4906.20868@quantum>
-References: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr>
- <87k376vadk.fsf@free.fr> <20140726004212.4791.52407@quantum>
- <87k370o61q.fsf@free.fr>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH RFC v4 4/4] Documentation: nand: pl353: Add documentation
+ for controller and driver
+Date: Mon, 28 Jul 2014 17:31:15 -0700
+Message-ID: <53D6EB53.2000209@infradead.org>
+References: <1406561500-18264-1-git-send-email-punnaia@xilinx.com> <b37e0e96-e91d-496c-a530-df72898798a1@BY2FFO11FD057.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87k370o61q.fsf@free.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <b37e0e96-e91d-496c-a530-df72898798a1@BY2FFO11FD057.protection.gbl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, anirudh@xilinx.com, svemula@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Robert Jarzmik (2014-07-26 01:52:49)
-> Mike Turquette <mturquette@linaro.org> writes:
+On 07/28/14 08:31, Punnaiah Choudary Kalluri wrote:
+> Added notes about the controller and driver
 > 
-> > Quoting Robert Jarzmik (2014-07-21 11:23:51)
-> >> Robert Jarzmik <robert.jarzmik@free.fr> writes:
-> >> 
-> >> > This is the second opus of this serie.
-> >> 
-> >> Ping ?
-> >
-> > Hi Robert,
-> >
-> > Overall the series looks good to me. The only problem I see is that
-> > somewhere in the use of the PARENTS() macro there is a section mismatch
-> > introduced. I spent about 5 minutes looking at it and gave up. This
-> > problem introduces 26 section mismatch warnings building
-> > colibri_pxa270_defconfig.
-> OK Mike, I'll fix this. This is probably because pxa27x_clocks array is not
-> __init, and it references parents which are __init. I was lazy letting
-> pxa27x_clocks not __init because I reuse the internal fields "hw" and "gate->hw"
-> later (hence I didn't leave the __init).
-> This is a bit dirty and I'll launder it.
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> ---
+> Changes in v4:
+> - None
+> ---
+>  Documentation/mtd/nand/pl353-nand.txt |   92 +++++++++++++++++++++++++++++++++
+>  1 files changed, 92 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/mtd/nand/pl353-nand.txt
 > 
-> Moreover, I have one fix which I had fixed wrt boot ordering : the
-> postcore_init() must die. The reason behind is that I have no guarantee of
-> ordering between clocks init and clocksource init, and clocksource relies on
-> clocks.
-> 
-> The right way will be AFAIK to call the core clocks init :
->  - within the device-tree initialization function : pxa27x_dt_clocks_init()
->  calls pxa27x_clocks_init9)
->  - directly from pxa27x_init() or pxa_timer_init() in non-device tree setup
-> 
-> > Once those are fixed up then I will be happy to take this series. Do you
-> > want me to take all six patches through the clk tree, including the
-> > arm/arm stuff?
-> I would feel more comfortable if :
->  - you take the 4 first ones (3 clock ones + 1 arm pxa header bit definitions)
->  - Haojian takes the last 2 ones (pxa ones)
-> 
-> I will check that taking only the first 4 ones doesn't break anything, in case
-> there is a merge window hipcup.
+> diff --git a/Documentation/mtd/nand/pl353-nand.txt b/Documentation/mtd/nand/pl353-nand.txt
+> new file mode 100644
+> index 0000000..4deac94
+> --- /dev/null
+> +++ b/Documentation/mtd/nand/pl353-nand.txt
+> @@ -0,0 +1,92 @@
+> +This documents provides some notes about the ARM pl353 smc controller used in
 
-Sounds good.
+                                                    PL353 SMC
 
-Regards,
-Mike
+> +Zynq SOC and confined to NAND specific details.
 
+            and is confined to
+
+> +
+> +Overview of the controller
+> +==========================
+> +	The SMC (PL353) supports two memory interfaces:
+> +	Interface 0 type SRAM.
+> +	Interface 1 type NAND.
+> +	This configuration supports the following configurable options:
+> +	   . 32-bit or 64-bit AXI data width
+> +	   . 8-bit, 16-bit, or 32-bit memory data width for interface 0
+> +	   . 8-bit, or 16-bit memory data width for interface 1
+> +	   . 1-4 chip selects on each interface
+> +	   . SLC ECC block for interface 1
+> +
+> +For more information, refer the below link for TRM
+
+                         refer to the below link for TRM.
+
+> +http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
+> +DDI0380G_smc_pl350_series_r2p1_trm.pdf
+> +
+> +NAND memory accesses
+> +====================
+> +	. Two phase NAND accesses
+> +	. NAND command phase transfers
+> +	. NAND data phase transfers
+> +
+> +Two phase NAND accesses
+> +	The SMC defines two phases of commands when transferring data to or from
+> +NAND flash.
+> +
+> +Command phase
+> +	Commands and optional address information are written to the NAND flash.
+> +The command and address can be associated with either a data phase operation to
+> +write to or read from the array, or a status/ID register transfer.
+> +
+> +Data phase
+> + Data is either written to or read from the NAND flash. This data can be either
+> +data transferred to or from the array, or status/ID register information.
+> +
+> +NAND AXI address setup
+> +       AXI address      Command phase      Data phase
+> +	[31:24]         Chip address       Chip address
+> +	[23]            NoOfAddCycles_2    Reserved
+> +	[22]            NoOfAddCycles_1    Reserved
+> +	[21]            NoOfAddCycles_0    ClearCS
+> +	[20]            End command valid  End command valid
+> +	[19]            0                  1
+> +	[18:11]         End command        End command
+> +	[10:3]          Start command      [10] ECC Last
+> +					   [9:3] Reserved
+> +	[2:0]           Reserved           Reserved
+> +
+> +ECC
+> +===
+> +    It operates on a number of 512 byte blocks of NAND memory and can be
+
+                                  512-byte blocks
+
+> +programmed to store the ECC codes after the data in memory. For writes,
+> +the ECC is written to the spare area of the page. For reads, the result of
+> +a block ECC check are made available to the device driver.
+> +
+> +------------------------------------------------------------------------
+> +|               n * 512 blocks                  | extra  | ecc    |     |
+
+                                                              ECC
+
+> +|                                               | block  | codes  |     |
+> +------------------------------------------------------------------------
+> +
+> +The ECC calculation uses a simple Hamming code, using 1-bit correction 2-bit
+> +detection. It starts when a valid read or write command with a 512 byte aligned
+
+                                                                  512-byte
+
+> +address is detected on the memory interface.
+> +
+> +Driver details
+> +==============
+> +	The NAND driver has dependancy with the pl353_smc memory controller
+
+	                    dependency          PL353 SMC
+ 
+> +driver for intializing the nand timing parameters, bus width, ECC modes,
+
+              initializing the NAND
+
+> +control and status information.
+> +
+> +Since the controller expects that the chipselect bit should be cleared for the
+> +last data transfer i.e last 4 data bytes, the existing nandbase page
+
+             transfer,
+
+> +read/write routines for soft ecc and ecc none modes will not work. So, inorder
+
+                                ECC and ECC                               in order
+
+> +to make this driver work, it always updates the ecc mode as HW ECC and
+
+                                                   ECC
+
+> +implemented the page read/write functions for supporting the SW ECC.
+
+   implements
+
+> +
+> +HW ECC mode:
+> +	Upto 2K page size is supported and beyond that it retuns
+
+	Up to                                             returns
+
+> +-ENOSUPPORT error. If the flsh has ONDIE ecc controller then the
+
+                             flash          ECC
+
+> +priority has given to the ONDIE ecc controller. Also the current
+
+            is given               ECC
+
+> +implementation has support for upto 64 byte oob area
+
+                                  up to 64-byte OOB area.
+
+> +
+> +SW ECC mode:
+> +	It supports all the pgae sizes. But since, zynq soc bootrom uses
+
+	                    page sizes, but since Zynq SOC boot ROM
+
+> +HW ECC for the devices that have pgae size <=2K so, to avoid any ecc related
+
+                                    page size <= 2K, to avoid any ECC-related
+
+> +issues during boot, prefer HW ECC over SW ECC.
+> +
+> +For devicetree binding information please refer the below dt binding file
+
+                                             refer to the below
+
+> +Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
 > 
-> Cheers.
-> 
-> -- 
-> Robert
+
+
+-- 
+~Randy
