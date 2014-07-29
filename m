@@ -1,57 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses in DT
-Date: Tue, 29 Jul 2014 14:00:50 +0200
-Message-ID: <3794875.CZFbAag5Sv@wuerfel>
-References: <53D788A7.4020303@mm-sol.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 30/35] irqchip: add irq-omap-intc.h header
+Date: Tue, 29 Jul 2014 05:01:33 -0700
+Message-ID: <20140729120133.GQ29045@atomide.com>
+References: <1406582183-696-1-git-send-email-balbi@ti.com>
+ <1406582183-696-31-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D788A7.4020303-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406582183-696-31-git-send-email-balbi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, bcousson@baylibre.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 July 2014 14:42:31 Stanimir Varbanov wrote:
->         taddr = of_translate_address(dev, addrp);
-> -       if (taddr == OF_BAD_ADDR)
-> -               return -EINVAL;
-> +       /*
-> +        * if the address is non-translatable to cpu physical address
-> +        * fallback to a IORESOURCE_REG resource.
-> +        */
-> +       if (taddr == OF_BAD_ADDR) {
-> +               memset(r, 0, sizeof(*r));
-> +               taddr = of_read_number(addrp, 1);
-> +               if (taddr == OF_BAD_ADDR)
-> +                       return -EINVAL;
-> +               r->start = taddr;
-> +               r->end = taddr + size - 1;
-> +               r->flags = IORESOURCE_REG;
-> +               r->name = name ? name : dev->full_name;
-> +               return 0;
-> +       }
-> +
+* Felipe Balbi <balbi@ti.com> [140728 14:19]:
+> OMAP INTC irqchip driver will be moved under
+> drivers/irqchip/ soon but we still have a dependency
+> with mach-omap2 when it comes to idle functions.
+> 
+> In order to make it easy to share those function
+> prototypes with OMAP PM code, we introduce this new
+> header.
+> 
+> Signed-off-by: Felipe Balbi <balbi@ti.com>
+> ---
+>  arch/arm/mach-omap2/board-3430sdp.c        |  1 +
+>  arch/arm/mach-omap2/board-am3517crane.c    |  1 +
+>  arch/arm/mach-omap2/board-am3517evm.c      |  1 +
+>  arch/arm/mach-omap2/board-cm-t35.c         |  1 +
+>  arch/arm/mach-omap2/board-cm-t3517.c       |  1 +
+>  arch/arm/mach-omap2/board-devkit8000.c     |  1 +
+>  arch/arm/mach-omap2/board-ldp.c            |  1 +
+>  arch/arm/mach-omap2/board-omap3beagle.c    |  1 +
+>  arch/arm/mach-omap2/board-omap3logic.c     |  1 +
+>  arch/arm/mach-omap2/board-omap3pandora.c   |  1 +
+>  arch/arm/mach-omap2/board-omap3stalker.c   |  1 +
+>  arch/arm/mach-omap2/board-omap3touchbook.c |  1 +
+>  arch/arm/mach-omap2/board-overo.c          |  1 +
+>  arch/arm/mach-omap2/board-rx51.c           |  1 +
+>  arch/arm/mach-omap2/board-ti8168evm.c      |  1 +
+>  arch/arm/mach-omap2/common.h               |  9 ---------
+>  arch/arm/mach-omap2/cpuidle34xx.c          |  1 +
+>  arch/arm/mach-omap2/irq.c                  |  1 +
+>  arch/arm/mach-omap2/pm24xx.c               |  1 +
+>  arch/arm/mach-omap2/pm34xx.c               |  1 +
+>  include/linux/irqchip/irq-omap-intc.h      | 32 ++++++++++++++++++++++++++++++
+...
 
-I don't think that everything returning OF_BAD_ADDR makes sense
-to turn into IORESOURCE_REG. It could be an e.g. invalid DT
-representation, a node with #size-cells=<0>, or it could be
-something that gets translated one or more nodes up in the
-tree before it reaches a bus without a ranges property.
+> +void omap2_init_irq(void);
+> +void omap3_init_irq(void);
+> +void ti81xx_init_irq(void);
 
-Also, you should not rely on #address-cells being hardcoded
-to <1> above.
+I think these will all go away with DT based booting?
+So it might be worth waiting for that rather than churn
+all these files, or..
 
-How about modifying of_get_address() rather than
-__of_address_to_resource() instead? You could introduce
-a new of_bus entry for each bus you expect to return
-an IORESOURCE_REG, or you could change of_bus_default_get_flags
-to return IORESOURCE_REG if the parent node has no ranges property
-and is not the root node.
+> +int omap_irq_pending(void);
+> +void omap_intc_save_context(void);
+> +void omap_intc_restore_context(void);
+> +void omap3_intc_suspend(void);
+> +void omap3_intc_prepare_idle(void);
+> +void omap3_intc_resume_idle(void);
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+..how about we pass something like struct omap_intc_data
+as pdata and let the intc driver populate function pointers
+for these if runtime PM calls are not enough here?
+
+That way we could have just minimal pdata header file.
+
+Regards,
+
+Tony
