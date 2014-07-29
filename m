@@ -1,104 +1,47 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv4 5/5] mtd: gpmi: prevent creating a new BBT when
- blockmark swapping is disabled
-Date: Tue, 29 Jul 2014 08:31:45 +0200
-Message-ID: <20140729083145.647b77fc@ipc1.ka-ro>
-References: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-2-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-4-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-5-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-6-git-send-email-LW@KARO-electronics.de>
- <20140728052906.GA3095@norris-Latitude-E6410>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140728052906.GA3095@norris-Latitude-E6410>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, linux-mtd@lists.infradead.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@freescale.com>, linux-kernel@vger.kernel.org, Huang
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v4 0/4]ata: Fixes related to APM X-Gene SATA host controller driver.
+Date: Tue, 29 Jul 2014 12:24:48 +0530
+Message-ID: <1406616892-30273-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpCcmlhbiBOb3JyaXMgd3JvdGU6Cj4gSGkgTG90aGFyLAo+IAo+IE9uIFRodSwgSnVuIDEy
-LCAyMDE0IGF0IDAzOjIwOjQ1UE0gKzAyMDAsIExvdGhhciBXYcOfbWFubiB3cm90ZToKPiA+IFdp
-dGhvdXQgYmxvY2ttYXJrIHN3YXBwaW5nLCB0aGVyZSBpcyBubyB1c2UgaW4gY3JlYXRpbmcgYSBC
-QlQgZnJvbQo+ID4gc2NyYXRjaCwgc28gdXNlIGEgQkJUIGRlc2NyaXB0b3Igd2l0aCBOQU5EX0JC
-VF9DUkVBVEUgdW5zZXQgaW4gdGhpcwo+ID4gY2FzZS4KPiAKPiBJJ20gY3VyaW91czogd2hhdCBp
-cyB5b3VyIHBsYW4gaWYgdGhlcmUgaXMgbm8gQkJUIGF2YWlsYWJsZSBvbiB5b3VyCj4gZGV2aWNl
-LCBvciBpZiBpdCBldmVyIGdldHMgY29ycnVwdGVkPyBJSVVDLCBuYW5kX2JidCB3aWxsIGp1c3Qg
-YXNzdW1lCj4geW91IGhhdmUgbm8gYmFkIGJsb2NrcywgYW5kIGl0IHdpbGwgbmV2ZXIgd3JpdGUg
-YSBiYWQgYmxvY2sgdGFibGUgdG8KPiBmbGFzaC4gVGhpcyBhbHNvIG1lYW5zIG5vIHN1YnNlcXVl
-bnQgZGlzY292ZXJhYmxlIGJhZCBibG9ja3MgY2FuIGJlCj4gcmVjb3JkZWQgYWNyb3NzIHBvd2Vy
-IGN5Y2xlcywgSSBiZWxpZXZlLgo+IApUaGF0IHdvbid0IGhhcHBlbiAodW5sZXNzIGl0J3Mgbm90
-IHBvc3NpYmxlIHRvIGNyZWF0ZSBhIEJCVCBiZWNhdXNlIGFsbAp0aGUgcG9zc2libGUgYmxvY2tz
-IGZvciB0aGUgQkJUIGFyZSBiYWQpLCBiZWNhdXNlIHRoZSBib290bG9hZGVyIHdpbGwKaGF2ZSBj
-cmVhdGVkIG9uZSBiZWZvcmUgTGludXggaXMgc3RhcnRlZC4KCj4gTWF5YmUgeW91IGRvbid0IHdh
-bnQgdG8gc3BlY2lmeSB5b3VyIG93biBuYW5kX2JidF9kZXNjcidzIGF0IGFsbCwgYnV0Cj4geW91
-IGp1c3QgbmVlZCB0byBzZXQ6Cj4gCj4gCWNoaXAtPmJidF9vcHRpb25zIHw9IE5BTkRfQkJUX0NS
-RUFURV9FTVBUWSB8IE5BTkRfQkJUX05PX09PQjsKPiAKPiAoTm90ZTogdGhlcmUncyBhIGxpdHRs
-ZSBiaXQgb2YgZnV6emluZXNzIGFib3V0IE5BTkRfQkJUXyogZmxhZ3MsIHdoZXJlCj4gc29tZSBh
-cmUgdGFyZ2V0ZWQgZm9yIHRoZSBuYW5kX2NoaXA6OmJidF9vcHRpb25zIGZpZWxkLCBhbmQgb3Ro
-ZXJzCj4gYmVsb25nIGluIHN0cnVjdCBuYW5kX2JidF9kZXNjcjo6b3B0aW9ucy4pCj4gCj4gQnV0
-IGlmIGZvciBzb21lIHJlYXNvbiB3ZSBuZWVkIHRvIGtlZXAgdGhpcyBwYXRjaCwgYSBjb21tZW50
-IGJlbG93Ogo+IAo+ID4gU2lnbmVkLW9mZi1ieTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVs
-ZWN0cm9uaWNzLmRlPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3Bt
-aS1uYW5kLmMgfCAgIDI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKy0KPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5kLmMgYi9kcml2ZXJzL210
-ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+ID4gaW5kZXggMzc1MzdiNC4uZmM3MTBkNyAx
-MDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4g
-PiArKysgYi9kcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+ID4gQEAgLTQz
-LDYgKzQzLDI5IEBAIHN0YXRpYyBzdHJ1Y3QgbmFuZF9iYnRfZGVzY3IgZ3BtaV9iYnRfZGVzY3Ig
-PSB7Cj4gPiAgCS5wYXR0ZXJuCT0gc2Nhbl9mZl9wYXR0ZXJuCj4gPiAgfTsKPiA+ICAKPiA+ICtz
-dGF0aWMgdWludDhfdCBiYnRfcGF0dGVybltdID0geydCJywgJ2InLCAndCcsICcwJyB9Owo+ID4g
-K3N0YXRpYyB1aW50OF90IG1pcnJvcl9wYXR0ZXJuW10gPSB7JzEnLCAndCcsICdiJywgJ0InIH07
-Cj4gPiArCj4gPiArc3RhdGljIHN0cnVjdCBuYW5kX2JidF9kZXNjciBiYnRfbWFpbl9ub19vb2Jf
-ZGVzY3IgPSB7Cj4gPiArCS5vcHRpb25zID0gTkFORF9CQlRfTEFTVEJMT0NLIHwgTkFORF9CQlRf
-V1JJVEUgfAo+ID4gKwlOQU5EX0JCVF8yQklUIHwgTkFORF9CQlRfVkVSU0lPTiB8IE5BTkRfQkJU
-X1BFUkNISVAgfAo+ID4gKwlOQU5EX0JCVF9OT19PT0IsCj4gCj4gUGxlYXNlIGluZGVudCB0aGUg
-YWJvdmUgdHdvIGxpbmVzIGEgYml0LCBwcmVmZXJhYmx5IG1hdGNoaW5nIHRoZQo+IGluZGVudGF0
-aW9uIG9mIE5BTkRfQkJUX0xBU1RCTE9DSy4gSXQgc2hvdWxkIGJlIGNsZWFyIHRoYXQgdGhpcyBp
-cyBhCj4gY29udGludWF0aW9uIG9mIHRoZSAnLm9wdGlvbnMnIGluaXRpYWxpemF0aW9uLgo+IApP
-Sy4KCj4gPiArCS5sZW4gPSA0LAo+ID4gKwkudmVyb2ZmcyA9IDQsCj4gPiArCS5tYXhibG9ja3Mg
-PSBOQU5EX0JCVF9TQ0FOX01BWEJMT0NLUywKPiA+ICsJLnBhdHRlcm4gPSBiYnRfcGF0dGVybiwK
-PiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3QgbmFuZF9iYnRfZGVzY3IgYmJ0X21pcnJv
-cl9ub19vb2JfZGVzY3IgPSB7Cj4gPiArCS5vcHRpb25zID0gTkFORF9CQlRfTEFTVEJMT0NLIHwg
-TkFORF9CQlRfV1JJVEUgfAo+ID4gKwlOQU5EX0JCVF8yQklUIHwgTkFORF9CQlRfVkVSU0lPTiB8
-IE5BTkRfQkJUX1BFUkNISVAgfAo+ID4gKwlOQU5EX0JCVF9OT19PT0IsCj4gCj4gU2FtZSBoZXJl
-Lgo+IAo+ID4gKwkubGVuID0gNCwKPiA+ICsJLnZlcm9mZnMgPSA0LAo+ID4gKwkubWF4YmxvY2tz
-ID0gTkFORF9CQlRfU0NBTl9NQVhCTE9DS1MsCj4gPiArCS5wYXR0ZXJuID0gbWlycm9yX3BhdHRl
-cm4sCj4gPiArfTsKPiA+ICsKPiA+ICAvKgo+ID4gICAqIFdlIG1heSBjaGFuZ2UgdGhlIGxheW91
-dCBpZiB3ZSBjYW4gZ2V0IHRoZSBFQ0MgaW5mbyBmcm9tIHRoZSBkYXRhc2hlZXQsCj4gPiAgICog
-ZWxzZSB3ZSB3aWxsIHVzZSBhbGwgdGhlIChwYWdlICsgT09CKS4KPiA+IEBAIC0xNzI4LDggKzE3
-NTEsMTEgQEAgc3RhdGljIGludCBncG1pX25hbmRfaW5pdChzdHJ1Y3QgZ3BtaV9uYW5kX2RhdGEg
-KnRoaXMpCj4gPiAgCQkJY2hpcC0+YmJ0X29wdGlvbnMgfD0gTkFORF9CQlRfTk9fT09CX0JCTTsK
-PiA+ICAKPiA+ICAJCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wodGhpcy0+ZGV2LT5vZl9ub2Rl
-LAo+ID4gLQkJCQkJCSJmc2wsbm8tYmxvY2ttYXJrLXN3YXAiKSkKPiA+ICsJCQkJCQkiZnNsLG5v
-LWJsb2NrbWFyay1zd2FwIikpIHsKPiA+ICAJCQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSBmYWxz
-ZTsKPiA+ICsJCQljaGlwLT5iYnRfdGQgPSAmYmJ0X21haW5fbm9fb29iX2Rlc2NyOwo+ID4gKwkJ
-CWNoaXAtPmJidF9tZCA9ICZiYnRfbWlycm9yX25vX29vYl9kZXNjcjsKPiAKPiBNeSBpbml0aWFs
-IHJlY29tbWVuZGF0aW9uIGZvciB0aGlzIHBhdGNoIGFuZCB0aGUgcHJldmlvdXMgcGF0Y2ggbWVh
-bnMKPiB0aGF0IHlvdSBjb3VsZCBqdXN0IGRyb3AgYm90aCBwYXRjaGVzIGFuZCByZXBsYWNlIHRo
-ZW0gd2l0aCB0aGUKPiBmb2xsb3dpbmc6Cj4gCj4gCQkJLyogQ29tbWVudCBoZXJlIHRvIGV4cGxh
-aW4gd2h5Li4uICovCj4gCQkJY2hpcC0+YmJ0X29wdGlvbnMgfD0gTkFORF9CQlRfQ1JFQVRFX0VN
-UFRZIHwKPiAJCQkJCSAgICAgTkFORF9CQlRfTk9fT09CIHwKPiAJCQkJCSAgICAgTkFORF9CQlRf
-Tk9fT09CX0JCTTsKT0suCgpMb3RoYXIgV2HDn21hbm4KLS0gCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgpLYS1SbyBlbGVjdHJvbmlj
-cyBHbWJIIHwgUGFzY2Fsc3RyYcOfZSAyMiB8IEQgLSA1MjA3NiBBYWNoZW4KUGhvbmU6ICs0OSAy
-NDA4IDE0MDItMCB8IEZheDogKzQ5IDI0MDggMTQwMi0xMApHZXNjaMOkZnRzZsO8aHJlcjogTWF0
-dGhpYXMgS2F1c3NlbgpIYW5kZWxzcmVnaXN0ZXJlaW50cmFnOiBBbXRzZ2VyaWNodCBBYWNoZW4s
-IEhSQiA0OTk2Cgp3d3cua2Fyby1lbGVjdHJvbmljcy5kZSB8IGluZm9Aa2Fyby1lbGVjdHJvbmlj
-cy5kZQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+This patch set contains a couple of fixes related to APM X-Gene SATA
+controller driver.
+
+v2 Change:
+   1. Drop the Link down retry patch from this patch set.
+
+v4 Change:
+   1. Drop the patch to fix the csr-mask in dts for PHY clock
+     node of SATA Host Controller 1.
+   2. Add the patch to correct the OOB tunning parameters for
+     the COMINIT/COMWAKE parameters.
+   3. Add the patch to remove the NCQ support from the APM
+     X-Gene AHCI SATA Host controller driver.
+   4. Add the patch to remove the clock and PHY reference nodes
+     from the APM X-Gene Host controller dts node.
+
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+
+Suman Tripathi (4):
+  ata: Fix the watermark threshold for the APM X-Gene SATA host
+    controller driver.
+  arm64: Remove the clock and PHY reference from the APM X-Gene SoC AHCI
+    SATA Host controller dts node.
+  ata: Use correct OOB tunning parameters for APM X-Gene SoC AHCI SATA
+    Host controller driver.
+  ata: Removing NCQ support from the APM X-Gene SoC AHCI SATA Host
+    Controller driver.
+
+ arch/arm64/boot/dts/apm-storm.dtsi | 92 --------------------------------------
+ drivers/ata/ahci_xgene.c           | 17 ++++---
+ 2 files changed, 12 insertions(+), 97 deletions(-)
+
+--
+1.8.2.1
+
