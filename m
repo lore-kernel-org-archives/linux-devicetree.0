@@ -1,42 +1,91 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/5] Add eMMC and SD card support for rk3288-evb
-Date: Tue, 29 Jul 2014 22:42:51 +0200
-Message-ID: <2167758.ZBctteP0VZ@wuerfel>
-References: <1406665916-23396-1-git-send-email-dianders@chromium.org>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v3 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI
+ PMICs
+Date: Tue, 29 Jul 2014 14:54:50 -0700
+Message-ID: <53D8182A.5050204@codeaurora.org>
+References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com> <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1406665916-23396-1-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 July 2014 13:31:51 Doug Anderson wrote:
-> This series adds basic eMMC and SD card support for the rk3288-evb
-> board based on Addy's posted dw_mmc patch from:
->   https://patchwork.kernel.org/patch/4520631/
+On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
+> From: Josh Cartwright <joshc@codeaurora.org>
 > 
-> The series is a little tricky because:
-> * Addy's patch has a bug w/ DDR50 (see my response there), so I've
->   posted the original support without DDR50 and then a fix (that could
->   be squashed) enabling DDR50.
-> * Jaehoon has some outstanding patches to remove the slot node.  Since
->   those haven't landed yet, I've posted my original patch with the
->   slot node and then some future patches that can land with Jaehoon's
->   patches.
+> The Qualcomm SPMI PMIC chips are components used with the
+> Snapdragon 800 series SoC family.  This driver exists
+> largely as a glue mfd component, it exists to be an owner
+> of an SPMI regmap for children devices described in
+> device tree.
 > 
-> Note that we don't have regulators specified yet (no regulator driver
-> for rk808-based board).  We also don't yet support UHS modes (which
-> require regulator support plus dw_mmc driver support for tuning).
-> Those features can come later.
+> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/mfd/Kconfig       |   16 +++++++++++
+>  drivers/mfd/Makefile      |    1 +
+>  drivers/mfd/pm8xxx-spmi.c |   65 +++++++++++++++++++++++++++++++++++++++++++++
 
-Looks good to me,
+Would it be possible to rename this driver: qcom-spmi-pmic.c?  The driver
+will be supporting several PMICs that do not fit the pm8xxx naming scheme.
+ One of which is even specified in the compatible list of this driver
+(pma8084).  There is presently downstream support for the following PMICs:
+PM8019, PM8110, PM8226, PM8841, PM8916, PM8941, PM8994, PMA8084, PMD9635,
+PMI8962, and PMI8994 [1].  Four of these do not fit the "PM8XXX" template.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+If we can agree on changing the file name for the driver, then all other
+instances of "pm8xxx" would need to be renamed in this patch series (e.g.
+config options, function names, struct names, DT binding documentation, etc.)
 
-I wonder whether something can be done to generalize the tuning
-support. Is this just about the clock phase, or something else?
+It would probably be good to rename pm8xxx-ssbi.c to qcom-ssbi-pmic.c as
+well in order to maintain consistency.
 
-	Arnd
+(...)
+> +static const struct regmap_config pm8xxx_regmap_config = {
+> +	.reg_bits	= 16,
+> +	.val_bits	= 8,
+> +	.max_register	= 0xffff,
+
+Can you please add the following line here?
+
+	.fast_io	= true;
+
+This will cause a spinlock to be held during SPMI transactions instead of
+a mutex lock.  This is needed because several downstream peripheral
+drivers need to make SPMI read and write calls from atomic context.  I
+have commented on this point in a previous thread with specific examples [2].
+
+> +};
+
+(...)
+> +static const struct of_device_id pm8xxx_id_table[] = {
+> +	{ .compatible = "qcom,pm8941" },
+> +	{ .compatible = "qcom,pm8841" },
+> +	{ .compatible = "qcom,pma8084" },
+
+Would it be possible to add a generic compatible string as well?  Perhaps
+something like "qcom,spmi-pmic" could be used.  This driver is not doing
+anything with the PMIC specific compatible strings.  The generic
+compatible string could be specified in device tree in conjunction a PMIC
+specific string that is not present in this list.  That way, this driver
+file would not need to be touched as new PMIC chips are introduced unless
+some weird workaround is needed.  In that case, the PMIC specific
+compatible string could be added to the list along with whatever special
+function is needed to handle it.
+
+Take care,
+David Collins
+
+[1]:
+https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/arch/arm/boot/dts/qcom?h=msm-3.10
+
+[2]: https://lkml.org/lkml/2014/4/25/720
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
