@@ -1,79 +1,89 @@
-From: Rob Herring <rob.herring@linaro.org>
-Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
- in DT
-Date: Tue, 29 Jul 2014 10:29:50 -0500
-Message-ID: <CABGGisy6_TOkT7fHp049rwH_FhQxCRGQqGBCsODUFTTchhsLvg@mail.gmail.com>
-References: <53D788A7.4020303@mm-sol.com> <3794875.CZFbAag5Sv@wuerfel> <53D7AA72.6010309@mm-sol.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 13/35] arm: omap: irq: call set_handle_irq() from
+ intc_of_init
+Date: Tue, 29 Jul 2014 10:36:49 -0500
+Message-ID: <20140729153649.GD17808@saruman.home>
+References: <1406582183-696-1-git-send-email-balbi@ti.com>
+ <1406582183-696-14-git-send-email-balbi@ti.com>
+ <20140729022019.GB4421@earth.universe>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D7AA72.6010309@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140729022019.GB4421@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux@arm.linux.org.uk, jason@lakedaemon.net, khilman@deeprootsystems.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tglx@linutronix.de, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 29, 2014 at 9:06 AM, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
-> Arnd, thanks for the comments.
->
-> On 07/29/2014 03:00 PM, Arnd Bergmann wrote:
->> On Tuesday 29 July 2014 14:42:31 Stanimir Varbanov wrote:
->>>         taddr = of_translate_address(dev, addrp);
->>> -       if (taddr == OF_BAD_ADDR)
->>> -               return -EINVAL;
->>> +       /*
->>> +        * if the address is non-translatable to cpu physical address
->>> +        * fallback to a IORESOURCE_REG resource.
->>> +        */
->>> +       if (taddr == OF_BAD_ADDR) {
->>> +               memset(r, 0, sizeof(*r));
->>> +               taddr = of_read_number(addrp, 1);
->>> +               if (taddr == OF_BAD_ADDR)
->>> +                       return -EINVAL;
->>> +               r->start = taddr;
->>> +               r->end = taddr + size - 1;
->>> +               r->flags = IORESOURCE_REG;
->>> +               r->name = name ? name : dev->full_name;
->>> +               return 0;
->>> +       }
->>> +
->>
->> I don't think that everything returning OF_BAD_ADDR makes sense
->> to turn into IORESOURCE_REG. It could be an e.g. invalid DT
->> representation, a node with #size-cells=<0>, or it could be
->> something that gets translated one or more nodes up in the
->> tree before it reaches a bus without a ranges property.
->>
->> Also, you should not rely on #address-cells being hardcoded
->> to <1> above.
->>
->
-> This was just an example. Of course it has many issues and probaly it is
-> wrong:) The main goal was to understand does IORESOURCE_REG resource
-> type and parsing the *reg* properties for non-translatable addresses are
-> feasible. And also does it acceptable by community and OF platform
-> maintainers.
+--cHMo6Wbp1wrKhbfi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I guess the question I have is what is the advantage of making this a
-resource? You can't really pass it to other functions.
+On Tue, Jul 29, 2014 at 04:20:20AM +0200, Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Mon, Jul 28, 2014 at 04:16:01PM -0500, Felipe Balbi wrote:
+> > this will let us drop .handle_irq and .init_irq fields
+> > from our generic machine_descs.
+> >=20
+> > Signed-off-by: Felipe Balbi <balbi@ti.com>
+> > ---
+> >  arch/arm/mach-omap2/irq.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/arch/arm/mach-omap2/irq.c b/arch/arm/mach-omap2/irq.c
+> > index e6997c5..e452411 100644
+> > --- a/arch/arm/mach-omap2/irq.c
+> > +++ b/arch/arm/mach-omap2/irq.c
+> > @@ -314,6 +314,8 @@ static int __init intc_of_init(struct device_node *=
+node,
+> > =20
+> >  	omap_init_irq(res.start, nr_irq, of_node_get(node));
+> > =20
+> > +	set_handle_irq(omap2_intc_handle_irq);
+> > +
+> >  	return 0;
+> >  }
+> >
+>=20
+> if you respin the patchset you may want to call omap_intc_handle_irq
+> directly. It makes the review of the patchset less confusing.
+>=20
+> (I was wondering why omap3 can call omap2_intc_handle_irq until I
+> noticed, that your previous changes made both functions simple
+> wrapper functions for omap_intc_handle_irq)
 
-We're moving in the opposite direction for IRQs as now
-platform_get_irq translates the IRQ directly rather than using the
-resource (but the resource is still there just to avoid potentially
-breaking things for now).
+this is done later for a reason. At this point, omap_intc_handle_irq()
+still misses proper annotations for asmlinkage and
+__exception_irq_entry.
 
->> How about modifying of_get_address() rather than
->> __of_address_to_resource() instead? You could introduce
->> a new of_bus entry for each bus you expect to return
->> an IORESOURCE_REG, or you could change of_bus_default_get_flags
->> to return IORESOURCE_REG if the parent node has no ranges property
->> and is not the root node.
->
-> IMO the clearer solution is to introduce a new of_bus bus. In that case
-> one possible problem will be how to distinguish the non-translatable and
-> the other buses. Also the *device_type* property is deprecated for non
-> PCI devices.
+--=20
+balbi
 
-You would have to look for the presence or absence of ranges property.
+--cHMo6Wbp1wrKhbfi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT17+RAAoJEIaOsuA1yqREfS8QAI8g/VP1R6GdfUQrv8DYsWOs
+oynMlnTbeAOAgPtph4SxhYtS/Egyqqr6CeXZ9aOUNHtuDxdit9VuVoatxK/zAOW2
+RFwmBYlreZ0V0vtLSNly+yKSWl8JAem/+s519PFqDaZ3y0f1SxB/0e7Pfu0TCmE6
+K37ywb/RTRoOKVp9uKip68VSy52DXYCvLQrjhP+BL7q5+IJJRkQwS6eI4bXREFcY
+OZ8BrMB+F5MgLdJRTDGvLY1BSuLJ6pf1jdvmB0nk/NTDPb0Aey9B4gH7+G20Al9j
+XyZFzT7yoxku1DAN6P2/LnmS/Qvd8SoC+yXDJIjl8vfDEgU1eonyIfDuDnmMr+LE
+P+7aZdJHHvJDzEmXlgfl9VjLIt3bXXB8KYeNXvwUZeCEf/VqlOd4dIFOItAWGSLx
+C11OV1l87EPsrsc8EoOP6o5jNYsS79WxhJwCyxqgNrAru2/Aym5X/ajswXhOkYj9
+SpQw13SwvTqyE5GLDGfPv2F5t+8MiJ1F7CeBab6s17TZhSCn+60duPiVP0gsC0qq
+LhQcsfljVzcX19MntGa2E7qly98lkNKy7Z/1yQd4JEQRLyUIxGeKkrTVCjoxHYeK
+6cGbAlsCX6iswnlsozrtMU0wC6NoKHFVB5zdIqdr+rtZpkZs9QZ848TpvwYruAaQ
+DgemOK1rZQw+op0o22aD
+=F/4v
+-----END PGP SIGNATURE-----
+
+--cHMo6Wbp1wrKhbfi--
