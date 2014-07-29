@@ -1,235 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dt: sun7i: Add Banana Pi board
-Date: Tue, 29 Jul 2014 19:02:28 +0200
-Message-ID: <1406653348-16638-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 3/5] regulator: core: Only apply constraints if available
+ on list voltage
+Date: Tue, 29 Jul 2014 18:18:57 +0100
+Message-ID: <20140729171857.GV17528@sirena.org.uk>
+References: <1406651339-28901-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1406651339-28901-4-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBLFH36PAKGQE3TK3YTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="R0sYUISimcquDWTD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406651339-28901-4-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Banana Pi is an A20 based development board using Raspberry Pi compatible
-IO headers. It comes with 1 GB RAM, 1 Gb ethernet, 2x USB host, sata, hdmi
-and stereo audio out + various expenansion headers:
 
-http://www.bananapi.org/
+--R0sYUISimcquDWTD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 183 +++++++++++++++++++++++++++++++
- 2 files changed, 184 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
+On Tue, Jul 29, 2014 at 06:28:57PM +0200, Javier Martinez Canillas wrote:
+> If a selector can't be used on a platform due to voltage constraints,
+> regulator_list_voltage() returns 0. Doing this unconditionally made
+> sense since constraints were set in machine_constraints_voltage() at
+> regulator registration time.
+>=20
+> But for load switches that don't define a voltage output, the parent
+> supply voltage is used so the constraints should only be applied if
+> they were defined for the child regulators.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bdbc84a..440e037 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -379,6 +379,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31-hummingbird.dtb \
- 	sun6i-a31-m9.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
-+	sun7i-a20-bananapi.dtb \
- 	sun7i-a20-cubieboard2.dtb \
- 	sun7i-a20-cubietruck.dtb \
- 	sun7i-a20-i12-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-new file mode 100644
-index 0000000..0332b82
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -0,0 +1,183 @@
-+/*
-+ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-common-regulators.dtsi"
-+
-+/ {
-+	model = "LeMaker Banana Pi";
-+	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
-+
-+	soc@01c00000 {
-+		spi0: spi@01c05000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		mmc0: mmc@01c0f000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-+			vmmc-supply = <&reg_vcc3v3>;
-+			bus-width = <4>;
-+			cd-gpios = <&pio 7 10 0>; /* PH10 */
-+			cd-inverted;
-+			status = "okay";
-+		};
-+
-+		usbphy: phy@01c13400 {
-+			usb1_vbus-supply = <&reg_usb1_vbus>;
-+			usb2_vbus-supply = <&reg_usb2_vbus>;
-+			status = "okay";
-+		};
-+
-+		ehci0: usb@01c14000 {
-+			status = "okay";
-+		};
-+
-+		ohci0: usb@01c14400 {
-+			status = "okay";
-+		};
-+
-+		ahci: sata@01c18000 {
-+			status = "okay";
-+		};
-+
-+		ehci1: usb@01c1c000 {
-+			status = "okay";
-+		};
-+
-+		ohci1: usb@01c1c400 {
-+			status = "okay";
-+		};
-+
-+		pinctrl@01c20800 {
-+			uart3_pins_bananapi: uart3_pin@0 {
-+				allwinner,pins = "PH0", "PH1";
-+				allwinner,function = "uart3";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-+				allwinner,pins = "PH10";
-+				allwinner,function = "gpio_in";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <1>;
-+			};
-+
-+			gmac_power_pin_bananapi: gmac_power_pin@0 {
-+				allwinner,pins = "PH23";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			led_pins_bananapi: led_pins@0 {
-+				allwinner,pins = "PH24";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+		};
-+
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		uart0: serial@01c28000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		uart3: serial@01c28c00 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart3_pins_bananapi>;
-+			status = "okay";
-+		};
-+
-+		uart7: serial@01c29c00 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart7_pins_a>;
-+			status = "okay";
-+		};
-+
-+		i2c0: i2c@01c2ac00 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins_a>;
-+			status = "okay";
-+
-+			axp209: pmic@34 {
-+				compatible = "x-powers,axp209";
-+				reg = <0x34>;
-+				interrupt-parent = <&nmi_intc>;
-+				interrupts = <0 8>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+
-+		i2c2: i2c@01c2b400 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pins_a>;
-+			status = "okay";
-+		};
-+
-+		gmac: ethernet@01c50000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gmac_pins_rgmii_a>;
-+			phy = <&phy1>;
-+			phy-mode = "rgmii";
-+			phy-supply = <&reg_gmac_3v3>;
-+			status = "okay";
-+
-+			phy1: ethernet-phy@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_bananapi>;
-+
-+		green {
-+			label = "bananapi:green:usr";
-+			gpios = <&pio 7 24 0>;
-+		};
-+	};
-+
-+	reg_usb1_vbus: usb1-vbus {
-+		status = "okay";
-+	};
-+
-+	reg_usb2_vbus: usb2-vbus {
-+		status = "okay";
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_bananapi>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <50000>;
-+		enable-active-high;
-+		gpio = <&pio 7 23 0>;
-+	};
-+};
--- 
-2.0.0
+No, think about what you're doing here and why we're filtering out
+unsettable voltages - this causes problems for consumers on regulators
+that don't have any ability to vary voltages since they will now be able
+to list voltages that they can't select. =20
+
+I would also expect any regulator where the supplied devices are able to
+vary the voltage to explicitly provide a constraint even if the
+implementation is done in a parent regulator.  There may be constraints
+on the child supply which aren't directly present on the parent supply
+and can be ignored if the child supply is turned off.
+
+--R0sYUISimcquDWTD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT19d+AAoJELSic+t+oim992wP/iLrqpiwTyw4N9z1hAe8Oi6F
+bSV6hdU0SVlfOp2Fwge5oLNu8PVhrxpV3t/O607GeAwVBCnmW1cFS6c02gccuKpf
+4GGxaiBqe6Juw/KH4j26dgrEKFJwvpoEKkgGMBcw++bE7xEsvwpMMEDgEndFjpge
+WFe7Dw28SH4pcLbZd7/3o1k1zR2Fn6K2JevSMiPb3ukpiqwmt9MwySbuUsoVzz+U
+xqtARXnLN/U+XE8VX1R+jCYf0QqaAh/1u5Vzt2b6RKNsX/tuame+2wiPTZROj2oc
+U1csVFPHuztI+bi/FSVRiqEVav0TMekdqSzVjvX0T1Rg81qK9OPsOO2vD0aQC0NK
+bj3pFT0zb2Yu/hb6iQ9VKXs11yel1RmQRKPJ5nwp95b6zbDdvm1UKgbSJH2b2k05
+CZJBJSOiph016g1jdpfiNYfWQ0DxKLi9ph70+Cs6RcIw5jioVulhf2ZAKmzYbUJD
+aDlATxwn3L2jgL3jySGwxLmPjAlmtuXJxwStgfSOzSauscGA23r607ZNcpOD5X9+
+QEqmXH5PGwFd21h6sJ0DxTANTTBT1aQMikqxgiocYnafk9DuGPnEX6zKn9pdzWMJ
+XPeOh6AYsPYckbs0yIOfs8TKpZA67JVBsxWAzalCArtwraEy/NnCKc+pHy/1wUQm
+HpnYpfeS5Q6+d6Mi8gRF
+=uy9r
+-----END PGP SIGNATURE-----
+
+--R0sYUISimcquDWTD--
