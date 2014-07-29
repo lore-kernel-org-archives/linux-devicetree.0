@@ -1,219 +1,38 @@
-From: "Murphy, Dan" <dmurphy@ti.com>
-Subject: Re: [v2] input: drv260x: Add TI drv260x haptics driver
-Date: Tue, 29 Jul 2014 13:50:48 +0000
-Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DB2AAD@DFLE09.ent.ti.com>
-References: <1406566403-1436-1-git-send-email-dmurphy@ti.com>
- <20140729093701.GJ2576@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] irqchip: New driver for ST's SysCfg controlled IRQs
+Date: Tue, 29 Jul 2014 15:05:38 +0100
+Message-ID: <1406642744-22589-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark
+This driver enabled IRQs which are controlled using System Configuration
+registers.  Without it Performance Monitoring, Core Sight Tracing and some
+L2 Caches will fail to function.
 
-Thanks for the feedback
+Lee Jones (5):
+  irqchip: Supply new driver for STi based devices
+  irqchip: irq-st: Add documentation for STi based syscfg IRQs
+  ARM: STi: STiH416: Enable Cortex-A9 PMU support
+  ARM: STi: STiH416: Enable PMU IRQs
+  ARM: STI: Ensure requested STi's SysCfg Controlled IRQs are enabled at boot
 
-On 07/29/2014 04:37 AM, Mark Rutland wrote:
-> On Mon, Jul 28, 2014 at 05:53:23PM +0100, Dan Murphy wrote:
->> Add the TI drv260x haptics/vibrator driver.
->> This device uses the input force feedback
->> to produce a wave form to driver an
->> ERM or LRA actuator device.
->>
->> The initial driver supports the devices
->> real time playback mode.  But the device
->> has additional wave patterns in ROM.
->>
->> This functionality will be added in
->> future patchsets.
->>
->> Product data sheet is located here:
->> http://www.ti.com/product/drv2605
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v2 - Fixed binding doc and patch headline - https://patchwork.kernel.org/patch/4619641/
->>
->>  .../devicetree/bindings/input/ti,drv260x.txt       |   44 ++
->>  drivers/input/misc/Kconfig                         |    9 +
->>  drivers/input/misc/Makefile                        |    1 +
->>  drivers/input/misc/drv260x.c                       |  537 ++++++++++++++++++++
->>  include/dt-bindings/input/ti-drv260x.h             |   30 ++
->>  include/linux/input/drv260x.h                      |  181 +++++++
->>  6 files changed, 802 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/input/ti,drv260x.txt
->>  create mode 100644 drivers/input/misc/drv260x.c
->>  create mode 100644 include/dt-bindings/input/ti-drv260x.h
->>  create mode 100644 include/linux/input/drv260x.h
->>
->> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Documentation/devicetree/bindings/input/ti,drv260x.txt
->> new file mode 100644
->> index 0000000..930429b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
->> @@ -0,0 +1,44 @@
->> +Texas Instruments - drv260x Haptics driver family
->> +
->> +The drv260x family serial control bus communicates through I2C protocols
->> +
->> +Required properties:
->> +       - compatible - One of:
->> +               "ti,drv2604" - DRV2604
->> +               "ti,drv2605" - DRV2605
->> +               "ti,drv2605l" - DRV2605L
->> +       - reg -  I2C slave address
->> +       - mode - Power up mode of the chip (defined in include/dt-bindings/input/ti-drv260x.h)
->> +               DRV260X_RTP_MODE - Real time playback mode
->> +               DRV260X_LRA_MODE - Linear Resonance Actuator mode (Piezoelectric)
->> +               DRV260X_ERM_MODE - Eccentric Rotating Mass mode (Rotary vibrator)
-> 
-> What exactly are these, and why does the kernel not decide?
-
-The LRA and ERM are vibrator types.  These are specific to the product and the kernel cannot decide.
-The kernel driver needs to be told what type of vibrator is connected.  The driver then
-sets the voltages and other settings to drive the vibrator type safely. All vibrators are dumb and do not
-have IDs identifying themselves so there is no self discovery here.
-
-RTP is not a vibrator type but just a mode you can place the device into.  I can probably remove that
-and have the user space or driver take care of that setting.
-
-> 
->> +       - library_sel - Library to use at power up (defined in include/dt-bindings/input/ti-drv260x.h)
-> 
-> Please s/_/-/ in all property names.
-> 
->> +               DRV260X_LIB_A - Pre-programmed Library
->> +               DRV260X_LIB_B - Pre-programmed Library
->> +               DRV260X_LIB_C - Pre-programmed Library
->> +               DRV260X_LIB_D - Pre-programmed Library
->> +               DRV260X_LIB_E - Pre-programmed Library
->> +               DRV260X_LIB_F - Pre-programmed Library
-> 
-> What exactly are these, and why does the kernel not decide?
-> 
->> +
->> +Optional properties:
->> +       - enable-gpio - gpio pin to enable/disable the device.
->> +       - vib_rated_voltage - The rated voltage of the actuator.  If this is not
->> +                                                 set then the value will be defaulted to 0x90 in the
->> +                                                 driver.
-> 
-> What units is this in?
-
-Good catch I was thinking this when I was writing the documentation but forgot to add
-it.  I will fix the formatting here and below as well.
-
-> 
-> Don't mention the driver, just say "if not 0x90" (but with a better
-> description of what 0x90 actually means).
-> 
-
-OK
-
->> +       - vib_overdrive_voltage - The overdrive voltage of the actuator.
->> +                                                       If this is not set then the value
->> +                                                       will be defaulted to 0x90 in the driver.
-> 
-> Similarly on both points.
-> 
-> [...]
-> 
-
-Same as above as well
-
->> +static int drv260x_probe(struct i2c_client *client,
->> +                          const struct i2c_device_id *id)
->> +{
->> +       struct drv260x_data *haptics;
->> +       struct device_node *np = client->dev.of_node;
->> +       struct drv260x_platform_data *pdata = client->dev.platform_data;
->> +       struct ff_device *ff;
->> +       int ret;
->> +       int voltage;
->> +
->> +       haptics = devm_kzalloc(&client->dev, sizeof(*haptics), GFP_KERNEL);
->> +       if (!haptics)
->> +               return -ENOMEM;
->> +
->> +       haptics->rated_voltage = DRV260X_DEF_OD_CLAMP_VOLT;
->> +       haptics->rated_voltage = DRV260X_DEF_RATED_VOLT;
->> +
->> +       if (np) {
->> +               ret = of_property_read_u32(np, "mode", &haptics->mode);
->> +               if (ret < 0) {
->> +                       dev_err(&client->dev,
->> +                               "%s: No entry for mode\n", __func__);
->> +
->> +                       return ret;
->> +               }
-> 
-> No sanity checking on the actual value?
-> 
-> As far as I can see, haptics->mode is an int, not a u32.
-> 
-
-Will fix this and all points below.
-
->> +               ret = of_property_read_u32(np, "library_sel",
->> +                                       &haptics->library);
->> +               if (ret < 0) {
->> +                       dev_err(&client->dev,
->> +                               "%s: No entry for library selection\n", __func__);
->> +
->> +                       return ret;
->> +               }
-> 
-> Sanity checking?
-> 
-> haptics->library is not a u32.
-> 
->> +               ret = of_property_read_u32(np, "vib_rated_voltage",
->> +                                       &voltage);
->> +               if (!ret)
->> +                       haptics->rated_voltage = drv260x_calculate_voltage(voltage);
->> +
->> +
->> +               ret = of_property_read_u32(np, "vib_overdrive_voltage",
->> +                                       &voltage);
->> +               if (!ret)
->> +                       haptics->overdrive_voltage = drv260x_calculate_voltage(voltage);
->> +
-> 
-> And again, on both points.
-> 
->> +       } else if (pdata) {
->> +               haptics->mode = pdata->mode;
->> +               haptics->library = pdata->library_selection;
->> +               if (pdata->vib_overdrive_voltage)
->> +                       haptics->overdrive_voltage = drv260x_calculate_voltage(pdata->vib_overdrive_voltage);
->> +               if (pdata->vib_rated_voltage)
->> +                       haptics->rated_voltage = drv260x_calculate_voltage(pdata->vib_rated_voltage);
->> +       } else {
->> +               dev_err(&client->dev, "Platform data not set\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       haptics->regulator = regulator_get(&client->dev, "vbat");
-> 
-> This wasn't in the binding.
-
-Yep will add it.
-
-
-Dan
-
-> 
-> Thanks,
-> Mark.
-> 
-
+ .../interrupt-controller/st,sti-irq-syscfg.txt     |  35 ++++
+ arch/arm/boot/dts/stih416.dtsi                     |  16 ++
+ arch/arm/mach-sti/Kconfig                          |   1 +
+ drivers/irqchip/Kconfig                            |   7 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-st.c                           | 204 +++++++++++++++++++++
+ 6 files changed, 264 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+ create mode 100644 drivers/irqchip/irq-st.c
 
 -- 
-------------------
-Dan Murphy
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
