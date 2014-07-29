@@ -1,198 +1,146 @@
-From: Punnaiah Choudary <kpc528@gmail.com>
-Subject: Re: [PATCH RFC v4 4/4] Documentation: nand: pl353: Add documentation
- for controller and driver
-Date: Tue, 29 Jul 2014 08:14:59 +0530
-Message-ID: <CAHLkNHLhN1WLU0HH5XKQuGG1O2-TEhTfQgLFMqbGiWQTPmVe1g@mail.gmail.com>
-References: <1406561500-18264-1-git-send-email-punnaia@xilinx.com>
-	<b37e0e96-e91d-496c-a530-df72898798a1@BY2FFO11FD057.protection.gbl>
-	<53D6EB53.2000209@infradead.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] mmc: dw_mmc: add support for RK3288
+Date: Mon, 28 Jul 2014 21:52:59 -0700
+Message-ID: <CAD=FV=X87BViAZ9LsDWcx=AGsSmR9VtqbbVaZSZ_1-P-tgV_ig@mail.gmail.com>
+References: <1404565174-2923-1-git-send-email-addy.ke@rock-chips.com>
+	<1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53D6EB53.2000209@infradead.org>
+In-Reply-To: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Michal Simek <michal.simek@xilinx.com>, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, punnaiah choudary kalluri <kalluripu>
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, zyf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
+Addy,
 
-  Thanks for the review. I will fix the below review comments in my
-next submission.
+On Wed, Jul 9, 2014 at 8:31 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+> This patch focuses on clock setting for RK3288 mmc controller.
+>
+> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
+> and if DDR 8bit mode, CLKDIV register must be set 1.
+>
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+> changes since v1:
+> - dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
+>   host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
+>
+>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  4 +-
+>  drivers/mmc/host/dw_mmc-pltfm.c                    | 50 +++++++++++++++++++++-
+>  2 files changed, 51 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> index c559f3f..e3f95cd 100644
+> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> @@ -10,7 +10,9 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
+>  Required Properties:
+>
+>  * compatible: should be
+> -       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
+> +       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
+> +                                                       before RK3288
+> +       - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
+>
+>  Example:
+>
+> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+> index d4a47a9..809c28b 100644
+> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+> @@ -21,17 +21,61 @@
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/mmc/dw_mmc.h>
+>  #include <linux/of.h>
+> +#include <linux/clk.h>
+>
+>  #include "dw_mmc.h"
+>  #include "dw_mmc-pltfm.h"
+>
+> +#define RK3288_CLKGEN_DIV      2
 
-Regards,
-Punnaiah
+Yup, this matches what I see in the TRM.  It will always divide by 2
+to allow for 4 phases (picking the phases not supported yet).  Default
+phase looks to be 180 degrees which is why we've (currently) got
+USE_HOLD_REG hardcoded.  :)
 
-On Tue, Jul 29, 2014 at 6:01 AM, Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 07/28/14 08:31, Punnaiah Choudary Kalluri wrote:
->> Added notes about the controller and driver
->>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
->> ---
->> Changes in v4:
->> - None
->> ---
->>  Documentation/mtd/nand/pl353-nand.txt |   92 +++++++++++++++++++++++++++++++++
->>  1 files changed, 92 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/mtd/nand/pl353-nand.txt
->>
->> diff --git a/Documentation/mtd/nand/pl353-nand.txt b/Documentation/mtd/nand/pl353-nand.txt
->> new file mode 100644
->> index 0000000..4deac94
->> --- /dev/null
->> +++ b/Documentation/mtd/nand/pl353-nand.txt
->> @@ -0,0 +1,92 @@
->> +This documents provides some notes about the ARM pl353 smc controller used in
+> +
+>  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
+>  {
+>         *cmdr |= SDMMC_CMD_USE_HOLD_REG;
+>  }
 >
->                                                     PL353 SMC
+> -static const struct dw_mci_drv_data rockchip_drv_data = {
+> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
+> +{
+> +       host->bus_hz /= RK3288_CLKGEN_DIV;
+> +
+> +       return 0;
+> +}
+> +
+> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +       int ret;
+> +       unsigned int cclkin;
+> +
+> +       /*
+> +        * cclkin: source clock of mmc controller.
+> +        * bus_hz: card interface clock generated by CLKGEN.
+> +        * bus_hz = cclkin / RK3288_CLKGEN_DIV;
+> +        * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
+> +        *
+> +        * Note: div can only be 0 or 1
+> +        *       if DDR50 8bit mode, div must be set 1
+
+Makes sense.  So this function is essentially reversing the logic in
+dw_mmc and making sure that we'll get the right DIV (0 or 1) in
+dw_mci_setup_bus().
+
+
+> +        */
+> +       if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
+> +           (ios->timing == MMC_TIMING_UHS_DDR50 ||
+
+Probably don't need UHS_DDR50 since (I think) you can't have an 8-bit
+SD card--only MMC, right?  ...but it doesn't hurt.
+
+
+> +            ios->timing == MMC_TIMING_MMC_DDR52))
+> +               cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
+> +       else
+> +               cclkin = ios->clock * RK3288_CLKGEN_DIV;
+> +
+> +       ret = clk_set_rate(host->ciu_clk, cclkin);
+> +       if (ret)
+> +               dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
+> +
+> +       host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
+> +}
+> +
+> +static const struct dw_mci_drv_data rk2928_drv_data = {
+> +       .prepare_command        = dw_mci_pltfm_prepare_command,
+> +};
+> +
+> +static const struct dw_mci_drv_data rk3288_drv_data = {
+>         .prepare_command        = dw_mci_pltfm_prepare_command,
+> +       .set_ios        = dw_mci_rk3288_set_ios,
+> +       .setup_clock    = dw_mci_rk3288_setup_clock,
+>  };
 >
->> +Zynq SOC and confined to NAND specific details.
->
->             and is confined to
->
->> +
->> +Overview of the controller
->> +==========================
->> +     The SMC (PL353) supports two memory interfaces:
->> +     Interface 0 type SRAM.
->> +     Interface 1 type NAND.
->> +     This configuration supports the following configurable options:
->> +        . 32-bit or 64-bit AXI data width
->> +        . 8-bit, 16-bit, or 32-bit memory data width for interface 0
->> +        . 8-bit, or 16-bit memory data width for interface 1
->> +        . 1-4 chip selects on each interface
->> +        . SLC ECC block for interface 1
->> +
->> +For more information, refer the below link for TRM
->
->                          refer to the below link for TRM.
->
->> +http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
->> +DDI0380G_smc_pl350_series_r2p1_trm.pdf
->> +
->> +NAND memory accesses
->> +====================
->> +     . Two phase NAND accesses
->> +     . NAND command phase transfers
->> +     . NAND data phase transfers
->> +
->> +Two phase NAND accesses
->> +     The SMC defines two phases of commands when transferring data to or from
->> +NAND flash.
->> +
->> +Command phase
->> +     Commands and optional address information are written to the NAND flash.
->> +The command and address can be associated with either a data phase operation to
->> +write to or read from the array, or a status/ID register transfer.
->> +
->> +Data phase
->> + Data is either written to or read from the NAND flash. This data can be either
->> +data transferred to or from the array, or status/ID register information.
->> +
->> +NAND AXI address setup
->> +       AXI address      Command phase      Data phase
->> +     [31:24]         Chip address       Chip address
->> +     [23]            NoOfAddCycles_2    Reserved
->> +     [22]            NoOfAddCycles_1    Reserved
->> +     [21]            NoOfAddCycles_0    ClearCS
->> +     [20]            End command valid  End command valid
->> +     [19]            0                  1
->> +     [18:11]         End command        End command
->> +     [10:3]          Start command      [10] ECC Last
->> +                                        [9:3] Reserved
->> +     [2:0]           Reserved           Reserved
->> +
->> +ECC
->> +===
->> +    It operates on a number of 512 byte blocks of NAND memory and can be
->
->                                   512-byte blocks
->
->> +programmed to store the ECC codes after the data in memory. For writes,
->> +the ECC is written to the spare area of the page. For reads, the result of
->> +a block ECC check are made available to the device driver.
->> +
->> +------------------------------------------------------------------------
->> +|               n * 512 blocks                  | extra  | ecc    |     |
->
->                                                               ECC
->
->> +|                                               | block  | codes  |     |
->> +------------------------------------------------------------------------
->> +
->> +The ECC calculation uses a simple Hamming code, using 1-bit correction 2-bit
->> +detection. It starts when a valid read or write command with a 512 byte aligned
->
->                                                                   512-byte
->
->> +address is detected on the memory interface.
->> +
->> +Driver details
->> +==============
->> +     The NAND driver has dependancy with the pl353_smc memory controller
->
->                             dependency          PL353 SMC
->
->> +driver for intializing the nand timing parameters, bus width, ECC modes,
->
->               initializing the NAND
->
->> +control and status information.
->> +
->> +Since the controller expects that the chipselect bit should be cleared for the
->> +last data transfer i.e last 4 data bytes, the existing nandbase page
->
->              transfer,
->
->> +read/write routines for soft ecc and ecc none modes will not work. So, inorder
->
->                                 ECC and ECC                               in order
->
->> +to make this driver work, it always updates the ecc mode as HW ECC and
->
->                                                    ECC
->
->> +implemented the page read/write functions for supporting the SW ECC.
->
->    implements
->
->> +
->> +HW ECC mode:
->> +     Upto 2K page size is supported and beyond that it retuns
->
->         Up to                                             returns
->
->> +-ENOSUPPORT error. If the flsh has ONDIE ecc controller then the
->
->                              flash          ECC
->
->> +priority has given to the ONDIE ecc controller. Also the current
->
->             is given               ECC
->
->> +implementation has support for upto 64 byte oob area
->
->                                   up to 64-byte OOB area.
->
->> +
->> +SW ECC mode:
->> +     It supports all the pgae sizes. But since, zynq soc bootrom uses
->
->                             page sizes, but since Zynq SOC boot ROM
->
->> +HW ECC for the devices that have pgae size <=2K so, to avoid any ecc related
->
->                                     page size <= 2K, to avoid any ECC-related
->
->> +issues during boot, prefer HW ECC over SW ECC.
->> +
->> +For devicetree binding information please refer the below dt binding file
->
->                                              refer to the below
->
->> +Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
->>
->
->
-> --
-> ~Randy
+>  static const struct dw_mci_drv_data socfpga_drv_data = {
+> @@ -95,7 +139,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
+>  static const struct of_device_id dw_mci_pltfm_match[] = {
+>         { .compatible = "snps,dw-mshc", },
+>         { .compatible = "rockchip,rk2928-dw-mshc",
+> -               .data = &rockchip_drv_data },
+> +               .data = &rk2928_drv_data },
+> +       { .compatible = "rockchip,rk3288-dw-mshc",
+> +               .data = &rk3288_drv_data },
+>         { .compatible = "altr,socfpga-dw-mshc",
+>                 .data = &socfpga_drv_data },
+>         {},
+
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Tested-by: Doug Anderson <dianders@chromium.org>
