@@ -1,45 +1,146 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v4 3/4] ata: Use correct OOB tunning parameters for APM X-Gene SoC AHCI SATA Host controller driver.
-Date: Tue, 29 Jul 2014 12:24:51 +0530
-Message-ID: <1406616892-30273-4-git-send-email-stripathi@apm.com>
-References: <1406616892-30273-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1406616892-30273-1-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss always
+ enabled
+Date: Mon, 28 Jul 2014 23:58:44 -0700
+Message-ID: <20140729065844.4906.7964@quantum>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+ <1402464739-19044-2-git-send-email-tushar.b@samsung.com>
+ <20140611165027.6562.64928@quantum>
+ <CAC5m3BwR9WhiiDqUw1A6FjmzAnQ02xCBxOeAaY2nt3CRqTz+oQ@mail.gmail.com>
+ <20140612210920.6562.96815@quantum> <53BF81CE.60507@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53BF81CE.60507@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <trblinux@gmail.com>, Tushar Behera <tushar.b@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, lkml <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-APM X-Gene SoC AHCI SATA Host controller driver requires
-some correction of Phy Control OOB timing for the
-COMINIT/COMWAKE parameters to correctly interoperate with
-different kinds of disks.
+Quoting Tushar Behera (2014-07-10 23:18:54)
+> On 06/13/2014 02:39 AM, Mike Turquette wrote:
+> > Quoting Tushar Behera (2014-06-12 00:29:23)
+> >> On Wed, Jun 11, 2014 at 10:20 PM, Mike Turquette <mturquette@linaro.org> wrote:
+> >>> Quoting Tushar Behera (2014-06-10 22:32:17)
+> >>>> When the output clock of AUDSS mux is disabled, we are getting kernel
+> >>>> oops while doing a clk_get() on other clocks provided by AUDSS. Though
+> >>>> user manual doesn't specify this dependency, we came across this issue
+> >>>> while disabling the parent of AUDSS mux clocks.
+> >>>
+> >>> Hi Tushar,
+> >>>
+> >>> Can you help me understand better what the actual problem is? What is
+> >>> the root cause of the kernel oops?
+> >>
+> >> Currently AUDSS mux has two parents, XXTI crystal and MAU_EPLL clock.
+> >> As per observation, when the output of AUDSS mux is gated, we are not
+> >> able to do any operation on the clocks provided by MAU block (mostly
+> >> the clocks used by ADMA and audio blocks).
+> > 
+> > I tried to get a datasheet for Exynos 54xx but could not find it. I even
+> > looked at the public 5250 data sheet, but it is completely missing
+> > Chapter 34, "Audio Subsystem", which apparently contains Figure 34-3,
+> > "Clock names and clock tree diagram of MAUDIO_BLK".
+> > 
+> > So without any clue about your hardware (not for lack of trying) I would
+> > guess that somewhere in the parent hierarchy you have an interface clock
+> > which must be enabled in order for you to touch the registers pertaining
+> > to the downstream audio clocks.
+> > 
+> 
+> Yes, right. As per observation, we need to keep the output of AUDSS mux
+> enabled to access the registers present in MAU block.
+> 
+> > The right way to handle this requires two steps:
+> > 
+> > 1) model your interface clock in the Linux clock framework if you
+> > haven't already (I assume it is a gate clock, or the child of a gate
+> > clock)
+> > 
+> 
+> The interface clock is already part of the clock framework.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci_xgene.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Great!
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 03b6b0f..1d48371 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -163,11 +163,11 @@ static void xgene_ahci_set_phy_cfg(struct xgene_ahci_context *ctx, int channel)
- 	/* Disable fix rate */
- 	writel(0x0001fffe, mmio + PORTPHY1CFG);
- 	readl(mmio + PORTPHY1CFG); /* Force a barrier */
--	writel(0x5018461c, mmio + PORTPHY2CFG);
-+	writel(0x28183219, mmio + PORTPHY2CFG);
- 	readl(mmio + PORTPHY2CFG); /* Force a barrier */
--	writel(0x1c081907, mmio + PORTPHY3CFG);
-+	writel(0x13081008, mmio + PORTPHY3CFG);
- 	readl(mmio + PORTPHY3CFG); /* Force a barrier */
--	writel(0x1c080815, mmio + PORTPHY4CFG);
-+	writel(0x00480815, mmio + PORTPHY4CFG);
- 	readl(mmio + PORTPHY4CFG); /* Force a barrier */
- 	/* Set window negotiation */
- 	val = readl(mmio + PORTPHY5CFG);
---
-1.8.2.1
+> 
+> > 2) the clk_ops callbacks for the affected audio clocks should wrap their
+> > operations (i.e. critical secion) with a clk_enable/clk_disable pair,
+> > where the clock being enables/disable is the interface clock mentioned
+> > above in #1
+> > 
+> > The CCF is reentrant, so you can do this by simply using the top-level
+> > clk.h API from within your clk_ops callbacks.
+> > 
+> 
+> Right now, the clocks are registered with clk_register_mux,
+> clk_register_div and clk_register_gate calls which in turn set
+> appropriate clk_ops callbacks. If I need to wrap the register access
+> during these clk_ops callbacks with clk_enable/clk_disable of interface
+> lock, I would have to reimplement the clk_ops callbacks in
+> clk-exynos-audss driver.
+> 
+> Is that the approach that you are suggesting?
 
+Is there another way? This is one of the reasons why I don't like the
+basic clock types being subclassed by clock drivers. It's a brittle
+design that tends to fall over as soon as the basic clock types don't do
+what you need. And don't even get me started on how ugly clk-composite.c
+is! ;-)
+
+One hack you can do is to subclass the clk_ops for each of the basic
+clock types you use and add .prepare and .unprepare callbacks to them
+which enable/disable the interface clock. Some examples of this are
+merged and it may be what your clock driver does already. However this
+may not be very optimal if your consumer driver simply calls
+clk_prepare_enable at probe-time and never turns the interface clock off
+again...
+
+> 
+> > I might be totally wrong about the cause of the hang, but that's my best
+> > guess based on everyone's bug reports.
+> > 
+> 
+> There are 5 gate clocks within MAU block. While disabling the unused
+> clocks, if CLK_MAU_EPLL is disabled first, then we are getting this
+> system hang.
+
+Right. Then your accesses to the clock control register need to be
+protected by a clk_enable/clk_disable critical section.
+
+Regards,
+Mike
+
+> 
+> 
+> > Regards,
+> > Mike
+> > 
+> >>
+> >>>
+> >>> You mention calling clk_get on child clocks of the AUDSS mux fails, but
+> >>> I cannot imagine why. How can the enable/disable state of a clock affect
+> >>> the ability to clk_get other clocks?
+> >>>
+> >>
+> >> I might have a little vogue while updating the commit message
+> >> (mentioning about clk_get which surely is only a s/w operation), but
+> >> there is definitely some issue with handling those clocks under given
+> >> scenario.
+> >>
+> >> I am on leave till end of this week, so I will update you more with
+> >> the logs on Monday.
+> >>
+> >> Thanks,
+> >> --
+> >> Tushar
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+> 
+> -- 
+> Tushar Behera
