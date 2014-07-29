@@ -1,69 +1,80 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [LINUX PATCH] ARM: zynq: DT: Remove DMA from board DTs
-Date: Tue, 29 Jul 2014 07:33:20 +0200
-Message-ID: <53D73220.8040704@monstr.eu>
-References: <1406564643-10417-1-git-send-email-soren.brinkmann@xilinx.com> <53D67B3C.3050401@suse.de>
-Reply-To: monstr@monstr.eu
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 00/15] Add Flexgen Clock support
+Date: Mon, 28 Jul 2014 22:44:36 -0700
+Message-ID: <20140729054436.4906.44690@quantum>
+References: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="WcQJ1v8lQmWQwM5dhVx9FOalOMpL3Fgb2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D67B3C.3050401@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---WcQJ1v8lQmWQwM5dhVx9FOalOMpL3Fgb2
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Quoting Gabriel FERNANDEZ (2014-07-15 08:20:16)
+> Changes in v3:
+>  - Change commit message
+>  - Remove uncessary (void *) cast
+>  - add a block diagram for flexgen clock binding documentation
+> 
+> Changes in v2:
+>  - use static const for clkgen_pll_data and stm_fs tables (from
+>    Peter Griffin review)
+>  - add 326 and 333 Mhz frequencies
+>  - cosmetic correction in st,clkgen-vcc.txt
+>  - use of kcalloc instead of kzalloc in drivers/clk/st/clk-flexgen.c
+> 
+> The goal of this series is to add Flexgen clock support to ST SoCs.
+> 
+> A Flexgen clock is composed by:
+>   - a clock cross bar (represented by a mux element)
+>   - a pre and final dividers (represented by a divider and gate elements)
 
-On 07/28/2014 06:33 PM, Andreas F=C3=A4rber wrote:
-> Am 28.07.2014 18:24, schrieb Soren Brinkmann:
->> The DMA engine is enabled for all DTs that derive from zynq-7000.dtsi.=
+Applied to clk-next! I performed 's/drivers: //' on the $SUBJECT for
+most of the patches.
 
->> There is no need to override the 'status' property in board DTs.
->>
->> Cc: Andreas F=C3=A4rber <afaerber@suse.de>
->> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->> ---
->> When the 'status' property was removed from the DMA node, this had bee=
-n
->> overlooked.
->=20
-> Indeed,
->=20
-> Reviewed-by: Andreas F=C3=A4rber <afaerber@suse.de>
+Regards,
+Mike
 
-Applied.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---WcQJ1v8lQmWQwM5dhVx9FOalOMpL3Fgb2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlPXMiQACgkQykllyylKDCE/1QCfRd6Cwp6cuVGqUmaTjoxD/RPj
-PO0AniEik4vAR1ITapBTgVrpeKaqtUNM
-=p78X
------END PGP SIGNATURE-----
-
---WcQJ1v8lQmWQwM5dhVx9FOalOMpL3Fgb2--
+> 
+> Tested on B2120 board.
+> 
+> Gabriel Fernandez (15):
+>   clk: st: Update ST clock binding documentation
+>   drivers: clk: st: use static const for stm_fs tables
+>   drivers: clk: st: use static const for clkgen_pll_data tables
+>   drivers: clk: st: Remove uncessary (void *) cast
+>   clk: st: Adds Flexgen clock binding
+>   drivers: clk: st: STiH407: Support for Flexgen Clocks
+>   drivers: clk: st: STiH407: Support for A9 MUX Clocks
+>   drivers: clk: st: STiH407: Support for clockgenA0
+>   drivers: clk: st: Add polarity bit indication
+>   drivers: clk: st: Add quadfs reset handling
+>   drivers: clk: st: STiH407: Support for clockgenC0
+>   drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
+>   drivers: clk: st: STiH407: Support for clockgenA9
+>   drivers: clk: st: Update frequency tables for fs660c32 and fs432c65
+>   drivers: clk: st: Use round to closest divider flag
+> 
+>  .../bindings/clock/st/st,clkgen-divmux.txt         |  28 +-
+>  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |   6 +-
+>  .../devicetree/bindings/clock/st/st,clkgen-pll.txt |  17 +-
+>  .../bindings/clock/st/st,clkgen-prediv.txt         |   8 +-
+>  .../devicetree/bindings/clock/st/st,clkgen-vcc.txt |  34 ++-
+>  .../devicetree/bindings/clock/st/st,clkgen.txt     |  59 ++--
+>  .../devicetree/bindings/clock/st/st,flexgen.txt    | 119 ++++++++
+>  .../devicetree/bindings/clock/st/st,quadfs.txt     |  15 +-
+>  drivers/clk/st/Makefile                            |   2 +-
+>  drivers/clk/st/clk-flexgen.c                       | 331 +++++++++++++++++++++
+>  drivers/clk/st/clkgen-fsyn.c                       | 223 +++++++++++---
+>  drivers/clk/st/clkgen-mux.c                        |  12 +-
+>  drivers/clk/st/clkgen-pll.c                        |  94 +++++-
+>  13 files changed, 828 insertions(+), 120 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+>  create mode 100644 drivers/clk/st/clk-flexgen.c
+> 
+> -- 
+> 1.9.1
+> 
