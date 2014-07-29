@@ -1,101 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: exynos5250: Fold common ChromeOS parts
- into Snow
-Date: Tue, 29 Jul 2014 08:27:13 -0700
-Message-ID: <CAD=FV=VMuP3necmUqpzd2igvkr3BDcf_01b-0vuDvyQpsNxoRw@mail.gmail.com>
-References: <1405704009-8430-1-git-send-email-afaerber@suse.de>
-	<1405704009-8430-4-git-send-email-afaerber@suse.de>
-	<CABxcv=kP2PCcNCtM1WUXx5wGG4m-jdw-P1dw0boaSwdJpoX=jQ@mail.gmail.com>
-	<CAD=FV=V-7+Jj7b8-fQL1PiQhNmhiGOPJzitGd__OUQLDteO_8g@mail.gmail.com>
-	<CABxcv=nDsKSdDtVZKpcTP+=3pbeTswJRCUvvXVx98p+1Zzz0Bg@mail.gmail.com>
-	<53D79AD3.8020700@suse.de>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 30/35] irqchip: add irq-omap-intc.h header
+Date: Tue, 29 Jul 2014 08:28:38 -0700
+Message-ID: <20140729152838.GW29045@atomide.com>
+References: <1406582183-696-1-git-send-email-balbi@ti.com>
+ <1406582183-696-31-git-send-email-balbi@ti.com>
+ <20140729120133.GQ29045@atomide.com>
+ <20140729141045.GA17808@saruman.home>
+ <20140729150655.GU29045@atomide.com>
+ <20140729151936.GC17808@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D79AD3.8020700@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140729151936.GC17808-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Andreas,
+* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 08:22]:
+> On Tue, Jul 29, 2014 at 08:06:55AM -0700, Tony Lindgren wrote:
+> > * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 07:13]:
+> > > This is the third time I rebase the series after a long hiatus and it
+> > > always comes out to the same result -> "let's wait some more".
+> > 
+> > Nope, it's always been "this series causes PM regressions"
+> 
+> you just said that we haven't been in any position to really test this,
+> so can it be that the status has always been "this series causes PM
+> regressions". We couldn't test that before, right ?
 
-On Tue, Jul 29, 2014 at 6:00 AM, Andreas F=C3=A4rber <afaerber@suse.de>=
- wrote:
-> Hi Javier and Doug,
->
-> Am 25.07.2014 19:02, schrieb Javier Martinez Canillas:
->> On Fri, Jul 25, 2014 at 6:43 PM, Doug Anderson <dianders@chromium.or=
-g> wrote:
->>> On Fri, Jul 25, 2014 at 9:35 AM, Javier Martinez Canillas
->>> <javier@dowhile0.org> wrote:
->>>> Hello Andreas,
->>>>
->>>> On Fri, Jul 18, 2014 at 7:20 PM, Andreas F=C3=A4rber <afaerber@sus=
-e.de> wrote:
->>>>>
->>>>> +       memory {
->>>>> +               reg =3D <0x40000000 0x80000000>;
->>>>> +       };
->>>>> +
->>>>> +       chosen {
->>>>> +       };
->>>>> +
->>>>
->>>> Is there a reason for an empty chosen node? Same for the Spring DT=
-S.
->>>
->>> I know that the bootloader (U-Boot) fills this in.  I'd have to dou=
-ble
->>> check how the bootloader handles the node not being there to begin
->>> with.
->>
->> Yes, U-Boot fills this but if the node does not exist in the FDT, it
->> creates one. Take a look at fdt_chosen() in common/fdt_support.c [0]=
-=2E
->>
->> So I think it's better to just remove it since is empty.
->
-> Hm, in different context it was stated that device trees shouldn't re=
-ly
-> on bootloader behavior (for a /memory node on Zynq we ended up
-> specifying the size cell with the real value despite U-Boot overridin=
-g
-> it to a lesser value).
->
-> Can we instead settle on filling this node with defaults? :)
-> bootargs =3D "console=3Dtty1"; would be my choice for Spring. Would t=
-hat be
-> applicable for Snow as well?
+It's been working for legacy booting for years with the mainline
+kernel, but not for device tree based booting until with v3.16-rc4.
+I believe I tested your earlier series with my pending DT patches
+though.
+ 
+> > and few other minor comments. And we have not been in any
+> > position to really test that until with v3.16-rc4. And then
+> > you always run out of time and nobody else does anything :)
+> 
+> sure, I have other stuff to do as well.
 
-Personally I think that there's not a lot of use for including
-bootargs.  Every single person will need different bootargs since
-everyone will have a different boot source (eMMC partitioin 0, eMMC
-partition3, SD card, USB, etc).  You have to rely on the bootloader
-for _something_.
+Right :) I and others can provide some help here, but it's
+the mr. patch author that needs to follow up on this series
+too :p
 
+Regards,
 
-> Not sure how to specify that via linux,stdout-path property.
->
-> I believe this would be a follow-up patch either way.
-
-Right
-
-
-> Since there's at least two series out there trying to fiddle with
-> -cros-common.dtsi, including one that drops the slot sub-node of the =
-MMC
-> and one that adds CPU power supply, it would be nice if we can get th=
-e
-> -cros-common parts sorted out and applied. Can you ack/review 1-2?
-> Should I squash them in a v3?
-
-Yeah, it will be a fight to see who gets landed first...  :-P
-
-I was thinking you were going to spin the patches and I'd do another
-batch of review, but I think I can mark the first two as Reveiwed-by
-if it's helpful to you.  Let me do one more double-check when I get to
-my desk.
-
--Doug
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
