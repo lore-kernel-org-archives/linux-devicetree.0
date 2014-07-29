@@ -1,47 +1,60 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 RESEND 2/4] drivers: of: initialize and assign reserved
- memory to newly created devices
-Date: Tue, 29 Jul 2014 16:47:04 +0200
-Message-ID: <53D7B3E8.6070906@samsung.com>
-References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
- <1405326487-15346-3-git-send-email-m.szyprowski@samsung.com>
- <20140728141700.55FC4C408EA@trevor.secretlab.ca>
+From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] tty: omap-serial: prevent division by zero
+Date: Tue, 29 Jul 2014 17:00:14 +0200
+Message-ID: <20140729150014.GC32689@ci00147.xsens-tech.local>
+References: <1406645577-18620-1-git-send-email-frans.klaver@xsens.com>
+ <1406645577-18620-2-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140728141700.55FC4C408EA@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, Jon Medhurst <tixy@linaro.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, "Aneesh Kumar K.V." <aneesh.kumar@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406645577-18620-2-git-send-email-frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Sorry, missed some CC's in git send-email.
 
-On 2014-07-28 16:17, Grant Likely wrote:
-> On Mon, 14 Jul 2014 10:28:05 +0200, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->> Use recently introduced of_reserved_mem_device_init() function to
->> automatically assign respective reserved memory region to the newly created
->> platform and amba device.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> I'm still not okay with this patch. I don't think it is appropriate to
-> add the hook into the generic path that gets used for every platform
-> device. The devices that need reserved memory should explicitly request
-> it, and any setup be done at that time.
-
-Okay... I thought that it will be easier to have it done in generic 
-code, if You don't
-think so, then I give up and we will add it in all drivers requiring 
-such memory regions.
-
-What about patch 3/4 and 4/4? Would it be possible to have your ack to 
-get them merged?
-Right now patch 4/4 depends on changes from akpm tree, so it will be 
-best to merge them
-to akpm tree.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+On Tue, Jul 29, 2014 at 04:52:55PM +0200, Frans Klaver wrote:
+> If the chosen baud rate is large enough (e.g. 3.5 megabaud), the
+> calculated n13 and n16 values in serial_omap_baud_is_mode16 may become
+> 0. This causes a division by zero when calculating the difference
+> between calculated and desired baud rates. To prevent this, cap n13 and
+> n16 on 1.
+> 
+> Signed-off-by: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/tty/serial/omap-serial.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+> index d017cec..e454b7c 100644
+> --- a/drivers/tty/serial/omap-serial.c
+> +++ b/drivers/tty/serial/omap-serial.c
+> @@ -254,8 +254,16 @@ serial_omap_baud_is_mode16(struct uart_port *port, unsigned int baud)
+>  {
+>  	unsigned int n13 = port->uartclk / (13 * baud);
+>  	unsigned int n16 = port->uartclk / (16 * baud);
+> -	int baudAbsDiff13 = baud - (port->uartclk / (13 * n13));
+> -	int baudAbsDiff16 = baud - (port->uartclk / (16 * n16));
+> +	int baudAbsDiff13;
+> +	int baudAbsDiff16;
+> +
+> +	if (n13 == 0)
+> +		n13 = 1;
+> +	if (n16 == 0)
+> +		n16 = 1;
+> +
+> +	baudAbsDiff13 = baud - (port->uartclk / (13 * n13));
+> +	baudAbsDiff16 = baud - (port->uartclk / (16 * n16));
+>  	if (baudAbsDiff13 < 0)
+>  		baudAbsDiff13 = -baudAbsDiff13;
+>  	if (baudAbsDiff16 < 0)
+> -- 
+> 1.9.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
