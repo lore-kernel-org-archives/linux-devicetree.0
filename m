@@ -1,84 +1,104 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks
- handled by clock_ops domain
-Date: Mon, 28 Jul 2014 23:52:34 -0600
-Message-ID: <CACxGe6uMke5vgzcNC9xUqjr2bHJ4QFHD6YjocSZWq8Ccx8Mm6A@mail.gmail.com>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
- <1402592023-13416-1-git-send-email-grygorii.strashko@ti.com>
- <1402592023-13416-3-git-send-email-grygorii.strashko@ti.com>
- <20140728140533.6E916C4116F@trevor.secretlab.ca> <53D68CC4.1010704@ti.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv4 5/5] mtd: gpmi: prevent creating a new BBT when
+ blockmark swapping is disabled
+Date: Tue, 29 Jul 2014 08:31:45 +0200
+Message-ID: <20140729083145.647b77fc@ipc1.ka-ro>
+References: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-2-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-4-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-5-git-send-email-LW@KARO-electronics.de>
+ <1402579245-13377-6-git-send-email-LW@KARO-electronics.de>
+ <20140728052906.GA3095@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53D68CC4.1010704@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140728052906.GA3095@norris-Latitude-E6410>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, linux-mtd@lists.infradead.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@freescale.com>, linux-kernel@vger.kernel.org, Huang
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 11:47 AM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
-> Hi Grant.
->
-> On 07/28/2014 05:05 PM, Grant Likely wrote:
->> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->>> Use "clkops-clocks" property to specify clocks handled by
->>> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
->>> set of clocks will be handled by Runtime PM through clock_ops
->>> Pm domain.
->>>
->>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>> ---
->>>   drivers/of/of_clk.c |    7 ++-----
->>>   1 file changed, 2 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
->>> index 35f5e9f..5f9b90e 100644
->>> --- a/drivers/of/of_clk.c
->>> +++ b/drivers/of/of_clk.c
->>> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct device_node *np,
->>>      struct clk *clk;
->>>      int error;
->>>
->>> -    for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
->>> -            if (!clk_may_runtime_pm(clk)) {
->>> -                    clk_put(clk);
->>> -                    continue;
->>> -            }
->>> +    for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
->>> +                 !IS_ERR(clk); i++) {
->>
->> This really looks like an ABI break to me. What happens to all the
->> existing platforms who don't have this new clkops-clocks in their device
->> tree?
->
-> Agree. This patch as is will break such platforms.
-> As possible solution for above problem - the NULL can be used as clock's prefix
-> by default and platform code can configure new value of clock's prefix during
-> initialization.
-> In addition, to make this solution full the of_clk_get_by_name() will
-> need to be modified too.
->
-> But note pls, this is pure RFC patches which I did to find out the answer on questions:
-> - What is better: maintain Runtime PM clocks configuration in DT or in code?
-
-In code. I don't think it is workable to embed runtime PM behaviour
-into the DT bindings. I think there will be too much variance in what
-hardware requires. We can create helpers to make this simpler, but I
-don't think it is a good idea to set it up automatically without any
-control from the driver itself.
-
->
-> - Where and when to call of_clk_register_runtime_pm_clocks()?
->   Bus notifier/ platform core/ device drivers
-
-I would say in device drivers.
-
-> Also, May be platform dependent solution [1] can be acceptable for now?
->
-> [1] https://lkml.org/lkml/2014/7/25/630
-
-I need to look at the series before I comment. I've flagged it and
-will hopefully look at it tomorrow.
-
-g.
+SGksCgpCcmlhbiBOb3JyaXMgd3JvdGU6Cj4gSGkgTG90aGFyLAo+IAo+IE9uIFRodSwgSnVuIDEy
+LCAyMDE0IGF0IDAzOjIwOjQ1UE0gKzAyMDAsIExvdGhhciBXYcOfbWFubiB3cm90ZToKPiA+IFdp
+dGhvdXQgYmxvY2ttYXJrIHN3YXBwaW5nLCB0aGVyZSBpcyBubyB1c2UgaW4gY3JlYXRpbmcgYSBC
+QlQgZnJvbQo+ID4gc2NyYXRjaCwgc28gdXNlIGEgQkJUIGRlc2NyaXB0b3Igd2l0aCBOQU5EX0JC
+VF9DUkVBVEUgdW5zZXQgaW4gdGhpcwo+ID4gY2FzZS4KPiAKPiBJJ20gY3VyaW91czogd2hhdCBp
+cyB5b3VyIHBsYW4gaWYgdGhlcmUgaXMgbm8gQkJUIGF2YWlsYWJsZSBvbiB5b3VyCj4gZGV2aWNl
+LCBvciBpZiBpdCBldmVyIGdldHMgY29ycnVwdGVkPyBJSVVDLCBuYW5kX2JidCB3aWxsIGp1c3Qg
+YXNzdW1lCj4geW91IGhhdmUgbm8gYmFkIGJsb2NrcywgYW5kIGl0IHdpbGwgbmV2ZXIgd3JpdGUg
+YSBiYWQgYmxvY2sgdGFibGUgdG8KPiBmbGFzaC4gVGhpcyBhbHNvIG1lYW5zIG5vIHN1YnNlcXVl
+bnQgZGlzY292ZXJhYmxlIGJhZCBibG9ja3MgY2FuIGJlCj4gcmVjb3JkZWQgYWNyb3NzIHBvd2Vy
+IGN5Y2xlcywgSSBiZWxpZXZlLgo+IApUaGF0IHdvbid0IGhhcHBlbiAodW5sZXNzIGl0J3Mgbm90
+IHBvc3NpYmxlIHRvIGNyZWF0ZSBhIEJCVCBiZWNhdXNlIGFsbAp0aGUgcG9zc2libGUgYmxvY2tz
+IGZvciB0aGUgQkJUIGFyZSBiYWQpLCBiZWNhdXNlIHRoZSBib290bG9hZGVyIHdpbGwKaGF2ZSBj
+cmVhdGVkIG9uZSBiZWZvcmUgTGludXggaXMgc3RhcnRlZC4KCj4gTWF5YmUgeW91IGRvbid0IHdh
+bnQgdG8gc3BlY2lmeSB5b3VyIG93biBuYW5kX2JidF9kZXNjcidzIGF0IGFsbCwgYnV0Cj4geW91
+IGp1c3QgbmVlZCB0byBzZXQ6Cj4gCj4gCWNoaXAtPmJidF9vcHRpb25zIHw9IE5BTkRfQkJUX0NS
+RUFURV9FTVBUWSB8IE5BTkRfQkJUX05PX09PQjsKPiAKPiAoTm90ZTogdGhlcmUncyBhIGxpdHRs
+ZSBiaXQgb2YgZnV6emluZXNzIGFib3V0IE5BTkRfQkJUXyogZmxhZ3MsIHdoZXJlCj4gc29tZSBh
+cmUgdGFyZ2V0ZWQgZm9yIHRoZSBuYW5kX2NoaXA6OmJidF9vcHRpb25zIGZpZWxkLCBhbmQgb3Ro
+ZXJzCj4gYmVsb25nIGluIHN0cnVjdCBuYW5kX2JidF9kZXNjcjo6b3B0aW9ucy4pCj4gCj4gQnV0
+IGlmIGZvciBzb21lIHJlYXNvbiB3ZSBuZWVkIHRvIGtlZXAgdGhpcyBwYXRjaCwgYSBjb21tZW50
+IGJlbG93Ogo+IAo+ID4gU2lnbmVkLW9mZi1ieTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVs
+ZWN0cm9uaWNzLmRlPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3Bt
+aS1uYW5kLmMgfCAgIDI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKy0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5kLmMgYi9kcml2ZXJzL210
+ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+ID4gaW5kZXggMzc1MzdiNC4uZmM3MTBkNyAx
+MDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCj4g
+PiArKysgYi9kcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYwo+ID4gQEAgLTQz
+LDYgKzQzLDI5IEBAIHN0YXRpYyBzdHJ1Y3QgbmFuZF9iYnRfZGVzY3IgZ3BtaV9iYnRfZGVzY3Ig
+PSB7Cj4gPiAgCS5wYXR0ZXJuCT0gc2Nhbl9mZl9wYXR0ZXJuCj4gPiAgfTsKPiA+ICAKPiA+ICtz
+dGF0aWMgdWludDhfdCBiYnRfcGF0dGVybltdID0geydCJywgJ2InLCAndCcsICcwJyB9Owo+ID4g
+K3N0YXRpYyB1aW50OF90IG1pcnJvcl9wYXR0ZXJuW10gPSB7JzEnLCAndCcsICdiJywgJ0InIH07
+Cj4gPiArCj4gPiArc3RhdGljIHN0cnVjdCBuYW5kX2JidF9kZXNjciBiYnRfbWFpbl9ub19vb2Jf
+ZGVzY3IgPSB7Cj4gPiArCS5vcHRpb25zID0gTkFORF9CQlRfTEFTVEJMT0NLIHwgTkFORF9CQlRf
+V1JJVEUgfAo+ID4gKwlOQU5EX0JCVF8yQklUIHwgTkFORF9CQlRfVkVSU0lPTiB8IE5BTkRfQkJU
+X1BFUkNISVAgfAo+ID4gKwlOQU5EX0JCVF9OT19PT0IsCj4gCj4gUGxlYXNlIGluZGVudCB0aGUg
+YWJvdmUgdHdvIGxpbmVzIGEgYml0LCBwcmVmZXJhYmx5IG1hdGNoaW5nIHRoZQo+IGluZGVudGF0
+aW9uIG9mIE5BTkRfQkJUX0xBU1RCTE9DSy4gSXQgc2hvdWxkIGJlIGNsZWFyIHRoYXQgdGhpcyBp
+cyBhCj4gY29udGludWF0aW9uIG9mIHRoZSAnLm9wdGlvbnMnIGluaXRpYWxpemF0aW9uLgo+IApP
+Sy4KCj4gPiArCS5sZW4gPSA0LAo+ID4gKwkudmVyb2ZmcyA9IDQsCj4gPiArCS5tYXhibG9ja3Mg
+PSBOQU5EX0JCVF9TQ0FOX01BWEJMT0NLUywKPiA+ICsJLnBhdHRlcm4gPSBiYnRfcGF0dGVybiwK
+PiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3QgbmFuZF9iYnRfZGVzY3IgYmJ0X21pcnJv
+cl9ub19vb2JfZGVzY3IgPSB7Cj4gPiArCS5vcHRpb25zID0gTkFORF9CQlRfTEFTVEJMT0NLIHwg
+TkFORF9CQlRfV1JJVEUgfAo+ID4gKwlOQU5EX0JCVF8yQklUIHwgTkFORF9CQlRfVkVSU0lPTiB8
+IE5BTkRfQkJUX1BFUkNISVAgfAo+ID4gKwlOQU5EX0JCVF9OT19PT0IsCj4gCj4gU2FtZSBoZXJl
+Lgo+IAo+ID4gKwkubGVuID0gNCwKPiA+ICsJLnZlcm9mZnMgPSA0LAo+ID4gKwkubWF4YmxvY2tz
+ID0gTkFORF9CQlRfU0NBTl9NQVhCTE9DS1MsCj4gPiArCS5wYXR0ZXJuID0gbWlycm9yX3BhdHRl
+cm4sCj4gPiArfTsKPiA+ICsKPiA+ICAvKgo+ID4gICAqIFdlIG1heSBjaGFuZ2UgdGhlIGxheW91
+dCBpZiB3ZSBjYW4gZ2V0IHRoZSBFQ0MgaW5mbyBmcm9tIHRoZSBkYXRhc2hlZXQsCj4gPiAgICog
+ZWxzZSB3ZSB3aWxsIHVzZSBhbGwgdGhlIChwYWdlICsgT09CKS4KPiA+IEBAIC0xNzI4LDggKzE3
+NTEsMTEgQEAgc3RhdGljIGludCBncG1pX25hbmRfaW5pdChzdHJ1Y3QgZ3BtaV9uYW5kX2RhdGEg
+KnRoaXMpCj4gPiAgCQkJY2hpcC0+YmJ0X29wdGlvbnMgfD0gTkFORF9CQlRfTk9fT09CX0JCTTsK
+PiA+ICAKPiA+ICAJCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wodGhpcy0+ZGV2LT5vZl9ub2Rl
+LAo+ID4gLQkJCQkJCSJmc2wsbm8tYmxvY2ttYXJrLXN3YXAiKSkKPiA+ICsJCQkJCQkiZnNsLG5v
+LWJsb2NrbWFyay1zd2FwIikpIHsKPiA+ICAJCQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSBmYWxz
+ZTsKPiA+ICsJCQljaGlwLT5iYnRfdGQgPSAmYmJ0X21haW5fbm9fb29iX2Rlc2NyOwo+ID4gKwkJ
+CWNoaXAtPmJidF9tZCA9ICZiYnRfbWlycm9yX25vX29vYl9kZXNjcjsKPiAKPiBNeSBpbml0aWFs
+IHJlY29tbWVuZGF0aW9uIGZvciB0aGlzIHBhdGNoIGFuZCB0aGUgcHJldmlvdXMgcGF0Y2ggbWVh
+bnMKPiB0aGF0IHlvdSBjb3VsZCBqdXN0IGRyb3AgYm90aCBwYXRjaGVzIGFuZCByZXBsYWNlIHRo
+ZW0gd2l0aCB0aGUKPiBmb2xsb3dpbmc6Cj4gCj4gCQkJLyogQ29tbWVudCBoZXJlIHRvIGV4cGxh
+aW4gd2h5Li4uICovCj4gCQkJY2hpcC0+YmJ0X29wdGlvbnMgfD0gTkFORF9CQlRfQ1JFQVRFX0VN
+UFRZIHwKPiAJCQkJCSAgICAgTkFORF9CQlRfTk9fT09CIHwKPiAJCQkJCSAgICAgTkFORF9CQlRf
+Tk9fT09CX0JCTTsKT0suCgpMb3RoYXIgV2HDn21hbm4KLS0gCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgpLYS1SbyBlbGVjdHJvbmlj
+cyBHbWJIIHwgUGFzY2Fsc3RyYcOfZSAyMiB8IEQgLSA1MjA3NiBBYWNoZW4KUGhvbmU6ICs0OSAy
+NDA4IDE0MDItMCB8IEZheDogKzQ5IDI0MDggMTQwMi0xMApHZXNjaMOkZnRzZsO8aHJlcjogTWF0
+dGhpYXMgS2F1c3NlbgpIYW5kZWxzcmVnaXN0ZXJlaW50cmFnOiBBbXRzZ2VyaWNodCBBYWNoZW4s
+IEhSQiA0OTk2Cgp3d3cua2Fyby1lbGVjdHJvbmljcy5kZSB8IGluZm9Aa2Fyby1lbGVjdHJvbmlj
+cy5kZQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
