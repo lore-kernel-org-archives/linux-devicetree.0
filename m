@@ -1,91 +1,53 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v3 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI
- PMICs
-Date: Tue, 29 Jul 2014 14:54:50 -0700
-Message-ID: <53D8182A.5050204@codeaurora.org>
-References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com> <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: [PATCH net v3 0/6] net: stmmac: Improve mcast/ucast filter for snps
+Date: Tue, 29 Jul 2014 17:06:41 -0500
+Message-ID: <1406671607-27368-1-git-send-email-vbridgers2013@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, peppe.cavallaro@st.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org
+Cc: dinguyen@altera.com, davem@davemloft.net, vbridgers2013@gmail.com, vbridger@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
-> From: Josh Cartwright <joshc@codeaurora.org>
-> 
-> The Qualcomm SPMI PMIC chips are components used with the
-> Snapdragon 800 series SoC family.  This driver exists
-> largely as a glue mfd component, it exists to be an owner
-> of an SPMI regmap for children devices described in
-> device tree.
-> 
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/mfd/Kconfig       |   16 +++++++++++
->  drivers/mfd/Makefile      |    1 +
->  drivers/mfd/pm8xxx-spmi.c |   65 +++++++++++++++++++++++++++++++++++++++++++++
+This patch series adds Synopsys specific bindings for the Synopsys EMAC
+filter characteristics since those are implementation dependent. The
+multicast and unicast filtering code was improved to handle different
+configuration variations based on device tree settings. 
 
-Would it be possible to rename this driver: qcom-spmi-pmic.c?  The driver
-will be supporting several PMICs that do not fit the pm8xxx naming scheme.
- One of which is even specified in the compatible list of this driver
-(pma8084).  There is presently downstream support for the following PMICs:
-PM8019, PM8110, PM8226, PM8841, PM8916, PM8941, PM8994, PMA8084, PMD9635,
-PMI8962, and PMI8994 [1].  Four of these do not fit the "PM8XXX" template.
+I verified the operation of the multicast and unicast filters through 
+Synopsys support as requested during the V1 review, and tested the GMAC
+configuration on an Altera Cyclone 5 SOC (which supports 256 multicast
+bins and 128 Unicast addresses). The 10/100 variant of this driver
+modification was not tested, although it was compile tested. I shared
+the email thread results of the investigation through Synopsys with the
+stmmac maintainer.
 
-If we can agree on changing the file name for the driver, then all other
-instances of "pm8xxx" would need to be renamed in this patch series (e.g.
-config options, function names, struct names, DT binding documentation, etc.)
+---
+V3: Break up the patch into interface and functional change patches
+    per review comments
+V2: Confirm with Synopsys methods to determine number of Multicast bins
+    and Unicast address filter entries per first round review comments.
 
-It would probably be good to rename pm8xxx-ssbi.c to qcom-ssbi-pmic.c as
-well in order to maintain consistency.
+Vince Bridgers (6):
+  net: stmmac: Change MAC interface to support multiple filter
+    configurations
+  net: stmmac: Correct set_filter for multicast and unicast cases
+  dts: Add bindings for multicast hash bins and perfect filter entries
+  ARM: socfpga: Add socfpga Ethernet filter attributes entries
+  net: stmmac: Support devicetree configs for mcast and ucast filter
+    entries
+  net: stmmac: squelch sparse warning with casts
 
-(...)
-> +static const struct regmap_config pm8xxx_regmap_config = {
-> +	.reg_bits	= 16,
-> +	.val_bits	= 8,
-> +	.max_register	= 0xffff,
-
-Can you please add the following line here?
-
-	.fast_io	= true;
-
-This will cause a spinlock to be held during SPMI transactions instead of
-a mutex lock.  This is needed because several downstream peripheral
-drivers need to make SPMI read and write calls from atomic context.  I
-have commented on this point in a previous thread with specific examples [2].
-
-> +};
-
-(...)
-> +static const struct of_device_id pm8xxx_id_table[] = {
-> +	{ .compatible = "qcom,pm8941" },
-> +	{ .compatible = "qcom,pm8841" },
-> +	{ .compatible = "qcom,pma8084" },
-
-Would it be possible to add a generic compatible string as well?  Perhaps
-something like "qcom,spmi-pmic" could be used.  This driver is not doing
-anything with the PMIC specific compatible strings.  The generic
-compatible string could be specified in device tree in conjunction a PMIC
-specific string that is not present in this list.  That way, this driver
-file would not need to be touched as new PMIC chips are introduced unless
-some weird workaround is needed.  In that case, the PMIC specific
-compatible string could be added to the list along with whatever special
-function is needed to handle it.
-
-Take care,
-David Collins
-
-[1]:
-https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/arch/arm/boot/dts/qcom?h=msm-3.10
-
-[2]: https://lkml.org/lkml/2014/4/25/720
+ Documentation/devicetree/bindings/net/stmmac.txt   |    6 +
+ arch/arm/boot/dts/socfpga.dtsi                     |    4 +
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   47 ++++---
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |    3 +-
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |  131 ++++++++++++++------
+ .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |   27 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |    6 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   38 +++---
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   71 ++++++++++-
+ include/linux/stmmac.h                             |    2 +
+ 10 files changed, 240 insertions(+), 95 deletions(-)
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.9.5
