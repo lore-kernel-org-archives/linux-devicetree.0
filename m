@@ -1,54 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 1/5] regulator: core: Get voltage from parent if not
- available
-Date: Tue, 29 Jul 2014 19:26:01 +0100
-Message-ID: <20140729182601.GA17528@sirena.org.uk>
-References: <1406651339-28901-1-git-send-email-javier.martinez@collabora.co.uk>
- <1406651339-28901-2-git-send-email-javier.martinez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="A5jN/zRxu3Z2JiN/"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406651339-28901-2-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
+Date: Tue, 29 Jul 2014 21:12:05 +0200
+Message-ID: <1406661128-7614-2-git-send-email-heiko@sntech.de>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406661128-7614-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The clock-tree contains clocks that should never get disabled automatically.
+One example are the base ACLKs, the base supplies for all peripherals.
 
---A5jN/zRxu3Z2JiN/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Therefore add a structure similar to the sunxi clock-tree to protect these
+special clocks from being disabled.
 
-On Tue, Jul 29, 2014 at 06:28:55PM +0200, Javier Martinez Canillas wrote:
-> Load switches are modeled as regulators but they just provide
-> the voltage of their parent input supply. So the drivers for
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
+ drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
+ drivers/clk/rockchip/clk.c        | 13 +++++++++++++
+ drivers/clk/rockchip/clk.h        |  1 +
+ 4 files changed, 28 insertions(+)
 
-Applied, thanks.  The term "load switch" is a bit unusual - they're
-usually just called switches (or sometimes FETs since that tends to be
-the implementation).
+diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
+index a83a6d8..5aef277 100644
+--- a/drivers/clk/rockchip/clk-rk3188.c
++++ b/drivers/clk/rockchip/clk-rk3188.c
+@@ -599,6 +599,11 @@ static struct rockchip_clk_branch rk3188_clk_branches[] __initdata = {
+ 	GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(8), 13, GFLAGS),
+ };
+ 
++static const char *rk3188_critical_clocks[] __initconst = {
++	"aclk_cpu",
++	"aclk_peri",
++};
++
+ static void __init rk3188_common_clk_init(struct device_node *np)
+ {
+ 	void __iomem *reg_base;
+@@ -628,6 +633,8 @@ static void __init rk3188_common_clk_init(struct device_node *np)
+ 				   RK3188_GRF_SOC_STATUS);
+ 	rockchip_clk_register_branches(common_clk_branches,
+ 				  ARRAY_SIZE(common_clk_branches));
++	rockchip_clk_protect_critical(rk3188_critical_clocks,
++				      ARRAY_SIZE(rk3188_critical_clocks));
+ 
+ 	rockchip_register_softrst(np, 9, reg_base + RK2928_SOFTRST_CON(0),
+ 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 0d8c6c5..6c6f954 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -680,6 +680,11 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	GATE(0, "pclk_isp_in", "ext_isp", 0, RK3288_CLKGATE_CON(16), 3, GFLAGS),
+ };
+ 
++static const char *rk3288_critical_clocks[] __initconst = {
++	"aclk_cpu",
++	"aclk_peri",
++};
++
+ static void __init rk3288_clk_init(struct device_node *np)
+ {
+ 	void __iomem *reg_base;
+@@ -710,6 +715,8 @@ static void __init rk3288_clk_init(struct device_node *np)
+ 				   RK3288_GRF_SOC_STATUS);
+ 	rockchip_clk_register_branches(rk3288_clk_branches,
+ 				  ARRAY_SIZE(rk3288_clk_branches));
++	rockchip_clk_protect_critical(rk3288_critical_clocks,
++				      ARRAY_SIZE(rk3288_critical_clocks));
+ 
+ 	rockchip_register_softrst(np, 9, reg_base + RK3288_SOFTRST_CON(0),
+ 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
+diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+index 278cf9d..9189f1b 100644
+--- a/drivers/clk/rockchip/clk.c
++++ b/drivers/clk/rockchip/clk.c
+@@ -242,3 +242,16 @@ void __init rockchip_clk_register_branches(
+ 		rockchip_clk_add_lookup(clk, list->id);
+ 	}
+ }
++
++void __init rockchip_clk_protect_critical(const char *clocks[], int nclocks)
++{
++	int i;
++
++	/* Protect the clocks that needs to stay on */
++	for (i = 0; i < nclocks; i++) {
++		struct clk *clk = __clk_lookup(clocks[i]);
++
++		if (clk)
++			clk_prepare_enable(clk);
++	}
++}
+diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
+index 887cbde..2b0bca1 100644
+--- a/drivers/clk/rockchip/clk.h
++++ b/drivers/clk/rockchip/clk.h
+@@ -329,6 +329,7 @@ void rockchip_clk_register_branches(struct rockchip_clk_branch *clk_list,
+ 				    unsigned int nr_clk);
+ void rockchip_clk_register_plls(struct rockchip_pll_clock *pll_list,
+ 				unsigned int nr_pll, int grf_lock_offset);
++void rockchip_clk_protect_critical(const char *clocks[], int nclocks);
+ 
+ #define ROCKCHIP_SOFTRST_HIWORD_MASK	BIT(0)
+ 
+-- 
+2.0.1
 
---A5jN/zRxu3Z2JiN/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT1+c2AAoJELSic+t+oim9ok4P/0NGywZ+ZbhbapJG8/wVSlWl
-XpLwUxLXuGLvJDIhfco84MlnwKwHTaxIt+W2ef50LiKYlnXw8Ni/YDPNyqd/tZxL
-tDGuo3liZ9yaMRoc8OfPrPdST9Icy8kkirSNJf+WCtRTZ+FDsGsxRR3R3pqtD+yM
-MVs36Lv/WcmwVocD1eGgFkCj+8Qlve+yvYdPyY4TooHp9VJbX/kB0Ts1cjzVtnkW
-XHQnMWeR8uJZn2j2P9uv2Bmj4O7agDqeuek7oPJA+nh0Fw7IWwBNCSHDDk+MHU8F
-Mx1pdiK8D7+GbbtEb4JWfGJWRRcjzKoIKyz5J89uGt1hA5kbQdn8OmE42y/aLDUQ
-EnurNiDGhrW3sKdiggZ7RS/fzG6bCUuPpXGZ6EEmFIf6wXCPIEYM9M07YpYNJ6mU
-wyHPnQuld1nuosZcMpNkB8vvyYF/mUTn3wcUaDHOvXBuGHj6U763i0j9JK7Maxp2
-GnFpvdc85AU/UMZE5A6aPy04xgsaznN8tc9qABXqXXeDu5EUkw/enHEJCG7l55EA
-3uj9Cgac2ptlKExAo55Ppkw9SVgekfVb3bZj4sS3vU28N2NrOu9dZQctIOkUxgT/
-I+lC/YxXLZL8Sjtfv3mgCeVFOK2ueTjs5eTpCR+iiLb+Czq4lFW9TKJ+HbEhszBR
-nhRv8bnj7ioW2TQxmmwp
-=kh5M
------END PGP SIGNATURE-----
-
---A5jN/zRxu3Z2JiN/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
