@@ -1,191 +1,235 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] mmc: dw_mmc: add support for RK3288
-Date: Tue, 29 Jul 2014 09:38:13 -0700
-Message-ID: <CAD=FV=VtmKCGU1GKd4yQfY=fcggN8xq4p2AEMSoEtz8XydtPDg@mail.gmail.com>
-References: <1404565174-2923-1-git-send-email-addy.ke@rock-chips.com>
-	<1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-	<CAD=FV=X87BViAZ9LsDWcx=AGsSmR9VtqbbVaZSZ_1-P-tgV_ig@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: dt: sun7i: Add Banana Pi board
+Date: Tue, 29 Jul 2014 19:02:28 +0200
+Message-ID: <1406653348-16638-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=X87BViAZ9LsDWcx=AGsSmR9VtqbbVaZSZ_1-P-tgV_ig@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, zyf <zyf@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBLFH36PAKGQE3TK3YTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Addy,
+The Banana Pi is an A20 based development board using Raspberry Pi compatible
+IO headers. It comes with 1 GB RAM, 1 Gb ethernet, 2x USB host, sata, hdmi
+and stereo audio out + various expenansion headers:
 
-On Mon, Jul 28, 2014 at 9:52 PM, Doug Anderson <dianders@chromium.org> wrote:
-> Addy,
->
-> On Wed, Jul 9, 2014 at 8:31 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
->> This patch focuses on clock setting for RK3288 mmc controller.
->>
->> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
->> and if DDR 8bit mode, CLKDIV register must be set 1.
->>
->> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
->> ---
->> changes since v1:
->> - dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
->>   host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
->>
->>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  4 +-
->>  drivers/mmc/host/dw_mmc-pltfm.c                    | 50 +++++++++++++++++++++-
->>  2 files changed, 51 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
->> index c559f3f..e3f95cd 100644
->> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
->> @@ -10,7 +10,9 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
->>  Required Properties:
->>
->>  * compatible: should be
->> -       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
->> +       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
->> +                                                       before RK3288
->> +       - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
->>
->>  Example:
->>
->> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
->> index d4a47a9..809c28b 100644
->> --- a/drivers/mmc/host/dw_mmc-pltfm.c
->> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
->> @@ -21,17 +21,61 @@
->>  #include <linux/mmc/mmc.h>
->>  #include <linux/mmc/dw_mmc.h>
->>  #include <linux/of.h>
->> +#include <linux/clk.h>
->>
->>  #include "dw_mmc.h"
->>  #include "dw_mmc-pltfm.h"
->>
->> +#define RK3288_CLKGEN_DIV      2
->
-> Yup, this matches what I see in the TRM.  It will always divide by 2
-> to allow for 4 phases (picking the phases not supported yet).  Default
-> phase looks to be 180 degrees which is why we've (currently) got
-> USE_HOLD_REG hardcoded.  :)
->
->> +
->>  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
->>  {
->>         *cmdr |= SDMMC_CMD_USE_HOLD_REG;
->>  }
->>
->> -static const struct dw_mci_drv_data rockchip_drv_data = {
->> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
->> +{
->> +       host->bus_hz /= RK3288_CLKGEN_DIV;
->> +
->> +       return 0;
->> +}
->> +
->> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->> +{
->> +       int ret;
->> +       unsigned int cclkin;
->> +
->> +       /*
->> +        * cclkin: source clock of mmc controller.
->> +        * bus_hz: card interface clock generated by CLKGEN.
->> +        * bus_hz = cclkin / RK3288_CLKGEN_DIV;
->> +        * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
->> +        *
->> +        * Note: div can only be 0 or 1
->> +        *       if DDR50 8bit mode, div must be set 1
->
-> Makes sense.  So this function is essentially reversing the logic in
-> dw_mmc and making sure that we'll get the right DIV (0 or 1) in
-> dw_mci_setup_bus().
->
->
->> +        */
->> +       if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
->> +           (ios->timing == MMC_TIMING_UHS_DDR50 ||
->
-> Probably don't need UHS_DDR50 since (I think) you can't have an 8-bit
-> SD card--only MMC, right?  ...but it doesn't hurt.
->
->
->> +            ios->timing == MMC_TIMING_MMC_DDR52))
->> +               cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
->> +       else
->> +               cclkin = ios->clock * RK3288_CLKGEN_DIV;
->> +
->> +       ret = clk_set_rate(host->ciu_clk, cclkin);
->> +       if (ret)
->> +               dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
->> +
->> +       host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
->> +}
->> +
->> +static const struct dw_mci_drv_data rk2928_drv_data = {
->> +       .prepare_command        = dw_mci_pltfm_prepare_command,
->> +};
->> +
->> +static const struct dw_mci_drv_data rk3288_drv_data = {
->>         .prepare_command        = dw_mci_pltfm_prepare_command,
->> +       .set_ios        = dw_mci_rk3288_set_ios,
->> +       .setup_clock    = dw_mci_rk3288_setup_clock,
->>  };
->>
->>  static const struct dw_mci_drv_data socfpga_drv_data = {
->> @@ -95,7 +139,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
->>  static const struct of_device_id dw_mci_pltfm_match[] = {
->>         { .compatible = "snps,dw-mshc", },
->>         { .compatible = "rockchip,rk2928-dw-mshc",
->> -               .data = &rockchip_drv_data },
->> +               .data = &rk2928_drv_data },
->> +       { .compatible = "rockchip,rk3288-dw-mshc",
->> +               .data = &rk3288_drv_data },
->>         { .compatible = "altr,socfpga-dw-mshc",
->>                 .data = &socfpga_drv_data },
->>         {},
->
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Tested-by: Doug Anderson <dianders@chromium.org>
+http://www.bananapi.org/
 
-It turns out that I spoke too soon.  I realized that in my testing I
-didn't have "DDR" mode enabled for my eMMC card.  When I did that then
-your patch didn't work.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 183 +++++++++++++++++++++++++++++++
+ 2 files changed, 184 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
 
-The problem is that dw_mci_setup_bus() doesn't realize that you've
-changed "bus_hz" so it needs to re-run.  You can fix it like this:
-
-
-diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-index 809c28b..bcc96d0 100644
---- a/drivers/mmc/host/dw_mmc-pltfm.c
-+++ b/drivers/mmc/host/dw_mmc-pltfm.c
-@@ -44,6 +44,7 @@ static void dw_mci_rk3288_set_ios(struct dw_mci
-*host, struct mmc_ios *ios)
- {
-        int ret;
-        unsigned int cclkin;
-+       u32 bus_hz;
-
-        /*
-         * cclkin: source clock of mmc controller.
-@@ -65,7 +66,11 @@ static void dw_mci_rk3288_set_ios(struct dw_mci
-*host, struct mmc_ios *ios)
-        if (ret)
-                dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-
--       host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-+       bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-+       if (bus_hz != host->bus_hz) {
-+               host->bus_hz = bus_hz;
-+               host->current_speed = 0;        /* force dw_mci_setup_bus() */
-+       }
- }
-
- static const struct dw_mci_drv_data rk2928_drv_data = {
-
-
-Do you want to spin the patch for this?
-
--Doug
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index bdbc84a..440e037 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -379,6 +379,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+ 	sun6i-a31-hummingbird.dtb \
+ 	sun6i-a31-m9.dtb
+ dtb-$(CONFIG_MACH_SUN7I) += \
++	sun7i-a20-bananapi.dtb \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+ 	sun7i-a20-i12-tvbox.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+new file mode 100644
+index 0000000..0332b82
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -0,0 +1,183 @@
++/*
++ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++/include/ "sun7i-a20.dtsi"
++/include/ "sunxi-common-regulators.dtsi"
++
++/ {
++	model = "LeMaker Banana Pi";
++	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
++
++	soc@01c00000 {
++		spi0: spi@01c05000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi0_pins_a>;
++			status = "okay";
++		};
++
++		mmc0: mmc@01c0f000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
++			vmmc-supply = <&reg_vcc3v3>;
++			bus-width = <4>;
++			cd-gpios = <&pio 7 10 0>; /* PH10 */
++			cd-inverted;
++			status = "okay";
++		};
++
++		usbphy: phy@01c13400 {
++			usb1_vbus-supply = <&reg_usb1_vbus>;
++			usb2_vbus-supply = <&reg_usb2_vbus>;
++			status = "okay";
++		};
++
++		ehci0: usb@01c14000 {
++			status = "okay";
++		};
++
++		ohci0: usb@01c14400 {
++			status = "okay";
++		};
++
++		ahci: sata@01c18000 {
++			status = "okay";
++		};
++
++		ehci1: usb@01c1c000 {
++			status = "okay";
++		};
++
++		ohci1: usb@01c1c400 {
++			status = "okay";
++		};
++
++		pinctrl@01c20800 {
++			uart3_pins_bananapi: uart3_pin@0 {
++				allwinner,pins = "PH0", "PH1";
++				allwinner,function = "uart3";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
++
++			mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
++				allwinner,pins = "PH10";
++				allwinner,function = "gpio_in";
++				allwinner,drive = <0>;
++				allwinner,pull = <1>;
++			};
++
++			gmac_power_pin_bananapi: gmac_power_pin@0 {
++				allwinner,pins = "PH23";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
++
++			led_pins_bananapi: led_pins@0 {
++				allwinner,pins = "PH24";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
++		};
++
++		ir0: ir@01c21800 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
++		};
++
++		uart0: serial@01c28000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins_a>;
++			status = "okay";
++		};
++
++		uart3: serial@01c28c00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart3_pins_bananapi>;
++			status = "okay";
++		};
++
++		uart7: serial@01c29c00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart7_pins_a>;
++			status = "okay";
++		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupt-parent = <&nmi_intc>;
++				interrupts = <0 8>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++		};
++
++		i2c2: i2c@01c2b400 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c2_pins_a>;
++			status = "okay";
++		};
++
++		gmac: ethernet@01c50000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&gmac_pins_rgmii_a>;
++			phy = <&phy1>;
++			phy-mode = "rgmii";
++			phy-supply = <&reg_gmac_3v3>;
++			status = "okay";
++
++			phy1: ethernet-phy@1 {
++				reg = <1>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_bananapi>;
++
++		green {
++			label = "bananapi:green:usr";
++			gpios = <&pio 7 24 0>;
++		};
++	};
++
++	reg_usb1_vbus: usb1-vbus {
++		status = "okay";
++	};
++
++	reg_usb2_vbus: usb2-vbus {
++		status = "okay";
++	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gmac_power_pin_bananapi>;
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <50000>;
++		enable-active-high;
++		gpio = <&pio 7 23 0>;
++	};
++};
+-- 
+2.0.0
