@@ -1,80 +1,84 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 00/15] Add Flexgen Clock support
-Date: Mon, 28 Jul 2014 22:44:36 -0700
-Message-ID: <20140729054436.4906.44690@quantum>
-References: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks
+ handled by clock_ops domain
+Date: Mon, 28 Jul 2014 23:52:34 -0600
+Message-ID: <CACxGe6uMke5vgzcNC9xUqjr2bHJ4QFHD6YjocSZWq8Ccx8Mm6A@mail.gmail.com>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+ <1402592023-13416-1-git-send-email-grygorii.strashko@ti.com>
+ <1402592023-13416-3-git-send-email-grygorii.strashko@ti.com>
+ <20140728140533.6E916C4116F@trevor.secretlab.ca> <53D68CC4.1010704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53D68CC4.1010704@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Gabriel FERNANDEZ (2014-07-15 08:20:16)
-> Changes in v3:
->  - Change commit message
->  - Remove uncessary (void *) cast
->  - add a block diagram for flexgen clock binding documentation
-> 
-> Changes in v2:
->  - use static const for clkgen_pll_data and stm_fs tables (from
->    Peter Griffin review)
->  - add 326 and 333 Mhz frequencies
->  - cosmetic correction in st,clkgen-vcc.txt
->  - use of kcalloc instead of kzalloc in drivers/clk/st/clk-flexgen.c
-> 
-> The goal of this series is to add Flexgen clock support to ST SoCs.
-> 
-> A Flexgen clock is composed by:
->   - a clock cross bar (represented by a mux element)
->   - a pre and final dividers (represented by a divider and gate elements)
+On Mon, Jul 28, 2014 at 11:47 AM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> Hi Grant.
+>
+> On 07/28/2014 05:05 PM, Grant Likely wrote:
+>> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+>>> Use "clkops-clocks" property to specify clocks handled by
+>>> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
+>>> set of clocks will be handled by Runtime PM through clock_ops
+>>> Pm domain.
+>>>
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> ---
+>>>   drivers/of/of_clk.c |    7 ++-----
+>>>   1 file changed, 2 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
+>>> index 35f5e9f..5f9b90e 100644
+>>> --- a/drivers/of/of_clk.c
+>>> +++ b/drivers/of/of_clk.c
+>>> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct device_node *np,
+>>>      struct clk *clk;
+>>>      int error;
+>>>
+>>> -    for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
+>>> -            if (!clk_may_runtime_pm(clk)) {
+>>> -                    clk_put(clk);
+>>> -                    continue;
+>>> -            }
+>>> +    for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
+>>> +                 !IS_ERR(clk); i++) {
+>>
+>> This really looks like an ABI break to me. What happens to all the
+>> existing platforms who don't have this new clkops-clocks in their device
+>> tree?
+>
+> Agree. This patch as is will break such platforms.
+> As possible solution for above problem - the NULL can be used as clock's prefix
+> by default and platform code can configure new value of clock's prefix during
+> initialization.
+> In addition, to make this solution full the of_clk_get_by_name() will
+> need to be modified too.
+>
+> But note pls, this is pure RFC patches which I did to find out the answer on questions:
+> - What is better: maintain Runtime PM clocks configuration in DT or in code?
 
-Applied to clk-next! I performed 's/drivers: //' on the $SUBJECT for
-most of the patches.
+In code. I don't think it is workable to embed runtime PM behaviour
+into the DT bindings. I think there will be too much variance in what
+hardware requires. We can create helpers to make this simpler, but I
+don't think it is a good idea to set it up automatically without any
+control from the driver itself.
 
-Regards,
-Mike
+>
+> - Where and when to call of_clk_register_runtime_pm_clocks()?
+>   Bus notifier/ platform core/ device drivers
 
-> 
-> Tested on B2120 board.
-> 
-> Gabriel Fernandez (15):
->   clk: st: Update ST clock binding documentation
->   drivers: clk: st: use static const for stm_fs tables
->   drivers: clk: st: use static const for clkgen_pll_data tables
->   drivers: clk: st: Remove uncessary (void *) cast
->   clk: st: Adds Flexgen clock binding
->   drivers: clk: st: STiH407: Support for Flexgen Clocks
->   drivers: clk: st: STiH407: Support for A9 MUX Clocks
->   drivers: clk: st: STiH407: Support for clockgenA0
->   drivers: clk: st: Add polarity bit indication
->   drivers: clk: st: Add quadfs reset handling
->   drivers: clk: st: STiH407: Support for clockgenC0
->   drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
->   drivers: clk: st: STiH407: Support for clockgenA9
->   drivers: clk: st: Update frequency tables for fs660c32 and fs432c65
->   drivers: clk: st: Use round to closest divider flag
-> 
->  .../bindings/clock/st/st,clkgen-divmux.txt         |  28 +-
->  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |   6 +-
->  .../devicetree/bindings/clock/st/st,clkgen-pll.txt |  17 +-
->  .../bindings/clock/st/st,clkgen-prediv.txt         |   8 +-
->  .../devicetree/bindings/clock/st/st,clkgen-vcc.txt |  34 ++-
->  .../devicetree/bindings/clock/st/st,clkgen.txt     |  59 ++--
->  .../devicetree/bindings/clock/st/st,flexgen.txt    | 119 ++++++++
->  .../devicetree/bindings/clock/st/st,quadfs.txt     |  15 +-
->  drivers/clk/st/Makefile                            |   2 +-
->  drivers/clk/st/clk-flexgen.c                       | 331 +++++++++++++++++++++
->  drivers/clk/st/clkgen-fsyn.c                       | 223 +++++++++++---
->  drivers/clk/st/clkgen-mux.c                        |  12 +-
->  drivers/clk/st/clkgen-pll.c                        |  94 +++++-
->  13 files changed, 828 insertions(+), 120 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->  create mode 100644 drivers/clk/st/clk-flexgen.c
-> 
-> -- 
-> 1.9.1
-> 
+I would say in device drivers.
+
+> Also, May be platform dependent solution [1] can be acceptable for now?
+>
+> [1] https://lkml.org/lkml/2014/7/25/630
+
+I need to look at the series before I comment. I've flagged it and
+will hopefully look at it tomorrow.
+
+g.
