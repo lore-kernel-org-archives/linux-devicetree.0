@@ -1,46 +1,30 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v2 2/4] ARM: dts: exynos5250: cypress,cyapa trackpad is
- Snow only
-Date: Wed, 30 Jul 2014 08:06:40 +0900
-Message-ID: <53D82900.1050409@samsung.com>
-References: <1405704009-8430-1-git-send-email-afaerber@suse.de>	<1405704009-8430-3-git-send-email-afaerber@suse.de> <CAD=FV=VAWG=H9=mwKZfip9zvAROU3aVXihnaBUBr0GNSzDoWFw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=VAWG=H9=mwKZfip9zvAROU3aVXihnaBUBr0GNSzDoWFw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 0/3] Enable EHCI port on rk3288-evb
+Date: Tue, 29 Jul 2014 16:24:30 -0700
+Message-ID: <1406676273-20701-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/14 01:16, Doug Anderson wrote:
-> Andreas,
->
-> On Fri, Jul 18, 2014 at 10:20 AM, Andreas F=C3=A4rber<afaerber@suse.d=
-e>  wrote:
->> Move it from exynos5250-cros-common.dtsi to exynos5250-snow.dts.
->> Spring does not need it, it uses an Atmel maXTouch instead.
->>
->> Signed-off-by: Andreas F=C3=A4rber<afaerber@suse.de>
->> ---
->>   v2: New (Doug Anderson)
->>
->>   arch/arm/boot/dts/exynos5250-cros-common.dtsi |  8 --------
->>   arch/arm/boot/dts/exynos5250-snow.dts         | 10 ++++++++++
->>   2 files changed, 10 insertions(+), 8 deletions(-)
->
-> Reviewed-by: Doug Anderson<dianders@chromium.org>
->
-> Kukjin could apply this now if he wanted to avoid future conflicts.
+This series enables the EHCI port on the rk3288-evb boards.  A later
+patch series (from Kever) will enable the dwc2 ports.
 
-OK, I read your comments on another this series and I've applied 1/4 an=
-d=20
-2/4 as per your suggestion with your reviewed by tag ;)
 
-And I think, Andreas is going to re-spin remains for exynos5250-spring=20
-based on updated my -next?
+Doug Anderson (3):
+  ARM: dts: Turn on USB host vbus on rk3288-evb
+  ARM: dts: add rk3288 ehci usb devices
+  ARM: dts: Enable USB host0 (EHCI) on rk3288-evb
 
-Thanks,
-Kukjin
+ arch/arm/boot/dts/rk3288-evb.dtsi | 22 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288.dtsi     | 20 ++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
+
+-- 
+2.0.0.526.g5318336
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
