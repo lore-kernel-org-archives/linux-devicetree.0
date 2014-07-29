@@ -1,48 +1,72 @@
-From: caesar <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
- Rockchip SoCs
-Date: Tue, 29 Jul 2014 19:09:07 +0800
-Message-ID: <53D780D3.8070603@rock-chips.com>
-References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com> <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com> <20140721085001.GG8843@ulmo> <53CD0E82.6030901@rock-chips.com> <20140721132723.GH15238@ulmo> <53D23192.4000908@rock-chips.com> <CAD=FV=XLjYQYmHxp3HBdwVmt6Wa7y-LEnsFKobsgVfFCp2-rRg@mail.gmail.com> <53D50601.1020106@rock-chips.com> <CAD=FV=UvF58NiY76FMi-TPVzsaWRJsR-M5HnHc7MRAWjwjY1jw@mail.gmail.com> <53D631B6.1050603@rock-chips.com> <20140729102212.GB21182@ulmo.nvidia.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v9] video: ARM CLCD: Add DT support
+Date: Tue, 29 Jul 2014 14:15:40 +0300
+Message-ID: <53D7825C.2020900@ti.com>
+References: <1403610911-31491-1-git-send-email-pawel.moll@arm.com>	 <1404824767.21897.7.camel@hornet> <1406023366.25343.44.camel@hornet> <1406631987.17155.0.camel@hornet>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140729102212.GB21182@ulmo.nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Doug Anderson <dianders@chromium.org>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406631987.17155.0.camel@hornet>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Thierry,
+--bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-=E5=9C=A8 2014=E5=B9=B407=E6=9C=8829=E6=97=A5 18:22, Thierry Reding =E5=
-=86=99=E9=81=93:
-> On Mon, Jul 28, 2014 at 07:19:18PM +0800, caesar wrote:
->> Doug,
->> =E5=9C=A8 2014=E5=B9=B407=E6=9C=8828=E6=97=A5 12:01, Doug Anderson =E5=
-=86=99=E9=81=93:
->>> Caesar,
+Hi,
+
+On 29/07/14 14:06, Pawel Moll wrote:
+> On Tue, 2014-07-22 at 11:02 +0100, Pawel Moll wrote:
+>> On Tue, 2014-07-08 at 14:06 +0100, Pawel Moll wrote:
+>>> On Tue, 2014-06-24 at 12:55 +0100, Pawel Moll wrote:
+>>>> This patch adds basic DT bindings for the PL11x CLCD cells
+>>>> and make their fbdev driver use them.
+>>>>
+>>>> Signed-off-by: Pawel Moll <pawel.moll@arm.com>
 >>>
->>> On Sun, Jul 27, 2014 at 7:00 AM, caesar <caesar.wang@rock-chips.com=
-> wrote:
->>>> /*I think will be show the faill log:->
->>>>
->>>> * rockchip-pwm ff9301a0.pwm: can't request region for resource [me=
-m
->>>> 0xff9301a0-0xff93019f]
->>>> */
->>>>
->>>> pc->base =3D devm_ioremap_resource(dev, regs);
->>> Did you actually code this up and try it and get this error?
->> Yeah.
-> This should work if you properly set up the PWM subregion as a child =
-of
-> the LCDC region, which is what MFD will do for you.
->
-> Thierry
-As you say,should this change be occured by lcdc driver and dts?
+>>> As two weeks passed without any further comment, I'm assuming that th=
+ere
+>>> are no more obstacles for this patch to be merged.
+>>>
+>>> Tomi, will you pick it up for 3.17, as you offered? Russell, if you
+>>> prefer to take it via your tree, it's in your system as 8005/4.
+>>
+>> Ping...
+>>
+>> Tomi?
 
-The PWM driver don't need do any changes?
+Yep, I've queued it now for 3.17.
 
+ Tomi
+
+
+
+--bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT14JhAAoJEPo9qoy8lh71sUQP/jKPnLxnzJq8fzpuEeIGj601
+vr11tla+Ih3Xb9oXBwwhomrsvX1sf1MbwTlQrSggdYj47ZkSXC/cM8SYYJuzTZX9
+v2Tyv3HnQ62CP9JenfUh6p0CTOZlnFp0VaWRCudHPT+4CamtGf1NfV4JV0Aop0kF
+1kHlZt0IDYUJOVQx7oVWvGwJ9sljx1cfePenKw7z6CZbK0UyU5Vu1/eCCQO0s+5K
+kJ7IsXlFCAhWPkiy1sZqfutId5zFeO0IHG3HNllmleh9juE6w9pvhnbdsyaTEIM/
+L5jZzWAWfbHJtQZe07tA73iDlqWueI5PFdeILFBqiU/umMBmMQmmxNby0oLqOd6K
+wZVoGdihQ7yYKEN3ZOEeP58MBkYzXtJJ2Jj/jJ5RV8x/Gj622PHME7x/J6BOnMvK
+8LaTtGnl7jul/qgr5DCcu5fU9xw2148VwuVSMd2YPsp4x0d8TaA3q1X+skYBvisK
+2KDEVEOKIuT4dkazBU1oocy7nALOKATzbHr0hub+f8+ZO1lwBnRDSEStS9LwMqmT
+zS3Y7j5Vz/xgC6kpVB8REG7ZfBL+DnPMePKFFmGE4uH+ryYrPCm21TWgCrxpk5Xp
+o11cB9hBw5cCk901vFRfB/gAO2FoRbp4ufKh0usT27r2FaUM9cgqTvTCEX2UiZPC
+qO/J480Qe+wW1kJTc2FH
+=IPAQ
+-----END PGP SIGNATURE-----
+
+--bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx--
