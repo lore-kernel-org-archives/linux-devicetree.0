@@ -1,44 +1,48 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9] video: ARM CLCD: Add DT support
-Date: Tue, 29 Jul 2014 12:06:27 +0100
-Message-ID: <1406631987.17155.0.camel@hornet>
-References: <1403610911-31491-1-git-send-email-pawel.moll@arm.com>
-	 <1404824767.21897.7.camel@hornet> <1406023366.25343.44.camel@hornet>
+From: caesar <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v2 2/2] pwm: add this patch to support the new pwm of
+ Rockchip SoCs
+Date: Tue, 29 Jul 2014 19:09:07 +0800
+Message-ID: <53D780D3.8070603@rock-chips.com>
+References: <1405774529-26027-1-git-send-email-caesar.wang@rock-chips.com> <1405774529-26027-3-git-send-email-caesar.wang@rock-chips.com> <20140721085001.GG8843@ulmo> <53CD0E82.6030901@rock-chips.com> <20140721132723.GH15238@ulmo> <53D23192.4000908@rock-chips.com> <CAD=FV=XLjYQYmHxp3HBdwVmt6Wa7y-LEnsFKobsgVfFCp2-rRg@mail.gmail.com> <53D50601.1020106@rock-chips.com> <CAD=FV=UvF58NiY76FMi-TPVzsaWRJsR-M5HnHc7MRAWjwjY1jw@mail.gmail.com> <53D631B6.1050603@rock-chips.com> <20140729102212.GB21182@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406023366.25343.44.camel@hornet>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140729102212.GB21182@ulmo.nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Doug Anderson <dianders@chromium.org>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-07-22 at 11:02 +0100, Pawel Moll wrote:
-> On Tue, 2014-07-08 at 14:06 +0100, Pawel Moll wrote:
-> > On Tue, 2014-06-24 at 12:55 +0100, Pawel Moll wrote:
-> > > This patch adds basic DT bindings for the PL11x CLCD cells
-> > > and make their fbdev driver use them.
-> > > 
-> > > Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > 
-> > As two weeks passed without any further comment, I'm assuming that there
-> > are no more obstacles for this patch to be merged.
-> > 
-> > Tomi, will you pick it up for 3.17, as you offered? Russell, if you
-> > prefer to take it via your tree, it's in your system as 8005/4.
-> 
-> Ping...
-> 
-> Tomi?
+Thierry,
 
-... and again...
+=E5=9C=A8 2014=E5=B9=B407=E6=9C=8829=E6=97=A5 18:22, Thierry Reding =E5=
+=86=99=E9=81=93:
+> On Mon, Jul 28, 2014 at 07:19:18PM +0800, caesar wrote:
+>> Doug,
+>> =E5=9C=A8 2014=E5=B9=B407=E6=9C=8828=E6=97=A5 12:01, Doug Anderson =E5=
+=86=99=E9=81=93:
+>>> Caesar,
+>>>
+>>> On Sun, Jul 27, 2014 at 7:00 AM, caesar <caesar.wang@rock-chips.com=
+> wrote:
+>>>> /*I think will be show the faill log:->
+>>>>
+>>>> * rockchip-pwm ff9301a0.pwm: can't request region for resource [me=
+m
+>>>> 0xff9301a0-0xff93019f]
+>>>> */
+>>>>
+>>>> pc->base =3D devm_ioremap_resource(dev, regs);
+>>> Did you actually code this up and try it and get this error?
+>> Yeah.
+> This should work if you properly set up the PWM subregion as a child =
+of
+> the LCDC region, which is what MFD will do for you.
+>
+> Thierry
+As you say,should this change be occured by lcdc driver and dts?
 
-Regards
+The PWM driver don't need do any changes?
 
-Pawel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
