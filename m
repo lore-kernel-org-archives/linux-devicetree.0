@@ -1,120 +1,69 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH V6 8/8] drm/bridge: Add i2c based driver for ps8622/ps8625
- bridge
-Date: Tue, 29 Jul 2014 13:29:58 +0200
-Message-ID: <53D785B6.9060806@suse.de>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com> <1406316130-4744-9-git-send-email-ajaykumar.rs@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
+Date: Tue, 29 Jul 2014 12:32:36 +0100
+Message-ID: <20140729113236.GM17528@sirena.org.uk>
+References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz>
+ <20140728122103.GR9532@piout.net>
+ <53D64ADA.1000102@aksignal.cz>
+ <20140728223859.GA3214@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406316130-4744-9-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: inki.dae@samsung.com, thierry.reding@gmail.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Vincent Palatin <vpalatin@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nOkP3B9e3ta8qQbV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140728223859.GA3214@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal@aksignal.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@atmel.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Am 25.07.2014 21:22, schrieb Ajay Kumar:
-> From: Vincent Palatin <vpalatin@chromium.org>
->=20
-> This patch adds drm_bridge driver for parade DisplayPort
-> to LVDS bridge chip.
->=20
-> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  .../devicetree/bindings/video/bridge/ps8622.txt    |   19 +
->  drivers/gpu/drm/bridge/Kconfig                     |   10 +
->  drivers/gpu/drm/bridge/Makefile                    |    1 +
->  drivers/gpu/drm/bridge/ps8622.c                    |  602 ++++++++++=
-++++++++++
->  5 files changed, 633 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/bridge/ps=
-8622.txt
->  create mode 100644 drivers/gpu/drm/bridge/ps8622.c
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 46a311e..b4a99cc 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -96,6 +96,7 @@ nxp	NXP Semiconductors
->  onnn	ON Semiconductor Corp.
->  opencores	OpenCores.org
->  panasonic	Panasonic Corporation
-> +parade	Parade Technologies Inc.
->  phytec	PHYTEC Messtechnik GmbH
->  picochip	Picochip Ltd
->  plathome	Plat'Home Co., Ltd.
-> diff --git a/Documentation/devicetree/bindings/video/bridge/ps8622.tx=
-t b/Documentation/devicetree/bindings/video/bridge/ps8622.txt
-> new file mode 100644
-> index 0000000..fdeafb2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/bridge/ps8622.txt
-> @@ -0,0 +1,19 @@
-> +ps8622-bridge bindings
-> +
-> +Required properties:
-> +	- compatible: "parade,ps8622" or "parade,ps8625"
-> +	- reg: first i2c address of the bridge
-> +	- sleep-gpios: OF device-tree gpio specification
-> +	- reset-gpios: OF device-tree gpio specification
-> +
-> +Optional properties:
-> +	- lane-count: number of DP lanes to use
-> +
-> +Example:
-> +	ps8622-bridge@48 {
 
-Nit: Shouldn't this be lvds-bridge like in 7/8 or something else not
-derived from the specific model? Applies to the DT series as well.
+--nOkP3B9e3ta8qQbV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		compatible =3D "parade,ps8622";
-> +		reg =3D <0x48>;
-> +		sleep-gpios =3D <&gpc3 6 1 0 0>;
-> +		reset-gpios =3D <&gpc3 1 1 0 0>;
-> +		lane-count =3D <1>
-> +	};
-[...]
-> diff --git a/drivers/gpu/drm/bridge/ps8622.c b/drivers/gpu/drm/bridge=
-/ps8622.c
-> new file mode 100644
-> index 0000000..ec60fcf
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/ps8622.c
-> @@ -0,0 +1,602 @@
-> +/*
-> + * Parade PS8622 eDP/LVDS bridge driver
-> + *
-> + * Copyright (C) 2014 Google, Inc.
-> + *
-> + * This software is licensed under the terms of the GNU General Publ=
-ic
-> + * License version 2, as published by the Free Software Foundation, =
-and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-[...]
-> +MODULE_AUTHOR("Vincent Palatin <vpalatin@chromium.org>");
-> +MODULE_DESCRIPTION("Parade ps8622 eDP-LVDS converter driver");
-> +MODULE_LICENSE("GPL");
+On Tue, Jul 29, 2014 at 12:38:59AM +0200, Alexandre Belloni wrote:
 
-"GPL v2"?
+> Mark: maybe it would make sense to do devm_gpio_request_one() in
+> of_spi_register_master(), after of_get_named_gpio.
 
-Regards,
-Andreas
+You need to transition all the drivers doing things manually but yes.
+As I keep saying all the GPIO handling needs to be completely
+refactored.
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+> While this solves the particular issue Ji=C5=99=C3=AD is seeing, this wil=
+l not
+> solve the case where PA14 (CS0) is not used by the spi driver at all. It
+> will remained muxed as CS0 and toggle when the spi master needs to
+> access CS0 until another driver muxes it to something else. I still
+> believe we should explicitly ask pinctrl to mux them as gpios.
+
+I'm just guessing as to what the issue that he's seeing is but isn't
+this just saying that the board pinmuxing is wrong?  If the board
+doesn't want the pin to be used by the SPI controller it shouldn't be=20
+configuring it that way.
+
+--nOkP3B9e3ta8qQbV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT14ZRAAoJELSic+t+oim9sM0P/jmBwEu0CH2FaGSh+517g5R4
+KbrixTeEPmC1TlcJ6AKCtCzEW7v6amUpiBOm/8h2w7vcQEVNt4kVAzPwvQDXqmdr
+IJ36hXXB9VGt1k51u0fW8wBvkl8xu/VzuS3pyuNZTvzjHr6BqJlAve8en4FH4Dk9
+qJubrRG/C9HZLUbrD7TvIVtQ8Am01Ip+1LnLVtVGKLdh8Dqy/q3vBR5zbTcJYxMj
+FBa4mugfAgkUg4SAf9DsxsG0Aj9SO3DZRBSArp2t9uXT6TxKhSbG6jmdZpXHZtF2
+bZ7o70qIsuuJ6O5Rn22WoA7WgHmNxN/7uO3hRZg5Xj7zSTlc45ezvaq1tRq72+Xl
+61xmHFZxkooB/d4wnlWM0/ukhx9yCCVnKFpG3031rbQ6b1kqVIHUAiEL/sIOd1/b
+pHA+UXkn0CcpuE0xA2dNH10l3MbH92YU1ow9QgicIai795IZh8bPQGHAp/v3w/4n
+0i0dd4LsKNu5G1inBqm5UIr1/KrBDeE0+78u0lHeRNkSRc+LhYZBoxNE4gm6CBMR
+dQTkqbgLg6yo8SdQywA98uI+gM0NnXTj2rgMnJUbGaw/vKWK1nVef00XDQSsySmN
+zKISdo2bbGMuLbKY9AOw4Q6DA0HmT1u9o9VzPVAFLaMD50jzEwDctJf+eP793wJ2
+EL3kXOpSdZCzCWzES7k1
+=lTuD
+-----END PGP SIGNATURE-----
+
+--nOkP3B9e3ta8qQbV--
