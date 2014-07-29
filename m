@@ -1,155 +1,191 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
-Date: Tue, 29 Jul 2014 11:33:45 -0500
-Message-ID: <20140729163345.GF17808@saruman.home>
-References: <1406582183-696-1-git-send-email-balbi@ti.com>
- <1406582183-696-30-git-send-email-balbi@ti.com>
- <20140729121425.GR29045@atomide.com>
- <20140729141522.GB17808@saruman.home>
- <20140729152052.GV29045@atomide.com>
- <20140729154057.GE17808@saruman.home>
-Reply-To: <balbi@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] mmc: dw_mmc: add support for RK3288
+Date: Tue, 29 Jul 2014 09:38:13 -0700
+Message-ID: <CAD=FV=VtmKCGU1GKd4yQfY=fcggN8xq4p2AEMSoEtz8XydtPDg@mail.gmail.com>
+References: <1404565174-2923-1-git-send-email-addy.ke@rock-chips.com>
+	<1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
+	<CAD=FV=X87BViAZ9LsDWcx=AGsSmR9VtqbbVaZSZ_1-P-tgV_ig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140729154057.GE17808@saruman.home>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, bcousson@baylibre.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=X87BViAZ9LsDWcx=AGsSmR9VtqbbVaZSZ_1-P-tgV_ig@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, zyf <zyf@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
---Pql/uPZNXIm1JCle
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Addy,
 
-Hi,
+On Mon, Jul 28, 2014 at 9:52 PM, Doug Anderson <dianders@chromium.org> wrote:
+> Addy,
+>
+> On Wed, Jul 9, 2014 at 8:31 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
+>> This patch focuses on clock setting for RK3288 mmc controller.
+>>
+>> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
+>> and if DDR 8bit mode, CLKDIV register must be set 1.
+>>
+>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>> ---
+>> changes since v1:
+>> - dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
+>>   host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
+>>
+>>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  4 +-
+>>  drivers/mmc/host/dw_mmc-pltfm.c                    | 50 +++++++++++++++++++++-
+>>  2 files changed, 51 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+>> index c559f3f..e3f95cd 100644
+>> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+>> @@ -10,7 +10,9 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
+>>  Required Properties:
+>>
+>>  * compatible: should be
+>> -       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
+>> +       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
+>> +                                                       before RK3288
+>> +       - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
+>>
+>>  Example:
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+>> index d4a47a9..809c28b 100644
+>> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+>> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+>> @@ -21,17 +21,61 @@
+>>  #include <linux/mmc/mmc.h>
+>>  #include <linux/mmc/dw_mmc.h>
+>>  #include <linux/of.h>
+>> +#include <linux/clk.h>
+>>
+>>  #include "dw_mmc.h"
+>>  #include "dw_mmc-pltfm.h"
+>>
+>> +#define RK3288_CLKGEN_DIV      2
+>
+> Yup, this matches what I see in the TRM.  It will always divide by 2
+> to allow for 4 phases (picking the phases not supported yet).  Default
+> phase looks to be 180 degrees which is why we've (currently) got
+> USE_HOLD_REG hardcoded.  :)
+>
+>> +
+>>  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
+>>  {
+>>         *cmdr |= SDMMC_CMD_USE_HOLD_REG;
+>>  }
+>>
+>> -static const struct dw_mci_drv_data rockchip_drv_data = {
+>> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
+>> +{
+>> +       host->bus_hz /= RK3288_CLKGEN_DIV;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>> +{
+>> +       int ret;
+>> +       unsigned int cclkin;
+>> +
+>> +       /*
+>> +        * cclkin: source clock of mmc controller.
+>> +        * bus_hz: card interface clock generated by CLKGEN.
+>> +        * bus_hz = cclkin / RK3288_CLKGEN_DIV;
+>> +        * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
+>> +        *
+>> +        * Note: div can only be 0 or 1
+>> +        *       if DDR50 8bit mode, div must be set 1
+>
+> Makes sense.  So this function is essentially reversing the logic in
+> dw_mmc and making sure that we'll get the right DIV (0 or 1) in
+> dw_mci_setup_bus().
+>
+>
+>> +        */
+>> +       if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
+>> +           (ios->timing == MMC_TIMING_UHS_DDR50 ||
+>
+> Probably don't need UHS_DDR50 since (I think) you can't have an 8-bit
+> SD card--only MMC, right?  ...but it doesn't hurt.
+>
+>
+>> +            ios->timing == MMC_TIMING_MMC_DDR52))
+>> +               cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
+>> +       else
+>> +               cclkin = ios->clock * RK3288_CLKGEN_DIV;
+>> +
+>> +       ret = clk_set_rate(host->ciu_clk, cclkin);
+>> +       if (ret)
+>> +               dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
+>> +
+>> +       host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
+>> +}
+>> +
+>> +static const struct dw_mci_drv_data rk2928_drv_data = {
+>> +       .prepare_command        = dw_mci_pltfm_prepare_command,
+>> +};
+>> +
+>> +static const struct dw_mci_drv_data rk3288_drv_data = {
+>>         .prepare_command        = dw_mci_pltfm_prepare_command,
+>> +       .set_ios        = dw_mci_rk3288_set_ios,
+>> +       .setup_clock    = dw_mci_rk3288_setup_clock,
+>>  };
+>>
+>>  static const struct dw_mci_drv_data socfpga_drv_data = {
+>> @@ -95,7 +139,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
+>>  static const struct of_device_id dw_mci_pltfm_match[] = {
+>>         { .compatible = "snps,dw-mshc", },
+>>         { .compatible = "rockchip,rk2928-dw-mshc",
+>> -               .data = &rockchip_drv_data },
+>> +               .data = &rk2928_drv_data },
+>> +       { .compatible = "rockchip,rk3288-dw-mshc",
+>> +               .data = &rk3288_drv_data },
+>>         { .compatible = "altr,socfpga-dw-mshc",
+>>                 .data = &socfpga_drv_data },
+>>         {},
+>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Tested-by: Doug Anderson <dianders@chromium.org>
 
-On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
-> On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
-> > * Felipe Balbi <balbi@ti.com> [140729 07:18]:
-> > > Hi,
-> > >=20
-> > > On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
-> > > > * Felipe Balbi <balbi@ti.com> [140728 14:19]:
-> > > > > now that we don't need to support legacy board-files,
-> > > > > we can completely switch over to a linear irq domain
-> > > > > and make use of irq_alloc_domain_generic_chips() to
-> > > > > allocate all generic irq chips for us.
-> > > >=20
-> > > > This patch seems to somehow break off-idle for omap3=20
-> > > > where it no longer wakes up.
-> > >=20
-> > > Sure your bisection is correct ? This patch just switches from legacy
-> > > irq domain to linear irq domain.
-> >=20
-> > Yes, I tried it a few times. Just enabling
-> > retention idle hangs too with this patch.
-> >=20
-> > Maybe it's omap3_prcm_irq_setup that relies on
-> > 11 + OMAP_INTC_START? There may be other such issues
->=20
-> lol.
->=20
-> OMAP4 has the same nonsense.
+It turns out that I spoke too soon.  I realized that in my testing I
+didn't have "DDR" mode enabled for my eMMC card.  When I did that then
+your patch didn't work.
 
-made me think why (if) OMAP4 works with that same setup. Does wake from
-OFF work with OMAP4 ?
+The problem is that dw_mci_setup_bus() doesn't realize that you've
+changed "bus_hz" so it needs to re-run.  You can fix it like this:
 
-Anyway, here's a quick little hack to check if that's the reason for the
-regression:
 
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index ff953c9..c234b98 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -97,6 +97,7 @@
- 		prm: prm@48306000 {
- 			compatible =3D "ti,omap3-prm";
- 			reg =3D <0x48306000 0x4000>;
-+			interrupts =3D <11>;
-=20
- 			prm_clocks: clocks {
- 				#address-cells =3D <1>;
-diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_com=
-mon.c
-index 25e8b82..3d11377 100644
---- a/arch/arm/mach-omap2/prm_common.c
-+++ b/arch/arm/mach-omap2/prm_common.c
-@@ -242,6 +242,11 @@ void omap_prcm_irq_complete(void)
- 	prcm_irq_setup->restore_irqen(prcm_irq_setup->saved_mask);
- }
-=20
-+static struct of_device_id tmp[] =3D {
-+	{ .compatible =3D "ti,omap3-prm" },
-+	{ }
-+};
-+
- /**
-  * omap_prcm_register_chain_handler - initializes the prcm chained interru=
-pt
-  * handler based on provided parameters
-@@ -254,17 +259,24 @@ void omap_prcm_irq_complete(void)
-  */
- int omap_prcm_register_chain_handler(struct omap_prcm_irq_setup *irq_setup)
+diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+index 809c28b..bcc96d0 100644
+--- a/drivers/mmc/host/dw_mmc-pltfm.c
++++ b/drivers/mmc/host/dw_mmc-pltfm.c
+@@ -44,6 +44,7 @@ static void dw_mci_rk3288_set_ios(struct dw_mci
+*host, struct mmc_ios *ios)
  {
-+	struct device_node *node;
- 	int nr_regs;
- 	u32 mask[OMAP_PRCM_MAX_NR_PENDING_REG];
- 	int offset, i;
-+	int irq;
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
-=20
- 	if (!irq_setup)
- 		return -EINVAL;
-=20
-+	irq =3D irq_setup->irq;
- 	nr_regs =3D irq_setup->nr_regs;
-=20
-+	node =3D of_find_matching_node(NULL, tmp);
-+	if (node)
-+		irq =3D of_irq_get(node, 0);
-+
- 	if (prcm_irq_setup) {
- 		pr_err("PRCM: already initialized; won't reinitialize\n");
- 		return -EINVAL;
-@@ -298,7 +310,7 @@ int omap_prcm_register_chain_handler(struct omap_prcm_i=
-rq_setup *irq_setup)
- 				1 << (offset & 0x1f);
- 	}
-=20
--	irq_set_chained_handler(irq_setup->irq, omap_prcm_irq_handler);
-+	irq_set_chained_handler(irq, omap_prcm_irq_handler);
-=20
- 	irq_setup->base_irq =3D irq_alloc_descs(-1, 0, irq_setup->nr_regs * 32,
- 		0);
+        int ret;
+        unsigned int cclkin;
++       u32 bus_hz;
 
---=20
-balbi
+        /*
+         * cclkin: source clock of mmc controller.
+@@ -65,7 +66,11 @@ static void dw_mci_rk3288_set_ios(struct dw_mci
+*host, struct mmc_ios *ios)
+        if (ret)
+                dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
 
---Pql/uPZNXIm1JCle
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-       host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
++       bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
++       if (bus_hz != host->bus_hz) {
++               host->bus_hz = bus_hz;
++               host->current_speed = 0;        /* force dw_mci_setup_bus() */
++       }
+ }
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+ static const struct dw_mci_drv_data rk2928_drv_data = {
 
-iQIcBAEBAgAGBQJT18zpAAoJEIaOsuA1yqRE1+0P/0LBahhkxT97T8au3XIRSTw7
-E+riMUXLHJqgN7a6o6pg93FeFqhOPpm/4A4T1lVDp3uWhbexpbTbiSR+cj9ty+HP
-K6Uhf9nqB+B8KN0U2baXw0IeSM8c79riBeTxKo4Rt11qd8PZYeuRLbHaQTou3FW7
-HwD+1XxJpvjjV0qEIm4P86FPduHYPC3w1afsV2O2PVt+0/E0EtfolULzLwvlU7Je
-hTzvP2Kf0YHqbfLnxhAjKjv1kZINK/GCvx8VF9wPWrSa2967EyXzh98cW2SbiVEi
-IA0sZXLcU+I243suxOuFFcv3bZDclO2m1IqKg2er564gdCwAizE49xcvBF82ml0N
-nMR79mH1jgUQF+Zv7jwry08i6Ydb0aEvFPnITxGlO4x1IWOX6xi2FiQo2UQ4+PWo
-fCPED+Uy7LllL/prXoDDU9afqL3EVOPQIY1WYjdLqPcUs4BOLruzG0/E9GIvLxvo
-3iiBMMUVh4ju1K7PQzHOWGU9JIvXk5chFoHbeNe3lQh7J7msiRWAKOBvcGpFdh60
-eYOUW+sEa+VA4P4JZdTg0uEydMqgUETdyUjbYym8nA6JRTUzhQtraMHvE8LjWkjy
-tYBHHq/hWLYQchSOKQhNhL7Wfwd1QQo0+QMSYaHmF5nV0/vwnlh++pkJk1EsqHgJ
-QE/ca/4jxy8HkWboOEkR
-=HOWE
------END PGP SIGNATURE-----
 
---Pql/uPZNXIm1JCle--
+Do you want to spin the patch for this?
+
+-Doug
