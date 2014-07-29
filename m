@@ -1,72 +1,159 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v9] video: ARM CLCD: Add DT support
-Date: Tue, 29 Jul 2014 14:15:40 +0300
-Message-ID: <53D7825C.2020900@ti.com>
-References: <1403610911-31491-1-git-send-email-pawel.moll@arm.com>	 <1404824767.21897.7.camel@hornet> <1406023366.25343.44.camel@hornet> <1406631987.17155.0.camel@hornet>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Tue, 29 Jul 2014 13:21:48 +0200
+Message-ID: <53D783CC.2080108@suse.de>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>	<53D5435B.8030305@suse.de> <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406631987.17155.0.camel@hornet>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed;
+ boundary="------------040406040706050300090904"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay kumar <ajaynumb@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, thierry.reding@gmail.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
---bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+This is a multi-part message in MIME format.
+--------------040406040706050300090904
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Ajay,
 
-On 29/07/14 14:06, Pawel Moll wrote:
-> On Tue, 2014-07-22 at 11:02 +0100, Pawel Moll wrote:
->> On Tue, 2014-07-08 at 14:06 +0100, Pawel Moll wrote:
->>> On Tue, 2014-06-24 at 12:55 +0100, Pawel Moll wrote:
->>>> This patch adds basic DT bindings for the PL11x CLCD cells
->>>> and make their fbdev driver use them.
->>>>
->>>> Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+Am 28.07.2014 08:13, schrieb Ajay kumar:
+> On 7/27/14, Andreas Färber <afaerber@suse.de> wrote:
+>> Am 25.07.2014 21:22, schrieb Ajay Kumar:
+>>> This series is based on exynos-drm-next branch of Inki Dae's tree at:
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
 >>>
->>> As two weeks passed without any further comment, I'm assuming that th=
-ere
->>> are no more obstacles for this patch to be merged.
->>>
->>> Tomi, will you pick it up for 3.17, as you offered? Russell, if you
->>> prefer to take it via your tree, it's in your system as 8005/4.
+>>> I have tested this after adding few DT changes for exynos5250-snow,
+>>> exynos5420-peach-pit and exynos5800-peach-pi boards.
 >>
->> Ping...
+>> I'm trying to test this with a modified exynos5250-spring DT based off
+>> kgene's for-next branch due to DT, and I run into the following:
 >>
->> Tomi?
+>>   CC      drivers/gpu/drm/bridge/ptn3460.o
+>> drivers/gpu/drm/bridge/ptn3460.c: In function ‘ptn3460_post_encoder_init’:
+>> drivers/gpu/drm/bridge/ptn3460.c:275:2: error: implicit declaration of
+>> function ‘drm_connector_register’ [-Werror=implicit-function-declaration]
+>>   drm_connector_register(&ptn_bridge->connector);
+>>   ^
+> Hope this might help:
+> http://www.spinics.net/lists/dri-devel/msg60578.html
 
-Yep, I've queued it now for 3.17.
+That fixed my build, thanks.
 
- Tomi
+Unfortunately the most I got on Spring with attached DT was a blank
+screen with a white horizontal line in the middle.
+
+Do I need to specify a specific panel model for Spring?
+
+For testing I re-applied your iommu patches (which btw fail now for 5420
+due to disp_pd) but didn't know what to do about your panel-lvds
+regulator patch now that it's gone.
+
+If I don't apply this series, then commenting out the dp-controller node
+gets me a working display with simplefb as before.
+
+Regards,
+Andreas
+
+-- 
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imendörffer; HRB 16746 AG Nürnberg
+
+--------------040406040706050300090904
+Content-Type: text/x-patch;
+ name="0001-ARM-dts-exynos5250-Add-eDP-LVDS-bridge-to-Spring.patch"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment;
+ filename*0="0001-ARM-dts-exynos5250-Add-eDP-LVDS-bridge-to-Spring.patch"
+
+>From 9172a26a8f0d0f0d170bd27e1c150ad204d8086a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Date: Sun, 27 Jul 2014 21:58:06 +0200
+Subject: [PATCH] ARM: dts: exynos5250: Add eDP/LVDS bridge to Spring
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+[AF: Redone for v6]
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm/boot/dts/exynos5250-spring.dts | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/dts/exynos5250-spring.dts
+index 687dfab86bc8..517b1ff2bfdf 100644
+--- a/arch/arm/boot/dts/exynos5250-spring.dts
++++ b/arch/arm/boot/dts/exynos5250-spring.dts
+@@ -64,10 +64,14 @@
+ 		vdd_pll-supply = <&s5m_ldo8_reg>;
+ 	};
+ 
++	panel: panel {
++		compatible = "simple-panel";
++	};
++
+ 	dp-controller@145B0000 {
+ 		status = "okay";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&dp_hpd>;
++		pinctrl-0 = <&dp_hpd_gpio>;
+ 		samsung,color-space = <0>;
+ 		samsung,dynamic-range = <0>;
+ 		samsung,ycbcr-coeff = <0>;
+@@ -75,6 +79,7 @@
+ 		samsung,link-rate = <0x0a>;
+ 		samsung,lane-count = <1>;
+ 		samsung,hpd-gpio = <&gpc3 0 0>;
++		bridge = <&ps8622>;
+ 	};
+ 
+ 	fixed-rate-clocks {
+@@ -387,6 +392,17 @@
+ 	status = "okay";
+ 	samsung,i2c-sda-delay = <100>;
+ 	samsung,i2c-max-bus-freq = <66000>;
++
++	ps8622: ps8622-bridge@08 {
++		compatible = "parade,ps8622";
++		reg = <0x08>;
++		sleep-gpios = <&gpc3 6 0>;
++		reset-gpios = <&gpc3 1 0>;
++		lane-count = <1>;
++		panel = <&panel>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ps8622_gpios>;
++	};
+ };
+ 
+ &i2c_8 {
+@@ -450,6 +466,20 @@
+ 		samsung,pin-pud = <0>;
+ 	};
+ 
++	dp_hpd_gpio: dp-hpd-gpio {
++		samsung,pins = "gpc3-0";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <3>;
++		samsung,pin-drv = <0>;
++	};
++
++	ps8622_gpios: ps8622-gpios {
++		samsung,pins = "gpc3-1", "gpc3-6";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
+ 	s5m8767_dvs: s5m8767-dvs {
+ 		samsung,pins = "gpd1-0", "gpd1-1", "gpd1-2";
+ 		samsung,pin-function = <0>;
+-- 
+1.9.3
 
 
-
---bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT14JhAAoJEPo9qoy8lh71sUQP/jKPnLxnzJq8fzpuEeIGj601
-vr11tla+Ih3Xb9oXBwwhomrsvX1sf1MbwTlQrSggdYj47ZkSXC/cM8SYYJuzTZX9
-v2Tyv3HnQ62CP9JenfUh6p0CTOZlnFp0VaWRCudHPT+4CamtGf1NfV4JV0Aop0kF
-1kHlZt0IDYUJOVQx7oVWvGwJ9sljx1cfePenKw7z6CZbK0UyU5Vu1/eCCQO0s+5K
-kJ7IsXlFCAhWPkiy1sZqfutId5zFeO0IHG3HNllmleh9juE6w9pvhnbdsyaTEIM/
-L5jZzWAWfbHJtQZe07tA73iDlqWueI5PFdeILFBqiU/umMBmMQmmxNby0oLqOd6K
-wZVoGdihQ7yYKEN3ZOEeP58MBkYzXtJJ2Jj/jJ5RV8x/Gj622PHME7x/J6BOnMvK
-8LaTtGnl7jul/qgr5DCcu5fU9xw2148VwuVSMd2YPsp4x0d8TaA3q1X+skYBvisK
-2KDEVEOKIuT4dkazBU1oocy7nALOKATzbHr0hub+f8+ZO1lwBnRDSEStS9LwMqmT
-zS3Y7j5Vz/xgC6kpVB8REG7ZfBL+DnPMePKFFmGE4uH+ryYrPCm21TWgCrxpk5Xp
-o11cB9hBw5cCk901vFRfB/gAO2FoRbp4ufKh0usT27r2FaUM9cgqTvTCEX2UiZPC
-qO/J480Qe+wW1kJTc2FH
-=IPAQ
------END PGP SIGNATURE-----
-
---bVRbbePG6nEdxevRqOVDUhKnmgQaHteVx--
+--------------040406040706050300090904--
