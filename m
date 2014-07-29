@@ -1,146 +1,128 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] mmc: dw_mmc: add support for RK3288
-Date: Mon, 28 Jul 2014 21:52:59 -0700
-Message-ID: <CAD=FV=X87BViAZ9LsDWcx=AGsSmR9VtqbbVaZSZ_1-P-tgV_ig@mail.gmail.com>
-References: <1404565174-2923-1-git-send-email-addy.ke@rock-chips.com>
-	<1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, zyf@rock-chips.com
+From: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: dts: Add gta04a5 model
+Date: Tue, 29 Jul 2014 07:17:06 +0200
+Message-ID: <A0AA66B6-5D28-49D7-AF83-06F0D38DA96D@goldelico.com>
+References: <1406577213-9642-1-git-send-email-marek@goldelico.com> <1406577213-9642-4-git-send-email-marek@goldelico.com> <CAOf5uwk=ctww=pP4Ae+1C6i-oOtiYTv2NJbj1GpuPwVSKXB4Hw@mail.gmail.com> <CAAfyv35jvhzvjCKMwrpa=RQ1JkfcmthCsGDzwLW9Y6bq3Ww_fg@mail.gmail.com> <CAOf5uw=Fm9FXEH5ESqDC8pGjMbn5VQ1+MyPJVXSqGh_9+JRLHw@mail.gmail.com> <CAAfyv351g1R6TnmW+JKM1sDQsegEFExV6p9BEN=izOdR4n8zEQ@mail.gmail.com> <CAOf5uwmjznuK_1au1HnsnYh=BhqC=x+O_tpk6U71bqPv=hFe_A@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOf5uwmjznuK_1au1HnsnYh=BhqC=x+O_tpk6U71bqPv=hFe_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Marek Belisko <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Addy,
+Hi,
 
-On Wed, Jul 9, 2014 at 8:31 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
-> This patch focuses on clock setting for RK3288 mmc controller.
->
-> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
-> and if DDR 8bit mode, CLKDIV register must be set 1.
->
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> ---
-> changes since v1:
-> - dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
->   host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
->
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  4 +-
->  drivers/mmc/host/dw_mmc-pltfm.c                    | 50 +++++++++++++++++++++-
->  2 files changed, 51 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> index c559f3f..e3f95cd 100644
-> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> @@ -10,7 +10,9 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
->  Required Properties:
->
->  * compatible: should be
-> -       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
-> +       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
-> +                                                       before RK3288
-> +       - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
->
->  Example:
->
-> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-> index d4a47a9..809c28b 100644
-> --- a/drivers/mmc/host/dw_mmc-pltfm.c
-> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
-> @@ -21,17 +21,61 @@
->  #include <linux/mmc/mmc.h>
->  #include <linux/mmc/dw_mmc.h>
->  #include <linux/of.h>
-> +#include <linux/clk.h>
->
->  #include "dw_mmc.h"
->  #include "dw_mmc-pltfm.h"
->
-> +#define RK3288_CLKGEN_DIV      2
+Am 28.07.2014 um 22:12 schrieb Michael Trimarchi:
 
-Yup, this matches what I see in the TRM.  It will always divide by 2
-to allow for 4 phases (picking the phases not supported yet).  Default
-phase looks to be 180 degrees which is why we've (currently) got
-USE_HOLD_REG hardcoded.  :)
+> Hi
+> 
+> Il 28/lug/2014 22:06 "Belisko Marek" <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> ha scritto:
+> >
+> > On Mon, Jul 28, 2014 at 10:04 PM, Michael Trimarchi
+> > <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > > Hi
+> > >
+> > > Il 28/lug/2014 22:02 "Belisko Marek" <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> ha scritto:
+> > >
+> > >
+> > >>
+> > >> Hi Michael,
+> > >>
+> > >> On Mon, Jul 28, 2014 at 9:56 PM, Michael Trimarchi
+> > >> <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > >> > Hi Marek
+> > >> >
+> > >> > Il 28/lug/2014 21:54 "Marek Belisko" <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> ha scritto:
+> > >> >
+> > >> >
+> > >> >>
+> > >> >> Add model a5 which have additional jack detection.
+> > >> >>
+> > >> >> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> > >> >> ---
+> > >> >>  arch/arm/boot/dts/Makefile          |  1 +
+> > >> >>  arch/arm/boot/dts/omap3-gta04a5.dts | 17 +++++++++++++++++
+> > >> >>  2 files changed, 18 insertions(+)
+> > >> >>  create mode 100644 arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> >>
+> > >> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > >> >> index 7d45fde..576c595 100644
+> > >> >> --- a/arch/arm/boot/dts/Makefile
+> > >> >> +++ b/arch/arm/boot/dts/Makefile
+> > >> >> @@ -285,6 +285,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += am3517-craneboard.dtb \
+> > >> >>         omap3-evm-37xx.dtb \
+> > >> >>         omap3-gta04a3.dtb \
+> > >> >>         omap3-gta04a4.dtb \
+> > >> >> +       omap3-gta04a5.dtb \
+> > >> >>         omap3-igep0020.dtb \
+> > >> >>         omap3-igep0030.dtb \
+> > >> >>         omap3-ldp.dtb \
+> > >> >> diff --git a/arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> >> b/arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> >> new file mode 100644
+> > >> >> index 0000000..210317c3
+> > >> >> --- /dev/null
+> > >> >> +++ b/arch/arm/boot/dts/omap3-gta04a5.dts
+> > >> >> @@ -0,0 +1,17 @@
+> > >> >> +/*
+> > >> >> + * Copyright (C) 2014 H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> > >> >> + *
+> > >> >> + * This program is free software; you can redistribute it and/or
+> > >> >> modify
+> > >> >> + * it under the terms of the GNU General Public License version 2 as
+> > >> >> + * published by the Free Software Foundation.
+> > >> >> + */
+> > >> >> +
+> > >> >> +#include "omap3-gta04.dtsi"
+> > >> >> +
+> > >> >> +/ {
+> > >> >> +       model = "Goldelico GTA04A5;
+> > >> >> +
+> > >> >> +       sound {
+> > >> >> +               ti,jack-det-gpio = <&twl_gpio 2 0>;    /* GTA04A5 only
+> > >> >> */
+> > >> >> +       };
+> > >> >> +};
+> > >> >> --
+> > >> >> 1.9.1
+> > >> >>
+> > >> >
+> > >> > Can we have only one dts with status enabled/disabled?
+> > >> Do you mean to define this node it gta04.dtsi disabled and enable only
+> > >> for a5 model?
+> > >> >
+> > >
+> > > This should be possible in the bootloader
+> > Sorry I didn't get that. Can you give me some short example (or
+> > existing board which using it)?
+> > Thanks.
+> > >
+> 
+> http://www.denx.de/wiki/view/DULG/UBootCmdFDT
+> 
+> I just suggest to not create a dts for each board revision but let it manage by the bootloader. I don't know if there are examples but make sense to me to avoid to add a lot of dts.
+> 
+> 
 
-> +
->  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
->  {
->         *cmdr |= SDMMC_CMD_USE_HOLD_REG;
->  }
->
-> -static const struct dw_mci_drv_data rockchip_drv_data = {
-> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-> +{
-> +       host->bus_hz /= RK3288_CLKGEN_DIV;
-> +
-> +       return 0;
-> +}
-> +
-> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +       int ret;
-> +       unsigned int cclkin;
-> +
-> +       /*
-> +        * cclkin: source clock of mmc controller.
-> +        * bus_hz: card interface clock generated by CLKGEN.
-> +        * bus_hz = cclkin / RK3288_CLKGEN_DIV;
-> +        * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
-> +        *
-> +        * Note: div can only be 0 or 1
-> +        *       if DDR50 8bit mode, div must be set 1
+Hm. Why should we dynamically modify the dtb in memory through slow, interpreted FDT commands in u-boot, if the DTC can statically compile complete .dtb files by using an #include mechanism? It would slow down boot time for no other improvement. And debugging is more difficult that looking for compiler errors.
 
-Makes sense.  So this function is essentially reversing the logic in
-dw_mmc and making sure that we'll get the right DIV (0 or 1) in
-dw_mci_setup_bus().
+And our u-boot does not support the fdt command to avoid bloating it. IMHO boot loaders should be as small and fast as possible and contain only what is barely necessary. Everything more sophisticated should be done by the kernel and device drivers and some init user space process. I.e. boot loader should only tell the kernel only which board revision it is but not "manage" the board revisions.
 
+We also have a nice feature that a system on an SD card has the uImage in /boot and all existing and relevant .dtb files. U-Boot simply picks and loads the right one (by file name). This keeps the boot loader stable (people always have difficulties flashing new boot loaders). Therefore we need precompiled DTBs that completely and consistently describe each board variant. This mechanism allows that we can easily swap the SD card between different boards and variants. Implementing this feature using U-Boot scripts with FDT commands to patch the DT, appears to become a nightmare. If you are interested, the whole concept is described here:
 
-> +        */
-> +       if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
-> +           (ios->timing == MMC_TIMING_UHS_DDR50 ||
+http://projects.goldelico.com/p/gta04-main/downloads/55/
 
-Probably don't need UHS_DDR50 since (I think) you can't have an 8-bit
-SD card--only MMC, right?  ...but it doesn't hurt.
+Another aspect to consider: in my understanding, the main reason why DT is still maintained within the kernel is that the bindings are not yet stable. Therefore if bindings are patched, all device trees using them are also to be changed. I don't see how this can work if we have part of the board variations managed outside the kernel tree. Therefore each board revision is to be treated not differently from a completely new board. And similar parts are treated by a common .dtsi. This is how the concept IMHO should be. And the consequence is that we need a different .dts file for each board that has differences (even if they are or appear to be small).
 
+So I don't see that your suggestion is the right way to go.
 
-> +            ios->timing == MMC_TIMING_MMC_DDR52))
-> +               cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
-> +       else
-> +               cclkin = ios->clock * RK3288_CLKGEN_DIV;
-> +
-> +       ret = clk_set_rate(host->ciu_clk, cclkin);
-> +       if (ret)
-> +               dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-> +
-> +       host->bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-> +}
-> +
-> +static const struct dw_mci_drv_data rk2928_drv_data = {
-> +       .prepare_command        = dw_mci_pltfm_prepare_command,
-> +};
-> +
-> +static const struct dw_mci_drv_data rk3288_drv_data = {
->         .prepare_command        = dw_mci_pltfm_prepare_command,
-> +       .set_ios        = dw_mci_rk3288_set_ios,
-> +       .setup_clock    = dw_mci_rk3288_setup_clock,
->  };
->
->  static const struct dw_mci_drv_data socfpga_drv_data = {
-> @@ -95,7 +139,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
->  static const struct of_device_id dw_mci_pltfm_match[] = {
->         { .compatible = "snps,dw-mshc", },
->         { .compatible = "rockchip,rk2928-dw-mshc",
-> -               .data = &rockchip_drv_data },
-> +               .data = &rk2928_drv_data },
-> +       { .compatible = "rockchip,rk3288-dw-mshc",
-> +               .data = &rk3288_drv_data },
->         { .compatible = "altr,socfpga-dw-mshc",
->                 .data = &socfpga_drv_data },
->         {},
+BR,
+Nikolaus
 
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
