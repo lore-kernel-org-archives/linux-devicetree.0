@@ -1,56 +1,72 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: [PATCH net v3 3/6] dts: Add bindings for multicast hash bins and perfect filter entries
-Date: Tue, 29 Jul 2014 17:06:44 -0500
-Message-ID: <1406671607-27368-4-git-send-email-vbridgers2013@gmail.com>
-References: <1406671607-27368-1-git-send-email-vbridgers2013@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1406671607-27368-1-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, peppe.cavallaro@st.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org
-Cc: dinguyen@altera.com, davem@davemloft.net, vbridgers2013@gmail.com, vbridger@altera.com
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v3 2/4] mfd: pm8xxx-spmi: document DT bindings for Qualcomm
+ SPMI PMICs
+Date: Tue, 29 Jul 2014 15:23:29 -0700
+Message-ID: <53D81EE1.7040309@codeaurora.org>
+References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com> <1406205921-7452-3-git-send-email-svarbanov@mm-sol.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1406205921-7452-3-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This change adds bindings for the number of multicast hash bins and perfect
-filter entries supported by the Synopsys EMAC. The Synopsys EMAC core is
-configurable at device creation time, and can be configured for a different
-number of multicast hash bins and a different number of perfect filter
-entries. The device does not provide a way to query these parameters,
-therefore parameters are required. The Altera Cyclone V SOC has support for
-256 multicast hash bins and 128 perfect filter entries, and is different
-than what's currently provided in the stmmac driver.
+On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
+> Document DT bindings used to describe the Qualcomm SPMI PMICs.
+> Currently the SPMI PMICs supported are pm8941, pm8841 and pma8084.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-V3: No changes
-V2: No changes
----
- Documentation/devicetree/bindings/net/stmmac.txt |    6 ++++++
- 1 file changed, 6 insertions(+)
+(...)
+> +Required properties for peripheral child nodes:
+> +- compatible:      Should contain "qcom,pm8xxx-xxx", where "xxx" is
+> +                   peripheral name. The "pm8xxx" can be any of supported PMICs,
+> +                   see example below.
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index a2acd2b..9b03c57 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -25,6 +25,10 @@ Required properties:
- - snps,force_sf_dma_mode	Force DMA to use the Store and Forward
- 				mode for both tx and rx. This flag is
- 				ignored if force_thresh_dma_mode is set.
-+- snps,multicast-filter-bins:	Number of multicast filter hash bins
-+				supported by this device instance
-+- snps,perfect-filter-entries:	Number of perfect filter entries supported
-+				by this device instance
- 
- Optional properties:
- - resets: Should contain a phandle to the STMMAC reset signal, if any
-@@ -47,6 +51,8 @@ Examples:
- 		mac-address = [000000000000]; /* Filled in by U-Boot */
- 		max-frame-size = <3800>;
- 		phy-mode = "gmii";
-+		snps,multicast-filter-bins = <256>;
-+		snps,perfect-filter-entries = <128>;
- 		clocks = <&clock>;
- 		clock-names = "stmmaceth">;
- 	};
+I don't think that this binding document should be imposing any formatting
+restrictions on the compatible strings for QPNP peripheral drivers.  The
+QPNP peripheral drivers in the downstream msm-3.10 tree [1] do not specify
+per-PMIC compatible strings.  This is because ideally, a given QPNP
+peripheral represents a hardware block that is identical in interface and
+operation between PMICs.
+
+These peripheral drivers determine the base address for a given device
+instance via device tree reg and reg-names properties.  In order for this
+to continue to work with the pm8xxx-spmi driver, some mechanism will need
+to be introduced which creates resource structs for the
+non-memory-mappable SPMI base addresses.  One possible solution is
+currently being discussed in another thread [2].  This document will need
+to be updated to show the child node reg property scheme once a solution
+is reached.
+
+(...)
+> +Example:
+> +
+> +	pm8941@0 {
+> +		compatible = "qcom,pm8941";
+> +		reg = <0x0 SPMI_USID>;
+> +
+> +		rtc {
+> +			compatible = "qcom,pm8941-rtc";
+> +			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "alarm";
+> +		};
+> +	};
+
+Can you please expand your example to include the second SID for the
+PM8941 chip?  That way, it will be clear that each PMIC needs two DT
+nodes; one for each SID.
+
+Thanks,
+David Collins
+
+[1]: https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/?h=msm-3.10
+
+[2]: https://lkml.org/lkml/2014/7/29/252
+
 -- 
-1.7.9.5
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
