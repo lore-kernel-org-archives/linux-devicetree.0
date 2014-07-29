@@ -1,73 +1,76 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 3/6] irqchip: irq-st: Add documentation for STi based syscfg
- IRQs
-Date: Tue, 29 Jul 2014 15:05:41 +0100
-Message-ID: <1406642744-22589-4-git-send-email-lee.jones@linaro.org>
-References: <1406642744-22589-1-git-send-email-lee.jones@linaro.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
+ in DT
+Date: Tue, 29 Jul 2014 17:06:42 +0300
+Message-ID: <53D7AA72.6010309@mm-sol.com>
+References: <53D788A7.4020303@mm-sol.com> <3794875.CZFbAag5Sv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1406642744-22589-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, tglx@linutronix.de, lee.jones@linaro.org, kernel@stlinux.com, jason@lakedaemon.net
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <3794875.CZFbAag5Sv@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@linaro.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../interrupt-controller/st,sti-irq-syscfg.txt     | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+Arnd, thanks for the comments.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-new file mode 100644
-index 0000000..ced6014
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-@@ -0,0 +1,35 @@
-+STMicroelectronics STi System Configuration Controlled IRQs
-+-----------------------------------------------------------
-+
-+On STi based systems; External, CTI (Core Sight), PMU (Performance Management),
-+and PL310 L2 Cache IRQs are controlled using System Configuration registers.
-+This driver is used to unmask them prior to use.
-+
-+Required properties:
-+- compatible	: Should be set to one of:
-+			"st,stih415-irq-syscfg"
-+			"st,stih416-irq-syscfg"
-+			"st,stih407-irq-syscfg"
-+			"st,stid127-irq-syscfg"
-+- st,syscfg	: Phandle to Cortex-A9 IRQ system config registers
-+- st,irq-device	: Array of IRQs to enable - should be 2 in length
-+- st,fiq-device	: Array of FIQs to enable - should be 2 in length
-+
-+Optional properties:
-+- st,invert-ext	: External IRQs can be inverted at will.  This property inverts
-+		  these IRQs using bitwise logic.  A number of defines have been
-+		  provided for convenience:
-+			ST_IRQ_SYSCFG_EXT_1_INV
-+			ST_IRQ_SYSCFG_EXT_2_INV
-+			ST_IRQ_SYSCFG_EXT_3_INV
-+Example:
-+
-+irq-syscfg {
-+	compatible    = "st,stih416-irq-syscfg";
-+	st,syscfg     = <&syscfg_cpu>;
-+	st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
-+			<ST_IRQ_SYSCFG_PMU_1>;
-+	st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
-+			<ST_IRQ_SYSCFG_DISABLED>;
-+	st,invert-ext = <(ST_IRQ_SYSCFG_EXT_1_INV | ST_IRQ_SYSCFG_EXT_3_INV)>;
-+};
+On 07/29/2014 03:00 PM, Arnd Bergmann wrote:
+> On Tuesday 29 July 2014 14:42:31 Stanimir Varbanov wrote:
+>>         taddr = of_translate_address(dev, addrp);
+>> -       if (taddr == OF_BAD_ADDR)
+>> -               return -EINVAL;
+>> +       /*
+>> +        * if the address is non-translatable to cpu physical address
+>> +        * fallback to a IORESOURCE_REG resource.
+>> +        */
+>> +       if (taddr == OF_BAD_ADDR) {
+>> +               memset(r, 0, sizeof(*r));
+>> +               taddr = of_read_number(addrp, 1);
+>> +               if (taddr == OF_BAD_ADDR)
+>> +                       return -EINVAL;
+>> +               r->start = taddr;
+>> +               r->end = taddr + size - 1;
+>> +               r->flags = IORESOURCE_REG;
+>> +               r->name = name ? name : dev->full_name;
+>> +               return 0;
+>> +       }
+>> +
+> 
+> I don't think that everything returning OF_BAD_ADDR makes sense
+> to turn into IORESOURCE_REG. It could be an e.g. invalid DT
+> representation, a node with #size-cells=<0>, or it could be
+> something that gets translated one or more nodes up in the
+> tree before it reaches a bus without a ranges property.
+> 
+> Also, you should not rely on #address-cells being hardcoded
+> to <1> above.
+> 
+
+This was just an example. Of course it has many issues and probaly it is
+wrong:) The main goal was to understand does IORESOURCE_REG resource
+type and parsing the *reg* properties for non-translatable addresses are
+feasible. And also does it acceptable by community and OF platform
+maintainers.
+
+> How about modifying of_get_address() rather than
+> __of_address_to_resource() instead? You could introduce
+> a new of_bus entry for each bus you expect to return
+> an IORESOURCE_REG, or you could change of_bus_default_get_flags
+> to return IORESOURCE_REG if the parent node has no ranges property
+> and is not the root node.
+
+IMO the clearer solution is to introduce a new of_bus bus. In that case
+one possible problem will be how to distinguish the non-translatable and
+the other buses. Also the *device_type* property is deprecated for non
+PCI devices.
+
+The second option will need to change the prototype of .get_flags method
+to receive device_node structure.
+
+Thoughts?
+
 -- 
-1.9.1
+regards,
+Stan
