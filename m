@@ -1,22 +1,68 @@
-From: "Noemi Alvarez" <nimvarez-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Hello
-Date: Tue, 29 Jul 2014 10:23:20 +0200
-Message-ID: <adf9c84deea711c6326c744d8c46dc8a.squirrel__24320.453804876$1406636050$gmane$org@acemedia.mk>
-Reply-To: nimvarez-EMRzualFZlQ@public.gmane.org
+From: Michal =?ISO-8859-1?Q?Mal=FD?= <madcatxster@devoid-pointer.net>
+Subject: Re: [v2] input: drv260x: Add TI drv260x haptics driver
+Date: Tue, 29 Jul 2014 14:08:59 +0200
+Message-ID: <2696156.zc98nP9bBH@sigyn>
+References: <1406566403-1436-1-git-send-email-dmurphy@ti.com> <5adf0339146a7b655a77053195aa892c.squirrel@mungewell.org> <00FC9A978A94B7418C33AFAE8A35ED49DB1A79@DFLE09.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=UTF8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DB1A79@DFLE09.ent.ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "Murphy, Dan" <dmurphy@ti.com>
+Cc: "simon@mungewell.org" <simon@mungewell.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Elias Vanderstuyft <elias.vds@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 28 of July 2014 21:21:26 Murphy, Dan wrote:
+> Dmitry
+> 
+> On 07/28/2014 12:59 PM, simon@mungewell.org wrote:
+> >>> The initial driver supports the devices
+> >>> real time playback mode.  But the device
+> >>> has additional wave patterns in ROM.
+> >> 
+> >> As it presented the device appears to be a memoryless device, however
+> >> you present it to the rest of the system as if it can support playback
+> >> of multiple effects simultaneously, which is incorrect.
+> >> 
+> >> My guess that you need to engage the memoryless input library to schedule
+> >> handling multiple effects for your device, including ramping up, ramping
+> >> down, stopping playback when effects runs out, etc.
+> > 
+> > Hi Dan,
+> > Elias and Michal (cc'ed) are working on a kernel/userland library to
+> > handle sending multiple force feedback signals to 'simple' devices,
+> > perhaps you should engage with them.
+> > 
+> > Simon
 
-I want to keep up with you with hope for friendship if you are interested.
-If you don't mind i will like you to write me back. I am waiting to read
-from you, because i have something important and urgent to discuss with
-you. I will also send some of my beautiful photos to you.
+Hi Dan,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+since I spent some time trying to improve the memoryless library I can 
+hopefully provide you with some hints.
+
+If I'm reading this right, your device cannot play more than one effect at once 
+but it can operate eihter in RTP mode where the user controls the operation of 
+the motors directly on in an automated mode where the device follows some pre-
+programmed waveform. These two modes are mutually exclusive.
+
+If my understanding of the problem is correct, you will struggle both with 
+memoryless library and your own imlementation. The memoryless library is quite 
+simplistic and it doesn't have any sort of "passthrough" mode so you would not 
+be able to do anything besides RTP that way.
+
+On the other hand if you decide to write your own implementation of effect 
+handling you will end up duplicating a lot of code that already exists in the 
+memoryless library and has been proven to work.
+
+A possible solution for the problem would be to separate the functions that 
+control effect timing from the memoryless library and make them globally 
+accessible. I believe that this would simplify any customized haptic 
+implementation considerably and it might be a decent interim solution before 
+the project Simon mentioned is ready.
+
+If there is anybody interested in such a solution I can probably whip up a 
+patch for it quite quickly.
+
+Regards,
+Michal
