@@ -1,50 +1,47 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v11 3/8] ata: libahci_platform: move port_map parameters
- into the AHCI structure
-Date: Tue, 29 Jul 2014 10:40:42 -0400
-Message-ID: <20140729144042.GD4791@htj.dyndns.org>
-References: <1406193450-17283-1-git-send-email-antoine.tenart@free-electrons.com>
- <1406193450-17283-4-git-send-email-antoine.tenart@free-electrons.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2 RESEND 2/4] drivers: of: initialize and assign reserved
+ memory to newly created devices
+Date: Tue, 29 Jul 2014 16:47:04 +0200
+Message-ID: <53D7B3E8.6070906@samsung.com>
+References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
+ <1405326487-15346-3-git-send-email-m.szyprowski@samsung.com>
+ <20140728141700.55FC4C408EA@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406193450-17283-4-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140728141700.55FC4C408EA@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, Jon Medhurst <tixy@linaro.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, "Aneesh Kumar K.V." <aneesh.kumar@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-A couple nit picks.
+Hello,
 
-On Thu, Jul 24, 2014 at 11:17:25AM +0200, Antoine T=E9nart wrote:
-> @@ -321,6 +321,8 @@ struct ahci_host_priv {
->  	u32			cap;		/* cap to use */
->  	u32			cap2;		/* cap2 to use */
->  	u32			port_map;	/* port map to use */
-> +	u32			force_port_map;	/* force port map */
-> +	u32			mask_port_map;	/* mask out particular bits */
+On 2014-07-28 16:17, Grant Likely wrote:
+> On Mon, 14 Jul 2014 10:28:05 +0200, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>> Use recently introduced of_reserved_mem_device_init() function to
+>> automatically assign respective reserved memory region to the newly created
+>> platform and amba device.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> I'm still not okay with this patch. I don't think it is appropriate to
+> add the hook into the generic path that gets used for every platform
+> device. The devices that need reserved memory should explicitly request
+> it, and any setup be done at that time.
 
-Let's collect the inputs, including flags, at the top and mark them cle=
-arly.
+Okay... I thought that it will be easier to have it done in generic 
+code, if You don't
+think so, then I give up and we will add it in all drivers requiring 
+such memory regions.
 
->  int ahci_platform_init_host(struct platform_device *pdev,
->  			    struct ahci_host_priv *hpriv,
->  			    const struct ata_port_info *pi_template,
-> -			    unsigned long host_flags,
-> -			    unsigned int force_port_map,
-> -			    unsigned int mask_port_map)
-> +			    unsigned long host_flags)
+What about patch 3/4 and 4/4? Would it be possible to have your ack to 
+get them merged?
+Right now patch 4/4 depends on changes from akpm tree, so it will be 
+best to merge them
+to akpm tree.
 
-This doesn't make much sense to me.  Near the head of the function, it
-does
-
-	hpriv->flags |=3D host_flags;
-
-Wouldn't it make more sense to just let the caller set hpriv->flags?
-
-Thanks.
-
---=20
-tejun
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
