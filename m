@@ -1,109 +1,218 @@
-From: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
-Subject: RE: [PATCH 1/4] Documentation: dt-bindings: add dt binding info for
- Rockchip dwc2
-Date: Wed, 30 Jul 2014 22:39:44 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E0304844C307A@US01WEMBX2.internal.synopsys.com>
-References: <1406683873-18194-1-git-send-email-kever.yang@rock-chips.com>
- <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
- <A2CA0424C0A6F04399FB9E1CD98E0304844C2F5B@US01WEMBX2.internal.synopsys.com>
- <CAD=FV=VKJ2+y4Hh8x5oOPN=RTihth5uu2FKkgo2-74s+hAtGEA@mail.gmail.com>
+From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [git:media_tree/master] [media] media: atmel-isi: add primary DT
+	support
+Date: Thu, 31 Jul 2014 00:48:36 +0200
+Message-ID: <E1XCci2-0005kq-Bs@www.linuxtv.org>
+Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=VKJ2+y4Hh8x5oOPN=RTihth5uu2FKkgo2-74s+hAtGEA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "heiko@sntech.de" <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Kever Yang <kever.yang@rock-chips.com>, "xjq@rock-chips.com" <xjq@rock-chips.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "kishon@ti.com" <kishon@ti.com>, "lyz@rock-chips.com" <lyz@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "mporter@linaro.org" <mporter@linaro.org>, "olof@lixom.net" <olof@lixom.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "wulf@rock-chips.com" <wulf@rock-chips.com>, "sonnyrao@chromium.org" <sonnyrao@chromium.org>
+Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <http://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
+	<mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
+List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
+List-Subscribe: <http://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
+	<mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
+Sender: linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> From: dianders@google.com [mailto:dianders@google.com] On Behalf Of Doug Anderson
-> Sent: Wednesday, July 30, 2014 3:29 PM
-> 
-> On Wed, Jul 30, 2014 at 11:53 AM, Paul Zimmerman
-> <Paul.Zimmerman@synopsys.com> wrote:
-> >> From: Kever Yang [mailto:kever.yang@rock-chips.com]
-> >> Sent: Tuesday, July 29, 2014 6:31 PM
-> >>
-> >> This add necessary dwc2 binding documentation for Rockchip socs:
-> >> rk3066, rk3188 and rk3288
-> >>
-> >> add dr_mode as optional properties.
-> >>
-> >> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/usb/dwc2.txt |    5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> b/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> index aa91034..eb80d7b 100644
-> >> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> @@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
-> >>  Required properties:
-> >>  - compatible : One of:
-> >>    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-> >> +  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
-> >> +  - "rockchip,rk3188-usb","rockchip,rk3066-usb": for rk3188 Soc;
-> >> +  - "rockchip,rk3288-usb","rockchip,rk3066-usb": for rk3288 Soc;
-> >>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
-> >
-> > Do you really need three different bindings here? I believe the
-> > recommended approach is to define one binding for the common case, and
-> > reuse it for similar SOCs. Additional bindings should only be added if
-> > there is some difference in the SOC that requires it.
-> 
-> I think that Kever is doing the right thing.  Although we might think
-> that we are 100% 3066 compatible right now, we might later decide that
-> there's some difference that we didn't think about.  The standard way
-> to handle this is to list several different modes like this.  In other
-> words, we say:
-> 
-> * We are really a rk3288.
-> 
-> * We're either exactly compatible with a rk3066 or mostly compatible
-> with an rk3066.  We certainly know that if we don't have a special
-> rk3288 driver that the rk3066 driver works pretty well.
-> 
-> * If we didn't have an rk3066 driver, we might be able to get some
-> functionality with the generic "snps,dwc2" driver (in fact I can mount
-> a USB stick and read files with the generic driver).
+This is an automatic generated email to let you know that the following patch were queued at the 
+http://git.linuxtv.org/media_tree.git tree:
 
-OK, I'll take your word for it, unless someone else objects.
+Subject: [media] media: atmel-isi: add primary DT support
+Author:  Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Date:    Mon Jul 28 04:25:17 2014 -0300
 
-> >>  - reg : Should contain 1 register range (address and length)
-> >>  - interrupts : Should contain 1 interrupt
-> >> @@ -15,6 +18,8 @@ Optional properties:
-> >>  - phys: phy provider specifier
-> >>  - phy-names: shall be "usb2-phy"
-> >>  Refer to phy/phy-bindings.txt for generic phy consumer properties
-> >> +- dr_mode: shall be one of "host", "peripheral" and "otg"
-> >
-> > I don't see where you use 'dr_mode' in any of the DTS files. Are you
-> > going to add the uses later? And please us a more descriptive name,
-> > such as 'dual-role-mode'.
-> 
-> We have some local patches that do this, since we have another board
-> where the OTG port needs to be forced into host mode.  As I said above
-> I think this should be split into a separate patch series, though,
-> since it's not rk3288-related.
-> 
-> Using dr_mode is the right thing because it matches all of the other
-> drivers and also the generic bindings.  See Kever's note saying "Refer
-> to usb/generic.txt".
+This patch add the DT support for Atmel ISI driver.
+It use the same v4l2 DT interface that defined in video-interfaces.txt.
 
-Whoops, yes, I see a lot of other platforms us 'dr_mode' as well. Never
-mind me, then :)
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Signed-off-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
--- 
-Paul
+ .../devicetree/bindings/media/atmel-isi.txt        |   51 +++++++++++++++
+ drivers/media/platform/soc_camera/atmel-isi.c      |   65 +++++++++++++++++++-
+ 2 files changed, 114 insertions(+), 2 deletions(-)
+
+---
+
+http://git.linuxtv.org/media_tree.git?a=commitdiff;h=8ff19bc437f8d42d8a03dafe2bb28c5b3fc1bff1
+
+diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+new file mode 100644
+index 0000000..17e71b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+@@ -0,0 +1,51 @@
++Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
++----------------------------------------------
++
++Required properties:
++- compatible: must be "atmel,at91sam9g45-isi"
++- reg: physical base address and length of the registers set for the device;
++- interrupts: should contain IRQ line for the ISI;
++- clocks: list of clock specifiers, corresponding to entries in
++          the clock-names property;
++- clock-names: must contain "isi_clk", which is the isi peripherial clock.
++
++ISI supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++	isi: isi@f0034000 {
++		compatible = "atmel,at91sam9g45-isi";
++		reg = <0xf0034000 0x4000>;
++		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
++
++		clocks = <&isi_clk>;
++		clock-names = "isi_clk";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_isi>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			isi_0: endpoint {
++				remote-endpoint = <&ov2640_0>;
++				bus-width = <8>;
++			};
++		};
++	};
++
++	i2c1: i2c@f0018000 {
++		ov2640: camera@0x30 {
++			compatible = "omnivision,ov2640";
++			reg = <0x30>;
++
++			port {
++				ov2640_0: endpoint {
++					remote-endpoint = <&isi_0>;
++					bus-width = <8>;
++				};
++			};
++		};
++	};
+diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+index d32c533..3408b04 100644
+--- a/drivers/media/platform/soc_camera/atmel-isi.c
++++ b/drivers/media/platform/soc_camera/atmel-isi.c
+@@ -25,6 +25,7 @@
+ #include <media/atmel-isi.h>
+ #include <media/soc_camera.h>
+ #include <media/soc_mediabus.h>
++#include <media/v4l2-of.h>
+ #include <media/videobuf2-dma-contig.h>
+ 
+ #define MAX_BUFFER_NUM			32
+@@ -33,6 +34,7 @@
+ #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
+ #define MIN_FRAME_RATE			15
+ #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
++#define ISI_DEFAULT_MCLK_FREQ		25000000
+ 
+ /* Frame buffer descriptor */
+ struct fbd {
+@@ -876,6 +878,51 @@ static int atmel_isi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int atmel_isi_probe_dt(struct atmel_isi *isi,
++			struct platform_device *pdev)
++{
++	struct device_node *np= pdev->dev.of_node;
++	struct v4l2_of_endpoint ep;
++	int err;
++
++	/* Default settings for ISI */
++	isi->pdata.full_mode = 1;
++	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
++	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
++
++	np = of_graph_get_next_endpoint(np, NULL);
++	if (!np) {
++		dev_err(&pdev->dev, "Could not find the endpoint\n");
++		return -EINVAL;
++	}
++
++	err = v4l2_of_parse_endpoint(np, &ep);
++	if (err) {
++		dev_err(&pdev->dev, "Could not parse the endpoint\n");
++		goto err_probe_dt;
++	}
++
++	switch (ep.bus.parallel.bus_width) {
++	case 8:
++		isi->pdata.data_width_flags = ISI_DATAWIDTH_8;
++		break;
++	case 10:
++		isi->pdata.data_width_flags =
++				ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
++		break;
++	default:
++		dev_err(&pdev->dev, "Unsupported bus width: %d\n",
++				ep.bus.parallel.bus_width);
++		err = -EINVAL;
++		goto err_probe_dt;
++	}
++
++err_probe_dt:
++	of_node_put(np);
++
++	return err;
++}
++
+ static int atmel_isi_probe(struct platform_device *pdev)
+ {
+ 	unsigned int irq;
+@@ -887,7 +934,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
+ 	struct isi_platform_data *pdata;
+ 
+ 	pdata = dev->platform_data;
+-	if (!pdata || !pdata->data_width_flags) {
++	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
+ 		dev_err(&pdev->dev,
+ 			"No config available for Atmel ISI\n");
+ 		return -EINVAL;
+@@ -903,7 +950,14 @@ static int atmel_isi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(isi->pclk))
+ 		return PTR_ERR(isi->pclk);
+ 
+-	memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
++	if (pdata) {
++		memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
++	} else {
++		ret = atmel_isi_probe_dt(isi, pdev);
++		if (ret)
++			return ret;
++	}
++
+ 	isi->active = NULL;
+ 	spin_lock_init(&isi->lock);
+ 	INIT_LIST_HEAD(&isi->video_buffer_list);
+@@ -1005,11 +1059,18 @@ err_alloc_ctx:
+ 	return ret;
+ }
+ 
++static const struct of_device_id atmel_isi_of_match[] = {
++	{ .compatible = "atmel,at91sam9g45-isi" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
++
+ static struct platform_driver atmel_isi_driver = {
+ 	.remove		= atmel_isi_remove,
+ 	.driver		= {
+ 		.name = "atmel_isi",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(atmel_isi_of_match),
+ 	},
+ };
