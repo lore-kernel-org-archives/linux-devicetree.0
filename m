@@ -1,116 +1,98 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
- controller
-Date: Wed, 30 Jul 2014 15:41:47 +0000
-Message-ID: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
+Date: Wed, 30 Jul 2014 10:45:41 -0500
+Message-ID: <CAGo_u6ou+MoKOE_tTTmjxyFNW=jTaN9vnTsHrxR6sQHsieJyLA@mail.gmail.com>
+References: <1406582183-696-1-git-send-email-balbi@ti.com>
+	<1406582183-696-30-git-send-email-balbi@ti.com>
+	<20140729121425.GR29045@atomide.com>
+	<20140729141522.GB17808@saruman.home>
+	<20140729152052.GV29045@atomide.com>
+	<20140729154057.GE17808@saruman.home>
+	<20140729163345.GF17808@saruman.home>
+	<20140730060420.GY29045@atomide.com>
+	<20140730144059.GA7272@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20140730144059.GA7272-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
-IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiBNb25kYXksIEp1bHkgMjgsIDIw
-MTQgMTE6MzIgUE0NCj5UbzogUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaQ0KPkNjOiBQdW5uYWlh
-aCBDaG91ZGFyeSBLYWxsdXJpOyBkb3VndGhvbXBzb25AeG1pc3Npb24uY29tOw0KPnJvYmgrZHRA
-a2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBNaWNoYWwgU2ltZWs7DQo+bWFyay5ydXRs
-YW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBLdW1hciBHYWxhOyBS
-b2INCj5MYW5kbGV5OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtZG9jQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtDQo+ZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj5rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
-UHVubmFpYWggQ2hvdWRhcnk7IEFuaXJ1ZGhhIFNhcmFuZ2k7IFNyaWthbnRoDQo+VmVtdWxhDQo+
-U3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggdjNdIGVkYWM6IHN5bnBzOiBBZGRlZCBFREFDIHN1cHBv
-cnQgZm9yIHp5bnEgZGRyDQo+ZWNjIGNvbnRyb2xsZXINCj4NCj5PbiBNb24sIEp1bCAyOCwgMjAx
-NCBhdCAxMDo1MzoyNlBNICswNTMwLCBwdW5uYWlhaCBjaG91ZGFyeSBrYWxsdXJpIHdyb3RlOg0K
-Pj4gSSBjYW4gYWdyZWUgd2l0aCB5b3UgdGhhdCB3ZSBjYW4gdXNlIHNob3J0ZXIgbmFtZXMuQnV0
-IFpZTlEgaGFzDQo+PiBwcm9ncmFtbWFibGUgbG9naWMgbmV4dCB0byBwcm9jZXNzaW5nIHN5c3Rl
-bSB3aGVyZSBvbmUgY2FuIGFkZCBzb2Z0DQo+PiBtZW1vcnkgY29udHJvbGxlciBpbiB0aGUgc2Ft
-ZSBzeXN0ZW0gYW5kIG1heSB1c2UgZGlmZmVyZW50IGRyaXZlci4gU28sDQo+PiB0aGUgZWRhYyBk
-cml2ZXIgZm9yIHp5bnEgbWF5IGluY2x1ZGUgbXVsdGlwbGUgZHJpdmVycyBmb3IgZGlmZmVyZW50
-DQo+PiBtZW1vcnkgY29udHJvbGxlcnMgaW4gdGhlIHNhbWUgZmlsZS4gSW4gdGhpcyBjYXNlIGl0
-IGlzIGRpZmZpY3VsdCB0bw0KPj4gbWFpbnRhaW4gZ2VuZXJpYyBtYWNyb3MgYXMgeW91IHN1Z2dl
-c3RlZCBhYm92ZS4NCj4NCj5Tbz8NCj4NCj5Zb3UgY2FuIHN0aWxsIHNob3J0ZW4gdGhlbSBhIGJp
-dCAtIHRoZSBjdXJyZW50IG5hbWVzIGFyZSBhd2Z1bGx5IGxvbmcuDQo+U1lOUFNfRERSQ19FQ0Nf
-IGlzIHRvbyBtdWNoIGluZm9ybWF0aW9uLCBmb3IgZXhhbXBsZS4gV2Uga25vdyBpdCBpcyBERFIN
-Cj5hbmQgd2Uga25vdyBpdCBpcyBhYm91dCBFQ0MuIFNvIGRvIFNZTlBTIGFuZCBaWU5RIG9yIE9U
-SEVSIG9yIHdoYXRldmVyDQo+eW91IHdhbm5hIGNhbGwgaXQgcHJlZml4IGFuZCB0aGVuIHRoZSBy
-ZXN0LiBJLmUuLA0KPg0KPiAgICBTWU5QU188cmVnPl88Yml0cyo+DQo+ICAgIFpZTlFfPHJlZz5f
-Yml0cyo+DQo+DQo+WW91IGNhbiBldmVuIHVzZSBzaW5nbGUgbGV0dGVyIHByZWZpeGVzIGxpa2Ug
-U18gYW5kIFpfIGFuZCBhZGQgYSBjb21tZW50DQo+ZXhwbGFpbmluZyB3aGF0IHRob3NlIG1lYW4u
-IFN0aWxsIG11Y2ggbW9yZSByZWFkYWJsZSB0aGFuIHRoZSBsb25nDQo+cmVwZWF0aW5nIHByZWZp
-eGVzIGN1cnJlbnRseS4NCg0KT2suDQo+DQo+PiBBbHNvIHRoZSBjdXJyZW50IGVkYWMgZnJhbWV3
-b3JrIGZvciBlZGFjIG1lbW9yeSBjb250cm9sbGVycyBpcw0KPj4gZXhwZWN0aW5nIHRoZSBtY19u
-dW0gZnJvbSB0aGUgZHJpdmVyIHdoaWxlIGFsbG9jYXRpbmcgdGhlIG1lbW9yeQ0KPj4gY29udHJv
-bGxlciBpbnN0YW5jZSB1c2luZyB0aGUgZWRhY19tY19hbGxvYyBmdW5jdGlvbi4gVGhpcyByZXF1
-aXJlbWVudA0KPj4gbWFuZGF0ZXMgdGhhdCBpZiB0aGUgc3lzdGVtIGNvbnRhaW5zIHR3byBkaWZm
-ZXJlbnQgbWVtb3J5IGNvbnRyb2xsZXJzDQo+PiB0aGVuIHRoZSBjb3JyZXNwb25kaW5nIGVkYWMg
-ZHJpdmVycyBzaG91bGQgYmUgaW4gc2luZ2xlIGZpbGUuDQo+DQo+U28geW91J3JlIHRlbGxpbmcg
-bWUgdGhhdCB5b3Ugd2FudCBvbmUgZWRhYyBkcml2ZXIgZm9yICp0d28qIG1lbW9yeQ0KPmNvbnRy
-b2xsZXJzIHdoaWNoIGNhbiBiZSBwcmVzZW50IG9uIGEgc2luZ2xlIHN5c3RlbSAqYXQqICp0aGUq
-ICpzYW1lKg0KPip0aW1lKj8gSXMgdGhhdCBpdD8NCg0KWWVzLg0KPg0KPkhvdyBleGFjdGx5IGlz
-IHRoYXQgdG9wb2xvZ3kgc3VwcG9zZWQgdG8gbG9vayBsaWtlLCB3b3JrLCBldGMsIGV0Yz8gV2hh
-dA0KPmtpbmQgb2YgZXJyb3IgcmVwb3J0aW5nIGRvIHlvdSBpbWFnaW5lIHlvdSB3YW50IHRvIGRv
-IHdpdGggRURBQz8NCg0KWnlucSAoQWxsIHByb2dyYW1tYWJsZSBTT0MpIGNvbnRhaW5zIGEgZHVh
-bCBjb3JlIEFSTSBjb3J0ZXggQTkgYmFzZWQgcHJvY2Vzc2luZw0KU3lzdGVtKFBTKSBhbmQgWGls
-aW54IHByb2dyYW1tYWJsZSBsb2dpYyhQTCkgaW4gYSBzaW5nbGUgZGV2aWNlLg0KDQpBc3N1bWUg
-dGhlIGFwcGxpY2F0aW9uIGlzIGEgYnJvYWRjYXN0IGNhbWVyYS4gVGhlIGRlc2lnbiBmb3IgdGhp
-cyBzeXN0ZW0gdXNlIFBTIGFzDQpDb250cm9sIHBsYW5lIGFuZCB1c2UgUEwgYXMgZGF0YSBwbGFu
-ZSBmb3IgcHJvY2Vzc2luZyB0aGUgdmlkZW8gZGF0YS4gU28sIHRoZSBkZXNpZ24gDQptYXkgaGF2
-ZSB0d28gZGlmZmVyZW50IG1lbW9yeSBjb250cm9sbGVycyBvbmUgaW4gUFMgYW5kIGFub3RoZXIg
-b25lIGluIFBMLiAgIA0KUFMgaXMgcnVubmluZyB3aXRoIExpbnV4IE9TIGFuZCBQTCBkb2Vzbid0
-IGhhdmUgdGhlIE9TIGFuZCBpdCBpcyAgY29udHJvbGxlZCBieSB0aGUgDQpPUyBydW5uaW5nIG9u
-IFBTLg0KIE5vdyB0aGUgcmVxdWlyZW1lbnQgaXMgdG8gZGV2ZWxvcCBhIG1vbml0b3Jpbmcgc3lz
-dGVtIGZvciBhbGwgdGhlIGhhcmR3YXJlIGZhaWx1cmVzIA0KSW5jbHVkaW5nIGRkciBlY2MgZXJy
-b3JzLiBTaW5jZSB0aGUgYnJvYWRjYXN0IGNhbWVyYSBpbnZvbHZlcyBtb3JlIGRhdGEgcHJvY2Vz
-c2luZyBhbmQNCkREUiBtZW1vcnkgYWNjZXNzLCB0aGVyZSBpcyBhIGhpZ2ggcHJvYmFiaWxpdHkg
-b2YgZ2V0dGluZyBkZHIgZWNjIGVycm9ycyBvdmVyIHRoZSBwZXJpb2QuDQpTbywgdGhlIHVzZXIg
-c2hvdWxkIGJlIGludGltYXRlZCB3aXRoIHRoZXNlIGVycm9ycyB3aGVuIHRoZXkgb2NjdXIgYW5k
-IGlmIHRoZSBlcnJvciByYXRlDQogaXMgaGlnaCwgdGhlbiB0aGUgdXNlciBjYW4gY29uc2lkZXIg
-dGhlIHByZXZlbnRpdmUgbWV0aG9kcy4gV2l0aG91dCB0aGlzIGVycm9yIHJlcG9ydGluZw0KbWVj
-aGFuaXNtIGl0IGlzIGRpZmZpY3VsdCB0byBkZWJ1ZyB0aGUgaXNzdWVzIGxpa2UgbWVtb3J5IGNv
-cnJ1cHRpb24sIGtlcm5lbCBvb3BzIHdoaWNoDQogbWF5IG9jY3VyIGR1ZSB0byBkZHIgZWNjIGZh
-aWx1cmVzLg0KDQpTaW5jZSwgdGhlIG1lbW9yeSBjb250cm9sbGVycyBhcmUgZGlmZmVyZW50LCBp
-dCBuZWVkIHR3byBlZGFjIGRyaXZlcnMgZm9yIHJlcG9ydGluZyB0aGUgZWNjIA0KZXJyb3JzIGFu
-ZCBhbHNvIG1haW50YWluaW5nIHRoZSBzdGF0aXN0aWNzIG9mIHRoYXQgcGFydGljdWxhciBtZW1v
-cnkgY29udHJvbGxlci4gV2l0aCB0aGUgY3VycmVudA0KZnJhbWV3b3JrLCB0aGVyZSBpcyBhIGNo
-YW5jZSB0aGF0IGJvdGggdGhlIGRyaXZlcnMgZ2V0IG1jX251bSBhcyB6ZXJvIGFuZCBtYWxmdW5j
-dGlvbi4gDQpBc3N1bWUgdGhlIGNvZGUgZm9yIHRoZSB0d28gZHJpdmVycyBsb29rcyBsaWtlIGJl
-bG93DQoNCkRyaXZlciAxOg0KCW1jaSA9IGVkYWNfbWNfYWxsb2MoMCwgQVJSQVlfU0laRShsYXll
-cnMpLCBsYXllcnMsDQoJCQkgICAgc2l6ZW9mKHN0cnVjdCAgY3RybDFfZHJ2ZGF0YSkpOw0KDQpE
-cml2ZXIgMjoNCgltY2kgPSBlZGFjX21jX2FsbG9jKDAsIEFSUkFZX1NJWkUobGF5ZXJzKSwgbGF5
-ZXJzLA0KCQkJICAgIHNpemVvZihzdHJ1Y3QgY3RybDJfZHJ2ZGF0YSkpOw0KDQpJc3N1ZToNCiAg
-U2luY2UgZHJpdmVyIGlzIHByb3ZpZGluZyB0aGUgbWNfbnVtIHRvIGZyYW1ld29yaywgbm93IHRo
-ZXJlIGlzIGNoYW5jZSB0aGF0IG9ubHkgb25lIGRldmljZSBhY3RpdmUgYXMNCiBib3RoIHRoZSBk
-cml2ZXJzIGNsYWltaW5nIHRoZSBzYW1lIG51bWJlci4NCg0KU29sdXRpb24gMToNCiBLZWVwIHR3
-byBkcml2ZXJzIGluIHNpbmdsZSBmaWxlIGFuZCB1c2Ugc3RhdGljIGdsb2JhbCB2YXJpYWJsZSBm
-b3IgdHJhY2tpbmcgdGhlIG1jX251bS4gVGhpcyBzb2x1dGlvbiBsb29rcw0KZ29vZCBidXQgdGhl
-IGRyaXZlcnMgbWF5IG5vdCBiZSBnZW5lcmljIGFzIHRoZXNlIGRyaXZlciB3b3VsZCBiZSBpbiBh
-IHp5bnFfZWRhYy5jIGZpbGUuIFNvIG90aGVycyBtYXkgbm90DQpyZXVzZSB0aGVzZSBkcml2ZXJz
-DQpzdGF0aWMgaW50IG1jX251bSA9IDA7DQoNCkRyaXZlciAxOg0KCW1jaSA9IGVkYWNfbWNfYWxs
-b2MobWNfbnVtLCBBUlJBWV9TSVpFKGxheWVycyksIGxheWVycywNCgkJCSAgICBzaXplb2Yoc3Ry
-dWN0ICBjdHJsMV9kcnZkYXRhKSk7DQogICAgICAgICAgICAgIG1jX251bSsrOw0KDQpEcml2ZXIg
-MjoNCgltY2kgPSBlZGFjX21jX2FsbG9jKG1jX251bSwgQVJSQVlfU0laRShsYXllcnMpLCBsYXll
-cnMsDQoJCQkgICAgc2l6ZW9mKHN0cnVjdCBjdHJsMl9kcnZkYXRhKSk7DQogICAgICAgICAgICAg
-ICAgIG1jX251bSsrOw0KDQpTb2x1dGlvbiAyOg0KICBMZXQgdGhlIGZyYW1ld29yayBhc3NpZ24g
-dGhlIG1jX251bSB0byB0aGUgZWRhYyBkcml2ZXINCg0KICAgICBtY19udW0gPSBlZGFjX21jX2dl
-dF9pZCgpOyAvKiByZXR1cm5zIHRoZSBuZXh0IGF2YWlsYWJsZSBtY2kgc2xvdCAqLw0KICAgICBt
-Y2kgPSBlZGFjX21jX2FsbG9jKG1jX251bSwuLi4pOw0KDQoNCkluIG15IG9waW5pb24gc29sdXRp
-b24gMiAgbG9va3MgbmVhdCBhbmQgaXQgZWxpbWluYXRlcyB0aGUgZGVwZW5kZW5jeSBvbiB0cmFj
-a2luZw0KIHRoZSBtY19udW0uDQoNClBsZWFzZSBzdWdnZXN0IHlvdXIgdmlldyBvbiB0aGlzIHNv
-bHV0aW9uLg0KIA0KQXQgdGhpcyBwb2ludCBvZiB0aW1lLCBteSByZXF1aXJlbWVudCBpcyByZXBv
-cnRpbmcgdGhlIGVjYyBjb3JyZWN0YWJsZSBhbmQgdW5jb3JyZWN0YWJsZQ0KIGVycm9ycyBhbmQg
-YWxzbyBtYWludGFpbmluZyB0aGUgZXJyb3Igc3RhdHMgZm9yIGZ1dHVyZSBkZWNpc2lvbiBtYWtp
-bmcuIFNpbmNlIHRoZSBsaW51eCBlZGFjDQpGcmFtZXdvcmsgaXMgcmVhZHksIHdlIGRlY2lkZWQg
-dG8gdXNlIHRoaXMgZnJhbWV3b3JrLg0KIA0KTWVhbndoaWxlLCBJIHdpbGwgIHN1Ym1pdCB0aGUg
-bmV4dCByZXZpc2lvbiBvZiB0aGUgcGF0Y2ggZm9yIHRoZSBhYm92ZSBjb29tZW50cy4gDQoNClJl
-Z2FyZHMsDQpQdW5uYWlhaA0KPg0KPklPVywgbW9yZSBpbmZvIHdvdWxkIGJlIGFwcHJlY2lhdGVk
-Lg0KPg0KPlRoYW5rcy4NCj4NCj4tLQ0KPlJlZ2FyZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0K
-PlNlbnQgZnJvbSBhIGZhdCBjcmF0ZSB1bmRlciBteSBkZXNrLiBGb3JtYXR0aW5nIGlzIGZpbmUu
-DQo+LS0NCg==
+On Wed, Jul 30, 2014 at 9:40 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> HI,
+>
+> On Tue, Jul 29, 2014 at 11:04:21PM -0700, Tony Lindgren wrote:
+>> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 09:36]:
+>> > Hi,
+>> >
+>> > On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
+>> > > On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
+>> > > > * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 07:18]:
+>> > > > > Hi,
+>> > > > >
+>> > > > > On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
+>> > > > > > * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140728 14:19]:
+>> > > > > > > now that we don't need to support legacy board-files,
+>> > > > > > > we can completely switch over to a linear irq domain
+>> > > > > > > and make use of irq_alloc_domain_generic_chips() to
+>> > > > > > > allocate all generic irq chips for us.
+>> > > > > >
+>> > > > > > This patch seems to somehow break off-idle for omap3
+>> > > > > > where it no longer wakes up.
+>> > > > >
+>> > > > > Sure your bisection is correct ? This patch just switches from legacy
+>> > > > > irq domain to linear irq domain.
+>> > > >
+>> > > > Yes, I tried it a few times. Just enabling
+>> > > > retention idle hangs too with this patch.
+>> > > >
+>> > > > Maybe it's omap3_prcm_irq_setup that relies on
+>> > > > 11 + OMAP_INTC_START? There may be other such issues
+>> > >
+>> > > lol.
+>> > >
+>> > > OMAP4 has the same nonsense.
+>> >
+>> > made me think why (if) OMAP4 works with that same setup. Does wake from
+>> > OFF work with OMAP4 ?
+>>
+>> Not without similar changes, omap4+ has the same issue.. There's a RFC
+>> series from Nishant to fix some of this, and Tero is moving the PRCM
+>> into a driver.
+>>
+>> > Anyway, here's a quick little hack to check if that's the reason for the
+>> > regression:
+>>
+>> OK yeah that's along the same lines with Nishant's RFC series in thread
+>> "[RFC PATCH 0/7] ARM: OMAP4+: PRM: minor cleanups and dt support of
+>> interrupts"
+>>
+>> FYI, it did not compile, needs to include linux/of_irq.h. But yes,
+>
+> I might have sent the wrong version as I had that same build error and
+> fixed it localy.
+>
+>> it fixes the regression for me, Also now the whole series works for
+>> me :)
+>
+> good to know.
+>
+> What do you want to do now ? Wait for PRCM to become a driver ? Wait for
+> Nishanth's series to get accepted ? I guess the same thing could be done
+> for OMAP3 and AM33, then we would have a chance of having working wake
+> from idle with the new irqchip.
+
+I can repost the current series as it stands now once 17-rc1 comes out
+(without the build failure ofcourse).. if that helps to move it out of
+RFC status.
+
+
+-- 
+---
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
