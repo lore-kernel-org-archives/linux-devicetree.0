@@ -1,203 +1,218 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCHv7 2/5] ARM: dts: exynos: unuse the slot-node and deprecated
- the supports-highspeed for dw-mmc
-Date: Wed, 30 Jul 2014 14:33:29 +0200
-Message-ID: <53D8E619.90601@suse.de>
-References: <1406514579-3769-1-git-send-email-jh80.chung@samsung.com> <1406514579-3769-3-git-send-email-jh80.chung@samsung.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks
+ handled by clock_ops domain
+Date: Wed, 30 Jul 2014 16:25:31 +0300
+Message-ID: <53D8F24B.7010104@ti.com>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+ <53D68CC4.1010704@ti.com>
+ <CACxGe6uMke5vgzcNC9xUqjr2bHJ4QFHD6YjocSZWq8Ccx8Mm6A@mail.gmail.com>
+ <2717555.fiA6A86F65@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406514579-3769-3-git-send-email-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, kgene.kim@samsung.com
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2717555.fiA6A86F65@avalon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Simon Horman <horms@verge.net.au>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 28.07.2014 04:29, schrieb Jaehoon Chung:
-> dw-mmc controller can support multiple slots.
-> But, there are no use-cases anywhere. So we don't need to support the
-> slot-node for dw-mmc controller.
-> And "supports-highspeed" property in dw-mmc is deprecated.
-> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspee=
-d".
+Hi Laurent,
 
-s/replaced to/replaced with/
+On 07/30/2014 03:06 AM, Laurent Pinchart wrote:
+> Hi Grygorii and Grant,
+> 
+> On Monday 28 July 2014 23:52:34 Grant Likely wrote:
+>> On Mon, Jul 28, 2014 at 11:47 AM, Grygorii Strashko wrote:
+>>> On 07/28/2014 05:05 PM, Grant Likely wrote:
+>>>> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko wrote:
+>>>>> Use "clkops-clocks" property to specify clocks handled by
+>>>>> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
+>>>>> set of clocks will be handled by Runtime PM through clock_ops
+>>>>> Pm domain.
+>>>>>
+>>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>>> ---
+>>>>>
+>>>>>    drivers/of/of_clk.c |    7 ++-----
+>>>>>    1 file changed, 2 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
+>>>>> index 35f5e9f..5f9b90e 100644
+>>>>> --- a/drivers/of/of_clk.c
+>>>>> +++ b/drivers/of/of_clk.c
+>>>>> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct
+>>>>> device_node *np,>>>
+>>>>>       struct clk *clk;
+>>>>>       int error;
+>>>>>
+>>>>> -    for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
+>>>>> -            if (!clk_may_runtime_pm(clk)) {
+>>>>> -                    clk_put(clk);
+>>>>> -                    continue;
+>>>>> -            }
+>>>>> +    for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
+>>>>> +                 !IS_ERR(clk); i++) {
+>>>>
+>>>> This really looks like an ABI break to me. What happens to all the
+>>>> existing platforms who don't have this new clkops-clocks in their device
+>>>> tree?
+>>>
+>>> Agree. This patch as is will break such platforms.
+>>> As possible solution for above problem - the NULL can be used as clock's
+>>> prefix by default and platform code can configure new value of clock's
+>>> prefix during initialization.
+>>> In addition, to make this solution full the of_clk_get_by_name() will
+>>> need to be modified too.
+>>>
+>>> But note pls, this is pure RFC patches which I did to find out the answer
+>>> on questions: - What is better: maintain Runtime PM clocks configuration
+>>> in DT or in code?
+>>
+>> In code. I don't think it is workable to embed runtime PM behaviour
+>> into the DT bindings. I think there will be too much variance in what
+>> hardware requires. We can create helpers to make this simpler, but I
+>> don't think it is a good idea to set it up automatically without any
+>> control from the driver itself.
+>>
+>>> - Where and when to call of_clk_register_runtime_pm_clocks()?
+>>>
+>>>    Bus notifier/ platform core/ device drivers
+>>
+>> I would say in device drivers.
+> 
+> I tend to agree with that.
+> 
+> It will help here to take a step back and remember what the problem we're
+> trying to solve is.
+> 
+> At the root is clock management. Our system comprise many clocks, and they
+> need to be handled. The Common Clock Framework nicely models the clocks, and
+> offers an API for drivers to retrieve device clocks and control them. Drivers
+> can thus implement clock management manually without much pain.
+> 
+> A clock can be managed in roughly three different ways :
+> 
+> - it can be enabled at probe time and disabled at remove time ;
+> 
+> - it can be enabled right before the device leaves its idle state and disabled
+> when the device goes back to idle ; or
+> 
+> - it can be enabled and disabled in a more fine-grained, device-specific
+> manner.
+> 
+> The selected clock management granularity depends on constraints specific to
+> the device and on how aggressive power saving needs to be. Enabling the clocks
+> at probe time and disabling them at remove time is enough for most devices,
+> but leads to a high power consumption. For that reason the second clock
+> management scheme is often desired.
+> 
+> Managing clocks manually in the driver is a valid option. However, when adding
+> runtime PM to the equation, and realizing that the clocks need to be enabled
+> in the runtime PM resume handler and disabled in the suspend handler, the
+> clock management code starts looking very similar in most drivers. We're thus
+> tempted to factorize it away from the drivers into a shared location.
+> 
+> It's important to note at this point that the goal here is only to simplify
+> drivers. Moving clock management code out of the drivers doesn't (unless I'm
+> missing something) open the door to new possibilities, it just serves as a
+> simplification.
+> 
+> Now, as Grygorii mentioned, differences between how a given IP core is
+> integrated in various SoCs can make clock management SoC-dependent. In the
+> vast majority of cases (which is really what we need to target, given that our
+> target is simplifying drivers) SoC integration can be described as a list of
+> clocks that must be managed. That list can be common to all devices in a given
+> SoC, or can be device-dependent as well.
 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Reviewed-by: Tushar Behera <trblinux@gmail.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
-> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
-> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-odroidx.dts      |    8 ++------
->  arch/arm/boot/dts/exynos4412-origen.dts       |    8 ++------
->  arch/arm/boot/dts/exynos4412-trats2.dts       |    8 ++------
->  arch/arm/boot/dts/exynos5250-arndale.dts      |   18 +++++----------=
---
->  arch/arm/boot/dts/exynos5250-cros-common.dtsi |   26 +++++++--------=
-----------
->  arch/arm/boot/dts/exynos5250-smdk5250.dts     |   18 +++++----------=
---
->  arch/arm/boot/dts/exynos5250-snow.dts         |    6 ++----
->  arch/arm/boot/dts/exynos5260-xyref5260.dts    |   18 +++++----------=
---
->  arch/arm/boot/dts/exynos5410-smdk5410.dts     |   18 +++++----------=
---
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts |   16 ++++-----------
->  arch/arm/boot/dts/exynos5420-peach-pit.dts    |   16 ++++-----------
->  arch/arm/boot/dts/exynos5420-smdk5420.dts     |   16 ++++-----------
->  arch/arm/boot/dts/exynos5800-peach-pi.dts     |   16 ++++-----------
->  13 files changed, 51 insertions(+), 141 deletions(-)
-[...]
-> diff --git a/arch/arm/boot/dts/exynos5250-cros-common.dtsi b/arch/arm=
-/boot/dts/exynos5250-cros-common.dtsi
-> index 89ac90f..af51361 100644
-> --- a/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> @@ -248,7 +248,6 @@
-> =20
->  	mmc@12200000 {
->  		num-slots =3D <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay =3D <200>;
->  		samsung,dw-mshc-ciu-div =3D <3>;
-> @@ -256,44 +255,33 @@
->  		samsung,dw-mshc-ddr-timing =3D <1 2>;
->  		pinctrl-names =3D "default";
->  		pinctrl-0 =3D <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4 &sd0_bus8>;
-> -
-> -		slot@0 {
-> -			reg =3D <0>;
-> -			bus-width =3D <8>;
-> -		};
-> +		bus-width =3D <8>;
-> +		cap-mmc-highspeed;
->  	};
-> =20
->  	mmc@12220000 {
->  		num-slots =3D <1>;
-> -		supports-highspeed;
->  		card-detect-delay =3D <200>;
->  		samsung,dw-mshc-ciu-div =3D <3>;
->  		samsung,dw-mshc-sdr-timing =3D <2 3>;
->  		samsung,dw-mshc-ddr-timing =3D <1 2>;
->  		pinctrl-names =3D "default";
->  		pinctrl-0 =3D <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -		slot@0 {
-> -			reg =3D <0>;
-> -			bus-width =3D <4>;
-> -			wp-gpios =3D <&gpc2 1 0>;
-> -		};
-> +		bus-width =3D <4>;
-> +		wp-gpios =3D <&gpc2 1 0>;
-> +		cap-sd-highspeed;
->  	};
-> =20
->  	mmc@12230000 {
->  		num-slots =3D <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay =3D <200>;
->  		samsung,dw-mshc-ciu-div =3D <3>;
->  		samsung,dw-mshc-sdr-timing =3D <2 3>;
->  		samsung,dw-mshc-ddr-timing =3D <1 2>;
->  		/* See board-specific dts files for pin setup */
-> -
-> -		slot@0 {
-> -			reg =3D <0>;
-> -			bus-width =3D <4>;
-> -		};
-> +		bus-width =3D <4>;
-> +		cap-sd-highspeed;
->  	};
-> =20
->  	spi_1: spi@12d30000 {
-[...]
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dt=
-s/exynos5250-snow.dts
-> index 079fdf9..17d8f53 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -329,10 +329,8 @@
->  	 */
->  	mmc@12230000 {
->  		status =3D "okay";
-> -		slot@0 {
-> -			pinctrl-names =3D "default";
-> -			pinctrl-0 =3D <&sd3_clk &sd3_cmd &sd3_bus4>;
-> -		};
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&sd3_clk &sd3_cmd &sd3_bus4>;
->  	};
-> =20
->  	i2c@12CD0000 {
+That's actually a problem - now we have static list of managed clocks per-SoC and
+not per device.
 
-Since you said you are targeting 3.16 still, FYI Doug asked me to do th=
-e
-same change for 3.17 in my Spring series for correctness reasons. So we
-shouldn't have merge conflict there.
+> 
+> Few locations can be used to express a per-device list of per-SoC clocks. We
+> can have clocks lists in a per-SoC and per-device location, per-device clocks
+> lists in an SoC-specific location, or per-SoC clocks lists in a device-
+> specific location.
+> 
+> The first option would require listing clocks to be managed by runtime PM in
+> DT nodes, as proposed by this patch set. I don't think this is the best
+> option, as that information is a mix of hardware description and software
+> policy, with the hardware description part being already present in DT in the
+> clocks property.
 
-However, we are also dropping exynos5250-cros-common.dtsi, so at some
-point the above changes will need to be merged into -snow.dts as
-conflict resolution.
+I'm not fully agree here. The clock is "functional clock" If It's managed by runtime PM.
+And all such clocks need to be enabled/disabled always when device is powered on/off.
+So, from my point of view it's HW description and it follows TRM. 
+Other clocks are optional and only drivers should control them.
+And question is how to define sets of such clocks in the best way?
 
-[...]
-> diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boo=
-t/dts/exynos5410-smdk5410.dts
-> index 7275bbd..be3e025 100644
-> --- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> +++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> @@ -40,33 +40,25 @@
->  &mmc_0 {
->  	status =3D "okay";
->  	num-slots =3D <1>;
-> -	supports-highspeed;
-> +	cap-mmc-highspeed;
->  	broken-cd;
->  	card-detect-delay =3D <200>;
->  	samsung,dw-mshc-ciu-div =3D <3>;
->  	samsung,dw-mshc-sdr-timing =3D <2 3>;
->  	samsung,dw-mshc-ddr-timing =3D <1 2>;
-> -
-> -	slot@0 {
-> -		reg =3D <0>;
-> -		bus-width =3D <8>;
-> -	};
-> +	bus-width =3D <8>;
->  };
-> =20
->  &mmc_2 {
->  	status =3D "okay";
->  	num-slots =3D <1>;
-> -	supports-highspeed;
-> +	cap-sd-highspeed;
->  	card-detect-delay =3D <200>;
->  	samsung,dw-mshc-ciu-div =3D <3>;
->  	samsung,dw-mshc-sdr-timing =3D <2 3>;
->  	samsung,dw-mshc-ddr-timing =3D <1 2>;
-> -
-> -	slot@0 {
-> -		reg =3D <0>;
-> -		bus-width =3D <4>;
-> -		disable-wp;
-> -	};
-> +	bus-width =3D <4>;
-> +	disable-wp;
->  };
-> =20
->  &uart0 {
+> 
+> The second option calls for storing the lists in SoC code under arch/. As
+> we're trying to minimize the amount of SoC code there (and even remove SoC
+> code completely when possible) I don't think that's a good option.
+> 
+> The third option would require storing the clocks lists in device drivers. I
+> believe this is our best option, as a trade-off between simplicity and
+> versatility. Drivers that use runtime PM already need to enable it explicitly
+> when probing devices. Passing a list of clock names to runtime PM at that
+> point wouldn't complicate drivers much. When the clocks list isn't SoC-
+> dependent it could be stored as static information. Otherwise it could be
+> derived from DT (or any other source of hardware description) using C code,
+> offering all the versatility we need.
 
-Similarly here, I am adding an exynos5410-odroidxu.dts file that will
-need to get the same changes as -smdk5410.dts then.
+Ok. if I understand right, you propose smth like this:
+1) DT based solution:
 
-Regards,
-Andreas
+devA {
+	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
+	rpm-clocks = <&clkpa>, <&clkcpgmac>;
+- or -
+	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
+	clock-names = "clk_pa", "clk_cpgmac", "cpsw_cpts_rft_clk";
+	rpm-clocks =  "clk_pa", "clk_cpgmac";
+}
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+in driver:
+ pm_runtime_enable();
+  |- of_clk_register_runtime_pm_clocks()
+- or -
+ of_clk_register_runtime_pm_clocks()
+ pm_runtime_enable();
+
+
+2) Static solution:
+char *con_ids_davinci[] =
+    { "fck", "master", "slave", NULL };
+char *con_ids_keystone[] =
+    { "clk_pa", "clk_cpgmac" };
+
+static struct of_device_id of_match[] = {
+	{ .compatible = "ti,keystone", con_ids_keystone},
+	{ .compatible = "ti,davinci", con_ids_davinci},
+	{},
+};
+
+Personally, I like option 1 and, seems, it will not break ABI. 
+
+> 
+> The only drawback of this solution I can think of right now is that the
+> runtime PM core couldn't manage device clocks before probing the device.
+> Specifically device clocks couldn't be managed if no driver is loaded for that
+> device. I somehow recall that someone raised this as being a problem, but I
+> can't remember why.
+> 
+
+I can recollect only OMAP2+ SoCs where some abstraction called HW_MOD is used 
+during platform initialization to reset all devices and turn off unused ones
+before probing the devices. But clock_ops are not used by OMAP2+:)
+
+regards,
+-grygorii
