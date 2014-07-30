@@ -1,102 +1,162 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: Re: [PATCH 3/4] usb: dwc2: add compatible data for rockchip soc
-Date: Tue, 29 Jul 2014 23:40:14 -0700
-Message-ID: <53D8934E.9040807@rock-chips.com>
-References: <1406683873-18194-1-git-send-email-kever.yang@rock-chips.com>	<1406684102-18313-1-git-send-email-kever.yang@rock-chips.com>
- <CAD=FV=Wqr0C7gj89DVof=gBo4mxvqqz0or7_vkdad==CkzzrPg@mail.gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] rcar_can: add device tree support
+Date: Wed, 30 Jul 2014 09:38:23 +0200
+Message-ID: <53D8A0EF.7060903@pengutronix.de>
+References: <201407300253.42491.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=Wqr0C7gj89DVof=gBo4mxvqqz0or7_vkdad==CkzzrPg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Randy Dunlap <rdunlap@infradead.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jianqun Xu <xjq@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Kishon Vijay Abraham I <kishon@ti.com>, lyz@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Porter <mporter@linaro.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, wulf@rock-chips.com, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, linux-kernel
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="rq23u4nhKIUkTlQfnOCHkcb6cqd8jb3dr"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201407300253.42491.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, vksavl@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--rq23u4nhKIUkTlQfnOCHkcb6cqd8jb3dr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 07/29/2014 09:21 PM, Doug Anderson wrote:
-> Kever,
->
-> On Tue, Jul 29, 2014 at 6:35 PM, Kever Yang <kever.yang@rock-chips.com> wrote:
->> This patch add compatible data for dwc2 controller found on
->> rk3066, rk3188 and rk3288 processors from rockchip.
->>
->> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
->> ---
->>   drivers/usb/dwc2/platform.c |   29 +++++++++++++++++++++++++++++
->>   1 file changed, 29 insertions(+)
-> I'm nowhere an expert here, but...
->
->
->> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
->> index a10e7a3..cc5983c 100644
->> --- a/drivers/usb/dwc2/platform.c
->> +++ b/drivers/usb/dwc2/platform.c
->> @@ -75,6 +75,34 @@ static const struct dwc2_core_params params_bcm2835 = {
->>          .uframe_sched                   = 0,
->>   };
->>
->> +static const struct dwc2_core_params params_rk3066 = {
->> +       .otg_cap                        = 2,    /* no HNP/SRP capable */
-> Are you sure HNP/SRP is not available?  Do things break if you leave this at 0?
-1. HNP/SRP is not need right now, I didn't see it used in mobile devices.
-2. If HNP/SRP is enabled, the controller will monitor the otg_vbus about 5V,
-     overcurrent change will happen if vbus not detect after switch to host
-     for a period of time.
-     If not, the controller will monitor b_valid signal about 3V instead 
-of 5V vbus,
-     which match the hardware reference design from Rockchip.
->
->
->> +       .otg_ver                        = 0,    /* 1.3 */
->> +       .dma_enable                     = 1,
->> +       .dma_desc_enable                = 0,
->> +       .speed                          = 0,    /* High Speed */
->> +       .enable_dynamic_fifo            = 1,
->> +       .en_multiple_tx_fifo            = 1,
->> +       .host_rx_fifo_size              = 520,  /* 520 DWORDs */
->> +       .host_nperio_tx_fifo_size       = 128,  /* 128 DWORDs */
->> +       .host_perio_tx_fifo_size        = 256,  /* 256 DWORDs */
->> +       .max_transfer_size              = 65536,
->> +       .max_packet_count               = 512,
-> Header file says max_packet_count should be max of 511.
-Yeap, you are right, I will fix this.
->
->
->> +       .host_channels                  = 9,
->> +       .phy_type                       = 1,    /* UTMI */
->> +       .phy_utmi_width                 = 16,   /* 8 bits */
-> Either comment or value is wrong since 16 != 8 bits.
-I will change this to auto detect.
->
->
->> +       .phy_ulpi_ddr                   = 0,    /* Single */
->> +       .phy_ulpi_ext_vbus              = 0,
->> +       .i2c_enable                     = 0,
->> +       .ulpi_fs_ls                     = 0,
->> +       .host_support_fs_ls_low_power   = 0,
->> +       .host_ls_low_power_phy_clk      = 0,    /* 48 MHz */
->> +       .ts_dline                       = 0,
->> +       .reload_ctl                     = 1,
->> +       .ahbcfg                         = 0x17, /* dma enable &  INCR16 */
->> +       .uframe_sched                   = 1,
->> +};
-> Many of these values could just be -1 to autodetect / use default.
-> Should we consider doing that?
-Most of the parameter can be auto-detect right except some have more than
-one choice, so I will leave the parameters to driver if it can do it right.
->
-> -Doug
->
->
->
+On 07/30/2014 12:53 AM, Sergei Shtylyov wrote:
+> Add support of the device tree probing for the Renesas R-Car CAN contro=
+llers.
+>=20
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>=20
+> ---
+> The patch is against the 'linux-can-next.git' repo plus the CAN clock h=
+andling
+> patch I've just posted.
+>=20
+> Changes in version 2:
+> - split the device tree bindings document into a separate patch;
+> - replaced 0 with CLKR_CLKP1 in the 'clock_select' variable intializer
+> - reversed the condition in the *if* stetement handling the reading of =
+the
+>   CAN clock selector from the device tree or the paltfrom data;
+> - renamed the "clock-select" property to "renesas,can-clock-select";
+> - rebased the patch on top of the CAN clock handling fix.
+>=20
+>  drivers/net/can/rcar_can.c |   33 +++++++++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 8 deletions(-)
+>=20
+> Index: linux-can-next/drivers/net/can/rcar_can.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-can-next.orig/drivers/net/can/rcar_can.c
+> +++ linux-can-next/drivers/net/can/rcar_can.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/can/dev.h>
+>  #include <linux/clk.h>
+>  #include <linux/can/platform/rcar_can.h>
+> +#include <linux/of.h>
+> =20
+>  #define RCAR_CAN_DRV_NAME	"rcar_can"
+> =20
+> @@ -738,13 +739,20 @@ static int rcar_can_probe(struct platfor
+>  	struct net_device *ndev;
+>  	struct resource *mem;
+>  	void __iomem *addr;
+> +	u32 clock_select =3D CLKR_CLKP1;
+
+If you introduce the variable clock_select in the patch "rcar_can:
+support all input clocks", this diff would be smaller.
+
+>  	int err =3D -ENODEV;
+>  	int irq;
+> =20
+> -	pdata =3D dev_get_platdata(&pdev->dev);
+> -	if (!pdata) {
+> -		dev_err(&pdev->dev, "No platform data provided!\n");
+> -		goto fail;
+> +	if (pdev->dev.of_node) {
+> +		of_property_read_u32(pdev->dev.of_node,
+> +				     "renesas,can-clock-select", &clock_select);
+> +	} else {
+> +		pdata =3D dev_get_platdata(&pdev->dev);
+> +		if (!pdata) {
+> +			dev_err(&pdev->dev, "No platform data provided!\n");
+> +			goto fail;
+> +		}
+> +		clock_select =3D pdata->clock_select;
+>  	}
+> =20
+>  	irq =3D platform_get_irq(pdev, 0);
+> @@ -776,13 +784,12 @@ static int rcar_can_probe(struct platfor
+>  		goto fail_clk;
+>  	}
+> =20
+> -	if (pdata->clock_select > CLKR_CLKEXT) {
+> +	if (clock_select > CLKR_CLKEXT) {
+>  		err =3D -EINVAL;
+>  		dev_err(&pdev->dev, "invalid CAN clock selected\n");
+>  		goto fail_clk;
+>  	}
+> -	priv->can_clk =3D devm_clk_get(&pdev->dev,
+> -				     clock_names[pdata->clock_select]);
+> +	priv->can_clk =3D devm_clk_get(&pdev->dev, clock_names[clock_select])=
+;
+>  	if (IS_ERR(priv->can_clk)) {
+>  		err =3D PTR_ERR(priv->can_clk);
+>  		dev_err(&pdev->dev, "cannot get CAN clock: %d\n", err);
+> @@ -794,7 +801,7 @@ static int rcar_can_probe(struct platfor
+>  	ndev->flags |=3D IFF_ECHO;
+>  	priv->ndev =3D ndev;
+>  	priv->regs =3D addr;
+> -	priv->clock_select =3D pdata->clock_select;
+> +	priv->clock_select =3D clock_select;
+>  	priv->can.clock.freq =3D clk_get_rate(priv->can_clk);
+>  	priv->can.bittiming_const =3D &rcar_can_bittiming_const;
+>  	priv->can.do_set_mode =3D rcar_can_do_set_mode;
+> @@ -887,10 +894,20 @@ static int __maybe_unused rcar_can_resum
+> =20
+>  static SIMPLE_DEV_PM_OPS(rcar_can_pm_ops, rcar_can_suspend, rcar_can_r=
+esume);
+> =20
+> +static const struct of_device_id rcar_can_of_table[] __maybe_unused =3D=
+ {
+> +	{ .compatible =3D "renesas,can-r8a7778" },
+> +	{ .compatible =3D "renesas,can-r8a7779" },
+> +	{ .compatible =3D "renesas,can-r8a7790" },
+> +	{ .compatible =3D "renesas,can-r8a7791" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_can_of_table);
+> +
+>  static struct platform_driver rcar_can_driver =3D {
+>  	.driver =3D {
+>  		.name =3D RCAR_CAN_DRV_NAME,
+>  		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(rcar_can_of_table),
+>  		.pm =3D &rcar_can_pm_ops,
+>  	},
+>  	.probe =3D rcar_can_probe,
+>=20
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--rq23u4nhKIUkTlQfnOCHkcb6cqd8jb3dr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlPYoO8ACgkQjTAFq1RaXHM54QCePaaURomLxae22K2+GbVixfCE
+oYMAni1pOSPt2heG8siViLQUyakTkRwx
+=vs5x
+-----END PGP SIGNATURE-----
+
+--rq23u4nhKIUkTlQfnOCHkcb6cqd8jb3dr--
