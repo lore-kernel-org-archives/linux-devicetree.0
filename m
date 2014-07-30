@@ -1,162 +1,117 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 7/8] drm/bridge: Add i2c based driver for ptn3460 bridge
-Date: Wed, 30 Jul 2014 17:40:54 +0200
-Message-ID: <20140730154054.GE1345@ulmo>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406316130-4744-8-git-send-email-ajaykumar.rs@samsung.com>
- <20140730120504.GJ29590@ulmo>
- <CAEC9eQPERoZjPV5=P_Re_Bs7gT7Q5Q_Z6sJViuxoG8oo9O3=-w@mail.gmail.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
+ controller
+Date: Wed, 30 Jul 2014 15:41:47 +0000
+Message-ID: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0723685626=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAEC9eQPERoZjPV5=P_Re_Bs7gT7Q5Q_Z6sJViuxoG8oo9O3=-w@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0723685626==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qOrJKOH36bD5yhNe"
-Content-Disposition: inline
-
-
---qOrJKOH36bD5yhNe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jul 30, 2014 at 08:46:44PM +0530, Ajay kumar wrote:
-> On Wed, Jul 30, 2014 at 5:35 PM, Thierry Reding <thierry.reding@gmail.com> wrote:
-> > On Sat, Jul 26, 2014 at 12:52:09AM +0530, Ajay Kumar wrote:
-[...]
-> >> +int ptn3460_post_encoder_init(struct drm_bridge *bridge)
-> >> +{
-> >> +     struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
-> >> +     int ret;
-> >> +
-> >> +     /* bridge is attached to encoder.
-> >> +      * safe to remove it from the bridge_lookup table.
-> >> +      */
-> >> +     drm_bridge_remove_from_lookup(bridge);
-> >
-> > No, you should never do this. First, you're not adding it back to the
-> > registry when the bridge is detached, so unloading and reloading the
-> > display driver will fail. Second there should never be a need to remove
-> > it from the registry as long as the driver itself is loaded. If you're
-> > concerned about a single bridge being used multiple times, there's
-> > already code to handle that in your previous patch:
-> >
-> >         int drm_bridge_attach_encoder(...)
-> >         {
-> >                 ...
-> >
-> >                 if (bridge->encoder)
-> >                         return -EBUSY;
-> >
-> >                 ...
-> >         }
-> >
-> > Generally the registry should contain a list of bridges that have been
-> > registered, whether they're used or not is irrelevant.
-> I was just wondering if it is ok to have a node in two independent lists?
-> bridge_lookup_table and the other mode_config.bridge_list?
-
-Oh, it reuses the head field for the registry. I hadn't noticed before.
-No, you certainly can't have the same node in two lists. Honestly I
-don't quite understand why there was a need to expose drm_bridge as a
-drm_mode_object in the first place since it's never exported to
-userspace.
-
-So I think that perhaps we could simply get rid of the base field and
-not tie in drm_bridge objects with the DRM object as we currently do.
-But until Sean or Rob comment on this it might be better to simply add
-another struct list_head field for the registry. That way both can
-coexist and we can independently still decide to remove the base and
-head fields if they're no longer needed.
-
-> >> +     ret = drm_connector_init(bridge->drm_dev, &ptn_bridge->connector,
-> >> +                     &ptn3460_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
-> >> +     if (ret) {
-> >> +             DRM_ERROR("Failed to initialize connector with drm\n");
-> >> +             return ret;
-> >> +     }
-> >> +     drm_connector_helper_add(&ptn_bridge->connector,
-> >> +                                     &ptn3460_connector_helper_funcs);
-> >> +     drm_connector_register(&ptn_bridge->connector);
-> >> +     drm_mode_connector_attach_encoder(&ptn_bridge->connector,
-> >> +                                                     bridge->encoder);
-> >> +
-> >> +     if (ptn_bridge->panel)
-> >> +             drm_panel_attach(ptn_bridge->panel, &ptn_bridge->connector);
-> >> +
-> >> +     return ret;
-> >> +}
-> >
-> > I'm thinking that eventually we'll want to register the connector only
-> > when a panel is attached to the bridge. This will only become important
-> > when we implement bridge chaining because if you instantiate a connector
-> > for each bridge then you'll get a list of connectors for the DRM device
-> > representing the output of each bridge rather than just the final one
-> > that goes to the display.
-> So, do not initialize connector if there is no panel? and, get_modes
-> via panel instead of doing it by edid-emulation?
-
-If there's no panel, then there's nothing to connect the connector to,
-so it's unneeded. Also if you have chained bridges, then each bridge
-would expose a connector and it would become impossible to choose the
-correct one. So only the final bridge in the chain should instantiate
-the connector.
-
-.get_modes() still needs to be done from the bridge because that is the
-most closely connected to the display controller and therefore dictates
-the timing that the display controller needs to generate.
-
-Querying the panel's .get_modes() might be useful to figure out which
-emulation mode to use in the bridge.
-
-Thierry
-
---qOrJKOH36bD5yhNe
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT2RIGAAoJEN0jrNd/PrOhYJUP+wW3AIgtlY0/VmCyCCHKbzIR
-sBAC3Kz+8vO4bVRlcprKJ61b7Pyg/2lGaesRUZKUSV/gYKNqQgRZbDjCR/ygHQ5y
-YWk/+rWMVxsrBO68xhyjjk4LCD6mHzW0NhgZweTteRq/18cGIEI8+G/cuuQaV4t9
-WYN6jPQ9nynuH1I1dznhq3ZBvz+5lOYX4P9Tc5EiMy/UX4cLFUK/UtThaGZQcz/w
-WFbp4G0aP5/CdSoZ35wRGrzP0x9h5eQaHankuNPyMeLKhnuosDOqXeyQ0IFZakAg
-Noaz8X4npEawgT2Yq8mXA4nOWwVucmAopwQkZVvfp4Kc4NGQ05Kx6spFKaXSvwjS
-8vaSkoXEqXyPZCK2ZOTJq3qx9o451rsSn7BGGl6W2oi9nXoF3KQ/e7y0HP0PihZ3
-QTFF1OI1ULWbNg9gGgP0jli50/yh31QFP0mG+VbwbNgkt8qi+vx4FUmEuFPe7//H
-4opXoCcA/aCpZLb23rMWYoFq5ZsHQdtoK+GW4/wUaeEOQ8+zRoP/gjkyDMdyO/+T
-iBysaEiSeAr2TYGO41SxFR7D55Y+XyHvCyPp1aqiqGA/2Ub2DHjJG1hkzhW7bxc3
-sq1pRKYi/n73JxY4vT2eYweVzth4Fc7TMFlax8EZVFhDX8p0ocFNYcWHQDu631A6
-Sk50PhOur+ixuWxyXjG3
-=ro32
------END PGP SIGNATURE-----
-
---qOrJKOH36bD5yhNe--
-
---===============0723685626==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0723685626==--
+SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
+IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiBNb25kYXksIEp1bHkgMjgsIDIw
+MTQgMTE6MzIgUE0NCj5UbzogUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaQ0KPkNjOiBQdW5uYWlh
+aCBDaG91ZGFyeSBLYWxsdXJpOyBkb3VndGhvbXBzb25AeG1pc3Npb24uY29tOw0KPnJvYmgrZHRA
+a2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBNaWNoYWwgU2ltZWs7DQo+bWFyay5ydXRs
+YW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBLdW1hciBHYWxhOyBS
+b2INCj5MYW5kbGV5OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtZG9jQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtDQo+ZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj5rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
+UHVubmFpYWggQ2hvdWRhcnk7IEFuaXJ1ZGhhIFNhcmFuZ2k7IFNyaWthbnRoDQo+VmVtdWxhDQo+
+U3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggdjNdIGVkYWM6IHN5bnBzOiBBZGRlZCBFREFDIHN1cHBv
+cnQgZm9yIHp5bnEgZGRyDQo+ZWNjIGNvbnRyb2xsZXINCj4NCj5PbiBNb24sIEp1bCAyOCwgMjAx
+NCBhdCAxMDo1MzoyNlBNICswNTMwLCBwdW5uYWlhaCBjaG91ZGFyeSBrYWxsdXJpIHdyb3RlOg0K
+Pj4gSSBjYW4gYWdyZWUgd2l0aCB5b3UgdGhhdCB3ZSBjYW4gdXNlIHNob3J0ZXIgbmFtZXMuQnV0
+IFpZTlEgaGFzDQo+PiBwcm9ncmFtbWFibGUgbG9naWMgbmV4dCB0byBwcm9jZXNzaW5nIHN5c3Rl
+bSB3aGVyZSBvbmUgY2FuIGFkZCBzb2Z0DQo+PiBtZW1vcnkgY29udHJvbGxlciBpbiB0aGUgc2Ft
+ZSBzeXN0ZW0gYW5kIG1heSB1c2UgZGlmZmVyZW50IGRyaXZlci4gU28sDQo+PiB0aGUgZWRhYyBk
+cml2ZXIgZm9yIHp5bnEgbWF5IGluY2x1ZGUgbXVsdGlwbGUgZHJpdmVycyBmb3IgZGlmZmVyZW50
+DQo+PiBtZW1vcnkgY29udHJvbGxlcnMgaW4gdGhlIHNhbWUgZmlsZS4gSW4gdGhpcyBjYXNlIGl0
+IGlzIGRpZmZpY3VsdCB0bw0KPj4gbWFpbnRhaW4gZ2VuZXJpYyBtYWNyb3MgYXMgeW91IHN1Z2dl
+c3RlZCBhYm92ZS4NCj4NCj5Tbz8NCj4NCj5Zb3UgY2FuIHN0aWxsIHNob3J0ZW4gdGhlbSBhIGJp
+dCAtIHRoZSBjdXJyZW50IG5hbWVzIGFyZSBhd2Z1bGx5IGxvbmcuDQo+U1lOUFNfRERSQ19FQ0Nf
+IGlzIHRvbyBtdWNoIGluZm9ybWF0aW9uLCBmb3IgZXhhbXBsZS4gV2Uga25vdyBpdCBpcyBERFIN
+Cj5hbmQgd2Uga25vdyBpdCBpcyBhYm91dCBFQ0MuIFNvIGRvIFNZTlBTIGFuZCBaWU5RIG9yIE9U
+SEVSIG9yIHdoYXRldmVyDQo+eW91IHdhbm5hIGNhbGwgaXQgcHJlZml4IGFuZCB0aGVuIHRoZSBy
+ZXN0LiBJLmUuLA0KPg0KPiAgICBTWU5QU188cmVnPl88Yml0cyo+DQo+ICAgIFpZTlFfPHJlZz5f
+Yml0cyo+DQo+DQo+WW91IGNhbiBldmVuIHVzZSBzaW5nbGUgbGV0dGVyIHByZWZpeGVzIGxpa2Ug
+U18gYW5kIFpfIGFuZCBhZGQgYSBjb21tZW50DQo+ZXhwbGFpbmluZyB3aGF0IHRob3NlIG1lYW4u
+IFN0aWxsIG11Y2ggbW9yZSByZWFkYWJsZSB0aGFuIHRoZSBsb25nDQo+cmVwZWF0aW5nIHByZWZp
+eGVzIGN1cnJlbnRseS4NCg0KT2suDQo+DQo+PiBBbHNvIHRoZSBjdXJyZW50IGVkYWMgZnJhbWV3
+b3JrIGZvciBlZGFjIG1lbW9yeSBjb250cm9sbGVycyBpcw0KPj4gZXhwZWN0aW5nIHRoZSBtY19u
+dW0gZnJvbSB0aGUgZHJpdmVyIHdoaWxlIGFsbG9jYXRpbmcgdGhlIG1lbW9yeQ0KPj4gY29udHJv
+bGxlciBpbnN0YW5jZSB1c2luZyB0aGUgZWRhY19tY19hbGxvYyBmdW5jdGlvbi4gVGhpcyByZXF1
+aXJlbWVudA0KPj4gbWFuZGF0ZXMgdGhhdCBpZiB0aGUgc3lzdGVtIGNvbnRhaW5zIHR3byBkaWZm
+ZXJlbnQgbWVtb3J5IGNvbnRyb2xsZXJzDQo+PiB0aGVuIHRoZSBjb3JyZXNwb25kaW5nIGVkYWMg
+ZHJpdmVycyBzaG91bGQgYmUgaW4gc2luZ2xlIGZpbGUuDQo+DQo+U28geW91J3JlIHRlbGxpbmcg
+bWUgdGhhdCB5b3Ugd2FudCBvbmUgZWRhYyBkcml2ZXIgZm9yICp0d28qIG1lbW9yeQ0KPmNvbnRy
+b2xsZXJzIHdoaWNoIGNhbiBiZSBwcmVzZW50IG9uIGEgc2luZ2xlIHN5c3RlbSAqYXQqICp0aGUq
+ICpzYW1lKg0KPip0aW1lKj8gSXMgdGhhdCBpdD8NCg0KWWVzLg0KPg0KPkhvdyBleGFjdGx5IGlz
+IHRoYXQgdG9wb2xvZ3kgc3VwcG9zZWQgdG8gbG9vayBsaWtlLCB3b3JrLCBldGMsIGV0Yz8gV2hh
+dA0KPmtpbmQgb2YgZXJyb3IgcmVwb3J0aW5nIGRvIHlvdSBpbWFnaW5lIHlvdSB3YW50IHRvIGRv
+IHdpdGggRURBQz8NCg0KWnlucSAoQWxsIHByb2dyYW1tYWJsZSBTT0MpIGNvbnRhaW5zIGEgZHVh
+bCBjb3JlIEFSTSBjb3J0ZXggQTkgYmFzZWQgcHJvY2Vzc2luZw0KU3lzdGVtKFBTKSBhbmQgWGls
+aW54IHByb2dyYW1tYWJsZSBsb2dpYyhQTCkgaW4gYSBzaW5nbGUgZGV2aWNlLg0KDQpBc3N1bWUg
+dGhlIGFwcGxpY2F0aW9uIGlzIGEgYnJvYWRjYXN0IGNhbWVyYS4gVGhlIGRlc2lnbiBmb3IgdGhp
+cyBzeXN0ZW0gdXNlIFBTIGFzDQpDb250cm9sIHBsYW5lIGFuZCB1c2UgUEwgYXMgZGF0YSBwbGFu
+ZSBmb3IgcHJvY2Vzc2luZyB0aGUgdmlkZW8gZGF0YS4gU28sIHRoZSBkZXNpZ24gDQptYXkgaGF2
+ZSB0d28gZGlmZmVyZW50IG1lbW9yeSBjb250cm9sbGVycyBvbmUgaW4gUFMgYW5kIGFub3RoZXIg
+b25lIGluIFBMLiAgIA0KUFMgaXMgcnVubmluZyB3aXRoIExpbnV4IE9TIGFuZCBQTCBkb2Vzbid0
+IGhhdmUgdGhlIE9TIGFuZCBpdCBpcyAgY29udHJvbGxlZCBieSB0aGUgDQpPUyBydW5uaW5nIG9u
+IFBTLg0KIE5vdyB0aGUgcmVxdWlyZW1lbnQgaXMgdG8gZGV2ZWxvcCBhIG1vbml0b3Jpbmcgc3lz
+dGVtIGZvciBhbGwgdGhlIGhhcmR3YXJlIGZhaWx1cmVzIA0KSW5jbHVkaW5nIGRkciBlY2MgZXJy
+b3JzLiBTaW5jZSB0aGUgYnJvYWRjYXN0IGNhbWVyYSBpbnZvbHZlcyBtb3JlIGRhdGEgcHJvY2Vz
+c2luZyBhbmQNCkREUiBtZW1vcnkgYWNjZXNzLCB0aGVyZSBpcyBhIGhpZ2ggcHJvYmFiaWxpdHkg
+b2YgZ2V0dGluZyBkZHIgZWNjIGVycm9ycyBvdmVyIHRoZSBwZXJpb2QuDQpTbywgdGhlIHVzZXIg
+c2hvdWxkIGJlIGludGltYXRlZCB3aXRoIHRoZXNlIGVycm9ycyB3aGVuIHRoZXkgb2NjdXIgYW5k
+IGlmIHRoZSBlcnJvciByYXRlDQogaXMgaGlnaCwgdGhlbiB0aGUgdXNlciBjYW4gY29uc2lkZXIg
+dGhlIHByZXZlbnRpdmUgbWV0aG9kcy4gV2l0aG91dCB0aGlzIGVycm9yIHJlcG9ydGluZw0KbWVj
+aGFuaXNtIGl0IGlzIGRpZmZpY3VsdCB0byBkZWJ1ZyB0aGUgaXNzdWVzIGxpa2UgbWVtb3J5IGNv
+cnJ1cHRpb24sIGtlcm5lbCBvb3BzIHdoaWNoDQogbWF5IG9jY3VyIGR1ZSB0byBkZHIgZWNjIGZh
+aWx1cmVzLg0KDQpTaW5jZSwgdGhlIG1lbW9yeSBjb250cm9sbGVycyBhcmUgZGlmZmVyZW50LCBp
+dCBuZWVkIHR3byBlZGFjIGRyaXZlcnMgZm9yIHJlcG9ydGluZyB0aGUgZWNjIA0KZXJyb3JzIGFu
+ZCBhbHNvIG1haW50YWluaW5nIHRoZSBzdGF0aXN0aWNzIG9mIHRoYXQgcGFydGljdWxhciBtZW1v
+cnkgY29udHJvbGxlci4gV2l0aCB0aGUgY3VycmVudA0KZnJhbWV3b3JrLCB0aGVyZSBpcyBhIGNo
+YW5jZSB0aGF0IGJvdGggdGhlIGRyaXZlcnMgZ2V0IG1jX251bSBhcyB6ZXJvIGFuZCBtYWxmdW5j
+dGlvbi4gDQpBc3N1bWUgdGhlIGNvZGUgZm9yIHRoZSB0d28gZHJpdmVycyBsb29rcyBsaWtlIGJl
+bG93DQoNCkRyaXZlciAxOg0KCW1jaSA9IGVkYWNfbWNfYWxsb2MoMCwgQVJSQVlfU0laRShsYXll
+cnMpLCBsYXllcnMsDQoJCQkgICAgc2l6ZW9mKHN0cnVjdCAgY3RybDFfZHJ2ZGF0YSkpOw0KDQpE
+cml2ZXIgMjoNCgltY2kgPSBlZGFjX21jX2FsbG9jKDAsIEFSUkFZX1NJWkUobGF5ZXJzKSwgbGF5
+ZXJzLA0KCQkJICAgIHNpemVvZihzdHJ1Y3QgY3RybDJfZHJ2ZGF0YSkpOw0KDQpJc3N1ZToNCiAg
+U2luY2UgZHJpdmVyIGlzIHByb3ZpZGluZyB0aGUgbWNfbnVtIHRvIGZyYW1ld29yaywgbm93IHRo
+ZXJlIGlzIGNoYW5jZSB0aGF0IG9ubHkgb25lIGRldmljZSBhY3RpdmUgYXMNCiBib3RoIHRoZSBk
+cml2ZXJzIGNsYWltaW5nIHRoZSBzYW1lIG51bWJlci4NCg0KU29sdXRpb24gMToNCiBLZWVwIHR3
+byBkcml2ZXJzIGluIHNpbmdsZSBmaWxlIGFuZCB1c2Ugc3RhdGljIGdsb2JhbCB2YXJpYWJsZSBm
+b3IgdHJhY2tpbmcgdGhlIG1jX251bS4gVGhpcyBzb2x1dGlvbiBsb29rcw0KZ29vZCBidXQgdGhl
+IGRyaXZlcnMgbWF5IG5vdCBiZSBnZW5lcmljIGFzIHRoZXNlIGRyaXZlciB3b3VsZCBiZSBpbiBh
+IHp5bnFfZWRhYy5jIGZpbGUuIFNvIG90aGVycyBtYXkgbm90DQpyZXVzZSB0aGVzZSBkcml2ZXJz
+DQpzdGF0aWMgaW50IG1jX251bSA9IDA7DQoNCkRyaXZlciAxOg0KCW1jaSA9IGVkYWNfbWNfYWxs
+b2MobWNfbnVtLCBBUlJBWV9TSVpFKGxheWVycyksIGxheWVycywNCgkJCSAgICBzaXplb2Yoc3Ry
+dWN0ICBjdHJsMV9kcnZkYXRhKSk7DQogICAgICAgICAgICAgIG1jX251bSsrOw0KDQpEcml2ZXIg
+MjoNCgltY2kgPSBlZGFjX21jX2FsbG9jKG1jX251bSwgQVJSQVlfU0laRShsYXllcnMpLCBsYXll
+cnMsDQoJCQkgICAgc2l6ZW9mKHN0cnVjdCBjdHJsMl9kcnZkYXRhKSk7DQogICAgICAgICAgICAg
+ICAgIG1jX251bSsrOw0KDQpTb2x1dGlvbiAyOg0KICBMZXQgdGhlIGZyYW1ld29yayBhc3NpZ24g
+dGhlIG1jX251bSB0byB0aGUgZWRhYyBkcml2ZXINCg0KICAgICBtY19udW0gPSBlZGFjX21jX2dl
+dF9pZCgpOyAvKiByZXR1cm5zIHRoZSBuZXh0IGF2YWlsYWJsZSBtY2kgc2xvdCAqLw0KICAgICBt
+Y2kgPSBlZGFjX21jX2FsbG9jKG1jX251bSwuLi4pOw0KDQoNCkluIG15IG9waW5pb24gc29sdXRp
+b24gMiAgbG9va3MgbmVhdCBhbmQgaXQgZWxpbWluYXRlcyB0aGUgZGVwZW5kZW5jeSBvbiB0cmFj
+a2luZw0KIHRoZSBtY19udW0uDQoNClBsZWFzZSBzdWdnZXN0IHlvdXIgdmlldyBvbiB0aGlzIHNv
+bHV0aW9uLg0KIA0KQXQgdGhpcyBwb2ludCBvZiB0aW1lLCBteSByZXF1aXJlbWVudCBpcyByZXBv
+cnRpbmcgdGhlIGVjYyBjb3JyZWN0YWJsZSBhbmQgdW5jb3JyZWN0YWJsZQ0KIGVycm9ycyBhbmQg
+YWxzbyBtYWludGFpbmluZyB0aGUgZXJyb3Igc3RhdHMgZm9yIGZ1dHVyZSBkZWNpc2lvbiBtYWtp
+bmcuIFNpbmNlIHRoZSBsaW51eCBlZGFjDQpGcmFtZXdvcmsgaXMgcmVhZHksIHdlIGRlY2lkZWQg
+dG8gdXNlIHRoaXMgZnJhbWV3b3JrLg0KIA0KTWVhbndoaWxlLCBJIHdpbGwgIHN1Ym1pdCB0aGUg
+bmV4dCByZXZpc2lvbiBvZiB0aGUgcGF0Y2ggZm9yIHRoZSBhYm92ZSBjb29tZW50cy4gDQoNClJl
+Z2FyZHMsDQpQdW5uYWlhaA0KPg0KPklPVywgbW9yZSBpbmZvIHdvdWxkIGJlIGFwcHJlY2lhdGVk
+Lg0KPg0KPlRoYW5rcy4NCj4NCj4tLQ0KPlJlZ2FyZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0K
+PlNlbnQgZnJvbSBhIGZhdCBjcmF0ZSB1bmRlciBteSBkZXNrLiBGb3JtYXR0aW5nIGlzIGZpbmUu
+DQo+LS0NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
