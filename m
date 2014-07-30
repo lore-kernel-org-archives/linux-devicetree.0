@@ -1,184 +1,86 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V6 6/8] drm/bridge: Modify drm_bridge core to support
- driver model
-Date: Wed, 30 Jul 2014 20:01:44 +0530
-Message-ID: <CAEC9eQPv-D2ThnHR=FZiXJJisMf9NRqS-TJQKdZRjV45Y0Mjsw@mail.gmail.com>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406316130-4744-7-git-send-email-ajaykumar.rs@samsung.com>
- <20140730111931.GI29590@ulmo>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v6 10/14] drm/panel: add S6E3FA0 driver
+Date: Wed, 30 Jul 2014 16:36:20 +0200
+Message-ID: <20140730143619.GA1345@ulmo>
+References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com>
+ <1405587689-1466-11-git-send-email-yj44.cho@samsung.com>
+ <20140717103645.GD17877@ulmo>
+ <53C87D2F.9000906@samsung.com>
+ <53CCD5A8.6090406@samsung.com>
+ <20140721091917.GK8843@ulmo>
+ <53CCF70A.5010403@samsung.com>
+ <53CDDD61.6000005@samsung.com>
+ <20140722074935.GC18258@ulmo>
+ <53D8F6B5.4090903@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140730111931.GI29590@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53D8F6B5.4090903@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: YoungJun Cho <yj44.cho@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Paul Mundt <paul.mundt@gmail.com>, Imre Deak <imre.deak@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 4:49 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Sat, Jul 26, 2014 at 12:52:08AM +0530, Ajay Kumar wrote:
->> This patch tries to seperate drm_bridge implementation
->> into 2 parts, a drm part and a non_drm part.
->>
->> A set of helper functions are defined in this patch to make
->> bridge driver probe independent of the drm flow.
->>
->> The bridge devices register themselves on a lookup table
->> when they get probed by calling "drm_bridge_add_for_lookup".
->>
->> The parent encoder driver waits till the bridge is available in the
->> lookup table(by calling "of_drm_find_bridge") and then continues with
->> its initialization.
->>
->> The encoder driver should call "drm_bridge_attach_encoder" to pass on
->> the drm_device and the encoder pointers to the bridge object.
->>
->> Now that the drm_device pointer is available, the encoder then calls
->> "bridge->funcs->post_encoder_init" to allow the bridge to continue
->> registering itself with the drm core.
->>
->> Also, non driver model based ptn3460 driver is removed in this patch.
->
-> Why is it removed in this patch? Can't you do this incrementally rather
-> than remove the driver in this patch and add it again later? If you do
-> it this way then we'll always have this one commit where devices that
-> have a ptn3460 don't work, so it becomes impossible to bisect across
-> this commit.
-Ok. I will try to modify ptn3460 to support driver model in this patch itself.
-And then, adding panel support, converting it to gpiod interface and other
-cleanups should follow.
 
->> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> [...]
->> +int drm_bridge_add_for_lookup(struct drm_bridge *bridge)
->> +{
->> +     mutex_lock(&bridge_lock);
->> +     list_add_tail(&bridge->head, &bridge_lookup);
->> +     mutex_unlock(&bridge_lock);
->> +
->> +     return 0;
->> +}
->> +EXPORT_SYMBOL(drm_bridge_add_for_lookup);
->> +
->> +void drm_bridge_remove_from_lookup(struct drm_bridge *bridge)
->> +{
->> +     mutex_lock(&bridge_lock);
->> +     list_del_init(&bridge->head);
->> +     mutex_unlock(&bridge_lock);
->> +}
->> +EXPORT_SYMBOL(drm_bridge_remove_from_lookup);
->
-> The "_for_lookup" and "_from_lookup" suffixes aren't useful in my
-> opinion.
-Ok. I will just remove the suffix.
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +int drm_bridge_attach_encoder(struct drm_bridge *bridge,
->> +                             struct drm_encoder *encoder)
->
-> And this could simply be "drm_bridge_attach()" since we'll only ever
-> want to attach it to encoders.
-Right.
+On Wed, Jul 30, 2014 at 04:44:21PM +0300, Tomi Valkeinen wrote:
+> On 22/07/14 10:49, Thierry Reding wrote:
+>=20
+> > But what I was trying to say is that if the Read IDs command isn't an
+> > official DCS command, maybe it would be a better idea to use the DDB
+> > instead. I assume that even if it isn't the same information it would
+> > at least be a superset and therefore a suitable replacement.
+>=20
+> Only if DDB commands work on that panel =3D). Even if a panel supports
+> DCS, it doesn't mean it supports all the commands.
 
->> +{
->> +     if (!bridge || !encoder)
->> +             return -EINVAL;
->> +
->> +     if (bridge->encoder)
->> +             return -EBUSY;
->> +
->> +     encoder->bridge = bridge;
->> +     bridge->encoder = encoder;
->> +     bridge->drm_dev = encoder->dev;
->
-> Should this function perhaps call the bridge's ->post_encoder_init()?
-> And it should probably call drm_bridge_init() too, since the DRM device
-> is now available.
-This will cleanup some code in both the drivers. I will change it.
+Indeed. I was perhaps a little na=C3=AFve and assumed this was such a great
+standard command that every panel simply had to support it. But so far
+I haven't yet come across a single panel that does...
 
->> diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
-> [...]
->
-> Maybe since you're introducing a new drm_bridge.c file above already it
-> would make sense to move out existing drm_bridge related code in a
-> preparatory patch?
->
-> Maybe Sean or Rob can comment on whether there was a specific reason to
-> include it in drm_crtc.c in the first place.
->
->> @@ -1012,8 +1010,7 @@ int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge,
->>       if (ret)
->>               goto out;
->>
->> -     bridge->dev = dev;
->> -     bridge->funcs = funcs;
->> +     bridge->drm_dev = dev;
->
-> This sets ->drm_dev, but it was already set in drm_bridge_attach(), so I
-> think that's one more argument to call this function when attaching.
-Point accepted.
+> Also, does it really matter which one to use inside a panel driver? I
+> don't really see any pros nor cons with either option. Except, of
+> course, if using one of those makes the driver's code simpler.
 
->> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
-> [...]
->> @@ -1370,7 +1361,7 @@ static const struct component_ops exynos_dp_ops = {
->>  static int exynos_dp_probe(struct platform_device *pdev)
->>  {
->>       struct device *dev = &pdev->dev;
->> -     struct device_node *panel_node;
->> +     struct device_node *panel_node, *bridge_node;
->
-> Nit: I don't think you'll need two variables here, since once you've
-> obtained the real panel or bridge objects you no longer need the OF
-> nodes.
-Right.
+Yeah, at this point I don't see why the read IDs command shouldn't be
+used. It's somewhat unfortunate that it isn't mentioned in the DCS
+specification at all, but specifications are only as useful to the
+degree that they get implemented...
 
->> diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
->> index e529b68..e5a41ad 100644
->> --- a/include/drm/drm_crtc.h
->> +++ b/include/drm/drm_crtc.h
->> @@ -619,6 +619,7 @@ struct drm_plane {
->>
->>  /**
->>   * drm_bridge_funcs - drm_bridge control functions
->> + * @post_encoder_init: called by the parent encoder
->
-> Maybe rename this to "attach" to make it more obvious when exactly it's
-> called?
-"post_encoder_attach"?
+My hope had been that we would be able to automatically probe for panels
+using the DDB, but it seems like that's not a practicable idea given the
+almost non-existent support for it.
 
->>   * @mode_fixup: Try to fixup (or reject entirely) proposed mode for this bridge
->>   * @disable: Called right before encoder prepare, disables the bridge
->>   * @post_disable: Called right after encoder prepare, for lockstepped disable
->> @@ -628,6 +629,7 @@ struct drm_plane {
->>   * @destroy: make object go away
->>   */
->>  struct drm_bridge_funcs {
->> +     int (*post_encoder_init)(struct drm_bridge *bridge);
->>       bool (*mode_fixup)(struct drm_bridge *bridge,
->>                          const struct drm_display_mode *mode,
->>                          struct drm_display_mode *adjusted_mode);
->> @@ -648,15 +650,19 @@ struct drm_bridge_funcs {
->>   * @base: base mode object
->>   * @funcs: control functions
->>   * @driver_private: pointer to the bridge driver's internal context
->> + * @connector_polled: polled flag needed for registering connector
->
-> Can you explain why this new field is needed? It seems like a completely
-> unrelated change.
-How do I select this flag for the bridge chip?
-Assume if I did select DRM_CONNECTOR_POLL_HPD, where to call
-drm_helper_hpd_irq_event in the driver? Is post_encoder_init a right place?
+So as long as we can standardize on common APIs rather than per-driver
+implementations, I'm good.
 
-Without the polled flag, I get display very late.
-Please throw some light on this!
+Thierry
 
-Ajay
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT2QLjAAoJEN0jrNd/PrOhGQEQAI4XFatbODIwvTeSGtgFoUqM
+OZZmxyva4Wk+A6iRdCUDFiMBB3vqLbWSmNdAjwixYod3qn+KwTsqlnqPLTZLTBKS
+O4+GBbpTl0aKOG2oZv4+99SsH/shBy7UDbgjpC1SVGkZDOh+LZC1v4+C8ZLIZbZh
+xjmKoKMxGTxWd5veXbI1YYyE8XNZv6fN6wXIsh82FEU5vSPk5OMpoYACqDywOurJ
+bmnLpim6GWbU1g8pyxoeNvPJs8jwkdyBJFvCcbo5F8Ow46cAVh5FlRiE/6TUm9g/
+tHUUgh6QJiLxq8iFlFM8/DvEWue8UJsNjZcnrtvm47uTL5a4oPUJgwtfjCOyBK0g
+18olXm9z9RDDGrGEFXaHmlzA9BpK2hSwQvEau4AZP5R4B9qQfgGqjPcBAhm4TNIM
+q9S9rqvL2ALLSPsdvx5T+jP4iQLqDVr9Pv2eLkiWRC4K8B+5jnsUzoaC/WBQ7TV2
+tPQ7jW79g78xren2lz6wn/MhvX9cVrcU0CGxPDzwzuCwu2mJFNVgvSa9MeH4iQTX
+C7m8MpirZNIKsDSOfLcGszuVKaUSAWf5HB4jzZbNCnnS2KD7QePdk+Nt6D6RzEQL
+G03vMyus/4DGC9jn0j5uSC6tUDRvgU30kFnKBLU8R7FRAOcBLDzRtTNXww+7uFGz
+zHomiB5svCtqBN8d8D7K
+=LdrU
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
