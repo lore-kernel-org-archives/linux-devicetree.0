@@ -1,190 +1,65 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
-Date: Wed, 30 Jul 2014 11:37:38 -0500
-Message-ID: <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg@mail.gmail.com>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org> <20140730154626.GD20162@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: userspace-consumer: add DT binding details
+Date: Wed, 30 Jul 2014 17:40:14 +0100
+Message-ID: <20140730164014.GY17528@sirena.org.uk>
+References: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
+ <1406728440-17837-2-git-send-email-ldewangan@nvidia.com>
+ <20140730155302.GE20162@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GZ7IEjvh/SgTPveO"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140730154626.GD20162@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <20140730155302.GE20162@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 10:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi,
->
-> On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
->> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> Add initial device tree nodes for Cavium Thunder SoCs with support of
->> 48 cores and gicv3. The dts file requires further changes, esp. for
->> pci, gicv3-its and smmu. This changes will be added later together
->> with the device drivers.
->>
->> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/Makefile         |   1 +
->>  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
->>  2 files changed, 388 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
->>
->> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
->> index c52bdb051f66..f8001a62029c 100644
->> --- a/arch/arm64/boot/dts/Makefile
->> +++ b/arch/arm64/boot/dts/Makefile
->> @@ -1,3 +1,4 @@
->> +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
->>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
->>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
->>
->> diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
->> new file mode 100644
->> index 000000000000..4cf20ac9138b
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/thunder-88xx.dts
->> @@ -0,0 +1,387 @@
->> +/*
->> + * Cavium Thunder DTS file
->> + *
->> + * Copyright (C) 2013, Cavium Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation; either version 2 of
->> + * the License, or (at your option) any later version.
->> + */
 
-You may want to reconsider if this should be BSD.
+--GZ7IEjvh/SgTPveO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> +/dts-v1/;
->> +
->> +/* Reserving first 12MB of DDR for firmware */
->> +/memreserve/ 0x00000000 0x00c00000;
->
-> What exactly is this memreserve intended to protect at runtime?
->
-> The only item of runtime firmware I see in use below is PSCI on the
-> secure side.
->
-> How is the kernel booted on this platform? UEFI?
->
->> +/ {
->> +     model = "Cavium ThunderX CN88XX Family";
->> +     compatible = "cavium,thunder-88xx";
->
-> Please don't use wildcards in compatible strings. Give this an absolute
-> name, and override as necessary.
->
->> +     interrupt-parent = <&gic0>;
->> +     #address-cells = <2>;
->> +     #size-cells = <2>;
->> +
->> +     aliases {
->> +             serial0 = &uaa0;
->> +             serial1 = &uaa1;
->> +     };
->> +
->> +     psci {
->> +             compatible = "arm,psci-0.2";
->> +             method = "smc";
->> +     };
->
-> Nice!
->
->> +
->> +     cpus {
->> +             #address-cells = <2>;
->> +             #size-cells = <0>;
->> +
->> +             cpu@000 {
->> +                     device_type = "cpu";
->> +                     compatible = "cavium,thunder", "arm,armv8";
->> +                     reg = <0x0 0x000>;
->> +                     enable-method = "psci";
->> +             };
->
-> Just to check: both the SoC and CPU are called thunder?
->
-> [...]
->
->> +
->> +     memory@00000000 {
->> +             device_type = "memory";
->> +             reg = <0x0 0x00000000 0x0 0x80000000>;
->> +     };
->> +
->> +     gic0: interrupt-controller@801000000000 {
->
-> To make this easier to read, please place a comma between 32-bit
-> portions of the unit address (e.g. here have 8010,00000000).
+On Wed, Jul 30, 2014 at 04:53:03PM +0100, Mark Rutland wrote:
+> On Wed, Jul 30, 2014 at 02:54:00PM +0100, Laxman Dewangan wrote:
 
-Mark, perhaps a dtc or checkpatch.pl check for this?
+> > +Required properties:
+> > +- compatible		: Must be "reg-userspace-consumer".
 
-This should also be under a bus node.
+> I would never expect to see "userspace" in a DT beinding string; this is
+> entirely a software abstraction description and has nothing to do with
+> the interaction of HW components.
 
->> +             compatible = "arm,gic-v3";
->> +             #interrupt-cells = <3>;
->> +             #address-cells = <2>;
->> +             #size-cells = <2>;
->> +             ranges;
->
-> This has no children, so why have ranges, #address-cells, and
-> #size-cells?
->
->> +             interrupt-controller;
->> +             reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
->> +                   <0x8010 0x80000000 0x0 0x200000>; /* GICR */
->> +             interrupts = <1 9 0xf04>;
->> +     };
->> +
->> +     timer {
->> +             compatible = "arm,armv8-timer";
->> +             interrupts = <1 13 0xff01>,
->> +                          <1 14 0xff01>,
->> +                          <1 11 0xff01>,
->> +                          <1 10 0xff01>;
->> +     };
->> +
->> +     soc {
->> +             compatible = "simple-bus";
->> +             #address-cells = <2>;
->> +             #size-cells = <2>;
->> +             ranges;
->> +
->> +             clocks {
->> +                     #address-cells = <2>;
->> +                     #size-cells = <2>;
->> +                     ranges;
->> +
->> +                     refclk50mhz: refclk50mhz {
->> +                             compatible = "fixed-clock";
->> +                             #clock-cells = <0>;
->> +                             clock-frequency = <50000000>;
->> +                             clock-output-names = "refclk50mhz";
->> +                     };
->> +             };
->
-> Please get rid of the clocks node and just put the clocks here.
->
->> +
->> +             uaa0: serial@87e024000000 {
->> +                     compatible = "arm,pl011", "arm,primecell";
->> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
->> +                     interrupts = <1 21 4>;
->> +                     clocks = <&refclk50mhz>;
->> +                     clock-names = "apb_pclk";
->
-> Is this actually the apb_pclk, or is the the uartclk? I assume it's the
-> latter.
+> Why do you think we need this in the DT?
 
-Shouldn't new bindings have both clocks here? A single clock was a
-mistake I think (mine in fact).
+Yes, this is test code - it is not intended to be used in production.
+Any binding should be for the consumer using this, not for this
+implementation detail.
 
-Rob
+--GZ7IEjvh/SgTPveO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIbBAEBAgAGBQJT2R/rAAoJELSic+t+oim91jwP+KsCYAJCp5Q84qu3Omi6J5Gv
+98nf9V1Rshc/I2IaSdr9JYKMzbTN0ke5HJ81DK06bvXqw3Cz1ZIpoQrjJ5HOtBkf
+NdVd2iSqKWP9bSZ2m04C3WUPXpqtONNchfOGun10GGWcV4Y8q4sknbSsE5dLYD5L
+F45Lc2MnJt7VXCB7ISi3bGq7D6loOL8nkYzFK4AZSMAhEYklNCfaC2K+qZ3f7zvN
+131dlaCNlKwf1B+XL8r9+007ZIaFWF6jsOOaWJlSGktupF2Qb5bMCVlqpUq5xsoH
+qKq/HDE+TFXasO/oMjGtQB+Br23IlhgeAehGFdaukp4InHqfatBc3Y0/tLOn/1As
+8YdphlqKP0kvVDfNKJaK+Awd0bxzUlAUShInVnRTslsyqXOywowi1y7P3Ob45Ny9
+L3P0Dmty1mc7UEGB2lKlpFgqFBKgpharud1u0oOJ3PElucRPDKotiIH8U4HBcqOj
+yVqWDhZJ3Sens9HQZGlGnUhau1nnuBEy9e1yz8EmGfL+xPg4xfe3r6XrRcyDsT7f
+IQrVTVqjub5+hU/oe+HK/B1EwjwkmHrIwYeU8QmF+6qsVgrRqSbgsVtkSh5BaiQx
+uPoc1AqIjNGpmXRCZXxj2Fm3J/1t8Jp17QLOJSoY9UbDDUV2UALh0mDCUqptPOA2
+7/FNVjc1OVJ81UGgLAA=
+=nb21
+-----END PGP SIGNATURE-----
+
+--GZ7IEjvh/SgTPveO--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
