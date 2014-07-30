@@ -1,33 +1,84 @@
 From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/2] Enable wifi on pandaboard
-Date: Wed, 30 Jul 2014 16:02:27 +0200
-Message-ID: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
+Subject: [PATCH 1/2] mfd: twl-core: move TWL6030 defines to twl.h
+Date: Wed, 30 Jul 2014 16:02:28 +0200
+Message-ID: <1406728949-7560-2-git-send-email-sassmann@kpanic.de>
+References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406728949-7560-1-git-send-email-sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On the pandaboard the wifi isn't available because on the TWL6030 chip
-the clock CLK32KG never gets enabled. Adding a clock driver for the
-TWL6030 which performs the required steps. Moved some register defines
-from regulator code to twl.h.
+These defines should be available to all drivers. Also added register
+offset for CLK32KG_CFG_STATE and GRP defines.
 
-Stefan Assmann (2):
-  mfd: twl-core: move TWL6030 defines to twl.h
-  clk: initial clock driver for TWL6030
+Signed-off-by: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/regulator/twl-regulator.c | 11 -----------
+ include/linux/i2c/twl.h           | 20 ++++++++++++++++++++
+ 2 files changed, 20 insertions(+), 11 deletions(-)
 
- .../devicetree/bindings/clock/ti/twl6030.txt       |   4 +
- drivers/clk/Kconfig                                |   7 +
- drivers/clk/ti/Makefile                            |   1 +
- drivers/clk/ti/clk-6030.c                          | 141 +++++++++++++++++++++
- drivers/mfd/twl-core.c                             |   3 +
- drivers/regulator/twl-regulator.c                  |  11 --
- include/linux/i2c/twl.h                            |  20 +++
- 7 files changed, 176 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/twl6030.txt
- create mode 100644 drivers/clk/ti/clk-6030.c
-
+diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
+index fed28ab..ad0dd22 100644
+--- a/drivers/regulator/twl-regulator.c
++++ b/drivers/regulator/twl-regulator.c
+@@ -94,17 +94,6 @@ struct twlreg_info {
+ #define VREG_BC_PROC		3
+ #define VREG_BC_CLK_RST		4
+ 
+-/* TWL6030 LDO register values for CFG_STATE */
+-#define TWL6030_CFG_STATE_OFF	0x00
+-#define TWL6030_CFG_STATE_ON	0x01
+-#define TWL6030_CFG_STATE_OFF2	0x02
+-#define TWL6030_CFG_STATE_SLEEP	0x03
+-#define TWL6030_CFG_STATE_GRP_SHIFT	5
+-#define TWL6030_CFG_STATE_APP_SHIFT	2
+-#define TWL6030_CFG_STATE_APP_MASK	(0x03 << TWL6030_CFG_STATE_APP_SHIFT)
+-#define TWL6030_CFG_STATE_APP(v)	(((v) & TWL6030_CFG_STATE_APP_MASK) >>\
+-						TWL6030_CFG_STATE_APP_SHIFT)
+-
+ /* Flags for SMPS Voltage reading */
+ #define SMPS_OFFSET_EN		BIT(0)
+ #define SMPS_EXTENDED_EN	BIT(1)
+diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
+index 8cfb50f..8ad63a2 100644
+--- a/include/linux/i2c/twl.h
++++ b/include/linux/i2c/twl.h
+@@ -127,6 +127,20 @@ enum twl6030_module_ids {
+ #define REG_INT_MSK_STS_B		0x07
+ #define REG_INT_MSK_STS_C		0x08
+ 
++/* TWL6030 register values for CFG_STATE */
++#define TWL6030_GRP_APP			(1 << 0)
++#define TWL6030_GRP_CON			(1 << 1)
++#define TWL6030_GRP_MOD			(1 << 2)
++#define TWL6030_CFG_STATE_OFF		0x00
++#define TWL6030_CFG_STATE_ON		0x01
++#define TWL6030_CFG_STATE_OFF2		0x02
++#define TWL6030_CFG_STATE_SLEEP		0x03
++#define TWL6030_CFG_STATE_GRP_SHIFT	5
++#define TWL6030_CFG_STATE_APP_SHIFT	2
++#define TWL6030_CFG_STATE_APP_MASK	(0x03 << TWL6030_CFG_STATE_APP_SHIFT)
++#define TWL6030_CFG_STATE_APP(v)	(((v) & TWL6030_CFG_STATE_APP_MASK) >>\
++						TWL6030_CFG_STATE_APP_SHIFT)
++
+ /* MASK INT REG GROUP A */
+ #define TWL6030_PWR_INT_MASK 		0x07
+ #define TWL6030_RTC_INT_MASK 		0x18
+@@ -470,6 +484,12 @@ static inline int twl6030_mmc_card_detect(struct device *dev, int slot)
+ 
+ #define TWL4030_PM_MASTER_GLOBAL_TST		0xb6
+ 
++/*
++ * PM Receiver module register offsets (use TWL_MODULE_PM_RECEIVER)
++ */
++
++#define TWL6030_PM_RECEIVER_CLK32KG_CFG_STATE	0x8e
++
+ /*----------------------------------------------------------------------*/
+ 
+ /* Power bus message definitions */
 -- 
 1.9.3
 
