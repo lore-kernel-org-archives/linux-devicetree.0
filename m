@@ -1,321 +1,140 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 RESEND 3/4] drivers: dma-coherent: add initialization
- from device tree
-Date: Wed, 30 Jul 2014 07:33:34 +0200
-Message-ID: <53D883AE.6030209@samsung.com>
-References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
- <1405326487-15346-4-git-send-email-m.szyprowski@samsung.com>
- <20140729215432.4B73FC40738@trevor.secretlab.ca>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
+Date: Tue, 29 Jul 2014 23:04:21 -0700
+Message-ID: <20140730060420.GY29045@atomide.com>
+References: <1406582183-696-1-git-send-email-balbi@ti.com>
+ <1406582183-696-30-git-send-email-balbi@ti.com>
+ <20140729121425.GR29045@atomide.com>
+ <20140729141522.GB17808@saruman.home>
+ <20140729152052.GV29045@atomide.com>
+ <20140729154057.GE17808@saruman.home>
+ <20140729163345.GF17808@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140729215432.4B73FC40738@trevor.secretlab.ca>
+Content-Disposition: inline
+In-Reply-To: <20140729163345.GF17808@saruman.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, Jon Medhurst <tixy@linaro.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, "Aneesh Kumar K.V." <aneesh.kumar@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Felipe Balbi <balbi@ti.com>
+Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, bcousson@baylibre.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+* Felipe Balbi <balbi@ti.com> [140729 09:36]:
+> Hi,
+> 
+> On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
+> > On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
+> > > * Felipe Balbi <balbi@ti.com> [140729 07:18]:
+> > > > Hi,
+> > > > 
+> > > > On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
+> > > > > * Felipe Balbi <balbi@ti.com> [140728 14:19]:
+> > > > > > now that we don't need to support legacy board-files,
+> > > > > > we can completely switch over to a linear irq domain
+> > > > > > and make use of irq_alloc_domain_generic_chips() to
+> > > > > > allocate all generic irq chips for us.
+> > > > > 
+> > > > > This patch seems to somehow break off-idle for omap3 
+> > > > > where it no longer wakes up.
+> > > > 
+> > > > Sure your bisection is correct ? This patch just switches from legacy
+> > > > irq domain to linear irq domain.
+> > > 
+> > > Yes, I tried it a few times. Just enabling
+> > > retention idle hangs too with this patch.
+> > > 
+> > > Maybe it's omap3_prcm_irq_setup that relies on
+> > > 11 + OMAP_INTC_START? There may be other such issues
+> > 
+> > lol.
+> > 
+> > OMAP4 has the same nonsense.
+> 
+> made me think why (if) OMAP4 works with that same setup. Does wake from
+> OFF work with OMAP4 ?
 
-On 2014-07-29 23:54, Grant Likely wrote:
-> On Mon, 14 Jul 2014 10:28:06 +0200, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->> Initialization procedure of dma coherent pool has been split into two
->> parts, so memory pool can now be initialized without assigning to
->> particular struct device. Then initialized region can be assigned to
->> more than one struct device. To protect from concurent allocations from
->> different devices, a spinlock has been added to dma_coherent_mem
->> structure. The last part of this patch adds support for handling
->> 'shared-dma-pool' reserved-memory device tree nodes.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> I think this looks okay. It isn't in my area of expertise though.
-> Comments below.
->
->> ---
->>   drivers/base/dma-coherent.c | 137 ++++++++++++++++++++++++++++++++++++++------
->>   1 file changed, 118 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
->> index 7d6e84a51424..7185a4f247e1 100644
->> --- a/drivers/base/dma-coherent.c
->> +++ b/drivers/base/dma-coherent.c
->> @@ -14,11 +14,14 @@ struct dma_coherent_mem {
->>   	int		size;
->>   	int		flags;
->>   	unsigned long	*bitmap;
->> +	spinlock_t	spinlock;
->>   };
->>   
->> -int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
->> -				dma_addr_t device_addr, size_t size, int flags)
->> +static int dma_init_coherent_memory(phys_addr_t phys_addr, dma_addr_t device_addr,
->> +			     size_t size, int flags,
->> +			     struct dma_coherent_mem **mem)
-> This is a bit odd. Why wouldn't you return the dma_mem pointer directly
-> instead of passing in a **mem argument?
+Not without similar changes, omap4+ has the same issue.. There's a RFC
+series from Nishant to fix some of this, and Tero is moving the PRCM
+into a driver.
+ 
+> Anyway, here's a quick little hack to check if that's the reason for the
+> regression:
 
-Because this function (as a direct successor of 
-dma_declare_coherent_memory) doesn't
-return typical error codes, but some custom values like DMA_MEMORY_MAP, 
-DMA_MEMORY_IO
-or zero (which means failure). I wanted to avoid confusion with typical 
-error
-handling path and IS_ERR/ERR_PTR usage used widely in other functions. 
-This probably
-should be unified with the rest of kernel some day, but right now I 
-wanted to keep
-the patch simple and easy to review.
+OK yeah that's along the same lines with Nishant's RFC series in thread
+"[RFC PATCH 0/7] ARM: OMAP4+: PRM: minor cleanups and dt support of
+interrupts"
 
->>   {
->> +	struct dma_coherent_mem *dma_mem = NULL;
->>   	void __iomem *mem_base = NULL;
->>   	int pages = size >> PAGE_SHIFT;
->>   	int bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->> @@ -27,27 +30,26 @@ int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
->>   		goto out;
->>   	if (!size)
->>   		goto out;
->> -	if (dev->dma_mem)
->> -		goto out;
->> -
->> -	/* FIXME: this routine just ignores DMA_MEMORY_INCLUDES_CHILDREN */
->>   
->>   	mem_base = ioremap(phys_addr, size);
->>   	if (!mem_base)
->>   		goto out;
->>   
->> -	dev->dma_mem = kzalloc(sizeof(struct dma_coherent_mem), GFP_KERNEL);
->> -	if (!dev->dma_mem)
->> +	dma_mem = kzalloc(sizeof(struct dma_coherent_mem), GFP_KERNEL);
->> +	if (!dma_mem)
->>   		goto out;
->> -	dev->dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->> -	if (!dev->dma_mem->bitmap)
->> +	dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->> +	if (!dma_mem->bitmap)
->>   		goto free1_out;
->>   
->> -	dev->dma_mem->virt_base = mem_base;
->> -	dev->dma_mem->device_base = device_addr;
->> -	dev->dma_mem->pfn_base = PFN_DOWN(phys_addr);
->> -	dev->dma_mem->size = pages;
->> -	dev->dma_mem->flags = flags;
->> +	dma_mem->virt_base = mem_base;
->> +	dma_mem->device_base = device_addr;
->> +	dma_mem->pfn_base = PFN_DOWN(phys_addr);
->> +	dma_mem->size = pages;
->> +	dma_mem->flags = flags;
->> +	spin_lock_init(&dma_mem->spinlock);
->> +
->> +	*mem = dma_mem;
->>   
->>   	if (flags & DMA_MEMORY_MAP)
->>   		return DMA_MEMORY_MAP;
->> @@ -55,12 +57,51 @@ int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
->>   	return DMA_MEMORY_IO;
->>   
->>    free1_out:
->> -	kfree(dev->dma_mem);
->> +	kfree(dma_mem);
->>    out:
->>   	if (mem_base)
->>   		iounmap(mem_base);
->>   	return 0;
->>   }
->> +
->> +static void dma_release_coherent_memory(struct dma_coherent_mem *mem)
->> +{
->> +	if (!mem)
->> +		return;
->> +	iounmap(mem->virt_base);
->> +	kfree(mem->bitmap);
->> +	kfree(mem);
->> +}
->> +
->> +static int dma_assign_coherent_memory(struct device *dev,
->> +				      struct dma_coherent_mem *mem)
->> +{
->> +	if (dev->dma_mem)
->> +		return -EBUSY;
->> +
->> +	dev->dma_mem = mem;
->> +	/* FIXME: this routine just ignores DMA_MEMORY_INCLUDES_CHILDREN */
->> +
->> +	return 0;
->> +}
->> +
->> +int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
->> +				dma_addr_t device_addr, size_t size, int flags)
->> +{
->> +	struct dma_coherent_mem *mem;
->> +	int ret;
->> +
->> +	ret = dma_init_coherent_memory(phys_addr, device_addr, size, flags,
->> +				       &mem);
->> +	if (ret == 0)
->> +		return 0;
->> +
->> +	if (dma_assign_coherent_memory(dev, mem) == 0)
->> +		return ret;
->> +
->> +	dma_release_coherent_memory(mem);
->> +	return 0;
->> +}
->>   EXPORT_SYMBOL(dma_declare_coherent_memory);
->>   
->>   void dma_release_declared_memory(struct device *dev)
->> @@ -69,10 +110,8 @@ void dma_release_declared_memory(struct device *dev)
->>   
->>   	if (!mem)
->>   		return;
->> +	dma_release_coherent_memory(mem);
->>   	dev->dma_mem = NULL;
->> -	iounmap(mem->virt_base);
->> -	kfree(mem->bitmap);
->> -	kfree(mem);
->>   }
->>   EXPORT_SYMBOL(dma_release_declared_memory);
->>   
->> @@ -80,6 +119,7 @@ void *dma_mark_declared_memory_occupied(struct device *dev,
->>   					dma_addr_t device_addr, size_t size)
->>   {
->>   	struct dma_coherent_mem *mem = dev->dma_mem;
->> +	unsigned long flags;
->>   	int pos, err;
->>   
->>   	size += device_addr & ~PAGE_MASK;
->> @@ -87,8 +127,11 @@ void *dma_mark_declared_memory_occupied(struct device *dev,
->>   	if (!mem)
->>   		return ERR_PTR(-EINVAL);
->>   
->> +	spin_lock_irqsave(&mem->spinlock, flags);
->>   	pos = (device_addr - mem->device_base) >> PAGE_SHIFT;
->>   	err = bitmap_allocate_region(mem->bitmap, pos, get_order(size));
->> +	spin_unlock_irqrestore(&mem->spinlock, flags);
->> +
->>   	if (err != 0)
->>   		return ERR_PTR(err);
->>   	return mem->virt_base + (pos << PAGE_SHIFT);
->> @@ -115,6 +158,7 @@ int dma_alloc_from_coherent(struct device *dev, ssize_t size,
->>   {
->>   	struct dma_coherent_mem *mem;
->>   	int order = get_order(size);
->> +	unsigned long flags;
->>   	int pageno;
->>   
->>   	if (!dev)
->> @@ -124,6 +168,7 @@ int dma_alloc_from_coherent(struct device *dev, ssize_t size,
->>   		return 0;
->>   
->>   	*ret = NULL;
->> +	spin_lock_irqsave(&mem->spinlock, flags);
->>   
->>   	if (unlikely(size > (mem->size << PAGE_SHIFT)))
->>   		goto err;
->> @@ -138,10 +183,12 @@ int dma_alloc_from_coherent(struct device *dev, ssize_t size,
->>   	*dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
->>   	*ret = mem->virt_base + (pageno << PAGE_SHIFT);
->>   	memset(*ret, 0, size);
->> +	spin_unlock_irqrestore(&mem->spinlock, flags);
->>   
->>   	return 1;
->>   
->>   err:
->> +	spin_unlock_irqrestore(&mem->spinlock, flags);
->>   	/*
->>   	 * In the case where the allocation can not be satisfied from the
->>   	 * per-device area, try to fall back to generic memory if the
->> @@ -171,8 +218,11 @@ int dma_release_from_coherent(struct device *dev, int order, void *vaddr)
->>   	if (mem && vaddr >= mem->virt_base && vaddr <
->>   		   (mem->virt_base + (mem->size << PAGE_SHIFT))) {
->>   		int page = (vaddr - mem->virt_base) >> PAGE_SHIFT;
->> +		unsigned long flags;
->>   
->> +		spin_lock_irqsave(&mem->spinlock, flags);
->>   		bitmap_release_region(mem->bitmap, page, order);
->> +		spin_unlock_irqrestore(&mem->spinlock, flags);
->>   		return 1;
->>   	}
->>   	return 0;
->> @@ -218,3 +268,52 @@ int dma_mmap_from_coherent(struct device *dev, struct vm_area_struct *vma,
->>   	return 0;
->>   }
->>   EXPORT_SYMBOL(dma_mmap_from_coherent);
->> +
->> +/*
->> + * Support for reserved memory regions defined in device tree
->> + */
->> +#ifdef CONFIG_OF_RESERVED_MEM
->> +#include <linux/of.h>
->> +#include <linux/of_fdt.h>
->> +#include <linux/of_reserved_mem.h>
->> +
->> +static void rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
->> +{
->> +	struct dma_coherent_mem *mem = rmem->priv;
-> Will the reserved_mem->priv pointer ever point to some other kind of
-> structure? How do we know that the pointer here is always a
-> dma_coherent_mem struct (if there are other uses of priv, what is the
-> guarantee against another user assigning something to it?) Is it the
-> reserved_mem_ops below that provide the guarantee?
+FYI, it did not compile, needs to include linux/of_irq.h. But yes,
+it fixes the regression for me, Also now the whole series works for
+me :)
 
-reserved_mem_ops are set by the given reserved memory driver and access 
-to priv
-pointer is limited only to that driver. This pattern is used widely 
-across the
-whole kernel, so I don't think that a separate pointer to particular 
-structure
-type is needed.
+Regards,
 
-> If it is a risk, then the alternative would be to put an explicit
-> dma_coherent_mem pointer into the reserved_mem structure.
+Tony
 
-If one messes with priv pointers, he should expect serious problems and 
-we really
-cannot prevent him anyway.
-
->> +	if (!mem &&
->> +	    dma_init_coherent_memory(rmem->base, rmem->base, rmem->size,
->> +				     DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE,
->> +				     &mem) != DMA_MEMORY_MAP) {
->> +		pr_info("Reserved memory: failed to init DMA memory pool at %pa, size %ld MiB\n",
->> +			&rmem->base, (unsigned long)rmem->size / SZ_1M);
->> +		return;
->> +	}
->> +	rmem->priv = mem;
->> +	dma_assign_coherent_memory(dev, mem);
->> +}
->> +
->> +static void rmem_dma_device_release(struct reserved_mem *rmem,
->> +				    struct device *dev)
->> +{
->> +	dev->dma_mem = NULL;
->> +}
->> +
->> +static const struct reserved_mem_ops rmem_dma_ops = {
->> +	.device_init	= rmem_dma_device_init,
->> +	.device_release	= rmem_dma_device_release,
->> +};
->> +
->> +static int __init rmem_dma_setup(struct reserved_mem *rmem)
->> +{
->> +	unsigned long node = rmem->fdt_node;
->> +
->> +	if (of_get_flat_dt_prop(node, "reusable", NULL))
->> +		return -EINVAL;
->> +
->> +	rmem->ops = &rmem_dma_ops;
->> +	pr_info("Reserved memory: created DMA memory pool at %pa, size %ld MiB\n",
->> +		&rmem->base, (unsigned long)rmem->size / SZ_1M);
->> +	return 0;
->> +}
->> +RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
->> +#endif
->> -- 
->> 1.9.2
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+ 
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index ff953c9..c234b98 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -97,6 +97,7 @@
+>  		prm: prm@48306000 {
+>  			compatible = "ti,omap3-prm";
+>  			reg = <0x48306000 0x4000>;
+> +			interrupts = <11>;
+>  
+>  			prm_clocks: clocks {
+>  				#address-cells = <1>;
+> diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_common.c
+> index 25e8b82..3d11377 100644
+> --- a/arch/arm/mach-omap2/prm_common.c
+> +++ b/arch/arm/mach-omap2/prm_common.c
+> @@ -242,6 +242,11 @@ void omap_prcm_irq_complete(void)
+>  	prcm_irq_setup->restore_irqen(prcm_irq_setup->saved_mask);
+>  }
+>  
+> +static struct of_device_id tmp[] = {
+> +	{ .compatible = "ti,omap3-prm" },
+> +	{ }
+> +};
+> +
+>  /**
+>   * omap_prcm_register_chain_handler - initializes the prcm chained interrupt
+>   * handler based on provided parameters
+> @@ -254,17 +259,24 @@ void omap_prcm_irq_complete(void)
+>   */
+>  int omap_prcm_register_chain_handler(struct omap_prcm_irq_setup *irq_setup)
+>  {
+> +	struct device_node *node;
+>  	int nr_regs;
+>  	u32 mask[OMAP_PRCM_MAX_NR_PENDING_REG];
+>  	int offset, i;
+> +	int irq;
+>  	struct irq_chip_generic *gc;
+>  	struct irq_chip_type *ct;
+>  
+>  	if (!irq_setup)
+>  		return -EINVAL;
+>  
+> +	irq = irq_setup->irq;
+>  	nr_regs = irq_setup->nr_regs;
+>  
+> +	node = of_find_matching_node(NULL, tmp);
+> +	if (node)
+> +		irq = of_irq_get(node, 0);
+> +
+>  	if (prcm_irq_setup) {
+>  		pr_err("PRCM: already initialized; won't reinitialize\n");
+>  		return -EINVAL;
+> @@ -298,7 +310,7 @@ int omap_prcm_register_chain_handler(struct omap_prcm_irq_setup *irq_setup)
+>  				1 << (offset & 0x1f);
+>  	}
+>  
+> -	irq_set_chained_handler(irq_setup->irq, omap_prcm_irq_handler);
+> +	irq_set_chained_handler(irq, omap_prcm_irq_handler);
+>  
+>  	irq_setup->base_irq = irq_alloc_descs(-1, 0, irq_setup->nr_regs * 32,
+>  		0);
+> 
+> -- 
+> balbi
