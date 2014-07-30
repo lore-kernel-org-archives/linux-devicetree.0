@@ -1,218 +1,136 @@
-From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [git:media_tree/master] [media] media: atmel-isi: add primary DT
-	support
-Date: Thu, 31 Jul 2014 00:48:36 +0200
-Message-ID: <E1XCci2-0005kq-Bs@www.linuxtv.org>
-Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
+ existing vendor prefixes to standardise on 'dlg'
+Date: Thu, 31 Jul 2014 08:47:43 +0900
+Message-ID: <20140730234743.GB24845@verge.net.au>
+References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
+ <20140725070002.GH7063@lee--X1>
+ <6ED8E3B22081A4459DAC7699F3695FB7D0B28E95@SW-EX-MBX02.diasemi.com>
+ <20140730023725.GA23224@verge.net.au>
+ <6ED8E3B22081A4459DAC7699F3695FB7D0B2910C@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <http://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
-	<mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
-List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
-List-Subscribe: <http://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
-	<mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
-Sender: linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B2910C@SW-EX-MBX02.diasemi.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, DEVICE TREE <devicetree@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, LINUX SH <linux-sh@vger.kernel.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an automatic generated email to let you know that the following patch were queued at the 
-http://git.linuxtv.org/media_tree.git tree:
+On Wed, Jul 30, 2014 at 11:05:01AM +0000, Opensource [Steve Twiss] wrote:
+> 
+> On 30 July 2014 03:37 Simon Horman wrote:
+> >On Mon, Jul 28, 2014 at 09:53:56AM +0000, Opensource [Steve Twiss] wrote:
+> >> On 25 July 2014 08:00, Lee Jones wrote:
+> >>
+> >> >On Thu, 24 Jul 2014, Opensource [Steve Twiss] wrote:
+> >> >> From: Steve Twiss <stwiss.opensource@diasemi.com>
+> >> >>
+> >> >> This patch series updates the device tree vendor prefix for
+> >> >> Dialog Semiconductor.
+> >> >>
+> >> >> Various methods are currently used throughout the kernel: 'diasemi',
+> >> >> 'dialog' and 'dlg'. Others have also been suggested.
+> >> >>
+> >> >> This patch set aims to consolidate the usage of the vendor prefix to
+> >> >> use a common standard. The prefix 'dlg' is used.
+> >> >>
+> >> >>
+> >> >> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> >> >
+> >> >Didn't I Ack the MFD parts already?
+> >> >
+> >>
+> >> Yes -- certainly.
+> >>  (I should have put them in the main body of the e-mail shouldn't I ..?)
+> >>
+> >> I just need the SHMobile responses now.
+> >> I will try to make contact with those guys this week.
+> >
+> >Hi Steve,
+> >
+> >I apologise for not noticing this earlier:
+> >I am entirely unsure how I missed it.
+> 
+> Hi Simon,
+> 
+> Thank you for responding to this. No problem.
+> 
+> >
+> >In principle I am fine with this change so long as it does not
+> >introduce any backwards-compatibility problems. In particular removing
+> >compatibility strings that may already be in use by DTB blobs in the wild.
+> >
+> >For SH Mobile it seems that Lager and Koelsch were using "diasemi,da9210"
+> >which is unsupported by the driver at this time. So it seems there is no
+> >backwards-compatibility problem there. I'm less sure about other aspects of
+> >the patch. And I'm also less concerned about them.
+> >
+> >I do have a slight preference for SH Mobile changes to go through my
+> >renesas tree rather than elsewhere (as part of a more global change)
+> >principally to try to avoid the possibility of conflicts. The SH Mobile dts
+> >files in question are often updated. And for example I notice some fuzz
+> >when applying this patch on top of the next-20140729 tag of linux-next.
+> 
+> I have applied the patch to linux-next/next-20140729 and the patch
+> program does throw some warnings,
+> 
+> patching file arch/arm/boot/dts/r8a7790-lager.dts
+> Hunk #1 succeeded at 378 (offset 4 lines).
+> patching file arch/arm/boot/dts/r8a7791-koelsch.dts
+> Hunk #1 succeeded at 430 (offset 4 lines).
+> 
+> But when I checked the output, the patch was applied correctly.
+> They are one-line changes in both cases:
+> 
+> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+> index 7853c2c..becaaab 100644
+> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> @@ -378,7 +378,7 @@
+>         status = "okay";
+>  
+>         vdd_dvfs: regulator@68 {
+> -               compatible = "diasemi,da9210";
+> +               compatible = "dlg,da9210";
+>                 reg = <0x68>;
+>  
+>                 regulator-min-microvolt = <1000000>;
+> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> index 8f36d4f..684fc44 100644
+> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
+> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> @@ -430,7 +430,7 @@
+>         clock-frequency = <100000>;
+>  
+>         vdd_dvfs: regulator@68 {
+> -               compatible = "diasemi,da9210";
+> +               compatible = "dlg,da9210";
+>                 reg = <0x68>;
+>  
+>                 regulator-min-microvolt = <1000000>;
+> 
+> 
+> >
+> >If you were to break out the SH Mobile portion of this patch I would be
+> >happy to take it once the driver portion is accepted.  That said, I do see
+> >that everyone else has acked the change so clearly this is not an issue
+> >from their point of view. So I will not complain if you decide not to break
+> >the patch up (though please note my warning about possible conflicts).
+> 
+> I have been trying to get Acked-by: tags for a while now, and it has taken a
+> fair amount of time to get everybody's responses. For that reason and
+> because the patch managed to be applied cleanly to next-20140729 (despite
+> 4 line offsets) I would like to resend this patch with your Acked-by: applied
+> instead of splitting up the patch into several sections and then touting
+> for new Acked-by: all over again.
+> 
+> I realise that your DTS files are updated constantly -- I do hope this will
+> not cause any problems with the merge.
 
-Subject: [media] media: atmel-isi: add primary DT support
-Author:  Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Date:    Mon Jul 28 04:25:17 2014 -0300
+Hi Steve,
 
-This patch add the DT support for Atmel ISI driver.
-It use the same v4l2 DT interface that defined in video-interfaces.txt.
+thanks. I'm happy for you to proceed with the plan you outline above.
+I think the risk of a non-trivial conflict is minimal.
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Signed-off-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
- .../devicetree/bindings/media/atmel-isi.txt        |   51 +++++++++++++++
- drivers/media/platform/soc_camera/atmel-isi.c      |   65 +++++++++++++++++++-
- 2 files changed, 114 insertions(+), 2 deletions(-)
-
----
-
-http://git.linuxtv.org/media_tree.git?a=commitdiff;h=8ff19bc437f8d42d8a03dafe2bb28c5b3fc1bff1
-
-diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
-new file mode 100644
-index 0000000..17e71b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-@@ -0,0 +1,51 @@
-+Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
-+----------------------------------------------
-+
-+Required properties:
-+- compatible: must be "atmel,at91sam9g45-isi"
-+- reg: physical base address and length of the registers set for the device;
-+- interrupts: should contain IRQ line for the ISI;
-+- clocks: list of clock specifiers, corresponding to entries in
-+          the clock-names property;
-+- clock-names: must contain "isi_clk", which is the isi peripherial clock.
-+
-+ISI supports a single port node with parallel bus. It should contain one
-+'port' child node with child 'endpoint' node. Please refer to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+	isi: isi@f0034000 {
-+		compatible = "atmel,at91sam9g45-isi";
-+		reg = <0xf0034000 0x4000>;
-+		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
-+
-+		clocks = <&isi_clk>;
-+		clock-names = "isi_clk";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_isi>;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			isi_0: endpoint {
-+				remote-endpoint = <&ov2640_0>;
-+				bus-width = <8>;
-+			};
-+		};
-+	};
-+
-+	i2c1: i2c@f0018000 {
-+		ov2640: camera@0x30 {
-+			compatible = "omnivision,ov2640";
-+			reg = <0x30>;
-+
-+			port {
-+				ov2640_0: endpoint {
-+					remote-endpoint = <&isi_0>;
-+					bus-width = <8>;
-+				};
-+			};
-+		};
-+	};
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
-index d32c533..3408b04 100644
---- a/drivers/media/platform/soc_camera/atmel-isi.c
-+++ b/drivers/media/platform/soc_camera/atmel-isi.c
-@@ -25,6 +25,7 @@
- #include <media/atmel-isi.h>
- #include <media/soc_camera.h>
- #include <media/soc_mediabus.h>
-+#include <media/v4l2-of.h>
- #include <media/videobuf2-dma-contig.h>
- 
- #define MAX_BUFFER_NUM			32
-@@ -33,6 +34,7 @@
- #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
- #define MIN_FRAME_RATE			15
- #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
-+#define ISI_DEFAULT_MCLK_FREQ		25000000
- 
- /* Frame buffer descriptor */
- struct fbd {
-@@ -876,6 +878,51 @@ static int atmel_isi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int atmel_isi_probe_dt(struct atmel_isi *isi,
-+			struct platform_device *pdev)
-+{
-+	struct device_node *np= pdev->dev.of_node;
-+	struct v4l2_of_endpoint ep;
-+	int err;
-+
-+	/* Default settings for ISI */
-+	isi->pdata.full_mode = 1;
-+	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
-+	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
-+
-+	np = of_graph_get_next_endpoint(np, NULL);
-+	if (!np) {
-+		dev_err(&pdev->dev, "Could not find the endpoint\n");
-+		return -EINVAL;
-+	}
-+
-+	err = v4l2_of_parse_endpoint(np, &ep);
-+	if (err) {
-+		dev_err(&pdev->dev, "Could not parse the endpoint\n");
-+		goto err_probe_dt;
-+	}
-+
-+	switch (ep.bus.parallel.bus_width) {
-+	case 8:
-+		isi->pdata.data_width_flags = ISI_DATAWIDTH_8;
-+		break;
-+	case 10:
-+		isi->pdata.data_width_flags =
-+				ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unsupported bus width: %d\n",
-+				ep.bus.parallel.bus_width);
-+		err = -EINVAL;
-+		goto err_probe_dt;
-+	}
-+
-+err_probe_dt:
-+	of_node_put(np);
-+
-+	return err;
-+}
-+
- static int atmel_isi_probe(struct platform_device *pdev)
- {
- 	unsigned int irq;
-@@ -887,7 +934,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
- 	struct isi_platform_data *pdata;
- 
- 	pdata = dev->platform_data;
--	if (!pdata || !pdata->data_width_flags) {
-+	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
- 		dev_err(&pdev->dev,
- 			"No config available for Atmel ISI\n");
- 		return -EINVAL;
-@@ -903,7 +950,14 @@ static int atmel_isi_probe(struct platform_device *pdev)
- 	if (IS_ERR(isi->pclk))
- 		return PTR_ERR(isi->pclk);
- 
--	memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
-+	if (pdata) {
-+		memcpy(&isi->pdata, pdata, sizeof(isi->pdata));
-+	} else {
-+		ret = atmel_isi_probe_dt(isi, pdev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	isi->active = NULL;
- 	spin_lock_init(&isi->lock);
- 	INIT_LIST_HEAD(&isi->video_buffer_list);
-@@ -1005,11 +1059,18 @@ err_alloc_ctx:
- 	return ret;
- }
- 
-+static const struct of_device_id atmel_isi_of_match[] = {
-+	{ .compatible = "atmel,at91sam9g45-isi" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
-+
- static struct platform_driver atmel_isi_driver = {
- 	.remove		= atmel_isi_remove,
- 	.driver		= {
- 		.name = "atmel_isi",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(atmel_isi_of_match),
- 	},
- };
