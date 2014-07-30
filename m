@@ -1,76 +1,45 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v11 3/8] ata: libahci_platform: move port_map parameters
- into the AHCI structure
-Date: Wed, 30 Jul 2014 10:20:38 +0200
-Message-ID: <20140730082038.GB29900@kwain>
-References: <1406193450-17283-1-git-send-email-antoine.tenart@free-electrons.com>
- <1406193450-17283-4-git-send-email-antoine.tenart@free-electrons.com>
- <20140729144042.GD4791@htj.dyndns.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFC 3/5] regulator: core: Only apply constraints if available
+ on list voltage
+Date: Wed, 30 Jul 2014 10:49:25 +0200
+Message-ID: <53D8B195.4050003@collabora.co.uk>
+References: <1406651339-28901-1-git-send-email-javier.martinez@collabora.co.uk> <1406651339-28901-4-git-send-email-javier.martinez@collabora.co.uk> <20140729171857.GV17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140729144042.GD4791@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140729171857.GV17528@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 29, 2014 at 10:40:42AM -0400, Tejun Heo wrote:
-> On Thu, Jul 24, 2014 at 11:17:25AM +0200, Antoine T=E9nart wrote:
-> > @@ -321,6 +321,8 @@ struct ahci_host_priv {
-> >  	u32			cap;		/* cap to use */
-> >  	u32			cap2;		/* cap2 to use */
-> >  	u32			port_map;	/* port map to use */
-> > +	u32			force_port_map;	/* force port map */
-> > +	u32			mask_port_map;	/* mask out particular bits */
->=20
-> Let's collect the inputs, including flags, at the top and mark them c=
-learly.
+Hello Mark, thanks a lot for all your feedback.
 
-Done.
+On 07/29/2014 07:18 PM, Mark Brown wrote:
+> On Tue, Jul 29, 2014 at 06:28:57PM +0200, Javier Martinez Canillas wrote:
+>> 
+>> But for load switches that don't define a voltage output, the parent
+>> supply voltage is used so the constraints should only be applied if
+>> they were defined for the child regulators.
+> 
+> No, think about what you're doing here and why we're filtering out
+> unsettable voltages - this causes problems for consumers on regulators
+> that don't have any ability to vary voltages since they will now be able
+> to list voltages that they can't select.  
+> 
 
->=20
-> >  int ahci_platform_init_host(struct platform_device *pdev,
-> >  			    struct ahci_host_priv *hpriv,
-> >  			    const struct ata_port_info *pi_template,
-> > -			    unsigned long host_flags,
-> > -			    unsigned int force_port_map,
-> > -			    unsigned int mask_port_map)
-> > +			    unsigned long host_flags)
->=20
-> This doesn't make much sense to me.  Near the head of the function, i=
-t
-> does
->=20
-> 	hpriv->flags |=3D host_flags;
->=20
-> Wouldn't it make more sense to just let the caller set hpriv->flags?
+Understood. Thanks for the explanation.
 
-I just removed the host_flags parameter and updated the drivers calling
-it.
+> I would also expect any regulator where the supplied devices are able to
+> vary the voltage to explicitly provide a constraint even if the
+> implementation is done in a parent regulator.  There may be constraints
+> on the child supply which aren't directly present on the parent supply
+> and can be ignored if the child supply is turned off.
+> 
 
+Agreed, if I explicitly set the voltage constraints on the child supply then
+this patch is indeed not needed.
 
-How do you want me to send the series? There is two conflicts when
-applying to libata/for-3.17:
-- patch 4/8: it takes into account a patch not in libata/for-3.17 but
-  added before rc7. It should be better to first merge rc7, otherwise
-  some modifications won't make sense.
-- patch 6/8: "fsl,imx53-ahci" was removed from the documentation in
-  libata/for-3.17 but not in rc7. Resolving the conflict is really
-  simple.
-
-I think it's better to apply the whole thing after merging rc7 into
-libata/for-3.17, because it will only have a really simple conflict to
-resolve.
-
-Please tell me what do you prefer before I send the updated version.
-
-Antoine
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Best regards,
+Javier
