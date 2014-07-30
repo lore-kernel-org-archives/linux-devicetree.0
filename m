@@ -1,89 +1,162 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
- in DT
-Date: Tue, 29 Jul 2014 17:45:22 -0600
-Message-ID: <20140729234522.E9FF1C40738@trevor.secretlab.ca>
-References: <53D788A7.4020303@mm-sol.com> <3794875.CZFbAag5Sv@wuerfel>
-	<53D7AA72.6010309@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53D7AA72.6010309@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <rob.herring@linaro.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks handled by clock_ops domain
+Date: Wed, 30 Jul 2014 02:06:59 +0200
+Message-ID: <2717555.fiA6A86F65@avalon>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be> <53D68CC4.1010704@ti.com> <CACxGe6uMke5vgzcNC9xUqjr2bHJ4QFHD6YjocSZWq8Ccx8Mm6A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6uMke5vgzcNC9xUqjr2bHJ4QFHD6YjocSZWq8Ccx8Mm6A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Geert Uytterhoeven <geert+renesas@glider.be>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Jul 2014 17:06:42 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
-> Arnd, thanks for the comments.
-> 
-> On 07/29/2014 03:00 PM, Arnd Bergmann wrote:
-> > On Tuesday 29 July 2014 14:42:31 Stanimir Varbanov wrote:
-> >>         taddr = of_translate_address(dev, addrp);
-> >> -       if (taddr == OF_BAD_ADDR)
-> >> -               return -EINVAL;
-> >> +       /*
-> >> +        * if the address is non-translatable to cpu physical address
-> >> +        * fallback to a IORESOURCE_REG resource.
-> >> +        */
-> >> +       if (taddr == OF_BAD_ADDR) {
-> >> +               memset(r, 0, sizeof(*r));
-> >> +               taddr = of_read_number(addrp, 1);
-> >> +               if (taddr == OF_BAD_ADDR)
-> >> +                       return -EINVAL;
-> >> +               r->start = taddr;
-> >> +               r->end = taddr + size - 1;
-> >> +               r->flags = IORESOURCE_REG;
-> >> +               r->name = name ? name : dev->full_name;
-> >> +               return 0;
-> >> +       }
-> >> +
+Hi Grygorii and Grant,
+
+On Monday 28 July 2014 23:52:34 Grant Likely wrote:
+> On Mon, Jul 28, 2014 at 11:47 AM, Grygorii Strashko wrote:
+> > On 07/28/2014 05:05 PM, Grant Likely wrote:
+> >> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko wrote:
+> >>> Use "clkops-clocks" property to specify clocks handled by
+> >>> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
+> >>> set of clocks will be handled by Runtime PM through clock_ops
+> >>> Pm domain.
+> >>> 
+> >>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> >>> ---
+> >>> 
+> >>>   drivers/of/of_clk.c |    7 ++-----
+> >>>   1 file changed, 2 insertions(+), 5 deletions(-)
+> >>> 
+> >>> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
+> >>> index 35f5e9f..5f9b90e 100644
+> >>> --- a/drivers/of/of_clk.c
+> >>> +++ b/drivers/of/of_clk.c
+> >>> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct
+> >>> device_node *np,>>> 
+> >>>      struct clk *clk;
+> >>>      int error;
+> >>> 
+> >>> -    for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
+> >>> -            if (!clk_may_runtime_pm(clk)) {
+> >>> -                    clk_put(clk);
+> >>> -                    continue;
+> >>> -            }
+> >>> +    for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
+> >>> +                 !IS_ERR(clk); i++) {
+> >> 
+> >> This really looks like an ABI break to me. What happens to all the
+> >> existing platforms who don't have this new clkops-clocks in their device
+> >> tree?
 > > 
-> > I don't think that everything returning OF_BAD_ADDR makes sense
-> > to turn into IORESOURCE_REG. It could be an e.g. invalid DT
-> > representation, a node with #size-cells=<0>, or it could be
-> > something that gets translated one or more nodes up in the
-> > tree before it reaches a bus without a ranges property.
+> > Agree. This patch as is will break such platforms.
+> > As possible solution for above problem - the NULL can be used as clock's
+> > prefix by default and platform code can configure new value of clock's
+> > prefix during initialization.
+> > In addition, to make this solution full the of_clk_get_by_name() will
+> > need to be modified too.
 > > 
-> > Also, you should not rely on #address-cells being hardcoded
-> > to <1> above.
+> > But note pls, this is pure RFC patches which I did to find out the answer
+> > on questions: - What is better: maintain Runtime PM clocks configuration
+> > in DT or in code?
+>
+> In code. I don't think it is workable to embed runtime PM behaviour
+> into the DT bindings. I think there will be too much variance in what
+> hardware requires. We can create helpers to make this simpler, but I
+> don't think it is a good idea to set it up automatically without any
+> control from the driver itself.
+> 
+> > - Where and when to call of_clk_register_runtime_pm_clocks()?
 > > 
+> >   Bus notifier/ platform core/ device drivers
 > 
-> This was just an example. Of course it has many issues and probaly it is
-> wrong:) The main goal was to understand does IORESOURCE_REG resource
-> type and parsing the *reg* properties for non-translatable addresses are
-> feasible. And also does it acceptable by community and OF platform
-> maintainers.
+> I would say in device drivers.
 
-The use case is actually very different from of_address_to_resource or
-of_get_address() because those APIs explicitly return physical memory
-addresses from the CPU perspective. It makes more sense to create a new
-API that doesn't attempt to translate the reg address. Alternately, a
-new API that only translates upto a given parent node.
+I tend to agree with that.
 
-You don't want to automagically translate as far up the tree as
-possible because the code won't know what node the address is associated
-with. Translated addresses only make sense if the node it was translated
-to as also known.
+It will help here to take a step back and remember what the problem we're 
+trying to solve is.
 
-g.
+At the root is clock management. Our system comprise many clocks, and they 
+need to be handled. The Common Clock Framework nicely models the clocks, and 
+offers an API for drivers to retrieve device clocks and control them. Drivers 
+can thus implement clock management manually without much pain.
 
+A clock can be managed in roughly three different ways :
+
+- it can be enabled at probe time and disabled at remove time ;
+
+- it can be enabled right before the device leaves its idle state and disabled 
+when the device goes back to idle ; or
+
+- it can be enabled and disabled in a more fine-grained, device-specific 
+manner.
+
+The selected clock management granularity depends on constraints specific to 
+the device and on how aggressive power saving needs to be. Enabling the clocks 
+at probe time and disabling them at remove time is enough for most devices, 
+but leads to a high power consumption. For that reason the second clock 
+management scheme is often desired.
+
+Managing clocks manually in the driver is a valid option. However, when adding 
+runtime PM to the equation, and realizing that the clocks need to be enabled 
+in the runtime PM resume handler and disabled in the suspend handler, the 
+clock management code starts looking very similar in most drivers. We're thus 
+tempted to factorize it away from the drivers into a shared location.
+
+It's important to note at this point that the goal here is only to simplify 
+drivers. Moving clock management code out of the drivers doesn't (unless I'm 
+missing something) open the door to new possibilities, it just serves as a 
+simplification.
+
+Now, as Grygorii mentioned, differences between how a given IP core is 
+integrated in various SoCs can make clock management SoC-dependent. In the 
+vast majority of cases (which is really what we need to target, given that our 
+target is simplifying drivers) SoC integration can be described as a list of 
+clocks that must be managed. That list can be common to all devices in a given 
+SoC, or can be device-dependent as well.
+
+Few locations can be used to express a per-device list of per-SoC clocks. We 
+can have clocks lists in a per-SoC and per-device location, per-device clocks 
+lists in an SoC-specific location, or per-SoC clocks lists in a device-
+specific location.
+
+The first option would require listing clocks to be managed by runtime PM in 
+DT nodes, as proposed by this patch set. I don't think this is the best 
+option, as that information is a mix of hardware description and software 
+policy, with the hardware description part being already present in DT in the 
+clocks property.
+
+The second option calls for storing the lists in SoC code under arch/. As 
+we're trying to minimize the amount of SoC code there (and even remove SoC 
+code completely when possible) I don't think that's a good option.
+
+The third option would require storing the clocks lists in device drivers. I 
+believe this is our best option, as a trade-off between simplicity and 
+versatility. Drivers that use runtime PM already need to enable it explicitly 
+when probing devices. Passing a list of clock names to runtime PM at that 
+point wouldn't complicate drivers much. When the clocks list isn't SoC-
+dependent it could be stored as static information. Otherwise it could be 
+derived from DT (or any other source of hardware description) using C code, 
+offering all the versatility we need.
+
+The only drawback of this solution I can think of right now is that the 
+runtime PM core couldn't manage device clocks before probing the device. 
+Specifically device clocks couldn't be managed if no driver is loaded for that 
+device. I somehow recall that someone raised this as being a problem, but I 
+can't remember why.
+
+> > Also, May be platform dependent solution [1] can be acceptable for now?
+> > 
+> > [1] https://lkml.org/lkml/2014/7/25/630
 > 
-> > How about modifying of_get_address() rather than
-> > __of_address_to_resource() instead? You could introduce
-> > a new of_bus entry for each bus you expect to return
-> > an IORESOURCE_REG, or you could change of_bus_default_get_flags
-> > to return IORESOURCE_REG if the parent node has no ranges property
-> > and is not the root node.
-> 
-> IMO the clearer solution is to introduce a new of_bus bus. In that case
-> one possible problem will be how to distinguish the non-translatable and
-> the other buses. Also the *device_type* property is deprecated for non
-> PCI devices.
-> 
-> The second option will need to change the prototype of .get_flags method
-> to receive device_node structure.
-> 
-> Thoughts?
-> 
-> -- 
-> regards,
-> Stan
+> I need to look at the series before I comment. I've flagged it and
+> will hopefully look at it tomorrow.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
