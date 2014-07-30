@@ -1,33 +1,39 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RESEND][PATCHv2 0/3] Fix for buggy u-boot memory banks
-Date: Tue, 29 Jul 2014 21:24:38 -0600
-Message-ID: <20140730032438.948EAC408F6@trevor.secretlab.ca>
-References: <1405443816-29917-1-git-send-email-lauraa@codeaurora.org>
-	<CAL_JsqJv2_UHxHGFF=nFKQRiEwfFtH_7PhMPS=W=APyzc-yiTQ@mail.gmail.com>
-	<53D69CEA.3060206@codeaurora.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53D69CEA.3060206@codeaurora.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robherring2@gmail.com>
-Cc: Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Andreas =?iso-8859-1?q?F=E4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: add dt binding info for
+ Rockchip dwc2
+Date: Tue, 29 Jul 2014 20:54:46 -0700
+Message-ID: <CAD=FV=UaRb+UtZNJMZQik9oe_2r-9_b-t9PTQFDb6zkHwwAqFw@mail.gmail.com>
+References: <1406683873-18194-1-git-send-email-kever.yang@rock-chips.com>
+ <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Randy Dunlap <rdunlap@infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jianqun Xu <xjq@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Kishon Vijay Abraham I <kishon@ti.com>, lyz@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, addy.ke@rock-chips.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, mporter@linaro.org, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, wulf@rock-chips.com, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-k>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Jul 2014 11:56:42 -0700, Laura Abbott <lauraa@codeaurora.org> wrote:
-> On 7/26/2014 2:20 PM, Rob Herring wrote:
-> > On Tue, Jul 15, 2014 at 12:03 PM, Laura Abbott <lauraa@codeaurora.org> wrote:
-> >> Hi,
-> >>
-> >> This is a resend of the series to fix the uboot bug exposed by the removal
-> >> of meminfo. I haven't gotten any acks though.
-> > 
-> > Is the bug with ATAGs that get converted to DT in the decompressor or
-> > u-boot puts the wrong info in DT directly?
-> > 
-> 
-> I believe it's u-boot putting the wrong info in DT directly. See
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/266782.html
+Kever,
 
-I've picked up this series with some very minor changes. I'll ask Linus
-to pull it into v3.16 as a last minute fix.
+On Tue, Jul 29, 2014 at 6:31 PM, Kever Yang <kever.yang@rock-chips.com> wrote:
+> This add necessary dwc2 binding documentation for Rockchip socs:
+> rk3066, rk3188 and rk3288
+>
+> add dr_mode as optional properties.
+>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.txt |    5 +++++
+>  1 file changed, 5 insertions(+)
 
-g.
+Reviewed-by: Doug Anderson <dianders@chromium.org>
