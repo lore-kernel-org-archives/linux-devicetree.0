@@ -1,55 +1,27 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v3] Documentation: devicetree: Fix tps65090 typos in example
-Date: Wed, 30 Jul 2014 23:29:27 +0200
-Message-ID: <1406755767-5910-1-git-send-email-afaerber@suse.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/3] Add R8A7791/Henninger board CAN DT support
+Date: Thu, 31 Jul 2014 01:58:14 +0400
+Message-ID: <201407310158.15446.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Specification and existing device trees use vsys-l{1,2}-supply,
-not vsys_l{1,2}-supply. Fix the example to match the specification.
+Hello.
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-=46ixes: 21d2202158e9 ("mfd: tps65090: add DT support for tps65090")
-Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
----
- v2 -> v3:
- * Added Fixes header
- * + regulator and mfd maintainers
-=20
- v1 -> v2:
- * More verbose commit message (requested by Mark Rutland)
-=20
- Documentation/devicetree/bindings/regulator/tps65090.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-v3.16-rc7-20140729' tag. Here we add the CAN device tree support
+for the R8A7791-based Henninger board. It depends on the PFC CAN fix, R-Car CAN
+driver clock support and device tree support patches, and the clk driver RCAN
+clock patch posted recently in order to work.
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b=
-/Documentation/devicetree/bindings/regulator/tps65090.txt
-index 340980239ea9..ca69f5e3040c 100644
---- a/Documentation/devicetree/bindings/regulator/tps65090.txt
-+++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
-@@ -45,8 +45,8 @@ Example:
- 		infet5-supply =3D <&some_reg>;
- 		infet6-supply =3D <&some_reg>;
- 		infet7-supply =3D <&some_reg>;
--		vsys_l1-supply =3D <&some_reg>;
--		vsys_l2-supply =3D <&some_reg>;
-+		vsys-l1-supply =3D <&some_reg>;
-+		vsys-l2-supply =3D <&some_reg>;
-=20
- 		regulators {
- 			dcdc1 {
---=20
-1.9.3
+[1/3] ARM: shmobile: r8a7791: add CAN clocks
+[2/3] ARM: shmobile: r8a7791: add CAN DT support
+[3/3] ARM: shmobile: henninger: add CAN0 DT support
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WBR, Sergei
