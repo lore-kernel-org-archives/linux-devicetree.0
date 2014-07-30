@@ -1,86 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v6 10/14] drm/panel: add S6E3FA0 driver
-Date: Wed, 30 Jul 2014 16:36:20 +0200
-Message-ID: <20140730143619.GA1345@ulmo>
-References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com>
- <1405587689-1466-11-git-send-email-yj44.cho@samsung.com>
- <20140717103645.GD17877@ulmo>
- <53C87D2F.9000906@samsung.com>
- <53CCD5A8.6090406@samsung.com>
- <20140721091917.GK8843@ulmo>
- <53CCF70A.5010403@samsung.com>
- <53CDDD61.6000005@samsung.com>
- <20140722074935.GC18258@ulmo>
- <53D8F6B5.4090903@ti.com>
+From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
+Date: Wed, 30 Jul 2014 16:36:24 +0200
+Message-ID: <53D902E8.1030008@kpanic.de>
+References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de> <1406728949-7560-3-git-send-email-sassmann@kpanic.de> <53D90159.7040307@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53D8F6B5.4090903@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: YoungJun Cho <yj44.cho@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Paul Mundt <paul.mundt@gmail.com>, Imre Deak <imre.deak@intel.com>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D90159.7040307-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 30.07.2014 16:29, Andreas F=E4rber wrote:
+> Hi Stefan,
+>
+> Glad you got it working. :)
+>
+> Small nit below:
+>
+> Am 30.07.2014 16:02, schrieb Stefan Assmann:
+>> diff --git a/drivers/clk/ti/clk-6030.c b/drivers/clk/ti/clk-6030.c
+>> new file mode 100644
+>> index 0000000..baa965b
+>> --- /dev/null
+>> +++ b/drivers/clk/ti/clk-6030.c
+>> @@ -0,0 +1,141 @@
+>> +/*
+>> + * drivers/clk/ti/clk-6030.c
+>> + *
+>> + *  Copyright (C) 2014 Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify
+>> + * it under the terms of the GNU General Public License version 2 a=
+s
+>> + * published by the Free Software Foundation.
+>
+> Here you say version 2 ...
+>
+>> + *
+>> + * Clock driver for ti twl6030.
+>> + */
+> [...]
+>> +MODULE_AUTHOR("Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>");
+>> +MODULE_DESCRIPTION("clock driver for TI SoC based boards with twl60=
+30");
+>> +MODULE_LICENSE("GPL");
+>
+> ... but down here it's "GPL". Either use "GPL v2" here, or IIUC use t=
+he
+> "or (at your option) any later version" license above if you can.
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the hint. I'll fix it in the next version. :)
 
-On Wed, Jul 30, 2014 at 04:44:21PM +0300, Tomi Valkeinen wrote:
-> On 22/07/14 10:49, Thierry Reding wrote:
->=20
-> > But what I was trying to say is that if the Read IDs command isn't an
-> > official DCS command, maybe it would be a better idea to use the DDB
-> > instead. I assume that even if it isn't the same information it would
-> > at least be a superset and therefore a suitable replacement.
->=20
-> Only if DDB commands work on that panel =3D). Even if a panel supports
-> DCS, it doesn't mean it supports all the commands.
-
-Indeed. I was perhaps a little na=C3=AFve and assumed this was such a great
-standard command that every panel simply had to support it. But so far
-I haven't yet come across a single panel that does...
-
-> Also, does it really matter which one to use inside a panel driver? I
-> don't really see any pros nor cons with either option. Except, of
-> course, if using one of those makes the driver's code simpler.
-
-Yeah, at this point I don't see why the read IDs command shouldn't be
-used. It's somewhat unfortunate that it isn't mentioned in the DCS
-specification at all, but specifications are only as useful to the
-degree that they get implemented...
-
-My hope had been that we would be able to automatically probe for panels
-using the DDB, but it seems like that's not a practicable idea given the
-almost non-existent support for it.
-
-So as long as we can standardize on common APIs rather than per-driver
-implementations, I'm good.
-
-Thierry
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT2QLjAAoJEN0jrNd/PrOhGQEQAI4XFatbODIwvTeSGtgFoUqM
-OZZmxyva4Wk+A6iRdCUDFiMBB3vqLbWSmNdAjwixYod3qn+KwTsqlnqPLTZLTBKS
-O4+GBbpTl0aKOG2oZv4+99SsH/shBy7UDbgjpC1SVGkZDOh+LZC1v4+C8ZLIZbZh
-xjmKoKMxGTxWd5veXbI1YYyE8XNZv6fN6wXIsh82FEU5vSPk5OMpoYACqDywOurJ
-bmnLpim6GWbU1g8pyxoeNvPJs8jwkdyBJFvCcbo5F8Ow46cAVh5FlRiE/6TUm9g/
-tHUUgh6QJiLxq8iFlFM8/DvEWue8UJsNjZcnrtvm47uTL5a4oPUJgwtfjCOyBK0g
-18olXm9z9RDDGrGEFXaHmlzA9BpK2hSwQvEau4AZP5R4B9qQfgGqjPcBAhm4TNIM
-q9S9rqvL2ALLSPsdvx5T+jP4iQLqDVr9Pv2eLkiWRC4K8B+5jnsUzoaC/WBQ7TV2
-tPQ7jW79g78xren2lz6wn/MhvX9cVrcU0CGxPDzwzuCwu2mJFNVgvSa9MeH4iQTX
-C7m8MpirZNIKsDSOfLcGszuVKaUSAWf5HB4jzZbNCnnS2KD7QePdk+Nt6D6RzEQL
-G03vMyus/4DGC9jn0j5uSC6tUDRvgU30kFnKBLU8R7FRAOcBLDzRtTNXww+7uFGz
-zHomiB5svCtqBN8d8D7K
-=LdrU
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+   Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
