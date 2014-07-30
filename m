@@ -1,57 +1,93 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 30 Jul 2014 10:37:22 -0700
-Message-ID: <CAOesGMgKzbGe0uZEH84i=uYttcweUaZfEeRgCU9dUd43T+pP2g@mail.gmail.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-	<20140730110425.GI12239@arm.com> <20140730132348.GM29590@ulmo>
-	<20140730133309.GF9809@8bytes.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
+ SoC
+Date: Wed, 30 Jul 2014 18:48:03 +0100
+Message-ID: <20140730174803.GF20162@leverpostej>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+ <1406732794-20920-3-git-send-email-rric@kernel.org>
+ <20140730154626.GD20162@leverpostej>
+ <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140730133309.GF9809-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak@co>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 6:33 AM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jul 30, 2014 at 03:23:50PM +0200, Thierry Reding wrote:
->> I think there weren't any comments left for me to address and I've
->> mostly been waiting for Joerg to pick it up.
->>
->> Joerg, can you take this through the iommu tree for 3.17? Will acked
->> this, but perhaps you were waiting for an ACK from the device tree
->> bindings maintainers?
->>
->> Will, perhaps you can get Pawel or Mark to look at this?
->>
->> Arnd, I'm sure if we had your Acked-by that would go a long way too.
->
-> Yes, as Arnd requested this generic binding it would be good to have his
-> Acked-by before proceeding. Arnd?
+[...]
 
-Arnd is on vacation now, unfortunately. I've read up on the history
-and the current proposal from Thierry looks sane to me. As discussed,
-there might be a need for some common helpers to walk the tree and
-figure out things.
+> >> +     gic0: interrupt-controller@801000000000 {
+> >
+> > To make this easier to read, please place a comma between 32-bit
+> > portions of the unit address (e.g. here have 8010,00000000).
+> 
+> Mark, perhaps a dtc or checkpatch.pl check for this?
 
-There's also the possibility that the IOMMU at init time actually
-modifies and configures the stream IDs for the clients, but that again
-is an implementation detail and not something that affects the binding
-per se.
+Sure. Dodgy first atttempt at checkpatch below.
 
-I'm not giving my Ack now since I want to make sure there are no
-disagreements on my separate reply from a minute ago, but I expect
-you'll have it once we've had that round trip of comments. :)
+---->8----
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 182be0f..8aee3f5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2136,6 +2136,14 @@ sub process {
+                        }
+                }
+ 
++# check for difficult-to-read unit-addresses
++               if (defined $root &&
++                       ($realfile =~ /\.dtsi?$/ && $line =~ /([a-z0-9._\-+]++@([0-9a-f]+))\s*{/gi) &&
++                       (length($2) > 8)) {
++                               WARN("LONG_DT_UNIT_ADDRESS",
++                                    "Consider splitting long unit address \"$2\" with a comma between cells\n" . $herecurr);
++               }
++
+ # check we are in a valid source file if not then ignore this hunk
+                next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
+----8<----
 
+It would also be nice to check matching unit-address and reg, but doing
+that correctly requires knowing #address-cells, which sounds a little
+painful.
 
--Olof
+I'm not sure where I picked up the comma convention, as it doesn't seem
+to be in ePAPR.  It does seem common though, and is my personal
+preference:
+
+[mark@leverpostej:~/src/linux]% git grep '@[a-z0-9]\+,[a-b0-9]\+' \                          
+	-- arch/arm/boot/dts | wc -l
+254
+[mark@leverpostej:~/src/linux]% git grep '@[a-z0-9]\+,[a-b0-9]\+' \
+	-- arch/powerpc/boot/dts | wc -l
+370
+[mark@leverpostej:~/src/linux]% git grep '@[a-z0-9]\+,[a-b0-9]\+' \
+        -- arch/*/boot/dts | wc -l
+631
+
+[...]
+
+> >> +             uaa0: serial@87e024000000 {
+> >> +                     compatible = "arm,pl011", "arm,primecell";
+> >> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
+> >> +                     interrupts = <1 21 4>;
+> >> +                     clocks = <&refclk50mhz>;
+> >> +                     clock-names = "apb_pclk";
+> >
+> > Is this actually the apb_pclk, or is the the uartclk? I assume it's the
+> > latter.
+> 
+> Shouldn't new bindings have both clocks here? A single clock was a
+> mistake I think (mine in fact).
+
+I don't think we fixed it up in the end. It made drivers look a bit messy and
+it dropped off my priority queue.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
