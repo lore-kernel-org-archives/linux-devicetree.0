@@ -1,89 +1,72 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Wed, 30 Jul 2014 18:50:33 +0100
-Message-ID: <20140730175033.GA17528@sirena.org.uk>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
- <1406728949-7560-3-git-send-email-sassmann@kpanic.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/4] ARM: dts: add rk3288 dwc2 controller support
+Date: Wed, 30 Jul 2014 21:55:38 +0400
+Message-ID: <53D9319A.9060407@cogentembedded.com>
+References: <1406683873-18194-1-git-send-email-kever.yang@rock-chips.com> <1406684075-18271-1-git-send-email-kever.yang@rock-chips.com> <53D90CC4.9070009@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="58l+liMhP3+87v+P"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406728949-7560-3-git-send-email-sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53D90CC4.9070009@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>, heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, paulz@synopsys.com, gregkh@linuxfoundation.org, mporter@linaro.org, kishon@ti.com, balbi@ti.com
+Cc: swarren@wwwdotorg.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, addy.ke@rock-chips.com, xjq@rock-chips.com, cf@rock-chips.com, lyz@rock-chips.com, wulf@rock-chips.com, dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/30/2014 07:18 PM, Sergei Shtylyov wrote:
 
---58l+liMhP3+87v+P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> rk3288 has two kind of usb controller, this add the dwc2 controller
+>> for otg and host1.
 
-On Wed, Jul 30, 2014 at 04:02:29PM +0200, Stefan Assmann wrote:
+>> Controller can works with usb PHY default setting and Vbus on.
 
-> +static int twl6030_clk32kg_is_prepared(struct clk_hw *hw)
-> +{
-> +	struct twl6030_desc *desc = to_twl6030_desc(hw);
-> +
-> +	return desc->enabled;
-> +}
+>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>> ---
+>>   arch/arm/boot/dts/rk3288.dtsi |   20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
 
-Why not just check the register map - can't the register be cached?  If
-that's not possible a comment would be good.
+>> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk328=
+8.dtsi
+>> index abc51f5..4309c4f 100644
+>> --- a/arch/arm/boot/dts/rk3288.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> @@ -646,5 +646,25 @@
+>>               clock-names =3D "baudclk", "apb_pclk";
+>>               status =3D "disabled";
+>>           };
+>> +
+>> +        usb_otg: dwc2@ff580000 {
 
-> +static int of_twl6030_clk32kg_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct clk *clk;
-> +	int ret = 0;
-> +
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	clk = clk_get(&pdev->dev, "clk32kg");
+>     The ePAPR standard [1] says:
 
-devm_clk_get()?
+> The name of a node should be somewhat generic, reflecting the functio=
+n of the
+> device and not its precise programming model. If appropriate, the nam=
+e should
+> be one of the following choices:
 
-> +	if (IS_ERR(clk))
-> +		ret = -EPROBE_DEFER;
+> [...]
+>     =95 usb
 
-Shouldn't the provided return code be being used?
+>> +            compatible =3D "rockchip,rk3288-usb", "rockchip,rk3066-=
+usb",
+>> +                    "snps,dwc2";
+>> +            reg =3D <0xff580000 0x40000>;
+>> +            interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+>> +            clocks =3D <&cru HCLK_OTG0>;
+>> +            clock-names =3D "otg";
+>> +            status =3D "disabled";
+>> +        };
+>> +
+>> +        usb_host1: dwc2@ff540000 {
 
-> +	else
-> +		clk_prepare(clk);
+>     Same here.
 
-Why is the clock driver defaulting to enabling the clock, and if it
-needs to shouldn't it be doing a prepere_enable() even if the enable
-happens not to do anything to the hardware?  Otherwise child clocks
-might get confused.
+    Oops, forgot to give the ePAPR link:
 
-The return value is also not being checked.
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.=
+pdf
 
---58l+liMhP3+87v+P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+WBR, Sergei
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT2TBmAAoJELSic+t+oim9muIP/ie+pHPmirfRYp4gimECI4V0
-BcKVfOb6guc9K7hUjRSDdM3iPCPxr75bJ9hDrP56VMQGZn3daCydCCwXW0c88zs4
-jhMuefFH0glGgfWbWOHvR8Du98hhfL/UP1tKoEMk4J2/tmaGlfXbj2U6V8dIzQT5
-atcpludXMxCroS/f0LpWQi4J6tEPiFfCGtCV6yb3qui3KoCwTpUjTz4Fuj6fe/mJ
-L0rAD6hj9nVudjf2beMHHDD0ogiBzPcKj1mchEl/3g82PSuYUZeTUYdYHAFbTxum
-aQwSdQ7QnuqyIvkcPxhbhLmwPaxThKW0wCLsBP+zo7oNOD+giujonaaqppHYyDtW
-OE0R+2BxVsAFyz5HXlMIaEltU7AvFuWhrgQr1D9gH3pfLMDhPcI5J7MOltVcuzVq
-r+sQ7nm3Wjib81+9OHkxwhLSSUmi2AKwLNsrLtBrILP03oY9dPWCyqKpdoZjmwg2
-zS6DYqbtePbKk32TrQbMJGkJeLxsOaeC9XIndCgJEayISz5dTMbhDJ0eBh6Ua+eZ
-aIngvhLZej5XhRZEthhF7zSdgl0VCbfcmoehJKs7YZCXnolDg8/uoOmyUGzghmrs
-QBB7UfISozGE29AWPoYCaBfPjUmUUvHLysuxvAXBR4sOuZC5v4kxn5wWhxIMU0zD
-FPBRc0g+HbiruN2RsbR5
-=3WV3
------END PGP SIGNATURE-----
-
---58l+liMhP3+87v+P--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
