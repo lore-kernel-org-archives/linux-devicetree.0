@@ -1,63 +1,76 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 3/5] regulator: core: Only apply constraints if available
- on list voltage
-Date: Wed, 30 Jul 2014 11:42:53 +0100
-Message-ID: <20140730104253.GP17528@sirena.org.uk>
-References: <1406651339-28901-1-git-send-email-javier.martinez@collabora.co.uk>
- <1406651339-28901-4-git-send-email-javier.martinez@collabora.co.uk>
- <20140729171857.GV17528@sirena.org.uk>
- <53D8B195.4050003@collabora.co.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] mtd: spi-nor: add DDR quad read support
+Date: Wed, 30 Jul 2014 11:46:07 +0100
+Message-ID: <20140730104607.GQ17528@sirena.org.uk>
+References: <1398657227-20721-1-git-send-email-b32955@freescale.com>
+ <1398657227-20721-4-git-send-email-b32955@freescale.com>
+ <20140730050843.GE11952@brian-ubuntu>
+ <20140730064413.GA15547@shldeISGChi005.sh.intel.com>
+ <20140730074500.GF11952@brian-ubuntu>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x+ia+h3A4XZzeh4n"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="HYygyrmJsD3lYHfd"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53D8B195.4050003@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140730074500.GF11952@brian-ubuntu>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Huang Shijie <shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---x+ia+h3A4XZzeh4n
+--HYygyrmJsD3lYHfd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jul 30, 2014 at 10:49:25AM +0200, Javier Martinez Canillas wrote:
-> On 07/29/2014 07:18 PM, Mark Brown wrote:
+On Wed, Jul 30, 2014 at 12:45:00AM -0700, Brian Norris wrote:
+> On Wed, Jul 30, 2014 at 02:44:13PM +0800, Huang Shijie wrote:
+> > On Tue, Jul 29, 2014 at 10:08:43PM -0700, Brian Norris wrote:
+> > > On Mon, Apr 28, 2014 at 11:53:40AM +0800, Huang Shijie wrote:
+> > > > This patch adds the DDR quad read support by the following:
 
-> > I would also expect any regulator where the supplied devices are able to
-> > vary the voltage to explicitly provide a constraint even if the
-> > implementation is done in a parent regulator.  There may be constraints
-> > on the child supply which aren't directly present on the parent supply
-> > and can be ignored if the child supply is turned off.
+> > > Are DDR modes in the scope of drivers/spi/ at all, so that we could
+> > > someday wire it up through m25p80.c? Or is 'DDR' such a distortion of
+> > > the meaning of 'SPI' such that it will be restricted only to SPI NOR
+> > > dedicated controllers?
 
-> Agreed, if I explicitly set the voltage constraints on the child supply then
-> this patch is indeed not needed.
+> > IMHO, the DDR modes can _NOT_ be handled by the driver/spi/*.
 
-We will, however, need some code to pass the child supply constraints on
-to the parent.
+> I agree to some extent, but I wanted to confirm with the SPI guys that
+> DDR is truly unique to SPI NOR. (I know it doesn't currently support
+> it.)
 
---x+ia+h3A4XZzeh4n
+I don't know what DDR is in this context, sorry.  I'm guessing you're
+right since it sounds like something to do with extra clocks and this is
+probably not something used by generic SPI devices at present (if it
+ends up being widely implemented by sufficiently generic controllers
+that might change but the trend seems to be to flash specific
+controllers).
+
+--HYygyrmJsD3lYHfd
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT2MwqAAoJELSic+t+oim9aSMP/1mskx3pbsqkgw34u4P/2oU1
-mEi0MeW02i1FYQnwqNFq8JZFzgik444f6vY73w6AOSnTP1Z5Z8x2YdYAbCd8ipmH
-SX/PUgrLUIU0y6bnbicfOkni74C+BfYHpoJxHQDQKAWq4qxUeW9WpNnVplboNZNt
-LJZktdAhs06OGgk/mevhppZ/xIauaJYJoaUbs+EniX5z6dYwTuFYPTQObjBhEt1w
-JHiAlZPuvGi6pFDYXqxL6vBtqskq6/qofqX3ojskIdSFsmag36GQcO5yclK5/kVe
-uiCFdG6ygzFlnytMENMRT6HapBvK9CQkY4qIFQGrt8edmVW2tGpvXm64MiMQ2VmM
-uUawHp4WOQB28oVSByDKK/UyXaACueOYu4EJfPnod4PCTJCDXS/OVpiucCwZCv8m
-JU5DI0fkj76eJqXP2Q0VIElDURwA8Hnq8hGfaMfMt8oPZPmC5QA4AOEoB+3oq0A3
-SpB9jMiUefZ+nOAwI0cPdCHRSpiXm7w2qSYca0E+XxLvVvYffpTz0a9mxlBskgUy
-Yh3CSBiGycX+cQ4sjyje7Y6lpEEwq4Qg4P6wr4zk0ACIoXw0pdIcNNCHdpAJVUcx
-zE0PMpSm7cHEEVOc6ZEmzm5lCMnCWTNAw0G/b7gXDMduVROug5ow3wo5CcFmmOMC
-4tpsCYLxwN5Zx5nzGEl0
-=TkDr
+iQIcBAEBAgAGBQJT2MzsAAoJELSic+t+oim9zC8P/iMTrgOuOTCEaOdbapoLtDLh
+L9b5ThghYHU71m3dH4lXXIRAiorrvovipM9lHalh9z9nC4dw78AWAZE9P1lPzlGi
+Ycj125A2ptBY6ZI3h+ntQlfmE6Z7bVoziLh3OgxQqAStfv+Pt+IgkqsCXl0hCBix
+/PfFzJoGM3KNNvS7MuUBpCQ11xbKybL1TEpjQiUcCaK0PIm49XeYTmFn8JpxdV5i
+L6kJfD4RGcGKuEh9UvQPHcavAiQpq0hZnGioVbJ+XWfLiWVOpmOc/82Os+tUO35n
+KZe8hT0OijI3M5mxqwaVXQqUU5rBLkA1d93aX86aZJ6E7yUm/Q4Kd5rltOuI/wrD
+iSFmAkfrMc6XhBqeNl/fHhhh4txrobmxNr27jDgkdNBcuR8VXJhTnzjbUwRrTNJV
+WrgGWgNdBQ7YMcQQqszr5ePyX6Dw3mc5vQf1mBK9/1ETZufYVJTmKveYieU24bxf
+J8R1uaJyrKpZAIXw66uRDXJqWhwoqunYfgYIxxtwVw7fzw4RLzLlcKsjlaqDUdHs
+iYLq8s4WFYM+bZGxcQJX+BesgOHKTKV3gGPYsuLrFSqEdUxSxD36en4V1H4q/CfR
+zF3Zr6aPHHiINxVhagU4pYPWYZsn8iSGC/5kr8vCHMFRKJswv5mM9y3lsSSzbCOy
+XLDTgtOyQeC8BpD3DsFV
+=K622
 -----END PGP SIGNATURE-----
 
---x+ia+h3A4XZzeh4n--
+--HYygyrmJsD3lYHfd--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
