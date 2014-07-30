@@ -1,16 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] ARM: dts: sun8i: add rtc device node
-Date: Wed, 30 Jul 2014 10:48:05 +0200
-Message-ID: <20140730084805.GW3952@lukather>
+Subject: Re: [PATCH v4 3/6] ARM: dts: sun6i: add rtc device node
+Date: Wed, 30 Jul 2014 10:47:48 +0200
+Message-ID: <20140730084748.GV3952@lukather>
 References: <1406535661-25072-1-git-send-email-wens@csie.org>
- <1406535661-25072-5-git-send-email-wens@csie.org>
+ <1406535661-25072-4-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mz5eWKkhz39mMVQV"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPPD4KPAKGQEG4UKWMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="22hJjvOmZW2O/jbw"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBO7D4KPAKGQECEJ54GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1406535661-25072-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1406535661-25072-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -23,14 +23,14 @@ Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zum
 List-Id: devicetree@vger.kernel.org
 
 
---mz5eWKkhz39mMVQV
+--22hJjvOmZW2O/jbw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 28, 2014 at 04:20:59PM +0800, Chen-Yu Tsai wrote:
-> sun8i shares the same rtc hardware as sun6i. Now that we have a driver
-> for it, add a device node to the DTSI for it so we can use it.
+On Mon, Jul 28, 2014 at 04:20:58PM +0800, Chen-Yu Tsai wrote:
+> Now that we have a driver for sun6i's rtc hardware, add a device node
+> for it so we can use it.
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
@@ -43,26 +43,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---mz5eWKkhz39mMVQV
+--22hJjvOmZW2O/jbw
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJT2LFFAAoJEBx+YmzsjxAg2SQP/3rzzjyl2rHrsooW6w8AcDoN
-3jo5qrlnyG7bgh7le7MPMEK00HRGiKctL8jHgFWvIHqxSvitvodpmljqkOxksosa
-7+9Q+P/ys16Qd8IHv4JlA+oNU61QhlW6cj/eRUBsZtISH0usF9f8/X8NqnoEUyul
-O/SGnXf2z5jc03BWw/zEzx9DyNQuzTUEkbKCBG2+vNCt4lJYULj6mjhL01y/+JyL
-RltahruZmIetRXefnR2AvzIvIdQAfjjtJtuR2446V8LjUdNBANP2+0CNNWci7Kl9
-TCuHMPhtjiMhR0Qd8sb8EsxfaZvuufB9cMYykQE9ubrGNFFHoDAaxmi9WF42Z47v
-jqlRdh3CviLpMrfsuP4y3qeodKHa6LWKauUn8CigC1wfeNR5EbgrTVwVbL1mevhT
-YKOJ5FyHOurG3J42osA9/NbxzLWA4zFhoXTauWOZRmwiJI4EuN2yfkFqhK/97QBf
-lWJgCHaa0cc68vpPiSfW/3JYmt7hwMP8MkHvxitRan8SrrvIeYsLx2ZeyEAJQMcB
-BXVnI0dMa2pxWq1VWw1T5RpRR7q1XlL5lQDw6H7ACr6yZ8J7kba6UeE79uw3yU+B
-klaTjJ4eMg/KRsO6TG4pLs0KKPWnIy9lIHRo62S6h9twTkM2Fl6dYjxCFTRn/QkS
-nZitOQ80w0al96rFa2JO
-=/+qa
+iQIcBAEBAgAGBQJT2LE0AAoJEBx+YmzsjxAgvEMQAINx6RdG/tzjHeUmQlXQ2LH0
+5NJflp1l3kMFfgaA6P94krJmTnb+4RBhz+pqVHZZ8yJFRNrFdHrIMhw3MmQ1MT82
+u2uPyN5MpJOcNTvYONJACcmVb0KB/AiTbhBaOEKWckYv7JFIFgPUziuQMu/s2+0n
+MSkZmAr6JeBWMeFOyfsLJ/i+UbYNhhSMZpm0zelNxA7X+buqPj6biIxcn8alPtSy
+KL/0HzWiFsMBGKm/q8TNN2CIMPLk9FIc50ept5jfIY+Ms1E3uiLm634F8aWdtFnm
+LjPGdotcHLwZ3whatcqKsOoemVISrCtnyZLwEotFenYgwLEr7qCD1SoguuOKtcsr
+UB0rtZltL/sqGexRsGZ7rsHewLEqhcDa1yhosXlDS2HMRDAVLzxglsvvWOWWV7vS
+GyJeJJnIM/rDWrwyZnPt6nX8NVBhCbCNedGcfiNFSNS5Km5dxiF7dyDheq/hpvSM
+IHqqabFnzM2hguqAfMCUE4Mhcz0wlrONxy9yXnP9v1OM9yxiunQOCeoTck2mG9Rf
+HCB9QYCRFQs6saVRdhbyJVOWqnY+gPSIKdFQz4HEeJPQsKvccvW05tBd1C8muUHH
++2goSh5BhwzEHdmzKvgMd+6UBIYBsC54krT/YUrRsXyZIhI+y4CVlVMR3DU0xAjl
+mDQ4kEqPg0+cA/SxZT/a
+=YpXe
 -----END PGP SIGNATURE-----
 
---mz5eWKkhz39mMVQV--
+--22hJjvOmZW2O/jbw--
