@@ -1,57 +1,28 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/2] regulator: userspace-consumer: add DT binding details
-Date: Wed, 30 Jul 2014 19:24:00 +0530
-Message-ID: <1406728440-17837-2-git-send-email-ldewangan@nvidia.com>
-References: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9] video: ARM CLCD: Add DT support
+Date: Wed, 30 Jul 2014 14:57:56 +0100
+Message-ID: <1406728676.17155.22.camel@hornet>
+References: <1403610911-31491-1-git-send-email-pawel.moll@arm.com>
+		 <1404824767.21897.7.camel@hornet> <1406023366.25343.44.camel@hornet>
+	 <1406631987.17155.0.camel@hornet> <53D7825C.2020900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D7825C.2020900-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding document and details DT binding for the driver
-regulator/userspace-consumer.
+On Tue, 2014-07-29 at 14:15 +0300, Tomi Valkeinen wrote:
+> Yep, I've queued it now for 3.17.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- .../bindings/regulator/userspace-consumer.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/userspace-consumer.txt
+Awesome, thanks!
 
-diff --git a/Documentation/devicetree/bindings/regulator/userspace-consumer.txt b/Documentation/devicetree/bindings/regulator/userspace-consumer.txt
-new file mode 100644
-index 0000000..73c651c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/userspace-consumer.txt
-@@ -0,0 +1,26 @@
-+Userspace consumer regulators
-+
-+Required properties:
-+- compatible		: Must be "reg-userspace-consumer".
-+- regulator-supplies: Supply names for this regulator. This can be
-+	multiple strings.
-+
-+Optional properties:
-+- regulator-name: Name of the consumer line.
-+- regulator-boot-on: Enable regulator on booting.
-+
-+With all supply names, there should be <supply-name>-supply to pass regulators
-+handle as defined in regulator.txt.
-+
-+Example:
-+
-+	userspace-consumer {
-+		compatible = "reg-userspace-consumer";
-+
-+		regulator-name = "gps-consumer";
-+		regulator-boot-on;
-+		regulator-supplies = "vdd", "vcc", "vdd-3v3";
-+		vdd-supply = <&reg1>;
-+		vcc-supply = <&reg2>;
-+		vdd-3v3-supply = <&reg3>;
-+	};
--- 
-1.8.1.5
+Pawel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
