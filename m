@@ -1,98 +1,66 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [RESEND RFC V2] devicetree: Dialog Semiconductor consolidate
- existing vendor prefixes to standardise on 'dlg'
-Date: Wed, 30 Jul 2014 11:37:25 +0900
-Message-ID: <20140730023725.GA23224@verge.net.au>
-References: <201407241554.s6OFsqbW031651@swsrvapps-01.diasemi.com>
- <20140725070002.GH7063@lee--X1>
- <6ED8E3B22081A4459DAC7699F3695FB7D0B28E95@SW-EX-MBX02.diasemi.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCHv7 5/5] mmc: dw_mmc: replace "disable-wp" from slot's quirk
+ to host's quirk
+Date: Wed, 30 Jul 2014 11:47:26 +0900
+Message-ID: <53D85CBE.8090104@samsung.com>
+References: <1406514579-3769-1-git-send-email-jh80.chung@samsung.com>
+ <1406514579-3769-6-git-send-email-jh80.chung@samsung.com>
+ <CAD=FV=VnP7q0UE0uP_8Hzbhtu6qJqz2kUR9E_sfk4wHbBH_7cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7D0B28E95-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LINUX SH <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, LINUX ARM KERNEL <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAD=FV=VnP7q0UE0uP_8Hzbhtu6qJqz2kUR9E_sfk4wHbBH_7cg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@google.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Dinh Nguyen <dinguyen@altera.com>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, CPGS <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 09:53:56AM +0000, Opensource [Steve Twiss] wrote:
-> On 25 July 2014 08:00, Lee Jones wrote:
-> 
-> >On Thu, 24 Jul 2014, Opensource [Steve Twiss] wrote:
-> >> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> >>
-> >> This patch series updates the device tree vendor prefix for
-> >> Dialog Semiconductor.
-> >>
-> >> Various methods are currently used throughout the kernel: 'diasemi',
-> >> 'dialog' and 'dlg'. Others have also been suggested.
-> >>
-> >> This patch set aims to consolidate the usage of the vendor prefix to
-> >> use a common standard. The prefix 'dlg' is used.
-> >>
-> >>
-> >> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> >
-> >Didn't I Ack the MFD parts already?
-> >
-> 
-> Yes -- certainly.
->  (I should have put them in the main body of the e-mail shouldn't I ..?)
-> 
-> I just need the SHMobile responses now.
-> I will try to make contact with those guys this week.
+Hi, Doug.
 
-Hi Steve,
+Thanks for review.
 
-I apologise for not noticing this earlier:
-I am entirely unsure how I missed it.
-
-In principle I am fine with this change so long as it does not
-introduce any backwards-compatibility problems. In particular removing
-compatibility strings that may already be in use by DTB blobs in the wild.
-
-For SH Mobile it seems that Lager and Koelsch were using "diasemi,da9210"
-which is unsupported by the driver at this time. So it seems there is no
-backwards-compatibility problem there. I'm less sure about other aspects of
-the patch. And I'm also less concerned about them.
-
-I do have a slight preference for SH Mobile changes to go through my
-renesas tree rather than elsewhere (as part of a more global change)
-principally to try to avoid the possibility of conflicts. The SH Mobile dts
-files in question are often updated. And for example I notice some fuzz
-when applying this patch on top of the next-20140729 tag of linux-next.
-
-If you were to break out the SH Mobile portion of this patch I would be
-happy to take it once the driver portion is accepted.  That said, I do see
-that everyone else has acked the change so clearly this is not an issue
-from their point of view. So I will not complain if you decide not to break
-the patch up (though please note my warning about possible conflicts).
-
-In the case where you do not want to split up the patch:
-Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-
-> I have the following Acks so far.
+On 07/30/2014 03:01 AM, Doug Anderson wrote:
+> Jaehoon,
 > 
-> >From: Rob Herring on 21 July 2014 16:43
-> >I'm okay with this, but it also needs acks from i.MX and SHMobile
-> >folks as it could break out of tree users.
-> >  Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> On Sun, Jul 27, 2014 at 7:29 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>> Replaced the "disable-wp" into host's quirks.
+>> (Because the slot-node is removed at dt-file.)
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
+>> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+>> ---
+>>  drivers/mmc/host/dw_mmc.c  |   12 +++++-------
+>>  include/linux/mmc/dw_mmc.h |    6 ++----
+>>  2 files changed, 7 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 1ac227c..4a4f66f 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -997,7 +997,7 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
+>>         int gpio_ro = mmc_gpio_get_ro(mmc);
+>>
+>>         /* Use platform get_ro function, else try on board write protect */
+>> -       if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
+>> +       if (slot->host->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
 > 
-> >From: Shawn Guo on 22 July 2014 02:38
-> >arch/arm/boot/dts/imx53-smd.dts                    |  2 +-
-> >arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  2 +-
-> >  Acked-by: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> It doesn't seem like it would be hard to include support for the old
+> binding (and just print a warning).  Then this could land ahead of the
+> device tree changes.
 > 
-> >From: Lee Jones on 22 July 2014 08:09
-> >For the MFD changes:
-> >  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Generally I think we're supposed to keep support for old device trees
+> if possible (except in extreme cases).
+Ok, I see. I will add the Warning message like this. ("Recommend not to use the slot-node...")
+Then Developers can change the device-tree, right.
+
+Today, i will send the patch. If you have any other comment, let me know, plz.
+I want to merge this patch-set into 3.16.
+
+Best Regards,
+Jaehoon Chung
 > 
-> and
+> -Doug
 > 
-> >From: Philipp Zabel on 24 July 2014 20:44
-> >  Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
