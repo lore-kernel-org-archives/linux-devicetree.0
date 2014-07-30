@@ -1,47 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 30 Jul 2014 22:11:14 +0200
-Message-ID: <201407302211.14342.arnd@arndb.de>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-	<20140730110425.GI12239@arm.com> <20140730132348.GM29590@ulmo>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [2/2] powerpc/fsl-booke: Add initial T1042RDB_PI board support
+Date: Wed, 30 Jul 2014 15:12:51 -0500
+Message-ID: <20140730201250.GA29789@home.buserror.net>
+References: <1404879851-2914-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140730132348.GM29590@ulmo>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <1404879851-2914-1-git-send-email-Priyanka.Jain@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Priyanka Jain <Priyanka.Jain@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Prabhakar Kushwaha <prabhakar@freescale.com>, Poonam Aggrwal <poonam.aggrwal@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 30 July 2014, Thierry Reding wrote:
-se?
-> 
-> I think there weren't any comments left for me to address and I've
-> mostly been waiting for Joerg to pick it up.
-> 
-> Joerg, can you take this through the iommu tree for 3.17? Will acked
-> this, but perhaps you were waiting for an ACK from the device tree
-> bindings maintainers?
-> 
-> Will, perhaps you can get Pawel or Mark to look at this?
-> 
-> Arnd, I'm sure if we had your Acked-by that would go a long way too.
-
-
-Sorry for missing this before my vacation.
-
-Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-Olof, please merge it into arm-soc so we can finally build on top
-of this!
-
-	Arnd
+T24gV2VkLCBKdWwgMDksIDIwMTQgYXQgMDk6NTQ6MTFBTSArMDUzMCwgUHJpeWFua2EgSmFpbiB3
+cm90ZToKPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL3QxMDR4cmRiLmR0c2kg
+Yi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvdDEwNHhyZGIuZHRzaQo+IGluZGV4IDlhYWVmYTUuLmU3
+ZTc2NWYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL3QxMDR4cmRiLmR0c2kK
+PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvdDEwNHhyZGIuZHRzaQo+IEBAIC01Nyw3ICs1
+Nyw4IEBACj4gIAkJfTsKPiAgCj4gIAkJY3BsZEAzLDAgewo+IC0JCQljb21wYXRpYmxlID0gImZz
+bCx0MTA0MHJkYi1jcGxkIiwiZnNsLHQxMDQycmRiLWNwbGQiOwo+ICsJCQljb21wYXRpYmxlID0g
+ImZzbCx0MTA0MHJkYi1jcGxkIiwiZnNsLHQxMDQycmRiLWNwbGQiLAo+ICsJCQkJCSJmc2wsdDEw
+NDJyZGJfcGktY3BsZCI7Cj4gIAkJCXJlZyA9IDwzIDAgMHgzMDA+Owo+ICAJCX07Cj4gIAl9OwoK
+V2hhdCdzIGdvaW5nIG9uIGhlcmU/ICBUaGlzIGZpbGUgaXMgdXNlZCBieSBhbGwgdGhyZWUgYm9h
+cmRzLiAgSWYgeW91Cm5lZWQgdG8gZGlzdGluZ3Vpc2ggb25lIGJvYXJkJ3MgQ1BMRCBmcm9tIGFu
+b3RoZXIncywgeW91J2xsIGhhdmUgdG8gZG8gaXQKc29tZXdoZXJlIGVsc2UuICBJZiB0aGUgQ1BM
+RHMgYXJlIGV4YWN0bHkgdGhlIHNhbWUgYW5kIG5vIGRpc3RpbmN0aW9uCm5lZWRzIHRvIGJlIG1h
+ZGUsIHRoZW4geW91IGRvbid0IG5lZWQgdGhyZWUgY29tcGF0aWJsZSBzdHJpbmdzLiAgRXZlbgp0
+aGVuLCB5b3UgbWF5IHdpc2ggdG8gc3BlY2lmeSB0aGUgZXhhY3QgYm9hcmQgYXMgdGhlIGZpcnN0
+IGNvbXBhdGlibGUKc3RyaW5nLCBidXQgYWdhaW4geW91J2xsIG5lZWQgdG8gcGF0Y2ggdGhhdCBp
+biBlbHNld2hlcmUgc28gdGhhdCBpdAphY3R1YWxseSBtYXRjaGVzIHRoZSBib2FyZC4KCi1TY290
+dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
+Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
