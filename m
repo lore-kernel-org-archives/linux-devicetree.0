@@ -1,130 +1,113 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v3 3/4] ARM: dts: Clean up exynos5250-snow
-Date: Wed, 30 Jul 2014 15:50:43 +0200
-Message-ID: <1406728244-5105-4-git-send-email-afaerber@suse.de>
-References: <1406728244-5105-1-git-send-email-afaerber@suse.de>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] regulator: userspace-consumer: add DT support
+Date: Wed, 30 Jul 2014 19:23:59 +0530
+Message-ID: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1406728244-5105-1-git-send-email-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Stephan van Schaik <stephan@synkhronix.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Russell King <linux@arm.linux.org.uk>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VXNlIHRoZSBuZXcgc3R5bGUgb2YgcmVmZXJlbmNpbmcgaW5oZXJpdGVkIG5vZGVzIGFuZCB1c2Ug
-c3ltYm9saWMgbmFtZXMuCgpTdWdnZXN0ZWQtYnk6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNo
-cm9taXVtLm9yZz4KU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNl
-LmRlPgotLS0KIHYzOiBOZXcgKERvdWcgQW5kZXJzb24pCgogYXJjaC9hcm0vYm9vdC9kdHMvZXh5
-bm9zNTI1MC1zbm93LmR0cyB8IDE4MiArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
-CiAxIGZpbGUgY2hhbmdlZCwgOTAgaW5zZXJ0aW9ucygrKSwgOTIgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93LmR0cyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczUyNTAtc25vdy5kdHMKaW5kZXggMWMzNmNkNzI5MDVmLi4yZWQ2Y2Iw
-NGEyZGIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc25vdy5kdHMK
-KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93LmR0cwpAQCAtOSw2ICs5LDgg
-QEAKICovCiAKIC9kdHMtdjEvOworI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPgor
-I2luY2x1ZGUgPGR0LWJpbmRpbmdzL2lucHV0L2lucHV0Lmg+CiAjaW5jbHVkZSAiZXh5bm9zNTI1
-MC5kdHNpIgogCiAvIHsKQEAgLTMwLDg1ICszMiwxOSBAQAogCQlzdGF0dXMgPSAib2theSI7CiAJ
-fTsKIAotCXBpbmN0cmxAMTE0MDAwMDAgewotCQllY19pcnE6IGVjLWlycSB7Ci0JCQlzYW1zdW5n
-LHBpbnMgPSAiZ3B4MS02IjsKLQkJCXNhbXN1bmcscGluLWZ1bmN0aW9uID0gPDA+OwotCQkJc2Ft
-c3VuZyxwaW4tcHVkID0gPDA+OwotCQkJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OwotCQl9OwotCi0J
-CXNkM19jbGs6IHNkMy1jbGsgewotCQkJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OwotCQl9OwotCi0J
-CXNkM19jbWQ6IHNkMy1jbWQgewotCQkJc2Ftc3VuZyxwaW4tcHVkID0gPDM+OwotCQkJc2Ftc3Vu
-ZyxwaW4tZHJ2ID0gPDA+OwotCQl9OwotCi0JCXNkM19idXM0OiBzZDMtYnVzLXdpZHRoNCB7Ci0J
-CQlzYW1zdW5nLHBpbi1kcnYgPSA8MD47Ci0JCX07Ci0KLQkJbWF4OTgwOTVfZW46IG1heDk4MDk1
-LWVuIHsKLQkJCXNhbXN1bmcscGlucyA9ICJncHgxLTciOwotCQkJc2Ftc3VuZyxwaW4tZnVuY3Rp
-b24gPSA8MD47Ci0JCQlzYW1zdW5nLHBpbi1wdWQgPSA8Mz47Ci0JCQlzYW1zdW5nLHBpbi1kcnYg
-PSA8MD47Ci0JCX07Ci0KLQkJdHBzNjUwOTBfaXJxOiB0cHM2NTA5MC1pcnEgewotCQkJc2Ftc3Vu
-ZyxwaW5zID0gImdweDItNiI7Ci0JCQlzYW1zdW5nLHBpbi1mdW5jdGlvbiA9IDwwPjsKLQkJCXNh
-bXN1bmcscGluLXB1ZCA9IDwwPjsKLQkJCXNhbXN1bmcscGluLWRydiA9IDwwPjsKLQkJfTsKLQot
-CQl1c2IzX3ZidXNfZW46IHVzYjMtdmJ1cy1lbiB7Ci0JCQlzYW1zdW5nLHBpbnMgPSAiZ3B4Mi03
-IjsKLQkJCXNhbXN1bmcscGluLWZ1bmN0aW9uID0gPDE+OwotCQkJc2Ftc3VuZyxwaW4tcHVkID0g
-PDA+OwotCQkJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OwotCQl9OwotCi0JCWhkbWlfaHBkX2lycTog
-aGRtaS1ocGQtaXJxIHsKLQkJCXNhbXN1bmcscGlucyA9ICJncHgzLTciOwotCQkJc2Ftc3VuZyxw
-aW4tZnVuY3Rpb24gPSA8MD47Ci0JCQlzYW1zdW5nLHBpbi1wdWQgPSA8MT47Ci0JCQlzYW1zdW5n
-LHBpbi1kcnYgPSA8MD47Ci0JCX07Ci0JfTsKLQotCXBpbmN0cmxAMTM0MDAwMDAgewotCQlhcmJf
-dGhlaXJfY2xhaW06IGFyYi10aGVpci1jbGFpbSB7Ci0JCQlzYW1zdW5nLHBpbnMgPSAiZ3BlMC00
-IjsKLQkJCXNhbXN1bmcscGluLWZ1bmN0aW9uID0gPDA+OwotCQkJc2Ftc3VuZyxwaW4tcHVkID0g
-PDM+OwotCQkJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OwotCQl9OwotCi0JCWFyYl9vdXJfY2xhaW06
-IGFyYi1vdXItY2xhaW0gewotCQkJc2Ftc3VuZyxwaW5zID0gImdwZjAtMyI7Ci0JCQlzYW1zdW5n
-LHBpbi1mdW5jdGlvbiA9IDwxPjsKLQkJCXNhbXN1bmcscGluLXB1ZCA9IDwwPjsKLQkJCXNhbXN1
-bmcscGluLWRydiA9IDwwPjsKLQkJfTsKLQl9OwotCiAJZ3Bpby1rZXlzIHsKIAkJY29tcGF0aWJs
-ZSA9ICJncGlvLWtleXMiOwogCiAJCXBvd2VyIHsKIAkJCWxhYmVsID0gIlBvd2VyIjsKLQkJCWdw
-aW9zID0gPCZncHgxIDMgMT47Ci0JCQlsaW51eCxjb2RlID0gPDExNj47IC8qIEtFWV9QT1dFUiAq
-LworCQkJZ3Bpb3MgPSA8JmdweDEgMyBHUElPX0FDVElWRV9MT1c+OworCQkJbGludXgsY29kZSA9
-IDxLRVlfUE9XRVI+OwogCQkJZ3Bpby1rZXksd2FrZXVwOwogCQl9OwogCiAJCWxpZC1zd2l0Y2gg
-ewogCQkJbGFiZWwgPSAiTGlkIjsKLQkJCWdwaW9zID0gPCZncHgzIDUgMT47CisJCQlncGlvcyA9
-IDwmZ3B4MyA1IEdQSU9fQUNUSVZFX0xPVz47CiAJCQlsaW51eCxpbnB1dC10eXBlID0gPDU+OyAv
-KiBFVl9TVyAqLwogCQkJbGludXgsY29kZSA9IDwwPjsgLyogU1dfTElEICovCiAJCQlkZWJvdW5j
-ZS1pbnRlcnZhbCA9IDwxPjsKQEAgLTEyOSw4ICs2NSw4IEBACiAKIAkJaTJjLXBhcmVudCA9IDwm
-ey9pMmNAMTJDQTAwMDB9PjsKIAotCQlvdXItY2xhaW0tZ3BpbyA9IDwmZ3BmMCAzIDE+OwotCQl0
-aGVpci1jbGFpbS1ncGlvcyA9IDwmZ3BlMCA0IDE+OworCQlvdXItY2xhaW0tZ3BpbyA9IDwmZ3Bm
-MCAzIEdQSU9fQUNUSVZFX0xPVz47CisJCXRoZWlyLWNsYWltLWdwaW9zID0gPCZncGUwIDQgR1BJ
-T19BQ1RJVkVfTE9XPjsKIAkJc2xldy1kZWxheS11cyA9IDwxMD47CiAJCXdhaXQtcmV0cnktdXMg
-PSA8MzAwMD47CiAJCXdhaXQtZnJlZS11cyA9IDw1MDAwMD47CkBAIC0yMzksMTkgKzE3NSw2IEBA
-CiAJCX07CiAJfTsKIAotCWkyY0AxMkNEMDAwMCB7Ci0JCW1heDk4MDk1OiBjb2RlY0AxMSB7Ci0J
-CQljb21wYXRpYmxlID0gIm1heGltLG1heDk4MDk1IjsKLQkJCXJlZyA9IDwweDExPjsKLQkJCXBp
-bmN0cmwtMCA9IDwmbWF4OTgwOTVfZW4+OwotCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsK
-LQkJfTsKLQl9OwotCi0JaTJzMDogaTJzQDAzODMwMDAwIHsKLQkJc3RhdHVzID0gIm9rYXkiOwot
-CX07Ci0KIAlzb3VuZCB7CiAJCWNvbXBhdGlibGUgPSAiZ29vZ2xlLHNub3ctYXVkaW8tbWF4OTgw
-OTUiOwogCkBAIC0yNjUsMTggKzE4OCwxNCBAQAogCQlyZWd1bGF0b3ItbmFtZSA9ICJQNS4wVl9V
-U0IzQ09OIjsKIAkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NTAwMDAwMD47CiAJCXJlZ3Vs
-YXRvci1tYXgtbWljcm92b2x0ID0gPDUwMDAwMDA+OwotCQlncGlvID0gPCZncHgyIDcgMD47CisJ
-CWdwaW8gPSA8JmdweDIgNyBHUElPX0FDVElWRV9ISUdIPjsKIAkJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsKIAkJcGluY3RybC0wID0gPCZ1c2IzX3ZidXNfZW4+OwogCQllbmFibGUtYWN0aXZl
-LWhpZ2g7CiAJfTsKIAotCXBoeUAxMjEwMDAwMCB7Ci0JCXZidXMtc3VwcGx5ID0gPCZ1c2IzX3Zi
-dXNfcmVnPjsKLQl9OwotCiAJdXNiQDEyMTEwMDAwIHsKLQkJc2Ftc3VuZyx2YnVzLWdwaW8gPSA8
-JmdweDEgMSAwPjsKKwkJc2Ftc3VuZyx2YnVzLWdwaW8gPSA8JmdweDEgMSBHUElPX0FDVElWRV9I
-SUdIPjsKIAl9OwogCiAJZml4ZWQtcmF0ZS1jbG9ja3MgewpAQCAtMjg3LDcgKzIwNiw3IEBACiAJ
-fTsKIAogCWhkbWkgewotCQlocGQtZ3BpbyA9IDwmZ3B4MyA3IDA+OworCQlocGQtZ3BpbyA9IDwm
-Z3B4MyA3IEdQSU9fQUNUSVZFX0hJR0g+OwogCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwog
-CQlwaW5jdHJsLTAgPSA8JmhkbWlfaHBkX2lycT47CiAJCXBoeSA9IDwmaGRtaXBoeT47CkBAIC0z
-MjIsNyArMjQxLDcgQEAKIAkJc2Ftc3VuZyxjb2xvci1kZXB0aCA9IDwxPjsKIAkJc2Ftc3VuZyxs
-aW5rLXJhdGUgPSA8MHgwYT47CiAJCXNhbXN1bmcsbGFuZS1jb3VudCA9IDwyPjsKLQkJc2Ftc3Vu
-ZyxocGQtZ3BpbyA9IDwmZ3B4MCA3IDA+OworCQlzYW1zdW5nLGhwZC1ncGlvID0gPCZncHgwIDcg
-R1BJT19BQ1RJVkVfSElHSD47CiAKIAkJZGlzcGxheS10aW1pbmdzIHsKIAkJCW5hdGl2ZS1tb2Rl
-ID0gPCZ0aW1pbmcxPjsKQEAgLTU0Nyw2ICs0NjYsMTMgQEAKIAlzdGF0dXMgPSAib2theSI7CiAJ
-c2Ftc3VuZyxpMmMtc2RhLWRlbGF5ID0gPDEwMD47CiAJc2Ftc3VuZyxpMmMtbWF4LWJ1cy1mcmVx
-ID0gPDY2MDAwPjsKKworCW1heDk4MDk1OiBjb2RlY0AxMSB7CisJCWNvbXBhdGlibGUgPSAibWF4
-aW0sbWF4OTgwOTUiOworCQlyZWcgPSA8MHgxMT47CisJCXBpbmN0cmwtMCA9IDwmbWF4OTgwOTVf
-ZW4+OworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCX07CiB9OwogCiAmaTJjXzggewpA
-QCAtNTYwLDYgKzQ4NiwxMCBAQAogCX07CiB9OwogCismaTJzMCB7CisJc3RhdHVzID0gIm9rYXki
-OworfTsKKwogJm1tY18wIHsKIAlzdGF0dXMgPSAib2theSI7CiAJbnVtLXNsb3RzID0gPDE+OwpA
-QCAtNjI1LDYgKzU1NSw3MCBAQAogCQlzYW1zdW5nLHBpbi1wdWQgPSA8MD47CiAJCXNhbXN1bmcs
-cGluLWRydiA9IDwwPjsKIAl9OworCisJZWNfaXJxOiBlYy1pcnEgeworCQlzYW1zdW5nLHBpbnMg
-PSAiZ3B4MS02IjsKKwkJc2Ftc3VuZyxwaW4tZnVuY3Rpb24gPSA8MD47CisJCXNhbXN1bmcscGlu
-LXB1ZCA9IDwwPjsKKwkJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OworCX07CisKKwltYXg5ODA5NV9l
-bjogbWF4OTgwOTUtZW4geworCQlzYW1zdW5nLHBpbnMgPSAiZ3B4MS03IjsKKwkJc2Ftc3VuZyxw
-aW4tZnVuY3Rpb24gPSA8MD47CisJCXNhbXN1bmcscGluLXB1ZCA9IDwzPjsKKwkJc2Ftc3VuZyxw
-aW4tZHJ2ID0gPDA+OworCX07CisKKwl0cHM2NTA5MF9pcnE6IHRwczY1MDkwLWlycSB7CisJCXNh
-bXN1bmcscGlucyA9ICJncHgyLTYiOworCQlzYW1zdW5nLHBpbi1mdW5jdGlvbiA9IDwwPjsKKwkJ
-c2Ftc3VuZyxwaW4tcHVkID0gPDA+OworCQlzYW1zdW5nLHBpbi1kcnYgPSA8MD47CisJfTsKKwor
-CXVzYjNfdmJ1c19lbjogdXNiMy12YnVzLWVuIHsKKwkJc2Ftc3VuZyxwaW5zID0gImdweDItNyI7
-CisJCXNhbXN1bmcscGluLWZ1bmN0aW9uID0gPDE+OworCQlzYW1zdW5nLHBpbi1wdWQgPSA8MD47
-CisJCXNhbXN1bmcscGluLWRydiA9IDwwPjsKKwl9OworCisJaGRtaV9ocGRfaXJxOiBoZG1pLWhw
-ZC1pcnEgeworCQlzYW1zdW5nLHBpbnMgPSAiZ3B4My03IjsKKwkJc2Ftc3VuZyxwaW4tZnVuY3Rp
-b24gPSA8MD47CisJCXNhbXN1bmcscGluLXB1ZCA9IDwxPjsKKwkJc2Ftc3VuZyxwaW4tZHJ2ID0g
-PDA+OworCX07Cit9OworCismcGluY3RybF8xIHsKKwlhcmJfdGhlaXJfY2xhaW06IGFyYi10aGVp
-ci1jbGFpbSB7CisJCXNhbXN1bmcscGlucyA9ICJncGUwLTQiOworCQlzYW1zdW5nLHBpbi1mdW5j
-dGlvbiA9IDwwPjsKKwkJc2Ftc3VuZyxwaW4tcHVkID0gPDM+OworCQlzYW1zdW5nLHBpbi1kcnYg
-PSA8MD47CisJfTsKKworCWFyYl9vdXJfY2xhaW06IGFyYi1vdXItY2xhaW0geworCQlzYW1zdW5n
-LHBpbnMgPSAiZ3BmMC0zIjsKKwkJc2Ftc3VuZyxwaW4tZnVuY3Rpb24gPSA8MT47CisJCXNhbXN1
-bmcscGluLXB1ZCA9IDwwPjsKKwkJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OworCX07Cit9OworCism
-c2QzX2NsayB7CisJc2Ftc3VuZyxwaW4tZHJ2ID0gPDA+OworfTsKKworJnNkM19jbWQgeworCXNh
-bXN1bmcscGluLXB1ZCA9IDwzPjsKKwlzYW1zdW5nLHBpbi1kcnYgPSA8MD47Cit9OworCismc2Qz
-X2J1czQgeworCXNhbXN1bmcscGluLWRydiA9IDwwPjsKIH07CiAKICZzcGlfMSB7CkBAIC02MzMs
-NCArNjI3LDggQEAKIAludW0tY3MgPSA8MT47CiB9OwogCismdXNiZHJkX3BoeSB7CisJdmJ1cy1z
-dXBwbHkgPSA8JnVzYjNfdmJ1c19yZWc+OworfTsKKwogI2luY2x1ZGUgImNyb3MtZWMta2V5Ym9h
-cmQuZHRzaSIKLS0gCjEuOS4zCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add DT support of the regulator driver userspace-consumer.
+The supply names for this driver is provided through DT properties
+so that proper regulator handle can be acquired.
+
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/regulator/userspace-consumer.c | 48 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/drivers/regulator/userspace-consumer.c b/drivers/regulator/userspace-consumer.c
+index 765acc1..91d50a2 100644
+--- a/drivers/regulator/userspace-consumer.c
++++ b/drivers/regulator/userspace-consumer.c
+@@ -23,6 +23,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/regulator/userspace-consumer.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
+ 
+ struct userspace_consumer_data {
+ 	const char *name;
+@@ -105,6 +106,41 @@ static const struct attribute_group attr_group = {
+ 	.attrs	= attributes,
+ };
+ 
++static struct regulator_userspace_consumer_data *get_pdata_from_dt_node(
++		struct platform_device *pdev)
++{
++	struct regulator_userspace_consumer_data *pdata;
++	struct device_node *np = pdev->dev.of_node;
++	struct property *prop;
++	const char *supply;
++	int num_supplies;
++	int count = 0;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->name = of_get_property(np, "regulator-name", NULL);
++	pdata->init_on = of_property_read_bool(np, "regulator-boot-on");
++
++	num_supplies = of_property_count_strings(np, "regulator-supplies");
++	if (num_supplies < 0) {
++		dev_err(&pdev->dev,
++			"could not parse property regulator-supplies\n");
++		return ERR_PTR(-EINVAL);
++	}
++	pdata->num_supplies = num_supplies;
++	pdata->supplies = devm_kzalloc(&pdev->dev, num_supplies *
++				sizeof(*pdata->supplies), GFP_KERNEL);
++	if (!pdata->supplies)
++		return ERR_PTR(-ENOMEM);
++
++	of_property_for_each_string(np, "regulator-supplies", prop, supply)
++		pdata->supplies[count++].supply = supply;
++
++	return pdata;
++}
++
+ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
+ {
+ 	struct regulator_userspace_consumer_data *pdata;
+@@ -112,6 +148,11 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	pdata = dev_get_platdata(&pdev->dev);
++	if (!pdata && pdev->dev.of_node) {
++		pdata = get_pdata_from_dt_node(pdev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
+@@ -171,11 +212,18 @@ static int regulator_userspace_consumer_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id regulator_userspace_consumer_of_match[] = {
++	{ .compatible = "reg-userspace-consumer", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, regulator_userspace_consumer_of_match);
++
+ static struct platform_driver regulator_userspace_consumer_driver = {
+ 	.probe		= regulator_userspace_consumer_probe,
+ 	.remove		= regulator_userspace_consumer_remove,
+ 	.driver		= {
+ 		.name		= "reg-userspace-consumer",
++		.of_match_table = regulator_userspace_consumer_of_match,
+ 	},
+ };
+ 
+-- 
+1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
