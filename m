@@ -1,199 +1,153 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V6 3/8] drm/panel: simple: Add support for auo_b133htn01
- panel
-Date: Wed, 30 Jul 2014 17:02:11 +0530
-Message-ID: <CAEC9eQN0mqhiEzn5mkVKu+cAqVkdQ90F73q9cNf76gMAZZ-LRg@mail.gmail.com>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406316130-4744-4-git-send-email-ajaykumar.rs@samsung.com>
- <20140730105132.GF29590@ulmo>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v5 1/2] can: m_can: add device tree binding documentation
+Date: Wed, 30 Jul 2014 13:52:15 +0200
+Message-ID: <53D8DC6F.8070307@pengutronix.de>
+References: <1405503050-16796-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140730105132.GF29590@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="VWC5SR3V6mUNbmp2QsAXD7EIFbmCxvDH5"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1405503050-16796-1-git-send-email-b29396@freescale.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, socketcan@hartkopp.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, varkabhadram@gmail.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 4:21 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Sat, Jul 26, 2014 at 12:52:05AM +0530, Ajay Kumar wrote:
->> Add panel_desc structure for auo_b133htn01 eDP panel.
->>
->> Also, modify the panel_simple routines to support timing_parameter
->> delays if mentioned in the panel_desc structure.
->>
->> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->> ---
->>  .../devicetree/bindings/panel/auo,b133htn01.txt    |    7 +++
->>  drivers/gpu/drm/panel/panel-simple.c               |   47 ++++++++++++++++++++
->>  2 files changed, 54 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/panel/auo,b133htn01.txt
->
-> I think this should be two patches, one which adds the delay parameters
-> and another which adds support for the new panel.
-Ok. Will split it.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--VWC5SR3V6mUNbmp2QsAXD7EIFbmCxvDH5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
->> diff --git a/Documentation/devicetree/bindings/panel/auo,b133htn01.txt b/Documentation/devicetree/bindings/panel/auo,b133htn01.txt
->> new file mode 100644
->> index 0000000..302226b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/auo,b133htn01.txt
->> @@ -0,0 +1,7 @@
->> +AU Optronics Corporation 13.3" FHD (1920x1080) color TFT-LCD panel
->> +
->> +Required properties:
->> +- compatible: should be "auo,b133htn01"
->> +
->> +This binding is compatible with the simple-panel binding, which is specified
->> +in simple-panel.txt in this directory.
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->> index fb0cfe2..cbbb1b8 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -41,6 +41,13 @@ struct panel_desc {
->>               unsigned int width;
->>               unsigned int height;
->>       } size;
->> +
->> +     struct {
->> +             unsigned int prepare_stage_delay;
->> +             unsigned int enable_stage_delay;
->> +             unsigned int disable_stage_delay;
->> +             unsigned int unprepare_stage_delay;
->> +     } timing_parameter;
->
-> These are overly long in my opinion, how about:
->
->         struct {
->                 unsigned int prepare;
->                 unsigned int enable;
->                 unsigned int disable;
->                 unsigned int unprepare;
->         } delay;
-Ok, will use this.
+On 07/16/2014 11:30 AM, Dong Aisheng wrote:
+> add M_CAN device tree binding documentation
+>=20
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+> Cc: Varka Bhadram <varkabhadram@gmail.com>
+> Signed-off-by: Dong Aisheng <b29396@freescale.com>
 
-> ? Oh, and this should probably mention that it's in milliseconds. On
-> that note, do you think we'll ever need microsecond resolution? I don't
-> think I've ever seen a panel datasheet mentioning that kind of
-> granularity.
-Nope. All in milliseconds.
+Are there any comment from the DT side to this patch?
+Preferred an Acked-by :)
 
->>  struct panel_simple {
->> @@ -105,6 +112,8 @@ static int panel_simple_unprepare(struct drm_panel *panel)
->>               gpiod_set_value_cansleep(p->enable_gpio, 0);
->>
->>       regulator_disable(p->supply);
->> +     if (p->desc)
->
-> Should have a blank line between "regulator_disable(...)" and "if ...".
-> Also it's not useful to check for p->desc, really, since it's a bug if
-> that is NULL.
-Well, I added this check because I used just the "simple-panel" compatible
-for panel node on snow. This check won't be needed anymore.
+The series looks good to me, I'm waiting for an Ack to apply it to the
+linux-can-next tree.
 
-> However I think it would be good to check for the delay being set, like
-> so:
->
->         if (p->desc->delay.unprepare)
->                 msleep(p->desc->delay.unprepare);
-Ok, will change it.
+Marc
 
-> I'm not sure about the placement of the delay here, see below for more.
->
->> @@ -142,6 +154,9 @@ static int panel_simple_prepare(struct drm_panel *panel)
->>               return err;
->>       }
->>
->> +     if (p->desc)
->> +             msleep(p->desc->timing_parameter.prepare_stage_delay);
->> +
->>       if (p->enable_gpio)
->>               gpiod_set_value_cansleep(p->enable_gpio, 1);
->
-> Should the delay not be *after* all steps in prepare have been
-> performed? That way drivers can use it to specify the time that a panel
-> needs to "internally" become ready after they've been power up (for
-> example).
-Right. I will move that delay down.
+> ---
+> Changes since v4:
+> - change the name of board dtsi to board dts which is more common
+>=20
+> Changes since v3:
+> - change mram-cfg property name to bosch,mram-cfg
+> - indent change
+> ---
+>  .../devicetree/bindings/net/can/m_can.txt          |   67 ++++++++++++=
+++++++++
+>  1 files changed, 67 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt=
 
->>
->> @@ -157,6 +172,8 @@ static int panel_simple_enable(struct drm_panel *panel)
->>       if (p->backlight_enabled)
->>               return 0;
->>
->> +     if (p->desc)
->> +             msleep(p->desc->timing_parameter.enable_stage_delay);
->>       if (p->backlight) {
->>               p->backlight->props.power = FB_BLANK_UNBLANK;
->>               backlight_update_status(p->backlight);
->
-> I think here the delay makes sense where it is because it allows the
-> panel driver to wait for a given amount of time (after video data has
-> been sent by the display controller) until the first "good" frame is
-> visible.
-Exactly!
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Docu=
+mentation/devicetree/bindings/net/can/m_can.txt
+> new file mode 100644
+> index 0000000..9e33177
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -0,0 +1,67 @@
+> +Bosch MCAN controller Device Tree Bindings
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "bosch,m_can" for M_CAN controllers
+> +- reg			: physical base address and size of the M_CAN
+> +			  registers map and Message RAM
+> +- reg-names		: Should be "m_can" and "message_ram"
+> +- interrupts		: Should be the interrupt number of M_CAN interrupt
+> +			  line 0 and line 1, could be same if sharing
+> +			  the same interrupt.
+> +- interrupt-names	: Should contain "int0" and "int1"
+> +- clocks		: Clocks used by controller, should be host clock
+> +			  and CAN clock.
+> +- clock-names		: Should contain "hclk" and "cclk"
+> +- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinct=
+rl-bindings.txt
+> +- pinctrl-names 	: Names corresponding to the numbered pinctrl states
+> +- bosch,mram-cfg	: Message RAM configuration data.
+> +			  Multiple M_CAN instances can share the same Message
+> +			  RAM and each element(e.g Rx FIFO or Tx Buffer and etc)
+> +			  number in Message RAM is also configurable,
+> +			  so this property is telling driver how the shared or
+> +			  private Message RAM are used by this M_CAN controller.
+> +
+> +			  The format should be as follows:
+> +			  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems
+> +			   rxb_elems txe_elems txb_elems>
+> +			  The 'offset' is an address offset of the Message RAM
+> +			  where the following elements start from. This is
+> +			  usually set to 0x0 if you're using a private Message
+> +			  RAM. The remain cells are used to specify how many
+> +			  elements are used for each FIFO/Buffer.
+> +
+> +			  M_CAN includes the following elements according to user manual:
+> +			  11-bit Filter	0-128 elements / 0-128 words
+> +			  29-bit Filter	0-64 elements / 0-128 words
+> +			  Rx FIFO 0	0-64 elements / 0-1152 words
+> +			  Rx FIFO 1	0-64 elements / 0-1152 words
+> +			  Rx Buffers	0-64 elements / 0-1152 words
+> +			  Tx Event FIFO	0-32 elements / 0-64 words
+> +			  Tx Buffers	0-32 elements / 0-576 words
+> +
+> +			  Please refer to 2.4.1 Message RAM Configuration in
+> +			  Bosch M_CAN user manual for details.
+> +
+> +Example:
+> +SoC dtsi:
+> +m_can1: can@020e8000 {
+> +	compatible =3D "bosch,m_can";
+> +	reg =3D <0x020e8000 0x4000>, <0x02298000 0x4000>;
+> +	reg-names =3D "m_can", "message_ram";
+> +	interrupts =3D <0 114 0x04>,
+> +		     <0 114 0x04>;
+> +	interrupt-names =3D "int0", "int1";
+> +	clocks =3D <&clks IMX6SX_CLK_CANFD>,
+> +		 <&clks IMX6SX_CLK_CANFD>;
+> +	clock-names =3D "hclk", "cclk";
+> +	bosch,mram-cfg =3D <0x0 0 0 32 0 0 0 1>;
+> +	status =3D "disabled";
+> +};
+> +
+> +Board dts:
+> +&m_can1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_m_can1>;
+> +	status =3D "enabled";
+> +};
+>=20
 
-> In general I think it would be good to have a description of these in
-> the struct panel_desc structure, something like this perhaps:
->
->         /**
->          * @prepare: the time (in milliseconds) that it takes for the panel
->          *           to become ready and start receiving video data
->          * @enable: the time (in milliseconds) that it takes for the panel
->          *          to display the first valid frame after starting to
->          *          receive video data
->          * @disable: the time (in milliseconds) that it takes for the panel
->          *           to turn the display off (no content is visible)
->          * @unprepare: the time (in milliseconds) that it takes for the panel
-                        to power down itself completely.
->          */
->         struct {
->                 unsigned int prepare;
->                 unsigned int enable;
->                 unsigned int disable;
->                 unsigned int unprepare;
->         } delay;
->
-> For prepare and enable delays this would mean that they should take
-> effect at the very end of the .prepare() and .enable() functions,
-> respectively. For disable in means that it should be at the end (for
-> example to take into account the time it takes for backlight to
-> completely turn off). For unprepare I have no idea what we would need it
-> for. And the new panel that you're adding in this patch doesn't use it
-> either, so perhaps it can just be left out (for now)?
-Actually, there was a typo.
-That should have been .unprepare_stage_delay = 50.
-This is needed because panels need some delay before powering
-them on again.
-As in, assume you are doing a test to turn on/off display continuously,
-Then, the delay between
-(N - 1)th cycle poweroff to Nth cycle poweron should be at least 500ms.
-That's what the datasheet says! And, somehow 50ms works fine for me.
 
-Ajay
->> +static const struct panel_desc auo_b133htn01 = {
->> +     .modes = &auo_b133htn01_mode,
->> +     .num_modes = 1,
->> +     .size = {
->> +             .width = 293,
->> +             .height = 165,
->> +     },
->> +     .timing_parameter = {
->> +             .prepare_stage_delay = 105,
->> +             .enable_stage_delay = 20,
->> +             .prepare_stage_delay = 50,
->
-> I take it that this last one was supposed to be .enable_stage_delay
-> since you've already set up .prepare_stage_delay.
->
-> Thierry
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--VWC5SR3V6mUNbmp2QsAXD7EIFbmCxvDH5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlPY3G8ACgkQjTAFq1RaXHMvOgCgjLOpl1Y4MR7X0JMWkIinDb6G
+I4kAn24c9v1Zx15GksE5LbW8UApp1EDo
+=mYdx
+-----END PGP SIGNATURE-----
+
+--VWC5SR3V6mUNbmp2QsAXD7EIFbmCxvDH5--
