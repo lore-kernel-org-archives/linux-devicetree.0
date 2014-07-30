@@ -1,59 +1,67 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 0/4] Support for Qualcomm QPNP PMIC's
-Date: Tue, 29 Jul 2014 18:56:23 -0600
-Message-ID: <20140730005623.EA57CC4062A@trevor.secretlab.ca>
-References: <1405613855-27572-1-git-send-email-svarbanov@mm-sol.com>
-	<53C857DE.7030507@codeaurora.org> <53C947C0.5020604@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53C947C0.5020604@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
+ in DT
+Date: Tue, 29 Jul 2014 18:07:36 -0700
+Message-ID: <53D84558.7060406@codeaurora.org>
+References: <53D788A7.4020303@mm-sol.com> <3794875.CZFbAag5Sv@wuerfel> <53D7AA72.6010309@mm-sol.com> <20140729234522.E9FF1C40738@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140729234522.E9FF1C40738@trevor.secretlab.ca>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Jul 2014 19:13:52 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
-> On 07/18/2014 02:10 AM, Stephen Boyd wrote:
-> > On 07/17/14 09:17, Stanimir Varbanov wrote:
-> >> Hello everyone,
-> >>
-> >> Here is the continuation of patch sets sent recently about Qualcomm
-> >> QPNP SPMI PMICs.
-> >>
-> >> The previous version of the patch set can be found at [1].
-> >>
-> >> Changes since v1:
-> >>  - removed completely custom *of* parser
-> >>  - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
-> >>  - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
-> >>
-> >> Removing of the custom *of* parser leads to that that the *reg* devicetree
-> >> property cannot exist and therefore cannot be parsed to get PMIC peripheral
-> >> resources. I took this step aside because no one from mfd drivers does this
-> >> parsing. This will lead to inconvenience in the peripheral drivers to define
-> >> internally the SPMI base addresses depending on the compatible property
-> >> i.e. PMIC version. 
-> > 
-> > We should teach the of platform layer to translate reg properties up
-> > until the point that they can't be translated anymore. If they can't be
-> > translated all the way back to cpu addresses we can make the resource
-> > have IORESOURCE_REG instead of IORESOURCE_MEM and then said pmic
-> > platform drivers can use platform_get_resource() with IORESOURCE_REG
-> > instead of IORESOURCE_MEM to get the addresses.
-> > 
-> 
-> I considered this as an option, if it is acceptable by OF maintainers it
-> will be awesome.
-> 
-> Rob, Grant, is that feasible?
+On 07/29/14 16:45, Grant Likely wrote:
+> On Tue, 29 Jul 2014 17:06:42 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
+>>
+>> This was just an example. Of course it has many issues and probaly it is
+>> wrong:) The main goal was to understand does IORESOURCE_REG resource
+>> type and parsing the *reg* properties for non-translatable addresses are
+>> feasible. And also does it acceptable by community and OF platform
+>> maintainers.
+> The use case is actually very different from of_address_to_resource or
+> of_get_address() because those APIs explicitly return physical memory
+> addresses from the CPU perspective. It makes more sense to create a new
+> API that doesn't attempt to translate the reg address. Alternately, a
+> new API that only translates upto a given parent node.
 
-It doesn't really make sense to do that kind of translation because the
-resulting address only makes sense if you also know which node the
-translation stopped at.
+The most important thing is that platform_get_resource{_by_name}(&pdev,
+IORESOURCE_REG, n) returns the reg property and optional size encoded
+into a struct resource. I think Rob is suggesting we circumvent the
+entire of_address_to_resource() path and do some if
+(IS_ENABLED(CONFIG_OF) && type == IORESOURCE_REG) check in
+platform_get_resource() to package up the reg property into a struct
+resource. That should work.
 
-A better solution is a new api for retrieving bus-local addresses
-instead of a global physical address. That would requires passing in a
-node or device to use as the translation root. If the child isn't a
-descended of that node, or if translation isn't possible then it should
-straight out fail instead of providing a partially translated value.
+It sounds like you think partially translating addresses is risky
+though. Fair enough. Perhaps we should call WARN() if someone tries to
+call platform_get_resource() with IORESOURCE_REG and the parent node has
+a ranges property that isn't a one-to-one conversion. That way if we
+want to do something like this we can.
 
-g.
+pmic@0 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    reg = <0>;
+
+    regulators {
+        ranges;
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        regulator@40 {
+            reg = <0x40>;
+        };
+
+        regulator@50 {
+            reg = <0x50>;
+        }
+    };
+};
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
