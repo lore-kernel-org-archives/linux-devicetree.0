@@ -1,253 +1,67 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V6 2/8] drm/panel: Add support for prepare and unprepare
- routines
-Date: Wed, 30 Jul 2014 16:39:44 +0530
-Message-ID: <CAEC9eQPB7ttebwmnPKtj=ER3Tg9TNd6oFPXKqX9CDoLJ5zy_NA@mail.gmail.com>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406316130-4744-3-git-send-email-ajaykumar.rs@samsung.com>
- <20140730103239.GE29590@ulmo>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] drivers: video: fbdev: atmel_lcdfb.c: Add ability to
+ inverted backlight PWM.
+Date: Wed, 30 Jul 2014 14:14:54 +0300
+Message-ID: <53D8D3AE.3090701@ti.com>
+References: <1404440796-11090-1-git-send-email-mwelling@ieee.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140730103239.GE29590@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, InKi Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="EBVT1AePQ5tfB3p9UTkmL1wWC0TOGORip"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404440796-11090-1-git-send-email-mwelling-EkmVulN54Sk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 4:02 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Sat, Jul 26, 2014 at 12:52:04AM +0530, Ajay Kumar wrote:
->> Now that we have 2 new callbacks(prepare and unprepare) for drm_panel,
->> make changes in all the drm drivers which use the drm_panel framework
->> to support the new callbacks.
->>
->> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->> ---
->>  drivers/gpu/drm/exynos/exynos_drm_dpi.c |    8 +++--
->>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |    7 +++++
->>  drivers/gpu/drm/panel/panel-ld9040.c    |   18 +++++++++--
->>  drivers/gpu/drm/panel/panel-s6e8aa0.c   |   18 +++++++++--
->>  drivers/gpu/drm/panel/panel-simple.c    |   51 ++++++++++++++++++++++++-------
->>  drivers/gpu/drm/tegra/output.c          |    2 ++
->>  6 files changed, 85 insertions(+), 19 deletions(-)
->
-> I'd prefer for this to be split up into patches per panel and per
-> display driver. The reason is that if this patch is merged as-is, then
-> if it's ever determined to cause a regression it'll be difficult to find
-> out which change exactly caused this.
->
-> But to not break bisectability you'll need to be careful in how you
-> break up the patches. I think the following should work:
->
->         - for each panel driver, implement dummy .prepare() and
->           .unprepare() that return 0
->         - for each display driver, make use of drm_panel_prepare() and
->           drm_panel_unprepare()
->         - for each panel driver, properly implement .prepare() and
->           .unprepare() (presumably by moving code out of .enable() and
->           .disable(), respectively)
->
-I will try this. With this approach, compilation should not fail.
+--EBVT1AePQ5tfB3p9UTkmL1wWC0TOGORip
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-> I have a couple more comments below about the ordering of the .prepare()
-> vs. .enable() and .disable() vs. .unprepare() calls.
->
->> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> index 5e78d45..2f58e45 100644
->> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> @@ -1333,6 +1333,12 @@ static int exynos_dsi_enable(struct exynos_dsi *dsi)
->>       if (ret < 0)
->>               return ret;
->>
->> +     ret = drm_panel_prepare(dsi->panel);
->> +     if (ret < 0) {
->> +             exynos_dsi_poweroff(dsi);
->> +             return ret;
->> +     }
->> +
->>       ret = drm_panel_enable(dsi->panel);
->>       if (ret < 0) {
->>               exynos_dsi_poweroff(dsi);
->> @@ -1354,6 +1360,7 @@ static void exynos_dsi_disable(struct exynos_dsi *dsi)
->>
->>       exynos_dsi_set_display_enable(dsi, false);
->>       drm_panel_disable(dsi->panel);
->> +     drm_panel_unprepare(dsi->panel);
->>       exynos_dsi_poweroff(dsi);
->
-> I don't know Exynos very well, so this may be completely wrong, but
-> should disable_panel_prepare() be called much earlier than
-> drm_panel_enable() and drm_panel_unprepare() much later than
-> drm_panel_disable()? With the above the result is still the same, so
-> you'll get the same glitches as without their separation.
-Actually, I have not worked on DSI panels.
-And till now, these DSI panels have been working with just the
-enable/disable callback. So, I thought it might not really cause a
-glitch/garbage on the screen.
-I just placed the new panel calls so that basic working will not be broken.
-It would be great if someone can test this on exynos boards with DSI panels :(
-Inki/Andrej?
+On 04/07/14 05:26, Michael Welling wrote:
+> The code has a variable to change the polarity of the PWM backlight con=
+trol but
+> it was not being initialized. This patch adds a devicetree entry to set=
+ the
+> variable if required.
+>=20
+> Signed-off-by: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/atmel,lcdc.txt       |    1 +
+>  drivers/video/fbdev/atmel_lcdfb.c                  |    3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 
-Anyways, now there is a kerneldoc which explains all these calls,
-I will rearrange the panel calls.
+Thanks, queued for 3.17.
 
-> Without knowing exactly what Exynos does in the above, I'd expect the
-> correct sequence to be something like this:
->
->         ret = exynos_dsi_power_on(dsi);
->         if (ret < 0)
->                 return ret;
->
->         ret = drm_panel_prepare(dsi->panel);
->         if (ret < 0) {
->                 exynos_dsi_poweroff(dsi);
->                 return ret;
->         }
->
->         exynos_dsi_set_display_mode(dsi);
->         exynos_dsi_set_display_enable(dsi, true);
->
->         ret = drm_panel_enable(dsi->panel);
->         if (ret < 0) {
->                 /* perhaps undo exynos_dsi_set_display_enable() here? */
->                 exynos_dsi_poweroff(dsi);
->                 return ret;
->         }
->
-> And for disable:
->
->         drm_panel_disable(dsi->panel);
->         exynos_dsi_set_display_enable(dsi, false);
->         drm_panel_unprepare(dsi->panel);
->         exynos_dsi_poweroff(dsi);
->
-> Perhaps I should quote the kerneldoc that I added for drm_panel_funcs to
-> underline why I think this is important:
->
-> /**
->  * struct drm_panel_funcs - perform operations on a given panel
->  * @disable: disable panel (turn off back light, etc.)
->  * @unprepare: turn off panel
->  * @prepare: turn on panel and perform set up
->  * @enable: enable panel (turn on back light, etc.)
->  * @get_modes: add modes to the connector that the panel is attached to and
->  * return the number of modes added
->  *
->  * The .prepare() function is typically called before the display controller
->  * starts to transmit video data. Panel drivers can use this to turn the panel
->  * on and wait for it to become ready. If additional configuration is required
->  * (via a control bus such as I2C, SPI or DSI for example) this is a good time
->  * to do that.
->  *
->  * After the display controller has started transmitting video data, it's safe
->  * to call the .enable() function. This will typically enable the backlight to
->  * make the image on screen visible. Some panels require a certain amount of
->  * time or frames before the image is displayed. This function is responsible
->  * for taking this into account before enabling the backlight to avoid visual
->  * glitches.
->  *
->  * Before stopping video transmission from the display controller it can be
->  * necessary to turn off the panel to avoid visual glitches. This is done in
->  * the .disable() function. Analogously to .enable() this typically involves
->  * turning off the backlight and waiting for some time to make sure no image
->  * is visible on the panel. It is then safe for the display controller to
->  * cease transmission of video data.
->  *
->  * To save power when no video data is transmitted, a driver can power down
->  * the panel. This is the job of the .unprepare() function.
->  */
->
-> As you see, .prepare() should do whatever is necessary to make the panel
-> accept a stream of video data, then the display driver can start sending
-> video data and call .enable() to make the transmitted data visible.
->
-> Analogously .disable() should turn off the display, so that the user can
-> no longer see what's going on, then the display controller can cease
-> transmission of video data (and since the panel is disabled this should
-> no longer cause visual glitches) and then call .unprepare() to turn the
-> panel off.
->
-> I know that this isn't immediately relevant just yet because currently
-> the backlight will already turn on by default, but like we discussed
-> earlier I have ideas on how to properly fix it. As a matter of fact I'll
-> go and send out another mail about that when I'm through this series.
->
->>  static const struct drm_panel_funcs ld9040_drm_funcs = {
->> +     .unprepare = ld9040_unprepare,
->>       .disable = ld9040_disable,
->> +     .prepare = ld9040_prepare,
->>       .enable = ld9040_enable,
->>       .get_modes = ld9040_get_modes,
->>  };
->
-> The patch I applied for .prepare() and .unprepare() I've reordered the
-> functions slightly to give a more natural sequence. .disable() is now
-> first, while .unprepare() is next, since that's the sequence that they
-> should be called in.
->
-> Patches for the panel drivers should follow this same ordering.
-Ok. I will follow the same order for all panel drivers.
+ Tomi
 
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->> index a251361..fb0cfe2 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -45,7 +45,8 @@ struct panel_desc {
->>
->>  struct panel_simple {
->>       struct drm_panel base;
->> -     bool enabled;
->> +     bool panel_enabled;
->> +     bool backlight_enabled;
->
-> Perhaps this should rather be:
->
->         bool prepared;
->         bool enabled;
->
-More generic. Will change it!
 
-Ajay
 
->
->> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
->> index 446837e..b574ee6 100644
->> --- a/drivers/gpu/drm/tegra/output.c
->> +++ b/drivers/gpu/drm/tegra/output.c
->> @@ -139,9 +139,11 @@ static void tegra_encoder_dpms(struct drm_encoder *encoder, int mode)
->>
->>       if (mode != DRM_MODE_DPMS_ON) {
->>               drm_panel_disable(panel);
->> +             drm_panel_unprepare(panel);
->>               tegra_output_disable(output);
->
-> Similarly to my comments for the Exynos drivers, this should be:
->
->                 drm_panel_disable(panel);
->                 tegra_output_disable(output);
->                 drm_panel_unprepare(panel);
->
->>       } else {
->>               tegra_output_enable(output);
->> +             drm_panel_prepare(panel);
->>               drm_panel_enable(panel);
->>       }
->
-> and
->
->                 drm_panel_prepare(panel);
->                 tegra_output_enable(output);
->                 drm_panel_enable(panel);
->
-> Thierry
+--EBVT1AePQ5tfB3p9UTkmL1wWC0TOGORip
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT2NOuAAoJEPo9qoy8lh71S/AP+wY8hZz/fgbBrf+9sgKTgYio
+sNu8TsEI8GKPfPQUg2IMGc6aYNnboZplB3fFtqMFOsbj0s/Km1hYhKGBEAyUMcPN
+vQLuu8h3B6fDmCHrX2vbcxQSDUuhTGgBYoqtRQH2fLJZEinuFqGpwTX9qarkTkMo
+TTnYtbqzJglquc1Zk/qiA3hOcezDvtFbQdfJzNfJA+XzRmguQaJT3q9kI2Jvz3Lk
+GvJ4L3jdKqTaZK1jQI/sn5ZEhsvi/G+nhfnKAKB1vwspGEsVA9Z6ZwkPDCW9iXdJ
+XooEfJauHDrm4baV0o1C4wes16xJx6hWpaYkLC7KbrxF3WXecb7X9JvRpw3/gSJF
+5I9ilNX2e31QSpgIh0C/cBx+Yjh1CA7fjdEFUfyISQ0BvnPqHfcqSoYMmGV5X840
+RCCtDDsoeyap7FHZIXAMP4ioW2BIad33knpkwz0xtrI9MdSDGnHH1CQH+KKk98s/
+6NiFobujkZa19Egd+XV3sUmnVnCfq2KYmm03V46MUJ2wnakCteg/rKDz9xJp3Mt7
+dM18MbAOZIVpK9laZ7CSRwbdeWfBa8oRvImZw/Zm9TP2hZ81c2GAJKFFZqk2Czr+
+k2pkDweoyV5ooo6RSKCOa4J252ouh/kdNzHOtxcQnT74aI2ZHXNiupjPKbSvgOqf
+s4p4DoWonUeSev7S4xIB
+=BgcE
+-----END PGP SIGNATURE-----
+
+--EBVT1AePQ5tfB3p9UTkmL1wWC0TOGORip--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
