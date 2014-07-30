@@ -1,85 +1,62 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
- in DT
-Date: Tue, 29 Jul 2014 23:06:19 -0700
-Message-ID: <20140730060619.GC19933@codeaurora.org>
-References: <53D788A7.4020303@mm-sol.com>
- <3794875.CZFbAag5Sv@wuerfel>
- <53D7AA72.6010309@mm-sol.com>
- <20140729234522.E9FF1C40738@trevor.secretlab.ca>
- <53D84558.7060406@codeaurora.org>
- <CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA@mail.gmail.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 30 Jul 2014 11:51:13 +0530
+Message-ID: <CAEC9eQOpS90U9kWmY8YdcAtdxQYKoM9ikoWpkwMs6T2udLeZHA@mail.gmail.com>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
+ <53D5435B.8030305@suse.de>
+ <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com>
+ <53D783CC.2080108@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53D783CC.2080108@suse.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/29, Rob Herring wrote:
-> On Tue, Jul 29, 2014 at 8:07 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> > On 07/29/14 16:45, Grant Likely wrote:
-> >> On Tue, 29 Jul 2014 17:06:42 +0300, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
-> >>>
-> >>> This was just an example. Of course it has many issues and probaly it is
-> >>> wrong:) The main goal was to understand does IORESOURCE_REG resource
-> >>> type and parsing the *reg* properties for non-translatable addresses are
-> >>> feasible. And also does it acceptable by community and OF platform
-> >>> maintainers.
-> >> The use case is actually very different from of_address_to_resource or
-> >> of_get_address() because those APIs explicitly return physical memory
-> >> addresses from the CPU perspective. It makes more sense to create a new
-> >> API that doesn't attempt to translate the reg address. Alternately, a
-> >> new API that only translates upto a given parent node.
-> >
-> > The most important thing is that platform_get_resource{_by_name}(&pdev,
-> > IORESOURCE_REG, n) returns the reg property and optional size encoded
-> > into a struct resource. I think Rob is suggesting we circumvent the
-> > entire of_address_to_resource() path and do some if
-> > (IS_ENABLED(CONFIG_OF) && type == IORESOURCE_REG) check in
-> > platform_get_resource() to package up the reg property into a struct
-> > resource. That should work.
-> 
-> No, I'm saying why are you using platform_get_resource at all and
-> adding a new resource type? I don't see any advantage.
-
-First off, the resource type is not new. IORESOURCE_REG has
-existed for two years (see commit 72dcb1197228 "resources: Add
-register address resource type, 2012-08-07").
-
-The main advantage is allowing things like
-platform_get_resource_by_name() and platform_get_resource() to
-work seamlessly with devicetree. If we don't have this, drivers
-are going to open code their reg property parsing and possibly
-reg-names parsing. There are a handful of drivers that would be
-doing this duplicate work.
-
-Sure, we could consolidate them into an OF helper function, but
-then these are the only platform drivers that are getting their
-reg properties via a special non-translatable address function.
-The drivers don't care that they're using non-translateable
-addresses as long as they can pass the address returned from
-platform_get_resource() to their regmap and do I/O. The drivers
-are written under the assumption that they're a sub-device of
-some parent device (in this case a PMIC) and so they assume that
-the regmap has already been setup for them.
-
-> 
-> You might as well do of_property_read_u32 in the below example.
-> 
-
-Fair enough. The example is probably too simple. Things are
-sometimes slightly more complicated and a simple
-of_property_read_u32() isn't going to work in the case of
-multiple reg values or when reg-names is in play.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcmVhcywKCk9uIFR1ZSwgSnVsIDI5LCAyMDE0IGF0IDQ6NTEgUE0sIEFuZHJlYXMgRsOk
+cmJlciA8YWZhZXJiZXJAc3VzZS5kZT4gd3JvdGU6Cj4gSGkgQWpheSwKPgo+IEFtIDI4LjA3LjIw
+MTQgMDg6MTMsIHNjaHJpZWIgQWpheSBrdW1hcjoKPj4gT24gNy8yNy8xNCwgQW5kcmVhcyBGw6Ry
+YmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cm90ZToKPj4+IEFtIDI1LjA3LjIwMTQgMjE6MjIsIHNj
+aHJpZWIgQWpheSBLdW1hcjoKPj4+PiBUaGlzIHNlcmllcyBpcyBiYXNlZCBvbiBleHlub3MtZHJt
+LW5leHQgYnJhbmNoIG9mIElua2kgRGFlJ3MgdHJlZSBhdDoKPj4+PiBnaXQ6Ly9naXQua2VybmVs
+Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZGFlaW5raS9kcm0tZXh5bm9zLmdpdAo+Pj4+
+Cj4+Pj4gSSBoYXZlIHRlc3RlZCB0aGlzIGFmdGVyIGFkZGluZyBmZXcgRFQgY2hhbmdlcyBmb3Ig
+ZXh5bm9zNTI1MC1zbm93LAo+Pj4+IGV4eW5vczU0MjAtcGVhY2gtcGl0IGFuZCBleHlub3M1ODAw
+LXBlYWNoLXBpIGJvYXJkcy4KPj4+Cj4+PiBJJ20gdHJ5aW5nIHRvIHRlc3QgdGhpcyB3aXRoIGEg
+bW9kaWZpZWQgZXh5bm9zNTI1MC1zcHJpbmcgRFQgYmFzZWQgb2ZmCj4+PiBrZ2VuZSdzIGZvci1u
+ZXh0IGJyYW5jaCBkdWUgdG8gRFQsIGFuZCBJIHJ1biBpbnRvIHRoZSBmb2xsb3dpbmc6Cj4+Pgo+
+Pj4gICBDQyAgICAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcHRuMzQ2MC5vCj4+PiBkcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL3B0bjM0NjAuYzogSW4gZnVuY3Rpb24g4oCYcHRuMzQ2MF9wb3N0X2Vu
+Y29kZXJfaW5pdOKAmToKPj4+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcHRuMzQ2MC5jOjI3NToy
+OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YKPj4+IGZ1bmN0aW9uIOKAmGRybV9jb25u
+ZWN0b3JfcmVnaXN0ZXLigJkgWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25d
+Cj4+PiAgIGRybV9jb25uZWN0b3JfcmVnaXN0ZXIoJnB0bl9icmlkZ2UtPmNvbm5lY3Rvcik7Cj4+
+PiAgIF4KPj4gSG9wZSB0aGlzIG1pZ2h0IGhlbHA6Cj4+IGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQv
+bGlzdHMvZHJpLWRldmVsL21zZzYwNTc4Lmh0bWwKPgo+IFRoYXQgZml4ZWQgbXkgYnVpbGQsIHRo
+YW5rcy4KPgo+IFVuZm9ydHVuYXRlbHkgdGhlIG1vc3QgSSBnb3Qgb24gU3ByaW5nIHdpdGggYXR0
+YWNoZWQgRFQgd2FzIGEgYmxhbmsKPiBzY3JlZW4gd2l0aCBhIHdoaXRlIGhvcml6b250YWwgbGlu
+ZSBpbiB0aGUgbWlkZGxlLgpUaGVuLCBJIHRoaW5rIGJyaWRnZSBjaGlwIGlzIHdvcmtpbmcgZmlu
+ZS4KWW91IGp1c3QgbmVlZCB0byBjb25maWd1cmUgdGhlIHByb3BlciBtb2RlIGZvciBGSU1ELgpZ
+b3UgY2FuIHNlZSBiYWNrbGlnaHQgYWxzbywgcmlnaHQ/Cgo+IERvIEkgbmVlZCB0byBzcGVjaWZ5
+IGEgc3BlY2lmaWMgcGFuZWwgbW9kZWwgZm9yIFNwcmluZz8KWWVzISBUcnkgdXNpbmcgImNodW5n
+aHdhLGNsYWExMDF3YjAxIiBhcyBjb21wYXRpYmxlIHN0cmluZyBmb3IKcGFuZWwgbm9kZS4KCj4g
+Rm9yIHRlc3RpbmcgSSByZS1hcHBsaWVkIHlvdXIgaW9tbXUgcGF0Y2hlcyAod2hpY2ggYnR3IGZh
+aWwgbm93IGZvciA1NDIwCj4gZHVlIHRvIGRpc3BfcGQpIGJ1dCBkaWRuJ3Qga25vdyB3aGF0IHRv
+IGRvIGFib3V0IHlvdXIgcGFuZWwtbHZkcwo+IHJlZ3VsYXRvciBwYXRjaCBub3cgdGhhdCBpdCdz
+IGdvbmUuCklnbm9yZSB0aGF0IHJlZ3VsYXRvciBwYXRjaC4KCkFsc28sIHBsZWFzZSBhdHRhY2gg
+dGhlIGJvb3Rsb2cgaWYgcG9zc2libGUgYWZ0ZXIgdHJ5aW5nIHRoaXMuCgpSZWdhcmRzLApBamF5
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
