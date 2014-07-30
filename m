@@ -1,42 +1,64 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 30 Jul 2014 15:33:09 +0200
-Message-ID: <20140730133309.GF9809@8bytes.org>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-	<20140730110425.GI12239@arm.com> <20140730132348.GM29590@ulmo>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v6 10/14] drm/panel: add S6E3FA0 driver
+Date: Wed, 30 Jul 2014 16:40:52 +0300
+Message-ID: <53D8F5E4.1080301@ti.com>
+References: <1405587689-1466-1-git-send-email-yj44.cho@samsung.com> <1405587689-1466-11-git-send-email-yj44.cho@samsung.com> <20140717103645.GD17877@ulmo> <53C87D2F.9000906@samsung.com> <53CCD5A8.6090406@samsung.com> <20140721091917.GK8843@ulmo> <53CCF70A.5010403@samsung.com> <53CDDD61.6000005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140730132348.GM29590@ulmo>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="3JkDLsmuvKtmI7OhigoniVDGQKLHnk8Gn"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53CDDD61.6000005@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Paul Mundt <paul.mundt@gmail.com>, Imre Deak <imre.deak@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 03:23:50PM +0200, Thierry Reding wrote:
-> I think there weren't any comments left for me to address and I've
-> mostly been waiting for Joerg to pick it up.
-> 
-> Joerg, can you take this through the iommu tree for 3.17? Will acked
-> this, but perhaps you were waiting for an ACK from the device tree
-> bindings maintainers?
-> 
-> Will, perhaps you can get Pawel or Mark to look at this?
-> 
-> Arnd, I'm sure if we had your Acked-by that would go a long way too.
+--3JkDLsmuvKtmI7OhigoniVDGQKLHnk8Gn
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Yes, as Arnd requested this generic binding it would be good to have his
-Acked-by before proceeding. Arnd?
+On 22/07/14 06:41, YoungJun Cho wrote:
+
+> Yes, this command is related with Nokia.
+>=20
+> Last Friday, I met panel vendor guy for some issues.
+> At the break time, I asked him for about this Read IDs(04H), why it is
+> not included in DCS specification.
+> He said that this command was originated by Nokia.
+> In feature phone times, most of panel vendors wanted their panels to be=
+
+> used by Nokia and Nokia wanted this command, so most of panel vendors
+> still provide this command traditionally.
+
+This is my understanding also. I think the whole MIPI DCS spec
+originated from Nokia's command set.
+
+ Tomi
 
 
-	Joerg
+
+--3JkDLsmuvKtmI7OhigoniVDGQKLHnk8Gn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT2PXkAAoJEPo9qoy8lh71aRAP/3IXsIcwxDnruqY2FEgooDFS
+nvzwBm/V4J0v4BG1/HdWBlRvWgaE4mPSRiTFbLJKQ5Ya+DBLwTZ4JwbYoCV9Y8UC
+S0DVS/C6quonQrUBPqoN0k+lgS0NGpkQKNGvrEeJPu2kIXcqHyaawROYoYTyJEH4
+Oe06HPNq2D67LbRvEG4z28kn9HLXV8y2jyacVHkVgFDxYjLsHWUSFvULagCl7FJM
+r0eEz7t2gjtt3ZFJtup8GM9DZjJkO1K8vrfPb5xJoE9bs3I0SBzI123R1NBI1PGC
+j1CveZcDZ2ZKVtD9Ew70/Px1cmA1osvYC6VH39rcyVyaVL/Q31Mm8nQ9qEEsE30t
+Ijw0WnZI9Bj7pJoRguZKDxHspXyjUKc16tq0XS/mwILu77YsWi5/YVdzWg4khXG/
+NbwAjz/loyw/yAdaCE9uYhdu04V9kNrJDkckaoGJn1776jwQV+9tRtkP6OUnRDw5
+J8FHv9+/yzat5GesJX1jZZjsfY1xa2EgwI4Zd3I0eSwAWlsqzYk2y9WY6xx525/1
+9fZn9gOWOSGoOoGToF2y67G74IgeCnQ7gFn2GQUH1RuTvKXDjyAE3DLUT5EQA+A9
+DQuwWqEe5tP0PJRmYiHGGZ36JmJDmgScdk8G5jfV9kojwoVD4i9Qe+z/3DJGQ8vB
+k5QtizgvvuCPeOFeGrWQ
+=BKr1
+-----END PGP SIGNATURE-----
+
+--3JkDLsmuvKtmI7OhigoniVDGQKLHnk8Gn--
