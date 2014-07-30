@@ -1,45 +1,49 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [2/2] powerpc/fsl-booke: Add initial T1042RDB_PI board support
-Date: Wed, 30 Jul 2014 15:12:51 -0500
-Message-ID: <20140730201250.GA29789@home.buserror.net>
-References: <1404879851-2914-1-git-send-email-Priyanka.Jain@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1404879851-2914-1-git-send-email-Priyanka.Jain@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Priyanka Jain <Priyanka.Jain@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Prabhakar Kushwaha <prabhakar@freescale.com>, Poonam Aggrwal <poonam.aggrwal@freescale.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v3 3/6] arm: pxa: add clock pll selection bits
+Date: Wed, 30 Jul 2014 22:51:01 +0200
+Message-ID: <1406753464-15000-4-git-send-email-robert.jarzmik@free.fr>
+References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406753464-15000-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdWwgMDksIDIwMTQgYXQgMDk6NTQ6MTFBTSArMDUzMCwgUHJpeWFua2EgSmFpbiB3
-cm90ZToKPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL3QxMDR4cmRiLmR0c2kg
-Yi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvdDEwNHhyZGIuZHRzaQo+IGluZGV4IDlhYWVmYTUuLmU3
-ZTc2NWYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL3QxMDR4cmRiLmR0c2kK
-PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvdDEwNHhyZGIuZHRzaQo+IEBAIC01Nyw3ICs1
-Nyw4IEBACj4gIAkJfTsKPiAgCj4gIAkJY3BsZEAzLDAgewo+IC0JCQljb21wYXRpYmxlID0gImZz
-bCx0MTA0MHJkYi1jcGxkIiwiZnNsLHQxMDQycmRiLWNwbGQiOwo+ICsJCQljb21wYXRpYmxlID0g
-ImZzbCx0MTA0MHJkYi1jcGxkIiwiZnNsLHQxMDQycmRiLWNwbGQiLAo+ICsJCQkJCSJmc2wsdDEw
-NDJyZGJfcGktY3BsZCI7Cj4gIAkJCXJlZyA9IDwzIDAgMHgzMDA+Owo+ICAJCX07Cj4gIAl9OwoK
-V2hhdCdzIGdvaW5nIG9uIGhlcmU/ICBUaGlzIGZpbGUgaXMgdXNlZCBieSBhbGwgdGhyZWUgYm9h
-cmRzLiAgSWYgeW91Cm5lZWQgdG8gZGlzdGluZ3Vpc2ggb25lIGJvYXJkJ3MgQ1BMRCBmcm9tIGFu
-b3RoZXIncywgeW91J2xsIGhhdmUgdG8gZG8gaXQKc29tZXdoZXJlIGVsc2UuICBJZiB0aGUgQ1BM
-RHMgYXJlIGV4YWN0bHkgdGhlIHNhbWUgYW5kIG5vIGRpc3RpbmN0aW9uCm5lZWRzIHRvIGJlIG1h
-ZGUsIHRoZW4geW91IGRvbid0IG5lZWQgdGhyZWUgY29tcGF0aWJsZSBzdHJpbmdzLiAgRXZlbgp0
-aGVuLCB5b3UgbWF5IHdpc2ggdG8gc3BlY2lmeSB0aGUgZXhhY3QgYm9hcmQgYXMgdGhlIGZpcnN0
-IGNvbXBhdGlibGUKc3RyaW5nLCBidXQgYWdhaW4geW91J2xsIG5lZWQgdG8gcGF0Y2ggdGhhdCBp
-biBlbHNld2hlcmUgc28gdGhhdCBpdAphY3R1YWxseSBtYXRjaGVzIHRoZSBib2FyZC4KCi1TY290
-dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
-Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
-bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+Add missing bits for CCCR and CCSR :
+ - CPLL and PPLL selection, either full speed or 13MHz
+ - CPSR masks
+
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+ arch/arm/mach-pxa/include/mach/pxa2xx-regs.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/mach-pxa/include/mach/pxa2xx-regs.h b/arch/arm/mach-pxa/include/mach/pxa2xx-regs.h
+index ee6ced1..f1dd629 100644
+--- a/arch/arm/mach-pxa/include/mach/pxa2xx-regs.h
++++ b/arch/arm/mach-pxa/include/mach/pxa2xx-regs.h
+@@ -143,6 +143,16 @@
+ #define CCCR_M_MASK	0x0060	/* Memory Frequency to Run Mode Frequency Multiplier */
+ #define CCCR_L_MASK	0x001f	/* Crystal Frequency to Memory Frequency Multiplier */
+ 
++#define CCCR_CPDIS_BIT	(31)
++#define CCCR_PPDIS_BIT	(30)
++#define CCCR_LCD_26_BIT	(27)
++#define CCCR_A_BIT	(25)
++
++#define CCSR_N2_MASK	CCCR_N_MASK
++#define CCSR_M_MASK	CCCR_M_MASK
++#define CCSR_L_MASK	CCCR_L_MASK
++#define CCSR_N2_SHIFT	7
++
+ #define CKEN_AC97CONF   (31)    /* AC97 Controller Configuration */
+ #define CKEN_CAMERA	(24)	/* Camera Interface Clock Enable */
+ #define CKEN_SSP1	(23)	/* SSP1 Unit Clock Enable */
+-- 
+2.0.0.rc2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
