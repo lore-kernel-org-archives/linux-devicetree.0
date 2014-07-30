@@ -1,96 +1,151 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V6 8/8] drm/bridge: Add i2c based driver for ps8622/ps8625
- bridge
-Date: Wed, 30 Jul 2014 11:57:20 +0530
-Message-ID: <CAEC9eQOvnoZ=RoVi5kxjU_yS96U+RaLdVn1+xqc35oCy3pVW5w@mail.gmail.com>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406316130-4744-9-git-send-email-ajaykumar.rs@samsung.com>
- <53D785B6.9060806@suse.de>
+From: Huang Shijie <shijie.huang@intel.com>
+Subject: Re: [PATCH v2 03/10] mtd: spi-nor: add DDR quad read support
+Date: Wed, 30 Jul 2014 14:44:13 +0800
+Message-ID: <20140730064413.GA15547@shldeISGChi005.sh.intel.com>
+References: <1398657227-20721-1-git-send-email-b32955@freescale.com>
+ <1398657227-20721-4-git-send-email-b32955@freescale.com>
+ <20140730050843.GE11952@brian-ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53D785B6.9060806@suse.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Sean Paul <seanpaul@google.com>, Andrew Bresticker <abrestic@chromium.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140730050843.GE11952@brian-ubuntu>
+Sender: linux-doc-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Huang Shijie <b32955@freescale.com>, marex@denx.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmVhcywKCk9uIFR1ZSwgSnVsIDI5LCAyMDE0IGF0IDQ6NTkgUE0sIEFuZHJlYXMgRsOk
-cmJlciA8YWZhZXJiZXJAc3VzZS5kZT4gd3JvdGU6Cj4gQW0gMjUuMDcuMjAxNCAyMToyMiwgc2No
-cmllYiBBamF5IEt1bWFyOgo+PiBGcm9tOiBWaW5jZW50IFBhbGF0aW4gPHZwYWxhdGluQGNocm9t
-aXVtLm9yZz4KPj4KPj4gVGhpcyBwYXRjaCBhZGRzIGRybV9icmlkZ2UgZHJpdmVyIGZvciBwYXJh
-ZGUgRGlzcGxheVBvcnQKPj4gdG8gTFZEUyBicmlkZ2UgY2hpcC4KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogVmluY2VudCBQYWxhdGluIDx2cGFsYXRpbkBjaHJvbWl1bS5vcmc+Cj4+IFNpZ25lZC1vZmYt
-Ynk6IEFuZHJldyBCcmVzdGlja2VyIDxhYnJlc3RpY0BjaHJvbWl1bS5vcmc+Cj4+IFNpZ25lZC1v
-ZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+PiBTaWduZWQtb2ZmLWJ5
-OiBSYWh1bCBTaGFybWEgPHJhaHVsLnNoYXJtYUBzYW1zdW5nLmNvbT4KPj4gU2lnbmVkLW9mZi1i
-eTogQWpheSBLdW1hciA8YWpheWt1bWFyLnJzQHNhbXN1bmcuY29tPgo+PiAtLS0KPj4gIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgICAgMSArCj4+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9icmlkZ2UvcHM4NjIyLnR4dCAgICB8ICAg
-MTkgKwo+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDEwICsKPj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAg
-ICAgICAgICAgIHwgICAgMSArCj4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BzODYyMi5jICAg
-ICAgICAgICAgICAgICAgICB8ICA2MDIgKysrKysrKysrKysrKysrKysrKysKPj4gIDUgZmlsZXMg
-Y2hhbmdlZCwgNjMzIGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3BzODYyMi50eHQKPj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BzODYyMi5jCj4+Cj4+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZp
-eGVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4
-ZXMudHh0Cj4+IGluZGV4IDQ2YTMxMWUuLmI0YTk5Y2MgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4+IEBA
-IC05Niw2ICs5Niw3IEBAIG54cCBOWFAgU2VtaWNvbmR1Y3RvcnMKPj4gIG9ubm4gT04gU2VtaWNv
-bmR1Y3RvciBDb3JwLgo+PiAgb3BlbmNvcmVzICAgIE9wZW5Db3Jlcy5vcmcKPj4gIHBhbmFzb25p
-YyAgICBQYW5hc29uaWMgQ29ycG9yYXRpb24KPj4gK3BhcmFkZSAgICAgICBQYXJhZGUgVGVjaG5v
-bG9naWVzIEluYy4KPj4gIHBoeXRlYyAgICAgICBQSFlURUMgTWVzc3RlY2huaWsgR21iSAo+PiAg
-cGljb2NoaXAgICAgIFBpY29jaGlwIEx0ZAo+PiAgcGxhdGhvbWUgICAgIFBsYXQnSG9tZSBDby4s
-IEx0ZC4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
-aWRlby9icmlkZ2UvcHM4NjIyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy92aWRlby9icmlkZ2UvcHM4NjIyLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRl
-eCAwMDAwMDAwLi5mZGVhZmIyCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9wczg2MjIudHh0Cj4+IEBAIC0wLDAg
-KzEsMTkgQEAKPj4gK3BzODYyMi1icmlkZ2UgYmluZGluZ3MKPj4gKwo+PiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4gKyAgICAgLSBjb21wYXRpYmxlOiAicGFyYWRlLHBzODYyMiIgb3IgInBhcmFk
-ZSxwczg2MjUiCj4+ICsgICAgIC0gcmVnOiBmaXJzdCBpMmMgYWRkcmVzcyBvZiB0aGUgYnJpZGdl
-Cj4+ICsgICAgIC0gc2xlZXAtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlv
-bgo+PiArICAgICAtIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRp
-b24KPj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKyAgICAgLSBsYW5lLWNvdW50OiBu
-dW1iZXIgb2YgRFAgbGFuZXMgdG8gdXNlCj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsgICAgIHBzODYy
-Mi1icmlkZ2VANDggewo+Cj4gTml0OiBTaG91bGRuJ3QgdGhpcyBiZSBsdmRzLWJyaWRnZSBsaWtl
-IGluIDcvOCBvciBzb21ldGhpbmcgZWxzZSBub3QKPiBkZXJpdmVkIGZyb20gdGhlIHNwZWNpZmlj
-IG1vZGVsPyBBcHBsaWVzIHRvIHRoZSBEVCBzZXJpZXMgYXMgd2VsbC4KUmlnaHQuIEkgd2lsbCBm
-aXggdGhpcyB3aGlsZSBzZW5kaW5nIHRoZSBuZXh0IHNlcmllcy4KCj4+ICsgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJwYXJhZGUscHM4NjIyIjsKPj4gKyAgICAgICAgICAgICByZWcgPSA8MHg0
-OD47Cj4+ICsgICAgICAgICAgICAgc2xlZXAtZ3Bpb3MgPSA8JmdwYzMgNiAxIDAgMD47Cj4+ICsg
-ICAgICAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JmdwYzMgMSAxIDAgMD47Cj4+ICsgICAgICAgICAg
-ICAgbGFuZS1jb3VudCA9IDwxPgo+PiArICAgICB9Owo+IFsuLi5dCj4+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BzODYyMi5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9w
-czg2MjIuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5lYzYwZmNm
-Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9wczg2MjIu
-Ywo+PiBAQCAtMCwwICsxLDYwMiBAQAo+PiArLyoKPj4gKyAqIFBhcmFkZSBQUzg2MjIgZURQL0xW
-RFMgYnJpZGdlIGRyaXZlcgo+PiArICoKPj4gKyAqIENvcHlyaWdodCAoQykgMjAxNCBHb29nbGUs
-IEluYy4KPj4gKyAqCj4+ICsgKiBUaGlzIHNvZnR3YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0
-ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljCj4+ICsgKiBMaWNlbnNlIHZlcnNpb24gMiwg
-YXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24sIGFuZAo+PiArICog
-bWF5IGJlIGNvcGllZCwgZGlzdHJpYnV0ZWQsIGFuZCBtb2RpZmllZCB1bmRlciB0aG9zZSB0ZXJt
-cy4KPj4gKyAqCj4+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUg
-dGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPj4gKyAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsg
-d2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4+ICsgKiBNRVJDSEFOVEFCSUxJ
-VFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCj4+ICsgKiBH
-TlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgo+PiArICovCj4gWy4u
-Ll0KPj4gK01PRFVMRV9BVVRIT1IoIlZpbmNlbnQgUGFsYXRpbiA8dnBhbGF0aW5AY2hyb21pdW0u
-b3JnPiIpOwo+PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJQYXJhZGUgcHM4NjIyIGVEUC1MVkRTIGNv
-bnZlcnRlciBkcml2ZXIiKTsKPj4gK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsKPgo+ICJHUEwgdjIi
-PwpPay4gV2lsbCBjaGFuZ2UgaXQuCgpSZWdhcmRzLApBamF5Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Jul 29, 2014 at 10:08:43PM -0700, Brian Norris wrote:
+> 
+> On Mon, Apr 28, 2014 at 11:53:40AM +0800, Huang Shijie wrote:
+> > This patch adds the DDR quad read support by the following:
+> 
+> To Mark / linux-spi:
+> 
+> Are DDR modes in the scope of drivers/spi/ at all, so that we could
+> someday wire it up through m25p80.c? Or is 'DDR' such a distortion of
+> the meaning of 'SPI' such that it will be restricted only to SPI NOR
+> dedicated controllers?
+
+IMHO, the DDR modes can _NOT_ be handled by the driver/spi/*.
+The SPI can only handles the byte streams. But the DDR mode may need to
+handle the cycles(such as the dummy cycles could be 7 cycles) which is not byte.
+
+So the DDR mode is handled by the SPI NOR controller now.
+
+Please correct me if I am wrong. :)
+
+> 
+> >   [1] add SPI_NOR_DDR_QUAD read mode.
+> > 
+> >   [2] add DDR Quad read opcodes:
+> >        SPINOR_OP_READ_1_4_4_D / SPINOR_OP_READ4_1_4_4_D
+> > 
+> >   [3] add set_ddr_quad_mode() to initialize for the DDR quad read.
+> >       Currently it only works for Spansion NOR.
+> > 
+> >   [3] about the dummy cycles.
+> >       We set the dummy with 8 for DDR quad read by default.
+> 
+> Why? That seems wrong. You need to know for sure how many cycles should
+> be used, not just guess a default.
+
+Do you mean that if people do not set the DT node for dummy, we should
+return an -EINVAL immediately?
+
+
+> 
+> >       The m25p80.c can not support the DDR quad read, but the SPI NOR controller
+> >       can set the dummy value in its child DT node, and the SPI NOR framework
+> >       can parse it out.
+> 
+> Why does the dummy value belong in device tree? I think this can be
+> handled in software. You might, however, want a few other hardware
+> description parameters in device tree to help you.
+> 
+> So I think spi-nor.c needs to know a few things:
+> 
+>  1. Does the hardware/driver support DDR clocking?
+>  2. What granularity of dummy cycles are supported? So m25p80.c needs to
+>     communicate that it only supports dummy cycles of multiples of 8,
+>     and fsl-quadspi supports single clock cycles.
+
+I think you can send patches for these features. I does not clear about:
+  for what does the spi-nor needs to know the above things.
+
+> And spi-nor.c should be able to do the following:
+> 
+>  3. Set how many dummy cycles should be used.
+where can we get the number of the cycles? 
+
+
+>  4. Write to the configuration register, to choose a Latency Code
+>     according to what the flash supports. I see modes that support 3, 6,
+>     7, or 8. We'd probably just go for the fastest mode, which requires
+>     8, right?
+not right.
+
+The DDR mode can not work if we set a wrong dummy cycles for the flash.
+
+for some chips, the fastest mode may need 6 cycles, not 8. 
+
+> 
+> So far, none of this seems to require a DT binding, unless there's
+> something I'm missing about your fsl-quadspi controller.
+> 
+> > Test this patch for Spansion s25fl128s NOR flash.
+> > 
+> > Signed-off-by: Huang Shijie <b32955@freescale.com>
+> > ---
+> > +	/* DDR Quad/Quad/Dual-read mode takes precedence over fast/normal */
+> > +	if (mode == SPI_NOR_DDR_QUAD && info->flags & SPI_NOR_DDR_QUAD_READ) {
+> 
+> Hmm, I think I should probably take another look at the design of
+> spi-nor.c... Why does spi_nor_scan() take a single 'mode' argument? The
+> driver should be communicating which (multiple) modes it supports, not
+> selecting a single mode. spi-nor.c is the only one which knows what the
+> *flash* supports, so it should be combining knowledge from the
+> controller driver with its own knowledge of the flash.
+
+It is okay for me to add multiples modes for the spi_nor_scan().
+I added the single mode for spi_nor_scan is because that the fsl-quadspi
+does not want to support the low speed modes. (Of course, the fsl-quadspi
+controller does support the low speed modes.)
+
+> 
+> > +		ret = set_ddr_quad_mode(nor, info->jedec_id);
+> > +		if (ret) {
+> > +			dev_err(dev, "DDR quad mode not supported\n");
+> > +			return ret;
+> 
+> A ramification of my comment above is that we should not be returning an
+> error in a situation like this; we should be able to fall back to
+> another known-supported mode, like SDR QUAD, SDR DUAL, or just plain
+> SPI -- if they're supported by the driver -- and spi-nor.c doesn't
+> currently have enough information to do this.
+ok.
+> 
+> > +		}
+> > +		nor->flash_read = SPI_NOR_DDR_QUAD;
+> >  
+> >  /**
+> 
+> So, I'll have to take another hard look at spi-nor.c soon. I think we
+> may need to work on the abstractions here a bit more before I merge any
+> new features like this.
+
+okay.  no problem.
+
+> 
+> Regards,
+> Brian
+> 
+> P.S. Is there a good reason we've defined a whole read_xfer/write_xfer
+> API that is completely unused?
+These hooks are designed for other SPI NOR drivers, the fsl-quadspi does
+not use them.
+
+thanks
+Huang Shijie
+
+
