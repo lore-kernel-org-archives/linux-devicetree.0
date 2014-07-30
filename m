@@ -1,295 +1,118 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 3/4] drivers: dma-coherent: add initialization
- from device tree
-Date: Wed, 30 Jul 2014 17:49:25 -0600
-Message-ID: <CACxGe6s2G_vEnmo5LwK79bwkEWSNsegfiojDAdQZV01Wapo0eg@mail.gmail.com>
-References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
- <1405326487-15346-4-git-send-email-m.szyprowski@samsung.com>
- <20140729215432.4B73FC40738@trevor.secretlab.ca> <53D883AE.6030209@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53D883AE.6030209-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonsoo Kim <iamjoonsoo.kim-Hm3cg6mZ9cc@public.gmane.org>, "Aneesh Kumar K.V." <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: ARC fails to boot on linux-next of 20140711
+Date: Wed, 30 Jul 2014 17:53:45 -0600
+Message-ID: <20140730235345.41FD3C40712@trevor.secretlab.ca>
+References: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
+	<CAL_JsqJ2q0RSvXQW03RqwwBi_TKQ7Zt6DsUbsUruzh5oqYi5Cg@mail.gmail.com>
+	<C2D7FE5348E1B147BCA15975FBA230753C4B7DD5@IN01WEMBXA.internal.synopsys.com>
+	<20140726165055.D3E64C43E0B@trevor.secretlab.ca>
+	<C2D7FE5348E1B147BCA15975FBA230753C4B8155@IN01WEMBXA.internal.synopsys.com>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA230753C4B8155@IN01WEMBXA.internal.synopsys.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <robherring2@gmail.com>
+Cc: linux-next <linux-next@vger.kernel.org>, Anton Kolesov <Anton.Kolesov@synopsys.com>, lkml <linux-kernel@vger.kernel.org>, greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 29, 2014 at 11:33 PM, Marek Szyprowski
-<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hello,
->
->
-> On 2014-07-29 23:54, Grant Likely wrote:
->>
->> On Mon, 14 Jul 2014 10:28:06 +0200, Marek Szyprowski
->> <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>
->>> Initialization procedure of dma coherent pool has been split into two
->>> parts, so memory pool can now be initialized without assigning to
->>> particular struct device. Then initialized region can be assigned to
->>> more than one struct device. To protect from concurent allocations from
->>> different devices, a spinlock has been added to dma_coherent_mem
->>> structure. The last part of this patch adds support for handling
->>> 'shared-dma-pool' reserved-memory device tree nodes.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> I think this looks okay. It isn't in my area of expertise though.
->> Comments below.
->>
->>> ---
->>>   drivers/base/dma-coherent.c | 137
->>> ++++++++++++++++++++++++++++++++++++++------
->>>   1 file changed, 118 insertions(+), 19 deletions(-)
->>>
->>> diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
->>> index 7d6e84a51424..7185a4f247e1 100644
->>> --- a/drivers/base/dma-coherent.c
->>> +++ b/drivers/base/dma-coherent.c
->>> @@ -14,11 +14,14 @@ struct dma_coherent_mem {
->>>         int             size;
->>>         int             flags;
->>>         unsigned long   *bitmap;
->>> +       spinlock_t      spinlock;
->>>   };
->>>   -int dma_declare_coherent_memory(struct device *dev, phys_addr_t
->>> phys_addr,
->>> -                               dma_addr_t device_addr, size_t size, int
->>> flags)
->>> +static int dma_init_coherent_memory(phys_addr_t phys_addr, dma_addr_t
->>> device_addr,
->>> +                            size_t size, int flags,
->>> +                            struct dma_coherent_mem **mem)
->>
->> This is a bit odd. Why wouldn't you return the dma_mem pointer directly
->> instead of passing in a **mem argument?
->
->
-> Because this function (as a direct successor of dma_declare_coherent_memory)
-> doesn't
-> return typical error codes, but some custom values like DMA_MEMORY_MAP,
-> DMA_MEMORY_IO
-> or zero (which means failure). I wanted to avoid confusion with typical
-> error
-> handling path and IS_ERR/ERR_PTR usage used widely in other functions. This
-> probably
-> should be unified with the rest of kernel some day, but right now I wanted
-> to keep
-> the patch simple and easy to review.
->
->
->>>   {
->>> +       struct dma_coherent_mem *dma_mem = NULL;
->>>         void __iomem *mem_base = NULL;
->>>         int pages = size >> PAGE_SHIFT;
->>>         int bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>> @@ -27,27 +30,26 @@ int dma_declare_coherent_memory(struct device *dev,
->>> phys_addr_t phys_addr,
->>>                 goto out;
->>>         if (!size)
->>>                 goto out;
->>> -       if (dev->dma_mem)
->>> -               goto out;
->>> -
->>> -       /* FIXME: this routine just ignores DMA_MEMORY_INCLUDES_CHILDREN
->>> */
->>>         mem_base = ioremap(phys_addr, size);
->>>         if (!mem_base)
->>>                 goto out;
->>>   -     dev->dma_mem = kzalloc(sizeof(struct dma_coherent_mem),
->>> GFP_KERNEL);
->>> -       if (!dev->dma_mem)
->>> +       dma_mem = kzalloc(sizeof(struct dma_coherent_mem), GFP_KERNEL);
->>> +       if (!dma_mem)
->>>                 goto out;
->>> -       dev->dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> -       if (!dev->dma_mem->bitmap)
->>> +       dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> +       if (!dma_mem->bitmap)
->>>                 goto free1_out;
->>>   -     dev->dma_mem->virt_base = mem_base;
->>> -       dev->dma_mem->device_base = device_addr;
->>> -       dev->dma_mem->pfn_base = PFN_DOWN(phys_addr);
->>> -       dev->dma_mem->size = pages;
->>> -       dev->dma_mem->flags = flags;
->>> +       dma_mem->virt_base = mem_base;
->>> +       dma_mem->device_base = device_addr;
->>> +       dma_mem->pfn_base = PFN_DOWN(phys_addr);
->>> +       dma_mem->size = pages;
->>> +       dma_mem->flags = flags;
->>> +       spin_lock_init(&dma_mem->spinlock);
->>> +
->>> +       *mem = dma_mem;
->>>         if (flags & DMA_MEMORY_MAP)
->>>                 return DMA_MEMORY_MAP;
->>> @@ -55,12 +57,51 @@ int dma_declare_coherent_memory(struct device *dev,
->>> phys_addr_t phys_addr,
->>>         return DMA_MEMORY_IO;
->>>      free1_out:
->>> -       kfree(dev->dma_mem);
->>> +       kfree(dma_mem);
->>>    out:
->>>         if (mem_base)
->>>                 iounmap(mem_base);
->>>         return 0;
->>>   }
->>> +
->>> +static void dma_release_coherent_memory(struct dma_coherent_mem *mem)
->>> +{
->>> +       if (!mem)
->>> +               return;
->>> +       iounmap(mem->virt_base);
->>> +       kfree(mem->bitmap);
->>> +       kfree(mem);
->>> +}
->>> +
->>> +static int dma_assign_coherent_memory(struct device *dev,
->>> +                                     struct dma_coherent_mem *mem)
->>> +{
->>> +       if (dev->dma_mem)
->>> +               return -EBUSY;
->>> +
->>> +       dev->dma_mem = mem;
->>> +       /* FIXME: this routine just ignores DMA_MEMORY_INCLUDES_CHILDREN
->>> */
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +int dma_declare_coherent_memory(struct device *dev, phys_addr_t
->>> phys_addr,
->>> +                               dma_addr_t device_addr, size_t size, int
->>> flags)
->>> +{
->>> +       struct dma_coherent_mem *mem;
->>> +       int ret;
->>> +
->>> +       ret = dma_init_coherent_memory(phys_addr, device_addr, size,
->>> flags,
->>> +                                      &mem);
->>> +       if (ret == 0)
->>> +               return 0;
->>> +
->>> +       if (dma_assign_coherent_memory(dev, mem) == 0)
->>> +               return ret;
->>> +
->>> +       dma_release_coherent_memory(mem);
->>> +       return 0;
->>> +}
->>>   EXPORT_SYMBOL(dma_declare_coherent_memory);
->>>     void dma_release_declared_memory(struct device *dev)
->>> @@ -69,10 +110,8 @@ void dma_release_declared_memory(struct device *dev)
->>>         if (!mem)
->>>                 return;
->>> +       dma_release_coherent_memory(mem);
->>>         dev->dma_mem = NULL;
->>> -       iounmap(mem->virt_base);
->>> -       kfree(mem->bitmap);
->>> -       kfree(mem);
->>>   }
->>>   EXPORT_SYMBOL(dma_release_declared_memory);
->>>   @@ -80,6 +119,7 @@ void *dma_mark_declared_memory_occupied(struct
->>> device *dev,
->>>                                         dma_addr_t device_addr, size_t
->>> size)
->>>   {
->>>         struct dma_coherent_mem *mem = dev->dma_mem;
->>> +       unsigned long flags;
->>>         int pos, err;
->>>         size += device_addr & ~PAGE_MASK;
->>> @@ -87,8 +127,11 @@ void *dma_mark_declared_memory_occupied(struct device
->>> *dev,
->>>         if (!mem)
->>>                 return ERR_PTR(-EINVAL);
->>>   +     spin_lock_irqsave(&mem->spinlock, flags);
->>>         pos = (device_addr - mem->device_base) >> PAGE_SHIFT;
->>>         err = bitmap_allocate_region(mem->bitmap, pos, get_order(size));
->>> +       spin_unlock_irqrestore(&mem->spinlock, flags);
->>> +
->>>         if (err != 0)
->>>                 return ERR_PTR(err);
->>>         return mem->virt_base + (pos << PAGE_SHIFT);
->>> @@ -115,6 +158,7 @@ int dma_alloc_from_coherent(struct device *dev,
->>> ssize_t size,
->>>   {
->>>         struct dma_coherent_mem *mem;
->>>         int order = get_order(size);
->>> +       unsigned long flags;
->>>         int pageno;
->>>         if (!dev)
->>> @@ -124,6 +168,7 @@ int dma_alloc_from_coherent(struct device *dev,
->>> ssize_t size,
->>>                 return 0;
->>>         *ret = NULL;
->>> +       spin_lock_irqsave(&mem->spinlock, flags);
->>>         if (unlikely(size > (mem->size << PAGE_SHIFT)))
->>>                 goto err;
->>> @@ -138,10 +183,12 @@ int dma_alloc_from_coherent(struct device *dev,
->>> ssize_t size,
->>>         *dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
->>>         *ret = mem->virt_base + (pageno << PAGE_SHIFT);
->>>         memset(*ret, 0, size);
->>> +       spin_unlock_irqrestore(&mem->spinlock, flags);
->>>         return 1;
->>>     err:
->>> +       spin_unlock_irqrestore(&mem->spinlock, flags);
->>>         /*
->>>          * In the case where the allocation can not be satisfied from the
->>>          * per-device area, try to fall back to generic memory if the
->>> @@ -171,8 +218,11 @@ int dma_release_from_coherent(struct device *dev,
->>> int order, void *vaddr)
->>>         if (mem && vaddr >= mem->virt_base && vaddr <
->>>                    (mem->virt_base + (mem->size << PAGE_SHIFT))) {
->>>                 int page = (vaddr - mem->virt_base) >> PAGE_SHIFT;
->>> +               unsigned long flags;
->>>   +             spin_lock_irqsave(&mem->spinlock, flags);
->>>                 bitmap_release_region(mem->bitmap, page, order);
->>> +               spin_unlock_irqrestore(&mem->spinlock, flags);
->>>                 return 1;
->>>         }
->>>         return 0;
->>> @@ -218,3 +268,52 @@ int dma_mmap_from_coherent(struct device *dev,
->>> struct vm_area_struct *vma,
->>>         return 0;
->>>   }
->>>   EXPORT_SYMBOL(dma_mmap_from_coherent);
->>> +
->>> +/*
->>> + * Support for reserved memory regions defined in device tree
->>> + */
->>> +#ifdef CONFIG_OF_RESERVED_MEM
->>> +#include <linux/of.h>
->>> +#include <linux/of_fdt.h>
->>> +#include <linux/of_reserved_mem.h>
->>> +
->>> +static void rmem_dma_device_init(struct reserved_mem *rmem, struct
->>> device *dev)
->>> +{
->>> +       struct dma_coherent_mem *mem = rmem->priv;
->>
->> Will the reserved_mem->priv pointer ever point to some other kind of
->> structure? How do we know that the pointer here is always a
->> dma_coherent_mem struct (if there are other uses of priv, what is the
->> guarantee against another user assigning something to it?) Is it the
->> reserved_mem_ops below that provide the guarantee?
->
->
-> reserved_mem_ops are set by the given reserved memory driver and access to
-> priv
-> pointer is limited only to that driver. This pattern is used widely across
-> the
-> whole kernel, so I don't think that a separate pointer to particular
-> structure
-> type is needed.
+On Mon, 28 Jul 2014 04:38:38 +0000, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+> On Saturday 26 July 2014 10:21 PM, Grant Likely wrote:
+> > On Sat, 26 Jul 2014 06:52:36 +0000, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+> >> Hi Rob,
+> >>
+> >> On Friday 25 July 2014 07:45 PM, Rob Herring wrote:
+> >>> On Fri, Jul 25, 2014 at 6:02 AM, Vineet Gupta
+> >>> <Vineet.Gupta1@synopsys.com> wrote:
+> >>>>> Hi Grant,
+> >>>>>
+> >>>>> linux-next has a series for arc_uart (via tty tree) which converts it to generic
+> >>>>> earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
+> >>>>> /chose/bootargs
+> >>>>>
+> >>>>> 2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console
+> >>>>>
+> >>>>> This relied on prev commit of yours (from linux next of 20140711), which seem to
+> >>>>> have disappeared now.
+> >>>>>
+> >>>>> 2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
+> >>>>> specified in /chosen
+> >>>>> 2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
+> >>>>> /chosen/stdout-path
+> >>>>>
+> >>>>> Is there a specific reason for dropping these patches (or perhaps a merge to be
+> >>>>> merged). I cherry-picked both but still doesn't work.
+> >>>>>
+> >>>>> Can you please advise next step forward, before I go off debugging with those
+> >>>>> patches in.
+> >>> There's an issue that if you have stdout-path and "earlycon" on the
+> >>> command line, the kernel will switch to tty0 and disable the earlycon.
+> >>>
+> >>> This is the "fix", but I don't like adding the DT dependency into generic code:
+> >>>
+> >>> @@ -2382,7 +2386,7 @@ void register_console(struct console *newcon)
+> >>>                 if (newcon->setup == NULL ||
+> >>>                     newcon->setup(newcon, NULL) == 0) {
+> >>>                         newcon->flags |= CON_ENABLED;
+> >>> -                       if (newcon->device) {
+> >>> +                       if (newcon->device  && !of_stdout) {
+> >>>                                 newcon->flags |= CON_CONSDEV;
+> >>>                                 preferred_console = 0;
+> >>>                         }
+> >> The DT settings relevant for ARC, which enable generic-earlycon and
+> >> console-with-stdout-path are as follows
+> >>
+> >>         chosen {
+> >>                 bootargs = "earlycon";
+> >>                 stdout-path = &arcuart0;
+> >>         };
+> >>
+> >> ....
+> >>                 arcuart0: serial@c0fc1000 {
+> >>                         compatible = "snps,arc-uart";
+> >>
+> >> And it works w/o above hunk, provided the 2 patches from Grant exist in linux-next
+> >> which they don't at the moment. I'm pretty confused how the hunk above comes into
+> >> picture.
+> >>
+> >> And if not then I will have to get the ARC std-out patch reverted in tty-next as
+> >> it is broken.
+> > You need to revert it anyway, the dependency chain is broken. Just
+> > because something is in linux-next doesn't mean it will be merged.
+> > Dependencies must always be in the branch to which you commit.
+> >
+> > If that doesn't happen (like here) then bisecting is broken and the
+> > dependencies may not actually get merged.
+> >
+> > When this happens, what you're supposed to do is tell the maintainers
+> > what commits the patch depends on so that it can be applied to the
+> > correct tree. In this case I could take it through my devicetree branch
+> > that contains the console patches.
+> 
+> I understand all of that. Actually 9 out of 10 of my changes were for switching to
+> earlycon for which corresponding core changes from Rob were already in mainline.
+> When reviewing my code, Rob pointed me to your on going work on use of stdout-path
+> so my mistake was to pile that up in the same series vs. asking you to add that
+> patch in ur tree for precisely the multi dependency reason.
+> 
+> > If a patch depends on commits in several branches then it is a bit more
+> > complex. What we usually do is create a new branch that merges in each
+> > branch that is depended on, and then apply the commit on top of that.
+> >
+> > As for the console patches, I'm only going to be putting them back if I
+> > can devise a good fix for the earlycon duplication issue.
+> 
+> If you have an internal branch for this work, can you please add the patch below
+> to it so that we don't forget abt it.
+> 
+> https://lkml.org/lkml/2014/6/24/127
+> 
+> I'll ask Greg to revert it from tty tree !
 
-Yup, that's fine. I wanted to make sure.
+Isn't that also broken for bisect? Doesn't that patch depend on the
+patches in Greg's tree? If so, then same problem. At this point you'll
+need to wait until both are mainlined before this patch gets applied
+since I don't want to deal with cross merging trees.
 
-Do I need to be taking these patches through the DT tree? Do patches 3
-& 4 make sense without patch 2?
+However, this patch is trivial, so I don't see any problem with not
+having it in linux-next before the merge window.
 
 g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
