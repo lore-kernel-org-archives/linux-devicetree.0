@@ -1,139 +1,190 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
-Date: Wed, 30 Jul 2014 11:20:38 -0500
-Message-ID: <20140730162038.GH7272@saruman.home>
-References: <1406582183-696-1-git-send-email-balbi@ti.com>
- <1406582183-696-30-git-send-email-balbi@ti.com>
- <20140729121425.GR29045@atomide.com>
- <20140729141522.GB17808@saruman.home>
- <20140729152052.GV29045@atomide.com>
- <20140729154057.GE17808@saruman.home>
- <20140729163345.GF17808@saruman.home>
- <20140730060420.GY29045@atomide.com>
- <20140730144059.GA7272@saruman.home>
- <CAGo_u6ou+MoKOE_tTTmjxyFNW=jTaN9vnTsHrxR6sQHsieJyLA@mail.gmail.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Wed, 30 Jul 2014 11:37:38 -0500
+Message-ID: <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg@mail.gmail.com>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+ <1406732794-20920-3-git-send-email-rric@kernel.org> <20140730154626.GD20162@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="e5bfZ/T2xnjpUIbw"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGo_u6ou+MoKOE_tTTmjxyFNW=jTaN9vnTsHrxR6sQHsieJyLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20140730154626.GD20162@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---e5bfZ/T2xnjpUIbw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 30, 2014 at 10:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi,
+>
+> On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
+>> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>
+>> Add initial device tree nodes for Cavium Thunder SoCs with support of
+>> 48 cores and gicv3. The dts file requires further changes, esp. for
+>> pci, gicv3-its and smmu. This changes will be added later together
+>> with the device drivers.
+>>
+>> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/Makefile         |   1 +
+>>  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
+>>  2 files changed, 388 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+>> index c52bdb051f66..f8001a62029c 100644
+>> --- a/arch/arm64/boot/dts/Makefile
+>> +++ b/arch/arm64/boot/dts/Makefile
+>> @@ -1,3 +1,4 @@
+>> +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
+>>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+>>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+>>
+>> diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
+>> new file mode 100644
+>> index 000000000000..4cf20ac9138b
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/thunder-88xx.dts
+>> @@ -0,0 +1,387 @@
+>> +/*
+>> + * Cavium Thunder DTS file
+>> + *
+>> + * Copyright (C) 2013, Cavium Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation; either version 2 of
+>> + * the License, or (at your option) any later version.
+>> + */
 
-Hi,
+You may want to reconsider if this should be BSD.
 
-On Wed, Jul 30, 2014 at 10:45:41AM -0500, Nishanth Menon wrote:
-> On Wed, Jul 30, 2014 at 9:40 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> > HI,
-> >
-> > On Tue, Jul 29, 2014 at 11:04:21PM -0700, Tony Lindgren wrote:
-> >> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 09:36]:
-> >> > Hi,
-> >> >
-> >> > On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
-> >> > > On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
-> >> > > > * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 07:18]:
-> >> > > > > Hi,
-> >> > > > >
-> >> > > > > On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
-> >> > > > > > * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140728 14:19]:
-> >> > > > > > > now that we don't need to support legacy board-files,
-> >> > > > > > > we can completely switch over to a linear irq domain
-> >> > > > > > > and make use of irq_alloc_domain_generic_chips() to
-> >> > > > > > > allocate all generic irq chips for us.
-> >> > > > > >
-> >> > > > > > This patch seems to somehow break off-idle for omap3
-> >> > > > > > where it no longer wakes up.
-> >> > > > >
-> >> > > > > Sure your bisection is correct ? This patch just switches from=
- legacy
-> >> > > > > irq domain to linear irq domain.
-> >> > > >
-> >> > > > Yes, I tried it a few times. Just enabling
-> >> > > > retention idle hangs too with this patch.
-> >> > > >
-> >> > > > Maybe it's omap3_prcm_irq_setup that relies on
-> >> > > > 11 + OMAP_INTC_START? There may be other such issues
-> >> > >
-> >> > > lol.
-> >> > >
-> >> > > OMAP4 has the same nonsense.
-> >> >
-> >> > made me think why (if) OMAP4 works with that same setup. Does wake f=
-rom
-> >> > OFF work with OMAP4 ?
-> >>
-> >> Not without similar changes, omap4+ has the same issue.. There's a RFC
-> >> series from Nishant to fix some of this, and Tero is moving the PRCM
-> >> into a driver.
-> >>
-> >> > Anyway, here's a quick little hack to check if that's the reason for=
- the
-> >> > regression:
-> >>
-> >> OK yeah that's along the same lines with Nishant's RFC series in thread
-> >> "[RFC PATCH 0/7] ARM: OMAP4+: PRM: minor cleanups and dt support of
-> >> interrupts"
-> >>
-> >> FYI, it did not compile, needs to include linux/of_irq.h. But yes,
-> >
-> > I might have sent the wrong version as I had that same build error and
-> > fixed it localy.
-> >
-> >> it fixes the regression for me, Also now the whole series works for
-> >> me :)
-> >
-> > good to know.
-> >
-> > What do you want to do now ? Wait for PRCM to become a driver ? Wait for
-> > Nishanth's series to get accepted ? I guess the same thing could be done
-> > for OMAP3 and AM33, then we would have a chance of having working wake
-> > from idle with the new irqchip.
->=20
-> I can repost the current series as it stands now once 17-rc1 comes out
-> (without the build failure ofcourse).. if that helps to move it out of
-> RFC status.
+>> +/dts-v1/;
+>> +
+>> +/* Reserving first 12MB of DDR for firmware */
+>> +/memreserve/ 0x00000000 0x00c00000;
+>
+> What exactly is this memreserve intended to protect at runtime?
+>
+> The only item of runtime firmware I see in use below is PSCI on the
+> secure side.
+>
+> How is the kernel booted on this platform? UEFI?
+>
+>> +/ {
+>> +     model = "Cavium ThunderX CN88XX Family";
+>> +     compatible = "cavium,thunder-88xx";
+>
+> Please don't use wildcards in compatible strings. Give this an absolute
+> name, and override as necessary.
+>
+>> +     interrupt-parent = <&gic0>;
+>> +     #address-cells = <2>;
+>> +     #size-cells = <2>;
+>> +
+>> +     aliases {
+>> +             serial0 = &uaa0;
+>> +             serial1 = &uaa1;
+>> +     };
+>> +
+>> +     psci {
+>> +             compatible = "arm,psci-0.2";
+>> +             method = "smc";
+>> +     };
+>
+> Nice!
+>
+>> +
+>> +     cpus {
+>> +             #address-cells = <2>;
+>> +             #size-cells = <0>;
+>> +
+>> +             cpu@000 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "cavium,thunder", "arm,armv8";
+>> +                     reg = <0x0 0x000>;
+>> +                     enable-method = "psci";
+>> +             };
+>
+> Just to check: both the SoC and CPU are called thunder?
+>
+> [...]
+>
+>> +
+>> +     memory@00000000 {
+>> +             device_type = "memory";
+>> +             reg = <0x0 0x00000000 0x0 0x80000000>;
+>> +     };
+>> +
+>> +     gic0: interrupt-controller@801000000000 {
+>
+> To make this easier to read, please place a comma between 32-bit
+> portions of the unit address (e.g. here have 8010,00000000).
 
-That'd be great. It would be ever greater if you could add support for
-OMAP3 on that too.
+Mark, perhaps a dtc or checkpatch.pl check for this?
 
-cheers
+This should also be under a bus node.
 
---=20
-balbi
+>> +             compatible = "arm,gic-v3";
+>> +             #interrupt-cells = <3>;
+>> +             #address-cells = <2>;
+>> +             #size-cells = <2>;
+>> +             ranges;
+>
+> This has no children, so why have ranges, #address-cells, and
+> #size-cells?
+>
+>> +             interrupt-controller;
+>> +             reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
+>> +                   <0x8010 0x80000000 0x0 0x200000>; /* GICR */
+>> +             interrupts = <1 9 0xf04>;
+>> +     };
+>> +
+>> +     timer {
+>> +             compatible = "arm,armv8-timer";
+>> +             interrupts = <1 13 0xff01>,
+>> +                          <1 14 0xff01>,
+>> +                          <1 11 0xff01>,
+>> +                          <1 10 0xff01>;
+>> +     };
+>> +
+>> +     soc {
+>> +             compatible = "simple-bus";
+>> +             #address-cells = <2>;
+>> +             #size-cells = <2>;
+>> +             ranges;
+>> +
+>> +             clocks {
+>> +                     #address-cells = <2>;
+>> +                     #size-cells = <2>;
+>> +                     ranges;
+>> +
+>> +                     refclk50mhz: refclk50mhz {
+>> +                             compatible = "fixed-clock";
+>> +                             #clock-cells = <0>;
+>> +                             clock-frequency = <50000000>;
+>> +                             clock-output-names = "refclk50mhz";
+>> +                     };
+>> +             };
+>
+> Please get rid of the clocks node and just put the clocks here.
+>
+>> +
+>> +             uaa0: serial@87e024000000 {
+>> +                     compatible = "arm,pl011", "arm,primecell";
+>> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
+>> +                     interrupts = <1 21 4>;
+>> +                     clocks = <&refclk50mhz>;
+>> +                     clock-names = "apb_pclk";
+>
+> Is this actually the apb_pclk, or is the the uartclk? I assume it's the
+> latter.
 
---e5bfZ/T2xnjpUIbw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Shouldn't new bindings have both clocks here? A single clock was a
+mistake I think (mine in fact).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT2RtWAAoJEIaOsuA1yqREaPUP/3E6rqd9KoIusXrp9A/la+68
-25ii+wRZQ6BmOorjxx1XKmwhvxuGE9rNv/TUXiBa51FY7WCfCMWmGU+XqfgyoKNC
-imChzFRjWwSCPjESYb4Esm/ShY/g3F5Ss7e7WxLu2KMYXbB0Q1xe8g4ZOHZAly2H
-/VeTzC5XI8OX8VxC0yQa+MAyXeYs1rS1B5dfikNh9PR+kYsyUptZ9gHBadI/Rj9j
-hocAAm63/VludPppdK07tMUnLSoMK2XF3GEy6AUw5YhnwWKa6TQmNUBTo3RXCCdg
-gpU5jKL1L/x6xHYs3Svt5TZkOuvjUwrBRKtBzJm7APgWBy6E3jYlUOJxYxk+u0cG
-6Qh1vE8eDRlsip4ELnEBAXNcylnp2mPIDc0VBvu8kvoN/2WqUyQIttHZcBRihNS9
-B9QPNxjpqkUmvzU91Sein5L7MpLXxhAqZUq524tPQwcLfQqeQHeGN04WsKqWpC1H
-TAMG2JBv0sDEoW2Vw4bkm+5ah4ksCI3sYFZ6A7c0g2Nr5c+4jEnWdgjxf3F8b3it
-Rx//d6uvC6YV08gpWnBoprpzbDgKQ0m4YnAIBnhU+0d8j6J7ug0H5//UR3KWx2lc
-PLBW8i5K0fy/rwjUeJVSB+xPJeTcQbcOjVPNxT1ttjTN6frmC64+bcXjRcnmHl52
-zihC2sA4BGII/MiEAcU6
-=yK6R
------END PGP SIGNATURE-----
-
---e5bfZ/T2xnjpUIbw--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
