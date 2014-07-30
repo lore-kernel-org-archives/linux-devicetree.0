@@ -1,113 +1,134 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 30 Jul 2014 19:18:42 +0100
-Message-ID: <20140730181842.GG20162@leverpostej>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
- <20140730152646.GC20162@leverpostej>
- <CAOesGMi3zM1-cqmeGddJ69RNXx0ktFm_zXO_yq7N0EeA3HNrUQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Turn on USB host vbus on rk3288-evb
+Date: Wed, 30 Jul 2014 20:24:03 +0200
+Message-ID: <2935278.D1LmZlOTqj@diego>
+References: <1406676273-20701-1-git-send-email-dianders@chromium.org> <1836225.xQCoI7eRWl@diego> <CAD=FV=Wm-cB3-xHQdOUAXyX2xeYrXxPN6wYZrAoC6WAQ9sQ_Bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMi3zM1-cqmeGddJ69RNXx0ktFm_zXO_yq7N0EeA3HNrUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAD=FV=Wm-cB3-xHQdOUAXyX2xeYrXxPN6wYZrAoC6WAQ9sQ_Bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kern
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
+Hi Doug,
 
-> >> +Multiple-master IOMMU:
-> >> +----------------------
+Am Mittwoch, 30. Juli 2014, 08:13:52 schrieb Doug Anderson:
+> On Wed, Jul 30, 2014 at 4:24 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
+ote:
+> > Am Dienstag, 29. Juli 2014, 16:24:31 schrieb Doug Anderson:
+> >> There is no phy driver that works on the Rockchip board for either=
+ USB
+> >> host port yet.  For now just hardcode the vbus signal to be on all=
+ the
+> >> time which makes both the dwc2 host and the EHCI port work.
+> >>=20
+> >> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> ---
+> >>=20
+> >>  arch/arm/boot/dts/rk3288-evb.dtsi | 18 ++++++++++++++++++
+> >>  1 file changed, 18 insertions(+)
+> >>=20
+> >> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi
+> >> b/arch/arm/boot/dts/rk3288-evb.dtsi index 749e20d..efd625e 100644
+> >> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
+> >> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+> >> @@ -35,6 +35,18 @@
+> >>=20
+> >>                       debounce-interval =3D <100>;
+> >>              =20
+> >>               };
+> >>      =20
+> >>       };
+> >>=20
 > >> +
-> >> +     iommu {
-> >> +             /* the specifier represents the ID of the master */
-> >> +             #iommu-cells = <1>;
+> >> +     /* This turns on vbus for both host0 (ehci) and host1 (dwc2)=
+ */
+> >> +     usb_host_vbus_regulator: usb-host-vbus-regulator {
+> >> +             compatible =3D "regulator-fixed";
+> >> +             enable-active-high;
+> >> +             gpio =3D <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> >> +             pinctrl-names =3D "default";
+> >> +             pinctrl-0 =3D <&usb_host_vbus>;
+> >> +             regulator-name =3D "usb-host-vbus";
+> >> +             regulator-always-on;
+> >> +             regulator-boot-on;
 > >> +     };
-> >> +
-> >> +     master@1 {
-> >> +             /* device has master ID 42 in the IOMMU */
-> >> +             iommus = <&/iommu 42>;
-> >> +     };
-> >> +
-> >> +     master@2 {
-> >> +             /* device has master IDs 23 and 24 in the IOMMU */
-> >> +             iommus = <&/iommu 23>, <&/iommu 24>;
-> >> +     };
-> >
-> > In future I suspect master will need to be able to identify which master
-> > IDs correspond to which of their master ports (where each port might
-> > have an arbitrary number of master IDs).
-> >
-> > While we don't need that for the first run, it would be nice to have
-> > that looked into so master bindings don't come up with arbitrarily
-> > different ways of doing that.
-> 
-> iommu-names would be the logical extension to handle that, just like
-> we do with other resources, right?
+> >>=20
+> >>  };
+> >=20
+> > It seems I have a slightly outdated schematics pdf for the evb ... =
+and
+> > only
+> > see the OTG vbus pin, on <&gpio0 12>, but am missing the whole host=
+ vbus.
+>=20
+> I have schematics that claim to be from January 25, 2014 and claim to
+> be rev 1.0.  On my schematics:
+>=20
+> * GPIO0_B4 (12) =3D OTG_VBUS_DRV =3D pin 233 of the mainboard connect=
+or
+> * GPIO0_B6 (14) =3D HOST_VBUS_DRV =3D pin 239 of the mainboard connec=
+tor
+>=20
+> On the mainboard schematics I have the OTG signal (233) doesn't
+> actually go to the OTG port.  It goes to a debug header and nowhere
+> else.  The HOST VBUS controls VBUS on both of the two "host" ports.
+>=20
+> > Could you think about finding another name for the handle? For exam=
+ple, in
+> > my incomplete evb-schematics the supply coming from the otg regulat=
+or is
+> > called vcc50_usb and there should be something similar for the host
+> > supply, so I'd like something like
+> >=20
+> >         vcc50_usbhost: usb-host-vbus-regulator { /* or whatever it =
+gets
+> >         called */
+> >         ...
+> >         };
+> >=20
+> > simply to keep with the supply names defined in the schematics - ma=
+kes
+> > reading easier.
+>=20
+> I did!  ;)  ...but I matched my schematics, not yours.  Can you
+> provide the date / version number from your schematics and we can see
+> which is newer?  Just for reference I was emailed schematics last wee=
+k
+> but that doesn't necessarily guarantee that they're the newest ones.
 
-Possibly. If the master has multiple IDs assigned to transactions from a
-single master port then it depends on how the master wants to group
-those for the sake of the binding. If it's per-port then you'd need the
-same name multiple times:
+the schematics I have is "RK3288_BETA", REV 0.2, created in 2014/02/12,=
+ last=20
+changed on 2014/03/04.
 
-iommus = <&iommu 0>, <&iommu 4>, <&iommu 17>, <&iommu 25>;
-iommu-names = "video", "video", "dram", dram";
+At least in my schematics on page 16 of 44, the OTG_VBUS_DRV pin leads =
+to a=20
+switch, that gets supplied by VCC50_BOOST and emits the VCC50_USB .
+So, a later phy node should in the otg case probably have a
+	whatever-supply =3D <&vcc50_usb>;
+and not
+	whatever-supply =3D <&usb_otg_vbus_regulator>
 
-This is really specific to a given master, so we can table that until
-the first master appears which needs to distinguish between IDs.
 
-> >> +
-> >> +Multiple-master IOMMU with configurable DMA window:
-> >> +---------------------------------------------------
-> >> +
-> >> +     / {
-> >> +             #address-cells = <1>;
-> >> +             #size-cells = <1>;
-> >> +
-> >> +             iommu {
-> >> +                     /* master ID, address and length of DMA window */
-> >> +                     #iommu-cells = <4>;
-> >> +             };
-> >> +
-> >> +             master {
-> >> +                     /* master ID 42, 4 GiB DMA window starting at 0 */
-> >> +                     iommus = <&/iommu  42  0  0x1 0x0>;
-> >
-> > Is this that window is from the POV of the master, i.e. the master can
-> > address 0x0 to 0xffffffff when generating transactions, and these get
-> > translated somehow?
-> >
-> > Or is this the physical addresses to allocate to the master?
-> 
-> It needs to be clarified in the documentation, but as far as I know it
-> is the DMA address space that is used.
+And there I'd guess the host supply will probably be structured similar=
+ly -=20
+even if I can't see it right now :-) .
 
-Ok. So that's pre-translation, from the POV of the master?
 
-If we don't have that knowledge about the master already (e.g. based on
-the compatible string), surely we always need that information in a
-given iommu-specifier format? Otherwise certain iommus won't be able to
-handle masters with limited addressing only due to limitations of their
-binding.
+> Given the above, I'm not planning to spin this patch unless you
+> confirm you want me to.  Thanks!  :)
 
-> It is somewhat confusing to have size-cells = 1 and then use 2 cells
-> for size in the iommu property. It's legal and expected, but having
-> size-cells in the example adds a little confusion.
-> 
-> Either way, I'm OK with fixing the above with an incremental patch,
-> assuming there is no disagreements on what's said above.
+I'd like the regulator handle to be named after the supply name, not af=
+ter the=20
+pin-name :-) .
 
-I like the general idea.
 
-Given my concerns are to do with implementation details I'm happy to
-have this go through and fix it up as the first implementations of the
-binding take shape.
-
-Thanks,
-Mark.
+Heiko
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
