@@ -1,66 +1,57 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: userspace-consumer: add DT binding details
-Date: Wed, 30 Jul 2014 17:40:14 +0100
-Message-ID: <20140730164014.GY17528@sirena.org.uk>
-References: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
- <1406728440-17837-2-git-send-email-ldewangan@nvidia.com>
- <20140730155302.GE20162@leverpostej>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v11 3/8] ata: libahci_platform: move port_map parameters
+ into the AHCI structure
+Date: Wed, 30 Jul 2014 18:47:21 +0200
+Message-ID: <20140730164721.GA15772@kwain>
+References: <1406193450-17283-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1406193450-17283-4-git-send-email-antoine.tenart@free-electrons.com>
+ <20140729144042.GD4791@htj.dyndns.org>
+ <20140730082038.GB29900@kwain>
+ <20140730153526.GB23734@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GZ7IEjvh/SgTPveO"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140730155302.GE20162@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140730153526.GB23734@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 30, 2014 at 11:35:26AM -0400, Tejun Heo wrote:
+> On Wed, Jul 30, 2014 at 10:20:38AM +0200, Antoine T=E9nart wrote:
+> > How do you want me to send the series? There is two conflicts when
+> > applying to libata/for-3.17:
+> > - patch 4/8: it takes into account a patch not in libata/for-3.17 b=
+ut
+> >   added before rc7. It should be better to first merge rc7, otherwi=
+se
+> >   some modifications won't make sense.
+> > - patch 6/8: "fsl,imx53-ahci" was removed from the documentation in
+> >   libata/for-3.17 but not in rc7. Resolving the conflict is really
+> >   simple.
+> >=20
+> > I think it's better to apply the whole thing after merging rc7 into
+> > libata/for-3.17, because it will only have a really simple conflict=
+ to
+> > resolve.
+> >=20
+> > Please tell me what do you prefer before I send the updated version=
+=2E
+>=20
+> Hmmm... does pulling in libata/for-3.16-fixes into libata/for-3.17
+> resolves the conflict?  If so, please send the patch on top of the
+> merged branch.  I wanna avoid pulling in -rc7 wholesale at this point=
+=2E
 
---GZ7IEjvh/SgTPveO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Works for me. I'll cook and send a series based on top of
+libata/for-3.16-fixes merged into libata/for-3.17.
 
-On Wed, Jul 30, 2014 at 04:53:03PM +0100, Mark Rutland wrote:
-> On Wed, Jul 30, 2014 at 02:54:00PM +0100, Laxman Dewangan wrote:
+Antoine
 
-> > +Required properties:
-> > +- compatible		: Must be "reg-userspace-consumer".
-
-> I would never expect to see "userspace" in a DT beinding string; this is
-> entirely a software abstraction description and has nothing to do with
-> the interaction of HW components.
-
-> Why do you think we need this in the DT?
-
-Yes, this is test code - it is not intended to be used in production.
-Any binding should be for the consumer using this, not for this
-implementation detail.
-
---GZ7IEjvh/SgTPveO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIbBAEBAgAGBQJT2R/rAAoJELSic+t+oim91jwP+KsCYAJCp5Q84qu3Omi6J5Gv
-98nf9V1Rshc/I2IaSdr9JYKMzbTN0ke5HJ81DK06bvXqw3Cz1ZIpoQrjJ5HOtBkf
-NdVd2iSqKWP9bSZ2m04C3WUPXpqtONNchfOGun10GGWcV4Y8q4sknbSsE5dLYD5L
-F45Lc2MnJt7VXCB7ISi3bGq7D6loOL8nkYzFK4AZSMAhEYklNCfaC2K+qZ3f7zvN
-131dlaCNlKwf1B+XL8r9+007ZIaFWF6jsOOaWJlSGktupF2Qb5bMCVlqpUq5xsoH
-qKq/HDE+TFXasO/oMjGtQB+Br23IlhgeAehGFdaukp4InHqfatBc3Y0/tLOn/1As
-8YdphlqKP0kvVDfNKJaK+Awd0bxzUlAUShInVnRTslsyqXOywowi1y7P3Ob45Ny9
-L3P0Dmty1mc7UEGB2lKlpFgqFBKgpharud1u0oOJ3PElucRPDKotiIH8U4HBcqOj
-yVqWDhZJ3Sens9HQZGlGnUhau1nnuBEy9e1yz8EmGfL+xPg4xfe3r6XrRcyDsT7f
-IQrVTVqjub5+hU/oe+HK/B1EwjwkmHrIwYeU8QmF+6qsVgrRqSbgsVtkSh5BaiQx
-uPoc1AqIjNGpmXRCZXxj2Fm3J/1t8Jp17QLOJSoY9UbDDUV2UALh0mDCUqptPOA2
-7/FNVjc1OVJ81UGgLAA=
-=nb21
------END PGP SIGNATURE-----
-
---GZ7IEjvh/SgTPveO--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
