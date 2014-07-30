@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v5 3/6] ARM: dts: sun6i: add rtc device node
-Date: Wed, 30 Jul 2014 20:56:06 +0800
-Message-ID: <1406724969-2482-4-git-send-email-wens@csie.org>
+Subject: [PATCH v5 6/6] ARM: sunxi: Add A31 RTC driver to multi_v7_defconfig
+Date: Wed, 30 Jul 2014 20:56:09 +0800
+Message-ID: <1406724969-2482-7-git-send-email-wens@csie.org>
 References: <1406724969-2482-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,30 +19,25 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a driver for sun6i's rtc hardware, add a device node
-for it so we can use it.
+Now that we have a driver for A31's RTC, enable it
+in multi_v7_defconfig.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 44b07e5..8fdf90d 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -779,6 +779,12 @@
- 			interrupts = <1 9 0xf04>;
- 		};
- 
-+		rtc: rtc@01f00000 {
-+			compatible = "allwinner,sun6i-a31-rtc";
-+			reg = <0x01f00000 0x54>;
-+			interrupts = <0 40 4>, <0 41 4>;
-+		};
-+
- 		nmi_intc: interrupt-controller@01f00c0c {
- 			compatible = "allwinner,sun6i-a31-sc-nmi";
- 			interrupt-controller;
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index a62ca27..130dd8d 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -346,6 +346,7 @@ CONFIG_RTC_DRV_TPS65910=y
+ CONFIG_RTC_DRV_EM3027=y
+ CONFIG_RTC_DRV_PL031=y
+ CONFIG_RTC_DRV_VT8500=y
++CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_RTC_DRV_SUNXI=y
+ CONFIG_RTC_DRV_MV=y
+ CONFIG_RTC_DRV_TEGRA=y
 -- 
 2.0.1
