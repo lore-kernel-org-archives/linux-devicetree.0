@@ -1,83 +1,58 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: Turn on USB host vbus on rk3288-evb
-Date: Wed, 30 Jul 2014 13:24:17 +0200
-Message-ID: <1836225.xQCoI7eRWl@diego>
-References: <1406676273-20701-1-git-send-email-dianders@chromium.org> <1406676273-20701-2-git-send-email-dianders@chromium.org>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v5] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Wed, 30 Jul 2014 16:54:49 +0530
+Message-ID: <CA+mB=1LeZn1k2VHNby2TRBcb1xuFFTQio=C845_xe2A=ZciYqg@mail.gmail.com>
+References: <1406131381-25577-1-git-send-email-sthokal@xilinx.com>
+	<CA+mB=1JhDF=BBXcyTbgVB8S7qH=Mb1JH78HLL4pA9OBH19hQvA@mail.gmail.com>
+	<8258903.Rn4s07GKGV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406676273-20701-2-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8258903.Rn4s07GKGV@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Srikanth Thokala <sthokal@xilinx.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, svemula@xilinx.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, anirudh@xilinx.com, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 29. Juli 2014, 16:24:31 schrieb Doug Anderson:
-> There is no phy driver that works on the Rockchip board for either USB
-> host port yet.  For now just hardcode the vbus signal to be on all the
-> time which makes both the dwc2 host and the EHCI port work.
-> 
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288-evb.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi
-> b/arch/arm/boot/dts/rk3288-evb.dtsi index 749e20d..efd625e 100644
-> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> @@ -35,6 +35,18 @@
->  			debounce-interval = <100>;
->  		};
->  	};
-> +
-> +	/* This turns on vbus for both host0 (ehci) and host1 (dwc2) */
-> +	usb_host_vbus_regulator: usb-host-vbus-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb_host_vbus>;
-> +		regulator-name = "usb-host-vbus";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
->  };
+Hi Arnd,
 
-It seems I have a slightly outdated schematics pdf for the evb ... and only 
-see the OTG vbus pin, on <&gpio0 12>, but am missing the whole host vbus.
+On Mon, Jul 28, 2014 at 6:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday 28 July 2014 18:04:34 Srikanth Thokala wrote:
+>> Hi Arnd and Rob,
+>>
+>> I discussed with Bjorn and we believe this patch is in good shape to
+>> apply.  And Bjorn requires ACKs to apply this patch.  So, could you
+>> guys please review this patch and provided your ACKs to this patch.
+>
+> Looks great for the most part. I've looked through the whole driver
+> again, and I have two small issues remaining:
+>
+> a) Please clarify in the changeset description why there is no support
+>    for PCI I/O space.
 
-Could you think about finding another name for the handle? For example, in my 
-incomplete evb-schematics the supply coming from the otg regulator is called 
-vcc50_usb and there should be something similar for the host supply, so I'd 
-like something like
+Sure, I will add to my changeset.
 
-	vcc50_usbhost: usb-host-vbus-regulator { /* or whatever it gets called */
-	...
-	};
+>
+> b) I think you should use the 'msi-parent' property, and the
+>    of_pci_find_msi_chip_by_node() to find the msi_chip for the
+>    PCI controller. This will make it possible to forward MSIs
+>    to the main interrupt controller in the system, which is more
+>    efficient. See the pcie-mvebu driver for an example of this.
 
-simply to keep with the supply names defined in the schematics - makes reading 
-easier.
+Ok, I need to look into this and I will plan to implement on top of this patch.
 
+>
+> Other than these:
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Heiko
+Thanks Arnd for the Ack.
 
-> 
->  &i2c0 {
-> @@ -71,4 +83,10 @@
->  			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
->  		};
->  	};
-> +
-> +	usb-host {
-> +		usb_host_vbus: usb-host-vbus {
-> +			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
->  };
+Srikanth
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
