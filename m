@@ -1,66 +1,56 @@
 From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Wed, 30 Jul 2014 22:50:58 +0200
-Message-ID: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
+Subject: [PATCH v3 5/6] dts: add devicetree bindings for pxa27x clocks
+Date: Wed, 30 Jul 2014 22:51:03 +0200
+Message-ID: <1406753464-15000-6-git-send-email-robert.jarzmik@free.fr>
+References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406753464-15000-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the third opus of this serie.
->From the previous one :
- - the boot ordering was fixed
-   For DT, we rely on time_init() in arch/arm
-   For non-DT, we keep the postcore_init() until all 3 PXA variants are
-   converted, and meanwhile I'll discuss with Haojian where to call directly the
-   clocks init function.
- - the section mismatches were fixed
-   A split is done between CKEN clock descriptor and CKEN clock structure
+Add the clock tree description for the PXA27x based boards.
 
-The result was tested with a Mitac MIO A701 :
- - with the upstream platform-data based machine code
- - with the device-tree version
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+ arch/arm/boot/dts/pxa27x.dtsi | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-As for the patches, if they are carried fully by Mike, I think there will be a
-minor conflict in arch/arm/mach-pxa/Makefile with the clocksource patches I
-submitted earlier.
-
-As before, the goal remains the same :
- - keeping legacy platforms working (ie. without device-tree)
- - enable PXA27x to work with a device-tree kernel, and hence
-   open the way to drivers conversion
- - be robust enough to support pxa25x and pxa3xx later inclusion
-   with almost no change to clk-pxa-dt.c.
-
-Robert Jarzmik (6):
-  clk: add pxa clocks infrastructure
-  clk: dts: document pxa clock binding
-  arm: pxa: add clock pll selection bits
-  clk: add pxa27x clock drivers
-  dts: add devicetree bindings for pxa27x clocks
-  arm: pxa: Transition pxa27x to clk framework
-
- .../devicetree/bindings/clock/pxa-clock.txt        |  16 +
- arch/arm/Kconfig                                   |   1 +
- arch/arm/boot/dts/pxa27x.dtsi                      |  20 +-
- arch/arm/mach-pxa/Makefile                         |   8 +-
- arch/arm/mach-pxa/include/mach/pxa2xx-regs.h       |  10 +
- arch/arm/mach-pxa/pxa27x.c                         | 186 +----------
- drivers/clk/Makefile                               |   1 +
- drivers/clk/pxa/Makefile                           |   2 +
- drivers/clk/pxa/clk-pxa.c                          |  97 ++++++
- drivers/clk/pxa/clk-pxa.h                          | 107 ++++++
- drivers/clk/pxa/clk-pxa27x.c                       | 370 +++++++++++++++++++++
- include/dt-bindings/clock/pxa-clock.h              |  77 +++++
- 12 files changed, 716 insertions(+), 179 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/pxa-clock.txt
- create mode 100644 drivers/clk/pxa/Makefile
- create mode 100644 drivers/clk/pxa/clk-pxa.c
- create mode 100644 drivers/clk/pxa/clk-pxa.h
- create mode 100644 drivers/clk/pxa/clk-pxa27x.c
- create mode 100644 include/dt-bindings/clock/pxa-clock.h
-
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index a705469..80fc5d7 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -1,5 +1,6 @@
+ /* The pxa3xx skeleton simply augments the 2xx version */
+-/include/ "pxa2xx.dtsi"
++#include "pxa2xx.dtsi"
++#include "dt-bindings/clock/pxa2xx-clock.h"
+ 
+ / {
+ 	model = "Marvell PXA27x familiy SoC";
+@@ -35,4 +36,21 @@
+ 			#pwm-cells = <1>;
+ 		};
+ 	};
++
++	clocks {
++	       /*
++		* The muxing of external clocks/internal dividers for osc* clock
++		* sources has been hidden under the carpet by now.
++		*/
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		pxa2xx_clks: pxa2xx_clks@41300004 {
++			compatible = "marvell,pxa-clocks";
++			#clock-cells = <1>;
++			status = "okay";
++		};
++	};
++
+ };
 -- 
 2.0.0.rc2
 
