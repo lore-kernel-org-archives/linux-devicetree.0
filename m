@@ -1,61 +1,42 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v2 1/3] ARM: dts: Turn on USB host vbus on rk3288-evb
-Date: Wed, 30 Jul 2014 13:00:10 -0700
-Message-ID: <1406750412-15592-2-git-send-email-dianders@chromium.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: dts: Enable USB host0 (EHCI) on rk3288-evb
+Date: Wed, 30 Jul 2014 13:00:12 -0700
+Message-ID: <1406750412-15592-4-git-send-email-dianders@chromium.org>
 References: <1406750412-15592-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406750412-15592-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406750412-15592-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is no phy driver that works on the Rockchip board for either USB
-host port yet.  For now just hardcode the vbus signal to be on all the
-time which makes both the dwc2 host and the EHCI port work.
+This is the top USB port on the evb (the one closest to the Ethernet
+connector).
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
-Changes in v2:
-- usb_host_vbus => vcc_host to match supply name, not pin name.
-- pin name now matches in name in schematic
+Changes in v2: None
 
- arch/arm/boot/dts/rk3288-evb.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/rk3288-evb.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 749e20d..e6c5b03 100644
+index e6c5b03..4f57209 100644
 --- a/arch/arm/boot/dts/rk3288-evb.dtsi
 +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -35,6 +35,18 @@
- 			debounce-interval = <100>;
+@@ -90,3 +90,7 @@
  		};
  	};
-+
-+	/* This turns on USB vbus for both host0 (ehci) and host1 (dwc2) */
-+	vcc_host: vcc-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		regulator-name = "vcc_host";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
  };
- 
- &i2c0 {
-@@ -71,4 +83,10 @@
- 			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
- 	};
 +
-+	usb {
-+		host_vbus_drv: host-vbus-drv {
-+			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
- };
++&usb_host0_ehci {
++	status = "okay";
++};
 -- 
 2.0.0.526.g5318336
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
