@@ -1,613 +1,285 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
- Broadcom STB SoCs
-Date: Wed, 30 Jul 2014 12:09:48 -0500
-Message-ID: <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q@mail.gmail.com>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com> <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
+Date: Wed, 30 Jul 2014 10:35:06 -0700
+Message-ID: <CAOesGMi3zM1-cqmeGddJ69RNXx0ktFm_zXO_yq7N0EeA3HNrUQ@mail.gmail.com>
+References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
+	<20140730152646.GC20162@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405976886-27807-2-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140730152646.GC20162@leverpostej>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 21, 2014 at 4:07 PM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi,
+
+On Wed, Jul 30, 2014 at 8:26 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Thierry,
 >
-> The BCM7xxx series of Broadcom SoCs are used primarily in set-top boxes.
+> This looks sane to me.
 >
-> This patch adds machine support for the ARM-based Broadcom SoCs.
+> I just have a few questions below which are hopefully simple/stupid.
 >
-> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/configs/multi_v7_defconfig |   1 +
->  arch/arm/mach-bcm/Kconfig           |  14 ++
->  arch/arm/mach-bcm/Makefile          |   5 +
->  arch/arm/mach-bcm/brcmstb.c         |  28 +++
->  arch/arm/mach-bcm/brcmstb.h         |  19 ++
->  arch/arm/mach-bcm/headsmp-brcmstb.S |  33 ++++
->  arch/arm/mach-bcm/platsmp-brcmstb.c | 363 ++++++++++++++++++++++++++++++++++++
->  7 files changed, 463 insertions(+)
->  create mode 100644 arch/arm/mach-bcm/brcmstb.c
->  create mode 100644 arch/arm/mach-bcm/brcmstb.h
->  create mode 100644 arch/arm/mach-bcm/headsmp-brcmstb.S
->  create mode 100644 arch/arm/mach-bcm/platsmp-brcmstb.c
+> On Fri, Jul 04, 2014 at 04:29:17PM +0100, Thierry Reding wrote:
+>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> This commit introduces a generic device tree binding for IOMMU devices.
+>> Only a very minimal subset is described here, but it is enough to cover
+>> the requirements of both the Exynos System MMU and Tegra SMMU as
+>> discussed here:
+>>
+>>     https://lkml.org/lkml/2014/4/27/346
+>>
+>> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v4:
+>> - clarify that disabling an IOMMU DT node may not disable translation
+>> - be more explicit that examples are only examples
+>> - add multi-ID master example
+>>
+>> Changes in v3:
+>> - use #iommu-cells instead of #address-cells/#size-cells
+>> - drop optional iommu-names property
+>>
+>> Changes in v2:
+>> - add notes about "dma-ranges" property (drop note from commit message)
+>> - document priorities of "iommus" property vs. "dma-ranges" property
+>> - drop #iommu-cells in favour of #address-cells and #size-cells
+>> - remove multiple-master device example
+>>
+>>  Documentation/devicetree/bindings/iommu/iommu.txt | 172 ++++++++++++++++++++++
+>>  1 file changed, 172 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
+>> new file mode 100644
+>> index 000000000000..464a81eaaf61
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+>> @@ -0,0 +1,172 @@
+>> +This document describes the generic device tree binding for IOMMUs and their
+>> +master(s).
+>> +
+>> +
+>> +IOMMU device node:
+>> +==================
+>> +
+>> +An IOMMU can provide the following services:
+>> +
+>> +* Remap address space to allow devices to access physical memory ranges that
+>> +  they otherwise wouldn't be capable of accessing.
+>> +
+>> +  Example: 32-bit DMA to 64-bit physical addresses
+>> +
+>> +* Implement scatter-gather at page level granularity so that the device does
+>> +  not have to.
+>> +
+>> +* Provide system protection against "rogue" DMA by forcing all accesses to go
+>> +  through the IOMMU and faulting when encountering accesses to unmapped
+>> +  address regions.
+>> +
+>> +* Provide address space isolation between multiple contexts.
+>> +
+>> +  Example: Virtualization
+>> +
+>> +Device nodes compatible with this binding represent hardware with some of the
+>> +above capabilities.
+>> +
+>> +IOMMUs can be single-master or multiple-master. Single-master IOMMU devices
+>> +typically have a fixed association to the master device, whereas multiple-
+>> +master IOMMU devices can translate accesses from more than one master.
+>> +
+>> +The device tree node of the IOMMU device's parent bus must contain a valid
+>> +"dma-ranges" property that describes how the physical address space of the
+>> +IOMMU maps to memory. An empty "dma-ranges" property means that there is a
+>> +1:1 mapping from IOMMU to memory.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- #iommu-cells: The number of cells in an IOMMU specifier needed to encode an
+>> +  address.
+>> +
+>> +The meaning of the IOMMU specifier is defined by the device tree binding of
+>> +the specific IOMMU. Below are a few examples of typical use-cases:
+>> +
+>> +- #iommu-cells = <0>: Single master IOMMU devices are not configurable and
+>> +  therefore no additional information needs to be encoded in the specifier.
+>> +  This may also apply to multiple master IOMMU devices that do not allow the
+>> +  association of masters to be configured. Note that an IOMMU can by design
+>> +  be multi-master yet only expose a single master in a given configuration.
+>> +  In such cases the number of cells will usually be 1 as in the next case.
+>> +- #iommu-cells = <1>: Multiple master IOMMU devices may need to be configured
+>> +  in order to enable translation for a given master. In such cases the single
+>> +  address cell corresponds to the master device's ID. In some cases more than
+>> +  one cell can be required to represent a single master ID.
+>> +- #iommu-cells = <4>: Some IOMMU devices allow the DMA window for masters to
+>> +  be configured. The first cell of the address in this may contain the master
+>> +  device's ID for example, while the second cell could contain the start of
+>> +  the DMA window for the given device. The length of the DMA window is given
+>> +  by the third and fourth cells.
+>> +
+>> +Note that these are merely examples and real-world use-cases may use different
+>> +definitions to represent their individual needs. Always refer to the specific
+>> +IOMMU binding for the exact meaning of the cells that make up the specifier.
+>> +
+>> +
+>> +IOMMU master node:
+>> +==================
+>> +
+>> +Devices that access memory through an IOMMU are called masters. A device can
+>> +have multiple master interfaces (to one or more IOMMU devices).
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
+>> +  master interfaces of the device. One entry in the list describes one master
+>> +  interface of the device.
+>> +
+>> +When an "iommus" property is specified in a device tree node, the IOMMU will
+>> +be used for address translation. If a "dma-ranges" property exists in the
+>> +device's parent node it will be ignored. An exception to this rule is if the
+>> +referenced IOMMU is disabled, in which case the "dma-ranges" property of the
+>> +parent shall take effect. Note that merely disabling a device tree node does
+>> +not guarantee that the IOMMU is really disabled since the hardware may not
+>> +have a means to turn off translation.
+
+How do you know if the IOMMU is disabled then? Runtime by checking
+status of the iommu?
+
+>> +
+>> +
+>> +Notes:
+>> +======
+>> +
+>> +One possible extension to the above is to use an "iommus" property along with
+>> +a "dma-ranges" property in a bus device node (such as PCI host bridges). This
+>> +can be useful to describe how children on the bus relate to the IOMMU if they
+>> +are not explicitly listed in the device tree (e.g. PCI devices). However, the
+>> +requirements of that use-case haven't been fully determined yet. Implementing
+>> +this is therefore not recommended without further discussion and extension of
+>> +this binding.
+>> +
+>> +
+>> +Examples:
+>> +=========
+>> +
+>> +Single-master IOMMU:
+>> +--------------------
+>> +
+>> +     iommu {
+>> +             #iommu-cells = <0>;
+>> +     };
+>> +
+>> +     master {
+>> +             iommus = <&/iommu>;
 >
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 534836497998..bf0df396a3cf 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -19,6 +19,7 @@ CONFIG_MACH_DOVE=y
->  CONFIG_ARCH_BCM=y
->  CONFIG_ARCH_BCM_MOBILE=y
->  CONFIG_ARCH_BCM_5301X=y
-> +CONFIG_ARCH_BRCMSTB=y
->  CONFIG_ARCH_BERLIN=y
->  CONFIG_MACH_BERLIN_BG2=y
->  CONFIG_MACH_BERLIN_BG2CD=y
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 41c839167e87..0073633e7699 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -87,4 +87,18 @@ config ARCH_BCM_5301X
->           different SoC or with the older BCM47XX and BCM53XX based
->           network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
+> Nit: this should be iommus = <&{/iommu}>, or it's not valid dts syntax.
 >
-> +config ARCH_BRCMSTB
-> +       bool "Broadcom BCM7XXX based boards" if ARCH_MULTI_V7
-> +       depends on MMU
-
-This was implied, but there are some patches from Arnd in this area.
-Does it really not build with !MMU?
-
-> +       select ARM_GIC
-
-> +       select MIGHT_HAVE_PCI
-> +       select HAVE_SMP
-
-At least HAVE_SMP is for sure, but I think both of these are selected already .
-
-> +       select HAVE_ARM_ARCH_TIMER
-> +       help
-> +         Say Y if you intend to run the kernel on a Broadcom ARM-based STB
-> +         chipset.
-> +
-> +         This enables support for Broadcom ARM-based set-top box chipsets,
-> +         including the 7445 family of chips.
-> +
->  endif
-> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-> index 731292114975..f3665121729b 100644
-> --- a/arch/arm/mach-bcm/Makefile
-> +++ b/arch/arm/mach-bcm/Makefile
-> @@ -30,3 +30,8 @@ obj-$(CONFIG_ARCH_BCM2835)    += board_bcm2835.o
+>> +     };
+>> +
+>> +Multiple-master IOMMU with fixed associations:
+>> +----------------------------------------------
+>> +
+>> +     /* multiple-master IOMMU */
+>> +     iommu {
+>> +             /*
+>> +              * Masters are statically associated with this IOMMU and
+>> +              * address translation is always enabled.
+>> +              */
+>> +             #iommu-cells = <0>;
 >
->  # BCM5301X
->  obj-$(CONFIG_ARCH_BCM_5301X)   += bcm_5301x.o
-> +
-> +ifeq ($(CONFIG_ARCH_BRCMSTB),y)
-> +obj-y                          += brcmstb.o
-> +obj-$(CONFIG_SMP)              += headsmp-brcmstb.o platsmp-brcmstb.o
-> +endif
-> diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
-> new file mode 100644
-> index 000000000000..60a5afa06ed7
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/brcmstb.c
-> @@ -0,0 +1,28 @@
-> +/*
-> + * Copyright (C) 2013-2014 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <asm/mach-types.h>
-> +#include <asm/mach/arch.h>
-> +
-> +static const char *brcmstb_match[] __initconst = {
-> +       "brcm,bcm7445",
-> +       "brcm,brcmstb",
-> +       NULL
-> +};
-> +
-> +DT_MACHINE_START(BRCMSTB, "Broadcom STB (Flattened Device Tree)")
-> +       .dt_compat      = brcmstb_match,
-> +MACHINE_END
-
-Do you plan to add more here? Otherwise you don't need this file.
-
-> diff --git a/arch/arm/mach-bcm/brcmstb.h b/arch/arm/mach-bcm/brcmstb.h
-> new file mode 100644
-> index 000000000000..ec0c3d112b36
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/brcmstb.h
-> @@ -0,0 +1,19 @@
-> +/*
-> + * Copyright (C) 2013-2014 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __BRCMSTB_H__
-> +#define __BRCMSTB_H__
-> +
-> +void brcmstb_secondary_startup(void);
-> +
-> +#endif /* __BRCMSTB_H__ */
-> diff --git a/arch/arm/mach-bcm/headsmp-brcmstb.S b/arch/arm/mach-bcm/headsmp-brcmstb.S
-> new file mode 100644
-> index 000000000000..199c1ea58248
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/headsmp-brcmstb.S
-> @@ -0,0 +1,33 @@
-> +/*
-> + * SMP boot code for secondary CPUs
-> + * Based on arch/arm/mach-tegra/headsmp.S
-> + *
-> + * Copyright (C) 2010 NVIDIA, Inc.
-> + * Copyright (C) 2013-2014 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <asm/assembler.h>
-> +#include <linux/linkage.h>
-> +#include <linux/init.h>
-> +
-> +        .section ".text.head", "ax"
-> +
-> +ENTRY(brcmstb_secondary_startup)
-> +        /*
-> +         * Ensure CPU is in a sane state by disabling all IRQs and switching
-> +         * into SVC mode.
-> +         */
-> +        setmode        PSR_I_BIT | PSR_F_BIT | SVC_MODE, r0
-> +
-> +        bl      v7_invalidate_l1
-
-This should be in your boot code. That is part of the documented entry
-requirements. Also, if you are coming straight from reset, there is
-other setup probably missing.
-
-Yes, there are others with this, but that doesn't make it right.
-
-> +        b       secondary_startup
-> +ENDPROC(brcmstb_secondary_startup)
-> diff --git a/arch/arm/mach-bcm/platsmp-brcmstb.c b/arch/arm/mach-bcm/platsmp-brcmstb.c
-> new file mode 100644
-> index 000000000000..af780e9c23a6
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/platsmp-brcmstb.c
-> @@ -0,0 +1,363 @@
-> +/*
-> + * Broadcom STB CPU SMP and hotplug support for ARM
-> + *
-> + * Copyright (C) 2013-2014 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/printk.h>
-> +#include <linux/regmap.h>
-> +#include <linux/smp.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <asm/cacheflush.h>
-> +#include <asm/cp15.h>
-> +#include <asm/mach-types.h>
-> +#include <asm/smp_plat.h>
-> +
-> +#include "brcmstb.h"
-> +
-> +enum {
-> +       ZONE_MAN_CLKEN_MASK             = BIT(0),
-> +       ZONE_MAN_RESET_CNTL_MASK        = BIT(1),
-> +       ZONE_MAN_MEM_PWR_MASK           = BIT(4),
-> +       ZONE_RESERVED_1_MASK            = BIT(5),
-> +       ZONE_MAN_ISO_CNTL_MASK          = BIT(6),
-> +       ZONE_MANUAL_CONTROL_MASK        = BIT(7),
-> +       ZONE_PWR_DN_REQ_MASK            = BIT(9),
-> +       ZONE_PWR_UP_REQ_MASK            = BIT(10),
-> +       ZONE_BLK_RST_ASSERT_MASK        = BIT(12),
-> +       ZONE_PWR_OFF_STATE_MASK         = BIT(25),
-> +       ZONE_PWR_ON_STATE_MASK          = BIT(26),
-> +       ZONE_DPG_PWR_STATE_MASK         = BIT(28),
-> +       ZONE_MEM_PWR_STATE_MASK         = BIT(29),
-> +       ZONE_RESET_STATE_MASK           = BIT(31),
-> +       CPU0_PWR_ZONE_CTRL_REG          = 1,
-> +       CPU_RESET_CONFIG_REG            = 2,
-> +};
-> +
-> +static void __iomem *cpubiuctrl_block;
-> +static void __iomem *hif_cont_block;
-> +static u32 cpu0_pwr_zone_ctrl_reg;
-> +static u32 cpu_rst_cfg_reg;
-> +static u32 hif_cont_reg;
-> +
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static DEFINE_PER_CPU_ALIGNED(int, per_cpu_sw_state);
-> +
-> +static int per_cpu_sw_state_rd(u32 cpu)
-> +{
-> +       sync_cache_r(SHIFT_PERCPU_PTR(&per_cpu_sw_state, per_cpu_offset(cpu)));
-> +       return per_cpu(per_cpu_sw_state, cpu);
-> +}
-> +
-> +static void per_cpu_sw_state_wr(u32 cpu, int val)
-> +{
-> +       per_cpu(per_cpu_sw_state, cpu) = val;
-> +       dmb();
-> +       sync_cache_w(SHIFT_PERCPU_PTR(&per_cpu_sw_state, per_cpu_offset(cpu)));
-> +       dsb_sev();
-
-Barriers need to be documented why they are needed.
-
-> +}
-> +#else
-> +static inline void per_cpu_sw_state_wr(u32 cpu, int val) { }
-> +#endif
-> +
-> +static void __iomem *pwr_ctrl_get_base(u32 cpu)
-> +{
-> +       void __iomem *base = cpubiuctrl_block + cpu0_pwr_zone_ctrl_reg;
-> +       base += (cpu_logical_map(cpu) * 4);
-> +       return base;
-> +}
-> +
-> +static u32 pwr_ctrl_rd(u32 cpu)
-> +{
-> +       void __iomem *base = pwr_ctrl_get_base(cpu);
-> +       return readl_relaxed(base);
-> +}
-> +
-> +static void pwr_ctrl_wr(u32 cpu, u32 val)
-> +{
-> +       void __iomem *base = pwr_ctrl_get_base(cpu);
-> +       writel(val, base);
-> +}
-> +
-> +static void cpu_rst_cfg_set(u32 cpu, int set)
-> +{
-> +       u32 val;
-> +       val = readl_relaxed(cpubiuctrl_block + cpu_rst_cfg_reg);
-> +       if (set)
-> +               val |= BIT(cpu_logical_map(cpu));
-> +       else
-> +               val &= ~BIT(cpu_logical_map(cpu));
-> +       writel_relaxed(val, cpubiuctrl_block + cpu_rst_cfg_reg);
-> +}
-> +
-> +static void cpu_set_boot_addr(u32 cpu, unsigned long boot_addr)
-> +{
-> +       const int reg_ofs = cpu_logical_map(cpu) * 8;
-> +       writel_relaxed(0, hif_cont_block + hif_cont_reg + reg_ofs);
-> +       writel_relaxed(boot_addr, hif_cont_block + hif_cont_reg + 4 + reg_ofs);
-> +}
-> +
-> +static void brcmstb_cpu_boot(u32 cpu)
-> +{
-> +       pr_info("SMP: Booting CPU%d...\n", cpu);
-
-The core already prints messages.
-
-> +
-> +       /*
-> +        * set the reset vector to point to the secondary_startup
-> +        * routine
-> +        */
-> +       cpu_set_boot_addr(cpu, virt_to_phys(brcmstb_secondary_startup));
-> +
-> +       /* unhalt the cpu */
-> +       cpu_rst_cfg_set(cpu, 0);
-> +}
-> +
-> +static void brcmstb_cpu_power_on(u32 cpu)
-> +{
-> +       /*
-> +        * The secondary cores power was cut, so we must go through
-> +        * power-on initialization.
-> +        */
-> +       u32 tmp;
-> +
-> +       pr_info("SMP: Powering up CPU%d...\n", cpu);
-
-ditto.
-
-> +
-> +       /* Request zone power up */
-> +       pwr_ctrl_wr(cpu, ZONE_PWR_UP_REQ_MASK);
-> +
-> +       /* Wait for the power up FSM to complete */
-> +       do {
-> +               tmp = pwr_ctrl_rd(cpu);
-> +       } while (!(tmp & ZONE_PWR_ON_STATE_MASK));
-
-Perhaps a timeout? Or perhaps you don't need to wait here. The core
-code will wait for the core to come online.
-
-> +
-> +       per_cpu_sw_state_wr(cpu, 1);
-
-The kernel already tracks the state.
-
-> +}
-> +
-> +static int brcmstb_cpu_get_power_state(u32 cpu)
-> +{
-> +       int tmp = pwr_ctrl_rd(cpu);
-> +       return (tmp & ZONE_RESET_STATE_MASK) ? 0 : 1;
-> +}
-> +
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +
-> +static void brcmstb_cpu_die(u32 cpu)
-> +{
-> +       v7_exit_coherency_flush(all);
-> +
-> +       /* Prevent all interrupts from reaching this CPU. */
-> +       arch_local_irq_disable();
-
-Surely that is already done? And disabling IRQ has no effect on
-wake-up from WFI.
-
-> +
-> +       /*
-> +        * Final full barrier to ensure everything before this instruction has
-> +        * quiesced.
-> +        */
-> +       isb();
-> +       dsb();
-> +
-> +       per_cpu_sw_state_wr(cpu, 0);
-> +
-> +       /* Sit and wait to die */
-> +       wfi();
-> +
-> +       /* We should never get here... */
-> +       panic("Spurious interrupt on CPU %d received!\n", cpu);
-> +}
-> +
-> +static int brcmstb_cpu_kill(u32 cpu)
-> +{
-> +       u32 tmp;
-> +
-> +       pr_info("SMP: Powering down CPU%d...\n", cpu);
-> +
-> +       while (per_cpu_sw_state_rd(cpu))
-> +               ;
-
-I don't think this is necessary. You don't need to synchronize die and
-kill. Look at other implementations that actually power down the core
-(vs. just wfi).
-
-> +
-> +       /* Program zone reset */
-> +       pwr_ctrl_wr(cpu, ZONE_RESET_STATE_MASK | ZONE_BLK_RST_ASSERT_MASK |
-> +                             ZONE_PWR_DN_REQ_MASK);
-> +
-> +       /* Verify zone reset */
-> +       tmp = pwr_ctrl_rd(cpu);
-> +       if (!(tmp & ZONE_RESET_STATE_MASK))
-> +               pr_err("%s: Zone reset bit for CPU %d not asserted!\n",
-> +                       __func__, cpu);
-> +
-> +       /* Wait for power down */
-> +       do {
-> +               tmp = pwr_ctrl_rd(cpu);
-> +       } while (!(tmp & ZONE_PWR_OFF_STATE_MASK));
-> +
-> +       /* Settle-time from Broadcom-internal DVT reference code */
-> +       udelay(7);
-> +
-> +       /* Assert reset on the CPU */
-> +       cpu_rst_cfg_set(cpu, 1);
-> +
-> +       return 1;
-> +}
-> +
-> +#endif /* CONFIG_HOTPLUG_CPU */
-> +
-> +static int __init setup_hifcpubiuctrl_regs(struct device_node *np)
-> +{
-> +       int rc = 0;
-> +       char *name;
-> +       struct device_node *syscon_np = NULL;
-> +
-> +       name = "syscon-cpu";
-> +
-> +       syscon_np = of_parse_phandle(np, name, 0);
-> +       if (!syscon_np) {
-> +               pr_err("can't find phandle %s\n", name);
-> +               rc = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +       cpubiuctrl_block = of_iomap(syscon_np, 0);
-> +       if (!cpubiuctrl_block) {
-> +               pr_err("iomap failed for cpubiuctrl_block\n");
-> +               rc = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +       rc = of_property_read_u32_index(np, name, CPU0_PWR_ZONE_CTRL_REG,
-> +                                       &cpu0_pwr_zone_ctrl_reg);
-> +       if (rc) {
-> +               pr_err("failed to read 1st entry from %s property (%d)\n", name,
-> +                       rc);
-> +               rc = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +       rc = of_property_read_u32_index(np, name, CPU_RESET_CONFIG_REG,
-> +                                       &cpu_rst_cfg_reg);
-> +       if (rc) {
-> +               pr_err("failed to read 2nd entry from %s property (%d)\n", name,
-> +                       rc);
-> +               rc = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +cleanup:
-> +       if (syscon_np)
-> +               of_node_put(syscon_np);
-> +
-> +       return rc;
-> +}
-> +
-> +static int __init setup_hifcont_regs(struct device_node *np)
-> +{
-> +       int rc = 0;
-> +       char *name;
-> +       struct device_node *syscon_np = NULL;
-> +
-> +       name = "syscon-cont";
-> +
-> +       syscon_np = of_parse_phandle(np, name, 0);
-> +       if (!syscon_np) {
-> +               pr_err("can't find phandle %s\n", name);
-> +               rc = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +       hif_cont_block = of_iomap(syscon_np, 0);
-> +       if (!hif_cont_block) {
-> +               pr_err("iomap failed for hif_cont_block\n");
-> +               rc = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +       /* offset is at top of hif_cont_block */
-> +       hif_cont_reg = 0;
-> +
-> +cleanup:
-> +       if (syscon_np)
-> +               of_node_put(syscon_np);
-> +
-> +       return rc;
-> +}
-> +
-> +static void __init brcmstb_cpu_ctrl_setup(unsigned int max_cpus)
-> +{
-> +       int rc;
-> +       struct device_node *np;
-> +       char *name;
-> +
-> +       name = "brcm,brcmstb-smpboot";
-> +       np = of_find_compatible_node(NULL, NULL, name);
-> +       if (!np) {
-> +               pr_err("can't find compatible node %s\n", name);
-> +               return;
-> +       }
-> +
-> +       rc = setup_hifcpubiuctrl_regs(np);
-> +       if (rc)
-> +               return;
-> +
-> +       rc = setup_hifcont_regs(np);
-> +       if (rc)
-> +               return;
-> +}
-> +
-> +static DEFINE_SPINLOCK(boot_lock);
-> +
-> +static void brcmstb_secondary_init(unsigned int cpu)
-> +{
-> +       /*
-> +        * Synchronise with the boot thread.
-> +        */
-> +       spin_lock(&boot_lock);
-> +       spin_unlock(&boot_lock);
-
-I suggest you read previous discussions on attempts to make this
-common before replying to Russell.
-
-> +}
-> +
-> +static int brcmstb_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> +{
-> +       /*
-> +        * set synchronisation state between this boot processor
-> +        * and the secondary one
-> +        */
-> +       spin_lock(&boot_lock);
-> +
-> +       /* Bring up power to the core if necessary */
-> +       if (brcmstb_cpu_get_power_state(cpu) == 0)
-> +               brcmstb_cpu_power_on(cpu);
-> +
-> +       brcmstb_cpu_boot(cpu);
-> +
-> +       /*
-> +        * now the secondary core is starting up let it run its
-> +        * calibrations, then wait for it to finish
-> +        */
-> +       spin_unlock(&boot_lock);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct smp_operations brcmstb_smp_ops __initdata = {
-> +       .smp_prepare_cpus       = brcmstb_cpu_ctrl_setup,
-> +       .smp_secondary_init     = brcmstb_secondary_init,
-> +       .smp_boot_secondary     = brcmstb_boot_secondary,
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +       .cpu_kill               = brcmstb_cpu_kill,
-> +       .cpu_die                = brcmstb_cpu_die,
-> +#endif
-> +};
-> +
-> +CPU_METHOD_OF_DECLARE(brcmstb_smp, "brcm,brahma-b15", &brcmstb_smp_ops);
-> --
-> 1.9.1
+> I don't follow why translation being always enabled is relevant to the
+> example; that would seem to be independent from the binding.
 >
+> Surely the key point is that with no way to distinguish devices, they
+> presumably share the same translations?
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +     };
+>> +
+>> +     /* static association with IOMMU */
+>> +     master@1 {
+>> +             reg = <1>;
+>> +             iommus = <&/iommu>;
+>> +     };
+>> +
+>> +     /* static association with IOMMU */
+>> +     master@2 {
+>> +             reg = <2>;
+>> +             iommus = <&/iommu>;
+>> +     };
+>> +
+>> +Multiple-master IOMMU:
+>> +----------------------
+>> +
+>> +     iommu {
+>> +             /* the specifier represents the ID of the master */
+>> +             #iommu-cells = <1>;
+>> +     };
+>> +
+>> +     master@1 {
+>> +             /* device has master ID 42 in the IOMMU */
+>> +             iommus = <&/iommu 42>;
+>> +     };
+>> +
+>> +     master@2 {
+>> +             /* device has master IDs 23 and 24 in the IOMMU */
+>> +             iommus = <&/iommu 23>, <&/iommu 24>;
+>> +     };
+>
+> In future I suspect master will need to be able to identify which master
+> IDs correspond to which of their master ports (where each port might
+> have an arbitrary number of master IDs).
+>
+> While we don't need that for the first run, it would be nice to have
+> that looked into so master bindings don't come up with arbitrarily
+> different ways of doing that.
+
+iommu-names would be the logical extension to handle that, just like
+we do with other resources, right?
+
+>> +
+>> +Multiple-master IOMMU with configurable DMA window:
+>> +---------------------------------------------------
+>> +
+>> +     / {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +
+>> +             iommu {
+>> +                     /* master ID, address and length of DMA window */
+>> +                     #iommu-cells = <4>;
+>> +             };
+>> +
+>> +             master {
+>> +                     /* master ID 42, 4 GiB DMA window starting at 0 */
+>> +                     iommus = <&/iommu  42  0  0x1 0x0>;
+>
+> Is this that window is from the POV of the master, i.e. the master can
+> address 0x0 to 0xffffffff when generating transactions, and these get
+> translated somehow?
+>
+> Or is this the physical addresses to allocate to the master?
+
+It needs to be clarified in the documentation, but as far as I know it
+is the DMA address space that is used.
+
+It is somewhat confusing to have size-cells = 1 and then use 2 cells
+for size in the iommu property. It's legal and expected, but having
+size-cells in the example adds a little confusion.
+
+Either way, I'm OK with fixing the above with an incremental patch,
+assuming there is no disagreements on what's said above.
+
+
+-Olof
