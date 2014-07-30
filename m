@@ -1,73 +1,66 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 30 Jul 2014 15:30:37 +0100
-Message-ID: <20140730143037.GD8989@arm.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
- <20140730110425.GI12239@arm.com>
- <20140730132348.GM29590@ulmo>
+From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
+Date: Wed, 30 Jul 2014 16:29:45 +0200
+Message-ID: <53D90159.7040307@suse.de>
+References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
+ <1406728949-7560-3-git-send-email-sassmann@kpanic.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140730132348.GM29590@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29Tb/PtFMR13I2A@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1406728949-7560-3-git-send-email-sassmann@kpanic.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Assmann <sassmann@kpanic.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, mturquette@linaro.org, pawel.moll@arm.com, robh+dt@kernel.org, t-kristo@ti.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 02:23:50PM +0100, Thierry Reding wrote:
-> On Wed, Jul 30, 2014 at 12:04:25PM +0100, Will Deacon wrote:
-> > On Fri, Jul 04, 2014 at 04:29:17PM +0100, Thierry Reding wrote:
-> > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > 
-> > > This commit introduces a generic device tree binding for IOMMU devices.
-> > > Only a very minimal subset is described here, but it is enough to cover
-> > > the requirements of both the Exynos System MMU and Tegra SMMU as
-> > > discussed here:
-> > > 
-> > >     https://lkml.org/lkml/2014/4/27/346
-> > > 
-> > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > > Changes in v4:
-> > > - clarify that disabling an IOMMU DT node may not disable translation
-> > > - be more explicit that examples are only examples
-> > > - add multi-ID master example
-> > > 
-> > > Changes in v3:
-> > > - use #iommu-cells instead of #address-cells/#size-cells
-> > > - drop optional iommu-names property
-> > > 
-> > > Changes in v2:
-> > > - add notes about "dma-ranges" property (drop note from commit message)
-> > > - document priorities of "iommus" property vs. "dma-ranges" property
-> > > - drop #iommu-cells in favour of #address-cells and #size-cells
-> > > - remove multiple-master device example
-> > > 
-> > >  Documentation/devicetree/bindings/iommu/iommu.txt | 172 ++++++++++++++++++++++
-> > >  1 file changed, 172 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
-> > 
-> > I'm concerned that this patch hasn't been picked up for 3.17 (I can't see it
-> > in -next). If we want to move the ARM SMMU driver over to this new binding,
-> > we can't keep dragging our feet for much longer as I *really* don't plan to
-> > support two bindings in parallel (one is complicated enough already).
-> > 
-> > Any chance we can see this merged, please?
-> 
-> I think there weren't any comments left for me to address and I've
-> mostly been waiting for Joerg to pick it up.
-> 
-> Joerg, can you take this through the iommu tree for 3.17? Will acked
-> this, but perhaps you were waiting for an ACK from the device tree
-> bindings maintainers?
+Hi Stefan,
 
-Rob, Mark: can one or both of you take a look at this please?
+Glad you got it working. :)
+
+Small nit below:
+
+Am 30.07.2014 16:02, schrieb Stefan Assmann:
+> diff --git a/drivers/clk/ti/clk-6030.c b/drivers/clk/ti/clk-6030.c
+> new file mode 100644
+> index 0000000..baa965b
+> --- /dev/null
+> +++ b/drivers/clk/ti/clk-6030.c
+> @@ -0,0 +1,141 @@
+> +/*
+> + * drivers/clk/ti/clk-6030.c
+> + *
+> + *  Copyright (C) 2014 Stefan Assmann <sassmann@kpanic.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+
+Here you say version 2 ...
+
+> + *
+> + * Clock driver for ti twl6030.
+> + */
+[...]
+> +MODULE_AUTHOR("Stefan Assmann <sassmann@kpanic.de>");
+> +MODULE_DESCRIPTION("clock driver for TI SoC based boards with twl6030");
+> +MODULE_LICENSE("GPL");
+
+... but down here it's "GPL". Either use "GPL v2" here, or IIUC use the
+"or (at your option) any later version" license above if you can.
 
 Cheers,
+Andreas
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- =
+
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnberg
