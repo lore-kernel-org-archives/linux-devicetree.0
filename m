@@ -1,95 +1,66 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Wed, 30 Jul 2014 19:35:14 +0100
-Message-ID: <20140730183514.GH20162@leverpostej>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <CAOesGMj9PnfddJO7PorZ7U2OoBFBe4LqONRnbJeMiEkQV1mmWw@mail.gmail.com>
+From: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
+Subject: RE: [PATCH 1/4] Documentation: dt-bindings: add dt binding info for
+ Rockchip dwc2
+Date: Wed, 30 Jul 2014 18:53:38 +0000
+Message-ID: <A2CA0424C0A6F04399FB9E1CD98E0304844C2F5B@US01WEMBX2.internal.synopsys.com>
+References: <963258>
+ <1406683873-18194-1-git-send-email-kever.yang@rock-chips.com>
+ <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMj9PnfddJO7PorZ7U2OoBFBe4LqONRnbJeMiEkQV1mmWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>, "heiko@sntech.de" <heiko@sntech.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mporter@linaro.org" <mporter@linaro.org>, "kishon@ti.com" <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>
+Cc: "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "xjq@rock-chips.com" <xjq@rock-chips.com>, "cf@rock-chips.com" <cf@rock-chips.com>, "lyz@rock-chips.com" <lyz@rock-chips.com>, "wulf@rock-chips.com" <wulf@rock-chips.com>, "dianders@chromium.org" <dianders@chromium.org>, "olof@lixom.net" <olof@lixom.net>, "sonnyrao@chromium.org" <sonnyrao@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 07:12:17PM +0100, Olof Johansson wrote:
-> On Wed, Jul 30, 2014 at 8:06 AM, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >
-> > Add initial device tree nodes for Cavium Thunder SoCs with support of
-> > 48 cores and gicv3. The dts file requires further changes, esp. for
-> > pci, gicv3-its and smmu. This changes will be added later together
-> > with the device drivers.
-> >
-> > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/Makefile         |   1 +
-> >  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 388 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> > index c52bdb051f66..f8001a62029c 100644
-> > --- a/arch/arm64/boot/dts/Makefile
-> > +++ b/arch/arm64/boot/dts/Makefile
-> > @@ -1,3 +1,4 @@
-> > +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-> >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
-> >  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
-> >
-> > diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
-> > new file mode 100644
-> > index 000000000000..4cf20ac9138b
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/thunder-88xx.dts
-> > @@ -0,0 +1,387 @@
-> > +/*
-> > + * Cavium Thunder DTS file
-> > + *
-> > + * Copyright (C) 2013, Cavium Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License as
-> > + * published by the Free Software Foundation; either version 2 of
-> > + * the License, or (at your option) any later version.
-> > + */
-> > +/dts-v1/;
-> > +
-> > +/* Reserving first 12MB of DDR for firmware */
-> > +/memreserve/ 0x00000000 0x00c00000;
-> > +
-> > +/ {
-> > +       model = "Cavium ThunderX CN88XX Family";
-> > +       compatible = "cavium,thunder-88xx";
+> From: Kever Yang [mailto:kever.yang@rock-chips.com]
+> Sent: Tuesday, July 29, 2014 6:31 PM
 > 
-> Hmm. I take it this platform is compliant with some level of SBSA? We
-> should probably have a compatible value for that so that platforms can
-> communicate it.
+> This add necessary dwc2 binding documentation for Rockchip socs:
+> rk3066, rk3188 and rk3288
 > 
-> Mark, are there already plans for this?
+> add dr_mode as optional properties.
+> 
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.txt |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt
+> b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index aa91034..eb80d7b 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
+>  Required properties:
+>  - compatible : One of:
+>    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
+> +  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+> +  - "rockchip,rk3188-usb","rockchip,rk3066-usb": for rk3188 Soc;
+> +  - "rockchip,rk3288-usb","rockchip,rk3066-usb": for rk3288 Soc;
+>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
 
-Not so far, but my monitor now has a sticky note telling me to look into
-it. :)
+Do you really need three different bindings here? I believe the 
+recommended approach is to define one binding for the common case, and
+reuse it for similar SOCs. Additional bindings should only be added if
+there is some difference in the SOC that requires it.
 
-Many of the useful properties provided by SBSA are already described
-elsewhere (e.g. page and ASID size can be found in ID registers), and
-hardware properties it mandates (e.g. PPI assignment for level 2
-compliant systems) will be described elsewhere.
+>  - reg : Should contain 1 register range (address and length)
+>  - interrupts : Should contain 1 interrupt
+> @@ -15,6 +18,8 @@ Optional properties:
+>  - phys: phy provider specifier
+>  - phy-names: shall be "usb2-phy"
+>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+> +- dr_mode: shall be one of "host", "peripheral" and "otg"
 
-I'll have to read the spec in more detail to figure out what we can
-derive from an SBSA compliance property. Regardless it probably makes
-sense to have a compatible string or other property on the root node; at
-worst it only costs us a few bytes.
+I don't see where you use 'dr_mode' in any of the DTS files. Are you
+going to add the uses later? And please us a more descriptive name,
+such as 'dual-role-mode'.
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Paul
+
