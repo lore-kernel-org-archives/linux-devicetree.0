@@ -1,76 +1,77 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 30 Jul 2014 13:08:23 -0500
-Message-ID: <CAL_JsqLXKer_PAaYNakB9LDNuyQUZLOCHWry4FbybK3KpDZSDg@mail.gmail.com>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
- <20140730110425.GI12239@arm.com> <20140730132348.GM29590@ulmo> <20140730143037.GD8989@arm.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Wed, 30 Jul 2014 11:12:17 -0700
+Message-ID: <CAOesGMj9PnfddJO7PorZ7U2OoBFBe4LqONRnbJeMiEkQV1mmWw@mail.gmail.com>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+	<1406732794-20920-3-git-send-email-rric@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140730143037.GD8989-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ker
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406732794-20920-3-git-send-email-rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 30, 2014 at 9:30 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Jul 30, 2014 at 02:23:50PM +0100, Thierry Reding wrote:
->> On Wed, Jul 30, 2014 at 12:04:25PM +0100, Will Deacon wrote:
->> > On Fri, Jul 04, 2014 at 04:29:17PM +0100, Thierry Reding wrote:
->> > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> > >
->> > > This commit introduces a generic device tree binding for IOMMU devices.
->> > > Only a very minimal subset is described here, but it is enough to cover
->> > > the requirements of both the Exynos System MMU and Tegra SMMU as
->> > > discussed here:
->> > >
->> > >     https://lkml.org/lkml/2014/4/27/346
->> > >
->> > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> > > ---
->> > > Changes in v4:
->> > > - clarify that disabling an IOMMU DT node may not disable translation
->> > > - be more explicit that examples are only examples
->> > > - add multi-ID master example
->> > >
->> > > Changes in v3:
->> > > - use #iommu-cells instead of #address-cells/#size-cells
->> > > - drop optional iommu-names property
->> > >
->> > > Changes in v2:
->> > > - add notes about "dma-ranges" property (drop note from commit message)
->> > > - document priorities of "iommus" property vs. "dma-ranges" property
->> > > - drop #iommu-cells in favour of #address-cells and #size-cells
->> > > - remove multiple-master device example
->> > >
->> > >  Documentation/devicetree/bindings/iommu/iommu.txt | 172 ++++++++++++++++++++++
->> > >  1 file changed, 172 insertions(+)
->> > >  create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
->> >
->> > I'm concerned that this patch hasn't been picked up for 3.17 (I can't see it
->> > in -next). If we want to move the ARM SMMU driver over to this new binding,
->> > we can't keep dragging our feet for much longer as I *really* don't plan to
->> > support two bindings in parallel (one is complicated enough already).
->> >
->> > Any chance we can see this merged, please?
->>
->> I think there weren't any comments left for me to address and I've
->> mostly been waiting for Joerg to pick it up.
->>
->> Joerg, can you take this through the iommu tree for 3.17? Will acked
->> this, but perhaps you were waiting for an ACK from the device tree
->> bindings maintainers?
+On Wed, Jul 30, 2014 at 8:06 AM, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 >
-> Rob, Mark: can one or both of you take a look at this please?
+> Add initial device tree nodes for Cavium Thunder SoCs with support of
+> 48 cores and gicv3. The dts file requires further changes, esp. for
+> pci, gicv3-its and smmu. This changes will be added later together
+> with the device drivers.
+>
+> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/Makefile         |   1 +
+>  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 388 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
+>
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index c52bdb051f66..f8001a62029c 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+> +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
+>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+>
+> diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
+> new file mode 100644
+> index 000000000000..4cf20ac9138b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/thunder-88xx.dts
+> @@ -0,0 +1,387 @@
+> +/*
+> + * Cavium Thunder DTS file
+> + *
+> + * Copyright (C) 2013, Cavium Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +/dts-v1/;
+> +
+> +/* Reserving first 12MB of DDR for firmware */
+> +/memreserve/ 0x00000000 0x00c00000;
+> +
+> +/ {
+> +       model = "Cavium ThunderX CN88XX Family";
+> +       compatible = "cavium,thunder-88xx";
 
-I've been quiet on this round, but I think prior input I've had has
-been addressed. If we believe this will work for ARM SMMU and MSM
-IOMMU and some of the crazy chaining scenarios, then I'm fine with the
-binding.
+Hmm. I take it this platform is compliant with some level of SBSA? We
+should probably have a compatible value for that so that platforms can
+communicate it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Mark, are there already plans for this?
 
-Rob
 
-P.S. Thankfully, there are no Calxeda systems with the SMMU enabled,
-so a binding change should not cause much pain.
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
