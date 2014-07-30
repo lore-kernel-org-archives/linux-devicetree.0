@@ -1,55 +1,106 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 2/4] ARM: dts: exynos5250: cypress,cyapa trackpad is
- Snow only
-Date: Wed, 30 Jul 2014 02:21:53 +0200
-Message-ID: <53D83AA1.7080607@suse.de>
-References: <1405704009-8430-1-git-send-email-afaerber@suse.de>	<1405704009-8430-3-git-send-email-afaerber@suse.de> <CAD=FV=VAWG=H9=mwKZfip9zvAROU3aVXihnaBUBr0GNSzDoWFw@mail.gmail.com> <53D82900.1050409@samsung.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv3 0/5] OMAP Mailbox framework adoption & DT support
+Date: Tue, 29 Jul 2014 19:34:34 -0500
+Message-ID: <1406680479-18446-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53D82900.1050409@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Ben Dooks <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "ARM/SAMSUNG ARM A..." <linux-arm-kernel@lists.infradead.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 30.07.2014 01:06, schrieb Kukjin Kim:
-> On 07/30/14 01:16, Doug Anderson wrote:
->> On Fri, Jul 18, 2014 at 10:20 AM, Andreas F=C3=A4rber<afaerber@suse.=
-de>=20
->> wrote:
->>> Move it from exynos5250-cros-common.dtsi to exynos5250-snow.dts.
->>> Spring does not need it, it uses an Atmel maXTouch instead.
->>>
->>> Signed-off-by: Andreas F=C3=A4rber<afaerber@suse.de>
->>> ---
->>>   v2: New (Doug Anderson)
->>>
->>>   arch/arm/boot/dts/exynos5250-cros-common.dtsi |  8 --------
->>>   arch/arm/boot/dts/exynos5250-snow.dts         | 10 ++++++++++
->>>   2 files changed, 10 insertions(+), 8 deletions(-)
->>
->> Reviewed-by: Doug Anderson<dianders@chromium.org>
->>
->> Kukjin could apply this now if he wanted to avoid future conflicts.
->=20
-> OK, I read your comments on another this series and I've applied 1/4 =
-and
-> 2/4 as per your suggestion with your reviewed by tag ;)
+Hi,
 
-Thanks.
+This is an updated version of the OMAP Mailbox framework adoption &
+DT support series, refreshed to work with the v9 version of the mailbox
+framework [1] from Jassi Brar while also addressing some minor review
+comments. Detailed changes are summarized below. Patches are based on
+3.16-rc2.
 
-> And I think, Andreas is going to re-spin remains for exynos5250-sprin=
-g
-> based on updated my -next?
+The series depends on the OMAP mailbox DT/hwmod cleanup series [2] and the
+OMAP mailbox cleanup series [3]. Both these series are staged to be merged
+for 3.17 [4]. The last 2 framework adaptation patches require the v9 framework
+patches to build successfully. The reference branch with all the patches is
+hosted (not for merging - includes an additional patch for dsp/bridge changes) at 
+https://github.com/sumananna/mailbox/commits/submit/3.16-rc2-omap-mbox-v9-fwk-v3
 
-Yes. Please don't apply 3/4, I'm fixing a duplicate hdmi node.
+The AM335 PM suspend series [5] which relies on this series needs to have
+the wkupm3 node updated to use the new property name "mboxes" instead of
+"mbox", and use the updated mbox_request_channel API.
 
-Regards,
-Andreas
+Changes in v3:
+- Revised the OMAP mailbox bindings to reflect the updated compatible
+  strings (Patch 1) and the updated common mailbox properties in
+  the v9 framework (Patch 4)
+- Code rearrangement/flip of if code blocks in omap_mailbox probe to address
+  Markus Mayer's comments from v2 (Patch 2)
+- omap_mbox_of_xlate updated to add a missing of_node_put (Patch 4)
+- Adjust the added OMAP non-DT support API, omap_mbox_request_channel, to
+  handle the loss of the chan_name field in the mbox_client structure
+  from v8 to v9 of mailbox framework (Patch 4)
+- Dropped mailbox adaptation changes to TI DSP/Bridge driver, as it will be
+  deleted in 3.17 (Patch 4)
+- No changes to DTS patches (Patches 3 and 5)
+- Tested against v9 of mailbox framework
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+v2:
+- http://www.spinics.net/lists/linux-omap/msg109379.html
+- Updated the OMAP DT bindings document for the added back DT properties:
+  "ti,mbox-num-users" and "ti,mbox-num-fifos". Also added information
+  regarding "#mbox-cells" and DT client usage.
+- Updated the OMAP DT adaptation patch to parse the added back DT properties
+  and clean up the previous match data structure.
+- Squashed custom xlate patch into the framework adaptation patch.
+- Tested against v8 of mailbox framework.
+
+v1:
+- http://www.spinics.net/lists/linux-omap/msg108595.html
+- Tested against v7 of mailbox framework
+
+
+The following shows the boot/validation logs on various OMAP platforms:
+  OMAP2 (SDP2430)           : http://slexy.org/view/s20ZcIovmA
+  OMAP3 (BeagleXM)          : http://slexy.org/view/s2jWS6RPDJ
+  OMAP4 (PandaBoard)        : http://slexy.org/view/s21Mxi3Z4v
+  OMAP5 (OMAP5 uEVM)        : http://slexy.org/view/s2EUjy49h9
+  DRA7  (DRA7 EVM)          : http://slexy.org/view/s29ehoRZWl
+  AM33xx (BeagleBone Black) : http://slexy.org/view/s20A8RDPRy
+  AM43xx (AM437x GP EVM)    : http://slexy.org/view/s21HMTnL2t
+
+[1] https://lkml.org/lkml/2014/7/22/613
+[2] http://marc.info/?l=linux-omap&m=140511512208519&w=2
+[3] http://www.spinics.net/lists/linux-omap/msg108574.html
+[4] https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v3.17/mailbox
+[5] http://www.spinics.net/lists/linux-omap/msg109331.html
+
+Suman Anna (5):
+  Documentation: dt: add omap mailbox bindings
+  mailbox/omap: add support for parsing dt devices
+  ARM: dts: OMAP2+: Add sub mailboxes device node information
+  mailbox/omap: adapt to the new mailbox framework
+  ARM: dts: OMAP2+: Add #mbox-cells property to all mailbox nodes
+
+ .../devicetree/bindings/mailbox/omap-mailbox.txt   | 132 ++++++
+ arch/arm/boot/dts/am33xx.dtsi                      |   5 +
+ arch/arm/boot/dts/am4372.dtsi                      |   5 +
+ arch/arm/boot/dts/dra7.dtsi                        |  13 +
+ arch/arm/boot/dts/omap2420.dtsi                    |   9 +
+ arch/arm/boot/dts/omap2430.dtsi                    |   5 +
+ arch/arm/boot/dts/omap3.dtsi                       |   5 +
+ arch/arm/boot/dts/omap4.dtsi                       |   9 +
+ arch/arm/boot/dts/omap5.dtsi                       |   9 +
+ drivers/mailbox/omap-mailbox.c                     | 502 ++++++++++++++-------
+ drivers/remoteproc/omap_remoteproc.c               |  51 ++-
+ include/linux/omap-mailbox.h                       |  16 +-
+ 12 files changed, 557 insertions(+), 204 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
