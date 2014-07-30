@@ -1,194 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Wed, 30 Jul 2014 16:46:26 +0100
-Message-ID: <20140730154626.GD20162@leverpostej>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: add dt binding info for
+ Rockchip dwc2
+Date: Wed, 30 Jul 2014 08:46:52 -0700
+Message-ID: <CAD=FV=X2ZZkK=18T=c40a3ZkwaoDk5Vf0hCir_OdC7r888hwUw@mail.gmail.com>
+References: <1406683873-18194-1-git-send-email-kever.yang@rock-chips.com>
+ <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406732794-20920-3-git-send-email-rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1406683873-18194-2-git-send-email-kever.yang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Randy Dunlap <rdunlap@infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jianqun Xu <xjq@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Kishon Vijay Abraham I <kishon@ti.com>, lyz <lyz@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Porter <mporter@linaro.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, wulf <wulf@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Kever,
 
-On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
-> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> Add initial device tree nodes for Cavium Thunder SoCs with support of
-> 48 cores and gicv3. The dts file requires further changes, esp. for
-> pci, gicv3-its and smmu. This changes will be added later together
-> with the device drivers.
-> 
-> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Tue, Jul 29, 2014 at 6:31 PM, Kever Yang <kever.yang@rock-chips.com> wrote:
+> This add necessary dwc2 binding documentation for Rockchip socs:
+> rk3066, rk3188 and rk3288
+>
+> add dr_mode as optional properties.
+>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 > ---
->  arch/arm64/boot/dts/Makefile         |   1 +
->  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
->  2 files changed, 388 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
-> 
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index c52bdb051f66..f8001a62029c 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -1,3 +1,4 @@
-> +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
->  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
->  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
->  
-> diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
-> new file mode 100644
-> index 000000000000..4cf20ac9138b
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/thunder-88xx.dts
-> @@ -0,0 +1,387 @@
-> +/*
-> + * Cavium Thunder DTS file
-> + *
-> + * Copyright (C) 2013, Cavium Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + */
-> +/dts-v1/;
-> +
-> +/* Reserving first 12MB of DDR for firmware */
-> +/memreserve/ 0x00000000 0x00c00000;
+>  Documentation/devicetree/bindings/usb/dwc2.txt |    5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index aa91034..eb80d7b 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
+>  Required properties:
+>  - compatible : One of:
+>    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
+> +  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+> +  - "rockchip,rk3188-usb","rockchip,rk3066-usb": for rk3188 Soc;
+> +  - "rockchip,rk3288-usb","rockchip,rk3066-usb": for rk3288 Soc;
+>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+>  - reg : Should contain 1 register range (address and length)
+>  - interrupts : Should contain 1 interrupt
+> @@ -15,6 +18,8 @@ Optional properties:
+>  - phys: phy provider specifier
+>  - phy-names: shall be "usb2-phy"
+>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+> +- dr_mode: shall be one of "host", "peripheral" and "otg"
+> +  Refer to usb/generic.txt
 
-What exactly is this memreserve intended to protect at runtime?
+One other note: Maybe we should break this series into two different
+patch series'.  I think that the patches for doing "dr_mode" can be
+totally separate from the ones adding support for rockchip, right?
 
-The only item of runtime firmware I see in use below is PSCI on the
-secure side.
-
-How is the kernel booted on this platform? UEFI?
-
-> +/ {
-> +	model = "Cavium ThunderX CN88XX Family";
-> +	compatible = "cavium,thunder-88xx";
-
-Please don't use wildcards in compatible strings. Give this an absolute
-name, and override as necessary.
-
-> +	interrupt-parent = <&gic0>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	aliases {
-> +		serial0 = &uaa0;
-> +		serial1 = &uaa1;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-
-Nice!
-
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@000 {
-> +			device_type = "cpu";
-> +			compatible = "cavium,thunder", "arm,armv8";
-> +			reg = <0x0 0x000>;
-> +			enable-method = "psci";
-> +		};
-
-Just to check: both the SoC and CPU are called thunder?
-
-[...]
-
-> +
-> +	memory@00000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00000000 0x0 0x80000000>;
-> +	};
-> +
-> +	gic0: interrupt-controller@801000000000 {
-
-To make this easier to read, please place a comma between 32-bit
-portions of the unit address (e.g. here have 8010,00000000).
-
-> +		compatible = "arm,gic-v3";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-
-This has no children, so why have ranges, #address-cells, and
-#size-cells?
-
-> +		interrupt-controller;
-> +		reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
-> +		      <0x8010 0x80000000 0x0 0x200000>; /* GICR */
-> +		interrupts = <1 9 0xf04>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 13 0xff01>,
-> +		             <1 14 0xff01>,
-> +		             <1 11 0xff01>,
-> +		             <1 10 0xff01>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clocks {
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +
-> +			refclk50mhz: refclk50mhz {
-> +				compatible = "fixed-clock";
-> +				#clock-cells = <0>;
-> +				clock-frequency = <50000000>;
-> +				clock-output-names = "refclk50mhz";
-> +			};
-> +		};
-
-Please get rid of the clocks node and just put the clocks here.
-
-> +
-> +		uaa0: serial@87e024000000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0x87e0 0x24000000 0x0 0x1000>;
-> +			interrupts = <1 21 4>;
-> +			clocks = <&refclk50mhz>;
-> +			clock-names = "apb_pclk";
-
-Is this actually the apb_pclk, or is the the uartclk? I assume it's the
-latter.
-
-> +		};
-> +
-> +		uaa1: serial@87e025000000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0x87e0 0x25000000 0x0 0x1000>;
-> +			interrupts = <1 22 4>;
-> +			clocks = <&refclk50mhz>;
-> +			clock-names = "apb_pclk";
-
-Similarly?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
