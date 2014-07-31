@@ -1,101 +1,172 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv2 4/5] clk: samsung: exynos5410: Add fixed rate clocks
-Date: Thu, 31 Jul 2014 15:37:39 +0200
-Message-ID: <53DA46A3.9080808@gmail.com>
-References: <1406805732-17372-1-git-send-email-hsnaves@gmail.com> <1406805732-17372-5-git-send-email-hsnaves@gmail.com> <53DA3C36.1040206@gmail.com> <CAEe5pB_7e_5YkpcuRvsaUg6vKfdu6C+XhwRYyY1uUGptxM5zkg@mail.gmail.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dmaengine: add a driver for AMBA AXI NBPF DMAC
+ IP cores
+Date: Thu, 31 Jul 2014 15:42:44 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1407311520290.24081@axis700.grange>
+References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
+ <Pine.LNX.4.64.1407191243360.3062@axis700.grange> <20140725141621.GT8181@intel.com>
+ <Pine.LNX.4.64.1407251635070.13523@axis700.grange> <20140725163417.GV8181@intel.com>
+ <Pine.LNX.4.64.1407262105150.24257@axis700.grange> <20140731125704.GV8181@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAEe5pB_7e_5YkpcuRvsaUg6vKfdu6C+XhwRYyY1uUGptxM5zkg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Humberto Naves <hsnaves@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Thomas Abraham <ta.omasab@gmail.com>, Andreas Farber <afaerber@suse.de>, Randy Dunlap <rdunlap@infradead.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140731125704.GV8181-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.2014 15:23, Humberto Naves wrote:
-> Hi Tomasz,
+On Thu, 31 Jul 2014, Vinod Koul wrote:
+
+> On Sat, Jul 26, 2014 at 09:32:18PM +0200, Guennadi Liakhovetski wrote:
+> > On Fri, 25 Jul 2014, Vinod Koul wrote:
+> > > And please also see there were regression on few of them, recently dw was
+> > > fixed for this case. Similarly few other drivers were fixed for their
+> > > behaviour in tasklet kill, syncronizing the irq and freeing up behaviour.
+> > > 
+> > > So now back to this driver, since you are using devm_ the irq is not freed,
+> > > so how does it prevent race.
+> > 
+> > How is it not freed? Of course it is freed, but later - after .release() 
+> > has completed.
+> > 
+> > As for races - AFAIU, no interrupts should be coming after all DMA 
+> > channels have been freed, and .release() will not be called as long as any 
+> > channels are in use. However, I think, there might be a chance for a race 
+> > if the user would try to free a DMA channel before all descriptors have 
+> > completed and without calling TERMINATE_ALL. I think this would be an 
+> > abnormal behaviour - usually you either wait for all descriptors to 
+> > complete or terminate any remaining ones, but if such a buggy DMA slave 
+> > driver would be used, and if .device_free_chan_resources() gets called 
+> > (on a different CPU core) after a hard IRQ has completed and before the 
+> > IRQ thread has run (this would be the same if a tasklet was used in the 
+> > driver instead of an IRQ thread), i.e.
+> > 
+> > CPU core #0		CPU core #1
+> > 
+> > DMA IRQ
+> > schedule IRQ thread
+> > 			.device_free_chan_resources()
+> > IRQ thread:
+> > nbpf_chan_irqt()
+> > 
+> > then there can be a problem, because .device_free_chan_resources() would 
+> > free descriptor pages and the IRQ thread would try to use them.
+> > 
+> > Again, I consider that case to be a buggy DMA slave and even then such a 
+> > race would be very unlikely, but theoretically it might be possible. The 
+> > fix can be as simple as calling nbpf_chan_idle() from 
+> > nbpf_free_chan_resources(). Would you like a new version with this single 
+> > change or would such an incremental patch suffice?
 > 
-> I perfectly see your point.
-> However my question was why you did you decide to postpone
-> Sylwester's? Was there any specific reason?
-> I suppose it would break all the dtb compatibility, but besides that,
-> was there any other reason?
+> There are two issues in the current driver.
+> 1. You have a spurious irq. That will lead your irq running. Although
+> your driver handlers can handle this, but with remove it will race and cause
+> panic because your have not freed irq.
 
-We discussed this in private (we work in the same office) and I pointed
-out certain issues with Sylwester's proposed implementation and we
-agreed that one more revision of the patch is needed, but as it happens,
-higher priority tasks showed up and this one got lost in action.
+Why? Why should it panic? The managed resource handling framework will 
+free IRQs before freeing the private driver object, so, pointers will 
+still be valid, because those objects, including memory for all channels:
 
-The first version of the patch [1] changed the original behavior
-breaking DT ABI compatibility and relied on improper assumption that
-those clocks are always in "fixed-rate-clocks" node. The thing is that
-no code should rely on DT node naming.
+	nbpf = devm_kzalloc(dev, sizeof(*nbpf) + num_channels *
+			    sizeof(nbpf->chan[0]), GFP_KERNEL);
+ 
+are allocated before interrupts are requested. This is a very important 
+guarantee, without which nothing would work. So, these lines in the IRQ 
+handler:
 
-Second version [2] was much better in this aspect, but it had some minor
-implementation issues - custom clk_ops used instead of generic mux clock
-and chipid block being constantly mapped and unmapped in every call to
-__fin_pll_mux_get_parent().
+static irqreturn_t nbpf_chan_irq(int irq, void *dev)
+{
+	struct nbpf_channel *chan = dev;
+	bool done = nbpf_status_get(chan);
+	struct nbpf_desc *desc;
+	irqreturn_t ret;
 
-I should have reviewed them both on the mailing lists, but at that time
-there was no major activity related to Exynos4 outside of our office, so
-it was more convenient to just talk together directly.
+	if (!done)
+		return IRQ_NONE;
 
-[1] http://www.spinics.net/lists/arm-kernel/msg333211.html
-[2]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/258490.html
+will run without problem.
 
-Anyway, I don't think this is all relevant to Exynos5410, which just
-uses the generic fixed rate binding and has the thing done right from
-the start.
-
-Best regards,
-Tomasz
-
+> 2. There is nothing in your .remove which ensures all the threads have
+> exited. Yes with the above argument this sounds not so simple to achieve as
+> typically we get irq, callback and free the channel. But as your rightly
+> pointed in multi-core systems there can be instance where you get back to
+> back interrupts where descriptor sizes where small, so while processing your
+> some thread maybe still stuck while user frees up.
 > 
-> Best,
-> Humberto
+> The job of .remove is to ensure you clean up everything. the fact that you
+> can still get irq after remove makes this a not so good design!
+
+Ok, I mentioned in one of my previous mails the possibility of IRQ threads 
+racing with .free_chan_resources(). And .free_chan_resources() should 
+complete before .remove(), right? So, in fact we do have to fix my 
+theoretical race, then your race will be fixed automatically too.
+
+> > > If we do ensure that, then yes driver is fine
+> > > and can be merged, otherwise needs a fix
+> > > > 
+> > > > > You need to run free_irq and synchronize_irq()
+> > > > > to ensure everything is proper before freeing up.
+> > > > > 
+> > > > > Also why threaded_irq when dmaengine API mandates you to use tasklet? The
+> > > > > callback is supposed to be invoked from a tasklet.
+> > > > 
+> > > > As for this one. Yes, I'm aware, that most other dmaengine drivers use a 
+> > > > tasklet for bottom half IRQ processing. But is there a real requirement 
+> > > > for that? This driver has been written in the end of last year and has 
+> > > > been in use since then - no problems. As long as proper locking is used, 
+> > > > an IRQ thread seems to work just fine here. And allows us to leverage the 
+> > > > threaded-IRQ API instead of inventing own bottom-half processing.
+> > > > 
+> > > > But if there's a _real_ essential reason to use a tasklet here, I can 
+> > > > switch, np. Does it really have to be done now or would an incremental 
+> > > > patch suffice?
+> > > The API mandates this for a reason. I think we can add this later as it
+> > > doesn't break the functionality.
+> > 
+> > What was that reason? Is it that the network stack is using a tasklet and 
+> > to make DMA usable for network TCP copy offloading? But that's only 
+> > available with INTEL_IOATDMA and FSL_DMA and is broken anyway?
+> The tasklets run at atomic context and have higher priority as comparaed to
+> thread and workqueues.
+
+AFAIK, IRQ threads have real-time priorities.
+
+> The fact that lot of dma users are realtime, audio
+> etc, we need to process this as fast as possible. With the tasklet assumption
+> we assume that dmaengine APIs are invoked with atomic context, same is with
+> callback called form tasklet).
+> So you can never sleep in these calls. The whole framework has been built on
+> these assumptions and I am not even talking about NET/Async as we are
+> discussing only slave.
+
+I think we have to find specific problems, point out at specific 
+problematic locations. The above is too generic. I think I satisfy 
+atomicity guarantees, where needed, using spinlocks etc. If not - those 
+problems have to be identified and fixed.
+
+> And only sh- driver try to do this, rest are fairly happy with tasklet.
 > 
-> On Thu, Jul 31, 2014 at 2:53 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> Hi Humberto,
->>
->> You can find my comments inline.
->>
->> On 31.07.2014 13:22, Humberto Silva Naves wrote:
->>> This implements the fixed rate clocks generated either inside or
->>> outside the SoC. It also adds a dt-binding constant for the
->>> sclk_hdmiphy clock, which shall be later used by other drivers,
->>> such as the DRM.
->>>
->>> Since the external fixed rate clock fin_pll is now registered by
->>> the clk-exynos5410 file, the bindings with the device tree file have
->>> changed. It is no longer needed to define fin_pll as a fixed clock,
->>> such as in:
->>>
->>>       fin_pll: xxti {
->>>               compatible = "fixed-clock";
->>>               clock-frequency = <24000000>;
->>>               clock-output-names = "fin_pll";
->>>               #clock-cells = <0>;
->>>       };
->>>
->>> The above lines should be replaced by the following lines:
->>>
->>>       fixed-rate-clocks {
->>>               oscclk {
->>>                       compatible = "samsung,exynos5410-oscclk";
->>>                       clock-frequency = <24000000>;
->>>               };
->>>       };
->>>
->>> This new form of binding was properly documented in the relevant
->>> documentation file.
->>
->> In general this is backwards. This Exynos-specific clock binding was
->> invented before generic fixed rate clock binding showed up and so few
->> drivers still use it to maintain DT ABI compatibility. However new
->> drivers are required to use the new generic binding and so does the one
->> for Exynos5410.
->>
->> Best regards,
->> Tomasz
+> So then why do you want to do this? What is your reason from deviating?
+
+I explained this already. We already have a mechanism to handle top-bottom 
+IRQ halves - threaded IRQ. It takes away a part of developer's work to set 
+this up.
+
+Ok. This doesn't seem to progress. You suggested in your previous mail, 
+that I can provide an incremental patch to add devm_free(_threaded)_irq() 
+and synchronize_irq() to .release(). I still think, that this doesn't make 
+much sense, but if you insist... Alternatively, my proposal would be to 
+fix the thoretical race in .free_chan_resources(). Would you accept such a 
+patch instead of what you were proposing? I can also convert the driver to 
+using a tasklet, if required. Would it suffice, if I do those patches as 
+fixes after -rc1? I'm leaving on a holiday tomorrow and I still have to 
+finalise some other work, so, preparing those patches today doesn't seem 
+realistic to me... Would this be acceptable?
+
+Thanks
+Guennadi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
