@@ -1,40 +1,81 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: twl-core: move TWL6030 defines to twl.h
-Date: Thu, 31 Jul 2014 09:36:11 +0100
-Message-ID: <20140731083611.GI9030@lee--X1>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
- <1406728949-7560-2-git-send-email-sassmann@kpanic.de>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Thu, 31 Jul 2014 14:08:05 +0530
+Message-ID: <CAEC9eQOFWQ8t1zzOVrHm2=aS4+N94EW6LSjBUG2fH51aFs0GLQ@mail.gmail.com>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
+ <53D5435B.8030305@suse.de>
+ <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com>
+ <53D783CC.2080108@suse.de>
+ <CAEC9eQOpS90U9kWmY8YdcAtdxQYKoM9ikoWpkwMs6T2udLeZHA@mail.gmail.com>
+ <53D9484A.1070905@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406728949-7560-2-git-send-email-sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53D9484A.1070905@suse.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Jul 2014, Stefan Assmann wrote:
-
-> These defines should be available to all drivers. Also added register
-> offset for CLK32KG_CFG_STATE and GRP defines.
->=20
-> Signed-off-by: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/regulator/twl-regulator.c | 11 -----------
->  include/linux/i2c/twl.h           | 20 ++++++++++++++++++++
->  2 files changed, 20 insertions(+), 11 deletions(-)
-
-This doesn't have anything to do with MFD?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW5kcmVhcywKCk9uIFRodSwgSnVsIDMxLCAyMDE0IGF0IDE6MDIgQU0sIEFuZHJlYXMgRsOkcmJl
+ciA8YWZhZXJiZXJAc3VzZS5kZT4gd3JvdGU6Cj4gSGkgQWpheSwKPgo+IEFtIDMwLjA3LjIwMTQg
+MDg6MjEsIHNjaHJpZWIgQWpheSBrdW1hcjoKPj4gT24gVHVlLCBKdWwgMjksIDIwMTQgYXQgNDo1
+MSBQTSwgQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cm90ZToKPj4+IEFtIDI4
+LjA3LjIwMTQgMDg6MTMsIHNjaHJpZWIgQWpheSBrdW1hcjoKPj4+PiBPbiA3LzI3LzE0LCBBbmRy
+ZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+IHdyb3RlOgo+Pj4+PiBBbSAyNS4wNy4yMDE0
+IDIxOjIyLCBzY2hyaWViIEFqYXkgS3VtYXI6Cj4+Pj4+PiBUaGlzIHNlcmllcyBpcyBiYXNlZCBv
+biBleHlub3MtZHJtLW5leHQgYnJhbmNoIG9mIElua2kgRGFlJ3MgdHJlZSBhdDoKPj4+Pj4+IGdp
+dDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9kYWVpbmtpL2RybS1l
+eHlub3MuZ2l0Cj4+Pj4+Pgo+Pj4+Pj4gSSBoYXZlIHRlc3RlZCB0aGlzIGFmdGVyIGFkZGluZyBm
+ZXcgRFQgY2hhbmdlcyBmb3IgZXh5bm9zNTI1MC1zbm93LAo+Pj4+Pj4gZXh5bm9zNTQyMC1wZWFj
+aC1waXQgYW5kIGV4eW5vczU4MDAtcGVhY2gtcGkgYm9hcmRzLgo+Pj4+Pgo+Pj4+PiBJJ20gdHJ5
+aW5nIHRvIHRlc3QgdGhpcyB3aXRoIGEgbW9kaWZpZWQgZXh5bm9zNTI1MC1zcHJpbmcgRFQgYmFz
+ZWQgb2ZmCj4+Pj4+IGtnZW5lJ3MgZm9yLW5leHQgYnJhbmNoIGR1ZSB0byBEVCwgYW5kIEkgcnVu
+IGludG8gdGhlIGZvbGxvd2luZzoKPj4+Cj4+PiBVbmZvcnR1bmF0ZWx5IHRoZSBtb3N0IEkgZ290
+IG9uIFNwcmluZyB3aXRoIGF0dGFjaGVkIERUIHdhcyBhIGJsYW5rCj4+PiBzY3JlZW4gd2l0aCBh
+IHdoaXRlIGhvcml6b250YWwgbGluZSBpbiB0aGUgbWlkZGxlLgo+PiBUaGVuLCBJIHRoaW5rIGJy
+aWRnZSBjaGlwIGlzIHdvcmtpbmcgZmluZS4KPj4gWW91IGp1c3QgbmVlZCB0byBjb25maWd1cmUg
+dGhlIHByb3BlciBtb2RlIGZvciBGSU1ELgo+PiBZb3UgY2FuIHNlZSBiYWNrbGlnaHQgYWxzbywg
+cmlnaHQ/Cj4+Cj4+PiBEbyBJIG5lZWQgdG8gc3BlY2lmeSBhIHNwZWNpZmljIHBhbmVsIG1vZGVs
+IGZvciBTcHJpbmc/Cj4+IFllcyEgVHJ5IHVzaW5nICJjaHVuZ2h3YSxjbGFhMTAxd2IwMSIgYXMg
+Y29tcGF0aWJsZSBzdHJpbmcgZm9yCj4+IHBhbmVsIG5vZGUuCj4KPiBXaXRoIGp1c3QgeW91ciB2
+NiBhcHBsaWVkIHBsdXMgdXBkYXRlZCBEVCBwYXRjaCAoYXR0YWNoZWQpIFsxXSwgSSBzZWUKPiBi
+YWNrbGlnaHQgYW5kIGEgYmxhY2sgc2NyZWVuIChubyB3aGl0ZSBsaW5lIGFueSBtb3JlKS4gZG1l
+c2cgYXR0YWNoZWQuCkkgY2FuIHNlZSBwZW5ndWluJ3MgYWxzbyEKCj4+PiBGb3IgdGVzdGluZyBJ
+IHJlLWFwcGxpZWQgeW91ciBpb21tdSBwYXRjaGVzICh3aGljaCBidHcgZmFpbCBub3cgZm9yIDU0
+MjAKPj4+IGR1ZSB0byBkaXNwX3BkKSBidXQgZGlkbid0IGtub3cgd2hhdCB0byBkbyBhYm91dCB5
+b3VyIHBhbmVsLWx2ZHMKPj4+IHJlZ3VsYXRvciBwYXRjaCBub3cgdGhhdCBpdCdzIGdvbmUuCj4+
+IElnbm9yZSB0aGF0IHJlZ3VsYXRvciBwYXRjaC4KPj4KPj4gQWxzbywgcGxlYXNlIGF0dGFjaCB0
+aGUgYm9vdGxvZyBpZiBwb3NzaWJsZSBhZnRlciB0cnlpbmcgdGhpcy4KPgo+IElmIEkgZnVydGhl
+ciBhcHBseSB0aGUgSU9NTVUgcGF0Y2hlcyBbMl0sIEkgZ2V0IG5vIGJhY2tsaWdodCBub3IgVVNC
+IGFuZAo+IHRodXMgY2FuJ3Qgb2J0YWluIGEgYm9vdCBsb2cuCj4KPiBSZWdhcmRzLAo+IEFuZHJl
+YXMKPgo+IFsxXSBodHRwczovL2dpdGh1Yi5jb20vYWZhZXJiZXIvbGludXgvY29tbWl0cy9zcHJp
+bmctbmV4dAo+IFsyXSBodHRwczovL2dpdGh1Yi5jb20vYWZhZXJiZXIvbGludXgvY29tbWl0cy9z
+cHJpbmctYnJpZGdlLnY2CldpdGgganVzdCB0aGUgc3ByaW5nLWJyaWRnZS52NiBicmFuY2ggb2Yg
+eW91ciBvd24gdHJlZSwgSSBhbSBhYmxlIHRvIHNlZQpib290dXAgbG9nbyBvbiBTa2F0ZShhIHZh
+cmlhbnQgb2Ygc3ByaW5nIHdoaWNoIGFsc28gY29udGFpbnMgcHM4NjIyKS4KSSBoYXZlIHRyaWVk
+IGJvdGggZXh5bm9zX2RlZmNvbmZpZyBhbmQgbXVsdGlfdjdfZGVmY29uZmlnLgpJIGVuYWJsZSBE
+Uk0sIEVYWU5PUyBEUk0sIEJSSURHRSBDSElQUywgSU9NTVUsIEVYWU5PUyBJT01NVQppbiBjb25m
+aWdzLgoKRXZlbiBpbiB5b3VyIGJvb3Rsb2dzLCBJIGNhbiBzZWUgRFAgZ2V0dGluZyBwcm9iZWQu
+CkFuZCwgeW91IHNheSBiYWNrbGlnaHQgaXMgYWxzbyB2aXNpYmxlLiBUaGF0IG1lYW5zIGVudGly
+ZSBkaXNwbGF5CnBhdGggc2hvdWxkIGJlIGZpbmUuIEl0cyBqdXN0IHRoYXQgeW91IHNob3VsZCBz
+dGFydCB3cml0aW5nIHRvIHRoZSBidWZmZXIuCkhhdmUgeW91IGVuYWJsZWQgYm9vdCBsb2dvcz8K
+CkFqYXkKPiBQLlMuIE5vdGUgdGhhdCB5b3VyIFNub3cgRFQgcGF0Y2ggd2lsbCBjb25mbGljdCB3
+aXRoIG15IFNub3cgY2xlYW51cHMsCj4gc2h1ZmZsaW5nIHNvbWUgbm9kZXMgYXJvdW5kOiBodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzQ2NDk0NzEvCj4KPiAtLQo+IFNVU0UgTElO
+VVggUHJvZHVjdHMgR21iSCwgTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55
+Cj4gR0Y6IEplZmYgSGF3biwgSmVubmlmZXIgR3VpbGQsIEZlbGl4IEltZW5kw7ZyZmZlcjsgSFJC
+IDE2NzQ2IEFHIE7DvHJuYmVyZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
