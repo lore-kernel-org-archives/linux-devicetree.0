@@ -1,68 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: Add support for CS35L32 Boosted Amplifier
-Date: Thu, 31 Jul 2014 21:27:18 +0100
-Message-ID: <20140731202718.GZ17528@sirena.org.uk>
-References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
- <20140731200729.GW17528@sirena.org.uk>
- <alpine.DEB.2.02.1407311520490.7394@heelrod>
+From: David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI
+ PMICs
+Date: Thu, 31 Jul 2014 13:33:49 -0700
+Message-ID: <53DAA82D.4020901@codeaurora.org>
+References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com> <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com> <53D8182A.5050204@codeaurora.org> <53DA02C0.2050606@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZKE/1Mm+6y0nReWg"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1407311520490.7394@heelrod>
+In-Reply-To: <53DA02C0.2050606-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/31/2014 01:48 AM, Stanimir Varbanov wrote:
+> Hi David,
+> 
+> Thanks for the comments!
+> 
+> On 07/30/2014 12:54 AM, David Collins wrote:
+>> On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
+>>> From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>
+>>> The Qualcomm SPMI PMIC chips are components used with the
+>>> Snapdragon 800 series SoC family.  This driver exists
+>>> largely as a glue mfd component, it exists to be an owner
+>>> of an SPMI regmap for children devices described in
+>>> device tree.
 
---ZKE/1Mm+6y0nReWg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+(...)
+>>> +static const struct regmap_config pm8xxx_regmap_config = {
+>>> +	.reg_bits	= 16,
+>>> +	.val_bits	= 8,
+>>> +	.max_register	= 0xffff,
+>>
+>> Can you please add the following line here?
+>>
+>> 	.fast_io	= true;
+>>
+>> This will cause a spinlock to be held during SPMI transactions instead of
+>> a mutex lock.  This is needed because several downstream peripheral
+>> drivers need to make SPMI read and write calls from atomic context.  I
+>> have commented on this point in a previous thread with specific examples [2].
+> 
+> OK, I understand the need of atomic context, but pmic_arb_read_cmd() and
+> pmic_arb_write_cmd() functions use raw_spin_lock_irqsave already. Isn't
+> those locks enough?
 
-On Thu, Jul 31, 2014 at 03:27:13PM -0500, Brian Austin wrote:
-> On Thu, 31 Jul 2014, Mark Brown wrote:
+No, that isn't sufficient.  The problem is that the peripheral driver
+would already be in atomic context at the time that it needs to perform an
+SPMI read or write via regmap_read() or regmap_write() respectively.
+These regmap calls would take a mutex lock if fast_io == false.  This is
+not allowed since calling a sleepable function in atomic context can lead
+to deadlock.
 
-> > Should the interrupt and LED status registers not also be volatile?
+Take care,
+David
 
-> Sure. I guess precious doesn't have any effect on cache then?
-
-It doesn't.
-
-> > > +	case CS35L32_MCLK_6144MHZ:
-
-> > Not sure these defines add anything over just using the numbers and it
-> > avoids ickyness with the fact that I bet this isn't really 6.144GHz.
-
-> I was trying to avoid using numbers, but if it is OK I can do that.
-
-If the define just ends up shoving some characters in front of a number
-it's not really adding anything.
-
---ZKE/1Mm+6y0nReWg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT2qaiAAoJELSic+t+oim9y+MP/j8G1XxyhXeU6D4BB9TXdmF6
-MC7V1LmOodCsORt9hbXQNig+YSAhESLP1BJbXyQXaQ7ClyEZrSBhVyyiSyBNJPkG
-lRu7Y3s2pPHI8bSTTPGQzdOPPyOEON4KIDA8junvfvCRneV0n4KFTJTDvwo/cW9H
-yLnPEXuwzBqcjlf3L/udEAr6kjn++ea59WxUkgoDDk1nhG+MxOu8T1e4HcHwOjgL
-dvIehmK0J/4PquZkbt6DyB2826xwbEYB0AfxdGVr8KVwmJhD6RsSDdx82SN2gkfh
-V/8NqTecatp/quxBGKECk9M8AIGlm+p9kW42B43aVNx5Cml9vc8FR6Fzff+TYg2B
-GOnXx/oGIrsJQCwyxuWnqailNsKBWmwTawlnbgY5DTc12CaU9nwjAsL5Bqg+PF5d
-H57xteL2IBYHXF5fcb70vNZbXiOUsfIaD5kxrYNKVy/2vo7K7Mq95Klf2w7vjUUw
-HvRSwcIClQwLiNHHSQ7j5o26jsoFW3HyaHxIGQTV5fAOea6TAk6TRyGzQPwKg476
-5JJfhWe9f8nOTiakaCpyllnkXFpS0zcEB4kKeDCz00qb1jskm6i/+j3/0beAPB8m
-g59aTCTMOgngZd14YxIBTfjsCpQ2IOaKSIO3GkFrdEmVoQ0fWLKhJ339cBFDxH9G
-U6MOPvx1nffRFPeyPuwa
-=xjKW
------END PGP SIGNATURE-----
-
---ZKE/1Mm+6y0nReWg--
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
