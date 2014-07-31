@@ -1,110 +1,128 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
- Broadcom STB SoCs
-Date: Thu, 31 Jul 2014 15:06:42 -0700
-Message-ID: <20140731220642.GQ3711@ld-irv-0074>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
- <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q@mail.gmail.com>
- <20140731022320.GM3711@ld-irv-0074>
- <20140731084315.GJ30282@n2100.arm.linux.org.uk>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
+Date: Thu, 31 Jul 2014 15:45:23 -0700
+Message-ID: <20140731224523.4463.34464@quantum>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
+ <1406661128-7614-2-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140731084315.GJ30282-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <1406661128-7614-2-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Thu, Jul 31, 2014 at 09:43:15AM +0100, Russell King wrote:
-> On Wed, Jul 30, 2014 at 07:23:20PM -0700, Brian Norris wrote:
-> > I appreciate your comments, but where were many of these 5 months ago on
-> > the first 7 revisions? :)
-> > 
-> > On a practical note: v9 is already queued for 3.17. Should I send
-> > patches for the 3.17 cycle (or later) to fixup some of these issues? Or
-> > would you recommend pulling the patches out of Matt Porter's tree now,
-> > and reintroducing for 3.18? (I would be much happier with the first.)
-> > 
-> > I do note that we at least need to fix allmodconfig ASAP; I'll reply to
-> > Russell on that one.
-> > 
-> > On Wed, Jul 30, 2014 at 12:09:48PM -0500, Rob Herring wrote:
-> > > On Mon, Jul 21, 2014 at 4:07 PM, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > +
-> > > > +       per_cpu_sw_state_wr(cpu, 1);
-> > > 
-> > > The kernel already tracks the state.
-> > 
-> > Yes, but it doesn't synchronize cpu_die() and cpu_kill(). But I see you
-> > objected below.
+Quoting Heiko Stuebner (2014-07-29 12:12:05)
+> The clock-tree contains clocks that should never get disabled automatically.
+> One example are the base ACLKs, the base supplies for all peripherals.
 > 
-> Err.
+> Therefore add a structure similar to the sunxi clock-tree to protect these
+> special clocks from being disabled.
 > 
-> static DECLARE_COMPLETION(cpu_died);
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
+>  drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
+>  drivers/clk/rockchip/clk.c        | 13 +++++++++++++
+>  drivers/clk/rockchip/clk.h        |  1 +
+>  4 files changed, 28 insertions(+)
+> 
+> diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
+> index a83a6d8..5aef277 100644
+> --- a/drivers/clk/rockchip/clk-rk3188.c
+> +++ b/drivers/clk/rockchip/clk-rk3188.c
+> @@ -599,6 +599,11 @@ static struct rockchip_clk_branch rk3188_clk_branches[] __initdata = {
+>         GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(8), 13, GFLAGS),
+>  };
+>  
+> +static const char *rk3188_critical_clocks[] __initconst = {
+> +       "aclk_cpu",
+> +       "aclk_peri",
 
-Yes, I noticed this. What I meant is that smp_ops.cpu_die() and
-smp_ops.cpu_kill() are not synchronized.
+I'm not against the idea of critical clocks, but I want to verify that
+there is no other driver out there that is a better fit for claiming
+these clks via clk_get and enabling them the normal way via clk_enable?
 
-> /*
->  * called on the thread which is asking for a CPU to be shutdown -
->  * waits until shutdown has completed, or it is timed out.
->  */
-> void __cpu_die(unsigned int cpu)
-> {
->         if (!wait_for_completion_timeout(&cpu_died, msecs_to_jiffies(5000))) {
->                 pr_err("CPU%u: cpu didn't die\n", cpu);
->                 return;
+Regards,
+Mike
+
+> +};
+> +
+>  static void __init rk3188_common_clk_init(struct device_node *np)
+>  {
+>         void __iomem *reg_base;
+> @@ -628,6 +633,8 @@ static void __init rk3188_common_clk_init(struct device_node *np)
+>                                    RK3188_GRF_SOC_STATUS);
+>         rockchip_clk_register_branches(common_clk_branches,
+>                                   ARRAY_SIZE(common_clk_branches));
+> +       rockchip_clk_protect_critical(rk3188_critical_clocks,
+> +                                     ARRAY_SIZE(rk3188_critical_clocks));
+>  
+>         rockchip_register_softrst(np, 9, reg_base + RK2928_SOFTRST_CON(0),
+>                                   ROCKCHIP_SOFTRST_HIWORD_MASK);
+> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> index 0d8c6c5..6c6f954 100644
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -680,6 +680,11 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+>         GATE(0, "pclk_isp_in", "ext_isp", 0, RK3288_CLKGATE_CON(16), 3, GFLAGS),
+>  };
+>  
+> +static const char *rk3288_critical_clocks[] __initconst = {
+> +       "aclk_cpu",
+> +       "aclk_peri",
+> +};
+> +
+>  static void __init rk3288_clk_init(struct device_node *np)
+>  {
+>         void __iomem *reg_base;
+> @@ -710,6 +715,8 @@ static void __init rk3288_clk_init(struct device_node *np)
+>                                    RK3288_GRF_SOC_STATUS);
+>         rockchip_clk_register_branches(rk3288_clk_branches,
+>                                   ARRAY_SIZE(rk3288_clk_branches));
+> +       rockchip_clk_protect_critical(rk3288_critical_clocks,
+> +                                     ARRAY_SIZE(rk3288_critical_clocks));
+>  
+>         rockchip_register_softrst(np, 9, reg_base + RK3288_SOFTRST_CON(0),
+>                                   ROCKCHIP_SOFTRST_HIWORD_MASK);
+> diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+> index 278cf9d..9189f1b 100644
+> --- a/drivers/clk/rockchip/clk.c
+> +++ b/drivers/clk/rockchip/clk.c
+> @@ -242,3 +242,16 @@ void __init rockchip_clk_register_branches(
+>                 rockchip_clk_add_lookup(clk, list->id);
 >         }
->         printk(KERN_NOTICE "CPU%u: shutdown\n", cpu);
-> ...
->         if (!platform_cpu_kill(cpu))
->                 printk("CPU%u: unable to kill\n", cpu);
-> }
+>  }
+> +
+> +void __init rockchip_clk_protect_critical(const char *clocks[], int nclocks)
+> +{
+> +       int i;
+> +
+> +       /* Protect the clocks that needs to stay on */
+> +       for (i = 0; i < nclocks; i++) {
+> +               struct clk *clk = __clk_lookup(clocks[i]);
+> +
+> +               if (clk)
+> +                       clk_prepare_enable(clk);
+> +       }
+> +}
+> diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
+> index 887cbde..2b0bca1 100644
+> --- a/drivers/clk/rockchip/clk.h
+> +++ b/drivers/clk/rockchip/clk.h
+> @@ -329,6 +329,7 @@ void rockchip_clk_register_branches(struct rockchip_clk_branch *clk_list,
+>                                     unsigned int nr_clk);
+>  void rockchip_clk_register_plls(struct rockchip_pll_clock *pll_list,
+>                                 unsigned int nr_pll, int grf_lock_offset);
+> +void rockchip_clk_protect_critical(const char *clocks[], int nclocks);
+>  
+>  #define ROCKCHIP_SOFTRST_HIWORD_MASK   BIT(0)
+>  
+> -- 
+> 2.0.1
 > 
-> void __ref cpu_die(void)
-> {
-> ...
->         /*
->          * Tell __cpu_die() that this CPU is now safe to dispose of.  Once
->          * this returns, power and/or clocks can be removed at any point
->          * from this CPU and its cache by platform_cpu_kill().
->          */
->         complete(&cpu_died);
-> 
-> There _is_ synchronisation between these two.  Your cpu_kill() function
-> will not be called until we have flushed all data from the dying CPU's
-> cache.  That's the best we can do, because if we cause the dying CPU to
-> exit the coherency domain, any kind of locking or completion will no
-> longer work (neither will your state tracking solution because the L1
-> caches will no longer snoop.)
-
-We're not relying on the L1 cache, though. Don't sync_cache_{r,w}()
-ensure all reads/writes reach at least the L2?
-
-Besides, we modeled this after the MCPM code (e.g., __mcpm_cpu_down()).
-Are both implementations incorrect?
-
-> > Hmm, I'm pretty sure the synchronization is required for our B15 core.
-> > If we yank the power before the core has properly quiesced, the whole
-> > CPU complex will lock up. (Similar story for the power-up while loop you
-> > complained about above.)
-> 
-> If you need to ensure that the power isn't turned off too soon, how about
-> using a delayed work queue to do the power-off of the CPU (remembering to
-> cancel the delayed work queue when powering the CPU back up.)
-
-How does that ensure that the CPU is down by the time the work is
-scheduled? It seems like this would just defer the work long enough that
-it *most likely* has quiesced, but I don't see how this gives us a
-better guarantee. Or maybe I'm missing something. (If so, please do
-enlighten!)
-
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
