@@ -1,109 +1,47 @@
-From: Humberto Naves <hsnaves@gmail.com>
-Subject: Re: [PATCHv2 1/5] clk: samsung: exynos5410: Add NULL pointer checks
- in clock init
-Date: Thu, 31 Jul 2014 15:13:37 +0200
-Message-ID: <CAEe5pB-FnkY8E9qPjy+6R5ausEEx-pO2wupWYZO8Lscb2BAwiw@mail.gmail.com>
-References: <1406805732-17372-1-git-send-email-hsnaves@gmail.com>
- <1406805732-17372-2-git-send-email-hsnaves@gmail.com>
- <53DA37EA.7010306@gmail.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
+Date: Thu, 31 Jul 2014 16:16:17 +0300
+Message-ID: <53DA41A1.5010900@ti.com>
+References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de> <1406728949-7560-3-git-send-email-sassmann@kpanic.de> <20140730175033.GA17528@sirena.org.uk> <53DA12BF.1060008@kpanic.de> <53DA284D.6030404@ti.com> <53DA2F53.8010405@kpanic.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53DA37EA.7010306@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <ta.omasab@gmail.com>, linux-doc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Andreas Farber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53DA2F53.8010405-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+<snip>
 
-I am bit confused by your response: first you mentioned that I should
-remove the NULL check for variable np, but later on you suggested that
-I should rearrange the conditional statement to avoid adding more
-indentation. My guess is that I should remove that if statement
-altogether?
+>>> +static int of_twl6030_clk32kg_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct device_node *node = pdev->dev.of_node;
+>>> +	struct clk *clk;
+>>> +
+>>> +	if (!node)
+>>> +		return -ENODEV;
+>>> +
+>>> +	clk = devm_clk_get(&pdev->dev, "clk32kg");
+>>> +	if (IS_ERR(clk))
+>>> +		return PTR_ERR(clk);
+>>> +
+>>> +	return clk_prepare(clk);
+>>
+>> This is plain wrong as pointed out earlier. The driver that uses the
+>> clock must enable it.
+>
+> Understood. I'll change it to clk_prepare_enable().
 
-Regarding the ctx variable, should I still remove the NULL check? As
-you said, in the near future samsung_clk_init() won't panic anymore,
-and keeping the check in place won't hurt anybody.
+Nono, remove it completely from here. The clock driver should not enable 
+itself by default. The clock itself has some sort of customer somewhere 
+(like am33xx-wifi driver), which should request for the clock and enable 
+it only when needed.
 
-Best,
-Humberto
+-Tero
 
-On Thu, Jul 31, 2014 at 2:34 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Humberto,
->
-> Please see my comments inline.
->
-> On 31.07.2014 13:22, Humberto Silva Naves wrote:
->> Added NULL pointer checks for device_node input parameter and
->> for the samsung_clk_provider context returned by samsung_clk_init.
->> Even though the *current* samsung_clk_init function never returns
->> a NULL pointer, it is good to keep this check in place to avoid
->> possible problems in the future due to changes in implementation.
->> That way, we also improve the consistency of the code that performs
->> clock initialization across the different SoCs.
->>
->> Signed-off-by: Humberto Silva Naves <hsnaves@gmail.com>
->> ---
->>  drivers/clk/samsung/clk-exynos5410.c |   12 +++++++++---
->>  1 file changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/clk/samsung/clk-exynos5410.c b/drivers/clk/samsung/clk-exynos5410.c
->> index 231475b..bf57c80 100644
->> --- a/drivers/clk/samsung/clk-exynos5410.c
->> +++ b/drivers/clk/samsung/clk-exynos5410.c
->> @@ -188,11 +188,17 @@ static void __init exynos5410_clk_init(struct device_node *np)
->>       struct samsung_clk_provider *ctx;
->>       void __iomem *reg_base;
->>
->> -     reg_base = of_iomap(np, 0);
->> -     if (!reg_base)
->> -             panic("%s: failed to map registers\n", __func__);
->> +     if (np) {
->
-> Since all Exynos-based boards are always booted using DT, this function
-> will never be called if there is no node for the clock controller and so
-> there is no way this pointer can end up being NULL. I don't see a point
-> in complicating this code with useless checks.
->
->> +             reg_base = of_iomap(np, 0);
->> +             if (!reg_base)
->> +                     panic("%s: failed to map registers\n", __func__);
->> +     } else {
->> +             panic("%s: unable to determine soc\n", __func__);
->> +     }
->
-> As a side note, since panic() does not return, the code above could be
-> changed to follow rest of checks in this function:
->
->         if (!np)
->                 panic("%s: unable to determine soc\n", __func__);
->
->         reg_base = of_iomap(np, 0);
->         ...
->
-> leading to more readable code with less indentation and less changes to
-> existing code.
->
->>
->>       ctx = samsung_clk_init(np, reg_base, CLK_NR_CLKS);
->> +     if (!ctx)
->> +             panic("%s: unable to allocate context.\n", __func__);
->
-> samsung_clk_init() already panics on any error, although now as I think
-> of it, it probably should be changed with a patch to just error out and
-> let the caller handle the error. However callers don't need to be
-> changed before this is done.
->
-> Best regards,
-> Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
