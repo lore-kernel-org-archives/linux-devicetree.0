@@ -1,98 +1,153 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
- support
-Date: Thu, 31 Jul 2014 12:28:00 +0200
-Message-ID: <53DA1A30.4070509@suse.de>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com> <53D5435B.8030305@suse.de> <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com> <53D783CC.2080108@suse.de> <CAEC9eQOpS90U9kWmY8YdcAtdxQYKoM9ikoWpkwMs6T2udLeZHA@mail.gmail.com> <53D9484A.1070905@suse.de> <CAEC9eQOFWQ8t1zzOVrHm2=aS4+N94EW6LSjBUG2fH51aFs0GLQ@mail.gmail.com> <53DA0513.3080602@suse.de> <20140731102348.GC7458@ulmo>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dt: sun7i: Add Banana Pi board
+Date: Thu, 31 Jul 2014 12:29:29 +0200
+Message-ID: <53DA1A89.4000104@redhat.com>
+References: <1406653348-16638-1-git-send-email-hdegoede@redhat.com> <20140731095800.GA3952@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="oNvHOiNqkbrDO6w2KfPcX4FnT158lXRDm"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140731102348.GC7458@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBD5V5CPAKGQEM2BLG7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140731095800.GA3952@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---oNvHOiNqkbrDO6w2KfPcX4FnT158lXRDm
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Am 31.07.2014 12:23, schrieb Thierry Reding:
-> On Thu, Jul 31, 2014 at 10:57:55AM +0200, Andreas F=C3=A4rber wrote:
->> Am 31.07.2014 10:38, schrieb Ajay kumar:
-> [...]
->>> With just the spring-bridge.v6 branch of your own tree, I am able to =
-see
->>> bootup logo on Skate(a variant of spring which also contains ps8622).=
-
->>> I have tried both exynos_defconfig and multi_v7_defconfig.
->>> I enable DRM, EXYNOS DRM, BRIDGE CHIPS, IOMMU, EXYNOS IOMMU
->>> in configs.
->>>
->>> Even in your bootlogs, I can see DP getting probed.
->>> And, you say backlight is also visible. That means entire display
->>> path should be fine. Its just that you should start writing to the bu=
-ffer.
->>> Have you enabled boot logos?
+On 07/31/2014 11:58 AM, Maxime Ripard wrote:
+> Hi Hans,
+> 
+> On Tue, Jul 29, 2014 at 07:02:28PM +0200, Hans de Goede wrote:
+>> The Banana Pi is an A20 based development board using Raspberry Pi compatible
+>> IO headers. It comes with 1 GB RAM, 1 Gb ethernet, 2x USB host, sata, hdmi
+>> and stereo audio out + various expenansion headers:
 >>
->> Let me clarify: U-Boot uses the display [*], so it is powered and I se=
-e
->> penguins initially. Then, when drm gets initialized, the screen goes
->> black and no longer prints kernel messages or systemd output or X11 gd=
-m
->> login screen.
->=20
-> Who's displaying the penguins? If you're referring to the Linux boot
-> logo then it shouldn't be displayed at all until after DRM has been
-> initialized (and the framebuffer console been set up).
+>> http://www.bananapi.org/
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile               |   1 +
+>>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 183 +++++++++++++++++++++++++++++++
+>>  2 files changed, 184 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index bdbc84a..440e037 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -379,6 +379,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>>  	sun6i-a31-hummingbird.dtb \
+>>  	sun6i-a31-m9.dtb
+>>  dtb-$(CONFIG_MACH_SUN7I) += \
+>> +	sun7i-a20-bananapi.dtb \
+>>  	sun7i-a20-cubieboard2.dtb \
+>>  	sun7i-a20-cubietruck.dtb \
+>>  	sun7i-a20-i12-tvbox.dtb \
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>> new file mode 100644
+>> index 0000000..0332b82
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>> @@ -0,0 +1,183 @@
+>> +/*
+>> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+>> + *
+>> + * http://www.opensource.org/licenses/gpl-license.html
+>> + * http://www.gnu.org/copyleft/gpl.html
+>> + */
+>> +
+>> +/dts-v1/;
+>> +/include/ "sun7i-a20.dtsi"
+>> +/include/ "sunxi-common-regulators.dtsi"
+>> +
+>> +/ {
+>> +	model = "LeMaker Banana Pi";
+>> +	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+>> +
+>> +	soc@01c00000 {
+>> +		spi0: spi@01c05000 {
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&spi0_pins_a>;
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		mmc0: mmc@01c0f000 {
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
+>> +			vmmc-supply = <&reg_vcc3v3>;
+>> +			bus-width = <4>;
+>> +			cd-gpios = <&pio 7 10 0>; /* PH10 */
+>> +			cd-inverted;
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		usbphy: phy@01c13400 {
+>> +			usb1_vbus-supply = <&reg_usb1_vbus>;
+>> +			usb2_vbus-supply = <&reg_usb2_vbus>;
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		ehci0: usb@01c14000 {
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		ohci0: usb@01c14400 {
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		ahci: sata@01c18000 {
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		ehci1: usb@01c1c000 {
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		ohci1: usb@01c1c400 {
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		pinctrl@01c20800 {
+>> +			uart3_pins_bananapi: uart3_pin@0 {
+>> +				allwinner,pins = "PH0", "PH1";
+>> +				allwinner,function = "uart3";
+>> +				allwinner,drive = <0>;
+>> +				allwinner,pull = <0>;
+>> +			};
+> 
+> That node should be in the DTSI
 
-Yes, I'm referring to the default boot logo, but before the boot
-messages (console=3Dtty1) indicate that [drm] driver is being initialized=
-=2E
+I deliberately put it here because it is non standard, uart3
+has 4 pins rx, tx, cts and rts, which can be mapped to either
+PG6-9 or PH0-3 but here only 2 are used, it seemed appropriate
+to put this inside the dts, if we start also taking pinctrl
+variants where a subset of the pins are used into the dtsi
+then we will end up with a lot of pinctrl entries there.
 
->> Since drm stuff is the only variance here and it works with simplefb,
->> surely something prints to some buffer!
->=20
-> If you have something like simplefb enabled in addition to a DRM driver=
-,
-> then perhaps the DRM driver isn't properly taking over the framebuffer
-> console.
+Note if you decide to take this as is, please
+s/bananapi.org/lemaker.org/ in the commit message, bananapi.org
+is an unofficial site, I should have put lemaker.org there.
 
-Okay, that's worth a try. Around v4 of this series it was not a problem.
+Note btw that we already have this problem for spi1, the
+current spi1_pins_a does not include the cs1 pin, because it
+was added for use in sun7i-a20-olinuxino-micro.dts where
+only cs0 is hooked up, but I decided to leave that as is for now.
 
-Thanks,
-Andreas
+Also the "primary" binding for spi2 is to PORTB, but
+our spi2_pins_a binds it to PORTC, so it should be renamed
+spi2_pins_b IMHO.
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=BC=
-rnberg
+Regards,
 
-
---oNvHOiNqkbrDO6w2KfPcX4FnT158lXRDm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJT2ho2AAoJEPou0S0+fgE/py8QAKfLqMssSWEKIiJY5/FwtvOV
-+7pgtILS/IzejxYnm1DQjgXnevUcVlGG/ZB+C6avFW582pRhTHsxzTBcFGFzBrcE
-dabq+ssVWcesoMqkYFXL4q9HBWj29ZBqXUUvKjr6+7/JvGAQ/xiMLonuJ3rsU3hE
-3WBzR2SEyKMnQiPm9Mp4MP91AZPBcbMGeCpORpSFKTIRHkilbjS0jHmRo42Ns/P+
-jD0GaHgQPlHsmWh/471PmyLV5MJ8a/QLCOCTPrjWkOU9siZQoHjS4843K2PwbwtC
-qGbDNEIcigA9bH0lS68W29VtseNvea5JHDZ7it4z3GnUyszLojZB1xU9cbSEly7H
-zI3YlQBhQU6RZJK1/c4ArExUoRM4MOUwdCTMrzppYVcZpF6lmr5DT1sza2fPRGuh
-DYme4iwDjRfD9/LdBH1DlH6Dl8k/dp6S3dj5cCaCoplK2SJ7ocFdNnoASZsCPEad
-ATja9qqzBwKF8YQ3wq/qH+kWOCUhMKGKBKaOtF1s2bntuuu0W20O3UtPUA72LO8X
-kyKFscVyANprWsiV2bC+0XSbSmM/wiS4L7eGAO5vN8YTE2Snad1fOMO3oDGdiUxR
-QBGjB2fDC2HU16jcUsMjzKMR+qlanlMNUlUdCPKvFBnuGdHFN2/pRQg+9w+iAEd8
-xDITEafO+/6vM9OE6OZ1
-=5MnN
------END PGP SIGNATURE-----
-
---oNvHOiNqkbrDO6w2KfPcX4FnT158lXRDm--
+Hans
