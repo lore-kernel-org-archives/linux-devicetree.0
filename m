@@ -1,78 +1,66 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
-Date: Fri, 1 Aug 2014 00:10:05 +0800
-Message-ID: <C5B462AE-B1D2-4067-91EB-44FDF49D28FA@jcrosoft.com>
-References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz> <20140728122103.GR9532@piout.net> <53D64ADA.1000102@aksignal.cz> <20140728223859.GA3214@piout.net> <20140729100017.31f0b1be@bbrezillon> <20140731155906.GH3214@piout.net>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v2 1/4] ARM: dts: Add emmc and sdmmc to the rk3288 device tree
+Date: Thu, 31 Jul 2014 09:13:17 -0700
+Message-ID: <1406823200-20911-2-git-send-email-dianders@chromium.org>
+References: <1406823200-20911-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140731155906.GH3214@piout.net>
+In-Reply-To: <1406823200-20911-1-git-send-email-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, =?utf-8?Q?Ji=C5=99=C3=AD_Prchal?= <jiri.prchal@aksignal.cz>, Nicolas FERRE <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, voice.shen@atmel.com, linux-arm-kernel@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This adds support for the sdmmc and emmc ports on the rk3288 using the
+currently posted driver from Addy at:
+  https://patchwork.kernel.org/patch/4653631/
 
-On Jul 31, 2014, at 11:59 PM, Alexandre Belloni <alexandre.belloni@free=
--electrons.com> wrote:
+Note:
+* This is not baesd on Jaehoon's patch series removing the slot node,
+  but it does use new syntax like putting the bus width at the top
+  level and using the new cap-mmc-highspeed / cap-sd-highspeed.  A
+  future patch will modify this one to remove the slot node.
 
-> On 29/07/2014 at 10:00:17 +0200, Boris Brezillon wrote :
->> Hi Alexandre,
->>=20
->>> While this solves the particular issue Ji=C5=99=C3=AD is seeing, th=
-is will not
->>> solve the case where PA14 (CS0) is not used by the spi driver at al=
-l. It
->>> will remained muxed as CS0 and toggle when the spi master needs to
->>> access CS0 until another driver muxes it to something else. I still
->>> believe we should explicitly ask pinctrl to mux them as gpios.
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+Changes in v2:
+- New patchwork link for Addy's patch
 
-This is not the job of the kernel but to the bootloader
-no the pinctrl binding is not here and will never be here the configure=
- a pin as a GPIO or
-to a specific state. This the job of the driver or the bootloader
+ arch/arm/boot/dts/rk3288.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
->>>=20
->>=20
->> Do we really care about this case ?
->> After all, if a given pin needs a specific muxing during kernel boot
->> (i.e. a pin connected to a gpio-led that needs to stay in its previo=
-us
->> state or a pin connected to the reset line of a device that needs to
->> stay up and running during kernel boot) the bootloader/bootstrap sho=
-uld
->> have muxed this pin appropriately before booting the kernel.
->>=20
->=20
-> Yeah, you are right.
->=20
->=20
->> What do you mean by "we should explicitly ask pinctrl to mux them as
->> gpios" ?
->> Do you mean configuring all the pins as GPIOs when the pin controlle=
-r is
->> probed, or just adding a new pinctrl state configuring the pin as an
->> output GPIO and reference it in the pinctrl-0 property of the spi
->> controller.
->>=20
->> If the former, you'll break devices that needs their pins to stay in
->> the state they were during the bootloader/boostrap phase.
->> The latter won't work if the pin you request as GPIO is later reques=
-ted
->> by another device (which, if I'm correct, is exactly the case you're
->> trying to solve).
->>=20
->=20
-> Again you are right, let's not care about that use case. I still feel
-> that the pinctrl-0 property has to be filled correctly.
->=20
-> --=20
-> Alexandre Belloni, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 3ef8951..fd77a65 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -78,6 +78,28 @@
+ 		clock-frequency = <24000000>;
+ 	};
+ 
++	sdmmc: dwmmc@ff0c0000 {
++		compatible = "rockchip,rk3288-dw-mshc";
++		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
++		clock-names = "biu", "ciu";
++		fifo-depth = <0x100>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++		reg = <0xff0c0000 0x4000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	emmc: dwmmc@ff0f0000 {
++		compatible = "rockchip,rk3288-dw-mshc";
++		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
++		clock-names = "biu", "ciu";
++		fifo-depth = <0x100>;
++		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++		reg = <0xff0f0000 0x4000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
+ 	i2c1: i2c@ff140000 {
+ 		compatible = "rockchip,rk3288-i2c";
+ 		reg = <0xff140000 0x1000>;
+-- 
+2.0.0.526.g5318336
