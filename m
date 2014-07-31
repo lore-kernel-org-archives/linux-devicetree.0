@@ -1,75 +1,52 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
-Date: Thu, 31 Jul 2014 19:14:59 +0200
-Message-ID: <53DA7993.1000800@suse.de>
-References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <CAP_ceTz+KRJzF9XV=_aLE+6sV6d5GqCtQ_daKtpFJfCZQ1erpA@mail.gmail.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
+Date: Thu, 31 Jul 2014 19:23:19 +0200
+Message-ID: <20140731172319.GN9809@8bytes.org>
+References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
+	<20140731120424.GK9809@8bytes.org>
+	<CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA@mail.gmail.com>
+	<20140731163611.GM9809@8bytes.org>
+	<CAOesGMjovbqn86Q97_SCgsC4jeZf1M_gTKk-Twjr_=6rvnXTCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAP_ceTz+KRJzF9XV=_aLE+6sV6d5GqCtQ_daKtpFJfCZQ1erpA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vincent Palatin <vpalatin@chromium.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ARM PORT <linux-arm-kernel@lists.infradead.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMjovbqn86Q97_SCgsC4jeZf1M_gTKk-Twjr_=6rvnXTCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jul 31, 2014 at 10:14:08AM -0700, Olof Johansson wrote:
+> On Thu, Jul 31, 2014 at 9:36 AM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
+> > On Thu, Jul 31, 2014 at 08:38:47AM -0700, Olof Johansson wrote:
+> >> >
+> >> > Applied, thanks everyone.
+> >>
+> >> Really?
+> >>
+> >> Gee, thanks for giving people a chance to reply with acks. It's
+> >> considered polite to do so when there has been outstanding questions.
+> >
+> > Its not pushed yet, I can still make changes. Do you have any objections
+> > or an Ack?
+> 
+> No outstanding objections. We have some things to amend with later but
+> that's perfectly fine:
+> 
+> Reviewed-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 
-Am 31.07.2014 19:00, schrieb Vincent Palatin:
-> Always a bit late to the game.
-> One small comment inline.
->=20
-> Reviewed-by: Vincent Palatin <vpalatin@chromium.org>
+Thanks, added your Reviewed-by and will push the new tree out in the
+evening.
 
-Thanks,
 
->=20
-> On Thu, Jul 31, 2014 at 9:08 AM, Andreas F=C3=A4rber <afaerber@suse.d=
-e> wrote:
->> +       usb3_vbus_reg: regulator-usb3 {
->> +               compatible =3D "regulator-fixed";
->> +               regulator-name =3D "P5.0V_USB3CON";
->> +               regulator-min-microvolt =3D <5000000>;
->> +               regulator-max-microvolt =3D <5000000>;
->> +               gpio =3D <&gpe1 0 GPIO_ACTIVE_LOW>;
->> +               enable-active-high;
->> +       };
->=20
-> GPE1_0 GPIO is the HSIC hub (SMSC 3503) reset# line (already defined
-> below afaik).
-
-Yes, that was a suggestion you made on v1.
-
-> On this design there is no external USB3 port, so no VBUS reg/load
-> switch for USB3.
-
-Could you be a little clearer? Are you suggesting to drop the gpio
-property? I just re-tested that without the regulator node plus the
-vbus-supply below I don't get any USB2 (so maybe rename the regulator?)=
-=2E
-
-Regards,
-Andreas
-
->> +
->> +       usb@12110000 {
->> +               samsung,vbus-gpio =3D <&gpx1 1 GPIO_ACTIVE_HIGH>;
->> +       };
->> +
->> +       usb-hub {
->> +               compatible =3D "smsc,usb3503a";
->> +               reset-gpios =3D <&hsic_reset>;
->> +       };
-[...]
->> +&usbdrd_phy {
->> +       vbus-supply =3D <&usb3_vbus_reg>;
->> +};
->> +
->> +#include "cros-ec-keyboard.dtsi"
->> --
->> 1.9.3
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+	Joerg
