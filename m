@@ -1,61 +1,60 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 2/4] ARM: dts: Enable emmc and sdmmc on the rk3288-evb boards
-Date: Thu, 31 Jul 2014 16:44:39 -0700
-Message-ID: <CAD=FV=UcJD08wUB7kJH4DusJEZ+xdH=L-zig5DGZrUgu9HYbmA@mail.gmail.com>
-References: <1406823200-20911-1-git-send-email-dianders@chromium.org>
-	<1406823200-20911-3-git-send-email-dianders@chromium.org>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v3] Documentation: devicetree: Fix tps65090 typos in example
+Date: Fri, 1 Aug 2014 01:51:13 +0200
+Message-ID: <CABxcv==gNo84M7uFK04MiJp=Wn-n3uS4xH3QzxMNoKuOirH0VQ@mail.gmail.com>
+References: <1406755767-5910-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406823200-20911-3-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406755767-5910-1-git-send-email-afaerber@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Andreas,
 
-On Thu, Jul 31, 2014 at 9:13 AM, Doug Anderson <dianders@chromium.org> wrote:
-> This adds support for the sdmmc and emmc ports on the rk3288 using the
-> currently posted driver from Addy at:
->   https://patchwork.kernel.org/patch/4653631/
+On Wed, Jul 30, 2014 at 11:29 PM, Andreas F=C3=A4rber <afaerber@suse.de=
+> wrote:
+> Specification and existing device trees use vsys-l{1,2}-supply,
+> not vsys_l{1,2}-supply. Fix the example to match the specification.
 >
-> This enables basic SD and eMMC support.  Things are not yet running at
-> the fastest speed and we don't have the regulators specified, but we
-> can at least use the eMMC and SD cards now.
->
-> A few notes:
-> * This is not baesd on Jaehoon's patch series removing the slot node,
->   but it does use new syntax like putting the bus width at the top
->   level and using the new cap-mmc-highspeed / cap-sd-highspeed.  A
->   future patch will modify this one to remove the slot node.
->
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Fixes: 21d2202158e9 ("mfd: tps65090: add DT support for tps65090")
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 > ---
-> Changes in v2:
-> - Squashed in the DDR50 mode since Addy spun his patch.
-> - New patchwork link for Addy's patch
+>  v2 -> v3:
+>  * Added Fixes header
+>  * + regulator and mfd maintainers
 >
->  arch/arm/boot/dts/rk3288-evb.dtsi | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+>  v1 -> v2:
+>  * More verbose commit message (requested by Mark Rutland)
 >
-> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-> index 749e20d..ec580fa 100644
-> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> @@ -37,6 +37,39 @@
->         };
->  };
+>  Documentation/devicetree/bindings/regulator/tps65090.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> +&emmc {
-> +       broken-cd;
-> +       bus-width = <8>;
-> +       cap-mmc-highspeed;
-> +       mmc-ddr-1_8v;
+> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt=
+ b/Documentation/devicetree/bindings/regulator/tps65090.txt
+> index 340980239ea9..ca69f5e3040c 100644
+> --- a/Documentation/devicetree/bindings/regulator/tps65090.txt
+> +++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
+> @@ -45,8 +45,8 @@ Example:
+>                 infet5-supply =3D <&some_reg>;
+>                 infet6-supply =3D <&some_reg>;
+>                 infet7-supply =3D <&some_reg>;
+> -               vsys_l1-supply =3D <&some_reg>;
+> -               vsys_l2-supply =3D <&some_reg>;
+> +               vsys-l1-supply =3D <&some_reg>;
+> +               vsys-l2-supply =3D <&some_reg>;
+>
 
-Strangely DDR mode started failing all of a sudden for me.  Even going
-back to old git hashes made things fail.  ...I'd be curious to know if
-DDR mode is working for others.
+True, these also matches the .supply_name used when registering the
+LDO[1-2] regulators in the tps65090 driver. So clearly the example was
+wrong while the property specification is correct.
 
--Doug
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+Best regards,
+Javier
