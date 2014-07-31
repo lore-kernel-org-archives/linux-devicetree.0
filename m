@@ -1,92 +1,147 @@
-From: Brian Austin <brian.austin@cirrus.com>
-Subject: Re: [PATCH 1/2] ASoC: Add support for CS35L32 Boosted
-	Amplifier
-Date: Thu, 31 Jul 2014 09:37:38 -0500
-Message-ID: <alpine.DEB.2.02.1407310936000.7394@heelrod>
-References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
- <CADhT+wfub5Li5tdM+dTnridOs9k5GwaKDTKvo7s-nefS4Oymyg@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ARC fails to boot on linux-next of 20140711
+Date: Thu, 31 Jul 2014 10:12:47 -0500
+Message-ID: <CAL_JsqL_sjp_31oJj5Nc4wh6+bo8Qqq4tdEiw9FLejJk+sgoVw@mail.gmail.com>
+References: <C2D7FE5348E1B147BCA15975FBA230753C4B67CF@IN01WEMBXA.internal.synopsys.com>
+ <CAL_JsqJ2q0RSvXQW03RqwwBi_TKQ7Zt6DsUbsUruzh5oqYi5Cg@mail.gmail.com>
+ <C2D7FE5348E1B147BCA15975FBA230753C4B7DD5@IN01WEMBXA.internal.synopsys.com>
+ <20140726165055.D3E64C43E0B@trevor.secretlab.ca> <CAL_JsqLR65PcLhoQR6VaQvrLLbPOR1tLx9oLEinYkkATSKxbKQ@mail.gmail.com>
+ <20140731032527.D2C5AC40A02@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1994874856-1406817458=:7394"
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CADhT+wfub5Li5tdM+dTnridOs9k5GwaKDTKvo7s-nefS4Oymyg@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Austin <brian.austin@cirrus.com>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, lgirdwood@gmail.com, broonie@kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140731032527.D2C5AC40A02-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-next <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anton Kolesov <Anton.Kolesov-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---8323329-1994874856-1406817458=:7394
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 30, 2014 at 10:25 PM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Sat, 26 Jul 2014 15:10:28 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sat, Jul 26, 2014 at 11:50 AM, Grant Likely
+>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> > On Sat, 26 Jul 2014 06:52:36 +0000, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
+>> >> Hi Rob,
+>> >>
+>> >> On Friday 25 July 2014 07:45 PM, Rob Herring wrote:
+>> >> > On Fri, Jul 25, 2014 at 6:02 AM, Vineet Gupta
+>> >> > <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
+>> >> >> > Hi Grant,
+>> >> >> >
+>> >> >> > linux-next has a series for arc_uart (via tty tree) which converts it to generic
+>> >> >> > earlycon and specifies console via /chosen/stdout-path vs.  an explicit param in
+>> >> >> > /chose/bootargs
+>> >> >> >
+>> >> >> > 2014-06-24 9da433c0a0b5 ARC: [arcfpga] stdout-path now suffices for earlycon/console
+>> >> >> >
+>> >> >> > This relied on prev commit of yours (from linux next of 20140711), which seem to
+>> >> >> > have disappeared now.
+>> >> >> >
+>> >> >> > 2014-03-27 a9296cf2d0b6 of: Create of_console_check() for selecting a console
+>> >> >> > specified in /chosen
+>> >> >> > 2014-03-27 cfa9cacc5dd3 of: Enable console on serial ports specified by
+>> >> >> > /chosen/stdout-path
+>> >> >> >
+>> >> >> > Is there a specific reason for dropping these patches (or perhaps a merge to be
+>> >> >> > merged). I cherry-picked both but still doesn't work.
+>> >> >> >
+>> >> >> > Can you please advise next step forward, before I go off debugging with those
+>> >> >> > patches in.
+>> >> > There's an issue that if you have stdout-path and "earlycon" on the
+>> >> > command line, the kernel will switch to tty0 and disable the earlycon.
+>> >> >
+>> >> > This is the "fix", but I don't like adding the DT dependency into generic code:
+>> >> >
+>> >> > @@ -2382,7 +2386,7 @@ void register_console(struct console *newcon)
+>> >> >                 if (newcon->setup == NULL ||
+>> >> >                     newcon->setup(newcon, NULL) == 0) {
+>> >> >                         newcon->flags |= CON_ENABLED;
+>> >> > -                       if (newcon->device) {
+>> >> > +                       if (newcon->device  && !of_stdout) {
+>> >> >                                 newcon->flags |= CON_CONSDEV;
+>> >> >                                 preferred_console = 0;
+>> >> >                         }
+>> >>
+>> >> The DT settings relevant for ARC, which enable generic-earlycon and
+>> >> console-with-stdout-path are as follows
+>> >>
+>> >>         chosen {
+>> >>                 bootargs = "earlycon";
+>> >>                 stdout-path = &arcuart0;
+>> >>         };
+>> >>
+>> >> ....
+>> >>                 arcuart0: serial@c0fc1000 {
+>> >>                         compatible = "snps,arc-uart";
+>> >>
+>> >> And it works w/o above hunk, provided the 2 patches from Grant exist in linux-next
+>> >> which they don't at the moment. I'm pretty confused how the hunk above comes into
+>> >> picture.
+>> >>
+>> >> And if not then I will have to get the ARC std-out patch reverted in tty-next as
+>> >> it is broken.
+>> >
+>> > You need to revert it anyway, the dependency chain is broken. Just
+>> > because something is in linux-next doesn't mean it will be merged.
+>> > Dependencies must always be in the branch to which you commit.
+>> >
+>> > If that doesn't happen (like here) then bisecting is broken and the
+>> > dependencies may not actually get merged.
+>> >
+>> > When this happens, what you're supposed to do is tell the maintainers
+>> > what commits the patch depends on so that it can be applied to the
+>> > correct tree. In this case I could take it through my devicetree branch
+>> > that contains the console patches.
+>> >
+>> > If a patch depends on commits in several branches then it is a bit more
+>> > complex. What we usually do is create a new branch that merges in each
+>> > branch that is depended on, and then apply the commit on top of that.
+>> >
+>> > As for the console patches, I'm only going to be putting them back if I
+>> > can devise a good fix for the earlycon duplication issue.
+>>
+>> There is also a simple work-around. You have to specify the console
+>> when you use earlycon. For example, you can add "earlycon
+>> console=ttyAMA0" instead of just earlycon. To summarize, this is the
+>> state of combinations of console params:
+>>
+>> Working:
+>> stdout-path
+>> console=blah
+>> stdout-path + console=blah
+>> earlycon=blah
+>>
+>> Not working:
+>> stdout-path + earlycon
+>>
+>> Also, it is a developer only feature which is new. You will be aware
+>> of an issue because the earlycon starts output and then stops on
+>> switching to tty0 versus complete silence which could be anything.
+>
+> Fair enough. Okay, I'm going to put it back into linux-next. The proper
+> fix can come later.
+>
+>> There are other landmines in this area already. For example, setting
+>> earlycon on ARM will break the boot because an ioremap is attempted
+>> before paging_init. This is nothing new, but has always been the case
+>> if the 8250 driver was enabled.
+>
+> We should not allow earlycon to be selectable on ARM until this is
+> fixed. Can you do a patch for this?
 
+There is not a config option as it is always enabled when the console
+is enabled, and it is no different than many command line options that
+could break booting. More importantly, earlycon does work on ARM with
+semihosting since nothing needs to be mapped. And BTW, you can use
+semihosting with QEMU.
 
-On Wed, 30 Jul 2014, Dinh Nguyen wrote:
+Hopefully, we'll get fixmap support sorted out soon clearing this
+minefield. Part of fixmap support is needed for UEFI early ioremap and
+I think there's a few other things that could use it.
 
->=20
->=20
->=20
-> On Tue, Jul 29, 2014 at 3:02 PM, Brian Austin <brian.austin@cirrus.com>=
- wrote:
->       This patch adds support for the Cirrus Logic CS35L32 Boosted Ampl=
-ifier
->       I2S Output provides monitor data to the SOC/CODEC for speaker pro=
-tection algorithms
->=20
->       Signed-off-by: Brian Austin <brian.austin@cirrus.com>
->       ---
->       =C2=A0include/dt-bindings/sound/cs35l32.h | =C2=A0 26 ++
->       =C2=A0sound/soc/codecs/Kconfig =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0| =C2=A0 =C2=A05 +
->       =C2=A0sound/soc/codecs/Makefile =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- | =C2=A0 =C2=A02 +
->       =C2=A0sound/soc/codecs/cs35l32.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
-| =C2=A0670 +++++++++++++++++++++++++++++++++++
->       =C2=A0sound/soc/codecs/cs35l32.h =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
-| =C2=A0 97 +++++
->       =C2=A05 files changed, 800 insertions(+)
->       =C2=A0create mode 100644 include/dt-bindings/sound/cs35l32.h
->       =C2=A0create mode 100644 sound/soc/codecs/cs35l32.c
->       =C2=A0create mode 100644 sound/soc/codecs/cs35l32.h
->=20
->       +
->       +static int int_clear(struct snd_soc_dapm_widget *w,
->       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 struct snd_kcontrol *kcontrol, int event)
->       +{
->       + =C2=A0 =C2=A0 =C2=A0 struct snd_soc_codec *codec =3D w->codec;
->       +
->       + =C2=A0 =C2=A0 =C2=A0 if (SND_SOC_DAPM_EVENT_ON(event)) {
->       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 snd_soc_read(c=
-odec, CS35L32_INT_STATUS_1);
->       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 snd_soc_read(c=
-odec, CS35L32_INT_STATUS_2);
->       + =C2=A0 =C2=A0 =C2=A0 } else {
->       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;
->       + =C2=A0 =C2=A0 =C2=A0 }
->       + =C2=A0 =C2=A0 =C2=A0 return 0;
->=20
->=20
-> Can remove one of the "return 0" or why not just a void?
-You know, I think I am just going to remove this altogether. It was a=20
-request from Apps and I don't think it is really needed. I'll test withou=
-t=20
-it and send a v2 with it removed.
-
-Thanks,
-Brian
-
---8323329-1994874856-1406817458=:7394
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---8323329-1994874856-1406817458=:7394--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
