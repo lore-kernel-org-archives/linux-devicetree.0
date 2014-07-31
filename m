@@ -1,434 +1,242 @@
-From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: =?UTF-8?q?=5BPATCH=201/2=5D=5Bv2=5D=20powerpc/fsl-booke=3A=20Add=20initial=20T1040/T1042=20RDB=20board=20support?=
-Date: Thu, 31 Jul 2014 15:49:20 +0530
-Message-ID: <1406801960-3680-1-git-send-email-Priyanka.Jain@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlYI+954vlgkHg@public.gmane.org
-Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
+Date: Thu, 31 Jul 2014 12:43:03 +0200
+Message-ID: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T1040/T1042RDB is Freescale Reference Design Board.
-The board can support both T1040/T1042 QorIQ Power Architecture=E2=84=A2=
- processor.
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-T1040/T1042RDB board Overview
------------------------
-- SERDES Connections, 8 lanes supporting:
-	- PCI
-	- SGMII
-    	- QSGMII
-    	- SATA 2.0
-- DDR Controller
-    	- Supports rates of up to 1600 MHz data-rate
-    	- Supports one DDR3LP UDIMM
--IFC/Local Bus
-    	- NAND flash: 1GB 8-bit NAND flash
-    	- NOR: 128MB 16-bit NOR Flash
-- Ethernet
-    	- Two on-board RGMII 10/100/1G ethernet ports.
-    	- PHY #0 remains powered up during deep-sleep
-- CPLD
-- Clocks
-    	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
-    	- SERDES clocks
-- Power Supplies
-- USB
-    	- Supports two USB 2.0 ports with integrated PHYs
-    	- Two type A ports with 5V@1.5A per port.
-- SDHC
-    	- SDHC/SDXC connector
-- SPI
-    	- On-board 64MB SPI flash
-- I2C
-    	- Devices connected: EEPROM, thermal monitor, VID controller
-- Other IO
-    	- Two Serial ports
-    	- ProfiBus port
+This commit introduces a generic device tree binding for IOMMU devices.
+Only a very minimal subset is described here, but it is enough to cover
+the requirements of both the Exynos System MMU and Tegra SMMU as
+discussed here:
 
-Add support for T1040/T1042 RDB board:
-    -add device tree
-    -add entry in Kconfig to build
-    -Add entry in corenet_generic.c, as it is similar to other corenet =
-platforms
+    https://lkml.org/lkml/2014/4/27/346
 
-Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- Changes for v2: Incorporated Scott comments on using common name
- for compatible string for cpld as register set is same
+Changes in v5:
+- clarify comment about dma-ranges vs. IOMMU regarding a device's
+  disabled state
+- use proper DTS syntax reference absolute nodes for phandles
+- clarify the meaning of the #iommu-cells = <0> example
+- remove confusing (and unnecessary) #address-cells and #size-cells from
+  multi-master windowed IOMMU example and clarify the meaning of DMA
+  window
 
- arch/powerpc/boot/dts/t1040rdb.dts            |   43 +++++++
- arch/powerpc/boot/dts/t1042rdb.dts            |   43 +++++++
- arch/powerpc/boot/dts/t104xrdb.dtsi           |  157 +++++++++++++++++=
-++++++++
- arch/powerpc/platforms/85xx/Kconfig           |    2 +-
- arch/powerpc/platforms/85xx/corenet_generic.c |    2 +
- 5 files changed, 246 insertions(+), 1 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/t1040rdb.dts
- create mode 100644 arch/powerpc/boot/dts/t1042rdb.dts
- create mode 100644 arch/powerpc/boot/dts/t104xrdb.dtsi
+Changes in v4:
+- clarify that disabling an IOMMU DT node may not disable translation
+- be more explicit that examples are only examples
+- add multi-ID master example
 
-diff --git a/arch/powerpc/boot/dts/t1040rdb.dts b/arch/powerpc/boot/dts=
-/t1040rdb.dts
+Changes in v3:
+- use #iommu-cells instead of #address-cells/#size-cells
+- drop optional iommu-names property
+
+Changes in v2:
+- add notes about "dma-ranges" property (drop note from commit message)
+- document priorities of "iommus" property vs. "dma-ranges" property
+- drop #iommu-cells in favour of #address-cells and #size-cells
+- remove multiple-master device example
+
+ Documentation/devicetree/bindings/iommu/iommu.txt | 182 ++++++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
+
+diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
 new file mode 100644
-index 0000000..ff26043
+index 000000000000..5a8b4624defc
 --- /dev/null
-+++ b/arch/powerpc/boot/dts/t1040rdb.dts
-@@ -0,0 +1,43 @@
-+/*
-+ * T1040RDB Device Tree Source
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions =
-are met:
-+ *     * Redistributions of source code must retain the above copyrigh=
-t
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyr=
-ight
-+ *	 notice, this list of conditions and the following disclaimer in th=
-e
-+ *	 documentation and/or other materials provided with the distributio=
-n.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote produc=
-ts
-+ *	 derived from this software without specific prior written permissi=
-on.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of =
-the
-+ * GNU General Public License ("GPL") as published by the Free Softwar=
-e
-+ * Foundation, either version 2 of that License or (at your option) an=
-y
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
-Y
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
-MPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
-ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
- ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
-DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
-SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
-USED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
-OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
-SE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
++++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+@@ -0,0 +1,182 @@
++This document describes the generic device tree binding for IOMMUs and their
++master(s).
 +
-+/include/ "fsl/t104xsi-pre.dtsi"
-+/include/ "t104xrdb.dtsi"
 +
-+/ {
-+	model =3D "fsl,T1040RDB";
-+	compatible =3D "fsl,T1040RDB";
-+};
++IOMMU device node:
++==================
 +
-+/include/ "fsl/t1040si-post.dtsi"
-diff --git a/arch/powerpc/boot/dts/t1042rdb.dts b/arch/powerpc/boot/dts=
-/t1042rdb.dts
-new file mode 100644
-index 0000000..a30058a
---- /dev/null
-+++ b/arch/powerpc/boot/dts/t1042rdb.dts
-@@ -0,0 +1,43 @@
-+/*
-+ * T1042RDB Device Tree Source
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions =
-are met:
-+ *     * Redistributions of source code must retain the above copyrigh=
-t
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyr=
-ight
-+ *	 notice, this list of conditions and the following disclaimer in th=
-e
-+ *	 documentation and/or other materials provided with the distributio=
-n.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote produc=
-ts
-+ *	 derived from this software without specific prior written permissi=
-on.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of =
-the
-+ * GNU General Public License ("GPL") as published by the Free Softwar=
-e
-+ * Foundation, either version 2 of that License or (at your option) an=
-y
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
-Y
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
-MPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
-ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
- ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
-DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
-SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
-USED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
-OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
-SE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
++An IOMMU can provide the following services:
 +
-+/include/ "fsl/t104xsi-pre.dtsi"
-+/include/ "t104xrdb.dtsi"
++* Remap address space to allow devices to access physical memory ranges that
++  they otherwise wouldn't be capable of accessing.
 +
-+/ {
-+	model =3D "fsl,T1042RDB";
-+	compatible =3D "fsl,T1042RDB";
-+};
++  Example: 32-bit DMA to 64-bit physical addresses
 +
-+/include/ "fsl/t1042si-post.dtsi"
-diff --git a/arch/powerpc/boot/dts/t104xrdb.dtsi b/arch/powerpc/boot/dt=
-s/t104xrdb.dtsi
-new file mode 100644
-index 0000000..cafaa37
---- /dev/null
-+++ b/arch/powerpc/boot/dts/t104xrdb.dtsi
-@@ -0,0 +1,157 @@
-+/*
-+ * T1040RDB/T1042RDB Device Tree Source
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions =
-are met:
-+ *     * Redistributions of source code must retain the above copyrigh=
-t
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyr=
-ight
-+ *	 notice, this list of conditions and the following disclaimer in th=
-e
-+ *	 documentation and/or other materials provided with the distributio=
-n.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote produc=
-ts
-+ *	 derived from this software without specific prior written permissi=
-on.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of =
-the
-+ * GNU General Public License ("GPL") as published by the Free Softwar=
-e
-+ * Foundation, either version 2 of that License or (at your option) an=
-y
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
-Y
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
-MPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
-ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
- ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
-DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
-SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
-USED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
-OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
-SE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
++* Implement scatter-gather at page level granularity so that the device does
++  not have to.
 +
-+/ {
++* Provide system protection against "rogue" DMA by forcing all accesses to go
++  through the IOMMU and faulting when encountering accesses to unmapped
++  address regions.
 +
-+	ifc: localbus@ffe124000 {
-+		reg =3D <0xf 0xfe124000 0 0x2000>;
-+		ranges =3D <0 0 0xf 0xe8000000 0x08000000
-+			  2 0 0xf 0xff800000 0x00010000
-+			  3 0 0xf 0xffdf0000 0x00008000>;
++* Provide address space isolation between multiple contexts.
 +
-+		nor@0,0 {
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			compatible =3D "cfi-flash";
-+			reg =3D <0x0 0x0 0x8000000>;
-+			bank-width =3D <2>;
-+			device-width =3D <1>;
-+		};
++  Example: Virtualization
 +
-+		nand@2,0 {
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			compatible =3D "fsl,ifc-nand";
-+			reg =3D <0x2 0x0 0x10000>;
-+		};
++Device nodes compatible with this binding represent hardware with some of the
++above capabilities.
 +
-+		cpld@3,0 {
-+			compatible =3D "fsl,t1040rdb-cpld";
-+			reg =3D <3 0 0x300>;
-+		};
++IOMMUs can be single-master or multiple-master. Single-master IOMMU devices
++typically have a fixed association to the master device, whereas multiple-
++master IOMMU devices can translate accesses from more than one master.
++
++The device tree node of the IOMMU device's parent bus must contain a valid
++"dma-ranges" property that describes how the physical address space of the
++IOMMU maps to memory. An empty "dma-ranges" property means that there is a
++1:1 mapping from IOMMU to memory.
++
++Required properties:
++--------------------
++- #iommu-cells: The number of cells in an IOMMU specifier needed to encode an
++  address.
++
++The meaning of the IOMMU specifier is defined by the device tree binding of
++the specific IOMMU. Below are a few examples of typical use-cases:
++
++- #iommu-cells = <0>: Single master IOMMU devices are not configurable and
++  therefore no additional information needs to be encoded in the specifier.
++  This may also apply to multiple master IOMMU devices that do not allow the
++  association of masters to be configured. Note that an IOMMU can by design
++  be multi-master yet only expose a single master in a given configuration.
++  In such cases the number of cells will usually be 1 as in the next case.
++- #iommu-cells = <1>: Multiple master IOMMU devices may need to be configured
++  in order to enable translation for a given master. In such cases the single
++  address cell corresponds to the master device's ID. In some cases more than
++  one cell can be required to represent a single master ID.
++- #iommu-cells = <4>: Some IOMMU devices allow the DMA window for masters to
++  be configured. The first cell of the address in this may contain the master
++  device's ID for example, while the second cell could contain the start of
++  the DMA window for the given device. The length of the DMA window is given
++  by the third and fourth cells.
++
++Note that these are merely examples and real-world use-cases may use different
++definitions to represent their individual needs. Always refer to the specific
++IOMMU binding for the exact meaning of the cells that make up the specifier.
++
++
++IOMMU master node:
++==================
++
++Devices that access memory through an IOMMU are called masters. A device can
++have multiple master interfaces (to one or more IOMMU devices).
++
++Required properties:
++--------------------
++- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
++  master interfaces of the device. One entry in the list describes one master
++  interface of the device.
++
++When an "iommus" property is specified in a device tree node, the IOMMU will
++be used for address translation. If a "dma-ranges" property exists in the
++device's parent node it will be ignored. An exception to this rule is if the
++referenced IOMMU is disabled, in which case the "dma-ranges" property of the
++parent shall take effect. Note that merely disabling a device tree node does
++not guarantee that the IOMMU is really disabled since the hardware may not
++have a means to turn off translation. But it is invalid in such cases to
++disable the IOMMU's device tree node in the first place because it would
++prevent any driver from properly setting up the translations.
++
++
++Notes:
++======
++
++One possible extension to the above is to use an "iommus" property along with
++a "dma-ranges" property in a bus device node (such as PCI host bridges). This
++can be useful to describe how children on the bus relate to the IOMMU if they
++are not explicitly listed in the device tree (e.g. PCI devices). However, the
++requirements of that use-case haven't been fully determined yet. Implementing
++this is therefore not recommended without further discussion and extension of
++this binding.
++
++
++Examples:
++=========
++
++Single-master IOMMU:
++--------------------
++
++	iommu {
++		#iommu-cells = <0>;
 +	};
 +
-+	memory {
-+		device_type =3D "memory";
++	master {
++		iommus = <&{/iommu}>;
 +	};
 +
-+	dcsr: dcsr@f00000000 {
-+		ranges =3D <0x00000000 0xf 0x00000000 0x01072000>;
++Multiple-master IOMMU with fixed associations:
++----------------------------------------------
++
++	/* multiple-master IOMMU */
++	iommu {
++		/*
++		 * Masters are statically associated with this IOMMU and share
++		 * the same address translations because the IOMMU does not
++		 * have sufficient information to distinguish between masters.
++		 *
++		 * Consequently address translation is always on or off for
++		 * all masters at any given point in time.
++		 */
++		#iommu-cells = <0>;
 +	};
 +
-+	soc: soc@ffe000000 {
-+		ranges =3D <0x00000000 0xf 0xfe000000 0x1000000>;
-+		reg =3D <0xf 0xfe000000 0 0x00001000>;
++	/* static association with IOMMU */
++	master@1 {
++		reg = <1>;
++		iommus = <&{/iommu}>;
++	};
 +
-+		spi@110000 {
-+			flash@0 {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <1>;
-+				compatible =3D "micron,n25q512a";
-+				reg =3D <0>;
-+				spi-max-frequency =3D <10000000>; /* input clock */
-+			};
++	/* static association with IOMMU */
++	master@2 {
++		reg = <2>;
++		iommus = <&{/iommu}>;
++	};
++
++Multiple-master IOMMU:
++----------------------
++
++	iommu {
++		/* the specifier represents the ID of the master */
++		#iommu-cells = <1>;
++	};
++
++	master@1 {
++		/* device has master ID 42 in the IOMMU */
++		iommus = <&{/iommu} 42>;
++	};
++
++	master@2 {
++		/* device has master IDs 23 and 24 in the IOMMU */
++		iommus = <&{/iommu} 23>, <&{/iommu} 24>;
++	};
++
++Multiple-master IOMMU with configurable DMA window:
++---------------------------------------------------
++
++	/ {
++		iommu {
++			/*
++			 * One cell for the master ID and one cell for the
++			 * address of the DMA window. The length of the DMA
++			 * window is encoded in two cells.
++			 *
++			 * The DMA window is the range addressable by the
++			 * master (i.e. the I/O virtual address space).
++			 */
++			#iommu-cells = <4>;
 +		};
 +
-+		i2c@118100 {
-+			pca9546@77 {
-+				compatible =3D "nxp,pca9546";
-+				reg =3D <0x77>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+			};
-+		};
-+
-+	};
-+
-+	pci0: pcie@ffe240000 {
-+		reg =3D <0xf 0xfe240000 0 0x10000>;
-+		ranges =3D <0x02000000 0 0xe0000000 0xc 0x00000000 0x0 0x10000000
-+			  0x01000000 0 0x00000000 0xf 0xf8000000 0x0 0x00010000>;
-+		pcie@0 {
-+			ranges =3D <0x02000000 0 0xe0000000
-+				  0x02000000 0 0xe0000000
-+				  0 0x10000000
-+
-+				  0x01000000 0 0x00000000
-+				  0x01000000 0 0x00000000
-+				  0 0x00010000>;
++		master {
++			/* master ID 42, 4 GiB DMA window starting at 0 */
++			iommus = <&{/iommu}  42  0  0x1 0x0>;
 +		};
 +	};
-+
-+	pci1: pcie@ffe250000 {
-+		reg =3D <0xf 0xfe250000 0 0x10000>;
-+		ranges =3D <0x02000000 0x0 0xe0000000 0xc 0x10000000 0x0 0x10000000
-+			  0x01000000 0x0 0x00000000 0xf 0xf8010000 0x0 0x00010000>;
-+		pcie@0 {
-+			ranges =3D <0x02000000 0 0xe0000000
-+				  0x02000000 0 0xe0000000
-+				  0 0x10000000
-+
-+				  0x01000000 0 0x00000000
-+				  0x01000000 0 0x00000000
-+				  0 0x00010000>;
-+		};
-+	};
-+
-+	pci2: pcie@ffe260000 {
-+		reg =3D <0xf 0xfe260000 0 0x10000>;
-+		ranges =3D <0x02000000 0 0xe0000000 0xc 0x20000000 0 0x10000000
-+			  0x01000000 0 0x00000000 0xf 0xf8020000 0 0x00010000>;
-+		pcie@0 {
-+			ranges =3D <0x02000000 0 0xe0000000
-+				  0x02000000 0 0xe0000000
-+				  0 0x10000000
-+
-+				  0x01000000 0 0x00000000
-+				  0x01000000 0 0x00000000
-+				  0 0x00010000>;
-+		};
-+	};
-+
-+	pci3: pcie@ffe270000 {
-+		reg =3D <0xf 0xfe270000 0 0x10000>;
-+		ranges =3D <0x02000000 0 0xe0000000 0xc 0x30000000 0 0x10000000
-+			  0x01000000 0 0x00000000 0xf 0xf8030000 0 0x00010000>;
-+		pcie@0 {
-+			ranges =3D <0x02000000 0 0xe0000000
-+				  0x02000000 0 0xe0000000
-+				  0 0x10000000
-+
-+				  0x01000000 0 0x00000000
-+				  0x01000000 0 0x00000000
-+				  0 0x00010000>;
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platfor=
-ms/85xx/Kconfig
-index 5063696..157a1a4 100644
---- a/arch/powerpc/platforms/85xx/Kconfig
-+++ b/arch/powerpc/platforms/85xx/Kconfig
-@@ -276,7 +276,7 @@ config CORENET_GENERIC
- 	  For 64bit kernel, the following boards are supported:
- 	    T208x QDS, T4240 QDS/RDB and B4 QDS
- 	  The following boards are supported for both 32bit and 64bit kernel:
--	    P5020 DS, P5040 DS and T104xQDS
-+	    P5020 DS, P5040 DS and T104xQDS/RDB
-=20
- endif # FSL_SOC_BOOKE
-=20
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/power=
-pc/platforms/85xx/corenet_generic.c
-index 4f22ad1..c268f89 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -128,6 +128,8 @@ static const char * const boards[] __initconst =3D =
-{
- 	"fsl,B4220QDS",
- 	"fsl,T1040QDS",
- 	"fsl,T1042QDS",
-+	"fsl,T1040RDB",
-+	"fsl,T1042RDB",
- 	"keymile,kmcoge4",
- 	NULL
- };
---=20
-1.7.4.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.0.3
