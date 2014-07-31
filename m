@@ -1,164 +1,105 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Thu, 31 Jul 2014 12:33:01 +0100
-Message-ID: <20140731113301.GE22994@leverpostej>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <20140730154626.GD20162@leverpostej>
- <CAFpQJXWKybVUxpHg8MVrVMjLj3swuxLGo_9r1tL+gZ4hxUHTzQ@mail.gmail.com>
- <20140731095336.GB21850@leverpostej>
- <CAFpQJXUtP=v7FSLd3_OU7FG3w=pKYy2ihTQULA_DPEacsSu0Og@mail.gmail.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
+ controller
+Date: Thu, 31 Jul 2014 13:33:24 +0200
+Message-ID: <20140731113324.GB4375@pd.tnic>
+References: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFpQJXUtP=v7FSLd3_OU7FG3w=pKYy2ihTQULA_DPEacsSu0Og-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd-fm2tX0oQAVwurciUxeYi6OhlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Please send plain text rather than HTML email; this is becoming painful
-to reply to.
+On Wed, Jul 30, 2014 at 03:41:47PM +0000, Punnaiah Choudary Kalluri wrote:
+> >So you're telling me that you want one edac driver for *two* memory
+> >controllers which can be present on a single system *at* *the* *same*
+> >*time*? Is that it?
+> 
+> Yes.
 
-On Thu, Jul 31, 2014 at 12:12:33PM +0100, Ganapatrao Kulkarni wrote:
->    On Thu, Jul 31, 2014 at 3:23 PM, Mark Rutland <[1]mark.rutland@arm=
-=2Ecom>
->    wrote:
->=20
->      On Thu, Jul 31, 2014 at 09:41:10AM +0100, Ganapatrao Kulkarni wr=
-ote:
->      > =C2=A0 =C2=A0On Wed, Jul 30, 2014 at 9:16 PM, Mark Rutland
->      <[1][2]mark.rutland-5wv7dgnIgG8@public.gmane.org>
->      > =C2=A0 =C2=A0wrote:
->      >
->      > =C2=A0 =C2=A0 =C2=A0Hi,
->      > =C2=A0 =C2=A0 =C2=A0On Wed, Jul 30, 2014 at 04:06:31PM +0100, =
-Robert Richter wrote:
->      > =C2=A0 =C2=A0 =C2=A0> From: Radha Mohan Chintakuntla <[2][3]rc=
-hintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->      > =C2=A0 =C2=A0 =C2=A0>
->      > =C2=A0 =C2=A0 =C2=A0> Add initial device tree nodes for Cavium=
- Thunder SoCs with
->      support of
->      > =C2=A0 =C2=A0 =C2=A0> 48 cores and gicv3. The dts file require=
-s further changes, esp.
->      for
->      > =C2=A0 =C2=A0 =C2=A0> pci, gicv3-its and smmu. This changes wi=
-ll be added later
->      together
->      > =C2=A0 =C2=A0 =C2=A0> with the device drivers.
->      > =C2=A0 =C2=A0 =C2=A0>
->      > =C2=A0 =C2=A0 =C2=A0> Signed-off-by: Radha Mohan Chintakuntla
->      <[3][4]rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->      > =C2=A0 =C2=A0 =C2=A0> Signed-off-by: Robert Richter <[4][5]rri=
-chter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->      > =C2=A0 =C2=A0 =C2=A0> ---
->      > =C2=A0 =C2=A0 =C2=A0> =C2=A0arch/arm64/boot/dts/Makefile =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 | =C2=A0 1 +
->      > =C2=A0 =C2=A0 =C2=A0> =C2=A0arch/arm64/boot/dts/thunder-88xx.d=
-ts | 387
->      > =C2=A0 =C2=A0 =C2=A0+++++++++++++++++++++++++++++++++++
->      > =C2=A0 =C2=A0 =C2=A0> =C2=A02 files changed, 388 insertions(+)
->      > =C2=A0 =C2=A0 =C2=A0> =C2=A0create mode 100644 arch/arm64/boot=
-/dts/thunder-88xx.dts
->      > =C2=A0 =C2=A0 =C2=A0>
->      > =C2=A0 =C2=A0 =C2=A0> diff --git a/arch/arm64/boot/dts/Makefil=
-e
->      > =C2=A0 =C2=A0 =C2=A0b/arch/arm64/boot/dts/Makefile
->      > =C2=A0 =C2=A0 =C2=A0> index c52bdb051f66..f8001a62029c 100644
->      > =C2=A0 =C2=A0 =C2=A0> --- a/arch/arm64/boot/dts/Makefile
->      > =C2=A0 =C2=A0 =C2=A0> +++ b/arch/arm64/boot/dts/Makefile
->      > =C2=A0 =C2=A0 =C2=A0> @@ -1,3 +1,4 @@
->      > =C2=A0 =C2=A0 =C2=A0> +dtb-$(CONFIG_ARCH_THUNDER) +=3D thunder=
--88xx.dtb
->      > =C2=A0 =C2=A0 =C2=A0> =C2=A0dtb-$(CONFIG_ARCH_VEXPRESS) +=3D r=
-tsm_ve-aemv8a.dtb
->      foundation-v8.dtb
->      > =C2=A0 =C2=A0 =C2=A0> =C2=A0dtb-$(CONFIG_ARCH_XGENE) +=3D apm-=
-mustang.dtb
->      > =C2=A0 =C2=A0 =C2=A0>
->      > =C2=A0 =C2=A0 =C2=A0> diff --git a/arch/arm64/boot/dts/thunder=
--88xx.dts
->      > =C2=A0 =C2=A0 =C2=A0b/arch/arm64/boot/dts/thunder-88xx.dts
->      > =C2=A0 =C2=A0 =C2=A0> new file mode 100644
->      > =C2=A0 =C2=A0 =C2=A0> index 000000000000..4cf20ac9138b
->      > =C2=A0 =C2=A0 =C2=A0> --- /dev/null
->      > =C2=A0 =C2=A0 =C2=A0> +++ b/arch/arm64/boot/dts/thunder-88xx.d=
-ts
->      > =C2=A0 =C2=A0 =C2=A0> @@ -0,0 +1,387 @@
->      > =C2=A0 =C2=A0 =C2=A0> +/*
->      > =C2=A0 =C2=A0 =C2=A0> + * Cavium Thunder DTS file
->      > =C2=A0 =C2=A0 =C2=A0> + *
->      > =C2=A0 =C2=A0 =C2=A0> + * Copyright (C) 2013, Cavium Inc.
->      > =C2=A0 =C2=A0 =C2=A0> + *
->      > =C2=A0 =C2=A0 =C2=A0> + * This program is free software; you c=
-an redistribute it
->      and/or
->      > =C2=A0 =C2=A0 =C2=A0> + * modify it under the terms of the GNU=
- General Public License
->      as
->      > =C2=A0 =C2=A0 =C2=A0> + * published by the Free Software Found=
-ation; either version 2
->      of
->      > =C2=A0 =C2=A0 =C2=A0> + * the License, or (at your option) any=
- later version.
->      > =C2=A0 =C2=A0 =C2=A0> + */
->      > =C2=A0 =C2=A0 =C2=A0> +/dts-v1/;
->      > =C2=A0 =C2=A0 =C2=A0> +
->      > =C2=A0 =C2=A0 =C2=A0> +/* Reserving first 12MB of DDR for firm=
-ware */
->      > =C2=A0 =C2=A0 =C2=A0> +/memreserve/ 0x00000000 0x00c00000;
->      >
->      > =C2=A0 =C2=A0 =C2=A0What exactly is this memreserve intended t=
-o protect at runtime?
->      > =C2=A0 =C2=A0 =C2=A0Yes, this 12 MB is reserved for ATF and UE=
-=46I boot and run-time
->      services.
->=20
->      If booted as an EFI application Linux will use the UEFI memory m=
-ap.
->      Anything UEFI needs to have kept around will be marked as such, =
-so
->      there's no need to memreserve that.
->=20
->    We are loading ATF and UEFI from flash(which is not XIP) within 12=
-MB of
->    DDR.
->    =C2=A0I dont see UEFI stub freeing RAM address where UEFI=C2=A0 im=
-age is loaded.
+Oh, this'll be fun. :-P
 
-Therefore we don't need the memreserve, then?
+> >
+> >How exactly is that topology supposed to look like, work, etc, etc? What
+> >kind of error reporting do you imagine you want to do with EDAC?
+> 
+> Zynq (All programmable SOC) contains a dual core ARM cortex A9 based processing
+> System(PS) and Xilinx programmable logic(PL) in a single device.
+> 
+> Assume the application is a broadcast camera. The design for this system use PS as
+> Control plane and use PL as data plane for processing the video data. So, the design 
+> may have two different memory controllers one in PS and another one in PL.   
+> PS is running with Linux OS and PL doesn't have the OS and it is  controlled by the 
+> OS running on PS.
 
->      I was under the impression that the ARM Trusted Firmware didn't =
-need
->      anything resident on the non-secure side, so I don't see why tha=
-t needs
->      a memreserve -- Linux should not be able to address anything it =
-has
->      resident.
->=20
->    We mark RAM used by ATF as secure-RAM, however we don't support
->    secure/non-secure address aliasing.
->    i.e, a DRAM address that can be referenced from both a secure PA a=
-nd a
->    non-secure PA is not allowed.
+Ok.
 
-What exactly do you mean by "not allowed"?
+>  Now the requirement is to develop a monitoring system for all the
+> hardware failures Including ddr ecc errors. Since the broadcast camera
+> involves more data processing and DDR memory access, there is a high
+> probability of getting ddr ecc errors over the period.
 
-If Linux maps that memory, what happens?
+So you're saying the camera has memory with ECC? People really pay
+attention on getting error free video frames? :-)
 
-What if Linux tried to read or write to it?
+Or this is just an example? You're saying the PL will need ECC for some
+applications?
 
-If Linux should not map that memory, it should not be described in the
-memory map to begin with.
+> So, the user should be intimated with these errors when they occur and if the error rate
+>  is high, then the user can consider the preventive methods. Without this error reporting
+> mechanism it is difficult to debug the issues like memory corruption, kernel oops which
+>  may occur due to ddr ecc failures.
+> 
+> Since, the memory controllers are different, it need two edac drivers for reporting the ecc 
+> errors and also maintaining the statistics of that particular memory controller. With the current
+> framework, there is a chance that both the drivers get mc_num as zero and malfunction. 
+> Assume the code for the two drivers looks like below
+> 
+> Driver 1:
+> 	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> 			    sizeof(struct  ctrl1_drvdata));
+> 
+> Driver 2:
+> 	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> 			    sizeof(struct ctrl2_drvdata));
+> 
+> Issue:
+>   Since driver is providing the mc_num to framework, now there is chance that only one device active as
+>  both the drivers claiming the same number.
+> 
+> Solution 1:
+>  Keep two drivers in single file and use static global variable for tracking the mc_num. This solution looks
+> good but the drivers may not be generic as these driver would be in a zynq_edac.c file. So others may not
+> reuse these drivers
 
-Thanks,
-Mark.
+Ok, I think I know what you mean. And this architecture works just fine.
+On x86 we have one EDAC instance per memory controller so on a multinode
+machine with multiple memory controllers, we do edac_mc_alloc() per
+memory controller.
+
+For examples, see amd64_edac::init_one_instance() and sb_edac should
+have this too. So you basically have a local array of instances which
+you allocate and setup.
+
+If someone wants to reuse the driver, then we can talk about this later,
+when the time comes.
+
+For now I think you should put both PS and PL stuff in one file,
+zynq_edac or so.
+
+Any issues with this design?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
