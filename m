@@ -1,172 +1,152 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dmaengine: add a driver for AMBA AXI NBPF DMAC
- IP cores
-Date: Thu, 31 Jul 2014 15:42:44 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1407311520290.24081@axis700.grange>
-References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
- <Pine.LNX.4.64.1407191243360.3062@axis700.grange> <20140725141621.GT8181@intel.com>
- <Pine.LNX.4.64.1407251635070.13523@axis700.grange> <20140725163417.GV8181@intel.com>
- <Pine.LNX.4.64.1407262105150.24257@axis700.grange> <20140731125704.GV8181@intel.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
+Date: Thu, 31 Jul 2014 08:49:45 -0500
+Message-ID: <20140731134945.GB19512@saruman.home>
+References: <20140729141522.GB17808@saruman.home>
+ <20140729152052.GV29045@atomide.com>
+ <20140729154057.GE17808@saruman.home>
+ <20140729163345.GF17808@saruman.home>
+ <20140730060420.GY29045@atomide.com>
+ <20140730144059.GA7272@saruman.home>
+ <CAGo_u6ou+MoKOE_tTTmjxyFNW=jTaN9vnTsHrxR6sQHsieJyLA@mail.gmail.com>
+ <20140730162038.GH7272@saruman.home>
+ <20140731062843.GA29045@atomide.com>
+ <53D9F6D5.1080307@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731125704.GV8181-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53D9F6D5.1080307@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Nishanth Menon <nm@ti.com>, dt list <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, jason@lakedaemon.net, Kevin Hilman <khilman@deeprootsystems.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, tglx@linutronix.de, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Vinod Koul wrote:
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Sat, Jul 26, 2014 at 09:32:18PM +0200, Guennadi Liakhovetski wrote:
-> > On Fri, 25 Jul 2014, Vinod Koul wrote:
-> > > And please also see there were regression on few of them, recently dw was
-> > > fixed for this case. Similarly few other drivers were fixed for their
-> > > behaviour in tasklet kill, syncronizing the irq and freeing up behaviour.
-> > > 
-> > > So now back to this driver, since you are using devm_ the irq is not freed,
-> > > so how does it prevent race.
-> > 
-> > How is it not freed? Of course it is freed, but later - after .release() 
-> > has completed.
-> > 
-> > As for races - AFAIU, no interrupts should be coming after all DMA 
-> > channels have been freed, and .release() will not be called as long as any 
-> > channels are in use. However, I think, there might be a chance for a race 
-> > if the user would try to free a DMA channel before all descriptors have 
-> > completed and without calling TERMINATE_ALL. I think this would be an 
-> > abnormal behaviour - usually you either wait for all descriptors to 
-> > complete or terminate any remaining ones, but if such a buggy DMA slave 
-> > driver would be used, and if .device_free_chan_resources() gets called 
-> > (on a different CPU core) after a hard IRQ has completed and before the 
-> > IRQ thread has run (this would be the same if a tasklet was used in the 
-> > driver instead of an IRQ thread), i.e.
-> > 
-> > CPU core #0		CPU core #1
-> > 
-> > DMA IRQ
-> > schedule IRQ thread
-> > 			.device_free_chan_resources()
-> > IRQ thread:
-> > nbpf_chan_irqt()
-> > 
-> > then there can be a problem, because .device_free_chan_resources() would 
-> > free descriptor pages and the IRQ thread would try to use them.
-> > 
-> > Again, I consider that case to be a buggy DMA slave and even then such a 
-> > race would be very unlikely, but theoretically it might be possible. The 
-> > fix can be as simple as calling nbpf_chan_idle() from 
-> > nbpf_free_chan_resources(). Would you like a new version with this single 
-> > change or would such an incremental patch suffice?
-> 
-> There are two issues in the current driver.
-> 1. You have a spurious irq. That will lead your irq running. Although
-> your driver handlers can handle this, but with remove it will race and cause
-> panic because your have not freed irq.
+Hi,
 
-Why? Why should it panic? The managed resource handling framework will 
-free IRQs before freeing the private driver object, so, pointers will 
-still be valid, because those objects, including memory for all channels:
+On Thu, Jul 31, 2014 at 10:57:09AM +0300, Tero Kristo wrote:
+> On 07/31/2014 09:28 AM, Tony Lindgren wrote:
+> >* Felipe Balbi <balbi@ti.com> [140730 09:23]:
+> >>Hi,
+> >>
+> >>On Wed, Jul 30, 2014 at 10:45:41AM -0500, Nishanth Menon wrote:
+> >>>On Wed, Jul 30, 2014 at 9:40 AM, Felipe Balbi <balbi@ti.com> wrote:
+> >>>>HI,
+> >>>>
+> >>>>On Tue, Jul 29, 2014 at 11:04:21PM -0700, Tony Lindgren wrote:
+> >>>>>* Felipe Balbi <balbi@ti.com> [140729 09:36]:
+> >>>>>>Hi,
+> >>>>>>
+> >>>>>>On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
+> >>>>>>>On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
+> >>>>>>>>* Felipe Balbi <balbi@ti.com> [140729 07:18]:
+> >>>>>>>>>Hi,
+> >>>>>>>>>
+> >>>>>>>>>On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
+> >>>>>>>>>>* Felipe Balbi <balbi@ti.com> [140728 14:19]:
+> >>>>>>>>>>>now that we don't need to support legacy board-files,
+> >>>>>>>>>>>we can completely switch over to a linear irq domain
+> >>>>>>>>>>>and make use of irq_alloc_domain_generic_chips() to
+> >>>>>>>>>>>allocate all generic irq chips for us.
+> >>>>>>>>>>
+> >>>>>>>>>>This patch seems to somehow break off-idle for omap3
+> >>>>>>>>>>where it no longer wakes up.
+> >>>>>>>>>
+> >>>>>>>>>Sure your bisection is correct ? This patch just switches from l=
+egacy
+> >>>>>>>>>irq domain to linear irq domain.
+> >>>>>>>>
+> >>>>>>>>Yes, I tried it a few times. Just enabling
+> >>>>>>>>retention idle hangs too with this patch.
+> >>>>>>>>
+> >>>>>>>>Maybe it's omap3_prcm_irq_setup that relies on
+> >>>>>>>>11 + OMAP_INTC_START? There may be other such issues
+> >>>>>>>
+> >>>>>>>lol.
+> >>>>>>>
+> >>>>>>>OMAP4 has the same nonsense.
+> >>>>>>
+> >>>>>>made me think why (if) OMAP4 works with that same setup. Does wake =
+=66rom
+> >>>>>>OFF work with OMAP4 ?
+> >>>>>
+> >>>>>Not without similar changes, omap4+ has the same issue.. There's a R=
+FC
+> >>>>>series from Nishant to fix some of this, and Tero is moving the PRCM
+> >>>>>into a driver.
+> >>>>>
+> >>>>>>Anyway, here's a quick little hack to check if that's the reason fo=
+r the
+> >>>>>>regression:
+> >>>>>
+> >>>>>OK yeah that's along the same lines with Nishant's RFC series in thr=
+ead
+> >>>>>"[RFC PATCH 0/7] ARM: OMAP4+: PRM: minor cleanups and dt support of
+> >>>>>interrupts"
+> >>>>>
+> >>>>>FYI, it did not compile, needs to include linux/of_irq.h. But yes,
+> >>>>
+> >>>>I might have sent the wrong version as I had that same build error and
+> >>>>fixed it localy.
+> >>>>
+> >>>>>it fixes the regression for me, Also now the whole series works for
+> >>>>>me :)
+> >>>>
+> >>>>good to know.
+> >>>>
+> >>>>What do you want to do now ? Wait for PRCM to become a driver ? Wait =
+for
+> >>>>Nishanth's series to get accepted ? I guess the same thing could be d=
+one
+> >>>>for OMAP3 and AM33, then we would have a chance of having working wake
+> >>>>from idle with the new irqchip.
+> >>>
+> >>>I can repost the current series as it stands now once 17-rc1 comes out
+> >>>(without the build failure ofcourse).. if that helps to move it out of
+> >>>RFC status.
+> >>
+> >>That'd be great. It would be ever greater if you could add support for
+> >>OMAP3 on that too.
+> >
+> >Yeah sounds good to me. Tero, does that work OK for your PRCM changes?
+>=20
+> Well, this set seems to break PM. suspend-resume on omap3-beagle just han=
+gs
+> after this set is applied. Works fine without it with 3.16-rc5 tag.
 
-	nbpf = devm_kzalloc(dev, sizeof(*nbpf) + num_channels *
-			    sizeof(nbpf->chan[0]), GFP_KERNEL);
- 
-are allocated before interrupts are requested. This is a very important 
-guarantee, without which nothing would work. So, these lines in the IRQ 
-handler:
+did you apply the quick little hack to prm3xxx.c ? prcm IRQ is hardcoded
+to 11, once we switch to a linear irq domain, irq_base may change.
 
-static irqreturn_t nbpf_chan_irq(int irq, void *dev)
-{
-	struct nbpf_channel *chan = dev;
-	bool done = nbpf_status_get(chan);
-	struct nbpf_desc *desc;
-	irqreturn_t ret;
+--=20
+balbi
 
-	if (!done)
-		return IRQ_NONE;
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-will run without problem.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> 2. There is nothing in your .remove which ensures all the threads have
-> exited. Yes with the above argument this sounds not so simple to achieve as
-> typically we get irq, callback and free the channel. But as your rightly
-> pointed in multi-core systems there can be instance where you get back to
-> back interrupts where descriptor sizes where small, so while processing your
-> some thread maybe still stuck while user frees up.
-> 
-> The job of .remove is to ensure you clean up everything. the fact that you
-> can still get irq after remove makes this a not so good design!
+iQIcBAEBAgAGBQJT2kl5AAoJEIaOsuA1yqREiZIP/3AjKM9gbUNdAQNAg+9LNVOn
+uXFbQ4ssgTGOlNzsAWY1QIG4Qz9H+rZA9JJEkl2phipZQkXFiGRuorHS/7dHwB8T
+AaR5XNSu0vBL3LlVCivx7rY38BKT3+b8SNuYNsrxMuXO3dlo7JgkoQFyf2bSV/eX
+HFBAeRRp4Dp/W9nTYa3k5ynoh+em2LThflyS8fZE4wM1F7pEypuBcoLs7Swq3w84
+cb3soHBkoVktgKJDsXi0x1rasm6jYPfNy43jAFosrNY8G6cq5/REdNx86bQKGMKh
+oBpV1vvJgTlcK+mo7pRwcHH7JcgzphA+aaIGaRBmauO1IMXsybxd2yi8aKuGVFaZ
+rnhLUMoTVHvvyKkXw8peAVtE8TFoTh+CiPIzYd8AbnCvF1z5BQDRJOAgs2ji9JBX
+Myj813XYANYw6XB604aue1D6MhtuMtqn9Vdz/+8I9Pon9UesXW95KwAhvu00/cKM
+uapz5my2nF/8+NcQSrwJ13jDE80OH6RtZadVfClDyevVAjXMw4cNS221zfuFb0tf
+xg7zsD141azp2hbiWMLT3a+lpYswxtT/oqLPxbNWAp9fssd6qC+pkn4gnptGcy67
+ZjgoCP4C646Edr2CCdyK0WBjeIGwoSu+KJNbsqfHMnWLeRsoKN/wtTH4jKN56FN4
+O9dRnS1yjjrLU+PyEPv9
+=MxKN
+-----END PGP SIGNATURE-----
 
-Ok, I mentioned in one of my previous mails the possibility of IRQ threads 
-racing with .free_chan_resources(). And .free_chan_resources() should 
-complete before .remove(), right? So, in fact we do have to fix my 
-theoretical race, then your race will be fixed automatically too.
-
-> > > If we do ensure that, then yes driver is fine
-> > > and can be merged, otherwise needs a fix
-> > > > 
-> > > > > You need to run free_irq and synchronize_irq()
-> > > > > to ensure everything is proper before freeing up.
-> > > > > 
-> > > > > Also why threaded_irq when dmaengine API mandates you to use tasklet? The
-> > > > > callback is supposed to be invoked from a tasklet.
-> > > > 
-> > > > As for this one. Yes, I'm aware, that most other dmaengine drivers use a 
-> > > > tasklet for bottom half IRQ processing. But is there a real requirement 
-> > > > for that? This driver has been written in the end of last year and has 
-> > > > been in use since then - no problems. As long as proper locking is used, 
-> > > > an IRQ thread seems to work just fine here. And allows us to leverage the 
-> > > > threaded-IRQ API instead of inventing own bottom-half processing.
-> > > > 
-> > > > But if there's a _real_ essential reason to use a tasklet here, I can 
-> > > > switch, np. Does it really have to be done now or would an incremental 
-> > > > patch suffice?
-> > > The API mandates this for a reason. I think we can add this later as it
-> > > doesn't break the functionality.
-> > 
-> > What was that reason? Is it that the network stack is using a tasklet and 
-> > to make DMA usable for network TCP copy offloading? But that's only 
-> > available with INTEL_IOATDMA and FSL_DMA and is broken anyway?
-> The tasklets run at atomic context and have higher priority as comparaed to
-> thread and workqueues.
-
-AFAIK, IRQ threads have real-time priorities.
-
-> The fact that lot of dma users are realtime, audio
-> etc, we need to process this as fast as possible. With the tasklet assumption
-> we assume that dmaengine APIs are invoked with atomic context, same is with
-> callback called form tasklet).
-> So you can never sleep in these calls. The whole framework has been built on
-> these assumptions and I am not even talking about NET/Async as we are
-> discussing only slave.
-
-I think we have to find specific problems, point out at specific 
-problematic locations. The above is too generic. I think I satisfy 
-atomicity guarantees, where needed, using spinlocks etc. If not - those 
-problems have to be identified and fixed.
-
-> And only sh- driver try to do this, rest are fairly happy with tasklet.
-> 
-> So then why do you want to do this? What is your reason from deviating?
-
-I explained this already. We already have a mechanism to handle top-bottom 
-IRQ halves - threaded IRQ. It takes away a part of developer's work to set 
-this up.
-
-Ok. This doesn't seem to progress. You suggested in your previous mail, 
-that I can provide an incremental patch to add devm_free(_threaded)_irq() 
-and synchronize_irq() to .release(). I still think, that this doesn't make 
-much sense, but if you insist... Alternatively, my proposal would be to 
-fix the thoretical race in .free_chan_resources(). Would you accept such a 
-patch instead of what you were proposing? I can also convert the driver to 
-using a tasklet, if required. Would it suffice, if I do those patches as 
-fixes after -rc1? I'm leaving on a holiday tomorrow and I still have to 
-finalise some other work, so, preparing those patches today doesn't seem 
-realistic to me... Would this be acceptable?
-
-Thanks
-Guennadi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--A6N2fC+uXW/VQSAv--
