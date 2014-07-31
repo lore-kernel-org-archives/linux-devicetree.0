@@ -1,261 +1,76 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
-Date: Thu, 31 Jul 2014 21:20:41 +0200
-Message-ID: <53DA9709.10602@suse.de>
-References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <53DA936E.9060004@gmail.com>
+From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
+Date: Thu, 31 Jul 2014 21:20:16 +0200
+Message-ID: <20140731192016.GA6869@excalibur.cnev.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53DA936E.9060004@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hello,
 
-Am 31.07.2014 21:05, schrieb Tomasz Figa:
-> Hi Andreas,
->=20
-> Sorry for joining the party a bit late, but there were patches with l=
-ess
-> people involved so I preferred to review them first.
->=20
-> You can find my comments inline.
->=20
-> On 31.07.2014 18:08, Andreas F=C3=A4rber wrote:
->> Adds initial support for the HP Chromebook 11.
->=20
-> [snip]
->=20
->> +	gpio-keys {
->> +		compatible =3D "gpio-keys";
->> +		pinctrl-names =3D "default";
->> +		pinctrl-0 =3D <&power_key_irq>, <&lid_irq>;
->> +
->> +		power {
->> +			label =3D "Power";
->> +			gpios =3D <&gpx1 3 GPIO_ACTIVE_LOW>;
->> +			linux,code =3D <KEY_POWER>;
->=20
-> I assume the key is debounced in hardware, so there is no need for
-> debounce-interval here. Is this correct?
+I have today read the patch by Hans de Goede to add a dts file
+for the "Banana Pi" development board (see
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/276339.=
+html)
+and have stumbled over the license declaration at the beginning:
 
-You're asking the wrong person... This is copied from
--cros-common/-snow. Downstream 3.8 does not have a debounce-interval
-property.
+> +/*
+> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Publi=
+c
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
 
->=20
->> +			gpio-key,wakeup;
->> +		};
->> +
->> +		lid-switch {
->> +			label =3D "Lid";
->> +			gpios =3D <&gpx3 5 GPIO_ACTIVE_LOW>;
->> +			linux,input-type =3D <5>; /* EV_SW */
->> +			linux,code =3D <0>; /* SW_LID */
->> +			debounce-interval =3D <1>;
->> +			gpio-key,wakeup;
->> +		};
->> +	};
->> +
->> +	usb3_vbus_reg: regulator-usb3 {
->> +		compatible =3D "regulator-fixed";
->> +		regulator-name =3D "P5.0V_USB3CON";
->> +		regulator-min-microvolt =3D <5000000>;
->> +		regulator-max-microvolt =3D <5000000>;
->> +		gpio =3D <&gpe1 0 GPIO_ACTIVE_LOW>;
->> +		enable-active-high;
->> +	};
->> +
->> +	usb@12110000 {
->=20
-> Since this is a brand new dts file, it should use the reference based
-> syntax, which would be something like
->=20
-> &usbhost {
-> 	...
-> };
->=20
-> below the / { ... }; block.
+The phrase "The code contained herein is licensed under the GNU
+General Public License" does not make explicitly clear under
+which version(s) of the GPL the code can be used.  From the
+following "You may obtain a copy of the GNU General Public
+License Version 2 or later at the following locations [...]" one
+can deduce that the intention is most probably to license the
+code unter GPL2+, but from a legal point of view this information
+should be an explicit part of the license statement itself, as
+strictly formally speaking the latter statement does only inform
+the reader where he can find the text of GPL2 and later GPL
+versions, but does not expressly apply them to the code.  This is
+of course a rather formalistic view and may well be seen as
+beancounting, but I have seen too many cases where formal license
+ambiguities have led to problems years later, so I proposed to
+Hans to change the wording in his patch to something more
+explicit, similar to the dts files for other arm platforms.
 
-You will find that I already did that for all nodes that have a label.
-Since there are lots of usb nodes, please suggest specific label names.
+A phrasing like used in the GPL appendix ("This program is
+free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your
+option) any later version") would avoid any ambiguity.
 
-I originally tried to stay out of existing code, then I was asked to fi=
-x
--cros-common, clean up -snow too, now the SoC, ... ;)
+Hans agreed that the current phrasing is not ideal and should
+probably be changed to something unabiguous but pointed out that a
+similar wording is used in all the other dts files for Allwinner
+SOCs (arch/arm/boot/dts/sun?i-a*.dts) and proposed to refer the
+issue to you as the Allwinner platform maintainer (with the
+linux-arm-kernel and devicetree lists in CC).
 
->> +		samsung,vbus-gpio =3D <&gpx1 1 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	usb-hub {
->> +		compatible =3D "smsc,usb3503a";
->> +		reset-gpios =3D <&hsic_reset>;
->=20
-> Hmm, why a -gpios property points to a pinctrl node? Shouldn't there =
-be
-> a phandle to GPIO bank + GPIO specifier instead?
-
-Dunno, can change it. Can I just copy the gpio property from the
-regulator above?
-
->> +	};
->> +
->> +	fixed-rate-clocks {
->> +		xxti {
->> +			compatible =3D "samsung,clock-xxti";
->> +			clock-frequency =3D <24000000>;
->> +		};
->> +	};
->=20
-> This is also referencing a node from higher level, so it should be do=
-ne
-> using a reference.
->=20
->> +
->> +	hdmi {
->> +		hpd-gpio =3D <&gpx3 7 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names =3D "default";
->> +		pinctrl-0 =3D <&hdmi_hpd_irq>;
->> +		phy =3D <&hdmiphy>;
->> +		ddc =3D <&i2c_2>;
->> +		hdmi-en-supply =3D <&s5m_ldo8_reg>;
->> +		vdd-supply =3D <&s5m_ldo8_reg>;
->> +		vdd_osc-supply =3D <&s5m_ldo10_reg>;
->> +		vdd_pll-supply =3D <&s5m_ldo8_reg>;
->> +	};
->=20
-> Ditto.
-
-hdmi?
-
->=20
->> +
->> +	fimd@14400000 {
->> +		status =3D "okay";
->> +		samsung,invert-vclk;
->> +	};
->=20
-> Ditto.
-
-fimd?
-
->=20
->> +
->> +	dp-controller@145B0000 {
->> +		status =3D "okay";
->> +		pinctrl-names =3D "default";
->> +		pinctrl-0 =3D <&dp_hpd>;
->> +		samsung,color-space =3D <0>;
->> +		samsung,dynamic-range =3D <0>;
->> +		samsung,ycbcr-coeff =3D <0>;
->> +		samsung,color-depth =3D <1>;
->> +		samsung,link-rate =3D <0x0a>;
->> +		samsung,lane-count =3D <1>;
->> +		samsung,hpd-gpio =3D <&gpc3 0 GPIO_ACTIVE_HIGH>;
->> +	};
->=20
-> Ditto.
-
-dp_controller? display_port_controller?
-
->=20
->> +};
->> +
->> +&dp_hpd {
->> +	samsung,pins =3D "gpc3-0";
->> +	samsung,pin-function =3D <0>;
->> +	samsung,pin-pud =3D <3>;
->> +	samsung,pin-drv =3D <0>;
->> +};
->=20
-> Hmm, what node is this referencing? I believe this should rather
-> reference the pin controller and add a new board-specific pinconf/pin=
-mux
-> group instead....
-
-It's a -pinctrl node. See v3->v4 change log and discussion on v3.
-
->> +
->> +&i2c_0 {
->> +	status =3D "okay";
->> +	samsung,i2c-sda-delay =3D <100>;
->> +	samsung,i2c-max-bus-freq =3D <378000>;
->=20
-> [snip]
->=20
->> +/*
->> + * Disabled pullups since external part has its own pullups and
->> + * double-pulling gets us out of spec in some cases.
->> + */
->> +&i2c2_bus {
->> +	samsung,pin-pud =3D <0>;
->> +};
->=20
-> OK, here overriding a generic pinconf group is justified and nicely
-> explained by a comment.
-
-You seem to assume that I actually understand these things. ;)
-Just copied from -cros-common/-snow.
-
->> +
->> +&i2c_2 {
->> +	status =3D "okay";
->> +	samsung,i2c-sda-delay =3D <100>;
->> +	samsung,i2c-max-bus-freq =3D <66000>;
->> +
->> +	hdmiddc@50 {
->> +		compatible =3D "samsung,exynos4210-hdmiddc";
->> +		reg =3D <0x50>;
->> +	};
->=20
-> I don't think this matches current Exynos HDMI bindings, which I beli=
-eve
-> have been changed to just take a phandle to i2c bus instead.
-
-Copied from -cros-common/-snow.
-
->> +};
->> +
->> +&i2c_3 {
->> +	status =3D "okay";
->> +	samsung,i2c-sda-delay =3D <100>;
->> +	samsung,i2c-max-bus-freq =3D <66000>;
->> +};
->=20
-> [snip]
->=20
->> +&sd1_clk {
->> +	samsung,pin-drv =3D <0>;
->> +};
->> +
->> +&sd1_cmd {
->> +	samsung,pin-pud =3D <3>;
->> +	samsung,pin-drv =3D <0>;
->> +};
->> +
->> +&sd1_cd {
->> +	samsung,pin-drv =3D <0>;
->> +};
->> +
->> +&sd1_bus4 {
->> +	samsung,pin-drv =3D <0>;
->> +};
->=20
-> Here generic settings are being overridden, so it might be a good ide=
-a
-> to explain why, like with i2c pull-up above.
-
-Snow does not have an explanation either, so please suggest what commen=
-t
-you'd like to see. Consider me just a user with no specs. :)
-
-Cheers,
-Andreas
-
+Regards,
+Karsten
 --=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzun=
+g
+sowie der Weitergabe meiner personenbezogenen Daten f=C3=BCr Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
