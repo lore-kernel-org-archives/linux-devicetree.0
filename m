@@ -1,215 +1,696 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: sun7i: Add Banana Pi board
-Date: Thu, 31 Jul 2014 18:52:12 +0200
-Message-ID: <20140731165212.GG3952@lukather>
-References: <1406653348-16638-1-git-send-email-hdegoede@redhat.com>
- <20140731095800.GA3952@lukather>
- <53DA1A89.4000104@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vincent Palatin <vpalatin@chromium.org>
+Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
+Date: Thu, 31 Jul 2014 10:00:11 -0700
+Message-ID: <CAP_ceTz+KRJzF9XV=_aLE+6sV6d5GqCtQ_daKtpFJfCZQ1erpA@mail.gmail.com>
+References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wQkw7DhpL9hyPo7K"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCPL5GPAKGQE33C2H6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53DA1A89.4000104-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406822910-6255-5-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ARM PORT <linux-arm-kernel@lists.infradead.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Always a bit late to the game.
+One small comment inline.
 
---wQkw7DhpL9hyPo7K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Vincent Palatin <vpalatin@chromium.org>
 
-On Thu, Jul 31, 2014 at 12:29:29PM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 07/31/2014 11:58 AM, Maxime Ripard wrote:
-> > Hi Hans,
-> >=20
-> > On Tue, Jul 29, 2014 at 07:02:28PM +0200, Hans de Goede wrote:
-> >> The Banana Pi is an A20 based development board using Raspberry Pi com=
-patible
-> >> IO headers. It comes with 1 GB RAM, 1 Gb ethernet, 2x USB host, sata, =
-hdmi
-> >> and stereo audio out + various expenansion headers:
-> >>
-> >> http://www.bananapi.org/
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/Makefile               |   1 +
-> >>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 183 ++++++++++++++++++++++=
-+++++++++
-> >>  2 files changed, 184 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> >>
-> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >> index bdbc84a..440e037 100644
-> >> --- a/arch/arm/boot/dts/Makefile
-> >> +++ b/arch/arm/boot/dts/Makefile
-> >> @@ -379,6 +379,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
-> >>  	sun6i-a31-hummingbird.dtb \
-> >>  	sun6i-a31-m9.dtb
-> >>  dtb-$(CONFIG_MACH_SUN7I) +=3D \
-> >> +	sun7i-a20-bananapi.dtb \
-> >>  	sun7i-a20-cubieboard2.dtb \
-> >>  	sun7i-a20-cubietruck.dtb \
-> >>  	sun7i-a20-i12-tvbox.dtb \
-> >> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/=
-dts/sun7i-a20-bananapi.dts
-> >> new file mode 100644
-> >> index 0000000..0332b82
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> >> @@ -0,0 +1,183 @@
-> >> +/*
-> >> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >> + *
-> >> + * The code contained herein is licensed under the GNU General Public
-> >> + * License. You may obtain a copy of the GNU General Public License
-> >> + * Version 2 or later at the following locations:
-> >> + *
-> >> + * http://www.opensource.org/licenses/gpl-license.html
-> >> + * http://www.gnu.org/copyleft/gpl.html
-> >> + */
-> >> +
-> >> +/dts-v1/;
-> >> +/include/ "sun7i-a20.dtsi"
-> >> +/include/ "sunxi-common-regulators.dtsi"
-> >> +
-> >> +/ {
-> >> +	model =3D "LeMaker Banana Pi";
-> >> +	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
-> >> +
-> >> +	soc@01c00000 {
-> >> +		spi0: spi@01c05000 {
-> >> +			pinctrl-names =3D "default";
-> >> +			pinctrl-0 =3D <&spi0_pins_a>;
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		mmc0: mmc@01c0f000 {
-> >> +			pinctrl-names =3D "default";
-> >> +			pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-> >> +			vmmc-supply =3D <&reg_vcc3v3>;
-> >> +			bus-width =3D <4>;
-> >> +			cd-gpios =3D <&pio 7 10 0>; /* PH10 */
-> >> +			cd-inverted;
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		usbphy: phy@01c13400 {
-> >> +			usb1_vbus-supply =3D <&reg_usb1_vbus>;
-> >> +			usb2_vbus-supply =3D <&reg_usb2_vbus>;
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		ehci0: usb@01c14000 {
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		ohci0: usb@01c14400 {
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		ahci: sata@01c18000 {
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		ehci1: usb@01c1c000 {
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		ohci1: usb@01c1c400 {
-> >> +			status =3D "okay";
-> >> +		};
-> >> +
-> >> +		pinctrl@01c20800 {
-> >> +			uart3_pins_bananapi: uart3_pin@0 {
-> >> +				allwinner,pins =3D "PH0", "PH1";
-> >> +				allwinner,function =3D "uart3";
-> >> +				allwinner,drive =3D <0>;
-> >> +				allwinner,pull =3D <0>;
-> >> +			};
-> >=20
-> > That node should be in the DTSI
->=20
-> I deliberately put it here because it is non standard, uart3
-> has 4 pins rx, tx, cts and rts, which can be mapped to either
-> PG6-9 or PH0-3 but here only 2 are used, it seemed appropriate
-> to put this inside the dts, if we start also taking pinctrl
-> variants where a subset of the pins are used into the dtsi
-> then we will end up with a lot of pinctrl entries there.
+On Thu, Jul 31, 2014 at 9:08 AM, Andreas F=C3=A4rber <afaerber@suse.de>=
+ wrote:
+> Adds initial support for the HP Chromebook 11.
+>
+> Cc: Vincent Palatin <vpalatin@chromium.org>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Stephan van Schaik <stephan@synkhronix.com>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>  v3 -> v4:
+>  * Fixed samsung,pin-function 1 -> 0 for dp-hpd-gpio
+>  * Replaced dp-hpd-gpio with existing dp_hpd, overriding it
+>
+>  v2 -> v3:
+>  * Use GPIO_ACTIVE_{LOW,HIGH} (Doug Anderson)
+>  * Use symbolic KEY_POWER instead of comment
+>  * Moved hsic_reset to new USB3503 node's reset-gpios (Vincent Palati=
+n)
+>  * Use dp_hpd_gpio for dp-controller (Doug Anderson, Ajay Kumar)
+>  * Override sd1_{clk,cmd,cd,bus4} pinctrl similar to Snow (Doug Ander=
+son)
+>  * Added ec_irq pinctrl for cros_ec (Doug Anderson)
+>  * Reordered nodes to minimize diff against Snow (Doug Anderson)
+>  * Dropped obsolete mmc_2 override (Doug Anderson)
+>  * Added lid-switch node (Doug Anderson)
+>  * Added gpio-keys pinctrl (Doug Anderson)
+>  * Added bootargs to avoid empty /chosen node and to document console=
+ setting
+>  * Renamed s5m8767_pmic node to avoid underscore
+>  * Use new style for overriding inherited pinctrl nodes, too
+>  * Enable i2s0 node
+>
+>  v1 -> v2:
+>  * Use label-based overriding/extension of nodes. (Doug Anderson)
+>  * Dropped tps65090 for now, until we know where to place it.
+>  * Dropped non-Spring nodes from -cros-common.dtsi rather than disabl=
+ing them.
+>  * Enabled a missing MMC node for access to internal storage.
+>  * Dropped display-timings from dp-controller node. (Ajay Kumar)
+>
+>  arch/arm/boot/dts/Makefile              |   1 +
+>  arch/arm/boot/dts/exynos5250-spring.dts | 539 ++++++++++++++++++++++=
+++++++++++
+>  2 files changed, 540 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos5250-spring.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 80a781f76e88..dec4c292f63d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -76,6 +76,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) +=3D exynos4210-origen.dt=
+b \
+>         exynos5250-arndale.dtb \
+>         exynos5250-smdk5250.dtb \
+>         exynos5250-snow.dtb \
+> +       exynos5250-spring.dtb \
+>         exynos5260-xyref5260.dtb \
+>         exynos5410-smdk5410.dtb \
+>         exynos5420-arndale-octa.dtb \
+> diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/=
+dts/exynos5250-spring.dts
+> new file mode 100644
+> index 000000000000..1fdfa04182fc
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5250-spring.dts
+> @@ -0,0 +1,539 @@
+> +/*
+> + * Google Spring board device tree source
+> + *
+> + * Copyright (c) 2013 Google, Inc
+> + * Copyright (c) 2014 SUSE LINUX Products GmbH
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "exynos5250.dtsi"
+> +
+> +/ {
+> +       model =3D "Google Spring";
+> +       compatible =3D "google,spring", "samsung,exynos5250", "samsun=
+g,exynos5";
+> +
+> +       memory {
+> +               reg =3D <0x40000000 0x80000000>;
+> +       };
+> +
+> +       chosen {
+> +               bootargs =3D "console=3Dtty1";
+> +       };
+> +
+> +       gpio-keys {
+> +               compatible =3D "gpio-keys";
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&power_key_irq>, <&lid_irq>;
+> +
+> +               power {
+> +                       label =3D "Power";
+> +                       gpios =3D <&gpx1 3 GPIO_ACTIVE_LOW>;
+> +                       linux,code =3D <KEY_POWER>;
+> +                       gpio-key,wakeup;
+> +               };
+> +
+> +               lid-switch {
+> +                       label =3D "Lid";
+> +                       gpios =3D <&gpx3 5 GPIO_ACTIVE_LOW>;
+> +                       linux,input-type =3D <5>; /* EV_SW */
+> +                       linux,code =3D <0>; /* SW_LID */
+> +                       debounce-interval =3D <1>;
+> +                       gpio-key,wakeup;
+> +               };
+> +       };
+> +
+> +       usb3_vbus_reg: regulator-usb3 {
+> +               compatible =3D "regulator-fixed";
+> +               regulator-name =3D "P5.0V_USB3CON";
+> +               regulator-min-microvolt =3D <5000000>;
+> +               regulator-max-microvolt =3D <5000000>;
+> +               gpio =3D <&gpe1 0 GPIO_ACTIVE_LOW>;
+> +               enable-active-high;
+> +       };
 
-We're already pretty much in that situation, and most UART (aside from
-UART0) can work with at least 4 pins, so it's nothing new really.
+GPE1_0 GPIO is the HSIC hub (SMSC 3503) reset# line (already defined
+below afaik).
+On this design there is no external USB3 port, so no VBUS reg/load
+switch for USB3.
 
-There was some patches made to DTC at some point to garbage collect
-specifically flagged nodes when they're not referenced, which would
-prevent the DTB size to get too big. I'm not sure about the status of
-these patches though.
 
-But it's definitely something that is worked on, and we shouldn't
-worry too much about it.
 
->=20
-> Note if you decide to take this as is, please
-> s/bananapi.org/lemaker.org/ in the commit message, bananapi.org
-> is an unofficial site, I should have put lemaker.org there.
->=20
-> Note btw that we already have this problem for spi1, the
-> current spi1_pins_a does not include the cs1 pin, because it
-> was added for use in sun7i-a20-olinuxino-micro.dts where
-> only cs0 is hooked up, but I decided to leave that as is for now.
-
-Yeah, that's another issue, maybe we should split the SPI pinctrl
-nodes then, to have the "main" pins (CLK, MISO, MOSI), and then
-individual nodes for each chip select.
-
-> Also the "primary" binding for spi2 is to PORTB, but
-> our spi2_pins_a binds it to PORTC, so it should be renamed
-> spi2_pins_b IMHO.
-
-I don't have any opinion on this, I was applying the "whoever is first
-wins" on this, but if you come up with a better and more sensible
-policy, it's totally fine for me :)
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---wQkw7DhpL9hyPo7K
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT2nQ8AAoJEBx+YmzsjxAgspEP/2RwMzKG07gdw3rru0uKq1Vv
-R6LrnaPwVAsdGLUnensPmWeNL9w+o2Y4hwSdoljrY6sQaYGknHabkqCKSKNfoNEw
-Fg/cmoeAPk7jEv/c47a35ioSYshyZEjw5W6AjwHaFWb6YJBGdYqH480vRQ5KFmhz
-z4Dt1y2ZGCGWpmh2zpC9QDQKRdidOK7GKcagdaGh+eo+ckUXVod2U4G9FQnMXXhs
-V1D2yc2DHcGa7tv2tEBh/ekiu2SeRbpNLDYxxsGbazZas14TUxDyJ0IB0NJg9FKU
-O5eKto9qd/k9knXeCZv1rUH0PNtXcmD5qa8Ylw/JNjxKMeBiyfFj0LlvK8VjUQcV
-gEP3at1dFG/zhjFTpqsN8aFxM+KSPWQwc3yMpdxCVeJ6/nYY2P+nTv1GCoPMr0j+
-+2k26lB4ZLbSytIcXd4SjtiHD7f3zfbW5z+dUnjqJukD82UEt8w/Xk7yWqxBap2g
-4okVpUNGHP045xSUOTT9C/DugyRzNrFxKY0yqnESpm1AGBgtkI6fT5oegVd2ixyc
-Dp5YcpendJF/ZPtxEY6q/ldYiMH0Hw8JPs8deq2elomMs+Mosz4r168GbNgVTLSb
-ogYnpPpwWgXjpKH6OY44cR90qW7B2aJP2RgeygVFChgMTNx5HSRKmzk4CA9sBnIJ
-iXEU2Ut53DgFHalaoWWC
-=CbSM
------END PGP SIGNATURE-----
-
---wQkw7DhpL9hyPo7K--
+> +
+> +       usb@12110000 {
+> +               samsung,vbus-gpio =3D <&gpx1 1 GPIO_ACTIVE_HIGH>;
+> +       };
+> +
+> +       usb-hub {
+> +               compatible =3D "smsc,usb3503a";
+> +               reset-gpios =3D <&hsic_reset>;
+> +       };
+> +
+> +       fixed-rate-clocks {
+> +               xxti {
+> +                       compatible =3D "samsung,clock-xxti";
+> +                       clock-frequency =3D <24000000>;
+> +               };
+> +       };
+> +
+> +       hdmi {
+> +               hpd-gpio =3D <&gpx3 7 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&hdmi_hpd_irq>;
+> +               phy =3D <&hdmiphy>;
+> +               ddc =3D <&i2c_2>;
+> +               hdmi-en-supply =3D <&s5m_ldo8_reg>;
+> +               vdd-supply =3D <&s5m_ldo8_reg>;
+> +               vdd_osc-supply =3D <&s5m_ldo10_reg>;
+> +               vdd_pll-supply =3D <&s5m_ldo8_reg>;
+> +       };
+> +
+> +       fimd@14400000 {
+> +               status =3D "okay";
+> +               samsung,invert-vclk;
+> +       };
+> +
+> +       dp-controller@145B0000 {
+> +               status =3D "okay";
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&dp_hpd>;
+> +               samsung,color-space =3D <0>;
+> +               samsung,dynamic-range =3D <0>;
+> +               samsung,ycbcr-coeff =3D <0>;
+> +               samsung,color-depth =3D <1>;
+> +               samsung,link-rate =3D <0x0a>;
+> +               samsung,lane-count =3D <1>;
+> +               samsung,hpd-gpio =3D <&gpc3 0 GPIO_ACTIVE_HIGH>;
+> +       };
+> +};
+> +
+> +&dp_hpd {
+> +       samsung,pins =3D "gpc3-0";
+> +       samsung,pin-function =3D <0>;
+> +       samsung,pin-pud =3D <3>;
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&i2c_0 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <378000>;
+> +
+> +       s5m8767-pmic@66 {
+> +               compatible =3D "samsung,s5m8767-pmic";
+> +               reg =3D <0x66>;
+> +               interrupt-parent =3D <&gpx3>;
+> +               interrupts =3D <2 0>;
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&s5m8767_irq &s5m8767_dvs &s5m8767_ds>=
+;
+> +               wakeup-source;
+> +
+> +               s5m8767,pmic-buck-dvs-gpios =3D <&gpd1 0 GPIO_ACTIVE_=
+LOW>, /* DVS1 */
+> +                                             <&gpd1 1 GPIO_ACTIVE_LO=
+W>, /* DVS2 */
+> +                                             <&gpd1 2 GPIO_ACTIVE_LO=
+W>; /* DVS3 */
+> +
+> +               s5m8767,pmic-buck-ds-gpios =3D <&gpx2 3 GPIO_ACTIVE_L=
+OW>, /* SET1 */
+> +                                            <&gpx2 4 GPIO_ACTIVE_LOW=
+>, /* SET2 */
+> +                                            <&gpx2 5 GPIO_ACTIVE_LOW=
+>; /* SET3 */
+> +
+> +               /*
+> +                * The following arrays of DVS voltages are not used,=
+ since we are
+> +                * not using GPIOs to control PMIC bucks, but they mu=
+st be defined
+> +                * to please the driver.
+> +                */
+> +               s5m8767,pmic-buck2-dvs-voltage =3D <1350000>, <130000=
+0>,
+> +                                                <1250000>, <1200000>=
+,
+> +                                                <1150000>, <1100000>=
+,
+> +                                                <1000000>, <950000>;
+> +
+> +               s5m8767,pmic-buck3-dvs-voltage =3D <1100000>, <110000=
+0>,
+> +                                                <1100000>, <1100000>=
+,
+> +                                                <1000000>, <1000000>=
+,
+> +                                                <1000000>, <1000000>=
+;
+> +
+> +               s5m8767,pmic-buck4-dvs-voltage =3D <1200000>, <120000=
+0>,
+> +                                                <1200000>, <1200000>=
+,
+> +                                                <1200000>, <1200000>=
+,
+> +                                                <1200000>, <1200000>=
+;
+> +
+> +               clocks {
+> +                       compatible =3D "samsung,s5m8767-clk";
+> +                       #clock-cells =3D <1>;
+> +                       clock-output-names =3D "en32khz_ap",
+> +                                            "en32khz_cp",
+> +                                            "en32khz_bt";
+> +               };
+> +
+> +               regulators {
+> +                       s5m_ldo4_reg: LDO4 {
+> +                               regulator-name =3D "P1.0V_LDO_OUT4";
+> +                               regulator-min-microvolt =3D <1000000>=
+;
+> +                               regulator-max-microvolt =3D <1000000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <0>;
+> +                       };
+> +
+> +                       s5m_ldo5_reg: LDO5 {
+> +                               regulator-name =3D "P1.0V_LDO_OUT5";
+> +                               regulator-min-microvolt =3D <1000000>=
+;
+> +                               regulator-max-microvolt =3D <1000000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <0>;
+> +                       };
+> +
+> +                       s5m_ldo6_reg: LDO6 {
+> +                               regulator-name =3D "vdd_mydp";
+> +                               regulator-min-microvolt =3D <1000000>=
+;
+> +                               regulator-max-microvolt =3D <1000000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo7_reg: LDO7 {
+> +                               regulator-name =3D "P1.1V_LDO_OUT7";
+> +                               regulator-min-microvolt =3D <1100000>=
+;
+> +                               regulator-max-microvolt =3D <1100000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo8_reg: LDO8 {
+> +                               regulator-name =3D "P1.0V_LDO_OUT8";
+> +                               regulator-min-microvolt =3D <1000000>=
+;
+> +                               regulator-max-microvolt =3D <1000000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo10_reg: LDO10 {
+> +                               regulator-name =3D "P1.8V_LDO_OUT10";
+> +                               regulator-min-microvolt =3D <1800000>=
+;
+> +                               regulator-max-microvolt =3D <1800000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo11_reg: LDO11 {
+> +                               regulator-name =3D "P1.8V_LDO_OUT11";
+> +                               regulator-min-microvolt =3D <1800000>=
+;
+> +                               regulator-max-microvolt =3D <1800000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <0>;
+> +                       };
+> +
+> +                       s5m_ldo12_reg: LDO12 {
+> +                               regulator-name =3D "P3.0V_LDO_OUT12";
+> +                               regulator-min-microvolt =3D <3000000>=
+;
+> +                               regulator-max-microvolt =3D <3000000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo13_reg: LDO13 {
+> +                               regulator-name =3D "P1.8V_LDO_OUT13";
+> +                               regulator-min-microvolt =3D <1800000>=
+;
+> +                               regulator-max-microvolt =3D <1800000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <0>;
+> +                       };
+> +
+> +                       s5m_ldo14_reg: LDO14 {
+> +                               regulator-name =3D "P1.8V_LDO_OUT14";
+> +                               regulator-min-microvolt =3D <1800000>=
+;
+> +                               regulator-max-microvolt =3D <1800000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo15_reg: LDO15 {
+> +                               regulator-name =3D "P1.0V_LDO_OUT15";
+> +                               regulator-min-microvolt =3D <1000000>=
+;
+> +                               regulator-max-microvolt =3D <1000000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo16_reg: LDO16 {
+> +                               regulator-name =3D "P1.8V_LDO_OUT16";
+> +                               regulator-min-microvolt =3D <1800000>=
+;
+> +                               regulator-max-microvolt =3D <1800000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       s5m_ldo17_reg: LDO17 {
+> +                               regulator-name =3D "P2.8V_LDO_OUT17";
+> +                               regulator-min-microvolt =3D <2800000>=
+;
+> +                               regulator-max-microvolt =3D <2800000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <0>;
+> +                       };
+> +
+> +                       s5m_ldo25_reg: LDO25 {
+> +                               regulator-name =3D "vdd_bridge";
+> +                               regulator-min-microvolt =3D <1200000>=
+;
+> +                               regulator-max-microvolt =3D <1200000>=
+;
+> +                               regulator-always-on;
+> +                               op_mode =3D <1>;
+> +                       };
+> +
+> +                       BUCK1 {
+> +                               regulator-name =3D "vdd_mif";
+> +                               regulator-min-microvolt =3D <950000>;
+> +                               regulator-max-microvolt =3D <1300000>=
+;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       BUCK2 {
+> +                               regulator-name =3D "vdd_arm";
+> +                               regulator-min-microvolt =3D <850000>;
+> +                               regulator-max-microvolt =3D <1350000>=
+;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       BUCK3 {
+> +                               regulator-name =3D "vdd_int";
+> +                               regulator-min-microvolt =3D <900000>;
+> +                               regulator-max-microvolt =3D <1200000>=
+;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       BUCK4 {
+> +                               regulator-name =3D "vdd_g3d";
+> +                               regulator-min-microvolt =3D <850000>;
+> +                               regulator-max-microvolt =3D <1300000>=
+;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +
+> +                       BUCK5 {
+> +                               regulator-name =3D "P1.8V_BUCK_OUT5";
+> +                               regulator-min-microvolt =3D <1800000>=
+;
+> +                               regulator-max-microvolt =3D <1800000>=
+;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <1>;
+> +                       };
+> +
+> +                       BUCK6 {
+> +                               regulator-name =3D "P1.2V_BUCK_OUT6";
+> +                               regulator-min-microvolt =3D <1200000>=
+;
+> +                               regulator-max-microvolt =3D <1200000>=
+;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <0>;
+> +                       };
+> +
+> +                       BUCK9 {
+> +                               regulator-name =3D "vdd_ummc";
+> +                               regulator-min-microvolt =3D <950000>;
+> +                               regulator-max-microvolt =3D <3000000>=
+;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               op_mode =3D <3>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&i2c_1 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <378000>;
+> +};
+> +
+> +/*
+> + * Disabled pullups since external part has its own pullups and
+> + * double-pulling gets us out of spec in some cases.
+> + */
+> +&i2c2_bus {
+> +       samsung,pin-pud =3D <0>;
+> +};
+> +
+> +&i2c_2 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <66000>;
+> +
+> +       hdmiddc@50 {
+> +               compatible =3D "samsung,exynos4210-hdmiddc";
+> +               reg =3D <0x50>;
+> +       };
+> +};
+> +
+> +&i2c_3 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <66000>;
+> +};
+> +
+> +&i2c_4 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <66000>;
+> +
+> +       cros_ec: embedded-controller {
+> +               compatible =3D "google,cros-ec-i2c";
+> +               reg =3D <0x1e>;
+> +               interrupts =3D <6 0>;
+> +               interrupt-parent =3D <&gpx1>;
+> +               wakeup-source;
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&ec_irq>;
+> +       };
+> +};
+> +
+> +&i2c_5 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <66000>;
+> +};
+> +
+> +&i2c_7 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <66000>;
+> +};
+> +
+> +&i2c_8 {
+> +       status =3D "okay";
+> +       samsung,i2c-sda-delay =3D <100>;
+> +       samsung,i2c-max-bus-freq =3D <378000>;
+> +
+> +       hdmiphy: hdmiphy@38 {
+> +               compatible =3D "samsung,exynos4212-hdmiphy";
+> +               reg =3D <0x38>;
+> +       };
+> +};
+> +
+> +&i2s0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&mmc_0 {
+> +       status =3D "okay";
+> +       num-slots =3D <1>;
+> +       supports-highspeed;
+> +       broken-cd;
+> +       card-detect-delay =3D <200>;
+> +       samsung,dw-mshc-ciu-div =3D <3>;
+> +       samsung,dw-mshc-sdr-timing =3D <2 3>;
+> +       samsung,dw-mshc-ddr-timing =3D <1 2>;
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4 &sd0_bus8>=
+;
+> +
+> +       slot@0 {
+> +               reg =3D <0>;
+> +               bus-width =3D <8>;
+> +       };
+> +};
+> +
+> +&mmc_1 {
+> +       status =3D "okay";
+> +       num-slots =3D <1>;
+> +       supports-highspeed;
+> +       broken-cd;
+> +       card-detect-delay =3D <200>;
+> +       samsung,dw-mshc-ciu-div =3D <3>;
+> +       samsung,dw-mshc-sdr-timing =3D <2 3>;
+> +       samsung,dw-mshc-ddr-timing =3D <1 2>;
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&sd1_clk &sd1_cmd &sd1_cd &sd1_bus4>;
+> +
+> +       slot@0 {
+> +               reg =3D <0>;
+> +               bus-width =3D <4>;
+> +       };
+> +};
+> +
+> +&pinctrl_0 {
+> +       s5m8767_dvs: s5m8767-dvs {
+> +               samsung,pins =3D "gpd1-0", "gpd1-1", "gpd1-2";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <1>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +
+> +       power_key_irq: power-key-irq {
+> +               samsung,pins =3D "gpx1-3";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <0>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +
+> +       ec_irq: ec-irq {
+> +               samsung,pins =3D "gpx1-6";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <0>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +
+> +       s5m8767_ds: s5m8767-ds {
+> +               samsung,pins =3D "gpx2-3", "gpx2-4", "gpx2-5";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <1>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +
+> +       s5m8767_irq: s5m8767-irq {
+> +               samsung,pins =3D "gpx3-2";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <0>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +
+> +       lid_irq: lid-irq {
+> +               samsung,pins =3D "gpx3-5";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <0>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +
+> +       hdmi_hpd_irq: hdmi-hpd-irq {
+> +               samsung,pins =3D "gpx3-7";
+> +               samsung,pin-function =3D <0>;
+> +               samsung,pin-pud =3D <1>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +};
+> +
+> +&pinctrl_1 {
+> +       hsic_reset: hsic-reset {
+> +               samsung,pins =3D "gpe1-0";
+> +               samsung,pin-function =3D <1>;
+> +               samsung,pin-pud =3D <0>;
+> +               samsung,pin-drv =3D <0>;
+> +       };
+> +};
+> +
+> +&sd1_clk {
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&sd1_cmd {
+> +       samsung,pin-pud =3D <3>;
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&sd1_cd {
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&sd1_bus4 {
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&spi_1 {
+> +       status =3D "okay";
+> +       samsung,spi-src-clk =3D <0>;
+> +       num-cs =3D <1>;
+> +};
+> +
+> +&usbdrd_phy {
+> +       vbus-supply =3D <&usb3_vbus_reg>;
+> +};
+> +
+> +#include "cros-ec-keyboard.dtsi"
+> --
+> 1.9.3
+>
