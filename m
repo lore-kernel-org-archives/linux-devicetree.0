@@ -1,43 +1,123 @@
-From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Thu, 31 Jul 2014 13:33:51 +0200
-Message-ID: <20140731113351.GR4703@rric.localhost>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <201407311224.14097.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
+Date: Thu, 31 Jul 2014 13:42:50 +0200
+Message-ID: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201407311224.14097.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.14 12:24:13, Arnd Bergmann wrote:
-> On Wednesday 30 July 2014, Robert Richter wrote:
-> > +/*
-> > + * Cavium Thunder DTS file
-> > + *
-> > + * Copyright (C) 2013, Cavium Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License as
-> > + * published by the Free Software Foundation; either version 2 of
-> > + * the License, or (at your option) any later version.
-> > + */
-> 
-> I think it makes sense to use a permissive license for these files here,
-> since board vendors may want to include a copy of the binary in their
-> firmware, which isn't necessarily GPL compatible.
-> 
-> What is Cavium's interest in making this GPL?
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-See my response to Rob's mail on this.
+The default for backlight devices is to be enabled immediately when
+registering with the backlight core. This can be useful for setups that
+use a simple framebuffer device and where the backlight cannot otherwise
+be hooked up to the panel.
 
--Robert
+However, when dealing with more complex setups, such as those of recent
+ARM SoCs, this can be problematic. Since the backlight is usually setup
+separately from the display controller, the probe order is not usually
+deterministic. That can lead to situations where the backlight will be
+powered up and the panel will show an uninitialized framebuffer.
+
+Furthermore, subsystems such as DRM have advanced functionality to set
+the power mode of a panel. In order to allow such setups to power up the
+panel at exactly the right moment, a way is needed to prevent the
+backlight core from powering the backlight up automatically when it is
+registered.
+
+This commit introduces a new boot_off field in the platform data (and
+also implements getting the same information from device tree). When set
+the initial backlight power mode will be set to "off".
+
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+I've been meaning to send this for a while but was always holding back
+because of the indoctrination that this type of configuration shouldn't
+be part of device tree. However this issue was recently raised again in
+the context of power up sequences for display panels. As described above
+the issue is that panel datasheets recommend that the backlight attached
+to a panel be turned on at the very last step to avoid visual glitches
+during the panel's power up sequence. With the current implementation it
+is typical for the backlight to be probed before the display panel. That
+has, in many cases, the side-effect of enabling the backlight, therefore
+making the screen content visible before it's actually initialized.
+
+Some panels come up with random garbage when uninitialized, others show
+all white. With some luck the panel will be all black and users won't
+really notice.
+
+This patch is an attempt to enable boards to override the default of
+turning on the backlight for the pwm-backlight driver. I'm not sure if
+there was a specific reason to turn on the backlight by default when
+this driver was initially written, but the fact is that since it has
+pretty much always been like this we can't really go and change the
+default, otherwise a lot of people may end up with no backlight and no
+clue as to how to enable it. So the only reasonable thing we can do is
+to keep the old behaviour and give new boards a way to override it if
+they know that some other part of the stack will enable it at the right
+moment.
+
+ .../devicetree/bindings/video/backlight/pwm-backlight.txt         | 1 +
+ drivers/video/backlight/pwm_bl.c                                  | 8 ++++++++
+ include/linux/pwm_backlight.h                                     | 2 ++
+ 3 files changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+index 764db86d441a..65e001a1733d 100644
+--- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
++++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+@@ -17,6 +17,7 @@ Optional properties:
+                "pwms" property (see PWM binding[0])
+   - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+                   and disables the backlight (see GPIO binding[1])
++  - backlight-boot-off: keep the backlight disabled on boot
+ 
+ [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+ [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index d7a3d13e72ec..62adfc9d37a7 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -173,6 +173,8 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 		data->max_brightness--;
+ 	}
+ 
++	data->boot_off = of_property_read_bool(node, "backlight-boot-off");
++
+ 	return 0;
+ }
+ 
+@@ -317,6 +319,12 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	bl->props.brightness = data->dft_brightness;
++
++	if (data->boot_off)
++		bl->props.power = FB_BLANK_POWERDOWN;
++	else
++		bl->props.power = FB_BLANK_UNBLANK;
++
+ 	backlight_update_status(bl);
+ 
+ 	platform_set_drvdata(pdev, bl);
+diff --git a/include/linux/pwm_backlight.h b/include/linux/pwm_backlight.h
+index efdd9227a49c..1fc14989da4a 100644
+--- a/include/linux/pwm_backlight.h
++++ b/include/linux/pwm_backlight.h
+@@ -15,6 +15,8 @@ struct platform_pwm_backlight_data {
+ 	unsigned int *levels;
+ 	/* TODO remove once all users are switched to gpiod_* API */
+ 	int enable_gpio;
++	bool boot_off;
++
+ 	int (*init)(struct device *dev);
+ 	int (*notify)(struct device *dev, int brightness);
+ 	void (*notify_after)(struct device *dev, int brightness);
+-- 
+2.0.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
