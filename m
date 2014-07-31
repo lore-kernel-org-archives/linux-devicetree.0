@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/6] ARM: DTS: da850: Add node for edma0
-Date: Thu, 31 Jul 2014 13:18:50 +0300
-Message-ID: <1406801934-23334-3-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH 1/6] ARM: davinci: da8xx-dt: add OF_DEV_AUXDATA entry for mcasp0
+Date: Thu, 31 Jul 2014 13:18:49 +0300
+Message-ID: <1406801934-23334-2-git-send-email-peter.ujfalusi@ti.com>
 References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,24 @@ To: nsekhar@ti.com, robh+dt@kernel.org
 Cc: khilman@deeprootsystems.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT node for edma0.
+Add OF_DEV_AUXDATA for mcasp to be able to use clocks.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/mach-davinci/da8xx-dt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index b695548dbb4e..41ce4e8bf227 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -150,6 +150,12 @@
- 			};
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index ed1928740b5f..f703d82f08a8 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -46,6 +46,7 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
+ 	OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
+ 		       NULL),
++	OF_DEV_AUXDATA("ti,da830-mcasp-audio", 0x01d00000, "davinci-mcasp.0", NULL),
+ 	{}
+ };
  
- 		};
-+		edma0: edma@01c00000 {
-+			compatible = "ti,edma3";
-+			reg =	<0x0 0x10000>;
-+			interrupts = <11 13 12>;
-+			#dma-cells = <1>;
-+		};
- 		serial0: serial@1c42000 {
- 			compatible = "ns16550a";
- 			reg = <0x42000 0x100>;
 -- 
 2.0.2
