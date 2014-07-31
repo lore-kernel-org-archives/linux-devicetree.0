@@ -1,49 +1,92 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: DTS: da850: Add node for edma0
-Date: Thu, 31 Jul 2014 18:26:56 +0400
-Message-ID: <53DA5230.1050200@cogentembedded.com>
-References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com> <1406801934-23334-3-git-send-email-peter.ujfalusi@ti.com>
+From: Brian Austin <brian.austin@cirrus.com>
+Subject: Re: [PATCH 1/2] ASoC: Add support for CS35L32 Boosted
+	Amplifier
+Date: Thu, 31 Jul 2014 09:37:38 -0500
+Message-ID: <alpine.DEB.2.02.1407310936000.7394@heelrod>
+References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
+ <CADhT+wfub5Li5tdM+dTnridOs9k5GwaKDTKvo7s-nefS4Oymyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406801934-23334-3-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="8323329-1994874856-1406817458=:7394"
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CADhT+wfub5Li5tdM+dTnridOs9k5GwaKDTKvo7s-nefS4Oymyg@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Dinh Nguyen <dinh.linux@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Austin <brian.austin@cirrus.com>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, lgirdwood@gmail.com, broonie@kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2014 02:18 PM, Peter Ujfalusi wrote:
+--8323329-1994874856-1406817458=:7394
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Add DT node for edma0.
 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> ---
->   arch/arm/boot/dts/da850.dtsi | 6 ++++++
->   1 file changed, 6 insertions(+)
+On Wed, 30 Jul 2014, Dinh Nguyen wrote:
 
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index b695548dbb4e..41ce4e8bf227 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -150,6 +150,12 @@
->   			};
->
->   		};
-> +		edma0: edma@01c00000 {
-> +			compatible = "ti,edma3";
-> +			reg =	<0x0 0x10000>;
+>=20
+>=20
+>=20
+> On Tue, Jul 29, 2014 at 3:02 PM, Brian Austin <brian.austin@cirrus.com>=
+ wrote:
+>       This patch adds support for the Cirrus Logic CS35L32 Boosted Ampl=
+ifier
+>       I2S Output provides monitor data to the SOC/CODEC for speaker pro=
+tection algorithms
+>=20
+>       Signed-off-by: Brian Austin <brian.austin@cirrus.com>
+>       ---
+>       =C2=A0include/dt-bindings/sound/cs35l32.h | =C2=A0 26 ++
+>       =C2=A0sound/soc/codecs/Kconfig =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0| =C2=A0 =C2=A05 +
+>       =C2=A0sound/soc/codecs/Makefile =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ | =C2=A0 =C2=A02 +
+>       =C2=A0sound/soc/codecs/cs35l32.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+| =C2=A0670 +++++++++++++++++++++++++++++++++++
+>       =C2=A0sound/soc/codecs/cs35l32.h =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+| =C2=A0 97 +++++
+>       =C2=A05 files changed, 800 insertions(+)
+>       =C2=A0create mode 100644 include/dt-bindings/sound/cs35l32.h
+>       =C2=A0create mode 100644 sound/soc/codecs/cs35l32.c
+>       =C2=A0create mode 100644 sound/soc/codecs/cs35l32.h
+>=20
+>       +
+>       +static int int_clear(struct snd_soc_dapm_widget *w,
+>       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 struct snd_kcontrol *kcontrol, int event)
+>       +{
+>       + =C2=A0 =C2=A0 =C2=A0 struct snd_soc_codec *codec =3D w->codec;
+>       +
+>       + =C2=A0 =C2=A0 =C2=A0 if (SND_SOC_DAPM_EVENT_ON(event)) {
+>       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 snd_soc_read(c=
+odec, CS35L32_INT_STATUS_1);
+>       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 snd_soc_read(c=
+odec, CS35L32_INT_STATUS_2);
+>       + =C2=A0 =C2=A0 =C2=A0 } else {
+>       + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;
+>       + =C2=A0 =C2=A0 =C2=A0 }
+>       + =C2=A0 =C2=A0 =C2=A0 return 0;
+>=20
+>=20
+> Can remove one of the "return 0" or why not just a void?
+You know, I think I am just going to remove this altogether. It was a=20
+request from Apps and I don't think it is really needed. I'll test withou=
+t=20
+it and send a v2 with it removed.
 
-    Why the mismatch between the unit-address part of the node name and the 
-"reg" property?
+Thanks,
+Brian
 
-> +			interrupts = <11 13 12>;
-> +			#dma-cells = <1>;
-> +		};
+--8323329-1994874856-1406817458=:7394
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-WBR, Sergei
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--8323329-1994874856-1406817458=:7394--
