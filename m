@@ -1,193 +1,84 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCHv9 2/4] mailbox: Introduce framework for mailbox
-Date: Thu, 31 Jul 2014 18:32:45 +0100
-Message-ID: <53DA7DBD.10704@arm.com>
-References: <1406055250-29159-1-git-send-email-jaswinder.singh@linaro.org> <1406055374-29275-1-git-send-email-jaswinder.singh@linaro.org>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
+Date: Thu, 31 Jul 2014 19:38:54 +0200
+Message-ID: <53DA7F2E.2030109@suse.de>
+References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <CAP_ceTz+KRJzF9XV=_aLE+6sV6d5GqCtQ_daKtpFJfCZQ1erpA@mail.gmail.com> <53DA7993.1000800@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406055374-29275-1-git-send-email-jaswinder.singh@linaro.org>
+In-Reply-To: <53DA7993.1000800@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "ijc@hellion.org.uk" <ijc@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, "mporter@linaro.org" <mporter@linaro.org>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "s-anna@ti.com" <s-anna@ti.com>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "patches@linaro.org" <patches@linaro.org>, "t.takinishi@jp.fujitsu.com" <t.takinishi@jp.fujitsu.com>, "broonie@linaro.org" <broonie@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "mollie.wu@linaro.org" <mollie.wu@linaro.org>
+To: Vincent Palatin <vpalatin@chromium.org>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ARM PORT <linux-arm-kernel@lists.infradead.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Am 31.07.2014 19:14, schrieb Andreas F=C3=A4rber:
+> Hi,
+>=20
+> Am 31.07.2014 19:00, schrieb Vincent Palatin:
+>> Always a bit late to the game.
+>> One small comment inline.
+>>
+>> Reviewed-by: Vincent Palatin <vpalatin@chromium.org>
+>=20
+> Thanks,
+>=20
+>>
+>> On Thu, Jul 31, 2014 at 9:08 AM, Andreas F=C3=A4rber <afaerber@suse.=
+de> wrote:
+>>> +       usb3_vbus_reg: regulator-usb3 {
+>>> +               compatible =3D "regulator-fixed";
+>>> +               regulator-name =3D "P5.0V_USB3CON";
+>>> +               regulator-min-microvolt =3D <5000000>;
+>>> +               regulator-max-microvolt =3D <5000000>;
+>>> +               gpio =3D <&gpe1 0 GPIO_ACTIVE_LOW>;
+>>> +               enable-active-high;
+>>> +       };
+>>
+>> GPE1_0 GPIO is the HSIC hub (SMSC 3503) reset# line (already defined
+>> below afaik).
+>=20
+> Yes, that was a suggestion you made on v1.
+>=20
+>> On this design there is no external USB3 port, so no VBUS reg/load
+>> switch for USB3.
+>=20
+> Could you be a little clearer? Are you suggesting to drop the gpio
+> property?
+
+Nah, doesn't work. Do we need a pinctrl on the usb-hub instead?
+
+Andreas
+
+> I just re-tested that without the regulator node plus the
+> vbus-supply below I don't get any USB2 (so maybe rename the regulator=
+?).
+>=20
+> Regards,
+> Andreas
+>=20
+>>> +
+>>> +       usb@12110000 {
+>>> +               samsung,vbus-gpio =3D <&gpx1 1 GPIO_ACTIVE_HIGH>;
+>>> +       };
+>>> +
+>>> +       usb-hub {
+>>> +               compatible =3D "smsc,usb3503a";
+>>> +               reset-gpios =3D <&hsic_reset>;
+>>> +       };
+> [...]
+>>> +&usbdrd_phy {
+>>> +       vbus-supply =3D <&usb3_vbus_reg>;
+>>> +};
+>>> +
+>>> +#include "cros-ec-keyboard.dtsi"
+>>> --
+>>> 1.9.3
+>=20
 
 
-On 22/07/14 19:56, Jassi Brar wrote:
-> Introduce common framework for client/protocol drivers and
-> controller drivers of Inter-Processor-Communication (IPC).
->
-> Client driver developers should have a look at
->   include/linux/mailbox_client.h to understand the part of
-> the API exposed to client drivers.
-> Similarly controller driver developers should have a look
-> at include/linux/mailbox_controller.h
->
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> ---
->   MAINTAINERS                        |   8 +
->   drivers/mailbox/Makefile           |   4 +
->   drivers/mailbox/mailbox.c          | 467 +++++++++++++++++++++++++++++++++++++
->   include/linux/mailbox_client.h     |  45 ++++
->   include/linux/mailbox_controller.h | 131 +++++++++++
->   5 files changed, 655 insertions(+)
->   create mode 100644 drivers/mailbox/mailbox.c
->   create mode 100644 include/linux/mailbox_client.h
->   create mode 100644 include/linux/mailbox_controller.h
->
-
-[...]
-
-> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-> new file mode 100644
-> index 0000000..99c0d23
-> --- /dev/null
-> +++ b/drivers/mailbox/mailbox.c
-> @@ -0,0 +1,467 @@
-> +/*
-> + * Mailbox: Common code for Mailbox controllers and users
-> + *
-> + * Copyright (C) 2013-2014 Linaro Ltd.
-> + * Author: Jassi Brar <jassisinghbrar@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/mutex.h>
-> +#include <linux/delay.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/mailbox_controller.h>
-> +
-> +#define TXDONE_BY_IRQ  (1 << 0) /* controller has remote RTR irq */
-> +#define TXDONE_BY_POLL (1 << 1) /* controller can read status of last TX */
-> +#define TXDONE_BY_ACK  (1 << 2) /* S/W ACK recevied by Client ticks the TX */
-> +
-> +static LIST_HEAD(mbox_cons);
-> +static DEFINE_MUTEX(con_mutex);
-> +
-> +static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
-> +{
-> +       int idx;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&chan->lock, flags);
-> +
-> +       /* See if there is any space left */
-> +       if (chan->msg_count == MBOX_TX_QUEUE_LEN) {
-> +               spin_unlock_irqrestore(&chan->lock, flags);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       idx = chan->msg_free;
-> +       chan->msg_data[idx] = mssg;
-> +       chan->msg_count++;
-> +
-> +       if (idx == MBOX_TX_QUEUE_LEN - 1)
-> +               chan->msg_free = 0;
-> +       else
-> +               chan->msg_free++;
-> +
-> +       spin_unlock_irqrestore(&chan->lock, flags);
-> +
-> +       return idx;
-> +}
-> +
-> +static void msg_submit(struct mbox_chan *chan)
-> +{
-> +       unsigned count, idx;
-> +       unsigned long flags;
-> +       void *data;
-> +       int err;
-> +
-> +       spin_lock_irqsave(&chan->lock, flags);
-> +
-> +       if (!chan->msg_count || chan->active_req) {
-> +               spin_unlock_irqrestore(&chan->lock, flags);
-> +               return;
-> +       }
-> +
-> +       count = chan->msg_count;
-> +       idx = chan->msg_free;
-> +       if (idx >= count)
-> +               idx -= count;
-> +       else
-> +               idx += MBOX_TX_QUEUE_LEN - count;
-> +
-> +       data = chan->msg_data[idx];
-> +
-> +       /* Try to submit a message to the MBOX controller */
-> +       err = chan->mbox->ops->send_data(chan, data);
-
-Probably this is discussed already, but again I missed to find it
-in archives, so asking here. If the protocol has some payload associated
-with the message and controller expects it to be in place before calling
-send_data, we essentially end up not using this queue at all by waiting
-in the protocol layer(may be in it's own queue)
-
-Instead can we have some kind of chan->cl->prepare_data callback so that
-client can prepare payload ? This in turn avoids to implement it's
-*own Tx queue* and *reusing the mailbox queue*.
-
-Or am I missing something ?
-
-> +       if (!err) {
-> +               chan->active_req = data;
-> +               chan->msg_count--;
-> +       }
-> +
-> +       spin_unlock_irqrestore(&chan->lock, flags);
-> +}
-> +
-> +static void tx_tick(struct mbox_chan *chan, int r)
-> +{
-> +       unsigned long flags;
-> +       void *mssg;
-> +
-> +       spin_lock_irqsave(&chan->lock, flags);
-> +       mssg = chan->active_req;
-> +       chan->active_req = NULL;
-> +       spin_unlock_irqrestore(&chan->lock, flags);
-> +
-> +       /* Submit next message */
-> +       msg_submit(chan);
-> +
-> +       /* Notify the client */
-> +       if (mssg && chan->cl->tx_done)
-> +               chan->cl->tx_done(chan->cl, mssg, r);
-> +
-> +       if (chan->cl->tx_block)
-> +               complete(&chan->tx_complete);
-> +}
-> +
-> +static void poll_txdone(unsigned long data)
-> +{
-> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
-> +       bool txdone, resched = false;
-> +       int i;
-> +
-> +       for (i = 0; i < mbox->num_chans; i++) {
-> +               struct mbox_chan *chan = &mbox->chans[i];
-> +
-> +               if (chan->active_req && chan->cl) {
-> +                       resched = true;
-> +                       txdone = chan->mbox->ops->last_tx_done(chan);
-> +                       if (txdone)
-> +                               tx_tick(chan, 0);
-
-What if all the active channels finished Tx(i.e. txdone = 1), we still have
-resched = true and add a timer, not really harmful though. But IMO you can
-move it to else part instead ?
-
-
-Regards,
-Sudeep
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
