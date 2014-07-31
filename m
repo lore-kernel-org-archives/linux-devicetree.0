@@ -1,7 +1,7 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V6 3/3] arm64:dts: Add APM X-Gene SoC GPIO controller DTS entries
-Date: Thu, 31 Jul 2014 12:03:27 -0700
-Message-ID: <1406833407-28316-4-git-send-email-fkan@apm.com>
+Subject: [PATCH V6 2/3] Documentation: gpio: Add APM X-Gene SoC GPIO controller DTS binding
+Date: Thu, 31 Jul 2014 12:03:26 -0700
+Message-ID: <1406833407-28316-3-git-send-email-fkan@apm.com>
 References: <1406833407-28316-1-git-send-email-fkan@apm.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1406833407-28316-1-git-send-email-fkan@apm.com>
@@ -10,30 +10,43 @@ To: patches@apm.com, linus.walleij@linaro.org, gnurou@gmail.com, linux-gpio@vger
 Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add gpio dts node for APM X-Gene SoC platform.
+Documentation for APM X-Gene SoC GPIO controller DTS binding.
 
 Signed-off-by: Feng Kan <fkan@apm.com>
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- arch/arm64/boot/dts/apm-storm.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../devicetree/bindings/gpio/gpio-xgene.txt        | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 40aa96c..cf38b6f 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -397,5 +397,12 @@
- 			#clock-cells = <1>;
- 			clocks = <&rtcclk 0>;
- 		};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+new file mode 100644
+index 0000000..86dbb05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+@@ -0,0 +1,22 @@
++APM X-Gene SoC GPIO controller bindings
 +
-+		gfcgpio: gpio0@1701c000 {
-+			compatible = "apm,xgene-gpio";
-+			reg = <0x0 0x1701c000 0x0 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
- 	};
- };
++This is a gpio controller that is part of the flash controller.
++This gpio controller controls a total of 48 gpios.
++
++Required properties:
++- compatible: "apm,xgene-gpio" for X-Gene GPIO controller
++- reg: Physical base address and size of the controller's registers
++- #gpio-cells: Should be two.
++	- first cell is the pin number
++	- second cell is used to specify the gpio polarity:
++		0 = active high
++		1 = active low
++- gpio-controller: Marks the device node as a GPIO controller.
++
++Example:
++	gpio0: gpio0@1701c000 {
++		compatible = "apm,xgene-gpio";
++		reg = <0x0 0x1701c000 0x0 0x40>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
 -- 
 1.9.1
 
