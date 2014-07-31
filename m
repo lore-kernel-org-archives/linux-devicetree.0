@@ -1,54 +1,101 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH RFC v4 3/4] nand: pl353: Add ONDIE ECC support
-Date: Thu, 31 Jul 2014 00:23:17 -0700
-Message-ID: <20140731072317.GI11952@brian-ubuntu>
-References: <1406561500-18264-1-git-send-email-punnaia@xilinx.com>
- <27fce982-6598-44a0-ad80-c13d02a952ee@BN1AFFO11FD042.protection.gbl>
- <20140731070643.GG11952@brian-ubuntu>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
+Date: Thu, 31 Jul 2014 10:57:09 +0300
+Message-ID: <53D9F6D5.1080307@ti.com>
+References: <1406582183-696-30-git-send-email-balbi@ti.com> <20140729121425.GR29045@atomide.com> <20140729141522.GB17808@saruman.home> <20140729152052.GV29045@atomide.com> <20140729154057.GE17808@saruman.home> <20140729163345.GF17808@saruman.home> <20140730060420.GY29045@atomide.com> <20140730144059.GA7272@saruman.home> <CAGo_u6ou+MoKOE_tTTmjxyFNW=jTaN9vnTsHrxR6sQHsieJyLA@mail.gmail.com> <20140730162038.GH7272@saruman.home> <20140731062843.GA29045@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140731070643.GG11952@brian-ubuntu>
-Sender: linux-doc-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, anirudh@xilinx.com, svemula@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140731062843.GA29045-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 12:06:43AM -0700, Brian Norris wrote:
-> On Mon, Jul 28, 2014 at 09:01:39PM +0530, Punnaiah Choudary Kalluri wrote:
-> > +/* Generic flash bbt decriptors */
-> > +static uint8_t bbt_pattern[] = { 'B', 'b', 't', '0' };
-> > +static uint8_t mirror_pattern[] = { '1', 't', 'b', 'B' };
-> > +
-> > +static struct nand_bbt_descr bbt_main_descr = {
-> > +	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE
-> > +		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
-> > +	.offs = 4,
-> > +	.len = 4,
-> > +	.veroffs = 20,
-> > +	.maxblocks = 4,
-> > +	.pattern = bbt_pattern
-> > +};
-> > +
-> > +static struct nand_bbt_descr bbt_mirror_descr = {
-> > +	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE
-> > +		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
-> > +	.offs = 4,
-> > +	.len = 4,
-> > +	.veroffs = 20,
-> > +	.maxblocks = 4,
-> > +	.pattern = mirror_pattern
-> > +};
-> 
-> Why do you need a custom BBT descriptor? It's much better to use the
-> standard ones. Perhaps you just want the NAND_BBT_NO_OOB_BBM option, so
-> you get the bbt_{main,mirror}_no_oob_descr structs from nand_bbt.c.
+On 07/31/2014 09:28 AM, Tony Lindgren wrote:
+> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140730 09:23]:
+>> Hi,
+>>
+>> On Wed, Jul 30, 2014 at 10:45:41AM -0500, Nishanth Menon wrote:
+>>> On Wed, Jul 30, 2014 at 9:40 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+>>>> HI,
+>>>>
+>>>> On Tue, Jul 29, 2014 at 11:04:21PM -0700, Tony Lindgren wrote:
+>>>>> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 09:36]:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
+>>>>>>> On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
+>>>>>>>> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140729 07:18]:
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>> On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
+>>>>>>>>>> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140728 14:19]:
+>>>>>>>>>>> now that we don't need to support legacy board-files,
+>>>>>>>>>>> we can completely switch over to a linear irq domain
+>>>>>>>>>>> and make use of irq_alloc_domain_generic_chips() to
+>>>>>>>>>>> allocate all generic irq chips for us.
+>>>>>>>>>>
+>>>>>>>>>> This patch seems to somehow break off-idle for omap3
+>>>>>>>>>> where it no longer wakes up.
+>>>>>>>>>
+>>>>>>>>> Sure your bisection is correct ? This patch just switches from legacy
+>>>>>>>>> irq domain to linear irq domain.
+>>>>>>>>
+>>>>>>>> Yes, I tried it a few times. Just enabling
+>>>>>>>> retention idle hangs too with this patch.
+>>>>>>>>
+>>>>>>>> Maybe it's omap3_prcm_irq_setup that relies on
+>>>>>>>> 11 + OMAP_INTC_START? There may be other such issues
+>>>>>>>
+>>>>>>> lol.
+>>>>>>>
+>>>>>>> OMAP4 has the same nonsense.
+>>>>>>
+>>>>>> made me think why (if) OMAP4 works with that same setup. Does wake from
+>>>>>> OFF work with OMAP4 ?
+>>>>>
+>>>>> Not without similar changes, omap4+ has the same issue.. There's a RFC
+>>>>> series from Nishant to fix some of this, and Tero is moving the PRCM
+>>>>> into a driver.
+>>>>>
+>>>>>> Anyway, here's a quick little hack to check if that's the reason for the
+>>>>>> regression:
+>>>>>
+>>>>> OK yeah that's along the same lines with Nishant's RFC series in thread
+>>>>> "[RFC PATCH 0/7] ARM: OMAP4+: PRM: minor cleanups and dt support of
+>>>>> interrupts"
+>>>>>
+>>>>> FYI, it did not compile, needs to include linux/of_irq.h. But yes,
+>>>>
+>>>> I might have sent the wrong version as I had that same build error and
+>>>> fixed it localy.
+>>>>
+>>>>> it fixes the regression for me, Also now the whole series works for
+>>>>> me :)
+>>>>
+>>>> good to know.
+>>>>
+>>>> What do you want to do now ? Wait for PRCM to become a driver ? Wait for
+>>>> Nishanth's series to get accepted ? I guess the same thing could be done
+>>>> for OMAP3 and AM33, then we would have a chance of having working wake
+>>>> from idle with the new irqchip.
+>>>
+>>> I can repost the current series as it stands now once 17-rc1 comes out
+>>> (without the build failure ofcourse).. if that helps to move it out of
+>>> RFC status.
+>>
+>> That'd be great. It would be ever greater if you could add support for
+>> OMAP3 on that too.
+>
+> Yeah sounds good to me. Tero, does that work OK for your PRCM changes?
 
-I see you answered this:
+Well, this set seems to break PM. suspend-resume on omap3-beagle just 
+hangs after this set is applied. Works fine without it with 3.16-rc5 tag.
 
- http://lists.infradead.org/pipermail/linux-mtd/2014-April/053451.html
-
-That's unfortunate.
-
-Brian
+-Tero
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
