@@ -1,70 +1,47 @@
-From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: dt: bindings: sound: Add bindings
- file for CS35L32
-Date: Thu, 31 Jul 2014 15:40:51 -0500
-Message-ID: <alpine.DEB.2.02.1407311528570.7394@heelrod>
-References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
- <1406664163-10506-2-git-send-email-brian.austin@cirrus.com>
- <20140731202149.GX17528@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+From: Kever Yang <kever.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/5] Patches to add support for Rockchip dwc2 controller
+Date: Thu, 31 Jul 2014 13:51:41 -0700
+Message-ID: <1406839906-14633-1-git-send-email-kever.yang@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731202149.GX17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Mark Brown wrote:
+These patches to add support for dwc2 controller found in
+Rockchip processors rk3066, rk3188 and rk3288,
+and enable dts for rk3288 evb.
 
-> On Tue, Jul 29, 2014 at 03:02:43PM -0500, Brian Austin wrote:
-> 
-> > This patch adds the devicetree bindings file for the Cirrus Logic CS35L32 Boosted Amplifier
-> 
-> Word wrapping in the commit message please.
-> 
-> > +  - cirrus,sdout-datacfg : Data configuration for dual CS35L32 applications only.
-> > +  Determines the data packed in a two-CS35L32 configuration.
-> > +  0 = Left/right channels VMON[11:0], IMON[11:0], VPMON[7:0].
-> > +  1 = Left/right channels VMON[11:0], IMON[11:0], STATUS.
-> > +  2 = (Default) left/right channels VMON[15:0], IMON [15:0].
-> > +  3 = Left/right channels VPMON[7:0], STATUS.
-> 
-> > +  - cirrus,sdout-share : SDOUT sharing. Determines whether one or two CS35L32
-> > +  devices are on board sharing SDOUT.
-> > +  0 = (Default) One IC.
-> > +  1 = Two IC's.
-> 
-> So, this was all a bit non-obvious but I found a datasheet so was able
-> to figure it out.  The device is using the I2S input channels to stream
-> monitoring data back to the host and can do this in TDM mode.  That's a
-> bit fun, and would ideally mean we'd have to play with hwmon, but it's
-> possibly better not to worry about that for now.
-Good. I didn't want to have to mess with anything on this part. At least 
-for now
-> 
-> Looking at the datasheet I also see a VP supply which is omitted from
-> the driver and bindings - in battery powered devices like phones it'll
-> be connected directly to the battery so have no effect but it's still
-> better to represent it in case someone wants to use it some other way
-> that does merit software control (eg, a system running off 12V batteries
-> will need to regulate it down).
-> 
-I was wondering about that. I didn't think representing a battery as a 
-regulator was gonna be accepted but I can add that back in for sure
+Changes in v3:
+- Moved out of pin control and sort by base address
+- EHCI and HSIC move new for version 3.
+- Rebase
 
-> > +  - cirrus,gain-manager : Audio-gain management when LEDs are active.
-> > +  0 = (Default) Automatically reduces audio volume once by 3 dB, only if needed
-> > +  to avoid thermal shutdown or current limiting the boost converter.
-> > +  If the condition persists, the CS35L32 examine s ILED_MNG and responds accordingly.
-> > +  Audio recovers to original volume automatically at the end of the LED event.
-> > +  1 = User controls volume (nonautomatic).
-> 
-> This looks like something that should be a runtime control.
-> 
-I thought so too but "They" assure me it is not.
+Changes in v2:
+- Split out dr_mode and rk3288 bindings.
+- add compatible "snps,dwc2" bingding info
+- set most parameters as driver auto-detect
+- change the node name from 'dwc2' to 'usb'
+- evb patch added in version 2
 
-Thanks Mark
+Doug Anderson (1):
+  ARM: dts: Fix the sort ordering of EHCI and HSIC in rk3288.dtsi
+
+Kever Yang (4):
+  Documentation: dt-bindings: add dt binding info for Rockchip dwc2
+  usb: dwc2: add compatible data for rockchip soc
+  ARM: dts: add rk3288 dwc2 controller support
+  ARM: dts: Enable USB otg and host1(dwc) on rk3288-evb
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |    3 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi              |    6 +++
+ arch/arm/boot/dts/rk3288.dtsi                  |   61 ++++++++++++++++--------
+ drivers/usb/dwc2/platform.c                    |   29 +++++++++++
+ 4 files changed, 78 insertions(+), 21 deletions(-)
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
