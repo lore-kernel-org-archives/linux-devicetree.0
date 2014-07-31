@@ -1,41 +1,54 @@
-From: Kever Yang <kever.yang@gmail.com>
-Subject: [PATCH v2 1/4] Documentation: dt-bindings: add dt binding info for Rockchip dwc2
-Date: Wed, 30 Jul 2014 21:29:56 -0700
-Message-ID: <1406780999-17798-2-git-send-email-kever.yang@rock-chips.com>
-References: <1406780999-17798-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406780999-17798-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Zimmerman <paulz@synopsys.com>
-Cc: dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Porter <mporter@linaro.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [2/2] powerpc/fsl-booke: Add initial T1042RDB_PI board support
+Date: Thu, 31 Jul 2014 04:37:22 +0000
+Message-ID: <946e9d7e260c4d78b3c025c3eaeec0f5@BY1PR0301MB0853.namprd03.prod.outlook.com>
+References: <1404879851-2914-1-git-send-email-Priyanka.Jain@freescale.com>
+ <20140730201250.GA29789@home.buserror.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140730201250.GA29789-vONcSABrMOVpTrP2zolEsF6hYfS7NtTn@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Poonam.Aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Poonam.Aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add necessary dwc2 binding documentation for Rockchip socs:
-rk3066, rk3188 and rk3288
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
 
-Changes in v2:
-- Split out dr_mode and rk3288 bindings.
-- add compatible "snps,dwc2" bingding info
+-----Original Message-----
+From: Wood Scott-B07421 
+Sent: Thursday, July 31, 2014 1:43 AM
+To: Jain Priyanka-B32167
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Aggrwal Poonam-B10812; Kushwaha Prabhakar-B32579
+Subject: Re: [2/2] powerpc/fsl-booke: Add initial T1042RDB_PI board support
 
- Documentation/devicetree/bindings/usb/dwc2.txt |    3 +++
- 1 file changed, 3 insertions(+)
+On Wed, Jul 09, 2014 at 09:54:11AM +0530, Priyanka Jain wrote:
+> diff --git a/arch/powerpc/boot/dts/t104xrdb.dtsi 
+> b/arch/powerpc/boot/dts/t104xrdb.dtsi
+> index 9aaefa5..e7e765f 100644
+> --- a/arch/powerpc/boot/dts/t104xrdb.dtsi
+> +++ b/arch/powerpc/boot/dts/t104xrdb.dtsi
+> @@ -57,7 +57,8 @@
+>  		};
+>  
+>  		cpld@3,0 {
+> -			compatible = "fsl,t1040rdb-cpld","fsl,t1042rdb-cpld";
+> +			compatible = "fsl,t1040rdb-cpld","fsl,t1042rdb-cpld",
+> +					"fsl,t1042rdb_pi-cpld";
+>  			reg = <3 0 0x300>;
+>  		};
+>  	};
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 801a284..6a87b27 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
- Required properties:
- - compatible : One of:
-   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-+  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
-+  - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
-+  - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
-   - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
--- 
-1.7.9.5
+What's going on here?  This file is used by all three boards.  If you need to distinguish one board's CPLD from another's, you'll have to do it somewhere else.  If the CPLDs are exactly the same and no distinction needs to be made, then you don't need three compatible strings.  Even then, you may wish to specify the exact board as the first compatible string, but again you'll need to patch that in elsewhere so that it actually matches the board
+.
+As the register set of CPLD for all three boards is same, I am thinking of replacing this with t104srdb-cpld
+compatible = "fsl,t104xrdb-cpld","
+Is this OK?
+
+-Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
