@@ -1,64 +1,85 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2 4/5] clk: samsung: exynos5410: Add fixed rate clocks
-Date: Thu, 31 Jul 2014 13:45:56 +0200
-Message-ID: <53DA2C74.3010101@samsung.com>
-References: <1406805732-17372-1-git-send-email-hsnaves@gmail.com>
- <1406805732-17372-5-git-send-email-hsnaves@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
+Date: Thu, 31 Jul 2014 13:54:31 +0200
+Message-ID: <20140731115429.GA12627@ulmo>
+References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1406805732-17372-5-git-send-email-hsnaves-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406806970-12561-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Humberto Silva Naves <hsnaves-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas Farber <afaerber-l3A5Bk7waGM@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(dropping linux-doc ML and Randy from Cc)
 
-On 31/07/14 13:22, Humberto Silva Naves wrote:
-> This implements the fixed rate clocks generated either inside or
-> outside the SoC. It also adds a dt-binding constant for the
-> sclk_hdmiphy clock, which shall be later used by other drivers,
-> such as the DRM.
-> 
-> Since the external fixed rate clock fin_pll is now registered by
-> the clk-exynos5410 file, the bindings with the device tree file have
-> changed. It is no longer needed to define fin_pll as a fixed clock,
-> such as in:
-> 
-> 	fin_pll: xxti {
->   		compatible = "fixed-clock";
-> 	  	clock-frequency = <24000000>;
-> 	  	clock-output-names = "fin_pll";
-> 	  	#clock-cells = <0>;
-> 	};
-> 
-> The above lines should be replaced by the following lines:
-> 
-> 	fixed-rate-clocks {
-> 		oscclk {
-> 			compatible = "samsung,exynos5410-oscclk";
-> 			clock-frequency = <24000000>;
-> 		};
-> 	};
-> 
-> This new form of binding was properly documented in the relevant
-> documentation file.
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can you explain what is rationale behind this change ? Is it related to
-suspend/resume ordering ?
-Obviously it breaks the kernel/dtb compatibility. We should be moving
-in opposite direction, i.e. completely remove the custom samsung fixed
-rate clocks. I've tried to address this with patches [1], [2] but Tomasz
-wasn't happy with them IIRC and I postponed work on that.
+On Thu, Jul 31, 2014 at 01:42:50PM +0200, Thierry Reding wrote:
+[...]
+> @@ -317,6 +319,12 @@ static int pwm_backlight_probe(struct platform_devic=
+e *pdev)
+>  	}
+> =20
+>  	bl->props.brightness =3D data->dft_brightness;
+> +
+> +	if (data->boot_off)
+> +		bl->props.power =3D FB_BLANK_POWERDOWN;
+> +	else
+> +		bl->props.power =3D FB_BLANK_UNBLANK;
+> +
+>  	backlight_update_status(bl);
 
-[1] http://www.spinics.net/lists/arm-kernel/msg333211.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/258490.html
+Looking at this again, perhaps a more sensible thing to do would be to
+not call backlight_update_status() in the first place. For example if
+the board defines that backlight should be kept off at boot, but the
+bootloader had already enabled it, then this would effectively turn off
+the backlight again.
 
---
-Regards,
-Sylwester
+I think it's safe to assume that if the bootloader sets up the backlight
+then it would also set up the display. Therefore not touching the
+backlight state at all at probe time seems like the safest default.
+
+Of course that doesn't help people who use some dumb framebuffer driver
+and therefore nothing explicitly enables the backlight. So it would
+still be changing behaviour for people for whom the bootloader doesn't
+set up the backlight at all and who therefore rely on the kernel to turn
+it on.
+
+We could perhaps alleviate that pain a little by making this dependent
+on whether or not the board is booted using DT on the assumption that
+anything that uses DT would be "modern" enough to provide a means to
+automatically enable the backlight at the right moment.
+
+Thierry
+
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT2i51AAoJEN0jrNd/PrOhqOsP/3lKe0zwoqXz7QbmZA7GQfmV
+KYLIXLvFutXVgY46HoQ2gCtO0ohL069pG+Yp6T+AMhIiEiaP08IZpB5OrgvGdVXv
+0K3IAYO8Ed6YCcjP6T6lT1dlf3xdU3zfB3p6dOZXydDNygmeumT5d/vAVojW2DcX
++l9v4UNEbRM8RZJekNpWmE55hguO2EeSGBX3peZUVhta42YlUdk5nipVmNJV9Wh4
+AsOSofOBrroyWA8JC7nmun6gCLkp2RsASUUyganCVbIKfRs+d9XQC76ghhZYIok1
+6XxACHTMsAOgwGN1+UoclF/QXOF7MHNrqH3TYr8PcTsryLFjmKG+xFcUeame6+VP
+pQ70xBq+70G8d5oKiusVfnf2JbafMloob7/+WiUGIP/x5ZpDQS0EcnbD2FMoJ6LB
+EcrnksJWWVvoO7U50LRBLxy+vQxG7elpeluwRk+X6ksXIqhSftYUb68lvoewKFiG
+KuiWueuLwjTogbsdzkYQYxDKeNxcUQ6xdgPm0/l3gXuLTOCwlCVz5ahnUMTf1eaV
+vuZNKm6oLkMEH/koJtCK/l72vTrpcAIz60x/Hxn/RgiGKdGEwT8pM4BOoEp9xpP2
+EGuhB97tuqL1uYlFCTclepXL5/PtZIpyDOoOemnJcDPIftSSwz9LfPSn+F1mrPha
+gB9X+y8LItqD35zMWzCI
+=cfJo
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
