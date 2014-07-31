@@ -1,44 +1,78 @@
-From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: dt: bindings: sound: Add bindings
- file for CS35L32
-Date: Thu, 31 Jul 2014 16:28:03 -0500
-Message-ID: <alpine.DEB.2.02.1407311626510.7394@heelrod>
-References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
- <1406664163-10506-2-git-send-email-brian.austin@cirrus.com>
- <20140731202149.GX17528@sirena.org.uk>
- <alpine.DEB.2.02.1407311528570.7394@heelrod>
- <20140731211828.GA17528@sirena.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 1/2] rcar_can: document device tree bindings
+Date: Fri, 1 Aug 2014 01:24:25 +0400
+Message-ID: <201408010124.26505.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731211828.GA17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Mark Brown wrote:
+Document the R-Car CAN device tree bindings.
 
-> On Thu, Jul 31, 2014 at 03:40:51PM -0500, Brian Austin wrote:
-> > On Thu, 31 Jul 2014, Mark Brown wrote:
-> > > On Tue, Jul 29, 2014 at 03:02:43PM -0500, Brian Austin wrote:
-> 
-> > > > +  - cirrus,gain-manager : Audio-gain management when LEDs are active.
-> > > > +  0 = (Default) Automatically reduces audio volume once by 3 dB, only if needed
-> > > > +  to avoid thermal shutdown or current limiting the boost converter.
-> > > > +  If the condition persists, the CS35L32 examine s ILED_MNG and responds accordingly.
-> > > > +  Audio recovers to original volume automatically at the end of the LED event.
-> > > > +  1 = User controls volume (nonautomatic).
-> 
-> > > This looks like something that should be a runtime control.
-> 
-> > I thought so too but "They" assure me it is not.
-> 
-> They may be unfamiliar with upstream policies and standards!
-> 
-That is a fair assumption. I can turn it into a Switch kcontrol and remove 
-it from DT.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+The patch is against the 'linux-can-next.git' repo.
+
+Changes in version 2:
+- new patch, split from the driver's device tree support patch;
+- adjusted "clocks" property to refer to 3 clocks instead of 1;
+- added mandatory "clock-names" property;
+- renamed the "clock-select" property to "renesas,can-clock-select".
+
+ Documentation/devicetree/bindings/net/can/rcar_can.txt |   43 +++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+Index: linux-can-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+===================================================================
+--- /dev/null
++++ linux-can-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -0,0 +1,43 @@
++Renesas R-Car CAN controller Device Tree Bindings
++-------------------------------------------------
++
++Required properties:
++- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
++	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
++	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
++	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
++- reg: physical base address and size of the R-Car CAN register map.
++- interrupts: interrupt specifier for the sole interrupt.
++- clocks: phandles and clock specifiers for 3 CAN clock inputs.
++- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
++- pinctrl-0: pin control group to be used for this controller.
++- pinctrl-names: must be "default".
++
++Optional properties:
++- renesas,can-clock-select: R-Car CAN Clock Source Select. Valid values are:
++			    <0x0> (default) : Peripheral clock (clkp1)
++			    <0x1> : Peripheral clock (clkp2)
++			    <0x3> : Externally input clock
++
++Example
++-------
++
++SoC common .dtsi file:
++
++	can0: can@e6e80000 {
++		compatible = "renesas,can-r8a7791";
++		reg = <0 0xe6e80000 0 0x1000>;
++		interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp9_clks R8A7791_CLK_RCAN0>,
++		       	 <&cpg_clocks R8A7791_CLK_RCAN>, <&can_clk>;
++		clock-names = "clkp1", "clkp2", "can_clk";
++		status = "disabled";
++	};
++
++Board specific .dts file:
++
++&can0 {
++	pinctrl-0 = <&can0_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
