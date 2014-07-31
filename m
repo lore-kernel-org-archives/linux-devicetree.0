@@ -1,305 +1,78 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 3/4] drivers: dma-coherent: add initialization
- from device tree
-Date: Thu, 31 Jul 2014 07:15:08 +0200
-Message-ID: <53D9D0DC.9030600@samsung.com>
-References: <1405326487-15346-1-git-send-email-m.szyprowski@samsung.com>
- <1405326487-15346-4-git-send-email-m.szyprowski@samsung.com>
- <20140729215432.4B73FC40738@trevor.secretlab.ca>
- <53D883AE.6030209@samsung.com>
- <CACxGe6s2G_vEnmo5LwK79bwkEWSNsegfiojDAdQZV01Wapo0eg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CACxGe6s2G_vEnmo5LwK79bwkEWSNsegfiojDAdQZV01Wapo0eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonsoo Kim <iamjoonsoo.kim-Hm3cg6mZ9cc@public.gmane.org>, "Aneesh Kumar K.V." <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv9 0/5] ARM: remove the sub-node and deprecate
+ supports-highspeed property for dwmmc.
+Date: Thu, 31 Jul 2014 14:35:02 +0900
+Message-ID: <1406784907-26349-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@google.com>, =?UTF-8?q?Andreas=20F=E4rber?= <afaerber@suse.de>, cpgs <cpgs@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Since used the mmc_of_parse(), didn't parse the sub-node.
+So we can remove the sub-node, because almost SoC used the only one card per a host.
+And supports-highspeed can be replaced with "cap-mmc/sd-highspeed" property.
 
-On 2014-07-31 01:49, Grant Likely wrote:
-> On Tue, Jul 29, 2014 at 11:33 PM, Marek Szyprowski
-> <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Hello,
->>
->>
->> On 2014-07-29 23:54, Grant Likely wrote:
->>> On Mon, 14 Jul 2014 10:28:06 +0200, Marek Szyprowski
->>> <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>> Initialization procedure of dma coherent pool has been split into two
->>>> parts, so memory pool can now be initialized without assigning to
->>>> particular struct device. Then initialized region can be assigned to
->>>> more than one struct device. To protect from concurent allocations from
->>>> different devices, a spinlock has been added to dma_coherent_mem
->>>> structure. The last part of this patch adds support for handling
->>>> 'shared-dma-pool' reserved-memory device tree nodes.
->>>>
->>>> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> I think this looks okay. It isn't in my area of expertise though.
->>> Comments below.
->>>
->>>> ---
->>>>    drivers/base/dma-coherent.c | 137
->>>> ++++++++++++++++++++++++++++++++++++++------
->>>>    1 file changed, 118 insertions(+), 19 deletions(-)
->>>>
->>>> diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
->>>> index 7d6e84a51424..7185a4f247e1 100644
->>>> --- a/drivers/base/dma-coherent.c
->>>> +++ b/drivers/base/dma-coherent.c
->>>> @@ -14,11 +14,14 @@ struct dma_coherent_mem {
->>>>          int             size;
->>>>          int             flags;
->>>>          unsigned long   *bitmap;
->>>> +       spinlock_t      spinlock;
->>>>    };
->>>>    -int dma_declare_coherent_memory(struct device *dev, phys_addr_t
->>>> phys_addr,
->>>> -                               dma_addr_t device_addr, size_t size, int
->>>> flags)
->>>> +static int dma_init_coherent_memory(phys_addr_t phys_addr, dma_addr_t
->>>> device_addr,
->>>> +                            size_t size, int flags,
->>>> +                            struct dma_coherent_mem **mem)
->>> This is a bit odd. Why wouldn't you return the dma_mem pointer directly
->>> instead of passing in a **mem argument?
->>
->> Because this function (as a direct successor of dma_declare_coherent_memory)
->> doesn't
->> return typical error codes, but some custom values like DMA_MEMORY_MAP,
->> DMA_MEMORY_IO
->> or zero (which means failure). I wanted to avoid confusion with typical
->> error
->> handling path and IS_ERR/ERR_PTR usage used widely in other functions. This
->> probably
->> should be unified with the rest of kernel some day, but right now I wanted
->> to keep
->> the patch simple and easy to review.
->>
->>
->>>>    {
->>>> +       struct dma_coherent_mem *dma_mem = NULL;
->>>>          void __iomem *mem_base = NULL;
->>>>          int pages = size >> PAGE_SHIFT;
->>>>          int bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>>> @@ -27,27 +30,26 @@ int dma_declare_coherent_memory(struct device *dev,
->>>> phys_addr_t phys_addr,
->>>>                  goto out;
->>>>          if (!size)
->>>>                  goto out;
->>>> -       if (dev->dma_mem)
->>>> -               goto out;
->>>> -
->>>> -       /* FIXME: this routine just ignores DMA_MEMORY_INCLUDES_CHILDREN
->>>> */
->>>>          mem_base = ioremap(phys_addr, size);
->>>>          if (!mem_base)
->>>>                  goto out;
->>>>    -     dev->dma_mem = kzalloc(sizeof(struct dma_coherent_mem),
->>>> GFP_KERNEL);
->>>> -       if (!dev->dma_mem)
->>>> +       dma_mem = kzalloc(sizeof(struct dma_coherent_mem), GFP_KERNEL);
->>>> +       if (!dma_mem)
->>>>                  goto out;
->>>> -       dev->dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>>> -       if (!dev->dma_mem->bitmap)
->>>> +       dma_mem->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>>> +       if (!dma_mem->bitmap)
->>>>                  goto free1_out;
->>>>    -     dev->dma_mem->virt_base = mem_base;
->>>> -       dev->dma_mem->device_base = device_addr;
->>>> -       dev->dma_mem->pfn_base = PFN_DOWN(phys_addr);
->>>> -       dev->dma_mem->size = pages;
->>>> -       dev->dma_mem->flags = flags;
->>>> +       dma_mem->virt_base = mem_base;
->>>> +       dma_mem->device_base = device_addr;
->>>> +       dma_mem->pfn_base = PFN_DOWN(phys_addr);
->>>> +       dma_mem->size = pages;
->>>> +       dma_mem->flags = flags;
->>>> +       spin_lock_init(&dma_mem->spinlock);
->>>> +
->>>> +       *mem = dma_mem;
->>>>          if (flags & DMA_MEMORY_MAP)
->>>>                  return DMA_MEMORY_MAP;
->>>> @@ -55,12 +57,51 @@ int dma_declare_coherent_memory(struct device *dev,
->>>> phys_addr_t phys_addr,
->>>>          return DMA_MEMORY_IO;
->>>>       free1_out:
->>>> -       kfree(dev->dma_mem);
->>>> +       kfree(dma_mem);
->>>>     out:
->>>>          if (mem_base)
->>>>                  iounmap(mem_base);
->>>>          return 0;
->>>>    }
->>>> +
->>>> +static void dma_release_coherent_memory(struct dma_coherent_mem *mem)
->>>> +{
->>>> +       if (!mem)
->>>> +               return;
->>>> +       iounmap(mem->virt_base);
->>>> +       kfree(mem->bitmap);
->>>> +       kfree(mem);
->>>> +}
->>>> +
->>>> +static int dma_assign_coherent_memory(struct device *dev,
->>>> +                                     struct dma_coherent_mem *mem)
->>>> +{
->>>> +       if (dev->dma_mem)
->>>> +               return -EBUSY;
->>>> +
->>>> +       dev->dma_mem = mem;
->>>> +       /* FIXME: this routine just ignores DMA_MEMORY_INCLUDES_CHILDREN
->>>> */
->>>> +
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +int dma_declare_coherent_memory(struct device *dev, phys_addr_t
->>>> phys_addr,
->>>> +                               dma_addr_t device_addr, size_t size, int
->>>> flags)
->>>> +{
->>>> +       struct dma_coherent_mem *mem;
->>>> +       int ret;
->>>> +
->>>> +       ret = dma_init_coherent_memory(phys_addr, device_addr, size,
->>>> flags,
->>>> +                                      &mem);
->>>> +       if (ret == 0)
->>>> +               return 0;
->>>> +
->>>> +       if (dma_assign_coherent_memory(dev, mem) == 0)
->>>> +               return ret;
->>>> +
->>>> +       dma_release_coherent_memory(mem);
->>>> +       return 0;
->>>> +}
->>>>    EXPORT_SYMBOL(dma_declare_coherent_memory);
->>>>      void dma_release_declared_memory(struct device *dev)
->>>> @@ -69,10 +110,8 @@ void dma_release_declared_memory(struct device *dev)
->>>>          if (!mem)
->>>>                  return;
->>>> +       dma_release_coherent_memory(mem);
->>>>          dev->dma_mem = NULL;
->>>> -       iounmap(mem->virt_base);
->>>> -       kfree(mem->bitmap);
->>>> -       kfree(mem);
->>>>    }
->>>>    EXPORT_SYMBOL(dma_release_declared_memory);
->>>>    @@ -80,6 +119,7 @@ void *dma_mark_declared_memory_occupied(struct
->>>> device *dev,
->>>>                                          dma_addr_t device_addr, size_t
->>>> size)
->>>>    {
->>>>          struct dma_coherent_mem *mem = dev->dma_mem;
->>>> +       unsigned long flags;
->>>>          int pos, err;
->>>>          size += device_addr & ~PAGE_MASK;
->>>> @@ -87,8 +127,11 @@ void *dma_mark_declared_memory_occupied(struct device
->>>> *dev,
->>>>          if (!mem)
->>>>                  return ERR_PTR(-EINVAL);
->>>>    +     spin_lock_irqsave(&mem->spinlock, flags);
->>>>          pos = (device_addr - mem->device_base) >> PAGE_SHIFT;
->>>>          err = bitmap_allocate_region(mem->bitmap, pos, get_order(size));
->>>> +       spin_unlock_irqrestore(&mem->spinlock, flags);
->>>> +
->>>>          if (err != 0)
->>>>                  return ERR_PTR(err);
->>>>          return mem->virt_base + (pos << PAGE_SHIFT);
->>>> @@ -115,6 +158,7 @@ int dma_alloc_from_coherent(struct device *dev,
->>>> ssize_t size,
->>>>    {
->>>>          struct dma_coherent_mem *mem;
->>>>          int order = get_order(size);
->>>> +       unsigned long flags;
->>>>          int pageno;
->>>>          if (!dev)
->>>> @@ -124,6 +168,7 @@ int dma_alloc_from_coherent(struct device *dev,
->>>> ssize_t size,
->>>>                  return 0;
->>>>          *ret = NULL;
->>>> +       spin_lock_irqsave(&mem->spinlock, flags);
->>>>          if (unlikely(size > (mem->size << PAGE_SHIFT)))
->>>>                  goto err;
->>>> @@ -138,10 +183,12 @@ int dma_alloc_from_coherent(struct device *dev,
->>>> ssize_t size,
->>>>          *dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
->>>>          *ret = mem->virt_base + (pageno << PAGE_SHIFT);
->>>>          memset(*ret, 0, size);
->>>> +       spin_unlock_irqrestore(&mem->spinlock, flags);
->>>>          return 1;
->>>>      err:
->>>> +       spin_unlock_irqrestore(&mem->spinlock, flags);
->>>>          /*
->>>>           * In the case where the allocation can not be satisfied from the
->>>>           * per-device area, try to fall back to generic memory if the
->>>> @@ -171,8 +218,11 @@ int dma_release_from_coherent(struct device *dev,
->>>> int order, void *vaddr)
->>>>          if (mem && vaddr >= mem->virt_base && vaddr <
->>>>                     (mem->virt_base + (mem->size << PAGE_SHIFT))) {
->>>>                  int page = (vaddr - mem->virt_base) >> PAGE_SHIFT;
->>>> +               unsigned long flags;
->>>>    +             spin_lock_irqsave(&mem->spinlock, flags);
->>>>                  bitmap_release_region(mem->bitmap, page, order);
->>>> +               spin_unlock_irqrestore(&mem->spinlock, flags);
->>>>                  return 1;
->>>>          }
->>>>          return 0;
->>>> @@ -218,3 +268,52 @@ int dma_mmap_from_coherent(struct device *dev,
->>>> struct vm_area_struct *vma,
->>>>          return 0;
->>>>    }
->>>>    EXPORT_SYMBOL(dma_mmap_from_coherent);
->>>> +
->>>> +/*
->>>> + * Support for reserved memory regions defined in device tree
->>>> + */
->>>> +#ifdef CONFIG_OF_RESERVED_MEM
->>>> +#include <linux/of.h>
->>>> +#include <linux/of_fdt.h>
->>>> +#include <linux/of_reserved_mem.h>
->>>> +
->>>> +static void rmem_dma_device_init(struct reserved_mem *rmem, struct
->>>> device *dev)
->>>> +{
->>>> +       struct dma_coherent_mem *mem = rmem->priv;
->>> Will the reserved_mem->priv pointer ever point to some other kind of
->>> structure? How do we know that the pointer here is always a
->>> dma_coherent_mem struct (if there are other uses of priv, what is the
->>> guarantee against another user assigning something to it?) Is it the
->>> reserved_mem_ops below that provide the guarantee?
->>
->> reserved_mem_ops are set by the given reserved memory driver and access to
->> priv
->> pointer is limited only to that driver. This pattern is used widely across
->> the
->> whole kernel, so I don't think that a separate pointer to particular
->> structure
->> type is needed.
-> Yup, that's fine. I wanted to make sure.
->
-> Do I need to be taking these patches through the DT tree? Do patches 3
-> & 4 make sense without patch 2?
+Changelog V9:
+	- Fix typos.
+	- Relocated the warning message.
+	- Change patch's sequence.
+Changelog V8:
+	- Add the warning message to notice that slot-node was removed.
+	(As Doug's suggestion)
+Changelog V7:
+	- Fixed typo and modified the commit message.
+Changelog V6:
+	- Fixed Wrong bit control for host's quirks and rename.
+	- Add "Acked-by" for each SoC maintainers.
+Changelog V5:
+	- Rebased on v3.16-rc4.
+	- Add Acked-by.
+Changelog V4:
+	- Fix the checkpatch error.
+Changelog V3:
+	- Fix the wrong bus-width value.
+	- Use the slot->host->quirks instead of brq->quirks.
+	- Add tested-by and reviewd-by.
+Changelog V2:
+	- Add the "mmc: dw_mmc: replace "disable-wp" from slot's quirks to host's quirk"
 
-Patches 3 and 4 are independent from patch 1&2. Patch 4 depends on the 
-other CMA
-patches, which has been merged to akpm tree. I think the easiest 
-solution would
-be to get your Ack for both patches and I will ask Andrew Morton to take 
-them
-together with other mm/CMA changes.
 
-Best regards
+Jaehoon Chung (5):
+  mmc: dw_mmc: Slot quirk "disable-wp" is deprecated.
+  mmc: dw_mmc: modify the dt-binding for removing slot-node and
+    supports-highspeed
+  ARM: dts: exynos: unuse the slot-node and deprecate the
+    supports-highspeed for dw-mmc
+  ARM: dts: socfpga: unuse the slot-node and deprecate the
+    supports-highspeed for dw-mmc
+  ARM: dts: rockchip: unuse the slot-node and deprecate the
+    supports-highspeed for dw-mmc
+
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++---------
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+ arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
+ arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++----------
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   26 ++++++--------------
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++----------
+ arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
+ arch/arm/boot/dts/exynos5260-xyref5260.dts         |   18 ++++----------
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |   18 ++++----------
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++---------
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |   16 +++---------
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++---------
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |   16 +++---------
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++---------
+ arch/arm/boot/dts/socfpga_arria5.dtsi              |    9 +++----
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
+ arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
+ drivers/mmc/host/dw_mmc.c                          |   11 +++++++--
+ include/linux/mmc/dw_mmc.h                         |    2 ++
+ 22 files changed, 90 insertions(+), 199 deletions(-)
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
