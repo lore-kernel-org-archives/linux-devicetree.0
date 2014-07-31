@@ -1,150 +1,47 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 31 Jul 2014 12:18:08 +0200
-Message-ID: <20140731101807.GB7458@ulmo>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-	<20140730152646.GC20162@leverpostej> <20140731083923.GA31218@ulmo>
-	<20140731092241.GA21850@leverpostej>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/6] ARM: DT/davinci: Audio for da850-evm in DT boot
+Date: Thu, 31 Jul 2014 13:18:48 +0300
+Message-ID: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4443301547798464863=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140731092241.GA21850@leverpostej>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============4443301547798464863==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
-Content-Disposition: inline
+The following series will enable audio via simple card on the board when booted
+with DT.
 
+For edma one patch is needed to have working dma:
+http://marc.info/?l=linux-omap&m=140680159327749&w=2
 
---MW5yreqqjyrRcusr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
+Peter
+---
+Peter Ujfalusi (6):
+  ARM: davinci: da8xx-dt: add OF_DEV_AUXDATA entry for mcasp0
+  ARM: DTS: da850: Add node for edma0
+  ARM: DTS: da850: Add node for McASP
+  ARM: DTS: da850-evm: Enable McASP via DT boot
+  ARM: DTS: da850-evm: Add node for tlv320aic3106 codec
+  ARM: DTS: da850-evm: Enable audio via simple-card
 
-On Thu, Jul 31, 2014 at 10:22:41AM +0100, Mark Rutland wrote:
-> [...]
->=20
-> > > > +Examples:
-> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > +
-> > > > +Single-master IOMMU:
-> > > > +--------------------
-> > > > +
-> > > > +	iommu {
-> > > > +		#iommu-cells =3D <0>;
-> > > > +	};
-> > > > +
-> > > > +	master {
-> > > > +		iommus =3D <&/iommu>;
-> > >=20
-> > > Nit: this should be iommus =3D <&{/iommu}>, or it's not valid dts syn=
-tax.
-> >=20
-> > Done.
->=20
-> Cheers. I take it that was done for the other occurrences too?
+ arch/arm/boot/dts/da850-evm.dts  | 72 ++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi     | 19 +++++++++++
+ arch/arm/mach-davinci/da8xx-dt.c |  1 +
+ 3 files changed, 92 insertions(+)
 
-Of course. =3D)
-
-> > > > +	};
-> > > > +
-> > > > +Multiple-master IOMMU with fixed associations:
-> > > > +----------------------------------------------
-> > > > +
-> > > > +	/* multiple-master IOMMU */
-> > > > +	iommu {
-> > > > +		/*
-> > > > +		 * Masters are statically associated with this IOMMU and
-> > > > +		 * address translation is always enabled.
-> > > > +		 */
-> > > > +		#iommu-cells =3D <0>;
-> > >=20
-> > > I don't follow why translation being always enabled is relevant to the
-> > > example; that would seem to be independent from the binding.
-> > >=20
-> > > Surely the key point is that with no way to distinguish devices, they
-> > > presumably share the same translations?
-> >=20
-> > Both aspects are important I think. For #iommu-cells =3D <0> there is no
-> > way for the IOMMU driver to know how to enable translation for a given
-> > device. So it must be either always on or always off.
->=20
-> Sure. But "always on or off" is not the same as "always enabled", which
-> was what confused me.
-
-Yes, this was indeed awkwardly formulated. I think the point that I was
-trying to get across was that there could be IOMMUs that are always on,
-with no means to disable translations at all. But since that's now
-mentioned in the "Notes:" section that Olof commented on I think we have
-that covered as well.
-
->=20
-> > I guess one could say that this is implicit if all masters share the
-> > same translations. And I guess translations don't always have to be on
-> > or off technically. Let me try to rephrase this:
-> >=20
-> > 		/*
-> > 		 * Masters are statically associated with this IOMMU and share
-> > 		 * the same address translations because the IOMMU does not
-> > 		 * have sufficient information to distinguish between masters.
-> > 		 *
-> > 		 * Consequently address translation is always on or off for
-> > 		 * all masters at any given point in time.
-> > 		 */
-> >=20
-> > Does that sound better?
->=20
-> That addresses my concern, so yes.
->=20
-> Given these are minor and everyone wants this in now, I'm happy for
-> these to go through in a fixup patch later.
-
-It looks like this hasn't been applied yet, so I can send out a v5
-shortly with the requested changes addressed.
-
-Thierry
-
---MW5yreqqjyrRcusr
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT2hffAAoJEN0jrNd/PrOh3pcP/0gVN98Cf1ILd1b5oVKSLq2g
-YgbdR+QRHEj5ZXermjbC6U477vKNV8trViOc3Vp7QlUdtNy2i0ckIY/0SF3HDRAf
-BPyvE/sNlYM8tdyOmpfeiP1vmIxfaxOYoSsD4odJmOInetlI0F3PCOFRjOyxFP2o
-UO1WAoVxlYxmqzk9gdxTXLXE2VAt7AM3mA9Gumu262zZDXzGFkutae0PJP2c/Pt7
-bt9mEWE+TuzwjlYQNCbGPxwkY7W7MqNmRK29p9jLkdo++ujYNSKmEYEnvMw+SvKi
-NY5pFIOj5TV6pYqZeu0FDUEDcxOz9Zx6+cmRp0mSndZEDJtdVvvSnUU90+NAZ4jm
-mTOnRwjMSO+kvpzu2j6heP1Th4xudG4eFqy1jLvZ8hgX9co397JxG5RElQGUUPlT
-ZWgTAL16wklR42/70q3ZGPfr5YzopUbu2wbWLfFZgE/ESPZ6KAceBumJLYwyo8/5
-iT12ZDi0B2NlpIIY6d6nRVFrxKMNOoU3qWyeCrSh96wyOKj5qew6iRYP33Lls7lo
-PY7Ilm5i3UMs5B8JyQac+gSJCkCO+Zfi1YxI/ljunwtMz2Qf8LzDw42K1BTUT8uz
-JYKOnfAq6SvlEEMa+insjYDcU8nelXaDYdJo13KIqveVAIMf4pPzm7bOaVHY/OCF
-sOwv7iQD8LR8eG5YALcg
-=gtMX
------END PGP SIGNATURE-----
-
---MW5yreqqjyrRcusr--
-
---===============4443301547798464863==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4443301547798464863==--
+-- 
+2.0.2
