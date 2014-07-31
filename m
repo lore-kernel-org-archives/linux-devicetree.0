@@ -1,98 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 2/2] rcar_can: add device tree support
-Date: Fri, 1 Aug 2014 01:25:53 +0400
-Message-ID: <201408010125.54723.sergei.shtylyov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, vksavl@gmail.com
+From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [REPOST PATCH v3 0/5] Patches to add support for Rockchip dwc2 controller
+Date: Thu, 31 Jul 2014 14:26:20 -0700
+Message-ID: <1406841985-15790-1-git-send-email-kever.yang@rock-chips.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support of the device tree probing for the Renesas R-Car CAN controllers.
+These patches to add support for dwc2 controller found in
+Rockchip processors rk3066, rk3188 and rk3288,
+and enable dts for rk3288 evb.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reposting series with the proper email address.
 
----
-The patch is against the 'linux-can-next.git' repo plus the CAN clock handling
-patch I've just posted.
+Changes in v3:
+- Moved out of pin control and sort by base address
+- EHCI and HSIC move new for version 3.
+- Rebase
 
-Changes in version 3:
-- resolved rejects due to the 'clock_select' variable declaration being moved to
-  the CAN clock handling patch.
+Changes in v2:
+- Split out dr_mode and rk3288 bindings.
+- add compatible "snps,dwc2" bingding info
+- set most parameters as driver auto-detect
+- change the node name from 'dwc2' to 'usb'
+- evb patch added in version 2
 
-Changes in version 2:
-- split the device tree bindings document into a separate patch;
-- replaced 0 with CLKR_CLKP1 in the 'clock_select' variable intializer
-- reversed the condition in the *if* stetement handling the reading of the
-  CAN clock selector from the device tree or the paltfrom data;
-- renamed the "clock-select" property to "renesas,can-clock-select";
-- rebased the patch on top of the CAN clock handling fix.
+Doug Anderson (1):
+  ARM: dts: Fix the sort ordering of EHCI and HSIC in rk3288.dtsi
 
- drivers/net/can/rcar_can.c |   28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+Kever Yang (4):
+  Documentation: dt-bindings: add dt binding info for Rockchip dwc2
+  usb: dwc2: add compatible data for rockchip soc
+  ARM: dts: add rk3288 dwc2 controller support
+  ARM: dts: Enable USB otg and host1(dwc) on rk3288-evb
 
-Index: linux-can-next/drivers/net/can/rcar_can.c
-===================================================================
---- linux-can-next.orig/drivers/net/can/rcar_can.c
-+++ linux-can-next/drivers/net/can/rcar_can.c
-@@ -20,6 +20,7 @@
- #include <linux/can/dev.h>
- #include <linux/clk.h>
- #include <linux/can/platform/rcar_can.h>
-+#include <linux/of.h>
- 
- #define RCAR_CAN_DRV_NAME	"rcar_can"
- 
-@@ -738,16 +739,21 @@ static int rcar_can_probe(struct platfor
- 	struct net_device *ndev;
- 	struct resource *mem;
- 	void __iomem *addr;
--	u32 clock_select;
-+	u32 clock_select = CLKR_CLKP1;
- 	int err = -ENODEV;
- 	int irq;
- 
--	pdata = dev_get_platdata(&pdev->dev);
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data provided!\n");
--		goto fail;
-+	if (pdev->dev.of_node) {
-+		of_property_read_u32(pdev->dev.of_node,
-+				     "renesas,can-clock-select", &clock_select);
-+	} else {
-+		pdata = dev_get_platdata(&pdev->dev);
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "No platform data provided!\n");
-+			goto fail;
-+		}
-+		clock_select = pdata->clock_select;
- 	}
--	clock_select = pdata->clock_select;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (!irq) {
-@@ -888,10 +894,20 @@ static int __maybe_unused rcar_can_resum
- 
- static SIMPLE_DEV_PM_OPS(rcar_can_pm_ops, rcar_can_suspend, rcar_can_resume);
- 
-+static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
-+	{ .compatible = "renesas,can-r8a7778" },
-+	{ .compatible = "renesas,can-r8a7779" },
-+	{ .compatible = "renesas,can-r8a7790" },
-+	{ .compatible = "renesas,can-r8a7791" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rcar_can_of_table);
-+
- static struct platform_driver rcar_can_driver = {
- 	.driver = {
- 		.name = RCAR_CAN_DRV_NAME,
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(rcar_can_of_table),
- 		.pm = &rcar_can_pm_ops,
- 	},
- 	.probe = rcar_can_probe,
+ Documentation/devicetree/bindings/usb/dwc2.txt |    3 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi              |    6 +++
+ arch/arm/boot/dts/rk3288.dtsi                  |   61 ++++++++++++++++--------
+ drivers/usb/dwc2/platform.c                    |   29 +++++++++++
+ 4 files changed, 78 insertions(+), 21 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
