@@ -1,59 +1,151 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv2 5/5] clk: samsung: exynos5410: Added clocks DPLL, EPLL,
- IPLL, and VPLL
-Date: Thu, 31 Jul 2014 17:19:26 +0200
-Message-ID: <53DA5E7E.9010607@gmail.com>
-References: <1406805732-17372-1-git-send-email-hsnaves@gmail.com> <1406805732-17372-6-git-send-email-hsnaves@gmail.com> <53DA3F86.3020506@gmail.com> <CAEe5pB9Rj9rdzk-fjyNcdWyhQCfLtwxt+nAZdb4xuKDO9OpzUA@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Thu, 31 Jul 2014 10:22:19 -0500
+Message-ID: <CAL_JsqKgfjV4sEZOWuH4YcMjeOA_yNDvZLv_jTi_Sb=27cOD3g@mail.gmail.com>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+ <1406732794-20920-3-git-send-email-rric@kernel.org> <20140730154626.GD20162@leverpostej>
+ <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg@mail.gmail.com> <20140731123443.GS4703@rric.localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAEe5pB9Rj9rdzk-fjyNcdWyhQCfLtwxt+nAZdb4xuKDO9OpzUA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Humberto Naves <hsnaves@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Thomas Abraham <ta.omasab@gmail.com>, Andreas Farber <afaerber@suse.de>, Randy Dunlap <rdunlap@infradead.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140731123443.GS4703-vWBEXY7mpu73kLQC+b9v0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.2014 15:37, Humberto Naves wrote:
-> Hi Tomasz,
-> 
-> I remember checking these rates on my calculator. You might notice the
-> odd frequency of 45158401Hz (no pun intended) in the EPLL clock. This
-> particular clock frequency was giving me a big headache in a previous
-> project, since it was wrongly listed as 45158400. At first it seems
-> innocuous, but whenever I would ask for one of the child clocks to
-> change the rate, the driver would miscalculate the correct frequencies
-> and errors would propagate up and down the clock tree.
-> 
-> Anyway, I would double check these tables. And if you want, I can
-> write a separate patch for the rate table validation. I presume that
-> you would like to add a new field, such as default_base_freq, to the
-> structure samsung_pll_clock, and if that field is non-zero, you
-> perform the validation of the table in _samsung_clk_register_pll?
+On Thu, Jul 31, 2014 at 7:34 AM, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 30.07.14 11:37:38, Rob Herring wrote:
+>> On Wed, Jul 30, 2014 at 10:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
+>> >> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>
+>> >> +/ {
+>> >> +     model = "Cavium ThunderX CN88XX Family";
+>> >> +     compatible = "cavium,thunder-88xx";
+>> >
+>> > Please don't use wildcards in compatible strings. Give this an absolute
+>> > name, and override as necessary.
+>
+> The naming 88xx refers to the processor family and arn't actually
+> wildcards. In the future we might need another dts file for 87xx, but
+> so far all SoCs of 88xx family should use the same dts files. In this
+> sense the naming is very specific.
 
-I'm not sure I get the idea of the field you're suggesting. If I
-understand correctly, your intention would be to provide a default
-frequency if there is no table provided. I don't think there is a need
-for it, because current code can read back current settings from
-registers and calculate current rate.
+Yes, but each implementation can have its own errata. You might not
+need to distinguish them now, but you could in the future.
 
-As for the validation itself, one more thing that needs to be considered
-is that the rate table must be sorted.
+However, if the family is really all the same die and different parts
+are just marketing, then the name is fine. Or if you can easily probe
+the exact part and revision it's probably fine.
 
-We once decided to rely on the fact that tables in SoC drivers have
-rates explicitly specified and are correctly sorted, but now I'm
-inclined to reconsider this, based on the fact that those rates often
-are already incorrectly calculated in vendor code or even datasheets,
-which are main information sources for patch authors.
+>
+>
+>> >> +     cpus {
+>> >> +             #address-cells = <2>;
+>> >> +             #size-cells = <0>;
+>> >> +
+>> >> +             cpu@000 {
+>> >> +                     device_type = "cpu";
+>> >> +                     compatible = "cavium,thunder", "arm,armv8";
+>> >> +                     reg = <0x0 0x000>;
+>> >> +                     enable-method = "psci";
+>> >> +             };
+>> >
+>> > Just to check: both the SoC and CPU are called thunder?
+>
+> The soc is called thunder-88xx, the cpu thunder. E.g. an 87xx soc will
+> have the same core in which is thunder.
 
-Before mainlining PLL drivers (which was quite some time ago), we had a
-bit different implementation in our internal tree, which did not use
-explicitly specified rates at all (they could have been considered just
-comments to improve table readability) and the _register_pll() function
-simply calculated rates for all entries creating new table for internal
-use of the PLL driver that was in addition explicitly sorted to make
-sure that the order is correct. This kind of implementation is what I
-would lean toward today.
+And the next version of the core would be called something else?
+thunder-v2? lightning? As long as they are distinguishable they should
+be fine.
 
-Best regards,
-Tomasz
+Rob
+
+>
+>
+>> >> +     memory@00000000 {
+>> >> +             device_type = "memory";
+>> >> +             reg = <0x0 0x00000000 0x0 0x80000000>;
+>> >> +     };
+>> >> +
+>> >> +     gic0: interrupt-controller@801000000000 {
+>> >
+>> > To make this easier to read, please place a comma between 32-bit
+>> > portions of the unit address (e.g. here have 8010,00000000).
+>
+> Changed this.
+>
+>>
+>> Mark, perhaps a dtc or checkpatch.pl check for this?
+>>
+>> This should also be under a bus node.
+>
+> Will do.
+>
+>>
+>> >> +             compatible = "arm,gic-v3";
+>> >> +             #interrupt-cells = <3>;
+>> >> +             #address-cells = <2>;
+>> >> +             #size-cells = <2>;
+>> >> +             ranges;
+>> >
+>> > This has no children, so why have ranges, #address-cells, and
+>> > #size-cells?
+>
+> Right, this is a leftover from a change in a follow on patch that
+> introduces a child for its. Will remove #address-cells, #size-cells
+> and ranges in this patch and move the change to the later patch.
+>
+>> >
+>> >> +             interrupt-controller;
+>> >> +             reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
+>> >> +                   <0x8010 0x80000000 0x0 0x200000>; /* GICR */
+>> >> +             interrupts = <1 9 0xf04>;
+>> >> +     };
+>
+>> >> +             clocks {
+>> >> +                     #address-cells = <2>;
+>> >> +                     #size-cells = <2>;
+>> >> +                     ranges;
+>> >> +
+>> >> +                     refclk50mhz: refclk50mhz {
+>> >> +                             compatible = "fixed-clock";
+>> >> +                             #clock-cells = <0>;
+>> >> +                             clock-frequency = <50000000>;
+>> >> +                             clock-output-names = "refclk50mhz";
+>> >> +                     };
+>> >> +             };
+>> >
+>> > Please get rid of the clocks node and just put the clocks here.
+>
+> Will do.
+>
+>> >
+>> >> +
+>> >> +             uaa0: serial@87e024000000 {
+>> >> +                     compatible = "arm,pl011", "arm,primecell";
+>> >> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
+>> >> +                     interrupts = <1 21 4>;
+>> >> +                     clocks = <&refclk50mhz>;
+>> >> +                     clock-names = "apb_pclk";
+>> >
+>> > Is this actually the apb_pclk, or is the the uartclk? I assume it's the
+>> > latter.
+>>
+>> Shouldn't new bindings have both clocks here? A single clock was a
+>> mistake I think (mine in fact).
+>
+> Do you mean
+>                         clock-names = "uartclk", "apb_pclk";
+> here?
+
+Yes, but Mark said this change never happened so maybe it is fine. In
+any case, follow the pl011 binding documentation.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
