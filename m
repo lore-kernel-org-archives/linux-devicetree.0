@@ -1,275 +1,420 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
-Date: Thu, 31 Jul 2014 21:40:25 +0200
-Message-ID: <53DA9BA9.60808@gmail.com>
-References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <53DA936E.9060004@gmail.com> <53DA9709.10602@suse.de>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
+Date: Thu, 31 Jul 2014 15:00:50 -0500
+Message-ID: <53DAA072.4010902@opensource.altera.com>
+References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-2-git-send-email-tthayer@opensource.altera.com> <20140731082637.GH9030@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53DA9709.10602@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140731082637.GH9030@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Andreas,
 
-On 31.07.2014 21:20, Andreas F=C3=A4rber wrote:
-> Am 31.07.2014 21:05, schrieb Tomasz Figa:
->> On 31.07.2014 18:08, Andreas F=C3=A4rber wrote:
->>> Adds initial support for the HP Chromebook 11.
+On 07/31/2014 03:26 AM, Lee Jones wrote:
+> On Wed, 30 Jul 2014, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>
+>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >>
->> [snip]
+>> Add a simple MFD for the Altera SDRAM Controller.
 >>
->>> +	gpio-keys {
->>> +		compatible =3D "gpio-keys";
->>> +		pinctrl-names =3D "default";
->>> +		pinctrl-0 =3D <&power_key_irq>, <&lid_irq>;
->>> +
->>> +		power {
->>> +			label =3D "Power";
->>> +			gpios =3D <&gpx1 3 GPIO_ACTIVE_LOW>;
->>> +			linux,code =3D <KEY_POWER>;
+>> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>> v1-8: The MFD implementation was not included in the original series.
 >>
->> I assume the key is debounced in hardware, so there is no need for
->> debounce-interval here. Is this correct?
->=20
-> You're asking the wrong person... This is copied from
-> -cros-common/-snow. Downstream 3.8 does not have a debounce-interval
-> property.
-
-Doug, Vincent?
-
->=20
+>> v9: New MFD implementation.
+>> ---
+>>   MAINTAINERS                    |    5 ++
+>>   drivers/mfd/Kconfig            |    7 ++
+>>   drivers/mfd/Makefile           |    1 +
+>>   drivers/mfd/altera-sdr.c       |  162 ++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/altera-sdr.h |  102 +++++++++++++++++++++++++
+>>   5 files changed, 277 insertions(+)
+>>   create mode 100644 drivers/mfd/altera-sdr.c
+>>   create mode 100644 include/linux/mfd/altera-sdr.h
 >>
->>> +			gpio-key,wakeup;
->>> +		};
-
-[snip]
-
->>> +
->>> +	usb@12110000 {
->>
->> Since this is a brand new dts file, it should use the reference base=
-d
->> syntax, which would be something like
->>
->> &usbhost {
->> 	...
->> };
->>
->> below the / { ... }; block.
->=20
-> You will find that I already did that for all nodes that have a label=
-=2E
-> Since there are lots of usb nodes, please suggest specific label name=
-s.
->=20
-> I originally tried to stay out of existing code, then I was asked to =
-fix
-> -cros-common, clean up -snow too, now the SoC, ... ;)
-
-Well, adding labels should be pretty trivial and IMHO could be squashed
-into this patch. For usb@1211000 the right label would be "ehci".
-
->=20
->>> +		samsung,vbus-gpio =3D <&gpx1 1 GPIO_ACTIVE_HIGH>;
->>> +	};
->>> +
->>> +	usb-hub {
->>> +		compatible =3D "smsc,usb3503a";
->>> +		reset-gpios =3D <&hsic_reset>;
->>
->> Hmm, why a -gpios property points to a pinctrl node? Shouldn't there=
- be
->> a phandle to GPIO bank + GPIO specifier instead?
->=20
-> Dunno, can change it. Can I just copy the gpio property from the
-> regulator above?
-
-Reading what Vincent posted earlier I would consider this as the right
-thing to do and it might even let you remove the fake regulator node.
-
->=20
->>> +	};
->>> +
->>> +	fixed-rate-clocks {
->>> +		xxti {
->>> +			compatible =3D "samsung,clock-xxti";
->>> +			clock-frequency =3D <24000000>;
->>> +		};
->>> +	};
->>
->> This is also referencing a node from higher level, so it should be d=
-one
->> using a reference.
->>
->>> +
->>> +	hdmi {
->>> +		hpd-gpio =3D <&gpx3 7 GPIO_ACTIVE_HIGH>;
->>> +		pinctrl-names =3D "default";
->>> +		pinctrl-0 =3D <&hdmi_hpd_irq>;
->>> +		phy =3D <&hdmiphy>;
->>> +		ddc =3D <&i2c_2>;
->>> +		hdmi-en-supply =3D <&s5m_ldo8_reg>;
->>> +		vdd-supply =3D <&s5m_ldo8_reg>;
->>> +		vdd_osc-supply =3D <&s5m_ldo10_reg>;
->>> +		vdd_pll-supply =3D <&s5m_ldo8_reg>;
->>> +	};
->>
->> Ditto.
->=20
-> hdmi?
-
-Sounds good.
-
->=20
->>
->>> +
->>> +	fimd@14400000 {
->>> +		status =3D "okay";
->>> +		samsung,invert-vclk;
->>> +	};
->>
->> Ditto.
->=20
-> fimd?
-
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 86efa7e..48a8923 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1340,6 +1340,11 @@ M:	Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>   S:	Maintained
+>>   F:	drivers/clk/socfpga/
+>>   
+>> +ARM/SOCFPGA SDRAM CONTROLLER SUPPORT
+>> +M:	Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>> +S:	Maintained
+>> +F:	drivers/mfd/altera-sdr.c
+>> +
+>>   ARM/STI ARCHITECTURE
+>>   M:	Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>   M:	Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+> This should be in a separate patch.
+OK. Thanks for your comments and for reviewing. I will move this into a 
+separate patch.
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 6cc4b6a..8ce4961 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -719,6 +719,13 @@ config MFD_STMPE
+>>   		Keypad: stmpe-keypad
+>>   		Touchscreen: stmpe-ts
+>>   
+>> +config MFD_ALTERA_SDR
+>> +	bool "Altera SDRAM Controller MFD"
+>> +	depends on ARCH_SOCFPGA
+>> +	select MFD_CORE
+>> +	help
+>> +	  Support for Altera SDRAM Controller (SDR) MFD.
+>> +
+>>   menu "STMicroelectronics STMPE Interface Drivers"
+>>   depends on MFD_STMPE
+>>   
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 8afedba..24cc2b7 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -169,3 +169,4 @@ obj-$(CONFIG_MFD_AS3711)	+= as3711.o
+>>   obj-$(CONFIG_MFD_AS3722)	+= as3722.o
+>>   obj-$(CONFIG_MFD_STW481X)	+= stw481x.o
+>>   obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
+>> +obj-$(CONFIG_MFD_ALTERA_SDR)	+= altera-sdr.o
+>> diff --git a/drivers/mfd/altera-sdr.c b/drivers/mfd/altera-sdr.c
+>> new file mode 100644
+>> index 0000000..b5c6646
+>> --- /dev/null
+>> +++ b/drivers/mfd/altera-sdr.c
+>> @@ -0,0 +1,162 @@
+>> +/*
+>> + * SDRAM Controller (SDR) MFD
+>> + *
+>> + * Copyright (C) 2014 Altera Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> Can you use the shorter version of the licence?
+Hi. This seems to be the shorter version of the license agreement and is 
+fairly common in the kernel, right?
+>> + */
+> '\n' here.
 OK.
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mfd/altera-sdr.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +static const struct mfd_cell altera_sdr_devs[] = {
+>> +#if defined(CONFIG_EDAC_ALTERA_MC)
+> No need to do this, as it will only be matched if the driver is
+> enabled.  Please remove the #iffery.
+OK. Will remove.
+>> +	{
+>> +		.name = "altr_sdram_edac",
+>> +		.of_compatible = "altr,sdram-edac",
+> What other devices will there be?
+>
+There will be an FPGA bridge and a power control driver that will need 
+access to the SDR Controller registers.
+>> +	},
+>> +#endif
+>> +};
+>> +
+>> +u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
+>> +{
+>> +	return readl(sdr->reg_base + reg_offset);
+>> +}
+>> +EXPORT_SYMBOL_GPL(altera_sdr_readl);
+>> +
+>> +void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value)
+>> +{
+>> +	writel(value, sdr->reg_base + reg_offset);
+>> +}
+>> +EXPORT_SYMBOL_GPL(altera_sdr_writel);
+> Why are you abstracting these?
+>
+> Might be better to use Regmap even.
+regmap seems unnecessarily complex for what we're doing which is why 
+this method was chosen.
 
->=20
->>
->>> +
->>> +	dp-controller@145B0000 {
->>> +		status =3D "okay";
->>> +		pinctrl-names =3D "default";
->>> +		pinctrl-0 =3D <&dp_hpd>;
->>> +		samsung,color-space =3D <0>;
->>> +		samsung,dynamic-range =3D <0>;
->>> +		samsung,ycbcr-coeff =3D <0>;
->>> +		samsung,color-depth =3D <1>;
->>> +		samsung,link-rate =3D <0x0a>;
->>> +		samsung,lane-count =3D <1>;
->>> +		samsung,hpd-gpio =3D <&gpc3 0 GPIO_ACTIVE_HIGH>;
->>> +	};
->>
->> Ditto.
->=20
-> dp_controller? display_port_controller?
+Future drivers will access different sets of registers in the device. 
+These drivers won't share bitfields in the same register so the MFD 
+seemed like the best solution. Originally we implemented this using 
+syscon but that seems to be frowned upon so we changed to using a MFD.
+>> +/* Get total memory size in bytes */
+>> +u32 altera_sdr_mem_size(struct altera_sdr *sdr)
+>> +{
+>> +	u32 size;
+>> +	u32 read_reg, row, bank, col, cs, width;
+> Weird that size is on its own.  Either place on a single line or
+> separate them all.
+OK. I will change this.
+>> +	read_reg = altera_sdr_readl(sdr, SDR_DRAMADDRW_OFST);
+>> +	if (read_reg < 0)
+>> +		return 0;
+>> +
+>> +	width = altera_sdr_readl(sdr, SDR_DRAMIFWIDTH_OFST);
+>> +	if (width < 0)
+>> +		return 0;
+>> +
+>> +	col = (read_reg & SDR_DRAMADDRW_COLBITS_MASK) >>
+>> +		SDR_DRAMADDRW_COLBITS_LSB;
+>> +	row = (read_reg & SDR_DRAMADDRW_ROWBITS_MASK) >>
+>> +		SDR_DRAMADDRW_ROWBITS_LSB;
+>> +	bank = (read_reg & SDR_DRAMADDRW_BANKBITS_MASK) >>
+>> +		SDR_DRAMADDRW_BANKBITS_LSB;
+>> +	cs = (read_reg & SDR_DRAMADDRW_CSBITS_MASK) >>
+>> +		SDR_DRAMADDRW_CSBITS_LSB;
+> These would probably be better as macros.
+>
+OK. I will fix this.
+>> +	/* Correct for ECC as its not addressible */
+>> +	if (width == SDR_DRAMIFWIDTH_32B_ECC)
+>> +		width = 32;
+>> +	if (width == SDR_DRAMIFWIDTH_16B_ECC)
+>> +		width = 16;
+>> +
+>> +	/* calculate the SDRAM size base on this info */
+>> +	size = 1 << (row + bank + col);
+>> +	size = size * cs * (width / 8);
+>> +	return size;
+>> +}
+>> +EXPORT_SYMBOL_GPL(altera_sdr_mem_size);
+> Should this really be done in here?  Isn't this an SDRAM function?
+>
+This register is part of the SDRAM controller and size information may 
+be required by the other drivers that share this memory area/need SDRAM 
+information.
 
-dp?
+>> +static int altera_sdr_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct altera_sdr *sdr;
+>> +	struct resource *res;
+>> +	void __iomem *base;
+>> +	int ret;
+>> +
+>> +	sdr = devm_kzalloc(dev, sizeof(*sdr), GFP_KERNEL);
+>> +	if (!sdr)
+>> +		return -ENOMEM;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res)
+>> +		return -ENOENT;
+>> +
+>> +	base = devm_ioremap(dev, res->start, resource_size(res));
+> Instead use devm_ioremap_resource(), then you can omit the error
+> checking of platform_get_resource().
+OK. Thanks. I will make the change.
+>> +	if (!base)
+>> +		return -ENOMEM;
+>> +
+>> +	sdr->dev = &pdev->dev;
+> Either use 'dev' here, or remove the top line in this function and use
+> &pdev->dev everywhere.  I personally prefer the latter.
+OK. I will use the latter.
+>> +	sdr->reg_base = base;
+>> +
+>> +	ret = mfd_add_devices(sdr->dev, 0, altera_sdr_devs,
+>> +			      ARRAY_SIZE(altera_sdr_devs), NULL, 0, NULL);
+>> +	if (ret)
+>> +		dev_err(sdr->dev, "error adding devices");
+>> +
+>> +	platform_set_drvdata(pdev, sdr);
+>> +
+>> +	dev_dbg(dev, "Altera SDR MFD registered\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int altera_sdr_remove(struct platform_device *pdev)
+>> +{
+>> +	struct altera_sdr *sdr = platform_get_drvdata(pdev);
+> No need for this, just use &pdev->dev.
+OK. I will make the change.
+>> +	mfd_remove_devices(sdr->dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id of_altera_sdr_match[] = {
+>> +	{ .compatible = "altr,sdr", },
+>> +	{ },
+>> +};
+>> +
+>> +static const struct platform_device_id altera_sdr_ids[] = {
+>> +	{ "altera_sdr", },
+>> +	{ }
+>> +};
+> What's this for?
+We don't strictly need it because we are driven by the device tree. It 
+can be removed it if is a problem but I'm not clear why it is a problem.
+>> +static struct platform_driver altera_sdr_driver = {
+>> +	.driver = {
+>> +		.name = "altera_sdr",
+>> +		.owner = THIS_MODULE,
+> You can remove this line, it's taken care of for you.
+I will remove the .owner line.
+>> +		.of_match_table = of_altera_sdr_match,
+>> +	},
+>> +	.probe		= altera_sdr_probe,
+>> +	.remove		= altera_sdr_remove,
+>> +	.id_table	= altera_sdr_ids,
+>> +};
+>> +
+>> +static int __init altera_sdr_init(void)
+>> +{
+>> +	return platform_driver_register(&altera_sdr_driver);
+>> +}
+>> +postcore_initcall(altera_sdr_init);
+> Why was this chosen?
+We want this to happen pretty early.
+>> +static void __exit altera_sdr_exit(void)
+>> +{
+>> +	platform_driver_unregister(&altera_sdr_driver);
+>> +}
+>> +module_exit(altera_sdr_exit);
+>> +
+>> +MODULE_AUTHOR("Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
+>> +MODULE_DESCRIPTION("Altera SDRAM Controller (SDR) MFD");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/linux/mfd/altera-sdr.h b/include/linux/mfd/altera-sdr.h
+>> new file mode 100644
+>> index 0000000..a5f5c39
+>> --- /dev/null
+>> +++ b/include/linux/mfd/altera-sdr.h
+>> @@ -0,0 +1,102 @@
+>> +/*
+>> + * Copyright (C) 2014 Altera Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> Use the short version.
+Same as above. This is the shorter version that we've been using at Altera.
+>> + */
+> '\n' here.
+OK.
+>> +#ifndef __LINUX_MFD_ALTERA_SDR_H
+>> +#define __LINUX_MFD_ALTERA_SDR_H
+>> +
+>> +/* SDRAM Controller register offsets */
+>> +#define SDR_CTLCFG_OFST                 0x00
+>> +#define SDR_DRAMADDRW_OFST		0x2C
+>> +#define SDR_DRAMIFWIDTH_OFST		0x30
+>> +#define SDR_DRAMSTS_OFST                0x38
+>> +#define SDR_DRAMINTR_OFST               0x3C
+>> +#define SDR_SBECOUNT_OFST               0x40
+>> +#define SDR_DBECOUNT_OFST               0x44
+>> +#define SDR_ERRADDR_OFST                0x48
+>> +#define SDR_DROPCOUNT_OFST              0x4C
+>> +#define SDR_DROPADDR_OFST               0x50
+>> +#define SDR_CTRLGRP_LOWPWREQ_OFST       0x54
+>> +#define SDR_CTRLGRP_LOWPWRACK_OFST      0x58
+>> +
+>> +/* SDRAM Controller CtrlCfg Register Bit Masks */
+>> +#define SDR_CTLCFG_ECC_EN               0x400
+>> +#define SDR_CTLCFG_ECC_CORR_EN          0x800
+>> +#define SDR_CTLCFG_GEN_SB_ERR           0x2000
+>> +#define SDR_CTLCFG_GEN_DB_ERR           0x4000
+>> +
+>> +#define SDR_CTLCFG_ECC_AUTO_EN          (SDR_CTLCFG_ECC_EN | \
+>> +					 SDR_CTLCFG_ECC_CORR_EN)
+>> +
+>> +/* SDRAM Controller Address Widths Field Register */
+>> +#define SDR_DRAMADDRW_COLBITS_MASK      0x001F
+>> +#define SDR_DRAMADDRW_COLBITS_LSB       0
+>> +#define SDR_DRAMADDRW_ROWBITS_MASK      0x03E0
+>> +#define SDR_DRAMADDRW_ROWBITS_LSB       5
+>> +#define SDR_DRAMADDRW_BANKBITS_MASK     0x1C00
+>> +#define SDR_DRAMADDRW_BANKBITS_LSB      10
+>> +#define SDR_DRAMADDRW_CSBITS_MASK       0xE000
+>> +#define SDR_DRAMADDRW_CSBITS_LSB        13
+> We normally call _LSB, _SHIFT.
+OK. I will change.
+>> +/* SDRAM Controller Interface Data Width Defines */
+>> +#define SDR_DRAMIFWIDTH_16B_ECC         24
+>> +#define SDR_DRAMIFWIDTH_32B_ECC         40
+>> +
+>> +/* SDRAM Controller DRAM Status Register Bit Masks */
+>> +#define SDR_DRAMSTS_SBEERR              0x04
+>> +#define SDR_DRAMSTS_DBEERR              0x08
+>> +#define SDR_DRAMSTS_CORR_DROP           0x10
+>> +
+>> +/* SDRAM Controller DRAM IRQ Register Bit Masks */
+>> +#define SDR_DRAMINTR_INTREN             0x01
+>> +#define SDR_DRAMINTR_SBEMASK            0x02
+>> +#define SDR_DRAMINTR_DBEMASK            0x04
+>> +#define SDR_DRAMINTR_CORRDROPMASK       0x08
+>> +#define SDR_DRAMINTR_INTRCLR            0x10
+>> +
+>> +/* SDRAM Controller Single Bit Error Count Register Bit Masks */
+>> +#define SDR_SBECOUNT_COUNT_MASK         0x0F
+>> +
+>> +/* SDRAM Controller Double Bit Error Count Register Bit Masks */
+>> +#define SDR_DBECOUNT_COUNT_MASK         0x0F
+>> +
+>> +/* SDRAM Controller ECC Error Address Register Bit Masks */
+>> +#define SDR_ERRADDR_ADDR_MASK           0xFFFFFFFF
+>> +
+>> +/* SDRAM Controller ECC Autocorrect Drop Count Register Bit Masks */
+>> +#define SDR_DROPCOUNT_CORRMASK          0x0F
+>> +
+>> +/* SDRAM Controller ECC AutoCorrect Error Address Register Bit Masks */
+>> +#define SDR_DROPADDR_ADDR_MASK          0xFFFFFFFF
+>> +
+>> +#define SELFRSHREQ_POS                  3
+>> +#define SELFRSHREQ_MASK                 0x8
+>> +
+>> +#define SELFRFSHMASK_POS                4
+>> +#define SELFRFSHMASK_MASK               0x30
+>> +
+>> +#define SELFRFSHACK_POS                 1
+>> +#define SELFRFSHACK_MASK                0x2
+>> +
+>> +struct altera_sdr {
+>> +	struct device *dev;
+>> +	void __iomem *reg_base;
+>> +};
+>> +
+>> +/* Register access API */
+>> +u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset);
+>> +void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value);
+> Regmap?
+Same as above. This seems to be more complex than we need.
 
->=20
->>
->>> +};
->>> +
->>> +&dp_hpd {
->>> +	samsung,pins =3D "gpc3-0";
->>> +	samsung,pin-function =3D <0>;
->>> +	samsung,pin-pud =3D <3>;
->>> +	samsung,pin-drv =3D <0>;
->>> +};
->>
->> Hmm, what node is this referencing? I believe this should rather
->> reference the pin controller and add a new board-specific pinconf/pi=
-nmux
->> group instead....
->=20
-> It's a -pinctrl node. See v3->v4 change log and discussion on v3.
->=20
 
-Well, this is clearly a board specific node anyway, because it does not
-refer to a special function, but simply an input/interrupt GPIO. If it
-somehow has landed in generic pinctrl dtsi then it should be removed
-from there and this patch should simply introduce its own instance of
-dp_hpd node, so you did the right thing in v3.
+Thanks for your comments and for reviewing!
 
->>> +
->>> +&i2c_0 {
->>> +	status =3D "okay";
->>> +	samsung,i2c-sda-delay =3D <100>;
->>> +	samsung,i2c-max-bus-freq =3D <378000>;
->>
->> [snip]
->>
->>> +/*
->>> + * Disabled pullups since external part has its own pullups and
->>> + * double-pulling gets us out of spec in some cases.
->>> + */
->>> +&i2c2_bus {
->>> +	samsung,pin-pud =3D <0>;
->>> +};
->>
->> OK, here overriding a generic pinconf group is justified and nicely
->> explained by a comment.
->=20
-> You seem to assume that I actually understand these things. ;)
-> Just copied from -cros-common/-snow.
->=20
+Thor
+>> +u32 altera_sdr_mem_size(struct altera_sdr *sdr);
+>> +
+>> +#endif /* __LINUX_MFD_ALTERA_SDR_H */
 
-It is good if those things are being done with some level of
-understanding. The DT mechanics are quite well documented in
-Documentation/devicetree/bindings, while for HW-specific bits I believe
-Chromium guys could give you a hand.
-
->>> +
->>> +&i2c_2 {
->>> +	status =3D "okay";
->>> +	samsung,i2c-sda-delay =3D <100>;
->>> +	samsung,i2c-max-bus-freq =3D <66000>;
->>> +
->>> +	hdmiddc@50 {
->>> +		compatible =3D "samsung,exynos4210-hdmiddc";
->>> +		reg =3D <0x50>;
->>> +	};
->>
->> I don't think this matches current Exynos HDMI bindings, which I bel=
-ieve
->> have been changed to just take a phandle to i2c bus instead.
->=20
-> Copied from -cros-common/-snow.
->=20
-
-This means that somebody probably forgot to update -cros-common/-snow
-dts(i). Not the first and I guess probably not the last time...
-
->>> +};
->>> +
->>> +&i2c_3 {
->>> +	status =3D "okay";
->>> +	samsung,i2c-sda-delay =3D <100>;
->>> +	samsung,i2c-max-bus-freq =3D <66000>;
->>> +};
->>
->> [snip]
->>
->>> +&sd1_clk {
->>> +	samsung,pin-drv =3D <0>;
->>> +};
->>> +
->>> +&sd1_cmd {
->>> +	samsung,pin-pud =3D <3>;
->>> +	samsung,pin-drv =3D <0>;
->>> +};
->>> +
->>> +&sd1_cd {
->>> +	samsung,pin-drv =3D <0>;
->>> +};
->>> +
->>> +&sd1_bus4 {
->>> +	samsung,pin-drv =3D <0>;
->>> +};
->>
->> Here generic settings are being overridden, so it might be a good id=
-ea
->> to explain why, like with i2c pull-up above.
->=20
-> Snow does not have an explanation either, so please suggest what comm=
-ent
-> you'd like to see. Consider me just a user with no specs. :)
-
-Doug, Vincent, someone else?
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
