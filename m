@@ -1,250 +1,66 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: sun7i: Add Banana Pi board
-Date: Thu, 31 Jul 2014 11:58:00 +0200
-Message-ID: <20140731095800.GA3952@lukather>
-References: <1406653348-16638-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH v5 0/6] ARM: sunxi: RTC support for A31/A23
+Date: Thu, 31 Jul 2014 11:55:55 +0200
+Message-ID: <20140731095555.GZ3952@lukather>
+References: <1406724969-2482-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="va9XEZk9/dJ5GUjX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="vM12nk/63StVgfqY"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKFH5CPAKGQEAISB4HI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1406653348-16638-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1406724969-2482-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---va9XEZk9/dJ5GUjX
+--vM12nk/63StVgfqY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+Hi,
 
-On Tue, Jul 29, 2014 at 07:02:28PM +0200, Hans de Goede wrote:
-> The Banana Pi is an A20 based development board using Raspberry Pi compat=
-ible
-> IO headers. It comes with 1 GB RAM, 1 Gb ethernet, 2x USB host, sata, hdmi
-> and stereo audio out + various expenansion headers:
+On Wed, Jul 30, 2014 at 08:56:03PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
 >=20
-> http://www.bananapi.org/
+> This is v5 of the sun6i RTC series. This series adds support for
+> the RTC in A31 and A23 SoCs. The series applies to sunxi-next.
 >=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile               |   1 +
->  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 183 +++++++++++++++++++++++++=
-++++++
->  2 files changed, 184 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> The A31 has a new RTC block that is separate from the timer block.
+> It has separate interrupts for each of the alarms, and a different
+> format for the counter alarm. The driver has been tested on the
+> A31 Hummingbird, and the A23 tablet I'm using to work on sun8i
+> support.
 >=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index bdbc84a..440e037 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -379,6 +379,7 @@ dtb-$(CONFIG_MACH_SUN6I) +=3D \
->  	sun6i-a31-hummingbird.dtb \
->  	sun6i-a31-m9.dtb
->  dtb-$(CONFIG_MACH_SUN7I) +=3D \
-> +	sun7i-a20-bananapi.dtb \
->  	sun7i-a20-cubieboard2.dtb \
->  	sun7i-a20-cubietruck.dtb \
->  	sun7i-a20-i12-tvbox.dtb \
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts=
-/sun7i-a20-bananapi.dts
-> new file mode 100644
-> index 0000000..0332b82
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> @@ -0,0 +1,183 @@
-> +/*
-> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "sun7i-a20.dtsi"
-> +/include/ "sunxi-common-regulators.dtsi"
-> +
-> +/ {
-> +	model =3D "LeMaker Banana Pi";
-> +	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
-> +
-> +	soc@01c00000 {
-> +		spi0: spi@01c05000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&spi0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		mmc0: mmc@01c0f000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-> +			vmmc-supply =3D <&reg_vcc3v3>;
-> +			bus-width =3D <4>;
-> +			cd-gpios =3D <&pio 7 10 0>; /* PH10 */
-> +			cd-inverted;
-> +			status =3D "okay";
-> +		};
-> +
-> +		usbphy: phy@01c13400 {
-> +			usb1_vbus-supply =3D <&reg_usb1_vbus>;
-> +			usb2_vbus-supply =3D <&reg_usb2_vbus>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		ehci0: usb@01c14000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ohci0: usb@01c14400 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ahci: sata@01c18000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ehci1: usb@01c1c000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ohci1: usb@01c1c400 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		pinctrl@01c20800 {
-> +			uart3_pins_bananapi: uart3_pin@0 {
-> +				allwinner,pins =3D "PH0", "PH1";
-> +				allwinner,function =3D "uart3";
-> +				allwinner,drive =3D <0>;
-> +				allwinner,pull =3D <0>;
-> +			};
+> Patch 1 adds the driver for the RTC.
+>=20
+> Patch 2 is a minor cleanup. This makes rtc-sunxi depend on sun4i or
+> sun7i, the 2 platforms the driver is actually used on.
+>=20
+> Patch 3 adds the RTC device node to the sun6i DTSI.
+>=20
+> Patch 4 adds the RTC device node to the sun8i DTSI.
+>=20
+> Patch 5 adds enables rtc-sun6i in the sunxi defconfig.
+>=20
+> Patch 6 adds enables rtc-sun6i in the multi_v7 defconfig.
+> This patch applies to arm-soc/next/defconfig (e9a86d96)
 
-That node should be in the DTSI
+I queued patches 3 to 6 for 3.18.
 
-> +
-> +			mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-> +				allwinner,pins =3D "PH10";
-> +				allwinner,function =3D "gpio_in";
-> +				allwinner,drive =3D <0>;
-> +				allwinner,pull =3D <1>;
-> +			};
-> +
-> +			gmac_power_pin_bananapi: gmac_power_pin@0 {
-> +				allwinner,pins =3D "PH23";
-> +				allwinner,function =3D "gpio_out";
-> +				allwinner,drive =3D <0>;
-> +				allwinner,pull =3D <0>;
-> +			};
-> +
-> +			led_pins_bananapi: led_pins@0 {
-> +				allwinner,pins =3D "PH24";
-> +				allwinner,function =3D "gpio_out";
-> +				allwinner,drive =3D <0>;
-> +				allwinner,pull =3D <0>;
-> +			};
-> +		};
-> +
-> +		ir0: ir@01c21800 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&ir0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart0: serial@01c28000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart3: serial@01c28c00 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart3_pins_bananapi>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart7: serial@01c29c00 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart7_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		i2c0: i2c@01c2ac00 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c0_pins_a>;
-> +			status =3D "okay";
-> +
-> +			axp209: pmic@34 {
-> +				compatible =3D "x-powers,axp209";
-> +				reg =3D <0x34>;
-> +				interrupt-parent =3D <&nmi_intc>;
-> +				interrupts =3D <0 8>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <1>;
-> +			};
-> +		};
-> +
-> +		i2c2: i2c@01c2b400 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c2_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		gmac: ethernet@01c50000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&gmac_pins_rgmii_a>;
-> +			phy =3D <&phy1>;
-> +			phy-mode =3D "rgmii";
-> +			phy-supply =3D <&reg_gmac_3v3>;
-> +			status =3D "okay";
-> +
-> +			phy1: ethernet-phy@1 {
-> +				reg =3D <1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&led_pins_bananapi>;
-> +
-> +		green {
-> +			label =3D "bananapi:green:usr";
-> +			gpios =3D <&pio 7 24 0>;
-> +		};
-> +	};
-> +
-> +	reg_usb1_vbus: usb1-vbus {
-> +		status =3D "okay";
-> +	};
-> +
-> +	reg_usb2_vbus: usb2-vbus {
-> +		status =3D "okay";
-> +	};
-> +
-> +	reg_gmac_3v3: gmac-3v3 {
-> +		compatible =3D "regulator-fixed";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&gmac_power_pin_bananapi>;
-> +		regulator-name =3D "gmac-3v3";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		startup-delay-us =3D <50000>;
-> +		enable-active-high;
-> +		gpio =3D <&pio 7 23 0>;
-> +	};
-> +};
+I'll rebase a publish the branches as soon as 3.17-rc1 is out, so
+don't worry if you don't see these patches appear right away.
 
-Looks fine otherwise, thanks!
+Thanks,
 Maxime
 
 --=20
@@ -252,30 +68,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---va9XEZk9/dJ5GUjX
+--vM12nk/63StVgfqY
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJT2hMoAAoJEBx+YmzsjxAgk5QP/jupu9W9DHnHfYrg+/Xm8ks4
-Zr1/O0FmidZ4I5JMH/Xiy6PL3raBWwLOm/NT7Rq6wuPQMp6ekVkv6YFMA1uufX3u
-nEYrtiJbJSd17gZ40yGnoM7Dn21YJvvUSLK0Pc/LAHAc8JN9LA6qpl2ONN3TtR73
-AcqIkEQ0Nk/19OHHlUq/N88VBIwhDAaz1MaataiBMDPq74z741ylfw0KIyEpzW7h
-0yS+xA7+nO0fjSgQb0WuGR5/BbeO5kQswyFrhZQwtr8eQu2Qq7jIlIvQ0whKeJXS
-w+c0a0x1emOkJHYlKqoq+zbW3kKo0OQlHTSbajEwrvUzOamyQ1UQa5UaRJm3868P
-QM6YAETDxKZkWM7ffLu8dnxQZcsUprLVTR17pe6++c4vrimDXx71T7gxxWnSdv9W
-MPpJav2Xan37tJc6e2Z2LRN8kNqV8Gg65bRVXlPlbs0ZMaCNXUG5WJq1JfBpPY+A
-egunOVc7l8Ahcuf8+6zAFSSg908uZhr0ZfDj3oPTbmmWdtR65XRxL6zYxg90RRED
-1Ul/0ksKUZtGheB8aViHQ3ndVELaVpfGtqFHh2VGQ8LWxgJuYW7HEBXSQPYQ4PQ4
-r+O6NthVF+6RFL7kFr3PLpkBlxKCkHOQkEq3XdtAbPlPPo/CyJw2klVCx/oc1qs7
-Wj8XzCdeA6QhbSO7/Lui
-=e30/
+iQIcBAEBAgAGBQJT2hKrAAoJEBx+YmzsjxAgfDYP/RaiXfFQpn+DjlSVILcMFqjr
+edZyWgH35Ykrflgqixey1GZPqr4DnFyqvF4e+SDD16rGVRZtBnKrT+3N7IkyQNEm
+27XsPZg3KyLDzqads9fY5bCaKgy9+9dGzT1IrObAhwaGcFvYGa3kKgkbeijVD7js
+u3FcFXj94hbBzMuIRuSf41d+9Ns44bLfhYBBjdOETwGORTxY4LGeHrY61ethlRd6
+0cAoOuBjLDWtLX38Q+W2+ZuiJvQhTVzeE5Ltzk9uGODtk64FjdBcXe6O4dRv9VXt
+Mnr8V4158PtIpvFSL6cBnkR+L323mjmMGR9uz/UZbl407qVdMSoN92DVGYd0QxBH
+UGeAAwfx9/kMq8K3p68DOir3ob2P4uQgVWS+Eve1jm81fKwWxntWNJUaTaieRbbf
+dxLNQnEGCqaNWP8cT5Zqgnrm8H5XjM70/l08uXy5Aez5sxOfTOecx3P3ZeRlDObp
+xLPAyq7vxGgsGApE5eBTfOaMqXOlrs6bR6R1HfeNO+p5+tWHiyPRp2+tl32M7sNa
+vwhv4Ipd3Gnb6oKm9qKQ+2PTeCed/Vtl257CuKKx16LFLr+0liVQby9zYFt8Nb2i
++AzmkSTy9El1sdyr0tn3AhJxnRT3UXHMCZ5Ok8W36grhS4V2sGIABcigGnRre3fD
+7hq5fOB8zjZgXvHmAzkV
+=FUeA
 -----END PGP SIGNATURE-----
 
---va9XEZk9/dJ5GUjX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--vM12nk/63StVgfqY--
