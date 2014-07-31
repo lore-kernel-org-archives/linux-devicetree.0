@@ -1,111 +1,54 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH RFC v4 1/2] Devicetree: Add pl353 smc controller
- devicetree binding information
-Date: Thu, 31 Jul 2014 00:17:53 -0700
-Message-ID: <20140731071753.GH11952@brian-ubuntu>
-References: <1406561236-29207-1-git-send-email-punnaia@xilinx.com>
- <f9cb28fc-6a68-42b8-bdc0-9ad0941de977@BN1AFFO11FD013.protection.gbl>
+Subject: Re: [PATCH RFC v4 3/4] nand: pl353: Add ONDIE ECC support
+Date: Thu, 31 Jul 2014 00:23:17 -0700
+Message-ID: <20140731072317.GI11952@brian-ubuntu>
+References: <1406561500-18264-1-git-send-email-punnaia@xilinx.com>
+ <27fce982-6598-44a0-ad80-c13d02a952ee@BN1AFFO11FD042.protection.gbl>
+ <20140731070643.GG11952@brian-ubuntu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f9cb28fc-6a68-42b8-bdc0-9ad0941de977@BN1AFFO11FD013.protection.gbl>
+In-Reply-To: <20140731070643.GG11952@brian-ubuntu>
 Sender: linux-doc-owner@vger.kernel.org
 To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, anirudh@xilinx.com, svemula@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, anirudh@xilinx.com, svemula@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Jul 28, 2014 at 08:57:15PM +0530, Punnaiah Choudary Kalluri wrote:
-> Add pl353 static memory controller devicetree binding information.
+On Thu, Jul 31, 2014 at 12:06:43AM -0700, Brian Norris wrote:
+> On Mon, Jul 28, 2014 at 09:01:39PM +0530, Punnaiah Choudary Kalluri wrote:
+> > +/* Generic flash bbt decriptors */
+> > +static uint8_t bbt_pattern[] = { 'B', 'b', 't', '0' };
+> > +static uint8_t mirror_pattern[] = { '1', 't', 'b', 'B' };
+> > +
+> > +static struct nand_bbt_descr bbt_main_descr = {
+> > +	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE
+> > +		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
+> > +	.offs = 4,
+> > +	.len = 4,
+> > +	.veroffs = 20,
+> > +	.maxblocks = 4,
+> > +	.pattern = bbt_pattern
+> > +};
+> > +
+> > +static struct nand_bbt_descr bbt_mirror_descr = {
+> > +	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE
+> > +		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
+> > +	.offs = 4,
+> > +	.len = 4,
+> > +	.veroffs = 20,
+> > +	.maxblocks = 4,
+> > +	.pattern = mirror_pattern
+> > +};
 > 
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> ---
-> Changes in v4:
->  - none
-> Changes in v3:
->  - none
-> Changes in v2:
->  - modified timing binding info as per onfi timing parameters
+> Why do you need a custom BBT descriptor? It's much better to use the
+> standard ones. Perhaps you just want the NAND_BBT_NO_OOB_BBM option, so
+> you get the bbt_{main,mirror}_no_oob_descr structs from nand_bbt.c.
 
-^^^ There were other comments here:
+I see you answered this:
 
-  http://lists.infradead.org/pipermail/linux-mtd/2014-April/053488.html
+ http://lists.infradead.org/pipermail/linux-mtd/2014-April/053451.html
 
-You don't need or want these timing parameters at all, I don't think.
-
->  - add suffix nano second as timing unit
->  - modified the clock names as per the IP spec
-> ---
->  .../bindings/memory-controllers/pl353-smc.txt      |   53 ++++++++++++++++++++
->  1 files changed, 53 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-> new file mode 100644
-> index 0000000..c1f011d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-> @@ -0,0 +1,53 @@
-> +Device tree bindings for ARM PL353 static memory controller
-> +
-> +PL353 static memory controller supports two kinds of memory
-> +interfaces.i.e NAND and SRAM/NOR interfaces.
-> +The actual devices are instantiated from the child nodes of pl353 smc node.
-> +
-> +Required properties:
-> +- compatible		: Should be "arm,pl353-smc-r2p1"
-> +- reg			: Controller registers map and length.
-> +- clock-names		: List of input clock names - "memclk", "aclk"
-> +			  (See clock bindings for details).
-> +- clocks		: Clock phandles (see clock bindings for details).
-> +- address-cells	: Address cells, must be 1.
-> +- size-cells		: Size cells. Must be 1.
-> +
-> +Child nodes:
-> + For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
-> +supported as child nodes.
-> +
-> +Mandatory timing properties for child nodes:
-> +- nand-tRC-ns	: Read cycle time.
-> +- nand-tWC-ns	: Write cycle time.
-> +- nand-tREA-ns	: re_n assertion delay.
-> +- nand-tWP-ns	: we_n de-assertion delay.
-> +- nand-tCLR-ns	: Status read time
-> +- nand-tAR-ns	: ID read time
-> +- nand-tRR-ns	: busy to re_n
-
-These properties should probably be dropped. Look in l2-mtd.git, where
-we now have drivers/mtd/nand/nand_timings.c to define the ONFI timing
-modes, which can be auto-detected (look at struct
-nand_onfi_params::async_timing_mode). Boris also has pending patches for
-non-ONFI chips.
-
-> +for nand partition information please refer the below file
-> +Documentation/devicetree/bindings/mtd/partition.txt
-> +
-> +Example:
-> +	pl353smcc_0: pl353smcc@e000e000 {
-> +			compatible = "arm,pl353-smcc-r2p1"
-> +			clock-names = "memclk", "aclk";
-> +			clocks = <&clkc 11>, <&clkc 44>;
-> +			reg = <0xe000e000 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			nand_0: nand@e1000000 {
-> +				compatible = "arm,pl353-nand-r2p1"
-> +				reg = <0xe1000000 0x1000000>;
-> +				nand-tRC-ns = <40>;
-> +				nand-tWC-ns = <40>;
-> +				nand-tREA-ns = <10>;
-> +				nand-tWP-ns = <20>;
-> +				nand-tCLR-ns = <20>;
-> +				nand-tAR-ns = <20>;
-> +				nand-tRR-ns = <40>;
-> +				(...)
-> +			};
-> +	};
+That's unfortunate.
 
 Brian
