@@ -1,153 +1,434 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: sun7i: Add Banana Pi board
-Date: Thu, 31 Jul 2014 12:29:29 +0200
-Message-ID: <53DA1A89.4000104@redhat.com>
-References: <1406653348-16638-1-git-send-email-hdegoede@redhat.com> <20140731095800.GA3952@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: =?UTF-8?q?=5BPATCH=201/2=5D=5Bv2=5D=20powerpc/fsl-booke=3A=20Add=20initial=20T1040/T1042=20RDB=20board=20support?=
+Date: Thu, 31 Jul 2014 15:49:20 +0530
+Message-ID: <1406801960-3680-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBD5V5CPAKGQEM2BLG7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140731095800.GA3952@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlYI+954vlgkHg@public.gmane.org
+Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+T1040/T1042RDB is Freescale Reference Design Board.
+The board can support both T1040/T1042 QorIQ Power Architecture=E2=84=A2=
+ processor.
 
-On 07/31/2014 11:58 AM, Maxime Ripard wrote:
-> Hi Hans,
-> 
-> On Tue, Jul 29, 2014 at 07:02:28PM +0200, Hans de Goede wrote:
->> The Banana Pi is an A20 based development board using Raspberry Pi compatible
->> IO headers. It comes with 1 GB RAM, 1 Gb ethernet, 2x USB host, sata, hdmi
->> and stereo audio out + various expenansion headers:
->>
->> http://www.bananapi.org/
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile               |   1 +
->>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 183 +++++++++++++++++++++++++++++++
->>  2 files changed, 184 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index bdbc84a..440e037 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -379,6 +379,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->>  	sun6i-a31-hummingbird.dtb \
->>  	sun6i-a31-m9.dtb
->>  dtb-$(CONFIG_MACH_SUN7I) += \
->> +	sun7i-a20-bananapi.dtb \
->>  	sun7i-a20-cubieboard2.dtb \
->>  	sun7i-a20-cubietruck.dtb \
->>  	sun7i-a20-i12-tvbox.dtb \
->> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
->> new file mode 100644
->> index 0000000..0332b82
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
->> @@ -0,0 +1,183 @@
->> +/*
->> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +/dts-v1/;
->> +/include/ "sun7i-a20.dtsi"
->> +/include/ "sunxi-common-regulators.dtsi"
->> +
->> +/ {
->> +	model = "LeMaker Banana Pi";
->> +	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
->> +
->> +	soc@01c00000 {
->> +		spi0: spi@01c05000 {
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&spi0_pins_a>;
->> +			status = "okay";
->> +		};
->> +
->> +		mmc0: mmc@01c0f000 {
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
->> +			vmmc-supply = <&reg_vcc3v3>;
->> +			bus-width = <4>;
->> +			cd-gpios = <&pio 7 10 0>; /* PH10 */
->> +			cd-inverted;
->> +			status = "okay";
->> +		};
->> +
->> +		usbphy: phy@01c13400 {
->> +			usb1_vbus-supply = <&reg_usb1_vbus>;
->> +			usb2_vbus-supply = <&reg_usb2_vbus>;
->> +			status = "okay";
->> +		};
->> +
->> +		ehci0: usb@01c14000 {
->> +			status = "okay";
->> +		};
->> +
->> +		ohci0: usb@01c14400 {
->> +			status = "okay";
->> +		};
->> +
->> +		ahci: sata@01c18000 {
->> +			status = "okay";
->> +		};
->> +
->> +		ehci1: usb@01c1c000 {
->> +			status = "okay";
->> +		};
->> +
->> +		ohci1: usb@01c1c400 {
->> +			status = "okay";
->> +		};
->> +
->> +		pinctrl@01c20800 {
->> +			uart3_pins_bananapi: uart3_pin@0 {
->> +				allwinner,pins = "PH0", "PH1";
->> +				allwinner,function = "uart3";
->> +				allwinner,drive = <0>;
->> +				allwinner,pull = <0>;
->> +			};
-> 
-> That node should be in the DTSI
+T1040/T1042RDB board Overview
+-----------------------
+- SERDES Connections, 8 lanes supporting:
+	- PCI
+	- SGMII
+    	- QSGMII
+    	- SATA 2.0
+- DDR Controller
+    	- Supports rates of up to 1600 MHz data-rate
+    	- Supports one DDR3LP UDIMM
+-IFC/Local Bus
+    	- NAND flash: 1GB 8-bit NAND flash
+    	- NOR: 128MB 16-bit NOR Flash
+- Ethernet
+    	- Two on-board RGMII 10/100/1G ethernet ports.
+    	- PHY #0 remains powered up during deep-sleep
+- CPLD
+- Clocks
+    	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
+    	- SERDES clocks
+- Power Supplies
+- USB
+    	- Supports two USB 2.0 ports with integrated PHYs
+    	- Two type A ports with 5V@1.5A per port.
+- SDHC
+    	- SDHC/SDXC connector
+- SPI
+    	- On-board 64MB SPI flash
+- I2C
+    	- Devices connected: EEPROM, thermal monitor, VID controller
+- Other IO
+    	- Two Serial ports
+    	- ProfiBus port
 
-I deliberately put it here because it is non standard, uart3
-has 4 pins rx, tx, cts and rts, which can be mapped to either
-PG6-9 or PH0-3 but here only 2 are used, it seemed appropriate
-to put this inside the dts, if we start also taking pinctrl
-variants where a subset of the pins are used into the dtsi
-then we will end up with a lot of pinctrl entries there.
+Add support for T1040/T1042 RDB board:
+    -add device tree
+    -add entry in Kconfig to build
+    -Add entry in corenet_generic.c, as it is similar to other corenet =
+platforms
 
-Note if you decide to take this as is, please
-s/bananapi.org/lemaker.org/ in the commit message, bananapi.org
-is an unofficial site, I should have put lemaker.org there.
+Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Changes for v2: Incorporated Scott comments on using common name
+ for compatible string for cpld as register set is same
 
-Note btw that we already have this problem for spi1, the
-current spi1_pins_a does not include the cs1 pin, because it
-was added for use in sun7i-a20-olinuxino-micro.dts where
-only cs0 is hooked up, but I decided to leave that as is for now.
+ arch/powerpc/boot/dts/t1040rdb.dts            |   43 +++++++
+ arch/powerpc/boot/dts/t1042rdb.dts            |   43 +++++++
+ arch/powerpc/boot/dts/t104xrdb.dtsi           |  157 +++++++++++++++++=
+++++++++
+ arch/powerpc/platforms/85xx/Kconfig           |    2 +-
+ arch/powerpc/platforms/85xx/corenet_generic.c |    2 +
+ 5 files changed, 246 insertions(+), 1 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/t1040rdb.dts
+ create mode 100644 arch/powerpc/boot/dts/t1042rdb.dts
+ create mode 100644 arch/powerpc/boot/dts/t104xrdb.dtsi
 
-Also the "primary" binding for spi2 is to PORTB, but
-our spi2_pins_a binds it to PORTC, so it should be renamed
-spi2_pins_b IMHO.
+diff --git a/arch/powerpc/boot/dts/t1040rdb.dts b/arch/powerpc/boot/dts=
+/t1040rdb.dts
+new file mode 100644
+index 0000000..ff26043
+--- /dev/null
++++ b/arch/powerpc/boot/dts/t1040rdb.dts
+@@ -0,0 +1,43 @@
++/*
++ * T1040RDB Device Tree Source
++ *
++ * Copyright 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions =
+are met:
++ *     * Redistributions of source code must retain the above copyrigh=
+t
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyr=
+ight
++ *	 notice, this list of conditions and the following disclaimer in th=
+e
++ *	 documentation and/or other materials provided with the distributio=
+n.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote produc=
+ts
++ *	 derived from this software without specific prior written permissi=
+on.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of =
+the
++ * GNU General Public License ("GPL") as published by the Free Softwar=
+e
++ * Foundation, either version 2 of that License or (at your option) an=
+y
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
+Y
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
+MPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
+ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
+ ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
+DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
+SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
+USED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
+OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
+SE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/include/ "fsl/t104xsi-pre.dtsi"
++/include/ "t104xrdb.dtsi"
++
++/ {
++	model =3D "fsl,T1040RDB";
++	compatible =3D "fsl,T1040RDB";
++};
++
++/include/ "fsl/t1040si-post.dtsi"
+diff --git a/arch/powerpc/boot/dts/t1042rdb.dts b/arch/powerpc/boot/dts=
+/t1042rdb.dts
+new file mode 100644
+index 0000000..a30058a
+--- /dev/null
++++ b/arch/powerpc/boot/dts/t1042rdb.dts
+@@ -0,0 +1,43 @@
++/*
++ * T1042RDB Device Tree Source
++ *
++ * Copyright 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions =
+are met:
++ *     * Redistributions of source code must retain the above copyrigh=
+t
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyr=
+ight
++ *	 notice, this list of conditions and the following disclaimer in th=
+e
++ *	 documentation and/or other materials provided with the distributio=
+n.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote produc=
+ts
++ *	 derived from this software without specific prior written permissi=
+on.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of =
+the
++ * GNU General Public License ("GPL") as published by the Free Softwar=
+e
++ * Foundation, either version 2 of that License or (at your option) an=
+y
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
+Y
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
+MPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
+ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
+ ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
+DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
+SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
+USED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
+OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
+SE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/include/ "fsl/t104xsi-pre.dtsi"
++/include/ "t104xrdb.dtsi"
++
++/ {
++	model =3D "fsl,T1042RDB";
++	compatible =3D "fsl,T1042RDB";
++};
++
++/include/ "fsl/t1042si-post.dtsi"
+diff --git a/arch/powerpc/boot/dts/t104xrdb.dtsi b/arch/powerpc/boot/dt=
+s/t104xrdb.dtsi
+new file mode 100644
+index 0000000..cafaa37
+--- /dev/null
++++ b/arch/powerpc/boot/dts/t104xrdb.dtsi
+@@ -0,0 +1,157 @@
++/*
++ * T1040RDB/T1042RDB Device Tree Source
++ *
++ * Copyright 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions =
+are met:
++ *     * Redistributions of source code must retain the above copyrigh=
+t
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyr=
+ight
++ *	 notice, this list of conditions and the following disclaimer in th=
+e
++ *	 documentation and/or other materials provided with the distributio=
+n.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote produc=
+ts
++ *	 derived from this software without specific prior written permissi=
+on.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of =
+the
++ * GNU General Public License ("GPL") as published by the Free Softwar=
+e
++ * Foundation, either version 2 of that License or (at your option) an=
+y
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
+Y
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
+MPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
+ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
+ ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
+DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
+SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
+USED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
+OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
+SE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/ {
++
++	ifc: localbus@ffe124000 {
++		reg =3D <0xf 0xfe124000 0 0x2000>;
++		ranges =3D <0 0 0xf 0xe8000000 0x08000000
++			  2 0 0xf 0xff800000 0x00010000
++			  3 0 0xf 0xffdf0000 0x00008000>;
++
++		nor@0,0 {
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			compatible =3D "cfi-flash";
++			reg =3D <0x0 0x0 0x8000000>;
++			bank-width =3D <2>;
++			device-width =3D <1>;
++		};
++
++		nand@2,0 {
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			compatible =3D "fsl,ifc-nand";
++			reg =3D <0x2 0x0 0x10000>;
++		};
++
++		cpld@3,0 {
++			compatible =3D "fsl,t1040rdb-cpld";
++			reg =3D <3 0 0x300>;
++		};
++	};
++
++	memory {
++		device_type =3D "memory";
++	};
++
++	dcsr: dcsr@f00000000 {
++		ranges =3D <0x00000000 0xf 0x00000000 0x01072000>;
++	};
++
++	soc: soc@ffe000000 {
++		ranges =3D <0x00000000 0xf 0xfe000000 0x1000000>;
++		reg =3D <0xf 0xfe000000 0 0x00001000>;
++
++		spi@110000 {
++			flash@0 {
++				#address-cells =3D <1>;
++				#size-cells =3D <1>;
++				compatible =3D "micron,n25q512a";
++				reg =3D <0>;
++				spi-max-frequency =3D <10000000>; /* input clock */
++			};
++		};
++
++		i2c@118100 {
++			pca9546@77 {
++				compatible =3D "nxp,pca9546";
++				reg =3D <0x77>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++			};
++		};
++
++	};
++
++	pci0: pcie@ffe240000 {
++		reg =3D <0xf 0xfe240000 0 0x10000>;
++		ranges =3D <0x02000000 0 0xe0000000 0xc 0x00000000 0x0 0x10000000
++			  0x01000000 0 0x00000000 0xf 0xf8000000 0x0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++
++	pci1: pcie@ffe250000 {
++		reg =3D <0xf 0xfe250000 0 0x10000>;
++		ranges =3D <0x02000000 0x0 0xe0000000 0xc 0x10000000 0x0 0x10000000
++			  0x01000000 0x0 0x00000000 0xf 0xf8010000 0x0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++
++	pci2: pcie@ffe260000 {
++		reg =3D <0xf 0xfe260000 0 0x10000>;
++		ranges =3D <0x02000000 0 0xe0000000 0xc 0x20000000 0 0x10000000
++			  0x01000000 0 0x00000000 0xf 0xf8020000 0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++
++	pci3: pcie@ffe270000 {
++		reg =3D <0xf 0xfe270000 0 0x10000>;
++		ranges =3D <0x02000000 0 0xe0000000 0xc 0x30000000 0 0x10000000
++			  0x01000000 0 0x00000000 0xf 0xf8030000 0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++};
+diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platfor=
+ms/85xx/Kconfig
+index 5063696..157a1a4 100644
+--- a/arch/powerpc/platforms/85xx/Kconfig
++++ b/arch/powerpc/platforms/85xx/Kconfig
+@@ -276,7 +276,7 @@ config CORENET_GENERIC
+ 	  For 64bit kernel, the following boards are supported:
+ 	    T208x QDS, T4240 QDS/RDB and B4 QDS
+ 	  The following boards are supported for both 32bit and 64bit kernel:
+-	    P5020 DS, P5040 DS and T104xQDS
++	    P5020 DS, P5040 DS and T104xQDS/RDB
+=20
+ endif # FSL_SOC_BOOKE
+=20
+diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/power=
+pc/platforms/85xx/corenet_generic.c
+index 4f22ad1..c268f89 100644
+--- a/arch/powerpc/platforms/85xx/corenet_generic.c
++++ b/arch/powerpc/platforms/85xx/corenet_generic.c
+@@ -128,6 +128,8 @@ static const char * const boards[] __initconst =3D =
+{
+ 	"fsl,B4220QDS",
+ 	"fsl,T1040QDS",
+ 	"fsl,T1042QDS",
++	"fsl,T1040RDB",
++	"fsl,T1042RDB",
+ 	"keymile,kmcoge4",
+ 	NULL
+ };
+--=20
+1.7.4.1
 
-Regards,
 
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
