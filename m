@@ -1,31 +1,44 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 31 Jul 2014 18:36:11 +0200
-Message-ID: <20140731163611.GM9809@8bytes.org>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
- <20140731120424.GK9809@8bytes.org>
- <CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/7] arm: mediatek: Add more basic features
+Date: Thu, 31 Jul 2014 18:42:16 +0200
+Message-ID: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, anders.berg-M7mHMAq9Yzo@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 08:38:47AM -0700, Olof Johansson wrote:
-> >
-> > Applied, thanks everyone.
-> 
-> Really?
-> 
-> Gee, thanks for giving people a chance to reply with acks. It's
-> considered polite to do so when there has been outstanding questions.
+This patch set is based on the patches merged for v3.17 in the clock [0] and arm-soc [1] repositories.
 
-Its not pushed yet, I can still make changes. Do you have any objections
-or an Ack?
+The most important patch enables the arm arch timer for mt6589. As already seen on other vendor SoCs, to enable the arch timer we have to enable a SoC timer.
+This should be normally done by the bootloader. As up to now no open source bootloader exists for the mt6589, I added the functionality to the init_time function.
 
+Other features are low-level debugging on the mt6589, the addition to the "make dtbs" and multi_v7_defconfig, as well as a small typo in the dtsi file.
 
-	Joerg
+[0] http://git.linaro.org/people/daniel.lezcano/linux.git/shortlog/refs/heads/clockevents/3.17
+[1] https://git.kernel.org/cgit/linux/kernel/git/arm/arm-soc.git/commit/?h=next/soc&id=60c70c8c58d8cde3813e730d4e753531f292a1f0
+
+Matthias Brugger (7):
+  arm: dts: Build dtb for Mediatek board
+  arm: multi_v7_defconfig: Enable Mediatek platform
+  arm: dts: mt6589: Fix typo in GIC unit address
+  arm: mediatek: Add earlyprintk support for mt6589
+  arm: dts: mt6589-aquaris5: Add boot argument earlyprintk
+  arm: mediatek: enable gpt6 on boot up to make arch timer working
+  arm: dts: mt6589: Add arm arch timer node
+
+ arch/arm/Kconfig.debug                |   10 ++++++++++
+ arch/arm/boot/dts/Makefile            |    1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts |    4 ++++
+ arch/arm/boot/dts/mt6589.dtsi         |   14 +++++++++++---
+ arch/arm/configs/multi_v7_defconfig   |    1 +
+ arch/arm/mach-mediatek/mediatek.c     |   27 +++++++++++++++++++++++++++
+ 6 files changed, 54 insertions(+), 3 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
