@@ -1,151 +1,159 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
-Date: Thu, 31 Jul 2014 10:22:19 -0500
-Message-ID: <CAL_JsqKgfjV4sEZOWuH4YcMjeOA_yNDvZLv_jTi_Sb=27cOD3g@mail.gmail.com>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org> <20140730154626.GD20162@leverpostej>
- <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg@mail.gmail.com> <20140731123443.GS4703@rric.localhost>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [PATCH RFC v4 1/2] Devicetree: Add pl353 smc controller
+ devicetree binding information
+Date: Thu, 31 Jul 2014 15:22:41 +0000
+Message-ID: <489fb996-363c-4e64-af32-51afcf7da4cd@BN1AFFO11FD005.protection.gbl>
+References: <1406561236-29207-1-git-send-email-punnaia@xilinx.com>
+ <f9cb28fc-6a68-42b8-bdc0-9ad0941de977@BN1AFFO11FD013.protection.gbl>
+ <20140731071753.GH11952@brian-ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731123443.GS4703-vWBEXY7mpu73kLQC+b9v0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20140731071753.GH11952@brian-ubuntu>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jussi.kivilinna@iki.fi" <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, "arnd@arndb.de" <arnd@arndb.de>, Srikanth Vemula <svemula@xilinx.com>, Michal Simek <michals@xilinx.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Anirudha Sarangi <anirudh@xilinx.com>, "joern@logfs.org" <joern@logfs.org>, kpc528@gmai
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 7:34 AM, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 30.07.14 11:37:38, Rob Herring wrote:
->> On Wed, Jul 30, 2014 at 10:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
->> >> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->
->> >> +/ {
->> >> +     model = "Cavium ThunderX CN88XX Family";
->> >> +     compatible = "cavium,thunder-88xx";
->> >
->> > Please don't use wildcards in compatible strings. Give this an absolute
->> > name, and override as necessary.
->
-> The naming 88xx refers to the processor family and arn't actually
-> wildcards. In the future we might need another dts file for 87xx, but
-> so far all SoCs of 88xx family should use the same dts files. In this
-> sense the naming is very specific.
+Hi Brian,
 
-Yes, but each implementation can have its own errata. You might not
-need to distinguish them now, but you could in the future.
-
-However, if the family is really all the same die and different parts
-are just marketing, then the name is fine. Or if you can easily probe
-the exact part and revision it's probably fine.
-
+>-----Original Message-----
+>From: Brian Norris [mailto:computersforpeace@gmail.com]
+>Sent: Thursday, July 31, 2014 12:48 PM
+>To: Punnaiah Choudary Kalluri
+>Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+>ijc+devicetree@hellion.org.uk; galak@codeaurora.org; rob@landley.net;
+>Michal Simek; grant.likely@linaro.org; gregkh@linuxfoundation.org;
+>jason@lakedaemon.net; ezequiel.garcia@free-electrons.com;
+>arnd@arndb.de; dwmw2@infradead.org; artem.bityutskiy@linux.intel.com;
+>pekon@ti.com; jussi.kivilinna@iki.fi; acourbot@nvidia.com;
+>ivan.khoronzhuk@ti.com; joern@logfs.org; devicetree@vger.kernel.org;
+>linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>mtd@lists.infradead.org; kpc528@gmail.com;
+>kalluripunnaiahchoudary@gmail.com; Anirudha Sarangi; Srikanth Vemula;
+>Punnaiah Choudary Kalluri; Boris Brezillon
+>Subject: Re: [PATCH RFC v4 1/2] Devicetree: Add pl353 smc controller
+>devicetree binding information
 >
+>Hi,
 >
->> >> +     cpus {
->> >> +             #address-cells = <2>;
->> >> +             #size-cells = <0>;
->> >> +
->> >> +             cpu@000 {
->> >> +                     device_type = "cpu";
->> >> +                     compatible = "cavium,thunder", "arm,armv8";
->> >> +                     reg = <0x0 0x000>;
->> >> +                     enable-method = "psci";
->> >> +             };
->> >
->> > Just to check: both the SoC and CPU are called thunder?
->
-> The soc is called thunder-88xx, the cpu thunder. E.g. an 87xx soc will
-> have the same core in which is thunder.
-
-And the next version of the core would be called something else?
-thunder-v2? lightning? As long as they are distinguishable they should
-be fine.
-
-Rob
-
->
->
->> >> +     memory@00000000 {
->> >> +             device_type = "memory";
->> >> +             reg = <0x0 0x00000000 0x0 0x80000000>;
->> >> +     };
->> >> +
->> >> +     gic0: interrupt-controller@801000000000 {
->> >
->> > To make this easier to read, please place a comma between 32-bit
->> > portions of the unit address (e.g. here have 8010,00000000).
->
-> Changed this.
->
+>On Mon, Jul 28, 2014 at 08:57:15PM +0530, Punnaiah Choudary Kalluri wrote:
+>> Add pl353 static memory controller devicetree binding information.
 >>
->> Mark, perhaps a dtc or checkpatch.pl check for this?
->>
->> This should also be under a bus node.
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> ---
+>> Changes in v4:
+>>  - none
+>> Changes in v3:
+>>  - none
+>> Changes in v2:
+>>  - modified timing binding info as per onfi timing parameters
 >
-> Will do.
+>^^^ There were other comments here:
 >
->>
->> >> +             compatible = "arm,gic-v3";
->> >> +             #interrupt-cells = <3>;
->> >> +             #address-cells = <2>;
->> >> +             #size-cells = <2>;
->> >> +             ranges;
->> >
->> > This has no children, so why have ranges, #address-cells, and
->> > #size-cells?
+>  http://lists.infradead.org/pipermail/linux-mtd/2014-April/053488.html
 >
-> Right, this is a leftover from a change in a follow on patch that
-> introduces a child for its. Will remove #address-cells, #size-cells
-> and ranges in this patch and move the change to the later patch.
->
->> >
->> >> +             interrupt-controller;
->> >> +             reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
->> >> +                   <0x8010 0x80000000 0x0 0x200000>; /* GICR */
->> >> +             interrupts = <1 9 0xf04>;
->> >> +     };
->
->> >> +             clocks {
->> >> +                     #address-cells = <2>;
->> >> +                     #size-cells = <2>;
->> >> +                     ranges;
->> >> +
->> >> +                     refclk50mhz: refclk50mhz {
->> >> +                             compatible = "fixed-clock";
->> >> +                             #clock-cells = <0>;
->> >> +                             clock-frequency = <50000000>;
->> >> +                             clock-output-names = "refclk50mhz";
->> >> +                     };
->> >> +             };
->> >
->> > Please get rid of the clocks node and just put the clocks here.
->
-> Will do.
->
->> >
->> >> +
->> >> +             uaa0: serial@87e024000000 {
->> >> +                     compatible = "arm,pl011", "arm,primecell";
->> >> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
->> >> +                     interrupts = <1 21 4>;
->> >> +                     clocks = <&refclk50mhz>;
->> >> +                     clock-names = "apb_pclk";
->> >
->> > Is this actually the apb_pclk, or is the the uartclk? I assume it's the
->> > latter.
->>
->> Shouldn't new bindings have both clocks here? A single clock was a
->> mistake I think (mine in fact).
->
-> Do you mean
->                         clock-names = "uartclk", "apb_pclk";
-> here?
+>You don't need or want these timing parameters at all, I don't think.
 
-Yes, but Mark said this change never happened so maybe it is fine. In
-any case, follow the pl011 binding documentation.
+Ok. Understood
+>
+>>  - add suffix nano second as timing unit
+>>  - modified the clock names as per the IP spec
+>> ---
+>>  .../bindings/memory-controllers/pl353-smc.txt      |   53
+>++++++++++++++++++++
+>>  1 files changed, 53 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/memory-
+>controllers/pl353-smc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-
+>smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-
+>smc.txt
+>> new file mode 100644
+>> index 0000000..c1f011d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/pl353-
+>smc.txt
+>> @@ -0,0 +1,53 @@
+>> +Device tree bindings for ARM PL353 static memory controller
+>> +
+>> +PL353 static memory controller supports two kinds of memory
+>> +interfaces.i.e NAND and SRAM/NOR interfaces.
+>> +The actual devices are instantiated from the child nodes of pl353 smc node.
+>> +
+>> +Required properties:
+>> +- compatible		: Should be "arm,pl353-smc-r2p1"
+>> +- reg			: Controller registers map and length.
+>> +- clock-names		: List of input clock names - "memclk", "aclk"
+>> +			  (See clock bindings for details).
+>> +- clocks		: Clock phandles (see clock bindings for details).
+>> +- address-cells	: Address cells, must be 1.
+>> +- size-cells		: Size cells. Must be 1.
+>> +
+>> +Child nodes:
+>> + For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers
+>are
+>> +supported as child nodes.
+>> +
+>> +Mandatory timing properties for child nodes:
+>> +- nand-tRC-ns	: Read cycle time.
+>> +- nand-tWC-ns	: Write cycle time.
+>> +- nand-tREA-ns	: re_n assertion delay.
+>> +- nand-tWP-ns	: we_n de-assertion delay.
+>> +- nand-tCLR-ns	: Status read time
+>> +- nand-tAR-ns	: ID read time
+>> +- nand-tRR-ns	: busy to re_n
+>
+>These properties should probably be dropped. Look in l2-mtd.git, where
+>we now have drivers/mtd/nand/nand_timings.c to define the ONFI timing
+>modes, which can be auto-detected (look at struct
+>nand_onfi_params::async_timing_mode). Boris also has pending patches for
+>non-ONFI chips.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, Thanks. I will check the implementation for onfi timing configuration and I will
+use it. 
+
+Regards,
+Punnaiah
+>
+>> +for nand partition information please refer the below file
+>> +Documentation/devicetree/bindings/mtd/partition.txt
+>> +
+>> +Example:
+>> +	pl353smcc_0: pl353smcc@e000e000 {
+>> +			compatible = "arm,pl353-smcc-r2p1"
+>> +			clock-names = "memclk", "aclk";
+>> +			clocks = <&clkc 11>, <&clkc 44>;
+>> +			reg = <0xe000e000 0x1000>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +			nand_0: nand@e1000000 {
+>> +				compatible = "arm,pl353-nand-r2p1"
+>> +				reg = <0xe1000000 0x1000000>;
+>> +				nand-tRC-ns = <40>;
+>> +				nand-tWC-ns = <40>;
+>> +				nand-tREA-ns = <10>;
+>> +				nand-tWP-ns = <20>;
+>> +				nand-tCLR-ns = <20>;
+>> +				nand-tAR-ns = <20>;
+>> +				nand-tRR-ns = <40>;
+>> +				(...)
+>> +			};
+>> +	};
+>
+>Brian
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
