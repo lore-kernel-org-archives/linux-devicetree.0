@@ -1,99 +1,64 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
- support
-Date: Thu, 31 Jul 2014 16:22:24 +0200
-Message-ID: <53DA5120.7080709@suse.de>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com> <53D5435B.8030305@suse.de> <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com> <53D783CC.2080108@suse.de> <CAEC9eQOpS90U9kWmY8YdcAtdxQYKoM9ikoWpkwMs6T2udLeZHA@mail.gmail.com> <53D9484A.1070905@suse.de> <CAEC9eQOFWQ8t1zzOVrHm2=aS4+N94EW6LSjBUG2fH51aFs0GLQ@mail.gmail.com> <53DA0513.3080602@suse.de> <20140731102348.GC7458@ulmo>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: DTS: da850-evm: Add node for tlv320aic3106 codec
+Date: Thu, 31 Jul 2014 18:24:26 +0400
+Message-ID: <53DA519A.4090905@cogentembedded.com>
+References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com> <1406801934-23334-6-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140731102348.GC7458@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406801934-23334-6-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hello.
 
-Am 31.07.2014 12:23, schrieb Thierry Reding:
-> On Thu, Jul 31, 2014 at 10:57:55AM +0200, Andreas F=C3=A4rber wrote:
->> Am 31.07.2014 10:38, schrieb Ajay kumar:
->>> With just the spring-bridge.v6 branch of your own tree, I am able to =
-see
->>> bootup logo on Skate(a variant of spring which also contains ps8622).=
+On 07/31/2014 02:18 PM, Peter Ujfalusi wrote:
 
->>> I have tried both exynos_defconfig and multi_v7_defconfig.
->>> I enable DRM, EXYNOS DRM, BRIDGE CHIPS, IOMMU, EXYNOS IOMMU
->>> in configs.
-[...]
-> If you have something like simplefb enabled in addition to a DRM driver=
-,
-> then perhaps the DRM driver isn't properly taking over the framebuffer
-> console.
+> The board uses aic3106 for audio.
 
-So, with simplefb reverted in U-Boot and ...
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/da850-evm.dts | 14 ++++++++++++++
+>   1 file changed, 14 insertions(+)
 
-* with just the v6 applied (...~2), I get only a black screen from
-Linux, no penguins, but the backlight seems on. System comes up okay,
-ssh available, and nothing stands out in dmesg.
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index 09118c72e83f..b9ef2be0b145 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -51,6 +51,20 @@
+>   			tps: tps@48 {
+>   				reg = <0x48>;
+>   			};
+> +			tlv320aic3106: tlv320aic3106@1b {
 
-* with the two iommu patches on top, something breaks badly, no
-backlight, no USB/network, system inaccessible.
+    The "reg" property is <0x18>, why the unit-address part of a name is 
+different? Also, the ePAPR standard [1] says:
 
-I.e. U-Boot had no noticeable impact on these symptoms.
+The name of a node should be somewhat generic, reflecting the function of the 
+device and not its precise programming model.
 
-* with the iommu patches, but dp-controller, ps8622, panel commented
-out, I do get backlight but USB/network not working, system inaccessible.=
+> +				#sound-dai-cells = <0>;
+> +				compatible = "ti,tlv320aic3106";
+> +				reg = <0x18>;
+> +				status = "okay";
+> +
+> +				/* Regulators */
+> +				IOVDD-supply = <&vdcdc2_reg>;
+> +				/* Derived from VBAT: Baseboard 3.3V / 1.8V */
+> +				AVDD-supply = <&vbat>;
+> +				DRVDD-supply = <&vbat>;
+> +				DVDD-supply = <&vbat>;
+> +			};
+> +
 
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
 
-With simplefb support in U-Boot and with just v6 applied, but
-dp-controller, ps8622, panel commented out, things work as well as
-before, i.e. this series has no bad side effects. Note that I never
-claimed Ajay's series were broken, just reported that things regressed
-for me from v4, which may well be DT-related.
+WBR, Sergei
 
-The iommu patches interfere with my USB somehow (none or not all devices
-powered; with v4, plugging my wifi dongle led to oops but ethernet
-dongle worked, so not entirely new symptom), which is bad since my
-rootfs is on USB. The internal SDIO-connected Wifi is not enabled yet,
-so USB based network is my only alternative to a working display once we
-reach userspace.
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=BC=
-rnberg
-
-
---Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJT2lEgAAoJEPou0S0+fgE/hEIP/jL6jCLIqAk4IEFn3H9qhb4/
-R4DHefa6lfUtOmpJ0pdgyo3KHpqog7OAZUzr6k79b8d5KGTCfpQrSDzHsKCmaGE5
-pPtQn03mH5LFj12xsdIFG51SdqVp6fp2czPQmxjFTT1epwBFsMpuEOOIJ0/ABFcr
-bKtt7v+n+lI4nGATw2+PPGgDqa7jOrSa6dNnO6nkGd7dyIIt+IrDM+LUgGEsiHM8
-O7bw3L1IP4mJ/xJNiVqK6QQfZZT190K0sRD8O6HPlwobAnaBQ8Le43G4QgoaYbqW
-Xdm9F7cacdvOehlfNNEa2F5adAMerK3CrPBn2vO55d0Qo1+LiGHc9zirBhNluW+o
-66xRLw1KpiPPGrX8tPQ0ldfuV33Wv2XzZ83KWIvokci1iD7Z/s5iBwfcwnr52OU5
-yMnYuKLsKViw+iWNIqVxc2YMbakhbC8IWUPHh+nR+t/++vYNDMYMatEzs7BbL9Wc
-FVkXc+gCvJY/CK70gI3GUv5LGNZLKfFla23Nfex7sgqj87NnNHLWH3n7Hg8YxDiF
-Fug4/5h8eVV61LjEoTyoShxqaq6XDAgWwuw+X1z3CRv7GWjk6wLAVnPXcOVipr7m
-m6uG89gJOmX0KBnpYgP06zwtkLnsD/+ZASnuTAIelnPRmGKeRNLGxDSvA51NpwS6
-vloN1n3gVMaQ/VCQPU7X
-=Pita
------END PGP SIGNATURE-----
-
---Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
