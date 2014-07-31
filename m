@@ -1,116 +1,67 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
-Date: Fri, 01 Aug 2014 01:26:34 +0200
-Message-ID: <53DAD0AA.7040105@gmail.com>
-References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <53DA936E.9060004@gmail.com> <53DA9709.10602@suse.de> <53DA9BA9.60808@gmail.com> <53DACE73.8080009@suse.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
+Date: Fri, 01 Aug 2014 01:29:34 +0200
+Message-ID: <4047366.k35vzjcKGH@diego>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <1406661128-7614-2-git-send-email-heiko@sntech.de> <20140731224523.4463.34464@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53DACE73.8080009-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20140731224523.4463.34464@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephan van Schaik <stephan-zGZ7W/ttz6xN8Ch2cx6nig@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01.08.2014 01:17, Andreas F=C3=A4rber wrote:
-> Am 31.07.2014 21:40, schrieb Tomasz Figa:
->> On 31.07.2014 21:20, Andreas F=C3=A4rber wrote:
->>> Am 31.07.2014 21:05, schrieb Tomasz Figa:
->>>> On 31.07.2014 18:08, Andreas F=C3=A4rber wrote:
-[snip]
->>>>> +&dp_hpd {
->>>>> +	samsung,pins =3D "gpc3-0";
->>>>> +	samsung,pin-function =3D <0>;
->>>>> +	samsung,pin-pud =3D <3>;
->>>>> +	samsung,pin-drv =3D <0>;
->>>>> +};
->>>>
->>>> Hmm, what node is this referencing? I believe this should rather
->>>> reference the pin controller and add a new board-specific pinconf/=
-pinmux
->>>> group instead....
->>>
->>> It's a -pinctrl node. See v3->v4 change log and discussion on v3.
->>>
->>
->> Well, this is clearly a board specific node anyway, because it does =
-not
->> refer to a special function, but simply an input/interrupt GPIO. If =
-it
->> somehow has landed in generic pinctrl dtsi then it should be removed
->> from there and this patch should simply introduce its own instance o=
-f
->> dp_hpd node, so you did the right thing in v3.
->=20
-> Well, my point was that the 3.8 tree contains only one dp-hpd node, n=
-ot
-> two as we would get by adding a new node here.
->=20
-> Apart from Spring, it's used in Snow and SMDK5250, so moving it there
-> seems feasible and the cleanest solution to me.
->=20
+Hi Mike,
 
-What I mean is that in exynos5250-pinctrl.dtsi only generic SoC pin
-groups should be defined and those more or less correspond to groups
-with samsung,pin-function set to something other than 0 (input) or 1
-(output). Now here hpd_gpio is just a normal GPIO input used as
-interrupt source to detect when a cable is plugged or unplugged. This i=
-s
-by no means generic to the SoC, because any GPIO with interrupt
-capability can be used for this purpose. This means that the whole
-pin{conf,mux} group should be defined on board level.
+Am Donnerstag, 31. Juli 2014, 15:45:23 schrieb Mike Turquette:
+> Quoting Heiko Stuebner (2014-07-29 12:12:05)
+> 
+> > The clock-tree contains clocks that should never get disabled
+> > automatically. One example are the base ACLKs, the base supplies for all
+> > peripherals.
+> > 
+> > Therefore add a structure similar to the sunxi clock-tree to protect these
+> > special clocks from being disabled.
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > ---
+> > 
+> >  drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
+> >  drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
+> >  drivers/clk/rockchip/clk.c        | 13 +++++++++++++
+> >  drivers/clk/rockchip/clk.h        |  1 +
+> >  4 files changed, 28 insertions(+)
+> > 
+> > diff --git a/drivers/clk/rockchip/clk-rk3188.c
+> > b/drivers/clk/rockchip/clk-rk3188.c index a83a6d8..5aef277 100644
+> > --- a/drivers/clk/rockchip/clk-rk3188.c
+> > +++ b/drivers/clk/rockchip/clk-rk3188.c
+> > @@ -599,6 +599,11 @@ static struct rockchip_clk_branch
+> > rk3188_clk_branches[] __initdata = {> 
+> >         GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(8),
+> >         13, GFLAGS),>  
+> >  };
+> > 
+> > +static const char *rk3188_critical_clocks[] __initconst = {
+> > +       "aclk_cpu",
+> > +       "aclk_peri",
+> 
+> I'm not against the idea of critical clocks, but I want to verify that
+> there is no other driver out there that is a better fit for claiming
+> these clks via clk_get and enabling them the normal way via clk_enable?
 
-Best regards,
-Tomasz
+In the clock hierarchy of Rockchip SoCs, both aclks listed here, are sources 
+for pclk and hclk, as well as sourcing some other peripheral gates further 
+below too. So from what I've seen from the clock diagrams, there is nothing 
+that would claim these clocks directly, and it wouldn't also make any sense to 
+let them get disabled as there will always be something using them (for 
+example the dram-controller).
 
->>>> [snip]
->>>>
->>>>> +/*
->>>>> + * Disabled pullups since external part has its own pullups and
->>>>> + * double-pulling gets us out of spec in some cases.
->>>>> + */
->>>>> +&i2c2_bus {
->>>>> +	samsung,pin-pud =3D <0>;
->>>>> +};
->>>>
->>>> OK, here overriding a generic pinconf group is justified and nicel=
-y
->>>> explained by a comment.
->>>
->>> You seem to assume that I actually understand these things. ;)
->>> Just copied from -cros-common/-snow.
->>>
->>
->> It is good if those things are being done with some level of
->> understanding. The DT mechanics are quite well documented in
->> Documentation/devicetree/bindings, while for HW-specific bits I beli=
-eve
->> Chromium guys could give you a hand.
->=20
-> I did read and even fix documentation for those bindings that I added
-> myself in Spring, just not for those that were already in common code=
-,
-> like this one here.
 
-My intention was that if there is something not clear, rather than
-blindly copy-pasting it, it might be worth to ask people that might
-know. Although any issues should generally be found at review stage, so
-I don't really have any objections, assuming that Chromium people assur=
-e
-that this patch adds valid data indeed.
-
->=20
-> A tps65090 patch has been ignored since being asked to extend the com=
-mit
-> message, v3 was recently sent. Help getting that in appreciated.
-
-Will take a look if time allows. Thanks for your work on this.
-
-Best regards,
-Tomasz
+Heiko
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
