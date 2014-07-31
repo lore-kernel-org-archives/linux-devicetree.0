@@ -1,173 +1,39 @@
-From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/2][v2] powerpc/fsl-booke: Add initial T1042RDB_PI board support
-Date: Thu, 31 Jul 2014 15:46:38 +0530
-Message-ID: <1406801798-3596-1-git-send-email-Priyanka.Jain@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Thu, 31 Jul 2014 12:24:13 +0200
+Message-ID: <201407311224.14097.arnd@arndb.de>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org> <1406732794-20920-3-git-send-email-rric@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406732794-20920-3-git-send-email-rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlYI+954vlgkHg@public.gmane.org
-Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T1042RDB_PI is Freescale Reference Design Board supporting the T1042
-QorIQ Power Architecture=E2=84=A2 processor. T1042 is a reduced persona=
-lity
-of T1040 SoC without Integrated 8-port Gigabit. The board is designed
-with low power features targeted for Printing Image Market.
+On Wednesday 30 July 2014, Robert Richter wrote:
+> +/*
+> + * Cavium Thunder DTS file
+> + *
+> + * Copyright (C) 2013, Cavium Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
 
-T1042RDB_PI is  similar to T1040RDB board with few differences like
-it has video interface, supports T1042 personality only
+I think it makes sense to use a permissive license for these files here,
+since board vendors may want to include a copy of the binary in their
+firmware, which isn't necessarily GPL compatible.
 
-T1042RDB_PI board Overview
------------------------
-- SERDES Connections, 8 lanes supporting:
-    	- PCI
-    	- SATA 2.0
-- DDR Controller
-    	- Supports rates of up to 1600 MHz data-rate
-    	- Supports one DDR3LP UDIMM
--IFC/Local Bus
-    	- NAND flash: 1GB 8-bit NAND flash
-    	- NOR: 128MB 16-bit NOR Flash
-- Ethernet
-    	- Two on-board RGMII 10/100/1G ethernet ports.
-    	- PHY #0 remains powered up during deep-sleep
-- CPLD
-- Clocks
-    	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
-    	- SERDES clocks
-- Power Supplies
-- USB
-    	- Supports two USB 2.0 ports with integrated PHYs
-    	- Two type A ports with 5V@1.5A per port.
-- SDHC
-    	- SDHC/SDXC connector
-- SPI
-    	- On-board 64MB SPI flash
-- I2C
-    	- Device connected: EEPROM, thermal monitor, VID controller, RTC
-- Other IO
-    	- Two Serial ports
-    	- ProfiBus port
+What is Cavium's interest in making this GPL?
 
-Add support for T1042RDB_PI board:
-    -add device tree
-    -Add entry in corenet_generic.c, as it is similar to other corenet =
-platforms
-
-Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- Changes for v2: Incorporated Scott comments on using common name
- for compatible string for cpld as register set is same
-
- arch/powerpc/boot/dts/t1042rdb_pi.dts         |   52 +++++++++++++++++=
-++++++++
- arch/powerpc/platforms/85xx/corenet_generic.c |    1 +
- 2 files changed, 53 insertions(+), 0 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/t1042rdb_pi.dts
-
-diff --git a/arch/powerpc/boot/dts/t1042rdb_pi.dts b/arch/powerpc/boot/=
-dts/t1042rdb_pi.dts
-new file mode 100644
-index 0000000..f5293a9
---- /dev/null
-+++ b/arch/powerpc/boot/dts/t1042rdb_pi.dts
-@@ -0,0 +1,52 @@
-+/*
-+ * T1042RDB_PI Device Tree Source
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions =
-are met:
-+ *     * Redistributions of source code must retain the above copyrigh=
-t
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyr=
-ight
-+ *	 notice, this list of conditions and the following disclaimer in th=
-e
-+ *	 documentation and/or other materials provided with the distributio=
-n.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote produc=
-ts
-+ *	 derived from this software without specific prior written permissi=
-on.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of =
-the
-+ * GNU General Public License ("GPL") as published by the Free Softwar=
-e
-+ * Foundation, either version 2 of that License or (at your option) an=
-y
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
-Y
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
-MPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
-ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
- ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
-DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
-SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
-USED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
-OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
-SE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/include/ "fsl/t104xsi-pre.dtsi"
-+/include/ "t104xrdb.dtsi"
-+
-+/ {
-+	model =3D "fsl,T1042RDB_PI";
-+	compatible =3D "fsl,T1042RDB_PI";
-+	soc: soc@ffe000000 {
-+		i2c@118000 {
-+			rtc@68 {
-+				compatible =3D "dallas,ds1337";
-+				reg =3D <0x68>;
-+				interrupts =3D <0x2 0x1 0 0>;
-+			};
-+		};
-+	};
-+};
-+
-+/include/ "fsl/t1042si-post.dtsi"
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/power=
-pc/platforms/85xx/corenet_generic.c
-index c268f89..100e80d 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -130,6 +130,7 @@ static const char * const boards[] __initconst =3D =
-{
- 	"fsl,T1042QDS",
- 	"fsl,T1040RDB",
- 	"fsl,T1042RDB",
-+	"fsl,T1042RDB_PI",
- 	"keymile,kmcoge4",
- 	NULL
- };
---=20
-1.7.4.1
-
-
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
