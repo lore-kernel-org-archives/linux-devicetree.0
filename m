@@ -1,85 +1,110 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
- Broadcom STB SoCs
-Date: Wed, 30 Jul 2014 19:36:35 -0700
-Message-ID: <20140731023635.GN3711@ld-irv-0074>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
- <20140730092635.GI30282@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH RESEND v11 0/3] Add ES8328 audio codec
+Date: Thu, 31 Jul 2014 10:43:34 +0800
+Message-ID: <1406774617-12513-1-git-send-email-xobs@kosagi.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140730092635.GI30282-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+This patchset adds support for the Everest Semi ES8328 audio codec, used in
+the Novena open source laptop.  It also adds support for using the es8328 on
+IMX boards.
 
-On Wed, Jul 30, 2014 at 10:26:35AM +0100, Russell King wrote:
-> On Mon, Jul 21, 2014 at 02:07:56PM -0700, Brian Norris wrote:
-> > +static DEFINE_SPINLOCK(boot_lock);
-> > +
-> > +static void brcmstb_secondary_init(unsigned int cpu)
-> > +{
-> > +	/*
-> > +	 * Synchronise with the boot thread.
-> > +	 */
-> > +	spin_lock(&boot_lock);
-> > +	spin_unlock(&boot_lock);
-> > +}
-> > +
-> > +static int brcmstb_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> > +{
-> > +	/*
-> > +	 * set synchronisation state between this boot processor
-> > +	 * and the secondary one
-> > +	 */
-> > +	spin_lock(&boot_lock);
-> > +
-> > +	/* Bring up power to the core if necessary */
-> > +	if (brcmstb_cpu_get_power_state(cpu) == 0)
-> > +		brcmstb_cpu_power_on(cpu);
-> > +
-> > +	brcmstb_cpu_boot(cpu);
-> > +
-> > +	/*
-> > +	 * now the secondary core is starting up let it run its
-> > +	 * calibrations, then wait for it to finish
-> > +	 */
-> > +	spin_unlock(&boot_lock);
-> 
-> I've just read through this code (because it caused my allmodconfig to
-> break) and spotted this.
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the speaker amps and as well as
+supporting headphone jacks, in addition to the i.MX audmux routing.
 
-Sorry about the allmodconfig problems. I never compile-tested with ARMv6
-enabled. This look OK?
+Changes since v10:
+    - Minor documentation reformatting
+    - Minor spacing reformatting in sound/soc/fsl/imx-audio-es8328.c
 
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index f3665121729b..5ce82b4ba931 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
- obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
- 
- ifeq ($(CONFIG_ARCH_BRCMSTB),y)
-+CFLAGS_platsmp-brcmstb.o	+= -march=armv7-a
- obj-y				+= brcmstb.o
- obj-$(CONFIG_SMP)		+= headsmp-brcmstb.o platsmp-brcmstb.o
- endif
+Changes since v9:
+    - Minor formatting corrections
+    - Rework DAPM registers in es8328.h.  DAPM widgets use offsets, and the
+      v9 patch turned snd_soc_write() calls into widgets without converting
+      from i2c masks to offsets first.
+    - Rename DAC and ADC PLL to DLL, to reflect latest documentation.
 
-> What function does boot_lock perform here?  Please, don't quote the
-> comments (I know where the comments came from) but what I want to hear
-> is your comments about why you decided to retain this.
+Changes since v8:
+    - For the mclk ratios, move from an array to a lookup table, and rename
+      the variable to be clearer.
+    - Move all CHIPPOWER accesses into DAPM supplies.
+    - Fix sloppy compile problems introduced in v8.
+    - Shut down clocks and supplies on suspend, and enable them on resume.
+    - Remove double set of ES8328_MASTERMODE_MSC.
 
-You might glean a little more from my response to Rob, but I'm not sure
-there was a good reason for retaining this. We do need to be sure the
-CPU is fully powered online before bringing it out of reset, but the
-spinlock seems overkill AFAICT.
+Changes since v7:
+    - We now fetch the regulators in the device-level probe rather than
+      in the ASoC-level probe.
 
-Brian
+Changes since v6:
+    - Minor clarification of AUDMUX in imx-audio-es8328.txt
+    - Use u32 instead of int in imx-es8328.c for int-mux and ext-mux
+    - Bounds checking on mux-int-port and mux-ext-port in imx-es8328.c
+    - Remove NULL checks before calling of_node_put()
+
+Changes since v5:
+    - Removed empty imx_set_frequency function from imx-es8328.c
+    - Move the clock from imx-audio-es8328 to the es8328 codec itself
+    - Add support for 2x (22.5792 MHz) and 1x (11.2896 MHz) source clocks
+    - Restore registers on resume
+    - Document pins for ES8328, including input pins
+
+Changes since v4:
+    - Simplify clock handling and use assigned-clock-parents
+    - Move the codec regulator from the machine driver to the codec
+    - Specify all four regulators, and require their presence
+    - Fix audio recording, such that it enables the PGA
+
+Changes since v3:
+    - Add OF bindings for everest,es8328
+    - Add back in patch to add everest as a vendor prefix
+    - Give clocks more generic names
+    - Document required clocks in DT bindings document
+
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
+
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
+
+Sean Cross (3):
+  devicetree: bindings: Add Everest Semicodunctor
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
+
+ Documentation/devicetree/bindings/sound/es8328.txt |  38 ++
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  60 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  60 ++
+ sound/soc/codecs/es8328-spi.c                      |  49 ++
+ sound/soc/codecs/es8328.c                          | 756 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 314 +++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 232 +++++++
+ 12 files changed, 1545 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
+
+-- 
+2.0.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
