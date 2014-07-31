@@ -1,419 +1,166 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
-Date: Thu, 31 Jul 2014 15:00:50 -0500
-Message-ID: <53DAA072.4010902@opensource.altera.com>
-References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-2-git-send-email-tthayer@opensource.altera.com> <20140731082637.GH9030@lee--X1>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: Add support for CS35L32 Boosted Amplifier
+Date: Thu, 31 Jul 2014 21:07:29 +0100
+Message-ID: <20140731200729.GW17528@sirena.org.uk>
+References: <1406664163-10506-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ydd9XA/RGiC514xu"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731082637.GH9030@lee--X1>
+Content-Disposition: inline
+In-Reply-To: <1406664163-10506-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+To: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 07/31/2014 03:26 AM, Lee Jones wrote:
-> On Wed, 30 Jul 2014, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->
->> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>
->> Add a simple MFD for the Altera SDRAM Controller.
->>
->> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->> ---
->> v1-8: The MFD implementation was not included in the original series.
->>
->> v9: New MFD implementation.
->> ---
->>   MAINTAINERS                    |    5 ++
->>   drivers/mfd/Kconfig            |    7 ++
->>   drivers/mfd/Makefile           |    1 +
->>   drivers/mfd/altera-sdr.c       |  162 ++++++++++++++++++++++++++++++++++++++++
->>   include/linux/mfd/altera-sdr.h |  102 +++++++++++++++++++++++++
->>   5 files changed, 277 insertions(+)
->>   create mode 100644 drivers/mfd/altera-sdr.c
->>   create mode 100644 include/linux/mfd/altera-sdr.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 86efa7e..48a8923 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -1340,6 +1340,11 @@ M:	Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>   S:	Maintained
->>   F:	drivers/clk/socfpga/
->>   
->> +ARM/SOCFPGA SDRAM CONTROLLER SUPPORT
->> +M:	Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->> +S:	Maintained
->> +F:	drivers/mfd/altera-sdr.c
->> +
->>   ARM/STI ARCHITECTURE
->>   M:	Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>   M:	Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-> This should be in a separate patch.
-OK. Thanks for your comments and for reviewing. I will move this into a 
-separate patch.
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 6cc4b6a..8ce4961 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -719,6 +719,13 @@ config MFD_STMPE
->>   		Keypad: stmpe-keypad
->>   		Touchscreen: stmpe-ts
->>   
->> +config MFD_ALTERA_SDR
->> +	bool "Altera SDRAM Controller MFD"
->> +	depends on ARCH_SOCFPGA
->> +	select MFD_CORE
->> +	help
->> +	  Support for Altera SDRAM Controller (SDR) MFD.
->> +
->>   menu "STMicroelectronics STMPE Interface Drivers"
->>   depends on MFD_STMPE
->>   
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 8afedba..24cc2b7 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -169,3 +169,4 @@ obj-$(CONFIG_MFD_AS3711)	+= as3711.o
->>   obj-$(CONFIG_MFD_AS3722)	+= as3722.o
->>   obj-$(CONFIG_MFD_STW481X)	+= stw481x.o
->>   obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
->> +obj-$(CONFIG_MFD_ALTERA_SDR)	+= altera-sdr.o
->> diff --git a/drivers/mfd/altera-sdr.c b/drivers/mfd/altera-sdr.c
->> new file mode 100644
->> index 0000000..b5c6646
->> --- /dev/null
->> +++ b/drivers/mfd/altera-sdr.c
->> @@ -0,0 +1,162 @@
->> +/*
->> + * SDRAM Controller (SDR) MFD
->> + *
->> + * Copyright (C) 2014 Altera Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> Can you use the shorter version of the licence?
-Hi. This seems to be the shorter version of the license agreement and is 
-fairly common in the kernel, right?
->> + */
-> '\n' here.
-OK.
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/altera-sdr.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +
->> +static const struct mfd_cell altera_sdr_devs[] = {
->> +#if defined(CONFIG_EDAC_ALTERA_MC)
-> No need to do this, as it will only be matched if the driver is
-> enabled.  Please remove the #iffery.
-OK. Will remove.
->> +	{
->> +		.name = "altr_sdram_edac",
->> +		.of_compatible = "altr,sdram-edac",
-> What other devices will there be?
->
-There will be an FPGA bridge and a power control driver that will need 
-access to the SDR Controller registers.
->> +	},
->> +#endif
->> +};
->> +
->> +u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
->> +{
->> +	return readl(sdr->reg_base + reg_offset);
->> +}
->> +EXPORT_SYMBOL_GPL(altera_sdr_readl);
->> +
->> +void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value)
->> +{
->> +	writel(value, sdr->reg_base + reg_offset);
->> +}
->> +EXPORT_SYMBOL_GPL(altera_sdr_writel);
-> Why are you abstracting these?
->
-> Might be better to use Regmap even.
-regmap seems unnecessarily complex for what we're doing which is why 
-this method was chosen.
+--ydd9XA/RGiC514xu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Future drivers will access different sets of registers in the device. 
-These drivers won't share bitfields in the same register so the MFD 
-seemed like the best solution. Originally we implemented this using 
-syscon but that seems to be frowned upon so we changed to using a MFD.
->> +/* Get total memory size in bytes */
->> +u32 altera_sdr_mem_size(struct altera_sdr *sdr)
->> +{
->> +	u32 size;
->> +	u32 read_reg, row, bank, col, cs, width;
-> Weird that size is on its own.  Either place on a single line or
-> separate them all.
-OK. I will change this.
->> +	read_reg = altera_sdr_readl(sdr, SDR_DRAMADDRW_OFST);
->> +	if (read_reg < 0)
->> +		return 0;
->> +
->> +	width = altera_sdr_readl(sdr, SDR_DRAMIFWIDTH_OFST);
->> +	if (width < 0)
->> +		return 0;
->> +
->> +	col = (read_reg & SDR_DRAMADDRW_COLBITS_MASK) >>
->> +		SDR_DRAMADDRW_COLBITS_LSB;
->> +	row = (read_reg & SDR_DRAMADDRW_ROWBITS_MASK) >>
->> +		SDR_DRAMADDRW_ROWBITS_LSB;
->> +	bank = (read_reg & SDR_DRAMADDRW_BANKBITS_MASK) >>
->> +		SDR_DRAMADDRW_BANKBITS_LSB;
->> +	cs = (read_reg & SDR_DRAMADDRW_CSBITS_MASK) >>
->> +		SDR_DRAMADDRW_CSBITS_LSB;
-> These would probably be better as macros.
->
-OK. I will fix this.
->> +	/* Correct for ECC as its not addressible */
->> +	if (width == SDR_DRAMIFWIDTH_32B_ECC)
->> +		width = 32;
->> +	if (width == SDR_DRAMIFWIDTH_16B_ECC)
->> +		width = 16;
->> +
->> +	/* calculate the SDRAM size base on this info */
->> +	size = 1 << (row + bank + col);
->> +	size = size * cs * (width / 8);
->> +	return size;
->> +}
->> +EXPORT_SYMBOL_GPL(altera_sdr_mem_size);
-> Should this really be done in here?  Isn't this an SDRAM function?
->
-This register is part of the SDRAM controller and size information may 
-be required by the other drivers that share this memory area/need SDRAM 
-information.
+On Tue, Jul 29, 2014 at 03:02:42PM -0500, Brian Austin wrote:
 
->> +static int altera_sdr_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct altera_sdr *sdr;
->> +	struct resource *res;
->> +	void __iomem *base;
->> +	int ret;
->> +
->> +	sdr = devm_kzalloc(dev, sizeof(*sdr), GFP_KERNEL);
->> +	if (!sdr)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	if (!res)
->> +		return -ENOENT;
->> +
->> +	base = devm_ioremap(dev, res->start, resource_size(res));
-> Instead use devm_ioremap_resource(), then you can omit the error
-> checking of platform_get_resource().
-OK. Thanks. I will make the change.
->> +	if (!base)
->> +		return -ENOMEM;
->> +
->> +	sdr->dev = &pdev->dev;
-> Either use 'dev' here, or remove the top line in this function and use
-> &pdev->dev everywhere.  I personally prefer the latter.
-OK. I will use the latter.
->> +	sdr->reg_base = base;
->> +
->> +	ret = mfd_add_devices(sdr->dev, 0, altera_sdr_devs,
->> +			      ARRAY_SIZE(altera_sdr_devs), NULL, 0, NULL);
->> +	if (ret)
->> +		dev_err(sdr->dev, "error adding devices");
->> +
->> +	platform_set_drvdata(pdev, sdr);
->> +
->> +	dev_dbg(dev, "Altera SDR MFD registered\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static int altera_sdr_remove(struct platform_device *pdev)
->> +{
->> +	struct altera_sdr *sdr = platform_get_drvdata(pdev);
-> No need for this, just use &pdev->dev.
-OK. I will make the change.
->> +	mfd_remove_devices(sdr->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id of_altera_sdr_match[] = {
->> +	{ .compatible = "altr,sdr", },
->> +	{ },
->> +};
->> +
->> +static const struct platform_device_id altera_sdr_ids[] = {
->> +	{ "altera_sdr", },
->> +	{ }
->> +};
-> What's this for?
-We don't strictly need it because we are driven by the device tree. It 
-can be removed it if is a problem but I'm not clear why it is a problem.
->> +static struct platform_driver altera_sdr_driver = {
->> +	.driver = {
->> +		.name = "altera_sdr",
->> +		.owner = THIS_MODULE,
-> You can remove this line, it's taken care of for you.
-I will remove the .owner line.
->> +		.of_match_table = of_altera_sdr_match,
->> +	},
->> +	.probe		= altera_sdr_probe,
->> +	.remove		= altera_sdr_remove,
->> +	.id_table	= altera_sdr_ids,
->> +};
->> +
->> +static int __init altera_sdr_init(void)
->> +{
->> +	return platform_driver_register(&altera_sdr_driver);
->> +}
->> +postcore_initcall(altera_sdr_init);
-> Why was this chosen?
-We want this to happen pretty early.
->> +static void __exit altera_sdr_exit(void)
->> +{
->> +	platform_driver_unregister(&altera_sdr_driver);
->> +}
->> +module_exit(altera_sdr_exit);
->> +
->> +MODULE_AUTHOR("Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
->> +MODULE_DESCRIPTION("Altera SDRAM Controller (SDR) MFD");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/include/linux/mfd/altera-sdr.h b/include/linux/mfd/altera-sdr.h
->> new file mode 100644
->> index 0000000..a5f5c39
->> --- /dev/null
->> +++ b/include/linux/mfd/altera-sdr.h
->> @@ -0,0 +1,102 @@
->> +/*
->> + * Copyright (C) 2014 Altera Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> Use the short version.
-Same as above. This is the shorter version that we've been using at Altera.
->> + */
-> '\n' here.
-OK.
->> +#ifndef __LINUX_MFD_ALTERA_SDR_H
->> +#define __LINUX_MFD_ALTERA_SDR_H
->> +
->> +/* SDRAM Controller register offsets */
->> +#define SDR_CTLCFG_OFST                 0x00
->> +#define SDR_DRAMADDRW_OFST		0x2C
->> +#define SDR_DRAMIFWIDTH_OFST		0x30
->> +#define SDR_DRAMSTS_OFST                0x38
->> +#define SDR_DRAMINTR_OFST               0x3C
->> +#define SDR_SBECOUNT_OFST               0x40
->> +#define SDR_DBECOUNT_OFST               0x44
->> +#define SDR_ERRADDR_OFST                0x48
->> +#define SDR_DROPCOUNT_OFST              0x4C
->> +#define SDR_DROPADDR_OFST               0x50
->> +#define SDR_CTRLGRP_LOWPWREQ_OFST       0x54
->> +#define SDR_CTRLGRP_LOWPWRACK_OFST      0x58
->> +
->> +/* SDRAM Controller CtrlCfg Register Bit Masks */
->> +#define SDR_CTLCFG_ECC_EN               0x400
->> +#define SDR_CTLCFG_ECC_CORR_EN          0x800
->> +#define SDR_CTLCFG_GEN_SB_ERR           0x2000
->> +#define SDR_CTLCFG_GEN_DB_ERR           0x4000
->> +
->> +#define SDR_CTLCFG_ECC_AUTO_EN          (SDR_CTLCFG_ECC_EN | \
->> +					 SDR_CTLCFG_ECC_CORR_EN)
->> +
->> +/* SDRAM Controller Address Widths Field Register */
->> +#define SDR_DRAMADDRW_COLBITS_MASK      0x001F
->> +#define SDR_DRAMADDRW_COLBITS_LSB       0
->> +#define SDR_DRAMADDRW_ROWBITS_MASK      0x03E0
->> +#define SDR_DRAMADDRW_ROWBITS_LSB       5
->> +#define SDR_DRAMADDRW_BANKBITS_MASK     0x1C00
->> +#define SDR_DRAMADDRW_BANKBITS_LSB      10
->> +#define SDR_DRAMADDRW_CSBITS_MASK       0xE000
->> +#define SDR_DRAMADDRW_CSBITS_LSB        13
-> We normally call _LSB, _SHIFT.
-OK. I will change.
->> +/* SDRAM Controller Interface Data Width Defines */
->> +#define SDR_DRAMIFWIDTH_16B_ECC         24
->> +#define SDR_DRAMIFWIDTH_32B_ECC         40
->> +
->> +/* SDRAM Controller DRAM Status Register Bit Masks */
->> +#define SDR_DRAMSTS_SBEERR              0x04
->> +#define SDR_DRAMSTS_DBEERR              0x08
->> +#define SDR_DRAMSTS_CORR_DROP           0x10
->> +
->> +/* SDRAM Controller DRAM IRQ Register Bit Masks */
->> +#define SDR_DRAMINTR_INTREN             0x01
->> +#define SDR_DRAMINTR_SBEMASK            0x02
->> +#define SDR_DRAMINTR_DBEMASK            0x04
->> +#define SDR_DRAMINTR_CORRDROPMASK       0x08
->> +#define SDR_DRAMINTR_INTRCLR            0x10
->> +
->> +/* SDRAM Controller Single Bit Error Count Register Bit Masks */
->> +#define SDR_SBECOUNT_COUNT_MASK         0x0F
->> +
->> +/* SDRAM Controller Double Bit Error Count Register Bit Masks */
->> +#define SDR_DBECOUNT_COUNT_MASK         0x0F
->> +
->> +/* SDRAM Controller ECC Error Address Register Bit Masks */
->> +#define SDR_ERRADDR_ADDR_MASK           0xFFFFFFFF
->> +
->> +/* SDRAM Controller ECC Autocorrect Drop Count Register Bit Masks */
->> +#define SDR_DROPCOUNT_CORRMASK          0x0F
->> +
->> +/* SDRAM Controller ECC AutoCorrect Error Address Register Bit Masks */
->> +#define SDR_DROPADDR_ADDR_MASK          0xFFFFFFFF
->> +
->> +#define SELFRSHREQ_POS                  3
->> +#define SELFRSHREQ_MASK                 0x8
->> +
->> +#define SELFRFSHMASK_POS                4
->> +#define SELFRFSHMASK_MASK               0x30
->> +
->> +#define SELFRFSHACK_POS                 1
->> +#define SELFRFSHACK_MASK                0x2
->> +
->> +struct altera_sdr {
->> +	struct device *dev;
->> +	void __iomem *reg_base;
->> +};
->> +
->> +/* Register access API */
->> +u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset);
->> +void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value);
-> Regmap?
-Same as above. This seems to be more complex than we need.
+> +	case CS35L32_LED_STATUS:
+> +	case CS35L32_FLASH_MODE:
+> +	case CS35L32_MOVIE_MODE:
+> +	case CS35L32_FLASH_TIMER:
+> +	case CS35L32_FLASH_INHIBIT:
 
+Should this be an MFD?  Can always be refactored later if required
+though.
 
-Thanks for your comments and for reviewing!
+> +static bool cs35l32_volatile_register(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case CS35L32_DEVID_AB:
+> +	case CS35L32_DEVID_CD:
+> +	case CS35L32_DEVID_E:
+> +	case CS35L32_FAB_ID:
+> +	case CS35L32_REV_ID:
+> +		return 1;
+> +	default:
+> +		return 0;
+> +	}
+> +}
 
-Thor
->> +u32 altera_sdr_mem_size(struct altera_sdr *sdr);
->> +
->> +#endif /* __LINUX_MFD_ALTERA_SDR_H */
+Should the interrupt and LED status registers not also be volatile?
 
+> +static const struct snd_kcontrol_new cs35l32_snd_controls[] = {
+> +	SOC_SINGLE_TLV("SPK Amp Volume", CS35L32_CLASSD_CTL,
+> +		       3, 0x04, 1, classd_ctl_tlv),
+
+Speaker Volume.
+
+> +	SOC_SINGLE("Gain Zero Cross", CS35L32_CLASSD_CTL, 2, 1, 0),
+
+Zero Cross Switch perhaps (if it's an on/off control it should be called
+Switch)?
+
+> +static int int_clear(struct snd_soc_dapm_widget *w,
+> +			struct snd_kcontrol *kcontrol, int event)
+> +{
+> +	struct snd_soc_codec *codec = w->codec;
+> +
+> +	if (SND_SOC_DAPM_EVENT_ON(event)) {
+> +		snd_soc_read(codec, CS35L32_INT_STATUS_1);
+> +		snd_soc_read(codec, CS35L32_INT_STATUS_2);
+> +	} else {
+> +		return 0;
+> +	}
+> +	return 0;
+> +}
+
+This seems...  icky.  Shouldn't there be an interrupt handler doing
+this?
+
+> +static int cs35l32_codec_set_sysclk(struct snd_soc_codec *codec,
+> +			      int clk_id, int source, unsigned int freq, int dir)
+> +{
+> +
+> +	switch (freq) {
+
+> +	case CS35L32_MCLK_6144MHZ:
+
+Not sure these defines add anything over just using the numbers and it
+avoids ickyness with the fact that I bet this isn't really 6.144GHz.
+
+> +static int cs35l32_probe(struct snd_soc_codec *codec)
+> +{
+> +	/* Power down the AMP */
+> +	snd_soc_update_bits(codec, CS35L32_PWRCTL1, CS35L32_PDN_AMP,
+> +			    CS35L32_PDN_AMP);
+> +
+> +	/* Clear MCLK Error Bit since we don't have the clock yet */
+> +	snd_soc_read(codec, CS35L32_INT_STATUS_1);
+> +
+> +	return 0;
+> +}
+
+Any reason not to do these in the device level probe()?
+
+> +static int cs35l32_remove(struct snd_soc_codec *codec)
+> +{
+> +	struct cs35l32_private *cs35l32 = snd_soc_codec_get_drvdata(codec);
+> +
+> +	regulator_bulk_free(ARRAY_SIZE(cs35l32->supplies), cs35l32->supplies);
+> +	return 0;
+> +}
+
+The regulators should be being acquired and released in the device level
+probe(), though this could be dropped entirely with devm.
+
+> +	ret = regmap_register_patch(cs35l32->regmap, cs35l32_monitor_patch,
+> +				    ARRAY_SIZE(cs35l32_monitor_patch));
+
+Should either pay attention to the return value or not assign ret
+(better to pay attention but it's not like it'd be the first CODEC to
+ignore it).
+
+> +	/* initialize codec */
+> +	ret = regmap_read(cs35l32->regmap, CS35L32_DEVID_AB, &reg);
+> +	devid = (reg & 0xFF) << 12;
+> +
+> +	ret = regmap_read(cs35l32->regmap, CS35L32_DEVID_CD, &reg);
+> +	devid |= (reg & 0xFF) << 4;
+> +
+> +	ret = regmap_read(cs35l32->regmap, CS35L32_DEVID_E, &reg);
+> +	devid |= (reg & 0xF0) >> 4;
+> +
+> +	if (devid != CS35L32_CHIP_ID) {
+> +		ret = -ENODEV;
+> +		dev_err(&i2c_client->dev,
+> +			"CS35L32 Device ID (%X). Expected %X\n",
+> +			devid, CS35L32_CHIP_ID);
+> +		return ret;
+> +	}
+
+Should the ID check not be done before we register the patch in case
+it's the wrong device and we do something bad to it by writing to it?
+
+--ydd9XA/RGiC514xu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT2qH+AAoJELSic+t+oim9RrUP/i82rCAAJCfAXO8pibeS3LRb
++KwphmASVpUZjyXKwN8lX4PusYfOFnWi6K3aMoVeX+B4bBZsW6vlojPmVk3h8s+E
+XZ5yEWfJXJd5f9Xa7xo0SA3ZzEE0aRXx3HNHzBX1wHz/+iRbTIH8eUcXuSeEcudt
+vS0+Z/2b0pyPmU9S0XKlGT1gj+IMHzbZqP6t81WT4ecoz+sYB+LhTaxsdnsIt7On
+zqXPMTBvb8uZzcf/bMfCXcmocpoTr6+PkXeqNa//ZqXX8kQ3QTBYBaQ0eJ9eRBUN
+iSU8/hxDaWXjNOIVKfK24l/oBlYMSgXrtymN23/LkP/fbgpObAK4FXNcqOR7yyOL
+Z3wdvjaAm2PEbyPAopLK3VYcPJdurwOPiObjwY8+cdN+MsRqrwf73yMW1VRF6e51
+W+hS/NX22ZMeq8sehRuqNxUPMnQhKRdfUIjgodghVFPKhCcUuAZR43qMTojrpDXg
+xyhp+TFJG3rhIy0qDEGJ5HhxeWxpfQi5y4+uh4z3mJaNCkQrPV3WQ3R08OXd7cqu
+RyWE+EGWJ/lePmEW0rnAQANRH/ui7STVJ3ucwyxXgk+nzcsI0qMnOlhOtmHn1Brw
+NMb5JJQu9TLLZHE8AlU8QlZOOI2etwU5UKmmOJihumraWAwHFRdlWF3gdOwYryDH
+IjN8b+G9W32IhfwQnaj1
+=tbos
+-----END PGP SIGNATURE-----
+
+--ydd9XA/RGiC514xu--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
