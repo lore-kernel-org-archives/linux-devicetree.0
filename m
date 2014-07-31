@@ -1,67 +1,74 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
-Date: Fri, 01 Aug 2014 01:29:34 +0200
-Message-ID: <4047366.k35vzjcKGH@diego>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <1406661128-7614-2-git-send-email-heiko@sntech.de> <20140731224523.4463.34464@quantum>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
+Date: Fri, 01 Aug 2014 01:31:18 +0200
+Message-ID: <53DAD1C6.9070102@suse.de>
+References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <53DA936E.9060004@gmail.com> <53DA9709.10602@suse.de> <53DA9BA9.60808@gmail.com> <53DACE73.8080009@suse.de> <53DAD0AA.7040105@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731224523.4463.34464@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53DAD0AA.7040105@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
+Cc: Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Am 01.08.2014 01:26, schrieb Tomasz Figa:
+> On 01.08.2014 01:17, Andreas F=C3=A4rber wrote:
+>> Am 31.07.2014 21:40, schrieb Tomasz Figa:
+>>> On 31.07.2014 21:20, Andreas F=C3=A4rber wrote:
+>>>> Am 31.07.2014 21:05, schrieb Tomasz Figa:
+>>>>> On 31.07.2014 18:08, Andreas F=C3=A4rber wrote:
+> [snip]
+>>>>>> +&dp_hpd {
+>>>>>> +	samsung,pins =3D "gpc3-0";
+>>>>>> +	samsung,pin-function =3D <0>;
+>>>>>> +	samsung,pin-pud =3D <3>;
+>>>>>> +	samsung,pin-drv =3D <0>;
+>>>>>> +};
+>>>>>
+>>>>> Hmm, what node is this referencing? I believe this should rather
+>>>>> reference the pin controller and add a new board-specific pinconf=
+/pinmux
+>>>>> group instead....
+>>>>
+>>>> It's a -pinctrl node. See v3->v4 change log and discussion on v3.
+>>>>
+>>>
+>>> Well, this is clearly a board specific node anyway, because it does=
+ not
+>>> refer to a special function, but simply an input/interrupt GPIO. If=
+ it
+>>> somehow has landed in generic pinctrl dtsi then it should be remove=
+d
+>>> from there and this patch should simply introduce its own instance =
+of
+>>> dp_hpd node, so you did the right thing in v3.
+>>
+>> Well, my point was that the 3.8 tree contains only one dp-hpd node, =
+not
+>> two as we would get by adding a new node here.
+>>
+>> Apart from Spring, it's used in Snow and SMDK5250, so moving it ther=
+e
+>> seems feasible and the cleanest solution to me.
+>>
+>=20
+> What I mean is that in exynos5250-pinctrl.dtsi only generic SoC pin
+> groups should be defined and those more or less correspond to groups
+> with samsung,pin-function set to something other than 0 (input) or 1
+> (output). Now here hpd_gpio is just a normal GPIO input used as
+> interrupt source to detect when a cable is plugged or unplugged. This=
+ is
+> by no means generic to the SoC, because any GPIO with interrupt
+> capability can be used for this purpose. This means that the whole
+> pin{conf,mux} group should be defined on board level.
 
-Am Donnerstag, 31. Juli 2014, 15:45:23 schrieb Mike Turquette:
-> Quoting Heiko Stuebner (2014-07-29 12:12:05)
-> 
-> > The clock-tree contains clocks that should never get disabled
-> > automatically. One example are the base ACLKs, the base supplies for all
-> > peripherals.
-> > 
-> > Therefore add a structure similar to the sunxi clock-tree to protect these
-> > special clocks from being disabled.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> > 
-> >  drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
-> >  drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
-> >  drivers/clk/rockchip/clk.c        | 13 +++++++++++++
-> >  drivers/clk/rockchip/clk.h        |  1 +
-> >  4 files changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/clk/rockchip/clk-rk3188.c
-> > b/drivers/clk/rockchip/clk-rk3188.c index a83a6d8..5aef277 100644
-> > --- a/drivers/clk/rockchip/clk-rk3188.c
-> > +++ b/drivers/clk/rockchip/clk-rk3188.c
-> > @@ -599,6 +599,11 @@ static struct rockchip_clk_branch
-> > rk3188_clk_branches[] __initdata = {> 
-> >         GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(8),
-> >         13, GFLAGS),>  
-> >  };
-> > 
-> > +static const char *rk3188_critical_clocks[] __initconst = {
-> > +       "aclk_cpu",
-> > +       "aclk_peri",
-> 
-> I'm not against the idea of critical clocks, but I want to verify that
-> there is no other driver out there that is a better fit for claiming
-> these clks via clk_get and enabling them the normal way via clk_enable?
+Exactly what I meant! :)
 
-In the clock hierarchy of Rockchip SoCs, both aclks listed here, are sources 
-for pclk and hclk, as well as sourcing some other peripheral gates further 
-below too. So from what I've seen from the clock diagrams, there is nothing 
-that would claim these clocks directly, and it wouldn't also make any sense to 
-let them get disabled as there will always be something using them (for 
-example the dram-controller).
+Andreas
 
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
