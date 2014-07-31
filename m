@@ -1,21 +1,53 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 1/4] Documentation: dt-bindings: add dt binding info
- for Rockchip dwc2
-Date: Thu, 31 Jul 2014 11:39:43 -0600
-Message-ID: <53DA7F5F.3070500@wwwdotorg.org>
-References: <1406780999-17798-1-git-send-email-kever.yang@rock-chips.com> <1406780999-17798-2-git-send-email-kever.yang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1406780999-17798-2-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kever Yang <kever.yang@gmail.com>, Paul Zimmerman <paulz@synopsys.com>
-Cc: dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Porter <mporter@linaro.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH 03/15] drm/panel: ld9040: Add dummy prepare and unprepare
+ routines
+Date: Thu, 31 Jul 2014 23:12:02 +0530
+Message-ID: <1406828534-10072-4-git-send-email-ajaykumar.rs@samsung.com>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
+Cc: inki.dae@samsung.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2014 10:29 PM, Kever Yang wrote:
-> This add necessary dwc2 binding documentation for Rockchip socs:
-> rk3066, rk3188 and rk3288
+This patch adds dummy definition for prepare and unprepare
+routines to ld9040 panel driver.
 
-Acked-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+---
+ drivers/gpu/drm/panel/panel-ld9040.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-ld9040.c b/drivers/gpu/drm/panel/panel-ld9040.c
+index db1601f..9b40bd05 100644
+--- a/drivers/gpu/drm/panel/panel-ld9040.c
++++ b/drivers/gpu/drm/panel/panel-ld9040.c
+@@ -228,6 +228,16 @@ static int ld9040_disable(struct drm_panel *panel)
+ 	return ld9040_power_off(ctx);
+ }
+ 
++static int ld9040_unprepare(struct drm_panel *panel)
++{
++	return 0;
++}
++
++static int ld9040_prepare(struct drm_panel *panel)
++{
++	return 0;
++}
++
+ static int ld9040_enable(struct drm_panel *panel)
+ {
+ 	struct ld9040 *ctx = panel_to_ld9040(panel);
+@@ -273,6 +283,8 @@ static int ld9040_get_modes(struct drm_panel *panel)
+ 
+ static const struct drm_panel_funcs ld9040_drm_funcs = {
+ 	.disable = ld9040_disable,
++	.unprepare = ld9040_unprepare,
++	.prepare = ld9040_prepare,
+ 	.enable = ld9040_enable,
+ 	.get_modes = ld9040_get_modes,
+ };
+-- 
+1.7.9.5
