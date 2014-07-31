@@ -1,47 +1,44 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Thu, 31 Jul 2014 16:16:17 +0300
-Message-ID: <53DA41A1.5010900@ti.com>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de> <1406728949-7560-3-git-send-email-sassmann@kpanic.de> <20140730175033.GA17528@sirena.org.uk> <53DA12BF.1060008@kpanic.de> <53DA284D.6030404@ti.com> <53DA2F53.8010405@kpanic.de>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
+ controller
+Date: Thu, 31 Jul 2014 15:17:02 +0200
+Message-ID: <20140731131702.GC4375@pd.tnic>
+References: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
+ <20140731113324.GB4375@pd.tnic>
+ <808655a9-77eb-4e3a-9781-2b059ad9517b@BN1AFFO11FD020.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53DA2F53.8010405-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <808655a9-77eb-4e3a-9781-2b059ad9517b@BN1AFFO11FD020.protection.gbl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Punnaiah Choudary <kpc528@gmail.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-<snip>
+On Thu, Jul 31, 2014 at 02:13:48PM +0200, Michal Simek wrote:
+> Mixing two drivers in the one file is not a good idea because with
+> more memory controllers it is just a mess and you are not able to
+> cover all cases.
 
->>> +static int of_twl6030_clk32kg_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device_node *node = pdev->dev.of_node;
->>> +	struct clk *clk;
->>> +
->>> +	if (!node)
->>> +		return -ENODEV;
->>> +
->>> +	clk = devm_clk_get(&pdev->dev, "clk32kg");
->>> +	if (IS_ERR(clk))
->>> +		return PTR_ERR(clk);
->>> +
->>> +	return clk_prepare(clk);
->>
->> This is plain wrong as pointed out earlier. The driver that uses the
->> clock must enable it.
->
-> Understood. I'll change it to clk_prepare_enable().
+Why is it a mess?
 
-Nono, remove it completely from here. The clock driver should not enable 
-itself by default. The clock itself has some sort of customer somewhere 
-(like am33xx-wifi driver), which should request for the clock and enable 
-it only when needed.
+> If this is just about providing uniq number we can easily extend
+> binding and provide that uniq value. That's remind me solution with
+> edac_mc_get_id() can caused that you won't have exact number all the
+> time - depends on driver loading (deferred probing too).
 
--Tero
+-ENOPARSE for this sentence.
 
+> One option via DT can be via aliases where you can easily specify
+> order. But all of these issues can be solved in follow-up patch.
+
+Whatever you do, it should be designed cleanly and not introduce some
+homegrown solution.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
