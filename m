@@ -1,39 +1,84 @@
-From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Thu, 31 Jul 2014 16:05:43 +0200
-Message-ID: <53DA4D37.4030408@kpanic.de>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de> <1406728949-7560-3-git-send-email-sassmann@kpanic.de> <53DA3613.9010305@ti.com> <53DA3C68.3020406@kpanic.de> <53DA3D66.1030407@ti.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
+ controller
+Date: Thu, 31 Jul 2014 14:19:20 +0000
+Message-ID: <299a13fb-f442-4ebf-b0fc-d09d0dfc536d@BN1AFFO11FD019.protection.gbl>
+References: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
+ <20140731113324.GB4375@pd.tnic>
+ <808655a9-77eb-4e3a-9781-2b059ad9517b@BN1AFFO11FD020.protection.gbl>
+ <20140731131702.GC4375@pd.tnic>
+ <a366b39c-b354-4d90-8b1e-71e74ab77cf3@BL2FFO11FD011.protection.gbl>
+ <20140731135652.GD4375@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53DA3D66.1030407-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140731135652.GD4375@pd.tnic>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>, Michal Simek <michals@xilinx.com>
+Cc: "dougthompson@xmission.com" <dougthompson@xmission.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Punnaiah Choudary <kpc528@gmail.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.2014 14:58, Peter Ujfalusi wrote:
-> On 07/31/2014 03:54 PM, Stefan Assmann wrote:
->>> Why would you do this? The point of a clock provider is that you can
->>> enable/disable the clock on demand. Here you enable the clock and leave it
->>> enabled for the rest of the time...
->>>
->>> clk-dra7-atl deals with similar issue
->>
->> The idea is to enable the clock by default to get the wifi working.
->> Sorry if I got it wrong.
-> 
-> You should have a clock driver for the 32K clock. The wifi driver should
-> request and manage it's clocks via the clock API.
-> 
-
-If the clock does not get enabled the wifi driver wl12xx doesn't even
-get probed. Which is my initial problem. Maybe I need to figure that out
-first.
-
-  Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
+IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiBUaHVyc2RheSwgSnVseSAzMSwg
+MjAxNCA3OjI3IFBNDQo+VG86IE1pY2hhbCBTaW1law0KPkNjOiBQdW5uYWlhaCBDaG91ZGFyeSBL
+YWxsdXJpOyBkb3VndGhvbXBzb25AeG1pc3Npb24uY29tOw0KPnJvYmgrZHRAa2VybmVsLm9yZzsg
+cGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj5pamMrZGV2aWNldHJl
+ZUBoZWxsaW9uLm9yZy51azsgS3VtYXIgR2FsYTsgUm9iIExhbmRsZXk7DQo+ZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmVkYWNA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
+DQo+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IFB1bm5haWFoIENob3VkYXJ5OyBBbmlydWRo
+YSBTYXJhbmdpOyBTcmlrYW50aA0KPlZlbXVsYQ0KPlN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYz
+XSBlZGFjOiBzeW5wczogQWRkZWQgRURBQyBzdXBwb3J0IGZvciB6eW5xIGRkcg0KPmVjYyBjb250
+cm9sbGVyDQo+DQo+T24gVGh1LCBKdWwgMzEsIDIwMTQgYXQgMDM6MzY6MzVQTSArMDIwMCwgTWlj
+aGFsIFNpbWVrIHdyb3RlOg0KPj4gTWl4aW5nIGZ1bmN0aW9ucyBmb3IgdHdvL21vcmUgZGlmZmVy
+ZW50IGNvbnRyb2xsZXIgc2VlbXMgdG8gbWUNCj4+IHJlYWxseSBtZXNzeS4NCj4NCj5KdXN0IHN0
+YXRpbmcgdGhhdCBzb21ldGhpbmcgaXMgInJlYWxseSBtZXNzeSIgd2l0aG91dCBnaXZpbmcgYXQg
+bGVhc3QNCj5vbmUgdGVjaG5pY2FsIHJlYXNvbiBmb3IgaXQgaXMgbm90IGdvaW5nIHRvIGdldCB5
+b3UgYW55IGZ1cnRoZXIuIFNvIGxldA0KPm1lIGdpdmUgeW91IG1pbmU6DQo+DQo+SSB0aGluayBp
+dCBpcyBub3QgbWVzc3kgYmVjYXVzZSBvbmUgZmlsZSBjb250YWlucyBhbGwgdGhlIEVEQUMgY29k
+ZSBmb3INCj50aGF0IHN5c3RlbS4gTGlrZSBldmVyeSBvdGhlciBzeXN0ZW0gb3V0IHRoZXJlIHVz
+ZXMgb25lIEVEQUMgZHJpdmVyLg0KPkV2ZXJ5dGhpbmcgaXMgbmljZWx5IGNvbnRhaW5lZCBpbiBv
+bmUgcGxhY2UsIGFueSBjb21tdW5pY2F0aW9uIGJldHdlZW4NCj50aGUgdHdvIG1lbW9yeSBjb250
+cm9sbGVycyBpcyBkb25lIGludGVybmFsbHkgaW4gdGhhdCBkcml2ZXIuDQo+DQo+SGF2aW5nIHR3
+byBkcml2ZXJzIHdvdWxkIG1ha2UgdGhhdCBtdWNoIG1vcmUgY29tcGxpY2F0ZWQuIEJ1dCBoZXks
+IGlmDQo+eW91IHdhbnQgdG8gbWFrZSB5b3VyIGxpZmUgbW9yZSBjb21wbGljYXRlZCBiZWNhdXNl
+IGl0IGlzIG5vdCBlbm91Z2gNCj5jb21wbGljYXRlZCwgZmVlbCBmcmVlIHRvIGRvIHNvLiBKdXN0
+IG1ha2Ugc3VyZSB5b3UgZG9uJ3QgaW1wb3NlIGFueQ0KPnJlc3RyaWN0aW9ucyBvbiB0aGUgcmVz
+dCBvZiB0aGUgc3Vic3lzdGVtLg0KDQpIZXJlIHdlIGFyZSBhbHNvIGNvbnNpZGVyaW5nIHJldXNh
+YmlsaXR5IG9mIHRoZSBkcml2ZXIuIExldCdzIHNheSBpZiBzb21lIG90aGVyDQpTT0MgY29udGFp
+bnMgU3lub3BzeXMgZGRyIGNvbnRyb2xsZXIgdGhlbiB0aGlzIGRyaXZlciBjYW4gYmUgcmV1c2Vk
+LiBJbiB0aGlzIGNhc2UsDQpIYXZpbmcgc2VwYXJhdGUgZHJpdmVyIHdvdWxkIGJlIGdvb2QuIEJ1
+dCBhcyB5b3Ugc2FpZCBpbiB5b3VyIHByZXZpb3VzIGNvbW1lbnQsDQpXZSB3aWxsIHRhbGsgYWJv
+dXQgdGhpcyBsYXRlci4gDQoNClRoYW5rcywNClB1bm5haWFoDQo+DQo+PiA+IC1FTk9QQVJTRSBm
+b3IgdGhpcyBzZW50ZW5jZS4NCj4+DQo+PiBJIG1lYW50IGJ5IHRoaXMgdGhpcyBzY2VuYXJpbyAt
+IHBsZWFzZSBjb3JyZWN0IG1lIGlmIEkgYW0gY29tcGxldGVseSB3cm9uZw0KPj4gYmVjYXVzZSBJ
+IGFtIG5vdCBwbGF5aW5nIHdpdGggdGhpcyBzdWJzeXN0ZW0uIE15IGV4cGVjdGF0aW9uIGlzIHRo
+YXQNCj4+IG1lbW9yeSBjb250cm9sbGVyIG51bWJlciBzaG91bGQgYmUgc2FtZSBhbGwgdGhlIHRp
+bWUuDQo+Pg0KPj4gdHdvIG1lbW9yeSBjb250cm9sbGVycyB3aXRoIHRoZSBzYW1lIGVkYWMgZHJp
+dmVyLg0KPj4NCj4+IE5vcm1hbCBjYWxsaW5nIHNlcXVlbmNlOg0KPj4gWCBwcm9iZSAtIG51bWJl
+ciAwDQo+PiBZIHByb2JlIC0gbnVtYmVyIDENCj4+DQo+PiBEaWZmZXJlbnQgb3JkZXIvbmFtZSAo
+SSB0aGluayBvcmRlciBpcyB0YWtlbiBhdCB0aGUgZmlyc3QgcGxhY2UpDQo+PiBpbiBEVFMgc2hv
+dWxkIGNhdXNlZCB0aGF0IFggd2lsbCBoYXZlIG51bWJlciAxIGFuZCBZIG51bWJlciAwLg0KPj4N
+Cj4+IEFub3RoZXIgc2NlbmFyaW86DQo+PiB0d28gY29udHJvbGxlcnMgYW5kIG9uZSB3aXRoIGV4
+dGVybmFsIGdwaW8gcmVzZXQgZm9yIGV4YW1wbGUuDQo+Pg0KPj4gWCBwcm9iZSBpcyBjYWxsZWQg
+YnV0IGdwaW8gY29udHJvbGxlciBpcyBub3QgcmVhZHkgYW5kIGdwaW8gZHJpdmVyIHJldHVybnMN
+Cj4+IC1FUFJPQkVfREVGRVIgdGhlbiBZIHByb2JlIGlzIGNhbGxlZCBhbmQgZ2V0IG51bWJlciAw
+LiBUaGVuIFggcHJvYmUgaXMNCj5jYWxsZWQNCj4+IGFnYWluIGFuZCBnZXQgbnVtYmVyIDEuDQo+
+DQo+UmlnaHQsIHNpbmNlIHlvdSBoYXZlIGEgaGV0ZXJvZ2VuZW91cyBkZXNpZ24sIHlvdSdkIG5l
+ZWQgdG8gYWNjb3VudA0KPmZvciBhbGwgdGhhdCBpbiB5b3VyIGRyaXZlciBhbmQgZGVhbCB3aXRo
+IHByb2Jpbmcgb3JkZXIuIExpa2UgaGF2aW5nIGENCj53YXkgdG8gYXNrIGEgY29udHJvbGxlciB3
+aGF0IGtpbmQgb2YgYSBjb250cm9sbGVyIGl0IGlzIGFuZCBzbyBvbi4gSSdtDQo+YWZyYWlkIEkg
+ZG9uJ3Qga25vdyBhbnl0aGluZyBhYm91dCB5b3VyIGRlc2lnbiB0byBiZSBvZiBtb3JlIGhlbHAg
+dGhlcmUuDQo+DQo+SG93ZXZlciwgZG9pbmcgdGhpcyBpbiBvbmUgPG5hbWU+X2VkYWMuYyBmaWxl
+IGlzIGFsbW9zdCB0cml2aWFsIHRoYW4NCj5kb2luZyBpdCB3aXRoIHR3byBzZXBhcmF0ZSBkcml2
+ZXJzLiBVbmxlc3MgeW91IGRvbid0IG5lZWQgdG8gZG8gYW55DQo+bWVhbmluZ2Z1bCBjb21tdW5p
+Y2F0aW9uIGJldHdlZW4gdGhlIFBTIGFuZCBQTC4gVGhlbiBpdCBkb2Vzbid0IG1hdHRlci4NCj4N
+Cj5JZiBJIHdlcmUgeW91LCBJJ2Qgc3BlbmQgYSBtb3JlIHRpbWUgb24gYSBwcm9wZXIgZGVzaWdu
+IG5vdyBzbyB0aGF0IGFsbA0KPm15IHdvcmsgbGF0ZXIgaXMgZWFzeS4gQWRkaW5nIHR3byBkcml2
+ZXJzIGp1c3QgYmVjYXVzZSBpdCBzZWVtcyBtZXNzeSBpcw0KPm5vdCBhIHZlcnkgZ29vZCBpZGVh
+LiBXaGF0IEkgd291bGQgZG8gaXMgYW5hbHl6ZSBhbGwgbXkgdXNlIGNhc2VzIGFuZA0KPmNvbWUg
+dXAgd2l0aCBhIHByb3BlciBkZXNpZ24gdGhlbi4gQnV0IHRoaXMgaXMganVzdCBtZS4NCj4NCj5I
+VEguDQo+DQo+LS0NCj5SZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jpcy4NCj4NCj5TZW50IGZyb20g
+YSBmYXQgY3JhdGUgdW5kZXIgbXkgZGVzay4gRm9ybWF0dGluZyBpcyBmaW5lLg0KPi0tDQo=
