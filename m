@@ -1,67 +1,43 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [REPOST PATCH v3 3/5] ARM: dts: add rk3288 dwc2 controller support
-Date: Thu, 31 Jul 2014 14:26:23 -0700
-Message-ID: <1406841985-15790-4-git-send-email-kever.yang@rock-chips.com>
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [REPOST PATCH v3 1/5] Documentation: dt-bindings: add dt binding info for Rockchip dwc2
+Date: Thu, 31 Jul 2014 14:26:21 -0700
+Message-ID: <1406841985-15790-2-git-send-email-kever.yang@rock-chips.com>
 References: <1406841985-15790-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406841985-15790-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406841985-15790-1-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Zimmerman <paulz@synopsys.com>, heiko@sntech.de
+Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Porter <mporter@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-rk3288 has two kind of usb controller, this add the dwc2 controller
-for otg and host1.
+This add necessary dwc2 binding documentation for Rockchip socs:
+rk3066, rk3188 and rk3288
 
-Controller can works with usb PHY default setting and Vbus on.
-
-Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Stephen Warren <swarren@nvidia.com>
 ---
 
-Changes in v3:
-- Moved out of pin control and sort by base address
-
+Changes in v3: None
 Changes in v2:
-- change the node name from 'dwc2' to 'usb'
+- Split out dr_mode and rk3288 bindings.
+- add compatible "snps,dwc2" bingding info
 
- arch/arm/boot/dts/rk3288.dtsi |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc2.txt |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index ab8a611..a5607a1 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -205,6 +205,26 @@
- 		status = "disabled";
- 	};
- 
-+	usb_host1: usb@ff540000 {
-+		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
-+				"snps,dwc2";
-+		reg = <0xff540000 0x40000>;
-+		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_USBHOST1>;
-+		clock-names = "otg";
-+		status = "disabled";
-+	};
-+
-+	usb_otg: usb@ff580000 {
-+		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
-+				"snps,dwc2";
-+		reg = <0xff580000 0x40000>;
-+		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_OTG0>;
-+		clock-names = "otg";
-+		status = "disabled";
-+	};
-+
- 	uart2: serial@ff690000 {
- 		compatible = "rockchip,rk3288-uart", "snps,dw-apb-uart";
- 		reg = <0xff690000 0x100>;
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 467ddd1..2899679 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
+ Required properties:
+ - compatible : One of:
+   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
++  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
++  - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
++  - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+   - snps,dwc2: A generic DWC2 USB controller with default parameters.
+ - reg : Should contain 1 register range (address and length)
+ - interrupts : Should contain 1 interrupt
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
