@@ -1,105 +1,56 @@
-Return-Path: <pantelis.antoniou@konsulko.com>
-Return-Path: <pantelis.antoniou@konsulko.com>
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v7 9/9] OF: spi: Add OF notifier handler
-Date: Fri,  4 Jul 2014 19:59:28 +0300
-Message-Id: <1404493168-8980-10-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1404493168-8980-1-git-send-email-pantelis.antoniou@konsulko.com>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
-List-ID: <devicetree@vger.kernel.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [REPOST PATCH v3 4/5] ARM: dts: Fix the sort ordering of EHCI and
+ HSIC in rk3288.dtsi
+Date: Thu, 31 Jul 2014 15:01:51 -0700
+Message-ID: <CAD=FV=U-7D016n08My-SZRjqN68wTW9iuBEMDzkpy+LdTGRdtw@mail.gmail.com>
+References: <1406841985-15790-1-git-send-email-kever.yang@rock-chips.com>
+	<1406841985-15790-5-git-send-email-kever.yang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406841985-15790-5-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
-Add OF notifier handler needed for creating/destroying spi devices
-according to dynamic runtime changes in the DT live tree.
+Kever,
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/spi/spi.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 63 insertions(+), 1 deletion(-)
+On Thu, Jul 31, 2014 at 2:26 PM, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>
+> The EHCI and HSIC device tree nodes were added in the wrong place.
+> Fix them.
+>
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+> Changes in v3:
+> - EHCI and HSIC move new for version 3.
+>
+> Changes in v2: None
+>
+>  arch/arm/boot/dts/rk3288.dtsi |   41 ++++++++++++++++++++---------------------
+>  1 file changed, 20 insertions(+), 21 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index a5607a1..673dee3 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -205,6 +205,17 @@
+>                 status = "disabled";
+>         };
+>
+> +       usb_host0_ehci: ehci@ff500000 {
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index cd98bf2..d2a02ba 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2343,6 +2343,57 @@ EXPORT_SYMBOL_GPL(spi_write_then_read);
- 
- /*-------------------------------------------------------------------------*/
- 
-+#if IS_ENABLED(CONFIG_OF)
-+
-+static int of_spi_notify(struct notifier_block *nb,
-+				unsigned long action, void *arg)
-+{
-+	struct device_node *dn;
-+	struct spi_master *master;
-+	struct spi_device *spi;
-+
-+	if (action == OF_RECONFIG_DYNAMIC_CREATE_DEV) {
-+
-+		dn = arg;
-+
-+		master = of_find_spi_master_by_node(dn->parent);
-+		if (master == NULL)
-+			return NOTIFY_OK;	/* not for us */
-+
-+		spi = of_register_spi_device(master, dn);
-+		put_device(&master->dev);
-+
-+		if (IS_ERR(spi)) {
-+			pr_err("%s: failed to create for '%s'\n",
-+					__func__, dn->full_name);
-+			return notifier_from_errno(PTR_ERR(spi));
-+		}
-+
-+	} else if (action == OF_RECONFIG_DYNAMIC_DESTROY_DEV) {
-+
-+		dn = arg;
-+
-+		/* find our device by node */
-+		spi = of_find_spi_device_by_node(dn);
-+		if (spi == NULL)
-+			return NOTIFY_OK;	/* no? not meant for us */
-+
-+		/* unregister takes one ref away */
-+		spi_unregister_device(spi);
-+
-+		/* and put the reference of the find */
-+		put_device(&spi->dev);
-+
-+	} else
-+		return NOTIFY_OK;
-+
-+	return NOTIFY_STOP;
-+}
-+
-+static struct notifier_block spi_of_notifier;
-+
-+#endif
-+
- static int __init spi_init(void)
- {
- 	int	status;
-@@ -2360,8 +2411,19 @@ static int __init spi_init(void)
- 	status = class_register(&spi_master_class);
- 	if (status < 0)
- 		goto err2;
--	return 0;
- 
-+#if IS_ENABLED(CONFIG_OF)
-+	spi_of_notifier.notifier_call = of_spi_notify;
-+	status = of_reconfig_notifier_register(&spi_of_notifier);
-+	if (status)
-+		goto err3;
-+#endif
-+
-+	return 0;
-+#if IS_ENABLED(CONFIG_OF)
-+err3:
-+	class_unregister(&spi_master_class);
-+#endif
- err2:
- 	bus_unregister(&spi_bus_type);
- err1:
--- 
-1.7.12
+Argh.  When I was helping you I messed this up.  :(  I pointed you at
+an older version of the EHCI patch.
+
+I'll post a fixup myself.  Sorry for the bother...
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
