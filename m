@@ -1,145 +1,104 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH] mmc: dw_mmc: add support for RK3288
-Date: Thu, 31 Jul 2014 14:01:38 +0800
-Message-ID: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
-References: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 29/35] arm: omap: intc: switch over to linear irq domain
+Date: Wed, 30 Jul 2014 23:28:44 -0700
+Message-ID: <20140731062843.GA29045@atomide.com>
+References: <1406582183-696-30-git-send-email-balbi@ti.com>
+ <20140729121425.GR29045@atomide.com>
+ <20140729141522.GB17808@saruman.home>
+ <20140729152052.GV29045@atomide.com>
+ <20140729154057.GE17808@saruman.home>
+ <20140729163345.GF17808@saruman.home>
+ <20140730060420.GY29045@atomide.com>
+ <20140730144059.GA7272@saruman.home>
+ <CAGo_u6ou+MoKOE_tTTmjxyFNW=jTaN9vnTsHrxR6sQHsieJyLA@mail.gmail.com>
+ <20140730162038.GH7272@saruman.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140730162038.GH7272@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, dt list <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, jason@lakedaemon.net, Kevin Hilman <khilman@deeprootsystems.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Benoit Cousson <bcousson@baylibre.com>, tglx@linutronix.de, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch focuses on clock setting for RK3288 mmc controller.
+* Felipe Balbi <balbi@ti.com> [140730 09:23]:
+> Hi,
+> 
+> On Wed, Jul 30, 2014 at 10:45:41AM -0500, Nishanth Menon wrote:
+> > On Wed, Jul 30, 2014 at 9:40 AM, Felipe Balbi <balbi@ti.com> wrote:
+> > > HI,
+> > >
+> > > On Tue, Jul 29, 2014 at 11:04:21PM -0700, Tony Lindgren wrote:
+> > >> * Felipe Balbi <balbi@ti.com> [140729 09:36]:
+> > >> > Hi,
+> > >> >
+> > >> > On Tue, Jul 29, 2014 at 10:40:57AM -0500, Felipe Balbi wrote:
+> > >> > > On Tue, Jul 29, 2014 at 08:20:52AM -0700, Tony Lindgren wrote:
+> > >> > > > * Felipe Balbi <balbi@ti.com> [140729 07:18]:
+> > >> > > > > Hi,
+> > >> > > > >
+> > >> > > > > On Tue, Jul 29, 2014 at 05:14:25AM -0700, Tony Lindgren wrote:
+> > >> > > > > > * Felipe Balbi <balbi@ti.com> [140728 14:19]:
+> > >> > > > > > > now that we don't need to support legacy board-files,
+> > >> > > > > > > we can completely switch over to a linear irq domain
+> > >> > > > > > > and make use of irq_alloc_domain_generic_chips() to
+> > >> > > > > > > allocate all generic irq chips for us.
+> > >> > > > > >
+> > >> > > > > > This patch seems to somehow break off-idle for omap3
+> > >> > > > > > where it no longer wakes up.
+> > >> > > > >
+> > >> > > > > Sure your bisection is correct ? This patch just switches from legacy
+> > >> > > > > irq domain to linear irq domain.
+> > >> > > >
+> > >> > > > Yes, I tried it a few times. Just enabling
+> > >> > > > retention idle hangs too with this patch.
+> > >> > > >
+> > >> > > > Maybe it's omap3_prcm_irq_setup that relies on
+> > >> > > > 11 + OMAP_INTC_START? There may be other such issues
+> > >> > >
+> > >> > > lol.
+> > >> > >
+> > >> > > OMAP4 has the same nonsense.
+> > >> >
+> > >> > made me think why (if) OMAP4 works with that same setup. Does wake from
+> > >> > OFF work with OMAP4 ?
+> > >>
+> > >> Not without similar changes, omap4+ has the same issue.. There's a RFC
+> > >> series from Nishant to fix some of this, and Tero is moving the PRCM
+> > >> into a driver.
+> > >>
+> > >> > Anyway, here's a quick little hack to check if that's the reason for the
+> > >> > regression:
+> > >>
+> > >> OK yeah that's along the same lines with Nishant's RFC series in thread
+> > >> "[RFC PATCH 0/7] ARM: OMAP4+: PRM: minor cleanups and dt support of
+> > >> interrupts"
+> > >>
+> > >> FYI, it did not compile, needs to include linux/of_irq.h. But yes,
+> > >
+> > > I might have sent the wrong version as I had that same build error and
+> > > fixed it localy.
+> > >
+> > >> it fixes the regression for me, Also now the whole series works for
+> > >> me :)
+> > >
+> > > good to know.
+> > >
+> > > What do you want to do now ? Wait for PRCM to become a driver ? Wait for
+> > > Nishanth's series to get accepted ? I guess the same thing could be done
+> > > for OMAP3 and AM33, then we would have a chance of having working wake
+> > > from idle with the new irqchip.
+> > 
+> > I can repost the current series as it stands now once 17-rc1 comes out
+> > (without the build failure ofcourse).. if that helps to move it out of
+> > RFC status.
+> 
+> That'd be great. It would be ever greater if you could add support for
+> OMAP3 on that too.
 
-In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
-and if DDR 8bit mode, CLKDIV register must be set 1.
+Yeah sounds good to me. Tero, does that work OK for your PRCM changes?
 
-Reported-by Doug Anderson <dianders@chromium.org>
-Suggested-by: Jaehoon Chung <jh80.chung@samsung.com>
-Suggested-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
----
-changes since v1:
-- dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
-  host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
+Regards,
 
-changes since v2:
-- merge from ChromiumOS tree, fix up clock settting bug, 
-  which cause DDR50 mode for emmc not to work, reported by Doug Anderson
-- remove MMC_TIMING_UHS_DDR50 condition, because on RK3288 only emmc can work
-  in 8bit mode, suggested by Doug Anderson
-
- .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  6 ++-
- drivers/mmc/host/dw_mmc-pltfm.c                    | 56 +++++++++++++++++++++-
- 2 files changed, 58 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-index c559f3f..c327c2d 100644
---- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-@@ -10,12 +10,14 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
- Required Properties:
- 
- * compatible: should be
--	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
-+	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
-+							before RK3288
-+	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
- 
- Example:
- 
- 	rkdwmmc0@12200000 {
--		compatible = "rockchip,rk2928-dw-mshc";
-+		compatible = "rockchip,rk3288-dw-mshc";
- 		reg = <0x12200000 0x1000>;
- 		interrupts = <0 75 0>;
- 		#address-cells = <1>;
-diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-index d4a47a9..b547f7a 100644
---- a/drivers/mmc/host/dw_mmc-pltfm.c
-+++ b/drivers/mmc/host/dw_mmc-pltfm.c
-@@ -21,17 +21,67 @@
- #include <linux/mmc/mmc.h>
- #include <linux/mmc/dw_mmc.h>
- #include <linux/of.h>
-+#include <linux/clk.h>
- 
- #include "dw_mmc.h"
- #include "dw_mmc-pltfm.h"
- 
-+#define RK3288_CLKGEN_DIV	2
-+
- static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
- {
- 	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
- }
- 
--static const struct dw_mci_drv_data rockchip_drv_data = {
-+static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-+{
-+	host->bus_hz /= RK3288_CLKGEN_DIV;
-+
-+	return 0;
-+}
-+
-+static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-+{
-+	int ret;
-+	unsigned int cclkin;
-+	u32 bus_hz;
-+
-+	/*
-+	 * cclkin: source clock of mmc controller.
-+	 * bus_hz: card interface clock generated by CLKGEN.
-+	 * bus_hz = cclkin / RK3288_CLKGEN_DIV;
-+	 * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
-+	 *
-+	 * Note: div can only be 0 or 1
-+	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
-+	 *       div must be set 1
-+	 */
-+	if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
-+	    (ios->timing == MMC_TIMING_MMC_DDR52))
-+		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
-+	else
-+		cclkin = ios->clock * RK3288_CLKGEN_DIV;
-+
-+	ret = clk_set_rate(host->ciu_clk, cclkin);
-+	if (ret)
-+		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-+
-+	bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-+	if (bus_hz != host->bus_hz) {
-+		host->bus_hz = bus_hz;
-+		/* force dw_mci_setup_bus() */
-+		host->current_speed = 0;
-+	}
-+}
-+
-+static const struct dw_mci_drv_data rk2928_drv_data = {
-+	.prepare_command	= dw_mci_pltfm_prepare_command,
-+};
-+
-+static const struct dw_mci_drv_data rk3288_drv_data = {
- 	.prepare_command	= dw_mci_pltfm_prepare_command,
-+	.set_ios	= dw_mci_rk3288_set_ios,
-+	.setup_clock	= dw_mci_rk3288_setup_clock,
- };
- 
- static const struct dw_mci_drv_data socfpga_drv_data = {
-@@ -95,7 +145,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
- static const struct of_device_id dw_mci_pltfm_match[] = {
- 	{ .compatible = "snps,dw-mshc", },
- 	{ .compatible = "rockchip,rk2928-dw-mshc",
--		.data = &rockchip_drv_data },
-+		.data = &rk2928_drv_data },
-+	{ .compatible = "rockchip,rk3288-dw-mshc",
-+		.data = &rk3288_drv_data },
- 	{ .compatible = "altr,socfpga-dw-mshc",
- 		.data = &socfpga_drv_data },
- 	{},
--- 
-1.8.3.2
-
-
+Tony
