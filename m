@@ -1,134 +1,684 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 4/6] dmaengine: rcar-dmac: Add device tree bindings documentation
-Date: Thu, 31 Jul 2014 09:34:07 +0900
-Message-ID: <3dc5d31428846326bf122a2a9b402a2a80e97681.1406766014.git.horms+renesas@verge.net.au>
-References: <cover.1406766014.git.horms+renesas@verge.net.au>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <cover.1406766014.git.horms+renesas@verge.net.au>
-In-Reply-To: <cover.1406766014.git.horms+renesas@verge.net.au>
-References: <cover.1406766014.git.horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
+ Broadcom STB SoCs
+Date: Wed, 30 Jul 2014 19:23:20 -0700
+Message-ID: <20140731022320.GM3711@ld-irv-0074>
+References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
+ <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
+ <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Hi Rob,
 
-Document the device tree bindings for the R-Car Generation 2 DMA
-Controller (DMAC).
+I appreciate your comments, but where were many of these 5 months ago on
+the first 7 revisions? :)
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- .../devicetree/bindings/dma/renesas,rcar-dmac.txt  | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+On a practical note: v9 is already queued for 3.17. Should I send
+patches for the 3.17 cycle (or later) to fixup some of these issues? Or
+would you recommend pulling the patches out of Matt Porter's tree now,
+and reintroducing for 3.18? (I would be much happier with the first.)
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-new file mode 100644
-index 0000000..df0f48b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -0,0 +1,98 @@
-+* Renesas R-Car DMA Controller Device Tree bindings
-+
-+Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
-+controller instances named DMAC capable of serving multiple clients. Channels
-+can be dedicated to specific clients or shared between a large number of
-+clients.
-+
-+DMA clients are connected to the DMAC ports referenced by an 8-bit identifier
-+called MID/RID.
-+
-+Each DMA client is connected to one dedicated port of the DMAC, identified by
-+an 8-bit port number called the MID/RID. A DMA controller can thus serve up to
-+256 clients in total. When the number of hardware channels is lower than the
-+number of clients to be served, channels must be shared between multiple DMA
-+clients. The association of DMA clients to DMAC channels is fully dynamic and
-+not described in these device tree bindings.
-+
-+Required Properties:
-+
-+- compatible: must contain "renesas,rcar-dmac"
-+
-+- reg: base address and length of the registers block for the DMAC
-+
-+- interrupts: interrupt specifiers for the DMAC, one for each entry in
-+  interrupt-names.
-+- interrupt-names: one entry per channel, named "ch%u", where %u is the
-+  channel number ranging from zero to the number of channels minus one.
-+
-+- clock-names: "fck" for the functional clock
-+- clocks: a list of phandle + clock-specifier pairs, one for each entry
-+  in clock-names.
-+- clock-names: must contain "fck" for the functional clock.
-+
-+- #dma-cells: must be <1>, the cell specifies the MID/RID of the DMAC port
-+  connected to the DMA client
-+- dma-channels: number of DMA channels
-+
-+Example: R8A7790 (R-Car H2) SYS-DMACs
-+
-+	dmac0: dma-controller@e6700000 {
-+		compatible = "renesas,rcar-dmac";
-+		reg = <0 0xe6700000 0 0x20000>;
-+		interrupts = <0 197 IRQ_TYPE_LEVEL_HIGH
-+			      0 200 IRQ_TYPE_LEVEL_HIGH
-+			      0 201 IRQ_TYPE_LEVEL_HIGH
-+			      0 202 IRQ_TYPE_LEVEL_HIGH
-+			      0 203 IRQ_TYPE_LEVEL_HIGH
-+			      0 204 IRQ_TYPE_LEVEL_HIGH
-+			      0 205 IRQ_TYPE_LEVEL_HIGH
-+			      0 206 IRQ_TYPE_LEVEL_HIGH
-+			      0 207 IRQ_TYPE_LEVEL_HIGH
-+			      0 208 IRQ_TYPE_LEVEL_HIGH
-+			      0 209 IRQ_TYPE_LEVEL_HIGH
-+			      0 210 IRQ_TYPE_LEVEL_HIGH
-+			      0 211 IRQ_TYPE_LEVEL_HIGH
-+			      0 212 IRQ_TYPE_LEVEL_HIGH
-+			      0 213 IRQ_TYPE_LEVEL_HIGH
-+			      0 214 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				"ch0", "ch1", "ch2", "ch3",
-+				"ch4", "ch5", "ch6", "ch7",
-+				"ch8", "ch9", "ch10", "ch11",
-+				"ch12", "ch13", "ch14";
-+		clocks = <&mstp2_clks R8A7790_CLK_SYS_DMAC0>;
-+		clock-names = "fck";
-+		#dma-cells = <1>;
-+		dma-channels = <15>;
-+	};
-+
-+	dmac1: dma-controller@e6720000 {
-+		compatible = "renesas,rcar-dmac";
-+		reg = <0 0xe6720000 0 0x20000>;
-+		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH
-+			      0 216 IRQ_TYPE_LEVEL_HIGH
-+			      0 217 IRQ_TYPE_LEVEL_HIGH
-+			      0 218 IRQ_TYPE_LEVEL_HIGH
-+			      0 219 IRQ_TYPE_LEVEL_HIGH
-+			      0 308 IRQ_TYPE_LEVEL_HIGH
-+			      0 309 IRQ_TYPE_LEVEL_HIGH
-+			      0 310 IRQ_TYPE_LEVEL_HIGH
-+			      0 311 IRQ_TYPE_LEVEL_HIGH
-+			      0 312 IRQ_TYPE_LEVEL_HIGH
-+			      0 313 IRQ_TYPE_LEVEL_HIGH
-+			      0 314 IRQ_TYPE_LEVEL_HIGH
-+			      0 315 IRQ_TYPE_LEVEL_HIGH
-+			      0 316 IRQ_TYPE_LEVEL_HIGH
-+			      0 317 IRQ_TYPE_LEVEL_HIGH
-+			      0 318 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				"ch0", "ch1", "ch2", "ch3",
-+				"ch4", "ch5", "ch6", "ch7",
-+				"ch8", "ch9", "ch10", "ch11",
-+				"ch12", "ch13", "ch14";
-+		clocks = <&mstp2_clks R8A7790_CLK_SYS_DMAC1>;
-+		clock-names = "fck";
-+		#dma-cells = <1>;
-+		dma-channels = <15>;
-+	};
--- 
-2.0.1
+I do note that we at least need to fix allmodconfig ASAP; I'll reply to
+Russell on that one.
 
+On Wed, Jul 30, 2014 at 12:09:48PM -0500, Rob Herring wrote:
+> On Mon, Jul 21, 2014 at 4:07 PM, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> > The BCM7xxx series of Broadcom SoCs are used primarily in set-top boxes.
+> >
+> > This patch adds machine support for the ARM-based Broadcom SoCs.
+> >
+> > Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/configs/multi_v7_defconfig |   1 +
+> >  arch/arm/mach-bcm/Kconfig           |  14 ++
+> >  arch/arm/mach-bcm/Makefile          |   5 +
+> >  arch/arm/mach-bcm/brcmstb.c         |  28 +++
+> >  arch/arm/mach-bcm/brcmstb.h         |  19 ++
+> >  arch/arm/mach-bcm/headsmp-brcmstb.S |  33 ++++
+> >  arch/arm/mach-bcm/platsmp-brcmstb.c | 363 ++++++++++++++++++++++++++++++++++++
+> >  7 files changed, 463 insertions(+)
+> >  create mode 100644 arch/arm/mach-bcm/brcmstb.c
+> >  create mode 100644 arch/arm/mach-bcm/brcmstb.h
+> >  create mode 100644 arch/arm/mach-bcm/headsmp-brcmstb.S
+> >  create mode 100644 arch/arm/mach-bcm/platsmp-brcmstb.c
+> >
+> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> > index 534836497998..bf0df396a3cf 100644
+> > --- a/arch/arm/configs/multi_v7_defconfig
+> > +++ b/arch/arm/configs/multi_v7_defconfig
+> > @@ -19,6 +19,7 @@ CONFIG_MACH_DOVE=y
+> >  CONFIG_ARCH_BCM=y
+> >  CONFIG_ARCH_BCM_MOBILE=y
+> >  CONFIG_ARCH_BCM_5301X=y
+> > +CONFIG_ARCH_BRCMSTB=y
+> >  CONFIG_ARCH_BERLIN=y
+> >  CONFIG_MACH_BERLIN_BG2=y
+> >  CONFIG_MACH_BERLIN_BG2CD=y
+> > diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> > index 41c839167e87..0073633e7699 100644
+> > --- a/arch/arm/mach-bcm/Kconfig
+> > +++ b/arch/arm/mach-bcm/Kconfig
+> > @@ -87,4 +87,18 @@ config ARCH_BCM_5301X
+> >           different SoC or with the older BCM47XX and BCM53XX based
+> >           network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
+> >
+> > +config ARCH_BRCMSTB
+> > +       bool "Broadcom BCM7XXX based boards" if ARCH_MULTI_V7
+> > +       depends on MMU
+> 
+> This was implied, but there are some patches from Arnd in this area.
+> Does it really not build with !MMU?
+
+I suppose it probably builds, it likely won't run. I can drop this line
+and then reassess if ARCH_MULTIPLATFORM becomes buildable with !MMU.
+
+> > +       select ARM_GIC
+> 
+> > +       select MIGHT_HAVE_PCI
+> > +       select HAVE_SMP
+> 
+> At least HAVE_SMP is for sure, but I think both of these are selected already .
+
+You're correct. ARCH_MULTIPLATFORM selects MIGHT_HAVE_PCI and
+ARCH_MULTI_V7 selects HAVE_SMP. I can look at dropping these.
+
+> > +       select HAVE_ARM_ARCH_TIMER
+> > +       help
+> > +         Say Y if you intend to run the kernel on a Broadcom ARM-based STB
+> > +         chipset.
+> > +
+> > +         This enables support for Broadcom ARM-based set-top box chipsets,
+> > +         including the 7445 family of chips.
+> > +
+> >  endif
+> > diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+> > index 731292114975..f3665121729b 100644
+> > --- a/arch/arm/mach-bcm/Makefile
+> > +++ b/arch/arm/mach-bcm/Makefile
+> > @@ -30,3 +30,8 @@ obj-$(CONFIG_ARCH_BCM2835)    += board_bcm2835.o
+> >
+> >  # BCM5301X
+> >  obj-$(CONFIG_ARCH_BCM_5301X)   += bcm_5301x.o
+> > +
+> > +ifeq ($(CONFIG_ARCH_BRCMSTB),y)
+> > +obj-y                          += brcmstb.o
+> > +obj-$(CONFIG_SMP)              += headsmp-brcmstb.o platsmp-brcmstb.o
+> > +endif
+> > diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
+> > new file mode 100644
+> > index 000000000000..60a5afa06ed7
+> > --- /dev/null
+> > +++ b/arch/arm/mach-bcm/brcmstb.c
+> > @@ -0,0 +1,28 @@
+> > +/*
+> > + * Copyright (C) 2013-2014 Broadcom Corporation
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation version 2.
+> > + *
+> > + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> > + * kind, whether express or implied; without even the implied warranty
+> > + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/init.h>
+> > +#include <linux/of_platform.h>
+> > +
+> > +#include <asm/mach-types.h>
+> > +#include <asm/mach/arch.h>
+> > +
+> > +static const char *brcmstb_match[] __initconst = {
+> > +       "brcm,bcm7445",
+> > +       "brcm,brcmstb",
+> > +       NULL
+> > +};
+> > +
+> > +DT_MACHINE_START(BRCMSTB, "Broadcom STB (Flattened Device Tree)")
+> > +       .dt_compat      = brcmstb_match,
+> > +MACHINE_END
+> 
+> Do you plan to add more here? Otherwise you don't need this file.
+
+Probably eventually, but not yet (there's out-of-tree stuff that hasn't
+been integrated); should we drop the file until it's needed?
+
+(Over 9 revisions, this file has evolved. And the CPU_METHOD_OF_DECLARE
+stuff appearing in the meantime, which cut this file down to a no-op.)
+
+> > diff --git a/arch/arm/mach-bcm/brcmstb.h b/arch/arm/mach-bcm/brcmstb.h
+> > new file mode 100644
+> > index 000000000000..ec0c3d112b36
+> > --- /dev/null
+> > +++ b/arch/arm/mach-bcm/brcmstb.h
+> > @@ -0,0 +1,19 @@
+> > +/*
+> > + * Copyright (C) 2013-2014 Broadcom Corporation
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation version 2.
+> > + *
+> > + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> > + * kind, whether express or implied; without even the implied warranty
+> > + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#ifndef __BRCMSTB_H__
+> > +#define __BRCMSTB_H__
+> > +
+> > +void brcmstb_secondary_startup(void);
+> > +
+> > +#endif /* __BRCMSTB_H__ */
+> > diff --git a/arch/arm/mach-bcm/headsmp-brcmstb.S b/arch/arm/mach-bcm/headsmp-brcmstb.S
+> > new file mode 100644
+> > index 000000000000..199c1ea58248
+> > --- /dev/null
+> > +++ b/arch/arm/mach-bcm/headsmp-brcmstb.S
+> > @@ -0,0 +1,33 @@
+> > +/*
+> > + * SMP boot code for secondary CPUs
+> > + * Based on arch/arm/mach-tegra/headsmp.S
+> > + *
+> > + * Copyright (C) 2010 NVIDIA, Inc.
+> > + * Copyright (C) 2013-2014 Broadcom Corporation
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation version 2.
+> > + *
+> > + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> > + * kind, whether express or implied; without even the implied warranty
+> > + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <asm/assembler.h>
+> > +#include <linux/linkage.h>
+> > +#include <linux/init.h>
+> > +
+> > +        .section ".text.head", "ax"
+> > +
+> > +ENTRY(brcmstb_secondary_startup)
+> > +        /*
+> > +         * Ensure CPU is in a sane state by disabling all IRQs and switching
+> > +         * into SVC mode.
+> > +         */
+> > +        setmode        PSR_I_BIT | PSR_F_BIT | SVC_MODE, r0
+> > +
+> > +        bl      v7_invalidate_l1
+> 
+> This should be in your boot code. That is part of the documented entry
+> requirements.
+
+By "documented" are you referring to the ARM TRM? Wouldn't any "boot
+code" requirements only apply to CPU0? Linux prepares the non-boot CPUs
+for SMP, as you see here.
+
+> Also, if you are coming straight from reset, there is
+> other setup probably missing.
+
+Like what?
+
+> Yes, there are others with this, but that doesn't make it right.
+> 
+> > +        b       secondary_startup
+> > +ENDPROC(brcmstb_secondary_startup)
+> > diff --git a/arch/arm/mach-bcm/platsmp-brcmstb.c b/arch/arm/mach-bcm/platsmp-brcmstb.c
+> > new file mode 100644
+> > index 000000000000..af780e9c23a6
+> > --- /dev/null
+> > +++ b/arch/arm/mach-bcm/platsmp-brcmstb.c
+> > @@ -0,0 +1,363 @@
+> > +/*
+> > + * Broadcom STB CPU SMP and hotplug support for ARM
+> > + *
+> > + * Copyright (C) 2013-2014 Broadcom Corporation
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation version 2.
+> > + *
+> > + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> > + * kind, whether express or implied; without even the implied warranty
+> > + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/smp.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#include <asm/cacheflush.h>
+> > +#include <asm/cp15.h>
+> > +#include <asm/mach-types.h>
+> > +#include <asm/smp_plat.h>
+> > +
+> > +#include "brcmstb.h"
+> > +
+> > +enum {
+> > +       ZONE_MAN_CLKEN_MASK             = BIT(0),
+> > +       ZONE_MAN_RESET_CNTL_MASK        = BIT(1),
+> > +       ZONE_MAN_MEM_PWR_MASK           = BIT(4),
+> > +       ZONE_RESERVED_1_MASK            = BIT(5),
+> > +       ZONE_MAN_ISO_CNTL_MASK          = BIT(6),
+> > +       ZONE_MANUAL_CONTROL_MASK        = BIT(7),
+> > +       ZONE_PWR_DN_REQ_MASK            = BIT(9),
+> > +       ZONE_PWR_UP_REQ_MASK            = BIT(10),
+> > +       ZONE_BLK_RST_ASSERT_MASK        = BIT(12),
+> > +       ZONE_PWR_OFF_STATE_MASK         = BIT(25),
+> > +       ZONE_PWR_ON_STATE_MASK          = BIT(26),
+> > +       ZONE_DPG_PWR_STATE_MASK         = BIT(28),
+> > +       ZONE_MEM_PWR_STATE_MASK         = BIT(29),
+> > +       ZONE_RESET_STATE_MASK           = BIT(31),
+> > +       CPU0_PWR_ZONE_CTRL_REG          = 1,
+> > +       CPU_RESET_CONFIG_REG            = 2,
+> > +};
+> > +
+> > +static void __iomem *cpubiuctrl_block;
+> > +static void __iomem *hif_cont_block;
+> > +static u32 cpu0_pwr_zone_ctrl_reg;
+> > +static u32 cpu_rst_cfg_reg;
+> > +static u32 hif_cont_reg;
+> > +
+> > +#ifdef CONFIG_HOTPLUG_CPU
+> > +static DEFINE_PER_CPU_ALIGNED(int, per_cpu_sw_state);
+> > +
+> > +static int per_cpu_sw_state_rd(u32 cpu)
+> > +{
+> > +       sync_cache_r(SHIFT_PERCPU_PTR(&per_cpu_sw_state, per_cpu_offset(cpu)));
+> > +       return per_cpu(per_cpu_sw_state, cpu);
+> > +}
+> > +
+> > +static void per_cpu_sw_state_wr(u32 cpu, int val)
+> > +{
+> > +       per_cpu(per_cpu_sw_state, cpu) = val;
+> > +       dmb();
+> > +       sync_cache_w(SHIFT_PERCPU_PTR(&per_cpu_sw_state, per_cpu_offset(cpu)));
+> > +       dsb_sev();
+> 
+> Barriers need to be documented why they are needed.
+
+(NB: I see approximately 3 total existing cases where there is a comment
+near a dsb()/dsb_sev().)
+
+This was actually adapted from the mcpm code, and
+
+(1) I think the dmb() is in the wrong place (it should be the first
+    thing in this function);
+(2) the SEV is unnecessary (we don't use WFE; just a cache-invalidated
+    polling loop); and
+(3) the DSB is also unnecessary, since sync_cache_w() handles its own
+    barriers.
+
+Plus, we should probably add some comments to describe what's going on
+here. (Follow-up patch?)
+
+> > +}
+> > +#else
+> > +static inline void per_cpu_sw_state_wr(u32 cpu, int val) { }
+> > +#endif
+> > +
+> > +static void __iomem *pwr_ctrl_get_base(u32 cpu)
+> > +{
+> > +       void __iomem *base = cpubiuctrl_block + cpu0_pwr_zone_ctrl_reg;
+> > +       base += (cpu_logical_map(cpu) * 4);
+> > +       return base;
+> > +}
+> > +
+> > +static u32 pwr_ctrl_rd(u32 cpu)
+> > +{
+> > +       void __iomem *base = pwr_ctrl_get_base(cpu);
+> > +       return readl_relaxed(base);
+> > +}
+> > +
+> > +static void pwr_ctrl_wr(u32 cpu, u32 val)
+> > +{
+> > +       void __iomem *base = pwr_ctrl_get_base(cpu);
+> > +       writel(val, base);
+> > +}
+> > +
+> > +static void cpu_rst_cfg_set(u32 cpu, int set)
+> > +{
+> > +       u32 val;
+> > +       val = readl_relaxed(cpubiuctrl_block + cpu_rst_cfg_reg);
+> > +       if (set)
+> > +               val |= BIT(cpu_logical_map(cpu));
+> > +       else
+> > +               val &= ~BIT(cpu_logical_map(cpu));
+> > +       writel_relaxed(val, cpubiuctrl_block + cpu_rst_cfg_reg);
+> > +}
+> > +
+> > +static void cpu_set_boot_addr(u32 cpu, unsigned long boot_addr)
+> > +{
+> > +       const int reg_ofs = cpu_logical_map(cpu) * 8;
+> > +       writel_relaxed(0, hif_cont_block + hif_cont_reg + reg_ofs);
+> > +       writel_relaxed(boot_addr, hif_cont_block + hif_cont_reg + 4 + reg_ofs);
+> > +}
+> > +
+> > +static void brcmstb_cpu_boot(u32 cpu)
+> > +{
+> > +       pr_info("SMP: Booting CPU%d...\n", cpu);
+> 
+> The core already prints messages.
+
+Ok, we can drop.
+
+> > +
+> > +       /*
+> > +        * set the reset vector to point to the secondary_startup
+> > +        * routine
+> > +        */
+> > +       cpu_set_boot_addr(cpu, virt_to_phys(brcmstb_secondary_startup));
+> > +
+> > +       /* unhalt the cpu */
+> > +       cpu_rst_cfg_set(cpu, 0);
+> > +}
+> > +
+> > +static void brcmstb_cpu_power_on(u32 cpu)
+> > +{
+> > +       /*
+> > +        * The secondary cores power was cut, so we must go through
+> > +        * power-on initialization.
+> > +        */
+> > +       u32 tmp;
+> > +
+> > +       pr_info("SMP: Powering up CPU%d...\n", cpu);
+> 
+> ditto.
+> 
+> > +
+> > +       /* Request zone power up */
+> > +       pwr_ctrl_wr(cpu, ZONE_PWR_UP_REQ_MASK);
+> > +
+> > +       /* Wait for the power up FSM to complete */
+> > +       do {
+> > +               tmp = pwr_ctrl_rd(cpu);
+> > +       } while (!(tmp & ZONE_PWR_ON_STATE_MASK));
+> 
+> Perhaps a timeout? Or perhaps you don't need to wait here. The core
+> code will wait for the core to come online.
+
+I believe we do have to wait for power before we can proceed to poke the
+core. This is a quirk of our chip, explained below. But sure, I could
+try to add a timeout.
+
+> > +
+> > +       per_cpu_sw_state_wr(cpu, 1);
+> 
+> The kernel already tracks the state.
+
+Yes, but it doesn't synchronize cpu_die() and cpu_kill(). But I see you
+objected below.
+
+> > +}
+> > +
+> > +static int brcmstb_cpu_get_power_state(u32 cpu)
+> > +{
+> > +       int tmp = pwr_ctrl_rd(cpu);
+> > +       return (tmp & ZONE_RESET_STATE_MASK) ? 0 : 1;
+> > +}
+> > +
+> > +#ifdef CONFIG_HOTPLUG_CPU
+> > +
+> > +static void brcmstb_cpu_die(u32 cpu)
+> > +{
+> > +       v7_exit_coherency_flush(all);
+> > +
+> > +       /* Prevent all interrupts from reaching this CPU. */
+> > +       arch_local_irq_disable();
+> 
+> Surely that is already done?
+
+True. Third line in arch/arm/kernel/smp.c cpu_die(). I believe we can
+drop this.
+
+> And disabling IRQ has no effect on
+> wake-up from WFI.
+> 
+> > +
+> > +       /*
+> > +        * Final full barrier to ensure everything before this instruction has
+> > +        * quiesced.
+> > +        */
+> > +       isb();
+> > +       dsb();
+> > +
+> > +       per_cpu_sw_state_wr(cpu, 0);
+> > +
+> > +       /* Sit and wait to die */
+> > +       wfi();
+> > +
+> > +       /* We should never get here... */
+> > +       panic("Spurious interrupt on CPU %d received!\n", cpu);
+> > +}
+> > +
+> > +static int brcmstb_cpu_kill(u32 cpu)
+> > +{
+> > +       u32 tmp;
+> > +
+> > +       pr_info("SMP: Powering down CPU%d...\n", cpu);
+> > +
+> > +       while (per_cpu_sw_state_rd(cpu))
+> > +               ;
+> 
+> I don't think this is necessary. You don't need to synchronize die and
+> kill. Look at other implementations that actually power down the core
+> (vs. just wfi).
+
+Hmm, I'm pretty sure the synchronization is required for our B15 core.
+If we yank the power before the core has properly quiesced, the whole
+CPU complex will lock up. (Similar story for the power-up while loop you
+complained about above.)
+
+> > +
+> > +       /* Program zone reset */
+> > +       pwr_ctrl_wr(cpu, ZONE_RESET_STATE_MASK | ZONE_BLK_RST_ASSERT_MASK |
+> > +                             ZONE_PWR_DN_REQ_MASK);
+> > +
+> > +       /* Verify zone reset */
+> > +       tmp = pwr_ctrl_rd(cpu);
+> > +       if (!(tmp & ZONE_RESET_STATE_MASK))
+> > +               pr_err("%s: Zone reset bit for CPU %d not asserted!\n",
+> > +                       __func__, cpu);
+> > +
+> > +       /* Wait for power down */
+> > +       do {
+> > +               tmp = pwr_ctrl_rd(cpu);
+> > +       } while (!(tmp & ZONE_PWR_OFF_STATE_MASK));
+> > +
+> > +       /* Settle-time from Broadcom-internal DVT reference code */
+> > +       udelay(7);
+> > +
+> > +       /* Assert reset on the CPU */
+> > +       cpu_rst_cfg_set(cpu, 1);
+> > +
+> > +       return 1;
+> > +}
+> > +
+> > +#endif /* CONFIG_HOTPLUG_CPU */
+> > +
+> > +static int __init setup_hifcpubiuctrl_regs(struct device_node *np)
+> > +{
+> > +       int rc = 0;
+> > +       char *name;
+> > +       struct device_node *syscon_np = NULL;
+> > +
+> > +       name = "syscon-cpu";
+> > +
+> > +       syscon_np = of_parse_phandle(np, name, 0);
+> > +       if (!syscon_np) {
+> > +               pr_err("can't find phandle %s\n", name);
+> > +               rc = -EINVAL;
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       cpubiuctrl_block = of_iomap(syscon_np, 0);
+> > +       if (!cpubiuctrl_block) {
+> > +               pr_err("iomap failed for cpubiuctrl_block\n");
+> > +               rc = -EINVAL;
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       rc = of_property_read_u32_index(np, name, CPU0_PWR_ZONE_CTRL_REG,
+> > +                                       &cpu0_pwr_zone_ctrl_reg);
+> > +       if (rc) {
+> > +               pr_err("failed to read 1st entry from %s property (%d)\n", name,
+> > +                       rc);
+> > +               rc = -EINVAL;
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       rc = of_property_read_u32_index(np, name, CPU_RESET_CONFIG_REG,
+> > +                                       &cpu_rst_cfg_reg);
+> > +       if (rc) {
+> > +               pr_err("failed to read 2nd entry from %s property (%d)\n", name,
+> > +                       rc);
+> > +               rc = -EINVAL;
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +cleanup:
+> > +       if (syscon_np)
+> > +               of_node_put(syscon_np);
+> > +
+> > +       return rc;
+> > +}
+> > +
+> > +static int __init setup_hifcont_regs(struct device_node *np)
+> > +{
+> > +       int rc = 0;
+> > +       char *name;
+> > +       struct device_node *syscon_np = NULL;
+> > +
+> > +       name = "syscon-cont";
+> > +
+> > +       syscon_np = of_parse_phandle(np, name, 0);
+> > +       if (!syscon_np) {
+> > +               pr_err("can't find phandle %s\n", name);
+> > +               rc = -EINVAL;
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       hif_cont_block = of_iomap(syscon_np, 0);
+> > +       if (!hif_cont_block) {
+> > +               pr_err("iomap failed for hif_cont_block\n");
+> > +               rc = -EINVAL;
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       /* offset is at top of hif_cont_block */
+> > +       hif_cont_reg = 0;
+> > +
+> > +cleanup:
+> > +       if (syscon_np)
+> > +               of_node_put(syscon_np);
+> > +
+> > +       return rc;
+> > +}
+> > +
+> > +static void __init brcmstb_cpu_ctrl_setup(unsigned int max_cpus)
+> > +{
+> > +       int rc;
+> > +       struct device_node *np;
+> > +       char *name;
+> > +
+> > +       name = "brcm,brcmstb-smpboot";
+> > +       np = of_find_compatible_node(NULL, NULL, name);
+> > +       if (!np) {
+> > +               pr_err("can't find compatible node %s\n", name);
+> > +               return;
+> > +       }
+> > +
+> > +       rc = setup_hifcpubiuctrl_regs(np);
+> > +       if (rc)
+> > +               return;
+> > +
+> > +       rc = setup_hifcont_regs(np);
+> > +       if (rc)
+> > +               return;
+> > +}
+> > +
+> > +static DEFINE_SPINLOCK(boot_lock);
+> > +
+> > +static void brcmstb_secondary_init(unsigned int cpu)
+> > +{
+> > +       /*
+> > +        * Synchronise with the boot thread.
+> > +        */
+> > +       spin_lock(&boot_lock);
+> > +       spin_unlock(&boot_lock);
+> 
+> I suggest you read previous discussions on attempts to make this
+> common before replying to Russell.
+
+Can you point me to this discussion? linux-arm-kernel is a big and noisy
+world...
+
+BTW, I'm not sure the boot_lock is actually necessary at all for us; it
+was just borrowed from one of the other mach-*'s. The synchronization we
+need is done in the while loops above. 
+
+> > +}
+> > +
+> > +static int brcmstb_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> > +{
+> > +       /*
+> > +        * set synchronisation state between this boot processor
+> > +        * and the secondary one
+> > +        */
+> > +       spin_lock(&boot_lock);
+> > +
+> > +       /* Bring up power to the core if necessary */
+> > +       if (brcmstb_cpu_get_power_state(cpu) == 0)
+> > +               brcmstb_cpu_power_on(cpu);
+> > +
+> > +       brcmstb_cpu_boot(cpu);
+> > +
+> > +       /*
+> > +        * now the secondary core is starting up let it run its
+> > +        * calibrations, then wait for it to finish
+> > +        */
+> > +       spin_unlock(&boot_lock);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static struct smp_operations brcmstb_smp_ops __initdata = {
+> > +       .smp_prepare_cpus       = brcmstb_cpu_ctrl_setup,
+> > +       .smp_secondary_init     = brcmstb_secondary_init,
+> > +       .smp_boot_secondary     = brcmstb_boot_secondary,
+> > +#ifdef CONFIG_HOTPLUG_CPU
+> > +       .cpu_kill               = brcmstb_cpu_kill,
+> > +       .cpu_die                = brcmstb_cpu_die,
+> > +#endif
+> > +};
+> > +
+> > +CPU_METHOD_OF_DECLARE(brcmstb_smp, "brcm,brahma-b15", &brcmstb_smp_ops);
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
