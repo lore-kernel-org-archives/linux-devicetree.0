@@ -1,52 +1,193 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 31 Jul 2014 19:23:19 +0200
-Message-ID: <20140731172319.GN9809@8bytes.org>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<20140731120424.GK9809@8bytes.org>
-	<CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA@mail.gmail.com>
-	<20140731163611.GM9809@8bytes.org>
-	<CAOesGMjovbqn86Q97_SCgsC4jeZf1M_gTKk-Twjr_=6rvnXTCg@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCHv9 2/4] mailbox: Introduce framework for mailbox
+Date: Thu, 31 Jul 2014 18:32:45 +0100
+Message-ID: <53DA7DBD.10704@arm.com>
+References: <1406055250-29159-1-git-send-email-jaswinder.singh@linaro.org> <1406055374-29275-1-git-send-email-jaswinder.singh@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMjovbqn86Q97_SCgsC4jeZf1M_gTKk-Twjr_=6rvnXTCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406055374-29275-1-git-send-email-jaswinder.singh@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>, "arnd@arndb.de" <arnd@arndb.de>, "ijc@hellion.org.uk" <ijc@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, "mporter@linaro.org" <mporter@linaro.org>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "s-anna@ti.com" <s-anna@ti.com>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "patches@linaro.org" <patches@linaro.org>, "t.takinishi@jp.fujitsu.com" <t.takinishi@jp.fujitsu.com>, "broonie@linaro.org" <broonie@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "mollie.wu@linaro.org" <mollie.wu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 10:14:08AM -0700, Olof Johansson wrote:
-> On Thu, Jul 31, 2014 at 9:36 AM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
-> > On Thu, Jul 31, 2014 at 08:38:47AM -0700, Olof Johansson wrote:
-> >> >
-> >> > Applied, thanks everyone.
-> >>
-> >> Really?
-> >>
-> >> Gee, thanks for giving people a chance to reply with acks. It's
-> >> considered polite to do so when there has been outstanding questions.
-> >
-> > Its not pushed yet, I can still make changes. Do you have any objections
-> > or an Ack?
-> 
-> No outstanding objections. We have some things to amend with later but
-> that's perfectly fine:
-> 
-> Reviewed-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-
-Thanks, added your Reviewed-by and will push the new tree out in the
-evening.
 
 
-	Joerg
+On 22/07/14 19:56, Jassi Brar wrote:
+> Introduce common framework for client/protocol drivers and
+> controller drivers of Inter-Processor-Communication (IPC).
+>
+> Client driver developers should have a look at
+>   include/linux/mailbox_client.h to understand the part of
+> the API exposed to client drivers.
+> Similarly controller driver developers should have a look
+> at include/linux/mailbox_controller.h
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> ---
+>   MAINTAINERS                        |   8 +
+>   drivers/mailbox/Makefile           |   4 +
+>   drivers/mailbox/mailbox.c          | 467 +++++++++++++++++++++++++++++++++++++
+>   include/linux/mailbox_client.h     |  45 ++++
+>   include/linux/mailbox_controller.h | 131 +++++++++++
+>   5 files changed, 655 insertions(+)
+>   create mode 100644 drivers/mailbox/mailbox.c
+>   create mode 100644 include/linux/mailbox_client.h
+>   create mode 100644 include/linux/mailbox_controller.h
+>
+
+[...]
+
+> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> new file mode 100644
+> index 0000000..99c0d23
+> --- /dev/null
+> +++ b/drivers/mailbox/mailbox.c
+> @@ -0,0 +1,467 @@
+> +/*
+> + * Mailbox: Common code for Mailbox controllers and users
+> + *
+> + * Copyright (C) 2013-2014 Linaro Ltd.
+> + * Author: Jassi Brar <jassisinghbrar@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/mutex.h>
+> +#include <linux/delay.h>
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/mailbox_controller.h>
+> +
+> +#define TXDONE_BY_IRQ  (1 << 0) /* controller has remote RTR irq */
+> +#define TXDONE_BY_POLL (1 << 1) /* controller can read status of last TX */
+> +#define TXDONE_BY_ACK  (1 << 2) /* S/W ACK recevied by Client ticks the TX */
+> +
+> +static LIST_HEAD(mbox_cons);
+> +static DEFINE_MUTEX(con_mutex);
+> +
+> +static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
+> +{
+> +       int idx;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +
+> +       /* See if there is any space left */
+> +       if (chan->msg_count == MBOX_TX_QUEUE_LEN) {
+> +               spin_unlock_irqrestore(&chan->lock, flags);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       idx = chan->msg_free;
+> +       chan->msg_data[idx] = mssg;
+> +       chan->msg_count++;
+> +
+> +       if (idx == MBOX_TX_QUEUE_LEN - 1)
+> +               chan->msg_free = 0;
+> +       else
+> +               chan->msg_free++;
+> +
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +
+> +       return idx;
+> +}
+> +
+> +static void msg_submit(struct mbox_chan *chan)
+> +{
+> +       unsigned count, idx;
+> +       unsigned long flags;
+> +       void *data;
+> +       int err;
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +
+> +       if (!chan->msg_count || chan->active_req) {
+> +               spin_unlock_irqrestore(&chan->lock, flags);
+> +               return;
+> +       }
+> +
+> +       count = chan->msg_count;
+> +       idx = chan->msg_free;
+> +       if (idx >= count)
+> +               idx -= count;
+> +       else
+> +               idx += MBOX_TX_QUEUE_LEN - count;
+> +
+> +       data = chan->msg_data[idx];
+> +
+> +       /* Try to submit a message to the MBOX controller */
+> +       err = chan->mbox->ops->send_data(chan, data);
+
+Probably this is discussed already, but again I missed to find it
+in archives, so asking here. If the protocol has some payload associated
+with the message and controller expects it to be in place before calling
+send_data, we essentially end up not using this queue at all by waiting
+in the protocol layer(may be in it's own queue)
+
+Instead can we have some kind of chan->cl->prepare_data callback so that
+client can prepare payload ? This in turn avoids to implement it's
+*own Tx queue* and *reusing the mailbox queue*.
+
+Or am I missing something ?
+
+> +       if (!err) {
+> +               chan->active_req = data;
+> +               chan->msg_count--;
+> +       }
+> +
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +}
+> +
+> +static void tx_tick(struct mbox_chan *chan, int r)
+> +{
+> +       unsigned long flags;
+> +       void *mssg;
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +       mssg = chan->active_req;
+> +       chan->active_req = NULL;
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +
+> +       /* Submit next message */
+> +       msg_submit(chan);
+> +
+> +       /* Notify the client */
+> +       if (mssg && chan->cl->tx_done)
+> +               chan->cl->tx_done(chan->cl, mssg, r);
+> +
+> +       if (chan->cl->tx_block)
+> +               complete(&chan->tx_complete);
+> +}
+> +
+> +static void poll_txdone(unsigned long data)
+> +{
+> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
+> +       bool txdone, resched = false;
+> +       int i;
+> +
+> +       for (i = 0; i < mbox->num_chans; i++) {
+> +               struct mbox_chan *chan = &mbox->chans[i];
+> +
+> +               if (chan->active_req && chan->cl) {
+> +                       resched = true;
+> +                       txdone = chan->mbox->ops->last_tx_done(chan);
+> +                       if (txdone)
+> +                               tx_tick(chan, 0);
+
+What if all the active channels finished Tx(i.e. txdone = 1), we still have
+resched = true and add a timer, not really harmful though. But IMO you can
+move it to else part instead ?
+
+
+Regards,
+Sudeep
