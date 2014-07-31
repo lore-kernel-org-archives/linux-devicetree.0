@@ -1,45 +1,173 @@
-Return-Path: <dianders@google.com>
+Return-Path: <atull@opensource.altera.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [RFC PATCH 3/3] fpga sysfs interface
+Date: Thu, 31 Jul 2014 16:59:04 -0500
+Message-ID: <1406843944-7780-4-git-send-email-atull@opensource.altera.com>
+In-Reply-To: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
+References: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
 MIME-Version: 1.0
-Sender: dianders@google.com
-In-Reply-To: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
-References: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-	<1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
-Date: Thu, 31 Jul 2014 08:40:26 -0700
-Message-ID: <CAD=FV=VPHJKodvF6RHFwrQzew=RKpz68nUFgO3+2Y3hsM4jrGA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: dw_mmc: add support for RK3288
-From: Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-To: Addy Ke <addy.ke@rock-chips.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, han jiang <hj@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Lin Huang <hl@rock-chips.com>
+Content-Type: text/plain
+To: linux-kernel@vger.kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, Alan Tull <atull@opensource.altera.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Addy,
+Add basic sysfs interface.  Only exports two files:
 
-On Wed, Jul 30, 2014 at 11:01 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
-> This patch focuses on clock setting for RK3288 mmc controller.
->
-> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
-> and if DDR 8bit mode, CLKDIV register must be set 1.
->
-> Reported-by Doug Anderson <dianders@chromium.org>
-> Suggested-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Suggested-by: Doug Anderson <dianders@chromium.org>
+/sys/class/fpga_manager/fpga0/name
+   Name of low level driver.
 
-You don't need "Suggested-by" and "Reported-by" for people who
-reviewed your patch.  Suggested-by is usually when someone suggested
-an overall feature and Reported-by is usually when someone reported a
-bug in code that already landed.
+/sys/class/fpga_manager/fpga0/status
+   status of fpga framework as returned by core
+   fpga-mgr.c's fpga_mgr_ops_framework_status
+   function or by the low level driver's status
+   function.
 
-You could add me as a Signed-off-by, though, since you folded in some
-code that I wrote.
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+ drivers/fpga/Kconfig     |    7 +++++
+ drivers/fpga/Makefile    |    1 +
+ drivers/fpga/fpga-mgr.c  |    2 ++
+ drivers/fpga/sysfs.c     |   68 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fpga-mgr.h |   12 ++++++++
+ 5 files changed, 90 insertions(+)
+ create mode 100644 drivers/fpga/sysfs.c
 
-I think whoever applies this could fixup the tags, so:
-
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-
-
-It would be great to see this applied unless there are other objections.  :)
-
--Doug
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 9a2c25b..113b8b4 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -17,4 +17,11 @@ config FPGA_MGR_BUS
+ 	help
+ 	  FPGA Manager Bus interface.  Allows loading FPGA images
+ 	  from Device Tree or from other drivers.
++
++config FPGA_MGR_SYSFS
++	bool "FPGA Manager SysFS Interface"
++	depends on FPGA
++	depends on SYSFS
++	help
++	  FPGA Manager SysFS interface.
+ endmenu
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index e39911f..cad3d8c 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -7,5 +7,6 @@ fpga-mgr-core-y += fpga-mgr.o
+ # Core FPGA Manager Framework
+ obj-$(CONFIG_FPGA)			+= fpga-mgr-core.o
+ obj-$(CONFIG_FPGA_MGR_BUS)		+= bus.o
++obj-$(CONFIG_FPGA_MGR_SYSFS)		+= sysfs.o
+ 
+ # FPGA Manager Drivers
+diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+index 32888d6..e5d1a09 100644
+--- a/drivers/fpga/fpga-mgr.c
++++ b/drivers/fpga/fpga-mgr.c
+@@ -402,6 +402,8 @@ static int __init fpga_mgr_dev_init(void)
+ 	if (IS_ERR(fpga_mgr_class))
+ 		return PTR_ERR(fpga_mgr_class);
+ 
++	fpga_mgr_sysfs_init(fpga_mgr_class);
++
+ 	ret = alloc_chrdev_region(&fpga_mgr_dev, 0, FPGA_MAX_MINORS,
+ 				  "fpga_manager");
+ 	if (ret) {
+diff --git a/drivers/fpga/sysfs.c b/drivers/fpga/sysfs.c
+new file mode 100644
+index 0000000..58971b3
+--- /dev/null
++++ b/drivers/fpga/sysfs.c
+@@ -0,0 +1,68 @@
++/*
++ * FPGA Manager SysFS Interface
++ *
++ *  Copyright (C) 2013-2014 Altera Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/fs.h>
++#include <linux/slab.h>
++#include <linux/fpga-mgr.h>
++
++/*
++ * class attributes
++ */
++static ssize_t fpga_mgr_name_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct fpga_manager *mgr = dev_get_drvdata(dev);
++
++	return fpga_mgr_name(mgr, buf);
++}
++
++static ssize_t fpga_mgr_status_show(struct device *dev,
++				    struct device_attribute *attr, char *buf)
++{
++	struct fpga_manager *mgr = dev_get_drvdata(dev);
++
++	return fpga_mgr_status_get(mgr, buf);
++}
++
++static DEVICE_ATTR(name, S_IRUGO, fpga_mgr_name_show, NULL);
++static DEVICE_ATTR(status, S_IRUGO, fpga_mgr_status_show, NULL);
++
++static struct attribute *fpga_mgr_attrs[] = {
++	&dev_attr_name.attr,
++	&dev_attr_status.attr,
++	NULL,
++};
++
++static const struct attribute_group fpga_mgr_group = {
++	.attrs = fpga_mgr_attrs,
++};
++
++const struct attribute_group *fpga_mgr_groups[] = {
++	&fpga_mgr_group,
++	NULL,
++};
++
++void fpga_mgr_sysfs_init(struct class *fpga_mgr_class)
++{
++	fpga_mgr_class->dev_groups = fpga_mgr_groups;
++}
++EXPORT_SYMBOL_GPL(fpga_mgr_sysfs_init);
++
++MODULE_DESCRIPTION("FPGA Manager framework driver sysfs interface");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/fpga-mgr.h b/include/linux/fpga-mgr.h
+index 35d3380..86eeff5 100644
+--- a/include/linux/fpga-mgr.h
++++ b/include/linux/fpga-mgr.h
+@@ -105,6 +105,18 @@ struct fpga_manager {
+ 
+ #if IS_ENABLED(CONFIG_FPGA)
+ 
++#ifdef CONFIG_FPGA_MGR_SYSFS
++
++void fpga_mgr_sysfs_init(struct class *fpga_mgr_class);
++
++#else
++
++static inline void fpga_mgr_sysfs_init(struct class *fpga_mgr_class)
++{
++}
++
++#endif /* CONFIG_FPGA_MGR_SYSFS */
++
+ struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
+ 					    const char *mgr_property,
+ 					    int *ret);
+-- 
+1.7.9.5
