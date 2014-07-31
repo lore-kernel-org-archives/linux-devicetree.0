@@ -1,49 +1,73 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 31 Jul 2014 08:38:47 -0700
-Message-ID: <CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA@mail.gmail.com>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<20140731120424.GK9809@8bytes.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
+Date: Thu, 31 Jul 2014 17:59:06 +0200
+Message-ID: <20140731155906.GH3214@piout.net>
+References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz>
+ <20140728122103.GR9532@piout.net>
+ <53D64ADA.1000102@aksignal.cz>
+ <20140728223859.GA3214@piout.net>
+ <20140729100017.31f0b1be@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140731120424.GK9809-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140729100017.31f0b1be@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 5:04 AM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jul 31, 2014 at 12:43:03PM +0200, Thierry Reding wrote:
->> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> This commit introduces a generic device tree binding for IOMMU devices.
->> Only a very minimal subset is described here, but it is enough to cover
->> the requirements of both the Exynos System MMU and Tegra SMMU as
->> discussed here:
->>
->>     https://lkml.org/lkml/2014/4/27/346
->>
->> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> Applied, thanks everyone.
+On 29/07/2014 at 10:00:17 +0200, Boris Brezillon wrote :
+> Hi Alexandre,
+>=20
+> > While this solves the particular issue Ji=C5=99=C3=AD is seeing, th=
+is will not
+> > solve the case where PA14 (CS0) is not used by the spi driver at al=
+l. It
+> > will remained muxed as CS0 and toggle when the spi master needs to
+> > access CS0 until another driver muxes it to something else. I still
+> > believe we should explicitly ask pinctrl to mux them as gpios.
+> >=20
+>=20
+> Do we really care about this case ?
+> After all, if a given pin needs a specific muxing during kernel boot
+> (i.e. a pin connected to a gpio-led that needs to stay in its previou=
+s
+> state or a pin connected to the reset line of a device that needs to
+> stay up and running during kernel boot) the bootloader/bootstrap shou=
+ld
+> have muxed this pin appropriately before booting the kernel.
+>=20
 
-Really?
-
-Gee, thanks for giving people a chance to reply with acks. It's
-considered polite to do so when there has been outstanding questions.
+Yeah, you are right.
 
 
--Olof
+> What do you mean by "we should explicitly ask pinctrl to mux them as
+> gpios" ?
+> Do you mean configuring all the pins as GPIOs when the pin controller=
+ is
+> probed, or just adding a new pinctrl state configuring the pin as an
+> output GPIO and reference it in the pinctrl-0 property of the spi
+> controller.
+>=20
+> If the former, you'll break devices that needs their pins to stay in
+> the state they were during the bootloader/boostrap phase.
+> The latter won't work if the pin you request as GPIO is later request=
+ed
+> by another device (which, if I'm correct, is exactly the case you're
+> trying to solve).
+>=20
+
+Again you are right, let's not care about that use case. I still feel
+that the pinctrl-0 property has to be filled correctly.
+
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
