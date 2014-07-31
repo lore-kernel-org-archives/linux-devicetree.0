@@ -1,47 +1,58 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCHv9 1/5] mmc: dw_mmc: Slot quirk "disable-wp" is deprecated.
-Date: Fri, 01 Aug 2014 03:36:59 +0900
-Message-ID: <53DA8CCB.3080900@samsung.com>
-References: <1406784907-26349-1-git-send-email-jh80.chung@samsung.com>	<1406784907-26349-2-git-send-email-jh80.chung@samsung.com> <CAD=FV=VfXOqt1A=8-1kq5nhnMrk7PbpCWj-A-UWQN12_U8sW4g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] ARM: dts: Fix MMC pinctrl for exynos5250-snow
+Date: Fri, 01 Aug 2014 03:41:37 +0900
+Message-ID: <53DA8DE1.10601@samsung.com>
+References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-2-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=VfXOqt1A=8-1kq5nhnMrk7PbpCWj-A-UWQN12_U8sW4g@mail.gmail.com>
+In-Reply-To: <1406822910-6255-2-git-send-email-afaerber@suse.de>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@google.com>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Dinh Nguyen <dinguyen@altera.com>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, cpgs <cpgs@samsung.com>
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: linux-samsung-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Stephan van Schaik <stephan@synkhronix.com>, Doug Anderson <dianders@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/14 01:02, Doug Anderson wrote:
-> Jaehoon
+On 08/01/14 01:08, Andreas F=C3=A4rber wrote:
+> The pinctrl properties should be on the device directly and not on th=
+e
+> slot sub-node.
 >
-> On Wed, Jul 30, 2014 at 10:35 PM, Jaehoon Chung<jh80.chung@samsung.com>  wrote:
->> Slot quirks "disable-wp" is deprecated.
->> Instead, use the host quirk "disable-wp".
->> (Because the slot-node is removed in dt-file.)
->>
->> Signed-off-by: Jaehoon Chung<jh80.chung@samsung.com>
->> Tested-by: Sachin Kamat<sachin.kamat@samsung.com>
->> Acked-by: Seungwon Jeon<tgih.jun@samsung.com>
->> ---
->>   drivers/mmc/host/dw_mmc.c  |   11 +++++++++--
->>   include/linux/mmc/dw_mmc.h |    2 ++
->>   2 files changed, 11 insertions(+), 2 deletions(-)
+> Reported-by: Doug Anderson<dianders@chromium.org>
+> Cc: Jaehoon Chung<jh80.chung@samsung.com>
+> Signed-off-by: Andreas F=C3=A4rber<afaerber@suse.de>
+> ---
+>   v3 ->  v4: Unchanged
 >
-> Thanks for taking my suggestion and making it backward compatible.
-> This looks great to me.  It tested this in both the backward
-> compatible way (with the warning) and the non-backward compatible way.
-> I think we should land and patch #2 ASAP and then we can land the rest
-> of the series as SoC maintainers see fit.
+>   v3: New (Doug Anderson)
+>   Redundant with Jaehoon Chung's general slot@0 deprecation,
+>   in case that hits the tree earlier.
 >
-Yes, right if we don't want to see useless merge conflicts...
+>   arch/arm/boot/dts/exynos5250-snow.dts | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dt=
+s/exynos5250-snow.dts
+> index f2b8c4116541..eb437f6afec1 100644
+> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> @@ -240,10 +240,8 @@
+>   	 */
+>   	mmc@12230000 {
+>   		status =3D "okay";
+> -		slot@0 {
+> -			pinctrl-names =3D "default";
+> -			pinctrl-0 =3D<&sd3_clk&sd3_cmd&sd3_bus4>;
+> -		};
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D<&sd3_clk&sd3_cmd&sd3_bus4>;
+>   	};
+>
+>   	i2c@12CD0000 {
 
-When I sent ack on exynos stuff, there was no conflict with my tree but 
-happens it now.
+Once I get Doug's reviewed tag on exynos5250-snow dt changes, I will=20
+take this series :) Though Doug suggested or reported...
 
-- Kukjin
-
-
-> Reviewed-by: Doug Anderson<dianders@chromium.org>
-> Tested-by: Doug Anderson<dianders@chromium.org>
+Thanks,
+Kukjin
