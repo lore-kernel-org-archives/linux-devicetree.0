@@ -1,84 +1,99 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: RE: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
- controller
-Date: Thu, 31 Jul 2014 14:19:20 +0000
-Message-ID: <299a13fb-f442-4ebf-b0fc-d09d0dfc536d@BN1AFFO11FD019.protection.gbl>
-References: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
- <20140731113324.GB4375@pd.tnic>
- <808655a9-77eb-4e3a-9781-2b059ad9517b@BN1AFFO11FD020.protection.gbl>
- <20140731131702.GC4375@pd.tnic>
- <a366b39c-b354-4d90-8b1e-71e74ab77cf3@BL2FFO11FD011.protection.gbl>
- <20140731135652.GD4375@pd.tnic>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Thu, 31 Jul 2014 16:22:24 +0200
+Message-ID: <53DA5120.7080709@suse.de>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com> <53D5435B.8030305@suse.de> <CAEC9eQPW-Z4craCC15M7oTp8eSD09AGxdTFEWaAWqn3Up4eJUg@mail.gmail.com> <53D783CC.2080108@suse.de> <CAEC9eQOpS90U9kWmY8YdcAtdxQYKoM9ikoWpkwMs6T2udLeZHA@mail.gmail.com> <53D9484A.1070905@suse.de> <CAEC9eQOFWQ8t1zzOVrHm2=aS4+N94EW6LSjBUG2fH51aFs0GLQ@mail.gmail.com> <53DA0513.3080602@suse.de> <20140731102348.GC7458@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140731135652.GD4375@pd.tnic>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, Michal Simek <michals@xilinx.com>
-Cc: "dougthompson@xmission.com" <dougthompson@xmission.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Punnaiah Choudary <kpc528@gmail.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140731102348.GC7458@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
-IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiBUaHVyc2RheSwgSnVseSAzMSwg
-MjAxNCA3OjI3IFBNDQo+VG86IE1pY2hhbCBTaW1law0KPkNjOiBQdW5uYWlhaCBDaG91ZGFyeSBL
-YWxsdXJpOyBkb3VndGhvbXBzb25AeG1pc3Npb24uY29tOw0KPnJvYmgrZHRAa2VybmVsLm9yZzsg
-cGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj5pamMrZGV2aWNldHJl
-ZUBoZWxsaW9uLm9yZy51azsgS3VtYXIgR2FsYTsgUm9iIExhbmRsZXk7DQo+ZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmVkYWNA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
-DQo+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IFB1bm5haWFoIENob3VkYXJ5OyBBbmlydWRo
-YSBTYXJhbmdpOyBTcmlrYW50aA0KPlZlbXVsYQ0KPlN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYz
-XSBlZGFjOiBzeW5wczogQWRkZWQgRURBQyBzdXBwb3J0IGZvciB6eW5xIGRkcg0KPmVjYyBjb250
-cm9sbGVyDQo+DQo+T24gVGh1LCBKdWwgMzEsIDIwMTQgYXQgMDM6MzY6MzVQTSArMDIwMCwgTWlj
-aGFsIFNpbWVrIHdyb3RlOg0KPj4gTWl4aW5nIGZ1bmN0aW9ucyBmb3IgdHdvL21vcmUgZGlmZmVy
-ZW50IGNvbnRyb2xsZXIgc2VlbXMgdG8gbWUNCj4+IHJlYWxseSBtZXNzeS4NCj4NCj5KdXN0IHN0
-YXRpbmcgdGhhdCBzb21ldGhpbmcgaXMgInJlYWxseSBtZXNzeSIgd2l0aG91dCBnaXZpbmcgYXQg
-bGVhc3QNCj5vbmUgdGVjaG5pY2FsIHJlYXNvbiBmb3IgaXQgaXMgbm90IGdvaW5nIHRvIGdldCB5
-b3UgYW55IGZ1cnRoZXIuIFNvIGxldA0KPm1lIGdpdmUgeW91IG1pbmU6DQo+DQo+SSB0aGluayBp
-dCBpcyBub3QgbWVzc3kgYmVjYXVzZSBvbmUgZmlsZSBjb250YWlucyBhbGwgdGhlIEVEQUMgY29k
-ZSBmb3INCj50aGF0IHN5c3RlbS4gTGlrZSBldmVyeSBvdGhlciBzeXN0ZW0gb3V0IHRoZXJlIHVz
-ZXMgb25lIEVEQUMgZHJpdmVyLg0KPkV2ZXJ5dGhpbmcgaXMgbmljZWx5IGNvbnRhaW5lZCBpbiBv
-bmUgcGxhY2UsIGFueSBjb21tdW5pY2F0aW9uIGJldHdlZW4NCj50aGUgdHdvIG1lbW9yeSBjb250
-cm9sbGVycyBpcyBkb25lIGludGVybmFsbHkgaW4gdGhhdCBkcml2ZXIuDQo+DQo+SGF2aW5nIHR3
-byBkcml2ZXJzIHdvdWxkIG1ha2UgdGhhdCBtdWNoIG1vcmUgY29tcGxpY2F0ZWQuIEJ1dCBoZXks
-IGlmDQo+eW91IHdhbnQgdG8gbWFrZSB5b3VyIGxpZmUgbW9yZSBjb21wbGljYXRlZCBiZWNhdXNl
-IGl0IGlzIG5vdCBlbm91Z2gNCj5jb21wbGljYXRlZCwgZmVlbCBmcmVlIHRvIGRvIHNvLiBKdXN0
-IG1ha2Ugc3VyZSB5b3UgZG9uJ3QgaW1wb3NlIGFueQ0KPnJlc3RyaWN0aW9ucyBvbiB0aGUgcmVz
-dCBvZiB0aGUgc3Vic3lzdGVtLg0KDQpIZXJlIHdlIGFyZSBhbHNvIGNvbnNpZGVyaW5nIHJldXNh
-YmlsaXR5IG9mIHRoZSBkcml2ZXIuIExldCdzIHNheSBpZiBzb21lIG90aGVyDQpTT0MgY29udGFp
-bnMgU3lub3BzeXMgZGRyIGNvbnRyb2xsZXIgdGhlbiB0aGlzIGRyaXZlciBjYW4gYmUgcmV1c2Vk
-LiBJbiB0aGlzIGNhc2UsDQpIYXZpbmcgc2VwYXJhdGUgZHJpdmVyIHdvdWxkIGJlIGdvb2QuIEJ1
-dCBhcyB5b3Ugc2FpZCBpbiB5b3VyIHByZXZpb3VzIGNvbW1lbnQsDQpXZSB3aWxsIHRhbGsgYWJv
-dXQgdGhpcyBsYXRlci4gDQoNClRoYW5rcywNClB1bm5haWFoDQo+DQo+PiA+IC1FTk9QQVJTRSBm
-b3IgdGhpcyBzZW50ZW5jZS4NCj4+DQo+PiBJIG1lYW50IGJ5IHRoaXMgdGhpcyBzY2VuYXJpbyAt
-IHBsZWFzZSBjb3JyZWN0IG1lIGlmIEkgYW0gY29tcGxldGVseSB3cm9uZw0KPj4gYmVjYXVzZSBJ
-IGFtIG5vdCBwbGF5aW5nIHdpdGggdGhpcyBzdWJzeXN0ZW0uIE15IGV4cGVjdGF0aW9uIGlzIHRo
-YXQNCj4+IG1lbW9yeSBjb250cm9sbGVyIG51bWJlciBzaG91bGQgYmUgc2FtZSBhbGwgdGhlIHRp
-bWUuDQo+Pg0KPj4gdHdvIG1lbW9yeSBjb250cm9sbGVycyB3aXRoIHRoZSBzYW1lIGVkYWMgZHJp
-dmVyLg0KPj4NCj4+IE5vcm1hbCBjYWxsaW5nIHNlcXVlbmNlOg0KPj4gWCBwcm9iZSAtIG51bWJl
-ciAwDQo+PiBZIHByb2JlIC0gbnVtYmVyIDENCj4+DQo+PiBEaWZmZXJlbnQgb3JkZXIvbmFtZSAo
-SSB0aGluayBvcmRlciBpcyB0YWtlbiBhdCB0aGUgZmlyc3QgcGxhY2UpDQo+PiBpbiBEVFMgc2hv
-dWxkIGNhdXNlZCB0aGF0IFggd2lsbCBoYXZlIG51bWJlciAxIGFuZCBZIG51bWJlciAwLg0KPj4N
-Cj4+IEFub3RoZXIgc2NlbmFyaW86DQo+PiB0d28gY29udHJvbGxlcnMgYW5kIG9uZSB3aXRoIGV4
-dGVybmFsIGdwaW8gcmVzZXQgZm9yIGV4YW1wbGUuDQo+Pg0KPj4gWCBwcm9iZSBpcyBjYWxsZWQg
-YnV0IGdwaW8gY29udHJvbGxlciBpcyBub3QgcmVhZHkgYW5kIGdwaW8gZHJpdmVyIHJldHVybnMN
-Cj4+IC1FUFJPQkVfREVGRVIgdGhlbiBZIHByb2JlIGlzIGNhbGxlZCBhbmQgZ2V0IG51bWJlciAw
-LiBUaGVuIFggcHJvYmUgaXMNCj5jYWxsZWQNCj4+IGFnYWluIGFuZCBnZXQgbnVtYmVyIDEuDQo+
-DQo+UmlnaHQsIHNpbmNlIHlvdSBoYXZlIGEgaGV0ZXJvZ2VuZW91cyBkZXNpZ24sIHlvdSdkIG5l
-ZWQgdG8gYWNjb3VudA0KPmZvciBhbGwgdGhhdCBpbiB5b3VyIGRyaXZlciBhbmQgZGVhbCB3aXRo
-IHByb2Jpbmcgb3JkZXIuIExpa2UgaGF2aW5nIGENCj53YXkgdG8gYXNrIGEgY29udHJvbGxlciB3
-aGF0IGtpbmQgb2YgYSBjb250cm9sbGVyIGl0IGlzIGFuZCBzbyBvbi4gSSdtDQo+YWZyYWlkIEkg
-ZG9uJ3Qga25vdyBhbnl0aGluZyBhYm91dCB5b3VyIGRlc2lnbiB0byBiZSBvZiBtb3JlIGhlbHAg
-dGhlcmUuDQo+DQo+SG93ZXZlciwgZG9pbmcgdGhpcyBpbiBvbmUgPG5hbWU+X2VkYWMuYyBmaWxl
-IGlzIGFsbW9zdCB0cml2aWFsIHRoYW4NCj5kb2luZyBpdCB3aXRoIHR3byBzZXBhcmF0ZSBkcml2
-ZXJzLiBVbmxlc3MgeW91IGRvbid0IG5lZWQgdG8gZG8gYW55DQo+bWVhbmluZ2Z1bCBjb21tdW5p
-Y2F0aW9uIGJldHdlZW4gdGhlIFBTIGFuZCBQTC4gVGhlbiBpdCBkb2Vzbid0IG1hdHRlci4NCj4N
-Cj5JZiBJIHdlcmUgeW91LCBJJ2Qgc3BlbmQgYSBtb3JlIHRpbWUgb24gYSBwcm9wZXIgZGVzaWdu
-IG5vdyBzbyB0aGF0IGFsbA0KPm15IHdvcmsgbGF0ZXIgaXMgZWFzeS4gQWRkaW5nIHR3byBkcml2
-ZXJzIGp1c3QgYmVjYXVzZSBpdCBzZWVtcyBtZXNzeSBpcw0KPm5vdCBhIHZlcnkgZ29vZCBpZGVh
-LiBXaGF0IEkgd291bGQgZG8gaXMgYW5hbHl6ZSBhbGwgbXkgdXNlIGNhc2VzIGFuZA0KPmNvbWUg
-dXAgd2l0aCBhIHByb3BlciBkZXNpZ24gdGhlbi4gQnV0IHRoaXMgaXMganVzdCBtZS4NCj4NCj5I
-VEguDQo+DQo+LS0NCj5SZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jpcy4NCj4NCj5TZW50IGZyb20g
-YSBmYXQgY3JhdGUgdW5kZXIgbXkgZGVzay4gRm9ybWF0dGluZyBpcyBmaW5lLg0KPi0tDQo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Am 31.07.2014 12:23, schrieb Thierry Reding:
+> On Thu, Jul 31, 2014 at 10:57:55AM +0200, Andreas F=C3=A4rber wrote:
+>> Am 31.07.2014 10:38, schrieb Ajay kumar:
+>>> With just the spring-bridge.v6 branch of your own tree, I am able to =
+see
+>>> bootup logo on Skate(a variant of spring which also contains ps8622).=
+
+>>> I have tried both exynos_defconfig and multi_v7_defconfig.
+>>> I enable DRM, EXYNOS DRM, BRIDGE CHIPS, IOMMU, EXYNOS IOMMU
+>>> in configs.
+[...]
+> If you have something like simplefb enabled in addition to a DRM driver=
+,
+> then perhaps the DRM driver isn't properly taking over the framebuffer
+> console.
+
+So, with simplefb reverted in U-Boot and ...
+
+* with just the v6 applied (...~2), I get only a black screen from
+Linux, no penguins, but the backlight seems on. System comes up okay,
+ssh available, and nothing stands out in dmesg.
+
+* with the two iommu patches on top, something breaks badly, no
+backlight, no USB/network, system inaccessible.
+
+I.e. U-Boot had no noticeable impact on these symptoms.
+
+* with the iommu patches, but dp-controller, ps8622, panel commented
+out, I do get backlight but USB/network not working, system inaccessible.=
+
+
+With simplefb support in U-Boot and with just v6 applied, but
+dp-controller, ps8622, panel commented out, things work as well as
+before, i.e. this series has no bad side effects. Note that I never
+claimed Ajay's series were broken, just reported that things regressed
+for me from v4, which may well be DT-related.
+
+The iommu patches interfere with my USB somehow (none or not all devices
+powered; with v4, plugging my wifi dongle led to oops but ethernet
+dongle worked, so not entirely new symptom), which is bad since my
+rootfs is on USB. The internal SDIO-connected Wifi is not enabled yet,
+so USB based network is my only alternative to a working display once we
+reach userspace.
+
+Regards,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=BC=
+rnberg
+
+
+--Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJT2lEgAAoJEPou0S0+fgE/hEIP/jL6jCLIqAk4IEFn3H9qhb4/
+R4DHefa6lfUtOmpJ0pdgyo3KHpqog7OAZUzr6k79b8d5KGTCfpQrSDzHsKCmaGE5
+pPtQn03mH5LFj12xsdIFG51SdqVp6fp2czPQmxjFTT1epwBFsMpuEOOIJ0/ABFcr
+bKtt7v+n+lI4nGATw2+PPGgDqa7jOrSa6dNnO6nkGd7dyIIt+IrDM+LUgGEsiHM8
+O7bw3L1IP4mJ/xJNiVqK6QQfZZT190K0sRD8O6HPlwobAnaBQ8Le43G4QgoaYbqW
+Xdm9F7cacdvOehlfNNEa2F5adAMerK3CrPBn2vO55d0Qo1+LiGHc9zirBhNluW+o
+66xRLw1KpiPPGrX8tPQ0ldfuV33Wv2XzZ83KWIvokci1iD7Z/s5iBwfcwnr52OU5
+yMnYuKLsKViw+iWNIqVxc2YMbakhbC8IWUPHh+nR+t/++vYNDMYMatEzs7BbL9Wc
+FVkXc+gCvJY/CK70gI3GUv5LGNZLKfFla23Nfex7sgqj87NnNHLWH3n7Hg8YxDiF
+Fug4/5h8eVV61LjEoTyoShxqaq6XDAgWwuw+X1z3CRv7GWjk6wLAVnPXcOVipr7m
+m6uG89gJOmX0KBnpYgP06zwtkLnsD/+ZASnuTAIelnPRmGKeRNLGxDSvA51NpwS6
+vloN1n3gVMaQ/VCQPU7X
+=Pita
+-----END PGP SIGNATURE-----
+
+--Jj22w1ESj3FXg4dtXNTxxa4BSwH1I5PCg--
