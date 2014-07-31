@@ -1,73 +1,38 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: spi: request all csgpio in spi probe
-Date: Thu, 31 Jul 2014 17:59:06 +0200
-Message-ID: <20140731155906.GH3214@piout.net>
-References: <b033d16ec31d26a895726ee72ec89b43943dfbae.1406547656.git.jiri.prchal@aksignal.cz>
- <20140728122103.GR9532@piout.net>
- <53D64ADA.1000102@aksignal.cz>
- <20140728223859.GA3214@piout.net>
- <20140729100017.31f0b1be@bbrezillon>
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCHv9 1/5] mmc: dw_mmc: Slot quirk "disable-wp" is deprecated.
+Date: Thu, 31 Jul 2014 09:02:45 -0700
+Message-ID: <CAD=FV=VfXOqt1A=8-1kq5nhnMrk7PbpCWj-A-UWQN12_U8sW4g@mail.gmail.com>
+References: <1406784907-26349-1-git-send-email-jh80.chung@samsung.com>
+	<1406784907-26349-2-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140729100017.31f0b1be@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?utf-8?B?SmnFmcOt?= Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406784907-26349-2-git-send-email-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Dinh Nguyen <dinguyen@altera.com>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, cpgs <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/2014 at 10:00:17 +0200, Boris Brezillon wrote :
-> Hi Alexandre,
->=20
-> > While this solves the particular issue Ji=C5=99=C3=AD is seeing, th=
-is will not
-> > solve the case where PA14 (CS0) is not used by the spi driver at al=
-l. It
-> > will remained muxed as CS0 and toggle when the spi master needs to
-> > access CS0 until another driver muxes it to something else. I still
-> > believe we should explicitly ask pinctrl to mux them as gpios.
-> >=20
->=20
-> Do we really care about this case ?
-> After all, if a given pin needs a specific muxing during kernel boot
-> (i.e. a pin connected to a gpio-led that needs to stay in its previou=
-s
-> state or a pin connected to the reset line of a device that needs to
-> stay up and running during kernel boot) the bootloader/bootstrap shou=
-ld
-> have muxed this pin appropriately before booting the kernel.
->=20
+Jaehoon
 
-Yeah, you are right.
+On Wed, Jul 30, 2014 at 10:35 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Slot quirks "disable-wp" is deprecated.
+> Instead, use the host quirk "disable-wp".
+> (Because the slot-node is removed in dt-file.)
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
+> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c  |   11 +++++++++--
+>  include/linux/mmc/dw_mmc.h |    2 ++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
 
+Thanks for taking my suggestion and making it backward compatible.
+This looks great to me.  It tested this in both the backward
+compatible way (with the warning) and the non-backward compatible way.
+I think we should land and patch #2 ASAP and then we can land the rest
+of the series as SoC maintainers see fit.
 
-> What do you mean by "we should explicitly ask pinctrl to mux them as
-> gpios" ?
-> Do you mean configuring all the pins as GPIOs when the pin controller=
- is
-> probed, or just adding a new pinctrl state configuring the pin as an
-> output GPIO and reference it in the pinctrl-0 property of the spi
-> controller.
->=20
-> If the former, you'll break devices that needs their pins to stay in
-> the state they were during the bootloader/boostrap phase.
-> The latter won't work if the pin you request as GPIO is later request=
-ed
-> by another device (which, if I'm correct, is exactly the case you're
-> trying to solve).
->=20
-
-Again you are right, let's not care about that use case. I still feel
-that the pinctrl-0 property has to be filled correctly.
-
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Tested-by: Doug Anderson <dianders@chromium.org>
