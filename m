@@ -1,73 +1,126 @@
-From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Thu, 31 Jul 2014 14:04:29 +0200
-Message-ID: <53DA30CD.5020903@kpanic.de>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de> <1406728949-7560-3-git-send-email-sassmann@kpanic.de> <20140730175033.GA17528@sirena.org.uk> <53DA12BF.1060008@kpanic.de> <20140731110531.GH17528@sirena.org.uk>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH v3] edac: synps: Added EDAC support for zynq ddr ecc
+ controller
+Date: Thu, 31 Jul 2014 14:13:48 +0200
+Message-ID: <808655a9-77eb-4e3a-9781-2b059ad9517b@BN1AFFO11FD020.protection.gbl>
+References: <9dc2a947-d2ab-4f00-8ed3-d2499cb6fdfd@BN1BFFO11FD002.protection.gbl>
+ <20140731113324.GB4375@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731110531.GH17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, =?ISO-8859-1?Q?Andreas_F=E4rbe?= =?ISO-8859-1?Q?r?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140731113324.GB4375@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: "dougthompson@xmission.com" <dougthompson@xmission.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Punnaiah Choudary <kpc528@gmail.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.2014 13:05, Mark Brown wrote:
-> On Thu, Jul 31, 2014 at 11:56:15AM +0200, Stefan Assmann wrote:
->> On 30.07.2014 19:50, Mark Brown wrote:
->>> On Wed, Jul 30, 2014 at 04:02:29PM +0200, Stefan Assmann wrote:
+On 07/31/2014 01:33 PM, Borislav Petkov wrote:
+> On Wed, Jul 30, 2014 at 03:41:47PM +0000, Punnaiah Choudary Kalluri wrote:
+>>> So you're telling me that you want one edac driver for *two* memory
+>>> controllers which can be present on a single system *at* *the* *same*
+>>> *time*? Is that it?
+>>
+>> Yes.
 > 
->>>> +static int twl6030_clk32kg_is_prepared(struct clk_hw *hw)
->>>> +{
->>>> +	struct twl6030_desc *desc = to_twl6030_desc(hw);
->>>> +
->>>> +	return desc->enabled;
->>>> +}
-> 
->>> Why not just check the register map - can't the register be cached?  If
->>> that's not possible a comment would be good.
-> 
->> I just took atl_clk_is_enabled() as template. If you say it's better
->> to read the value, that can be arranged.
-> 
-> It might be worth doing this if you have to go to hardware to check the
-> status, if you can read a cache then just using the register is less
-> error prone.
+> Oh, this'll be fun. :-P
 
-Ok.
+just to give me one more possible and more crazy example.
+You can start system with one memory controller - then use partial
+reconfiguration and add others at run time till you have enough pins
+on your board. You can also remove it when you decide to do so.
+And every boot can be different on the same board.
+
+
+>>>
+>>> How exactly is that topology supposed to look like, work, etc, etc? What
+>>> kind of error reporting do you imagine you want to do with EDAC?
+>>
+>> Zynq (All programmable SOC) contains a dual core ARM cortex A9 based processing
+>> System(PS) and Xilinx programmable logic(PL) in a single device.
+>>
+>> Assume the application is a broadcast camera. The design for this system use PS as
+>> Control plane and use PL as data plane for processing the video data. So, the design 
+>> may have two different memory controllers one in PS and another one in PL.   
+>> PS is running with Linux OS and PL doesn't have the OS and it is  controlled by the 
+>> OS running on PS.
+> 
+> Ok.
+> 
+>>  Now the requirement is to develop a monitoring system for all the
+>> hardware failures Including ddr ecc errors. Since the broadcast camera
+>> involves more data processing and DDR memory access, there is a high
+>> probability of getting ddr ecc errors over the period.
+> 
+> So you're saying the camera has memory with ECC? People really pay
+> attention on getting error free video frames? :-)
+> 
+> Or this is just an example? You're saying the PL will need ECC for some
+> applications?
+
+I believe that this is real example.
+The another example can also be that Linux uses this PL memory with ECC
+and PS memory for application because of whatever reason - speed for example.
+
+But that configurations are real.
 
 > 
->>>> +	else
->>>> +		clk_prepare(clk);
+>> So, the user should be intimated with these errors when they occur and if the error rate
+>>  is high, then the user can consider the preventive methods. Without this error reporting
+>> mechanism it is difficult to debug the issues like memory corruption, kernel oops which
+>>  may occur due to ddr ecc failures.
+>>
+>> Since, the memory controllers are different, it need two edac drivers for reporting the ecc 
+>> errors and also maintaining the statistics of that particular memory controller. With the current
+>> framework, there is a chance that both the drivers get mc_num as zero and malfunction. 
+>> Assume the code for the two drivers looks like below
+>>
+>> Driver 1:
+>> 	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+>> 			    sizeof(struct  ctrl1_drvdata));
+>>
+>> Driver 2:
+>> 	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+>> 			    sizeof(struct ctrl2_drvdata));
+>>
+>> Issue:
+>>   Since driver is providing the mc_num to framework, now there is chance that only one device active as
+>>  both the drivers claiming the same number.
+>>
+>> Solution 1:
+>>  Keep two drivers in single file and use static global variable for tracking the mc_num. This solution looks
+>> good but the drivers may not be generic as these driver would be in a zynq_edac.c file. So others may not
+>> reuse these drivers
 > 
->>> Why is the clock driver defaulting to enabling the clock, and if it
->>> needs to shouldn't it be doing a prepere_enable() even if the enable
->>> happens not to do anything to the hardware?  Otherwise child clocks
->>> might get confused.
+> Ok, I think I know what you mean. And this architecture works just fine.
+> On x86 we have one EDAC instance per memory controller so on a multinode
+> machine with multiple memory controllers, we do edac_mc_alloc() per
+> memory controller.
 > 
->> Mike advised me to convert the functions from enable/disable to
->> prepare/unprepare because i2c transactions may sleep. That's what I did.
->> The code no longer enables the clock and just prepares it. So IIUC the
->> call to clk_prepare() should be fine.
+> For examples, see amd64_edac::init_one_instance() and sb_edac should
+> have this too. So you basically have a local array of instances which
+> you allocate and setup.
 > 
-> That's not going to help consumers of the clock, you do need to move the
-> operations to prepare() but users shouldn't need to know what happens in
-> prepare() and what happens in enable().
+> If someone wants to reuse the driver, then we can talk about this later,
+> when the time comes.
+>
+> For now I think you should put both PS and PL stuff in one file,
+> zynq_edac or so.
 > 
-> You've also not addressed the comment about defaulting to enabling the
-> clock in the first place.
+> Any issues with this design?
 
-Maybe I misinterpreted your previous comment, sorry. So if I got it right
-this time you're saying that the prepare/enable, disable/unprepare should
-be seen as a single step. If that's the case then using prepare_enable()
-should be used indeed.
+Mixing two drivers in the one file is not a good idea because with more
+memory controllers it is just a mess and you are not able to cover all cases.
 
-Tero suggested to look into making this a generic i2c clock driver. I'll
-look into that and report back.
+If this is just about providing uniq number we can easily extend binding
+and provide that uniq value.
+That's remind me solution with edac_mc_get_id() can caused that you won't have
+exact number all the time - depends on driver loading (deferred probing too).
 
-  Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+One option via DT can be via aliases where you can easily specify order.
+But all of these issues can be solved in follow-up patch.
+
+Thanks,
+Michal
+
+
