@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/6] ARM: DTS: da850: Add node for McASP
-Date: Thu, 31 Jul 2014 13:18:51 +0300
-Message-ID: <1406801934-23334-4-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH 6/6] ARM: DTS: da850-evm: Enable audio via simple-card
+Date: Thu, 31 Jul 2014 13:18:54 +0300
+Message-ID: <1406801934-23334-7-git-send-email-peter.ujfalusi@ti.com>
 References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,51 @@ To: nsekhar@ti.com, robh+dt@kernel.org
 Cc: khilman@deeprootsystems.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Node for mcasp0
+The audio on the board is using McASP <-> tlv320aic3106 codec and we have
+LineIn and LineOut jacks.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/da850-evm.dts | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 41ce4e8bf227..0bd98cd00816 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -276,6 +276,19 @@
- 			ti,davinci-gpio-unbanked = <0>;
- 			status = "disabled";
- 		};
-+
-+		mcasp0: mcasp@01d00000 {
-+			compatible = "ti,da830-mcasp-audio";
-+			reg = <0x100000 0x2000>,
-+			      <0x102000 0x400000>;
-+			reg-names = "mpu", "dat";
-+			interrupts = <54>;
-+			interrupt-names = "common";
-+			status = "disabled";
-+			dmas = <&edma0 1>,
-+				<&edma0 0>;
-+			dma-names = "tx", "rx";
-+		};
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index b9ef2be0b145..031117a4a797 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -143,6 +143,33 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-boot-on;
  	};
- 	nand_cs3@62000000 {
- 		compatible = "ti,davinci-nand";
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "DA850/OMAP-L138 EVM";
++		simple-audio-card,widgets =
++			"Line", "Line In",
++			"Line", "Line Out";
++		simple-audio-card,routing =
++			"LINE1L", "Line In",
++			"LINE1R", "Line In",
++			"Line Out", "LLOUT",
++			"Line Out", "RLOUT";
++		simple-audio-card,format = "dsp_b";
++		simple-audio-card,bitclock-master = <&link0_codec>;
++		simple-audio-card,frame-master = <&link0_codec>;
++		simple-audio-card,bitclock-inversion;
++
++		simple-audio-card,cpu {
++			sound-dai = <&mcasp0>;
++			system-clock-frequency = <24576000>;
++		};
++
++		link0_codec: simple-audio-card,codec {
++			sound-dai = <&tlv320aic3106>;
++			system-clock-frequency = <24576000>;
++		};
++	};
+ };
+ 
+ /include/ "tps6507x.dtsi"
 -- 
 2.0.2
