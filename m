@@ -1,65 +1,56 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Thu, 31 Jul 2014 12:20:53 -0700
-Message-ID: <20140731192053.4463.27499@quantum>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
- <1406728949-7560-3-git-send-email-sassmann@kpanic.de>
- <53DA3613.9010305@ti.com> <53DA3C68.3020406@kpanic.de>
- <53DA3D66.1030407@ti.com> <53DA4D37.4030408@kpanic.de>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 3/4] ARM: dts: Clean up exynos5250-snow
+Date: Thu, 31 Jul 2014 21:21:28 +0200
+Message-ID: <53DA9738.6080809@suse.de>
+References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-4-git-send-email-afaerber@suse.de> <53DA96C7.30009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53DA4D37.4030408-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53DA96C7.30009@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Stephan van Schaik <stephan@synkhronix.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stefan Assmann (2014-07-31 07:05:43)
-> On 31.07.2014 14:58, Peter Ujfalusi wrote:
-> > On 07/31/2014 03:54 PM, Stefan Assmann wrote:
-> >>> Why would you do this? The point of a clock provider is that you can
-> >>> enable/disable the clock on demand. Here you enable the clock and leave it
-> >>> enabled for the rest of the time...
-> >>>
-> >>> clk-dra7-atl deals with similar issue
-> >>
-> >> The idea is to enable the clock by default to get the wifi working.
-> >> Sorry if I got it wrong.
-> > 
-> > You should have a clock driver for the 32K clock. The wifi driver should
-> > request and manage it's clocks via the clock API.
-> > 
-> 
-> If the clock does not get enabled the wifi driver wl12xx doesn't even
-> get probed. Which is my initial problem. Maybe I need to figure that out
-> first.
+Am 31.07.2014 21:19, schrieb Tomasz Figa:
+> Andreas,
+>=20
+> Please see my comments inline.
+>=20
+> On 31.07.2014 18:08, Andreas F=C3=A4rber wrote:
+>> Use the new style of referencing inherited nodes and use symbolic na=
+mes.
+>>
+>> Suggested-by: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>=20
+> [snip]
+>=20
+>> -
+>>  	usb@12110000 {
+>> -		samsung,vbus-gpio =3D <&gpx1 1 0>;
+>> +		samsung,vbus-gpio =3D <&gpx1 1 GPIO_ACTIVE_HIGH>;
+>>  	};
+>=20
+> This is a higher level node being overridden, so it should be specifi=
+ed
+> using references too.
+>=20
+>> =20
+>>  	fixed-rate-clocks {
+>> @@ -287,7 +206,7 @@
+>>  	};
+>> =20
+>>  	hdmi {
+>=20
+> Ditto.
 
-Sounds like the wifi driver's probe is missing something like:
+Same problem as with spring: We need the labels first!
 
-"""
-#include <linux/clk.h>
+Andreas
 
-int ret;
-
-struct clk *clk32k = clk_get(...);
-
-if (IS_ERR(clk32k))
-        explode();
-
-ret = clk_prepare_enable(clk32k);
-
-if (ret)
-        explode();
-"""
-
-Regards,
-Mike
-
-> 
->   Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
