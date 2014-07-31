@@ -1,7 +1,7 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 3/7] arm: dts: mt6589: Fix typo in GIC unit address
-Date: Thu, 31 Jul 2014 18:42:19 +0200
-Message-ID: <1406824943-24052-4-git-send-email-matthias.bgg@gmail.com>
+Subject: [PATCH 7/7] arm: dts: mt6589: Add arm arch timer node
+Date: Thu, 31 Jul 2014 18:42:23 +0200
+Message-ID: <1406824943-24052-8-git-send-email-matthias.bgg@gmail.com>
 References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
@@ -10,25 +10,41 @@ To: linux-kernel@vger.kernel.org
 Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, olof@lixom.net, arnd@arndb.de, jason@lakedaemon.net, thomas.petazzoni@free-electrons.com, swarren@nvidia.com, sebastian.hesselbarth@gmail.com, stefan@agner.ch, maxime.ripard@free-electrons.com, matthias.bgg@gmail.com, anders.berg@lsi.com, linus.walleij@linaro.org, heiko@sntech.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This changes the unit address of the gic node to it's first register area.
+This patch adds the device tree node for the arm architecture timer.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm/boot/dts/mt6589.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/mt6589.dtsi |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-index d0297a0..742c9bd 100644
+index 742c9bd..7bcf031 100644
 --- a/arch/arm/boot/dts/mt6589.dtsi
 +++ b/arch/arm/boot/dts/mt6589.dtsi
-@@ -81,7 +81,7 @@
+@@ -73,14 +73,22 @@
+ 		compatible = "simple-bus";
+ 		ranges;
+ 
+-		timer: timer@10008000 {
++		timer1: timer@10008000 {
+ 			compatible = "mediatek,mt6577-timer";
+-			reg = <0x10008000 0x80>;
++			reg = <0x10008000 0x60>;
+ 			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
  			clock-names = "system-clk", "rtc-clk";
  		};
  
--		gic: interrupt-controller@10212000 {
-+		gic: interrupt-controller@10211000 {
++		timer2: timer {
++			compatible = "arm,armv7-timer";
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		};
++
+ 		gic: interrupt-controller@10211000 {
  			compatible = "arm,cortex-a15-gic";
  			interrupt-controller;
- 			#interrupt-cells = <3>;
 -- 
 1.7.9.5
