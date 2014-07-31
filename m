@@ -1,96 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 31 Jul 2014 10:22:41 +0100
-Message-ID: <20140731092241.GA21850@leverpostej>
-References: <1404487757-18829-1-git-send-email-thierry.reding@gmail.com>
-	<20140730152646.GC20162@leverpostej> <20140731083923.GA31218@ulmo>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ARM: dts: Add exynos5250-spring device tree
+Date: Thu, 31 Jul 2014 11:26:02 +0200
+Message-ID: <53DA0BAA.8090000@suse.de>
+References: <1406728244-5105-1-git-send-email-afaerber@suse.de> <1406728244-5105-5-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140731083923.GA31218@ulmo>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Sethi <varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406728244-5105-5-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephan van Schaik <stephan-zGZ7W/ttz6xN8Ch2cx6nig@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am 30.07.2014 15:50, schrieb Andreas F=C3=A4rber:
+> diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/=
+dts/exynos5250-spring.dts
+> new file mode 100644
+> index 000000000000..bcca892bf2ff
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5250-spring.dts
 [...]
+> +&pinctrl_0 {
+> +	dp_hpd_gpio: dp-hpd-gpio {
+> +		samsung,pins =3D "gpc3-0";
+> +		samsung,pin-function =3D <1>;
 
-> > > +Examples:
-> > > +=========
-> > > +
-> > > +Single-master IOMMU:
-> > > +--------------------
-> > > +
-> > > +	iommu {
-> > > +		#iommu-cells = <0>;
-> > > +	};
-> > > +
-> > > +	master {
-> > > +		iommus = <&/iommu>;
-> > 
-> > Nit: this should be iommus = <&{/iommu}>, or it's not valid dts syntax.
-> 
-> Done.
+Not sure where this 1 came from... Both Ajay and my 3.8 DT have 0.
 
-Cheers. I take it that was done for the other occurrences too?
+> +		samsung,pin-pud =3D <3>;
+> +		samsung,pin-drv =3D <0>;
+> +	};
 
-> 
-> > > +	};
-> > > +
-> > > +Multiple-master IOMMU with fixed associations:
-> > > +----------------------------------------------
-> > > +
-> > > +	/* multiple-master IOMMU */
-> > > +	iommu {
-> > > +		/*
-> > > +		 * Masters are statically associated with this IOMMU and
-> > > +		 * address translation is always enabled.
-> > > +		 */
-> > > +		#iommu-cells = <0>;
-> > 
-> > I don't follow why translation being always enabled is relevant to the
-> > example; that would seem to be independent from the binding.
-> > 
-> > Surely the key point is that with no way to distinguish devices, they
-> > presumably share the same translations?
-> 
-> Both aspects are important I think. For #iommu-cells = <0> there is no
-> way for the IOMMU driver to know how to enable translation for a given
-> device. So it must be either always on or always off.
+Seeing that Ajay called this node dp-hdp, it should probably be an over=
+ride?
 
-Sure. But "always on or off" is not the same as "always enabled", which
-was what confused me.
+&dp_hpd {
+	...
+};
 
-> I guess one could say that this is implicit if all masters share the
-> same translations. And I guess translations don't always have to be on
-> or off technically. Let me try to rephrase this:
-> 
-> 		/*
-> 		 * Masters are statically associated with this IOMMU and share
-> 		 * the same address translations because the IOMMU does not
-> 		 * have sufficient information to distinguish between masters.
-> 		 *
-> 		 * Consequently address translation is always on or off for
-> 		 * all masters at any given point in time.
-> 		 */
-> 
-> Does that sound better?
+Andreas
 
-That addresses my concern, so yes.
-
-Given these are minor and everyone wants this in now, I'm happy for
-these to go through in a fixup patch later.
-
-Cheers,
-Mark.
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
