@@ -1,79 +1,31 @@
-From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Thu, 31 Jul 2014 18:35:24 +0200
-Message-ID: <20140731163524.GT4703@rric.localhost>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <20140730154626.GD20162@leverpostej>
- <CAL_JsqLJ_W34XTF2aMOW9z+Gq4oxbrX1RztyJN8Mi0OFPeNxfg@mail.gmail.com>
- <20140731123443.GS4703@rric.localhost>
- <CAL_JsqKgfjV4sEZOWuH4YcMjeOA_yNDvZLv_jTi_Sb=27cOD3g@mail.gmail.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
+Date: Thu, 31 Jul 2014 18:36:11 +0200
+Message-ID: <20140731163611.GM9809@8bytes.org>
+References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
+ <20140731120424.GK9809@8bytes.org>
+ <CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKgfjV4sEZOWuH4YcMjeOA_yNDvZLv_jTi_Sb=27cOD3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMiS_MJNnkfPOsqxV27=rXPgT9UNbp-+VhpMRNf9u0+-eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.14 10:22:19, Rob Herring wrote:
-> On Thu, Jul 31, 2014 at 7:34 AM, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On 30.07.14 11:37:38, Rob Herring wrote:
-> >> On Wed, Jul 30, 2014 at 10:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> > On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
-> >> >> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Thu, Jul 31, 2014 at 08:38:47AM -0700, Olof Johansson wrote:
 > >
-> >> >> +/ {
-> >> >> +     model = "Cavium ThunderX CN88XX Family";
-> >> >> +     compatible = "cavium,thunder-88xx";
-> >> >
-> >> > Please don't use wildcards in compatible strings. Give this an absolute
-> >> > name, and override as necessary.
-> >
-> > The naming 88xx refers to the processor family and arn't actually
-> > wildcards. In the future we might need another dts file for 87xx, but
-> > so far all SoCs of 88xx family should use the same dts files. In this
-> > sense the naming is very specific.
+> > Applied, thanks everyone.
 > 
-> Yes, but each implementation can have its own errata. You might not
-> need to distinguish them now, but you could in the future.
+> Really?
 > 
-> However, if the family is really all the same die and different parts
-> are just marketing, then the name is fine. Or if you can easily probe
-> the exact part and revision it's probably fine.
+> Gee, thanks for giving people a chance to reply with acks. It's
+> considered polite to do so when there has been outstanding questions.
 
-Yes, this relates to the same soc.
+Its not pushed yet, I can still make changes. Do you have any objections
+or an Ack?
 
-> 
-> >
-> >
-> >> >> +     cpus {
-> >> >> +             #address-cells = <2>;
-> >> >> +             #size-cells = <0>;
-> >> >> +
-> >> >> +             cpu@000 {
-> >> >> +                     device_type = "cpu";
-> >> >> +                     compatible = "cavium,thunder", "arm,armv8";
-> >> >> +                     reg = <0x0 0x000>;
-> >> >> +                     enable-method = "psci";
-> >> >> +             };
-> >> >
-> >> > Just to check: both the SoC and CPU are called thunder?
-> >
-> > The soc is called thunder-88xx, the cpu thunder. E.g. an 87xx soc will
-> > have the same core in which is thunder.
-> 
-> And the next version of the core would be called something else?
-> thunder-v2? lightning? As long as they are distinguishable they should
-> be fine.
 
-Same here, the name relates to the same core.
-
--Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Joerg
