@@ -1,63 +1,74 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
- Broadcom STB SoCs
-Date: Fri, 1 Aug 2014 15:46:57 -0400
-Message-ID: <20140801194657.GJ2593@beef>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
- <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q@mail.gmail.com>
- <20140731022320.GM3711@ld-irv-0074>
- <CAL_Jsq+47YtqWwOkxYDzaEOG-+oouvpXvmGaX+Wh3wQ+BNAx_w@mail.gmail.com>
- <CAGVrzcaEV81BW+a--QgQSHiLb6UQDFsP3cqQxGwV206MRx4gXw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 03/10] ARM: dts: Clean up exynos5250-snow
+Date: Fri, 1 Aug 2014 13:24:12 -0700
+Message-ID: <CAD=FV=W2XJzv4NpB=27AFjX94VkH8dYXxAPBL58ntXL2WvRCoQ@mail.gmail.com>
+References: <1406868897-26874-1-git-send-email-afaerber@suse.de>
+	<1406868897-26874-4-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGVrzcaEV81BW+a--QgQSHiLb6UQDFsP3cqQxGwV206MRx4gXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406868897-26874-4-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 01, 2014 at 12:29:11PM -0700, Florian Fainelli wrote:
-> Hello,
-> 
-> 2014-08-01 7:33 GMT-07:00 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> > On Wed, Jul 30, 2014 at 9:23 PM, Brian Norris
-> > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> Hi Rob,
-> >>
-> >> I appreciate your comments, but where were many of these 5 months ago on
-> >> the first 7 revisions? :)
-> >
-> > Sorry, but that is the nature of upstreaming. But given some of the
-> > issues, it is obvious the reviews were not sufficient.
-> >
-> >> On a practical note: v9 is already queued for 3.17. Should I send
-> >> patches for the 3.17 cycle (or later) to fixup some of these issues? Or
-> >> would you recommend pulling the patches out of Matt Porter's tree now,
-> >> and reintroducing for 3.18? (I would be much happier with the first.)
-> >
-> > Things can always be un-queued. I guess that's Matt's and arm-soc's decision.
-> 
-> Does that mean we should get all those patches un-queued, because that
-> specific patch adding SMP support that needs to be reworked, or does
-> that mean that if we drop this specific patch we are good with the
-> remainder of the patch series?
+Andreas,
 
-Well, keep in mind that there's no specific patch adding SMP support.
-The patch here contains *all* of the actual code that goes through
-mach-bcm. The rest will go through Russell.
+On Thu, Jul 31, 2014 at 9:54 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
+ wrote:
+> Use the new style of referencing inherited nodes and use symbolic nam=
+es.
+> Reorder one pinctrl node in GPIO order.
+>
+> Goal is the alignment of all exynos5250 based device trees for compar=
+ison.
+>
+> Suggested-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>  v4 -> v5:
+>  * Introduced labels to consistently use new referencing style (Tomas=
+z)
+>  * Use IRQ_TYPE_* constants
+>  * Use some more GPIO_ACTIVE_*
+>
+>  v3 -> v4: Unchanged
+>
+>  v3: New (Doug Anderson)
+>
+>  arch/arm/boot/dts/exynos5250-snow.dts | 291 +++++++++++++++++-------=
+----------
+>  arch/arm/boot/dts/exynos5250.dtsi     |  20 +--
 
-Given what was missed, if we drop just this patch, we're left with just
-the DT, Kconfig, and MAINTAINERS changes. It doesn't seem like there's
-time to fix the problems now. It might be better to drop the whole
-series from arm-soc since it won't be functional in 3.17 if we drop
-just this patch. I'd like to see what Arnd and Olof think. I think
-there's value in leaving all the DT bits for 3.17.
+As much as possible it's nice to touch the main exynos dtsi file and
+specific board files in different patches.  Among other things it
+makes backporting the patch and resolving merge conflicts easier (if
+someone doesn't care about snow they could just pick up the main dtsi,
+for instance).
 
--Matt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not a total stickler and I'd love to see this land quickly to
+avoid conflicts, though...
+
+
+> +&sd3_clk {
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&sd3_cmd {
+> +       samsung,pin-pud =3D <3>;
+> +       samsung,pin-drv =3D <0>;
+> +};
+> +
+> +&sd3_bus4 {
+
+Itty bitty bitty nit that "bus" sorts alphabetically above "clk".  ;)
+Maybe Kukjin would be willing to sort these when he applies?
+
+
+Thank you for all your hard work on this one.  Things look MUCH MUCH
+nicer!  I did a pretty thorough review of your changes and it all
+looks good.
+
+Reviewed-by: Doug Anderson <dianders@chromium.org>
