@@ -1,60 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: renesas_usbhs: Add device tree bindings documentation
-Date: Fri, 01 Aug 2014 17:35:51 +0400
-Message-ID: <53DB97B7.2090203@cogentembedded.com>
-References: <53DB7EBA.3080004@renesas.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] of: Add vendor prefix for Innolux Corporation
+Date: Fri, 1 Aug 2014 15:49:07 +0200
+Message-ID: <20140801134905.GA20199@ulmo>
+References: <1404734672-14671-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53DB7EBA.3080004-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1404734672-14671-1-git-send-email-thierry.reding@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 08/01/2014 03:49 PM, Yoshihiro Shimoda wrote:
+--82I3+IH0IqGh5yIs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Document the device tree bindings for the Renesas USBHS controller.
-
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+On Mon, Jul 07, 2014 at 02:04:32PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>=20
+> According to Wikipedia, Innolux started out in 2003 as InnoLux Display
+> Corporation and merged with Chi Mei Optoelectronics in 2006. It went by
+> the name of Chimei Innolux Corporation for a while and changed its name
+> back to Innolux Corporation in late 2012.
+>=20
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->   .../devicetree/bindings/usb/renesas_usbhs.txt      |   24 ++++++++++++++++++++
->   1 file changed, 24 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> new file mode 100644
-> index 0000000..e9faa65
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> @@ -0,0 +1,24 @@
-> +Renesas Electronics USBHS driver
-> +
-> +Required properties:
-> +  - compatible: Must contain one of the following:
-> +	- "renesas,usbhs-r8a7790"
-> +	- "renesas,usbhs-r8a7791"
-> +  - reg: Base address and length of the register for the USBHS
-> +  - interrupts: Interrupt specifier for the USBHS
-> +  - clocks: A list of phandle + clock specifier pairs
-> +
-> +Optional properties:
-> +  - buswait_bwait: Integer to use BUSWAIT register
+Ping?
 
-   Should be named "renesas,buswait-bwait" or probably just "renesas,buswait".
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
+mentation/devicetree/bindings/vendor-prefixes.txt
+> index 4c4883e05df7..c9adab8eb2dc 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -63,6 +63,7 @@ ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
+>  iom	Iomega Corporation
+>  img	Imagination Technologies Ltd.
+> +innolux	Innolux Corporation
+>  intel	Intel Corporation
+>  intercontrol	Inter Control Group
+>  isee	ISEE 2007 S.L.
+> --=20
+> 2.0.1
+>=20
 
-> +  - enable-gpio: A gpio specifier to check GPIO determining if USB function
+--82I3+IH0IqGh5yIs
+Content-Type: application/pgp-signature
 
-   Should also be prefixed with "renesas,".
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-[...]
+iQIcBAEBAgAGBQJT25rRAAoJEN0jrNd/PrOhCVkP/iz54CMkpSHnJJBPtES5qp5r
+OHRaOP/XGwp0jZvQlQybjN4vp75tb4+5UGuG1efN0YZt328vg8Mhio+zvx8l2M4W
+ZvsmaIpYaMn/yIEBv9tp6sz1aiWGcHSuySILvsahZhC3nDAZVke+dZlHSZsO9OE5
+bRdzHQ64GO9RpUrhsweqdhDceb8jL2/N5eqp29aH+Z0tCslcAyNcC/vReb8kZ529
+ikbUI1C1TKk/T40Og0W46/CGDHAQBTZcCRPeYcZ+ajmGfGPtvbNN1DQVqTkP5tD6
+fbz2kAKp4P9pBOnbv2naarJQq5bz3Unf8VATHTEBeNY0Adq2LoMKc9WOn7Qhl4PP
+ZT4YFZPv9p1CIRJTk+cMESX55U1soQTf4IB44mjQJXwQWdJs7NW4xEu29tR30D6+
+XaFIA6qyC+lE+zbQKJknTRnrXCExS7lNGWnKq86SkXfEhAZ3a8QDF0/bXu/lBVBG
+3BublDoxRcrS1Aogz5hXDhEH9YhEK2XLjsKO5nu+RHGOCrNRC8IGvBtayfn/2YdY
+Sh1YTcMeebRDw1JZA4/4dYyZhW16n8oX44xddv0WX13GsvUPXAsCTZVXTJpjlxgT
+elMxmwVaSy5p9wrwk+PlpB4XG6V3beW2f8Y7YRC9sYMJ+qMod0IUZiuJJXtSUaWA
+C1omBzx8x0CRplrHKakY
+=inXf
+-----END PGP SIGNATURE-----
 
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--82I3+IH0IqGh5yIs--
