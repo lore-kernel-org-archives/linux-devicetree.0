@@ -1,102 +1,62 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Fri, 01 Aug 2014 18:05:15 +0100
-Message-ID: <87oaw4gmyc.fsf@approximate.cambridge.arm.com>
-References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
-	<1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
-	<87zjfqj3mc.fsf@approximate.cambridge.arm.com>
-	<53DBB562.5020003@amd.com> <53DBC074.3030309@amd.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] spi: davinci: add support to configure gpio cs
+ through dt
+Date: Fri, 1 Aug 2014 18:26:20 +0100
+Message-ID: <20140801172620.GA30458@sirena.org.uk>
+References: <1406911233-18999-1-git-send-email-grygorii.strashko@ti.com>
+ <1406911233-18999-2-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53DBC074.3030309@amd.com> (Suravee Suthikulanit's message of
-	"Fri, 1 Aug 2014 17:29:40 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YOxyDEsNCn0QNWql"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406911233-18999-2-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 01 2014 at  5:29:40 pm BST, Suravee Suthikulanit <suravee.suthikulpanit@amd.com> wrote:
-> On 8/1/2014 10:42 AM, Suravee Suthikulanit wrote:
->>>> +#ifdef CONFIG_SMP
->>>> +       .irq_set_affinity       = gic_set_affinity,
->>>> +#endif
->>>> +#ifdef CONFIG_PM
->>>> +       .irq_set_wake           = gic_set_wake,
->>>> +#endif
->>>> +};
->>>> +
->>>> +#ifdef CONFIG_OF
->>>> +static int __init
->>>> +gicv2m_of_init(struct device_node *node, struct device_node *parent)
->>>> +{
->>>> +       struct gic_chip_data *gic;
->>>> +       int ret;
->>>> +
->>>> +       ret = _gic_of_init(node, parent, &gicv2m_chip, &gic);
->>>> +       if (ret) {
->>>> +               pr_err("GICv2m: Failed to initialize GIC\n");
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       gic->msi_chip.owner = THIS_MODULE;
->>>> +       gic->msi_chip.of_node = node;
->>>> +       gic->msi_chip.setup_irq = gicv2m_setup_msi_irq;
->>>> +       gic->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
->>>> +       ret = of_pci_msi_chip_add(&gic->msi_chip);
->>>> +       if (ret) {
->>>> +               /* MSI is optional and not supported here */
->>>> +               pr_info("GICv2m: MSI is not supported.\n");
->>>> +               return 0;
->>>> +       }
->>>> +
->>>> +       ret = gicv2m_msi_init(node, &gic->v2m_data);
->>>> +       if (ret)
->>>> +               return ret;
->>>> +       return ret;
->>>> +}
->>>> +
->>>> +IRQCHIP_DECLARE(arm_gic_400_v2m, "arm,gic-400-v2m", gicv2m_of_init);
->>>
->>> So if you follow my advise of reversing your probing and call into the
->>> v2m init from the main GIC driver, you could take a irq_chip as a
->>> parameter, and use it to populate the v2m irq_chip, only overriding the
->>> two methods that actually differ.
->>>
->>> This would have the net effect of completely dropping patch #2, which
->>> becomes effectively useless.
->>>
->>
->> [Suravee] Ok, lemme look into this.
->
-> So, in previous revision, you mentioned that we should have a separate 
-> irq_chip for gicv2m stuff, is that is still the case here?
 
-Yes. You would do something like this:
+--YOxyDEsNCn0QNWql
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- In the main GIC code:
-	if (v2m_present()) {
-        	v2m_init(&gic_chip);
-        }
+On Fri, Aug 01, 2014 at 07:40:32PM +0300, Grygorii Strashko wrote:
+> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+>=20
+> Currently driver supports only configuration of GPIO CS through
+> platform data. This patch enhances the driver to configure GPIO
+> CS through DT. Also update the DT binding documentation to
+> reflect the availability of cs-gpios.
 
-- In the v2m code:
-	static struct irq_chip_v2m_chip;
-	void v2m_init(struct irq_chip *gic_chip)
-        {
-        	[...]
-        	v2m_chip = *gic_chip;
-                v2m_chip.mask = v2m_irq_mask;
-                v2m_chip.unmask = v2m_irq_unmask;
-                [...]
-        }
+Please submit an incremental patch with whatever the changes were from
+the version of this that I applied already.
 
-Basically, you inherit a number of default methods, only overloading the
-ones that are different. The rest of your driver is mostly unchanged.
+--YOxyDEsNCn0QNWql
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This preserves the current probing structure, and avoids exposing
-private methods outside of irq-gic.c (preventing people from doing silly
-things with an unsuspecting interrupt controller...).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+iQIcBAEBAgAGBQJT2825AAoJELSic+t+oim9uq4P/2MBs/rvvBj7luODTtlVVWTi
+ruNvsNBJzaRZa+XPk5dvAu3rNBdd1gQp1tqR0hs2qDvlI952TWR79zgcZL6iJOyx
+8HIIa5m5h3i0WIBRT9KkdVoMFcakYxilPqR2uB2Meg6UkW2Olnj/B3MmWrLaSqIV
+iaW1LpxVxm6vuF0UYkq6Bt0qOOKSN7NImeYSSqqs654iW/JPSoKpHkZse1RFGC8g
+x8sjkacoLXAMdCkMKQm0WTlTltLJ9MAqRVQHcAerqwIJVI0eqBClc6/SkLYZ+O1R
+jJM9SqGa++kpCCjgXgz7d0GsGxMSJUy4Z9KdJHMXCQ3DMrMsRqfxJX18ncBkuj/M
+AlYYkfWdubCvNo2gP5Sy4K8h9FtC6fFqm7ripk4gZMgmbzDSCUEU/ZnFkfGsWBw6
+Lgd6vQx0IFtwe6to8TYXlTTyabBkxsDL0Q9TOXh/nN6FYYdWm8WnZhTnKECvIzu4
+gG9+0/t1SfvnPS8q4OJDgwpnVU7L1Hbu3NCipa78qJZkdRm9HAU0jqeVVg+jprQB
+ct9K11DVIR1w1r9D5KvHdtUxHOa+N0JqrIl0wxJvVWFQYDXHEf+PwM4/Wo/rbBkc
+ppYKAwY09pb9wUoQvTflyQFFIATQbFfyE/0AlqZS7oPJfuyVfSZDAb99hcqs33zU
+9pfKE99COtw+pdihkLyU
+=jXKl
+-----END PGP SIGNATURE-----
+
+--YOxyDEsNCn0QNWql--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
