@@ -1,260 +1,196 @@
-From: Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Fri, 1 Aug 2014 10:42:26 -0500
-Message-ID: <53DBB562.5020003@amd.com>
-References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
-	<1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
- <87zjfqj3mc.fsf@approximate.cambridge.arm.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/2] spi: davinci: add support to configure gpio cs through dt
+Date: Fri, 1 Aug 2014 19:40:32 +0300
+Message-ID: <1406911233-18999-2-git-send-email-grygorii.strashko@ti.com>
+References: <1406911233-18999-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87zjfqj3mc.fsf-BgpFEFc6EmV6Fr0h90IsVGS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org" <Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406911233-18999-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/30/2014 9:57 AM, Marc Zyngier wrote:
-> On Thu, Jul 10 2014 at 12:05:03 am BST, "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org> wrote:
->
-> Hi Suravee,
->
->> From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>
- >> ......
- >>
->> -  first region is the GIC distributor register base and size. The 2nd region is
->> -  the GIC cpu interface register base and size.
->> +- reg : Specifies base physical address(s) and size of the GIC register frames.
->> +
->> +  Region | Description
->> +  Index  |
->> +  -------------------------------------------------------------------
->> +     0   | GIC distributor register base and size
->> +     1   | GIC cpu interface register base and size
->> +     2   | VGIC interface control register base and size (Optional)
->> +     3   | VGIC CPU interface register base and size (Optional)
->> +     4   | GICv2m MSI interface register base and size (Optional)
->
-> Given that the v2m block is somehow bolted on the side of a standard
-> GICv2, I'd rather see it as a subnode of the main GIC.
->
-> Then you could directly call into the v2m layer to initialize it,
-> instead of the odd "reverse probing" you're using here...
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 
-[Suravee] IIUC, you don't think we should introduce the "gic-400-v2m" 
-compatible ID. Instead, you want to see something like:
+Currently driver supports only configuration of GPIO CS through
+platform data. This patch enhances the driver to configure GPIO
+CS through DT. Also update the DT binding documentation to
+reflect the availability of cs-gpios.
 
-     gic @ 0x00f00000 {
-         .....
-         v2m {
-             msi-controller;
-             reg = < .... >; /* v2m reg frame */
-         }
-     }
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/spi/spi-davinci.txt        |    9 ++-
+ drivers/spi/spi-davinci.c                          |   64 +++++++++++++++++---
+ 2 files changed, 64 insertions(+), 9 deletions(-)
 
-If so, I can change this.
-
-
->> +
->> +static int __init
->> +gicv2m_msi_init(struct device_node *node, struct v2m_data *v2m)
->> +{
->> +       unsigned int val;
->> +
->> +       if (of_address_to_resource(node, GIC_OF_MSIV2M_RANGE_INDEX,
->> +                                  &v2m->res)) {
->> +               pr_err("GICv2m: Failed locate GICv2m MSI register frame\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       v2m->base = of_iomap(node, GIC_OF_MSIV2M_RANGE_INDEX);
->> +       if (!v2m->base) {
->> +               pr_err("GICv2m: Failed to map GIC MSI registers\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       val = readl_relaxed(v2m->base + V2M_MSI_TYPER);
->> +       if (!val) {
->> +               pr_warn("GICv2m: Failed to read V2M_MSI_TYPER register\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       v2m->spi_start = (val >> V2M_MSI_TYPER_BASE_SHIFT) &
->> +                               V2M_MSI_TYPER_BASE_MASK;
->> +       v2m->nr_spis = val & V2M_MSI_TYPER_NUM_MASK;
->> +       if ((v2m->spi_start < V2M_MIN_SPI) || (v2m->nr_spis >= V2M_MAX_SPI)) {
->> +                       pr_err("GICv2m: Invalid MSI_TYPER (%#x)\n", val);
->> +                       return -EINVAL;
->> +       }
->> +
->> +       v2m->bm = kzalloc(sizeof(long) * BITS_TO_LONGS(v2m->nr_spis),
->> +                         GFP_KERNEL);
->> +       if (!v2m->bm) {
->> +               pr_err("GICv2m: Failed to allocate MSI bitmap\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       spin_lock_init(&v2m->msi_cnt_lock);
->> +
->> +       pr_info("GICv2m: SPI range [%d:%d]\n",
->> +               v2m->spi_start, (v2m->spi_start + v2m->nr_spis));
->> +
->> +       return 0;
->> +}
->
-> This function is assuming that you will only see one single MSI frame
-> here. Is there any chance that there would be more than one in a system?
->
-
-[Suravee] If I would imagine such SOC, where there are multiple MSI 
-frames (hence multiple msi-controllers), can we currently support this 
-with the current msichip interface?  Currently, each PCI RC connects to 
-an "interrupt-parrent", which is also an MSI controller. We would need 
-to have a way for PCI RC to specify which of the msichips within an 
-interrupt-controller it wants to use.
-
-Currently, I am not aware if there is a GIC w/ multiple MSI frames. 
-Could you check if there is such product for ARM GICs?
-
->> +
->> +static void gicv2m_mask_irq(struct irq_data *d)
->> +{
->> +       gic_mask_irq(d);
->> +       if (d->msi_desc)
->> +               mask_msi_irq(d);
->> +}
->> +
->> +static void gicv2m_unmask_irq(struct irq_data *d)
->> +{
->> +       gic_unmask_irq(d);
->> +       if (d->msi_desc)
->> +               unmask_msi_irq(d);
->> +}
->> +
->> +static struct irq_chip gicv2m_chip = {
->> +       .name                   = "GICv2m",
->> +       .irq_mask               = gicv2m_mask_irq,
->> +       .irq_unmask             = gicv2m_unmask_irq,
->> +       .irq_eoi                = gic_eoi_irq,
->> +       .irq_set_type           = gic_set_type,
->> +       .irq_retrigger          = gic_retrigger,
->
-> I think you can loose the retrigger here.
->
-OK.
-
->> +#ifdef CONFIG_SMP
->> +       .irq_set_affinity       = gic_set_affinity,
->> +#endif
->> +#ifdef CONFIG_PM
->> +       .irq_set_wake           = gic_set_wake,
->> +#endif
->> +};
->> +
->> +#ifdef CONFIG_OF
->> +static int __init
->> +gicv2m_of_init(struct device_node *node, struct device_node *parent)
->> +{
->> +       struct gic_chip_data *gic;
->> +       int ret;
->> +
->> +       ret = _gic_of_init(node, parent, &gicv2m_chip, &gic);
->> +       if (ret) {
->> +               pr_err("GICv2m: Failed to initialize GIC\n");
->> +               return ret;
->> +       }
->> +
->> +       gic->msi_chip.owner = THIS_MODULE;
->> +       gic->msi_chip.of_node = node;
->> +       gic->msi_chip.setup_irq = gicv2m_setup_msi_irq;
->> +       gic->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
->> +       ret = of_pci_msi_chip_add(&gic->msi_chip);
->> +       if (ret) {
->> +               /* MSI is optional and not supported here */
->> +               pr_info("GICv2m: MSI is not supported.\n");
->> +               return 0;
->> +       }
->> +
->> +       ret = gicv2m_msi_init(node, &gic->v2m_data);
->> +       if (ret)
->> +               return ret;
->> +       return ret;
->> +}
->> +
->> +IRQCHIP_DECLARE(arm_gic_400_v2m, "arm,gic-400-v2m", gicv2m_of_init);
->
-> So if you follow my advise of reversing your probing and call into the
-> v2m init from the main GIC driver, you could take a irq_chip as a
-> parameter, and use it to populate the v2m irq_chip, only overriding the
-> two methods that actually differ.
->
-> This would have the net effect of completely dropping patch #2, which
-> becomes effectively useless.
->
-
-[Suravee] Ok, lemme look into this.
-
->>   struct gic_chip_data {
->>          union gic_base dist_base;
->>          union gic_base cpu_base;
->> @@ -20,12 +31,23 @@ struct gic_chip_data {
->>   #endif
->>          struct irq_domain *domain;
->>          unsigned int gic_irqs;
->> -       struct irq_chip *irq_chip;
->>   #ifdef CONFIG_GIC_NON_BANKED
->>          void __iomem *(*get_base)(union gic_base *);
->>   #endif
->> +       struct irq_chip *irq_chip;
->> +       struct msi_chip msi_chip;
->> +#ifdef CONFIG_ARM_GIC_V2M
->> +       struct v2m_data v2m_data;
->> +#endif
->
-> Why isn't msi_chip directly part of v2m_data? I think that would make
-> some of the code slightly clearer, and avoid polluting unsuspecting
-> architectures...
->
-
-[Suravee] I can do that.
-
->>   };
->>
->> +#ifdef CONFIG_OF
->> +int _gic_of_init(struct device_node *node,
->> +                struct device_node *parent,
->> +                struct irq_chip *chip,
->> +                struct gic_chip_data **gic) __init;
->> +#endif
->> +
->>   void gic_mask_irq(struct irq_data *d);
->>   void gic_unmask_irq(struct irq_data *d);
->>   void gic_eoi_irq(struct irq_data *d);
->> @@ -42,11 +64,4 @@ int gic_set_affinity(struct irq_data *d,
->>   int gic_set_wake(struct irq_data *d, unsigned int on);
->>   #endif
->>
->> -#ifdef CONFIG_OF
->> -int _gic_of_init(struct device_node *node,
->> -                struct device_node *parent,
->> -                struct irq_chip *chip,
->> -                struct gic_chip_data **gic) __init;
->> -#endif
->> -
->>   #endif /* _IRQ_GIC_H_ */
->
-> What is the purpose of this move?
->
-[Suravee] No need. I might have accidentally moved it.
-
-Thanks,
-
-Suravee
-
+diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+index 6d0ac8d..f80887b 100644
+--- a/Documentation/devicetree/bindings/spi/spi-davinci.txt
++++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+@@ -8,7 +8,8 @@ Required properties:
+ 	- "ti,dm6441-spi" for SPI used similar to that on DM644x SoC family
+ 	- "ti,da830-spi" for SPI used similar to that on DA8xx SoC family
+ - reg: Offset and length of SPI controller register space
+-- num-cs: Number of chip selects
++- num-cs: Number of chip selects. This includes internal as well as
++	GPIO chip selects.
+ - ti,davinci-spi-intr-line: interrupt line used to connect the SPI
+ 	IP to the interrupt controller within the SoC. Possible values
+ 	are 0 and 1. Manual says one of the two possible interrupt
+@@ -17,6 +18,12 @@ Required properties:
+ - interrupts: interrupt number mapped to CPU.
+ - clocks: spi clk phandle
+ 
++Optional:
++- cs-gpios: gpio chip selects
++	For example to have 3 internal CS and 2 GPIO CS, user could define
++	cs-gpios = <0>, <0>, <0>, <&gpio1 30 0>, <&gpio1 31 0>;
++	where first three are internal CS and last two are GPIO CS.
++
+ Example of a NOR flash slave device (n25q032) connected to DaVinci
+ SPI controller device over the SPI bus.
+ 
+diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+index 2477af4..ac4414e0 100644
+--- a/drivers/spi/spi-davinci.c
++++ b/drivers/spi/spi-davinci.c
+@@ -30,6 +30,7 @@
+ #include <linux/edma.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi_bitbang.h>
+ #include <linux/slab.h>
+@@ -207,17 +208,28 @@ static inline void clear_io_bits(void __iomem *addr, u32 bits)
+ static void davinci_spi_chipselect(struct spi_device *spi, int value)
+ {
+ 	struct davinci_spi *dspi;
++	struct device_node *np = spi->dev.of_node;
+ 	struct davinci_spi_platform_data *pdata;
++	struct spi_master *master = spi->master;
+ 	u8 chip_sel = spi->chip_select;
+ 	u16 spidat1 = CS_DEFAULT;
+ 	bool gpio_chipsel = false;
++	int gpio;
+ 
+ 	dspi = spi_master_get_devdata(spi->master);
+ 	pdata = &dspi->pdata;
+ 
+-	if (pdata->chip_sel && chip_sel < pdata->num_chipselect &&
+-				pdata->chip_sel[chip_sel] != SPI_INTERN_CS)
++	if (np && master->cs_gpios != NULL && spi->cs_gpio >= 0) {
++		/* SPI core parse and update master->cs_gpio */
+ 		gpio_chipsel = true;
++		gpio = spi->cs_gpio;
++	} else if (pdata->chip_sel &&
++		   chip_sel < pdata->num_chipselect &&
++		   pdata->chip_sel[chip_sel] != SPI_INTERN_CS) {
++		/* platform data defines chip_sel */
++		gpio_chipsel = true;
++		gpio = pdata->chip_sel[chip_sel];
++	}
+ 
+ 	/*
+ 	 * Board specific chip select logic decides the polarity and cs
+@@ -225,9 +237,9 @@ static void davinci_spi_chipselect(struct spi_device *spi, int value)
+ 	 */
+ 	if (gpio_chipsel) {
+ 		if (value == BITBANG_CS_ACTIVE)
+-			gpio_set_value(pdata->chip_sel[chip_sel], 0);
++			gpio_set_value(gpio, 0);
+ 		else
+-			gpio_set_value(pdata->chip_sel[chip_sel], 1);
++			gpio_set_value(gpio, 1);
+ 	} else {
+ 		if (value == BITBANG_CS_ACTIVE) {
+ 			spidat1 |= SPIDAT1_CSHOLD_MASK;
+@@ -390,17 +402,41 @@ static int davinci_spi_setup(struct spi_device *spi)
+ 	int retval = 0;
+ 	struct davinci_spi *dspi;
+ 	struct davinci_spi_platform_data *pdata;
++	struct spi_master *master = spi->master;
++	struct device_node *np = spi->dev.of_node;
++	bool internal_cs = true;
+ 
+ 	dspi = spi_master_get_devdata(spi->master);
+ 	pdata = &dspi->pdata;
+ 
+ 	if (!(spi->mode & SPI_NO_CS)) {
+-		if ((pdata->chip_sel == NULL) ||
+-		    (pdata->chip_sel[spi->chip_select] == SPI_INTERN_CS))
+-			set_io_bits(dspi->base + SPIPC0, 1 << spi->chip_select);
+-
++		if (np && (master->cs_gpios != NULL) && (spi->cs_gpio >= 0)) {
++			unsigned long flags;
++
++			flags = GPIOF_DIR_OUT;
++			if (spi->mode & SPI_CS_HIGH)
++				flags |= GPIOF_INIT_LOW;
++			else
++				flags |= GPIOF_INIT_HIGH;
++			retval = gpio_request_one(spi->cs_gpio,
++						  flags, dev_name(&spi->dev));
++			if (retval) {
++				dev_err(&spi->dev,
++					"GPIO %d request failed (%d)\n",
++					spi->cs_gpio, retval);
++				return retval;
++			}
++			internal_cs = false;
++		} else if (pdata->chip_sel &&
++			   spi->chip_select < pdata->num_chipselect &&
++			   pdata->chip_sel[spi->chip_select] != SPI_INTERN_CS) {
++			internal_cs = false;
++		}
+ 	}
+ 
++	if (internal_cs)
++		set_io_bits(dspi->base + SPIPC0, 1 << spi->chip_select);
++
+ 	if (spi->mode & SPI_READY)
+ 		set_io_bits(dspi->base + SPIPC0, SPIPC0_SPIENA_MASK);
+ 
+@@ -412,6 +448,15 @@ static int davinci_spi_setup(struct spi_device *spi)
+ 	return retval;
+ }
+ 
++static void davinci_spi_cleanup(struct spi_device *spi)
++{
++	struct spi_master *master = spi->master;
++	struct device_node *np = spi->dev.of_node;
++
++	if (np && (master->cs_gpios != NULL) && (spi->cs_gpio >= 0))
++		gpio_free(spi->cs_gpio);
++}
++
+ static int davinci_spi_check_error(struct davinci_spi *dspi, int int_status)
+ {
+ 	struct device *sdev = dspi->bitbang.master->dev.parent;
+@@ -810,6 +855,8 @@ static int spi_davinci_get_pdata(struct platform_device *pdev,
+ 
+ 	/*
+ 	 * default num_cs is 1 and all chipsel are internal to the chip
++	 * indicated by chip_sel being NULL or cs_gpios being NULL or
++	 * set to -ENOENT. num-cs includes internal as well as gpios.
+ 	 * indicated by chip_sel being NULL. GPIO based CS is not
+ 	 * supported yet in DT bindings.
+ 	 */
+@@ -921,6 +968,7 @@ static int davinci_spi_probe(struct platform_device *pdev)
+ 	master->num_chipselect = pdata->num_chipselect;
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(2, 16);
+ 	master->setup = davinci_spi_setup;
++	master->cleanup = davinci_spi_cleanup;
+ 
+ 	dspi->bitbang.chipselect = davinci_spi_chipselect;
+ 	dspi->bitbang.setup_transfer = davinci_spi_setup_transfer;
+-- 
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
