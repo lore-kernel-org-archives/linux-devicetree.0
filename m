@@ -1,42 +1,144 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/2] spi: davinci: add support for gpio cs through dt
-Date: Fri, 1 Aug 2014 19:40:31 +0300
-Message-ID: <1406911233-18999-1-git-send-email-grygorii.strashko@ti.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Fri, 01 Aug 2014 17:05:14 +0100
+Message-ID: <87silggpqd.fsf@approximate.cambridge.arm.com>
+References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
+	<1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
+	<87zjfqj3mc.fsf@approximate.cambridge.arm.com>
+	<53DBB562.5020003@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <53DBB562.5020003@amd.com> (Suravee Suthikulanit's message of
+	"Fri, 1 Aug 2014 16:42:26 +0100")
+Sender: linux-pci-owner@vger.kernel.org
+To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This small series enables GPIO chip select feature for Davinci SPI
-when DT-boot mode is used.
-This is actual for Keystone 2 which supports DT-boot mode only.
+On Fri, Aug 01 2014 at  4:42:26 pm BST, Suravee Suthikulanit <suravee.suthikulpanit@amd.com> wrote:
+> On 7/30/2014 9:57 AM, Marc Zyngier wrote:
+>> On Thu, Jul 10 2014 at 12:05:03 am BST, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com> wrote:
+>>
+>> Hi Suravee,
+>>
+>>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>>
+>  >> ......
+>  >>
+>>> -  first region is the GIC distributor register base and size. The 2nd region is
+>>> -  the GIC cpu interface register base and size.
+>>> +- reg : Specifies base physical address(s) and size of the GIC register frames.
+>>> +
+>>> +  Region | Description
+>>> +  Index  |
+>>> +  -------------------------------------------------------------------
+>>> +     0   | GIC distributor register base and size
+>>> +     1   | GIC cpu interface register base and size
+>>> +     2   | VGIC interface control register base and size (Optional)
+>>> +     3   | VGIC CPU interface register base and size (Optional)
+>>> +     4   | GICv2m MSI interface register base and size (Optional)
+>>
+>> Given that the v2m block is somehow bolted on the side of a standard
+>> GICv2, I'd rather see it as a subnode of the main GIC.
+>>
+>> Then you could directly call into the v2m layer to initialize it,
+>> instead of the odd "reverse probing" you're using here...
+>
+> [Suravee] IIUC, you don't think we should introduce the "gic-400-v2m" 
+> compatible ID. Instead, you want to see something like:
+>
+>      gic @ 0x00f00000 {
+>          .....
+>          v2m {
+>              msi-controller;
+>              reg = < .... >; /* v2m reg frame */
+>          }
+>      }
+>
+> If so, I can change this.
 
-Changes in v2:
-- gpio_request_one() is used
-- as suggested by Mark Brown, new patch has been added which updates
-  Davinci SPI driver to use cs_gpio field
-  of SPI device structure (spi_device) for both DT and non-DT cases.
+Yes, something like that indeed.
 
-v1:
- http://www.spinics.net/lists/linux-spi/msg01446.html
+>
+>
+>>> +
+>>> +static int __init
+>>> +gicv2m_msi_init(struct device_node *node, struct v2m_data *v2m)
+>>> +{
+>>> +       unsigned int val;
+>>> +
+>>> +       if (of_address_to_resource(node, GIC_OF_MSIV2M_RANGE_INDEX,
+>>> +                                  &v2m->res)) {
+>>> +               pr_err("GICv2m: Failed locate GICv2m MSI register frame\n");
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       v2m->base = of_iomap(node, GIC_OF_MSIV2M_RANGE_INDEX);
+>>> +       if (!v2m->base) {
+>>> +               pr_err("GICv2m: Failed to map GIC MSI registers\n");
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       val = readl_relaxed(v2m->base + V2M_MSI_TYPER);
+>>> +       if (!val) {
+>>> +               pr_warn("GICv2m: Failed to read V2M_MSI_TYPER register\n");
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       v2m->spi_start = (val >> V2M_MSI_TYPER_BASE_SHIFT) &
+>>> +                               V2M_MSI_TYPER_BASE_MASK;
+>>> +       v2m->nr_spis = val & V2M_MSI_TYPER_NUM_MASK;
+>>> +       if ((v2m->spi_start < V2M_MIN_SPI) || (v2m->nr_spis >= V2M_MAX_SPI)) {
+>>> +                       pr_err("GICv2m: Invalid MSI_TYPER (%#x)\n", val);
+>>> +                       return -EINVAL;
+>>> +       }
+>>> +
+>>> +       v2m->bm = kzalloc(sizeof(long) * BITS_TO_LONGS(v2m->nr_spis),
+>>> +                         GFP_KERNEL);
+>>> +       if (!v2m->bm) {
+>>> +               pr_err("GICv2m: Failed to allocate MSI bitmap\n");
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       spin_lock_init(&v2m->msi_cnt_lock);
+>>> +
+>>> +       pr_info("GICv2m: SPI range [%d:%d]\n",
+>>> +               v2m->spi_start, (v2m->spi_start + v2m->nr_spis));
+>>> +
+>>> +       return 0;
+>>> +}
+>>
+>> This function is assuming that you will only see one single MSI frame
+>> here. Is there any chance that there would be more than one in a system?
+>>
+>
+> [Suravee] If I would imagine such SOC, where there are multiple MSI 
+> frames (hence multiple msi-controllers), can we currently support this 
+> with the current msichip interface?  Currently, each PCI RC connects to 
+> an "interrupt-parrent", which is also an MSI controller. We would need 
+> to have a way for PCI RC to specify which of the msichips within an 
+> interrupt-controller it wants to use.
 
-Grygorii Strashko (1):
-  spi: davinci: use spi_device.cs_gpio to store gpio cs per spi device
+Not necessarly multiple MSI controllers. As far as I can see, a v2m MSI
+frame describes a range of SPIs, and I can perfectly imagine a system
+where someone would have a number of these, each capable of generating a
+number of SPIs. It becomes interesting when you have non-contiguous SPI
+ranges... ;-)
 
-Murali Karicheri (1):
-  spi: davinci: add support to configure gpio cs through dt
+> Currently, I am not aware if there is a GIC w/ multiple MSI frames. 
+> Could you check if there is such product for ARM GICs?
 
- .../devicetree/bindings/spi/spi-davinci.txt        |    9 ++-
- drivers/spi/spi-davinci.c                          |   60 ++++++++++++++------
- 2 files changed, 52 insertions(+), 17 deletions(-)
+I can, but it is unlikely I'll be able to find about what people outside
+of ARM are doing. They usually only get in touch when they've screwed
+something up.. ;-)
 
+Anyway, maybe we just don't need to address this at this point in
+time. Adding a comment to that effect would probably be enough, and give
+a hint to anyone building such a configuration.
+
+Thanks,
+
+	M.
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jazz is not dead. It just smells funny.
