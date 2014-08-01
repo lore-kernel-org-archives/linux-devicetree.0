@@ -1,60 +1,68 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v3] Documentation: devicetree: Fix tps65090 typos in example
-Date: Fri, 1 Aug 2014 01:51:13 +0200
-Message-ID: <CABxcv==gNo84M7uFK04MiJp=Wn-n3uS4xH3QzxMNoKuOirH0VQ@mail.gmail.com>
-References: <1406755767-5910-1-git-send-email-afaerber@suse.de>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting
+ disabled
+Date: Thu, 31 Jul 2014 17:30:25 -0700
+Message-ID: <20140801003025.4463.76384@quantum>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
+ <1406661128-7614-2-git-send-email-heiko@sntech.de>
+ <20140731224523.4463.34464@quantum> <4047366.k35vzjcKGH@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406755767-5910-1-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4047366.k35vzjcKGH@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, dianders@chromium.org, kever.yang@rock-chips.com, arm@kernel.org, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Andreas,
-
-On Wed, Jul 30, 2014 at 11:29 PM, Andreas F=C3=A4rber <afaerber@suse.de=
-> wrote:
-> Specification and existing device trees use vsys-l{1,2}-supply,
-> not vsys_l{1,2}-supply. Fix the example to match the specification.
->
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Fixes: 21d2202158e9 ("mfd: tps65090: add DT support for tps65090")
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->  v2 -> v3:
->  * Added Fixes header
->  * + regulator and mfd maintainers
->
->  v1 -> v2:
->  * More verbose commit message (requested by Mark Rutland)
->
->  Documentation/devicetree/bindings/regulator/tps65090.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt=
- b/Documentation/devicetree/bindings/regulator/tps65090.txt
-> index 340980239ea9..ca69f5e3040c 100644
-> --- a/Documentation/devicetree/bindings/regulator/tps65090.txt
-> +++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
-> @@ -45,8 +45,8 @@ Example:
->                 infet5-supply =3D <&some_reg>;
->                 infet6-supply =3D <&some_reg>;
->                 infet7-supply =3D <&some_reg>;
-> -               vsys_l1-supply =3D <&some_reg>;
-> -               vsys_l2-supply =3D <&some_reg>;
-> +               vsys-l1-supply =3D <&some_reg>;
-> +               vsys-l2-supply =3D <&some_reg>;
->
-
-True, these also matches the .supply_name used when registering the
-LDO[1-2] regulators in the tps65090 driver. So clearly the example was
-wrong while the property specification is correct.
-
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-
-Best regards,
-Javier
+UXVvdGluZyBIZWlrbyBTdMO8Ym5lciAoMjAxNC0wNy0zMSAxNjoyOTozNCkKPiBIaSBNaWtlLAo+
+IAo+IEFtIERvbm5lcnN0YWcsIDMxLiBKdWxpIDIwMTQsIDE1OjQ1OjIzIHNjaHJpZWIgTWlrZSBU
+dXJxdWV0dGU6Cj4gPiBRdW90aW5nIEhlaWtvIFN0dWVibmVyICgyMDE0LTA3LTI5IDEyOjEyOjA1
+KQo+ID4gCj4gPiA+IFRoZSBjbG9jay10cmVlIGNvbnRhaW5zIGNsb2NrcyB0aGF0IHNob3VsZCBu
+ZXZlciBnZXQgZGlzYWJsZWQKPiA+ID4gYXV0b21hdGljYWxseS4gT25lIGV4YW1wbGUgYXJlIHRo
+ZSBiYXNlIEFDTEtzLCB0aGUgYmFzZSBzdXBwbGllcyBmb3IgYWxsCj4gPiA+IHBlcmlwaGVyYWxz
+Lgo+ID4gPiAKPiA+ID4gVGhlcmVmb3JlIGFkZCBhIHN0cnVjdHVyZSBzaW1pbGFyIHRvIHRoZSBz
+dW54aSBjbG9jay10cmVlIHRvIHByb3RlY3QgdGhlc2UKPiA+ID4gc3BlY2lhbCBjbG9ja3MgZnJv
+bSBiZWluZyBkaXNhYmxlZC4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVi
+bmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gPiA+IC0tLQo+ID4gPiAKPiA+ID4gIGRyaXZlcnMvY2xr
+L3JvY2tjaGlwL2Nsay1yazMxODguYyB8ICA3ICsrKysrKysKPiA+ID4gIGRyaXZlcnMvY2xrL3Jv
+Y2tjaGlwL2Nsay1yazMyODguYyB8ICA3ICsrKysrKysKPiA+ID4gIGRyaXZlcnMvY2xrL3JvY2tj
+aGlwL2Nsay5jICAgICAgICB8IDEzICsrKysrKysrKysrKysKPiA+ID4gIGRyaXZlcnMvY2xrL3Jv
+Y2tjaGlwL2Nsay5oICAgICAgICB8ICAxICsKPiA+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMjggaW5z
+ZXJ0aW9ucygrKQo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3JvY2tjaGlw
+L2Nsay1yazMxODguYwo+ID4gPiBiL2RyaXZlcnMvY2xrL3JvY2tjaGlwL2Nsay1yazMxODguYyBp
+bmRleCBhODNhNmQ4Li41YWVmMjc3IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2Nsay9yb2Nr
+Y2hpcC9jbGstcmszMTg4LmMKPiA+ID4gKysrIGIvZHJpdmVycy9jbGsvcm9ja2NoaXAvY2xrLXJr
+MzE4OC5jCj4gPiA+IEBAIC01OTksNiArNTk5LDExIEBAIHN0YXRpYyBzdHJ1Y3Qgcm9ja2NoaXBf
+Y2xrX2JyYW5jaAo+ID4gPiByazMxODhfY2xrX2JyYW5jaGVzW10gX19pbml0ZGF0YSA9IHs+IAo+
+ID4gPiAgICAgICAgIEdBVEUoQUNMS19HUFMsICJhY2xrX2dwcyIsICJhY2xrX3BlcmkiLCAwLCBS
+SzI5MjhfQ0xLR0FURV9DT04oOCksCj4gPiA+ICAgICAgICAgMTMsIEdGTEFHUyksPiAgCj4gPiA+
+ICB9Owo+ID4gPiAKPiA+ID4gK3N0YXRpYyBjb25zdCBjaGFyICpyazMxODhfY3JpdGljYWxfY2xv
+Y2tzW10gX19pbml0Y29uc3QgPSB7Cj4gPiA+ICsgICAgICAgImFjbGtfY3B1IiwKPiA+ID4gKyAg
+ICAgICAiYWNsa19wZXJpIiwKPiA+IAo+ID4gSSdtIG5vdCBhZ2FpbnN0IHRoZSBpZGVhIG9mIGNy
+aXRpY2FsIGNsb2NrcywgYnV0IEkgd2FudCB0byB2ZXJpZnkgdGhhdAo+ID4gdGhlcmUgaXMgbm8g
+b3RoZXIgZHJpdmVyIG91dCB0aGVyZSB0aGF0IGlzIGEgYmV0dGVyIGZpdCBmb3IgY2xhaW1pbmcK
+PiA+IHRoZXNlIGNsa3MgdmlhIGNsa19nZXQgYW5kIGVuYWJsaW5nIHRoZW0gdGhlIG5vcm1hbCB3
+YXkgdmlhIGNsa19lbmFibGU/Cj4gCj4gSW4gdGhlIGNsb2NrIGhpZXJhcmNoeSBvZiBSb2NrY2hp
+cCBTb0NzLCBib3RoIGFjbGtzIGxpc3RlZCBoZXJlLCBhcmUgc291cmNlcyAKPiBmb3IgcGNsayBh
+bmQgaGNsaywgYXMgd2VsbCBhcyBzb3VyY2luZyBzb21lIG90aGVyIHBlcmlwaGVyYWwgZ2F0ZXMg
+ZnVydGhlciAKPiBiZWxvdyB0b28uIFNvIGZyb20gd2hhdCBJJ3ZlIHNlZW4gZnJvbSB0aGUgY2xv
+Y2sgZGlhZ3JhbXMsIHRoZXJlIGlzIG5vdGhpbmcgCj4gdGhhdCB3b3VsZCBjbGFpbSB0aGVzZSBj
+bG9ja3MgZGlyZWN0bHksIGFuZCBpdCB3b3VsZG4ndCBhbHNvIG1ha2UgYW55IHNlbnNlIHRvIAo+
+IGxldCB0aGVtIGdldCBkaXNhYmxlZCBhcyB0aGVyZSB3aWxsIGFsd2F5cyBiZSBzb21ldGhpbmcg
+dXNpbmcgdGhlbSAoZm9yIAo+IGV4YW1wbGUgdGhlIGRyYW0tY29udHJvbGxlcikuCgpTb3VuZHMg
+Z29vZC4gSnVzdCBvdXQgb2YgY3VyaW9zaXR5LCB1bmRlciB3aGF0IGNpcmN1bXN0YW5jZXMgd291
+bGQgeW91CndhbnQgdG8gZ2F0ZSB0aGVtPyBJcyB0aGVyZSBhIHVzZSBjYXNlIGZvciBpdD8KClJl
+Z2FyZHMsCk1pa2UKCj4gCj4gCj4gSGVpa28KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
