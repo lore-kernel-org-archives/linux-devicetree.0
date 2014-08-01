@@ -1,46 +1,63 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
-Date: Fri, 01 Aug 2014 05:17:42 +0200
-Message-ID: <53DB06D6.9060604@suse.de>
-References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <53DA936E.9060004@gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCHv9 1/5] mmc: dw_mmc: Slot quirk "disable-wp" is deprecated.
+Date: Fri, 01 Aug 2014 13:26:43 +0900
+Message-ID: <53DB1703.4090002@samsung.com>
+References: <1406784907-26349-1-git-send-email-jh80.chung@samsung.com>
+ <1406784907-26349-2-git-send-email-jh80.chung@samsung.com>
+ <CAD=FV=VfXOqt1A=8-1kq5nhnMrk7PbpCWj-A-UWQN12_U8sW4g@mail.gmail.com>
+ <53DA8CCB.3080900@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53DA936E.9060004@gmail.com>
+In-reply-to: <53DA8CCB.3080900@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, open list <linux-kernel@vger.kernel.org>
+To: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@google.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Dinh Nguyen <dinguyen@altera.com>, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, cpgs <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 31.07.2014 21:05, schrieb Tomasz Figa:
->> +
->> +&i2c_2 {
->> +	status =3D "okay";
->> +	samsung,i2c-sda-delay =3D <100>;
->> +	samsung,i2c-max-bus-freq =3D <66000>;
->> +
->> +	hdmiddc@50 {
->> +		compatible =3D "samsung,exynos4210-hdmiddc";
->> +		reg =3D <0x50>;
->> +	};
->=20
-> I don't think this matches current Exynos HDMI bindings, which I beli=
-eve
-> have been changed to just take a phandle to i2c bus instead.
+Hi, All.
 
-Looks correct to me:
+It seems too late that this patch-set is merged into linux-3.16.
+Also there are some conflicts in device-tree. (I will remove the conflicts)
+So if everybody is ok, I will rebase on linux-next after released linux-3.16.
+At that time, i will send this patch-set to stable kernel, too.
+how about?
+And I want to know who can apply this patch-set(#3~#5).
 
-http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/tre=
-e/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt?h=3Dfor-ne=
-xt
+Best Regards,
+Jaehoon Chung
 
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/D=
-ocumentation/devicetree/bindings/video/exynos_hdmiddc.txt
-
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+On 08/01/2014 03:36 AM, Kukjin Kim wrote:
+> On 08/01/14 01:02, Doug Anderson wrote:
+>> Jaehoon
+>>
+>> On Wed, Jul 30, 2014 at 10:35 PM, Jaehoon Chung<jh80.chung@samsung.com>  wrote:
+>>> Slot quirks "disable-wp" is deprecated.
+>>> Instead, use the host quirk "disable-wp".
+>>> (Because the slot-node is removed in dt-file.)
+>>>
+>>> Signed-off-by: Jaehoon Chung<jh80.chung@samsung.com>
+>>> Tested-by: Sachin Kamat<sachin.kamat@samsung.com>
+>>> Acked-by: Seungwon Jeon<tgih.jun@samsung.com>
+>>> ---
+>>>   drivers/mmc/host/dw_mmc.c  |   11 +++++++++--
+>>>   include/linux/mmc/dw_mmc.h |    2 ++
+>>>   2 files changed, 11 insertions(+), 2 deletions(-)
+>>
+>> Thanks for taking my suggestion and making it backward compatible.
+>> This looks great to me.  It tested this in both the backward
+>> compatible way (with the warning) and the non-backward compatible way.
+>> I think we should land and patch #2 ASAP and then we can land the rest
+>> of the series as SoC maintainers see fit.
+>>
+> Yes, right if we don't want to see useless merge conflicts...
+> 
+> When I sent ack on exynos stuff, there was no conflict with my tree but happens it now.
+> 
+> - Kukjin
+> 
+> 
+>> Reviewed-by: Doug Anderson<dianders@chromium.org>
+>> Tested-by: Doug Anderson<dianders@chromium.org>
+> 
