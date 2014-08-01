@@ -1,83 +1,97 @@
-From: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Fri, 01 Aug 2014 12:04:35 +0200
-Message-ID: <53DB6633.3020005@kpanic.de>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de> <1406728949-7560-3-git-send-email-sassmann@kpanic.de> <53DA3613.9010305@ti.com> <53DA3C68.3020406@kpanic.de> <53DA3D66.1030407@ti.com> <53DA4D37.4030408@kpanic.de> <20140731192053.4463.27499@quantum>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 14/15] drm/exynos: Move DP setup into commit()
+Date: Fri, 1 Aug 2014 12:21:23 +0200
+Message-ID: <20140801102122.GG21724@ulmo>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1406828534-10072-15-git-send-email-ajaykumar.rs@samsung.com>
+ <20140801091834.GE21724@ulmo>
+ <CAEC9eQPARFrDP8k31v_P=ve5DK9Kx9Ao6ZBRuDt2bVS3eegiQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140731192053.4463.27499@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1450540871=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAEC9eQPARFrDP8k31v_P=ve5DK9Kx9Ao6ZBRuDt2bVS3eegiQQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ajay kumar <ajaynumb@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.2014 21:20, Mike Turquette wrote:
-> Quoting Stefan Assmann (2014-07-31 07:05:43)
->> On 31.07.2014 14:58, Peter Ujfalusi wrote:
->>> On 07/31/2014 03:54 PM, Stefan Assmann wrote:
->>>>> Why would you do this? The point of a clock provider is that you can
->>>>> enable/disable the clock on demand. Here you enable the clock and leave it
->>>>> enabled for the rest of the time...
->>>>>
->>>>> clk-dra7-atl deals with similar issue
->>>>
->>>> The idea is to enable the clock by default to get the wifi working.
->>>> Sorry if I got it wrong.
->>>
->>> You should have a clock driver for the 32K clock. The wifi driver should
->>> request and manage it's clocks via the clock API.
->>>
->>
->> If the clock does not get enabled the wifi driver wl12xx doesn't even
->> get probed. Which is my initial problem. Maybe I need to figure that out
->> first.
-> 
-> Sounds like the wifi driver's probe is missing something like:
 
-Thanks for the example Mike, but the issue is that the wifi drivers
-probe function doesn't even get called without the clock being
-powered/enabled. I've instrumented do_one_initcall() to verify this.
-With the clock being enabled I see:
-[   19.693511] init/main.c do_one_initcall:792 initcall wl1271_init+0x0/0x38 [wlcore_sdio]
-[   20.993347] init/main.c do_one_initcall:792 initcall wl12xx_driver_init+0x0/0x14 [wl12xx]
-If the clock is kept disabled none of the calls is made and we never get
-to wl12xx_probe().
-The device might not be discoverable without the clock.
+--===============1450540871==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
+Content-Disposition: inline
 
-Maybe we should rethink the idea of doing that single register write to
-enable the device in twl-core code, if the TWL6030 is present.
 
-Alternatively this could be done by u-boot. Seems like something that
-should have been done by firmware upfront.
+--PyMzGVE0NRonI6bs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  Stefan
-
-> 
-> """
-> #include <linux/clk.h>
-> 
-> int ret;
-> 
-> struct clk *clk32k = clk_get(...);
-> 
-> if (IS_ERR(clk32k))
->         explode();
-> 
-> ret = clk_prepare_enable(clk32k);
-> 
-> if (ret)
->         explode();
-> """
-> 
-> Regards,
-> Mike
-> 
->>
->>   Stefan
-
+On Fri, Aug 01, 2014 at 03:11:37PM +0530, Ajay kumar wrote:
+> On Fri, Aug 1, 2014 at 2:48 PM, Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+> > On Thu, Jul 31, 2014 at 11:12:13PM +0530, Ajay Kumar wrote:
+> >> Add commit callback for exynos_dp, and move the DP link training,
+> >> video configuration code from the hotplug handler into commit().
+> >>
+> >> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> >> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> >> ---
+> >>  drivers/gpu/drm/exynos/exynos_dp_core.c |   24 +++++++++++++++++++---=
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>  1 file changed, 19 insertions(+), 5 deletions(-)
+> >
+> > This is not related to the other patches in the series, so it can be
+> > applied independently.
+> This patch should go in this series only.
+> [PATCH 15/15] has dependency on this because it modifies exynos_dp_commit=
+().
+
+Okay, I'll apply it to the panel tree. Inki, can I assume your Acked-by
+=66rom patch 06/15 applies to this one as well?
+
+Thierry
+
+--PyMzGVE0NRonI6bs
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT22oiAAoJEN0jrNd/PrOhd9MQAIGxjFif3RED4hD+ikOmIz7G
+AXl5OAFKKi6Qqzzo3s1D8kSL4T6NvLskhMhkPDYIfXuSxse02MvfH5JFfKZiWnDe
+zRI043XVrpbEsBXwlWVUSL6PaO2w+uyO7mY1XBy57qB6NMK7kVYnKtC15q6KBb+k
+EPiUv2P6vBKcEiOnbG5wjtNpkVxipSppHZOhQI0/oGVWgSiDTkIpxwzAt6lr9w4f
+eK07dOZ0jbTpCVPPK+gjPHlEbCQ1wkRn0rdQ7+K/lNoWu/XW2xNz+xUtNGwQ+smW
+Tn1s2Sbg4uDIjAYv1Ov33lSFq3wf8Of64RQhRRdp6dC8kAxDysvwhvAr2eYUPYZp
+If3P6nhoqxtupxJjk/KXLxpJWXxWh+eEZCKHGWfodEEfHZTyyLJYqlYWOV9f3LWc
+TQ/VO+EWSHe0C2iDdNJ417fKVADf4vcMqzgDToLH7hoDvHmrmiHq28ervZyv9EWa
+vAwlQvsrY9YA1kDOhu0cYiBJqJnypFmAmAIuP9smxIsyN3QhZOVRK7BoxCAxHpRo
+pVnCPZ35UcqR6uBAMEr/v6+ZeXsFrwBR+PiMrts4yQ8JHlge/oCI1E4fddelqIiT
+C+mM+EBm9AW2fPaN7d0PGgdvnusy4jpJ0b0/+/SF4B/Wv4VANm2eBbHQ514JdNWP
+9kmKWYfV9tcBS/MloKlv
+=BprP
+-----END PGP SIGNATURE-----
+
+--PyMzGVE0NRonI6bs--
+
+--===============1450540871==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1450540871==--
