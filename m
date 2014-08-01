@@ -1,8 +1,8 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V9 2/6] Documentation: power: reset: Add documentation for
- generic SYSCON reboot driver
-Date: Thu, 31 Jul 2014 19:45:53 -0700
-Message-ID: <1406861157-29169-3-git-send-email-fkan@apm.com>
+Subject: [PATCH V9 3/6] Documentation: arm64: add SCU dts binding
+ documentation to linux kernel
+Date: Thu, 31 Jul 2014 19:45:54 -0700
+Message-ID: <1406861157-29169-4-git-send-email-fkan@apm.com>
 References: <1406861157-29169-1-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,42 +22,37 @@ To: linux@roeck-us.net, dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@inf
 Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for generic SYSCON reboot driver.
+This add documentation for the SCU system clock unit device tree binding
+to the kernel.
 
 Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- .../bindings/power/reset/syscon-reboot.txt         | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ Documentation/devicetree/bindings/arm/apm/scu.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/apm/scu.txt
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+diff --git a/Documentation/devicetree/bindings/arm/apm/scu.txt b/Documentation/devicetree/bindings/arm/apm/scu.txt
 new file mode 100644
-index 0000000..1190631
+index 0000000..b45be06
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-@@ -0,0 +1,23 @@
-+Generic SYSCON mapped register reset driver
++++ b/Documentation/devicetree/bindings/arm/apm/scu.txt
+@@ -0,0 +1,17 @@
++APM X-GENE SoC series SCU Registers
 +
-+This is a generic reset driver using syscon to map the reset register.
-+The reset is generally performed with a write to the reset register
-+defined by the register map pointed by syscon reference plus the offset
-+with the mask defined in the reboot node.
++This system clock unit contain various register that control block resets,
++clock enable/disables, clock divisors and other deepsleep registers.
 +
-+Required properties:
-+- compatible: should contain "syscon-reboot"
-+- regmap: this is phandle to the register map node
-+- offset: offset in the register map for the reboot register (in bytes)
-+- mask: the reset value written to the reboot register (32 bit access)
++Properties:
++ - compatible : should contain two values. First value must be:
++		   - "apm,xgene-scu"
++		second value must be always "syscon".
 +
-+Default will be little endian mode, 32 bit access only.
++ - reg : offset and length of the register set.
 +
-+Examples:
-+
-+	reboot {
-+	   compatible = "syscon-reboot";
-+	   regmap = <&regmapnode>;
-+	   offset = <0x0>;
-+	   mask = <0x1>;
++Example :
++	scu: system-clk-controller@17000000 {
++		compatible = "apm,xgene-scu","syscon";
++		reg = <0x0 0x17000000 0x0 0x400>;
 +	};
 -- 
 1.9.1
