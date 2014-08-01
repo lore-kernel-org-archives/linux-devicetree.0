@@ -1,74 +1,78 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 4/6] ARM: DTS: da850-evm: Enable McASP via DT boot
-Date: Fri, 1 Aug 2014 09:13:28 +0300
-Message-ID: <1406873610-5037-5-git-send-email-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v2 6/6] ARM: DTS: da850-evm: Enable audio via simple-card
+Date: Fri, 1 Aug 2014 09:13:30 +0300
+Message-ID: <1406873610-5037-7-git-send-email-peter.ujfalusi@ti.com>
 References: <1406873610-5037-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406873610-5037-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406873610-5037-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nsekhar@ti.com, robh+dt@kernel.org
+Cc: khilman@deeprootsystems.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl nodes for the McASP0 pins and configure McASP to the desired
-mode for the board.
+The audio on the board is using McASP <-> tlv320aic3106 codec and we have
+LineIn and LineOut jacks.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850-evm.dts | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/da850-evm.dts | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 1e11e5a5f723..1422c311af4c 100644
+index 41715b495861..4f935ad9f27b 100644
 --- a/arch/arm/boot/dts/da850-evm.dts
 +++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -17,6 +17,18 @@
- 	soc {
- 		pmx_core: pinmux@1c14120 {
- 			status = "okay";
-+
-+			mcasp0_pins: pinmux_mcasp0_pins {
-+				pinctrl-single,bits = <
-+					/*
-+					 * AHCLKX, ACLKX, AFSX, AHCLKR, ACLKR,
-+					 * AFSR, AMUTE
-+					 */
-+					0x00 0x11111111 0xffffffff
-+					/* AXR11, AXR12 */
-+					0x04 0x00011000 0x000ff000
-+				>;
-+			};
- 		};
- 		serial0: serial@1c42000 {
- 			status = "okay";
-@@ -170,3 +182,21 @@
- 		};
+@@ -52,6 +52,7 @@
+ 				reg = <0x48>;
+ 			};
+ 			tlv320aic3106: tlv320aic3106@18 {
++				#sound-dai-cells = <0>;
+ 				compatible = "ti,tlv320aic3106";
+ 				reg = <0x18>;
+ 				status = "okay";
+@@ -142,6 +143,33 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-boot-on;
  	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "DA850/OMAP-L138 EVM";
++		simple-audio-card,widgets =
++			"Line", "Line In",
++			"Line", "Line Out";
++		simple-audio-card,routing =
++			"LINE1L", "Line In",
++			"LINE1R", "Line In",
++			"Line Out", "LLOUT",
++			"Line Out", "RLOUT";
++		simple-audio-card,format = "dsp_b";
++		simple-audio-card,bitclock-master = <&link0_codec>;
++		simple-audio-card,frame-master = <&link0_codec>;
++		simple-audio-card,bitclock-inversion;
++
++		simple-audio-card,cpu {
++			sound-dai = <&mcasp0>;
++			system-clock-frequency = <24576000>;
++		};
++
++		link0_codec: simple-audio-card,codec {
++			sound-dai = <&tlv320aic3106>;
++			system-clock-frequency = <24576000>;
++		};
++	};
  };
-+
-+&mcasp0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcasp0_pins>;
-+
-+	op-mode = <0>;          /* MCASP_IIS_MODE */
-+	tdm-slots = <2>;
-+	/* 4 serializer */
-+	serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
-+		0 0 0 0
-+		0 0 0 0
-+		0 0 0 1
-+		2 0 0 0
-+	>;
-+	tx-num-evt = <32>;
-+	rx-num-evt = <32>;
-+};
+ 
+ /include/ "tps6507x.dtsi"
+@@ -197,6 +225,7 @@
+ };
+ 
+ &mcasp0 {
++	#sound-dai-cells = <0>;
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mcasp0_pins>;
 -- 
 2.0.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
