@@ -1,68 +1,79 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting
- disabled
-Date: Thu, 31 Jul 2014 17:30:25 -0700
-Message-ID: <20140801003025.4463.76384@quantum>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
- <1406661128-7614-2-git-send-email-heiko@sntech.de>
- <20140731224523.4463.34464@quantum> <4047366.k35vzjcKGH@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4047366.k35vzjcKGH@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, dianders@chromium.org, kever.yang@rock-chips.com, arm@kernel.org, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH V9 0/6] Add X-Gene platform reboot mechanism
+Date: Thu, 31 Jul 2014 19:45:51 -0700
+Message-ID: <1406861157-29169-1-git-send-email-fkan@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBIZWlrbyBTdMO8Ym5lciAoMjAxNC0wNy0zMSAxNjoyOTozNCkKPiBIaSBNaWtlLAo+
-IAo+IEFtIERvbm5lcnN0YWcsIDMxLiBKdWxpIDIwMTQsIDE1OjQ1OjIzIHNjaHJpZWIgTWlrZSBU
-dXJxdWV0dGU6Cj4gPiBRdW90aW5nIEhlaWtvIFN0dWVibmVyICgyMDE0LTA3LTI5IDEyOjEyOjA1
-KQo+ID4gCj4gPiA+IFRoZSBjbG9jay10cmVlIGNvbnRhaW5zIGNsb2NrcyB0aGF0IHNob3VsZCBu
-ZXZlciBnZXQgZGlzYWJsZWQKPiA+ID4gYXV0b21hdGljYWxseS4gT25lIGV4YW1wbGUgYXJlIHRo
-ZSBiYXNlIEFDTEtzLCB0aGUgYmFzZSBzdXBwbGllcyBmb3IgYWxsCj4gPiA+IHBlcmlwaGVyYWxz
-Lgo+ID4gPiAKPiA+ID4gVGhlcmVmb3JlIGFkZCBhIHN0cnVjdHVyZSBzaW1pbGFyIHRvIHRoZSBz
-dW54aSBjbG9jay10cmVlIHRvIHByb3RlY3QgdGhlc2UKPiA+ID4gc3BlY2lhbCBjbG9ja3MgZnJv
-bSBiZWluZyBkaXNhYmxlZC4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVi
-bmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gPiA+IC0tLQo+ID4gPiAKPiA+ID4gIGRyaXZlcnMvY2xr
-L3JvY2tjaGlwL2Nsay1yazMxODguYyB8ICA3ICsrKysrKysKPiA+ID4gIGRyaXZlcnMvY2xrL3Jv
-Y2tjaGlwL2Nsay1yazMyODguYyB8ICA3ICsrKysrKysKPiA+ID4gIGRyaXZlcnMvY2xrL3JvY2tj
-aGlwL2Nsay5jICAgICAgICB8IDEzICsrKysrKysrKysrKysKPiA+ID4gIGRyaXZlcnMvY2xrL3Jv
-Y2tjaGlwL2Nsay5oICAgICAgICB8ICAxICsKPiA+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMjggaW5z
-ZXJ0aW9ucygrKQo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3JvY2tjaGlw
-L2Nsay1yazMxODguYwo+ID4gPiBiL2RyaXZlcnMvY2xrL3JvY2tjaGlwL2Nsay1yazMxODguYyBp
-bmRleCBhODNhNmQ4Li41YWVmMjc3IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2Nsay9yb2Nr
-Y2hpcC9jbGstcmszMTg4LmMKPiA+ID4gKysrIGIvZHJpdmVycy9jbGsvcm9ja2NoaXAvY2xrLXJr
-MzE4OC5jCj4gPiA+IEBAIC01OTksNiArNTk5LDExIEBAIHN0YXRpYyBzdHJ1Y3Qgcm9ja2NoaXBf
-Y2xrX2JyYW5jaAo+ID4gPiByazMxODhfY2xrX2JyYW5jaGVzW10gX19pbml0ZGF0YSA9IHs+IAo+
-ID4gPiAgICAgICAgIEdBVEUoQUNMS19HUFMsICJhY2xrX2dwcyIsICJhY2xrX3BlcmkiLCAwLCBS
-SzI5MjhfQ0xLR0FURV9DT04oOCksCj4gPiA+ICAgICAgICAgMTMsIEdGTEFHUyksPiAgCj4gPiA+
-ICB9Owo+ID4gPiAKPiA+ID4gK3N0YXRpYyBjb25zdCBjaGFyICpyazMxODhfY3JpdGljYWxfY2xv
-Y2tzW10gX19pbml0Y29uc3QgPSB7Cj4gPiA+ICsgICAgICAgImFjbGtfY3B1IiwKPiA+ID4gKyAg
-ICAgICAiYWNsa19wZXJpIiwKPiA+IAo+ID4gSSdtIG5vdCBhZ2FpbnN0IHRoZSBpZGVhIG9mIGNy
-aXRpY2FsIGNsb2NrcywgYnV0IEkgd2FudCB0byB2ZXJpZnkgdGhhdAo+ID4gdGhlcmUgaXMgbm8g
-b3RoZXIgZHJpdmVyIG91dCB0aGVyZSB0aGF0IGlzIGEgYmV0dGVyIGZpdCBmb3IgY2xhaW1pbmcK
-PiA+IHRoZXNlIGNsa3MgdmlhIGNsa19nZXQgYW5kIGVuYWJsaW5nIHRoZW0gdGhlIG5vcm1hbCB3
-YXkgdmlhIGNsa19lbmFibGU/Cj4gCj4gSW4gdGhlIGNsb2NrIGhpZXJhcmNoeSBvZiBSb2NrY2hp
-cCBTb0NzLCBib3RoIGFjbGtzIGxpc3RlZCBoZXJlLCBhcmUgc291cmNlcyAKPiBmb3IgcGNsayBh
-bmQgaGNsaywgYXMgd2VsbCBhcyBzb3VyY2luZyBzb21lIG90aGVyIHBlcmlwaGVyYWwgZ2F0ZXMg
-ZnVydGhlciAKPiBiZWxvdyB0b28uIFNvIGZyb20gd2hhdCBJJ3ZlIHNlZW4gZnJvbSB0aGUgY2xv
-Y2sgZGlhZ3JhbXMsIHRoZXJlIGlzIG5vdGhpbmcgCj4gdGhhdCB3b3VsZCBjbGFpbSB0aGVzZSBj
-bG9ja3MgZGlyZWN0bHksIGFuZCBpdCB3b3VsZG4ndCBhbHNvIG1ha2UgYW55IHNlbnNlIHRvIAo+
-IGxldCB0aGVtIGdldCBkaXNhYmxlZCBhcyB0aGVyZSB3aWxsIGFsd2F5cyBiZSBzb21ldGhpbmcg
-dXNpbmcgdGhlbSAoZm9yIAo+IGV4YW1wbGUgdGhlIGRyYW0tY29udHJvbGxlcikuCgpTb3VuZHMg
-Z29vZC4gSnVzdCBvdXQgb2YgY3VyaW9zaXR5LCB1bmRlciB3aGF0IGNpcmN1bXN0YW5jZXMgd291
-bGQgeW91CndhbnQgdG8gZ2F0ZSB0aGVtPyBJcyB0aGVyZSBhIHVzZSBjYXNlIGZvciBpdD8KClJl
-Z2FyZHMsCk1pa2UKCj4gCj4gCj4gSGVpa28KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Enable reboot driver for the X-Gene platform. Add generic syscon reboot
+driver.
+
+V9 Change:
+	- rebase on Guenter Roeck's V5 reset handler patch set. This 
+	  allows for a generic reset to be call rather than the arm
+	  specific reset handler.
+
+V8 Change:
+	- change Kconfig to depend on ARM || ARM64 || COMPILE_TEST
+
+V7 Change:
+	- Seem V3 on, the patches were not making in to the mailinglist.
+	- Fix build error produced by other ARCH while including this
+	  driver. Set to depend on arm64 ARCH for now.
+
+V6 Change:
+	- Add documentation for scu node.
+
+V5 Change:
+	- Documentation update, endian and access size.
+
+V4 Change:
+	- Remove old X-Gene reboot driver
+	- Add generic syscon reboot driver
+	- Add DTS and Kconfig for X-Gene reboot using syscon method
+
+V3 Change:
+	- Remove the reboot driver's use of acpi resource patch.
+	- Change the reboot driver to use syscon to parse out 
+	  system clock register. Remove the old method of getting
+	  register from the reboot driver directly.
+	- Remove documentation since its now simple.
+
+V2 Change:
+	- Add support for using ACPI resource.
+
+
+Feng Kan (6):
+  power: reset: Add generic SYSCON register mapped reset
+  Documentation: power: reset: Add documentation for generic SYSCON
+    reboot driver
+  Documentation: arm64: add SCU dts binding documentation to linux
+    kernel
+  arm64: dts: Add X-Gene reboot driver dts node
+  arm64: Select reboot driver for X-Gene platform
+  power: reset: Remove X-Gene reboot driver
+
+ Documentation/devicetree/bindings/arm/apm/scu.txt  |  17 ++++
+ .../bindings/power/reset/syscon-reboot.txt         |  23 +++++
+ arch/arm64/Kconfig                                 |   2 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  12 +++
+ drivers/power/reset/Kconfig                        |  12 +--
+ drivers/power/reset/Makefile                       |   2 +-
+ drivers/power/reset/syscon-reboot.c                |  98 ++++++++++++++++++++
+ drivers/power/reset/xgene-reboot.c                 | 103 ---------------------
+ 8 files changed, 158 insertions(+), 111 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/apm/scu.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ create mode 100644 drivers/power/reset/syscon-reboot.c
+ delete mode 100644 drivers/power/reset/xgene-reboot.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
