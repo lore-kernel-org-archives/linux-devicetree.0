@@ -1,88 +1,101 @@
-From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Subject: AW: core command line parameters with dt
-Date: Fri, 1 Aug 2014 14:39:16 +0000
-Message-ID: <E70AF999396FDF4EAE40E195B84709611F847234@SPMDEGHN001.CADCON.INTERN>
-References: <E70AF999396FDF4EAE40E195B84709611F8471EA@SPMDEGHN001.CADCON.INTERN>
- <20140801141222.GG22994@leverpostej>
+From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/2] Documentation: dt: bindings: sound: Add bindings file for CS35L32
+Date: Fri, 1 Aug 2014 09:45:31 -0500
+Message-ID: <1406904331-13860-2-git-send-email-brian.austin@cirrus.com>
+References: <1406904331-13860-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140801141222.GG22994@leverpostej>
-Content-Language: de-DE
+In-Reply-To: <1406904331-13860-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: =broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+This patch adds device tree bindings file for the Cirrus Logic CS35L32
 
-thank you for your advice. I figured out what I did wrong now.
-And my function has "bt" in its name and not "dt". So, don't worry, I d=
-on't mess with the DT there.
+Changes for v2:
+- Remove Gain Manager from DT and move to driver kcontrol
+- Add VP-Supply for regulator
 
-Greetings
-Sebastian Priebe
+Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs35l32.txt          |   62 ++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l32.txt
 
+diff --git a/Documentation/devicetree/bindings/sound/cs35l32.txt b/Documentation/devicetree/bindings/sound/cs35l32.txt
+new file mode 100644
+index 0000000..1417d3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l32.txt
+@@ -0,0 +1,62 @@
++CS35L32 audio CODEC
++
++Required properties:
++
++  - compatible : "cirrus,cs35l32"
++
++  - reg : the I2C address of the device for I2C. Address is determined by the level
++  of the AD0 pin. Level 0 is 0x40 while Level 1 is 0x41.
++
++  - VA-supply, VP-supply : power supplies for the device,
++  as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Optional properties:
++
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++  deasserted before communication to the codec starts.
++
++  - cirrus,boost-manager : Boost voltage control.
++  0 = Automatically managed.  Boost-converter output voltage is the higher
++  of the two: Class G or adaptive LED voltage.
++  1 = Automatically managed irrespective of audio, adapting for low-power
++  dissipation when LEDs are ON, and operating in Fixed-Boost Bypass Mode
++  if LEDs are OFF (VBST = VP).
++  2 = (Default) Boost voltage fixed in Bypass Mode (VBST = VP).
++  3 = Boost voltage fixed at 5 V.
++
++  - cirrus,sdout-datacfg : Data configuration for dual CS35L32 applications only.
++  Determines the data packed in a two-CS35L32 configuration.
++  0 = Left/right channels VMON[11:0], IMON[11:0], VPMON[7:0].
++  1 = Left/right channels VMON[11:0], IMON[11:0], STATUS.
++  2 = (Default) left/right channels VMON[15:0], IMON [15:0].
++  3 = Left/right channels VPMON[7:0], STATUS.
++
++  - cirrus,sdout-share : SDOUT sharing. Determines whether one or two CS35L32
++  devices are on board sharing SDOUT.
++  0 = (Default) One IC.
++  1 = Two IC's.
++
++  - cirrus,battery-recovery : Low battery nominal recovery threshold, rising VP.
++  0 = 3.1V
++  1 = 3.2V
++  2 = 3.3V (Default)
++  3 = 3.4V
++
++  - cirrus,battery-threshold : Low battery nominal threshold, falling VP.
++  0 = 3.1V
++  1 = 3.2V
++  2 = 3.3V
++  3 = 3.4V (Default)
++  4 = 3.5V
++  5 = 3.6V
++
++Example:
++
++codec: codec@40 {
++	compatible = "cirrus,cs35l32";
++	reg = <0x40>;
++	reset-gpios = <&gpio 10 0>;
++	cirrus,boost-manager = <0x03>;
++	cirrus,sdout-datacfg = <0x02>;
++	VA-supply = <&reg_audio>;
++};
+-- 
+1.7.9.5
 
-
-
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-CADCON
-Ingenieurgesellschaft mbH & Co. KG
-Geschaeftsfuehrer: Robert Bauer, Andreas Gundel
-Sitz der Gesellschaft: D-86368 Gersthofen
-Registergericht: Amtsgericht Augsburg HRA 14521
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
------Urspr=FCngliche Nachricht-----
-Von: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:devicetree-owner-u79uwXL29TY@public.gmane.org=
-nel.org] Im Auftrag von Mark Rutland
-Gesendet: Freitag, 1. August 2014 16:12
-An: Priebe, Sebastian
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Betreff: Re: core command line parameters with dt
-
-On Fri, Aug 01, 2014 at 02:55:42PM +0100, Priebe, Sebastian wrote:
-> Hello,
->
-> I want to use kernel command line parameters within my machine file.
-> If I use the __setup macro I get the following build error:
-> error: __setup_str_model_bt causes a section type conflict with
-> myboard_dt_board_compat
->
-> static const char *myboard_dt_board_compat[] __initconst =3D {
->         "vendor,model",
->         NULL
-> };
-
-You have a section mismatch because your code evidently doesn't live in=
- an init section, but is trying to access data which does. The fact tha=
-t the data happens to be a list of compatible strings is irrelevant, an=
-d this is in no way related to dt.
-
-=46igure out whether your function should live in an init section or if=
- the data should not. Make sure that you don't reference anything in in=
-it section from anything else which does not itself live in an init sec=
-tion. That will solve your build issue.
-
-The name of the function sounds suspicious to begin with from a DT pers=
-pective. You shouldn't need to override DT properties from the command =
-line.
-
-Thanks,
-Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo inf=
-o at  http://vger.kernel.org/majordomo-info.html
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
