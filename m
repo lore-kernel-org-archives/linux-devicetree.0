@@ -1,7 +1,7 @@
 From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 2/3] mfd: document DT bindings for Qualcomm SPMI PMICs
-Date: Fri,  1 Aug 2014 17:30:49 +0300
-Message-ID: <1406903450-27283-3-git-send-email-svarbanov@mm-sol.com>
+Subject: [PATCH v4 3/3] ARM: dts: qcom: add pm8941 and pm8841 PMICs device nodes
+Date: Fri,  1 Aug 2014 17:30:50 +0300
+Message-ID: <1406903450-27283-4-git-send-email-svarbanov@mm-sol.com>
 References: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1406903450-27283-1-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
@@ -10,84 +10,69 @@ To: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel
 Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document DT bindings used to describe the Qualcomm SPMI PMICs.
+The pm8941 and pm8841 spmi devicetree nodes are childrens of
+spmi pmic arbiter. The msm8974 SoC uses two PMIC chips
+pm8941 and pm8841. Every PMIC chip has two spmi bus slave id's.
 
 Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   64 ++++++++++++++++++++
- 1 files changed, 64 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+ arch/arm/boot/dts/qcom-msm8974.dtsi |   37 +++++++++++++++++++++++++++++++++++
+ 1 files changed, 37 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-new file mode 100644
-index 0000000..7182b88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-@@ -0,0 +1,64 @@
-+          Qualcomm SPMI PMICs multi-function device bindings
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 69dca2a..5e08d43 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -3,6 +3,7 @@
+ #include "skeleton.dtsi"
+ 
+ #include <dt-bindings/clock/qcom,gcc-msm8974.h>
++#include <dt-bindings/spmi/spmi.h>
+ 
+ / {
+ 	model = "Qualcomm MSM8974";
+@@ -236,5 +237,41 @@
+ 			#interrupt-cells = <2>;
+ 			interrupts = <0 208 0>;
+ 		};
 +
-+The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
-+PMICs.  These PMICs use a QPNP scheme through SPMI interface.
-+QPNP is effectively a partitioning scheme for dividing the SPMI extended
-+register space up into logical pieces, and set of fixed register
-+locations/definitions within these regions, with some of these regions
-+specifically used for interrupt handling.
++		spmi@fc4cf000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg-names = "core", "intr", "cnfg";
++			reg = <0xfc4cf000 0x1000>,
++			      <0xfc4cb000 0x1000>,
++			      <0xfc4ca000 0x1000>;
++			interrupt-names = "periph_irq";
++			interrupts = <0 190 0>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
 +
-+The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
-+interfaced to the chip via the SPMI (System Power Management Interface) bus.
-+Support for multiple independent functions are implemented by splitting the
-+16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
-+each. A function can consume one or more of these fixed-size register regions.
++			pm8941@0 {
++				compatible = "qcom,pm8941";
++				reg = <0x0 SPMI_USID>;
++			};
 +
-+Required properties:
-+- compatible:      Should contain one of:
-+                     "qcom,pm8941"
-+                     "qcom,pm8841"
-+                     "qcom,pma8084"
-+                     or generalized "qcom,spmi-pmic".
-+- reg:             Specifies the SPMI USID slave address for this device.
-+                   For more information see:
-+                   Documentation/devicetree/bindings/spmi/spmi.txt
++			pm8941@1 {
++				compatible = "qcom,pm8941";
++				reg = <0x1 SPMI_USID>;
++			};
 +
-+Required properties for peripheral child nodes:
-+- compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
++			pm8841@4 {
++				compatible = "qcom,pm8841";
++				reg = <0x4 SPMI_USID>;
++			};
 +
-+Optional properties for peripheral child nodes:
-+- interrupts:      Interrupts are specified as a 4-tuple. For more information
-+                   see:
-+                   Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-+- interrupt-names: Corresponding interrupt name to the interrupts property
-+
-+Each child node of SPMI slave id represents a function of the PMIC. In the
-+example below the rtc device node represents a peripheral of pm8941
-+SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
-+
-+Example:
-+
-+	spmi {
-+		compatible = "qcom,spmi-pmic-arb";
-+
-+		pm8941@0 {
-+			compatible = "qcom,pm8941", "qcom,spmi-pmic";
-+			reg = <0x0 SPMI_USID>;
-+
-+			rtc {
-+				compatible = "qcom,rtc";
-+				interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-+				interrupt-names = "alarm";
++			pm8841@5 {
++				compatible = "qcom,pm8841";
++				reg = <0x5 SPMI_USID>;
 +			};
 +		};
-+
-+		pm8941@1 {
-+			compatible = "qcom,pm8941", "qcom,spmi-pmic";
-+			reg = <0x1 SPMI_USID>;
-+
-+			regulator {
-+				compatible = "qcom,regulator";
-+				regulator-name = "8941_boost";
-+			};
-+		};
-+	};
+ 	};
+ };
 -- 
 1.7.0.4
 
