@@ -1,65 +1,68 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] spi: davinci: add support to configure gpio cs
-	through dt
-Date: Fri, 1 Aug 2014 21:24:52 +0300
-Message-ID: <53DBDB74.3070205@ti.com>
-References: <1406911233-18999-1-git-send-email-grygorii.strashko@ti.com>
-	<1406911233-18999-2-git-send-email-grygorii.strashko@ti.com>
-	<20140801173506.GB30458@sirena.org.uk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
+ SoC
+Date: Fri, 1 Aug 2014 19:00:35 +0100
+Message-ID: <20140801180035.GF3264@leverpostej>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+ <1406732794-20920-3-git-send-email-rric@kernel.org>
+ <20140730154626.GD20162@leverpostej>
+ <CAFpQJXWKybVUxpHg8MVrVMjLj3swuxLGo_9r1tL+gZ4hxUHTzQ@mail.gmail.com>
+ <20140731095336.GB21850@leverpostej>
+ <CAFpQJXUtP=v7FSLd3_OU7FG3w=pKYy2ihTQULA_DPEacsSu0Og@mail.gmail.com>
+ <20140731113301.GE22994@leverpostej>
+ <20140801170411.GG4703@rric.localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20140801173506.GB30458-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140801170411.GG4703@rric.localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Richter <rric@kernel.org>
+Cc: Ganapatrao Kulkarni <gpkulkarni@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2014 08:35 PM, Mark Brown wrote:
-> On Fri, Aug 01, 2014 at 07:40:32PM +0300, Grygorii Strashko wrote:
->> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->>
->> Currently driver supports only configuration of GPIO CS through
->> platform data. This patch enhances the driver to configure GPIO
->> CS through DT. Also update the DT binding documentation to
->> reflect the availability of cs-gpios.
-> 
-> Ah, sorry - this is the unapplied patch from before.  It would have been
-> much better to submit this as the second patch after your rework patch
-> since this...
-> 
+On Fri, Aug 01, 2014 at 06:04:11PM +0100, Robert Richter wrote:
+> Mark,
 
-I can do this, but It will wait for a week :(
+Hi Robert,
 
->> -	if (pdata->chip_sel && chip_sel < pdata->num_chipselect &&
->> -				pdata->chip_sel[chip_sel] != SPI_INTERN_CS)
->> +	if (np && master->cs_gpios != NULL && spi->cs_gpio >= 0) {
->> +		/* SPI core parse and update master->cs_gpio */
->>   		gpio_chipsel = true;
->> +		gpio = spi->cs_gpio;
->> +	} else if (pdata->chip_sel &&
->> +		   chip_sel < pdata->num_chipselect &&
->> +		   pdata->chip_sel[chip_sel] != SPI_INTERN_CS) {
->> +		/* platform data defines chip_sel */
->> +		gpio_chipsel = true;
->> +		gpio = pdata->chip_sel[chip_sel];
->> +	}
+> On 31.07.14 12:33:01, Mark Rutland wrote:
+> > On Thu, Jul 31, 2014 at 12:12:33PM +0100, Ganapatrao Kulkarni wrote:
+> > >    We mark RAM used by ATF as secure-RAM, however we don't support
+> > >    secure/non-secure address aliasing.
+> > >    i.e, a DRAM address that can be referenced from both a secure PA and a
+> > >    non-secure PA is not allowed.
+> >
+> > What exactly do you mean by "not allowed"?
 > 
-> ...still looks excessively confusing - it is way more logic than I'd
-> expect to see on every chip select.
+> It actually means "not possible" since secure and non-secure memory is
+> kept in separate address ranges.
+
+I understand that the two are separate physical address spaces, but
+Ganapatrao's reply was somewhat ambiguous and it wasn't clear to me that
+the memory was actually marked as secure.
+
+> > If Linux maps that memory, what happens?
+> >
+> > What if Linux tried to read or write to it?
+> >
+> > If Linux should not map that memory, it should not be described in the
+> > memory map to begin with.
 > 
+> Linux never will see secure-RAM. Firmware must be sure to report the
+> correct non-secure memory ranges to the OS (e.g. unsecure mem size =
+> total size - secure mem size).
 
-Yep. Finally, patch "[PATCH v2 2/2] spi: davinci: use spi_device.cs_gpio to store gpio cs per spi device"
-simplifies logic above.
+Ok, that's what I had hoped for and that makes sense.
 
-Regards,
--grygorii
+The issue was that the memory node contained an address range that was
+supposedly secure-only (which Linux could attempt to map), which was
+'protected' with a /memreserve/ (which does not stop it from being
+mapped).
+
+Given they are unnecessary (unless you want to bypass EFI for some
+reason) they can be dropped.
+
+Thanks,
+Mark.
