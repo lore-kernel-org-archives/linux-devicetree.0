@@ -1,61 +1,46 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: DTS: da850: Add node for edma0
-Date: Fri, 1 Aug 2014 11:48:55 +0530
-Message-ID: <53DB314F.6060706@ti.com>
-References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>
-	<1406801934-23334-3-git-send-email-peter.ujfalusi@ti.com>
-	<53DA5230.1050200@cogentembedded.com> <53DB210B.5010204@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: driver using another driver
+Date: Fri, 1 Aug 2014 08:31:05 +0200
+Message-ID: <20140801063105.GV23235@pengutronix.de>
+References: <E70AF999396FDF4EAE40E195B84709611F84671F@SPMDEGHN001.CADCON.INTERN>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <53DB210B.5010204-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E70AF999396FDF4EAE40E195B84709611F84671F-VHQhki0MIenpQFNhCJRnZ0Yy6alPw7Wn0MAMd6zgKLc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 August 2014 10:39 AM, Peter Ujfalusi wrote:
-> On 07/31/2014 05:26 PM, Sergei Shtylyov wrote:
->> On 07/31/2014 02:18 PM, Peter Ujfalusi wrote:
->>
->>> Add DT node for edma0.
->>
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/da850.dtsi | 6 ++++++
->>>   1 file changed, 6 insertions(+)
->>
->>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->>> index b695548dbb4e..41ce4e8bf227 100644
->>> --- a/arch/arm/boot/dts/da850.dtsi
->>> +++ b/arch/arm/boot/dts/da850.dtsi
->>> @@ -150,6 +150,12 @@
->>>               };
->>>
->>>           };
->>> +        edma0: edma@01c00000 {
->>> +            compatible = "ti,edma3";
->>> +            reg =    <0x0 0x10000>;
->>
->>    Why the mismatch between the unit-address part of the node name and the
->> "reg" property?
+Hi Sebastian,
+
+On Wed, Jul 30, 2014 at 02:45:51PM +0000, Priebe, Sebastian wrote:
+> Hello,
 > 
-> For some reason the whole da850 uses offset from 0x01c00000 for the SoC IPs.
-> The nodes are under 'soc' and that has the ranges attribute.
-> I do not really like this either.
+> I am working on a project with an ARMv6 cpu and I am currently trying
+> to port our board file to a device tree.  Our custom hardware has a
+> CPLD with is used by multiple driver.  In the past we shared the CPLD
+> driver resource (struct resource...) among the drivers platform data
+> to be able to access the CPLD registers from all the drivers.  The
+> CPLD driver allocated the resource, returned it to our platform code
+> and our platform code passed it to the other drivers.
+> In other words the CPLD driver is used by the other driver.
+> How can I achieve the same with a device tree?
 
-There is no reason I can remember for why we chose to go the offset +
-ranges way. Probably based it on an early OMAP example. Right now lets
-keep it that way unless there is a big disadvantage.
+You can use a toplevel device node for your CPLD on which your toplevel driver
+matches. Call of_platform_populate() with this toplevel node to create
+the child devices. drivers/bus/ contains some examples, like
+drivers/bus/imx-weim.c.
 
-Thanks,
-Sekhar
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
