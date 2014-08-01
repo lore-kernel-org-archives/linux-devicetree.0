@@ -1,54 +1,58 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv9 2/4] mailbox: Introduce framework for mailbox
-Date: Fri, 1 Aug 2014 09:17:00 +0100
-Message-ID: <20140801081700.GM9030@lee--X1>
-References: <1406055250-29159-1-git-send-email-jaswinder.singh@linaro.org>
- <1406055374-29275-1-git-send-email-jaswinder.singh@linaro.org>
- <20140723085411.GG23210@lee--X1>
- <CAJe_ZhfaLqgKb3oK-m5Rpae5+zeAEk9-DLFOovq4qjBgg64b-w@mail.gmail.com>
- <20140723152649.GJ23210@lee--X1>
- <CAJe_ZhcOXyGO49sZUXnqCk9wm7WvQ01b76k7Wqxxi1S3qisDPA@mail.gmail.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI
+ PMICs
+Date: Fri, 01 Aug 2014 11:31:29 +0300
+Message-ID: <53DB5061.8080403@mm-sol.com>
+References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com> <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com> <53D8182A.5050204@codeaurora.org> <53DA02C0.2050606@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJe_ZhcOXyGO49sZUXnqCk9wm7WvQ01b76k7Wqxxi1S3qisDPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <53DA02C0.2050606@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: David Collins <collinsd@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Jassi Brar wrote:
+On 07/31/2014 11:48 AM, Stanimir Varbanov wrote:
+> Hi David,
+> 
+> Thanks for the comments!
+> 
+> On 07/30/2014 12:54 AM, David Collins wrote:
+>> On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
+>>> From: Josh Cartwright <joshc@codeaurora.org>
+>>>
+>>> The Qualcomm SPMI PMIC chips are components used with the
+>>> Snapdragon 800 series SoC family.  This driver exists
+>>> largely as a glue mfd component, it exists to be an owner
+>>> of an SPMI regmap for children devices described in
+>>> device tree.
+>>>
+>>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>>> ---
+>>>  drivers/mfd/Kconfig       |   16 +++++++++++
+>>>  drivers/mfd/Makefile      |    1 +
+>>>  drivers/mfd/pm8xxx-spmi.c |   65 +++++++++++++++++++++++++++++++++++++++++++++
+>>
+>> Would it be possible to rename this driver: qcom-spmi-pmic.c?  The driver
+>> will be supporting several PMICs that do not fit the pm8xxx naming scheme.
+>>  One of which is even specified in the compatible list of this driver
+>> (pma8084).  There is presently downstream support for the following PMICs:
+>> PM8019, PM8110, PM8226, PM8841, PM8916, PM8941, PM8994, PMA8084, PMD9635,
+>> PMI8962, and PMI8994 [1].  Four of these do not fit the "PM8XXX" template.
+> 
+> I haven't strong opinion on the file names. The qcom prefix is the one
+> which annoying me. If you look at /drivers/mfd the company name prefixes
+> are very few.
+> 
+> The *compatible* strings are the important thing here. So If MFD
+> maintainer is fine with this name I'm fine too.
 
-> On 23 July 2014 20:56, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, 23 Jul 2014, Jassi Brar wrote:
->=20
-> >> >> +     if (chan->txdone_method =3D=3D (TXDONE_BY_POLL | TXDONE_B=
-Y_ACK))
-> >> >> +             chan->txdone_method =3D TXDONE_BY_POLL;
-> >> >
-> >> > Unless you're leaving it there for clarity, you can drop the
-> >> > "TXDONE_BY_POLL |" from if().
-> >> >
-> >> We need to check for both.
-> >
-> > What I'm trying to get at is; if it's already TXDONE_BY_POLL, there=
- is no
-> > need to set it to TXDONE_BY_POLL.
-> >
-> In mbox_request_channel() we added the ACK flag, if POLL was set and
-> now we need to revert that in mbox_free_channel().
+Lee, are you OK with suggested names qcom-spmi-pmic and qcom-ssbi-pmic?
 
-Okay, I see what you're doing.  Thanks for the clarification.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
