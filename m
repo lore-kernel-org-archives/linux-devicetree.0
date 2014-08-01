@@ -1,72 +1,52 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: DTS: da850: Add node for edma0
-Date: Fri, 1 Aug 2014 08:09:31 +0300
-Message-ID: <53DB210B.5010204@ti.com>
-References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>
-	<1406801934-23334-3-git-send-email-peter.ujfalusi@ti.com>
-	<53DA5230.1050200@cogentembedded.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v5 00/10] ARM: dts: exynos: Prepare Spring
+Date: Fri, 01 Aug 2014 07:16:27 +0200
+Message-ID: <53DB22AB.6020007@suse.de>
+References: <1406868897-26874-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <53DA5230.1050200-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406868897-26874-1-git-send-email-afaerber@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2014 05:26 PM, Sergei Shtylyov wrote:
-> On 07/31/2014 02:18 PM, Peter Ujfalusi wrote:
-> =
+Am 01.08.2014 06:54, schrieb Andreas F=C3=A4rber:
+> Andreas F=C3=A4rber (10):
+>   ARM: dts: Fix MMC pinctrl for exynos5250-snow
+>   ARM: dts: Fold exynos5250-cros-common into exynos5250-snow
+>   ARM: dts: Clean up exynos5250-snow
+>   ARM: dts: Fill in bootargs for exynos5250-snow
+>   ARM: dts: Move dp_hpd from exynos5250 into smdk5250 and snow
+>   ARM: dts: Clean up exynos5250-smdk5250
+>   ARM: dts: Clean up exynos5250-arndale
 
->> Add DT node for edma0.
-> =
+>   ARM: dts: Fix apparent GPIO typo in exynos5250-arndale
+>   ARM: dts: Simplify USB3503 on exynos5250-arndale
 
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/da850.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
-> =
+Note that these two are again untested! They are entirely optional.
 
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index b695548dbb4e..41ce4e8bf227 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -150,6 +150,12 @@
->>               };
->>
->>           };
->> +        edma0: edma@01c00000 {
->> +            compatible =3D "ti,edma3";
->> +            reg =3D    <0x0 0x10000>;
-> =
+Andreas
 
->    Why the mismatch between the unit-address part of the node name and the
-> "reg" property?
+>   ARM: dts: Add exynos5250-spring device tree
+>=20
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  arch/arm/boot/dts/exynos5250-arndale.dts      | 927 +++++++++++++---=
+----------
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi | 164 -----
+>  arch/arm/boot/dts/exynos5250-pinctrl.dtsi     |   7 -
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts     | 641 +++++++++-------=
+--
+>  arch/arm/boot/dts/exynos5250-snow.dts         | 441 +++++++-----
+>  arch/arm/boot/dts/exynos5250-spring.dts       | 536 +++++++++++++++
+>  arch/arm/boot/dts/exynos5250.dtsi             |  24 +-
+>  8 files changed, 1624 insertions(+), 1117 deletions(-)
+>  delete mode 100644 arch/arm/boot/dts/exynos5250-cros-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/exynos5250-spring.dts
 
-For some reason the whole da850 uses offset from 0x01c00000 for the SoC IPs.
-The nodes are under 'soc' and that has the ranges attribute.
-I do not really like this either.
-
-> =
-
->> +            interrupts =3D <11 13 12>;
->> +            #dma-cells =3D <1>;
->> +        };
-> =
-
-> WBR, Sergei
-> =
-
-
--- =
-
-P=E9ter
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
