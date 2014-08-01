@@ -1,56 +1,250 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: Add gta04a5 model
-Date: Fri, 1 Aug 2014 01:02:46 -0700
-Message-ID: <20140801080246.GG29045@atomide.com>
-References: <1406577213-9642-1-git-send-email-marek@goldelico.com>
- <1406577213-9642-4-git-send-email-marek@goldelico.com>
- <CAOf5uwk=ctww=pP4Ae+1C6i-oOtiYTv2NJbj1GpuPwVSKXB4Hw@mail.gmail.com>
- <CAAfyv35jvhzvjCKMwrpa=RQ1JkfcmthCsGDzwLW9Y6bq3Ww_fg@mail.gmail.com>
- <CAOf5uw=Fm9FXEH5ESqDC8pGjMbn5VQ1+MyPJVXSqGh_9+JRLHw@mail.gmail.com>
- <1FA8171E-1B7A-4684-887E-11593BB9C29E@goldelico.com>
- <20140729124120.GS29045@atomide.com>
- <589F7CA3-F245-4299-8E39-36A7FA9F3CBD@goldelico.com>
- <CABxcv=n7g8c2ePGKgu_0Y35iearcRoAj9ZH5jDWY9nE+1uUKnA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
+Date: Fri, 1 Aug 2014 09:13:17 +0100
+Message-ID: <20140801081317.GL9030@lee--X1>
+References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com>
+ <1406744573-609-2-git-send-email-tthayer@opensource.altera.com>
+ <20140731082637.GH9030@lee--X1>
+ <53DAA072.4010902@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv=n7g8c2ePGKgu_0Y35iearcRoAj9ZH5jDWY9nE+1uUKnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Marek Belisko <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53DAA072.4010902@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-* Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> [140729 07:14]:
-> Hello,
-> 
-> On Tue, Jul 29, 2014 at 3:03 PM, Dr. H. Nikolaus Schaller
-> <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-> > Hi,
-> >> So what's the conclusion? Are changes needed to this patch
-> >> series or not?
+On Thu, 31 Jul 2014, Thor Thayer wrote:
+> On 07/31/2014 03:26 AM, Lee Jones wrote:
+> >On Wed, 30 Jul 2014, tthayer@opensource.altera.com wrote:
 > >
-> > I advocate that no changes are needed.
+> >>From: Thor Thayer <tthayer@opensource.altera.com>
+> >>
+> >>Add a simple MFD for the Altera SDRAM Controller.
+> >>
+> >>Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> >>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> >>---
+> >>v1-8: The MFD implementation was not included in the original serie=
+s.
+> >>
+> >>v9: New MFD implementation.
+> >>---
+> >>  MAINTAINERS                    |    5 ++
+> >>  drivers/mfd/Kconfig            |    7 ++
+> >>  drivers/mfd/Makefile           |    1 +
+> >>  drivers/mfd/altera-sdr.c       |  162 +++++++++++++++++++++++++++=
++++++++++++++
+> >>  include/linux/mfd/altera-sdr.h |  102 +++++++++++++++++++++++++
+> >>  5 files changed, 277 insertions(+)
+> >>  create mode 100644 drivers/mfd/altera-sdr.c
+> >>  create mode 100644 include/linux/mfd/altera-sdr.h
+
+[...]
+
+> >>+++ b/drivers/mfd/altera-sdr.c
+> >>@@ -0,0 +1,162 @@
+> >>+/*
+> >>+ * SDRAM Controller (SDR) MFD
+> >>+ *
+> >>+ * Copyright (C) 2014 Altera Corporation
+> >>+ *
+> >>+ * This program is free software; you can redistribute it and/or m=
+odify it
+> >>+ * under the terms and conditions of the GNU General Public Licens=
+e,
+> >>+ * version 2, as published by the Free Software Foundation.
+> >>+ *
+> >>+ * This program is distributed in the hope it will be useful, but =
+WITHOUT
+> >>+ * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
+ITY or
+> >>+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
+icense for
+> >>+ * more details.
+> >>+ *
+> >>+ * You should have received a copy of the GNU General Public Licen=
+se along with
+> >>+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+> >Can you use the shorter version of the licence?
+> Hi. This seems to be the shorter version of the license agreement
+> and is fairly common in the kernel, right?
+
+This is the long(ish) version.  Many programs have the Copyright line
+and the "This program is free software;" line.  It'll also be a good
+idea to keep the link to the full licence.
+
+[...]
+
+> >>+	{
+> >>+		.name =3D "altr_sdram_edac",
+> >>+		.of_compatible =3D "altr,sdram-edac",
+> >What other devices will there be?
 > >
-> 
-> I agree with Dr. H. Nikolaus on this regard. A DeviceTree should be a
-> description of the hardware and if two hardware platforms differs,
-> then we need two different DTS.
-> 
-> Lately I'm seeing some attempts to abuse u-boot's fdt command, u-boot
-> should only modify the strictly necessary like the /chosen branch.
-> Allowing u-boot to mangle the FDT before passing to the kernel just to
-> avoid some DT duplication doesn't sound like a good idea IMHO.
+> There will be an FPGA bridge and a power control driver that will
+> need access to the SDR Controller registers.
 
-OK no more comments, so applied all into omap-for-v3.17/dt.
-As there's a good chance the merge window will open on Monday,
-no guarantees the gta04 related changes will make it. But I'll
-send a pull request a bit later on today for them anyways.
+Okay.  Do you know when they'll be upstreamed?
 
-Regards,
+> >>+u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
+> >>+{
+> >>+	return readl(sdr->reg_base + reg_offset);
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(altera_sdr_readl);
+> >>+
+> >>+void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32=
+ value)
+> >>+{
+> >>+	writel(value, sdr->reg_base + reg_offset);
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(altera_sdr_writel);
+> >Why are you abstracting these?
+> >
+> >Might be better to use Regmap even.
+> regmap seems unnecessarily complex for what we're doing which is why
+> this method was chosen.
+>=20
+> Future drivers will access different sets of registers in the
+> device. These drivers won't share bitfields in the same register so
+> the MFD seemed like the best solution. Originally we implemented
+> this using syscon but that seems to be frowned upon so we changed to
+> using a MFD.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why was the use of syscon frowned upon?  Can you link me to the
+thread?  Writing directly to the registers sounds to me a lot worse
+than using infrastructure which was designed for these kinds of
+accesses.
+
+If you do choose to fiddle with the registers in this manner, is there
+any reason why you're calling back into here, rather than using
+readl() and writel() directly?
+
+> >>+u32 altera_sdr_mem_size(struct altera_sdr *sdr)
+> >>+{
+> >>+	u32 size;
+> >>+	u32 read_reg, row, bank, col, cs, width;
+> >Weird that size is on its own.  Either place on a single line or
+> >separate them all.
+> OK. I will change this.
+> >>+	read_reg =3D altera_sdr_readl(sdr, SDR_DRAMADDRW_OFST);
+> >>+	if (read_reg < 0)
+> >>+		return 0;
+> >>+
+> >>+	width =3D altera_sdr_readl(sdr, SDR_DRAMIFWIDTH_OFST);
+> >>+	if (width < 0)
+> >>+		return 0;
+
+u32s cant be < 0.  The 'u' means 'unsigned'.
+
+> >>+	col =3D (read_reg & SDR_DRAMADDRW_COLBITS_MASK) >>
+> >>+		SDR_DRAMADDRW_COLBITS_LSB;
+> >>+	row =3D (read_reg & SDR_DRAMADDRW_ROWBITS_MASK) >>
+> >>+		SDR_DRAMADDRW_ROWBITS_LSB;
+> >>+	bank =3D (read_reg & SDR_DRAMADDRW_BANKBITS_MASK) >>
+> >>+		SDR_DRAMADDRW_BANKBITS_LSB;
+> >>+	cs =3D (read_reg & SDR_DRAMADDRW_CSBITS_MASK) >>
+> >>+		SDR_DRAMADDRW_CSBITS_LSB;
+> >These would probably be better as macros.
+> >
+> OK. I will fix this.
+> >>+	/* Correct for ECC as its not addressible */
+> >>+	if (width =3D=3D SDR_DRAMIFWIDTH_32B_ECC)
+> >>+		width =3D 32;
+> >>+	if (width =3D=3D SDR_DRAMIFWIDTH_16B_ECC)
+> >>+		width =3D 16;
+> >>+
+> >>+	/* calculate the SDRAM size base on this info */
+> >>+	size =3D 1 << (row + bank + col);
+> >>+	size =3D size * cs * (width / 8);
+> >>+	return size;
+> >>+}
+> >>+EXPORT_SYMBOL_GPL(altera_sdr_mem_size);
+> >Should this really be done in here?  Isn't this an SDRAM function?
+> >
+> This register is part of the SDRAM controller and size information
+> may be required by the other drivers that share this memory
+> area/need SDRAM information.
+
+Then export a function from the SDRAM driver, not from here.
+
+[...]
+
+> >>+static const struct platform_device_id altera_sdr_ids[] =3D {
+> >>+	{ "altera_sdr", },
+> >>+	{ }
+> >>+};
+> >What's this for?
+> We don't strictly need it because we are driven by the device tree.
+> It can be removed it if is a problem but I'm not clear why it is a
+> problem.
+
+It's a problem because it's unused, superfluous bumph. :)
+
+[...]
+
+> >>+static int __init altera_sdr_init(void)
+> >>+{
+> >>+	return platform_driver_register(&altera_sdr_driver);
+> >>+}
+> >>+postcore_initcall(altera_sdr_init);
+> >Why was this chosen?
+> We want this to happen pretty early.
+
+If you _need_ this is happen early, core_initcall() is more commonly
+used, but _why_ do you need it to happen this early?
+
+> >>+/*
+> >>+ * Copyright (C) 2014 Altera Corporation
+> >>+ *
+> >>+ * This program is free software; you can redistribute it and/or m=
+odify it
+> >>+ * under the terms and conditions of the GNU General Public Licens=
+e,
+> >>+ * version 2, as published by the Free Software Foundation.
+> >>+ *
+> >>+ * This program is distributed in the hope it will be useful, but =
+WITHOUT
+> >>+ * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
+ITY or
+> >>+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
+icense for
+> >>+ * more details.
+> >>+ *
+> >>+ * You should have received a copy of the GNU General Public Licen=
+se along with
+> >>+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+> >Use the short version.
+> Same as above. This is the shorter version that we've been using at A=
+ltera.
+
+If you read COPYING, you only require the Copyright line and a link to
+the full licence.  In this case I'll be happy if you left in the "This
+program is free software;" line as well, but remove the paragraph
+below it.
+
+[...]
+
+> >>+/* Register access API */
+> >>+u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset);
+> >>+void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32=
+ value);
+> >Regmap?
+> Same as above. This seems to be more complex than we need.
+
+I'm not sure I believe that.  Regmap is as complex or as simple as you
+need.
+
+> Thanks for your comments and for reviewing!
+>=20
+> Thor
+
+You're welcome.  OOI, do you own a hammer? ;)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
