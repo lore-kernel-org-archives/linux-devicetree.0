@@ -1,38 +1,88 @@
-From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH 4/4 V3] irqchip: gicv2m: Add support for multiple MSI
- for ARM64 GICv2m
-Date: Fri, 1 Aug 2014 09:36:51 -0500
-Message-ID: <53DBA603.9030509@amd.com>
-References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
-	<1404947104-21345-5-git-send-email-suravee.suthikulpanit@amd.com>
- <87vbqej2rj.fsf@approximate.cambridge.arm.com>
+From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Subject: AW: core command line parameters with dt
+Date: Fri, 1 Aug 2014 14:39:16 +0000
+Message-ID: <E70AF999396FDF4EAE40E195B84709611F847234@SPMDEGHN001.CADCON.INTERN>
+References: <E70AF999396FDF4EAE40E195B84709611F8471EA@SPMDEGHN001.CADCON.INTERN>
+ <20140801141222.GG22994@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <87vbqej2rj.fsf@approximate.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140801141222.GG22994@leverpostej>
+Content-Language: de-DE
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/30/2014 10:16 AM, Marc Zyngier wrote:
-> Why do we need this complexity at all? Is there any case where we'd want
-> to limit ourselves to a single vector for MSI?
+Hello Mark,
 
-I think the ARM64 GICv2m should not be the limitation for the devices 
-multiple MSI if there is no real hardware/design limitation.
+thank you for your advice. I figured out what I did wrong now.
+And my function has "bt" in its name and not "dt". So, don't worry, I d=
+on't mess with the DT there.
 
-> arm64 is a new enough architecture so that we can expect all interrupt controllers to cope
-> with that.
+Greetings
+Sebastian Priebe
 
-I am not sure if I understand this comment.
 
-We are not forcing all interrupt controllers for ARM64 to handle 
-multi-MSI.  They have the option to support if multi-MSI if they want 
-to. I just think that we should not put the architectural limit here.
+
+
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+CADCON
+Ingenieurgesellschaft mbH & Co. KG
+Geschaeftsfuehrer: Robert Bauer, Andreas Gundel
+Sitz der Gesellschaft: D-86368 Gersthofen
+Registergericht: Amtsgericht Augsburg HRA 14521
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+-----Urspr=FCngliche Nachricht-----
+Von: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:devicetree-owner-u79uwXL29TY@public.gmane.org=
+nel.org] Im Auftrag von Mark Rutland
+Gesendet: Freitag, 1. August 2014 16:12
+An: Priebe, Sebastian
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Betreff: Re: core command line parameters with dt
+
+On Fri, Aug 01, 2014 at 02:55:42PM +0100, Priebe, Sebastian wrote:
+> Hello,
+>
+> I want to use kernel command line parameters within my machine file.
+> If I use the __setup macro I get the following build error:
+> error: __setup_str_model_bt causes a section type conflict with
+> myboard_dt_board_compat
+>
+> static const char *myboard_dt_board_compat[] __initconst =3D {
+>         "vendor,model",
+>         NULL
+> };
+
+You have a section mismatch because your code evidently doesn't live in=
+ an init section, but is trying to access data which does. The fact tha=
+t the data happens to be a list of compatible strings is irrelevant, an=
+d this is in no way related to dt.
+
+=46igure out whether your function should live in an init section or if=
+ the data should not. Make sure that you don't reference anything in in=
+it section from anything else which does not itself live in an init sec=
+tion. That will solve your build issue.
+
+The name of the function sounds suspicious to begin with from a DT pers=
+pective. You shouldn't need to override DT properties from the command =
+line.
 
 Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo inf=
+o at  http://vger.kernel.org/majordomo-info.html
 
-Suravee
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
