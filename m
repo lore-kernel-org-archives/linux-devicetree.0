@@ -1,42 +1,46 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 07/10] ARM: dts: Clean up exynos5250-arndale
-Date: Fri, 01 Aug 2014 23:03:52 +0200
-Message-ID: <53DC00B8.3050008@gmail.com>
-References: <1406868897-26874-1-git-send-email-afaerber@suse.de> <1406868897-26874-8-git-send-email-afaerber@suse.de>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dmaengine: add a driver for AMBA AXI NBPF DMAC
+ IP cores
+Date: Fri, 1 Aug 2014 23:04:52 +0200 (CEST)
+Message-ID: <alpine.DEB.2.00.1408012300270.4784@axis700.grange>
+References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange> <Pine.LNX.4.64.1407191243360.3062@axis700.grange> <20140725141621.GT8181@intel.com> <Pine.LNX.4.64.1407251635070.13523@axis700.grange> <20140725163417.GV8181@intel.com> <Pine.LNX.4.64.1407262105150.24257@axis700.grange>
+ <20140731125704.GV8181@intel.com> <Pine.LNX.4.64.1407311520290.24081@axis700.grange> <20140801163456.GZ8181@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406868897-26874-8-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, open list <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140801163456.GZ8181-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Just wanted to report one issue unrelated to your changes I spotted
-while reviewing this patch. See below.
+Hi Vinod,
 
-On 01.08.2014 06:54, Andreas F=C3=A4rber wrote:
-> Use the new style of referencing inherited nodes, use symbolic names,
-> tidy indentation and reorder includes.
->=20
-> Goal is the alignment of all exynos5250 based device trees for compar=
-ison.
+On Fri, 1 Aug 2014, Vinod Koul wrote:
 
-[snip]
+> On Thu, Jul 31, 2014 at 03:42:44PM +0200, Guennadi Liakhovetski wrote:
+> > Ok. This doesn't seem to progress. You suggested in your previous mail, 
+> > that I can provide an incremental patch to add devm_free(_threaded)_irq() 
+> > and synchronize_irq() to .release(). I still think, that this doesn't make 
+> > much sense, but if you insist... Alternatively, my proposal would be to 
+> > fix the thoretical race in .free_chan_resources(). Would you accept such a 
+> > patch instead of what you were proposing? I can also convert the driver to 
+> > using a tasklet, if required. Would it suffice, if I do those patches as 
+> > fixes after -rc1? I'm leaving on a holiday tomorrow and I still have to 
+> > finalise some other work, so, preparing those patches today doesn't seem 
+> > realistic to me... Would this be acceptable?
+> Can you please send both, incrementally is fine.
+> I will merge them tomorrow
 
-> -	fimd: fimd@14400000 {
-> -		status =3D "okay";
-> -		display-timings {
-> -			native-mode =3D <&timing0>;
-> -			timing0: timing@0 {
-> -				/* 2560x1600 DP panel */
-> -				clock-frequency =3D <50000>;
+Sorry, do you mean I should send those incremental patches for the 
+original one to become acceptable? As I explained above, I'm on a holiday 
+now, so, I hoped it would be acceptble to get this patch in and let me do 
+the other two later, possibly after -rc1 as fixes. If you definitely would 
+like all 3 patches now... Well, I could try, but this won't be easy...
 
-This apparently makes little sense as I doubt anybody would be willing
-to run a DP panel with refresh rate of 0,012 Hz...
-
-Anyway, your patch just moves it, so this is just an unrelated report.
-
-Best regards,
-Tomasz
+Thanks
+Guennadi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
