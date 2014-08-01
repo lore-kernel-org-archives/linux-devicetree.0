@@ -1,144 +1,82 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Fri, 01 Aug 2014 17:05:14 +0100
-Message-ID: <87silggpqd.fsf@approximate.cambridge.arm.com>
-References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com>
-	<1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
-	<87zjfqj3mc.fsf@approximate.cambridge.arm.com>
-	<53DBB562.5020003@amd.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH/RFC V8 1/1] clk: Support for clock parents and rates
+ assigned from device tree
+Date: Fri, 1 Aug 2014 18:15:57 +0200
+Message-ID: <20140801161557.GA3277@katana>
+References: <1403105372-30403-1-git-send-email-s.nawrocki@samsung.com>
+ <1403105372-30403-2-git-send-email-s.nawrocki@samsung.com>
+ <53B59221.5080100@samsung.com>
+ <20140725214231.5177.86866@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53DBB562.5020003@amd.com> (Suravee Suthikulanit's message of
-	"Fri, 1 Aug 2014 16:42:26 +0100")
-Sender: linux-pci-owner@vger.kernel.org
-To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140725214231.5177.86866@quantum>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 01 2014 at  4:42:26 pm BST, Suravee Suthikulanit <suravee.suthikulpanit@amd.com> wrote:
-> On 7/30/2014 9:57 AM, Marc Zyngier wrote:
->> On Thu, Jul 10 2014 at 12:05:03 am BST, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com> wrote:
->>
->> Hi Suravee,
->>
->>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->>>
->  >> ......
->  >>
->>> -  first region is the GIC distributor register base and size. The 2nd region is
->>> -  the GIC cpu interface register base and size.
->>> +- reg : Specifies base physical address(s) and size of the GIC register frames.
->>> +
->>> +  Region | Description
->>> +  Index  |
->>> +  -------------------------------------------------------------------
->>> +     0   | GIC distributor register base and size
->>> +     1   | GIC cpu interface register base and size
->>> +     2   | VGIC interface control register base and size (Optional)
->>> +     3   | VGIC CPU interface register base and size (Optional)
->>> +     4   | GICv2m MSI interface register base and size (Optional)
->>
->> Given that the v2m block is somehow bolted on the side of a standard
->> GICv2, I'd rather see it as a subnode of the main GIC.
->>
->> Then you could directly call into the v2m layer to initialize it,
->> instead of the odd "reverse probing" you're using here...
->
-> [Suravee] IIUC, you don't think we should introduce the "gic-400-v2m" 
-> compatible ID. Instead, you want to see something like:
->
->      gic @ 0x00f00000 {
->          .....
->          v2m {
->              msi-controller;
->              reg = < .... >; /* v2m reg frame */
->          }
->      }
->
-> If so, I can change this.
 
-Yes, something like that indeed.
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->
->>> +
->>> +static int __init
->>> +gicv2m_msi_init(struct device_node *node, struct v2m_data *v2m)
->>> +{
->>> +       unsigned int val;
->>> +
->>> +       if (of_address_to_resource(node, GIC_OF_MSIV2M_RANGE_INDEX,
->>> +                                  &v2m->res)) {
->>> +               pr_err("GICv2m: Failed locate GICv2m MSI register frame\n");
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       v2m->base = of_iomap(node, GIC_OF_MSIV2M_RANGE_INDEX);
->>> +       if (!v2m->base) {
->>> +               pr_err("GICv2m: Failed to map GIC MSI registers\n");
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       val = readl_relaxed(v2m->base + V2M_MSI_TYPER);
->>> +       if (!val) {
->>> +               pr_warn("GICv2m: Failed to read V2M_MSI_TYPER register\n");
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       v2m->spi_start = (val >> V2M_MSI_TYPER_BASE_SHIFT) &
->>> +                               V2M_MSI_TYPER_BASE_MASK;
->>> +       v2m->nr_spis = val & V2M_MSI_TYPER_NUM_MASK;
->>> +       if ((v2m->spi_start < V2M_MIN_SPI) || (v2m->nr_spis >= V2M_MAX_SPI)) {
->>> +                       pr_err("GICv2m: Invalid MSI_TYPER (%#x)\n", val);
->>> +                       return -EINVAL;
->>> +       }
->>> +
->>> +       v2m->bm = kzalloc(sizeof(long) * BITS_TO_LONGS(v2m->nr_spis),
->>> +                         GFP_KERNEL);
->>> +       if (!v2m->bm) {
->>> +               pr_err("GICv2m: Failed to allocate MSI bitmap\n");
->>> +               return -ENOMEM;
->>> +       }
->>> +
->>> +       spin_lock_init(&v2m->msi_cnt_lock);
->>> +
->>> +       pr_info("GICv2m: SPI range [%d:%d]\n",
->>> +               v2m->spi_start, (v2m->spi_start + v2m->nr_spis));
->>> +
->>> +       return 0;
->>> +}
->>
->> This function is assuming that you will only see one single MSI frame
->> here. Is there any chance that there would be more than one in a system?
->>
->
-> [Suravee] If I would imagine such SOC, where there are multiple MSI 
-> frames (hence multiple msi-controllers), can we currently support this 
-> with the current msichip interface?  Currently, each PCI RC connects to 
-> an "interrupt-parrent", which is also an MSI controller. We would need 
-> to have a way for PCI RC to specify which of the msichips within an 
-> interrupt-controller it wants to use.
+On Fri, Jul 25, 2014 at 02:42:31PM -0700, Mike Turquette wrote:
+> Quoting Sylwester Nawrocki (2014-07-03 10:25:53)
+> > On 18/06/14 17:29, Sylwester Nawrocki wrote:
+> > > This patch adds helper functions to configure clock parents and rates
+> > > as specified through 'assigned-clock-parents', 'assigned-clock-rates'
+> > > DT properties for a clock provider or clock consumer device.
+> > > The helpers are now being called by the bus code for the platform, I2C
+> > > and SPI busses, before the driver probing and also in the clock core
+> > > after registration of a clock provider.
+> > >=20
+> > > Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > > Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >=20
+> > Could someone please take a look and review that patch ?
+> > Any further suggestions, ACKs/NAKs ?
+>=20
+> Patch looks good to me. I'm happy to take it.
+>=20
+> >=20
+> > I would appreciate a DT, SPI or the I2C maintainer opinions.
+>=20
+> Yes, Acks from SPI and I2C maintainers would be good. I might need to
+> drop those parts of this patch if they don't come through :-(
 
-Not necessarly multiple MSI controllers. As far as I can see, a v2m MSI
-frame describes a range of SPIs, and I can perfectly imagine a system
-where someone would have a number of these, each capable of generating a
-number of SPIs. It becomes interesting when you have non-contiguous SPI
-ranges... ;-)
+For the I2C part:
 
-> Currently, I am not aware if there is a GIC w/ multiple MSI frames. 
-> Could you check if there is such product for ARM GICs?
+Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
-I can, but it is unlikely I'll be able to find about what people outside
-of ARM are doing. They usually only get in touch when they've screwed
-something up.. ;-)
 
-Anyway, maybe we just don't need to address this at this point in
-time. Adding a comment to that effect would probably be enough, and give
-a hint to anyone building such a configuration.
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+iQIcBAEBAgAGBQJT2708AAoJEBQN5MwUoCm2aCYP/365qBaTpbuWjzeZ1mlBEwpR
+3/qVH7fE0MfwEHd03BafDmNAf3rV3zTdQjvTyz3w7eH1Tvwf5nWJr3Wgqltkp5iU
+Dcm4FUO6r17Fae+bZLO88By7UOm8WccZtsI8TorQTruGanCVZbavul/AvJdDX7ck
+ffhNzao4AMuQdjFMz3FQr7kkGo3GpveC3tmNhK4aFnDWsleEgNvQ2NvaRLdz6wbe
+OTxk42sIJtG7iKjleKz2xthCp6R/AvhdU1O6SZCKmskpmZW3eHp6107WuCqd0IMr
+ifs9cwEK62iqVAix0cNp5GxmsOpEUBtExk2RAxTQMGCwFePPu4BI5iXYMYuDXbDl
+4xHzLoSr0wbCW8EGl17+Pd3i+llfjgZxvKIi0DUOh6IeuvWtB8sVNA6h1+6w3VTi
+DmUOEBcdbpNR1y0OdszrApcP5CJYbYlFzUYWfVn+MV01nj9lNaAwGB2ynlk2CpMI
+r9u0PbShD9lib5CgbO/rbQqSJfG+o5rjlzP/YtTw+InVZQT+2OQqYh/RxsKVGjcE
+9SHHRKesGwBhiDtLS5oRTI5GakkYjqg5+euIFKcHBshmoTgf54BiWAV4WATKuxwT
+gjcfbiUHdTDJ6+z2klekmIelujnlAMgAoKcksb0toRkMXZbq91bqB/ytak6/wHEG
+YtLYHZZiHTwejG8qi5jm
+=mIbT
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
