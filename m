@@ -1,115 +1,173 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] ARM: dts: Fix the sort ordering of EHCI and HSIC in rk3288.dtsi
-Date: Fri, 01 Aug 2014 11:17:27 +0200
-Message-ID: <5965899.y405fxfhDg@diego>
-References: <1406846976-23127-4-git-send-email-dianders@chromium.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 14/15] drm/exynos: Move DP setup into commit()
+Date: Fri, 1 Aug 2014 11:18:35 +0200
+Message-ID: <20140801091834.GE21724@ulmo>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1406828534-10072-15-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406846976-23127-4-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1562342365=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1406828534-10072-15-git-send-email-ajaykumar.rs@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ajay Kumar <ajaykumar.rs@samsung.com>, Sean Paul <seanpaul@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, joshi@samsung.com, dri-devel@lists.freedesktop.org, ajaynumb@gmail.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 31. Juli 2014, 15:49:35 schrieb Doug Anderson:
-> The EHCI and HSIC device tree nodes were added in the wrong place.
-> Fix them.
-> 
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-hmm, not sure if this counts as fix ... aka material for 3.17-rc2 or should 
-wait for 3.18. Simply because it's more a cosmetic thing.
-
-If it is a fix, could base it on the appropriate dts revision, because here 
-it's in the middle of the dwc2 series, including the
-	usb_host1: usb@ff540000
-nodes.
+--===============1562342365==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LSp5EJdfMPwZcMS1"
+Content-Disposition: inline
 
 
-Heiko
+--LSp5EJdfMPwZcMS1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jul 31, 2014 at 11:12:13PM +0530, Ajay Kumar wrote:
+> Add commit callback for exynos_dp, and move the DP link training,
+> video configuration code from the hotplug handler into commit().
+>=20
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
 > ---
-> Changes in v4:
-> - Based on the proper patch
-> 
-> Changes in v3:
-> - EHCI and HSIC move new for version 3.
-> 
->  arch/arm/boot/dts/rk3288.dtsi | 41
-> ++++++++++++++++++++--------------------- 1 file changed, 20 insertions(+),
-> 21 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 9713054..49c99f2 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -156,6 +156,17 @@
->  		status = "disabled";
->  	};
-> 
-> +	usb_host0_ehci: usb@ff500000 {
-> +		compatible = "generic-ehci";
-> +		reg = <0xff500000 0x100>;
-> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_USBHOST0>;
-> +		clock-names = "usbhost";
-> +		status = "disabled";
-> +	};
-> +
-> +	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
-> +
->  	usb_host1: usb@ff540000 {
->  		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
->  				"snps,dwc2";
-> @@ -176,6 +187,15 @@
->  		status = "disabled";
->  	};
-> 
-> +	usb_hsic: usb@ff5c0000 {
-> +		compatible = "generic-ehci";
-> +		reg = <0xff5c0000 0x100>;
-> +		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HSIC>;
-> +		clock-names = "usbhost";
-> +		status = "disabled";
-> +	};
-> +
->  	uart2: serial@ff690000 {
->  		compatible = "rockchip,rk3288-uart", "snps,dw-apb-uart";
->  		reg = <0xff690000 0x100>;
-> @@ -270,27 +290,6 @@
->  		interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
->  		status = "disabled";
->  	};
-> -
-> -	usb_host0_ehci: usb@ff500000 {
-> -		compatible = "generic-ehci";
-> -		reg = <0xff500000 0x100>;
-> -		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&cru HCLK_USBHOST0>;
-> -		clock-names = "usbhost";
-> -		status = "disabled";
-> -	};
-> -
-> -	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
-> -
-> -	usb_hsic: usb@ff5c0000 {
-> -		compatible = "generic-ehci";
-> -		reg = <0xff5c0000 0x100>;
-> -		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&cru HCLK_HSIC>;
-> -		clock-names = "usbhost";
-> -		status = "disabled";
-> -	};
-> -
->  	gic: interrupt-controller@ffc01000 {
->  		compatible = "arm,gic-400";
->  		interrupt-controller;
+>  drivers/gpu/drm/exynos/exynos_dp_core.c |   24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is not related to the other patches in the series, so it can be
+applied independently.
+
+Sean, this looks like a back-/forward-port of the patch you linked to in
+reply to an earlier version of the series, does this still correspond to
+what you think it should be doing? (hence not trimming the quote)
+
+Thierry
+
+> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/ex=
+ynos/exynos_dp_core.c
+> index 31c3de9..347dec9 100644
+> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
+> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
+> @@ -875,10 +875,18 @@ static irqreturn_t exynos_dp_irq_handler(int irq, v=
+oid *arg)
+>  static void exynos_dp_hotplug(struct work_struct *work)
+>  {
+>  	struct exynos_dp_device *dp;
+> -	int ret;
+> =20
+>  	dp =3D container_of(work, struct exynos_dp_device, hotplug_work);
+> =20
+> +	if (dp->drm_dev)
+> +		drm_helper_hpd_irq_event(dp->drm_dev);
+> +}
+> +
+> +static void exynos_dp_commit(struct exynos_drm_display *display)
+> +{
+> +	struct exynos_dp_device *dp =3D display->ctx;
+> +	int ret;
+> +
+>  	ret =3D exynos_dp_detect_hpd(dp);
+>  	if (ret) {
+>  		/* Cable has been disconnected, we're done */
+> @@ -1050,8 +1058,10 @@ static void exynos_dp_phy_exit(struct exynos_dp_de=
+vice *dp)
+>  	}
+>  }
+> =20
+> -static void exynos_dp_poweron(struct exynos_dp_device *dp)
+> +static void exynos_dp_poweron(struct exynos_drm_display *display)
+>  {
+> +	struct exynos_dp_device *dp =3D display->ctx;
+> +
+>  	if (dp->dpms_mode =3D=3D DRM_MODE_DPMS_ON)
+>  		return;
+> =20
+> @@ -1059,10 +1069,13 @@ static void exynos_dp_poweron(struct exynos_dp_de=
+vice *dp)
+>  	exynos_dp_phy_init(dp);
+>  	exynos_dp_init_dp(dp);
+>  	enable_irq(dp->irq);
+> +	exynos_dp_commit(display);
+>  }
+> =20
+> -static void exynos_dp_poweroff(struct exynos_dp_device *dp)
+> +static void exynos_dp_poweroff(struct exynos_drm_display *display)
+>  {
+> +	struct exynos_dp_device *dp =3D display->ctx;
+> +
+>  	if (dp->dpms_mode !=3D DRM_MODE_DPMS_ON)
+>  		return;
+> =20
+> @@ -1078,12 +1091,12 @@ static void exynos_dp_dpms(struct exynos_drm_disp=
+lay *display, int mode)
+> =20
+>  	switch (mode) {
+>  	case DRM_MODE_DPMS_ON:
+> -		exynos_dp_poweron(dp);
+> +		exynos_dp_poweron(display);
+>  		break;
+>  	case DRM_MODE_DPMS_STANDBY:
+>  	case DRM_MODE_DPMS_SUSPEND:
+>  	case DRM_MODE_DPMS_OFF:
+> -		exynos_dp_poweroff(dp);
+> +		exynos_dp_poweroff(display);
+>  		break;
+>  	default:
+>  		break;
+> @@ -1094,6 +1107,7 @@ static void exynos_dp_dpms(struct exynos_drm_displa=
+y *display, int mode)
+>  static struct exynos_drm_display_ops exynos_dp_display_ops =3D {
+>  	.create_connector =3D exynos_dp_create_connector,
+>  	.dpms =3D exynos_dp_dpms,
+> +	.commit =3D exynos_dp_commit,
+>  };
+> =20
+>  static struct exynos_drm_display exynos_dp_display =3D {
+> --=20
+> 1.7.9.5
+>=20
+
+--LSp5EJdfMPwZcMS1
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT21tqAAoJEN0jrNd/PrOh+FsP/2vVypmqRyvWcls5tYDqL3zS
+AafTIRESikD/e3IGEuML9TatlKfBDm9+RZOdJpSQ9knGTw+YWygCdZBoVP3DDW5B
+Qh9iXYVV+kMdJy3SNoug++Tto8chB+hgxhZ9LbIBsMjAkbPYEa/Bd1hcMuqXGd4T
+FSu0pB1+LTTiLmNS701bZxM8uI7dms45z8hPe0vKVlV6QTacUrL3U/epjxaAHEKT
+CyTDlUmbTtaAeji8db5rVkAmkCqjn3rzgZ8AOjIcNghFV3Wbewy268LblMUbvZ7j
+u+6zxAgsZSgegTPRofFsRViJL0H3wUBIi/NstgIC4hebAs2YRIP3diVfp9VI9a6e
+qa46lqb/XJ6t5vlSumeCVjiiMcyvGhL+5kfKZDxCkDl8wuoMf0jMpsINc6LgM8na
+PfwjNNBqARkpfmEoJ6h0GggL6BdkG6ZtVXi2QqFlKeyvhLIXt0ai2WBHqD1nyDdJ
+8gTVKPwiyn7U2mXwf7kp5BzG+SXRWC0pKdZo1P6QPIninXXtA2Fzd6EN1TlFEE5W
+yDWuT7ampv52CNbazqqIXbkMa0g3BPl1COrVqe/Q8PIqJvq+hch4FtB5MRyYnNxu
+KaUq0l9xTyGXxFD8imlclx87CxbTSKlYH6WBxjTI3eCDN0e01cSKvjh0W/XadkwY
+0YyHPkTsuYT8Ch/K4WxG
+=pCOC
+-----END PGP SIGNATURE-----
+
+--LSp5EJdfMPwZcMS1--
+
+--===============1562342365==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1562342365==--
