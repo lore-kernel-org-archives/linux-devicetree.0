@@ -1,47 +1,82 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: core command line parameters with dt
-Date: Fri, 1 Aug 2014 15:12:22 +0100
-Message-ID: <20140801141222.GG22994@leverpostej>
-References: <E70AF999396FDF4EAE40E195B84709611F8471EA@SPMDEGHN001.CADCON.INTERN>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E70AF999396FDF4EAE40E195B84709611F8471EA-VHQhki0MIenpQFNhCJRnZ0Yy6alPw7Wn0MAMd6zgKLc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH v4 0/3] Support for Qualcomm QPNP PMIC's
+Date: Fri,  1 Aug 2014 17:30:47 +0300
+Message-ID: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 01, 2014 at 02:55:42PM +0100, Priebe, Sebastian wrote:
-> Hello,
-> 
-> I want to use kernel command line parameters within my machine file.
-> If I use the __setup macro I get the following build error:
-> error: __setup_str_model_bt causes a section type conflict with myboard_dt_board_compat
-> 
-> static const char *myboard_dt_board_compat[] __initconst = {
->         "vendor,model",
->         NULL
-> };
+Hello all,
 
-You have a section mismatch because your code evidently doesn't live in
-an init section, but is trying to access data which does. The fact that
-the data happens to be a list of compatible strings is irrelevant, and
-this is in no way related to dt.
+Changes since v3:
+ - rename the driver to qcom-spmi-pmic - suggested by David Collins
+ - spmi regmap config now initialize .fast_io to true
+ - added generalized comptatible string in DT binding document and driver
+ - I dropped the pm8921 rename patch for now, it will be subject of another
+   patchset later on.
 
-Figure out whether your function should live in an init section or if
-the data should not. Make sure that you don't reference anything in init
-section from anything else which does not itself live in an init
-section. That will solve your build issue.
+regards,
+Stan
 
-The name of the function sounds suspicious to begin with from a DT
-perspective. You shouldn't need to override DT properties from the
-command line.
+--------------------------------------------------------------------------------
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+ - 1/4 - added new line, signed-off-by / acked-by and module_authors.
+ - 3/4 - the subject has been changed.
+
+The previous v2 can be found at [1].
+
+I'm still waiting Acks for:
+ - 4/4 from Qualcomm folks.
+ - 2/4 and 3/4 from DT folks.
+
+The patchset is ready to merge version and also it can be treated as an
+intermediate step until we find a solution for non-translatable peripheral
+addresses.
+
+[1] https://lkml.org/lkml/2014/7/17/877
+
+--------------------------------------------------------------------------------
+
+Hello everyone,
+
+Here is the continuation of patch sets sent recently about Qualcomm
+QPNP SPMI PMICs.
+
+The previous version of the patch set can be found at [1].
+
+Changes since v1:
+ - removed completely custom *of* parser
+ - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
+ - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
+
+Removing of the custom *of* parser leads to that that the *reg* devicetree
+property cannot exist and therefore cannot be parsed to get PMIC peripheral
+resources. I took this step aside because no one from mfd drivers does this
+parsing. This will lead to inconvenience in the peripheral drivers to define
+internally the SPMI base addresses depending on the compatible property
+i.e. PMIC version. 
+
+Comments are welcome!
+
+[1] https://lkml.org/lkml/2014/7/8/428
+
+--------------------------------------------------------------------------------
+
+Josh Cartwright (1):
+  mfd: add support for Qualcomm SPMI PMICs
+
+Stanimir Varbanov (2):
+  mfd: document DT bindings for Qualcomm SPMI PMICs
+  ARM: dts: qcom: add pm8941 and pm8841 PMICs device nodes
+
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   64 +++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |   37 +++++++++++
+ drivers/mfd/Kconfig                                |   15 +++++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/qcom-spmi-pmic.c                       |   67 ++++++++++++++++++++
+ 5 files changed, 184 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+ create mode 100644 drivers/mfd/qcom-spmi-pmic.c
