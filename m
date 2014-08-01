@@ -1,84 +1,115 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 07/15] drm/exynos: dsi: Add support for panel prepare and
- unprepare routines
-Date: Fri, 1 Aug 2014 11:05:06 +0200
-Message-ID: <20140801090505.GC21724@ulmo>
-References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406828534-10072-8-git-send-email-ajaykumar.rs@samsung.com>
+From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Subject: AW: driver using another driver
+Date: Fri, 1 Aug 2014 09:08:07 +0000
+Message-ID: <E70AF999396FDF4EAE40E195B84709611F8470FA@SPMDEGHN001.CADCON.INTERN>
+References: <E70AF999396FDF4EAE40E195B84709611F84671F@SPMDEGHN001.CADCON.INTERN>
+ <20140801063105.GV23235@pengutronix.de>
+ <E70AF999396FDF4EAE40E195B84709611F847086@SPMDEGHN001.CADCON.INTERN>
+ <20140801085148.GW23235@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1357095214=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1406828534-10072-8-git-send-email-ajaykumar.rs@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ajay Kumar <ajaykumar.rs@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, joshi@samsung.com, dri-devel@lists.freedesktop.org, ajaynumb@gmail.com, prashanth.g@samsung.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140801085148.GW23235-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: de-DE
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Sascha,
 
---===============1357095214==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
-Content-Disposition: inline
+I don't register a platform driver manually anymore.
+As I wrote before, I turned the CPLD driver in a platform driver and cr=
+eated an entry in the device tree.
+But I get an error in the probe: res =3D platform_get_resource(pdev, IO=
+RESOURCE_MEM, 0) returns NULL.
+
+Greetings
+Sebastian Priebe
+Telefon: +49 (0)621 685996-26
 
 
---9Ek0hoCL9XbhcSqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 31, 2014 at 11:12:06PM +0530, Ajay Kumar wrote:
-> Modify exynos_dsi driver to support the new panel calls:
-> prepare and unprepare.
->=20
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c |   12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
 
-And this one as well.
 
-Thierry
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+CADCON
+Ingenieurgesellschaft mbH & Co. KG
+Geschaeftsfuehrer: Robert Bauer, Andreas Gundel
+Sitz der Gesellschaft: D-86368 Gersthofen
+Registergericht: Amtsgericht Augsburg HRA 14521
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
---9Ek0hoCL9XbhcSqy
-Content-Type: application/pgp-signature
+-----Urspr=FCngliche Nachricht-----
+Von: Sascha Hauer [mailto:s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
+Gesendet: Freitag, 1. August 2014 10:52
+An: Priebe, Sebastian
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Betreff: Re: driver using another driver
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+On Fri, Aug 01, 2014 at 07:15:41AM +0000, Priebe, Sebastian wrote:
+> Hello Sascha,
+>
+> thanks for your answer.
+> We are using an imx35 cpu and our CPLD is in fact connected via weim =
+(CS1).
+> Though I created the following device node in our dts:
+> &weim {
+>         pinctrl-names =3D "default";
+>         status =3D "okay";
+>
+>         pld@1,0 {
+>                 compatible =3D "roche,hbm-pld";
+>                 reg =3D <1 0x00000000 0x0001000>;
+>                 fsl,weim-cs-timing =3D <0x0 0x0 0x0>; /* don't know w=
+hat to put here */
+>         };
+> };
+>
+> And I turned the CPLD driver into a platform driver. But I don't get =
+the resource in probe:
+> res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0) returns NULL.
+>
+> In our platform code we had:
+> static struct resource hbm_pld_resource_data =3D {
+>         .start =3D 0xA8000000,
+>         .end =3D 0xA8000000 + 0x1000 - 1,
+>         .flags =3D IORESOURCE_MEM,
+> };
 
-iQIcBAEBAgAGBQJT21hBAAoJEN0jrNd/PrOhbZIP/3RX1f7yT5AOtsMA8XCEAGg7
-htXqHV+PHYQjw3Z5Q4Qrd2ozD5+urDvYvdyyNaeskQISCQCRrgVkZrEsnMGchcvD
-m4ulKq8LzvVk1RdziGZT+yO5xVxqvwLRbX/EXjckUdFvLumfRTKTRpPL+2wh/dil
-6fPO1TXmhwFZub99vxUE/3CORuNW6dv/2D9243PaHfzbPJPZSPtXy/p8HCwuZSqL
-Z/MP6if1S/vQUwbi5dhtnySdBDGDh6/VRVOj6g9C99auDQvvCPWVfat30Zmou+aZ
-cv1yQTul6OsYi0H/iC8XpBuParsiF2Zr8P1D9MFoW8aZlgENMzmeJ9e8GL7uo7G7
-qRobdOuI48x8dRufu7ijlkXPENRAf0BB86IRrXmoIX3Ascx/lfMq0U8B8xQig/dW
-sVw4crIzfhlkYv0+PgHBv8IHkkSoAoW9bXt6EgbsHflPClqHYo5B0SvqeWYMQdze
-fubtQc1hDKl3EpqL1+atmDy9y36cZLe228sP1rF8gkGqENgms56dS1Jl0jiWOL2w
-CeM3GbOLQfoXqDavZl2hWiXZTrhVjOXh5LM4LQS8Puy3ovcWAlEJuUDLLL3l6Lij
-TFiCi7nUl5XjeBKyBxKBIbt5WVR+9bejxyvBJtYr/7gokeeHMG6isbOYCMmUSiH+
-Ao0p0pjFlulyC4ySojRR
-=JMsh
------END PGP SIGNATURE-----
+Why do you manually register a platform_device? You should add the CPLD=
+ device to the device tree instead.
 
---9Ek0hoCL9XbhcSqy--
+>
+> And for the setting of CS1:
+> __raw_writel((0x22 << 8), MX35_IO_ADDRESS(MX3x_WEIM_BASE_ADDR) +
+> 0x10); __raw_writel(((0x0a << 28) | (0x06 << 12) | (0x03 << 8) | (0x0=
+4
+> << 4) | (0x01 << 0)), MX35_IO_ADDRESS(MX3x_WEIM_BASE_ADDR) + 0x14);
+>
+> Where do I put this in the device tree?
 
---===============1357095214==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+In the fsl,weim-cs-timing property. See
+Documentation/devicetree/bindings/bus/imx-weim.txt
 
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
+Sascha
 
---===============1357095214==--
+--
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
