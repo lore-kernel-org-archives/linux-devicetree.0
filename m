@@ -1,46 +1,65 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v5 1/3] ahci_xgene: Removing NCQ support from the APM X-Gene SoC AHCI SATA Host Controller driver.
-Date: Fri,  1 Aug 2014 23:07:16 +0530
-Message-ID: <1406914638-24721-2-git-send-email-stripathi@apm.com>
-References: <1406914638-24721-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1406914638-24721-1-git-send-email-stripathi@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] spi: davinci: add support to configure gpio cs
+	through dt
+Date: Fri, 1 Aug 2014 21:24:52 +0300
+Message-ID: <53DBDB74.3070205@ti.com>
+References: <1406911233-18999-1-git-send-email-grygorii.strashko@ti.com>
+	<1406911233-18999-2-git-send-email-grygorii.strashko@ti.com>
+	<20140801173506.GB30458@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20140801173506.GB30458-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the NCQ support from the APM X-Gene SoC AHCI
-Host Controller driver as it doesn't support it.
+On 08/01/2014 08:35 PM, Mark Brown wrote:
+> On Fri, Aug 01, 2014 at 07:40:32PM +0300, Grygorii Strashko wrote:
+>> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+>>
+>> Currently driver supports only configuration of GPIO CS through
+>> platform data. This patch enhances the driver to configure GPIO
+>> CS through DT. Also update the DT binding documentation to
+>> reflect the availability of cs-gpios.
+> 
+> Ah, sorry - this is the unapplied patch from before.  It would have been
+> much better to submit this as the second patch after your rework patch
+> since this...
+> 
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci_xgene.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I can do this, but It will wait for a week :(
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 1cfbdca..f416495 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -344,7 +344,7 @@ static struct ata_port_operations xgene_ahci_ops = {
- };
+>> -	if (pdata->chip_sel && chip_sel < pdata->num_chipselect &&
+>> -				pdata->chip_sel[chip_sel] != SPI_INTERN_CS)
+>> +	if (np && master->cs_gpios != NULL && spi->cs_gpio >= 0) {
+>> +		/* SPI core parse and update master->cs_gpio */
+>>   		gpio_chipsel = true;
+>> +		gpio = spi->cs_gpio;
+>> +	} else if (pdata->chip_sel &&
+>> +		   chip_sel < pdata->num_chipselect &&
+>> +		   pdata->chip_sel[chip_sel] != SPI_INTERN_CS) {
+>> +		/* platform data defines chip_sel */
+>> +		gpio_chipsel = true;
+>> +		gpio = pdata->chip_sel[chip_sel];
+>> +	}
+> 
+> ...still looks excessively confusing - it is way more logic than I'd
+> expect to see on every chip select.
+> 
 
- static const struct ata_port_info xgene_ahci_port_info = {
--	.flags = AHCI_FLAG_COMMON | ATA_FLAG_NCQ,
-+	.flags = AHCI_FLAG_COMMON,
- 	.pio_mask = ATA_PIO4,
- 	.udma_mask = ATA_UDMA6,
- 	.port_ops = &xgene_ahci_ops,
-@@ -481,7 +481,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	/* Configure the host controller */
- 	xgene_ahci_hw_init(hpriv);
+Yep. Finally, patch "[PATCH v2 2/2] spi: davinci: use spi_device.cs_gpio to store gpio cs per spi device"
+simplifies logic above.
 
--	hflags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_YES_NCQ;
-+	hflags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_NCQ;
-
- 	rc = ahci_platform_init_host(pdev, hpriv, &xgene_ahci_port_info,
- 				     hflags, 0, 0);
---
-1.8.2.1
-
+Regards,
+-grygorii
