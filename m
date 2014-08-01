@@ -1,58 +1,46 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V9 3/6] Documentation: arm64: add SCU dts binding
- documentation to linux kernel
-Date: Thu, 31 Jul 2014 19:45:54 -0700
-Message-ID: <1406861157-29169-4-git-send-email-fkan@apm.com>
-References: <1406861157-29169-1-git-send-email-fkan@apm.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
+Date: Fri, 01 Aug 2014 05:17:42 +0200
+Message-ID: <53DB06D6.9060604@suse.de>
+References: <1406822910-6255-1-git-send-email-afaerber@suse.de> <1406822910-6255-5-git-send-email-afaerber@suse.de> <53DA936E.9060004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1406861157-29169-1-git-send-email-fkan@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@roeck-us.net, dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com
-Cc: Feng Kan <fkan@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53DA936E.9060004@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This add documentation for the SCU system clock unit device tree binding
-to the kernel.
+Am 31.07.2014 21:05, schrieb Tomasz Figa:
+>> +
+>> +&i2c_2 {
+>> +	status =3D "okay";
+>> +	samsung,i2c-sda-delay =3D <100>;
+>> +	samsung,i2c-max-bus-freq =3D <66000>;
+>> +
+>> +	hdmiddc@50 {
+>> +		compatible =3D "samsung,exynos4210-hdmiddc";
+>> +		reg =3D <0x50>;
+>> +	};
+>=20
+> I don't think this matches current Exynos HDMI bindings, which I beli=
+eve
+> have been changed to just take a phandle to i2c bus instead.
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- Documentation/devicetree/bindings/arm/apm/scu.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/apm/scu.txt
+Looks correct to me:
 
-diff --git a/Documentation/devicetree/bindings/arm/apm/scu.txt b/Documentation/devicetree/bindings/arm/apm/scu.txt
-new file mode 100644
-index 0000000..b45be06
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/apm/scu.txt
-@@ -0,0 +1,17 @@
-+APM X-GENE SoC series SCU Registers
-+
-+This system clock unit contain various register that control block resets,
-+clock enable/disables, clock divisors and other deepsleep registers.
-+
-+Properties:
-+ - compatible : should contain two values. First value must be:
-+		   - "apm,xgene-scu"
-+		second value must be always "syscon".
-+
-+ - reg : offset and length of the register set.
-+
-+Example :
-+	scu: system-clk-controller@17000000 {
-+		compatible = "apm,xgene-scu","syscon";
-+		reg = <0x0 0x17000000 0x0 0x400>;
-+	};
--- 
-1.9.1
+http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/tre=
+e/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt?h=3Dfor-ne=
+xt
+
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/D=
+ocumentation/devicetree/bindings/video/exynos_hdmiddc.txt
+
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
