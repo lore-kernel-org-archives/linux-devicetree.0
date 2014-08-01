@@ -1,50 +1,28 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v5 06/10] ARM: dts: Clean up exynos5250-smdk5250
-Date: Fri, 01 Aug 2014 13:42:57 +0200
-Message-ID: <53DB7D41.2070000@suse.de>
-References: <1406868897-26874-1-git-send-email-afaerber@suse.de> <1406868897-26874-7-git-send-email-afaerber@suse.de>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] usb: renesas_usbhs: Add device tree support for R-Car
+ H2 and M2
+Date: Fri, 1 Aug 2014 20:49:04 +0900
+Message-ID: <53DB7EB0.8000401@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406868897-26874-7-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: SH-Linux <linux-sh@vger.kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 01.08.2014 06:54, schrieb Andreas F=C3=A4rber:
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/ex=
-ynos5250.dtsi
-> index ff1c09607631..30482fc523f9 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -215,7 +215,7 @@
->  		clock-names =3D "fimg2d";
->  	};
-> =20
-> -	codec@11000000 {
-> +	codec: codec@11000000 {
->  		compatible =3D "samsung,mfc-v6";
->  		reg =3D <0x11000000 0x10000>;
->  		interrupts =3D <0 96 0>;
+This driver supports other SoCs, but they need boards/Soc depend code.
+So, this patch adds device tree support for R-Car H2 and M2 initially.
 
-I notice that Ajay's iommu patch uses mfc here, so let's use it here,
-too. Affects patches 7 and 10.
+Yoshihiro Shimoda (2):
+  usb: renesas_usbhs: Add device tree bindings documentation
+  usb: renesas_usbhs: Add device tree support for R-Car H2 and M2
 
-Andreas
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |   24 +++++++++++
+ drivers/usb/renesas_usbhs/common.c                 |   43 ++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/renesas_usbhs.txt
 
-> @@ -258,7 +258,7 @@
->  		clock-names =3D "uart", "clk_uart_baud0";
->  	};
-> =20
-> -	sata@122F0000 {
-> +	sata: sata@122F0000 {
->  		compatible =3D "snps,dwc-ahci";
->  		samsung,sata-freq =3D <66>;
->  		reg =3D <0x122F0000 0x1ff>;
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+-- 
+1.7.9.5
