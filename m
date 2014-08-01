@@ -1,118 +1,52 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH V2] ARM: dts: Add DT changes for display on peach_pi
-Date: Fri, 01 Aug 2014 18:54:25 +0200
-Message-ID: <53DBC641.3090601@suse.de>
-References: <1406910258-28036-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
+ SoC
+Date: Fri, 1 Aug 2014 19:04:11 +0200
+Message-ID: <20140801170411.GG4703@rric.localhost>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+ <1406732794-20920-3-git-send-email-rric@kernel.org>
+ <20140730154626.GD20162@leverpostej>
+ <CAFpQJXWKybVUxpHg8MVrVMjLj3swuxLGo_9r1tL+gZ4hxUHTzQ@mail.gmail.com>
+ <20140731095336.GB21850@leverpostej>
+ <CAFpQJXUtP=v7FSLd3_OU7FG3w=pKYy2ihTQULA_DPEacsSu0Og@mail.gmail.com>
+ <20140731113301.GE22994@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406910258-28036-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, thierry.reding@gmail.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140731113301.GE22994@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Mark,
 
-Am 01.08.2014 18:24, schrieb Ajay Kumar:
-> Add DT nodes for panel-simple "auo,b133htn01" panel.
-> Add backlight enable pin and backlight power supply for pwm-backlight=
-=2E
-> Also add panel phandle needed by dp to enable display on peach_pi.
->=20
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
-> Changes since V1:
-> Remove "simple-panel" compatible string and use only ""auo,b133htn01"=
-=2E
->=20
->  arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++---------=
---------
->  1 file changed, 10 insertions(+), 17 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boo=
-t/dts/exynos5800-peach-pi.dts
-> index f3ee48b..f8c2e61 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -28,11 +28,13 @@
->  		i2c20 =3D "/spi@12d40000/cros-ec@0/i2c-tunnel";
->  	};
-> =20
-> -	backlight {
-> +	backlight: backlight {
->  		compatible =3D "pwm-backlight";
->  		pwms =3D <&pwm 0 1000000 0>;
->  		brightness-levels =3D <0 100 500 1000 1500 2000 2500 2800>;
->  		default-brightness-level =3D <7>;
-> +		enable-gpios =3D <&gpx2 2 0>;
+On 31.07.14 12:33:01, Mark Rutland wrote:
+> On Thu, Jul 31, 2014 at 12:12:33PM +0100, Ganapatrao Kulkarni wrote:
+> >    We mark RAM used by ATF as secure-RAM, however we don't support
+> >    secure/non-secure address aliasing.
+> >    i.e, a DRAM address that can be referenced from both a secure PA and a
+> >    non-secure PA is not allowed.
+>
+> What exactly do you mean by "not allowed"?
 
-=46or Spring I was asked to use GPIO_ACTIVE_* - here that would mean
-s/0/GPIO_ACTIVE_HIGH/ IIUC and if necessary
-#include <dt-bindings/gpio/gpio.h> before the .dtsi #include.
+It actually means "not possible" since secure and non-secure memory is
+kept in separate address ranges.
 
-A modified version of your patch for Snow, rebased onto my cleanups, ca=
-n
-be found on my spring-next branch.
+> If Linux maps that memory, what happens?
+>
+> What if Linux tried to read or write to it?
+>
+> If Linux should not map that memory, it should not be described in the
+> memory map to begin with.
 
-> +		power-supply =3D <&tps65090_fet1>;
->  		pinctrl-0 =3D <&pwm0_out>;
->  		pinctrl-names =3D "default";
->  	};
-> @@ -98,6 +100,12 @@
->  		regulator-boot-on;
->  		regulator-always-on;
->  	};
-> +
-> +	panel: panel-simple {
+Linux never will see secure-RAM. Firmware must be sure to report the
+correct non-secure memory ranges to the OS (e.g. unsecure mem size =
+total size - secure mem size).
 
-Nit: panel-simple seems backwards in English language, and given that
-simple-panel would be referring to the implementation, I used just
-"panel" for Spring.
-
-> +		compatible =3D "auo,b133htn01";
-
-=46WIW this depends on auo,b133htn01 getting added to Documentation and
-panel-simple, which I think hasn't happened yet?
-
-https://patchwork.kernel.org/patch/4625321/
-
-> +		power-supply =3D <&tps65090_fet6>;
-> +		backlight =3D <&backlight>;
-> +	};
->  };
-> =20
->  &dp {
-> @@ -111,22 +119,7 @@
->  	samsung,link-rate =3D <0x0a>;
->  	samsung,lane-count =3D <2>;
->  	samsung,hpd-gpio =3D <&gpx2 6 0>;
-> -
-> -	display-timings {
-> -		native-mode =3D <&timing1>;
-> -
-> -		timing1: timing@1 {
-> -			clock-frequency =3D <150660000>;
-> -			hactive =3D <1920>;
-> -			vactive =3D <1080>;
-> -			hfront-porch =3D <60>;
-> -			hback-porch =3D <172>;
-> -			hsync-len =3D <80>;
-> -			vback-porch =3D <25>;
-> -			vfront-porch =3D <10>;
-> -			vsync-len =3D <10>;
-> -		};
-> -	};
-> +	panel =3D <&panel>;
->  };
-> =20
->  &fimd {
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+-Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
