@@ -1,76 +1,100 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
-Date: Fri, 1 Aug 2014 11:38:24 +0100
-Message-ID: <20140801103824.GC17528@sirena.org.uk>
-References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
- <1406728949-7560-3-git-send-email-sassmann@kpanic.de>
- <53DA3613.9010305@ti.com>
- <53DA3C68.3020406@kpanic.de>
- <53DA3D66.1030407@ti.com>
- <53DA4D37.4030408@kpanic.de>
- <20140731192053.4463.27499@quantum>
- <53DB6633.3020005@kpanic.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 00/15] drm/panel: Add prepare and unprepare routines
+Date: Fri, 1 Aug 2014 12:59:21 +0200
+Message-ID: <20140801105919.GI21724@ulmo>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MN9D2+RfCIChtc82"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="7IgncvKP0CVPV/ZZ"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53DB6633.3020005-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+In-Reply-To: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 
---MN9D2+RfCIChtc82
+--7IgncvKP0CVPV/ZZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 01, 2014 at 12:04:35PM +0200, Stefan Assmann wrote:
+On Thu, Jul 31, 2014 at 11:11:59PM +0530, Ajay Kumar wrote:
+> This series is based on exynos-drm-next branch of Inki Dae's tree at:
+> git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
+>=20
+> This is originally a part of the bridge chip series:
+> http://www.spinics.net/lists/linux-samsung-soc/msg34826.html
+>=20
+> But, since we can handle panel and bridge chips seperately,
+> I thought of seperating them.
+>=20
+> This patchset basically extends the drm panel framework
+> to accomodate wider range of panels with strict timing
+> sequence for enabling panel power, backlight enable, etc.
+>=20
+> I have tested this patchset on exynos5800-peach-pi board.
+>=20
+> Thierry:
+> 	As discussed, I have seperated patches such that they
+> 	won't break the compilation in between. Also, I have
+> 	incorporated all the comments given by you for panel patches.
+> 	I assume you have already taken [PATCH 01/15] and hence
+> 	it can be dropped from this patchset.
+>=20
+> Ajay Kumar (15):
+>   [PATCH 01/15] drm/panel: add prepare and unprepare routines
+>   [PATCH 02/15] drm/panel: Add get_modes helper
+>   [PATCH 03/15] drm/panel: ld9040: Add dummy prepare and unprepare routin=
+es
+>   [PATCH 04/15] drm/panel: s6e8aa0: Add dummy prepare and unprepare routi=
+nes
+>   [PATCH 05/15] drm/panel: simple: Add dummy prepare and unprepare routin=
+es
+>   [PATCH 06/15] drm/exynos: dpi: Add support for panel prepare and unprep=
+are routines
+>   [PATCH 07/15] drm/exynos: dsi: Add support for panel prepare and unprep=
+are routines
+>   [PATCH 08/15] drm/tegra: Add support for panel prepare and unprepare ro=
+utines
+>   [PATCH 09/15] drm/panel: ld9040: Add proper definition for prepare and =
+unprepare
+>   [PATCH 10/15] drm/panel: s6e8aa0: Add proper definition for prepare and=
+ unprepare
+>   [PATCH 11/15] drm/panel: simple: Add proper definition for prepare and =
+unprepare
+>   [PATCH 12/15] drm/panel: simple: Support usage of delays in panel funct=
+ions
+>   [PATCH 13/15] drm/panel: simple: Add support for auo_b133htn01 panel
+>   [PATCH 14/15] drm/exynos: Move DP setup into commit()
+>   [PATCH 15/15] drm/exynos: dp: Modify driver to support drm_panel
 
-> probe function doesn't even get called without the clock being
-> powered/enabled. I've instrumented do_one_initcall() to verify this.
-> With the clock being enabled I see:
-> [   19.693511] init/main.c do_one_initcall:792 initcall wl1271_init+0x0/0x38 [wlcore_sdio]
-> [   20.993347] init/main.c do_one_initcall:792 initcall wl12xx_driver_init+0x0/0x14 [wl12xx]
-> If the clock is kept disabled none of the calls is made and we never get
-> to wl12xx_probe().
-> The device might not be discoverable without the clock.
+I already had patches 01/15 and 02/15, but I've applied the rest of the
+series. I went out on a limb and applied Inki's Acked-by to all Exynos-
+related patches, assuming that was the intention.
 
-> Maybe we should rethink the idea of doing that single register write to
-> enable the device in twl-core code, if the TWL6030 is present.
+Thierry
 
-> Alternatively this could be done by u-boot. Seems like something that
-> should have been done by firmware upfront.
-
-If this is a SDIO device please search the lists for discussion on how
-to handle enabling required resources for them - Ulf was working on
-something generic for that.
-
---MN9D2+RfCIChtc82
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--7IgncvKP0CVPV/ZZ
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT224VAAoJELSic+t+oim9U5cP/iWGt46RyFrxLqOAwQ1FEGsM
-vdESM5DFx+7EsNS70eyHMwoDGCZuSvJwiLChVS9dfV1pmV3sF7CpXh3mV7xYrbgB
-q/84eaygLt8VqQcsiwOcC1oqkCRiR3fL27y1V+e8A6tYq5ccTrviBc7+UVVJ7hfN
-qLg36+XjFHGWAUvOZmL9oB692UAi7i2tpjlHSxOwI44M/KBHJ2GrHspMajQkjixt
-plS4JKFb0QNO99zErN18IlqrjWq+paQOZoQ9gj/wK94SExQAn2gkDST9jrxD1sCg
-tYTSk3pXWmFG2gzR0ZJn0nqT6G6Q0/+euGVvqddsU8CzKhRSF5zo5vJ90KF2Dewk
-YIg0mLr0US7MJCvMmrLk3edB/0m72+sa/5Ytc1zE+pFS2EwLJFFIdcAxGElORbbM
-fxRPqkxhkSjjO3vzyXig/1ZPD4wCzdaU4UbOd88JJx7cVhZdTgCxtwS+xJq0b9PO
-mZ23zfNFHadjDHX8FFARcP0dyMAxAJma3G8+TJ9Z3l8wFVPEuAr3+SO2x1WGqelQ
-9lCUpwKYr5j0UcaeldYBdWILoou0KfND0GeDrRk2pc698jjC6ZjyvvLHFeN1fz4o
-BKRHLYWI89mn9L1TnIzhASw5eTopMo0gcixoEWLV9pY9xGA3yUSHXAqJrL23UfiR
-6SOgklKrUHHNiKQpk0n6
-=jHRG
+iQIcBAEBAgAGBQJT23MHAAoJEN0jrNd/PrOhYaEQAKPYVDCX5iT9bppXkRWwpHcn
+sKjk6FkTAy6lFtTPx4D2jkcEZSkzDM6IljQU0PB4PyyoGcYOgJmcyC+DVhf8sxwK
++Mv6oYKl9xEfSM3Z5bMIHzV9jx81JivoID0G938nrZomoCq3Mb/dXueXgUA44u7P
+lmQAKVQ+tftJHduB/fP1a5Dm6HqMpEA6pslQ4vCh9MzAv6XToALOpJCi8F3n3r+f
+reWHPEJ8SQbrw1uK45q+PEhCVVv8SsMZ5f2hdMshEJJy+5VJ24CXxIdlPbss0Zdt
+VdR8lRCY8UtIcFSeDiSq9OmZVRl4GGiAR7y6CJaTuToAlw/tp+TMHE288HdYvGAZ
+RrBcJwWzjWLJqYvaJ920TUnpV6zB+aGgP12INKZBGN4DJuPrfPfYhr4h4PqQqrsY
+pNAAjs3jpQADcoTA0JfSySPz96oL9ZqFPOWnT2vqP/uvfOUWsgRiwL9AsiXbsBI6
+Pn4G7tqbON2xik+5H8FKF/pnHcUStwsRiRr6C2Y3gRhecp9jJVR+QhD6L8lPcneu
+sSxUOjexSNHSapkxB0XeVrjAHXPCT65daqeTt4HLAlUcRH7q4wjr7Ac8x+pPsOIr
+bkrQvFRJ6+gGV+YFMwemfQBSUSZbXGi+Y7ru2dY07du0TTtjyYdCWc2KSJ9N+1RU
+DpGMgJkch1snpH/rHY7L
+=0jEA
 -----END PGP SIGNATURE-----
 
---MN9D2+RfCIChtc82--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--7IgncvKP0CVPV/ZZ--
