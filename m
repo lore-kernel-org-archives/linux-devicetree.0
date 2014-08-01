@@ -1,100 +1,74 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 00/15] drm/panel: Add prepare and unprepare routines
-Date: Fri, 1 Aug 2014 12:59:21 +0200
-Message-ID: <20140801105919.GI21724@ulmo>
-References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/4] mfd: pm8xxx-spmi: add support for Qualcomm SPMI
+ PMICs
+Date: Fri, 1 Aug 2014 12:23:56 +0100
+Message-ID: <20140801112356.GP9030@lee--X1>
+References: <1406205921-7452-1-git-send-email-svarbanov@mm-sol.com>
+ <1406205921-7452-2-git-send-email-svarbanov@mm-sol.com>
+ <53D8182A.5050204@codeaurora.org>
+ <53DA02C0.2050606@mm-sol.com>
+ <53DB5061.8080403@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7IgncvKP0CVPV/ZZ"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay Kumar <ajaykumar.rs@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
+In-Reply-To: <53DB5061.8080403@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, David Collins <collinsd@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
---7IgncvKP0CVPV/ZZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 31, 2014 at 11:11:59PM +0530, Ajay Kumar wrote:
-> This series is based on exynos-drm-next branch of Inki Dae's tree at:
-> git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
+On Fri, 01 Aug 2014, Stanimir Varbanov wrote:
+> On 07/31/2014 11:48 AM, Stanimir Varbanov wrote:
+> > On 07/30/2014 12:54 AM, David Collins wrote:
+> >> On 07/24/2014 05:45 AM, Stanimir Varbanov wrote:
+> >>> From: Josh Cartwright <joshc@codeaurora.org>
+> >>>
+> >>> The Qualcomm SPMI PMIC chips are components used with the
+> >>> Snapdragon 800 series SoC family.  This driver exists
+> >>> largely as a glue mfd component, it exists to be an owner
+> >>> of an SPMI regmap for children devices described in
+> >>> device tree.
+> >>>
+> >>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> >>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >>> Acked-by: Lee Jones <lee.jones@linaro.org>
+> >>> ---
+> >>>  drivers/mfd/Kconfig       |   16 +++++++++++
+> >>>  drivers/mfd/Makefile      |    1 +
+> >>>  drivers/mfd/pm8xxx-spmi.c |   65 +++++++++++++++++++++++++++++++=
+++++++++++++++
+> >>
+> >> Would it be possible to rename this driver: qcom-spmi-pmic.c?  The=
+ driver
+> >> will be supporting several PMICs that do not fit the pm8xxx naming=
+ scheme.
+> >>  One of which is even specified in the compatible list of this dri=
+ver
+> >> (pma8084).  There is presently downstream support for the followin=
+g PMICs:
+> >> PM8019, PM8110, PM8226, PM8841, PM8916, PM8941, PM8994, PMA8084, P=
+MD9635,
+> >> PMI8962, and PMI8994 [1].  Four of these do not fit the "PM8XXX" t=
+emplate.
+> >=20
+> > I haven't strong opinion on the file names. The qcom prefix is the =
+one
+> > which annoying me. If you look at /drivers/mfd the company name pre=
+fixes
+> > are very few.
+> >=20
+> > The *compatible* strings are the important thing here. So If MFD
+> > maintainer is fine with this name I'm fine too.
 >=20
-> This is originally a part of the bridge chip series:
-> http://www.spinics.net/lists/linux-samsung-soc/msg34826.html
->=20
-> But, since we can handle panel and bridge chips seperately,
-> I thought of seperating them.
->=20
-> This patchset basically extends the drm panel framework
-> to accomodate wider range of panels with strict timing
-> sequence for enabling panel power, backlight enable, etc.
->=20
-> I have tested this patchset on exynos5800-peach-pi board.
->=20
-> Thierry:
-> 	As discussed, I have seperated patches such that they
-> 	won't break the compilation in between. Also, I have
-> 	incorporated all the comments given by you for panel patches.
-> 	I assume you have already taken [PATCH 01/15] and hence
-> 	it can be dropped from this patchset.
->=20
-> Ajay Kumar (15):
->   [PATCH 01/15] drm/panel: add prepare and unprepare routines
->   [PATCH 02/15] drm/panel: Add get_modes helper
->   [PATCH 03/15] drm/panel: ld9040: Add dummy prepare and unprepare routin=
-es
->   [PATCH 04/15] drm/panel: s6e8aa0: Add dummy prepare and unprepare routi=
-nes
->   [PATCH 05/15] drm/panel: simple: Add dummy prepare and unprepare routin=
-es
->   [PATCH 06/15] drm/exynos: dpi: Add support for panel prepare and unprep=
-are routines
->   [PATCH 07/15] drm/exynos: dsi: Add support for panel prepare and unprep=
-are routines
->   [PATCH 08/15] drm/tegra: Add support for panel prepare and unprepare ro=
-utines
->   [PATCH 09/15] drm/panel: ld9040: Add proper definition for prepare and =
-unprepare
->   [PATCH 10/15] drm/panel: s6e8aa0: Add proper definition for prepare and=
- unprepare
->   [PATCH 11/15] drm/panel: simple: Add proper definition for prepare and =
-unprepare
->   [PATCH 12/15] drm/panel: simple: Support usage of delays in panel funct=
-ions
->   [PATCH 13/15] drm/panel: simple: Add support for auo_b133htn01 panel
->   [PATCH 14/15] drm/exynos: Move DP setup into commit()
->   [PATCH 15/15] drm/exynos: dp: Modify driver to support drm_panel
+> Lee, are you OK with suggested names qcom-spmi-pmic and qcom-ssbi-pmi=
+c?
 
-I already had patches 01/15 and 02/15, but I've applied the rest of the
-series. I went out on a limb and applied Inki's Acked-by to all Exynos-
-related patches, assuming that was the intention.
+Sounds fine to me.
 
-Thierry
-
---7IgncvKP0CVPV/ZZ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT23MHAAoJEN0jrNd/PrOhYaEQAKPYVDCX5iT9bppXkRWwpHcn
-sKjk6FkTAy6lFtTPx4D2jkcEZSkzDM6IljQU0PB4PyyoGcYOgJmcyC+DVhf8sxwK
-+Mv6oYKl9xEfSM3Z5bMIHzV9jx81JivoID0G938nrZomoCq3Mb/dXueXgUA44u7P
-lmQAKVQ+tftJHduB/fP1a5Dm6HqMpEA6pslQ4vCh9MzAv6XToALOpJCi8F3n3r+f
-reWHPEJ8SQbrw1uK45q+PEhCVVv8SsMZ5f2hdMshEJJy+5VJ24CXxIdlPbss0Zdt
-VdR8lRCY8UtIcFSeDiSq9OmZVRl4GGiAR7y6CJaTuToAlw/tp+TMHE288HdYvGAZ
-RrBcJwWzjWLJqYvaJ920TUnpV6zB+aGgP12INKZBGN4DJuPrfPfYhr4h4PqQqrsY
-pNAAjs3jpQADcoTA0JfSySPz96oL9ZqFPOWnT2vqP/uvfOUWsgRiwL9AsiXbsBI6
-Pn4G7tqbON2xik+5H8FKF/pnHcUStwsRiRr6C2Y3gRhecp9jJVR+QhD6L8lPcneu
-sSxUOjexSNHSapkxB0XeVrjAHXPCT65daqeTt4HLAlUcRH7q4wjr7Ac8x+pPsOIr
-bkrQvFRJ6+gGV+YFMwemfQBSUSZbXGi+Y7ru2dY07du0TTtjyYdCWc2KSJ9N+1RU
-DpGMgJkch1snpH/rHY7L
-=0jEA
------END PGP SIGNATURE-----
-
---7IgncvKP0CVPV/ZZ--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
