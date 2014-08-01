@@ -1,61 +1,75 @@
-From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Fri, 1 Aug 2014 12:25:35 +0200
-Message-ID: <20140801102535.GX4703@rric.localhost>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <20140730154626.GD20162@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] clk: initial clock driver for TWL6030
+Date: Fri, 1 Aug 2014 11:38:24 +0100
+Message-ID: <20140801103824.GC17528@sirena.org.uk>
+References: <1406728949-7560-1-git-send-email-sassmann@kpanic.de>
+ <1406728949-7560-3-git-send-email-sassmann@kpanic.de>
+ <53DA3613.9010305@ti.com>
+ <53DA3C68.3020406@kpanic.de>
+ <53DA3D66.1030407@ti.com>
+ <53DA4D37.4030408@kpanic.de>
+ <20140731192053.4463.27499@quantum>
+ <53DB6633.3020005@kpanic.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MN9D2+RfCIChtc82"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140730154626.GD20162@leverpostej>
+In-Reply-To: <53DB6633.3020005-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+To: Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
 
-On 30.07.14 16:46:26, Mark Rutland wrote:
+--MN9D2+RfCIChtc82
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
-> > new file mode 100644
-> > index 000000000000..4cf20ac9138b
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/thunder-88xx.dts
-> > @@ -0,0 +1,387 @@
-> > +/*
-> > + * Cavium Thunder DTS file
-> > + *
-> > + * Copyright (C) 2013, Cavium Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License as
-> > + * published by the Free Software Foundation; either version 2 of
-> > + * the License, or (at your option) any later version.
-> > + */
-> > +/dts-v1/;
-> > +
-> > +/* Reserving first 12MB of DDR for firmware */
-> > +/memreserve/ 0x00000000 0x00c00000;
-> 
-> What exactly is this memreserve intended to protect at runtime?
-> 
-> The only item of runtime firmware I see in use below is PSCI on the
-> secure side.
-> 
-> How is the kernel booted on this platform? UEFI?
+On Fri, Aug 01, 2014 at 12:04:35PM +0200, Stefan Assmann wrote:
 
-We checked this and it seems we don't need memreserve. Mem is either
-not visible to the kernel (ATF) or it is marked reserved by firmware
-(UEFI). At the moment we don't see any other use cases. We will remove
-this memreserve.
+> probe function doesn't even get called without the clock being
+> powered/enabled. I've instrumented do_one_initcall() to verify this.
+> With the clock being enabled I see:
+> [   19.693511] init/main.c do_one_initcall:792 initcall wl1271_init+0x0/0x38 [wlcore_sdio]
+> [   20.993347] init/main.c do_one_initcall:792 initcall wl12xx_driver_init+0x0/0x14 [wl12xx]
+> If the clock is kept disabled none of the calls is made and we never get
+> to wl12xx_probe().
+> The device might not be discoverable without the clock.
 
-Thanks,
+> Maybe we should rethink the idea of doing that single register write to
+> enable the device in twl-core code, if the TWL6030 is present.
 
--Robert
+> Alternatively this could be done by u-boot. Seems like something that
+> should have been done by firmware upfront.
+
+If this is a SDIO device please search the lists for discussion on how
+to handle enabling required resources for them - Ulf was working on
+something generic for that.
+
+--MN9D2+RfCIChtc82
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT224VAAoJELSic+t+oim9U5cP/iWGt46RyFrxLqOAwQ1FEGsM
+vdESM5DFx+7EsNS70eyHMwoDGCZuSvJwiLChVS9dfV1pmV3sF7CpXh3mV7xYrbgB
+q/84eaygLt8VqQcsiwOcC1oqkCRiR3fL27y1V+e8A6tYq5ccTrviBc7+UVVJ7hfN
+qLg36+XjFHGWAUvOZmL9oB692UAi7i2tpjlHSxOwI44M/KBHJ2GrHspMajQkjixt
+plS4JKFb0QNO99zErN18IlqrjWq+paQOZoQ9gj/wK94SExQAn2gkDST9jrxD1sCg
+tYTSk3pXWmFG2gzR0ZJn0nqT6G6Q0/+euGVvqddsU8CzKhRSF5zo5vJ90KF2Dewk
+YIg0mLr0US7MJCvMmrLk3edB/0m72+sa/5Ytc1zE+pFS2EwLJFFIdcAxGElORbbM
+fxRPqkxhkSjjO3vzyXig/1ZPD4wCzdaU4UbOd88JJx7cVhZdTgCxtwS+xJq0b9PO
+mZ23zfNFHadjDHX8FFARcP0dyMAxAJma3G8+TJ9Z3l8wFVPEuAr3+SO2x1WGqelQ
+9lCUpwKYr5j0UcaeldYBdWILoou0KfND0GeDrRk2pc698jjC6ZjyvvLHFeN1fz4o
+BKRHLYWI89mn9L1TnIzhASw5eTopMo0gcixoEWLV9pY9xGA3yUSHXAqJrL23UfiR
+6SOgklKrUHHNiKQpk0n6
+=jHRG
+-----END PGP SIGNATURE-----
+
+--MN9D2+RfCIChtc82--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
