@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 6/6] ARM: DTS: da850-evm: Enable audio via simple-card
-Date: Fri, 1 Aug 2014 09:13:30 +0300
-Message-ID: <1406873610-5037-7-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 5/6] ARM: DTS: da850-evm: Add node for tlv320aic3106 codec
+Date: Fri, 1 Aug 2014 09:13:29 +0300
+Message-ID: <1406873610-5037-6-git-send-email-peter.ujfalusi@ti.com>
 References: <1406873610-5037-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,67 +12,36 @@ To: nsekhar@ti.com, robh+dt@kernel.org
 Cc: khilman@deeprootsystems.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The audio on the board is using McASP <-> tlv320aic3106 codec and we have
-LineIn and LineOut jacks.
+The board uses aic3106 for audio.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850-evm.dts | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 41715b495861..4f935ad9f27b 100644
+index 1422c311af4c..41715b495861 100644
 --- a/arch/arm/boot/dts/da850-evm.dts
 +++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -52,6 +52,7 @@
+@@ -51,6 +51,19 @@
+ 			tps: tps@48 {
  				reg = <0x48>;
  			};
- 			tlv320aic3106: tlv320aic3106@18 {
-+				#sound-dai-cells = <0>;
- 				compatible = "ti,tlv320aic3106";
- 				reg = <0x18>;
- 				status = "okay";
-@@ -142,6 +143,33 @@
- 		regulator-max-microvolt = <5000000>;
- 		regulator-boot-on;
- 	};
++			tlv320aic3106: tlv320aic3106@18 {
++				compatible = "ti,tlv320aic3106";
++				reg = <0x18>;
++				status = "okay";
 +
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "DA850/OMAP-L138 EVM";
-+		simple-audio-card,widgets =
-+			"Line", "Line In",
-+			"Line", "Line Out";
-+		simple-audio-card,routing =
-+			"LINE1L", "Line In",
-+			"LINE1R", "Line In",
-+			"Line Out", "LLOUT",
-+			"Line Out", "RLOUT";
-+		simple-audio-card,format = "dsp_b";
-+		simple-audio-card,bitclock-master = <&link0_codec>;
-+		simple-audio-card,frame-master = <&link0_codec>;
-+		simple-audio-card,bitclock-inversion;
++				/* Regulators */
++				IOVDD-supply = <&vdcdc2_reg>;
++				/* Derived from VBAT: Baseboard 3.3V / 1.8V */
++				AVDD-supply = <&vbat>;
++				DRVDD-supply = <&vbat>;
++				DVDD-supply = <&vbat>;
++			};
 +
-+		simple-audio-card,cpu {
-+			sound-dai = <&mcasp0>;
-+			system-clock-frequency = <24576000>;
-+		};
-+
-+		link0_codec: simple-audio-card,codec {
-+			sound-dai = <&tlv320aic3106>;
-+			system-clock-frequency = <24576000>;
-+		};
-+	};
- };
- 
- /include/ "tps6507x.dtsi"
-@@ -197,6 +225,7 @@
- };
- 
- &mcasp0 {
-+	#sound-dai-cells = <0>;
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcasp0_pins>;
+ 		};
+ 		wdt: wdt@1c21000 {
+ 			status = "okay";
 -- 
 2.0.2
