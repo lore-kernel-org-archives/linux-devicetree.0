@@ -1,88 +1,43 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: Add DT changes for display on peach_pi
-Date: Fri, 1 Aug 2014 22:00:25 +0530
-Message-ID: <CAEC9eQNGGG1CH3UN2_1A0iW28gA9kVtJsK7-UNt-AOJKV=J-Gw@mail.gmail.com>
-References: <1406910258-28036-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dmaengine: add a driver for AMBA AXI NBPF DMAC
+ IP cores
+Date: Fri, 1 Aug 2014 22:04:56 +0530
+Message-ID: <20140801163456.GZ8181@intel.com>
+References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
+ <Pine.LNX.4.64.1407191243360.3062@axis700.grange>
+ <20140725141621.GT8181@intel.com>
+ <Pine.LNX.4.64.1407251635070.13523@axis700.grange>
+ <20140725163417.GV8181@intel.com>
+ <Pine.LNX.4.64.1407262105150.24257@axis700.grange>
+ <20140731125704.GV8181@intel.com>
+ <Pine.LNX.4.64.1407311520290.24081@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406910258-28036-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene.kim@gmail.com
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, InKi Dae <inki.dae@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1407311520290.24081-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Kukjin
+On Thu, Jul 31, 2014 at 03:42:44PM +0200, Guennadi Liakhovetski wrote:
+> Ok. This doesn't seem to progress. You suggested in your previous mail, 
+> that I can provide an incremental patch to add devm_free(_threaded)_irq() 
+> and synchronize_irq() to .release(). I still think, that this doesn't make 
+> much sense, but if you insist... Alternatively, my proposal would be to 
+> fix the thoretical race in .free_chan_resources(). Would you accept such a 
+> patch instead of what you were proposing? I can also convert the driver to 
+> using a tasklet, if required. Would it suffice, if I do those patches as 
+> fixes after -rc1? I'm leaving on a holiday tomorrow and I still have to 
+> finalise some other work, so, preparing those patches today doesn't seem 
+> realistic to me... Would this be acceptable?
+Can you please send both, incrementally is fine.
+I will merge them tomorrow
 
-On Fri, Aug 1, 2014 at 9:54 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
-> Add DT nodes for panel-simple "auo,b133htn01" panel.
-> Add backlight enable pin and backlight power supply for pwm-backlight.
-> Also add panel phandle needed by dp to enable display on peach_pi.
->
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
-> Changes since V1:
-> Remove "simple-panel" compatible string and use only ""auo,b133htn01".
->
->  arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++-----------------
->  1 file changed, 10 insertions(+), 17 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> index f3ee48b..f8c2e61 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -28,11 +28,13 @@
->                 i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
->         };
->
-> -       backlight {
-> +       backlight: backlight {
->                 compatible = "pwm-backlight";
->                 pwms = <&pwm 0 1000000 0>;
->                 brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
->                 default-brightness-level = <7>;
-> +               enable-gpios = <&gpx2 2 0>;
-> +               power-supply = <&tps65090_fet1>;
->                 pinctrl-0 = <&pwm0_out>;
->                 pinctrl-names = "default";
->         };
-> @@ -98,6 +100,12 @@
->                 regulator-boot-on;
->                 regulator-always-on;
->         };
-> +
-> +       panel: panel-simple {
-> +               compatible = "auo,b133htn01";
-> +               power-supply = <&tps65090_fet6>;
-> +               backlight = <&backlight>;
-> +       };
->  };
->
->  &dp {
-> @@ -111,22 +119,7 @@
->         samsung,link-rate = <0x0a>;
->         samsung,lane-count = <2>;
->         samsung,hpd-gpio = <&gpx2 6 0>;
-> -
-> -       display-timings {
-> -               native-mode = <&timing1>;
-> -
-> -               timing1: timing@1 {
-> -                       clock-frequency = <150660000>;
-> -                       hactive = <1920>;
-> -                       vactive = <1080>;
-> -                       hfront-porch = <60>;
-> -                       hback-porch = <172>;
-> -                       hsync-len = <80>;
-> -                       vback-porch = <25>;
-> -                       vfront-porch = <10>;
-> -                       vsync-len = <10>;
-> -               };
-> -       };
-> +       panel = <&panel>;
->  };
->
->  &fimd {
-> --
-> 1.7.9.5
->
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
