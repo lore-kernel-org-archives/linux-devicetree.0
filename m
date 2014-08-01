@@ -1,88 +1,115 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 15/15] drm/exynos: dp: Modify driver to support drm_panel
-Date: Fri, 1 Aug 2014 11:09:53 +0200
-Message-ID: <20140801090952.GD21724@ulmo>
-References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406828534-10072-16-git-send-email-ajaykumar.rs@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] ARM: dts: Fix the sort ordering of EHCI and HSIC in rk3288.dtsi
+Date: Fri, 01 Aug 2014 11:17:27 +0200
+Message-ID: <5965899.y405fxfhDg@diego>
+References: <1406846976-23127-4-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0062217777=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1406828534-10072-16-git-send-email-ajaykumar.rs@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ajay Kumar <ajaykumar.rs@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, joshi@samsung.com, dri-devel@lists.freedesktop.org, ajaynumb@gmail.com, prashanth.g@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406846976-23127-4-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am Donnerstag, 31. Juli 2014, 15:49:35 schrieb Doug Anderson:
+> The EHCI and HSIC device tree nodes were added in the wrong place.
+> Fix them.
+> 
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
---===============0062217777==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8nsIa27JVQLqB7/C"
-Content-Disposition: inline
+hmm, not sure if this counts as fix ... aka material for 3.17-rc2 or should 
+wait for 3.18. Simply because it's more a cosmetic thing.
+
+If it is a fix, could base it on the appropriate dts revision, because here 
+it's in the middle of the dwc2 series, including the
+	usb_host1: usb@ff540000
+nodes.
 
 
---8nsIa27JVQLqB7/C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Heiko
 
-On Thu, Jul 31, 2014 at 11:12:14PM +0530, Ajay Kumar wrote:
-> Add drm_panel controls to support powerup/down of the
-> eDP panel, if one is present at the sink side.
->=20
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
 > ---
->  drivers/gpu/drm/exynos/Kconfig          |    1 +
->  drivers/gpu/drm/exynos/exynos_dp_core.c |   88 ++++++++++++++++++++++++-=
-------
->  drivers/gpu/drm/exynos/exynos_dp_core.h |    3 +-
->  3 files changed, 71 insertions(+), 21 deletions(-)
+> Changes in v4:
+> - Based on the proper patch
+> 
+> Changes in v3:
+> - EHCI and HSIC move new for version 3.
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 41
+> ++++++++++++++++++++--------------------- 1 file changed, 20 insertions(+),
+> 21 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 9713054..49c99f2 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -156,6 +156,17 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	usb_host0_ehci: usb@ff500000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0xff500000 0x100>;
+> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_USBHOST0>;
+> +		clock-names = "usbhost";
+> +		status = "disabled";
+> +	};
+> +
+> +	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
+> +
+>  	usb_host1: usb@ff540000 {
+>  		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
+>  				"snps,dwc2";
+> @@ -176,6 +187,15 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	usb_hsic: usb@ff5c0000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0xff5c0000 0x100>;
+> +		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HSIC>;
+> +		clock-names = "usbhost";
+> +		status = "disabled";
+> +	};
+> +
+>  	uart2: serial@ff690000 {
+>  		compatible = "rockchip,rk3288-uart", "snps,dw-apb-uart";
+>  		reg = <0xff690000 0x100>;
+> @@ -270,27 +290,6 @@
+>  		interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+>  		status = "disabled";
+>  	};
+> -
+> -	usb_host0_ehci: usb@ff500000 {
+> -		compatible = "generic-ehci";
+> -		reg = <0xff500000 0x100>;
+> -		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&cru HCLK_USBHOST0>;
+> -		clock-names = "usbhost";
+> -		status = "disabled";
+> -	};
+> -
+> -	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
+> -
+> -	usb_hsic: usb@ff5c0000 {
+> -		compatible = "generic-ehci";
+> -		reg = <0xff5c0000 0x100>;
+> -		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&cru HCLK_HSIC>;
+> -		clock-names = "usbhost";
+> -		status = "disabled";
+> -	};
+> -
+>  	gic: interrupt-controller@ffc01000 {
+>  		compatible = "arm,gic-400";
+>  		interrupt-controller;
 
-Inki, I'll need an Acked-by from you on this one as well. It has a build
-time dependency on earlier patches in this series, so taking it through
-the panel tree along with the rest is probably easiest.
-
-Thierry
-
---8nsIa27JVQLqB7/C
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT21lgAAoJEN0jrNd/PrOhrlYP/08hLKXrEkjOt99PzUf3uBIN
-cItmlejbjMvN3iSEIBAjSG7j/ccWXp2zvdlmHHDsYZNVQTaKDYIb6kFb5YKltO3P
-yulSxXP6ALl40E/LkJCmpLVDcn6rd14rcyvRhyto3d4sBxzhr3yD6M/nWujgy1xn
-dQdUKTdN51YSZJhVXTsiCIhriKNJksmYoQxCPx2rFujMAJDTEnUekY+XYga622K1
-i1G8bRNREMKhgbyWOVrjS2zS3xoHNqJ8795j4c5a2YXqgU3Y6AW2Engbt97f9MsY
-3lZZewB23bHR8UbjbUu9rPaffzaJRjxEfXuGR/8g6sRiNHR+zoETpt+5mOS+8Iaz
-yEDRqCRjrLurNMJF8EP52SGCzIofiAuSPCDlZFOXBZ65IqwS/rMEoVy3L+Bz91je
-CaN2cAvZLGt2MooVD8UvSkRHq1+jWN6Mq+Gh7Dc/+J78C49RAwuDCvAc/uMPb+sU
-Uo2VOQESPIxhneFdiuazsZu5KI/fbjYChLC/kBiUfOP+LdnZGqOxdceb2vLfIk9j
-QraGR3QJs3aixbTKMdq21eIkwVh2mEwgeC8hyQjD0kaEJrBPLdzOoeyW3cyVuRRh
-yakRs5kCEOdzQ3mm3P3NJ9SUFDoqHA1nO9LejGNlGW0jp7y+RlNQ/5+xMehWB40U
-qN2nYs66CpewDmAYemNe
-=xkLt
------END PGP SIGNATURE-----
-
---8nsIa27JVQLqB7/C--
-
---===============0062217777==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0062217777==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
