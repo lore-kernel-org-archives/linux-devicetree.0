@@ -1,72 +1,60 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: DTS: da850-evm: Add node for tlv320aic3106 codec
-Date: Fri, 1 Aug 2014 16:34:09 +0300
-Message-ID: <53DB9751.6030508@ti.com>
-References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>
-	<1406801934-23334-6-git-send-email-peter.ujfalusi@ti.com>
-	<53DA519A.4090905@cogentembedded.com> <53DB240F.2030908@ti.com>
-	<53DB8CEA.9010902@cogentembedded.com> <53DB8FE1.5010207@ti.com>
-	<53DB9292.7080008@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: renesas_usbhs: Add device tree bindings documentation
+Date: Fri, 01 Aug 2014 17:35:51 +0400
+Message-ID: <53DB97B7.2090203@cogentembedded.com>
+References: <53DB7EBA.3080004@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <53DB9292.7080008-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53DB7EBA.3080004-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-On 08/01/2014 04:13 PM, Sergei Shtylyov wrote:
-> Hello.
-> =
+On 08/01/2014 03:49 PM, Yoshihiro Shimoda wrote:
 
-> On 08/01/2014 05:02 PM, Peter Ujfalusi wrote:
-> =
+> Document the device tree bindings for the Renesas USBHS controller.
 
->>>     I do. We should follow the standard consistently. Why not call the =
-node
->>> "sound-codec"?
-> =
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/renesas_usbhs.txt      |   24 ++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/renesas_usbhs.txt
 
->> Well, there is _zero_ cases when the audio codec node is named as
->> "sound-codec" in linux-next but we have wmXXXX, tlvXXXX, twlXXXX, maxXXX=
-X etc.
-> =
+> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> new file mode 100644
+> index 0000000..e9faa65
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> @@ -0,0 +1,24 @@
+> +Renesas Electronics USBHS driver
+> +
+> +Required properties:
+> +  - compatible: Must contain one of the following:
+> +	- "renesas,usbhs-r8a7790"
+> +	- "renesas,usbhs-r8a7791"
+> +  - reg: Base address and length of the register for the USBHS
+> +  - interrupts: Interrupt specifier for the USBHS
+> +  - clocks: A list of phandle + clock specifier pairs
+> +
+> +Optional properties:
+> +  - buswait_bwait: Integer to use BUSWAIT register
 
->    Which only means people don't read the standard (which is referred to =
-on
-> http://www.devicetree.org/Device_Tree_Usage, that says the same).
-> =
+   Should be named "renesas,buswait-bwait" or probably just "renesas,buswait".
 
->> Yeah, there are few DTS files which have codec as node name.
->> So, no, I'm not going to change the node name from tlv320aic3106.
-> =
+> +  - enable-gpio: A gpio specifier to check GPIO determining if USB function
 
->    So you prefer following the bad examples to following the standard?
+   Should also be prefixed with "renesas,".
 
-those bad examples are in the tree and they did went through the review
-process (arch, DT and probably alsa). But it is interesting that we do not
-have a single correct node name for audio codecs (probably for other types =
-also).
+[...]
 
-> Well, "the Moor has done his duty, the Moor can go"...
+WBR, Sergei
 
-Let's ask the DT maintainers what should be the correct approach and someone
-should go through all the existing DT files and clean them up? People usual=
-ly
-start reading the code for examples before the standard...
-
--- =
-
-P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
