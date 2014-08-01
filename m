@@ -1,250 +1,107 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
-Date: Fri, 1 Aug 2014 09:13:17 +0100
-Message-ID: <20140801081317.GL9030@lee--X1>
-References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com>
- <1406744573-609-2-git-send-email-tthayer@opensource.altera.com>
- <20140731082637.GH9030@lee--X1>
- <53DAA072.4010902@opensource.altera.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
+Date: Fri, 01 Aug 2014 10:15:57 +0200
+Message-ID: <2434370.xFIeZvuJnT@diego>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <4047366.k35vzjcKGH@diego> <20140801003025.4463.76384@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53DAA072.4010902@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, Alan Tull <atull@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140801003025.4463.76384@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Thor Thayer wrote:
-> On 07/31/2014 03:26 AM, Lee Jones wrote:
-> >On Wed, 30 Jul 2014, tthayer@opensource.altera.com wrote:
-> >
-> >>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>
-> >>Add a simple MFD for the Altera SDRAM Controller.
-> >>
-> >>Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> >>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> >>---
-> >>v1-8: The MFD implementation was not included in the original serie=
-s.
-> >>
-> >>v9: New MFD implementation.
-> >>---
-> >>  MAINTAINERS                    |    5 ++
-> >>  drivers/mfd/Kconfig            |    7 ++
-> >>  drivers/mfd/Makefile           |    1 +
-> >>  drivers/mfd/altera-sdr.c       |  162 +++++++++++++++++++++++++++=
-+++++++++++++
-> >>  include/linux/mfd/altera-sdr.h |  102 +++++++++++++++++++++++++
-> >>  5 files changed, 277 insertions(+)
-> >>  create mode 100644 drivers/mfd/altera-sdr.c
-> >>  create mode 100644 include/linux/mfd/altera-sdr.h
-
-[...]
-
-> >>+++ b/drivers/mfd/altera-sdr.c
-> >>@@ -0,0 +1,162 @@
-> >>+/*
-> >>+ * SDRAM Controller (SDR) MFD
-> >>+ *
-> >>+ * Copyright (C) 2014 Altera Corporation
-> >>+ *
-> >>+ * This program is free software; you can redistribute it and/or m=
-odify it
-> >>+ * under the terms and conditions of the GNU General Public Licens=
-e,
-> >>+ * version 2, as published by the Free Software Foundation.
-> >>+ *
-> >>+ * This program is distributed in the hope it will be useful, but =
-WITHOUT
-> >>+ * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
-ITY or
-> >>+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
-icense for
-> >>+ * more details.
-> >>+ *
-> >>+ * You should have received a copy of the GNU General Public Licen=
-se along with
-> >>+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-> >Can you use the shorter version of the licence?
-> Hi. This seems to be the shorter version of the license agreement
-> and is fairly common in the kernel, right?
-
-This is the long(ish) version.  Many programs have the Copyright line
-and the "This program is free software;" line.  It'll also be a good
-idea to keep the link to the full licence.
-
-[...]
-
-> >>+	{
-> >>+		.name =3D "altr_sdram_edac",
-> >>+		.of_compatible =3D "altr,sdram-edac",
-> >What other devices will there be?
-> >
-> There will be an FPGA bridge and a power control driver that will
-> need access to the SDR Controller registers.
-
-Okay.  Do you know when they'll be upstreamed?
-
-> >>+u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
-> >>+{
-> >>+	return readl(sdr->reg_base + reg_offset);
-> >>+}
-> >>+EXPORT_SYMBOL_GPL(altera_sdr_readl);
-> >>+
-> >>+void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32=
- value)
-> >>+{
-> >>+	writel(value, sdr->reg_base + reg_offset);
-> >>+}
-> >>+EXPORT_SYMBOL_GPL(altera_sdr_writel);
-> >Why are you abstracting these?
-> >
-> >Might be better to use Regmap even.
-> regmap seems unnecessarily complex for what we're doing which is why
-> this method was chosen.
+Am Donnerstag, 31. Juli 2014, 17:30:25 schrieb Mike Turquette:
+> Quoting Heiko St=FCbner (2014-07-31 16:29:34)
 >=20
-> Future drivers will access different sets of registers in the
-> device. These drivers won't share bitfields in the same register so
-> the MFD seemed like the best solution. Originally we implemented
-> this using syscon but that seems to be frowned upon so we changed to
-> using a MFD.
-
-Why was the use of syscon frowned upon?  Can you link me to the
-thread?  Writing directly to the registers sounds to me a lot worse
-than using infrastructure which was designed for these kinds of
-accesses.
-
-If you do choose to fiddle with the registers in this manner, is there
-any reason why you're calling back into here, rather than using
-readl() and writel() directly?
-
-> >>+u32 altera_sdr_mem_size(struct altera_sdr *sdr)
-> >>+{
-> >>+	u32 size;
-> >>+	u32 read_reg, row, bank, col, cs, width;
-> >Weird that size is on its own.  Either place on a single line or
-> >separate them all.
-> OK. I will change this.
-> >>+	read_reg =3D altera_sdr_readl(sdr, SDR_DRAMADDRW_OFST);
-> >>+	if (read_reg < 0)
-> >>+		return 0;
-> >>+
-> >>+	width =3D altera_sdr_readl(sdr, SDR_DRAMIFWIDTH_OFST);
-> >>+	if (width < 0)
-> >>+		return 0;
-
-u32s cant be < 0.  The 'u' means 'unsigned'.
-
-> >>+	col =3D (read_reg & SDR_DRAMADDRW_COLBITS_MASK) >>
-> >>+		SDR_DRAMADDRW_COLBITS_LSB;
-> >>+	row =3D (read_reg & SDR_DRAMADDRW_ROWBITS_MASK) >>
-> >>+		SDR_DRAMADDRW_ROWBITS_LSB;
-> >>+	bank =3D (read_reg & SDR_DRAMADDRW_BANKBITS_MASK) >>
-> >>+		SDR_DRAMADDRW_BANKBITS_LSB;
-> >>+	cs =3D (read_reg & SDR_DRAMADDRW_CSBITS_MASK) >>
-> >>+		SDR_DRAMADDRW_CSBITS_LSB;
-> >These would probably be better as macros.
-> >
-> OK. I will fix this.
-> >>+	/* Correct for ECC as its not addressible */
-> >>+	if (width =3D=3D SDR_DRAMIFWIDTH_32B_ECC)
-> >>+		width =3D 32;
-> >>+	if (width =3D=3D SDR_DRAMIFWIDTH_16B_ECC)
-> >>+		width =3D 16;
-> >>+
-> >>+	/* calculate the SDRAM size base on this info */
-> >>+	size =3D 1 << (row + bank + col);
-> >>+	size =3D size * cs * (width / 8);
-> >>+	return size;
-> >>+}
-> >>+EXPORT_SYMBOL_GPL(altera_sdr_mem_size);
-> >Should this really be done in here?  Isn't this an SDRAM function?
-> >
-> This register is part of the SDRAM controller and size information
-> may be required by the other drivers that share this memory
-> area/need SDRAM information.
-
-Then export a function from the SDRAM driver, not from here.
-
-[...]
-
-> >>+static const struct platform_device_id altera_sdr_ids[] =3D {
-> >>+	{ "altera_sdr", },
-> >>+	{ }
-> >>+};
-> >What's this for?
-> We don't strictly need it because we are driven by the device tree.
-> It can be removed it if is a problem but I'm not clear why it is a
-> problem.
-
-It's a problem because it's unused, superfluous bumph. :)
-
-[...]
-
-> >>+static int __init altera_sdr_init(void)
-> >>+{
-> >>+	return platform_driver_register(&altera_sdr_driver);
-> >>+}
-> >>+postcore_initcall(altera_sdr_init);
-> >Why was this chosen?
-> We want this to happen pretty early.
-
-If you _need_ this is happen early, core_initcall() is more commonly
-used, but _why_ do you need it to happen this early?
-
-> >>+/*
-> >>+ * Copyright (C) 2014 Altera Corporation
-> >>+ *
-> >>+ * This program is free software; you can redistribute it and/or m=
-odify it
-> >>+ * under the terms and conditions of the GNU General Public Licens=
-e,
-> >>+ * version 2, as published by the Free Software Foundation.
-> >>+ *
-> >>+ * This program is distributed in the hope it will be useful, but =
-WITHOUT
-> >>+ * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
-ITY or
-> >>+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
-icense for
-> >>+ * more details.
-> >>+ *
-> >>+ * You should have received a copy of the GNU General Public Licen=
-se along with
-> >>+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-> >Use the short version.
-> Same as above. This is the shorter version that we've been using at A=
-ltera.
-
-If you read COPYING, you only require the Copyright line and a link to
-the full licence.  In this case I'll be happy if you left in the "This
-program is free software;" line as well, but remove the paragraph
-below it.
-
-[...]
-
-> >>+/* Register access API */
-> >>+u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset);
-> >>+void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32=
- value);
-> >Regmap?
-> Same as above. This seems to be more complex than we need.
-
-I'm not sure I believe that.  Regmap is as complex or as simple as you
-need.
-
-> Thanks for your comments and for reviewing!
+> > Hi Mike,
+> >=20
+> > Am Donnerstag, 31. Juli 2014, 15:45:23 schrieb Mike Turquette:
+> > > Quoting Heiko Stuebner (2014-07-29 12:12:05)
+> > >=20
+> > > > The clock-tree contains clocks that should never get disabled
+> > > > automatically. One example are the base ACLKs, the base supplie=
+s for
+> > > > all
+> > > > peripherals.
+> > > >=20
+> > > > Therefore add a structure similar to the sunxi clock-tree to pr=
+otect
+> > > > these
+> > > > special clocks from being disabled.
+> > > >=20
+> > > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > > > ---
+> > > >=20
+> > > >  drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
+> > > >  drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
+> > > >  drivers/clk/rockchip/clk.c        | 13 +++++++++++++
+> > > >  drivers/clk/rockchip/clk.h        |  1 +
+> > > >  4 files changed, 28 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/clk/rockchip/clk-rk3188.c
+> > > > b/drivers/clk/rockchip/clk-rk3188.c index a83a6d8..5aef277 1006=
+44
+> > > > --- a/drivers/clk/rockchip/clk-rk3188.c
+> > > > +++ b/drivers/clk/rockchip/clk-rk3188.c
+> > > > @@ -599,6 +599,11 @@ static struct rockchip_clk_branch
+> > > > rk3188_clk_branches[] __initdata =3D {>
+> > > >=20
+> > > >         GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0,
+> > > >         RK2928_CLKGATE_CON(8),
+> > > >         13, GFLAGS),>
+> > > > =20
+> > > >  };
+> > > >=20
+> > > > +static const char *rk3188_critical_clocks[] __initconst =3D {
+> > > > +       "aclk_cpu",
+> > > > +       "aclk_peri",
+> > >=20
+> > > I'm not against the idea of critical clocks, but I want to verify=
+ that
+> > > there is no other driver out there that is a better fit for claim=
+ing
+> > > these clks via clk_get and enabling them the normal way via clk_e=
+nable?
+> >=20
+> > In the clock hierarchy of Rockchip SoCs, both aclks listed here, ar=
+e
+> > sources for pclk and hclk, as well as sourcing some other periphera=
+l
+> > gates further below too. So from what I've seen from the clock diag=
+rams,
+> > there is nothing that would claim these clocks directly, and it wou=
+ldn't
+> > also make any sense to let them get disabled as there will always b=
+e
+> > something using them (for example the dram-controller).
 >=20
-> Thor
+> Sounds good. Just out of curiosity, under what circumstances would yo=
+u
+> want to gate them? Is there a use case for it?
 
-You're welcome.  OOI, do you own a hammer? ;)
+hmm, I don't see a use-case for gating these at runtime right now, simp=
+ly=20
+because there should be a user for them all the time. (both aclks combi=
+ned=20
+have at least 68 consumers on the rk3288 and a similar number on the pr=
+evious=20
+socs)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+The only thing I could think of would be something suspend related - wh=
+ich we=20
+don't have yet. But then this would probably happen in the clock contro=
+ller=20
+itself anyway in some late suspend-related action, so it could take int=
+o=20
+account them being defined as critical clocks.
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
