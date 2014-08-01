@@ -1,115 +1,56 @@
-From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Subject: AW: driver using another driver
-Date: Fri, 1 Aug 2014 07:15:41 +0000
-Message-ID: <E70AF999396FDF4EAE40E195B84709611F847086@SPMDEGHN001.CADCON.INTERN>
-References: <E70AF999396FDF4EAE40E195B84709611F84671F@SPMDEGHN001.CADCON.INTERN>
- <20140801063105.GV23235@pengutronix.de>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: dts: Add gta04a5 model
+Date: Fri, 1 Aug 2014 01:02:46 -0700
+Message-ID: <20140801080246.GG29045@atomide.com>
+References: <1406577213-9642-1-git-send-email-marek@goldelico.com>
+ <1406577213-9642-4-git-send-email-marek@goldelico.com>
+ <CAOf5uwk=ctww=pP4Ae+1C6i-oOtiYTv2NJbj1GpuPwVSKXB4Hw@mail.gmail.com>
+ <CAAfyv35jvhzvjCKMwrpa=RQ1JkfcmthCsGDzwLW9Y6bq3Ww_fg@mail.gmail.com>
+ <CAOf5uw=Fm9FXEH5ESqDC8pGjMbn5VQ1+MyPJVXSqGh_9+JRLHw@mail.gmail.com>
+ <1FA8171E-1B7A-4684-887E-11593BB9C29E@goldelico.com>
+ <20140729124120.GS29045@atomide.com>
+ <589F7CA3-F245-4299-8E39-36A7FA9F3CBD@goldelico.com>
+ <CABxcv=n7g8c2ePGKgu_0Y35iearcRoAj9ZH5jDWY9nE+1uUKnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140801063105.GV23235-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: de-DE
+Content-Disposition: inline
+In-Reply-To: <CABxcv=n7g8c2ePGKgu_0Y35iearcRoAj9ZH5jDWY9nE+1uUKnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Marek Belisko <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sascha,
-
-thanks for your answer.
-We are using an imx35 cpu and our CPLD is in fact connected via weim (C=
-S1).
-Though I created the following device node in our dts:
-&weim {
-        pinctrl-names =3D "default";
-        status =3D "okay";
-
-        pld@1,0 {
-                compatible =3D "roche,hbm-pld";
-                reg =3D <1 0x00000000 0x0001000>;
-                fsl,weim-cs-timing =3D <0x0 0x0 0x0>; /* don't know wha=
-t to put here */
-        };
-};
-
-And I turned the CPLD driver into a platform driver. But I don't get th=
-e resource in probe:
-res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0) returns NULL.
-
-In our platform code we had:
-static struct resource hbm_pld_resource_data =3D {
-        .start =3D 0xA8000000,
-        .end =3D 0xA8000000 + 0x1000 - 1,
-        .flags =3D IORESOURCE_MEM,
-};
-
-And for the setting of CS1:
-__raw_writel((0x22 << 8), MX35_IO_ADDRESS(MX3x_WEIM_BASE_ADDR) + 0x10);
-__raw_writel(((0x0a << 28) | (0x06 << 12) | (0x03 << 8) | (0x04 << 4) |=
- (0x01 << 0)), MX35_IO_ADDRESS(MX3x_WEIM_BASE_ADDR) + 0x14);
-
-Where do I put this in the device tree?
-
-Gru=DF
-Sebastian Priebe
-Telefon: +49 (0)621 685996-26
-
-
-
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-CADCON
-Ingenieurgesellschaft mbH & Co. KG
-Geschaeftsfuehrer: Robert Bauer, Andreas Gundel
-Sitz der Gesellschaft: D-86368 Gersthofen
-Registergericht: Amtsgericht Augsburg HRA 14521
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
------Urspr=FCngliche Nachricht-----
-Von: Sascha Hauer [mailto:s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
-Gesendet: Freitag, 1. August 2014 08:31
-An: Priebe, Sebastian
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Betreff: Re: driver using another driver
-
-Hi Sebastian,
-
-On Wed, Jul 30, 2014 at 02:45:51PM +0000, Priebe, Sebastian wrote:
+* Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> [140729 07:14]:
 > Hello,
->
-> I am working on a project with an ARMv6 cpu and I am currently trying
-> to port our board file to a device tree.  Our custom hardware has a
-> CPLD with is used by multiple driver.  In the past we shared the CPLD
-> driver resource (struct resource...) among the drivers platform data
-> to be able to access the CPLD registers from all the drivers.  The
-> CPLD driver allocated the resource, returned it to our platform code
-> and our platform code passed it to the other drivers.
-> In other words the CPLD driver is used by the other driver.
-> How can I achieve the same with a device tree?
+> 
+> On Tue, Jul 29, 2014 at 3:03 PM, Dr. H. Nikolaus Schaller
+> <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+> > Hi,
+> >> So what's the conclusion? Are changes needed to this patch
+> >> series or not?
+> >
+> > I advocate that no changes are needed.
+> >
+> 
+> I agree with Dr. H. Nikolaus on this regard. A DeviceTree should be a
+> description of the hardware and if two hardware platforms differs,
+> then we need two different DTS.
+> 
+> Lately I'm seeing some attempts to abuse u-boot's fdt command, u-boot
+> should only modify the strictly necessary like the /chosen branch.
+> Allowing u-boot to mangle the FDT before passing to the kernel just to
+> avoid some DT duplication doesn't sound like a good idea IMHO.
 
-You can use a toplevel device node for your CPLD on which your toplevel=
- driver matches. Call of_platform_populate() with this toplevel node to=
- create the child devices. drivers/bus/ contains some examples, like dr=
-ivers/bus/imx-weim.c.
+OK no more comments, so applied all into omap-for-v3.17/dt.
+As there's a good chance the merge window will open on Monday,
+no guarantees the gta04 related changes will make it. But I'll
+send a pull request a bit later on today for them anyways.
 
-Sascha
+Regards,
 
+Tony
 --
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
