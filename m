@@ -1,154 +1,380 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4] i2c: busses: i2c-pxa.c:  Fix for possible null
- pointer dereference
-Date: Sat, 2 Aug 2014 13:30:01 +0200
-Message-ID: <20140802113001.GC2739@katana>
-References: <1405545251-13087-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1405545251-13087-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] clk: add pxa clocks infrastructure
+Date: Sat, 2 Aug 2014 20:00:43 +0800
+Message-ID: <CAN1soZyST84DNvK=zyj6EhOt0fswZ4SvOmMnWiCZsYmapxkhOg@mail.gmail.com>
+References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
+	<1406753464-15000-2-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405545251-13087-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Leilei Shang <shangll@marvell.com>, Peter Korsgaard <peter@korsgaard.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406753464-15000-2-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 31, 2014 at 4:50 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Add a the common code used by all PXA variants.
+>
+> This is the first step in the transition from architecture defined
+> clocks (in arch/arm/mach-pxa) towards clock framework. The goal is to
+> have the same features (and not all the features) of the existing
+> clocks, and enable the transition of PXA to device-tree.
+>
+> All PXA rely on a "CKEN" type clock, which :
+>  - has a gate (bit in CKEN register)
+>  - is generated from a PLL, generally divided
+>  - has an alternate low power clock
+>
+> Each variant will specialize the CKEN clock :
+>  - pxa25x have no low power clock
+>  - pxa27x in low power use always the 13 MHz ring oscillator
+>  - pxa3xx in low power have specific dividers for each clock
+>
+> The device-tree provides a list of CLK_* (ex: CLK_USB or CLK_I2C) to get
+> a handle on the clock. While pxa-clock.h will describe all the clocks of
+> all the variants, each variant will only use a subset of it.
+>
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> ---
+>  drivers/clk/Makefile                  |   1 +
+>  drivers/clk/pxa/Makefile              |   1 +
+>  drivers/clk/pxa/clk-pxa.c             |  97 ++++++++++++++++++++++++++++++
+>  drivers/clk/pxa/clk-pxa.h             | 107 ++++++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/pxa-clock.h |  77 ++++++++++++++++++++++++
+>  5 files changed, 283 insertions(+)
+>  create mode 100644 drivers/clk/pxa/Makefile
+>  create mode 100644 drivers/clk/pxa/clk-pxa.c
+>  create mode 100644 drivers/clk/pxa/clk-pxa.h
+>  create mode 100644 include/dt-bindings/clock/pxa-clock.h
+>
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 567f102..40390ea 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_ARCH_MMP)                        += mmp/
+>  endif
+>  obj-$(CONFIG_PLAT_ORION)               += mvebu/
+>  obj-$(CONFIG_ARCH_MXS)                 += mxs/
+> +obj-$(CONFIG_ARCH_PXA)                 += pxa/
+>  obj-$(CONFIG_COMMON_CLK_QCOM)          += qcom/
+>  obj-$(CONFIG_ARCH_ROCKCHIP)            += rockchip/
+>  obj-$(CONFIG_COMMON_CLK_SAMSUNG)       += samsung/
+> diff --git a/drivers/clk/pxa/Makefile b/drivers/clk/pxa/Makefile
+> new file mode 100644
+> index 0000000..cb2bd8f
+> --- /dev/null
+> +++ b/drivers/clk/pxa/Makefile
+> @@ -0,0 +1 @@
+> +obj-y                          += clk-pxa.o
+> diff --git a/drivers/clk/pxa/clk-pxa.c b/drivers/clk/pxa/clk-pxa.c
+> new file mode 100644
+> index 0000000..ef3c053
+> --- /dev/null
+> +++ b/drivers/clk/pxa/clk-pxa.c
+> @@ -0,0 +1,97 @@
+> +/*
+> + * Marvell PXA family clocks
+> + *
+> + * Copyright (C) 2014 Robert Jarzmik
+> + *
+> + * Common clock code for PXA clocks ("CKEN" type clocks + DT)
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + *
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/of.h>
+> +
+> +#include <dt-bindings/clock/pxa-clock.h>
+> +#include "clk-pxa.h"
+> +
+> +DEFINE_SPINLOCK(lock);
+> +
+> +static struct clk *pxa_clocks[CLK_MAX];
+> +static struct clk_onecell_data onecell_data = {
+> +       .clks = pxa_clocks,
+> +       .clk_num = CLK_MAX,
+> +};
+> +
+> +#define to_pxa_clk(_hw) container_of(_hw, struct pxa_clk_cken, hw)
+> +
+> +static unsigned long cken_recalc_rate(struct clk_hw *hw,
+> +                                     unsigned long parent_rate)
+> +{
+> +       struct pxa_clk_cken *pclk = to_pxa_clk(hw);
+> +       struct clk_fixed_factor *fix;
+> +
+> +       if (!pclk->is_in_low_power || pclk->is_in_low_power())
+> +               fix = &pclk->lp;
+> +       else
+> +               fix = &pclk->hp;
+> +       fix->hw.clk = hw->clk;
+> +       return clk_fixed_factor_ops.recalc_rate(&fix->hw, parent_rate);
+> +}
+> +
+> +static struct clk_ops cken_rate_ops = {
+> +       .recalc_rate = cken_recalc_rate,
+> +};
+> +
+> +static u8 cken_get_parent(struct clk_hw *hw)
+> +{
+> +       struct pxa_clk_cken *pclk = to_pxa_clk(hw);
+> +
+> +       if (!pclk->is_in_low_power)
+> +               return 0;
+> +       return pclk->is_in_low_power() ? 0 : 1;
+> +}
+> +
+> +static struct clk_ops cken_mux_ops = {
+> +       .get_parent = cken_get_parent,
+> +       .set_parent = dummy_clk_set_parent,
+> +};
+> +
+> +void __init clkdev_pxa_register(int ckid, const char *con_id,
+> +                               const char *dev_id, struct clk *clk)
+> +{
+> +       if (!IS_ERR(clk) && (ckid != CLK_NONE))
 
---hYooF8G/hrfVAmum
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Will you specify CLK_NONE in clock driver? It seems that CLK_NONE
+isn't used in pxa27x clock driver. And pxa_clocks[0] is not used. Is
+it redundant?
 
-Hi,
-
->  	res =3D platform_get_resource(dev, IORESOURCE_MEM, 0);
->  	irq =3D platform_get_irq(dev, 0);
-> -	if (res =3D=3D NULL || irq < 0) {
-> -		ret =3D -ENODEV;
-> -		goto eclk;
-> -	}
-> +	if (res =3D=3D NULL || irq < 0)
-> +		return -ENODEV;
-
-No need to check for valid 'res' here...
-
-> =20
-> -	if (!request_mem_region(res->start, resource_size(res), res->name)) {
-> -		ret =3D -ENOMEM;
-> -		goto eclk;
-> -	}
-> +	if (!devm_request_mem_region(&dev->dev, res->start,
-> +				resource_size(res), res->name))
-> +		return -ENOMEM;
-
-=2E.. and no need to use 'devm_request_mem_region' ...
-
-> -	i2c->reg_base =3D ioremap(res->start, resource_size(res));
-> -	if (!i2c->reg_base) {
-> -		ret =3D -EIO;
-> -		goto eremap;
-> -	}
-> +	i2c->reg_base =3D devm_ioremap_resource(&adev->dev, res));
-> +	if (IS_ERR(i2c->reg_base))
-> +		return -EIO;
-
-=2E.. because devm_ioremap_resource does all that for you. Also, don't
-return -EIO but the PTR_ERR given from the function. Just check other
-drivers how they do it.
-
-> =20
->  	i2c->reg_ibmr =3D i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
->  	i2c->reg_idbr =3D i2c->reg_base + pxa_reg_layout[i2c_type].idbr;
-> @@ -1227,10 +1218,12 @@ static int i2c_pxa_probe(struct platform_device *=
-dev)
->  		i2c->adap.algo =3D &i2c_pxa_pio_algorithm;
->  	} else {
->  		i2c->adap.algo =3D &i2c_pxa_algorithm;
-> -		ret =3D request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
-> -				  dev_name(&dev->dev), i2c);
-> -		if (ret)
-> -			goto ereqirq;
-> +		ret =3D devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
-> +				 IRQF_SHARED, dev_name(&dev->dev), i2c);
-> +		if (ret) {
-> +			clk_disable_unprepare(i2c->clk);
-> +			return ret;
-
-Maybe you should make a error path with 'goto' out of it...
-
-
-> +		}
->  	}
-> =20
->  	i2c_pxa_reset(i2c);
-> @@ -1244,7 +1237,7 @@ static int i2c_pxa_probe(struct platform_device *de=
-v)
->  	ret =3D i2c_add_numbered_adapter(&i2c->adap);
->  	if (ret < 0) {
->  		printk(KERN_INFO "I2C: Failed to add bus\n");
-> -		goto eadapt;
-> +		return ret;
-
-=2E.. since you forgot disable_unprepare here and could simply reuse it.
-
-
->  	}
-> =20
->  	platform_set_drvdata(dev, i2c);
-> @@ -1257,20 +1250,6 @@ static int i2c_pxa_probe(struct platform_device *d=
-ev)
->  	       dev_name(&i2c->adap.dev));
->  #endif
->  	return 0;
-> -
-> -eadapt:
-> -	if (!i2c->use_pio)
-> -		free_irq(irq, i2c);
-> -ereqirq:
-> -	clk_disable_unprepare(i2c->clk);
-> -	iounmap(i2c->reg_base);
-> -eremap:
-> -	clk_put(i2c->clk);
-> -eclk:
-> -	kfree(i2c);
-> -emalloc:
-> -	release_mem_region(res->start, resource_size(res));
-> -	return ret;
->  }
-
-You forgot to cleanup the remove function.
-
-BTW I forgot, can you test this patch on real hardware? If not, is there
-somebody who does?
-
-All the best,
-
-   Wolfram
-
-
---hYooF8G/hrfVAmum
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT3Mu5AAoJEBQN5MwUoCm2gaAP/2iH9y+g5cexLZS/fDMhiCk4
-zayj3HE1sgCU0saveYUuYFTxTZ67YK62jroYsJDV75P7GtRnQQt/VpxngFEIlzXe
-W/KZUcab1t24ka1NNwb5RKmHola8d1HcQyHw6R7pv9w7IVrO1bERX06/Ym8Pkdn1
-slH6MpWdqEBS1SbbSeqs0FjJmXfCK7o7bGP+KlHyIGbpj/AZlxCJUmgA9v/ihu4e
-OPj5QT+99Tcm8apVkQS7hgaZ/fIWMMCcqcbo6wQRT/R3Bmw4t7nxVqpieOTLjqwM
-ii96zBUVuUduKVQT06n+UgLJWykzTkBffY/6lwI3iDQB7ob4EIyKR5l2MsODdPIm
-vCXXYEHeBssYRf8PfgshSv6GiqsOR33USrSdUS8oghp69xSVrKBmvcXnSRuXNYUO
-WUTcBdM19a+ntdpVe2C9SQrfGgNAq8/ngg3j21SDEtbL8GlNHbPNWxBOWFiV1gDp
-kRnV9sSt7sBqge0KUQrRoWjLlHxnLgb86ObjIpYyg/T4IMxd9j/X21J+n6p9JM0C
-wDckAaPbzDWUa6+clDdo8HGMFvYkZ9GE/JmZjF4pVtStp2PFmFzfRbw9xLGR4XpD
-Olp1B5XPyL8Bcxm+x0tkt5gMBuIIraEt4vx76yRRz5XnYk8dFKh+tl98utZmCDSi
-Rvkcbbp9qIAopzcR3Ll+
-=RcT3
------END PGP SIGNATURE-----
-
---hYooF8G/hrfVAmum--
+> +               pxa_clocks[ckid] = clk;
+> +       if (!IS_ERR(clk))
+> +               clk_register_clkdev(clk, con_id, dev_id);
+> +}
+> +
+> +int __init clk_pxa_cken_init(struct pxa_clk_cken *clks, int nb_clks)
+> +{
+> +       int i;
+> +       struct pxa_clk_cken *pclk;
+> +       struct clk *clk;
+> +
+> +       for (i = 0; i < nb_clks; i++) {
+> +               pclk = clks + i;
+> +               pclk->gate.lock = &lock;
+> +               clk = clk_register_composite(NULL, pclk->name,
+> +                                            pclk->parent_names, 2,
+> +                                            &pclk->hw, &cken_mux_ops,
+> +                                            &pclk->hw, &cken_rate_ops,
+> +                                            &pclk->gate.hw, &clk_gate_ops,
+> +                                            pclk->flags);
+> +               clkdev_pxa_register(pclk->ckid, pclk->con_id, pclk->dev_id,
+> +                                   clk);
+> +       }
+> +       return 0;
+> +}
+> +
+> +static void __init pxa_dt_clocks_init(struct device_node *np)
+> +{
+> +       of_clk_add_provider(np, of_clk_src_onecell_get, &onecell_data);
+> +}
+> +CLK_OF_DECLARE(pxa_clks, "marvell,pxa-clocks", pxa_dt_clocks_init);
+> diff --git a/drivers/clk/pxa/clk-pxa.h b/drivers/clk/pxa/clk-pxa.h
+> new file mode 100644
+> index 0000000..5fe219d
+> --- /dev/null
+> +++ b/drivers/clk/pxa/clk-pxa.h
+> @@ -0,0 +1,107 @@
+> +/*
+> + * Marvell PXA family clocks
+> + *
+> + * Copyright (C) 2014 Robert Jarzmik
+> + *
+> + * Common clock code for PXA clocks ("CKEN" type clocks + DT)
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + *
+> + */
+> +#ifndef _CLK_PXA_
+> +#define _CLK_PXA_
+> +
+> +#define PARENTS(name) \
+> +       static const char *name ## _parents[] __initconst
+> +#define MUX_RO_RATE_RO_OPS(name, clk_name)                     \
+> +       static struct clk_hw name ## _mux_hw;                   \
+> +       static struct clk_hw name ## _rate_hw;                  \
+> +       static struct clk_ops name ## _mux_ops = {              \
+> +               .get_parent = name ## _get_parent,              \
+> +               .set_parent = dummy_clk_set_parent,             \
+> +       };                                                      \
+> +       static struct clk_ops name ## _rate_ops = {             \
+> +               .recalc_rate = name ## _get_rate,               \
+> +       };                                                      \
+> +       static struct clk *clk_register_ ## name(void)          \
+> +       {                                                       \
+> +               return clk_register_composite(NULL, clk_name,   \
+> +                       name ## _parents,                       \
+> +                       ARRAY_SIZE(name ## _parents),           \
+> +                       &name ## _mux_hw, &name ## _mux_ops,    \
+> +                       &name ## _rate_hw, &name ## _rate_ops,  \
+> +                       NULL, NULL, CLK_GET_RATE_NOCACHE);      \
+> +       }
+> +
+> +#define RATE_RO_OPS(name, clk_name)                    \
+> +       static struct clk_hw name ## _rate_hw;                  \
+> +       static struct clk_ops name ## _rate_ops = {             \
+> +               .recalc_rate = name ## _get_rate,               \
+> +       };                                                      \
+> +       static struct clk *clk_register_ ## name(void)          \
+> +       {                                                       \
+> +               return clk_register_composite(NULL, clk_name,   \
+> +                       name ## _parents,                       \
+> +                       ARRAY_SIZE(name ## _parents),           \
+> +                       NULL, NULL,                             \
+> +                       &name ## _rate_hw, &name ## _rate_ops,  \
+> +                       NULL, NULL, CLK_GET_RATE_NOCACHE);      \
+> +       }
+> +
+> +/*
+> + * CKEN clock type
+> + * This clock takes it source from 2 possible parents :
+> + *  - a low power parent
+> + *  - a normal parent
+> + *
+> + *  +------------+     +-----------+
+> + *  |  Low Power | --- | x mult_lp |
+> + *  |    Clock   |     | / div_lp  |\
+> + *  +------------+     +-----------+ \+-----+   +-----------+
+> + *                                    | Mux |---| CKEN gate |
+> + *  +------------+     +-----------+ /+-----+   +-----------+
+> + *  | High Power |     | x mult_hp |/
+> + *  |    Clock   | --- | / div_hp  |
+> + *  +------------+     +-----------+
+> + */
+> +struct pxa_clk_cken {
+> +       struct clk_hw hw;
+> +       int ckid;
+> +       const char *name;
+> +       const char *dev_id;
+> +       const char *con_id;
+> +       const char **parent_names;
+> +       struct clk_fixed_factor lp;
+> +       struct clk_fixed_factor hp;
+> +       struct clk_gate gate;
+> +       bool (*is_in_low_power)(void);
+> +       const unsigned long flags;
+> +};
+> +
+> +#define PXA_CKEN(_dev_id, _con_id, _name, parents, _mult_lp, _div_lp,  \
+> +                _mult_hp, _div_hp, is_lp, _cken_reg, _cken_bit, flag)  \
+> +       { .ckid = CLK_ ## _name, .name = #_name,                        \
+> +         .dev_id = _dev_id, .con_id = _con_id, .parent_names = parents,\
+> +         .lp = { .mult = _mult_lp, .div = _div_lp },                   \
+> +         .hp = { .mult = _mult_hp, .div = _div_hp },                   \
+> +         .is_in_low_power = is_lp,                                     \
+> +         .gate = { .reg = (void __iomem *)_cken_reg, .bit_idx = _cken_bit }, \
+> +         .flags = flag,                                                \
+> +       }
+> +#define PXA_CKEN_1RATE(dev_id, con_id, name, parents, cken_reg,                \
+> +                           cken_bit, flag)                             \
+> +       PXA_CKEN(dev_id, con_id, name, parents, 1, 1, 1, 1,             \
+> +                NULL, cken_reg, cken_bit, flag)
+> +
+> +static int dummy_clk_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +       return 0;
+> +}
+> +
+> +extern void clkdev_pxa_register(int ckid, const char *con_id,
+> +                               const char *dev_id, struct clk *clk);
+> +extern int clk_pxa_cken_init(struct pxa_clk_cken *clks, int nb_clks);
+> +
+> +#endif
+> diff --git a/include/dt-bindings/clock/pxa-clock.h b/include/dt-bindings/clock/pxa-clock.h
+> new file mode 100644
+> index 0000000..e65803b
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/pxa-clock.h
+> @@ -0,0 +1,77 @@
+> +/*
+> + * Inspired by original work from pxa2xx-regs.h by Nicolas Pitre
+> + * Copyright (C) 2014 Robert Jarzmik
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_PXA2XX_H__
+> +#define __DT_BINDINGS_CLOCK_PXA2XX_H__
+> +
+> +#define CLK_NONE 0
+> +#define CLK_1WIRE 1
+> +#define CLK_AC97 2
+> +#define CLK_AC97CONF 3
+> +#define CLK_ASSP 4
+> +#define CLK_BOOT 5
+> +#define CLK_BTUART 6
+> +#define CLK_CAMERA 7
+> +#define CLK_CIR 8
+> +#define CLK_CORE 9
+> +#define CLK_DMC 10
+> +#define CLK_FFUART 11
+> +#define CLK_FICP 12
+> +#define CLK_GPIO 13
+> +#define CLK_HSIO2 14
+> +#define CLK_HWUART 15
+> +#define CLK_I2C 16
+> +#define CLK_I2S 17
+> +#define CLK_IM 18
+> +#define CLK_INC 19
+> +#define CLK_ISC 20
+> +#define CLK_KEYPAD 21
+> +#define CLK_LCD 22
+> +#define CLK_MEMC 23
+> +#define CLK_MEMSTK 24
+> +#define CLK_MINI_IM 25
+> +#define CLK_MINI_LCD 26
+> +#define CLK_MMC 27
+> +#define CLK_MMC1 28
+> +#define CLK_MMC2 29
+> +#define CLK_MMC3 30
+> +#define CLK_MSL 31
+> +#define CLK_MSL0 32
+> +#define CLK_MVED 33
+> +#define CLK_NAND 34
+> +#define CLK_NSSP 35
+> +#define CLK_OSTIMER 36
+> +#define CLK_PWM0 37
+> +#define CLK_PWM1 38
+> +#define CLK_PWM2 39
+> +#define CLK_PWM3 40
+> +#define CLK_PWRI2C 41
+> +#define CLK_PXA300_GCU 42
+> +#define CLK_PXA320_GCU 43
+> +#define CLK_SMC 44
+> +#define CLK_SSP 45
+> +#define CLK_SSP1 46
+> +#define CLK_SSP2 47
+> +#define CLK_SSP3 48
+> +#define CLK_SSP4 49
+> +#define CLK_STUART 50
+> +#define CLK_TOUCH 51
+> +#define CLK_TPM 52
+> +#define CLK_UDC 53
+> +#define CLK_USB 54
+> +#define CLK_USB2 55
+> +#define CLK_USBH 56
+> +#define CLK_USBHOST 57
+> +#define CLK_USIM 58
+> +#define CLK_USIM1 59
+> +#define CLK_USMI0 60
+> +#define CLK_MAX 61
+> +
+> +#endif
+> --
+> 2.0.0.rc2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
