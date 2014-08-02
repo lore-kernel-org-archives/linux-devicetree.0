@@ -1,92 +1,51 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 4/4] ARM: dts: Add exynos5250-spring device tree
-Date: Fri, 1 Aug 2014 22:15:45 -0700
-Message-ID: <CAD=FV=XVM4FUMxjindZGXku5DZ1MkTWq=Smmt_Fs7=_i4MBFKw@mail.gmail.com>
-References: <1406822910-6255-1-git-send-email-afaerber@suse.de>
-	<1406822910-6255-5-git-send-email-afaerber@suse.de>
-	<53DA936E.9060004@gmail.com>
-	<53DA9709.10602@suse.de>
-	<53DA9BA9.60808@gmail.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCHv10 4/4] dt: mailbox: add generic bindings
+Date: Sat, 2 Aug 2014 13:17:18 +0530
+Message-ID: <CAJe_ZhdNjH+eyxMfpAw8Zg1SeZa1qh2ouMnTSress+6Gyr+5qA@mail.gmail.com>
+References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
+	<1406896365-4971-1-git-send-email-jaswinder.singh@linaro.org>
+	<20140801184314.GM30458@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53DA9BA9.60808@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140801184314.GM30458@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Arnd Bergmann <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Courtney Cavin <courtney.cavin@sonymobile.com>, Matt Porter <mporter@linaro.org>, Craig McGeachie <slapdau@yahoo.com.au>, LeyFoon Tan <lftan.linux@gmail.com>, Loic Pallardy <loic.pallardy@st.com>, "Anna, Suman" <s-anna@ti.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Bjorn Andersson <bjorn@kryo.se>, Patch Tracking <patches@linaro.org>, Mollie Wu <mollie.wu@linaro.org>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, Kevin Hilman <khilman@linaro.org>, Lee Jones <lee.jones@linaro.org>, Andy Green <andy.green@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
-
-On Thu, Jul 31, 2014 at 12:40 PM, Tomasz Figa <tomasz.figa@gmail.com> w=
-rote:
-> Andreas,
+On 2 August 2014 00:13, Mark Brown <broonie@kernel.org> wrote:
+> On Fri, Aug 01, 2014 at 06:02:45PM +0530, Jassi Brar wrote:
 >
-> On 31.07.2014 21:20, Andreas F=C3=A4rber wrote:
->> Am 31.07.2014 21:05, schrieb Tomasz Figa:
->>> On 31.07.2014 18:08, Andreas F=C3=A4rber wrote:
->>>> Adds initial support for the HP Chromebook 11.
->>>
->>> [snip]
->>>
->>>> +   gpio-keys {
->>>> +           compatible =3D "gpio-keys";
->>>> +           pinctrl-names =3D "default";
->>>> +           pinctrl-0 =3D <&power_key_irq>, <&lid_irq>;
->>>> +
->>>> +           power {
->>>> +                   label =3D "Power";
->>>> +                   gpios =3D <&gpx1 3 GPIO_ACTIVE_LOW>;
->>>> +                   linux,code =3D <KEY_POWER>;
->>>
->>> I assume the key is debounced in hardware, so there is no need for
->>> debounce-interval here. Is this correct?
->>
->> You're asking the wrong person... This is copied from
->> -cros-common/-snow. Downstream 3.8 does not have a debounce-interval
->> property.
+>> +Optional property:
+>> +- mbox-names: List of identifier strings for each mailbox channel
+>> +             required by the client. The use of this property
+>> +             is discouraged in favor of using index in list of
+>> +             'mboxes' while requesting a mailbox.
 >
-> Doug, Vincent?
-
-Not something I've looked at, but it's never been a problem...
-
-
->>>> +&sd1_clk {
->>>> +   samsung,pin-drv =3D <0>;
->>>> +};
->>>> +
->>>> +&sd1_cmd {
->>>> +   samsung,pin-pud =3D <3>;
->>>> +   samsung,pin-drv =3D <0>;
->>>> +};
->>>> +
->>>> +&sd1_cd {
->>>> +   samsung,pin-drv =3D <0>;
->>>> +};
->>>> +
->>>> +&sd1_bus4 {
->>>> +   samsung,pin-drv =3D <0>;
->>>> +};
->>>
->>> Here generic settings are being overridden, so it might be a good i=
-dea
->>> to explain why, like with i2c pull-up above.
->>
->> Snow does not have an explanation either, so please suggest what com=
-ment
->> you'd like to see. Consider me just a user with no specs. :)
+> Can I suggest that if we do want to avoid strings for some reason (it's
+> not obvious to me why)
 >
-> Doug, Vincent, someone else?
+The string and index are both to be taken from DT node of client.
 
-The comment is just in a different place--it's in the dw_mmc node.
-Probably belongs here, though:
+    pwr_cntrl: power {
+               ...
+               mbox-names = "pwr-ctrl", "rpc";
+               mboxes = <&mailbox 0
+                       &mailbox 1>;
+    };
 
-                /*
-                 * Wifi is a SiP, so can keep drive strengths low
-                 * to reduce EMI.
-                 */
+The xlate() will map string onto index. So rather than the client
+driver specify, say, "rpc" while requesting mailbox channel, it can
+directly specify index 1.
 
-I guess the cmd line isn't documented.  There is no external pull on
-the command line and on most boards there is one.  Our hardware guys
-thought we didn't need it and apparently we don't...
+> then we include a recommendation to provide
+> defines in a header file in order to improve legibility.  That's pretty
+> minor, though.
+>
+Sorry I don't understand.
+
+> Reviewed-by: Mark Brown <broonie@linaro.org>
+>
+Thanks a lot!
+-Jassi
