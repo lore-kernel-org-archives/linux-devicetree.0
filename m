@@ -1,43 +1,84 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 3/3] fpga sysfs interface
-Date: Sat, 2 Aug 2014 02:25:11 +0200
-Message-ID: <20140802002511.GD11170@amd.pavel.ucw.cz>
-References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
- <1406932118-13885-4-git-send-email-atull@opensource.altera.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v6 00/10] ARM: dts: exynos: Prepare Spring
+Date: Sat,  2 Aug 2014 02:52:20 +0200
+Message-ID: <1406940750-15880-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406932118-13885-4-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2014-08-01 17:28:38, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Add basic sysfs interface.  Only exports two files:
-> 
-> /sys/class/fpga_manager/fpga0/name
->    Name of low level driver.
-> 
-> /sys/class/fpga_manager/fpga0/status
->    status of fpga framework as returned by core
->    fpga-mgr.c's fpga_mgr_ops_framework_status
->    function or by the low level driver's status
->    function.
+Hello,
 
-I believe sysfs additions need to be documented in
-Documentation/ABI/. Otherwise it looks  good.
+Based on the preinstalled 3.8 based ChromeOS kernel and previous 3.15=20
+based attempts by Stephan and me that broke for 3.16, I've prepared a=20
+device tree for the HP Chromebook 11 aka Google Spring.
 
-Thanks,
-								Pavel
+v6 renames a node and reverts dp_hpd.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not yet enabled are trackpad, Wifi and sound.
+
+My rebasing branch for testing is here:
+https://github.com/afaerber/linux/commits/spring-next
+
+Regards,
+Andreas
+
+v1 -> v2:
+* Dropped 3 documentation patches from series:
+  2 picked up,
+  https://patchwork.kernel.org/patch/4397271/
+  https://patchwork.kernel.org/patch/4397291/
+  1 already sent separately as v2, pending.
+  https://patchwork.kernel.org/patch/4424881/
+* Minimized and beautified Spring device tree and to some degree Snow a=
+s well.
+  See individual patches.
+
+v2 -> v3:
+* Rebased: Two -cros-common cleanup patches were already applied
+* Lots of small cleanups for both Snow and Spring
+* Enabled I2S in Spring for symmetry
+* Added lid-switch and gpio-keys pinctrls to Spring
+
+v3 -> v4:
+* Fixed pin-function 1 -> 0 for dp-hpd pinctrl, style cleanup
+
+v4 -> v5:
+* Dropped regulator and fixed USB3503 for Spring
+* More cleanups, including SMDK5250 and Arndale
+
+v5 -> v6:
+* Renamed mfc node label for alignment with iommu patches around
+* Reverted dp-hpd to v4
+
+
+Andreas F=C3=A4rber (10):
+  ARM: dts: Fix MMC pinctrl for exynos5250-snow
+  ARM: dts: Fold exynos5250-cros-common into exynos5250-snow
+  ARM: dts: Prepare node labels for exynos5250
+  ARM: dts: Clean up exynos5250-snow
+  ARM: dts: Fill in bootargs for exynos5250-snow
+  ARM: dts: Clean up exynos5250-smdk5250
+  ARM: dts: Clean up exynos5250-arndale
+  ARM: dts: Fix apparent GPIO typo in exynos5250-arndale
+  ARM: dts: Simplify USB3503 on exynos5250-arndale
+  ARM: dts: Add exynos5250-spring device tree
+
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/exynos5250-arndale.dts      | 927 +++++++++++++-----=
+--------
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi | 164 -----
+ arch/arm/boot/dts/exynos5250-smdk5250.dts     | 632 +++++++++---------
+ arch/arm/boot/dts/exynos5250-snow.dts         | 434 +++++++-----
+ arch/arm/boot/dts/exynos5250-spring.dts       | 536 +++++++++++++++
+ arch/arm/boot/dts/exynos5250.dtsi             |  24 +-
+ 7 files changed, 1608 insertions(+), 1110 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/exynos5250-cros-common.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos5250-spring.dts
+
+--=20
+1.9.3
