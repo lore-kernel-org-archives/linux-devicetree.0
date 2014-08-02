@@ -1,51 +1,41 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCHv10 4/4] dt: mailbox: add generic bindings
-Date: Sat, 2 Aug 2014 13:17:18 +0530
-Message-ID: <CAJe_ZhdNjH+eyxMfpAw8Zg1SeZa1qh2ouMnTSress+6Gyr+5qA@mail.gmail.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv10 0/4] Common Mailbox Framework
+Date: Sat, 2 Aug 2014 13:18:17 +0530
+Message-ID: <CAJe_ZhcmEUDD3+xC2mBFnBm7uiMhibtHhBOMxVBhy700BTvYsA@mail.gmail.com>
 References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406896365-4971-1-git-send-email-jaswinder.singh@linaro.org>
-	<20140801184314.GM30458@sirena.org.uk>
+	<20140801182656.GJ30458@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140801184314.GM30458@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Arnd Bergmann <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Courtney Cavin <courtney.cavin@sonymobile.com>, Matt Porter <mporter@linaro.org>, Craig McGeachie <slapdau@yahoo.com.au>, LeyFoon Tan <lftan.linux@gmail.com>, Loic Pallardy <loic.pallardy@st.com>, "Anna, Suman" <s-anna@ti.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Bjorn Andersson <bjorn@kryo.se>, Patch Tracking <patches@linaro.org>, Mollie Wu <mollie.wu@linaro.org>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, Kevin Hilman <khilman@linaro.org>, Lee Jones <lee.jones@linaro.org>, Andy Green <andy.green@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140801182656.GJ30458-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 August 2014 00:13, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Aug 01, 2014 at 06:02:45PM +0530, Jassi Brar wrote:
+On 1 August 2014 23:56, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Aug 01, 2014 at 05:59:54PM +0530, Jassi Brar wrote:
+>> Hello,
+>>  Here's v10. Not much different from v9. The code and the generic
+>> bindings looked good enough to relevant gods, but the patchset still
+>> needs some formal loving in the form of Acked-by's.
+>>
+>> Changes since v9:
+>>  o Purely cosmetic changes - added headers and used BIT()
 >
->> +Optional property:
->> +- mbox-names: List of identifier strings for each mailbox channel
->> +             required by the client. The use of this property
->> +             is discouraged in favor of using index in list of
->> +             'mboxes' while requesting a mailbox.
+> Given that this code is now getting very stable can I suggest setting up
+> a git tree and making sure it's included in -next?  Just send Stephen a
+> mail with a pointer to the relevant tree and branch and ask him to add it.
 >
-> Can I suggest that if we do want to avoid strings for some reason (it's
-> not obvious to me why)
+> I'd say it's probably worth merging at this point though since it's not
+> been in -next yet and the merge window is likely to open this weekend it
+> might be a bit much to try to merge it this window.
 >
-The string and index are both to be taken from DT node of client.
+Thanks, sounds good. Will do.
 
-    pwr_cntrl: power {
-               ...
-               mbox-names = "pwr-ctrl", "rpc";
-               mboxes = <&mailbox 0
-                       &mailbox 1>;
-    };
-
-The xlate() will map string onto index. So rather than the client
-driver specify, say, "rpc" while requesting mailbox channel, it can
-directly specify index 1.
-
-> then we include a recommendation to provide
-> defines in a header file in order to improve legibility.  That's pretty
-> minor, though.
->
-Sorry I don't understand.
-
-> Reviewed-by: Mark Brown <broonie@linaro.org>
->
-Thanks a lot!
--Jassi
+Regards,
+Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
