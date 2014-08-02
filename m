@@ -1,45 +1,64 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] clk: add pxa clocks infrastructure
-Date: Sat, 02 Aug 2014 18:46:00 +0200
-Message-ID: <87tx5usuuv.fsf@free.fr>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
-	<1406753464-15000-2-git-send-email-robert.jarzmik@free.fr>
-	<CAN1soZyST84DNvK=zyj6EhOt0fswZ4SvOmMnWiCZsYmapxkhOg@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
+Date: Sat, 2 Aug 2014 19:08:11 +0200
+Message-ID: <20140802170811.GA20550@pengutronix.de>
+References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com>
+ <1406744573-609-2-git-send-email-tthayer@opensource.altera.com>
+ <20140731082637.GH9030@lee--X1>
+ <53DAA072.4010902@opensource.altera.com>
+ <20140801081317.GL9030@lee--X1>
+ <53DC146D.1070504@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN1soZyST84DNvK=zyj6EhOt0fswZ4SvOmMnWiCZsYmapxkhOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Haojian Zhuang's message of "Sat, 2 Aug 2014 20:00:43 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53DC146D.1070504@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: Lee Jones <lee.jones@linaro.org>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Hi!
 
-> On Thu, Jul 31, 2014 at 4:50 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
->> +void __init clkdev_pxa_register(int ckid, const char *con_id,
->> +                               const char *dev_id, struct clk *clk)
->> +{
->> +       if (!IS_ERR(clk) && (ckid != CLK_NONE))
->
-> Will you specify CLK_NONE in clock driver?
-I haven't found a use yet (ie. pxa27x has no use for it, while for pxa3xx and
-pxa25x I don't know yet).
-I had put that here for a "CKEN" type clock which would be declared, but hidden
-from device-tree. That's the meaning of "CLK_NONE", hidden from DT.
+On Fri, Aug 01, 2014 at 05:27:57PM -0500, Thor Thayer wrote:
+> 
+> On 08/01/2014 03:13 AM, Lee Jones wrote:
+> >On Thu, 31 Jul 2014, Thor Thayer wrote:
+> >>On 07/31/2014 03:26 AM, Lee Jones wrote:
+> >>>On Wed, 30 Jul 2014, tthayer@opensource.altera.com wrote:
 
-I can remove it if you think that there is no pxaXXX which needs this functionality.
+[...]
 
-> It seems that CLK_NONE isn't used in pxa27x clock driver. And pxa_clocks[0] is
-> not used. Is it redundant?
-Yes it is. pxa_clocks[0] is never filled by any clock.
+> >>>>+u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
+> >>>>+{
+> >>>>+	return readl(sdr->reg_base + reg_offset);
+> >>>>+}
+> >>>>+EXPORT_SYMBOL_GPL(altera_sdr_readl);
+> >>>>+
+> >>>>+void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value)
+> >>>>+{
+> >>>>+	writel(value, sdr->reg_base + reg_offset);
+> >>>>+}
+> >>>>+EXPORT_SYMBOL_GPL(altera_sdr_writel);
+> We'd prefer to use syscon and that is what we started with. If you'd
+> like to be our advocate, I will return to that because it was pretty
+> clean. My primary concern is to get it upstreamed and if it is MFD
+> then I'll make the changes.
+> 
+> Here are the threads.
+> http://marc.info/?l=linux-kernel&m=140128791902800&w=2
 
-Cheers.
+The conclusion of this thread was syscon for offset 0x0, no ?!
+And if you decide to have new writel/readl functions, I'd prefer if you don't
+change the order of parameters just because. That always weirds me out, when
+there are vendorname_writel functions, that only change the API of writel and
+nothing else (not exactly the case here).
 
---
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
