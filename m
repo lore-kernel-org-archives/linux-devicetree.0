@@ -1,86 +1,57 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 04/10] ARM: dts: Fill in bootargs for exynos5250-snow
-Date: Fri, 1 Aug 2014 22:01:44 -0700
-Message-ID: <CAD=FV=XyvVNJ8vLYUE+Tx8dYUzqLH_sXXYcA_ZEFDfH_Un2u4g@mail.gmail.com>
-References: <1406868897-26874-1-git-send-email-afaerber@suse.de>
-	<1406868897-26874-5-git-send-email-afaerber@suse.de>
-	<CAD=FV=V4hQeGvE9+O2EY8KGvDj3SJKfOZGes4gKpHfg=xz1h4A@mail.gmail.com>
-	<53DC024A.3020106@suse.de>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] ARM: dts: Fix the sort ordering of EHCI and HSIC
+ in rk3288.dtsi
+Date: Fri, 1 Aug 2014 22:06:59 -0700
+Message-ID: <CAD=FV=WkBeBUMQQwUOR1dDzsVcU-54izhoDwuiMb6Myd0hB+0g@mail.gmail.com>
+References: <1406846976-23127-4-git-send-email-dianders@chromium.org>
+	<5965899.y405fxfhDg@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53DC024A.3020106@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, open list <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5965899.y405fxfhDg@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Andreas,
+Heiko,
 
-On Fri, Aug 1, 2014 at 2:10 PM, Andreas F=C3=A4rber <afaerber@suse.de> =
-wrote:
-> Hi Doug,
->
-> Am 01.08.2014 22:28, schrieb Doug Anderson:
->> On Thu, Jul 31, 2014 at 9:54 PM, Andreas F=C3=A4rber <afaerber@suse.=
-de> wrote:
->>> exynos5250-cros-common.dtsi had an empty /chosen node.
->>> Fill in exemplary boot arguments.
->>>
->>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>> ---
->>>  v5: New
->>>  Cleanup for /chosen node moved into -snow.dts.
->>>
->>>  arch/arm/boot/dts/exynos5250-snow.dts | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/=
-dts/exynos5250-snow.dts
->>> index 7680d5e03fb3..c4b0c73c736d 100644
->>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->>> @@ -27,6 +27,7 @@
->>>         };
->>>
->>>         chosen {
->>> +               bootargs =3D "console=3Dtty1";
+On Fri, Aug 1, 2014 at 2:17 AM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
+ote:
+> Am Donnerstag, 31. Juli 2014, 15:49:35 schrieb Doug Anderson:
+>> The EHCI and HSIC device tree nodes were added in the wrong place.
+>> Fix them.
 >>
->> As mentioned earlier, I don't think this is a particularly useful
->> change.  Just this boot argument is not enough to boot with anyway, =
-so
->> listing it doesn't really help anyone.  In theory you could make som=
-e
->> assertion about what the "most popular" boot device and filesystem i=
-s,
->> but it seems unlikely to cover the majority of the cases.
->>
->> I won't NAK this change myself, but I certainly won't push for it.
+>> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >
-> This patch should be entirely optional.
+> hmm, not sure if this counts as fix ... aka material for 3.17-rc2 or =
+should
+> wait for 3.18. Simply because it's more a cosmetic thing.
 >
-> I believe you said it wasn't necessary because the bootloader supplie=
-s
-> it. My point is that someone needs to know what to put into the boota=
-rgs
-> (setenv / boot.scr / uEnv.txt) - knowing whether it's ttySAC3 vs.
-> ttySAC2 vs. ttyS0 etc. has been pretty handy for me. In this case, Sn=
-ow
-> and Spring use an identical console, so not sure if it might be tty2 =
-or
-> something elsewhere?
+> If it is a fix, could base it on the appropriate dts revision, becaus=
+e here
+> it's in the middle of the dwc2 series, including the
+>         usb_host1: usb@ff540000
+> nodes.
 
-=2E..but in your case you're not including any of that info.  tty1 is a
-LCD console, isn't it?
+It didn't seem too urgent since it's just cosmetic.  ...but I didn't
+want to send up my fixup and then cause an immediate conflict with
+Kever.  :(  ...that's why I asked him to just include it in his
+series.
 
-
-> My question of what to use for linux,stdout-path (which was elsewhere
-> mentioned as successor to bootargs in that regard) remained unanswere=
-d.
-> Should it point to the dp-controller node or what?
-
-No idea since I've never heard of linux,stdout-path other than your
-emails.  Maybe someone else can chime in and I'll learn something.  ;)
+If you want me to spin this patch separately (and then Kever can spin
+his), let me know.  I know that for me Kever's series was still not
+making the dwc2 controller work 100% correctly for me (so maybe he'll
+need to spin anyway?), but someone else at work had it working so
+something is fishy.  Unfortunately I'm away from my computer and board
+for the next several days, so it might be a while before I can
+investigate more...
 
 -Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
