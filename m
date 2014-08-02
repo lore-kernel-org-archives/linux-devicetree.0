@@ -1,86 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/2] ARM: shmobile: henninger: add VIN0/ADV7180 DT support
-Date: Sat, 2 Aug 2014 04:05:54 +0400
-Message-ID: <201408020405.54978.sergei.shtylyov@cogentembedded.com>
-References: <201408020402.14560.sergei.shtylyov@cogentembedded.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH 1/3] fpga manager framework core
+Date: Sat, 2 Aug 2014 02:15:38 +0200
+Message-ID: <20140802001538.GA11170@amd.pavel.ucw.cz>
+References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
+ <1406932118-13885-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201408020402.14560.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406932118-13885-2-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Define the Henninger board dependent part of the VIN0 device node. Add the
-device node for Analog Devices ADV7180 video decoder to I2C2  bus. Add the
-necessary subnodes to interconnect VIN0 and ADV7180 devices.
+Hi!
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> +static int fpga_mgr_get_new_minor(struct fpga_manager *mgr, int request_nr)
+> +{
+> +	int nr, start;
+> +
+> +	/* check specified minor number */
+> +	if (request_nr >= FPGA_MAX_MINORS) {
+> +		dev_err(mgr->parent, "Out of device minors (%d)\n", request_nr);
+> +		return -ENODEV;
+> +	}
 
----
-Changes in version 2:
-- refreshed the patch.
+if (request_nr < -1)
+   return -EINVAL;
+?
 
- arch/arm/boot/dts/r8a7791-henninger.dts |   35 ++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+> +	/* FPGA mangager isr */
+> +	irqreturn_t (*isr)(int irq, void *dev_id);
+> +};
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -135,6 +135,11 @@
- 		renesas,groups = "usb1";
- 		renesas,function = "usb1";
- 	};
-+
-+	vin0_pins: vin0 {
-+		renesas,groups = "vin0_data8", "vin0_clk";
-+		renesas,function = "vin0";
-+	};
- };
- 
- &scif0 {
-@@ -191,6 +196,19 @@
- 
- 	status = "okay";
- 	clock-frequency = <400000>;
-+
-+	composite-in@20 {
-+		compatible = "adi,adv7180";
-+		reg = <0x20>;
-+		remote = <&vin0>;
-+
-+		port {
-+			adv7180: endpoint {
-+				bus-width = <8>;
-+				remote-endpoint = <&vin0ep>;
-+			};
-+		};
-+	};
- };
- 
- &qspi {
-@@ -260,3 +278,20 @@
- &pciec {
- 	status = "okay";
- };
-+
-+/* composite video input */
-+&vin0 {
-+	status = "ok";
-+	pinctrl-0 = <&vin0_pins>;
-+	pinctrl-names = "default";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vin0ep: endpoint {
-+			remote-endpoint = <&adv7180>;
-+			bus-width = <8>;
-+		};
-+	};
-+};
+"manager"?
+
+Best regards,
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
