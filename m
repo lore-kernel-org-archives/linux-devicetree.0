@@ -1,60 +1,86 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
-Date: Sat, 2 Aug 2014 13:20:16 +0530
-Message-ID: <CAJe_ZhePe7rTPc8wtSDP3qM6ptmt2udme6JdL15smejJgKJv5Q@mail.gmail.com>
-References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org>
-	<20140801183748.GL30458@sirena.org.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for
+	ARM-based Broadcom STB SoCs
+Date: Sat, 2 Aug 2014 09:19:24 +0100
+Message-ID: <20140802081924.GW30282@n2100.arm.linux.org.uk>
+References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com> <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140801183748.GL30458@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Arnd Bergmann <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Courtney Cavin <courtney.cavin@sonymobile.com>, Matt Porter <mporter@linaro.org>, Craig McGeachie <slapdau@yahoo.com.au>, LeyFoon Tan <lftan.linux@gmail.com>, Loic Pallardy <loic.pallardy@st.com>, "Anna, Suman" <s-anna@ti.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Bjorn Andersson <bjorn@kryo.se>, Patch Tracking <patches@linaro.org>, Mollie Wu <mollie.wu@linaro.org>, Tetsuya Takinishi <t.takinishi@jp.fujitsu.com>, Kevin Hilman <khilman@linaro.org>, Lee Jones <lee.jones@linaro.org>, Andy Green <andy.green@linaro.org>
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Matt Porter <mporter@linaro.org>, Christian Daudt <bcm@fixthebug.org>, linux-arm-kernel@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Marc Carino <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2 August 2014 00:07, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Aug 01, 2014 at 06:01:36PM +0530, Jassi Brar wrote:
->> Introduce common framework for client/protocol drivers and
->> controller drivers of Inter-Processor-Communication (IPC).
->>
->> Client driver developers should have a look at
->>  include/linux/mailbox_client.h to understand the part of
->> the API exposed to client drivers.
->> Similarly controller driver developers should have a look
->> at include/linux/mailbox_controller.h
->
-> Reviewed-by: Mark Brown <broonie@linaro.org>
->
-> One very minor thing:
->
->> +     t =3D add_to_rbuf(chan, mssg);
->> +     if (t < 0) {
->> +             pr_err("Try increasing MBOX_TX_QUEUE_LEN\n");
->> +             return t;
->> +     }
->
-> In this and the other error messages it's probably worth doing someth=
-ing
-> like a dev_ print with the device in the mbox_controller - if there's
-> more than one mailbox controller in the system it may well make
-> someone's life easier to get a hint about which one is running into
-> trouble.  Similarly if there were some identification for the channel=
-s
-> that might be useful to display that (perhaps add a name field people
-> can initialize if they like in the struct?).
->
-> This is clearly not a blocker for merge though.
->
-OK will do.
+Here's some more comments on this.
 
-Thanks,
-Jassi
+On Mon, Jul 21, 2014 at 02:07:56PM -0700, Brian Norris wrote:
+> +static void brcmstb_cpu_die(u32 cpu)
+> +{
+> +	v7_exit_coherency_flush(all);
 
+This is ultimately what causes my builds to break:
 
---=20
-Linaro.org =E2=94=82 Open source software for ARM SoCs | Follow Linaro
-http://facebook.com/pages/Linaro/155974581091106  -
-http://twitter.com/#!/linaroorg - http://linaro.org/linaro-blog
+/tmp/ccSPowmq.s:171: Error: selected processor does not support ARM mode `isb '
+/tmp/ccSPowmq.s:177: Error: selected processor does not support ARM mode `isb '
+/tmp/ccSPowmq.s:178: Error: selected processor does not support ARM mode `dsb '
+make[2]: *** [arch/arm/mach-bcm/platsmp-brcmstb.o] Error 1
+
+It seems that v7_exit_coherency_flush() can only be used with code which
+is ARMv7 only.
+
+> +	/* Prevent all interrupts from reaching this CPU. */
+> +	arch_local_irq_disable();
+
+Why do you think it is necessary to disable interrupts here?  Where
+have they been re-enabled since this bit of generic code:
+
+void __ref cpu_die(void)
+{
+        unsigned int cpu = smp_processor_id();
+
+        idle_task_exit();
+
+        local_irq_disable();
+
+and why arch_local_irq_disable() at that?  Even if interrupts were
+enabled prior to your call to arch_local_irq_disable(), what do you
+think would be the effect of receiving an interrupt after you've
+exited coherency?
+
+> +
+> +	/*
+> +	 * Final full barrier to ensure everything before this instruction has
+> +	 * quiesced.
+> +	 */
+> +	isb();
+> +	dsb();
+
+If the call to arch_local_irq_disable() is removed, and
+v7_exit_coherency_flush() is fixed, then this is not required, because
+v7_exit_coherency_flush() already does this at the very end.
+
+> +
+> +	per_cpu_sw_state_wr(cpu, 0);
+> +
+> +	/* Sit and wait to die */
+> +	wfi();
+> +
+> +	/* We should never get here... */
+> +	panic("Spurious interrupt on CPU %d received!\n", cpu);
+
+You really should /not/ be calling panic here, because that uses data
+shared with the CPUs which are still coherent.  This is akin to doing
+DMA into bits of the kernel space without dealing with the cache
+coherency issues.  Moreover, if you read the comments on
+v7_exit_coherency_flush() about ldrex/strex, which are two instructions
+spinlocks use, you'll see that ldrex/strex must not be executed, which
+means you can't call any function which uses spinlocks.  That rules
+out printk() et.al.  printascii is fine, but that's only available when
+the low level debug stuff is enabled.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
