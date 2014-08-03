@@ -1,42 +1,42 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] scsi: ibmvscsi: ibmvstgt.c:  Cleaning up missing null-terminate in conjunction with strncpy
-Date: Sun,  3 Aug 2014 01:23:57 +0200
-Message-ID: <1407021837-28525-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: "James E.J. Bottomley" <JBottomley@parallels.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Rob Herring <robh+dt@kernel.org>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 07/15] drm/exynos: dsi: Add support for panel prepare and
+ unprepare routines
+Date: Sun, 3 Aug 2014 16:58:19 +0900
+Message-ID: <CAAQKjZMVwc+5ErcL7JJfrAan--ga6nG+xEVuKuJz8xQHytFKuw@mail.gmail.com>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+	<1406828534-10072-8-git-send-email-ajaykumar.rs@samsung.com>
+	<20140801090505.GC21724@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140801090505.GC21724@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, joshi@samsung.com, dri-devel@lists.freedesktop.org, ajaynumb@gmail.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Replacing strncpy with strlcpy to avoid strings that lacks null terminate.
+2014-08-01 18:05 GMT+09:00 Thierry Reding <thierry.reding@gmail.com>:
+> On Thu, Jul 31, 2014 at 11:12:06PM +0530, Ajay Kumar wrote:
+>> Modify exynos_dsi driver to support the new panel calls:
+>> prepare and unprepare.
+>>
+>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+>> ---
+>>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |   12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>
+> And this one as well.
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
----
- drivers/scsi/ibmvscsi/ibmvstgt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Inki Dae <inki.dae@samsung.com>
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvstgt.c b/drivers/scsi/ibmvscsi/ibmvstgt.c
-index 56f8a86..5c16d17 100644
---- a/drivers/scsi/ibmvscsi/ibmvstgt.c
-+++ b/drivers/scsi/ibmvscsi/ibmvstgt.c
-@@ -340,7 +340,7 @@ int send_adapter_info(struct iu_entry *iue,
- 	memset(info, 0, sizeof(*info));
- 
- 	strcpy(info->srp_version, "16.a");
--	strncpy(info->partition_name, partition_name,
-+	strlcpy(info->partition_name, partition_name,
- 		sizeof(info->partition_name));
- 	info->partition_number = partition_number;
- 	info->mad_version = 1;
-@@ -938,7 +938,7 @@ static int get_system_info(void)
- 
- 	name = of_get_property(rootdn, "ibm,partition-name", NULL);
- 	if (name)
--		strncpy(partition_name, name, sizeof(partition_name));
-+		strlcpy(partition_name, name, sizeof(partition_name));
- 
- 	num = of_get_property(rootdn, "ibm,partition-no", NULL);
- 	if (num)
--- 
-1.7.10.4
+Thanks,
+Inki Dae
 
+>
+> Thierry
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
