@@ -1,60 +1,72 @@
-Return-Path: <delicious.quinoa@gmail.com>
+Return-Path: <gabriel.fernandez@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20140802002301.GC11170@amd.pavel.ucw.cz>
-References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
-	<1406932118-13885-3-git-send-email-atull@opensource.altera.com>
-	<20140802002301.GC11170@amd.pavel.ucw.cz>
-Date: Tue, 5 Aug 2014 12:11:18 -0500
-Message-ID: <CANk1AXT1mfyiC0WDSBMKRYn-WFWM0DzqTUWqtuTnKWa9dTMdfQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] fpga bus driver
-From: Alan Tull <delicious.quinoa@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Pavel Machek <pavel@denx.de>
-Cc: atull@opensource.altera.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+In-Reply-To: <20140729053149.4906.84119@quantum>
+References: <1405437631-23623-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1405437631-23623-7-git-send-email-gabriel.fernandez@linaro.org>
+	<20140729053149.4906.84119@quantum>
+Date: Sun, 3 Aug 2014 12:58:26 +0200
+Message-ID: <CAG374jC4V4sDqm_CWZjTTXHDOM4fSAvszpO52uY3CX-zfaAGBw@mail.gmail.com>
+Subject: Re: [PATCH v3 06/15] drivers: clk: st: STiH407: Support for Flexgen Clocks
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: multipart/alternative; boundary=047d7bdc13407d592904ffb780b4
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <maxime.coquelin@st.com>, Olivier Bideau <olivier.bideau@st.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 1, 2014 at 7:23 PM, Pavel Machek <pavel@denx.de> wrote:
->
-> Hi!
->
-> > Here's a simple example. Start with:
-> >   * the altera-gpio driver built in to the kernel but not in the
-> >     device tree.
-> >   * raw fpga image at /lib/firmware/soc_system.rbf
-> >   * Load appropriate device tree overlay in configfs by doing
-> >     $ mkdir /config/device-tree/overlays/1
-> >     $ echo socfpga_overlay.dtbo > /config/device-tree/overlays/1/path
-> >   * This results in the FPGA getting programmed and the altera
-> >     gpio driver getting probed.
->
-> Nice!
+--047d7bdc13407d592904ffb780b4
+Content-Type: text/plain; charset=UTF-8
 
-Thanks!
+Thanks Mike !
 
->
-> > +/* Find the fpga manager that is pointed to by a phandle */
-> > +struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
-> > +                                         const char *mgr_property,
-> > +                                         int *ret)
+
+On 29 July 2014 07:31, Mike Turquette <mturquette@linaro.org> wrote:
+
+> Quoting Gabriel FERNANDEZ (2014-07-15 08:20:22)
+> > +static const char ** __init flexgen_get_parents(struct device_node *np,
+> > +                                                      int *num_parents)
 > > +{
-> > +     struct fpga_manager *mgr;
-> > +     struct device_node *mgr_node;
+> > +       const char **parents;
+> > +       int nparents, i;
 > > +
-> > +     mgr_node = of_parse_phandle(node, mgr_property, 0);
-> > +
-> > +     if (!mgr_node) {
-> > +             *ret = -ENODEV;
-> > +             return NULL;
+> > +       nparents = of_count_phandle_with_args(np, "clocks",
+> "#clock-cells");
 >
-> Could IS_ERR_OR_NULL() and friends be used to get reasonable calling
+> FYI, of_clk_get_parent_count provides a nice wrapper around this. Maybe
+> you can update it some day? Not a blocking issue for this series.
+>
+> Regards,
+> Mike
+>
 
-Yes, that would be much simpler here.  I could get rid of the 'ret'.
+--047d7bdc13407d592904ffb780b4
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> convention?
->
-> Thanks,
->                                                                         Pavel
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+<div dir=3D"ltr">Thanks Mike !</div><div class=3D"gmail_extra"><br><br><div=
+ class=3D"gmail_quote">On 29 July 2014 07:31, Mike Turquette <span dir=3D"l=
+tr">&lt;<a href=3D"mailto:mturquette@linaro.org" target=3D"_blank">mturquet=
+te@linaro.org</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">Quoting Gabriel FERNANDEZ (2014-07-15 08:20:=
+22)<br>
+<div class=3D"">&gt; +static const char ** __init flexgen_get_parents(struc=
+t device_node *np,<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0int *num_parents)<br>
+&gt; +{<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 const char **parents;<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 int nparents, i;<br>
+&gt; +<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 nparents =3D of_count_phandle_with_args(np, &qu=
+ot;clocks&quot;, &quot;#clock-cells&quot;);<br>
+<br>
+</div>FYI, of_clk_get_parent_count provides a nice wrapper around this. May=
+be<br>
+you can update it some day? Not a blocking issue for this series.<br>
+<br>
+Regards,<br>
+Mike<br>
+</blockquote></div><br></div>
+
+--047d7bdc13407d592904ffb780b4--
