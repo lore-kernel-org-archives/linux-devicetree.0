@@ -1,147 +1,71 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 00/10] ARM: dts: exynos: Prepare Spring
-Date: Mon, 4 Aug 2014 08:42:51 -0700
-Message-ID: <CAD=FV=WFNW_5KZvLMk0kK1JQsdWLeo2kCjpQsFuxKNSnOKzfgw@mail.gmail.com>
-References: <1406940750-15880-1-git-send-email-afaerber@suse.de>
-	<53DC4E41.4050200@collabora.co.uk>
-	<CAD=FV=V_vXZLMaTMFdgr62=zRXucZA6D3PvS0Mb40he0ShHTfA@mail.gmail.com>
-	<53DCBC84.8080600@suse.de>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
+Date: Mon, 4 Aug 2014 11:09:20 -0500
+Message-ID: <53DFB030.1070406@opensource.altera.com>
+References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-2-git-send-email-tthayer@opensource.altera.com> <20140731082637.GH9030@lee--X1> <53DAA072.4010902@opensource.altera.com> <20140801081317.GL9030@lee--X1> <53DC146D.1070504@opensource.altera.com> <20140802170811.GA20550@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53DCBC84.8080600@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140802170811.GA20550@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Lee Jones <lee.jones@linaro.org>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Andreas,
 
-On Sat, Aug 2, 2014 at 3:25 AM, Andreas F=C3=A4rber <afaerber@suse.de> =
-wrote:
-> Hi,
+On 08/02/2014 12:08 PM, Steffen Trumtrar wrote:
+> Hi!
 >
-> Am 02.08.2014 06:57, schrieb Doug Anderson:
->> On Fri, Aug 1, 2014 at 7:34 PM, Javier Martinez Canillas
->> <javier.martinez@collabora.co.uk> wrote:
->>> On 08/02/2014 02:52 AM, Andreas F=C3=A4rber wrote:
->>>>
->>>> Based on the preinstalled 3.8 based ChromeOS kernel and previous 3=
-=2E15
->>>> based attempts by Stephan and me that broke for 3.16, I've prepare=
-d a
->>>> device tree for the HP Chromebook 11 aka Google Spring.
->>>>
->>>> v6 renames a node and reverts dp_hpd.
->>>>
->>>> Not yet enabled are trackpad, Wifi and sound.
->>>
->>> I made a comment on patch 05/10 but the rest of the series looks go=
-od to me. So
->>> for the remaining patches:
->>>
->>> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
->>>
->>> NOTE: I thought that Tomasz Figa gave you his Reviewed-by on v5 for=
- the whole
->>> series as well but I didn't see his tag on the v6 patches.
+> On Fri, Aug 01, 2014 at 05:27:57PM -0500, Thor Thayer wrote:
+>> On 08/01/2014 03:13 AM, Lee Jones wrote:
+>>> On Thu, 31 Jul 2014, Thor Thayer wrote:
+>>>> On 07/31/2014 03:26 AM, Lee Jones wrote:
+>>>>> On Wed, 30 Jul 2014, tthayer@opensource.altera.com wrote:
+> [...]
+>
+>>>>>> +u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
+>>>>>> +{
+>>>>>> +	return readl(sdr->reg_base + reg_offset);
+>>>>>> +}
+>>>>>> +EXPORT_SYMBOL_GPL(altera_sdr_readl);
+>>>>>> +
+>>>>>> +void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value)
+>>>>>> +{
+>>>>>> +	writel(value, sdr->reg_base + reg_offset);
+>>>>>> +}
+>>>>>> +EXPORT_SYMBOL_GPL(altera_sdr_writel);
+>> We'd prefer to use syscon and that is what we started with. If you'd
+>> like to be our advocate, I will return to that because it was pretty
+>> clean. My primary concern is to get it upstreamed and if it is MFD
+>> then I'll make the changes.
 >>
->> Yes, I thought that too.  I assume he's OK with the small changes yo=
-u
->> made between v5 and v6.  In the very least his Reviewed-by could be
->> present on the patches that didn't change between the last two revs.
+>> Here are the threads.
+>> http://marc.info/?l=linux-kernel&m=140128791902800&w=2
+> The conclusion of this thread was syscon for offset 0x0, no ?!
+> And if you decide to have new writel/readl functions, I'd prefer if you don't
+> change the order of parameters just because. That always weirds me out, when
+> there are vendorname_writel functions, that only change the API of writel and
+> nothing else (not exactly the case here).
+Hi Steffen,
+
+Yes, I see your point on the order of parameters. i will change it.
+
+As for the syscon only at offset 0, I submitted that in version 7 & 8. 
+It wasn't as clean as the version using syscon for the entire range.  It 
+could also require changes to the SDRAM controller binding as things are 
+added in the future.  My understanding is the bindings should not change 
+significantly and changes are frowned upon.
+
+After going through this exercise in a couple of different ways, I'm 
+leaning toward using syscon for the entire SDRAM controller register range.
+
+Is there a good reason not to use syscon on the entire register range?
+
+Thanks,
+
+Thor
 >
-> I did add it to the bootargs, GPIO, USB3503 patches. All other patche=
-s
-> were either split off or slightly changed due to dp_hpd[_gpio], so I
-> didn't carry it over.
+> Regards,
+> Steffen
 >
->> Given Javier's review and Tomasz's review and Vincent's comments, I'=
-ll
->> probably skip all the work of reviewing the rest of the series unles=
-s
->> someone really wants me to.  ;)
->
-> Could you maybe give an Rb or Ab for the actual Spring patch to have =
-the
-> Cc: updated? :)
-
-Done.
-
-
-> Note that if there's some problem that can't be resolved by selective=
-ly
-> dropping patches, I won't be available next week, so you'll either ha=
-ve
-> to provide fixups for Kukjin to squash or wait till I've returned.
->
-> One thing I've wondered is whether we should put status =3D "disabled=
-" on
-> the dp node with some comment, since it's known not to work as is (bu=
-t
-> better having the data here than leaving it out, I believe).
-
-Don't know about this one.
-
-
-> Of course if either of you has input on the discussions on the drm
-> bridge/panel series V6 [1] for how to enable non-simplefb display and
-> iommus, that would be valuable.
-
-I've been letting the graphics folks and Samsung hash out the graphics
-patches, so I don't think I'll be much help here.
-
-
-> [1] http://www.spinics.net/lists/linux-samsung-soc/msg35274.html
->
->
-> And when one thing is accomplished, I am always quick to look forward=
-:
->
-> I've taken a quick look at sound nodes: According to 3.8 DT, Spring u=
-ses
-> max98089 whereas Snow has 98091, so different codec driver and still
-> lacking DT binding support. I might look into trivially enabling
-> sound/soc/codecs/max98089.c through a "maxim,max98089" OF match table
-> once this series lands in linux-next. As for the driver, can we reuse
-> http://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/tree/so=
-und/soc/samsung/snow.c?h=3Dfor-next
-> with a "google,spring-audio-max98089", or are code changes needed?
-
-I don't know this offhand.
-
-
-> Both of you mentioned limitations of cros_ec i2c passthrough leading =
-to
-> a forked tps65090 driver downstream - I don't think I can be of help
-> there, as I guess simply copying a driver will not be an option. ;)
-> https://code.google.com/p/chromium/issues/detail?id=3D391797
-
-Yup, I think this will be real work for someone.  I made a quick
-attempt and failed at it and I haven't had time to work on it since
-(and don't necessarily expect to have time in the near future)...  I
-think it is possible for anyone versed in i2c to figure this out based
-on what I already posted and what's in our local tree...
-
-
-> For the touchpad it seems DT support has landed in the input tree as
-> "atmel,maxtouch". Backporting just that patch does not make it work
-> though. (Tried the rejected pinctrl approach to be on the safe side.)
-> https://code.google.com/p/chromium/issues/detail?id=3D371114
-> https://patchwork.kernel.org/patch/3976801/
-
-This is the same work as needed for pit and pi, I believe.  Perhaps
-Javier or Dmitry has this on their todo list?
-
-
-> I thought the internal xhci would have the webcam on it, but I don't =
-see
-> it in lsusb. Does that need some pinctrl or tps65090 regulator? Once
-> appearing on a bus, which driver config option will it need?
-
-Perhaps tps65090 FET5?  That looks like what the device tree says in
-our local tree.
-
--Doug
