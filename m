@@ -1,99 +1,83 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
-Date: Mon, 4 Aug 2014 21:25:10 +0200
-Message-ID: <20140804192510.GF3952@lukather>
-References: <20140731192016.GA6869@excalibur.cnev.de>
- <20140803130430.GY3952@lukather>
- <201408031959.27607.arnd@arndb.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 8/9] Add devicetree bindings for Rockchip Soc EDP
+Date: Mon, 04 Aug 2014 21:39:34 +0200
+Message-ID: <4758549.OE3inCP7ZI@diego>
+References: <1407127274-1356-1-git-send-email-mark.yao@rock-chips.com> <1407128159-1930-1-git-send-email-yzq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/A+0zda39IeytcGG"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201408031959.27607.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1407128159-1930-1-git-send-email-yzq@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: mark yao <yzq@rock-chips.com>
+Cc: Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, zwl@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, yxj@rock-chips.com, wxt@roc
 List-Id: devicetree@vger.kernel.org
 
+Am Montag, 4. August 2014, 12:55:59 schrieb mark yao:
+> Signed-off-by: mark yao <yzq@rock-chips.com>
+> ---
+>  .../devicetree/bindings/video/rockchip-panel.txt   |   34
+> ++++++++++++++++++++ 1 file changed, 34 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/rockchip-panel.txt
+> b/Documentation/devicetree/bindings/video/rockchip-panel.txt index
+> f599806..f6d80f6 100644
+> --- a/Documentation/devicetree/bindings/video/rockchip-panel.txt
+> +++ b/Documentation/devicetree/bindings/video/rockchip-panel.txt
+> @@ -80,3 +80,37 @@ Example:
+>  		rockchip,data-width = <24>;
+>  		rockchip,panel = <&panel>;
+>  	};
+> +
+> +Rockchip RK3288 EDP interface
+> +================================
+> +Required properties:
+> +-compatible: "rockchip,rk3288-edp";
+> +
+> +- reg: physical base address of the controller and length
+> +- clocks: from common clock binding: handle to dp clock.
+> +	of memory mapped region.
+> +- clock-names: from common clock binding:
+> +	Required elements: "clk_edp"
+> +			"clk_edp_24m"
+> +			"clk_edp_24m_parent"
+> +			"pclk_edp"
+> +- rockchip,grf: this soc should set GRF regs, so need get grf here.
+> +- resets: Must contain an entry for each entry in reset-names.
+> +	See ../reset/reset.txt for details.
+> +- reset-names: Must include the following entries:
+> +  - edp
+> +- rockchip,panel: required a panel node
+> +
+> +Example:
+> +	edp: edp@ff970000 {
+> +		compatible = "rockchip,rk3288-edp";
+> +                reg = <0xff970000 0x4000>;
+> +                interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&cru SCLK_EDP>, <&cru SCLK_EDP_24M>, <&cru
+> PCLK_EDP_CTRL>, <&xin24m>; +                clock-names = "clk_edp",
+> "clk_edp_24m", "pclk_edp", "clk_edp_24m_parent"; +
 
---/A+0zda39IeytcGG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+clk_epd_24m_parent is not part of the hardware, so instead of referencing the 
+target-parent as part of the device clocks, the new
+	"clk: Support for clock parents and rates assigned from device tree"
+should be used for setting the target parent - so the re-parenting code should 
+also move out of the driver.
 
-On Sun, Aug 03, 2014 at 07:59:27PM +0200, Arnd Bergmann wrote:
-> On Sunday 03 August 2014, Maxime Ripard wrote:
-> > Thanks for reporting this.
-> >=20
-> > From a quick grep, the issue is actually broader than just
-> > Allwinner. At least the following platforms seem to do the same:
-> >   - mvebu
-> >   - axm5516
-> >   - bcm
-> >   - berlin
-> >   - ea3250
-> >   - ecx-2000
-> >   - highbank
-> >   - imx / mxs
-> >   - lpc32xx
-> >   - phy3250
-> >   - picoxcell
-> >   - shmobile
-> >   - rockchip
-> >   - socfpga
-> >   - spear
-> >   - ste
-> >   - zynq
-> >=20
-> > Would you mind sending a patch to fix all these?
->=20
-> I would actually prefer if we could migrate a lot of these files to BSD l=
-icense,
-> provided the original authors agree. We want the dtb blobs to be embeddab=
-le into
-> boot loaders of any license.
+This commit [0] is part of the clk-pull request and thus will most likely be 
+part of 3.17.
 
-Even though I'd be open to having my contributions to DTBs under the
-BSD, is this really a thing?
 
-I mean, for all I know, an OS/Bootloader would just parse a documented
-binary file, and I don't see any derivative work there.
+Heiko
 
-The same argument could be made for example for u-boot modifying a
-DTB I guess.
+[0] 
+http://git.linaro.org/people/mike.turquette/linux.git/commitdiff/86be408bfbd846fab3c4ac21d6f9298bd2e4b790?hp=09575693a2511b5ddae0105546e0d9cefc936e34
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
 
---/A+0zda39IeytcGG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +                rockchip,grf = <&grf>;
+> +                resets = <&cru 111>;
+> +                reset-names = "edp";
+> +		rockchip,panel = <&panel>;
+> +	};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT394WAAoJEBx+YmzsjxAgzXkP/jRz6iE4O89bnLiCiFe6Ewku
-fsZc5VlecZmqhrJQzGciGZEVvxs+7yJJ8A+9JZhvf6Uon0Q1JcKjnJco6TBqDbsc
-kxbXJPhUEm9X4jsqvCTZSCMRNusivDs48EgJC5gEWQL3QqEPInbzrPsdL0v5jGka
-H6zFjJhv3uK1oC2Nlz8iUiBhwU6UYW69G/D3siyTo6sqqIlvK036Yyo1BDZFCyAS
-upZpnHeXykIb+LgjZufVCdCdh/2Y2QehtoyBw+g/YwI3wHVxxrpIuuU5ZNcq+K1S
-J8zJcjs6DcjdyN9dZLjgq7n1QJvR1V0nDuqXcgd8uzQjPMT06Jjmb/HhNW9tLMTR
-aoPF9M1O/SNXuUKhCRLQjobHjfvkYFeQYIPZegz2ScW43/e+o2tuHDrtXnfxxi11
-DXXWSo4mDZeG7Nzo0IbjY/s6IydimsZ4ETKGPIfRrUmZ4WOwQylgklaUpF4fe5g6
-f38QoxIvpP/hP6V4KKTFPUmHFL+Slvt+6y72OSamzBERTUebYhx2EXf2khYkxNwx
-TdGXNptngUIMqCxNsbkbnhBXylBW1z9SyNpNLstSmGAcIlFYmKbI9vPKtzpOYpdQ
-roqLKVV4H2IRRvDB8Mz9cC2RzhPHXZP70IwwN6zA5rWJX7qHe6hixkyxWKykzsW3
-E0dXjf9JQdgwb3CiUS8g
-=v45e
------END PGP SIGNATURE-----
-
---/A+0zda39IeytcGG--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
