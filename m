@@ -1,31 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 1/2] rcar_can: document device tree bindings
-Date: Mon, 04 Aug 2014 21:20:14 +0400
-Message-ID: <53DFC0CE.4050602@cogentembedded.com>
-References: <201408010124.26505.sergei.shtylyov@cogentembedded.com> <53DAB5CF.8000407@pengutronix.de>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v6 10/10] ARM: dts: Add exynos5250-spring device tree
+Date: Mon, 04 Aug 2014 19:31:12 +0200
+Message-ID: <53DFC360.9080304@collabora.co.uk>
+References: <1406940750-15880-1-git-send-email-afaerber@suse.de>	<1406940750-15880-11-git-send-email-afaerber@suse.de> <CAD=FV=WFP53bZAks7t9xybUxpna89Nz=KG+PQwAcxFEH0D+3mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <53DAB5CF.8000407@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WFP53bZAks7t9xybUxpna89Nz=KG+PQwAcxFEH0D+3mw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, open list <linux-kernel@vger.kernel.org>, Julius Werner <jwerner@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hello Doug,
 
-On 08/01/2014 01:31 AM, Marc Kleine-Budde wrote:
+On 08/04/2014 05:22 PM, Doug Anderson wrote:
+>> +
+>> +&pinctrl_0 {
+>> +       s5m8767_dvs: s5m8767-dvs {
+>> +               samsung,pins = "gpd1-0", "gpd1-1", "gpd1-2";
+>> +               samsung,pin-function = <0>;
+>> +               samsung,pin-pud = <1>;
+>> +               samsung,pin-drv = <0>;
+>> +       };
+>> +
+>> +       dp_hpd_gpio: dp-hpd-gpio {
+>> +               samsung,pins = "gpc3-0";
+>> +               samsung,pin-function = <0>;
+>> +               samsung,pin-pud = <3>;
+>> +               samsung,pin-drv = <0>;
+>> +       };
+>> +
+>> +       power_key_irq: power-key-irq {
+>> +               samsung,pins = "gpx1-3";
+>> +               samsung,pin-function = <0>;
+>> +               samsung,pin-pud = <0>;
+>> +               samsung,pin-drv = <0>;
+>> +       };
+> 
+> The fact that snow is missing the pinctrl lines for power and lid is a
+> bug on snow.  Perhaps Javier would be interested in submitting a patch
+> to fix that?
+> 
+> 
 
->> Document the R-Car CAN device tree bindings.
+Sure, added on my TODO list to not only add these missing pin control lines for
+lid and power and reference them on gpio-keys but also to double check if there
+is anything else missing in the mainline Snow DTS that is on the downstream
+Chrome OS one.
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I'll wait for Andreas series to be picked by Kukjin before submit a patch though
+to avoid any unnecessary churn.
 
-> The series looks good from the CAN perpective. I'll apply the patches
-> after we've got an Acked-by from the DT folks.
-
-    How about the prior CAN clock support patch?
-
-> Marc
-
-WBR, Sergei
+Best regards,
+Javier
