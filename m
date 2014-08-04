@@ -1,66 +1,71 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH 1/2] usb: renesas_usbhs: Add device tree bindings documentation
-Date: Mon, 4 Aug 2014 13:24:54 +0900
-Message-ID: <53DF0B16.4040405@renesas.com>
-References: <53DB7EBA.3080004@renesas.com> <53DB97B7.2090203@cogentembedded.com>
+Subject: Re: [PATCH 2/2] usb: renesas_usbhs: Add device tree support for R-Car
+ H2 and M2
+Date: Mon, 4 Aug 2014 13:27:01 +0900
+Message-ID: <53DF0B95.8090203@renesas.com>
+References: <53DB7EC4.5010705@renesas.com> <877g2pxgoi.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53DB97B7.2090203@cogentembedded.com>
+In-Reply-To: <877g2pxgoi.wl%kuninori.morimoto.gx@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Morimoto-san,
 
-(2014/08/01 22:35), Sergei Shtylyov wrote:
-> Hello.
+(2014/08/04 9:05), Kuninori Morimoto wrote:
 > 
-> On 08/01/2014 03:49 PM, Yoshihiro Shimoda wrote:
+> Hi Shimoda-san
 > 
->> Document the device tree bindings for the Renesas USBHS controller.
-> 
+>> This driver supports other SoCs, but they need boards/Soc depend code.
+>> So, this patch adds device tree support for R-Car H2 and M2 initially.
+>>
 >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 >> ---
->>   .../devicetree/bindings/usb/renesas_usbhs.txt      |   24 ++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> 
->> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
->> new file mode 100644
->> index 0000000..e9faa65
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
->> @@ -0,0 +1,24 @@
->> +Renesas Electronics USBHS driver
+> (snip)
+>> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
+>> +{
+>> +	struct renesas_usbhs_platform_info *info;
+>> +	struct renesas_usbhs_driver_param *dparam;
+>> +	u32 tmp;
+>> +	int gpio;
 >> +
->> +Required properties:
->> +  - compatible: Must contain one of the following:
->> +	- "renesas,usbhs-r8a7790"
->> +	- "renesas,usbhs-r8a7791"
->> +  - reg: Base address and length of the register for the USBHS
->> +  - interrupts: Interrupt specifier for the USBHS
->> +  - clocks: A list of phandle + clock specifier pairs
+>> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+>> +	if (!info)
+>> +		return NULL;
 >> +
->> +Optional properties:
->> +  - buswait_bwait: Integer to use BUSWAIT register
+>> +	dparam = &info->driver_param;
+>> +
+>> +	if (of_device_is_compatible(dev->of_node, "renesas,usbhs-r8a7790"))
+>> +		dparam->type = USBHS_TYPE_R8A7790;
+>> +
+>> +	if (of_device_is_compatible(dev->of_node, "renesas,usbhs-r8a7791"))
+>> +		dparam->type = USBHS_TYPE_R8A7791;
+>> +
+>> +	if (!of_property_read_u32(dev->of_node, "buswait_bwait", &tmp))
+>> +		dparam->buswait_bwait = tmp;
+>> +	gpio = of_get_named_gpio_flags(dev->of_node, "enable-gpio", 0, NULL);
+>> +	if (gpio > 0)
+>> +		dparam->enable_gpio = gpio;
+> (snip)
+>> +static const struct of_device_id usbhs_of_match[] = {
+>> +	{ .compatible = "renesas,usbhs-r8a7790"},
+>> +	{ .compatible = "renesas,usbhs-r8a7791"},
+>> +	{ },
 > 
->    Should be named "renesas,buswait-bwait" or probably just "renesas,buswait".
+> How about to use "of_device_id :: data" for USBHS_TYPE_xxx ?
 
-Thank you for the point. I will fix this name to "renesas,buswait".
-
->> +  - enable-gpio: A gpio specifier to check GPIO determining if USB function
-> 
->    Should also be prefixed with "renesas,".
-
-I will fix this name to "renesas,enable-gpio".
+Thank you for the suggestion.
+To remove the "if (of_device_is_compatible(...))", I will use the
+"of_device_id :: data" lile a ".data = (void *)USBHS_TYPE_R8A7790".
 
 Best regards,
 Yoshihiro Shimoda
 
-> [...]
-> 
-> WBR, Sergei
+> Best regards
+> ---
+> Kuninori Morimoto
 > 
