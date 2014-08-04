@@ -1,26 +1,29 @@
-From: Xiaoguang Chen <chenxg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: CCI-400 driver  ARM V8 support
-Date: Mon, 4 Aug 2014 00:03:18 -0700
-Message-ID: <4737A960563B524DA805CA602BE04B30799875DBE8@SC-VEXCH2.marvell.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/2] Add VIN and ADV7180 device tree support for
+ R8A7791/Henninger board
+Date: Mon, 4 Aug 2014 16:08:13 +0900
+Message-ID: <20140804070813.GB1889@verge.net.au>
+References: <201408020402.14560.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <robh+dt-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201408020402.14560.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Aug 02, 2014 at 04:02:13AM +0400, Sergei Shtylyov wrote:
+> Hello.
+> 
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-v3.16-rc7-20140731v2' tag. Here we add the VIN and ADV7180 video
+> decoder device tree support on the R8A7791/Henninger board. The patchset
+> requires Ben Dooks' 'rcar_vin' and 'soc_camera' DT support patches already
+> merged to the 'media_tree.git' in order to work.
+> 
+> [1/2] ARM: shmobile: r8a7791: add VIN DT support
+> [2/2] ARM: shmobile: henninger: add VIN0/ADV7180 DT support
 
-Hi, Grant, Rob
-I'm checking arm cci-400 driver on mainline, and found it only supports ARM v7, but no ARM V8 support.
-Do you have plan to support it? or it is under development?
-
-Thanks
-Xiaoguang
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have queued these up for v3.18.
