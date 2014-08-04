@@ -1,38 +1,31 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 03/11] ARM: brcmstb: add debug UART for earlyprintk
- support
-Date: Mon, 4 Aug 2014 09:56:27 -0700
-Message-ID: <20140804165627.GT3711@ld-irv-0074>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <1405976886-27807-4-git-send-email-computersforpeace@gmail.com>
- <20140802083040.GY30282@n2100.arm.linux.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 1/2] rcar_can: document device tree bindings
+Date: Mon, 04 Aug 2014 21:20:14 +0400
+Message-ID: <53DFC0CE.4050602@cogentembedded.com>
+References: <201408010124.26505.sergei.shtylyov@cogentembedded.com> <53DAB5CF.8000407@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140802083040.GY30282@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Matt Porter <mporter@linaro.org>, Christian Daudt <bcm@fixthebug.org>, linux-arm-kernel@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Marc Carino <marc.ceeeee@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <53DAB5CF.8000407@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 02, 2014 at 09:30:40AM +0100, Russell King wrote:
-> On Mon, Jul 21, 2014 at 02:07:58PM -0700, Brian Norris wrote:
-> > From: Marc Carino <marc.ceeeee@gmail.com>
-> > 
-> > Add the UART definitions needed to support earlyprintk on brcmstb machines.
-> > 
-> > Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
-> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> > Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> 
-> I noticed that you sent this to the patch system.  I asked Olof last
-> night whether he had anything in arm-soc touching Kconfig.debug, and
-> he does (a number of other platforms have updated it.)  This means
-> that if I apply it to my tree, it may conflict, so I'm reluctant to
-> take it.
+Hello.
 
-OK... Matt told me that such patches go through you. So which is it?
-Should all Kconfig.debug patches go through the arm-soc route?
+On 08/01/2014 01:31 AM, Marc Kleine-Budde wrote:
 
-Brian
+>> Document the R-Car CAN device tree bindings.
+
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+> The series looks good from the CAN perpective. I'll apply the patches
+> after we've got an Acked-by from the DT folks.
+
+    How about the prior CAN clock support patch?
+
+> Marc
+
+WBR, Sergei
