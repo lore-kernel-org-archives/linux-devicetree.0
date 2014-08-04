@@ -1,141 +1,134 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
-Date: Mon, 4 Aug 2014 09:41:26 +0100
-Message-ID: <20140804084126.GD3935@lee--X1>
-References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com>
- <1406744573-609-2-git-send-email-tthayer@opensource.altera.com>
- <20140731082637.GH9030@lee--X1>
- <53DAA072.4010902@opensource.altera.com>
- <20140801081317.GL9030@lee--X1>
- <53DC146D.1070504@opensource.altera.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: Add DT changes for display on peach_pi
+Date: Mon, 4 Aug 2014 14:22:06 +0530
+Message-ID: <CAEC9eQNskPt_BFZd7Ed2Faii4dEbjj597HArK2sYMyWL4Sk7UA@mail.gmail.com>
+References: <1406910258-28036-1-git-send-email-ajaykumar.rs@samsung.com>
+	<53DBC641.3090601@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53DC146D.1070504@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, Alan Tull <atull@opensource.altera.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53DBC641.3090601@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, InKi Dae <inki.dae@samsung.com>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 01 Aug 2014, Thor Thayer wrote:
-> On 08/01/2014 03:13 AM, Lee Jones wrote:
-> >On Thu, 31 Jul 2014, Thor Thayer wrote:
-> >>On 07/31/2014 03:26 AM, Lee Jones wrote:
-> >>>On Wed, 30 Jul 2014, tthayer@opensource.altera.com wrote:
-> >>>
-> >>>>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>>>
-> >>>>Add a simple MFD for the Altera SDRAM Controller.
-> >>>>
-> >>>>Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> >>>>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> >>>>---
-> >>>>v1-8: The MFD implementation was not included in the original ser=
-ies.
-> >>>>
-> >>>>v9: New MFD implementation.
-> >>>>---
-> >>>>  MAINTAINERS                    |    5 ++
-> >>>>  drivers/mfd/Kconfig            |    7 ++
-> >>>>  drivers/mfd/Makefile           |    1 +
-> >>>>  drivers/mfd/altera-sdr.c       |  162 +++++++++++++++++++++++++=
-+++++++++++++++
-> >>>>  include/linux/mfd/altera-sdr.h |  102 +++++++++++++++++++++++++
-> >>>>  5 files changed, 277 insertions(+)
-> >>>>  create mode 100644 drivers/mfd/altera-sdr.c
-> >>>>  create mode 100644 include/linux/mfd/altera-sdr.h
+Hi Andreas,
 
-[...]
+Thanks for the comments.
 
-> >>>>+	return readl(sdr->reg_base + reg_offset);
-> >>>>+}
-> >>>>+EXPORT_SYMBOL_GPL(altera_sdr_readl);
-> >>>>+
-> >>>>+void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u=
-32 value)
-> >>>>+{
-> >>>>+	writel(value, sdr->reg_base + reg_offset);
-> >>>>+}
-> >>>>+EXPORT_SYMBOL_GPL(altera_sdr_writel);
-> >>>Why are you abstracting these?
+On Fri, Aug 1, 2014 at 10:24 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
+ wrote:
+> Hi,
+>
+> Am 01.08.2014 18:24, schrieb Ajay Kumar:
+>> Add DT nodes for panel-simple "auo,b133htn01" panel.
+>> Add backlight enable pin and backlight power supply for pwm-backligh=
+t.
+>> Also add panel phandle needed by dp to enable display on peach_pi.
+>>
+>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+>> ---
+>> Changes since V1:
+>> Remove "simple-panel" compatible string and use only ""auo,b133htn01=
+".
+>>
+>>  arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++--------=
+---------
+>>  1 file changed, 10 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/bo=
+ot/dts/exynos5800-peach-pi.dts
+>> index f3ee48b..f8c2e61 100644
+>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> @@ -28,11 +28,13 @@
+>>               i2c20 =3D "/spi@12d40000/cros-ec@0/i2c-tunnel";
+>>       };
+>>
+>> -     backlight {
+>> +     backlight: backlight {
+>>               compatible =3D "pwm-backlight";
+>>               pwms =3D <&pwm 0 1000000 0>;
+>>               brightness-levels =3D <0 100 500 1000 1500 2000 2500 2=
+800>;
+>>               default-brightness-level =3D <7>;
+>> +             enable-gpios =3D <&gpx2 2 0>;
+>
+> For Spring I was asked to use GPIO_ACTIVE_* - here that would mean
+> s/0/GPIO_ACTIVE_HIGH/ IIUC and if necessary
+> #include <dt-bindings/gpio/gpio.h> before the .dtsi #include.
+Ok. I will use  it.
 
-You still didn't answer this?
+> A modified version of your patch for Snow, rebased onto my cleanups, =
+can
+> be found on my spring-next branch.
+>
+>> +             power-supply =3D <&tps65090_fet1>;
+>>               pinctrl-0 =3D <&pwm0_out>;
+>>               pinctrl-names =3D "default";
+>>       };
+>> @@ -98,6 +100,12 @@
+>>               regulator-boot-on;
+>>               regulator-always-on;
+>>       };
+>> +
+>> +     panel: panel-simple {
+>
+> Nit: panel-simple seems backwards in English language, and given that
+> simple-panel would be referring to the implementation, I used just
+> "panel" for Spring.
+Right. All the platforms just use "panel". I will use the same.
 
-> >>>Might be better to use Regmap even.
-> >>regmap seems unnecessarily complex for what we're doing which is wh=
-y
-> >>this method was chosen.
-> >>
-> >>Future drivers will access different sets of registers in the
-> >>device. These drivers won't share bitfields in the same register so
-> >>the MFD seemed like the best solution. Originally we implemented
-> >>this using syscon but that seems to be frowned upon so we changed t=
-o
-> >>using a MFD.
-> >Why was the use of syscon frowned upon?  Can you link me to the
-> >thread?  Writing directly to the registers sounds to me a lot worse
-> >than using infrastructure which was designed for these kinds of
-> >accesses.
-> >
-> >If you do choose to fiddle with the registers in this manner, is the=
-re
-> >any reason why you're calling back into here, rather than using
-> >readl() and writel() directly?
-> >
-> We'd prefer to use syscon and that is what we started with. If you'd
-> like to be our advocate, I will return to that because it was pretty
-> clean. My primary concern is to get it upstreamed and if it is MFD
-> then I'll make the changes.
->=20
-> Here are the threads.
-> http://marc.info/?l=3Dlinux-kernel&m=3D140128791902800&w=3D2
-> and
-> http://article.gmane.org/gmane.linux.kernel/1679601
+>> +             compatible =3D "auo,b133htn01";
+>
+> FWIW this depends on auo,b133htn01 getting added to Documentation and
+> panel-simple, which I think hasn't happened yet?
+>
+> https://patchwork.kernel.org/patch/4625321/
+This version is already old ;)
+Latest version is here:
+http://www.spinics.net/lists/devicetree/msg44158.html
+I hope it will be(is?) merged!
 
-Syscon looks the most appropriate to me.
+Ajay
 
-[...]
-
-> >>>>+EXPORT_SYMBOL_GPL(altera_sdr_mem_size);
-> >>>Should this really be done in here?  Isn't this an SDRAM function?
-> >>>
-> >>This register is part of the SDRAM controller and size information
-> >>may be required by the other drivers that share this memory
-> >>area/need SDRAM information.
-> >Then export a function from the SDRAM driver, not from here.
-> We don't have an SDRAM driver.  Although I could put this in the
-> EDAC driver it would be lost to anyone else wanting this
-> functionality so this seemed to be the logical place.
-
-Why can't you export it from the EDAC driver?
-
-[...]
-
-> >>>>+static int __init altera_sdr_init(void)
-> >>>>+{
-> >>>>+	return platform_driver_register(&altera_sdr_driver);
-> >>>>+}
-> >>>>+postcore_initcall(altera_sdr_init);
-> >>>Why was this chosen?
-> >>We want this to happen pretty early.
-> >If you _need_ this is happen early, core_initcall() is more commonly
-> >used, but _why_ do you need it to happen this early?
-> The syscon driver used this designation. After talking with Alan,
-> this could be changed to a core_initcall(). However, it could also
-> be a subsys_initcall which seems to be more common in the MFD
-> drivers.
-
-That doesn't answer my question still.=20
-
-What is the reason, requirement, need for this driver to be probed so
-early during the boot process?
-
-[...]
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>> +             power-supply =3D <&tps65090_fet6>;
+>> +             backlight =3D <&backlight>;
+>> +     };
+>>  };
+>>
+>>  &dp {
+>> @@ -111,22 +119,7 @@
+>>       samsung,link-rate =3D <0x0a>;
+>>       samsung,lane-count =3D <2>;
+>>       samsung,hpd-gpio =3D <&gpx2 6 0>;
+>> -
+>> -     display-timings {
+>> -             native-mode =3D <&timing1>;
+>> -
+>> -             timing1: timing@1 {
+>> -                     clock-frequency =3D <150660000>;
+>> -                     hactive =3D <1920>;
+>> -                     vactive =3D <1080>;
+>> -                     hfront-porch =3D <60>;
+>> -                     hback-porch =3D <172>;
+>> -                     hsync-len =3D <80>;
+>> -                     vback-porch =3D <25>;
+>> -                     vfront-porch =3D <10>;
+>> -                     vsync-len =3D <10>;
+>> -             };
+>> -     };
+>> +     panel =3D <&panel>;
+>>  };
+>>
+>>  &fimd {
+>
+> Regards,
+> Andreas
+>
+> --
+> SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+> GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=
+=C3=BCrnberg
