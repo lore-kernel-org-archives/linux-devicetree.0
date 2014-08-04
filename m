@@ -1,71 +1,31 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv9 1/3] mfd: altera: Add Altera SDRAM Controller
-Date: Mon, 4 Aug 2014 11:09:20 -0500
-Message-ID: <53DFB030.1070406@opensource.altera.com>
-References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-2-git-send-email-tthayer@opensource.altera.com> <20140731082637.GH9030@lee--X1> <53DAA072.4010902@opensource.altera.com> <20140801081317.GL9030@lee--X1> <53DC146D.1070504@opensource.altera.com> <20140802170811.GA20550@pengutronix.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/2] Documentation: dt-bindings: add dt binding info
+ for dwc2 dr_mode
+Date: Mon, 4 Aug 2014 09:20:42 -0700
+Message-ID: <CAD=FV=Vi07yrO1EEGthUgN7MRV2cmpgmK3F2PrN7DxdUZgb9Sw@mail.gmail.com>
+References: <1407159942-7063-1-git-send-email-kever.yang@rock-chips.com>
+	<1407159942-7063-2-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140802170811.GA20550@pengutronix.de>
+In-Reply-To: <1407159942-7063-2-git-send-email-kever.yang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Lee Jones <lee.jones@linaro.org>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, Alan Tull <atull@opensource.altera.com>
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: Paul Zimmerman <paulz@synopsys.com>, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@vger.kernel.org, Addy Ke <addy.ke@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, wulf <wulf@rock-chips.com>, lyz <lyz@rock-chips.com>, Jingoo Han <jg1.han@samsung.com>, han jiang <hj@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Porter <mporter@linaro.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Felipe Balbi <balbi@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>linux-
 List-Id: devicetree@vger.kernel.org
 
+Kever,
 
-On 08/02/2014 12:08 PM, Steffen Trumtrar wrote:
-> Hi!
+On Mon, Aug 4, 2014 at 6:45 AM, Kever Yang <kever.yang@rock-chips.com> wrote:
+> Indicate that the generic dr_mode binding should be used for dwc2.
 >
-> On Fri, Aug 01, 2014 at 05:27:57PM -0500, Thor Thayer wrote:
->> On 08/01/2014 03:13 AM, Lee Jones wrote:
->>> On Thu, 31 Jul 2014, Thor Thayer wrote:
->>>> On 07/31/2014 03:26 AM, Lee Jones wrote:
->>>>> On Wed, 30 Jul 2014, tthayer@opensource.altera.com wrote:
-> [...]
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
 >
->>>>>> +u32 altera_sdr_readl(struct altera_sdr *sdr, u32 reg_offset)
->>>>>> +{
->>>>>> +	return readl(sdr->reg_base + reg_offset);
->>>>>> +}
->>>>>> +EXPORT_SYMBOL_GPL(altera_sdr_readl);
->>>>>> +
->>>>>> +void altera_sdr_writel(struct altera_sdr *sdr, u32 reg_offset, u32 value)
->>>>>> +{
->>>>>> +	writel(value, sdr->reg_base + reg_offset);
->>>>>> +}
->>>>>> +EXPORT_SYMBOL_GPL(altera_sdr_writel);
->> We'd prefer to use syscon and that is what we started with. If you'd
->> like to be our advocate, I will return to that because it was pretty
->> clean. My primary concern is to get it upstreamed and if it is MFD
->> then I'll make the changes.
->>
->> Here are the threads.
->> http://marc.info/?l=linux-kernel&m=140128791902800&w=2
-> The conclusion of this thread was syscon for offset 0x0, no ?!
-> And if you decide to have new writel/readl functions, I'd prefer if you don't
-> change the order of parameters just because. That always weirds me out, when
-> there are vendorname_writel functions, that only change the API of writel and
-> nothing else (not exactly the case here).
-Hi Steffen,
+> Changes in v3: None
 
-Yes, I see your point on the order of parameters. i will change it.
+Since I gave my Reviewed-by tag for v2 and you made no changes from v2
+to v3, you should make sure you include my Reviewed-by tag in the new
+version.
 
-As for the syscon only at offset 0, I submitted that in version 7 & 8. 
-It wasn't as clean as the version using syscon for the entire range.  It 
-could also require changes to the SDRAM controller binding as things are 
-added in the future.  My understanding is the bindings should not change 
-significantly and changes are frowned upon.
-
-After going through this exercise in a couple of different ways, I'm 
-leaning toward using syscon for the entire SDRAM controller register range.
-
-Is there a good reason not to use syscon on the entire register range?
-
-Thanks,
-
-Thor
->
-> Regards,
-> Steffen
->
+Reviewed-by: Doug Anderson <dianders@chromium.org>
