@@ -1,47 +1,97 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/1] ARM: OMAP: add external clock provider support
-Date: Mon, 4 Aug 2014 15:36:19 +0300
-Message-ID: <53DF7E43.2060907@ti.com>
-References: <1406898948-26113-1-git-send-email-t-kristo@ti.com> <53DF7094.7050601@ti.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v4 06/21] leds: add API for setting torch brightness
+Date: Mon, 04 Aug 2014 14:35:26 +0200
+Message-ID: <53DF7E0E.2060705@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <1405087464-13762-7-git-send-email-j.anaszewski@samsung.com>
+ <20140716215444.GK16460@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53DF7094.7050601@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, sassmann@kpanic.de, jsarha@ti.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20140716215444.GK16460@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/2014 02:37 PM, Peter Ujfalusi wrote:
-> On 08/01/2014 04:15 PM, Tero Kristo wrote:
->> Hi,
+Hi Sakari,
+
+On 07/16/2014 11:54 PM, Sakari Ailus wrote:
+> Hi Jacek,
+>
+> Jacek Anaszewski wrote:
+> ...
+>> diff --git a/include/linux/leds.h b/include/linux/leds.h
+>> index 1a130cc..9bea9e6 100644
+>> --- a/include/linux/leds.h
+>> +++ b/include/linux/leds.h
+>> @@ -44,11 +44,21 @@ struct led_classdev {
+>>   #define LED_BLINK_ONESHOT_STOP    (1 << 18)
+>>   #define LED_BLINK_INVERT    (1 << 19)
+>>   #define LED_SYSFS_LOCK        (1 << 20)
+>> +#define LED_DEV_CAP_TORCH    (1 << 21)
 >>
->> This patch adds possibility to register external clocks (outside the main
->> SoC) on TI boards through device tree. Clock sources as such include for
->> example twl-6030 / twl-6040 chips and variants which can be used to clock
->> for example audio / WLAN chips.
+>>       /* Set LED brightness level */
+>>       /* Must not sleep, use a workqueue if needed */
+>>       void        (*brightness_set)(struct led_classdev *led_cdev,
+>>                         enum led_brightness brightness);
+>> +    /*
+>> +     * Set LED brightness immediately - it is required for flash led
+>> +     * devices as they require setting torch brightness to have
+>> immediate
+>> +     * effect. brightness_set op cannot be used for this purpose because
+>> +     * the led drivers schedule a work queue task in it to allow for
+>> +     * being called from led-triggers, i.e. from the timer irq context.
+>> +     */
 >
-> Just one question to Mike and Tero:
-> would it be possible to have generic binding for such an external clocks?
-> We have the palmas clock driver already upstream which handles the 32K clocks
-> from the PMIC. Palmas class of PMICs can be used with TI/nVidia(/Intel?)
-> platforms. We use Palmas on omap5-uevm, DRA7-EVM also uses Palmas compatible
-> PMIC and some nVidia platform also uses this class of devices (and they all
-> need to have control over the 32K clock(s)).
-
-Other platforms initialize their clocks in different manner, they can 
-use generic of_clk_init I believe. If they can't use that for some 
-reason, then they need to implement something similar to this.
-
--Tero
-
+> Do we need to classify actual devices based on this? I think it's rather
+> a different API behaviour between the LED and the V4L2 APIs.
 >
->> This patch can be queued once someone has a use-case + patches that requires
->> usage of such clocks.
->>
->> -Tero
->>
+> On devices that are slow to control, the behaviour should be asynchronous
+> over the LED API and synchronous when accessed through the V4L2 API. How
+> about implementing the work queue, as I have suggested, in the
+> framework, so
+> that individual drivers don't need to care about this and just implement
+> the
+> synchronous variant of this op? A flag could be added to distinguish
+> devices
+> that are fast so that the work queue isn't needed.
 >
+> It'd be nice to avoid individual drivers having to implement multiple
+> ops to
+> do the same thing, just for differing user space interfacs.
 >
 
+It is not only the matter of a device controller speed. If a flash
+device is to be made accessible from the LED subsystem, then it
+should be also compatible with led-triggers. Some of led-triggers
+call brightness_set op from the timer irq context and thus no
+locking in the callback can occur. This requirement cannot be
+met i.e. if i2c bus is to be used. This is probably the primary
+reason for scheduling work queue tasks in brightness_set op.
+
+Having the above in mind, setting a brightness in a work queue
+task must be possible for all LED Class Flash drivers, regardless
+whether related devices have fast or slow controller.
+
+Let's recap the cost of possible solutions then:
+
+1) Moving the work queues to the LED framework
+
+   - it would probably require extending led_set_brightness and
+     __led_set_brightness functions by a parameter indicating whether it
+     should call brightness_set op in the work queue task or directly;
+   - all existing triggers would have to be updated accordingly;
+   - work queues would have to be removed from all the LED drivers;
+
+2) adding led_set_torch_brightness API
+
+   - no modifications in existing drivers and triggers would be required
+   - instead, only the modifications from the discussed patch would
+     be required
+
+Solution 1 looks cleaner but requires much more modifications.
+
+Best Regards,
+Jacek Anaszewski
