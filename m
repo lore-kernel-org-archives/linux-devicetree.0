@@ -1,86 +1,85 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: DTS: da850-evm: Add node for tlv320aic3106 codec
-Date: Mon, 4 Aug 2014 12:09:56 +0300
-Message-ID: <53DF4DE4.3090305@ti.com>
-References: <1406801934-23334-1-git-send-email-peter.ujfalusi@ti.com>	<1406801934-23334-6-git-send-email-peter.ujfalusi@ti.com>	<53DA519A.4090905@cogentembedded.com>
-	<53DB240F.2030908@ti.com>	<53DB8CEA.9010902@cogentembedded.com>
-	<53DB8FE1.5010207@ti.com>	<53DB9292.7080008@cogentembedded.com>
-	<53DB9751.6030508@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <53DB9751.6030508-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH V3] ARM: dts: Add DT changes for display on peach_pi
+Date: Mon, 04 Aug 2014 15:17:18 +0530
+Message-ID: <1407145638-3803-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, thierry.reding@gmail.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2014 04:34 PM, Peter Ujfalusi wrote:
-> Hi,
-> =
+Add DT nodes for panel-simple "auo,b133htn01" panel.
+Add backlight enable pin and backlight power supply for pwm-backlight.
+Also, add panel phandle needed by dp to enable display on peach_pi.
 
-> On 08/01/2014 04:13 PM, Sergei Shtylyov wrote:
->> Hello.
->>
->> On 08/01/2014 05:02 PM, Peter Ujfalusi wrote:
->>
->>>>     I do. We should follow the standard consistently. Why not call the=
- node
->>>> "sound-codec"?
->>
->>> Well, there is _zero_ cases when the audio codec node is named as
->>> "sound-codec" in linux-next but we have wmXXXX, tlvXXXX, twlXXXX, maxXX=
-XX etc.
->>
->>    Which only means people don't read the standard (which is referred to=
- on
->> http://www.devicetree.org/Device_Tree_Usage, that says the same).
->>
->>> Yeah, there are few DTS files which have codec as node name.
->>> So, no, I'm not going to change the node name from tlv320aic3106.
->>
->>    So you prefer following the bad examples to following the standard?
-> =
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+---
+Changes since V1:
+Remove "simple-panel" compatible string and use only ""auo,b133htn01".
 
-> those bad examples are in the tree and they did went through the review
-> process (arch, DT and probably alsa). But it is interesting that we do not
-> have a single correct node name for audio codecs (probably for other type=
-s also).
+Changes since V2:
+As suggested by Andreas,
+Use GPIO_ACTIVE_HIGH for backlight enable-gpios instead of using 0.
+Change panel node naming from "panel-simple" to "panel".
 
-I have thought about this over the weekend and I would keep the node name f=
-or
-the codec as it is in the patch.
-It is the common practice for audio and it also helps when reading the DT f=
-ile
-to quickly see the audio support on the board. We all use the 'sound' node
-name for audio cards and when we use the name of the codec as node name we =
-do
-not need to look further in the dts file to see what is the codec in used (=
-and
-what/which cpu dai we are using). All this can be seen in the main sound
-support node.
+ arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
->> Well, "the Moor has done his duty, the Moor can go"...
-> =
-
-> Let's ask the DT maintainers what should be the correct approach and some=
-one
-> should go through all the existing DT files and clean them up? People usu=
-ally
-> start reading the code for examples before the standard...
-> =
-
-
-
--- =
-
-P=E9ter
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index f3ee48b..f8c2e61 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -28,11 +28,13 @@
+ 		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm 0 1000000 0>;
+ 		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
+ 		default-brightness-level = <7>;
++		enable-gpios = <&gpx2 2 GPIO_ACTIVE_HIGH>;
++		power-supply = <&tps65090_fet1>;
+ 		pinctrl-0 = <&pwm0_out>;
+ 		pinctrl-names = "default";
+ 	};
+@@ -98,6 +100,12 @@
+ 		regulator-boot-on;
+ 		regulator-always-on;
+ 	};
++
++	panel: panel {
++		compatible = "auo,b133htn01";
++		power-supply = <&tps65090_fet6>;
++		backlight = <&backlight>;
++	};
+ };
+ 
+ &dp {
+@@ -111,22 +119,7 @@
+ 	samsung,link-rate = <0x0a>;
+ 	samsung,lane-count = <2>;
+ 	samsung,hpd-gpio = <&gpx2 6 0>;
+-
+-	display-timings {
+-		native-mode = <&timing1>;
+-
+-		timing1: timing@1 {
+-			clock-frequency = <150660000>;
+-			hactive = <1920>;
+-			vactive = <1080>;
+-			hfront-porch = <60>;
+-			hback-porch = <172>;
+-			hsync-len = <80>;
+-			vback-porch = <25>;
+-			vfront-porch = <10>;
+-			vsync-len = <10>;
+-		};
+-	};
++	panel = <&panel>;
+ };
+ 
+ &fimd {
+-- 
+1.7.9.5
