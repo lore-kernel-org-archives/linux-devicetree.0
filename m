@@ -1,85 +1,724 @@
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
-Subject: [PATCH V3] ARM: dts: Add DT changes for display on peach_pi
-Date: Mon, 04 Aug 2014 15:17:18 +0530
-Message-ID: <1407145638-3803-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, thierry.reding@gmail.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCHv2 1/6] ARM: dts: Add SoC level device tree support for LS1021A
+Date: Mon, 4 Aug 2014 17:39:03 +0800
+Message-ID: <1407145148-29217-2-git-send-email-jingchang.lu@freescale.com>
+References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407145148-29217-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Suresh Gupta <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shaveta Leekha <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Adrian Sendroiu <adrian.sendroiu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for panel-simple "auo,b133htn01" panel.
-Add backlight enable pin and backlight power supply for pwm-backlight.
-Also, add panel phandle needed by dp to enable display on peach_pi.
+From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+Add Freescale LS1021A SoC device tree support
+
+Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Suresh Gupta <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Shaveta Leekha <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Adrian Sendroiu <adrian.sendroiu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Chao Fu <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-Changes since V1:
-Remove "simple-panel" compatible string and use only ""auo,b133htn01".
+ arch/arm/boot/dts/ls1021a.dtsi | 678 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 678 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ls1021a.dtsi
 
-Changes since V2:
-As suggested by Andreas,
-Use GPIO_ACTIVE_HIGH for backlight enable-gpios instead of using 0.
-Change panel node naming from "panel-simple" to "panel".
-
- arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index f3ee48b..f8c2e61 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -28,11 +28,13 @@
- 		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 0 1000000 0>;
- 		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
- 		default-brightness-level = <7>;
-+		enable-gpios = <&gpx2 2 GPIO_ACTIVE_HIGH>;
-+		power-supply = <&tps65090_fet1>;
- 		pinctrl-0 = <&pwm0_out>;
- 		pinctrl-names = "default";
- 	};
-@@ -98,6 +100,12 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+new file mode 100644
+index 0000000..948b9fb
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -0,0 +1,678 @@
++/*
++ * Copyright 2013-2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
 +
-+	panel: panel {
-+		compatible = "auo,b133htn01";
-+		power-supply = <&tps65090_fet6>;
-+		backlight = <&backlight>;
++#include "skeleton64.dtsi"
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "fsl,ls1021a";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		serial0 = &lpuart0;
++		serial1 = &lpuart1;
++		serial2 = &lpuart2;
++		serial3 = &lpuart3;
++		serial4 = &lpuart4;
++		serial5 = &lpuart5;
++		ethernet0 = &enet0;
++		ethernet1 = &enet1;
++		ethernet2 = &enet2;
 +	};
- };
- 
- &dp {
-@@ -111,22 +119,7 @@
- 	samsung,link-rate = <0x0a>;
- 	samsung,lane-count = <2>;
- 	samsung,hpd-gpio = <&gpx2 6 0>;
--
--	display-timings {
--		native-mode = <&timing1>;
--
--		timing1: timing@1 {
--			clock-frequency = <150660000>;
--			hactive = <1920>;
--			vactive = <1080>;
--			hfront-porch = <60>;
--			hback-porch = <172>;
--			hsync-len = <80>;
--			vback-porch = <25>;
--			vfront-porch = <10>;
--			vsync-len = <10>;
--		};
--	};
-+	panel = <&panel>;
- };
- 
- &fimd {
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x0 0x20000000>;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@f00 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0xf00>;
++		};
++
++		cpu@f01 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0xf01>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = 	<GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
++				<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
++				<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
++				<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		interrupt-parent = <&gic>;
++		ranges;
++
++		gic: interrupt-controller@1400000 {
++			compatible = "arm,cortex-a7-gic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x0 0x1401000 0x0 0x1000>,
++				<0x0 0x1402000 0x0 0x1000>,
++				<0x0 0x1404000 0x0 0x2000>,
++				<0x0 0x1406000 0x0 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
++
++		};
++
++		ifc: ifc@1530000 {
++			compatible = "fsl,ifc", "simple-bus";
++			reg = <0x0 0x1530000 0x0 0x10000>;
++			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		dcfg: dcfg@1ee0000 {
++			compatible = "fsl,ls1021a-dcfg";
++			reg = <0x0 0x1ee0000 0x0 0x10000>;
++		};
++
++		esdhc: esdhc@1560000 {
++			compatible = "fsl,esdhc";
++			reg = <0x0 0x1560000 0x0 0x10000>;
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			big-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
++		scfg: scfg@1570000 {
++			compatible = "fsl,ls1021a-scfg";
++			reg = <0x0 0x1570000 0x0 0x10000>;
++		};
++
++		crypto: crypto@1700000 {
++			compatible = "fsl,sec-v5.3", "fsl,sec-v5.0", "fsl,sec-v4.0";
++			fsl,sec-era = <4>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg		 = <0x0 0x1700000 0x0 0x100000>;
++			ranges		 = <0x0 0x0 0x1700000 0x100000>;
++			interrupts	 = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++
++			sec_jr0: jr@10000 {
++				compatible = "fsl,sec-v5.3-job-ring",
++				     "fsl,sec-v5.0-job-ring",
++				     "fsl,sec-v4.0-job-ring";
++				reg = <0x10000 0x10000>;
++				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			sec_jr1: jr@20000 {
++				compatible = "fsl,sec-v5.3-job-ring",
++				     "fsl,sec-v5.0-job-ring",
++				     "fsl,sec-v4.0-job-ring";
++				reg = <0x20000 0x10000>;
++				interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			sec_jr2: jr@30000 {
++				compatible = "fsl,sec-v5.3-job-ring",
++				     "fsl,sec-v5.0-job-ring",
++				     "fsl,sec-v4.0-job-ring";
++				reg = <0x30000 0x10000>;
++				interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			sec_jr3: jr@40000 {
++				compatible = "fsl,sec-v5.3-job-ring",
++				     "fsl,sec-v5.0-job-ring",
++				     "fsl,sec-v4.0-job-ring";
++				reg = <0x40000 0x10000>;
++				interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++		};
++
++		clockgen: clocking@1ee1000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x0 0x1ee1000 0x10000>;
++
++			sysclk: sysclk {
++				compatible = "fixed-clock", "fsl,qoriq-sysclk-2.0";
++				#clock-cells = <0>;
++				clock-frequency = <100000000>;
++				clock-output-names = "sysclk";
++			};
++
++			cga_pll1: pll1@800 {
++				compatible = "fsl,qoriq-core-pll-2.0";
++				#clock-cells = <1>;
++				reg = <0x800 0x10>;
++				clocks = <&sysclk>;
++				clock-output-names = "cga-pll1", "cga-pll1-div2",
++						"cga-pll1-div3", "cga-pll1-div4";
++			};
++
++			cga_pll2: pll2@820 {
++				compatible = "fsl,qoriq-core-pll-2.0";
++				#clock-cells = <1>;
++				reg = <0x820 0x10>;
++				clocks = <&sysclk>;
++				clock-output-names = "cga-pll2", "cga-pll2-div2",
++						"cga-pll2-div3", "cga-pll2-div4";
++			};
++
++			platform_clk: pll@c00 {
++				compatible = "fsl,qoriq-core-pll-2.0";
++				#clock-cells = <1>;
++				reg = <0xc00 0x10>;
++				clocks = <&sysclk>;
++				clock-output-names = "platform-clk", "platform-clk-div2";
++			};
++
++			cluster1_clk: clk0c0@0 {
++				compatible = "fsl,qoriq-core-mux-2.0";
++				#clock-cells = <1>;
++				reg = <0x0 0x10>;
++				clock-names = "pll1cga", "pll1cga-div2";
++				clocks = <&cga_pll1 0>, <&cga_pll1 2>;
++				clock-output-names = "cluster1-clk";
++
++			};
++		};
++
++		dspi0: dspi@2100000 {
++			compatible = "fsl,vf610-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2100000 0x0 0x10000>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&platform_clk 1>;
++			spi-num-chipselects = <5>;
++			big-endian;
++			status = "disabled";
++		};
++
++		dspi1: dspi@2110000 {
++			compatible = "fsl,vf610-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2110000 0x0 0x10000>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&platform_clk 1>;
++			spi-num-chipselects = <5>;
++			big-endian;
++			status = "disabled";
++		};
++
++		i2c0: i2c@2180000 {
++			compatible = "fsl,vf610-i2c";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2180000 0x0 0x10000>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "i2c";
++			clocks = <&platform_clk 1>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@2190000 {
++			compatible = "fsl,vf610-i2c";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2190000 0x0 0x10000>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "i2c";
++			clocks = <&platform_clk 1>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@21a0000 {
++			compatible = "fsl,vf610-i2c";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x21a0000 0x0 0x10000>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "i2c";
++			clocks = <&platform_clk 1>;
++			status = "disabled";
++		};
++
++		uart0: serial@21c0500 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x0 0x21c0500 0x0 0x100>;
++			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>;
++			fifo-size = <15>;
++			status = "disabled";
++		};
++
++		uart1: serial@21c0600 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x0 0x21c0600 0x0 0x100>;
++			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>;
++			fifo-size = <15>;
++			status = "disabled";
++		};
++
++		uart2: serial@21d0500 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x0 0x21d0500 0x0 0x100>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>;
++			fifo-size = <15>;
++			status = "disabled";
++		};
++
++		uart3: serial@21d0600 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x0 0x21d0600 0x0 0x100>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>;
++			fifo-size = <15>;
++			status = "disabled";
++		};
++
++		lpuart0: serial@2950000 {
++			compatible = "fsl,ls1021a-lpuart";
++			reg = <0x0 0x2950000 0x0 0x1000>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&sysclk>;
++			clock-names = "ipg";
++			status = "disabled";
++		};
++
++		lpuart1: serial@2960000 {
++			compatible = "fsl,ls1021a-lpuart";
++			reg = <0x0 0x2960000 0x0 0x1000>;
++			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "ipg";
++			status = "disabled";
++		};
++
++		lpuart2: serial@2970000 {
++			compatible = "fsl,ls1021a-lpuart";
++			reg = <0x0 0x2970000 0x0 0x1000>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "ipg";
++			status = "disabled";
++		};
++
++		lpuart3: serial@2980000 {
++			compatible = "fsl,ls1021a-lpuart";
++			reg = <0x0 0x2980000 0x0 0x1000>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "ipg";
++			status = "disabled";
++		};
++
++		lpuart4: serial@2990000 {
++			compatible = "fsl,ls1021a-lpuart";
++			reg = <0x0 0x2990000 0x0 0x1000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "ipg";
++			status = "disabled";
++		};
++
++		lpuart5: serial@29a0000 {
++			compatible = "fsl,ls1021a-lpuart";
++			reg = <0x0 0x29a0000 0x0 0x1000>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "ipg";
++			status = "disabled";
++		};
++
++		ftm0_1: ftm0_1@29d0000 {
++			compatible = "fsl,ftm-timer";
++			reg = <0x0 0x29d0000 0x0 0x10000>,
++				<0x0 0x29e0000 0x0 0x10000>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "ftm-evt", "ftm-src",
++			        "ftm-evt-counter-en", "ftm-src-counter-en";
++			clocks = <&platform_clk 1>, <&platform_clk 1>,
++			       <&platform_clk 1>, <&platform_clk 1>;
++			big-endian;
++			status = "disabled";
++		};
++
++		pwm3: ftm@2a00000 {
++			compatible = "fsl,vf610-ftm-pwm";
++			#pwm-cells = <3>;
++			reg = <0x0 0x2a00000 0x0 0x10000>;
++			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "ftm_sys", "ftm_ext",
++				"ftm_fix", "ftm_cnt_clk_en";
++			clocks = <&platform_clk 1>, <&platform_clk 1>,
++				<&platform_clk 1>, <&platform_clk 1>;
++			big-endian;
++			status = "disabled";
++		};
++
++		pwm6: ftm@2a30000 {
++			compatible = "fsl,vf610-ftm-pwm";
++			#pwm-cells = <3>;
++			reg = <0x0 0x2a30000 0x0 0x10000>;
++			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "ftm_sys", "ftm_ext",
++				"ftm_fix", "ftm_cnt_clk_en";
++			clocks = <&platform_clk 1>, <&platform_clk 1>,
++				<&platform_clk 1>, <&platform_clk 1>;
++			big-endian;
++			status = "disabled";
++		};
++
++		pwm7: ftm@2a40000 {
++			compatible = "fsl,vf610-ftm-pwm";
++			#pwm-cells = <3>;
++			reg = <0x0 0x2a40000 0x0 0x10000>;
++			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "ftm_sys", "ftm_ext",
++				"ftm_fix", "ftm_cnt_clk_en";
++			clocks = <&platform_clk 1>, <&platform_clk 1>,
++				<&platform_clk 1>, <&platform_clk 1>;
++			big-endian;
++			status = "disabled";
++		};
++
++		wdog0: wdog@2ad0000 {
++			compatible = "fsl,imx21-wdt";
++			reg = <0x0 0x2ad0000 0x0 0x10000>;
++			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "wdog";
++			big-endian;
++		};
++
++		sai1: sai@2b50000 {
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0x2b50000 0x0 0x10000>;
++			interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "sai";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 47>,
++				<&edma0 1 46>;
++			big-endian-regs;
++			status = "disabled";
++		};
++
++		sai2: sai@2b60000 {
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0x2b60000 0x0 0x10000>;
++			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&platform_clk 1>;
++			clock-names = "sai";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 45>,
++				<&edma0 1 44>;
++			big-endian-regs;
++			status = "disabled";
++		};
++
++		edma0: edma@2c00000 {
++			#dma-cells = <2>;
++			compatible = "fsl,vf610-edma";
++			reg = <0x0 0x2c00000 0x0 0x10000>,
++				<0x0 0x2c10000 0x0 0x10000>,
++				<0x0 0x2c20000 0x0 0x10000>;
++			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "edma-tx", "edma-err";
++			dma-channels = <32>;
++			big-endian;
++			clock-names = "dmamux0", "dmamux1";
++			clocks = <&platform_clk 1>,
++				<&platform_clk 1>;
++		};
++
++		mdio0: mdio@2d24000 {
++			compatible = "gianfar";
++			device_type = "mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2d24000 0x0 0x4000>;
++		};
++
++		enet0: ethernet@2d10000 {
++			compatible = "fsl,etsec2";
++			device_type = "network";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			interrupt-parent = <&gic>;
++			model = "eTSEC";
++			fsl,dma-endian-le;
++			fsl,num_rx_queues = <0x1>;
++			fsl,num_tx_queues = <0x1>;
++			ranges;
++
++			queue-group@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x0 0x2d10000 0x0 0x8000>;
++				fsl,rx-bit-map = <0xff>;
++				fsl,tx-bit-map = <0xff>;
++				interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++		};
++
++		enet1: ethernet@2d50000 {
++			compatible = "fsl,etsec2";
++			device_type = "network";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			interrupt-parent = <&gic>;
++			model = "eTSEC";
++			fsl,dma-endian-le;
++			fsl,num_rx_queues = <0x1>;
++			fsl,num_tx_queues = <0x1>;
++			ranges;
++
++			queue-group@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x0 0x2d50000 0x0 0x8000>;
++				fsl,rx-bit-map = <0xff>;
++				fsl,tx-bit-map = <0xff>;
++				interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++		};
++
++		enet2: ethernet@2d90000 {
++			compatible = "fsl,etsec2";
++			device_type = "network";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			interrupt-parent = <&gic>;
++			model = "eTSEC";
++			fsl,dma-endian-le;
++			fsl,num_rx_queues = <0x1>;
++			fsl,num_tx_queues = <0x1>;
++			ranges;
++
++			queue-group@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x0 0x2d90000 0x0 0x8000>;
++				fsl,rx-bit-map = <0xff>;
++				fsl,tx-bit-map = <0xff>;
++				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
++		usb@8600000 {
++			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
++			reg = <0x0 0x8600000 0x0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
++			dr_mode = "host";
++			phy_type = "ulpi";
++		};
++
++		usb@3100000 {
++			compatible = "fsl,fsl-dwc3";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			dwc3 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x3100000 0x0 0x10000>;
++				interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				maximum-speed = "high-speed";
++			};
++		};
++	};
++
++	dcsr {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,dcsr", "simple-bus";
++
++		ranges = <0x0 0x0 0x20000000 0x1000000>;
++
++		dcsr-epu@0 {
++			compatible = "fsl,ls1021a-dcsr-epu";
++			reg = <0x0 0x10000>;
++		};
++
++		dcsr-gdi@100000 {
++			compatible = "fsl,ls1021a-dcsr-gdi";
++			reg = <0x100000 0x10000>;
++		};
++
++		dcsr-dddi@120000 {
++			compatible = "fsl,ls1021a-dcsr-dddi";
++			reg = <0x120000 0x10000>;
++		};
++
++		dcsr-dcfg@220000 {
++			compatible = "fsl,ls1021a-dcsr-dcfg";
++			reg = <0x220000 0x1000>;
++		};
++
++		dcsr-clock@221000 {
++			compatible = "fsl,ls1021a-dcsr-clock";
++			reg = <0x221000 0x1000>;
++		};
++
++		dcsr-rcpm@222000 {
++			compatible = "fsl,ls1021a-dcsr-rcpm";
++			reg = <0x222000 0x1000 0x223000 0x1000>;
++		};
++
++		dcsr-ccp@225000 {
++			compatible = "fsl,ls1021a-dcsr-ccp";
++			reg = <0x225000 0x1000>;
++		};
++
++		dcsr-fusectrl@226000 {
++			compatible = "fsl,ls1021a-dcsr-fusectrl";
++			reg = <0x226000 0x1000>;
++		};
++
++		dcsr-dap@300000 {
++			compatible = "fsl,ls1021a-dcsr-dap";
++			reg = <0x300000 0x10000>;
++		};
++
++		dcsr-cstf@350000 {
++			compatible = "fsl,ls1021a-dcsr-cstf";
++			reg = <0x350000 0x1000 0x3a7000 0x1000>;
++		};
++
++		dcsr-a7rom@360000 {
++			compatible = "fsl,ls1021a-dcsr-a7rom";
++			reg = <0x360000 0x10000>;
++		};
++
++		dcsr-a7cpu@370000 {
++			compatible = "fsl,ls1021a-dcsr-a7cpu";
++			reg = <0x370000 0x8000>;
++		};
++
++		dcsr-a7cti@378000 {
++			compatible = "fsl,ls1021a-dcsr-a7cti";
++			reg = <0x378000 0x4000>;
++		};
++
++		dcsr-etm@37c000 {
++			compatible = "fsl,ls1021a-dcsr-etm";
++			reg = <0x37c000 0x1000 0x37d000 0x3000>;
++		};
++
++		dcsr-hugorom@3a0000 {
++			compatible = "fsl,ls1021a-dcsr-hugorom";
++			reg = <0x3a0000 0x1000>;
++		};
++
++		dcsr-etf@3a1000 {
++			compatible = "fsl,ls1021a-dcsr-etf";
++			reg = <0x3a1000 0x1000 0x3a2000 0x1000>;
++		};
++
++		dcsr-etr@3a3000 {
++			compatible = "fsl,ls1021a-dcsr-etr";
++			reg = <0x3a3000 0x1000>;
++		};
++
++		dcsr-cti@3a4000 {
++			compatible = "fsl,ls1021a-dcsr-cti";
++			reg = <0x3a4000 0x1000 0x3a5000 0x1000 0x3a6000 0x1000>;
++		};
++
++		dcsr-atbrepl@3a8000 {
++			compatible = "fsl,ls1021a-dcsr-atbrepl";
++			reg = <0x3a8000 0x1000>;
++		};
++
++		dcsr-tsgen-ctrl@3a9000 {
++			compatible = "fsl,ls1021a-dcsr-tsgen-ctrl";
++			reg = <0x3a9000 0x1000>;
++		};
++
++		dcsr-tsgen-read@3aa000 {
++			compatible = "fsl,ls1021a-dcsr-tsgen-read";
++			reg = <0x3aa000 0x1000>;
++		};
++	};
++};
 -- 
-1.7.9.5
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
