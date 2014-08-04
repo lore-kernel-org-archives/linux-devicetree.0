@@ -1,51 +1,49 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/9] drm: Add drm driver for Rockchip Socs
-Date: Mon, 4 Aug 2014 16:46:43 +0200
-Message-ID: <20140804144643.GV8727@phenom.ffwll.local>
-References: <1407127274-1356-1-git-send-email-mark.yao@rock-chips.com>
- <1407127507-1612-1-git-send-email-yzq@rock-chips.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks handled by clock_ops domain
+Date: Mon, 04 Aug 2014 17:21:49 +0200
+Message-ID: <1616494.8YxGyrZW3V@avalon>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be> <2717555.fiA6A86F65@avalon> <CAMuHMdVKDQz8q0b2UA7=1K8Qw4n3U0=M+mJyi5UQP7QZdC-JiQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407127507-1612-1-git-send-email-yzq@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: mark yao <yzq@rock-chips.com>
-Cc: heiko@sntech.de, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, huangtao@rock-chips.com, devicetree@vger.kernel.org, zwl@rock-chips.com, cym@rock-chips.com, linux-doc@vger.kernel.org, xw@rock-chips.com, linux-api@vger.kernel.org, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kever.yang@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, xxm@rock-chips.com, yxj@rock-chips.com, wxt@rock-chips.com, kfx@rock
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVKDQz8q0b2UA7=1K8Qw4n3U0=M+mJyi5UQP7QZdC-JiQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Grygorii Strashko <grygorii.strashko@ti.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 04, 2014 at 12:45:07PM +0800, mark yao wrote:
-> This patch is a DRM Driver for Rockchip Socs, driver provides an abstraction
-> for the graphics hardware, such as lcd controller and connector interface.
+Hi Geert,
+
+On Monday 04 August 2014 13:28:32 Geert Uytterhoeven wrote:
+> On Wed, Jul 30, 2014 at 2:06 AM, Laurent Pinchart wrote:
+> > The third option would require storing the clocks lists in device drivers.
+> > I believe this is our best option, as a trade-off between simplicity and
+> > versatility. Drivers that use runtime PM already need to enable it
+> > explicitly when probing devices. Passing a list of clock names to runtime
+> > PM at that point wouldn't complicate drivers much. When the clocks list
+> > isn't SoC- dependent it could be stored as static information. Otherwise
+> > it could be derived from DT (or any other source of hardware description)
+> > using C code, offering all the versatility we need.
+> > 
+> > The only drawback of this solution I can think of right now is that the
+> > runtime PM core couldn't manage device clocks before probing the device.
+> > Specifically device clocks couldn't be managed if no driver is loaded for
+> > that device. I somehow recall that someone raised this as being a
+> > problem, but I can't remember why.
 > 
-> Signed-off-by: mark yao <yzq@rock-chips.com>
-> ---
+> Perhaps you're thinking of clocks that were enabled (by the boot loader or
+> implicit reset state) before running Linux, and aren't disabled?
 
-Just a quick drive-by comment below, don't consider this a full review by
-far ;-)
+That wasn't the reason, I know that clk_disable_unused() takes care of that 
+problem (provided the clock drivers behave correctly, the commit you mention 
+below shows that's not always the case, but that's an unrelated issue).
 
-> +static int lcdc_bind(struct device *dev, struct device *master, void *data)
-> +{
-> +	struct drm_device *drm_dev = data;
-> +	struct rockchip_drm_private *private = drm_dev->dev_private;
-> +	struct lcdc_context *ctx = dev_get_drvdata(dev);
-> +	struct drm_crtc *crtc;
-> +
-> +	ctx->drm_dev = drm_dev;
-> +
-> +	ctx->pipe = rockchip_drm_pipe_get(dev);
-> +	ctx->dpms = DRM_MODE_DPMS_OFF;
-> +	crtc = &ctx->crtc;
-> +
-> +	private->crtc[ctx->pipe] = crtc;
-> +	ctx->plane = rockchip_plane_init(drm_dev, 1 << ctx->pipe, true);
-> +	drm_crtc_init(drm_dev, crtc, &rockchip_crtc_funcs);
+> That was fixed by commit bb178da701382a230e26d90cf94e8a24b280e0d9
+> ("clk: shmobile: mstp: Fix the is_enabled() operation").
 
-This function is deprecated, please use the _with_planes versions so that
-this new driver supports universal planes properly.
-
-Thanks, Daniel
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Regards,
+
+Laurent Pinchart
+
