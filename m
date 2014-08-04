@@ -1,11 +1,13 @@
 From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: [PATCHv2 0/6] ARM: imx: Add Freescale LS1021A SoC and board support
-Date: Mon, 4 Aug 2014 17:39:02 +0800
-Message-ID: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
+Subject: [PATCHv2 3/6] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Mon, 4 Aug 2014 17:39:05 +0800
+Message-ID: <1407145148-29217-4-git-send-email-jingchang.lu@freescale.com>
+References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,49 +18,241 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawn.guo@freescale.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Chen Lu <B46807@freescale.com>, Chao Fu <B44548@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
-and LS1021A-TWR board.
-
-The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
-for high reliability and pack the highest level of integration available
-for sub-3 W embedded communications processors and with a comprehensive
-enablement model focused on ease of programmability.
-
-The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
-PowerPC platform. 
-
-For the detail information about LS1021A SoC, please refer to the RM doc.
-
+Signed-off-by: Chen Lu <B46807@freescale.com>
+Signed-off-by: Chao Fu <B44548@freescale.com>
+Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
 ---
-changes in v2:
-remove unused nodes.
-wakeup the secondary core by IPI call to u-boot standby procedure. 
-add dt-bindings for LS1021A SoC and platform gerenal configuration nodes.
-
-----------------------------------------------------------------
-Jingchang Lu (6):
-      ARM: dts: Add SoC level device tree support for LS1021A
-      ARM: dts: Add initial LS1021A QDS board dts support
-      ARM: dts: Add initial LS1021A TWR board dts support
-      dt-bindings: arm: add Freescale LS1021A SoC device tree binding
-      ARM: imx: Add initial support for Freescale LS1021A
-      ARM: imx: Add Freescale LS1021A SMP support
-
- Documentation/devicetree/bindings/arm/fsl.txt |  37 +++
- arch/arm/boot/dts/Makefile                    |   4 +-
- arch/arm/boot/dts/ls1021a-qds.dts             | 349 ++++++++++++++++++++++++++
- arch/arm/boot/dts/ls1021a-twr.dts             | 204 +++++++++++++++
- arch/arm/boot/dts/ls1021a.dtsi                | 678 ++++++++++++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-imx/Kconfig                     |  14 ++
- arch/arm/mach-imx/Makefile                    |   2 +
- arch/arm/mach-imx/common.h                    |   2 +
- arch/arm/mach-imx/mach-ls1021a.c              |  34 +++
- arch/arm/mach-imx/platsmp.c                   |  32 +++
- 10 files changed, 1357 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+ arch/arm/boot/dts/Makefile        |   3 +-
+ arch/arm/boot/dts/ls1021a-twr.dts | 204 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 206 insertions(+), 1 deletion(-)
  create mode 100755 arch/arm/boot/dts/ls1021a-twr.dts
- create mode 100644 arch/arm/boot/dts/ls1021a.dtsi
- create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index af0d999..571c395 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -240,7 +240,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	vf610-colibri.dtb \
+ 	vf610-cosmic.dtb \
+ 	vf610-twr.dtb \
+-	ls1021a-qds.dtb
++	ls1021a-qds.dtb \
++	ls1021a-twr.dtb
+ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+ 	imx23-olinuxino.dtb \
+ 	imx23-stmp378x_devb.dtb \
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+new file mode 100755
+index 0000000..3b8cc08
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -0,0 +1,204 @@
++/*
++ * Copyright 2013-2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++/dts-v1/;
++#include "ls1021a.dtsi"
++
++/ {
++	model = "LS1021A TWR Board";
++
++	aliases {
++		enet2_rgmii_phy = &rgmii_phy1;
++		enet0_sgmii_phy = &sgmii_phy2;
++		enet1_sgmii_phy = &sgmii_phy0;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_3p3v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++	};
++
++	sound {
++		compatible = "fsl,vf610-sgtl5000";
++		simple-audio-card,name = "FSL-VF610-TWR-BOARD";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++
++		simple-audio-card,cpu = <&sai1>;
++
++		simple-audio-card,codec = <&codec>;
++	};
++};
++
++&dspi1 {
++	bus-num = <0>;
++	status = "okay";
++
++	dspiflash: s25fl064k@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl064k";
++		spi-max-frequency = <16000000>;
++		spi-cpol;
++		spi-cpha;
++		reg = <0>;
++	};
++};
++
++&enet0 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy2>;
++	phy-connection-type = "sgmii";
++	status = "okay";
++};
++
++&enet1 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy0>;
++	phy-connection-type = "sgmii";
++	status = "okay";
++};
++
++&enet2 {
++	phy-handle = <&rgmii_phy1>;
++	phy-connection-type = "rgmii-id";
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++
++	codec: sgtl5000@a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_3p3v>;
++		clocks = <&platform_clk 1>;
++	};
++};
++
++&ifc {
++	status = "okay";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	/* NOR, and CPLD on board */
++	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
++		0x2 0x0 0x0 0x7fb00000 0x0000010>;
++
++		nor@0,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "cfi-flash";
++			reg = <0x0 0x0 0x8000000>;
++			bank-width = <2>;
++			device-width = <1>;
++
++			partition@0 {
++				/* 128KB for rcw */
++				reg = <0x00000000 0x0020000>;
++				label = "NOR bank0 RCW Image";
++			};
++
++			partition@20000 {
++				/* 1MB for DTB */
++				reg = <0x00020000 0x00100000>;
++				label = "NOR DTB Image";
++			};
++
++			partition@120000 {
++				/* 8 MB for Linux Kernel Image */
++				reg = <0x00120000 0x00800000>;
++				label = "NOR Linux Kernel Image";
++			};
++
++			partition@920000 {
++				/* 56MB for Ramdisk Root File System */
++				reg = <0x00920000 0x03600000>;
++				label = "NOR Ramdisk Root File System Image";
++			};
++
++			partition@3f80000 {
++				/* 512KB for bank4 u-boot Image */
++				reg = <0x03f80000 0x80000>;
++				label = "NOR bank4 u-boot Image";
++			};
++
++			partition@4000000 {
++				/* 128KB for bank4 RCW Image */
++				reg = <0x04000000 0x20000>;
++				label = "NOR bank4 RCW Image";
++			};
++
++			partition@4020000 {
++				/* 63MB JFFS2 ROOT File System Image */
++				reg = <0x04020000 0x3f00000>;
++				label = "NOR JFFS2 ROOT File System Image";
++			};
++
++			partition@7f80000 {
++				/* 512KB for bank0 u-boot Image */
++				reg = <0x07f80000 0x80000>;
++				label = "NOR bank0 u-boot Image";
++			};
++		};
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&mdio0 {
++	sgmii_phy0: ethernet-phy@0 {
++		reg = <0x0>;
++	};
++	rgmii_phy1: ethernet-phy@1 {
++		reg = <0x1>;
++	};
++	sgmii_phy2: ethernet-phy@2 {
++		reg = <0x2>;
++	};
++	tbi1: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&pwm6 {
++	status = "okay";
++};
++
++&pwm7 {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
+-- 
+1.8.0
