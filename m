@@ -1,107 +1,54 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v4 2/3] mfd: document DT bindings for Qualcomm SPMI PMICs
-Date: Mon, 04 Aug 2014 16:51:54 +0300
-Message-ID: <53DF8FFA.601@mm-sol.com>
-References: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com> <1406903450-27283-3-git-send-email-svarbanov@mm-sol.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 4/6] dmaengine: rcar-dmac: Add device tree bindings documentation
+Date: Mon, 04 Aug 2014 16:01:42 +0200
+Message-ID: <2984491.bHCssUOyYu@avalon>
+References: <cover.1406766014.git.horms+renesas@verge.net.au> <3dc5d31428846326bf122a2a9b402a2a80e97681.1406766014.git.horms+renesas@verge.net.au> <CAMuHMdVtU_uujbJarBSdqR2hs5+=KTAxhnOU2tEM4MXaaTTG_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406903450-27283-3-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVtU_uujbJarBSdqR2hs5+=KTAxhnOU2tEM4MXaaTTG_A@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Kumar, Stephen, David can I have your Acked/Reviewed-by tag for 2/3 and
-if possible for 3/3. The last patch can wait because currently we don't
-have child peripherals. Thanks.
+Hi Geert,
 
-regards,
-Stan
+Thank you for the review.
 
-On 08/01/2014 05:30 PM, Stanimir Varbanov wrote:
-> Document DT bindings used to describe the Qualcomm SPMI PMICs.
+On Monday 04 August 2014 10:05:49 Geert Uytterhoeven wrote:
+> On Thu, Jul 31, 2014 at 2:34 AM, Simon Horman wrote:
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> > @@ -0,0 +1,98 @@
+> > +* Renesas R-Car DMA Controller Device Tree bindings
+> > +
+> > +Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
+> > +controller instances named DMAC capable of serving multiple clients.
+> > Channels +can be dedicated to specific clients or shared between a large
+> > number of +clients.
+> > +
+> > +DMA clients are connected to the DMAC ports referenced by an 8-bit
+> > identifier +called MID/RID.
 > 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> ---
->  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   64 ++++++++++++++++++++
->  1 files changed, 64 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> new file mode 100644
-> index 0000000..7182b88
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> @@ -0,0 +1,64 @@
-> +          Qualcomm SPMI PMICs multi-function device bindings
-> +
-> +The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
-> +PMICs.  These PMICs use a QPNP scheme through SPMI interface.
-> +QPNP is effectively a partitioning scheme for dividing the SPMI extended
-> +register space up into logical pieces, and set of fixed register
-> +locations/definitions within these regions, with some of these regions
-> +specifically used for interrupt handling.
-> +
-> +The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
-> +interfaced to the chip via the SPMI (System Power Management Interface) bus.
-> +Support for multiple independent functions are implemented by splitting the
-> +16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
-> +each. A function can consume one or more of these fixed-size register regions.
-> +
-> +Required properties:
-> +- compatible:      Should contain one of:
-> +                     "qcom,pm8941"
-> +                     "qcom,pm8841"
-> +                     "qcom,pma8084"
-> +                     or generalized "qcom,spmi-pmic".
-> +- reg:             Specifies the SPMI USID slave address for this device.
-> +                   For more information see:
-> +                   Documentation/devicetree/bindings/spmi/spmi.txt
-> +
-> +Required properties for peripheral child nodes:
-> +- compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
-> +
-> +Optional properties for peripheral child nodes:
-> +- interrupts:      Interrupts are specified as a 4-tuple. For more information
-> +                   see:
-> +                   Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> +- interrupt-names: Corresponding interrupt name to the interrupts property
-> +
-> +Each child node of SPMI slave id represents a function of the PMIC. In the
-> +example below the rtc device node represents a peripheral of pm8941
-> +SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
-> +
-> +Example:
-> +
-> +	spmi {
-> +		compatible = "qcom,spmi-pmic-arb";
-> +
-> +		pm8941@0 {
-> +			compatible = "qcom,pm8941", "qcom,spmi-pmic";
-> +			reg = <0x0 SPMI_USID>;
-> +
-> +			rtc {
-> +				compatible = "qcom,rtc";
-> +				interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-> +				interrupt-names = "alarm";
-> +			};
-> +		};
-> +
-> +		pm8941@1 {
-> +			compatible = "qcom,pm8941", "qcom,spmi-pmic";
-> +			reg = <0x1 SPMI_USID>;
-> +
-> +			regulator {
-> +				compatible = "qcom,regulator";
-> +				regulator-name = "8941_boost";
-> +			};
-> +		};
-> +	};
-> 
+> I think the above sentence can be removed, as it's superseded by the first
+> sentence of the successive paragraph:
 
+I've probably just forgotten to remove the sentence while reworking the 
+documentation. Thanks for reporting it, I'll fix that in the next version.
+
+> > +
+> > +Each DMA client is connected to one dedicated port of the DMAC,
+> > identified by +an 8-bit port number called the MID/RID. A DMA controller
+> > can thus serve up to +256 clients in total. When the number of hardware
+> > channels is lower than the +number of clients to be served, channels must
+> > be shared between multiple DMA +clients. The association of DMA clients
+> > to DMAC channels is fully dynamic and +not described in these device tree
+> > bindings.
 
 -- 
-regards,
-Stan
+Regards,
+
+Laurent Pinchart
+
