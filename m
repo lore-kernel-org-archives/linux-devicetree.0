@@ -1,58 +1,101 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/2] usb: renesas_usbhs: Add device tree bindings documentation
-Date: Mon, 4 Aug 2014 19:47:55 +0900
-Message-ID: <53DF64DB.7000206@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 2/2] usb: renesas_usbhs: Add device tree support for R-Car
+ H2 and M2
+Date: Mon, 4 Aug 2014 19:48:03 +0900
+Message-ID: <53DF64E3.6040000@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: SH-Linux <linux-sh@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for the Renesas USBHS controller.
+This driver supports other SoCs, but they need boards/Soc depend code.
+So, this patch adds device tree support for R-Car H2 and M2 initially.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/usb/renesas_usbhs.txt      |   24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+ drivers/usb/renesas_usbhs/common.c |   44 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-new file mode 100644
-index 0000000..b08c903
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -0,0 +1,24 @@
-+Renesas Electronics USBHS driver
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index 1b9bf8d..b3b6813 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -18,6 +18,8 @@
+ #include <linux/gpio.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+ #include <linux/sysfs.h>
+@@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct platform_device *pdev)
+ /*
+  *		platform functions
+  */
++static const struct of_device_id usbhs_of_match[] = {
++	{
++		.compatible = "renesas,usbhs-r8a7790",
++		.data = (void *)USBHS_TYPE_R8A7790,
++	},
++	{
++		.compatible = "renesas,usbhs-r8a7791",
++		.data = (void *)USBHS_TYPE_R8A7791,
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, usbhs_of_match);
 +
-+Required properties:
-+  - compatible: Must contain one of the following:
-+	- "renesas,usbhs-r8a7790"
-+	- "renesas,usbhs-r8a7791"
-+  - reg: Base address and length of the register for the USBHS
-+  - interrupts: Interrupt specifier for the USBHS
-+  - clocks: A list of phandle + clock specifier pairs
++static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
++{
++	struct renesas_usbhs_platform_info *info;
++	struct renesas_usbhs_driver_param *dparam;
++	const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
++	u32 tmp;
++	int gpio;
 +
-+Optional properties:
-+  - renesas,buswait: Integer to use BUSWAIT register
-+  - renesas,enable-gpio: A gpio specifier to check GPIO determining if USB
-+			 function should be enabled
-+  - phys: phandle + phy specifier pair
-+  - phy-names: must be "usb"
++	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return NULL;
 +
-+Example:
-+	usbhs: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7790";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+	};
++	dparam = &info->driver_param;
++	dparam->type = of_id ? (u32)of_id->data : 0;
++	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
++		dparam->buswait_bwait = tmp;
++	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
++				       NULL);
++	if (gpio > 0)
++		dparam->enable_gpio = gpio;
++
++	return info;
++}
++
+ static int usbhs_probe(struct platform_device *pdev)
+ {
+ 	struct renesas_usbhs_platform_info *info = dev_get_platdata(&pdev->dev);
+@@ -446,6 +485,10 @@ static int usbhs_probe(struct platform_device *pdev)
+ 	struct resource *res, *irq_res;
+ 	int ret;
+
++	/* check device node */
++	if (pdev->dev.of_node)
++		info = pdev->dev.platform_data = usbhs_parse_dt(&pdev->dev);
++
+ 	/* check platform information */
+ 	if (!info) {
+ 		dev_err(&pdev->dev, "no platform information\n");
+@@ -689,6 +732,7 @@ static struct platform_driver renesas_usbhs_driver = {
+ 	.driver		= {
+ 		.name	= "renesas_usbhs",
+ 		.pm	= &usbhsc_pm_ops,
++		.of_match_table = of_match_ptr(usbhs_of_match),
+ 	},
+ 	.probe		= usbhs_probe,
+ 	.remove		= usbhs_remove,
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
