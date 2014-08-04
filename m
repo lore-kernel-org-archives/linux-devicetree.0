@@ -1,83 +1,104 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 8/9] Add devicetree bindings for Rockchip Soc EDP
-Date: Mon, 04 Aug 2014 21:39:34 +0200
-Message-ID: <4758549.OE3inCP7ZI@diego>
-References: <1407127274-1356-1-git-send-email-mark.yao@rock-chips.com> <1407128159-1930-1-git-send-email-yzq@rock-chips.com>
+From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 2/2] Documentation: dt: bindings: sound: Add bindings for CS35L32
+Date: Mon, 4 Aug 2014 15:11:17 -0500
+Message-ID: <1407183077-23807-2-git-send-email-brian.austin@cirrus.com>
+References: <1407183077-23807-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1407128159-1930-1-git-send-email-yzq@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: mark yao <yzq@rock-chips.com>
-Cc: Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, zwl@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, yxj@rock-chips.com, wxt@roc
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407183077-23807-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 4. August 2014, 12:55:59 schrieb mark yao:
-> Signed-off-by: mark yao <yzq@rock-chips.com>
-> ---
->  .../devicetree/bindings/video/rockchip-panel.txt   |   34
-> ++++++++++++++++++++ 1 file changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/rockchip-panel.txt
-> b/Documentation/devicetree/bindings/video/rockchip-panel.txt index
-> f599806..f6d80f6 100644
-> --- a/Documentation/devicetree/bindings/video/rockchip-panel.txt
-> +++ b/Documentation/devicetree/bindings/video/rockchip-panel.txt
-> @@ -80,3 +80,37 @@ Example:
->  		rockchip,data-width = <24>;
->  		rockchip,panel = <&panel>;
->  	};
-> +
-> +Rockchip RK3288 EDP interface
-> +================================
-> +Required properties:
-> +-compatible: "rockchip,rk3288-edp";
-> +
-> +- reg: physical base address of the controller and length
-> +- clocks: from common clock binding: handle to dp clock.
-> +	of memory mapped region.
-> +- clock-names: from common clock binding:
-> +	Required elements: "clk_edp"
-> +			"clk_edp_24m"
-> +			"clk_edp_24m_parent"
-> +			"pclk_edp"
-> +- rockchip,grf: this soc should set GRF regs, so need get grf here.
-> +- resets: Must contain an entry for each entry in reset-names.
-> +	See ../reset/reset.txt for details.
-> +- reset-names: Must include the following entries:
-> +  - edp
-> +- rockchip,panel: required a panel node
-> +
-> +Example:
-> +	edp: edp@ff970000 {
-> +		compatible = "rockchip,rk3288-edp";
-> +                reg = <0xff970000 0x4000>;
-> +                interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +                clocks = <&cru SCLK_EDP>, <&cru SCLK_EDP_24M>, <&cru
-> PCLK_EDP_CTRL>, <&xin24m>; +                clock-names = "clk_edp",
-> "clk_edp_24m", "pclk_edp", "clk_edp_24m_parent"; +
+The patch adds device tree bindings file for the Cirrus Logic CS35L32
 
-clk_epd_24m_parent is not part of the hardware, so instead of referencing the 
-target-parent as part of the device clocks, the new
-	"clk: Support for clock parents and rates assigned from device tree"
-should be used for setting the target parent - so the re-parenting code should 
-also move out of the driver.
+Changes for v2:
+- Remove Gain Manager from DT and move to driver kcontrol
+- Add VP-Supply for regulator
 
-This commit [0] is part of the clk-pull request and thus will most likely be 
-part of 3.17.
+Changes for v3:
+- Add regulator disable for error return in i2c_probe
 
+Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs35l32.txt          |   62 ++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l32.txt
 
-Heiko
+diff --git a/Documentation/devicetree/bindings/sound/cs35l32.txt b/Documentation/devicetree/bindings/sound/cs35l32.txt
+new file mode 100644
+index 0000000..1417d3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l32.txt
+@@ -0,0 +1,62 @@
++CS35L32 audio CODEC
++
++Required properties:
++
++  - compatible : "cirrus,cs35l32"
++
++  - reg : the I2C address of the device for I2C. Address is determined by the level
++  of the AD0 pin. Level 0 is 0x40 while Level 1 is 0x41.
++
++  - VA-supply, VP-supply : power supplies for the device,
++  as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Optional properties:
++
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++  deasserted before communication to the codec starts.
++
++  - cirrus,boost-manager : Boost voltage control.
++  0 = Automatically managed.  Boost-converter output voltage is the higher
++  of the two: Class G or adaptive LED voltage.
++  1 = Automatically managed irrespective of audio, adapting for low-power
++  dissipation when LEDs are ON, and operating in Fixed-Boost Bypass Mode
++  if LEDs are OFF (VBST = VP).
++  2 = (Default) Boost voltage fixed in Bypass Mode (VBST = VP).
++  3 = Boost voltage fixed at 5 V.
++
++  - cirrus,sdout-datacfg : Data configuration for dual CS35L32 applications only.
++  Determines the data packed in a two-CS35L32 configuration.
++  0 = Left/right channels VMON[11:0], IMON[11:0], VPMON[7:0].
++  1 = Left/right channels VMON[11:0], IMON[11:0], STATUS.
++  2 = (Default) left/right channels VMON[15:0], IMON [15:0].
++  3 = Left/right channels VPMON[7:0], STATUS.
++
++  - cirrus,sdout-share : SDOUT sharing. Determines whether one or two CS35L32
++  devices are on board sharing SDOUT.
++  0 = (Default) One IC.
++  1 = Two IC's.
++
++  - cirrus,battery-recovery : Low battery nominal recovery threshold, rising VP.
++  0 = 3.1V
++  1 = 3.2V
++  2 = 3.3V (Default)
++  3 = 3.4V
++
++  - cirrus,battery-threshold : Low battery nominal threshold, falling VP.
++  0 = 3.1V
++  1 = 3.2V
++  2 = 3.3V
++  3 = 3.4V (Default)
++  4 = 3.5V
++  5 = 3.6V
++
++Example:
++
++codec: codec@40 {
++	compatible = "cirrus,cs35l32";
++	reg = <0x40>;
++	reset-gpios = <&gpio 10 0>;
++	cirrus,boost-manager = <0x03>;
++	cirrus,sdout-datacfg = <0x02>;
++	VA-supply = <&reg_audio>;
++};
+-- 
+1.7.9.5
 
-[0] 
-http://git.linaro.org/people/mike.turquette/linux.git/commitdiff/86be408bfbd846fab3c4ac21d6f9298bd2e4b790?hp=09575693a2511b5ddae0105546e0d9cefc936e34
-
-
-
-> +                rockchip,grf = <&grf>;
-> +                resets = <&cru 111>;
-> +                reset-names = "edp";
-> +		rockchip,panel = <&panel>;
-> +	};
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
