@@ -1,51 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/6] dmaengine: rcar-dmac: Add device tree bindings documentation
-Date: Mon, 4 Aug 2014 10:05:49 +0200
-Message-ID: <CAMuHMdVtU_uujbJarBSdqR2hs5+=KTAxhnOU2tEM4MXaaTTG_A@mail.gmail.com>
-References: <cover.1406766014.git.horms+renesas@verge.net.au>
-	<3dc5d31428846326bf122a2a9b402a2a80e97681.1406766014.git.horms+renesas@verge.net.au>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dmaengine: add device tree binding
+ documentation for the nbpfaxi driver
+Date: Mon, 4 Aug 2014 13:38:24 +0530
+Message-ID: <20140804080824.GK8181@intel.com>
+References: <Pine.LNX.4.64.1407191239400.3062@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <3dc5d31428846326bf122a2a9b402a2a80e97681.1406766014.git.horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1407191239400.3062-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 2:34 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> @@ -0,0 +1,98 @@
-> +* Renesas R-Car DMA Controller Device Tree bindings
-> +
-> +Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
-> +controller instances named DMAC capable of serving multiple clients. Channels
-> +can be dedicated to specific clients or shared between a large number of
-> +clients.
-> +
-> +DMA clients are connected to the DMAC ports referenced by an 8-bit identifier
-> +called MID/RID.
+On Sat, Jul 19, 2014 at 12:48:45PM +0200, Guennadi Liakhovetski wrote:
+> The nbpfaxi dmaengine driver doesn't define any new bindings, it only
+> uses standard dmaengine bindings and defines 3 flags for the 3rd parameter
+> of the "dmas" property.
 
-I think the above sentence can be removed, as it's superseded by the first
-sentence of the successive paragraph:
+Applied, these two and two fixups.
 
-> +
-> +Each DMA client is connected to one dedicated port of the DMAC, identified by
-> +an 8-bit port number called the MID/RID. A DMA controller can thus serve up to
-> +256 clients in total. When the number of hardware channels is lower than the
-> +number of clients to be served, channels must be shared between multiple DMA
-> +clients. The association of DMA clients to DMAC channels is fully dynamic and
-> +not described in these device tree bindings.
+While applying noticed that it doesn't have depends on any arch. Though the
+driver did compile well for few I tried (x86,x64,arm..) we might want to add
+arch dependency.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Thanks
+-- 
+~Vinod
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
