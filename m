@@ -1,71 +1,37 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH 2/2] usb: renesas_usbhs: Add device tree support for R-Car
- H2 and M2
-Date: Mon, 4 Aug 2014 13:27:01 +0900
-Message-ID: <53DF0B95.8090203@renesas.com>
-References: <53DB7EC4.5010705@renesas.com> <877g2pxgoi.wl%kuninori.morimoto.gx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <877g2pxgoi.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+From: mark yao <mark.yao@rock-chips.com>
+Subject: [PATCH 0/9] Add drm driver for Rockchip Socs
+Date: Mon,  4 Aug 2014 12:41:14 +0800
+Message-ID: <1407127274-1356-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: heiko@sntech.de, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, zwl@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, yxj@rock-chips.com, wxt@rock-chips.com, xw@rock-chips.com, mark yao <yzq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+From: mark yao <yzq@rock-chips.com>
 
-(2014/08/04 9:05), Kuninori Morimoto wrote:
-> 
-> Hi Shimoda-san
-> 
->> This driver supports other SoCs, but they need boards/Soc depend code.
->> So, this patch adds device tree support for R-Car H2 and M2 initially.
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> ---
-> (snip)
->> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
->> +{
->> +	struct renesas_usbhs_platform_info *info;
->> +	struct renesas_usbhs_driver_param *dparam;
->> +	u32 tmp;
->> +	int gpio;
->> +
->> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
->> +	if (!info)
->> +		return NULL;
->> +
->> +	dparam = &info->driver_param;
->> +
->> +	if (of_device_is_compatible(dev->of_node, "renesas,usbhs-r8a7790"))
->> +		dparam->type = USBHS_TYPE_R8A7790;
->> +
->> +	if (of_device_is_compatible(dev->of_node, "renesas,usbhs-r8a7791"))
->> +		dparam->type = USBHS_TYPE_R8A7791;
->> +
->> +	if (!of_property_read_u32(dev->of_node, "buswait_bwait", &tmp))
->> +		dparam->buswait_bwait = tmp;
->> +	gpio = of_get_named_gpio_flags(dev->of_node, "enable-gpio", 0, NULL);
->> +	if (gpio > 0)
->> +		dparam->enable_gpio = gpio;
-> (snip)
->> +static const struct of_device_id usbhs_of_match[] = {
->> +	{ .compatible = "renesas,usbhs-r8a7790"},
->> +	{ .compatible = "renesas,usbhs-r8a7791"},
->> +	{ },
-> 
-> How about to use "of_device_id :: data" for USBHS_TYPE_xxx ?
+This a series of patches is a DRM Driver for Rockchip Socs, driver provides
+an abstraction for the graphics hardware, as lcd controller and
+connector interface.
 
-Thank you for the suggestion.
-To remove the "if (of_device_is_compatible(...))", I will use the
-"of_device_id :: data" lile a ".data = (void *)USBHS_TYPE_R8A7790".
+add rk3288 lcd controller.
+add rk3288 lvds and rk3288 edp connector.
 
-Best regards,
-Yoshihiro Shimoda
+Tested on rk3288 sdk board, use lvds or edp connector, boot and display OK
 
-> Best regards
-> ---
-> Kuninori Morimoto
-> 
+mark yao (9):
+  drm: Add drm driver for Rockchip Socs
+  Add devicetree bindings for panels used by the Rockchip DRM
+  drm: add driver for panels used by the Rockchip DRM
+  Add devicetree bindings for Rockchip lcd controller
+  drm: add Rockchip rk3288 lcd controller driver
+  Add devicetree bindings for Rockchip Soc LVDS
+  drm: add Rockchip Soc rk3288 lvds connector
+  Add devicetree bindings for Rockchip Soc EDP
+  drm: add Rockchip Soc rk3288 edp connector
+
+
+-- 
+1.7.9.5
+
+
