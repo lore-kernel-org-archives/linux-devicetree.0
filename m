@@ -1,52 +1,60 @@
-Return-Path: <ulf.hansson@linaro.org>
+Return-Path: <delicious.quinoa@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VPHJKodvF6RHFwrQzew=RKpz68nUFgO3+2Y3hsM4jrGA@mail.gmail.com>
-References: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
-	<1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
-	<CAD=FV=VPHJKodvF6RHFwrQzew=RKpz68nUFgO3+2Y3hsM4jrGA@mail.gmail.com>
-Date: Tue, 12 Aug 2014 14:17:35 +0200
-Message-ID: <CAPDyKFoCvRpGxeWgEtt4sa5+Ftji0BRaz=yiXg_0xuge_9ZN9Q@mail.gmail.com>
-Subject: Re: [PATCH] mmc: dw_mmc: add support for RK3288
-From: Ulf Hansson <ulf.hansson@linaro.org>
+In-Reply-To: <20140802002301.GC11170@amd.pavel.ucw.cz>
+References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
+	<1406932118-13885-3-git-send-email-atull@opensource.altera.com>
+	<20140802002301.GC11170@amd.pavel.ucw.cz>
+Date: Tue, 5 Aug 2014 12:11:18 -0500
+Message-ID: <CANk1AXT1mfyiC0WDSBMKRYn-WFWM0DzqTUWqtuTnKWa9dTMdfQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] fpga bus driver
+From: Alan Tull <delicious.quinoa@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-To: Doug Anderson <dianders@chromium.org>, Addy Ke <addy.ke@rock-chips.com>
-Cc: Chris Ball <chris@printf.net>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, han jiang <hj@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Lin Huang <hl@rock-chips.com>
+To: Pavel Machek <pavel@denx.de>
+Cc: atull@opensource.altera.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 31 July 2014 17:40, Doug Anderson <dianders@chromium.org> wrote:
-> Addy,
+On Fri, Aug 1, 2014 at 7:23 PM, Pavel Machek <pavel@denx.de> wrote:
 >
-> On Wed, Jul 30, 2014 at 11:01 PM, Addy Ke <addy.ke@rock-chips.com> wrote:
->> This patch focuses on clock setting for RK3288 mmc controller.
->>
->> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
->> and if DDR 8bit mode, CLKDIV register must be set 1.
->>
->> Reported-by Doug Anderson <dianders@chromium.org>
->> Suggested-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Suggested-by: Doug Anderson <dianders@chromium.org>
+> Hi!
 >
-> You don't need "Suggested-by" and "Reported-by" for people who
-> reviewed your patch.  Suggested-by is usually when someone suggested
-> an overall feature and Reported-by is usually when someone reported a
-> bug in code that already landed.
+> > Here's a simple example. Start with:
+> >   * the altera-gpio driver built in to the kernel but not in the
+> >     device tree.
+> >   * raw fpga image at /lib/firmware/soc_system.rbf
+> >   * Load appropriate device tree overlay in configfs by doing
+> >     $ mkdir /config/device-tree/overlays/1
+> >     $ echo socfpga_overlay.dtbo > /config/device-tree/overlays/1/path
+> >   * This results in the FPGA getting programmed and the altera
+> >     gpio driver getting probed.
 >
-> You could add me as a Signed-off-by, though, since you folded in some
-> code that I wrote.
->
-> I think whoever applies this could fixup the tags, so:
->
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Tested-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
->
+> Nice!
 
-Thanks! Queued for 3.18, with corrected tags.
-
-Kind regards
-Uffe
+Thanks!
 
 >
-> It would be great to see this applied unless there are other objections.  :)
+> > +/* Find the fpga manager that is pointed to by a phandle */
+> > +struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
+> > +                                         const char *mgr_property,
+> > +                                         int *ret)
+> > +{
+> > +     struct fpga_manager *mgr;
+> > +     struct device_node *mgr_node;
+> > +
+> > +     mgr_node = of_parse_phandle(node, mgr_property, 0);
+> > +
+> > +     if (!mgr_node) {
+> > +             *ret = -ENODEV;
+> > +             return NULL;
 >
-> -Doug
+> Could IS_ERR_OR_NULL() and friends be used to get reasonable calling
+
+Yes, that would be much simpler here.  I could get rid of the 'ret'.
+
+> convention?
+>
+> Thanks,
+>                                                                         Pavel
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
