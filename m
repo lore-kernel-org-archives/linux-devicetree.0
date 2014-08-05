@@ -1,133 +1,106 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 05/13] thermal: rcar: Document SoC-specific bindings
-Date: Tue, 5 Aug 2014 10:57:25 +0200
-Message-ID: <CAMuHMdVHRcXYgCPtWcMzRvofp7OK3ugLW9ztOHM5ey3_atz6MA@mail.gmail.com>
-References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
-	<1404908623-909-6-git-send-email-geert+renesas@glider.be>
-	<20140711091358.GK12420@verge.net.au>
-	<1405435735.28592.50.camel@rzhang1-toshiba>
-	<87mwcakpzw.wl%kuninori.morimoto.gx@renesas.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 01/15] drm/panel: add prepare and unprepare routines
+Date: Tue, 05 Aug 2014 11:00:06 +0200
+Message-ID: <53E09D16.9090701@samsung.com>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com> <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <87mwcakpzw.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.orgdri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 16, 2014 at 4:16 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->> > > The documentation only mentioned the generic fallback compatible property.
->> > > Add the missing SoC-specific compatible properties, some of which are
->> > > already in use.
->> > >
->> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> > > Cc: Zhang Rui <rui.zhang@intel.com>
->> > > Cc: Eduardo Valentin <eduardo.valentin@ti.com>
->> > > Cc: linux-pm@vger.kernel.org
->> >
->> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
->>
->> Kuninori,
->>
->> what' your opinion of this patch?
->>
->> thanks,
->> rui
->> >
->> > > ---
->> > >  .../devicetree/bindings/thermal/rcar-thermal.txt       | 18 ++++++++++++------
->> > >  1 file changed, 12 insertions(+), 6 deletions(-)
->> > >
->> > > diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
->> > > index 28ef498a66e5..0ef00be44b01 100644
->> > > --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
->> > > +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
->> > > @@ -1,7 +1,13 @@
->> > >  * Renesas R-Car Thermal
->> > >
->> > >  Required properties:
->> > > -- compatible             : "renesas,rcar-thermal"
->> > > +- compatible             : "renesas,thermal-<soctype>", "renesas,rcar-thermal"
->> > > +                   as fallback.
->> > > +                   Examples with soctypes are:
->> > > +                     - "renesas,thermal-r8a73a4" (R-Mobile AP6)
->> > > +                     - "renesas,thermal-r8a7779" (R-Car H1)
->> > > +                     - "renesas,thermal-r8a7790" (R-Car H2)
->> > > +                     - "renesas,thermal-r8a7791" (R-Car M2)
->> > >  - reg                    : Address range of the thermal registers.
->> > >                     The 1st reg will be recognized as common register
->> > >                     if it has "interrupts".
->> > > @@ -12,18 +18,18 @@ Option properties:
->> > >
->> > >  Example (non interrupt support):
->> > >
->> > > -thermal@e61f0100 {
->> > > - compatible = "renesas,rcar-thermal";
->> > > - reg = <0xe61f0100 0x38>;
->> > > +thermal@ffc48000 {
->> > > + compatible = "renesas,thermal-r8a7779", "renesas,rcar-thermal";
->> > > + reg = <0xffc48000 0x38>;
->> > >  };
->> > >
->> > >  Example (interrupt support):
->> > >
->> > >  thermal@e61f0000 {
->> > > - compatible = "renesas,rcar-thermal";
->> > > + compatible = "renesas,thermal-r8a73a4", "renesas,rcar-thermal";
->> > >   reg = <0xe61f0000 0x14
->> > >           0xe61f0100 0x38
->> > >           0xe61f0200 0x38
->> > >           0xe61f0300 0x38>;
->> > > - interrupts = <0 69 4>;
->> > > + interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
->> > >  };
->
-> This patch and [12/13] are adding SoC-specific compatible name.
-> Of course we don't know future request,
-> and, adding SoC-specific compatible name for
-> fallbacking is nice safety for us.
-> So, I don't have strong objection about it.
->
-> But, thermal driver side do nothing for each
-> SoC-specific compatible name at this point.
-> This means
->
->  -> There is no trouble in driver/SoC
->  -> Add new (and not used) compatible name
->  -> Nothing happen in driver/SoC
->
-> My questions are...
->  1) How to verify this patch ?
->  2) Do we need to update example SoC "specific name" list in rcar-thermal.txt.
->     Few example codes are very enough ?
+Hi Ajay,
 
-One important thing to note in my patch description is "some of which
-are already in use.".
+I am glad we have finally more fine-grained callbacks.
+Just few nitpicks.
 
-$ git grep renesas,thermal -- arch/arm/boot/ | cat
-arch/arm/boot/dts/r8a7790.dtsi: compatible =
-"renesas,thermal-r8a7790", "renesas,rcar-thermal";
-arch/arm/boot/dts/r8a7791.dtsi: compatible =
-"renesas,thermal-r8a7791", "renesas,rcar-thermal";
-$
+On 07/31/2014 07:42 PM, Ajay Kumar wrote:
+> Most of the panels need an init sequence as mentioned below:
+> 	-- poweron LCD unit/LCD_EN
+> 	-- start video data
+> 	-- poweron LED unit/BACKLIGHT_EN
+> And, a de-init sequence as mentioned below:
+> 	-- poweroff LED unit/BACKLIGHT_EN
+> 	-- stop video data
+> 	-- poweroff LCD unit/LCD_EN
+> With existing callbacks for drm panel, we cannot accomodate such panels,
+> since only two callbacks, i.e "panel_enable" and panel_disable are supported.
+> 
+> This patch adds:
+> 	-- "prepare" callback which can be called before
+> 	the actual video data is on, and then call the "enable"
+> 	callback after the video data is available.
+> 
+> 	-- "unprepare" callback which can be called after
+> 	the video data is off, and use "disable" callback
+> 	to do something before switching off the video data.
+> 
+> Now, we can easily map the above scenario as shown below:
+> 	poweron LCD unit/LCD_EN = "prepare" callback
+> 	poweron LED unit/BACKLIGHT_EN = "enable" callback
+> 	poweroff LED unit/BACKLIGHT_EN = "disable" callback
+> 	poweroff LCD unit/LCD_EN = "unprepare" callback
+> 
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+>  include/drm/drm_panel.h |   18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index c2ab77a..9addc69 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -31,7 +31,9 @@ struct drm_device;
+>  struct drm_panel;
+>  
+>  struct drm_panel_funcs {
+> +	int (*unprepare)(struct drm_panel *panel);
+>  	int (*disable)(struct drm_panel *panel);
+> +	int (*prepare)(struct drm_panel *panel);
+>  	int (*enable)(struct drm_panel *panel);
+>  	int (*get_modes)(struct drm_panel *panel);
+>  };
+> @@ -46,6 +48,14 @@ struct drm_panel {
+>  	struct list_head list;
+>  };
+>  
+> +static inline int drm_panel_unprepare(struct drm_panel *panel)
+> +{
+> +	if (panel && panel->funcs && panel->funcs->unprepare)
+> +		return panel->funcs->unprepare(panel);
+> +
+> +	return panel ? -ENOSYS : -EINVAL;
+> +}
 
-So these 2 should be added to the documentation for sure.
-Adding the 2 others, and adding them to the respective DTSes (cfr. the
-other patches in the series) doesn't hurt, and will help if an incompatibility
-ever arises.
+Wouldn't be better to return 0 in case there is no callback.
+In such case we could avoid implementing ugly dummy callbacks in
+each panel driver. This is true for all
+prepare/unprepare/enable/disable callbacks.
 
-(I assume the driver works with the other DTSes that already claim to have
-a device compatible with "renesas,rcar-thermal").
+Regards
+Andrzej
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +
+>  static inline int drm_panel_disable(struct drm_panel *panel)
+>  {
+>  	if (panel && panel->funcs && panel->funcs->disable)
+> @@ -54,6 +64,14 @@ static inline int drm_panel_disable(struct drm_panel *panel)
+>  	return panel ? -ENOSYS : -EINVAL;
+>  }
+>  
+> +static inline int drm_panel_prepare(struct drm_panel *panel)
+> +{
+> +	if (panel && panel->funcs && panel->funcs->prepare)
+> +		return panel->funcs->prepare(panel);
+> +
+> +	return panel ? -ENOSYS : -EINVAL;
+> +}
+> +
+>  static inline int drm_panel_enable(struct drm_panel *panel)
+>  {
+>  	if (panel && panel->funcs && panel->funcs->enable)
+> 
