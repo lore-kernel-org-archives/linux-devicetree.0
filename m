@@ -1,112 +1,74 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 1/3] tty: serial: 8250: Add new capability for highspeed register
-Date: Tue,  5 Aug 2014 12:54:11 +0200
-Message-ID: <1407236054-30994-2-git-send-email-matthias.bgg@gmail.com>
-References: <1407236054-30994-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1407236054-30994-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, matthias.bgg@gmail.com, heikki.krogerus@linux.intel.com, alan@linux.intel.com, paul.gortmaker@windriver.com, asierra@xes-inc.com, mwelling@ieee.org, dianders@chromium.org, m-karicheri2@ti.com, jschultz@xes-inc.com, mingo@elte.hu, balbi@ti.com, heiko@sntech.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_sai: Add asynchronous mode support
+Date: Tue, 05 Aug 2014 16:29:50 +0530
+Message-ID: <53E0B926.9010103@gmail.com>
+References: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, b42378@freescale.com, b02247@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new capability to the 8250 driver framework. The Mediatek UART
-port has a highspeed register to set the baudrate the port will work with.
-This influences the calculation of the divisor.
+On 08/05/2014 01:02 PM, Nicolin Chen wrote:
+> From: Nicolin Chen <Guangyu.Chen@freescale.com>
+>
+> SAI supports these operation modes:
+> 1) asynchronous mode
+>     Both Tx and Rx are set to be asynchronous.
+> 2) synchronous mode (Rx sync with Tx)
+>     Tx is set to be asynchronous, Rx is set to be synchronous.
+> 3) synchronous mode (Tx sync with Rx)
+>     Rx is set to be asynchronous, Tx is set to be synchronous.
+> 4) synchronous mode (Tx/Rx sync with another SAI's Tx)
+> 5) synchronous mode (Tx/Rx sync with another SAI's Rx)
+>
+> * 4) and 5) are beyond this patch because they are related with another SAI.
+>
+> As the initial version of this SAI driver, it supported 2) as default while
+> the others were totally missing.
+>
+> So this patch just adds supports for 1) and 3).
+>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>   .../devicetree/bindings/sound/fsl-sai.txt          | 16 ++++++++++++
+>   sound/soc/fsl/fsl_sai.c                            | 30 +++++++++++++++++++---
+>   sound/soc/fsl/fsl_sai.h                            |  4 +++
+>   3 files changed, 46 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> index 0f4e238..77864f4 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> @@ -24,6 +24,22 @@ Required properties:
+>   - big-endian-data: If this property is absent, the little endian mode will
+>     be in use as default, or the big endian mode will be in use for all the
+>     fifo data.
+> +- fsl,sai-synchronous-rx: This is a boolean property. If present, indicating
+> +  that SAI will work in the synchronous mode (sync Tx with Rx) which means
+> +  both the transimitter and receiver will send and receive data by following
+> +  receiver's bit clocks and frame sync clocks.
+> +- fsl,sai-asynchronous: This is a boolean property. If present, indicating
+> +  that SAI will work in the asynchronous mode, which means both transimitter
+> +  and receiver will send and receive data by following their own bit clocks
+> +  and frame sync clocks separately.
+>
+Would be readable if it like this...
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- drivers/tty/serial/8250/8250.h      |    1 +
- drivers/tty/serial/8250/8250_core.c |   47 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/serial_reg.h     |    6 +++++
- 3 files changed, 54 insertions(+)
+fsl,sai-synchronous-rx: This is a boolean property. If present, indicating
+			that SAI will work in the synchronous mode (sync Tx with Rx) which means
+			both the transimitter and receiver will send and receive data by following
+			receiver's bit clocks and frame sync clocks.
+- fsl,sai-asynchronous: This is a boolean property. If present, indicating
+			that SAI will work in the asynchronous mode, which means both transimitter
+			and receiver will send and receive data by following their own bit clocks
+			and frame sync clocks separately.
+.....
 
-diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-index 1ebf853..2b17655 100644
---- a/drivers/tty/serial/8250/8250.h
-+++ b/drivers/tty/serial/8250/8250.h
-@@ -70,6 +70,7 @@ struct serial8250_config {
- #define UART_CAP_UUE	(1 << 12)	/* UART needs IER bit 6 set (Xscale) */
- #define UART_CAP_RTOIE	(1 << 13)	/* UART needs IER bit 4 set (Xscale, Tegra) */
- #define UART_CAP_HFIFO	(1 << 14)	/* UART has a "hidden" FIFO */
-+#define UART_CAP_HIGHS	(1 << 15)	/* UART has a highspeed register (Mediatek) */
- 
- #define UART_BUG_QUOT	(1 << 0)	/* UART has buggy quot LSB */
- #define UART_BUG_TXEN	(1 << 1)	/* UART has buggy TX IIR status */
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index 27f7ad6..a0c531b 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -2434,6 +2434,53 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
- 	serial_dl_write(up, quot);
- 
- 	/*
-+	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
-+	 *
-+	 * We need to recalcualte the quot register, as the claculation depends
-+	 * on the vaule in the highspeed register.
-+	 *
-+	 * Some baudrates are not supported by the chip, so we use the next
-+	 * lower rate supported.
-+	 *
-+	 * If highspeed register is set to 3, we need to specify sample count
-+	 * and sample point to increase accuracy. If not, we reset the
-+	 * registers to their default values.
-+	 */
-+	if (up->port.flags & UART_CAP_HIGHS) {
-+		if (baud <= 115200) {
-+			serial_port_out(port, UART_MTK_HIGHS, 0x0);
-+		} else if (baud <= 576000) {
-+			serial_port_out(port, UART_MTK_HIGHS, 0x2);
-+
-+			/* Set to next lower baudrate supported */
-+			if ((baud == 500000) || (baud == 576000))
-+				baud = 460800;
-+			quot = DIV_ROUND_CLOSEST(port->uartclk, 4 * baud);
-+		} else {
-+			serial_port_out(port, UART_MTK_HIGHS, 0x3);
-+
-+			/* Set to highest baudrate supported */
-+			if (baud >= 1152000)
-+				baud = 1000000;
-+			quot = DIV_ROUND_CLOSEST(port->uartclk, 256 * baud);
-+		}
-+
-+		serial_dl_write(up, quot);
-+
-+		if (baud > 460800) {
-+			unsigned int tmp;
-+
-+			tmp = DIV_ROUND_CLOSEST(port->uartclk, quot * baud);
-+			serial_port_out(port, UART_MTK_SAMPLE_COUNT, tmp - 1);
-+			serial_port_out(port, UART_MTK_SAMPLE_POINT,
-+						(tmp - 2) >> 1);
-+		} else {
-+			serial_port_out(port, UART_MTK_SAMPLE_COUNT, 0x00);
-+			serial_port_out(port, UART_MTK_SAMPLE_POINT, 0xff);
-+		}
-+	}
-+
-+	/*
- 	 * XR17V35x UARTs have an extra fractional divisor register (DLD)
- 	 *
- 	 * We need to recalculate all of the registers, because DLM and DLL
-diff --git a/include/uapi/linux/serial_reg.h b/include/uapi/linux/serial_reg.h
-index 99b4705..f6dc97c 100644
---- a/include/uapi/linux/serial_reg.h
-+++ b/include/uapi/linux/serial_reg.h
-@@ -385,5 +385,11 @@
- #define UART_EXAR_TXTRG		0x0a	/* Tx FIFO trigger level write-only */
- #define UART_EXAR_RXTRG		0x0b	/* Rx FIFO trigger level write-only */
- 
-+/*
-+ * These are definitions for the Mediatek UART
-+ */
-+#define UART_MTK_HIGHS		0x09	/* Highspeed register */
-+#define UART_MTK_SAMPLE_COUNT	0x0a	/* Sample count register */
-+#define UART_MTK_SAMPLE_POINT	0x0b	/* Sample point register */
- #endif /* _LINUX_SERIAL_REG_H */
- 
 -- 
-1.7.9.5
-
+Regards,
+Varka Bhadram.
