@@ -1,84 +1,133 @@
-From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Tue, 5 Aug 2014 10:47:17 +0200
-Message-ID: <20140805084717.GH4703@rric.localhost>
-References: <CAL_JsqKgfjV4sEZOWuH4YcMjeOA_yNDvZLv_jTi_Sb=27cOD3g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 05/13] thermal: rcar: Document SoC-specific bindings
+Date: Tue, 5 Aug 2014 10:57:25 +0200
+Message-ID: <CAMuHMdVHRcXYgCPtWcMzRvofp7OK3ugLW9ztOHM5ey3_atz6MA@mail.gmail.com>
+References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+	<1404908623-909-6-git-send-email-geert+renesas@glider.be>
+	<20140711091358.GK12420@verge.net.au>
+	<1405435735.28592.50.camel@rzhang1-toshiba>
+	<87mwcakpzw.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKgfjV4sEZOWuH4YcMjeOA_yNDvZLv_jTi_Sb=27cOD3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
- <20140730174803.GF20162@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87mwcakpzw.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30.07.14 18:48:03, Mark Rutland wrote:
-> > >> +             uaa0: serial@87e024000000 {
-> > >> +                     compatible = "arm,pl011", "arm,primecell";
-> > >> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
-> > >> +                     interrupts = <1 21 4>;
-> > >> +                     clocks = <&refclk50mhz>;
-> > >> +                     clock-names = "apb_pclk";
-> > >
-> > > Is this actually the apb_pclk, or is the the uartclk? I assume it's the
-> > > latter.
-> > 
-> > Shouldn't new bindings have both clocks here? A single clock was a
-> > mistake I think (mine in fact).
-> 
-> I don't think we fixed it up in the end. It made drivers look a bit messy and
-> it dropped off my priority queue.
+On Wed, Jul 16, 2014 at 4:16 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>> > > The documentation only mentioned the generic fallback compatible property.
+>> > > Add the missing SoC-specific compatible properties, some of which are
+>> > > already in use.
+>> > >
+>> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> > > Cc: Zhang Rui <rui.zhang@intel.com>
+>> > > Cc: Eduardo Valentin <eduardo.valentin@ti.com>
+>> > > Cc: linux-pm@vger.kernel.org
+>> >
+>> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
+>>
+>> Kuninori,
+>>
+>> what' your opinion of this patch?
+>>
+>> thanks,
+>> rui
+>> >
+>> > > ---
+>> > >  .../devicetree/bindings/thermal/rcar-thermal.txt       | 18 ++++++++++++------
+>> > >  1 file changed, 12 insertions(+), 6 deletions(-)
+>> > >
+>> > > diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+>> > > index 28ef498a66e5..0ef00be44b01 100644
+>> > > --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+>> > > +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+>> > > @@ -1,7 +1,13 @@
+>> > >  * Renesas R-Car Thermal
+>> > >
+>> > >  Required properties:
+>> > > -- compatible             : "renesas,rcar-thermal"
+>> > > +- compatible             : "renesas,thermal-<soctype>", "renesas,rcar-thermal"
+>> > > +                   as fallback.
+>> > > +                   Examples with soctypes are:
+>> > > +                     - "renesas,thermal-r8a73a4" (R-Mobile AP6)
+>> > > +                     - "renesas,thermal-r8a7779" (R-Car H1)
+>> > > +                     - "renesas,thermal-r8a7790" (R-Car H2)
+>> > > +                     - "renesas,thermal-r8a7791" (R-Car M2)
+>> > >  - reg                    : Address range of the thermal registers.
+>> > >                     The 1st reg will be recognized as common register
+>> > >                     if it has "interrupts".
+>> > > @@ -12,18 +18,18 @@ Option properties:
+>> > >
+>> > >  Example (non interrupt support):
+>> > >
+>> > > -thermal@e61f0100 {
+>> > > - compatible = "renesas,rcar-thermal";
+>> > > - reg = <0xe61f0100 0x38>;
+>> > > +thermal@ffc48000 {
+>> > > + compatible = "renesas,thermal-r8a7779", "renesas,rcar-thermal";
+>> > > + reg = <0xffc48000 0x38>;
+>> > >  };
+>> > >
+>> > >  Example (interrupt support):
+>> > >
+>> > >  thermal@e61f0000 {
+>> > > - compatible = "renesas,rcar-thermal";
+>> > > + compatible = "renesas,thermal-r8a73a4", "renesas,rcar-thermal";
+>> > >   reg = <0xe61f0000 0x14
+>> > >           0xe61f0100 0x38
+>> > >           0xe61f0200 0x38
+>> > >           0xe61f0300 0x38>;
+>> > > - interrupts = <0 69 4>;
+>> > > + interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+>> > >  };
+>
+> This patch and [12/13] are adding SoC-specific compatible name.
+> Of course we don't know future request,
+> and, adding SoC-specific compatible name for
+> fallbacking is nice safety for us.
+> So, I don't have strong objection about it.
+>
+> But, thermal driver side do nothing for each
+> SoC-specific compatible name at this point.
+> This means
+>
+>  -> There is no trouble in driver/SoC
+>  -> Add new (and not used) compatible name
+>  -> Nothing happen in driver/SoC
+>
+> My questions are...
+>  1) How to verify this patch ?
+>  2) Do we need to update example SoC "specific name" list in rcar-thermal.txt.
+>     Few example codes are very enough ?
 
-On 31.07.14 10:22:19, Rob Herring wrote:
-> On Thu, Jul 31, 2014 at 7:34 AM, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On 30.07.14 11:37:38, Rob Herring wrote:
-> >> On Wed, Jul 30, 2014 at 10:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> > On Wed, Jul 30, 2014 at 04:06:31PM +0100, Robert Richter wrote:
-> >> >> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >> >> +             uaa0: serial@87e024000000 {
-> >> >> +                     compatible = "arm,pl011", "arm,primecell";
-> >> >> +                     reg = <0x87e0 0x24000000 0x0 0x1000>;
-> >> >> +                     interrupts = <1 21 4>;
-> >> >> +                     clocks = <&refclk50mhz>;
-> >> >> +                     clock-names = "apb_pclk";
-> >> >
-> >> > Is this actually the apb_pclk, or is the the uartclk? I assume it's the
-> >> > latter.
-> >>
-> >> Shouldn't new bindings have both clocks here? A single clock was a
-> >> mistake I think (mine in fact).
-> >
-> > Do you mean
-> >                         clock-names = "uartclk", "apb_pclk";
-> > here?
-> 
-> Yes, but Mark said this change never happened so maybe it is fine. In
-> any case, follow the pl011 binding documentation.
+One important thing to note in my patch description is "some of which
+are already in use.".
 
-Right:
+$ git grep renesas,thermal -- arch/arm/boot/ | cat
+arch/arm/boot/dts/r8a7790.dtsi: compatible =
+"renesas,thermal-r8a7790", "renesas,rcar-thermal";
+arch/arm/boot/dts/r8a7791.dtsi: compatible =
+"renesas,thermal-r8a7791", "renesas,rcar-thermal";
+$
 
-Documentation/devicetree/bindings/arm/primecell.txt:
-- clocks : From common clock binding. First clock is phandle to clock for apb
-        pclk. Additional clocks are optional and specific to those peripherals.
-- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
+So these 2 should be added to the documentation for sure.
+Adding the 2 others, and adding them to the respective DTSes (cfr. the
+other patches in the series) doesn't hurt, and will help if an incompatibility
+ever arises.
 
-Documentation/devicetree/bindings/serial/pl011.txt
-- clocks:  When present, must refer to exactly one clock named
-           "apb_pclk"
+(I assume the driver works with the other DTSes that already claim to have
+a device compatible with "renesas,rcar-thermal").
 
-There is no binding documentation at all for "uartclk".
+Gr{oetje,eeting}s,
 
-It seems we should should leave clock-names = "apb_pclk" as it is.
+                        Geert
 
-Mark, Rob, would this be ok?
-
-Thanks,
-
--Robert
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
