@@ -1,10 +1,16 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Dual-channel DSI
-Date: Tue, 5 Aug 2014 17:39:25 +0200
-Message-ID: <20140805153923.GA3072@ulmo.nvidia.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH 07/15] drm/exynos: dsi: Add support for panel prepare and
+ unprepare routines
+Date: Tue, 5 Aug 2014 21:41:09 +0530
+Message-ID: <CAEC9eQPFnMEptzYiox2-6Z37iOCKgMyqjfYWo6RfRbEFtXW9jg@mail.gmail.com>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1406828534-10072-8-git-send-email-ajaykumar.rs@samsung.com>
+ <53E0AC0C.9030309@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1585315797=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53E0AC0C.9030309@samsung.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -14,188 +20,75 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, YoungJun Cho <yj44.cho@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1585315797==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
+Hi Andreas,
 
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 5, 2014 at 3:33 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> Hi Ajay,
+>
+>
+> On 07/31/2014 07:42 PM, Ajay Kumar wrote:
+>> Modify exynos_dsi driver to support the new panel calls:
+>> prepare and unprepare.
+>>
+>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+>> ---
+>>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |   12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> index dc7c80b..4834932 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> @@ -1351,7 +1351,7 @@ static int exynos_dsi_enable(struct exynos_dsi *dsi)
+>>       if (ret < 0)
+>>               return ret;
+>>
+>> -     ret = drm_panel_enable(dsi->panel);
+>> +     ret = drm_panel_prepare(dsi->panel);
+>>       if (ret < 0) {
+>>               exynos_dsi_poweroff(dsi);
+>>               return ret;
+>> @@ -1360,6 +1360,13 @@ static int exynos_dsi_enable(struct exynos_dsi *dsi)
+>>       exynos_dsi_set_display_mode(dsi);
+>>       exynos_dsi_set_display_enable(dsi, true);
+>>
+>> +     ret = drm_panel_enable(dsi->panel);
+>> +     if (ret < 0) {
+>> +             exynos_dsi_set_display_enable(dsi, false);
+>
+> I guess drm_panel_unprepare(dsi->panel) should be here.
+Thanks for pointing it out. I am not sure if Thierry has already
+picked this up since Inki has given Acked by.
+In that case, you can send it as a fix separately :)
 
-Hi everyone,
-
-I've been working on adding support for a panel that uses what's
-commonly known as dual-channel DSI. Sometimes this is referred to as
-ganged-mode as well.
-
-What is it, you ask? It's essentially a hack to work around the band-
-width restrictions of DSI, albeit one that's been commonly implemented
-by several SoC vendors.
-
-This typically works by equipping a peripheral with two DSI interfaces,
-each of which driving one half of the screen (symmetric left-right mode)
-or every other line (symmetric odd-even mode). Apparently there can be
-asymmetric modes in addition to those two, but they seem to be the
-common ones. Often both of the DSI interfaces need to be configured
-using DCS commands and vendor specific registers.
-
-A single display controller is typically used video data transmission.
-This is necessary to provide synchronization and avoid tearing and all
-kinds of other ugliness. For this to work both DSI controllers need to
-be made aware of which chunk of the video data stream is addressing
-them.
-
-=46rom a software perspective, this poses two problems:
-
-1) A dual-channel device is composed of two DSI peripheral devices which
-   cannot be programmed independently of each other. A typical example
-   is that the frame memory extents need to be configured differently
-   for each of the devices (using the DCS set_column_address and
-   set_page_address commands). Therefore each device must know of the
-   other, or there must be a driver that binds against a dummy device
-   that pulls in the two real devices.
-
-2) On the DSI host side, each of the controller instances needs to know
-   the intimate details of the other controller (or alternatively, one
-   controller needs to be a "master" and the other a "slave").
-
-I'm looking for feedback on how this is handled on other SoCs, hence
-adding a few people that I know are working on DSI as well (or have in
-the past). If you know of any other people that might have useful advice
-on this topic, feel free to include them.
-
-Another goal of this discussion is to come up with a somewhat standard
-way to represent this in device tree (oh no!) so that panels can be
-easily reused on different SoCs.
-
-What I currently have for Tegra is something along these lines:
-
-	dsi@54300000 {
-		nvidia,ganged-mode =3D <&dsib>;
-
-		panel@0 {
-			compatible =3D "sharp,lq101r1sx01";
-			reg =3D <0>;
-
-			secondary =3D <&secondary>;
-		};
-	};
-
-	dsib: dsi@54400000 {
-		nvidia,ganged-mode;
-
-		secondary: panel@0 {
-			reg =3D <0>;
-		};
-	};
-
-There are a couple of other properties in those nodes, such as
-regulators and such, but I've omitted them so that the discussion can
-focus on the important bits.
-
-In the above the panel driver will bind against dsi@54300000/panel@0 and
-use the "secondary" property to obtain a reference to the DSI peripheral
-device of the second DSI interface of the device.
-
-Similarly, the dsi@54300000 primary DSI host will obtain a reference to
-a "slave" DSI host via the "nvidia,ganged-mode" property. The secondary
-DSI host dsi@54400000 will know that it's not a fully functional DSI
-output by the presence of the empty "nvidia,ganged-mode" property.
-
-Using the above I can get things to work, but it seems somewhat kludgy.
-For example it assumes that both DSI hosts are the same type. I'm not
-sure if it makes sense for dual-channel to use completely different DSI
-hosts given that they need to be very tightly coupled (take input from
-the same display controller, use the same PLL, ...). It's also kind of
-redundant to have to specify the dual relationship twice (once for the
-peripheral and once for the DSI hosts). There's also the issue that we
-should really be specifying a compatible string for the secondary
-instance of the DSI peripheral, but that would mean that it will bind
-against the same driver and then both would be programmed independently
-in the same way (without taking into account the differences between the
-two interfaces).
-
-One alternative to the above could be something like this:
-
-	dsi@54300000 {
-		nvidia,ganged-mode =3D <&dsib>;
-		nvidia,panel =3D <&panel>
-
-		primary: panel@0 {
-			compatible =3D "sharp,lq101r1sx01-left";
-			reg =3D <0>;
-		};
-	};
-
-	dsib: dsi@54400000 {
-		nvidia,ganged-mode;
-
-		secondary: panel@0 {
-			compatible =3D "sharp,lq101r1sx01-right";
-			reg =3D <0>;
-		};
-	};
-
-	panel {
-		compatible =3D "sharp,lq101r1sx01";
-		sharp,left =3D <&primary>;
-		sharp,right =3D <&secondary>;
-	};
-
-Which would give us a more natural way to represent this. On the other
-hand we loose information about the device type (/panel is no longer a
-DSI device) and associated meta-data (number of DSI lanes, ...).
-
-My primary concern is that this may not work for other SoCs since I've
-only tested it against Tegra. But the goal would be that the same panel
-connected to a different SoC would still be able to work with the same
-device tree binding.
-
-It would be great if anybody could share if they know how this works on
-other SoCs and if somebody's thought about how to implement it.
-
-Thierry
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT4PqrAAoJEN0jrNd/PrOhXBoP/RnJLKfhpuCjk8ALg1pFyCbv
-ZIGgsnFse+5QnEzIpKgfaQgngcL8001vLN9EnHbJKLDMgkYObIs4OjZel9jbgLvf
-1yUuUS075Vbjm+jdbCbmirlNwIDZLLDr1Y/iM0aNTfj1IcV2OtAClkEmduNR5lEq
-7dIY9QpoWtHMC1Cth0sZ2w7ieZGoaqak396WaCSko489ntxnxVTUXt+H8x1/1Op0
-P0vR7V0J5VZY1YkHRu+bVKp+U2gz+XximOPZ65wa3HcBjGcWCjk+9QXnm7GNVvAs
-pFZE4o3cvePh0qO0Kjr0TxDJs27jlCeIcrPt3kKipS6c+J7sDCaiOobY0zrKEu7R
-DxpPhNCWhQL/UQEtwGrZejxXYUaa3Bf6zkRWdj4orbhadPlBwS+6GWja0noUgkWc
-G3OjJ/q5fMFhSj1kCcQjIXuhMPROHh4JPEiuGlcpCGzgfQTN5yMvYczDweF/CqRL
-aGbWK/J9MVUYSdy4fAp/ODUtKKqK/gnJ0uMpG7JUETMsB40lO/OKH5zHgtwuV6QF
-MDx1flZqVYPrOum9OVaLEJfqt3uDc9hf4Nzbpzkwa90VK+56M4QZlBFPnlWAMjqv
-IDheQ4IE1m9WZQht8rrCr9WpzcqrXZP8qQNCIm7tkmFCWTaeoyg90aypp+SpKrpD
-9D2wC4BdiLJqaqtnLNrj
-=Cf+X
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
-
---===============1585315797==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1585315797==--
+Ajay
+>> +             exynos_dsi_poweroff(dsi);
+>> +             return ret;
+>> +     }
+>> +
+>>       dsi->state |= DSIM_STATE_ENABLED;
+>>
+>>       return 0;
+>> @@ -1370,8 +1377,9 @@ static void exynos_dsi_disable(struct exynos_dsi *dsi)
+>>       if (!(dsi->state & DSIM_STATE_ENABLED))
+>>               return;
+>>
+>> -     exynos_dsi_set_display_enable(dsi, false);
+>>       drm_panel_disable(dsi->panel);
+>> +     exynos_dsi_set_display_enable(dsi, false);
+>> +     drm_panel_unprepare(dsi->panel);
+>>       exynos_dsi_poweroff(dsi);
+>>
+>>       dsi->state &= ~DSIM_STATE_ENABLED;
+>>
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
