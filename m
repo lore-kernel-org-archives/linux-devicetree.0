@@ -1,57 +1,105 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller
- driver
-Date: Tue, 05 Aug 2014 14:55:18 +0300
-Message-ID: <1407239718.2475.76.camel@iivanov-dev>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
-	  <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
-	  <53D307BB.1020208@codeaurora.org> <1406536774.2475.36.camel@iivanov-dev>
-	 <53E0350C.4020003@codeaurora.org>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH 2/3] tty: serial: 8250: Add Mediatek UART driver
+Date: Tue, 05 Aug 2014 17:25:31 +0530
+Message-ID: <53E0C633.7060600@gmail.com>
+References: <1407236054-30994-1-git-send-email-matthias.bgg@gmail.com> <1407236054-30994-3-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53E0350C.4020003-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1407236054-30994-3-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, heikki.krogerus@linux.intel.com, alan@linux.intel.com, paul.gortmaker@windriver.com, asierra@xes-inc.com, mwelling@ieee.org, dianders@chromium.org, m-karicheri2@ti.com, jschultz@xes-inc.com, mingo@elte.hu, balbi@ti.com, heiko@sntech.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-08-04 at 18:36 -0700, Stephen Boyd wrote:
-> On 07/28/14 01:39, Ivan T. Ivanov wrote:
-> > I am working on proposal from Stephen Boyd to encode GPIO/MPP mode and 
-> > source select into combined function. Something like this one:
-> >
-> > #define PM8XXX_DIGITAL_IN		0
-> > #define PM8XXX_DIGITAL_OUT		1
-> > #define PM8XXX_DIGITAL_IN_OUT		2
-> >
-> > ...
-> >
-> > /* mode and source select */
-> > #define PM8XXX_FUNCTION(m,s)		((m) << 16 | (s))
-> >
-> > #define PM8921_GPIO1_14_KYPD_SNS	PM8XXX_FUNCTION(PM8XXX_DIGITAL_IN, 1)
-> > #define PM8921_GPIO9_14_KYPD_DRV	PM8XXX_FUNCTION(PM8XXX_DIGITAL_OUT, 1)
-> > #define PM8921_GPIO33_35_PWM		PM8XXX_FUNCTION(PM8XXX_DIGITAL_OUT, 3)
-> >
-> > ..
-> >
-> >
-> 
-> This isn't what I was suggesting at all. The function should be
-> something like KYPD, PWM and those should just be defined to be 1 or 3.
-> The mode should be some other property like input or output, and the
-> driver should or the two together and put it into the register.
+On 08/05/2014 04:24 PM, Matthias Brugger wrote:
 
-Well, we can do this. I was just thought that will more convenient if
-function is fully described in to one property.
+(...)
 
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/serial_8250.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/pm_runtime.h>
+> +#include "8250.h"
+> +
+
+Better if we have includes in alphabetical order..
+
+> +#define MTK_UART_RATE_FIX 0x0D /* UART Rate Fix Register */
+> +
+> +struct mtk8250_data {
+> +	int			line;
+> +	struct clk		*clk;
+> +};
+> +
+> +static void
+> +mtk8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
+> +{
+> +	if (!state)
+> +		pm_runtime_get_sync(port->dev);
+> +
+> +	serial8250_do_pm(port, state, old);
+> +
+> +	if (state)
+> +		pm_runtime_put_sync_suspend(port->dev);
+> +}
+> +
+> +static int mtk8250_probe_of(struct uart_port *p,
+> +			   struct mtk8250_data *data)
+
+static int mtk8250_probe_of(struct uart_port *p,
+			    struct mtk8250_data *data)
+
+> +{
+> +	int err;
+> +	struct device_node	*np = p->dev->of_node;
+> +
+> +	data->clk = of_clk_get(np, 0);
+> +	if (IS_ERR(data->clk)) {
+> +		pr_warn("Can't get timer clock");
+
+missed terminating new line...
+
+> +		return PTR_ERR(data->clk);
+> +	}
+> +
+> +	err = clk_prepare_enable(data->clk);
+> +	if (err) {
+> +		pr_warn("Can't prepare clock");
+
+same...
+
+> +		clk_put(data->clk);
+> +		return err;
+> +	}
+> +	p->uartclk = clk_get_rate(data->clk);
+> +
+> +	return 0;
+> +}
+
+(...)
+
+> +static struct platform_driver mtk8250_platform_driver = {
+> +	.driver = {
+> +		.name		= "mt6577-uart",
+> +		.owner		= THIS_MODULE,
+
+No need to update this field...
+
+> +		.pm		= &mtk8250_pm_ops,
+> +		.of_match_table	= mtk8250_of_match,
+> +	},
+> +	.probe			= mtk8250_probe,
+> +	.remove			= mtk8250_remove,
+> +};
+> +module_platform_driver(mtk8250_platform_driver);
+>
+-- 
 Regards,
-Ivan
+Varka Bhadram.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
