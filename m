@@ -1,47 +1,70 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller driver
-Date: Mon, 04 Aug 2014 18:36:12 -0700
-Message-ID: <53E0350C.4020003@codeaurora.org>
-References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>  <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>  <53D307BB.1020208@codeaurora.org> <1406536774.2475.36.camel@iivanov-dev>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/6] dmaengine: rcar-dmac: Add device tree bindings
+ documentation
+Date: Tue, 5 Aug 2014 10:46:42 +0900
+Message-ID: <20140805014641.GD26270@verge.net.au>
+References: <cover.1406766014.git.horms+renesas@verge.net.au>
+ <3dc5d31428846326bf122a2a9b402a2a80e97681.1406766014.git.horms+renesas@verge.net.au>
+ <CAMuHMdVtU_uujbJarBSdqR2hs5+=KTAxhnOU2tEM4MXaaTTG_A@mail.gmail.com>
+ <2984491.bHCssUOyYu@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406536774.2475.36.camel@iivanov-dev>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: David Collins <collinsd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2984491.bHCssUOyYu@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/28/14 01:39, Ivan T. Ivanov wrote:
-> I am working on proposal from Stephen Boyd to encode GPIO/MPP mode and 
-> source select into combined function. Something like this one:
->
-> #define PM8XXX_DIGITAL_IN		0
-> #define PM8XXX_DIGITAL_OUT		1
-> #define PM8XXX_DIGITAL_IN_OUT		2
->
-> ...
->
-> /* mode and source select */
-> #define PM8XXX_FUNCTION(m,s)		((m) << 16 | (s))
->
-> #define PM8921_GPIO1_14_KYPD_SNS	PM8XXX_FUNCTION(PM8XXX_DIGITAL_IN, 1)
-> #define PM8921_GPIO9_14_KYPD_DRV	PM8XXX_FUNCTION(PM8XXX_DIGITAL_OUT, 1)
-> #define PM8921_GPIO33_35_PWM		PM8XXX_FUNCTION(PM8XXX_DIGITAL_OUT, 3)
->
-> ..
->
->
+On Mon, Aug 04, 2014 at 04:01:42PM +0200, Laurent Pinchart wrote:
+> Hi Geert,
+> 
+> Thank you for the review.
+> 
+> On Monday 04 August 2014 10:05:49 Geert Uytterhoeven wrote:
+> > On Thu, Jul 31, 2014 at 2:34 AM, Simon Horman wrote:
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> > > @@ -0,0 +1,98 @@
+> > > +* Renesas R-Car DMA Controller Device Tree bindings
+> > > +
+> > > +Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
+> > > +controller instances named DMAC capable of serving multiple clients.
+> > > Channels +can be dedicated to specific clients or shared between a large
+> > > number of +clients.
+> > > +
+> > > +DMA clients are connected to the DMAC ports referenced by an 8-bit
+> > > identifier +called MID/RID.
+> > 
+> > I think the above sentence can be removed, as it's superseded by the first
+> > sentence of the successive paragraph:
+> 
+> I've probably just forgotten to remove the sentence while reworking the 
+> documentation. Thanks for reporting it, I'll fix that in the next version.
 
-This isn't what I was suggesting at all. The function should be
-something like KYPD, PWM and those should just be defined to be 1 or 3.
-The mode should be some other property like input or output, and the
-driver should or the two together and put it into the register.
-Basically we shouldn't see any shifts or ors in the #defines, just
-convenient numbers that correspond to the value of the field in the
-register.
+BTW, I believe Vinod has already applied this and the previous three
+patches of this series to his tree.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+As he applied then rather than pulling the pull-request I sent I intend
+to drop the entire series from my tree for now.
+
+> > > +
+> > > +Each DMA client is connected to one dedicated port of the DMAC,
+> > > identified by +an 8-bit port number called the MID/RID. A DMA controller
+> > > can thus serve up to +256 clients in total. When the number of hardware
+> > > channels is lower than the +number of clients to be served, channels must
+> > > be shared between multiple DMA +clients. The association of DMA clients
+> > > to DMAC channels is fully dynamic and +not described in these device tree
+> > > bindings.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
