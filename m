@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
-Date: Tue, 05 Aug 2014 10:01:18 +0200
-Message-ID: <53E08F4E.8060009@redhat.com>
+Date: Tue, 05 Aug 2014 10:02:54 +0200
+Message-ID: <53E08FAE.3000205@redhat.com>
 References: <20140731192016.GA6869@excalibur.cnev.de> <20140803130430.GY3952@lukather> <201408031959.27607.arnd@arndb.de> <20140804192510.GF3952@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
@@ -49,12 +49,20 @@ On 08/04/2014 09:25 PM, Maxime Ripard wrote:
 > Even though I'd be open to having my contributions to DTBs under the
 > BSD
 
-+1 from me, I'm fine with all my dts patches being relicensed under a BSD / MIT
-license.
+p.s.
+
+I've a patch adding a new dts file for the bananapi pending. I might as well
+relicense that before submitting V2. So what shall we use 2 clause BSD or MIT ?
+
+I've a slight preference for MIT, but both are fine.
 
 Regards,
 
 Hans
+
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
