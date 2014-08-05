@@ -1,139 +1,146 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH] serial: clps711x: Use mctrl_gpio helpers for handling modem signals
-Date: Tue,  5 Aug 2014 22:37:21 +0400
-Message-ID: <1407263841-14692-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>
+From: pekon@pek-sem.com
+Subject: Re: [PATCH] mtd: nand: =?UTF-8?Q?stm=5Fnand=5Fbch=3A=20add=20new?=
+ =?UTF-8?Q?=20driver?=
+Date: Wed, 06 Aug 2014 02:32:18 +0530
+Message-ID: <d4ba973a22bd71eaff94be1f479c5334@pek-sem.com>
+References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
+ <20140703002237.GM3599@ld-irv-0074>
+ <20980858CB6D3A4BAE95CA194937D5E73EAFAFF1@DBDE04.ent.ti.com>
+ <20140805142324.GA10136@lee--X1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140805142324.GA10136@lee--X1>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, Boris BREZILLON <b.brezillon.dev@gmail.com>, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
-signals.
+Hello,
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../bindings/serial/cirrus,clps711x-uart.txt       |  7 +++--
- drivers/tty/serial/Kconfig                         |  1 +
- drivers/tty/serial/clps711x.c                      | 32 +++++++---------------
- 3 files changed, 16 insertions(+), 24 deletions(-)
+On Tuesday 05 August 2014 07:53 PM, Lee Jones wrote:
+> On Thu, 03 Jul 2014, Gupta, Pekon wrote:
+>>> From: Brian Norris [mailto:computersforpeace@gmail.com]
+>>> On Wed, May 28, 2014 at 10:20:05AM +0100, Lee Jones wrote:
+[...]
+>>>> +static void bch_wait_seq(struct nandi_controller *nandi)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = wait_for_completion_timeout(&nandi->seq_completed, HZ/2);
+>>
+>> Are you sure you want to use same timeout value for all operations
+>> like ERASE, READ, WRITE ? because
+>> (1) There is wide variance between:
+>> - BLOCK_ERASE:  max(tBER) = 10ms) for MT29F4G08 Micron NAND
+>> - PAGE_ERASE: max(tPROG) = 600usec for same Micron part.
+>>
+>> (2) The value of HZ varies across kernel versions and hardware 
+>> platforms.
+>>
+>> I suggest you pass the timeout value in call to bch_wait_seq().
+>> And this timeout value should be like 2x of typical value of which 
+>> you found
+>> during ONFI parsing, or from DT
+>
+> How do you obtain these timings?  I don't see tBER or tPROG being 
+> used
+> anywhere in MTD.
+>
 
-diff --git a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
-index 12f3cf8..caaeb25 100644
---- a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
-@@ -8,7 +8,8 @@ Required properties:
- - syscon: Phandle to SYSCON node, which contain UART control bits.
- 
- Optional properties:
--- uart-use-ms: Indicate the UART has modem signal (DCD, DSR, CTS).
-+- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
-+  line respectively.
- 
- Note: Each UART port should have an alias correctly numbered
- in "aliases" node.
-@@ -24,5 +25,7 @@ Example:
- 		interrupts = <12 13>;
- 		clocks = <&clks 11>;
- 		syscon = <&syscon1>;
--		uart-use-ms;
-+		cts-gpios = <&sysgpio 0 GPIO_ACTIVE_LOW>;
-+		dsr-gpios = <&sysgpio 1 GPIO_ACTIVE_LOW>;
-+		dcd-gpios = <&sysgpio 2 GPIO_ACTIVE_LOW>;
- 	};
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 26cec64..75cc59f 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -204,6 +204,7 @@ config SERIAL_CLPS711X
- 	tristate "CLPS711X serial port support"
- 	depends on ARCH_CLPS711X || COMPILE_TEST
- 	select SERIAL_CORE
-+	select SERIAL_MCTRL_GPIO
- 	help
- 	  This enables the driver for the on-chip UARTs of the Cirrus
- 	  Logic EP711x/EP721x/EP731x processors.
-diff --git a/drivers/tty/serial/clps711x.c b/drivers/tty/serial/clps711x.c
-index f5b4c3d..acfe317 100644
---- a/drivers/tty/serial/clps711x.c
-+++ b/drivers/tty/serial/clps711x.c
-@@ -33,6 +33,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/clps711x.h>
- 
-+#include "serial_mctrl_gpio.h"
-+
- #define UART_CLPS711X_DEVNAME	"ttyCL"
- #define UART_CLPS711X_NR	2
- #define UART_CLPS711X_MAJOR	204
-@@ -62,7 +64,7 @@ struct clps711x_port {
- 	unsigned int		tx_enabled;
- 	int			rx_irq;
- 	struct regmap		*syscon;
--	bool			use_ms;
-+	struct mctrl_gpios	*gpios;
- };
- 
- static struct uart_driver clps711x_uart = {
-@@ -198,28 +200,17 @@ static unsigned int uart_clps711x_tx_empty(struct uart_port *port)
- 
- static unsigned int uart_clps711x_get_mctrl(struct uart_port *port)
- {
-+	unsigned int result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
- 	struct clps711x_port *s = dev_get_drvdata(port->dev);
--	unsigned int result = 0;
--
--	if (s->use_ms) {
--		u32 sysflg = 0;
--
--		regmap_read(s->syscon, SYSFLG_OFFSET, &sysflg);
--		if (sysflg & SYSFLG1_DCD)
--			result |= TIOCM_CAR;
--		if (sysflg & SYSFLG1_DSR)
--			result |= TIOCM_DSR;
--		if (sysflg & SYSFLG1_CTS)
--			result |= TIOCM_CTS;
--	} else
--		result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
- 
--	return result;
-+	return mctrl_gpio_get(s->gpios, &result);
- }
- 
- static void uart_clps711x_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
--	/* Do nothing */
-+	struct clps711x_port *s = dev_get_drvdata(port->dev);
-+
-+	mctrl_gpio_set(s->gpios, mctrl);
- }
- 
- static void uart_clps711x_break_ctl(struct uart_port *port, int break_state)
-@@ -490,15 +481,10 @@ static int uart_clps711x_probe(struct platform_device *pdev)
- 		s->syscon = syscon_regmap_lookup_by_pdevname(syscon_name);
- 		if (IS_ERR(s->syscon))
- 			return PTR_ERR(s->syscon);
--
--		s->use_ms = !index;
- 	} else {
- 		s->syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
- 		if (IS_ERR(s->syscon))
- 			return PTR_ERR(s->syscon);
--
--		if (!index)
--			s->use_ms = of_property_read_bool(np, "uart-use-ms");
- 	}
- 
- 	s->port.line		= index;
-@@ -513,6 +499,8 @@ static int uart_clps711x_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, s);
- 
-+	s->gpios = mctrl_gpio_init(&pdev->dev, 0);
-+
- 	ret = uart_add_one_port(&clps711x_uart, &s->port);
- 	if (ret)
- 		return ret;
--- 
-1.8.5.5
+These are not from NAND framework, these are terms used in data-sheet.
+However, you can read all signal timing from ONFI page while probing.
+But, as Brian suggested that timeout is a erroneous and rare condition
+anyway, so these relaxed timeout values are acceptable. So you may
+ignore my previous comment.
 
+
+> [...]
+>
+>>>> +{
+>>>> +	uint8_t *b = data;
+>>>> +	int zeros = 0;
+>>>> +	int i;
+>>>> +
+>>>> +	for (i = 0; i < page_size; i++) {
+>>>> +		zeros += hweight8(~*b++);
+>> Are you sure you want to use hweight8 ?
+>> hweight32 or something should give better performance, plz check.
+>> because this piece of code (check_xx_bitflips) sometimes becomes
+>> bottle neck for READ path.
+>
+> I'm not sure, no.  If I change it, how will I know if it's still 
+> doing
+> the correct thing or otherwise?
+>
+hweight/hweight16/hweight32 are all macros of same family
+just operating on different data-widths, so you may continue
+for now. But once the driver is merged, you might like to
+re-analyze performance gain (especially on MLC NAND) when
+using hweight32() instead of hweight8().
+
+
+> [...]
+>
+>>>> +	/* Load last page of block */
+>>>> +	offs = (loff_t)block << chip->phys_erase_shift;
+>>>> +	offs += mtd->erasesize - mtd->writesize;
+>>>> +	if (bch_read_page(nandi, offs, buf) < 0) {
+>>
+>> *Important*: You shouldn't call internal functions directly here..
+>> Instead use chip->_read() OR mtd-read() that will:
+>> - keep this code independent of ECC modes added in your driver in 
+>> future.
+>> - implicitly handle updating mtd->ecc_stat (like ecc_failed, 
+>> bits_corrected).
+>> - implicitly take care of address alignments checks and offset 
+>> calculations.
+>>
+>> <Same applies to other places where you have directly used 
+>> bch_read_page())
+>
+> Yourself and Brian seem to disagree on this point.  Which is correct?
+>
+>>>> +	/* Is block already considered bad? (will also catch invalid 
+>>>> offsets) */
+>>>> +	ret = mtd_block_isbad(mtd, offs);
+>>>
+>>> You're violating some of the layering here; the low-level driver
+>>> probably shouldn't be calling the high-level mtd_*() APIs. On a 
+>>> similar
+>>> note, I'm not 100% confident that the nand_base/nand_bbt separation 
+>>> is
+>>> written cleanly enough for easy maintenance of your nand_base + ST 
+>>> BBT
+>>> code in parallel. I might need a second look at that, and I think
+>>> modularizing your BBT code to a separate file could help ease this 
+>>> a
+>>> little.
+>
+> ... here is the converse argument.
+>
+I think somewhere in earlier comments, Brian also supported
+to use high-level function like mtd_read(). Also, nand_bbt.c
+itself uses 'mtd_read(), mtd_read_oob() and mtd_write_oob()
+at many places. So I'll let Brain decide here.
+But having low-level function will add redundant code for
+re-checking and aligning the addresses boundaries to block
+and page/sector sizes.
+
+Brian ??
+
+
+with regards, pekon
+
+
+------------------------
+Powered by BigRock.com
