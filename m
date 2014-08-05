@@ -1,131 +1,61 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] Documentation: dt: bindings: sound: Add bindings
- for CS35L32
-Date: Tue, 05 Aug 2014 09:31:59 +0530
-Message-ID: <53E05737.3000601@gmail.com>
-References: <1407183077-23807-1-git-send-email-brian.austin@cirrus.com> <1407183077-23807-2-git-send-email-brian.austin@cirrus.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v3 1/2] rcar_can: document device tree bindings
+Date: Tue, 05 Aug 2014 08:15:43 +0200
+Message-ID: <53E0768F.8030406@pengutronix.de>
+References: <201408010124.26505.sergei.shtylyov@cogentembedded.com> <53DAB5CF.8000407@pengutronix.de> <53DFC0CE.4050602@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407183077-23807-2-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <53DFC0CE.4050602@cogentembedded.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/05/2014 01:41 AM, Brian Austin wrote:
-> The patch adds device tree bindings file for the Cirrus Logic CS35L32
->
-> Changes for v2:
-> - Remove Gain Manager from DT and move to driver kcontrol
-> - Add VP-Supply for regulator
->
-> Changes for v3:
-> - Add regulator disable for error return in i2c_probe
->
-> Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-> ---
->   .../devicetree/bindings/sound/cs35l32.txt          |   62 ++++++++++++++++++++
->   1 file changed, 62 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/sound/cs35l32.txt
->
-> diff --git a/Documentation/devicetree/bindings/sound/cs35l32.txt b/Documentation/devicetree/bindings/sound/cs35l32.txt
-> new file mode 100644
-> index 0000000..1417d3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/cs35l32.txt
-> @@ -0,0 +1,62 @@
-> +CS35L32 audio CODEC
-> +
-> +Required properties:
-> +
-> +  - compatible : "cirrus,cs35l32"
-> +
-> +  - reg : the I2C address of the device for I2C. Address is determined by the level
-> +  of the AD0 pin. Level 0 is 0x40 while Level 1 is 0x41.
-> +
-> +  - VA-supply, VP-supply : power supplies for the device,
-> +  as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
-> +
-> +Optional properties:
-> +
-> +  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
-> +  deasserted before communication to the codec starts.
-> +
-> +  - cirrus,boost-manager : Boost voltage control.
-> +  0 = Automatically managed.  Boost-converter output voltage is the higher
-> +  of the two: Class G or adaptive LED voltage.
-> +  1 = Automatically managed irrespective of audio, adapting for low-power
-> +  dissipation when LEDs are ON, and operating in Fixed-Boost Bypass Mode
-> +  if LEDs are OFF (VBST = VP).
-> +  2 = (Default) Boost voltage fixed in Bypass Mode (VBST = VP).
-> +  3 = Boost voltage fixed at 5 V.
-> +
-> +  - cirrus,sdout-datacfg : Data configuration for dual CS35L32 applications only.
-> +  Determines the data packed in a two-CS35L32 configuration.
-> +  0 = Left/right channels VMON[11:0], IMON[11:0], VPMON[7:0].
-> +  1 = Left/right channels VMON[11:0], IMON[11:0], STATUS.
-> +  2 = (Default) left/right channels VMON[15:0], IMON [15:0].
-> +  3 = Left/right channels VPMON[7:0], STATUS.
-> +
-> +  - cirrus,sdout-share : SDOUT sharing. Determines whether one or two CS35L32
-> +  devices are on board sharing SDOUT.
-> +  0 = (Default) One IC.
-> +  1 = Two IC's.
-> +
-> +  - cirrus,battery-recovery : Low battery nominal recovery threshold, rising VP.
-> +  0 = 3.1V
-> +  1 = 3.2V
-> +  2 = 3.3V (Default)
-> +  3 = 3.4V
-> +
-> +  - cirrus,battery-threshold : Low battery nominal threshold, falling VP.
-> +  0 = 3.1V
-> +  1 = 3.2V
-> +  2 = 3.3V
-> +  3 = 3.4V (Default)
-> +  4 = 3.5V
-> +  5 = 3.6V
-> +
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Proper indentation for all the properties... These are not readable like this...
+On 08/04/2014 07:20 PM, Sergei Shtylyov wrote:
+> Hello.
+>=20
+> On 08/01/2014 01:31 AM, Marc Kleine-Budde wrote:
+>=20
+>>> Document the R-Car CAN device tree bindings.
+>=20
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>=20
+>> The series looks good from the CAN perpective. I'll apply the patches
+>> after we've got an Acked-by from the DT folks.
+>=20
+>    How about the prior CAN clock support patch?
 
-Required properties:
-  - compatible:		"cirrus,cs35l32"
-  - reg:			the I2C address of the device for I2C. Address is determined by the level
-			of the AD0 pin. Level 0 is 0x40 while Level 1 is 0x41.
-  - VA-supply,VP-supply:	power supplies for the device,
-			as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
+That looks good, too.
 
-Optional properties:
-  - reset-gpios:		a GPIO spec for the reset pin. If specified, it will be
-			deasserted before communication to the codec starts.
-  - cirrus,boost-manager:Boost voltage control.
-			0 = Automatically managed.
-				Boost-converter output voltage is the higher
-				of the two: Class G or adaptive LED voltage.
-			1 = Automatically managed irrespective of audio, adapting for low-power
+Marc
 
-......
-
-> +Example:
-> +
-> +codec: codec@40 {
-> +	compatible = "cirrus,cs35l32";
-> +	reg = <0x40>;
-> +	reset-gpios = <&gpio 10 0>;
-> +	cirrus,boost-manager = <0x03>;
-> +	cirrus,sdout-datacfg = <0x02>;
-> +	VA-supply = <&reg_audio>;
-> +};
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
--- 
-Regards,
-Varka Bhadram.
+--xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlPgdo8ACgkQjTAFq1RaXHNdOACfXuSAf+fJj41EgZ/2jJLn4/O3
+ANoAn2/h1ZSLnl326pdZm1QK5jBvaduT
+=ZqsA
+-----END PGP SIGNATURE-----
+
+--xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG--
