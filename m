@@ -1,40 +1,57 @@
-From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Subject: Re: [PATCH 1/3] tty: serial: 8250: Add new capability for highspeed
- register
-Date: Tue, 5 Aug 2014 12:43:43 +0100
-Message-ID: <20140805124343.27ff9b32@alan.etchedpixels.co.uk>
-References: <1407236054-30994-1-git-send-email-matthias.bgg@gmail.com>
-	<1407236054-30994-2-git-send-email-matthias.bgg@gmail.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] pinctrl: qpnp: Qualcomm PMIC pin controller
+ driver
+Date: Tue, 05 Aug 2014 14:55:18 +0300
+Message-ID: <1407239718.2475.76.camel@iivanov-dev>
+References: <1405610748-7583-1-git-send-email-iivanov@mm-sol.com>
+	  <1405610748-7583-3-git-send-email-iivanov@mm-sol.com>
+	  <53D307BB.1020208@codeaurora.org> <1406536774.2475.36.camel@iivanov-dev>
+	 <53E0350C.4020003@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407236054-30994-2-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org, mwelling-EkmVulN54Sk@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, jschultz-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org, mingo-X9Un+BFzKDI@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53E0350C.4020003-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->  
->  	/*
-> +	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
-> +	 *
-> +	 * We need to recalcualte the quot register, as the claculation depends
-> +	 * on the vaule in the highspeed register.
-> +	 *
-> +	 * Some baudrates are not supported by the chip, so we use the next
-> +	 * lower rate supported.
-> +	 *
-> +	 * If highspeed register is set to 3, we need to specify sample count
-> +	 * and sample point to increase accuracy. If not, we reset the
-> +	 * registers to their default values.
-> +	 */
+On Mon, 2014-08-04 at 18:36 -0700, Stephen Boyd wrote:
+> On 07/28/14 01:39, Ivan T. Ivanov wrote:
+> > I am working on proposal from Stephen Boyd to encode GPIO/MPP mode and 
+> > source select into combined function. Something like this one:
+> >
+> > #define PM8XXX_DIGITAL_IN		0
+> > #define PM8XXX_DIGITAL_OUT		1
+> > #define PM8XXX_DIGITAL_IN_OUT		2
+> >
+> > ...
+> >
+> > /* mode and source select */
+> > #define PM8XXX_FUNCTION(m,s)		((m) << 16 | (s))
+> >
+> > #define PM8921_GPIO1_14_KYPD_SNS	PM8XXX_FUNCTION(PM8XXX_DIGITAL_IN, 1)
+> > #define PM8921_GPIO9_14_KYPD_DRV	PM8XXX_FUNCTION(PM8XXX_DIGITAL_OUT, 1)
+> > #define PM8921_GPIO33_35_PWM		PM8XXX_FUNCTION(PM8XXX_DIGITAL_OUT, 3)
+> >
+> > ..
+> >
+> >
+> 
+> This isn't what I was suggesting at all. The function should be
+> something like KYPD, PWM and those should just be defined to be 1 or 3.
+> The mode should be some other property like input or output, and the
+> driver should or the two together and put it into the register.
 
-Don't put stuff in the core driver core for your chip specific weirdness,
-wrap the termios method with your own in your driver code as a fair
-number of other 8250ish drivers do.
+Well, we can do this. I was just thought that will more convenient if
+function is fully described in to one property.
 
-If you do that then you don't need to waste a UART CAPS flag and you
-don't need to put anything in the core driver code.
+Regards,
+Ivan
 
-Alan
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
