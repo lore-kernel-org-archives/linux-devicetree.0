@@ -1,61 +1,39 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] rcar_can: document device tree bindings
-Date: Tue, 05 Aug 2014 08:15:43 +0200
-Message-ID: <53E0768F.8030406@pengutronix.de>
-References: <201408010124.26505.sergei.shtylyov@cogentembedded.com> <53DAB5CF.8000407@pengutronix.de> <53DFC0CE.4050602@cogentembedded.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dt/bindings: rcar-audmapp: tidyup dmas explanation
+Date: Tue, 5 Aug 2014 08:56:14 +0200
+Message-ID: <CAMuHMdVhyHx3Gv1oYz1KjR3B7e+GGXpT0GJAJ542VTkJNCBrDw@mail.gmail.com>
+References: <cover.1405401560.git.horms+renesas@verge.net.au>
+	<caf18c27ddb2fb8ae2a7591b908e7efb7484e459.1405401560.git.horms+renesas@verge.net.au>
+	<CAMuHMdUY5rHrvwDp6RpHoY3vmGc9Khi-jkkiTytby6CxZgmauA@mail.gmail.com>
+	<87silcwpv9.wl%kuninori.morimoto.gx@gmail.com>
+	<87y4v3of3z.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <53DFC0CE.4050602@cogentembedded.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <87y4v3of3z.wl%kuninori.morimoto.gx@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 5, 2014 at 4:16 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@gmail.com> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> Current dmas explanation of SRC/DRS is confusable.
+> This patch clarifies it.
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-On 08/04/2014 07:20 PM, Sergei Shtylyov wrote:
-> Hello.
->=20
-> On 08/01/2014 01:31 AM, Marc Kleine-Budde wrote:
->=20
->>> Document the R-Car CAN device tree bindings.
->=20
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
->> The series looks good from the CAN perpective. I'll apply the patches
->> after we've got an Acked-by from the DT folks.
->=20
->    How about the prior CAN clock support patch?
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-That looks good, too.
+Gr{oetje,eeting}s,
 
-Marc
+                        Geert
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
---xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlPgdo8ACgkQjTAFq1RaXHNdOACfXuSAf+fJj41EgZ/2jJLn4/O3
-ANoAn2/h1ZSLnl326pdZm1QK5jBvaduT
-=ZqsA
------END PGP SIGNATURE-----
-
---xn8EFqBR5OMu8Sj3dp8lr4UR5M4vTQgkG--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
