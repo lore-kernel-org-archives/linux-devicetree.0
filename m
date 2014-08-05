@@ -1,58 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 4/6] dmaengine: rcar-dmac: Add device tree bindings documentation
-Date: Tue, 05 Aug 2014 15:33:41 +0200
-Message-ID: <11536846.yTpuKL4B5k@avalon>
-References: <cover.1406766014.git.horms+renesas@verge.net.au> <2984491.bHCssUOyYu@avalon> <20140805014641.GD26270@verge.net.au>
+From: Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/3] tty: serial: 8250: Add Mediatek UART driver
+Date: Tue, 05 Aug 2014 14:38:34 +0100
+Message-ID: <1407245914.30675.31.camel@acox1-desk.ger.corp.intel.com>
+References: <1407236054-30994-1-git-send-email-matthias.bgg@gmail.com>
+		 <1407236054-30994-3-git-send-email-matthias.bgg@gmail.com>
+		 <53E0C633.7060600@gmail.com>
+	 <1407240147.30675.29.camel@acox1-desk.ger.corp.intel.com>
+	 <53E0C839.3000808@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140805014641.GD26270@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53E0C839.3000808-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org, mwelling-EkmVulN54Sk@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, jschultz-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org, mingo-X9Un+BFzKDI@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Tuesday 05 August 2014 10:46:42 Simon Horman wrote:
-> On Mon, Aug 04, 2014 at 04:01:42PM +0200, Laurent Pinchart wrote:
-> > On Monday 04 August 2014 10:05:49 Geert Uytterhoeven wrote:
-> >> On Thu, Jul 31, 2014 at 2:34 AM, Simon Horman wrote:
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> >>> @@ -0,0 +1,98 @@
-> >>> +* Renesas R-Car DMA Controller Device Tree bindings
-> >>> +
-> >>> +Renesas R-Car Generation 2 SoCs have have multiple multi-channel DMA
-> >>> +controller instances named DMAC capable of serving multiple clients.
-> >>> Channels
-> >>> +can be dedicated to specific clients or shared between a large number
-> >>> of
-> >>> +clients.
-> >>> +
-> >>> +DMA clients are connected to the DMAC ports referenced by an 8-bit
-> >>> identifier +called MID/RID.
-> >> 
-> >> I think the above sentence can be removed, as it's superseded by the
-> >> first sentence of the successive paragraph:
+On Tue, 2014-08-05 at 17:34 +0530, Varka Bhadram wrote:
+> On 08/05/2014 05:32 PM, Alan Cox wrote:
+> > On Tue, 2014-08-05 at 17:25 +0530, Varka Bhadram wrote:
+> >> On 08/05/2014 04:24 PM, Matthias Brugger wrote:
 > >>
-> > I've probably just forgotten to remove the sentence while reworking the
-> > documentation. Thanks for reporting it, I'll fix that in the next version.
+> >> (...)
+> >>
+> >>> +#include <linux/io.h>
+> >>> +#include <linux/module.h>
+> >>> +#include <linux/serial_8250.h>
+> >>> +#include <linux/of_irq.h>
+> >>> +#include <linux/of_platform.h>
+> >>> +#include <linux/platform_device.h>
+> >>> +#include <linux/clk.h>
+> >>> +#include <linux/pm_runtime.h>
+> >>> +#include "8250.h"
+> >>> +
+> >> Better if we have includes in alphabetical order..
+> >
+> > So 8250.h would be first and it wouldn't compile ???
+> >
+> > Can we stick to serious critiques ?
 > 
-> BTW, I believe Vinod has already applied this and the previous three
-> patches of this series to his tree.
+> The local headers should be at the end of all includes
 
-Indeed. I'm surprised to see the DT bindings being merged without the driver, 
-but given that they seem to be OK, that's not a problem.
+Which is not alaphetical order
 
-> As he applied then rather than pulling the pull-request I sent I intend
-> to drop the entire series from my tree for now.
-
-Please do. I'll resubmit the remaining patches.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+The include ordering does not matter, please stick to actual things that
+matter.
