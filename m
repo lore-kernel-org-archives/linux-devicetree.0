@@ -1,19 +1,22 @@
 From: Andrzej Hajda <a.hajda@samsung.com>
 Subject: Re: [PATCH 01/15] drm/panel: add prepare and unprepare routines
-Date: Tue, 05 Aug 2014 11:00:06 +0200
-Message-ID: <53E09D16.9090701@samsung.com>
-References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com> <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
+Date: Tue, 05 Aug 2014 11:11:35 +0200
+Message-ID: <53E09FC7.6010901@samsung.com>
+References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
+In-reply-to: <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.orgdri-devel@lists.freedesktop.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
+Cc: inki.dae@samsung.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 Hi Ajay,
+
+[RESEND with reconstructed mail receivers, sorry for noise]
 
 I am glad we have finally more fine-grained callbacks.
 Just few nitpicks.
@@ -45,7 +48,7 @@ On 07/31/2014 07:42 PM, Ajay Kumar wrote:
 > 	poweroff LED unit/BACKLIGHT_EN = "disable" callback
 > 	poweroff LCD unit/LCD_EN = "unprepare" callback
 > 
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> Signed-off-by: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
 >  include/drm/drm_panel.h |   18 ++++++++++++++++++
 >  1 file changed, 18 insertions(+)
