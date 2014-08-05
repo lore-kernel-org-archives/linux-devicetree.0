@@ -1,68 +1,60 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
-Date: Tue, 05 Aug 2014 10:02:54 +0200
-Message-ID: <53E08FAE.3000205@redhat.com>
-References: <20140731192016.GA6869@excalibur.cnev.de> <20140803130430.GY3952@lukather> <201408031959.27607.arnd@arndb.de> <20140804192510.GF3952@lukather>
+Date: Tue, 5 Aug 2014 10:06:03 +0200
+Message-ID: <201408051006.03303.arnd@arndb.de>
+References: <20140731192016.GA6869@excalibur.cnev.de> <20140804192510.GF3952@lukather> <20140804212317.GL30282@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140804192510.GF3952@lukather>
+In-Reply-To: <20140804212317.GL30282-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08/04/2014 09:25 PM, Maxime Ripard wrote:
-> On Sun, Aug 03, 2014 at 07:59:27PM +0200, Arnd Bergmann wrote:
->> On Sunday 03 August 2014, Maxime Ripard wrote:
->>> Thanks for reporting this.
->>>
->>> From a quick grep, the issue is actually broader than just
->>> Allwinner. At least the following platforms seem to do the same:
->>>   - mvebu
->>>   - axm5516
->>>   - bcm
->>>   - berlin
->>>   - ea3250
->>>   - ecx-2000
->>>   - highbank
->>>   - imx / mxs
->>>   - lpc32xx
->>>   - phy3250
->>>   - picoxcell
->>>   - shmobile
->>>   - rockchip
->>>   - socfpga
->>>   - spear
->>>   - ste
->>>   - zynq
->>>
->>> Would you mind sending a patch to fix all these?
->>
->> I would actually prefer if we could migrate a lot of these files to BSD license,
->> provided the original authors agree. We want the dtb blobs to be embeddable into
->> boot loaders of any license.
+On Monday 04 August 2014, Russell King - ARM Linux wrote:
+> On Mon, Aug 04, 2014 at 09:25:10PM +0200, Maxime Ripard wrote:
+> > On Sun, Aug 03, 2014 at 07:59:27PM +0200, Arnd Bergmann wrote:
+> > > I would actually prefer if we could migrate a lot of these files to BSD license,
+> > > provided the original authors agree. We want the dtb blobs to be embeddable into
+> > > boot loaders of any license.
+> > 
+> > Even though I'd be open to having my contributions to DTBs under the
+> > BSD, is this really a thing?
+> > 
+> > I mean, for all I know, an OS/Bootloader would just parse a documented
+> > binary file, and I don't see any derivative work there.
 > 
-> Even though I'd be open to having my contributions to DTBs under the
-> BSD
+> How does the OS/Bootloader end up with that binary file?
+> 
+> For the sake of argument, let's say that the BSDs want to move to DT on
+> ARM.  Great, they convert over to parsing our DT blobs.
 
-p.s.
+They already do, at least FreeBSD.
 
-I've a patch adding a new dts file for the bananapi pending. I might as well
-relicense that before submitting V2. So what shall we use 2 clause BSD or MIT ?
+> However, they can't distribute the binary DT blobs to their users without
+> coming up against the problems of the GPL wrt binary distribution.
+> 
+> They could distribute the source files, but remember that many of those
+> are currently GPL licensed, so they'd probably end up having to package
+> them entirely separately, if they're willing to do that at all.
+>
+> Or they could decide to ignore us altogether, and do their own DT stuff,
+> maybe partially implementing our properties, or maybe coming up with
+> different and/or incompatible properties - which would be bad because
+> we now end up with two ways to describe the same hardware in active use.
 
-I've a slight preference for MIT, but both are fine.
+I think this is exactly what is happening on the platforms that FreeBSD
+first adopted DT on.
 
-Regards,
+> I suspect the final option is the one they'd choose, and it's in our
+> interest that that doesn't happen.
 
-Hans
+Right, or at least not have it spread to other platforms.
 
-
-
-
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
