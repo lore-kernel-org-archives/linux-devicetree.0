@@ -1,109 +1,217 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 01/15] drm/panel: add prepare and unprepare routines
-Date: Tue, 05 Aug 2014 11:11:35 +0200
-Message-ID: <53E09FC7.6010901@samsung.com>
-References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] Thermal: imx: add i.mx6sx thermal support
+Date: Tue, 5 Aug 2014 17:12:43 +0800
+Message-ID: <1407229963-32662-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1406828534-10072-2-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
-Cc: inki.dae@samsung.com, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, eduardo.valentin-l0cyMroinI0@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ajay,
+i.MX6SX has some new features of thermal interrupt function,
+there are LOW, HIGH and PANIC irq for thermal sensor, so add
+platform data to separate different thermal version;
 
-[RESEND with reconstructed mail receivers, sorry for noise]
+The reset value of LOW ALARM is 0 which means the highest
+temp, so the LOW ALARM will be triggered once irq is enabled,
+so we need to correct it before enabling thermal irq;
 
-I am glad we have finally more fine-grained callbacks.
-Just few nitpicks.
+Enable PANIC ALARM as critical trip point, it will trigger
+system reset via SRC module once PANIC IRQ is triggered, it
+is pure hardware function, so use it instead of software
+reset by cooling device.
 
-On 07/31/2014 07:42 PM, Ajay Kumar wrote:
-> Most of the panels need an init sequence as mentioned below:
-> 	-- poweron LCD unit/LCD_EN
-> 	-- start video data
-> 	-- poweron LED unit/BACKLIGHT_EN
-> And, a de-init sequence as mentioned below:
-> 	-- poweroff LED unit/BACKLIGHT_EN
-> 	-- stop video data
-> 	-- poweroff LCD unit/LCD_EN
-> With existing callbacks for drm panel, we cannot accomodate such panels,
-> since only two callbacks, i.e "panel_enable" and panel_disable are supported.
-> 
-> This patch adds:
-> 	-- "prepare" callback which can be called before
-> 	the actual video data is on, and then call the "enable"
-> 	callback after the video data is available.
-> 
-> 	-- "unprepare" callback which can be called after
-> 	the video data is off, and use "disable" callback
-> 	to do something before switching off the video data.
-> 
-> Now, we can easily map the above scenario as shown below:
-> 	poweron LCD unit/LCD_EN = "prepare" callback
-> 	poweron LED unit/BACKLIGHT_EN = "enable" callback
-> 	poweroff LED unit/BACKLIGHT_EN = "disable" callback
-> 	poweroff LCD unit/LCD_EN = "unprepare" callback
-> 
-> Signed-off-by: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  include/drm/drm_panel.h |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> index c2ab77a..9addc69 100644
-> --- a/include/drm/drm_panel.h
-> +++ b/include/drm/drm_panel.h
-> @@ -31,7 +31,9 @@ struct drm_device;
->  struct drm_panel;
->  
->  struct drm_panel_funcs {
-> +	int (*unprepare)(struct drm_panel *panel);
->  	int (*disable)(struct drm_panel *panel);
-> +	int (*prepare)(struct drm_panel *panel);
->  	int (*enable)(struct drm_panel *panel);
->  	int (*get_modes)(struct drm_panel *panel);
->  };
-> @@ -46,6 +48,14 @@ struct drm_panel {
->  	struct list_head list;
->  };
->  
-> +static inline int drm_panel_unprepare(struct drm_panel *panel)
-> +{
-> +	if (panel && panel->funcs && panel->funcs->unprepare)
-> +		return panel->funcs->unprepare(panel);
-> +
-> +	return panel ? -ENOSYS : -EINVAL;
-> +}
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/thermal/imx-thermal.txt    |    2 +-
+ drivers/thermal/imx_thermal.c                      |   88 +++++++++++++++++---
+ 2 files changed, 76 insertions(+), 14 deletions(-)
 
-Wouldn't be better to return 0 in case there is no callback.
-In such case we could avoid implementing ugly dummy callbacks in
-each panel driver. This is true for all
-prepare/unprepare/enable/disable callbacks.
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+index 1f0f672..95c05b1 100644
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+@@ -1,7 +1,7 @@
+ * Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+ 
+ Required properties:
+-- compatible : "fsl,imx6q-thermal"
++- compatible : "fsl,imx6q-tempmon" for V1, "fsl,imx6sx-tempmon" for V2.
+ - fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+   control registers, e.g. ANATOP on imx6q.
+ - fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index 2c516f2..2276e74 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -19,6 +19,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -31,6 +32,10 @@
+ 
+ #define MISC0				0x0150
+ #define MISC0_REFTOP_SELBIASOFF		(1 << 3)
++#define MISC1				0x0160
++#define MISC1_IRQ_TEMPHIGH		(1 << 29)
++#define MISC1_IRQ_TEMPLOW		(1 << 28)
++#define MISC1_IRQ_TEMPPANIC		(1 << 27)
+ 
+ #define TEMPSENSE0			0x0180
+ #define TEMPSENSE0_ALARM_VALUE_SHIFT	20
+@@ -43,6 +48,11 @@
+ 
+ #define TEMPSENSE1			0x0190
+ #define TEMPSENSE1_MEASURE_FREQ		0xffff
++#define TEMPSENSE2			0x0290
++#define TEMPSENSE2_LOW_VALUE_SHIFT	0
++#define TEMPSENSE2_LOW_VALUE_MASK	0xfff
++#define TEMPSENSE2_PANIC_VALUE_SHIFT	16
++#define TEMPSENSE2_PANIC_VALUE_MASK	0xfff0000
+ 
+ #define OCOTP_ANA1			0x04e0
+ 
+@@ -66,6 +76,21 @@ enum imx_thermal_trip {
+ #define FACTOR1				15976
+ #define FACTOR2				4297157
+ 
++#define TEMPMON_V1			1
++#define TEMPMON_V2			2
++
++struct thermal_soc_data {
++	u32 version;
++};
++
++static struct thermal_soc_data thermal_imx6q_data = {
++	.version = TEMPMON_V1,
++};
++
++static struct thermal_soc_data thermal_imx6sx_data = {
++	.version = TEMPMON_V2,
++};
++
+ struct imx_thermal_data {
+ 	struct thermal_zone_device *tz;
+ 	struct thermal_cooling_device *cdev;
+@@ -79,8 +104,21 @@ struct imx_thermal_data {
+ 	bool irq_enabled;
+ 	int irq;
+ 	struct clk *thermal_clk;
++	const struct thermal_soc_data *socdata;
+ };
+ 
++static void imx_set_panic_temp(struct imx_thermal_data *data,
++			       signed long panic_temp)
++{
++	struct regmap *map = data->tempmon;
++	int critical_value;
++
++	critical_value = (data->c2 - panic_temp) / data->c1;
++	regmap_write(map, TEMPSENSE2 + REG_CLR, TEMPSENSE2_PANIC_VALUE_MASK);
++	regmap_write(map, TEMPSENSE2 + REG_SET, critical_value <<
++			TEMPSENSE2_PANIC_VALUE_SHIFT);
++}
++
+ static void imx_set_alarm_temp(struct imx_thermal_data *data,
+ 			       signed long alarm_temp)
+ {
+@@ -142,13 +180,15 @@ static int imx_get_temp(struct thermal_zone_device *tz, unsigned long *temp)
+ 	/* See imx_get_sensor_data() for formula derivation */
+ 	*temp = data->c2 - n_meas * data->c1;
+ 
+-	/* Update alarm value to next higher trip point */
+-	if (data->alarm_temp == data->temp_passive && *temp >= data->temp_passive)
+-		imx_set_alarm_temp(data, data->temp_critical);
+-	if (data->alarm_temp == data->temp_critical && *temp < data->temp_passive) {
+-		imx_set_alarm_temp(data, data->temp_passive);
+-		dev_dbg(&tz->device, "thermal alarm off: T < %lu\n",
+-			data->alarm_temp / 1000);
++	/* Update alarm value to next higher trip point, only V1 needs it */
++	if (data->socdata->version == TEMPMON_V1) {
++		if (data->alarm_temp == data->temp_passive && *temp >= data->temp_passive)
++			imx_set_alarm_temp(data, data->temp_critical);
++		if (data->alarm_temp == data->temp_critical && *temp < data->temp_passive) {
++			imx_set_alarm_temp(data, data->temp_passive);
++			dev_dbg(&tz->device, "thermal alarm off: T < %lu\n",
++				data->alarm_temp / 1000);
++		}
+ 	}
+ 
+ 	if (*temp != data->last_temp) {
+@@ -398,8 +438,17 @@ static irqreturn_t imx_thermal_alarm_irq_thread(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
++static const struct of_device_id of_imx_thermal_match[] = {
++	{ .compatible = "fsl,imx6q-tempmon", .data = &thermal_imx6q_data, },
++	{ .compatible = "fsl,imx6sx-tempmon", .data = &thermal_imx6sx_data, },
++	{ /* end */ }
++};
++MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
++
+ static int imx_thermal_probe(struct platform_device *pdev)
+ {
++	const struct of_device_id *of_id =
++		of_match_device(of_imx_thermal_match, &pdev->dev);
+ 	struct imx_thermal_data *data;
+ 	struct cpumask clip_cpus;
+ 	struct regmap *map;
+@@ -418,6 +467,21 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 	}
+ 	data->tempmon = map;
+ 
++	data->socdata = of_id->data;
++
++	/* make sure the IRQ flag is clear before enable irq */
++	regmap_write(map, MISC1 + REG_CLR, MISC1_IRQ_TEMPHIGH);
++	if (data->socdata->version == TEMPMON_V2) {
++		regmap_write(map, MISC1 + REG_CLR, MISC1_IRQ_TEMPLOW |
++			MISC1_IRQ_TEMPPANIC);
++		/*
++		 * reset value of LOW ALARM is incorrect, set it to lowest
++		 * value to avoid false trigger of low alarm.
++		 */
++		regmap_write(map, TEMPSENSE2 + REG_SET,
++			TEMPSENSE2_LOW_VALUE_MASK);
++	}
++
+ 	data->irq = platform_get_irq(pdev, 0);
+ 	if (data->irq < 0)
+ 		return data->irq;
+@@ -489,6 +553,10 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 	measure_freq = DIV_ROUND_UP(32768, 10); /* 10 Hz */
+ 	regmap_write(map, TEMPSENSE1 + REG_SET, measure_freq);
+ 	imx_set_alarm_temp(data, data->temp_passive);
++
++	if (data->socdata->version == TEMPMON_V2)
++		imx_set_panic_temp(data, data->temp_critical);
++
+ 	regmap_write(map, TEMPSENSE0 + REG_CLR, TEMPSENSE0_POWER_DOWN);
+ 	regmap_write(map, TEMPSENSE0 + REG_SET, TEMPSENSE0_MEASURE_TEMP);
+ 
+@@ -550,12 +618,6 @@ static int imx_thermal_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(imx_thermal_pm_ops,
+ 			 imx_thermal_suspend, imx_thermal_resume);
+ 
+-static const struct of_device_id of_imx_thermal_match[] = {
+-	{ .compatible = "fsl,imx6q-tempmon", },
+-	{ /* end */ }
+-};
+-MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
+-
+ static struct platform_driver imx_thermal = {
+ 	.driver = {
+ 		.name	= "imx_thermal",
+-- 
+1.7.9.5
 
-Regards
-Andrzej
-
-> +
->  static inline int drm_panel_disable(struct drm_panel *panel)
->  {
->  	if (panel && panel->funcs && panel->funcs->disable)
-> @@ -54,6 +64,14 @@ static inline int drm_panel_disable(struct drm_panel *panel)
->  	return panel ? -ENOSYS : -EINVAL;
->  }
->  
-> +static inline int drm_panel_prepare(struct drm_panel *panel)
-> +{
-> +	if (panel && panel->funcs && panel->funcs->prepare)
-> +		return panel->funcs->prepare(panel);
-> +
-> +	return panel ? -ENOSYS : -EINVAL;
-> +}
-> +
->  static inline int drm_panel_enable(struct drm_panel *panel)
->  {
->  	if (panel && panel->funcs && panel->funcs->enable)
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
