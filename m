@@ -1,50 +1,139 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 2/3] fpga bus driver
-Date: Tue, 5 Aug 2014 21:21:46 +0300
-Message-ID: <8FA28B3D-823F-48B1-83F6-0905F8004CE2@konsulko.com>
-References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com> <1406932118-13885-3-git-send-email-atull@opensource.altera.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406932118-13885-3-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH] serial: clps711x: Use mctrl_gpio helpers for handling modem signals
+Date: Tue,  5 Aug 2014 22:37:21 +0400
+Message-ID: <1407263841-14692-1-git-send-email-shc_work@mail.ru>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
+signals.
 
-On Aug 2, 2014, at 1:28 AM, <atull@opensource.altera.com> wrote:
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ .../bindings/serial/cirrus,clps711x-uart.txt       |  7 +++--
+ drivers/tty/serial/Kconfig                         |  1 +
+ drivers/tty/serial/clps711x.c                      | 32 +++++++---------------
+ 3 files changed, 16 insertions(+), 24 deletions(-)
 
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> This driver allows programming the fpga from
-> device tree overlays.
-> 
-> This code is dependent on Pantelis Antoniou's current
-> work on Device Tree overlays, a method of dynamically
-> altering the kerel's live Device Tree.  This patchset
-> was tested with Pantelis's and Grant Likely's stuff
-> that is in git plus some dtc fixups for compiling
-> overlays.
-> 
-> Resume is handled by re-requesting the firmware and
-> reprogramming the FPGA.
-> 
-> Here's a simple example. Start with:
->  * the altera-gpio driver built in to the kernel but not in the
->    device tree.
->  * raw fpga image at /lib/firmware/soc_system.rbf
->  * Load appropriate device tree overlay in configfs by doing
->    $ mkdir /config/device-tree/overlays/1
->    $ echo socfpga_overlay.dtbo > /config/device-tree/overlays/1/path
+diff --git a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+index 12f3cf8..caaeb25 100644
+--- a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
++++ b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+@@ -8,7 +8,8 @@ Required properties:
+ - syscon: Phandle to SYSCON node, which contain UART control bits.
+ 
+ Optional properties:
+-- uart-use-ms: Indicate the UART has modem signal (DCD, DSR, CTS).
++- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
++  line respectively.
+ 
+ Note: Each UART port should have an alias correctly numbered
+ in "aliases" node.
+@@ -24,5 +25,7 @@ Example:
+ 		interrupts = <12 13>;
+ 		clocks = <&clks 11>;
+ 		syscon = <&syscon1>;
+-		uart-use-ms;
++		cts-gpios = <&sysgpio 0 GPIO_ACTIVE_LOW>;
++		dsr-gpios = <&sysgpio 1 GPIO_ACTIVE_LOW>;
++		dcd-gpios = <&sysgpio 2 GPIO_ACTIVE_LOW>;
+ 	};
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 26cec64..75cc59f 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -204,6 +204,7 @@ config SERIAL_CLPS711X
+ 	tristate "CLPS711X serial port support"
+ 	depends on ARCH_CLPS711X || COMPILE_TEST
+ 	select SERIAL_CORE
++	select SERIAL_MCTRL_GPIO
+ 	help
+ 	  This enables the driver for the on-chip UARTs of the Cirrus
+ 	  Logic EP711x/EP721x/EP731x processors.
+diff --git a/drivers/tty/serial/clps711x.c b/drivers/tty/serial/clps711x.c
+index f5b4c3d..acfe317 100644
+--- a/drivers/tty/serial/clps711x.c
++++ b/drivers/tty/serial/clps711x.c
+@@ -33,6 +33,8 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/mfd/syscon/clps711x.h>
+ 
++#include "serial_mctrl_gpio.h"
++
+ #define UART_CLPS711X_DEVNAME	"ttyCL"
+ #define UART_CLPS711X_NR	2
+ #define UART_CLPS711X_MAJOR	204
+@@ -62,7 +64,7 @@ struct clps711x_port {
+ 	unsigned int		tx_enabled;
+ 	int			rx_irq;
+ 	struct regmap		*syscon;
+-	bool			use_ms;
++	struct mctrl_gpios	*gpios;
+ };
+ 
+ static struct uart_driver clps711x_uart = {
+@@ -198,28 +200,17 @@ static unsigned int uart_clps711x_tx_empty(struct uart_port *port)
+ 
+ static unsigned int uart_clps711x_get_mctrl(struct uart_port *port)
+ {
++	unsigned int result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
+ 	struct clps711x_port *s = dev_get_drvdata(port->dev);
+-	unsigned int result = 0;
+-
+-	if (s->use_ms) {
+-		u32 sysflg = 0;
+-
+-		regmap_read(s->syscon, SYSFLG_OFFSET, &sysflg);
+-		if (sysflg & SYSFLG1_DCD)
+-			result |= TIOCM_CAR;
+-		if (sysflg & SYSFLG1_DSR)
+-			result |= TIOCM_DSR;
+-		if (sysflg & SYSFLG1_CTS)
+-			result |= TIOCM_CTS;
+-	} else
+-		result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
+ 
+-	return result;
++	return mctrl_gpio_get(s->gpios, &result);
+ }
+ 
+ static void uart_clps711x_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ {
+-	/* Do nothing */
++	struct clps711x_port *s = dev_get_drvdata(port->dev);
++
++	mctrl_gpio_set(s->gpios, mctrl);
+ }
+ 
+ static void uart_clps711x_break_ctl(struct uart_port *port, int break_state)
+@@ -490,15 +481,10 @@ static int uart_clps711x_probe(struct platform_device *pdev)
+ 		s->syscon = syscon_regmap_lookup_by_pdevname(syscon_name);
+ 		if (IS_ERR(s->syscon))
+ 			return PTR_ERR(s->syscon);
+-
+-		s->use_ms = !index;
+ 	} else {
+ 		s->syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
+ 		if (IS_ERR(s->syscon))
+ 			return PTR_ERR(s->syscon);
+-
+-		if (!index)
+-			s->use_ms = of_property_read_bool(np, "uart-use-ms");
+ 	}
+ 
+ 	s->port.line		= index;
+@@ -513,6 +499,8 @@ static int uart_clps711x_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, s);
+ 
++	s->gpios = mctrl_gpio_init(&pdev->dev, 0);
++
+ 	ret = uart_add_one_port(&clps711x_uart, &s->port);
+ 	if (ret)
+ 		return ret;
+-- 
+1.8.5.5
 
-FWIW, there's now an updated configfs interface. You can just 
-# cp socfpga_overlay.dtbo /config/device-tree/overlays/1/dtbo
-
-That's namespace safe, if you care about those things.
-
-Regards
-
--- Pantelis
