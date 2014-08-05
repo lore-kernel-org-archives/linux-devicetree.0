@@ -1,94 +1,53 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH 07/15] drm/exynos: dsi: Add support for panel prepare and
- unprepare routines
-Date: Tue, 5 Aug 2014 21:41:09 +0530
-Message-ID: <CAEC9eQPFnMEptzYiox2-6Z37iOCKgMyqjfYWo6RfRbEFtXW9jg@mail.gmail.com>
-References: <1406828534-10072-1-git-send-email-ajaykumar.rs@samsung.com>
- <1406828534-10072-8-git-send-email-ajaykumar.rs@samsung.com>
- <53E0AC0C.9030309@samsung.com>
+From: Bill Pringlemeir <bpringlemeir@nbsps.com>
+Subject: [PATCH 1/2] ARM: dts: vf610-twr: Fix pinctrl_esdhc1 pin definitions.
+Date: Tue,  5 Aug 2014 13:34:00 -0400
+Message-ID: <1407260041-19234-2-git-send-email-bpringlemeir@nbsps.com>
+References: <1407260041-19234-1-git-send-email-bpringlemeir@nbsps.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53E0AC0C.9030309@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1407260041-19234-1-git-send-email-bpringlemeir@nbsps.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@freescale.com
+Cc: devicetree@vger.kernel.org, Bill Pringlemeir <bpringlemeir@nbsps.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+Previous version had an extra 'fsl' which made the pins not match
+any entry.  The console message,
 
+ vf610-pinctrl 40048000.iomuxc: no fsl,pins property in node \
+    /soc/aips-bus@40000000/iomuxc@40048000/vf610-twr/esdhc1grp
 
-On Tue, Aug 5, 2014 at 3:33 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
-> Hi Ajay,
->
->
-> On 07/31/2014 07:42 PM, Ajay Kumar wrote:
->> Modify exynos_dsi driver to support the new panel calls:
->> prepare and unprepare.
->>
->> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->> ---
->>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |   12 ++++++++++--
->>  1 file changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> index dc7c80b..4834932 100644
->> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> @@ -1351,7 +1351,7 @@ static int exynos_dsi_enable(struct exynos_dsi *dsi)
->>       if (ret < 0)
->>               return ret;
->>
->> -     ret = drm_panel_enable(dsi->panel);
->> +     ret = drm_panel_prepare(dsi->panel);
->>       if (ret < 0) {
->>               exynos_dsi_poweroff(dsi);
->>               return ret;
->> @@ -1360,6 +1360,13 @@ static int exynos_dsi_enable(struct exynos_dsi *dsi)
->>       exynos_dsi_set_display_mode(dsi);
->>       exynos_dsi_set_display_enable(dsi, true);
->>
->> +     ret = drm_panel_enable(dsi->panel);
->> +     if (ret < 0) {
->> +             exynos_dsi_set_display_enable(dsi, false);
->
-> I guess drm_panel_unprepare(dsi->panel) should be here.
-Thanks for pointing it out. I am not sure if Thierry has already
-picked this up since Inki has given Acked by.
-In that case, you can send it as a fix separately :)
+is displayed without the fix.  The prior version would generally
+work as u-boot sets the pins properly for sdhc.  This change allows
+Linux sdhc use even if u-boot is built without sdhc support.
 
-Ajay
->> +             exynos_dsi_poweroff(dsi);
->> +             return ret;
->> +     }
->> +
->>       dsi->state |= DSIM_STATE_ENABLED;
->>
->>       return 0;
->> @@ -1370,8 +1377,9 @@ static void exynos_dsi_disable(struct exynos_dsi *dsi)
->>       if (!(dsi->state & DSIM_STATE_ENABLED))
->>               return;
->>
->> -     exynos_dsi_set_display_enable(dsi, false);
->>       drm_panel_disable(dsi->panel);
->> +     exynos_dsi_set_display_enable(dsi, false);
->> +     drm_panel_unprepare(dsi->panel);
->>       exynos_dsi_poweroff(dsi);
->>
->>       dsi->state &= ~DSIM_STATE_ENABLED;
->>
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
+---
+ arch/arm/boot/dts/vf610-twr.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 11d7334..b8a5e8c 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -168,7 +168,7 @@
+ 		};
+ 
+ 		pinctrl_esdhc1: esdhc1grp {
+-			fsl,fsl,pins = <
++			fsl,pins = <
+ 				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
+ 				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
+ 				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
+-- 
+1.8.0.2
