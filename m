@@ -1,37 +1,84 @@
-From: Bill Pringlemeir <bpringlemeir@nbsps.com>
-Subject: Re: [PATCH 1/2] ARM: dts: vf610-twr: Fix pinctrl_esdhc1 pin
- definitions.
-Date: Tue, 05 Aug 2014 13:39:20 -0400
-Message-ID: <87tx5q7s53.fsf@nbsps.com>
-References: <1407260041-19234-1-git-send-email-bpringlemeir@nbsps.com>
- <1407260041-19234-2-git-send-email-bpringlemeir@nbsps.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407260041-19234-2-git-send-email-bpringlemeir@nbsps.com> (Bill
- Pringlemeir's message of "Tue, 5 Aug 2014 13:34:00 -0400")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@freescale.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH 0/3] Yet another stab at a fpga framework
+Date: Tue, 5 Aug 2014 21:18:46 +0300
+Message-ID: <1FF23F53-E94E-44F1-A198-BD49ACB2DCA7@konsulko.com>
+References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On  5 Aug 2014, bpringlemeir@nbsps.com wrote:
+Hi Alan,
 
-> Previous version had an extra 'fsl' which made the pins not match
-> any entry.  The console message,
+On Aug 2, 2014, at 1:28 AM, <atull@opensource.altera.com> wrote:
 
-All patches are based off 'for-next' (5424d6fd) in,
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> [resend with fixed email settings]
+> 
+> The idea of the framework is to provide consistent ways of
+> programming raw images into FPGA's.
+> 
+> Programming from device tree overlays is supported.
+> 
+> The core (fpga-mgr.c) does not include a userspace interface
+> and just exports kernel functions.
+> 
+> This approach separates the core from the interfaces.
+> 
+> Each interface can be enabled or disabled in the defconfig.
+> In some production contexts, interfaces that might be used
+> during development can be disabled.
+> 
+> The core exports kernel functions to:
+>  * write the fpga from a buffer or using the firmware layer
+>  * get fpga status
+>  * find a particular fpga manager from a device tree phandle
+>  * register/unregister lower level fpga drivers.
+> 
+> The bus allows us to:
+>  * program fpga from a device tree overlay using firmware.
+>  * automatically reload firmware and reprogram fpga during resume.
+> 
+> The sysfs interface:
+>  * read only, get the name and status of fpga manager.
+> 
+> I have a configfs interface patch which I haven't included,
+> adds configfs as a separate file.
+> 
+> TODO:
+>  * Enable bridges after fpga programming, disable during suspend
+> 
+> Alan Tull (3):
+>  fpga manager framework core
+>  fpga bus driver
+>  fpga sysfs interface
+> 
+> drivers/Kconfig          |    2 +
+> drivers/Makefile         |    1 +
+> drivers/fpga/Kconfig     |   27 +++
+> drivers/fpga/Makefile    |   12 ++
+> drivers/fpga/bus.c       |  145 ++++++++++++++++
+> drivers/fpga/fpga-mgr.c  |  431 ++++++++++++++++++++++++++++++++++++++++++++++
+> drivers/fpga/sysfs.c     |   69 ++++++++
+> include/linux/fpga-mgr.h |  137 +++++++++++++++
+> 8 files changed, 824 insertions(+)
+> create mode 100644 drivers/fpga/Kconfig
+> create mode 100644 drivers/fpga/Makefile
+> create mode 100644 drivers/fpga/bus.c
+> create mode 100644 drivers/fpga/fpga-mgr.c
+> create mode 100644 drivers/fpga/sysfs.c
+> create mode 100644 include/linux/fpga-mgr.h
+> 
 
- git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+Looks very sane and useful. Please let me know if you come across any problems
+with the overlays code, especially the removal path. 
 
-Thanks,
-Bill Pringlemeir.
+Regards
+
+-- Pantelis
