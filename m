@@ -1,70 +1,47 @@
-From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Subject: AW: where to add imx-udc-mx27 in device tree
-Date: Wed, 6 Aug 2014 13:16:11 +0000
-Message-ID: <E70AF999396FDF4EAE40E195B84709611F8480C6@SPMDEGHN001.CADCON.INTERN>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: where to add imx-udc-mx27 in device tree
+Date: Wed, 6 Aug 2014 10:24:40 -0300
+Message-ID: <CAOMZO5DPN=euHSRA093NVRC+dZotTDVpbodrji9NeGUgJjiDJA@mail.gmail.com>
 References: <E70AF999396FDF4EAE40E195B84709611F847DDE@SPMDEGHN001.CADCON.INTERN>
 	<CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ@mail.gmail.com>
 	<E70AF999396FDF4EAE40E195B84709611F84803F@SPMDEGHN001.CADCON.INTERN>
 	<CAOMZO5A0zVi29AXHOFZENQxonXFfETukbj-SSmQwO4km0cAgog@mail.gmail.com>
 	<E70AF999396FDF4EAE40E195B84709611F84808A@SPMDEGHN001.CADCON.INTERN>
- <CAOMZO5C89qyqzd0ML07YZvpCa-XSAgP7a6GGFH0DpDjx5vZgpg@mail.gmail.com>
+	<CAOMZO5C89qyqzd0ML07YZvpCa-XSAgP7a6GGFH0DpDjx5vZgpg@mail.gmail.com>
+	<E70AF999396FDF4EAE40E195B84709611F8480C6@SPMDEGHN001.CADCON.INTERN>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5C89qyqzd0ML07YZvpCa-XSAgP7a6GGFH0DpDjx5vZgpg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: de-DE
+In-Reply-To: <E70AF999396FDF4EAE40E195B84709611F8480C6-VHQhki0MIenpQFNhCJRnZ0Yy6alPw7Wn0MAMd6zgKLc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SSdtIHNvcnJ5IGZvciB0aGUgbm9pc2UsIGJ1dCBJIGFtIG5ldyB0byBkZXZpY2UgdHJlZXMuDQpX
-ZSBhcmUgdXNpbmcgYW4gaU1YMzUgKG5vdCBpTVgyNykgYW5kIGhhdmUgQ09ORklHX1VTQl9GU0xf
-TVBIX0RSX09GIGluIG91ciBjb25maWcuDQpJIGhhdmUgbm8gaWRlYSB3aHkgSSBzaG91bGQgbmVl
-ZCB0aGUgQ0hJUElERUEgc3R1ZmYuIEkgZGlkbid0IHVzZSBpdCBpbiB0aGUgcGFzdCAoa2VybmVs
-IDMuMiB3aXRob3V0IERUKS4NCkNhbiBzb21lYm9keSBwbGVhc2UgaGVscCB3aXRoIGEgbGl0dGxl
-IGJpdCB3aXRoIG15IFVTQiBnYWRnZXQ/IEkgYW0gdHJ5aW5nIHRvIHBvcnQgb3VyIG1hY2hpbmUg
-Y29kZSB0byBEVC4NClRoYW5rcyBhIGxvdC4NCg0KR3JlZXRpbmdzDQpTZWJhc3RpYW4gUHJpZWJl
-DQoNCg0KDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KQ0FE
-Q09ODQpJbmdlbmlldXJnZXNlbGxzY2hhZnQgbWJIICYgQ28uIEtHDQpHZXNjaGFlZnRzZnVlaHJl
-cjogUm9iZXJ0IEJhdWVyLCBBbmRyZWFzIEd1bmRlbA0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBE
-LTg2MzY4IEdlcnN0aG9mZW4NClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQXVnc2J1cmcg
-SFJBIDE0NTIxDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCg0K
-LS0tLS1VcnNwcsO8bmdsaWNoZSBOYWNocmljaHQtLS0tLQ0KVm9uOiBGYWJpbyBFc3RldmFtIFtt
-YWlsdG86ZmVzdGV2YW1AZ21haWwuY29tXQ0KR2VzZW5kZXQ6IE1pdHR3b2NoLCA2LiBBdWd1c3Qg
-MjAxNCAxNDo1NA0KQW46IFByaWViZSwgU2ViYXN0aWFuDQpDYzogZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmcNCkJldHJlZmY6IFJlOiB3aGVyZSB0byBhZGQgaW14LXVkYy1teDI3IGluIGRldmlj
-ZSB0cmVlDQoNCk9uIFdlZCwgQXVnIDYsIDIwMTQgYXQgOTo0NCBBTSwgUHJpZWJlLCBTZWJhc3Rp
-YW4gPFNlYmFzdGlhbi5QcmllYmVAY2FkY29uLmRlPiB3cm90ZToNCg0KPiBBbmQgaW4gb3VyIGR0
-cyB3ZSBoYXZlOg0KPiAmdXNib3RnIHsNCj4gICAgICAgICBjb21wYXRpYmxlID0gImlteC11ZGMt
-bXgyNyI7DQoNClRoaXMgaXMgbm90IGNvcnJlY3QuDQoNCj4gICAgICAgICBwaW5jdHJsLW5hbWVz
-ID0gImRlZmF1bHQiOw0KPiAgICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91c2JvdGc+Ow0K
-PiAgICAgICAgIGRyX21vZGUgPSAicGVyaXBoZXJhbCI7DQo+ICAgICAgICAgcGh5X3R5cGUgPSAi
-dXRtaV93aWRlIjsNCg0KTm8gdXRtaSBpbiBteDI3Lg0KDQo+ICAgICAgICAgc3RhdHVzID0gIm9r
-YXkiOw0KPiAgICAgICAgIC8qIHdoYXQgdG8gZG8gd2l0aCB3b3JrYXJvdW5kID0gRkxTX1VTQjJf
-V09SS0FST1VORF9FTkdDTTA5MTUyDQo+ID8/PyAqLw0KDQpUaGlzIGVycmF0dW0gZG9lcyBub3Qg
-YXBwbHkgdG8gbXgyNy4NCg0KPiB9Ow0KDQo+DQo+IEluIG91ciBjb25maWcgd2UgaGF2ZToNCj4g
-Q09ORklHX0lNWF9IQVZFX1BMQVRGT1JNX0ZTTF9VU0IyX1VEQz15DQoNClRoaXMgb3B0aW9uIGlz
-IGZvciB0aGUgbm9uLWR0IGRyaXZlci4gRGV2aWNlIHRyZWUgZHJpdmVyIG5lZWRzIHRoZSBjaGlw
-aWRlYSB0aGF0IEkgc2hvd2VkIGVhcmxpZXIuDQoNCkFzIEkgbWVudGlvbmVkIGJlZm9yZTogaW4g
-eW91ciBkdHMgZmlsZSB5b3Ugc2hvdWxkIGRvIHNvbWV0aGluZyBsaWtlDQphcmNoL2FybS9ib290
-L2R0cy9pbXgyNy0NCmV1a3JlYS1jcHVpbXgyNy5kdHNpOg0KDQomdXNib3RnIHsNCiAgICBwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiOw0KICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91c2JvdGc+
-Ow0KICAgIGRyX21vZGUgPSAib3RnIjsNCiAgICBwaHlfdHlwZSA9ICJ1bHBpIjsNCiAgICBkaXNh
-YmxlLW92ZXItY3VycmVudDsNCiAgICBzdGF0dXMgPSAib2theSI7DQp9Ow0KDQpZb3UgZG9uJ3Qg
-bmVlZCB0byBwYXNzIHRoZSBjb21wYXRpYmxlIGxpbmUgdGhlcmUuIFRoZSBjb21wYXRpYmxlIGxp
-bmUgaXMgYWxyZWFkeSBwYXNzZWQgaW4gdGhlIGlteDI3LmR0c2kgZmlsZToNCg0KICAgICAgICAg
-ICAgdXNib3RnOiB1c2JAMTAwMjQwMDAgew0KICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
-ZnNsLGlteDI3LXVzYiI7DQogICAgICAgICAgICAgICAgcmVnID0gPDB4MTAwMjQwMDAgMHgyMDA+
-Ow0KICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8NTY+Ow0KICAgICAgICAgICAgICAgIGNs
-b2NrcyA9IDwmY2xrcyBJTVgyN19DTEtfVVNCX0lQR19HQVRFPjsNCiAgICAgICAgICAgICAgICBm
-c2wsdXNibWlzYyA9IDwmdXNibWlzYyAwPjsNCiAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlz
-YWJsZWQiOw0KICAgICAgICAgICAgfTsNCg0KQWxzbywgaWYgeW91IHN0aWxsIGhhdmUgaXNzdWVz
-IHBsZWFzZSBzdGFydCBhIHRocmVhZCBhdCBhcm0gbGludXgga2VybmVsIG9yIHVzYi1kZXZlbCBt
-YWlsaW5nIGxpc3QgYXMgaXQgd291bGQgYmUgYSBiZXR0ZXIgcGxhY2UgdG8gZGlzY3VzcyB0aGlz
-DQoNCg==
+On Wed, Aug 6, 2014 at 10:16 AM, Priebe, Sebastian
+<Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org> wrote:
+> I'm sorry for the noise, but I am new to device trees.
+> We are using an iMX35 (not iMX27) and have CONFIG_USB_FSL_MPH_DR_OF in our config.
 
+Ah, OK that makes things clearer now :-)
+
+> I have no idea why I should need the CHIPIDEA stuff. I didn't use it in the past (kernel 3.2 without DT).
+
+When using device tree the USB driver for the imx family is the
+chipidea driver. The driver you used reviously without DT does not
+work with DT.
+
+> Can somebody please help with a little bit with my USB gadget? I am trying to port our machine code to DT.
+
+There is a mx35 dts file that has otg support. You can use
+arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi as reference:
+
+&usbotg {
+    phy_type = "utmi";
+    dr_mode = "otg";
+    external-vbus-divider;
+    status = "okay";
+};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
