@@ -1,67 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: userspace-consumer: add DT binding details
-Date: Wed, 6 Aug 2014 11:59:15 +0100
-Message-ID: <20140806105915.GH17528@sirena.org.uk>
-References: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
- <1406728440-17837-2-git-send-email-ldewangan@nvidia.com>
- <20140730155302.GE20162@leverpostej>
- <20140730164014.GY17528@sirena.org.uk>
- <53E1DA60.9010401@nvidia.com>
+From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Subject: AW: where to add imx-udc-mx27 in device tree
+Date: Wed, 6 Aug 2014 11:52:48 +0000
+Message-ID: <E70AF999396FDF4EAE40E195B84709611F84803F@SPMDEGHN001.CADCON.INTERN>
+References: <E70AF999396FDF4EAE40E195B84709611F847DDE@SPMDEGHN001.CADCON.INTERN>
+ <CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bri7I4a0+3PvYu+W"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53E1DA60.9010401@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: de-DE
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+SGVsbG8sDQoNCkkgcHVsbGVkIGxpbnV4LW5leHQsIGJ1dCBzdGlsbCBjYW4ndCBmaWd1cmUgb3V0
+IHdoZXJlIHRvIGFkZCBteSB1ZGMuDQpDYW4geW91IHBsZWFzZSBleHBsYWluIHdoZW4gZnNsLXVk
+YyBpcyBsb2FkZWQ/DQpUaGFua3MgYSBsb3QuDQoNCkdyZWV0aW5ncw0KU2ViYXN0aWFuIFByaWVi
+ZQ0KDQoNCg0KDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0K
+Q0FEQ09ODQpJbmdlbmlldXJnZXNlbGxzY2hhZnQgbWJIICYgQ28uIEtHDQpHZXNjaGFlZnRzZnVl
+aHJlcjogUm9iZXJ0IEJhdWVyLCBBbmRyZWFzIEd1bmRlbA0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0
+OiBELTg2MzY4IEdlcnN0aG9mZW4NClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQXVnc2J1
+cmcgSFJBIDE0NTIxDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
+Cg0KLS0tLS1VcnNwcsO8bmdsaWNoZSBOYWNocmljaHQtLS0tLQ0KVm9uOiBGYWJpbyBFc3RldmFt
+IFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29tXQ0KR2VzZW5kZXQ6IERpZW5zdGFnLCA1LiBBdWd1
+c3QgMjAxNCAxNDoyMQ0KQW46IFByaWViZSwgU2ViYXN0aWFuDQpDYzogZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmcNCkJldHJlZmY6IFJlOiB3aGVyZSB0byBhZGQgaW14LXVkYy1teDI3IGluIGRl
+dmljZSB0cmVlDQoNCk9uIFR1ZSwgQXVnIDUsIDIwMTQgYXQgOTowNiBBTSwgUHJpZWJlLCBTZWJh
+c3RpYW4gPFNlYmFzdGlhbi5QcmllYmVAY2FkY29uLmRlPiB3cm90ZToNCj4gSGVsbG8sDQo+DQo+
+IEkgYW0gdHJ5aW5nIHRvIGFkZCBhbiBVU0IgZ2FkZ2V0IHRvIG15IGRldmljZSB0cmVlIGFuZCBJ
+IGFtIHVzaW5nIG1vZHVsZXMgZm9yIG15IGdhZGdldHMgKHNlcmlhbCBhbmQgbWFzcy1zdG9yYWdl
+KS4NCj4gJnVzYm90ZyB7DQo+ICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4g
+ICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNib3RnPjsNCj4gICAgICAgICBkcl9tb2Rl
+ID0gInBlcmlwaGVyYWwiOw0KPiAgICAgICAgIHBoeV90eXBlID0gInV0bWlfd2lkZSI7DQo+ICAg
+ICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiB9Ow0KDQpUYWtlIGEgbG9vayBhdCBhcmNoL2FybS9i
+b290L2R0cy9pbXgyNy1ldWtyZWEtY3B1aW14MjcuZHRzaSBmb3IgYW4gZXhhbXBsZS4NCg0KVGhl
+IHVkYyBkcml2ZXIgaXMgQ09ORklHX1VTQl9DSElQSURFQV9VREM9eS4NCg0KVGhlcmUgaXMgYWxz
+byB0aGUgY29tbWl0IGJlbG93IGluIGxpbnV4LW5leHQgKG5vdCBpbiAzLjE2KSB0aGF0IHNlbGVj
+dCB0aGUgZ2FkZ2V0IGRyaXZlciBmb3IgaW14X3Y0X3Y1X2RlZmNvbmZpZy4NCg0KQXV0aG9yOiBG
+YWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQGZyZWVzY2FsZS5jb20+DQpEYXRlOiAgIFdlZCBK
+dW4gMjUgMTc6Mjg6NTMgMjAxNCAtMDMwMA0KDQogICAgQVJNOiBpbXhfdjRfdjVfZGVmY29uZmln
+OiBBZGQgVVNCIGRldmljZSBvcHRpb25zDQoNCiAgICBBbGxvdyBVU0IgZGV2aWNlIHRvIHdvcmsg
+YnkgZGVmYXVsdC4NCg0KICAgIFNpZ25lZC1vZmYtYnk6IEZhYmlvIEVzdGV2YW0gPGZhYmlvLmVz
+dGV2YW1AZnJlZXNjYWxlLmNvbT4NCiAgICBTaWduZWQtb2ZmLWJ5OiBTaGF3biBHdW8gPHNoYXdu
+Lmd1b0BmcmVlc2NhbGUuY29tPg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vY29uZmlncy9pbXhf
+djRfdjVfZGVmY29uZmlnIGIvYXJjaC9hcm0vY29uZmlncy9pbXhfdjRfdjVfZCBpbmRleCA2OGFi
+Y2U5Li4wOTBkZTAxIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vY29uZmlncy9pbXhfdjRfdjVfZGVm
+Y29uZmlnDQorKysgYi9hcmNoL2FybS9jb25maWdzL2lteF92NF92NV9kZWZjb25maWcNCkBAIC0x
+NTksNiArMTU5LDggQEAgQ09ORklHX1VTQl9DSElQSURFQT15ICBDT05GSUdfVVNCX0NISVBJREVB
+X1VEQz15ICBDT05GSUdfVVNCX0NISVBJREVBX0hPU1Q9eSAgQ09ORklHX05PUF9VU0JfWENFSVY9
+eQ0KK0NPTkZJR19VU0JfR0FER0VUPXkNCitDT05GSUdfVVNCX0VUSD1tDQogQ09ORklHX01NQz15
+DQogQ09ORklHX01NQ19TREhDST15DQogQ09ORklHX01NQ19TREhDSV9QTFRGTT15DQoNCg==
 
---bri7I4a0+3PvYu+W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Aug 06, 2014 at 01:03:52PM +0530, Laxman Dewangan wrote:
-> On Wednesday 30 July 2014 10:10 PM, Mark Brown wrote:
-
-> >Yes, this is test code - it is not intended to be used in production.
-> >Any binding should be for the consumer using this, not for this
-> >implementation detail.
-
-> We have the GPS module and its driver in the user space. There is no code
-> for GPS on kernel. Just power on and open port from user space, get the
-> information.
-
-That's an implementation detail of how you've provided this on Linux.
-
-> On this case, how do we power on GPS module if we don't expose it? It need
-> two power source for digital section and analog section.
-
-Describe the hardware in the device tree and then bind what's needed to
-that.
-
---bri7I4a0+3PvYu+W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT4gqAAAoJELSic+t+oim9GBUP/36qXTTi8U7wxXG6jm5UmmRS
-JlxpeOikt/TMs/OJXffB7u8LMMAhdGdb1V01ANBcNAqCfFqVTs5KUE5e7AH8cc5f
-donSAVprv2HTpaym3AXljFwVpYkO/OZQEcsZeKVh90rwbTsU/YcFoewMDTuqiDdE
-IjPwG7JF0cD9PHXeGNYIk419Mh4xCZZW1LI80v6qyXLXOCP0h5zXUXhcA0EgFxHj
-gGOdo3g7w7L7iCWu2X6EUxhk9SEyGbm+62DgpcLLFQRRWyiNLYuyza4eEznUqBe4
-yZzp3pFyddMuyBqKf823Lr5AtjNuVDnZd53Ri91j07T4YbyDcrCiU+TZRB7bgNK+
-5x1mQDJOtXs3ae6PBmMW1SianfT/fX3dOrcCvyuWMpAZIEkjUP8u7SfFexgckdoC
-hjZkkgVcyuxmvm1k2agHHkAbOrv+t1SgpkuPAN3p8HRlUwiRBTD3qmiR/yt5S+6F
-kGB4OnRm8GZpLna1FBPgtkFZNd0MEGOekQ675v6wIzvUbwwAbgLeAqaZ7hY7jH2M
-8S0J2GdYmUlCI7iefWOjREVNn2cciQDa6pMh2M46mY7HXTHa6iMYrNoYkPdu6WZt
-uo36hgp+hb0amFEzMYuPRDdRbesWCZ8Kb7juSElAbpuSWHA1GhkxGryEdaFqd9aR
-PDDjDaO1qE/MSO9zGR8t
-=Zm+l
------END PGP SIGNATURE-----
-
---bri7I4a0+3PvYu+W--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
