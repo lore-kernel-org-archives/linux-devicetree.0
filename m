@@ -1,78 +1,42 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH] of/irq: lookup 'interrupts-extended' property first
-Date: Wed, 6 Aug 2014 13:12:56 -0700
-Message-ID: <20140806201256.GO3711@ld-irv-0074>
-References: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
- <CAGVrzcYfA8rCXGRW7g0JhT4GQKT8SQj+pMvCh25yoXLFGNM_Pw@mail.gmail.com>
- <20140806165452.GN3711@ld-irv-0074>
- <CAL_JsqK8BiffXgpQSig5EbV3FUW7EBOn9YjZGqOcUcEJiCJ0WA@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] of/irq: lookup 'interrupts-extended' property first
+Date: Wed, 6 Aug 2014 13:15:00 -0700
+Message-ID: <20140806201500.GP3711@ld-irv-0074>
+References: <1407355347-30286-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqK8BiffXgpQSig5EbV3FUW7EBOn9YjZGqOcUcEJiCJ0WA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1407355347-30286-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 06, 2014 at 01:42:08PM -0500, Rob Herring wrote:
-> On Wed, Aug 6, 2014 at 11:54 AM, Brian Norris <computersforpeace@gmail.com> wrote:
-> > On Thu, Jul 31, 2014 at 11:00:01AM -0700, Florian Fainelli wrote:
-> > I think it is important that a device tree provide some flexibility on
-> > kernel versions. We only invented 'interrupts-extended' in Linux 3.13,
-> > so it's easy to have device trees that could work only on 3.13+.
-> >
-> > Typically, we might say that new features require new kernels, but this
-> > is a very basic piece of the DT infrastructure. In our case, we have
-> > hardware whose basic features can be supported by a single interrupt
-> > parent, and so we used the 'interrupts' property pre-3.13. But when we
-> > want to add some power management features, there's an additional
-> > interrupt parent. Under the current DT binding, we have to switch over
-> > to using 'interrupts-extended' exclusively, and thus we must have a
-> > completely new DTB for >=3.13, and this DTB no longer works with the old
-> > kernels.
+On Wed, Aug 06, 2014 at 01:02:27PM -0700, Florian Fainelli wrote:
+> In case the Device Tree blob passed by the boot agent supplies both an
+> 'interrupts-extended' and an 'interrupts' property in order to allow for
+> older kernels to be usable, prefer the new-style 'interrupts-extended'
+> property which conveys a lot more information.
 > 
-> "Must have" to enable the new features?
-
-Yes. The new feature requires an additional interrupt parent, and so it
-requires interrupts-extended.
-
-> I would expect a new kernel
-> and old dtb still works, right? That is the most important
-> compatibility issue to consider.
-
-Yes, new kernels work with an old DTB.
-
-The problem we are considering is that old kernels don't work with new
-DTBs, unless you allow both interrupts and interrupts-extended in a new
-DTB.
-
-> > How's that for DT stability?
-> >
-> > On the other hand, if we support this precedence concept, then a new DTB
-> > can provide both the 'interrupts-extended' and 'interrupts' properties,
-> > and thus be compatible with both pre-3.13 and
-> > post-<whenever-this-is-accepted> kernels.
+> This allows us to have bootloaders willingly maintaining backwards
+> compatibility with older kernels without entirely deprecating the
+> 'interrupts' property.
 > 
-> Yes, this is what should be done. And I don't have any issue marking
-> this for stable if needed.
-
-Fine with me. We'll be porting it for our downstream kernels anyway.
-
-> >> Any comments on this? Brian suggested that I update
-> >> interrupt-controller/interrupts.txt to specify the look up ordering
-> >> change as well.
-> >
-> > What do you think about the following DT binding doc update to accompany
-> > this change?
+> Update the bindings documentation to describe a situation where both the
+> 'interrupts-extended' and the 'interrupts' property are present, and
+> which one takes precedence over the other.
 > 
-> For both changes,
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Can you send a proper patch for the doc change or combine them.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Florian just sent the combined version.
+Might we add this?
+
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.13+
 
 Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
