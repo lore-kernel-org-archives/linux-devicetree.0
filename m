@@ -1,74 +1,83 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Wed, 6 Aug 2014 09:53:58 +0300
-Message-ID: <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 05/13] thermal: rcar: Document SoC-specific bindings
+Date: Wed, 6 Aug 2014 09:09:04 +0200
+Message-ID: <CAMuHMdV1PcH-Xcn9Qkc0GoLv7vg7roXfXh1f++Sn3bycAcsKww@mail.gmail.com>
+References: <1404908623-909-1-git-send-email-geert+renesas@glider.be>
+	<1404908623-909-6-git-send-email-geert+renesas@glider.be>
+	<20140711091358.GK12420@verge.net.au>
+	<1405435735.28592.50.camel@rzhang1-toshiba>
+	<87mwcakpzw.wl%kuninori.morimoto.gx@renesas.com>
+	<CAMuHMdVHRcXYgCPtWcMzRvofp7OK3ugLW9ztOHM5ey3_atz6MA@mail.gmail.com>
+	<878un2lat1.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <878un2lat1.wl%kuninori.morimoto.gx@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hi Morimoto-san,
 
-On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
-...
-> 1) Who should register V4L2 Flash sub-device?
-> 
-> LED Flash Class devices, after introduction of the Flash Manager,
-> are not tightly coupled with any media controller. They are maintained
-> by the Flash Manager and made available for dynamic assignment to
-> any media system they are connected to through multiplexing devices.
-> 
-> In the proposed rough solution, when support for V4L2 Flash sub-devices
-> is enabled, there is a v4l2_device created for them to register in.
-> This however implies that V4L2 Flash device will not be available
-> in any media controller, which calls its existence into question.
-> 
-> Therefore I'd like to consult possible ways of solving this issue.
-> The option I see is implementing a mechanism for moving V4L2 Flash
-> sub-devices between media controllers. A V4L2 Flash sub-device
-> would initially be assigned to one media system in the relevant
-> device tree binding, but it could be dynamically reassigned to
-> the other one. However I'm not sure if media controller design
-> is prepared for dynamic modifications of its graph and how many
-> modifications in the existing drivers this solution would require.
+On Wed, Aug 6, 2014 at 2:30 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@gmail.com> wrote:
+>> >> > >  Required properties:
+>> >> > > -- compatible             : "renesas,rcar-thermal"
+>> >> > > +- compatible             : "renesas,thermal-<soctype>", "renesas,rcar-thermal"
+>> >> > > +                   as fallback.
+>> >> > > +                   Examples with soctypes are:
+>> >> > > +                     - "renesas,thermal-r8a73a4" (R-Mobile AP6)
+>> >> > > +                     - "renesas,thermal-r8a7779" (R-Car H1)
+>> >> > > +                     - "renesas,thermal-r8a7790" (R-Car H2)
+>> >> > > +                     - "renesas,thermal-r8a7791" (R-Car M2)
+>> >> > >  - reg                    : Address range of the thermal registers.
+>> >> > >                     The 1st reg will be recognized as common register
+>> >> > >                     if it has "interrupts".
+> (snip)
+>> One important thing to note in my patch description is "some of which
+>> are already in use.".
+>>
+>> $ git grep renesas,thermal -- arch/arm/boot/ | cat
+>> arch/arm/boot/dts/r8a7790.dtsi: compatible =
+>> "renesas,thermal-r8a7790", "renesas,rcar-thermal";
+>> arch/arm/boot/dts/r8a7791.dtsi: compatible =
+>> "renesas,thermal-r8a7791", "renesas,rcar-thermal";
+>> $
+>>
+>> So these 2 should be added to the documentation for sure.
+>> Adding the 2 others, and adding them to the respective DTSes (cfr. the
+>> other patches in the series) doesn't hurt, and will help if an incompatibility
+>> ever arises.
+>>
+>> (I assume the driver works with the other DTSes that already claim to have
+>> a device compatible with "renesas,rcar-thermal").
+>
+> I reconsidered about this.
+> Actually, I'm still wondering about this approach
+> because driver side doesn't have SoC specific matching table.
+> Of course SoC-specific name in .compatible can be backup plan for us,
+> but, we don't know it is 100% true.
+> (we might have new driver for some specific SoC, like R-Car DMA driver ?)
+>
+> Adding to SoC specific compatible name in SoC side DTSes are no problem,
+> it can be backup plan.
+> but, we can't say 100% true that <driver>.txt has SoC specific name list.
+> because, driver doesn't care about it today, and we don't know the future
 
-Do you have a use case where you would need to strobe a flash from multiple
-media devices at different times, or is this entirely theoretical? Typically
-flash controllers are connected to a single source of hardware strobe (if
-there's one) since the flash LEDs are in fact mounted next to a specific
-camera sensor.
+If the SoC-specific name is used in a DTS, it must[*] be documented in the
+bindings. Checkpatch.pl checks for that.
 
-If this is a real issue the way to solve it would be to have a single media
-device instead of many.
+[*] The only exception is devices for which no driver exists yet. But then the
+    bindings are preliminary and in limbo.
 
-> 2) Consequences of locking the Flash Manager during flash strobe
-> 
-> In case a LED Flash Class device depends on muxes involved in
-> routing the other LED Flash Class device's strobe signals,
-> the Flash Manager must be locked for the time of strobing
-> to prevent reconfiguration of the strobe signal routing
-> by the other device.
+Gr{oetje,eeting}s,
 
-I wouldn't be concerned of this in particular. It's more important we do
-actully have V4L2 flash API supported by LED flash drivers and that they do
-implement the API correctly.
+                        Geert
 
-It's at least debatable whether you should try to prevent user space from
-doing silly things or not. With complex devices it may relatively easily
-lead to wrecking havoc with actual use cases which we certainly do not want.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In this case, if you just prevent changing the routing (do you have a use
-case for it?) while strobing, someone else could still change the routing
-just before you strobe.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
