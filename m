@@ -1,110 +1,60 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/irq: lookup 'interrupts-extended' property first
-Date: Wed, 6 Aug 2014 13:42:08 -0500
-Message-ID: <CAL_JsqK8BiffXgpQSig5EbV3FUW7EBOn9YjZGqOcUcEJiCJ0WA@mail.gmail.com>
-References: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
- <CAGVrzcYfA8rCXGRW7g0JhT4GQKT8SQj+pMvCh25yoXLFGNM_Pw@mail.gmail.com> <20140806165452.GN3711@ld-irv-0074>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ASoC: Add support for CS35L32 Boosted Amplifier
+Date: Wed, 6 Aug 2014 20:43:23 +0100
+Message-ID: <20140806194323.GM17528@sirena.org.uk>
+References: <1407183077-23807-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XC5GIdCAi0ueCExh"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140806165452.GN3711@ld-irv-0074>
+Content-Disposition: inline
+In-Reply-To: <1407183077-23807-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 6, 2014 at 11:54 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Grant, et al,
->
-> Can we get a comment here?
->
-> On Thu, Jul 31, 2014 at 11:00:01AM -0700, Florian Fainelli wrote:
->> 2014-06-19 16:33 GMT-07:00 Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> > In case the Device Tree blob passed by the boot agent supplies both an
->> > 'interrupts-extended' and an 'interrupts' property in order to allow for
->> > older kernels to be usable, prefer the new-style 'interrupts-extended'
->> > property which convey a lot more information.
->> >
->> > This allows us to have bootloaders willingly maintaining backwards
->> > compatibility with older kernels without entirely deprecating the
->> > 'interrupts' property (although that is a clear violation of the binding
->> > specified at
->> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt)
->
-> For the patch:
->
-> Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> I think it is important that a device tree provide some flexibility on
-> kernel versions. We only invented 'interrupts-extended' in Linux 3.13,
-> so it's easy to have device trees that could work only on 3.13+.
->
-> Typically, we might say that new features require new kernels, but this
-> is a very basic piece of the DT infrastructure. In our case, we have
-> hardware whose basic features can be supported by a single interrupt
-> parent, and so we used the 'interrupts' property pre-3.13. But when we
-> want to add some power management features, there's an additional
-> interrupt parent. Under the current DT binding, we have to switch over
-> to using 'interrupts-extended' exclusively, and thus we must have a
-> completely new DTB for >=3.13, and this DTB no longer works with the old
-> kernels.
 
-"Must have" to enable the new features? I would expect a new kernel
-and old dtb still works, right? That is the most important
-compatibility issue to consider.
+--XC5GIdCAi0ueCExh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> How's that for DT stability?
->
-> On the other hand, if we support this precedence concept, then a new DTB
-> can provide both the 'interrupts-extended' and 'interrupts' properties,
-> and thus be compatible with both pre-3.13 and
-> post-<whenever-this-is-accepted> kernels.
+On Mon, Aug 04, 2014 at 03:11:16PM -0500, Brian Austin wrote:
+> This patch adds support for the Cirrus Logic CS35L32 Boosted Amplifier
+> I2S output provides monitor data to the SOC/CODEC/DSP for speaker protection/enhancement algorithms
 
-Yes, this is what should be done. And I don't have any issue marking
-this for stable if needed.
+Applied, thanks.
 
->> Any comments on this? Brian suggested that I update
->> interrupt-controller/interrupts.txt to specify the look up ordering
->> change as well.
->
-> What do you think about the following DT binding doc update to accompany
-> this change?
+> Changes for v2:
+> - Interrupt Status Registers added to regmap volatile
 
-For both changes,
+Please word wrap your commit logs and if you're going to include a
+changelog place it after the --- so that it gets stripped out by the
+tools.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--XC5GIdCAi0ueCExh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Can you send a proper patch for the doc change or combine them.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Rob
+iQIcBAEBAgAGBQJT4oVYAAoJELSic+t+oim9a5AP/iAIJMTzpmPt/1sndDQcy+Uj
+lV0l5OlwPq5fz/1l6ykrCqLUDeCR/nLeMMU+gM6vWaJ1kdsE3rO359k6p93gtQzp
+VTKGmod64yAIoveedIWWQtjczVWJasnn6bZCMndw1g9UvYYs51N2JmKmw/2AVMb+
+T0UOWoOL5tBxqP+6uge2zWmXhTRUw4ADbY4dogRpVDnDkUan+kxx1HuV7LvKL7K/
+2F8P/uGRr5tpvd9AXCow8Yqo8THj6ysU4UXQhgGobjTi5GNl/u1c+em4sBLXH1A9
+kvAMDkQyM8D9fXBB0RdzYGpAvMW4Lt8xvIMbsKhIyu3DMu+lHCcSNqoV5FPKmRIN
+LMmuyRkF4xMeHFg8+Atf+DSNWhbfj2El5xkhI4b1no7YaURnFE7EGEgAjl5MEVAe
+7IoxtWDRwsn5vV3LCwSG0QpYFpG2lu4K659itE89GCMzUIIdJUir3ZcX7ZtkyzIw
+uXKP0B8fppPhFN3X1DCNVX+WFhKZNjwvusp986gVR8krq28DEWBsHW4h+V/pM4nm
+hMr7Qb8lSKdd+rJqPx9owaWKj8QdEJsd0UEtSS5sl5E0xldJdIn4t9WeFEQAMN0t
+w2/v4UMi4GofkCROWcByBgYWWUjJKfqJtxvubXMC1SbvzGUx66ZC9wG2VK13Pcbz
++oApceOmjX3PvpxXd1Ol
+=1FIR
+-----END PGP SIGNATURE-----
 
->
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> index 1486497a24c1..ce6a1a072028 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> @@ -4,11 +4,13 @@ Specifying interrupt information for devices
->  1) Interrupt client nodes
->  -------------------------
->
-> -Nodes that describe devices which generate interrupts must contain an either an
-> -"interrupts" property or an "interrupts-extended" property. These properties
-> -contain a list of interrupt specifiers, one per output interrupt. The format of
-> -the interrupt specifier is determined by the interrupt controller to which the
-> -interrupts are routed; see section 2 below for details.
-> +Nodes that describe devices which generate interrupts must contain an
-> +"interrupts" property, an "interrupts-extended" property, or both. If both are
-> +present, the latter should take precedence; the former may be provided simply
-> +for compatibility with software that does not recognize the latter. These
-> +properties contain a list of interrupt specifiers, one per output interrupt. The
-> +format of the interrupt specifier is determined by the interrupt controller to
-> +which the interrupts are routed; see section 2 below for details.
->
->    Example:
->         interrupt-parent = <&intc1>;
+--XC5GIdCAi0ueCExh--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
