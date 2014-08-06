@@ -1,111 +1,71 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 05/12] [v2] spi: rspi: Add DT support to DMA setup
-Date: Wed,  6 Aug 2014 14:59:02 +0200
-Message-ID: <1407329949-5695-6-git-send-email-geert+renesas@glider.be>
-References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407329949-5695-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Subject: AW: where to add imx-udc-mx27 in device tree
+Date: Wed, 6 Aug 2014 13:16:11 +0000
+Message-ID: <E70AF999396FDF4EAE40E195B84709611F8480C6@SPMDEGHN001.CADCON.INTERN>
+References: <E70AF999396FDF4EAE40E195B84709611F847DDE@SPMDEGHN001.CADCON.INTERN>
+	<CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ@mail.gmail.com>
+	<E70AF999396FDF4EAE40E195B84709611F84803F@SPMDEGHN001.CADCON.INTERN>
+	<CAOMZO5A0zVi29AXHOFZENQxonXFfETukbj-SSmQwO4km0cAgog@mail.gmail.com>
+	<E70AF999396FDF4EAE40E195B84709611F84808A@SPMDEGHN001.CADCON.INTERN>
+ <CAOMZO5C89qyqzd0ML07YZvpCa-XSAgP7a6GGFH0DpDjx5vZgpg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5C89qyqzd0ML07YZvpCa-XSAgP7a6GGFH0DpDjx5vZgpg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: de-DE
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v2:
-  - Update DMA specifiers to match the renesas,rcar-dmac bindings
----
- Documentation/devicetree/bindings/spi/spi-rspi.txt |  5 +++
- drivers/spi/spi-rspi.c                             | 37 ++++++++++++++--------
- 2 files changed, 28 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-index d57d82a74054..f9929aceeacc 100644
---- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-@@ -30,6 +30,9 @@ Required properties:
- 
- Optional properties:
- - clocks           : Must contain a reference to the functional clock.
-+- dmas             : Must contain a list of two references to DMA specifiers,
-+		     one for transmission, and one for reception.
-+- dma-names        : Must contain a list of two DMA names, "tx" and "rx".
- 
- Pinctrl properties might be needed, too.  See
- Documentation/devicetree/bindings/pinctrl/renesas,*.
-@@ -58,4 +61,6 @@ Examples:
- 		num-cs = <1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		dmas = <&dmac0 0x17>, <&dmac0 0x18>;
-+		dma-names = "tx", "rx";
- 	};
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 6a4eb2d7f644..1da609e4491d 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -909,10 +909,11 @@ static struct dma_chan *rspi_request_dma_chan(struct device *dev,
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 
--	chan = dma_request_channel(mask, shdma_chan_filter,
--				   (void *)(unsigned long)id);
-+	chan = dma_request_slave_channel_compat(mask, shdma_chan_filter,
-+				(void *)(unsigned long)id, dev,
-+				dir == DMA_MEM_TO_DEV ? "tx" : "rx");
- 	if (!chan) {
--		dev_warn(dev, "dma_request_channel failed\n");
-+		dev_warn(dev, "dma_request_slave_channel_compat failed\n");
- 		return NULL;
- 	}
- 
-@@ -941,22 +942,30 @@ static int rspi_request_dma(struct device *dev, struct spi_master *master,
- 			    const struct resource *res)
- {
- 	const struct rspi_plat_data *rspi_pd = dev_get_platdata(dev);
-+	unsigned int dma_tx_id, dma_rx_id;
-+
-+	if (dev->of_node) {
-+		/* In the OF case we will get the slave IDs from the DT */
-+		dma_tx_id = 0;
-+		dma_rx_id = 0;
-+	} else if (rspi_pd && rspi_pd->dma_tx_id && rspi_pd->dma_rx_id) {
-+		dma_tx_id = rspi_pd->dma_tx_id;
-+		dma_rx_id = rspi_pd->dma_rx_id;
-+	} else {
-+		/* The driver assumes no error. */
-+		return 0;
-+	}
- 
--	if (!rspi_pd || !rspi_pd->dma_rx_id || !rspi_pd->dma_tx_id)
--		return 0;	/* The driver assumes no error. */
--
--	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM,
--					       rspi_pd->dma_rx_id,
-+	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV, dma_tx_id,
- 					       res->start + RSPI_SPDR);
--	if (!master->dma_rx)
-+	if (!master->dma_tx)
- 		return -ENODEV;
- 
--	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV,
--					       rspi_pd->dma_tx_id,
-+	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM, dma_rx_id,
- 					       res->start + RSPI_SPDR);
--	if (!master->dma_tx) {
--		dma_release_channel(master->dma_rx);
--		master->dma_rx = NULL;
-+	if (!master->dma_rx) {
-+		dma_release_channel(master->dma_tx);
-+		master->dma_tx = NULL;
- 		return -ENODEV;
- 	}
- 
--- 
-1.9.1
+SSdtIHNvcnJ5IGZvciB0aGUgbm9pc2UsIGJ1dCBJIGFtIG5ldyB0byBkZXZpY2UgdHJlZXMuDQpX
+ZSBhcmUgdXNpbmcgYW4gaU1YMzUgKG5vdCBpTVgyNykgYW5kIGhhdmUgQ09ORklHX1VTQl9GU0xf
+TVBIX0RSX09GIGluIG91ciBjb25maWcuDQpJIGhhdmUgbm8gaWRlYSB3aHkgSSBzaG91bGQgbmVl
+ZCB0aGUgQ0hJUElERUEgc3R1ZmYuIEkgZGlkbid0IHVzZSBpdCBpbiB0aGUgcGFzdCAoa2VybmVs
+IDMuMiB3aXRob3V0IERUKS4NCkNhbiBzb21lYm9keSBwbGVhc2UgaGVscCB3aXRoIGEgbGl0dGxl
+IGJpdCB3aXRoIG15IFVTQiBnYWRnZXQ/IEkgYW0gdHJ5aW5nIHRvIHBvcnQgb3VyIG1hY2hpbmUg
+Y29kZSB0byBEVC4NClRoYW5rcyBhIGxvdC4NCg0KR3JlZXRpbmdzDQpTZWJhc3RpYW4gUHJpZWJl
+DQoNCg0KDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KQ0FE
+Q09ODQpJbmdlbmlldXJnZXNlbGxzY2hhZnQgbWJIICYgQ28uIEtHDQpHZXNjaGFlZnRzZnVlaHJl
+cjogUm9iZXJ0IEJhdWVyLCBBbmRyZWFzIEd1bmRlbA0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBE
+LTg2MzY4IEdlcnN0aG9mZW4NClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQXVnc2J1cmcg
+SFJBIDE0NTIxDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCg0K
+LS0tLS1VcnNwcsO8bmdsaWNoZSBOYWNocmljaHQtLS0tLQ0KVm9uOiBGYWJpbyBFc3RldmFtIFtt
+YWlsdG86ZmVzdGV2YW1AZ21haWwuY29tXQ0KR2VzZW5kZXQ6IE1pdHR3b2NoLCA2LiBBdWd1c3Qg
+MjAxNCAxNDo1NA0KQW46IFByaWViZSwgU2ViYXN0aWFuDQpDYzogZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmcNCkJldHJlZmY6IFJlOiB3aGVyZSB0byBhZGQgaW14LXVkYy1teDI3IGluIGRldmlj
+ZSB0cmVlDQoNCk9uIFdlZCwgQXVnIDYsIDIwMTQgYXQgOTo0NCBBTSwgUHJpZWJlLCBTZWJhc3Rp
+YW4gPFNlYmFzdGlhbi5QcmllYmVAY2FkY29uLmRlPiB3cm90ZToNCg0KPiBBbmQgaW4gb3VyIGR0
+cyB3ZSBoYXZlOg0KPiAmdXNib3RnIHsNCj4gICAgICAgICBjb21wYXRpYmxlID0gImlteC11ZGMt
+bXgyNyI7DQoNClRoaXMgaXMgbm90IGNvcnJlY3QuDQoNCj4gICAgICAgICBwaW5jdHJsLW5hbWVz
+ID0gImRlZmF1bHQiOw0KPiAgICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91c2JvdGc+Ow0K
+PiAgICAgICAgIGRyX21vZGUgPSAicGVyaXBoZXJhbCI7DQo+ICAgICAgICAgcGh5X3R5cGUgPSAi
+dXRtaV93aWRlIjsNCg0KTm8gdXRtaSBpbiBteDI3Lg0KDQo+ICAgICAgICAgc3RhdHVzID0gIm9r
+YXkiOw0KPiAgICAgICAgIC8qIHdoYXQgdG8gZG8gd2l0aCB3b3JrYXJvdW5kID0gRkxTX1VTQjJf
+V09SS0FST1VORF9FTkdDTTA5MTUyDQo+ID8/PyAqLw0KDQpUaGlzIGVycmF0dW0gZG9lcyBub3Qg
+YXBwbHkgdG8gbXgyNy4NCg0KPiB9Ow0KDQo+DQo+IEluIG91ciBjb25maWcgd2UgaGF2ZToNCj4g
+Q09ORklHX0lNWF9IQVZFX1BMQVRGT1JNX0ZTTF9VU0IyX1VEQz15DQoNClRoaXMgb3B0aW9uIGlz
+IGZvciB0aGUgbm9uLWR0IGRyaXZlci4gRGV2aWNlIHRyZWUgZHJpdmVyIG5lZWRzIHRoZSBjaGlw
+aWRlYSB0aGF0IEkgc2hvd2VkIGVhcmxpZXIuDQoNCkFzIEkgbWVudGlvbmVkIGJlZm9yZTogaW4g
+eW91ciBkdHMgZmlsZSB5b3Ugc2hvdWxkIGRvIHNvbWV0aGluZyBsaWtlDQphcmNoL2FybS9ib290
+L2R0cy9pbXgyNy0NCmV1a3JlYS1jcHVpbXgyNy5kdHNpOg0KDQomdXNib3RnIHsNCiAgICBwaW5j
+dHJsLW5hbWVzID0gImRlZmF1bHQiOw0KICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91c2JvdGc+
+Ow0KICAgIGRyX21vZGUgPSAib3RnIjsNCiAgICBwaHlfdHlwZSA9ICJ1bHBpIjsNCiAgICBkaXNh
+YmxlLW92ZXItY3VycmVudDsNCiAgICBzdGF0dXMgPSAib2theSI7DQp9Ow0KDQpZb3UgZG9uJ3Qg
+bmVlZCB0byBwYXNzIHRoZSBjb21wYXRpYmxlIGxpbmUgdGhlcmUuIFRoZSBjb21wYXRpYmxlIGxp
+bmUgaXMgYWxyZWFkeSBwYXNzZWQgaW4gdGhlIGlteDI3LmR0c2kgZmlsZToNCg0KICAgICAgICAg
+ICAgdXNib3RnOiB1c2JAMTAwMjQwMDAgew0KICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+ZnNsLGlteDI3LXVzYiI7DQogICAgICAgICAgICAgICAgcmVnID0gPDB4MTAwMjQwMDAgMHgyMDA+
+Ow0KICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8NTY+Ow0KICAgICAgICAgICAgICAgIGNs
+b2NrcyA9IDwmY2xrcyBJTVgyN19DTEtfVVNCX0lQR19HQVRFPjsNCiAgICAgICAgICAgICAgICBm
+c2wsdXNibWlzYyA9IDwmdXNibWlzYyAwPjsNCiAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlz
+YWJsZWQiOw0KICAgICAgICAgICAgfTsNCg0KQWxzbywgaWYgeW91IHN0aWxsIGhhdmUgaXNzdWVz
+IHBsZWFzZSBzdGFydCBhIHRocmVhZCBhdCBhcm0gbGludXgga2VybmVsIG9yIHVzYi1kZXZlbCBt
+YWlsaW5nIGxpc3QgYXMgaXQgd291bGQgYmUgYSBiZXR0ZXIgcGxhY2UgdG8gZGlzY3VzcyB0aGlz
+DQoNCg==
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
