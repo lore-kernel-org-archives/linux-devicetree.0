@@ -1,80 +1,111 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 10/12] [v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF
-Date: Wed,  6 Aug 2014 14:59:07 +0200
-Message-ID: <1407329949-5695-11-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 05/12] [v2] spi: rspi: Add DT support to DMA setup
+Date: Wed,  6 Aug 2014 14:59:02 +0200
+Message-ID: <1407329949-5695-6-git-send-email-geert+renesas@glider.be>
 References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1407329949-5695-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add register sets used for access by the DMA engine, and DMA properties to
-the MSIOF nodes.
-
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-This depends on "[PATCH v2 8/8] ARM: shmobile: r8a7791: Add DMAC devices
-to DT" of series "[PATCH v2 0/8] R-Car Gen2 DMA Controller driver".
-
-v3:
-  - Update DMA specifiers to match the renesas,rcar-dmac bindings,
 v2:
-  - Add register sets for DMA,
-  - Reorder: TX first, RX second.
+  - Update DMA specifiers to match the renesas,rcar-dmac bindings
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-rspi.txt |  5 +++
+ drivers/spi/spi-rspi.c                             | 37 ++++++++++++++--------
+ 2 files changed, 28 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 8186c9f4a18a..152c75ce8534 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1054,9 +1054,11 @@
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+index d57d82a74054..f9929aceeacc 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -30,6 +30,9 @@ Required properties:
  
- 	msiof0: spi@e6e20000 {
- 		compatible = "renesas,msiof-r8a7791";
--		reg = <0 0xe6e20000 0 0x0064>;
-+		reg = <0 0xe6e20000 0 0x0064>, <0 0xe7e20000 0 0x0064>;
- 		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7791_CLK_MSIOF0>;
-+		dmas = <&dmac0 0x51>, <&dmac0 0x52>;
-+		dma-names = "tx", "rx";
+ Optional properties:
+ - clocks           : Must contain a reference to the functional clock.
++- dmas             : Must contain a list of two references to DMA specifiers,
++		     one for transmission, and one for reception.
++- dma-names        : Must contain a list of two DMA names, "tx" and "rx".
+ 
+ Pinctrl properties might be needed, too.  See
+ Documentation/devicetree/bindings/pinctrl/renesas,*.
+@@ -58,4 +61,6 @@ Examples:
+ 		num-cs = <1>;
  		#address-cells = <1>;
  		#size-cells = <0>;
- 		status = "disabled";
-@@ -1064,9 +1066,11 @@
- 
- 	msiof1: spi@e6e10000 {
- 		compatible = "renesas,msiof-r8a7791";
--		reg = <0 0xe6e10000 0 0x0064>;
-+		reg = <0 0xe6e10000 0 0x0064>, <0 0xe7e10000 0 0x0064>;
- 		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7791_CLK_MSIOF1>;
-+		dmas = <&dmac0 0x55>, <&dmac0 0x56>;
++		dmas = <&dmac0 0x17>, <&dmac0 0x18>;
 +		dma-names = "tx", "rx";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		status = "disabled";
-@@ -1074,9 +1078,11 @@
+ 	};
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 6a4eb2d7f644..1da609e4491d 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -909,10 +909,11 @@ static struct dma_chan *rspi_request_dma_chan(struct device *dev,
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
  
- 	msiof2: spi@e6e00000 {
- 		compatible = "renesas,msiof-r8a7791";
--		reg = <0 0xe6e00000 0 0x0064>;
-+		reg = <0 0xe6e00000 0 0x0064>, <0 0xe7e00000 0 0x0064>;
- 		interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7791_CLK_MSIOF2>;
-+		dmas = <&dmac0 0x41>, <&dmac0 0x42>;
-+		dma-names = "tx", "rx";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		status = "disabled";
+-	chan = dma_request_channel(mask, shdma_chan_filter,
+-				   (void *)(unsigned long)id);
++	chan = dma_request_slave_channel_compat(mask, shdma_chan_filter,
++				(void *)(unsigned long)id, dev,
++				dir == DMA_MEM_TO_DEV ? "tx" : "rx");
+ 	if (!chan) {
+-		dev_warn(dev, "dma_request_channel failed\n");
++		dev_warn(dev, "dma_request_slave_channel_compat failed\n");
+ 		return NULL;
+ 	}
+ 
+@@ -941,22 +942,30 @@ static int rspi_request_dma(struct device *dev, struct spi_master *master,
+ 			    const struct resource *res)
+ {
+ 	const struct rspi_plat_data *rspi_pd = dev_get_platdata(dev);
++	unsigned int dma_tx_id, dma_rx_id;
++
++	if (dev->of_node) {
++		/* In the OF case we will get the slave IDs from the DT */
++		dma_tx_id = 0;
++		dma_rx_id = 0;
++	} else if (rspi_pd && rspi_pd->dma_tx_id && rspi_pd->dma_rx_id) {
++		dma_tx_id = rspi_pd->dma_tx_id;
++		dma_rx_id = rspi_pd->dma_rx_id;
++	} else {
++		/* The driver assumes no error. */
++		return 0;
++	}
+ 
+-	if (!rspi_pd || !rspi_pd->dma_rx_id || !rspi_pd->dma_tx_id)
+-		return 0;	/* The driver assumes no error. */
+-
+-	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM,
+-					       rspi_pd->dma_rx_id,
++	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV, dma_tx_id,
+ 					       res->start + RSPI_SPDR);
+-	if (!master->dma_rx)
++	if (!master->dma_tx)
+ 		return -ENODEV;
+ 
+-	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV,
+-					       rspi_pd->dma_tx_id,
++	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM, dma_rx_id,
+ 					       res->start + RSPI_SPDR);
+-	if (!master->dma_tx) {
+-		dma_release_channel(master->dma_rx);
+-		master->dma_rx = NULL;
++	if (!master->dma_rx) {
++		dma_release_channel(master->dma_tx);
++		master->dma_tx = NULL;
+ 		return -ENODEV;
+ 	}
+ 
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
