@@ -1,56 +1,59 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] Thermal: imx: add i.mx6sx thermal support
-Date: Wed, 6 Aug 2014 09:10:46 +0800
-Message-ID: <20140806011045.GC27051@dragon>
-References: <1407229963-32662-1-git-send-email-b20788@freescale.com>
- <20140805132553.GA20291@developer>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv6 0/2] add DT endianness binding support for regmap
+Date: Wed, 6 Aug 2014 01:58:15 +0000
+Message-ID: <d7b74069c0ef44c0bbcae8454cb9266b@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140805132553.GA20291@developer>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Anson Huang <b20788@freescale.com>, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 05, 2014 at 09:25:53AM -0400, Eduardo Valentin wrote:
-> > @@ -31,6 +32,10 @@
-> >  
-> >  #define MISC0				0x0150
-> >  #define MISC0_REFTOP_SELBIASOFF		(1 << 3)
-> > +#define MISC1				0x0160
-> > +#define MISC1_IRQ_TEMPHIGH		(1 << 29)
-> > +#define MISC1_IRQ_TEMPLOW		(1 << 28)
-> > +#define MISC1_IRQ_TEMPPANIC		(1 << 27)
+Hi,
+
+I'd like to know the status about this patch series, there are many patches
+Based the Regmap still waiting for these.
+
+Thanks,
+BRs
+Xiubo
+
+
+> -----Original Message-----
+> From: Xiubo Li [mailto:Li.Xiubo@freescale.com]
+> Sent: Tuesday, July 15, 2014 12:23 PM
+> To: broonie@kernel.org; mark.rutland@arm.com
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; ijc+devicetree@hellion.org.uk;
+> galak@codeaurora.org; gregkh@linuxfoundation.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Xiubo Li-B47053
+> Subject: [PATCHv6 0/2] add DT endianness binding support for regmap
 > 
-> how about using 
-> +#define MISC1_IRQ_TEMPHIGH		BIT(29)
-> +#define MISC1_IRQ_TEMPLOW		BIT(28)
-> +#define MISC1_IRQ_TEMPPANIC		BIT(27)
-
-While I agree this is good, I think it's more important to keep the
-style consistent for the file.  We already have a number of (1 << x)
-in the file.
-
-...
-
-> > @@ -66,6 +76,21 @@ enum imx_thermal_trip {
-> >  #define FACTOR1				15976
-> >  #define FACTOR2				4297157
-> >  
-> > +#define TEMPMON_V1			1
-> > +#define TEMPMON_V2			2
-> > +
+> Changes in V6:
+> - there is some mistake for V5 patch series, resend it.
 > 
-> where does the V1/V2 nomenclature come from? how about:
+> Changes in V5:
+> - remove the register's dt endianness support for it will always be BE
+>   for now.
+> - only support the register values buffers dt endianness support.
 > 
-> +#define TEMPMON_IMX6Q			1
-> +#define TEMPMON_IMX6SX			2
-
-+1
-
-If the V1/V2 nomenclature is not coming from hardware manual, we don't
-want to use it, neither code nor binding doc.
-
-Shawn
+> 
+> 
+> Xiubo Li (2):
+>   regmap: add DT endianness binding support.
+>   dt/bindings: Add the DT binding documentation for endianness
+> 
+>  .../devicetree/bindings/regmap/regmap.txt          |  48 +++++++++
+>  drivers/base/regmap/regmap-i2c.c                   |   2 +
+>  drivers/base/regmap/regmap-spi.c                   |   2 +
+>  drivers/base/regmap/regmap.c                       | 117 +++++++++++++++++++-
+> -
+>  4 files changed, 158 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/regmap/regmap.txt
+> 
+> --
+> 1.8.5
