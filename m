@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 2/6] usb: host: ehci-st: Add EHCI support for ST STB devices
-Date: Wed,  6 Aug 2014 18:03:05 +0100
-Message-ID: <1407344589-24863-3-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v3 1/6] usb: host: usb-st-common: Add common code required by ohci-st and ehci-st
+Date: Wed,  6 Aug 2014 18:03:04 +0100
+Message-ID: <1407344589-24863-2-git-send-email-peter.griffin@linaro.org>
 References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,66 +13,33 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@l
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the glue code required to ensure the on-chip EHCI
-controller works on STi consumer electronics SoC's from STMicroelectron=
-ics.
-
-It mainly manages the setting and enabling of the relevant clocks and m=
-anages
-the reset / power signals to the IP block.
+This patch abstracts out some common code required by both the ehci-st
+and ohci-st drivers.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/usb/host/Kconfig   |   6 +
- drivers/usb/host/Makefile  |   1 +
- drivers/usb/host/ehci-st.c | 334 +++++++++++++++++++++++++++++++++++++=
+ drivers/usb/host/usb-st-common.c | 99 ++++++++++++++++++++++++++++++++=
 ++++++++
- 3 files changed, 341 insertions(+)
- create mode 100644 drivers/usb/host/ehci-st.c
+ drivers/usb/host/usb-st-common.h | 34 ++++++++++++++
+ 2 files changed, 133 insertions(+)
+ create mode 100644 drivers/usb/host/usb-st-common.c
+ create mode 100644 drivers/usb/host/usb-st-common.h
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index a5e7f71..800969a 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -235,6 +235,12 @@ config USB_W90X900_EHCI
- 	---help---
- 		Enables support for the W90X900 USB controller
-=20
-+config USB_EHCI_ST
-+	tristate "EHCI support for ST STB SoC Series"
-+	depends on ARCH_STI && OF
-+       help
-+	Enable support for the ST SOC's on-chip EHCI controller.
-+
- config USB_CNS3XXX_EHCI
- 	bool "Cavium CNS3XXX EHCI Module (DEPRECATED)"
- 	depends on ARCH_CNS3XXX
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index af0b81d..877f7e2 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_USB_EHCI_HCD_AT91) +=3D ehci-atmel.o
- obj-$(CONFIG_USB_EHCI_MSM)	+=3D ehci-msm.o
- obj-$(CONFIG_USB_EHCI_TEGRA)	+=3D ehci-tegra.o
- obj-$(CONFIG_USB_W90X900_EHCI)	+=3D ehci-w90x900.o
-+obj-$(CONFIG_USB_EHCI_ST)	+=3D ehci-st.o usb-st-common.o
-=20
- obj-$(CONFIG_USB_OXU210HP_HCD)	+=3D oxu210hp-hcd.o
- obj-$(CONFIG_USB_ISP116X_HCD)	+=3D isp116x-hcd.o
-diff --git a/drivers/usb/host/ehci-st.c b/drivers/usb/host/ehci-st.c
+diff --git a/drivers/usb/host/usb-st-common.c b/drivers/usb/host/usb-st=
+-common.c
 new file mode 100644
-index 0000000..6f6f46d
+index 0000000..ddfdbf6
 --- /dev/null
-+++ b/drivers/usb/host/ehci-st.c
-@@ -0,0 +1,334 @@
++++ b/drivers/usb/host/usb-st-common.c
+@@ -0,0 +1,99 @@
 +/*
-+ * ST EHCI driver
++ * Common code shared between ehci-st.c and ohci-st.c
 + *
 + * Copyright (C) 2014 STMicroelectronics =E2=80=93 All Rights Reserved
 + *
 + * Author: Peter Griffin <peter.griffin@linaro.org>
 + *
-+ * Derived from ehci-platform.c
++ * Derived from ohci-platform.c and ehci-platform.c
 + *
 + * This program is free software; you can redistribute it and/or modif=
 y
@@ -81,329 +48,131 @@ y
 + */
 +
 +#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/hrtimer.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
 +#include <linux/reset.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
-+#include <linux/usb/ehci_pdriver.h>
++#include <linux/phy/phy.h>
 +
-+#include "ehci.h"
 +#include "usb-st-common.h"
 +
-+#define DRIVER_DESC "EHCI STMicroelectronics driver"
-+
-+#define hcd_to_ehci_priv(h) ((struct st_platform_priv *)hcd_to_ehci(h)=
-->priv)
-+
-+static const char hcd_name[] =3D "ehci-st";
-+
-+#define EHCI_CAPS_SIZE 0x10
-+#define AHB2STBUS_INSREG01 (EHCI_CAPS_SIZE + 0x84)
-+
-+int st_ehci_configure_bus(struct usb_hcd *hcd)
++int st_usb_platform_power_on(struct st_platform_priv *priv)
 +{
-+	/* Set EHCI packet buffer IN/OUT threshold to 128 bytes */
-+	u32 threshold =3D 128 | (128 << 16);
++	int clk, ret;
 +
-+	writel(threshold, hcd->regs + AHB2STBUS_INSREG01);
++	if (priv->pwr) {
++		ret =3D reset_control_deassert(priv->pwr);
++		if (ret)
++			return ret;
++	}
++
++	if (priv->rst) {
++		ret =3D reset_control_deassert(priv->rst);
++		if (ret)
++			goto err_assert_power;
++	}
++
++	/* some SoCs don't have a dedicated 48Mhz clock, but those that do
++	   need the rate to be explicitly set */
++	if (priv->clk48) {
++		ret =3D clk_set_rate(priv->clk48, 48000000);
++		if (ret)
++			goto err_assert_reset;
++	}
++
++	for (clk =3D 0; clk < USB_MAX_CLKS && priv->clks[clk]; clk++) {
++		ret =3D clk_prepare_enable(priv->clks[clk]);
++		if (ret)
++			goto err_disable_clks;
++	}
++
++	if (priv->phy) {
++		ret =3D phy_init(priv->phy);
++		if (ret)
++			goto err_disable_clks;
++
++		ret =3D phy_power_on(priv->phy);
++		if (ret)
++			goto err_exit_phy;
++	}
++
 +	return 0;
-+}
 +
-+static int st_ehci_platform_reset(struct usb_hcd *hcd)
-+{
-+	struct platform_device *pdev =3D to_platform_device(hcd->self.control=
-ler);
-+	struct usb_ehci_pdata *pdata =3D dev_get_platdata(&pdev->dev);
-+	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-+	int retval;
-+
-+	if (pdata->pre_setup) {
-+		retval =3D pdata->pre_setup(hcd);
-+		if (retval < 0)
-+			return retval;
-+	}
-+
-+	ehci->caps =3D hcd->regs + pdata->caps_offset;
-+	retval =3D ehci_setup(hcd);
-+	if (retval)
-+		return retval;
-+
-+	return 0;
-+}
-+
-+static int st_ehci_platform_power_on(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd =3D platform_get_drvdata(dev);
-+	struct st_platform_priv *priv =3D hcd_to_ehci_priv(hcd);
-+
-+	return st_usb_platform_power_on(priv);
-+}
-+
-+static void st_ehci_platform_power_off(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd =3D platform_get_drvdata(dev);
-+	struct st_platform_priv *priv =3D hcd_to_ehci_priv(hcd);
-+
-+	return st_usb_platform_power_off(priv);
-+}
-+
-+static struct hc_driver __read_mostly ehci_platform_hc_driver;
-+
-+static const struct ehci_driver_overrides platform_overrides __initcon=
-st =3D {
-+	.reset =3D		st_ehci_platform_reset,
-+	.extra_priv_size =3D	sizeof(struct st_platform_priv),
-+};
-+
-+static struct usb_ehci_pdata ehci_platform_defaults =3D {
-+	.power_on =3D		st_ehci_platform_power_on,
-+	.power_suspend =3D	st_ehci_platform_power_off,
-+	.power_off =3D		st_ehci_platform_power_off,
-+	.pre_setup =3D		st_ehci_configure_bus,
-+};
-+
-+static int st_ehci_platform_probe(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd;
-+	struct resource *res_mem;
-+	struct usb_ehci_pdata *pdata =3D dev_get_platdata(&dev->dev);
-+	struct st_platform_priv *priv;
-+	struct ehci_hcd *ehci;
-+	int err, irq, clk =3D 0;
-+
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	/*
-+	 * Use reasonable defaults so platforms don't have to provide these
-+	 * with DT probing on ARM.
-+	 */
-+	if (!pdata)
-+		pdata =3D &ehci_platform_defaults;
-+
-+	err =3D dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
-+	if (err)
-+		return err;
-+
-+	irq =3D platform_get_irq(dev, 0);
-+	if (irq < 0) {
-+		dev_err(&dev->dev, "no irq provided");
-+		return irq;
-+	}
-+	res_mem =3D platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!res_mem) {
-+		dev_err(&dev->dev, "no memory resource provided");
-+		return -ENXIO;
-+	}
-+
-+	hcd =3D usb_create_hcd(&ehci_platform_hc_driver, &dev->dev,
-+			     dev_name(&dev->dev));
-+	if (!hcd)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(dev, hcd);
-+	dev->dev.platform_data =3D pdata;
-+	priv =3D hcd_to_ehci_priv(hcd);
-+	ehci =3D hcd_to_ehci(hcd);
-+
-+	if (pdata =3D=3D &ehci_platform_defaults && dev->dev.of_node) {
-+		priv->phy =3D devm_phy_get(&dev->dev, "usb");
-+		if (IS_ERR(priv->phy)) {
-+			err =3D PTR_ERR(priv->phy);
-+			if (err =3D=3D -EPROBE_DEFER)
-+				goto err_put_hcd;
-+			priv->phy =3D NULL;
-+		}
-+
-+		for (clk =3D 0; clk < USB_MAX_CLKS; clk++) {
-+			priv->clks[clk] =3D of_clk_get(dev->dev.of_node, clk);
-+			if (IS_ERR(priv->clks[clk])) {
-+				err =3D PTR_ERR(priv->clks[clk]);
-+				if (err =3D=3D -EPROBE_DEFER)
-+					goto err_put_clks;
-+				priv->clks[clk] =3D NULL;
-+				break;
-+			}
-+		}
-+
-+		/* some SoCs don't have a dedicated 48Mhz clock, but those that
-+		   do need the rate to be explicitly set */
-+		priv->clk48 =3D devm_clk_get(&dev->dev, "clk48");
-+		if (IS_ERR(priv->clk48)) {
-+			dev_info(&dev->dev, "48MHz clk not found\n");
-+			priv->clk48 =3D NULL;
-+		}
-+	}
-+
-+	priv->pwr =3D devm_reset_control_get_optional(&dev->dev, "power");
-+	if (IS_ERR(priv->pwr)) {
-+		err =3D PTR_ERR(priv->pwr);
-+		if (err =3D=3D -EPROBE_DEFER)
-+			goto err_put_clks;
-+		priv->pwr =3D NULL;
-+	}
-+
-+	priv->rst =3D devm_reset_control_get_optional(&dev->dev, "softreset")=
-;
-+	if (IS_ERR(priv->rst)) {
-+		err =3D PTR_ERR(priv->rst);
-+		if (err =3D=3D -EPROBE_DEFER)
-+			goto err_put_clks;
-+		priv->rst =3D NULL;
-+	}
-+
-+	if (pdata->power_on) {
-+		err =3D pdata->power_on(dev);
-+		if (err < 0)
-+			goto err_put_clks;
-+	}
-+
-+	hcd->rsrc_start =3D res_mem->start;
-+	hcd->rsrc_len =3D resource_size(res_mem);
-+
-+	hcd->regs =3D devm_ioremap_resource(&dev->dev, res_mem);
-+	if (IS_ERR(hcd->regs)) {
-+		err =3D PTR_ERR(hcd->regs);
-+		goto err_put_clks;
-+	}
-+
-+	err =3D usb_add_hcd(hcd, irq, IRQF_SHARED);
-+	if (err)
-+		goto err_put_clks;
-+
-+	device_wakeup_enable(hcd->self.controller);
-+	platform_set_drvdata(dev, hcd);
-+
-+	return err;
-+
-+err_put_clks:
++err_exit_phy:
++	phy_exit(priv->phy);
++err_disable_clks:
 +	while (--clk >=3D 0)
-+		clk_put(priv->clks[clk]);
-+err_put_hcd:
-+	if (pdata =3D=3D &ehci_platform_defaults)
-+		dev->dev.platform_data =3D NULL;
-+
-+	usb_put_hcd(hcd);
-+
-+	return err;
-+}
-+
-+static int st_ehci_platform_remove(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd =3D platform_get_drvdata(dev);
-+	struct usb_ehci_pdata *pdata =3D dev_get_platdata(&dev->dev);
-+	struct st_platform_priv *priv =3D hcd_to_ehci_priv(hcd);
-+	int clk;
-+
-+	usb_remove_hcd(hcd);
-+
-+	if (pdata->power_off)
-+		pdata->power_off(dev);
-+
-+	for (clk =3D 0; clk < USB_MAX_CLKS && priv->clks[clk]; clk++)
-+		clk_put(priv->clks[clk]);
-+
-+	usb_put_hcd(hcd);
-+
-+	if (pdata =3D=3D &ehci_platform_defaults)
-+		dev->dev.platform_data =3D NULL;
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+
-+static int st_ehci_suspend(struct device *dev)
-+{
-+	struct usb_hcd *hcd =3D dev_get_drvdata(dev);
-+	struct usb_ehci_pdata *pdata =3D dev_get_platdata(dev);
-+	struct platform_device *pdev =3D
-+		container_of(dev, struct platform_device, dev);
-+	bool do_wakeup =3D device_may_wakeup(dev);
-+	int ret;
-+
-+	ret =3D ehci_suspend(hcd, do_wakeup);
-+	if (ret)
-+		return ret;
-+
-+	if (pdata->power_suspend)
-+		pdata->power_suspend(pdev);
-+
-+	pinctrl_pm_select_sleep_state(dev);
++		clk_disable_unprepare(priv->clks[clk]);
++err_assert_reset:
++	if (priv->rst)
++		ret =3D reset_control_assert(priv->rst);
++err_assert_power:
++	if (priv->pwr)
++		ret =3D reset_control_assert(priv->pwr);
 +
 +	return ret;
 +}
++EXPORT_SYMBOL(st_usb_platform_power_on);
 +
-+static int st_ehci_resume(struct device *dev)
++void st_usb_platform_power_off(struct st_platform_priv *priv)
 +{
-+	struct usb_hcd *hcd =3D dev_get_drvdata(dev);
-+	struct usb_ehci_pdata *pdata =3D dev_get_platdata(dev);
-+	struct platform_device *pdev =3D
-+		container_of(dev, struct platform_device, dev);
-+	int err;
++	int clk;
 +
-+	pinctrl_pm_select_default_state(dev);
++	if (priv->pwr)
++		reset_control_assert(priv->pwr);
 +
-+	if (pdata->power_on) {
-+		err =3D pdata->power_on(pdev);
-+		if (err < 0)
-+			return err;
++	if (priv->rst)
++		reset_control_assert(priv->rst);
++
++	if (priv->phy) {
++		phy_power_off(priv->phy);
++		phy_exit(priv->phy);
 +	}
 +
-+	ehci_resume(hcd, false);
-+	return 0;
++	for (clk =3D USB_MAX_CLKS - 1; clk >=3D 0; clk--)
++		if (priv->clks[clk])
++			clk_disable_unprepare(priv->clks[clk]);
++
 +}
++EXPORT_SYMBOL(st_usb_platform_power_off);
+diff --git a/drivers/usb/host/usb-st-common.h b/drivers/usb/host/usb-st=
+-common.h
+new file mode 100644
+index 0000000..5ee7fb0
+--- /dev/null
++++ b/drivers/usb/host/usb-st-common.h
+@@ -0,0 +1,34 @@
++/*
++ * ST ehci / ohci common header file
++ *
++ * Copyright (C) 2014 STMicroelectronics =E2=80=93 All Rights Reserved
++ *
++ * Author: Peter Griffin <peter.griffin@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
 +
-+#endif /* CONFIG_PM */
++#ifndef __USB_ST_COMMON_H
++#define __USB_ST_COMMON_H
 +
-+static SIMPLE_DEV_PM_OPS(st_ehci_pm_ops, st_ehci_suspend, st_ehci_resu=
-me);
++#include <linux/clk.h>
++#include <linux/reset.h>
++#include <linux/phy/phy.h>
 +
-+static const struct of_device_id st_ehci_ids[] =3D {
-+	{ .compatible =3D "st,st-ehci-300x", },
-+	{ /* sentinel */ }
++#define USB_MAX_CLKS 3
++
++struct st_platform_priv {
++	struct clk *clks[USB_MAX_CLKS];
++	struct clk *clk48;
++	struct reset_control *rst;
++	struct reset_control *pwr;
++	struct phy *phy;
 +};
-+MODULE_DEVICE_TABLE(of, st_ehci_ids);
 +
-+static struct platform_driver ehci_platform_driver =3D {
-+	.probe		=3D st_ehci_platform_probe,
-+	.remove		=3D st_ehci_platform_remove,
-+	.shutdown	=3D usb_hcd_platform_shutdown,
-+	.driver		=3D {
-+		.name	=3D "st-ehci",
-+		.pm	=3D &st_ehci_pm_ops,
-+		.of_match_table =3D st_ehci_ids,
-+	}
-+};
++int st_usb_platform_power_on(struct st_platform_priv *priv);
++void st_usb_platform_power_off(struct st_platform_priv *priv);
 +
-+static int __init ehci_platform_init(void)
-+{
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	pr_info("%s: " DRIVER_DESC "\n", hcd_name);
-+
-+	ehci_init_driver(&ehci_platform_hc_driver, &platform_overrides);
-+	return platform_driver_register(&ehci_platform_driver);
-+}
-+module_init(ehci_platform_init);
-+
-+static void __exit ehci_platform_cleanup(void)
-+{
-+	platform_driver_unregister(&ehci_platform_driver);
-+}
-+module_exit(ehci_platform_cleanup);
-+
-+MODULE_DESCRIPTION(DRIVER_DESC);
-+MODULE_AUTHOR("Peter Griffin <peter.griffin@linaro.org>");
-+MODULE_LICENSE("GPL");
++#endif /* __USB_ST_COMMON_H */
 --=20
 1.9.1
