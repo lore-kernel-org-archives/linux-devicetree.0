@@ -1,61 +1,79 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: where to add imx-udc-mx27 in device tree
-Date: Wed, 6 Aug 2014 09:31:31 -0300
-Message-ID: <CAOMZO5A0zVi29AXHOFZENQxonXFfETukbj-SSmQwO4km0cAgog@mail.gmail.com>
+From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+Subject: AW: where to add imx-udc-mx27 in device tree
+Date: Wed, 6 Aug 2014 12:44:51 +0000
+Message-ID: <E70AF999396FDF4EAE40E195B84709611F84808A@SPMDEGHN001.CADCON.INTERN>
 References: <E70AF999396FDF4EAE40E195B84709611F847DDE@SPMDEGHN001.CADCON.INTERN>
 	<CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ@mail.gmail.com>
 	<E70AF999396FDF4EAE40E195B84709611F84803F@SPMDEGHN001.CADCON.INTERN>
+ <CAOMZO5A0zVi29AXHOFZENQxonXFfETukbj-SSmQwO4km0cAgog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E70AF999396FDF4EAE40E195B84709611F84803F-VHQhki0MIenpQFNhCJRnZ0Yy6alPw7Wn0MAMd6zgKLc@public.gmane.org>
+In-Reply-To: <CAOMZO5A0zVi29AXHOFZENQxonXFfETukbj-SSmQwO4km0cAgog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: de-DE
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 6, 2014 at 8:52 AM, Priebe, Sebastian
-<Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org> wrote:
-> Hello,
->
-> I pulled linux-next, but still can't figure out where to add my udc.
-> Can you please explain when fsl-udc is loaded?
+SW4gaW14MzUuZHRzaSB0aGVyZSBpczoNCnVzYm90ZzogdXNiQDUzZmY0MDAwIHsNCiAgICAgICAg
+Y29tcGF0aWJsZSA9ICJmc2wsaW14MzUtdXNiIiwgImZzbCxpbXgyNy11c2IiOw0KICAgICAgICBy
+ZWcgPSA8MHg1M2ZmNDAwMCAweDAyMDA+Ow0KICAgICAgICBpbnRlcnJ1cHRzID0gPDM3PjsNCiAg
+ICAgICAgY2xvY2tzID0gPCZjbGtzIDczPjsNCiAgICAgICAgZnNsLHVzYm1pc2MgPSA8JnVzYm1p
+c2MgMD47DQogICAgICAgIGZzbCx1c2JwaHkgPSA8JnVzYnBoeTA+Ow0KICAgICAgICBzdGF0dXMg
+PSAiZGlzYWJsZWQiOw0KfTsNCg0KQW5kIGluIG91ciBkdHMgd2UgaGF2ZToNCiZ1c2JvdGcgew0K
+ICAgICAgICBjb21wYXRpYmxlID0gImlteC11ZGMtbXgyNyI7DQogICAgICAgIHBpbmN0cmwtbmFt
+ZXMgPSAiZGVmYXVsdCI7DQogICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91c2JvdGc+Ow0K
+ICAgICAgICBkcl9tb2RlID0gInBlcmlwaGVyYWwiOw0KICAgICAgICBwaHlfdHlwZSA9ICJ1dG1p
+X3dpZGUiOw0KICAgICAgICBzdGF0dXMgPSAib2theSI7DQogICAgICAgIC8qIHdoYXQgdG8gZG8g
+d2l0aCB3b3JrYXJvdW5kID0gRkxTX1VTQjJfV09SS0FST1VORF9FTkdDTTA5MTUyID8/PyAqLw0K
+fTsNCg0KSW4gb3VyIGNvbmZpZyB3ZSBoYXZlOg0KQ09ORklHX0lNWF9IQVZFX1BMQVRGT1JNX0ZT
+TF9VU0IyX1VEQz15DQpDT05GSUdfVVNCX0dBREdFVD15DQpDT05GSUdfVVNCX0ZTTF9VU0IyPXkN
+CkNPTkZJR19VU0JfTElCQ09NUE9TSVRFPW0NCkNPTkZJR19VU0JfRl9BQ009bQ0KQ09ORklHX1VT
+Ql9VX1NFUklBTD1tDQpDT05GSUdfVVNCX0ZfU0VSSUFMPW0NCkNPTkZJR19VU0JfRl9PQkVYPW0N
+CkNPTkZJR19VU0JfRl9NQVNTX1NUT1JBR0U9bQ0KQ09ORklHX1VTQl9NQVNTX1NUT1JBR0U9bQ0K
+Q09ORklHX1VTQl9HX1NFUklBTD1tDQoNCkJ1dCBtb2Rwcm9iZSBnX3NlcmlhbCByZXR1cm5zIC1F
+Tk9ERVYgYmVjYXVzZSBubyBVREMgY2FuIGJlIGZvdW5kIGluIHVzYl9nYWRnZXRfcHJvYmVfZHJp
+dmVyKCkuDQpTbyBJIGFzc3VtZWQgSSBoYXZlIHRvIGFkZCBhbiBVREMgaW4gdGhlIGRldmljZSB0
+cmVlLiBUaGlzIHNlZW1zIHRvIGJlIHdyb25nLg0KDQpTbywgbXkgcXVlc3Rpb24gaXM6IHdoeSBp
+cyB0aGVyZSBubyBVREMgZm91bmQ/DQpXZSBhcmUgdXNpbmcgZnNsX3VkY19jb3JlLmMgYW5kIGZz
+bF9teGNfdWRjLmMuDQoNCkdyZWV0aW5ncw0KU2ViYXN0aWFuIFByaWViZQ0KDQoNCg0KDQoNCj09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KQ0FEQ09ODQpJbmdlbmll
+dXJnZXNlbGxzY2hhZnQgbWJIICYgQ28uIEtHDQpHZXNjaGFlZnRzZnVlaHJlcjogUm9iZXJ0IEJh
+dWVyLCBBbmRyZWFzIEd1bmRlbA0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBELTg2MzY4IEdlcnN0
+aG9mZW4NClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQXVnc2J1cmcgSFJBIDE0NTIxDQo9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCg0KLS0tLS1VcnNwcsO8
+bmdsaWNoZSBOYWNocmljaHQtLS0tLQ0KVm9uOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2
+YW1AZ21haWwuY29tXQ0KR2VzZW5kZXQ6IE1pdHR3b2NoLCA2LiBBdWd1c3QgMjAxNCAxNDozMg0K
+QW46IFByaWViZSwgU2ViYXN0aWFuDQpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCkJl
+dHJlZmY6IFJlOiB3aGVyZSB0byBhZGQgaW14LXVkYy1teDI3IGluIGRldmljZSB0cmVlDQoNCk9u
+IFdlZCwgQXVnIDYsIDIwMTQgYXQgODo1MiBBTSwgUHJpZWJlLCBTZWJhc3RpYW4gPFNlYmFzdGlh
+bi5QcmllYmVAY2FkY29uLmRlPiB3cm90ZToNCj4gSGVsbG8sDQo+DQo+IEkgcHVsbGVkIGxpbnV4
+LW5leHQsIGJ1dCBzdGlsbCBjYW4ndCBmaWd1cmUgb3V0IHdoZXJlIHRvIGFkZCBteSB1ZGMuDQo+
+IENhbiB5b3UgcGxlYXNlIGV4cGxhaW4gd2hlbiBmc2wtdWRjIGlzIGxvYWRlZD8NCg0KTWF5YmUg
+SSBkb24ndCB1bmRlcnN0YW5kIHRoZSBxdWVzdGlvbi4NCg0KVGhlcmUgaXMgbm8gJ2ZzbC11ZGMn
+IHRoYXQgbmVlZHMgdG8gYmUgbG9hZGVkIGF0IGFsbC4gVGhlIFVTQiBkcml2ZXIgZm9yIGlteCBp
+cyB0aGUgY2hpcGlkZWEgZHJpdmVyLg0KDQpJbiB0aGUgaW14MjcuZHRzaSB3ZSBoYXZlOg0KDQog
+ICAgICAgICAgICB1c2JvdGc6IHVzYkAxMDAyNDAwMCB7DQogICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJmc2wsaW14MjctdXNiIjsNCiAgICAgICAgICAgICAgICByZWcgPSA8MHgxMDAyNDAw
+MCAweDIwMD47DQogICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw1Nj47DQogICAgICAgICAg
+ICAgICAgY2xvY2tzID0gPCZjbGtzIElNWDI3X0NMS19VU0JfSVBHX0dBVEU+Ow0KICAgICAgICAg
+ICAgICAgIGZzbCx1c2JtaXNjID0gPCZ1c2JtaXNjIDA+Ow0KICAgICAgICAgICAgICAgIHN0YXR1
+cyA9ICJkaXNhYmxlZCI7DQogICAgICAgICAgICB9Ow0KDQogICAgICAgICAgICB1c2JoMTogdXNi
+QDEwMDI0MjAwIHsNCiAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxpbXgyNy11c2Ii
+Ow0KICAgICAgICAgICAgICAgIHJlZyA9IDwweDEwMDI0MjAwIDB4MjAwPjsNCiAgICAgICAgICAg
+ICAgICBpbnRlcnJ1cHRzID0gPDU0PjsNCiAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNsa3Mg
+SU1YMjdfQ0xLX1VTQl9JUEdfR0FURT47DQogICAgICAgICAgICAgICAgZnNsLHVzYm1pc2MgPSA8
+JnVzYm1pc2MgMT47DQogICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICAg
+ICAgICAgIH07DQoNCiAgICAgICAgICAgIHVzYmgyOiB1c2JAMTAwMjQ0MDAgew0KICAgICAgICAg
+ICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDI3LXVzYiI7DQogICAgICAgICAgICAgICAgcmVn
+ID0gPDB4MTAwMjQ0MDAgMHgyMDA+Ow0KICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8NTU+
+Ow0KICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrcyBJTVgyN19DTEtfVVNCX0lQR19HQVRF
+PjsNCiAgICAgICAgICAgICAgICBmc2wsdXNibWlzYyA9IDwmdXNibWlzYyAyPjsNCiAgICAgICAg
+ICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KICAgICAgICAgICAgfTsNCg0KU28gdGhlICJj
+b21wYXRpYmxlID0gImZzbCxpbXgyNy11c2IiOyIgaXMgYWxsIHdlIG5lZWQgdGhlcmUuDQoNCg==
 
-Maybe I don't understand the question.
-
-There is no 'fsl-udc' that needs to be loaded at all. The USB driver
-for imx is the chipidea driver.
-
-In the imx27.dtsi we have:
-
-            usbotg: usb@10024000 {
-                compatible = "fsl,imx27-usb";
-                reg = <0x10024000 0x200>;
-                interrupts = <56>;
-                clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-                fsl,usbmisc = <&usbmisc 0>;
-                status = "disabled";
-            };
-
-            usbh1: usb@10024200 {
-                compatible = "fsl,imx27-usb";
-                reg = <0x10024200 0x200>;
-                interrupts = <54>;
-                clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-                fsl,usbmisc = <&usbmisc 1>;
-                status = "disabled";
-            };
-
-            usbh2: usb@10024400 {
-                compatible = "fsl,imx27-usb";
-                reg = <0x10024400 0x200>;
-                interrupts = <55>;
-                clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-                fsl,usbmisc = <&usbmisc 2>;
-                status = "disabled";
-            };
-
-So the "compatible = "fsl,imx27-usb";" is all we need there.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
