@@ -1,51 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 05/12] [v2] spi: rspi: Add DT support to DMA setup
-Date: Wed, 6 Aug 2014 21:28:03 +0100
-Message-ID: <20140806202803.GT17528@sirena.org.uk>
-References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
- <1407329949-5695-6-git-send-email-geert+renesas@glider.be>
+From: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: Allow mem_reserve of memory with a base address of zero
+Date: Wed, 6 Aug 2014 16:30:04 -0400
+Message-ID: <1407357004-31713-1-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="N8U4vaB+Yt07z2q/"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407329949-5695-6-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+__reserved_mem_reserve_reg() won't reserve memory if the base address
+is zero. This change removes the check for a base address of zero and
+allows it to be reserved.
 
---N8U4vaB+Yt07z2q/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Allowing the first 4K of memory to be reserved will help solve a
+problem on some ARM systems where the the first 16K of memory is
+unused and becomes allocable memory. This will prevent this memory
+from being used for DMA by drivers like the USB OHCI driver which
+consider a physical address of zero to be illegal.
 
-On Wed, Aug 06, 2014 at 02:59:02PM +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: devicetree@vger.kernel.org
+Signed-off-by: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 9aa012e..379ad4f 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -453,7 +453,7 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
+ 		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
+ 		size = dt_mem_next_cell(dt_root_size_cells, &prop);
+ 
+-		if (base && size &&
++		if (size &&
+ 		    early_init_dt_reserve_memory_arch(base, size, nomap) == 0)
+ 			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %ld MiB\n",
+ 				uname, &base, (unsigned long)size / SZ_1M);
+-- 
+1.9.0.138.g2de3478
 
---N8U4vaB+Yt07z2q/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT4o/QAAoJELSic+t+oim95Y0P/juKWzXi3wwXN2awhBKKv1Bc
-dzOEQ9CJ9we1bhB6Le5z/pYoiHwFnu9O3+NQ6lKGaUz1e/okmti8UtJ+utSnwkqu
-9LgXKyJLNr+C3NSJkx8OjKib6wCMFlKIOYrjzMXu0BEZ6Ztwi5r2ZXG/pGVGRPGt
-xtsqCAVCbVpQnY9WgdLu5fI5buPMr3H+jWlhtMkdhsd3KYz6EGNn9eiGUHC2nZyo
-lRp3BAxEY/hTNa9IoSCo4E0ECMdCBESa9x0HLx9x2QC41xqfhrda1P4TH0Xvu5Un
-3qANPMIG+wVzZta6ij/fRyzCRIQfkazcMOO/aNqlxrkzc+NYAkoNz9F60wEVuxP4
-bqoUnS+hh3PHEGTYJN1ZXeOSvGlDtN78g+YYH3CuX4JIPlTuSAV60F1UzfJXk4PV
-yEZmrPnBP5r5b9OCmLcVOtpLHrO89f+Kr4v4aFAwTnIhHW4TjPrRZpL6lyTOUKJx
-rknvg2xKsLrrHVgAyfkUEbX7nWLpRrDYf632pIVYxiQpCGGekGp7vaQHT4Ip3+/V
-S/b7V8wJPQ4AF6qgQ+K/BEylqAftXTYNBj/LEVgvgGz/6Cxkkb+I8XzEbSe67tZC
-qpQFRzzQ7RzQftvociwkeRf0Vtb8Fb5A4SRLbavzsyrCMXX71a96LjeEptIaK5yf
-r4pWQsxNjhjHZncJaRpC
-=xYRz
------END PGP SIGNATURE-----
-
---N8U4vaB+Yt07z2q/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
