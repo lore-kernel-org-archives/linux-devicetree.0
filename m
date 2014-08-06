@@ -1,54 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3] Documentation: devicetree: Fix tps65090 typos in
- example
-Date: Wed, 6 Aug 2014 22:10:51 +0100
-Message-ID: <20140806211051.GA17528@sirena.org.uk>
-References: <1406755767-5910-1-git-send-email-afaerber@suse.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] Add EHCI and OHCI drivers for STi SoC's
+Date: Wed, 6 Aug 2014 23:18:28 +0200
+Message-ID: <201408062318.28958.arnd@arndb.de>
+References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="w3kmj6YJmRtqQaLC"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406755767-5910-1-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407344589-24863-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 06 August 2014, Peter Griffin wrote:
+> This series adds support for the OHCI and EHCI on-chip controllers
+> found in STi consumer electronics SoC's from STMicroelectronics.
+> 
+> The series has been re-worked from v2 to split out the ehci and ohci parts
+> into their own drivers / devices like most other ARM platforms based on
+> feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
+> 
+> The ehci-platform & ohci-platform have been used as a basis for this in case we
+> wish to merge the drivers again in the future.
+> 
+> Changes since v2:
+>  - Based on Arnd Berghman feedback, split out into 2 devices / drivers
+>  - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
+>    to allow possible re-merge in the furture.
 
---w3kmj6YJmRtqQaLC
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Peter,
 
-On Wed, Jul 30, 2014 at 11:29:27PM +0200, Andreas F=E4rber wrote:
-> Specification and existing device trees use vsys-l{1,2}-supply,
-> not vsys_l{1,2}-supply. Fix the example to match the specification.
+This looks much better than the first version. I have some remaining comments for
+how it could be simplified a bit more.
 
-Applied.  I've previously reminded you to use subject lines appropraite
-for the subsystem, please do so - this is important for telling people
-what the patch is for.
+The way that you deal with the 48mhz clock seems like it should fit in well
+with the generic driver, just like all the rest (once the usb-st-common
+stuff is moved into the ohci/ehci drivers), so the alternative would be
+to make it all generic now.
 
---w3kmj6YJmRtqQaLC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT4pnXAAoJELSic+t+oim9Y6EP/0DwyVyQ/+UFFITQo7zScDpp
-hm9gZqRUOyJwNJC/fP47L464R3l4CrSS3bYfOLFzUe4jcVbAjZVTzguSAaN6f59Q
-4znQM8h60K2+vhUWKSxCinz+gvzTchV17d7R4PWN/wPypWg3xjA3jI1TnHca1d59
-EN+pYG++04VtV9Z2vj94kJDQRgyOyIz6W9QesyTX6aJuGN+WhvZ/qKLQ8aOifRdF
-FDQr4QSiY8tpvrDO8/g831NFT/RyBgCJGDyodlooHZ3Q3Vnx7TXOY24QpFnc/KQ9
-yt7KFgKjKfDl4Grgwx37HO5RLeYX2PeMMp0uPZuhSn/HAR9VCk9mXN00BPK7hv1H
-lI7M0OydX1crYOout2tTAyxf2pcX5HsRLMMHABCNb8+rzpbpNxrz/tr+VQRzUlfW
-IdRxzmlKAziLCg1tuTUbwNwP239nIhaK30FH2kyfJPsxIKEwjJHpF/zbbAZK8yqm
-hnDUeB+foWf5xncYeyLJFyG2n76QL9aS3fegQffXXXmrlGtii5OXpS5L2ZGBLcmh
-8cPFgVaiHNpyCLEH5Je9HCWdBg4DNwv84Yxrag+IJOTUdh6eJhs6cqWPUm1pn+bu
-gYWxhX+4tH76gO0Y6wGoAlG2tn6YUv6diyTPdiOcyi8EYWZWZ2S20JUlLKlR+Iup
-WmLYXxzxOZ9trZuNtQX+
-=Rlq4
------END PGP SIGNATURE-----
-
---w3kmj6YJmRtqQaLC--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
