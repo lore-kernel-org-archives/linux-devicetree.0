@@ -1,66 +1,69 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 0/6] Add EHCI and OHCI drivers for STi SoC's
-Date: Wed,  6 Aug 2014 18:03:03 +0100
-Message-ID: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 5/6] usb: host: ohci-st: Add ohci-st devicetree bindings documentation
+Date: Wed,  6 Aug 2014 18:03:08 +0100
+Message-ID: <1407344589-24863-6-git-send-email-peter.griffin@linaro.org>
+References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the OHCI and EHCI on-chip controllers
-found in STi consumer electronics SoC's from STMicroelectronics.
+This patch documents the device tree bindings required for
+the ohci on-chip controller found in ST consumer electronics SoC's.
 
-The series has been re-worked from v2 to split out the ehci and ohci parts
-into their own drivers / devices like most other ARM platforms based on
-feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
-
-The ehci-platform & ohci-platform have been used as a basis for this in case we
-wish to merge the drivers again in the future.
-
-Changes since v2:
- - Based on Arnd Berghman feedback, split out into 2 devices / drivers
- - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
-   to allow possible re-merge in the furture.
-
-Changes since v1:
- - Correct s/OCHI/OHCI/ spelling
- - Improve kconfig help message
- - Various formating / spelling nits identified by Lee Jones
- - Make driver depend on OF & remove node checks in code
- - Use devm_ioremap_resource
- - Remove unnecessary header files
-
-Peter Griffin (6):
-  usb: host: usb-st-common: Add common code required by ohci-st and
-    ehci-st
-  usb: host: ehci-st: Add EHCI support for ST STB devices
-  usb: host: ohci-st: Add OHCI driver support for ST STB devices
-  usb: host: ehci-st: Add ehci-st devicetree bindings documentation
-  usb: host: ohci-st: Add ohci-st devicetree bindings documentation
-  MAINTAINERS: Add ehci-st.c and ohci-st.c to ARCH/STI architecture
-
- Documentation/devicetree/bindings/usb/ehci-st.txt |  41 +++
- Documentation/devicetree/bindings/usb/ohci-st.txt |  40 +++
- MAINTAINERS                                       |   3 +-
- drivers/usb/host/Kconfig                          |  13 +
- drivers/usb/host/Makefile                         |   2 +
- drivers/usb/host/ehci-st.c                        | 334 ++++++++++++++++++++++
- drivers/usb/host/ohci-st.c                        | 302 +++++++++++++++++++
- drivers/usb/host/usb-st-common.c                  |  99 +++++++
- drivers/usb/host/usb-st-common.h                  |  34 +++
- 9 files changed, 867 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ehci-st.txt
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ Documentation/devicetree/bindings/usb/ohci-st.txt | 40 +++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/usb/ohci-st.txt
- create mode 100644 drivers/usb/host/ehci-st.c
- create mode 100644 drivers/usb/host/ohci-st.c
- create mode 100644 drivers/usb/host/usb-st-common.c
- create mode 100644 drivers/usb/host/usb-st-common.h
 
+diff --git a/Documentation/devicetree/bindings/usb/ohci-st.txt b/Documentation/devicetree/bindings/usb/ohci-st.txt
+new file mode 100644
+index 0000000..17181c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ohci-st.txt
+@@ -0,0 +1,40 @@
++ST USB OHCI controller
++
++Required properties:
++
++ - compatible		: must be "st,st-ohci-300x"
++ - reg			: physical base addresses of the controller and length of memory mapped
++			  region
++ - interrupts		: one OHCI controller interrupt should be described here
++
++Optional properties:
++
++ - clocks		: phandle list of usb clocks
++ - clock-names		: should be "ic" for interconnect clock and "clk48"
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++ - phys			: phandle for the PHY device
++ - phy-names		: should be "usb"
++
++ - resets		: phandle to the powerdown and reset controller for the USB IP
++ - reset-names		: should be "power" and "softreset".
++See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
++See: Documentation/devicetree/bindings/reset/reset.txt
++
++Example:
++
++	ohci0: usb@0xfe1ffc00 {
++		compatible = "st,ohci-platform";
++		reg = <0xfe1ffc00 0x100>;
++		interrupts = <GIC_SPI 149 IRQ_TYPE_NONE>;
++		clocks = <&clk_s_a1_ls 0>,
++			 <&clockgen_b0 0>;
++		clock-names = "ic", "clk48";
++		phys = <&usb2_phy>;
++		phy-names = "usb";
++		status = "okay";
++
++		resets = <&powerdown STIH416_USB0_POWERDOWN>,
++			 <&softreset STIH416_USB0_SOFTRESET>;
++		reset-names = "power", "softreset";
++	};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
