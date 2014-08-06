@@ -1,48 +1,158 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v6 6/7] drivers: cpuidle: initialize big.LITTLE driver
- through DT
-Date: Wed, 6 Aug 2014 10:02:20 +0100
-Message-ID: <20140806090220.GA24431@e102568-lin.cambridge.arm.com>
-References: <1405958786-17243-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1405958786-17243-7-git-send-email-lorenzo.pieralisi@arm.com>
- <20140723162626.GE20966@arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] serial: clps711x: Use mctrl_gpio helpers for handling
+ modem signals
+Date: Wed, 6 Aug 2014 10:07:27 +0100
+Message-ID: <20140806090726.GA5727@leverpostej>
+References: <1407263841-14692-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140723162626.GE20966@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, Bartlomi
+In-Reply-To: <1407263841-14692-1-git-send-email-shc_work@mail.ru>
+Sender: linux-serial-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 23, 2014 at 05:26:26PM +0100, Catalin Marinas wrote:
-> On Mon, Jul 21, 2014 at 05:06:25PM +0100, Lorenzo Pieralisi wrote:
-> > With the introduction of DT based idle states, CPUidle drivers for ARM
-> > can now initialize idle states data through properties in the device tree.
-> > 
-> > This patch adds code to the big.LITTLE CPUidle driver to dynamically
-> > initialize idle states data through the updated device tree source file.
-> > 
-> > Cc: Chander Kashyap <chander.kashyap@linaro.org>
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+On Tue, Aug 05, 2014 at 07:37:21PM +0100, Alexander Shiyan wrote:
+> This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
+> signals.
 > 
-> I think for this patch (and the exynos one) we should still allow the
-> driver to work fine with old DT. Basically if the information is not in
-> DT, fall back to the original static definitions.
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  .../bindings/serial/cirrus,clps711x-uart.txt       |  7 +++--
+>  drivers/tty/serial/Kconfig                         |  1 +
+>  drivers/tty/serial/clps711x.c                      | 32 +++++++---------------
+>  3 files changed, 16 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+> index 12f3cf8..caaeb25 100644
+> --- a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+> @@ -8,7 +8,8 @@ Required properties:
+>  - syscon: Phandle to SYSCON node, which contain UART control bits.
+>  
+>  Optional properties:
+> -- uart-use-ms: Indicate the UART has modem signal (DCD, DSR, CTS).
+> +- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
+> +  line respectively.
 
-Yes, this makes sense, I will implement the fall-back mechanism on v7,
-that should be final. If in the meanwhile Samsung guys have time to
-test the Exynos patch that would be very appreciated.
+The commit message states you are adding a capability to the driver, but
+you are removing portions of the driver and binding. Please come up with
+a better commit message explaining why this is necessary.
 
-Thanks,
-Lorenzo
+Mark.
+
+>  
+>  Note: Each UART port should have an alias correctly numbered
+>  in "aliases" node.
+> @@ -24,5 +25,7 @@ Example:
+>  		interrupts = <12 13>;
+>  		clocks = <&clks 11>;
+>  		syscon = <&syscon1>;
+> -		uart-use-ms;
+> +		cts-gpios = <&sysgpio 0 GPIO_ACTIVE_LOW>;
+> +		dsr-gpios = <&sysgpio 1 GPIO_ACTIVE_LOW>;
+> +		dcd-gpios = <&sysgpio 2 GPIO_ACTIVE_LOW>;
+>  	};
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 26cec64..75cc59f 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -204,6 +204,7 @@ config SERIAL_CLPS711X
+>  	tristate "CLPS711X serial port support"
+>  	depends on ARCH_CLPS711X || COMPILE_TEST
+>  	select SERIAL_CORE
+> +	select SERIAL_MCTRL_GPIO
+>  	help
+>  	  This enables the driver for the on-chip UARTs of the Cirrus
+>  	  Logic EP711x/EP721x/EP731x processors.
+> diff --git a/drivers/tty/serial/clps711x.c b/drivers/tty/serial/clps711x.c
+> index f5b4c3d..acfe317 100644
+> --- a/drivers/tty/serial/clps711x.c
+> +++ b/drivers/tty/serial/clps711x.c
+> @@ -33,6 +33,8 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/mfd/syscon/clps711x.h>
+>  
+> +#include "serial_mctrl_gpio.h"
+> +
+>  #define UART_CLPS711X_DEVNAME	"ttyCL"
+>  #define UART_CLPS711X_NR	2
+>  #define UART_CLPS711X_MAJOR	204
+> @@ -62,7 +64,7 @@ struct clps711x_port {
+>  	unsigned int		tx_enabled;
+>  	int			rx_irq;
+>  	struct regmap		*syscon;
+> -	bool			use_ms;
+> +	struct mctrl_gpios	*gpios;
+>  };
+>  
+>  static struct uart_driver clps711x_uart = {
+> @@ -198,28 +200,17 @@ static unsigned int uart_clps711x_tx_empty(struct uart_port *port)
+>  
+>  static unsigned int uart_clps711x_get_mctrl(struct uart_port *port)
+>  {
+> +	unsigned int result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
+>  	struct clps711x_port *s = dev_get_drvdata(port->dev);
+> -	unsigned int result = 0;
+> -
+> -	if (s->use_ms) {
+> -		u32 sysflg = 0;
+> -
+> -		regmap_read(s->syscon, SYSFLG_OFFSET, &sysflg);
+> -		if (sysflg & SYSFLG1_DCD)
+> -			result |= TIOCM_CAR;
+> -		if (sysflg & SYSFLG1_DSR)
+> -			result |= TIOCM_DSR;
+> -		if (sysflg & SYSFLG1_CTS)
+> -			result |= TIOCM_CTS;
+> -	} else
+> -		result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
+>  
+> -	return result;
+> +	return mctrl_gpio_get(s->gpios, &result);
+>  }
+>  
+>  static void uart_clps711x_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>  {
+> -	/* Do nothing */
+> +	struct clps711x_port *s = dev_get_drvdata(port->dev);
+> +
+> +	mctrl_gpio_set(s->gpios, mctrl);
+>  }
+>  
+>  static void uart_clps711x_break_ctl(struct uart_port *port, int break_state)
+> @@ -490,15 +481,10 @@ static int uart_clps711x_probe(struct platform_device *pdev)
+>  		s->syscon = syscon_regmap_lookup_by_pdevname(syscon_name);
+>  		if (IS_ERR(s->syscon))
+>  			return PTR_ERR(s->syscon);
+> -
+> -		s->use_ms = !index;
+>  	} else {
+>  		s->syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
+>  		if (IS_ERR(s->syscon))
+>  			return PTR_ERR(s->syscon);
+> -
+> -		if (!index)
+> -			s->use_ms = of_property_read_bool(np, "uart-use-ms");
+>  	}
+>  
+>  	s->port.line		= index;
+> @@ -513,6 +499,8 @@ static int uart_clps711x_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, s);
+>  
+> +	s->gpios = mctrl_gpio_init(&pdev->dev, 0);
+> +
+>  	ret = uart_add_one_port(&clps711x_uart, &s->port);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 1.8.5.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
