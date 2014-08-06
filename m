@@ -1,223 +1,37 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V3] Thermal: imx: add i.mx6sx thermal support
-Date: Wed, 6 Aug 2014 15:12:09 +0800
-Message-ID: <1407309129-5562-1-git-send-email-b20788@freescale.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: userspace-consumer: add DT binding details
+Date: Wed, 6 Aug 2014 13:03:52 +0530
+Message-ID: <53E1DA60.9010401@nvidia.com>
+References: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com> <1406728440-17837-2-git-send-email-ldewangan@nvidia.com> <20140730155302.GE20162@leverpostej> <20140730164014.GY17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140730164014.GY17528@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6SX has some new features of thermal interrupt function,
-there are LOW, HIGH and PANIC irq for thermal sensor, so add
-platform data to separate different thermal version;
+On Wednesday 30 July 2014 10:10 PM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Wed, Jul 30, 2014 at 04:53:03PM +0100, Mark Rutland wrote:
+>> On Wed, Jul 30, 2014 at 02:54:00PM +0100, Laxman Dewangan wrote:
+>>> +Required properties:
+>>> +- compatible		: Must be "reg-userspace-consumer".
+>> I would never expect to see "userspace" in a DT beinding string; this is
+>> entirely a software abstraction description and has nothing to do with
+>> the interaction of HW components.
+>> Why do you think we need this in the DT?
+> Yes, this is test code - it is not intended to be used in production.
+> Any binding should be for the consumer using this, not for this
+> implementation detail.
+>
 
-The reset value of LOW ALARM is 0 which means the highest
-temp, so the LOW ALARM will be triggered once irq is enabled,
-so we need to correct it before enabling thermal irq;
+We have the GPS module and its driver in the user space. There is no 
+code for GPS on kernel. Just power on and open port from user space, get 
+the information.
 
-Enable PANIC ALARM as critical trip point, it will trigger
-system reset via SRC module once PANIC IRQ is triggered, it
-is pure hardware function, so use it instead of software
-reset by cooling device.
-
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/thermal/imx-thermal.txt    |    5 +-
- drivers/thermal/imx_thermal.c                      |   91 +++++++++++++++++---
- 2 files changed, 82 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-index 1f0f672..3c67bd5 100644
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-@@ -1,7 +1,10 @@
- * Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
- 
- Required properties:
--- compatible : "fsl,imx6q-thermal"
-+- compatible : "fsl,imx6q-tempmon" for i.MX6Q, "fsl,imx6sx-tempmon" for i.MX6SX.
-+  i.MX6SX has two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
-+  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
-+  is higher than panic threshold, system will auto reboot by SRC module.
- - fsl,tempmon : phandle pointer to system controller that contains TEMPMON
-   control registers, e.g. ANATOP on imx6q.
- - fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index 2c516f2..461bf3d 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -19,6 +19,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -31,6 +32,11 @@
- 
- #define MISC0				0x0150
- #define MISC0_REFTOP_SELBIASOFF		(1 << 3)
-+#define MISC1				0x0160
-+#define MISC1_IRQ_TEMPHIGH		(1 << 29)
-+/* Below LOW and PANIC bits are only for TEMPMON_IMX6SX */
-+#define MISC1_IRQ_TEMPLOW		(1 << 28)
-+#define MISC1_IRQ_TEMPPANIC		(1 << 27)
- 
- #define TEMPSENSE0			0x0180
- #define TEMPSENSE0_ALARM_VALUE_SHIFT	20
-@@ -43,6 +49,12 @@
- 
- #define TEMPSENSE1			0x0190
- #define TEMPSENSE1_MEASURE_FREQ		0xffff
-+/* Below TEMPSENSE2 is only for TEMPMON_IMX6SX */
-+#define TEMPSENSE2			0x0290
-+#define TEMPSENSE2_LOW_VALUE_SHIFT	0
-+#define TEMPSENSE2_LOW_VALUE_MASK	0xfff
-+#define TEMPSENSE2_PANIC_VALUE_SHIFT	16
-+#define TEMPSENSE2_PANIC_VALUE_MASK	0xfff0000
- 
- #define OCOTP_ANA1			0x04e0
- 
-@@ -66,6 +78,21 @@ enum imx_thermal_trip {
- #define FACTOR1				15976
- #define FACTOR2				4297157
- 
-+#define TEMPMON_IMX6Q			1
-+#define TEMPMON_IMX6SX			2
-+
-+struct thermal_soc_data {
-+	u32 version;
-+};
-+
-+static struct thermal_soc_data thermal_imx6q_data = {
-+	.version = TEMPMON_IMX6Q,
-+};
-+
-+static struct thermal_soc_data thermal_imx6sx_data = {
-+	.version = TEMPMON_IMX6SX,
-+};
-+
- struct imx_thermal_data {
- 	struct thermal_zone_device *tz;
- 	struct thermal_cooling_device *cdev;
-@@ -79,8 +106,21 @@ struct imx_thermal_data {
- 	bool irq_enabled;
- 	int irq;
- 	struct clk *thermal_clk;
-+	const struct thermal_soc_data *socdata;
- };
- 
-+static void imx_set_panic_temp(struct imx_thermal_data *data,
-+			       signed long panic_temp)
-+{
-+	struct regmap *map = data->tempmon;
-+	int critical_value;
-+
-+	critical_value = (data->c2 - panic_temp) / data->c1;
-+	regmap_write(map, TEMPSENSE2 + REG_CLR, TEMPSENSE2_PANIC_VALUE_MASK);
-+	regmap_write(map, TEMPSENSE2 + REG_SET, critical_value <<
-+			TEMPSENSE2_PANIC_VALUE_SHIFT);
-+}
-+
- static void imx_set_alarm_temp(struct imx_thermal_data *data,
- 			       signed long alarm_temp)
- {
-@@ -142,13 +182,17 @@ static int imx_get_temp(struct thermal_zone_device *tz, unsigned long *temp)
- 	/* See imx_get_sensor_data() for formula derivation */
- 	*temp = data->c2 - n_meas * data->c1;
- 
--	/* Update alarm value to next higher trip point */
--	if (data->alarm_temp == data->temp_passive && *temp >= data->temp_passive)
--		imx_set_alarm_temp(data, data->temp_critical);
--	if (data->alarm_temp == data->temp_critical && *temp < data->temp_passive) {
--		imx_set_alarm_temp(data, data->temp_passive);
--		dev_dbg(&tz->device, "thermal alarm off: T < %lu\n",
--			data->alarm_temp / 1000);
-+	/* Update alarm value to next higher trip point for TEMPMON_IMX6Q */
-+	if (data->socdata->version == TEMPMON_IMX6Q) {
-+		if (data->alarm_temp == data->temp_passive &&
-+			*temp >= data->temp_passive)
-+			imx_set_alarm_temp(data, data->temp_critical);
-+		if (data->alarm_temp == data->temp_critical &&
-+			*temp < data->temp_passive) {
-+			imx_set_alarm_temp(data, data->temp_passive);
-+			dev_dbg(&tz->device, "thermal alarm off: T < %lu\n",
-+				data->alarm_temp / 1000);
-+		}
- 	}
- 
- 	if (*temp != data->last_temp) {
-@@ -398,8 +442,17 @@ static irqreturn_t imx_thermal_alarm_irq_thread(int irq, void *dev)
- 	return IRQ_HANDLED;
- }
- 
-+static const struct of_device_id of_imx_thermal_match[] = {
-+	{ .compatible = "fsl,imx6q-tempmon", .data = &thermal_imx6q_data, },
-+	{ .compatible = "fsl,imx6sx-tempmon", .data = &thermal_imx6sx_data, },
-+	{ /* end */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
-+
- static int imx_thermal_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id =
-+		of_match_device(of_imx_thermal_match, &pdev->dev);
- 	struct imx_thermal_data *data;
- 	struct cpumask clip_cpus;
- 	struct regmap *map;
-@@ -418,6 +471,20 @@ static int imx_thermal_probe(struct platform_device *pdev)
- 	}
- 	data->tempmon = map;
- 
-+	data->socdata = of_id->data;
-+
-+	/* make sure the IRQ flag is clear before enabling irq on i.MX6SX */
-+	if (data->socdata->version == TEMPMON_IMX6SX) {
-+		regmap_write(map, MISC1 + REG_CLR, MISC1_IRQ_TEMPHIGH |
-+			MISC1_IRQ_TEMPLOW | MISC1_IRQ_TEMPPANIC);
-+		/*
-+		 * reset value of LOW ALARM is incorrect, set it to lowest
-+		 * value to avoid false trigger of low alarm.
-+		 */
-+		regmap_write(map, TEMPSENSE2 + REG_SET,
-+			TEMPSENSE2_LOW_VALUE_MASK);
-+	}
-+
- 	data->irq = platform_get_irq(pdev, 0);
- 	if (data->irq < 0)
- 		return data->irq;
-@@ -489,6 +556,10 @@ static int imx_thermal_probe(struct platform_device *pdev)
- 	measure_freq = DIV_ROUND_UP(32768, 10); /* 10 Hz */
- 	regmap_write(map, TEMPSENSE1 + REG_SET, measure_freq);
- 	imx_set_alarm_temp(data, data->temp_passive);
-+
-+	if (data->socdata->version == TEMPMON_IMX6SX)
-+		imx_set_panic_temp(data, data->temp_critical);
-+
- 	regmap_write(map, TEMPSENSE0 + REG_CLR, TEMPSENSE0_POWER_DOWN);
- 	regmap_write(map, TEMPSENSE0 + REG_SET, TEMPSENSE0_MEASURE_TEMP);
- 
-@@ -550,12 +621,6 @@ static int imx_thermal_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(imx_thermal_pm_ops,
- 			 imx_thermal_suspend, imx_thermal_resume);
- 
--static const struct of_device_id of_imx_thermal_match[] = {
--	{ .compatible = "fsl,imx6q-tempmon", },
--	{ /* end */ }
--};
--MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
--
- static struct platform_driver imx_thermal = {
- 	.driver = {
- 		.name	= "imx_thermal",
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On this case, how do we power on GPS module if we don't expose it? It 
+need two power source for digital section and analog section.
