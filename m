@@ -1,47 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Add EHCI and OHCI drivers for STi SoC's
-Date: Wed, 6 Aug 2014 23:18:28 +0200
-Message-ID: <201408062318.28958.arnd@arndb.de>
-References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
+From: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/irq: lookup 'interrupts-extended' property first
+Date: Wed, 6 Aug 2014 14:50:47 -0700
+Message-ID: <CA+bK7J7LQq4S70ScSynbLTjNMmP=9n3KD2suYRg9JN+pEv-Y7g@mail.gmail.com>
+References: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
+	<CAGVrzcYfA8rCXGRW7g0JhT4GQKT8SQj+pMvCh25yoXLFGNM_Pw@mail.gmail.com>
+	<20140806165452.GN3711@ld-irv-0074>
+	<CAL_JsqK8BiffXgpQSig5EbV3FUW7EBOn9YjZGqOcUcEJiCJ0WA@mail.gmail.com>
+	<20140806201256.GO3711@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407344589-24863-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140806201256.GO3711@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 August 2014, Peter Griffin wrote:
-> This series adds support for the OHCI and EHCI on-chip controllers
-> found in STi consumer electronics SoC's from STMicroelectronics.
-> 
-> The series has been re-worked from v2 to split out the ehci and ohci parts
-> into their own drivers / devices like most other ARM platforms based on
-> feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
-> 
-> The ehci-platform & ohci-platform have been used as a basis for this in case we
-> wish to merge the drivers again in the future.
-> 
-> Changes since v2:
->  - Based on Arnd Berghman feedback, split out into 2 devices / drivers
->  - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
->    to allow possible re-merge in the furture.
+On Wed, Aug 6, 2014 at 1:12 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Aug 06, 2014 at 01:42:08PM -0500, Rob Herring wrote:
+>> On Wed, Aug 6, 2014 at 11:54 AM, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Thu, Jul 31, 2014 at 11:00:01AM -0700, Florian Fainelli wrote:
+>> > I think it is important that a device tree provide some flexibility on
+>> > kernel versions. We only invented 'interrupts-extended' in Linux 3.13,
+>> > so it's easy to have device trees that could work only on 3.13+.
+>> >
+>> > Typically, we might say that new features require new kernels, but this
+>> > is a very basic piece of the DT infrastructure. In our case, we have
+>> > hardware whose basic features can be supported by a single interrupt
+>> > parent, and so we used the 'interrupts' property pre-3.13. But when we
+>> > want to add some power management features, there's an additional
+>> > interrupt parent. Under the current DT binding, we have to switch over
+>> > to using 'interrupts-extended' exclusively, and thus we must have a
+>> > completely new DTB for >=3.13, and this DTB no longer works with the old
+>> > kernels.
+>>
+>> "Must have" to enable the new features?
+>
+> Yes. The new feature requires an additional interrupt parent, and so it
+> requires interrupts-extended.
 
-Hi Peter,
+Hold on there.  What about interrupt-map?  That was the traditional DT
+feature for
+supporting multi-parented interrupts.  Why couldn't the feature have been added
+using that instead of interrupts-extended?
 
-This looks much better than the first version. I have some remaining comments for
-how it could be simplified a bit more.
+I know interrupts-extended is preferred, but has interrupt-map support been
+removed from recent kernels?  I'm a bit confused.
 
-The way that you deal with the 48mhz clock seems like it should fit in well
-with the generic driver, just like all the rest (once the usb-st-common
-stuff is moved into the ohci/ehci drivers), so the alternative would be
-to make it all generic now.
-
-	Arnd
+ -- Tim Bird
+Senior Software Engineer, Sony Mobile
+Architecture Group Chair, CE Workgroup, Linux Foundation
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
