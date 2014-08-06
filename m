@@ -1,47 +1,67 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mtd: nand: stm_nand_bch: add new driver
-Date: Wed, 6 Aug 2014 11:44:40 +0100
-Message-ID: <20140806104440.GC10136@lee--X1>
-References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
- <20140703002237.GM3599@ld-irv-0074>
- <20140731164709.GK9030@lee--X1>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: userspace-consumer: add DT binding details
+Date: Wed, 6 Aug 2014 11:59:15 +0100
+Message-ID: <20140806105915.GH17528@sirena.org.uk>
+References: <1406728440-17837-1-git-send-email-ldewangan@nvidia.com>
+ <1406728440-17837-2-git-send-email-ldewangan@nvidia.com>
+ <20140730155302.GE20162@leverpostej>
+ <20140730164014.GY17528@sirena.org.uk>
+ <53E1DA60.9010401@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bri7I4a0+3PvYu+W"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140731164709.GK9030@lee--X1>
+In-Reply-To: <53E1DA60.9010401@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, "Gupta, Pekon\"" <pekon@ti.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Boris BREZILLON <b.brezillon.dev@gmail.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jul 2014, Lee Jones wrote:
-> On Wed, 02 Jul 2014, Brian Norris wrote:
-> > On Wed, May 28, 2014 at 10:20:05AM +0100, Lee Jones wrote:
 
-[...]
+--bri7I4a0+3PvYu+W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > +	if (IS_ERR(pdata))
-> > > +		return PTR_ERR(pdata);
-> > > +
-> > > +	ppdata.of_node =3D stm_of_get_partitions_node(np, 0);
-> >=20
-> > So you only support a single bank, at chip-select 0? Is this a
-> > hardware limitation, or simply software? You might consider whether=
- this
-> > needs to be noted in the DT binding too -- it currently suggests th=
-at
-> > this can be plural.
->=20
-> Yes, only one bank.  Chip select is not possible.
+On Wed, Aug 06, 2014 at 01:03:52PM +0530, Laxman Dewangan wrote:
+> On Wednesday 30 July 2014 10:10 PM, Mark Brown wrote:
 
-Sorry, not only one bank.
+> >Yes, this is test code - it is not intended to be used in production.
+> >Any binding should be for the consumer using this, not for this
+> >implementation detail.
 
-We can have multiple banks, but only one chip.
+> We have the GPS module and its driver in the user space. There is no code
+> for GPS on kernel. Just power on and open port from user space, get the
+> information.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+That's an implementation detail of how you've provided this on Linux.
+
+> On this case, how do we power on GPS module if we don't expose it? It need
+> two power source for digital section and analog section.
+
+Describe the hardware in the device tree and then bind what's needed to
+that.
+
+--bri7I4a0+3PvYu+W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT4gqAAAoJELSic+t+oim9GBUP/36qXTTi8U7wxXG6jm5UmmRS
+JlxpeOikt/TMs/OJXffB7u8LMMAhdGdb1V01ANBcNAqCfFqVTs5KUE5e7AH8cc5f
+donSAVprv2HTpaym3AXljFwVpYkO/OZQEcsZeKVh90rwbTsU/YcFoewMDTuqiDdE
+IjPwG7JF0cD9PHXeGNYIk419Mh4xCZZW1LI80v6qyXLXOCP0h5zXUXhcA0EgFxHj
+gGOdo3g7w7L7iCWu2X6EUxhk9SEyGbm+62DgpcLLFQRRWyiNLYuyza4eEznUqBe4
+yZzp3pFyddMuyBqKf823Lr5AtjNuVDnZd53Ri91j07T4YbyDcrCiU+TZRB7bgNK+
+5x1mQDJOtXs3ae6PBmMW1SianfT/fX3dOrcCvyuWMpAZIEkjUP8u7SfFexgckdoC
+hjZkkgVcyuxmvm1k2agHHkAbOrv+t1SgpkuPAN3p8HRlUwiRBTD3qmiR/yt5S+6F
+kGB4OnRm8GZpLna1FBPgtkFZNd0MEGOekQ675v6wIzvUbwwAbgLeAqaZ7hY7jH2M
+8S0J2GdYmUlCI7iefWOjREVNn2cciQDa6pMh2M46mY7HXTHa6iMYrNoYkPdu6WZt
+uo36hgp+hb0amFEzMYuPRDdRbesWCZ8Kb7juSElAbpuSWHA1GhkxGryEdaFqd9aR
+PDDjDaO1qE/MSO9zGR8t
+=Zm+l
+-----END PGP SIGNATURE-----
+
+--bri7I4a0+3PvYu+W--
