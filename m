@@ -1,180 +1,129 @@
-From: "edubezval@gmail.com" <edubezval@gmail.com>
-Subject: Re: [PATCH V2] Thermal: imx: add i.mx6sx thermal support
-Date: Wed, 6 Aug 2014 08:59:05 -0400
-Message-ID: <CAC-25o8pOAynNMk0z4kmPJN0E1Q-xYmggdVSOK+OVNwRTkxmEg@mail.gmail.com>
-References: <1407302256-26726-1-git-send-email-b20788@freescale.com>
-	<53E1D29D.1010009@gmail.com>
-	<b85e230a058340a58fd3091e2be9b25d@BN1PR0301MB0628.namprd03.prod.outlook.com>
-	<CAC-25o_z-pJ_3HX-wfnWB2uVSCRodXYzqOe2U-yac2kAY2ShYQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAC-25o_z-pJ_3HX-wfnWB2uVSCRodXYzqOe2U-yac2kAY2ShYQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
-Cc: Varka Bhadram <varkabhadram@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 08/12] [v2] spi: sh-msiof: Add DT support to DMA setup
+Date: Wed,  6 Aug 2014 14:59:05 +0200
+Message-ID: <1407329949-5695-9-git-send-email-geert+renesas@glider.be>
+References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, dmaengine@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello again,
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+v2:
+  - Update DMA specifiers to match the renesas,rcar-dmac bindings
+---
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 17 ++++++++++++---
+ drivers/spi/spi-sh-msiof.c                         | 25 ++++++++++++++++------
+ 2 files changed, 32 insertions(+), 10 deletions(-)
 
-On Wed, Aug 6, 2014 at 8:56 AM, edubezval@gmail.com <edubezval@gmail.com> wrote:
-> Hello Anson,
->
-> On Wed, Aug 6, 2014 at 3:05 AM, Anson.Huang@freescale.com
-> <Anson.Huang@freescale.com> wrote:
->> Sorry for leaving such warnings, I thought we did NOT care about the long
->> line issue now, will fix them in V3 patch.
->>
->
-> Lines over 80 columns are not an error of style. We simply suggest to
-> keep this. By now, I think it really depends on which subsystem you
-> are working with. I would prefer you keep this rule, as most of the
-> code inside the thermal framework follows it.
->
-
-Let me put this straight, quoting the Kernel Documentation/CodingStyle:
-
- 75                 Chapter 2: Breaking long lines and strings
-
- 76
-
- 77 Coding style is all about readability and maintainability using commonly
-
- 78 available tools.
-
- 79
-
- 80 The limit on the length of lines is 80 columns and this is a strongly
-
- 81 preferred limit.
-
- 82
-
- 83 Statements longer than 80 columns will be broken into sensible
-chunks, unless
-
- 84 exceeding 80 columns significantly increases readability and does not hide
-
- 85 information. Descendants are always substantially shorter than the
-parent and
-
- 86 are placed substantially to the right. The same applies to function headers
-
- 87 with a long argument list. However, never break user-visible strings such as
-
- 88 printk messages, because that breaks the ability to grep for them."
-
-
-
-
-
-
-
->>
->>
->> Thanks Varka.
->>
->>
->>
->> Best regards!
->>
->> Anson Huang
->>
->>
->>
->> From: Varka Bhadram [mailto:varkabhadram@gmail.com]
->> Sent: 2014-08-06 3:01 PM
->> To: Huang Yongcai-B20788; edubezval@gmail.com; shawn.guo@linaro.org;
->> rui.zhang@intel.com
->> Cc: linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org;
->> devicetree@vger.kernel.org
->> Subject: Re: [PATCH V2] Thermal: imx: add i.mx6sx thermal support
->>
->>
->>
->> On 08/06/2014 10:47 AM, Anson Huang wrote:
->>
->> i.MX6SX has some new features of thermal interrupt function,
->>
->> there are LOW, HIGH and PANIC irq for thermal sensor, so add
->>
->> platform data to separate different thermal version;
->>
->>
->>
->> The reset value of LOW ALARM is 0 which means the highest
->>
->> temp, so the LOW ALARM will be triggered once irq is enabled,
->>
->> so we need to correct it before enabling thermal irq;
->>
->>
->>
->> Enable PANIC ALARM as critical trip point, it will trigger
->>
->> system reset via SRC module once PANIC IRQ is triggered, it
->>
->> is pure hardware function, so use it instead of software
->>
->> reset by cooling device.
->>
->>
->>
->> Signed-off-by: Anson Huang <b20788@freescale.com>
->>
->> ---
->>
->>  .../devicetree/bindings/thermal/imx-thermal.txt    |    5 +-
->>
->>  drivers/thermal/imx_thermal.c                      |   89
->> +++++++++++++++++---
->>
->>  2 files changed, 80 insertions(+), 14 deletions(-)
->>
->>
->>
->> ./scripts/checkpatch.pl --show-types
->> V2-Thermal-imx-add-i.mx6sx-thermal-support.patch
->>
->> WARNING:LONG_LINE: line over 80 characters
->>
->> #109: FILE: drivers/thermal/imx_thermal.c:185:
->>
->> +    /* Update alarm value to next higher trip point, only TEMPMON_IMX6Q
->> needs it */
->>
->>
->>
->> WARNING:LONG_LINE: line over 80 characters
->>
->> #111: FILE: drivers/thermal/imx_thermal.c:187:
->>
->> +        if (data->alarm_temp == data->temp_passive && *temp >=
->> data->temp_passive)
->>
->>
->>
->> WARNING:LONG_LINE: line over 80 characters
->>
->> #113: FILE: drivers/thermal/imx_thermal.c:189:
->>
->> +        if (data->alarm_temp == data->temp_critical && *temp <
->> data->temp_passive) {
->>
->>
->>
->> --
->>
->> Regards,
->>
->> Varka Bhadram.
->
->
->
-> --
-> Eduardo Bezerra Valentin
-
-
-
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index f24baf3b6cc1..98e07f1c3dab 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -6,8 +6,13 @@ Required properties:
+ 			 "renesas,sh-mobile-msiof" for SH Mobile series.
+ 			 Examples with soctypes are:
+ 			 "renesas,msiof-r8a7790" (R-Car H2)
+-			 "renesas,msiof-r8a7791" (R-Car M2)
+-- reg                  : Offset and length of the register set for the device
++- reg                  : A list of offsets and lengths of the register sets for
++			 the device.
++			 If only one register set is present, it is to be used
++			 by both the CPU and the DMA engine.
++			 If two register sets are present, the first is to be
++			 used by the CPU, and the second is to be used by the
++			 DMA engine.
+ - interrupt-parent     : The phandle for the interrupt controller that
+ 			 services interrupts for this device
+ - interrupts           : Interrupt specifier
+@@ -17,6 +22,10 @@ Required properties:
+ Optional properties:
+ - clocks               : Must contain a reference to the functional clock.
+ - num-cs               : Total number of chip-selects (default is 1)
++- dmas                 : Must contain a list of two references to DMA
++			 specifiers, one for transmission, and one for
++			 reception.
++- dma-names            : Must contain a list of two DMA names, "tx" and "rx".
+ 
+ Optional properties, deprecated for soctype-specific bindings:
+ - renesas,tx-fifo-size : Overrides the default tx fifo size given in words
+@@ -31,9 +40,11 @@ Example:
+ 
+ 	msiof0: spi@e6e20000 {
+ 		compatible = "renesas,msiof-r8a7791";
+-		reg = <0 0xe6e20000 0 0x0064>;
++		reg = <0 0xe6e20000 0 0x0064>, <0 0xe7e20000 0 0x0064>;
+ 		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp0_clks R8A7791_CLK_MSIOF0>;
++		dmas = <&dmac0 0x51>, <&dmac0 0x52>;
++		dma-names = "tx", "rx";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "disabled";
+diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+index b19cbb4cb4a0..811a42dba92a 100644
+--- a/drivers/spi/spi-sh-msiof.c
++++ b/drivers/spi/spi-sh-msiof.c
+@@ -977,10 +977,11 @@ static struct dma_chan *sh_msiof_request_dma_chan(struct device *dev,
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
+ 
+-	chan = dma_request_channel(mask, shdma_chan_filter,
+-				  (void *)(unsigned long)id);
++	chan = dma_request_slave_channel_compat(mask, shdma_chan_filter,
++				(void *)(unsigned long)id, dev,
++				dir == DMA_MEM_TO_DEV ? "tx" : "rx");
+ 	if (!chan) {
+-		dev_warn(dev, "dma_request_channel failed\n");
++		dev_warn(dev, "dma_request_slave_channel_compat failed\n");
+ 		return NULL;
+ 	}
+ 
+@@ -1010,12 +1011,22 @@ static int sh_msiof_request_dma(struct sh_msiof_spi_priv *p)
+ 	struct platform_device *pdev = p->pdev;
+ 	struct device *dev = &pdev->dev;
+ 	const struct sh_msiof_spi_info *info = dev_get_platdata(dev);
++	unsigned int dma_tx_id, dma_rx_id;
+ 	const struct resource *res;
+ 	struct spi_master *master;
+ 	struct device *tx_dev, *rx_dev;
+ 
+-	if (!info || !info->dma_tx_id || !info->dma_rx_id)
+-		return 0;	/* The driver assumes no error */
++	if (dev->of_node) {
++		/* In the OF case we will get the slave IDs from the DT */
++		dma_tx_id = 0;
++		dma_rx_id = 0;
++	} else if (info && info->dma_tx_id && info->dma_rx_id) {
++		dma_tx_id = info->dma_tx_id;
++		dma_rx_id = info->dma_rx_id;
++	} else {
++		/* The driver assumes no error */
++		return 0;
++	}
+ 
+ 	/* The DMA engine uses the second register set, if present */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+@@ -1024,13 +1035,13 @@ static int sh_msiof_request_dma(struct sh_msiof_spi_priv *p)
+ 
+ 	master = p->master;
+ 	master->dma_tx = sh_msiof_request_dma_chan(dev, DMA_MEM_TO_DEV,
+-						   info->dma_tx_id,
++						   dma_tx_id,
+ 						   res->start + TFDR);
+ 	if (!master->dma_tx)
+ 		return -ENODEV;
+ 
+ 	master->dma_rx = sh_msiof_request_dma_chan(dev, DMA_DEV_TO_MEM,
+-						   info->dma_rx_id,
++						   dma_rx_id,
+ 						   res->start + RFDR);
+ 	if (!master->dma_rx)
+ 		goto free_tx_chan;
 -- 
-Eduardo Bezerra Valentin
+1.9.1
+
