@@ -1,80 +1,132 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: where to add imx-udc-mx27 in device tree
-Date: Wed, 6 Aug 2014 09:53:37 -0300
-Message-ID: <CAOMZO5C89qyqzd0ML07YZvpCa-XSAgP7a6GGFH0DpDjx5vZgpg@mail.gmail.com>
-References: <E70AF999396FDF4EAE40E195B84709611F847DDE@SPMDEGHN001.CADCON.INTERN>
-	<CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ@mail.gmail.com>
-	<E70AF999396FDF4EAE40E195B84709611F84803F@SPMDEGHN001.CADCON.INTERN>
-	<CAOMZO5A0zVi29AXHOFZENQxonXFfETukbj-SSmQwO4km0cAgog@mail.gmail.com>
-	<E70AF999396FDF4EAE40E195B84709611F84808A@SPMDEGHN001.CADCON.INTERN>
+From: "edubezval@gmail.com" <edubezval@gmail.com>
+Subject: Re: [PATCH V2] Thermal: imx: add i.mx6sx thermal support
+Date: Wed, 6 Aug 2014 08:56:33 -0400
+Message-ID: <CAC-25o_z-pJ_3HX-wfnWB2uVSCRodXYzqOe2U-yac2kAY2ShYQ@mail.gmail.com>
+References: <1407302256-26726-1-git-send-email-b20788@freescale.com>
+	<53E1D29D.1010009@gmail.com>
+	<b85e230a058340a58fd3091e2be9b25d@BN1PR0301MB0628.namprd03.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E70AF999396FDF4EAE40E195B84709611F84808A-VHQhki0MIenpQFNhCJRnZ0Yy6alPw7Wn0MAMd6zgKLc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b85e230a058340a58fd3091e2be9b25d@BN1PR0301MB0628.namprd03.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Cc: Varka Bhadram <varkabhadram@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 6, 2014 at 9:44 AM, Priebe, Sebastian
-<Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org> wrote:
+Hello Anson,
 
-> And in our dts we have:
-> &usbotg {
->         compatible = "imx-udc-mx27";
+On Wed, Aug 6, 2014 at 3:05 AM, Anson.Huang@freescale.com
+<Anson.Huang@freescale.com> wrote:
+> Sorry for leaving such warnings, I thought we did NOT care about the long
+> line issue now, will fix them in V3 patch.
+>
 
-This is not correct.
-
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_usbotg>;
->         dr_mode = "peripheral";
->         phy_type = "utmi_wide";
-
-No utmi in mx27.
-
->         status = "okay";
->         /* what to do with workaround = FLS_USB2_WORKAROUND_ENGCM09152 ??? */
-
-This erratum does not apply to mx27.
-
-> };
+Lines over 80 columns are not an error of style. We simply suggest to
+keep this. By now, I think it really depends on which subsystem you
+are working with. I would prefer you keep this rule, as most of the
+code inside the thermal framework follows it.
 
 >
-> In our config we have:
-> CONFIG_IMX_HAVE_PLATFORM_FSL_USB2_UDC=y
+>
+> Thanks Varka.
+>
+>
+>
+> Best regards!
+>
+> Anson Huang
+>
+>
+>
+> From: Varka Bhadram [mailto:varkabhadram@gmail.com]
+> Sent: 2014-08-06 3:01 PM
+> To: Huang Yongcai-B20788; edubezval@gmail.com; shawn.guo@linaro.org;
+> rui.zhang@intel.com
+> Cc: linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH V2] Thermal: imx: add i.mx6sx thermal support
+>
+>
+>
+> On 08/06/2014 10:47 AM, Anson Huang wrote:
+>
+> i.MX6SX has some new features of thermal interrupt function,
+>
+> there are LOW, HIGH and PANIC irq for thermal sensor, so add
+>
+> platform data to separate different thermal version;
+>
+>
+>
+> The reset value of LOW ALARM is 0 which means the highest
+>
+> temp, so the LOW ALARM will be triggered once irq is enabled,
+>
+> so we need to correct it before enabling thermal irq;
+>
+>
+>
+> Enable PANIC ALARM as critical trip point, it will trigger
+>
+> system reset via SRC module once PANIC IRQ is triggered, it
+>
+> is pure hardware function, so use it instead of software
+>
+> reset by cooling device.
+>
+>
+>
+> Signed-off-by: Anson Huang <b20788@freescale.com>
+>
+> ---
+>
+>  .../devicetree/bindings/thermal/imx-thermal.txt    |    5 +-
+>
+>  drivers/thermal/imx_thermal.c                      |   89
+> +++++++++++++++++---
+>
+>  2 files changed, 80 insertions(+), 14 deletions(-)
+>
+>
+>
+> ./scripts/checkpatch.pl --show-types
+> V2-Thermal-imx-add-i.mx6sx-thermal-support.patch
+>
+> WARNING:LONG_LINE: line over 80 characters
+>
+> #109: FILE: drivers/thermal/imx_thermal.c:185:
+>
+> +    /* Update alarm value to next higher trip point, only TEMPMON_IMX6Q
+> needs it */
+>
+>
+>
+> WARNING:LONG_LINE: line over 80 characters
+>
+> #111: FILE: drivers/thermal/imx_thermal.c:187:
+>
+> +        if (data->alarm_temp == data->temp_passive && *temp >=
+> data->temp_passive)
+>
+>
+>
+> WARNING:LONG_LINE: line over 80 characters
+>
+> #113: FILE: drivers/thermal/imx_thermal.c:189:
+>
+> +        if (data->alarm_temp == data->temp_critical && *temp <
+> data->temp_passive) {
+>
+>
+>
+> --
+>
+> Regards,
+>
+> Varka Bhadram.
 
-This option is for the non-dt driver. Device tree driver needs the
-chipidea that I showed earlier.
 
-As I mentioned before: in your dts file you should do something like
-arch/arm/boot/dts/imx27-
-eukrea-cpuimx27.dtsi:
 
-&usbotg {
-    pinctrl-names = "default";
-    pinctrl-0 = <&pinctrl_usbotg>;
-    dr_mode = "otg";
-    phy_type = "ulpi";
-    disable-over-current;
-    status = "okay";
-};
-
-You don't need to pass the compatible line there. The compatible line
-is already passed in the imx27.dtsi file:
-
-            usbotg: usb@10024000 {
-                compatible = "fsl,imx27-usb";
-                reg = <0x10024000 0x200>;
-                interrupts = <56>;
-                clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-                fsl,usbmisc = <&usbmisc 0>;
-                status = "disabled";
-            };
-
-Also, if you still have issues please start a thread at arm linux
-kernel or usb-devel mailing list as it would be a better place to
-discuss this
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Eduardo Bezerra Valentin
