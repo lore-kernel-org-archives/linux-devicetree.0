@@ -1,316 +1,217 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH 2/9] clk: add gpio controlled clock
-Date: Wed, 6 Aug 2014 16:47:17 +0300
-Message-ID: <bb168f7d8ee4937adbd1f57dc4b1df9c40daf52c.1407332062.git.jsarha@ti.com>
-References: <cover.1407332062.git.jsarha@ti.com>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: Re: [PATCH V3] Thermal: imx: add i.mx6sx thermal support
+Date: Wed, 6 Aug 2014 13:56:04 +0000
+Message-ID: <BB5DFDE4-B15E-445C-A406-A4EB0AE962F6@freescale.com>
+References: <1407309129-5562-1-git-send-email-b20788@freescale.com>,<CAC-25o8BiKHYAD6=_5xAP5L310bH_GjwVQpqBYC7UydvbaxeqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1407332062.git.jsarha@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, mturquette@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com
-Cc: tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, zonque@gmail.com, t-kristo@ti.com, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAC-25o8BiKHYAD6=_5xAP5L310bH_GjwVQpqBYC7UydvbaxeqQ@mail.gmail.com>
+Content-Language: zh-CN
+Sender: linux-pm-owner@vger.kernel.org
+To: "edubezval@gmail.com" <edubezval@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Zhang Rui <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The added clk-gpio is a basic clock that can be enabled and disabled
-trough a gpio output. The DT binding document for the clock is also
-added. For EPROBE_DEFER handling the registering of the clock has to
-be delayed until of_clk_get() call time.
-
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- .../devicetree/bindings/clock/gpio-clock.txt       |   21 ++
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-gpio.c                             |  206 ++++++++++++++++++++
- include/linux/clk-provider.h                       |   23 +++
- 4 files changed, 251 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/gpio-clock.txt
- create mode 100644 drivers/clk/clk-gpio.c
-
-diff --git a/Documentation/devicetree/bindings/clock/gpio-clock.txt b/Documentation/devicetree/bindings/clock/gpio-clock.txt
-new file mode 100644
-index 0000000..54fea39
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/gpio-clock.txt
-@@ -0,0 +1,21 @@
-+Binding for simple gpio controlled clock.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be "gpio-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- enable-gpios : GPIO reference for enabling and disabling the clock.
-+
-+Optional properties:
-+- clocks: Maximum of one parent clock is supported.
-+
-+Example:
-+	clock {
-+		compatible = "gpio-clock";
-+		clocks = <&parentclk>;
-+		#clock-cells = <0>;
-+		enable-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
-+	};
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 567f102..bde8fdf 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-gate.o
- obj-$(CONFIG_COMMON_CLK)	+= clk-mux.o
- obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
- obj-$(CONFIG_COMMON_CLK)	+= clk-fractional-divider.o
-+obj-$(CONFIG_COMMON_CLK)	+= clk-gpio.o
- 
- # hardware specific clock types
- # please keep this section sorted lexicographically by file/directory path name
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-new file mode 100644
-index 0000000..1eff97c
---- /dev/null
-+++ b/drivers/clk/clk-gpio.c
-@@ -0,0 +1,206 @@
-+/*
-+ * Copyright (C) 2012 - 2014 Texas Instruments Incorporated - http://www.ti.com
-+ * Author: Jyri Sarha <jsarha@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Gpio controlled clock implementation
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/err.h>
-+#include <linux/device.h>
-+
-+/**
-+ * DOC: basic gpio controlled clock which can be enabled and disabled
-+ *      with gpio output
-+ * Traits of this clock:
-+ * prepare - clk_(un)prepare only ensures parent is (un)prepared
-+ * enable - clk_enable and clk_disable are functional & control gpio
-+ * rate - inherits rate from parent.  No clk_set_rate support
-+ * parent - fixed parent.  No clk_set_parent support
-+ */
-+
-+#define to_clk_gpio(_hw) container_of(_hw, struct clk_gpio, hw)
-+
-+static int clk_gpio_enable(struct clk_hw *hw)
-+{
-+	struct clk_gpio *clk = to_clk_gpio(hw);
-+
-+	gpiod_set_value(clk->gpiod, 1);
-+
-+	return 0;
-+}
-+
-+static void clk_gpio_disable(struct clk_hw *hw)
-+{
-+	struct clk_gpio *clk = to_clk_gpio(hw);
-+
-+	gpiod_set_value(clk->gpiod, 0);
-+}
-+
-+static int clk_gpio_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_gpio *clk = to_clk_gpio(hw);
-+
-+	return gpiod_get_value(clk->gpiod);
-+}
-+
-+const struct clk_ops clk_gpio_ops = {
-+	.enable = clk_gpio_enable,
-+	.disable = clk_gpio_disable,
-+	.is_enabled = clk_gpio_is_enabled,
-+};
-+EXPORT_SYMBOL_GPL(clk_gpio_ops);
-+
-+/**
-+ * clk_register_gpio - register a gpip clock with the clock framework
-+ * @dev: device that is registering this clock
-+ * @name: name of this clock
-+ * @parent_name: name of this clock's parent
-+ * @gpiod: gpio descriptor to control this clock
-+ */
-+struct clk *clk_register_gpio(struct device *dev, const char *name,
-+		const char *parent_name, struct gpio_desc *gpiod,
-+		unsigned long flags)
-+{
-+	struct clk_gpio *clk_gpio = NULL;
-+	struct clk *clk = ERR_PTR(-EINVAL);
-+	struct clk_init_data init = { NULL };
-+	unsigned long gpio_flags;
-+	int err;
-+
-+	if (gpiod_is_active_low(gpiod))
-+		gpio_flags = GPIOF_OUT_INIT_HIGH;
-+	else
-+		gpio_flags = GPIOF_OUT_INIT_LOW;
-+
-+	if (dev)
-+		err = devm_gpio_request_one(dev, desc_to_gpio(gpiod),
-+					    gpio_flags, name);
-+	else
-+		err = gpio_request_one(desc_to_gpio(gpiod), gpio_flags, name);
-+
-+	if (err) {
-+		pr_err("%s: %s: Error requesting clock control gpio %u\n",
-+		       __func__, name, desc_to_gpio(gpiod));
-+		return ERR_PTR(err);
-+	}
-+
-+	if (dev)
-+		clk_gpio = devm_kzalloc(dev, sizeof(struct clk_gpio),
-+					GFP_KERNEL);
-+	else
-+		clk_gpio = kzalloc(sizeof(struct clk_gpio), GFP_KERNEL);
-+
-+	if (!clk_gpio) {
-+		pr_err("%s: %s: could not allocate gpio clk\n", __func__, name);
-+		clk = ERR_PTR(-ENOMEM);
-+		goto clk_register_gpio_err;
-+	}
-+
-+	init.name = name;
-+	init.ops = &clk_gpio_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	clk_gpio->gpiod = gpiod;
-+	clk_gpio->hw.init = &init;
-+
-+	clk = clk_register(dev, &clk_gpio->hw);
-+
-+	if (!IS_ERR(clk))
-+		return clk;
-+
-+	if (!dev)
-+		kfree(clk_gpio);
-+
-+clk_register_gpio_err:
-+	gpiod_put(gpiod);
-+
-+	return clk;
-+}
-+EXPORT_SYMBOL_GPL(clk_register_gpio);
-+
-+#ifdef CONFIG_OF
-+/**
-+ * The clk_register_gpio has to be delayed, because the EPROBE_DEFER
-+ * can not be handled properly at of_clk_init() call time.
-+ */
-+
-+struct clk_gpio_delayed_register_data {
-+	struct device_node *node;
-+	struct mutex lock;
-+	struct clk *clk;
-+};
-+
-+struct clk *of_clk_gpio_delayed_register_get(struct of_phandle_args *clkspec,
-+					     void *_data)
-+{
-+	struct clk_gpio_delayed_register_data *data = _data;
-+	struct clk *clk;
-+	const char *clk_name = data->node->name;
-+	const char *parent_name;
-+	struct gpio_desc *gpiod;
-+	int gpio;
-+
-+	mutex_lock(&data->lock);
-+
-+	if (data->clk) {
-+		mutex_unlock(&data->lock);
-+		return data->clk;
-+	}
-+
-+	gpio = of_get_named_gpio_flags(data->node, "enable-gpios", 0, NULL);
-+	if (gpio < 0) {
-+		mutex_unlock(&data->lock);
-+		if (gpio != -EPROBE_DEFER)
-+			pr_err("%s: %s: Can't get 'enable-gpios' DT property\n",
-+			       __func__, clk_name);
-+		return ERR_PTR(gpio);
-+	}
-+	gpiod = gpio_to_desc(gpio);
-+
-+	parent_name = of_clk_get_parent_name(data->node, 0);
-+
-+	clk = clk_register_gpio(NULL, clk_name, parent_name, gpiod, 0);
-+	if (IS_ERR(clk)) {
-+		mutex_unlock(&data->lock);
-+		return clk;
-+	}
-+
-+	data->clk = clk;
-+	mutex_unlock(&data->lock);
-+
-+	return clk;
-+}
-+
-+/**
-+ * of_gpio_clk_setup() - Setup function for gpio controlled clock
-+ */
-+void __init of_gpio_clk_setup(struct device_node *node)
-+{
-+	struct clk_gpio_delayed_register_data *data;
-+
-+	data = kzalloc(sizeof(struct clk_gpio_delayed_register_data),
-+		       GFP_KERNEL);
-+	if (!data) {
-+		pr_err("%s: could not allocate gpio clk\n", __func__);
-+		return;
-+	}
-+
-+	data->node = node;
-+	mutex_init(&data->lock);
-+
-+	of_clk_add_provider(node, of_clk_gpio_delayed_register_get, data);
-+}
-+EXPORT_SYMBOL_GPL(of_gpio_clk_setup);
-+CLK_OF_DECLARE(gpio_clk, "gpio-clock", of_gpio_clk_setup);
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 0c287db..09252d9 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -488,6 +488,29 @@ struct clk *clk_register_composite(struct device *dev, const char *name,
- 		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
- 		unsigned long flags);
- 
-+/***
-+ * struct clk_gpio - gpio controlled clock
-+ *
-+ * @hw:		handle between common and hardware-specific interfaces
-+ * @gpio:	gpio
-+ * @active_low:	gpio polarity
-+ *
-+ * Clock with a gpio control for enabling and disabling the parent clock.
-+ * Implements .enable, .disable and .is_enabled
-+ */
-+
-+struct clk_gpio {
-+	struct clk_hw	hw;
-+	struct gpio_desc *gpiod;
-+};
-+
-+extern const struct clk_ops clk_gpio_ops;
-+struct clk *clk_register_gpio(struct device *dev, const char *name,
-+		const char *parent_name, struct gpio_desc *gpio,
-+		unsigned long flags);
-+
-+void of_gpio_clk_setup(struct device_node *node);
-+
- /**
-  * clk_register - allocate a new clock, register it and return an opaque cookie
-  * @dev: device that is registering this clock
--- 
-1.7.9.5
+SGksIEVkdWFyZG8NCiAgICAgICAgVGhhbmtzIGFnYWluIGZvciByZXZpZXcsIHBsZWFzZSBzZWUg
+YmVsb3cgaW4gbGluZXM6DQoNClNlbnQgZnJvbSBteSBpUGFkDQoNCtTaIDIwMTQtOC02o6wyMToy
+NKOsImVkdWJlenZhbEBnbWFpbC5jb20iIDxlZHViZXp2YWxAZ21haWwuY29tPiDQtLXAo7oNCg0K
+PiBIZWxsbyBBbnNvbiwNCj4gDQo+IE9uIFdlZCwgQXVnIDYsIDIwMTQgYXQgMzoxMiBBTSwgQW5z
+b24gSHVhbmcgPGIyMDc4OEBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4+IGkuTVg2U1ggaGFzIHNv
+bWUgbmV3IGZlYXR1cmVzIG9mIHRoZXJtYWwgaW50ZXJydXB0IGZ1bmN0aW9uLA0KPj4gdGhlcmUg
+YXJlIExPVywgSElHSCBhbmQgUEFOSUMgaXJxIGZvciB0aGVybWFsIHNlbnNvciwgc28gYWRkDQo+
+PiBwbGF0Zm9ybSBkYXRhIHRvIHNlcGFyYXRlIGRpZmZlcmVudCB0aGVybWFsIHZlcnNpb247DQo+
+PiANCj4+IFRoZSByZXNldCB2YWx1ZSBvZiBMT1cgQUxBUk0gaXMgMCB3aGljaCBtZWFucyB0aGUg
+aGlnaGVzdA0KPj4gdGVtcCwgc28gdGhlIExPVyBBTEFSTSB3aWxsIGJlIHRyaWdnZXJlZCBvbmNl
+IGlycSBpcyBlbmFibGVkLA0KPj4gc28gd2UgbmVlZCB0byBjb3JyZWN0IGl0IGJlZm9yZSBlbmFi
+bGluZyB0aGVybWFsIGlycTsNCj4+IA0KPj4gRW5hYmxlIFBBTklDIEFMQVJNIGFzIGNyaXRpY2Fs
+IHRyaXAgcG9pbnQsIGl0IHdpbGwgdHJpZ2dlcg0KPj4gc3lzdGVtIHJlc2V0IHZpYSBTUkMgbW9k
+dWxlIG9uY2UgUEFOSUMgSVJRIGlzIHRyaWdnZXJlZCwgaXQNCj4+IGlzIHB1cmUgaGFyZHdhcmUg
+ZnVuY3Rpb24sIHNvIHVzZSBpdCBpbnN0ZWFkIG9mIHNvZnR3YXJlDQo+PiByZXNldCBieSBjb29s
+aW5nIGRldmljZS4NCj4gDQo+IFNvIGZhciB0aGUgcGF0Y2ggaXMgcHJldHR5IG11Y2ggYmV0dGVy
+IG5vdy4gVW5mb3J0dW5hdGVseSwgSSBkbyBub3QNCj4gaGF2ZSBhIHdheSB0byB0ZXN0IGl0LiBD
+YW4geW91IHBsZWFzZSBjaGVjayBpZiBzb21lIHdvcmttYXRlIG9mIHlvdXJzDQo+IGNhbiBkbyBh
+IHRlc3Rpbmcgb24gYm90aCBoYXJkd2FyZXMgYW5kIHNlbmQgaGlzL2hlciB0ZXN0ZWQtYnk/DQo+
+IA0KSSBoYXZlIHRlc3RlZCBpdCBvbiBpLk1YNlEsIGkuTVg2U0wgYW5kIGkuTVg2U1ggYmVmb3Jl
+IHNlbmRpbmcgdGhlDQpwYXRjaCBvdXQgZm9yIHJldmlldywgYnV0IGlmIGl0IGhhcyB0byBiZSBz
+b21lb25lIGVsc2UgdG8gdGVzdCB0aGlzIHBhdGNoLA0KSSBjYW4gdHJ5IHRvIGFzayBzb21lb25l
+IGVsc2UgdG8gaGVscCB0ZXN0IGl0IGFuZCBzZW5kIHRoZSB0ZXN0ZWQtYnkgbGF0ZXIuDQpEbyB5
+b3UgdGhpbmsgaXQgaXMgbmVjZXNzYXJ5LCBhcyBJIHNhdyBvdGhlciB0ZWFtIG1lbWJlcnMgYXJl
+IHNvIGJ1c3kNCldpdGggdGhlaXIgdGFza3MsIGxldCBtZSBrbm93IGlmIHlvdSB0aGluayB3ZSBt
+dXN0IGFkZCBhIHRlc3RlZC1ieSwgdGhhbmtzLg0KPiANCj4gDQo+PiANCj4+IFNpZ25lZC1vZmYt
+Ynk6IEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxlLmNvbT4NCj4+IC0tLQ0KPj4gLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhlcm1hbC50eHQgICAgfCAgICA1ICstDQo+
+PiBkcml2ZXJzL3RoZXJtYWwvaW14X3RoZXJtYWwuYyAgICAgICAgICAgICAgICAgICAgICB8ICAg
+OTEgKysrKysrKysrKysrKysrKystLS0NCj4+IDIgZmlsZXMgY2hhbmdlZCwgODIgaW5zZXJ0aW9u
+cygrKSwgMTQgZGVsZXRpb25zKC0pDQo+PiANCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhlcm1hbC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhlcm1hbC50eHQNCj4+IGluZGV4
+IDFmMGY2NzIuLjNjNjdiZDUgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhlcm1hbC50eHQNCj4+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2lteC10aGVybWFsLnR4dA0KPj4gQEAgLTEs
+NyArMSwxMCBAQA0KPj4gKiBUZW1wZXJhdHVyZSBNb25pdG9yIChURU1QTU9OKSBvbiBGcmVlc2Nh
+bGUgaS5NWCBTb0NzDQo+PiANCj4+IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAtLSBjb21wYXRp
+YmxlIDogImZzbCxpbXg2cS10aGVybWFsIg0KPj4gKy0gY29tcGF0aWJsZSA6ICJmc2wsaW14NnEt
+dGVtcG1vbiIgZm9yIGkuTVg2USwgImZzbCxpbXg2c3gtdGVtcG1vbiIgZm9yIGkuTVg2U1guDQo+
+PiArICBpLk1YNlNYIGhhcyB0d28gbW9yZSBJUlFzIHRoYW4gaS5NWDZRLCBvbmUgaXMgSVJRX0xP
+VyBhbmQgdGhlIG90aGVyIGlzIElSUV9QQU5JQywNCj4+ICsgIHdoZW4gdGVtcGVyYXR1cmUgaXMg
+YmVsb3cgdGhhbiBsb3cgdGhyZXNob2xkLCBJUlFfTE9XIHdpbGwgYmUgdHJpZ2dlcmVkLCB3aGVu
+IHRlbXBlcmF0dXJlDQo+PiArICBpcyBoaWdoZXIgdGhhbiBwYW5pYyB0aHJlc2hvbGQsIHN5c3Rl
+bSB3aWxsIGF1dG8gcmVib290IGJ5IFNSQyBtb2R1bGUuDQo+PiAtIGZzbCx0ZW1wbW9uIDogcGhh
+bmRsZSBwb2ludGVyIHRvIHN5c3RlbSBjb250cm9sbGVyIHRoYXQgY29udGFpbnMgVEVNUE1PTg0K
+Pj4gICBjb250cm9sIHJlZ2lzdGVycywgZS5nLiBBTkFUT1Agb24gaW14NnEuDQo+PiAtIGZzbCx0
+ZW1wbW9uLWRhdGEgOiBwaGFuZGxlIHBvaW50ZXIgdG8gZnVzZSBjb250cm9sbGVyIHRoYXQgY29u
+dGFpbnMgVEVNUE1PTg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1h
+bC5jIGIvZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMNCj4+IGluZGV4IDJjNTE2ZjIuLjQ2
+MWJmM2QgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3RoZXJtYWwvaW14X3RoZXJtYWwuYw0KPj4g
+KysrIGIvZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMNCj4+IEBAIC0xOSw2ICsxOSw3IEBA
+DQo+PiAjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPg0KPj4gI2luY2x1ZGUgPGxpbnV4L21v
+ZHVsZS5oPg0KPj4gI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L29m
+X2RldmljZS5oPg0KPj4gI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPj4gI2lu
+Y2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KPj4gI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4+IEBA
+IC0zMSw2ICszMiwxMSBAQA0KPj4gDQo+PiAjZGVmaW5lIE1JU0MwICAgICAgICAgICAgICAgICAg
+ICAgICAgICAweDAxNTANCj4+ICNkZWZpbmUgTUlTQzBfUkVGVE9QX1NFTEJJQVNPRkYgICAgICAg
+ICAgICAgICAgKDEgPDwgMykNCj4+ICsjZGVmaW5lIE1JU0MxICAgICAgICAgICAgICAgICAgICAg
+ICAgICAweDAxNjANCj4+ICsjZGVmaW5lIE1JU0MxX0lSUV9URU1QSElHSCAgICAgICAgICAgICAo
+MSA8PCAyOSkNCj4+ICsvKiBCZWxvdyBMT1cgYW5kIFBBTklDIGJpdHMgYXJlIG9ubHkgZm9yIFRF
+TVBNT05fSU1YNlNYICovDQo+PiArI2RlZmluZSBNSVNDMV9JUlFfVEVNUExPVyAgICAgICAgICAg
+ICAgKDEgPDwgMjgpDQo+PiArI2RlZmluZSBNSVNDMV9JUlFfVEVNUFBBTklDICAgICAgICAgICAg
+KDEgPDwgMjcpDQo+PiANCj4+ICNkZWZpbmUgVEVNUFNFTlNFMCAgICAgICAgICAgICAgICAgICAg
+IDB4MDE4MA0KPj4gI2RlZmluZSBURU1QU0VOU0UwX0FMQVJNX1ZBTFVFX1NISUZUICAgMjANCj4+
+IEBAIC00Myw2ICs0OSwxMiBAQA0KPj4gDQo+PiAjZGVmaW5lIFRFTVBTRU5TRTEgICAgICAgICAg
+ICAgICAgICAgICAweDAxOTANCj4+ICNkZWZpbmUgVEVNUFNFTlNFMV9NRUFTVVJFX0ZSRVEgICAg
+ICAgICAgICAgICAgMHhmZmZmDQo+PiArLyogQmVsb3cgVEVNUFNFTlNFMiBpcyBvbmx5IGZvciBU
+RU1QTU9OX0lNWDZTWCAqLw0KPj4gKyNkZWZpbmUgVEVNUFNFTlNFMiAgICAgICAgICAgICAgICAg
+ICAgIDB4MDI5MA0KPj4gKyNkZWZpbmUgVEVNUFNFTlNFMl9MT1dfVkFMVUVfU0hJRlQgICAgIDAN
+Cj4+ICsjZGVmaW5lIFRFTVBTRU5TRTJfTE9XX1ZBTFVFX01BU0sgICAgICAweGZmZg0KPj4gKyNk
+ZWZpbmUgVEVNUFNFTlNFMl9QQU5JQ19WQUxVRV9TSElGVCAgIDE2DQo+PiArI2RlZmluZSBURU1Q
+U0VOU0UyX1BBTklDX1ZBTFVFX01BU0sgICAgMHhmZmYwMDAwDQo+PiANCj4+ICNkZWZpbmUgT0NP
+VFBfQU5BMSAgICAgICAgICAgICAgICAgICAgIDB4MDRlMA0KPj4gDQo+PiBAQCAtNjYsNiArNzgs
+MjEgQEAgZW51bSBpbXhfdGhlcm1hbF90cmlwIHsNCj4+ICNkZWZpbmUgRkFDVE9SMSAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgMTU5NzYNCj4+ICNkZWZpbmUgRkFDVE9SMiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgNDI5NzE1Nw0KPj4gDQo+PiArI2RlZmluZSBURU1QTU9O
+X0lNWDZRICAgICAgICAgICAgICAgICAgMQ0KPj4gKyNkZWZpbmUgVEVNUE1PTl9JTVg2U1ggICAg
+ICAgICAgICAgICAgIDINCj4+ICsNCj4+ICtzdHJ1Y3QgdGhlcm1hbF9zb2NfZGF0YSB7DQo+PiAr
+ICAgICAgIHUzMiB2ZXJzaW9uOw0KPj4gK307DQo+PiArDQo+PiArc3RhdGljIHN0cnVjdCB0aGVy
+bWFsX3NvY19kYXRhIHRoZXJtYWxfaW14NnFfZGF0YSA9IHsNCj4+ICsgICAgICAgLnZlcnNpb24g
+PSBURU1QTU9OX0lNWDZRLA0KPj4gK307DQo+PiArDQo+PiArc3RhdGljIHN0cnVjdCB0aGVybWFs
+X3NvY19kYXRhIHRoZXJtYWxfaW14NnN4X2RhdGEgPSB7DQo+PiArICAgICAgIC52ZXJzaW9uID0g
+VEVNUE1PTl9JTVg2U1gsDQo+PiArfTsNCj4+ICsNCj4+IHN0cnVjdCBpbXhfdGhlcm1hbF9kYXRh
+IHsNCj4+ICAgICAgICBzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHo7DQo+PiAgICAgICAg
+c3RydWN0IHRoZXJtYWxfY29vbGluZ19kZXZpY2UgKmNkZXY7DQo+PiBAQCAtNzksOCArMTA2LDIx
+IEBAIHN0cnVjdCBpbXhfdGhlcm1hbF9kYXRhIHsNCj4+ICAgICAgICBib29sIGlycV9lbmFibGVk
+Ow0KPj4gICAgICAgIGludCBpcnE7DQo+PiAgICAgICAgc3RydWN0IGNsayAqdGhlcm1hbF9jbGs7
+DQo+PiArICAgICAgIGNvbnN0IHN0cnVjdCB0aGVybWFsX3NvY19kYXRhICpzb2NkYXRhOw0KPj4g
+fTsNCj4+IA0KPj4gK3N0YXRpYyB2b2lkIGlteF9zZXRfcGFuaWNfdGVtcChzdHJ1Y3QgaW14X3Ro
+ZXJtYWxfZGF0YSAqZGF0YSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaWdu
+ZWQgbG9uZyBwYW5pY190ZW1wKQ0KPj4gK3sNCj4+ICsgICAgICAgc3RydWN0IHJlZ21hcCAqbWFw
+ID0gZGF0YS0+dGVtcG1vbjsNCj4+ICsgICAgICAgaW50IGNyaXRpY2FsX3ZhbHVlOw0KPj4gKw0K
+Pj4gKyAgICAgICBjcml0aWNhbF92YWx1ZSA9IChkYXRhLT5jMiAtIHBhbmljX3RlbXApIC8gZGF0
+YS0+YzE7DQo+PiArICAgICAgIHJlZ21hcF93cml0ZShtYXAsIFRFTVBTRU5TRTIgKyBSRUdfQ0xS
+LCBURU1QU0VOU0UyX1BBTklDX1ZBTFVFX01BU0spOw0KPj4gKyAgICAgICByZWdtYXBfd3JpdGUo
+bWFwLCBURU1QU0VOU0UyICsgUkVHX1NFVCwgY3JpdGljYWxfdmFsdWUgPDwNCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIFRFTVBTRU5TRTJfUEFOSUNfVkFMVUVfU0hJRlQpOw0KPj4gK30NCj4+
+ICsNCj4+IHN0YXRpYyB2b2lkIGlteF9zZXRfYWxhcm1fdGVtcChzdHJ1Y3QgaW14X3RoZXJtYWxf
+ZGF0YSAqZGF0YSwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpZ25lZCBsb25n
+IGFsYXJtX3RlbXApDQo+PiB7DQo+PiBAQCAtMTQyLDEzICsxODIsMTcgQEAgc3RhdGljIGludCBp
+bXhfZ2V0X3RlbXAoc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6LCB1bnNpZ25lZCBsb25n
+ICp0ZW1wKQ0KPj4gICAgICAgIC8qIFNlZSBpbXhfZ2V0X3NlbnNvcl9kYXRhKCkgZm9yIGZvcm11
+bGEgZGVyaXZhdGlvbiAqLw0KPj4gICAgICAgICp0ZW1wID0gZGF0YS0+YzIgLSBuX21lYXMgKiBk
+YXRhLT5jMTsNCj4+IA0KPj4gLSAgICAgICAvKiBVcGRhdGUgYWxhcm0gdmFsdWUgdG8gbmV4dCBo
+aWdoZXIgdHJpcCBwb2ludCAqLw0KPj4gLSAgICAgICBpZiAoZGF0YS0+YWxhcm1fdGVtcCA9PSBk
+YXRhLT50ZW1wX3Bhc3NpdmUgJiYgKnRlbXAgPj0gZGF0YS0+dGVtcF9wYXNzaXZlKQ0KPj4gLSAg
+ICAgICAgICAgICAgIGlteF9zZXRfYWxhcm1fdGVtcChkYXRhLCBkYXRhLT50ZW1wX2NyaXRpY2Fs
+KTsNCj4+IC0gICAgICAgaWYgKGRhdGEtPmFsYXJtX3RlbXAgPT0gZGF0YS0+dGVtcF9jcml0aWNh
+bCAmJiAqdGVtcCA8IGRhdGEtPnRlbXBfcGFzc2l2ZSkgew0KPj4gLSAgICAgICAgICAgICAgIGlt
+eF9zZXRfYWxhcm1fdGVtcChkYXRhLCBkYXRhLT50ZW1wX3Bhc3NpdmUpOw0KPj4gLSAgICAgICAg
+ICAgICAgIGRldl9kYmcoJnR6LT5kZXZpY2UsICJ0aGVybWFsIGFsYXJtIG9mZjogVCA8ICVsdVxu
+IiwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgIGRhdGEtPmFsYXJtX3RlbXAgLyAxMDAwKTsN
+Cj4+ICsgICAgICAgLyogVXBkYXRlIGFsYXJtIHZhbHVlIHRvIG5leHQgaGlnaGVyIHRyaXAgcG9p
+bnQgZm9yIFRFTVBNT05fSU1YNlEgKi8NCj4+ICsgICAgICAgaWYgKGRhdGEtPnNvY2RhdGEtPnZl
+cnNpb24gPT0gVEVNUE1PTl9JTVg2USkgew0KPj4gKyAgICAgICAgICAgICAgIGlmIChkYXRhLT5h
+bGFybV90ZW1wID09IGRhdGEtPnRlbXBfcGFzc2l2ZSAmJg0KPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgKnRlbXAgPj0gZGF0YS0+dGVtcF9wYXNzaXZlKQ0KPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgaW14X3NldF9hbGFybV90ZW1wKGRhdGEsIGRhdGEtPnRlbXBfY3JpdGljYWwpOw0KPj4g
+KyAgICAgICAgICAgICAgIGlmIChkYXRhLT5hbGFybV90ZW1wID09IGRhdGEtPnRlbXBfY3JpdGlj
+YWwgJiYNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICp0ZW1wIDwgZGF0YS0+dGVtcF9wYXNz
+aXZlKSB7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBpbXhfc2V0X2FsYXJtX3RlbXAoZGF0
+YSwgZGF0YS0+dGVtcF9wYXNzaXZlKTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9k
+YmcoJnR6LT5kZXZpY2UsICJ0aGVybWFsIGFsYXJtIG9mZjogVCA8ICVsdVxuIiwNCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+YWxhcm1fdGVtcCAvIDEwMDApOw0KPj4g
+KyAgICAgICAgICAgICAgIH0NCj4+ICAgICAgICB9DQo+PiANCj4+ICAgICAgICBpZiAoKnRlbXAg
+IT0gZGF0YS0+bGFzdF90ZW1wKSB7DQo+PiBAQCAtMzk4LDggKzQ0MiwxNyBAQCBzdGF0aWMgaXJx
+cmV0dXJuX3QgaW14X3RoZXJtYWxfYWxhcm1faXJxX3RocmVhZChpbnQgaXJxLCB2b2lkICpkZXYp
+DQo+PiAgICAgICAgcmV0dXJuIElSUV9IQU5ETEVEOw0KPj4gfQ0KPj4gDQo+PiArc3RhdGljIGNv
+bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb2ZfaW14X3RoZXJtYWxfbWF0Y2hbXSA9IHsNCj4+ICsg
+ICAgICAgeyAuY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtdGVtcG1vbiIsIC5kYXRhID0gJnRoZXJt
+YWxfaW14NnFfZGF0YSwgfSwNCj4+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJmc2wsaW14NnN4
+LXRlbXBtb24iLCAuZGF0YSA9ICZ0aGVybWFsX2lteDZzeF9kYXRhLCB9LA0KPj4gKyAgICAgICB7
+IC8qIGVuZCAqLyB9DQo+PiArfTsNCj4+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBvZl9pbXhf
+dGhlcm1hbF9tYXRjaCk7DQo+PiArDQo+PiBzdGF0aWMgaW50IGlteF90aGVybWFsX3Byb2JlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+PiB7DQo+PiArICAgICAgIGNvbnN0IHN0cnVj
+dCBvZl9kZXZpY2VfaWQgKm9mX2lkID0NCj4+ICsgICAgICAgICAgICAgICBvZl9tYXRjaF9kZXZp
+Y2Uob2ZfaW14X3RoZXJtYWxfbWF0Y2gsICZwZGV2LT5kZXYpOw0KPj4gICAgICAgIHN0cnVjdCBp
+bXhfdGhlcm1hbF9kYXRhICpkYXRhOw0KPj4gICAgICAgIHN0cnVjdCBjcHVtYXNrIGNsaXBfY3B1
+czsNCj4+ICAgICAgICBzdHJ1Y3QgcmVnbWFwICptYXA7DQo+PiBAQCAtNDE4LDYgKzQ3MSwyMCBA
+QCBzdGF0aWMgaW50IGlteF90aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+PiAgICAgICAgfQ0KPj4gICAgICAgIGRhdGEtPnRlbXBtb24gPSBtYXA7DQo+PiANCj4+
+ICsgICAgICAgZGF0YS0+c29jZGF0YSA9IG9mX2lkLT5kYXRhOw0KPj4gKw0KPj4gKyAgICAgICAv
+KiBtYWtlIHN1cmUgdGhlIElSUSBmbGFnIGlzIGNsZWFyIGJlZm9yZSBlbmFibGluZyBpcnEgb24g
+aS5NWDZTWCAqLw0KPj4gKyAgICAgICBpZiAoZGF0YS0+c29jZGF0YS0+dmVyc2lvbiA9PSBURU1Q
+TU9OX0lNWDZTWCkgew0KPiANCj4gQSBnZW5lcmFsIHF1ZXN0aW9uIG9uIHRoZSBwYXRjaCBzdHJh
+dGVneS4gWW91IGhhdmUgY2hvc2VuIHRvIHNwbGl0IHRoZQ0KPiBmZWF0dXJlcyBwZXIgY2hpcCB2
+ZXJzaW9uLiBXaGlsZSB0aGlzIHN0cmF0ZWd5IGlzIHN0cmFpZ2h0IGZvcndhcmQsDQo+IGFuZCBv
+bmUgd291bGQgZXZlbiBzYXkgdmVyeSBuYXR1cmFsLCBJIHdvdWxkIHNheSBpdCBpcyBub3QgdmVy
+eQ0KPiBzY2FsYWJsZS4gSW4gY2FzZSB5b3VyIG5leHQgY2hpcCB2ZXJzaW9ucyBoYXZlIGFuIG92
+ZXJsYXAgaW4gZmVhdHVyZXMNCj4gd2l0aCB0aGUgZXhpc3Rpbmcgb25lcywgeW91IHdpbGwgbWFr
+ZSB5b3VyIGNvZGUgYSBuaWdodG1hcmUgb2YgaWZzIHBlcg0KPiBjaGlwIHZlcnNpb24uIE9uZSBz
+dWdnZXN0aW9uIGlzLCB0aGF0IEkgaGF2ZSBleHBlcmllbmNlZCB0byB3b3JrIHdpdGgNCj4gVEkg
+YW5kIFNhbXN1bmcgY2hpcHMsIHRvIHNwbGl0IHRoZSBjb2RlIHBlciBmZWF0dXJlLCBub3QgcGVy
+IGNoaXANCj4gdmVyc2lvbi4NCj4gDQo+IEluIGNoaXMgY2FzZSwgeW91IHdpbGwgaGF2ZSBhIC5z
+dXBwb3J0cyBvciAuZmVhdHVyZXMgYml0ZmllbGQgaW5zdGVhZA0KPiBvZiBhIC52ZXJzaW9uLiBU
+aGVuIHlvdSB3b3VsZCBjaGVjayBpZiBwYXJ0aWN1bGFyIGZlYXR1cmUgaXMgcHJlc2VudA0KPiBp
+biB0aGUgY2hpcCB5b3UgYXJlIGRlYWxpbmcgd2l0aCwgaW5zdGVhZCBvZiBhc2tpbmcgZm9yIGNo
+aXAgdmVyc2lvbi4NCj4gV2hhdCBkbyB5b3UgdGhpbms/DQoNClRoYW5rIHlvdSB2ZXJ5IG11Y2gg
+Zm9yIHNoYXJpbmcgZXhwZXJpZW5jZSBvbiBzdWNoIHNjZW5hcmlvLiBJIHRoaW5rDQplaXRoZXIg
+d2F5IGlzIE9LIGZvciB0aGlzIGNhc2UsIGFzIHRoaXMgbmV3IGZlYXR1cmUgb24gaS5NWDZTWCBp
+cyBhbiBwdXJlDQppbXByb3ZlbWVudCBvbiB0aGlzIHRoZXJtYWwgSVAgYmFzZWQgb24gb3VyIHN1
+Z2dlc3Rpb24gdG8gaGFyZHdhcmUgZGVzaWduDQp0ZWFtLEkgYmVsaWV2ZSBhbGwgdGhlIG5leHQg
+Y2hpcHMgd2lsbA0KcmV1c2UgaS5NWDZTWCdzIHRoZXJtYWwgSVAsIGJ1dCBOT1Qgc2VsZWN0IHNv
+bWUgb3ZlcmxhcCBmZWF0dXJlcyBvbg0KaS5NWDZTWCBhbmQgaS5NWDZRLiBUaGF0IGlzIHdoeSBJ
+IG5hbWVkIGl0IGFzIGEgVjEgYW5kIFYyIGZvciB0aGlzDQp0aGVybWFsIHNlbnNvciBJUCBiZWZv
+cmUuIERvIHlvdSB0aGluayBpdCBpcyBPSyB0byBqdXN0IGxlYXZlIGl0IHVzaW5nIHZlcnNpb24s
+DQpvciBpZiB5b3UgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIHVzZSB0aGUgd2F5IHlvdSByZWNvbW1l
+bmRlZCwgSSBjYW4gdHJ5IGl0LCBidXQNCnRvIGJlIGhvbmVzdCwgSSB0aGluayB1c2luZyB2ZXJz
+aW9uIHNob3VsZCBiZSBPSyBmb3IgdGhpcyBjYXNlLg0KPiANCj4+ICsgICAgICAgICAgICAgICBy
+ZWdtYXBfd3JpdGUobWFwLCBNSVNDMSArIFJFR19DTFIsIE1JU0MxX0lSUV9URU1QSElHSCB8DQo+
+PiArICAgICAgICAgICAgICAgICAgICAgICBNSVNDMV9JUlFfVEVNUExPVyB8IE1JU0MxX0lSUV9U
+RU1QUEFOSUMpOw0KPj4gKyAgICAgICAgICAgICAgIC8qDQo+PiArICAgICAgICAgICAgICAgICog
+cmVzZXQgdmFsdWUgb2YgTE9XIEFMQVJNIGlzIGluY29ycmVjdCwgc2V0IGl0IHRvIGxvd2VzdA0K
+Pj4gKyAgICAgICAgICAgICAgICAqIHZhbHVlIHRvIGF2b2lkIGZhbHNlIHRyaWdnZXIgb2YgbG93
+IGFsYXJtLg0KPj4gKyAgICAgICAgICAgICAgICAqLw0KPj4gKyAgICAgICAgICAgICAgIHJlZ21h
+cF93cml0ZShtYXAsIFRFTVBTRU5TRTIgKyBSRUdfU0VULA0KPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgVEVNUFNFTlNFMl9MT1dfVkFMVUVfTUFTSyk7DQo+PiArICAgICAgIH0NCj4+ICsNCj4+
+ICAgICAgICBkYXRhLT5pcnEgPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPj4gICAgICAg
+IGlmIChkYXRhLT5pcnEgPCAwKQ0KPj4gICAgICAgICAgICAgICAgcmV0dXJuIGRhdGEtPmlycTsN
+Cj4+IEBAIC00ODksNiArNTU2LDEwIEBAIHN0YXRpYyBpbnQgaW14X3RoZXJtYWxfcHJvYmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICAgICAgICBtZWFzdXJlX2ZyZXEgPSBESVZf
+Uk9VTkRfVVAoMzI3NjgsIDEwKTsgLyogMTAgSHogKi8NCj4+ICAgICAgICByZWdtYXBfd3JpdGUo
+bWFwLCBURU1QU0VOU0UxICsgUkVHX1NFVCwgbWVhc3VyZV9mcmVxKTsNCj4+ICAgICAgICBpbXhf
+c2V0X2FsYXJtX3RlbXAoZGF0YSwgZGF0YS0+dGVtcF9wYXNzaXZlKTsNCj4+ICsNCj4+ICsgICAg
+ICAgaWYgKGRhdGEtPnNvY2RhdGEtPnZlcnNpb24gPT0gVEVNUE1PTl9JTVg2U1gpDQo+PiArICAg
+ICAgICAgICAgICAgaW14X3NldF9wYW5pY190ZW1wKGRhdGEsIGRhdGEtPnRlbXBfY3JpdGljYWwp
+Ow0KPj4gKw0KPj4gICAgICAgIHJlZ21hcF93cml0ZShtYXAsIFRFTVBTRU5TRTAgKyBSRUdfQ0xS
+LCBURU1QU0VOU0UwX1BPV0VSX0RPV04pOw0KPj4gICAgICAgIHJlZ21hcF93cml0ZShtYXAsIFRF
+TVBTRU5TRTAgKyBSRUdfU0VULCBURU1QU0VOU0UwX01FQVNVUkVfVEVNUCk7DQo+PiANCj4+IEBA
+IC01NTAsMTIgKzYyMSw2IEBAIHN0YXRpYyBpbnQgaW14X3RoZXJtYWxfcmVzdW1lKHN0cnVjdCBk
+ZXZpY2UgKmRldikNCj4+IHN0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhpbXhfdGhlcm1hbF9wbV9v
+cHMsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICBpbXhfdGhlcm1hbF9zdXNwZW5kLCBpbXhf
+dGhlcm1hbF9yZXN1bWUpOw0KPj4gDQo+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
+aWQgb2ZfaW14X3RoZXJtYWxfbWF0Y2hbXSA9IHsNCj4+IC0gICAgICAgeyAuY29tcGF0aWJsZSA9
+ICJmc2wsaW14NnEtdGVtcG1vbiIsIH0sDQo+PiAtICAgICAgIHsgLyogZW5kICovIH0NCj4+IC19
+Ow0KPj4gLU1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG9mX2lteF90aGVybWFsX21hdGNoKTsNCj4+
+IC0NCj4+IHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGlteF90aGVybWFsID0gew0KPj4g
+ICAgICAgIC5kcml2ZXIgPSB7DQo+PiAgICAgICAgICAgICAgICAubmFtZSAgID0gImlteF90aGVy
+bWFsIiwNCj4+IC0tDQo+PiAxLjcuOS41DQo+PiANCj4gDQo+IA0KPiANCj4gLS0gDQo+IEVkdWFy
+ZG8gQmV6ZXJyYSBWYWxlbnRpbg0K
