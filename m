@@ -1,66 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] usb: host: ehci-st: Add EHCI support for ST STB devices
-Date: Wed, 6 Aug 2014 23:07:18 +0200
-Message-ID: <201408062307.18851.arnd@arndb.de>
-References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org> <1407344589-24863-3-git-send-email-peter.griffin@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] Documentation: devicetree: Fix tps65090 typos in
+ example
+Date: Wed, 6 Aug 2014 22:10:51 +0100
+Message-ID: <20140806211051.GA17528@sirena.org.uk>
+References: <1406755767-5910-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407344589-24863-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="w3kmj6YJmRtqQaLC"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406755767-5910-1-git-send-email-afaerber@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 August 2014, Peter Griffin wrote:
 
-> +static int st_ehci_platform_reset(struct usb_hcd *hcd)
-> +{
-> +	struct platform_device *pdev = to_platform_device(hcd->self.controller);
-> +	struct usb_ehci_pdata *pdata = dev_get_platdata(&pdev->dev);
-> +	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
-> +	int retval;
-> +
-> +	if (pdata->pre_setup) {
-> +		retval = pdata->pre_setup(hcd);
-> +		if (retval < 0)
-> +			return retval;
-> +	}
+--w3kmj6YJmRtqQaLC
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What is the point in going through a platform data function pointer here?
-Can't you just open-code st_ehci_configure_bus() here?
+On Wed, Jul 30, 2014 at 11:29:27PM +0200, Andreas F=E4rber wrote:
+> Specification and existing device trees use vsys-l{1,2}-supply,
+> not vsys_l{1,2}-supply. Fix the example to match the specification.
 
-> +static int st_ehci_platform_probe(struct platform_device *dev)
-> +{
-> +	struct usb_hcd *hcd;
-> +	struct resource *res_mem;
-> +	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
-> +	struct st_platform_priv *priv;
-> +	struct ehci_hcd *ehci;
-> +	int err, irq, clk = 0;
-> +
-> +	if (usb_disabled())
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Use reasonable defaults so platforms don't have to provide these
-> +	 * with DT probing on ARM.
-> +	 */
-> +	if (!pdata)
-> +		pdata = &ehci_platform_defaults;
+Applied.  I've previously reminded you to use subject lines appropraite
+for the subsystem, please do so - this is important for telling people
+what the patch is for.
 
-How would you ever get here with pdata set?
+--w3kmj6YJmRtqQaLC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	err = dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
-> +	if (err)
-> +		return err;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Remove this here, and rely on the correct mask to be set from the DT scan.
+iQIcBAEBAgAGBQJT4pnXAAoJELSic+t+oim9Y6EP/0DwyVyQ/+UFFITQo7zScDpp
+hm9gZqRUOyJwNJC/fP47L464R3l4CrSS3bYfOLFzUe4jcVbAjZVTzguSAaN6f59Q
+4znQM8h60K2+vhUWKSxCinz+gvzTchV17d7R4PWN/wPypWg3xjA3jI1TnHca1d59
+EN+pYG++04VtV9Z2vj94kJDQRgyOyIz6W9QesyTX6aJuGN+WhvZ/qKLQ8aOifRdF
+FDQr4QSiY8tpvrDO8/g831NFT/RyBgCJGDyodlooHZ3Q3Vnx7TXOY24QpFnc/KQ9
+yt7KFgKjKfDl4Grgwx37HO5RLeYX2PeMMp0uPZuhSn/HAR9VCk9mXN00BPK7hv1H
+lI7M0OydX1crYOout2tTAyxf2pcX5HsRLMMHABCNb8+rzpbpNxrz/tr+VQRzUlfW
+IdRxzmlKAziLCg1tuTUbwNwP239nIhaK30FH2kyfJPsxIKEwjJHpF/zbbAZK8yqm
+hnDUeB+foWf5xncYeyLJFyG2n76QL9aS3fegQffXXXmrlGtii5OXpS5L2ZGBLcmh
+8cPFgVaiHNpyCLEH5Je9HCWdBg4DNwv84Yxrag+IJOTUdh6eJhs6cqWPUm1pn+bu
+gYWxhX+4tH76gO0Y6wGoAlG2tn6YUv6diyTPdiOcyi8EYWZWZ2S20JUlLKlR+Iup
+WmLYXxzxOZ9trZuNtQX+
+=Rlq4
+-----END PGP SIGNATURE-----
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--w3kmj6YJmRtqQaLC--
