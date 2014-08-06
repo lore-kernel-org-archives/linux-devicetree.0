@@ -1,58 +1,110 @@
-From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Subject: AW: where to add imx-udc-mx27 in device tree
-Date: Wed, 6 Aug 2014 11:52:48 +0000
-Message-ID: <E70AF999396FDF4EAE40E195B84709611F84803F@SPMDEGHN001.CADCON.INTERN>
-References: <E70AF999396FDF4EAE40E195B84709611F847DDE@SPMDEGHN001.CADCON.INTERN>
- <CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: dts: at_xdmac: add bindings documentation
+Date: Wed, 6 Aug 2014 14:23:48 +0200
+Message-ID: <20140806122348.GD27338@ldesroches-Latitude-E6320>
+References: <1404825096-15724-1-git-send-email-ludovic.desroches@atmel.com>
+ <1404825096-15724-3-git-send-email-ludovic.desroches@atmel.com>
+ <20140725072008.GI8181@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5AqZrnn8ww1oM998NwRXVw6MM6TKkbD6rNZ1bZMKEx0tQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: de-DE
+Content-Disposition: inline
+In-Reply-To: <20140725072008.GI8181-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sDQoNCkkgcHVsbGVkIGxpbnV4LW5leHQsIGJ1dCBzdGlsbCBjYW4ndCBmaWd1cmUgb3V0
-IHdoZXJlIHRvIGFkZCBteSB1ZGMuDQpDYW4geW91IHBsZWFzZSBleHBsYWluIHdoZW4gZnNsLXVk
-YyBpcyBsb2FkZWQ/DQpUaGFua3MgYSBsb3QuDQoNCkdyZWV0aW5ncw0KU2ViYXN0aWFuIFByaWVi
-ZQ0KDQoNCg0KDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0K
-Q0FEQ09ODQpJbmdlbmlldXJnZXNlbGxzY2hhZnQgbWJIICYgQ28uIEtHDQpHZXNjaGFlZnRzZnVl
-aHJlcjogUm9iZXJ0IEJhdWVyLCBBbmRyZWFzIEd1bmRlbA0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0
-OiBELTg2MzY4IEdlcnN0aG9mZW4NClJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgQXVnc2J1
-cmcgSFJBIDE0NTIxDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
-Cg0KLS0tLS1VcnNwcsO8bmdsaWNoZSBOYWNocmljaHQtLS0tLQ0KVm9uOiBGYWJpbyBFc3RldmFt
-IFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29tXQ0KR2VzZW5kZXQ6IERpZW5zdGFnLCA1LiBBdWd1
-c3QgMjAxNCAxNDoyMQ0KQW46IFByaWViZSwgU2ViYXN0aWFuDQpDYzogZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmcNCkJldHJlZmY6IFJlOiB3aGVyZSB0byBhZGQgaW14LXVkYy1teDI3IGluIGRl
-dmljZSB0cmVlDQoNCk9uIFR1ZSwgQXVnIDUsIDIwMTQgYXQgOTowNiBBTSwgUHJpZWJlLCBTZWJh
-c3RpYW4gPFNlYmFzdGlhbi5QcmllYmVAY2FkY29uLmRlPiB3cm90ZToNCj4gSGVsbG8sDQo+DQo+
-IEkgYW0gdHJ5aW5nIHRvIGFkZCBhbiBVU0IgZ2FkZ2V0IHRvIG15IGRldmljZSB0cmVlIGFuZCBJ
-IGFtIHVzaW5nIG1vZHVsZXMgZm9yIG15IGdhZGdldHMgKHNlcmlhbCBhbmQgbWFzcy1zdG9yYWdl
-KS4NCj4gJnVzYm90ZyB7DQo+ICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4g
-ICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNib3RnPjsNCj4gICAgICAgICBkcl9tb2Rl
-ID0gInBlcmlwaGVyYWwiOw0KPiAgICAgICAgIHBoeV90eXBlID0gInV0bWlfd2lkZSI7DQo+ICAg
-ICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiB9Ow0KDQpUYWtlIGEgbG9vayBhdCBhcmNoL2FybS9i
-b290L2R0cy9pbXgyNy1ldWtyZWEtY3B1aW14MjcuZHRzaSBmb3IgYW4gZXhhbXBsZS4NCg0KVGhl
-IHVkYyBkcml2ZXIgaXMgQ09ORklHX1VTQl9DSElQSURFQV9VREM9eS4NCg0KVGhlcmUgaXMgYWxz
-byB0aGUgY29tbWl0IGJlbG93IGluIGxpbnV4LW5leHQgKG5vdCBpbiAzLjE2KSB0aGF0IHNlbGVj
-dCB0aGUgZ2FkZ2V0IGRyaXZlciBmb3IgaW14X3Y0X3Y1X2RlZmNvbmZpZy4NCg0KQXV0aG9yOiBG
-YWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQGZyZWVzY2FsZS5jb20+DQpEYXRlOiAgIFdlZCBK
-dW4gMjUgMTc6Mjg6NTMgMjAxNCAtMDMwMA0KDQogICAgQVJNOiBpbXhfdjRfdjVfZGVmY29uZmln
-OiBBZGQgVVNCIGRldmljZSBvcHRpb25zDQoNCiAgICBBbGxvdyBVU0IgZGV2aWNlIHRvIHdvcmsg
-YnkgZGVmYXVsdC4NCg0KICAgIFNpZ25lZC1vZmYtYnk6IEZhYmlvIEVzdGV2YW0gPGZhYmlvLmVz
-dGV2YW1AZnJlZXNjYWxlLmNvbT4NCiAgICBTaWduZWQtb2ZmLWJ5OiBTaGF3biBHdW8gPHNoYXdu
-Lmd1b0BmcmVlc2NhbGUuY29tPg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vY29uZmlncy9pbXhf
-djRfdjVfZGVmY29uZmlnIGIvYXJjaC9hcm0vY29uZmlncy9pbXhfdjRfdjVfZCBpbmRleCA2OGFi
-Y2U5Li4wOTBkZTAxIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vY29uZmlncy9pbXhfdjRfdjVfZGVm
-Y29uZmlnDQorKysgYi9hcmNoL2FybS9jb25maWdzL2lteF92NF92NV9kZWZjb25maWcNCkBAIC0x
-NTksNiArMTU5LDggQEAgQ09ORklHX1VTQl9DSElQSURFQT15ICBDT05GSUdfVVNCX0NISVBJREVB
-X1VEQz15ICBDT05GSUdfVVNCX0NISVBJREVBX0hPU1Q9eSAgQ09ORklHX05PUF9VU0JfWENFSVY9
-eQ0KK0NPTkZJR19VU0JfR0FER0VUPXkNCitDT05GSUdfVVNCX0VUSD1tDQogQ09ORklHX01NQz15
-DQogQ09ORklHX01NQ19TREhDST15DQogQ09ORklHX01NQ19TREhDSV9QTFRGTT15DQoNCg==
+On Fri, Jul 25, 2014 at 12:50:08PM +0530, Vinod Koul wrote:
+> On Tue, Jul 08, 2014 at 03:11:36PM +0200, Ludovic Desroches wrote:
+> > Add bindings documentation for the new Atmel DMA controller (XDMAC)
+> > introduced with SAMA5D4.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/dma/atmel-xdma.txt         |   48 ++++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> 
+> I dont see delta with current atmel-dma bindings. Shouldn't we reuse that
+> here too?
 
+Bindings have change through the revision, I didn't notice they were so
+close to the hdmac bindings. The only difference is the content of the
+second cell.
+
+I don't know if it's a sufficient reason to add a new binding.
+
+> 
+> Surely we dont want to add binding per contoller even if they are similar!
+> 
+> -- 
+> ~Vinod
+> 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > new file mode 100644
+> > index 0000000..647f099
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > @@ -0,0 +1,48 @@
+> > +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> > +
+> > +* XDMA Controller
+> > +Required properties:
+> > +- compatible: Should be "atmel,<chip>-dma".
+> > +- reg: Should contain DMA registers location and length.
+> > +- interrupts: Should contain DMA interrupt.
+> > +- #dma-cells: Must be <2>, used to represent the number of integer cells in
+> > +the dmas property of client devices.
+> > +  - The 1st cell specifies the memory interface (16 most significant bits) and
+> > +  the peripheral interface (16 less significant bits) to use.
+> > +  - The 2nd cell specifies the channel configuration register:
+> > +    - bit 30-24: PERID, peripheral identifier.
+> > +
+> > +Example:
+> > +
+> > +dma1: dma-controller@f0004000 {
+> > +	compatible = "atmel,sama5d4-dma";
+> > +	reg = <0xf0004000 0x200>;
+> > +	interrupts = <50 4 0>;
+> > +	#dma-cells = <2>;
+> > +};
+> > +
+> > +
+> > +* DMA clients
+> > +DMA clients connected to the Atmel XDMA controller must use the format
+> > +described in the dma.txt file, using a two-cell specifier for each channel.
+> > +The three cells in order are:
+> > +1. A phandle pointing to the DMA controller.
+> > +2. The memory interface (16 most significant bits), the peripheral interface
+> > +(16 less significant bits).
+> > +3. Channel configuration register. Configurable fields are:
+> > +  - bit 30-24: PERID, peripheral identifier.
+> > +
+> > +Example:
+> > +
+> > +i2c2: i2c@f8024000 {
+> > +	compatible = "atmel,at91sam9x5-i2c";
+> > +	reg = <0xf8024000 0x4000>;
+> > +	interrupts = <34 4 6>;
+> > +	dmas = <&dma1
+> > +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> > +		AT91_XDMAC_DT_PERID(6)>,
+> > +	       <&dma1
+> > +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> > +		AT91_XDMAC_DT_PERID(7)>;
+> > +	dma-names = "tx", "rx";
+> > +};
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> -- 
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
