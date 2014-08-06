@@ -1,42 +1,51 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of/irq: lookup 'interrupts-extended' property first
-Date: Wed, 6 Aug 2014 13:15:00 -0700
-Message-ID: <20140806201500.GP3711@ld-irv-0074>
-References: <1407355347-30286-1-git-send-email-f.fainelli@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 05/12] [v2] spi: rspi: Add DT support to DMA setup
+Date: Wed, 6 Aug 2014 21:28:03 +0100
+Message-ID: <20140806202803.GT17528@sirena.org.uk>
+References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
+ <1407329949-5695-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="N8U4vaB+Yt07z2q/"
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1407355347-30286-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1407329949-5695-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 06, 2014 at 01:02:27PM -0700, Florian Fainelli wrote:
-> In case the Device Tree blob passed by the boot agent supplies both an
-> 'interrupts-extended' and an 'interrupts' property in order to allow for
-> older kernels to be usable, prefer the new-style 'interrupts-extended'
-> property which conveys a lot more information.
-> 
-> This allows us to have bootloaders willingly maintaining backwards
-> compatibility with older kernels without entirely deprecating the
-> 'interrupts' property.
-> 
-> Update the bindings documentation to describe a situation where both the
-> 'interrupts-extended' and the 'interrupts' property are present, and
-> which one takes precedence over the other.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Might we add this?
+--N8U4vaB+Yt07z2q/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 3.13+
+On Wed, Aug 06, 2014 at 02:59:02PM +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: devicetree@vger.kernel.org
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+
+--N8U4vaB+Yt07z2q/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT4o/QAAoJELSic+t+oim95Y0P/juKWzXi3wwXN2awhBKKv1Bc
+dzOEQ9CJ9we1bhB6Le5z/pYoiHwFnu9O3+NQ6lKGaUz1e/okmti8UtJ+utSnwkqu
+9LgXKyJLNr+C3NSJkx8OjKib6wCMFlKIOYrjzMXu0BEZ6Ztwi5r2ZXG/pGVGRPGt
+xtsqCAVCbVpQnY9WgdLu5fI5buPMr3H+jWlhtMkdhsd3KYz6EGNn9eiGUHC2nZyo
+lRp3BAxEY/hTNa9IoSCo4E0ECMdCBESa9x0HLx9x2QC41xqfhrda1P4TH0Xvu5Un
+3qANPMIG+wVzZta6ij/fRyzCRIQfkazcMOO/aNqlxrkzc+NYAkoNz9F60wEVuxP4
+bqoUnS+hh3PHEGTYJN1ZXeOSvGlDtN78g+YYH3CuX4JIPlTuSAV60F1UzfJXk4PV
+yEZmrPnBP5r5b9OCmLcVOtpLHrO89f+Kr4v4aFAwTnIhHW4TjPrRZpL6lyTOUKJx
+rknvg2xKsLrrHVgAyfkUEbX7nWLpRrDYf632pIVYxiQpCGGekGp7vaQHT4Ip3+/V
+S/b7V8wJPQ4AF6qgQ+K/BEylqAftXTYNBj/LEVgvgGz/6Cxkkb+I8XzEbSe67tZC
+qpQFRzzQ7RzQftvociwkeRf0Vtb8Fb5A4SRLbavzsyrCMXX71a96LjeEptIaK5yf
+r4pWQsxNjhjHZncJaRpC
+=xYRz
+-----END PGP SIGNATURE-----
+
+--N8U4vaB+Yt07z2q/--
