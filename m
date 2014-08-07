@@ -1,92 +1,62 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v2] serial: uart: add hw flow control support configuration
-Date: Thu, 7 Aug 2014 12:16:59 -0400
-Message-ID: <53E3A67B.6070709@ti.com>
-References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com> <53E39B44.60406@hurleysoftware.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] Input: atmel_mxt_ts - Get IRQ edge/level flags on DT
+ booting
+Date: Thu, 7 Aug 2014 09:47:25 -0700
+Message-ID: <20140807164725.GA22421@core.coreip.homeip.net>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk>
+ <53E2D2F8.7010606@gmail.com>
+ <53E2DAAC.1060602@collabora.co.uk>
+ <20140807060926.GA651@core.coreip.homeip.net>
+ <53E32F9D.2080705@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <53E39B44.60406@hurleysoftware.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53E32F9D.2080705@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/07/2014 11:29 AM, Peter Hurley wrote:
-> On 05/01/2014 03:04 PM, Murali Karicheri wrote:
->> 8250 uart driver currently supports only software assisted hw flow
->> control. The software assisted hw flow control maintains a hw_stopped
->> flag in the tty structure to stop and start transmission and use modem
->> status interrupt for the event to drive the handshake signals. This is
->> not needed if hw has flow control capabilities. This patch adds a
->> DT attribute for enabling hw flow control for a uart port. Also skip
->> stop and start if this flag is present in flag field of the port
->> structure.
->>
->> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->>
->> CC: Rob Herring<robh+dt@kernel.org>
->> CC: Pawel Moll<pawel.moll@arm.com>
->> CC: Mark Rutland<mark.rutland@arm.com>
->> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
->> CC: Kumar Gala<galak@codeaurora.org>
->> CC: Randy Dunlap<rdunlap@infradead.org>
->> CC: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
->> CC: Jiri Slaby<jslaby@suse.cz>
->> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
->> ---
->>   .../devicetree/bindings/serial/of-serial.txt       |    1 +
->>   drivers/tty/serial/8250/8250_core.c                |    6 ++++--
->>   drivers/tty/serial/of_serial.c                     |    4 ++++
->>   drivers/tty/serial/serial_core.c                   |   12 +++++++++---
->>   4 files changed, 18 insertions(+), 5 deletions(-)
->>
-> [...]
->
->> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
->> index b68550d..851707a 100644
->> --- a/drivers/tty/serial/serial_core.c
->> +++ b/drivers/tty/serial/serial_core.c
->> @@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
->>   			if (tty->termios.c_cflag&  CBAUD)
->>   				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
->>   		}
->> -
->> -		if (tty_port_cts_enabled(port)) {
->> +		/*
->> +		 * if hw support flow control without software intervention,
->> +		 * then skip the below check
->> +		 */
->> +		if (tty_port_cts_enabled(port)&&
->> +		    !(uport->flags&  UPF_HARD_FLOW)) {
->>   			spin_lock_irq(&uport->lock);
->>   			if (!(uport->ops->get_mctrl(uport)&  TIOCM_CTS))
->>   				tty->hw_stopped = 1;
->> @@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
->>
->>   	uport->icount.cts++;
->>
->> -	if (tty_port_cts_enabled(port)) {
->> +	/* skip below code if the hw flow control is supported */
->> +	if (tty_port_cts_enabled(port)&&
->> +	    !(uport->flags&  UPF_HARD_FLOW)) {
-> Why is a modem status interrupt being generated for DCTS
-> if autoflow control is enabled?
->
-> This should be:
->
-> 	WARN_ON_ONCE(uport->flags&  UPF_HARD_FLOW);
->
-> to indicate a mis-configured driver/device.
-This patch is already merged to the upstream branch and if you see any 
-issue, please
-post a patch for review.
+On Thu, Aug 07, 2014 at 09:49:49AM +0200, Javier Martinez Canillas wrote:
+> Hello Dmitry,
+> 
+> On 08/07/2014 08:09 AM, Dmitry Torokhov wrote:
+> >> 
+> >> > irq_of_parse_and_map() already sets up IRQ trigger type based on DT
+> >> > data, by calling irq_create_of_mapping() which in turn calls
+> >> > irq_set_irq_type().
+> >> >
+> >> 
+> >> Right but somehow when the IRQ is actually requested the type is overwritten by
+> >> the value passed to request_threaded_irq() and interrupts are not being
+> >> generated by the device without this patch.
+> >> 
+> >> Do you think that this is a bug in the "interrupt-parent" irqchip driver or the
+> >> IRQ core? I'm not that familiar with the IRQ subsystem.
+> > 
+> > No, this is clearly driver fault - it smashed previously done setup with new
+> > flags.
+> >
+> 
+> Thanks a lot for the clarification. That was my understanding as well but wanted
+> to be sure.
 
-Murali
->
->>   		if (tty->hw_stopped) {
->>   			if (status) {
->>   				tty->hw_stopped = 0;
->>
+Actually, I take this back. In mainline everything as it should: if
+pdata does not specify particular trigger the flags requested end up
+being IRQF_ONESHOT, which should preserve trigger bits previously set up
+by the board or OF code. In Chrome kernel we have:
 
+	/* Default to falling edge if no platform data provided */
+	irqflags = data->pdata ? data->pdata->irqflags : IRQF_TRIGGER_FALLING;
+	error = request_threaded_irq(client->irq, NULL, mxt_interrupt,
+				     irqflags | IRQF_ONESHOT,
+				     client->name, data);
+
+which I believe should go away. If it is needed on ACPI systems we need
+to figure out how to do things we can do with OF there.
+
+Thanks.
+
+-- 
+Dmitry
