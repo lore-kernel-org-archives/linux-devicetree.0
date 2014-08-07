@@ -1,50 +1,44 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 4/4] ARM: dts: Enable USB otg and host1(dwc) on rk3288-evb
-Date: Thu,  7 Aug 2014 17:34:55 +0800
-Message-ID: <1407404095-3265-5-git-send-email-kever.yang@rock-chips.com>
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH v4 1/4] Documentation: dt-bindings: add dt binding info for Rockchip dwc2
+Date: Thu,  7 Aug 2014 17:34:52 +0800
+Message-ID: <1407404095-3265-2-git-send-email-kever.yang@rock-chips.com>
 References: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407404095-3265-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Zimmerman <paulz@synopsys.com>, heiko@sntech.de
+Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <mporter@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-USB otg port is the usb3.0 b-port on the board.
-USB host1 port is the host A port nearby the otg port.
+This add necessary dwc2 binding documentation for Rockchip socs:
+rk3066, rk3188 and rk3288
 
-Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Stephen Warren <swarren@nvidia.com>
 ---
 
 Changes in v4: None
-Changes in v3:
-- Rebase
-
+Changes in v3: None
 Changes in v2:
-- evb patch added in version 2
+- Split out dr_mode and rk3288 bindings.
+- add compatible "snps,dwc2" bingding info
 
- arch/arm/boot/dts/rk3288-evb.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 4f57209..a322100 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -94,3 +94,9 @@
- &usb_host0_ehci {
- 	status = "okay";
- };
-+&usb_host1 {
-+	status = "okay";
-+};
-+&usb_otg {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 467ddd1..2899679 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
+ Required properties:
+ - compatible : One of:
+   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
++  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
++  - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
++  - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+   - snps,dwc2: A generic DWC2 USB controller with default parameters.
+ - reg : Should contain 1 register range (address and length)
+ - interrupts : Should contain 1 interrupt
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
