@@ -1,135 +1,75 @@
-From: caesar <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v4 2/2] pwm: rockchip: Added to support for RK3288 SoC
-Date: Thu, 07 Aug 2014 12:05:34 +0800
-Message-ID: <53E2FB0E.40301@rock-chips.com>
-References: <1406197295-10604-1-git-send-email-caesar.wang@rock-chips.com>	<1406197295-10604-3-git-send-email-caesar.wang@rock-chips.com>	<CAD=FV=V4Kp-H3CcAKZPV1jBnYX+Ntwvxx6RB13TLxS5RRPHTWA@mail.gmail.com>	<53E2D605.2000704@rock-chips.com>	<CAD=FV=Xw8tz2keCUtO+qYUmnuv=+DPGZjY9-j_2XmAcP3Luzjg@mail.gmail.com>	<53E2F11A.1040109@rock-chips.com>	<CAD=FV=Wuj2_q+iW2EAj7w8TvgS=C2juSu+h_iG24NvPk4UqhKQ@mail.gmail.com>	<53E2F471.6020701@rock-chips.com> <CAD=FV=XhN__4hoGu=3hSXP69-T6T7KTxRiFY4Ac4bNJAYf+6jQ@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] Input: atmel_mxt_ts - Get IRQ edge/level flags on DT
+ booting
+Date: Wed, 6 Aug 2014 23:09:26 -0700
+Message-ID: <20140807060926.GA651@core.coreip.homeip.net>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk>
+ <53E2D2F8.7010606@gmail.com>
+ <53E2DAAC.1060602@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XhN__4hoGu=3hSXP69-T6T7KTxRiFY4Ac4bNJAYf+6jQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?B?SGVpa28gU3TDvGJu?= =?UTF-8?B?ZXI=?= <heiko@sntech.de>, Beniamino Galvani <b.galvani@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, Kumar Gala <galak@codeaurora.org>, Eddie Cai <cf@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Addy Ke <addy.ke@rock-chips.com>, =?UTF-8?B?6ZmI5riQ6aOe?= <cjf@rock-chips.com>, han jiang <hj@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pwm <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53E2DAAC.1060602@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Doug,
-=E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 11:46, Doug Anderson =E5=86=
-=99=E9=81=93:
-> Caesar,
->
-> On Wed, Aug 6, 2014 at 8:37 PM, caesar <caesar.wang@rock-chips.com> w=
-rote:
->> Doug,
->>
->> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 11:26, Doug Anderson =E5=
-=86=99=E9=81=93:
->>
->>> caesar,
->>>
->>> On Wed, Aug 6, 2014 at 8:23 PM, caesar <caesar.wang@rock-chips.com>=
- wrote:
->>>> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 10:16, Doug Anderson=
- =E5=86=99=E9=81=93:
->>>>
->>>>> Caesar,
->>>>>
->>>>> On Wed, Aug 6, 2014 at 6:27 PM, caesar <caesar.wang@rock-chips.co=
-m>
->>>>> wrote:
->>>>>> Doug,
->>>>>>
->>>>>> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 06:46, Doug Anders=
-on =E5=86=99=E9=81=93:
->>>>>>
->>>>>>> Caesar,
->>>>>>>
->>>>>>> On Thu, Jul 24, 2014 at 3:21 AM, Caesar Wang
->>>>>>> <caesar.wang@rock-chips.com>
->>>>>>> wrote:
->>>>>>>> +static const struct rockchip_pwm_data pwm_data_v1 =3D {
->>>>>>>> +       .regs.duty =3D PWM_HRC,
->>>>>>>> +       .regs.period =3D PWM_LRC,
->>>>>>>> +       .regs.cntr =3D PWM_CNTR,
->>>>>>>> +       .regs.ctrl =3D PWM_CTRL,
->>>>>>>> +       .prescaler =3D PRESCALER,
->>>>>>>> +       .set_enable =3D rockchip_pwm_set_enable_v1,
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const struct rockchip_pwm_data pwm_data_v2 =3D {
->>>>>>>> +       .regs.duty =3D PWM_LRC,
->>>>>>>> +       .regs.period =3D PWM_HRC,
->>>>>>>> +       .regs.cntr =3D PWM_CNTR,
->>>>>>>> +       .regs.ctrl =3D PWM_CTRL,
->>>>>>>> +       .prescaler =3D PRESCALER-1,
->>>>>>>> +       .set_enable =3D rockchip_pwm_set_enable_v2,
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const struct rockchip_pwm_data pwm_data_vop =3D {
->>>>>>>> +       .regs.duty =3D PWM_LRC,
->>>>>>>> +       .regs.period =3D PWM_HRC,
->>>>>>>> +       .regs.cntr =3D PWM_CTRL,
->>>>>>>> +       .regs.ctrl =3D PWM_CNTR,
->>>>>>> Did you really mean to flip CTRL and CNTR here?  If so, that's =
-super
->>>>>>> confusing and deserves a comment.  AKA, I think the above shoul=
-d not
->>>>>>> be:
->>>>>>>
->>>>>>>      +       .regs.cntr =3D PWM_CTRL,
->>>>>>>      +       .regs.ctrl =3D PWM_CNTR,
->>>>>>>
->>>>>>> ...but should be
->>>>>>>
->>>>>>>      +       .regs.cntr =3D PWM_CNTR,
->>>>>>>      +       .regs.ctrl =3D PWM_CTRL,
->>>>>>>
->>>>>>> If you didn't mean to flip CTRL and CNTR here, then just get ri=
-d of
->>>>>>> pwm_data_vop and refer to pwm_data_v2.  In fact, I'd suggest th=
-at you
->>>>>>> totally remove the "rockchip,vop-pwm" since there's nothing dif=
-ferent
->>>>>>> between "rockchip,rk3288-pwm" and "rockchip,vop-pwm".
->>>>>>
->>>>>> Sorry,I think it's no problem. the  "rockchip,rk3288-pwm" and
->>>>>> "rockchip,vop-pwm" are seperate PWM controllers.
->>>>>> They are just different registers address between CNTR and CTRL =
-=2E
->>>>> OK, I looked up in the TRM.  Right, the CNTR and CTRL are flipped=
- on
->>>>> the vop.  So I think that the only change you need is to add:
->>>>>
->>>>> #define PWM_VOP_CTRL  0x00
->>>>> #define PWM_VOP_CNTR  0x0c
->>>>>
->>>>> ...then use these new #defines for the vop structure.
->>>>>
->>>>>
->>>>> As you have the code written right now it's very confusing.  The =
-new
->>>>> #defines will fix this.
->>>>>
->>>> yeah, I think they can be used in the same context.
->>>>
->>>> I will fix it in patch v5 if it is really need.
->>> I think you should fix this, but if Thierry doesn't think so then i=
-t's
->>> really his decision.
->> I remember In patch v2 [1],Thierry suggests me to fix it so if I hav=
-e no to
->> get wrong.
->>
->> [1]: https://lkml.org/lkml/2014/7/21/113
-> I think Thierry might not have realized that they were flipped...
->
-> -Doug
->
->
->
-Maybe you are right.
-I will sent patch v5 fix the about tomorrow if it has no other problems=
-=2E
+On Thu, Aug 07, 2014 at 03:47:24AM +0200, Javier Martinez Canillas wrote:
+> Hello Tomasz,
+> 
+> Thanks a lot for your feedback.
+> 
+> On 08/07/2014 03:14 AM, Tomasz Figa wrote:
+> > Hi Javier,
+> > 
+> > 
+> > Have you observed an actual failure due to this? I believe that
+> 
+> Yes, I found this issue since the driver was not taking into account the value
+> defined in the edge/level type cells from the "interrupts" DT property.
+> 
+> Only doing the change in the following patch was not enough:
+> 
+> [PATCH 1/1] ARM: dts: Add Peach Pit and Pi dts entry for atmel touchpad [0].
+> 
+> > irq_of_parse_and_map() already sets up IRQ trigger type based on DT
+> > data, by calling irq_create_of_mapping() which in turn calls
+> > irq_set_irq_type().
+> >
+> 
+> Right but somehow when the IRQ is actually requested the type is overwritten by
+> the value passed to request_threaded_irq() and interrupts are not being
+> generated by the device without this patch.
+> 
+> Do you think that this is a bug in the "interrupt-parent" irqchip driver or the
+> IRQ core? I'm not that familiar with the IRQ subsystem.
 
+No, this is clearly driver fault - it smashed previously done setup with new
+flags.
 
+> 
+> >>  
+> >> +	if (client->dev.of_node)
+> >> +		irqflags = irq_get_trigger_type(client->irq);
+> > 
+> > It might be a bit cleaner to just assign the flags to pdata->irqflags in
+> > mxt_parse_dt() instead. That would also account for the fact that pdata,
+> > if provided, should have priority over DT.
+> > 
+> 
+> You are totally right, also this will break if CONFIG_OF is not enabled since
+> dev.of_node will not be defined. While this already is taken into account for
+> mxt_parse_dt() by defining an empty function.
+> 
+> I'll change it in v2 if getting the flags from the driver is the right approach
+
+Yes, please.
+
+> instead of fixing the irqchip driver or the IRQ core.
+
+Thanks.
+
+-- 
+Dmitry
