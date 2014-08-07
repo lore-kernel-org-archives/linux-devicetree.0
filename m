@@ -1,75 +1,32 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 09/12] [v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for
- QSPI
-Date: Thu, 7 Aug 2014 09:41:08 +0900
-Message-ID: <20140807004107.GB30872@verge.net.au>
-References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
- <1407329949-5695-10-git-send-email-geert+renesas@glider.be>
- <20140807003755.GF32652@verge.net.au>
- <20140807003908.GA30872@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: koelsch: add VIN1/ADV7180 DT support
+Date: Thu, 7 Aug 2014 09:47:41 +0900
+Message-ID: <20140807004741.GA32766@verge.net.au>
+References: <201408020402.14560.sergei.shtylyov@cogentembedded.com>
+ <2131152.vMTPsJUYLQ@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140807003908.GA30872@verge.net.au>
+In-Reply-To: <2131152.vMTPsJUYLQ@wasted.cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 07, 2014 at 09:39:08AM +0900, Simon Horman wrote:
-> On Thu, Aug 07, 2014 at 09:37:56AM +0900, Simon Horman wrote:
-> > On Wed, Aug 06, 2014 at 02:59:06PM +0200, Geert Uytterhoeven wrote:
-> > > Add a DMA property to the QSPI node
-> > > 
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Cc: devicetree@vger.kernel.org
-> > > ---
-> > > This depends on "[PATCH v2 8/8] ARM: shmobile: r8a7791: Add DMAC devices
-> > > to DT" of series "[PATCH v2 0/8] R-Car Gen2 DMA Controller driver".
-> > 
-> > Hi Geert, Hi Laurent,
-> > 
-> > Am I correct in assuming that with this patch applied things
-> > will continue to work the old way until the patch above applied
-> > to the same tree and from there on the user will get the new behaviour?
-> > 
-> > If so I think that I can take this patch as although the driver hasn't been
-> > merged the relevant bindings were added to the subsystem maintainers tree
-> > by "dmaengine: rcar-dmac: Add device tree bindings documentation" and are
-> > available in linux-next.
-> > 
-> > Likewise for "[v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIO".
+On Wed, Aug 06, 2014 at 10:38:22PM +0400, sergei.shtylyov@cogentembedded.com wrote:
+> Define the Koelsch board dependent part of the VIN1 device node. Add the device
+> node for Analog  Devices ADV7180  video decoder to  I2C2 bus. Add the necessary
+> subnodes to interconnect VIN1 and ADV7180 devices.
 > 
-> ... and "ARM: shmobile: r8a7790 dtsi: Enable DMA for QSPI"
-
-... and "ARM: shmobile: r8a7790 dtsi: Enable DMA for MSIO"
-
-and any other similar patches I didn't list above :)
-
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> > > v2:
-> > >   - Update DMA specifiers to match the renesas,rcar-dmac bindings,
-> > > v2:
-> > >   - QSPI needs to use 8-bit accesses for DMA, not 32-bit,
-> > >   - Reorder: TX first, RX second.
-> > > ---
-> > >  arch/arm/boot/dts/r8a7791.dtsi | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> > > index d59af615e365..8186c9f4a18a 100644
-> > > --- a/arch/arm/boot/dts/r8a7791.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> > > @@ -1044,6 +1044,8 @@
-> > >  		reg = <0 0xe6b10000 0 0x2c>;
-> > >  		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
-> > >  		clocks = <&mstp9_clks R8A7791_CLK_QSPI_MOD>;
-> > > +		dmas = <&dmac0 0x17>, <&dmac0 0x18>;
-> > > +		dma-names = "tx", "rx";
-> > >  		num-cs = <1>;
-> > >  		#address-cells = <1>;
-> > >  		#size-cells = <0>;
-> > > -- 
-> > > 1.9.1
-> > > 
+> ---
+> This patch is against the 'renesas-devel-v3.16-20140804' tag of Simon Horman's
+> 'renesas.git' repo. It requires the 'soc_camera' and 'rcar_vin' device tree
+> support patches (already merged to the 'media_tree.git' repo) in order to work.
+> 
+>  arch/arm/boot/dts/r8a7791-koelsch.dts |   35 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+
+Thanks, I have queued this up for v3.18.
