@@ -1,138 +1,59 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/2] pwm: rockchip: Added to support for RK3288 SoC
-Date: Wed, 6 Aug 2014 20:46:17 -0700
-Message-ID: <CAD=FV=XhN__4hoGu=3hSXP69-T6T7KTxRiFY4Ac4bNJAYf+6jQ@mail.gmail.com>
-References: <1406197295-10604-1-git-send-email-caesar.wang@rock-chips.com>
-	<1406197295-10604-3-git-send-email-caesar.wang@rock-chips.com>
-	<CAD=FV=V4Kp-H3CcAKZPV1jBnYX+Ntwvxx6RB13TLxS5RRPHTWA@mail.gmail.com>
-	<53E2D605.2000704@rock-chips.com>
-	<CAD=FV=Xw8tz2keCUtO+qYUmnuv=+DPGZjY9-j_2XmAcP3Luzjg@mail.gmail.com>
-	<53E2F11A.1040109@rock-chips.com>
-	<CAD=FV=Wuj2_q+iW2EAj7w8TvgS=C2juSu+h_iG24NvPk4UqhKQ@mail.gmail.com>
-	<53E2F471.6020701@rock-chips.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH] ARM: shmobile: koelsch: add VIN1/ADV7180 DT support
+Date: Thu, 7 Aug 2014 13:01:43 +0900
+Message-ID: <CANqRtoQhr-7RjZTxdk_e--if7ruSPQzyoGOR7VEy2saih64duw@mail.gmail.com>
+References: <201408020402.14560.sergei.shtylyov@cogentembedded.com>
+	<2131152.vMTPsJUYLQ@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53E2F471.6020701@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: caesar <caesar.wang@rock-chips.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Beniamino Galvani <b.galvani@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, Kumar Gala <galak@codeaurora.org>, Eddie Cai <cf@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Addy Ke <addy.ke@rock-chips.com>, =?UTF-8?B?6ZmI5riQ6aOe?= <cjf@rock-chips.com>, han jiang <hj@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pwm <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2131152.vMTPsJUYLQ@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Caesar,
+Hi Sergei,
 
-On Wed, Aug 6, 2014 at 8:37 PM, caesar <caesar.wang@rock-chips.com> wro=
-te:
-> Doug,
->
-> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 11:26, Doug Anderson =E5=
-=86=99=E9=81=93:
->
->> caesar,
->>
->> On Wed, Aug 6, 2014 at 8:23 PM, caesar <caesar.wang@rock-chips.com> =
-wrote:
->>>
->>> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 10:16, Doug Anderson =
-=E5=86=99=E9=81=93:
->>>
->>>> Caesar,
->>>>
->>>> On Wed, Aug 6, 2014 at 6:27 PM, caesar <caesar.wang@rock-chips.com=
->
->>>> wrote:
->>>>>
->>>>> Doug,
->>>>>
->>>>> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8807=E6=97=A5 06:46, Doug Anderso=
-n =E5=86=99=E9=81=93:
->>>>>
->>>>>> Caesar,
->>>>>>
->>>>>> On Thu, Jul 24, 2014 at 3:21 AM, Caesar Wang
->>>>>> <caesar.wang@rock-chips.com>
->>>>>> wrote:
->>>>>>>
->>>>>>> +static const struct rockchip_pwm_data pwm_data_v1 =3D {
->>>>>>> +       .regs.duty =3D PWM_HRC,
->>>>>>> +       .regs.period =3D PWM_LRC,
->>>>>>> +       .regs.cntr =3D PWM_CNTR,
->>>>>>> +       .regs.ctrl =3D PWM_CTRL,
->>>>>>> +       .prescaler =3D PRESCALER,
->>>>>>> +       .set_enable =3D rockchip_pwm_set_enable_v1,
->>>>>>> +};
->>>>>>> +
->>>>>>> +static const struct rockchip_pwm_data pwm_data_v2 =3D {
->>>>>>> +       .regs.duty =3D PWM_LRC,
->>>>>>> +       .regs.period =3D PWM_HRC,
->>>>>>> +       .regs.cntr =3D PWM_CNTR,
->>>>>>> +       .regs.ctrl =3D PWM_CTRL,
->>>>>>> +       .prescaler =3D PRESCALER-1,
->>>>>>> +       .set_enable =3D rockchip_pwm_set_enable_v2,
->>>>>>> +};
->>>>>>> +
->>>>>>> +static const struct rockchip_pwm_data pwm_data_vop =3D {
->>>>>>> +       .regs.duty =3D PWM_LRC,
->>>>>>> +       .regs.period =3D PWM_HRC,
->>>>>>> +       .regs.cntr =3D PWM_CTRL,
->>>>>>> +       .regs.ctrl =3D PWM_CNTR,
->>>>>>
->>>>>> Did you really mean to flip CTRL and CNTR here?  If so, that's s=
-uper
->>>>>> confusing and deserves a comment.  AKA, I think the above should=
- not
->>>>>> be:
->>>>>>
->>>>>>     +       .regs.cntr =3D PWM_CTRL,
->>>>>>     +       .regs.ctrl =3D PWM_CNTR,
->>>>>>
->>>>>> ...but should be
->>>>>>
->>>>>>     +       .regs.cntr =3D PWM_CNTR,
->>>>>>     +       .regs.ctrl =3D PWM_CTRL,
->>>>>>
->>>>>> If you didn't mean to flip CTRL and CNTR here, then just get rid=
- of
->>>>>> pwm_data_vop and refer to pwm_data_v2.  In fact, I'd suggest tha=
-t you
->>>>>> totally remove the "rockchip,vop-pwm" since there's nothing diff=
-erent
->>>>>> between "rockchip,rk3288-pwm" and "rockchip,vop-pwm".
->>>>>
->>>>>
->>>>> Sorry,I think it's no problem. the  "rockchip,rk3288-pwm" and
->>>>> "rockchip,vop-pwm" are seperate PWM controllers.
->>>>> They are just different registers address between CNTR and CTRL .
->>>>
->>>> OK, I looked up in the TRM.  Right, the CNTR and CTRL are flipped =
-on
->>>> the vop.  So I think that the only change you need is to add:
->>>>
->>>> #define PWM_VOP_CTRL  0x00
->>>> #define PWM_VOP_CNTR  0x0c
->>>>
->>>> ...then use these new #defines for the vop structure.
->>>>
->>>>
->>>> As you have the code written right now it's very confusing.  The n=
-ew
->>>> #defines will fix this.
->>>>
->>> yeah, I think they can be used in the same context.
->>>
->>> I will fix it in patch v5 if it is really need.
->>
->> I think you should fix this, but if Thierry doesn't think so then it=
-'s
->> really his decision.
->
-> I remember In patch v2 [1],Thierry suggests me to fix it so if I have=
- no to
-> get wrong.
->
-> [1]: https://lkml.org/lkml/2014/7/21/113
+Thanks for your patch.
 
-I think Thierry might not have realized that they were flipped...
+On Thu, Aug 7, 2014 at 3:38 AM,  <sergei.shtylyov@cogentembedded.com> wrote:
+> Define the Koelsch board dependent part of the VIN1 device node. Add the device
+> node for Analog  Devices ADV7180  video decoder to  I2C2 bus. Add the necessary
+> subnodes to interconnect VIN1 and ADV7180 devices.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+> This patch is against the 'renesas-devel-v3.16-20140804' tag of Simon Horman's
+> 'renesas.git' repo. It requires the 'soc_camera' and 'rcar_vin' device tree
+> support patches (already merged to the 'media_tree.git' repo) in order to work.
+>
+>  arch/arm/boot/dts/r8a7791-koelsch.dts |   35 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
+> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+> @@ -289,6 +289,11 @@
+>                 renesas,groups = "usb1";
+>                 renesas,function = "usb1";
+>         };
+> +
+> +       vin1_pins: vin1 {
+> +               renesas,groups = "vin1_data8", "vin1_clk";
+> +               renesas,function = "vin1";
+> +       };
+>  };
 
--Doug
+Quick question: Does this pin description match to the board layout? I
+suspect that clock and data by themselves are not enough.
+
+I'm not sure about Koelsch, but  in case of older SoCs using the CEU
+there were signals used like horizontal and vertical sync and
+sometimes even something that was used to determine interlace.
+
+Thanks,
+
+/ magnus
