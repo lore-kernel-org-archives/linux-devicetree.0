@@ -1,306 +1,69 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: Dual-channel DSI
-Date: Thu, 07 Aug 2014 10:39:36 +0200
-Message-ID: <53E33B48.1080401@samsung.com>
-References: <20140805153923.GA3072@ulmo.nvidia.com>
- <53E3227B.1010000@samsung.com> <20140807072530.GE17340@ulmo>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] host1x: mipi: Set MIPI_CAL_BIAS_PAD_CFG1 register
+Date: Thu, 7 Aug 2014 10:39:45 +0200
+Message-ID: <20140807083944.GB13315@ulmo.nvidia.com>
+References: <1407391907-19488-1-git-send-email-seanpaul@chromium.org>
+ <1407391907-19488-5-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140807072530.GE17340@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407391907-19488-5-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/07/2014 09:25 AM, Thierry Reding wrote:
-> On Thu, Aug 07, 2014 at 08:53:47AM +0200, Andrzej Hajda wrote:
->> Hi Thierry,
->>
->> Nice case.
->>
->> On 08/05/2014 05:39 PM, Thierry Reding wrote:
->>> Hi everyone,
->>>
->>> I've been working on adding support for a panel that uses what's
->>> commonly known as dual-channel DSI. Sometimes this is referred to as
->>> ganged-mode as well.
->>>
->>> What is it, you ask? It's essentially a hack to work around the band-
->>> width restrictions of DSI, albeit one that's been commonly implemented
->>> by several SoC vendors.
->>>
->>> This typically works by equipping a peripheral with two DSI interfaces,
->>> each of which driving one half of the screen (symmetric left-right mode)
->>> or every other line (symmetric odd-even mode). Apparently there can be
->>> asymmetric modes in addition to those two, but they seem to be the
->>> common ones. Often both of the DSI interfaces need to be configured
->>> using DCS commands and vendor specific registers.
->>>
->>> A single display controller is typically used video data transmission.
->>> This is necessary to provide synchronization and avoid tearing and all
->>> kinds of other ugliness. For this to work both DSI controllers need to
->>> be made aware of which chunk of the video data stream is addressing
->>> them.
->>>
->>> From a software perspective, this poses two problems:
->>>
->>> 1) A dual-channel device is composed of two DSI peripheral devices which
->>>    cannot be programmed independently of each other. A typical example
->>>    is that the frame memory extents need to be configured differently
->>>    for each of the devices (using the DCS set_column_address and
->>>    set_page_address commands). Therefore each device must know of the
->>>    other, or there must be a driver that binds against a dummy device
->>>    that pulls in the two real devices.
->> I am not sure if I understand correctly, but I see it rather as one
->> device with two dsi-slave interfaces. Probably panel driver can
->> create dsi dummy device to program some registers
->> via second dsi interface but the panel will be attached to one control bus.
->> It seems to be very similar to mfd/i2c devices with two or more i2c
->> addresses.
-> They are in fact attached to two different control busses. The DSI
-> controllers that talk to each are separate. On Tegra they are the same
-> type of IP block, but still two separate instances (with their own
-> clock, reset, etc. inputs).
->
-> So the panel driver can't create a dummy device to talk to the second
-> DSI interface because the second DSI interface uses a different DSI
-> host.
 
-Why different DSI host does not allow that? The only thing panel needs
-is the reference to another DSI host and this can be provided via
-DT direct phandle or video interface.
->
->>> 2) On the DSI host side, each of the controller instances needs to know
->>>    the intimate details of the other controller (or alternatively, one
->>>    controller needs to be a "master" and the other a "slave").
->> The question is if they need to communicate each other, or they have
->> to have similar configurations applied?
-> On Tegra at least the configuration needs to be almost the same. There
-> are two registers that may need to be programmed differently. But they
-> don't have to communicate with each other. Essentially the two registers
-> that require different programming define which parts of the display
-> controller's data stream they need to capture and turn into DSI packets.
->
-> Theoretically it would be possible to make this work with two completely
-> different DSI controllers, but in practice I'd expect that to never
-> happen. So I'm not sure we need to consider the case where the register
-> layout is different between the two DSI host controllers.
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So maybe the configuration could be provided by the panel.
+On Thu, Aug 07, 2014 at 02:11:47AM -0400, Sean Paul wrote:
+> During calibration, set the "internal reference level for drive
+> pull-down" to the value specified in the tegra TRM.
+>=20
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  drivers/gpu/host1x/mipi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> index 80578dc..84ed422 100644
+> --- a/drivers/gpu/host1x/mipi.c
+> +++ b/drivers/gpu/host1x/mipi.c
+> @@ -235,6 +235,8 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *de=
+vice)
+>  	value |=3D MIPI_CAL_BIAS_PAD_E_VCLAMP_REF;
+>  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_BIAS_PAD_CFG0);
+> =20
+> +	tegra_mipi_writel(device->mipi, 0x20000, MIPI_CAL_BIAS_PAD_CFG1);
 
->
->>> I'm looking for feedback on how this is handled on other SoCs, hence
->>> adding a few people that I know are working on DSI as well (or have in
->>> the past). If you know of any other people that might have useful advice
->>> on this topic, feel free to include them.
->>>
->>> Another goal of this discussion is to come up with a somewhat standard
->>> way to represent this in device tree (oh no!) so that panels can be
->>> easily reused on different SoCs.
->>>
->>> What I currently have for Tegra is something along these lines:
->>>
->>> 	dsi@54300000 {
->>> 		nvidia,ganged-mode = <&dsib>;
->>>
->>> 		panel@0 {
->>> 			compatible = "sharp,lq101r1sx01";
->>> 			reg = <0>;
->>>
->>> 			secondary = <&secondary>;
->>> 		};
->>> 	};
->>>
->>> 	dsib: dsi@54400000 {
->>> 		nvidia,ganged-mode;
->>>
->>> 		secondary: panel@0 {
->>> 			reg = <0>;
->>> 		};
->>> 	};
->>>
->>> There are a couple of other properties in those nodes, such as
->>> regulators and such, but I've omitted them so that the discussion can
->>> focus on the important bits.
->>>
->>> In the above the panel driver will bind against dsi@54300000/panel@0 and
->>> use the "secondary" property to obtain a reference to the DSI peripheral
->>> device of the second DSI interface of the device.
->>>
->>> Similarly, the dsi@54300000 primary DSI host will obtain a reference to
->>> a "slave" DSI host via the "nvidia,ganged-mode" property. The secondary
->>> DSI host dsi@54400000 will know that it's not a fully functional DSI
->>> output by the presence of the empty "nvidia,ganged-mode" property.
->>>
->>> Using the above I can get things to work, but it seems somewhat kludgy.
->>> For example it assumes that both DSI hosts are the same type. I'm not
->>> sure if it makes sense for dual-channel to use completely different DSI
->>> hosts given that they need to be very tightly coupled (take input from
->>> the same display controller, use the same PLL, ...). It's also kind of
->>> redundant to have to specify the dual relationship twice (once for the
->>> peripheral and once for the DSI hosts). There's also the issue that we
->>> should really be specifying a compatible string for the secondary
->>> instance of the DSI peripheral, but that would mean that it will bind
->>> against the same driver and then both would be programmed independently
->>> in the same way (without taking into account the differences between the
->>> two interfaces).
->>>
->>> One alternative to the above could be something like this:
->>>
->>> 	dsi@54300000 {
->>> 		nvidia,ganged-mode = <&dsib>;
->>> 		nvidia,panel = <&panel>
->>>
->>> 		primary: panel@0 {
->>> 			compatible = "sharp,lq101r1sx01-left";
->>> 			reg = <0>;
->>> 		};
->>> 	};
->>>
->>> 	dsib: dsi@54400000 {
->>> 		nvidia,ganged-mode;
->>>
->>> 		secondary: panel@0 {
->>> 			compatible = "sharp,lq101r1sx01-right";
->>> 			reg = <0>;
->>> 		};
->>> 	};
->>>
->>> 	panel {
->>> 		compatible = "sharp,lq101r1sx01";
->>> 		sharp,left = <&primary>;
->>> 		sharp,right = <&secondary>;
->>> 	};
->>>
->>> Which would give us a more natural way to represent this. On the other
->>> hand we loose information about the device type (/panel is no longer a
->>> DSI device) and associated meta-data (number of DSI lanes, ...).
->>>
->>> My primary concern is that this may not work for other SoCs since I've
->>> only tested it against Tegra. But the goal would be that the same panel
->>> connected to a different SoC would still be able to work with the same
->>> device tree binding.
->>>
->>> It would be great if anybody could share if they know how this works on
->>> other SoCs and if somebody's thought about how to implement it.
->> What about strictly following general 'rules' in DT:
->> 1. Control bus is modeled using subnodes.
->> 2. Video bus is modeled using video interface bindings.
->>
->> Assuming this we will put panel node inside the first dsi node and we
->> should make
->> video link to other dsi node. Something like this:
->>
->> dsiA {
->>     ports {
->>         port@0 {
->>             remote-endpoint = <&dc_port0>;
->>         };
->>         dsiA_port1: port@1 {
->>             remote-endpoint = <&panel_port0>;
->>     };
->>     panel@0 {
->>         compatible = "...";
->>         reg = <0>;
->>         ports {
->>             /* maybe common configuration for all ports */
->>             panel_port0: port@0 {
->>                 /* configuration specific for port@0 */
->>                 remote-endpoint = <&dsiA_port1>;
->>             };
->>             panel_port1: port@1 {
->>                 /* configuration specific for port@1 */
->>                 remote-endpoint = <&dsiB_port1>;
->>             };
->>         };
->>     };
->> };
->>
->> dsiB {
->>     ports {
->>         port@0 {
->>             remote-endpoint = <&dc_port1>;
->>         };
->>         dsiA_port1: port@1 {
->>             remote-endpoint = <&panel_port1>;
->>     };
->> };
-> Much of that information is redundant. For example the "DC" ports are
-> dynamically configurable at runtime.
-DC ports can be omitted if they are configurable dynamically.
-> Also I think panel_port1 is not
-> necessary because the panel can work (admittedly somewhat crippled) with
-> only a single DSI interface.
-In such situation you just removes this port, I see no problem here.
->  I've come up with another alternative that
-> works:
->
-> 	dsi@54300000 {
-> 		panel: panel@0 {
-> 			compatible = "sharp,lq101r1sx01";
-> 			reg = <0>;
-> 		};
-> 	};
->
-> 	dsi@54400000 {
-> 		panel@0 {
-> 			compatible = "sharp,lq101r1sx01";
-> 			reg = <0>;
->
-> 			master = <&panel>;
-> 		};
-> 	};
+Can you add field definitions for this, please?
 
-But here you have again two compatibles and two devices in DT representing
-one HW device. I am not sure if it is better. If you do not like video
-interfaces
-maybe better would be sth like this:
+Thierry
 
-	dsi@54300000 {
-		panel: panel@0 {
-			compatible = "sharp,lq101r1sx01";
-			reg = <0>;
-			secondary_dsi = <&dsiB>;
- 		};
-	};
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature
 
-	dsiB: dsi@54400000 {
-	};
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQIcBAEBAgAGBQJT4ztQAAoJEN0jrNd/PrOhmyAP/3G+mkigBRfhZx+J4Oj9/c1K
+inh2yhGBXhn+elqqpjULOPkWid4iftKcb5TeHP29IIJS411cnKz51FlnnENgw76v
+xkO0pHYpvXWIDwue04WGzRausTxJmjsdgMf7zAENBhQNHuXeoMAIXh9ghpKsSqfJ
+QKEkIis91hLH8sJopMIvV8IZC0duU1wDOug1erg7qUIKHlLCuV6xxe78SO96RLLx
+qZUlPik0z2CErIOyRN1mnzv4XD4Y/GP0+XhmIYLHq4Bih+6V4IclPYFasmSHGCOt
+VJz9ATOuFjpQScv8cCHM+H/6u+wEKn/Mp4Y42YXkpnO4iri4TAsw1vUW2y65EMg7
+TIYNG3ePP7kMqFL+XlBGpDxfnkYuWm+7uoDy+MwY3RspoKyOXY4GCYDiFq0PW6Nr
+p7keqtPAs6M2PxkUg5MgQKdwC5KkY2oRHV6noMBjFuiDxGrZm09QhV9T7fermvVB
+aW7ytauVvuedF09lcyV8VJPwmFYdUmkecXrIK0H7gi2JPFM+gfObe0cFhTEbQ5l/
+ArZ4PTPuyvgNl5pXL/VkkcQaKQa8U/z69L0lusm/yPvd6q6kOhVPcz0dPkHy4aBv
+JoyWFOxstlnpUhz7m1kIZcNuvdy5ulmgtGfY/uYWr2ROHu4hWLWutHGgxcpyzhu7
+XC4htI8+ST4KTIbVdUEF
+=HfF9
+-----END PGP SIGNATURE-----
 
-Regards
-Andrzej
-
->
-> That's about as minimal as it gets. The meaning of the above is that
-> there are two panel devices, each connected to different DSI hosts, that
-> form a composite device. The first instance can be used standalone, in
-> which case it will only display one half of the screen, whereas the
-> second instance can attach to a master (the first instance). When
-> attached the master can "enslave" the secondary device and set up dual-
-> channel mode.
->
-> From a driver perspective in the above the two instances share the same
-> driver, but the slave device will only perform a subset of the
-> initialization, whereas the master device will be the controlling
-> instance. Furthermore the DSI host controller driver will check that the
-> secondary's DSI host is compatible (by comparing the mipi_dsi_host.dev->
-> driver fields) and configure it in ganged mode.
->
-> This does work out pretty nicely and I've added a bit of helper code to
-> the DSI core to make this easier. I'm considering making this more
-> explicit by introducing the concept of a mipi_dsi_master that wraps a
-> mipi_dsi_device and provides callbacks for setting up or tearing down
-> dual-channel mode when a slave is added or removed.
->
-> Thierry
+--7ZAtKRhVyVSsbBD2--
