@@ -1,67 +1,153 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v6 00/10] ARM: dts: exynos: Prepare Spring
-Date: Thu, 07 Aug 2014 10:40:36 +0200
-Message-ID: <53E33B84.2010108@collabora.co.uk>
-References: <1406940750-15880-1-git-send-email-afaerber@suse.de>	<53DC4E41.4050200@collabora.co.uk>	<CAD=FV=V_vXZLMaTMFdgr62=zRXucZA6D3PvS0Mb40he0ShHTfA@mail.gmail.com>	<53DCBC84.8080600@suse.de> <CAD=FV=WFNW_5KZvLMk0kK1JQsdWLeo2kCjpQsFuxKNSnOKzfgw@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH] mmc: dw_mmc: add support for RK3288
+Date: Thu, 07 Aug 2014 17:47:38 +0900
+Message-ID: <53E33D2A.7030109@samsung.com>
+References: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
+ <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WFNW_5KZvLMk0kK1JQsdWLeo2kCjpQsFuxKNSnOKzfgw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-On 08/04/2014 05:42 PM, Doug Anderson wrote:
+Best Regards,
+Jaehoon Chung
+
+On 07/31/2014 03:01 PM, Addy Ke wrote:
+> This patch focuses on clock setting for RK3288 mmc controller.
 > 
+> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
+> and if DDR 8bit mode, CLKDIV register must be set 1.
 > 
->> For the touchpad it seems DT support has landed in the input tree as
->> "atmel,maxtouch". Backporting just that patch does not make it work
->> though. (Tried the rejected pinctrl approach to be on the safe side.)
->> https://code.google.com/p/chromium/issues/detail?id=371114
->> https://patchwork.kernel.org/patch/3976801/
+> Reported-by Doug Anderson <dianders@chromium.org>
+> Suggested-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Suggested-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+> changes since v1:
+> - dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
+>   host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
 > 
-> This is the same work as needed for pit and pi, I believe.  Perhaps
-> Javier or Dmitry has this on their todo list?
+> changes since v2:
+> - merge from ChromiumOS tree, fix up clock settting bug, 
+>   which cause DDR50 mode for emmc not to work, reported by Doug Anderson
+> - remove MMC_TIMING_UHS_DDR50 condition, because on RK3288 only emmc can work
+>   in 8bit mode, suggested by Doug Anderson
 > 
+>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  6 ++-
+>  drivers/mmc/host/dw_mmc-pltfm.c                    | 56 +++++++++++++++++++++-
+>  2 files changed, 58 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> index c559f3f..c327c2d 100644
+> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> @@ -10,12 +10,14 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
+>  Required Properties:
+>  
+>  * compatible: should be
+> -	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
+> +	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
+> +							before RK3288
+> +	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
+>  
+>  Example:
+>  
+>  	rkdwmmc0@12200000 {
+> -		compatible = "rockchip,rk2928-dw-mshc";
+> +		compatible = "rockchip,rk3288-dw-mshc";
+>  		reg = <0x12200000 0x1000>;
+>  		interrupts = <0 75 0>;
+>  		#address-cells = <1>;
+> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+> index d4a47a9..b547f7a 100644
+> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+> @@ -21,17 +21,67 @@
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/mmc/dw_mmc.h>
+>  #include <linux/of.h>
+> +#include <linux/clk.h>
+>  
+>  #include "dw_mmc.h"
+>  #include "dw_mmc-pltfm.h"
+>  
+> +#define RK3288_CLKGEN_DIV	2
+> +
+>  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
+>  {
+>  	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
+>  }
+>  
+> -static const struct dw_mci_drv_data rockchip_drv_data = {
+> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
+> +{
+> +	host->bus_hz /= RK3288_CLKGEN_DIV;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +	int ret;
+> +	unsigned int cclkin;
+> +	u32 bus_hz;
+> +
+> +	/*
+> +	 * cclkin: source clock of mmc controller.
+> +	 * bus_hz: card interface clock generated by CLKGEN.
+> +	 * bus_hz = cclkin / RK3288_CLKGEN_DIV;
+> +	 * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
+> +	 *
+> +	 * Note: div can only be 0 or 1
+> +	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
+> +	 *       div must be set 1
+> +	 */
+> +	if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
+> +	    (ios->timing == MMC_TIMING_MMC_DDR52))
+> +		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
+> +	else
+> +		cclkin = ios->clock * RK3288_CLKGEN_DIV;
+> +
+> +	ret = clk_set_rate(host->ciu_clk, cclkin);
+> +	if (ret)
+> +		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
+> +
+> +	bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
+> +	if (bus_hz != host->bus_hz) {
+> +		host->bus_hz = bus_hz;
+> +		/* force dw_mci_setup_bus() */
+> +		host->current_speed = 0;
+> +	}
+> +}
+> +
+> +static const struct dw_mci_drv_data rk2928_drv_data = {
+> +	.prepare_command	= dw_mci_pltfm_prepare_command,
+> +};
+> +
+> +static const struct dw_mci_drv_data rk3288_drv_data = {
+>  	.prepare_command	= dw_mci_pltfm_prepare_command,
+> +	.set_ios	= dw_mci_rk3288_set_ios,
+> +	.setup_clock	= dw_mci_rk3288_setup_clock,
+>  };
+>  
+>  static const struct dw_mci_drv_data socfpga_drv_data = {
+> @@ -95,7 +145,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
+>  static const struct of_device_id dw_mci_pltfm_match[] = {
+>  	{ .compatible = "snps,dw-mshc", },
+>  	{ .compatible = "rockchip,rk2928-dw-mshc",
+> -		.data = &rockchip_drv_data },
+> +		.data = &rk2928_drv_data },
+> +	{ .compatible = "rockchip,rk3288-dw-mshc",
+> +		.data = &rk3288_drv_data },
+>  	{ .compatible = "altr,socfpga-dw-mshc",
+>  		.data = &socfpga_drv_data },
+>  	{},
 > 
 
-I posted a couple of patches that allowed me to have the atmel touchpad working
-on Peach Pit. I found two issues while testing the driver:
-
-a) The device keycode event capabilities are hardcoded in the downstream Chrome
-OS driver while the mainline driver expect these to be defined in the DT. The
-property is called "linux,gpio-keymap" since it seems that the actual
-implementation is using a set of GPIOs. But this is handled by the firmware
-since the kernel just read a status register from the atmel T9 object.
-
-I found the property confusing at first since it didn't have anything to do with
-Linux GPIO so posted a patch to add an example to the DT binding doc in order to
-make it easier to understand [0].
-
-b) The driver overwrites the edge/level flags parsed by OF core and expects that
-the IRQ type will be passed using platform data. The downstream Chrome OS driver
-defaults the type to IRQF_TRIGGER_FALLING if this is not provided while the
-mainline does not have a default so it's just 0 (IRQ_TYPE_NONE).
-
-This is fixed by reading back the IRQ type from the struct irq_data when parsing
-the DT data [1].
-
-The DTS changes to make the atmel touchpad work on Peach Pit were posted in [2].
-Changes for Pi were included as well since it should be the same but it was not
-tested since I don't have access to that machine, testing will be highly
-appreciated.
-
-> 
-> -Doug
-> 
-
-Thanks a lot and best regards,
-Javier
-
-[0]: https://lkml.org/lkml/2014/8/6/584
-[1]: https://lkml.org/lkml/2014/8/7/82
-[2]: https://lkml.org/lkml/2014/8/6/589
