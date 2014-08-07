@@ -1,62 +1,45 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 00/11] pwm: Introduce ST's PWM driver
-Date: Thu, 7 Aug 2014 15:20:52 +0200
-Message-ID: <20140807132050.GC1540@ulmo.nvidia.com>
-References: <1405348412-7352-1-git-send-email-lee.jones@linaro.org>
- <20140721123950.GY30888@lee--X1>
+From: Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] tty: serial: 8250: Add Mediatek UART driver
+Date: Thu, 07 Aug 2014 14:21:54 +0100
+Message-ID: <1407417714.8334.8.camel@acox1-desk.ger.corp.intel.com>
+References: <1407394292-26317-1-git-send-email-matthias.bgg@gmail.com>
+	 <1407394292-26317-2-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140721123950.GY30888@lee--X1>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407394292-26317-2-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---da4uJneut+ArUgXk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +	 * Some baudrates are not supported by the chip, so we use the next
+> +	 * lower rate supported and update termios c_flag.
 
-On Mon, Jul 21, 2014 at 01:39:50PM +0100, Lee Jones wrote:
-> Hi Thierry,
->=20
-> Did you find some time to look at this set?
+I don't see the termios updating being done now ?
 
-Sorry for the long delay. I've applied patches 6-11 to the PWM tree,
-though I've modified patch 6 a little for consistency. The module is
-now named after the Kconfig option (pwm-sti rather than pwm-st). The
-dependencies also seem to be redundant (ARCH_STI already depends on
-OF), though I didn't change that just in case it's required for some
-other reason.
+> +	data->clk = of_clk_get(np, 0);
+> +	if (IS_ERR(data->clk)) {
+> +		pr_warn("Can't get timer clock");
+> +		return PTR_ERR(data->clk);
+> +	}
+> +
+> +	err = clk_prepare_enable(data->clk);
+> +	if (err) {
+> +		pr_warn("Can't prepare clock");
 
-Anyway, scream if there's anything in the PWM for-next branch that
-needs to be fixed up.
+and these do need a newline on them. They are also not very useful as
+they don't indicate what device was involved. If you passed pdev from
+mtk8250_probe you'd be able to use dev_warn instead
 
-Thierry
+Otherwise looks great and exactly as 8250_core is intended to be used.
 
---da4uJneut+ArUgXk
-Content-Type: application/pgp-signature
+Alan
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT430yAAoJEN0jrNd/PrOhjM4P/R1u9hzekLIfuj4Gu+1FfD5j
-kGPXYIUpxmyb+1Vxm/pFpMu3meWw5WZVVmS03A0pbgs5Y/B073ez8/xa4+p1b4mA
-rL+ErG+j81coaEuBOvg5IXyMCJhQcmJLlL9nNY8u7Hdh3DSidbWTflGFohE6k+nU
-QOConR8yochj/Mi0bTGVR4HDbQnGm1eYN4G16FYybfGXsim4wgBR6GDCTlHX2AS+
-C8IUx4Pamcsa7hhMJVjD80A7E6lPLPP7FXO1Na3zZhEAtwzYWr/rZd1VS53SxS2F
-eKEP0AAnmvQXdKmN1X/WJhNY+amNaEETMBFS3m21X+SMXWanmrjGB6j/1AkUf1kN
-TOP1vfJuOEA9e8RuqeW+HrF59ToMqYVd1foNW7X+p3l3ziGP6ZHxxRnJjscPfBOt
-s18WgOB7vIOEAmVOa0ufgNQDE3zJvU06nnGiw8BV2RadZ9mksaqsy2TDmDKke/Ei
-Vwju/RHWkKOgo2HgXukc6Nhzmz6Ei+xCXYLQzLpZf4q4KdGs87sGJ+GpWnO+qTJ+
-C6XcHKv6+2W0as7Voozzv7tSjVQbCgMaU2cPgXUfrWyR1Bp31GBPTxyJqd95CZcw
-belEvIVDEwHXEgoNimQ4PerWMXcQFKruHWxSvbu3vvxkgqIuLet42LE8ufE/YF1z
-QR0A+XyrgRfJsSYOQYfc
-=LvDo
------END PGP SIGNATURE-----
-
---da4uJneut+ArUgXk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
