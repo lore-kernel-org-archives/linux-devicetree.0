@@ -1,76 +1,73 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: document Rockchip saradc
-Date: Thu, 07 Aug 2014 15:15:52 +0100
-Message-ID: <53E38A18.5090203@kernel.org>
-References: <1984475.34C1XMW1q3@diego> <8132020.MqcOnlblHg@diego>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/4] host1x: mipi: Add new parent clock for mipi calibration
+Date: Thu, 7 Aug 2014 10:15:42 -0400
+Message-ID: <CAOw6vbKiECG8w6V3zvnr5Z4r4WuRsq556gtspAnM7Drj=A8m8A@mail.gmail.com>
+References: <1407391907-19488-1-git-send-email-seanpaul@chromium.org>
+ <1407391907-19488-2-git-send-email-seanpaul@chromium.org> <20140807081127.GD18359@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8132020.MqcOnlblHg@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?B?ImVkZGllKOiUoeaeqyki?= <cf@rock-chips.com>, huangtao@rock-chips.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140807081127.GD18359@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/07/14 22:24, Heiko St=C3=BCbner wrote:
-> This add the necessary binding documentation for the saradc found in =
-all recent
-> processors from Rockchip.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Applied to the togreg branch of iio.git.
-I have exercised a small amount of discretion wrt to the standard 3 wee=
-ks
-as there really is very little different in here from previous versions
-and no one has raised any comments on them.
+On Thu, Aug 7, 2014 at 4:11 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Aug 07, 2014 at 02:11:44AM -0400, Sean Paul wrote:
+>> This patch adds a new parent clock to enable/disable the 72MHz
+>> clock required for mipi calibration.
+>
+> s/mipi/MIPI/ please. Also this doesn't explain why this change is
+> necessary. Doesn't MIPI D-PHY calibration work without this patch? It
+> sure does for me.
 
-It's nearly 3 weeks anyway!
+Hi Thierry,
+Thanks for the prompt reviews.
 
-J
-> ---
-> changes since v5:
-> - remove clock-frquency property as described in patch 1/2
->=20
->  .../bindings/iio/adc/rockchip-saradc.txt           | 24 ++++++++++++=
-++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchi=
-p-saradc.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-sarad=
-c.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> new file mode 100644
-> index 0000000..5d3ec1d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> @@ -0,0 +1,24 @@
-> +Rockchip Successive Approximation Register (SAR) A/D Converter bindi=
-ngs
-> +
-> +Required properties:
-> +- compatible: Should be "rockchip,saradc"
-> +- reg: physical base address of the controller and length of memory =
-mapped
-> +       region.
-> +- interrupts: The interrupt number to the cpu. The interrupt specifi=
-er format
-> +              depends on the interrupt controller.
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +- clock-names: Shall be "saradc" for the converter-clock, and "apb_p=
-clk" for
-> +               the peripheral clock.
-> +- vref-supply: The regulator supply ADC reference voltage.
-> +- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-> +
-> +Example:
-> +	saradc: saradc@2006c000 {
-> +		compatible =3D "rockchip,saradc";
-> +		reg =3D <0x2006c000 0x100>;
-> +		interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks =3D <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-> +		clock-names =3D "saradc", "apb_pclk";
-> +		#io-channel-cells =3D <1>;
-> +		vref-supply =3D <&vcc18>;
-> +	};
->=20
+It doesn't work for me on T132 without this additional clock. It seems
+the source for mipi-cal has changed between T124 & T132 from PLL_OUT3
+to CLK72MHZ, so that could be why it's working for you and not for me.
+
+>
+> Furthermore you say 72 MHz clock, but the below uses PLL_P_OUT3 as the
+> parent in the example, yet PLL_P_OUT3 runs at 102 MHz on all of my
+> systems. What 72 MHz clock are you referring to?
+>
+
+This was just a bogus assumption on my part that PLL_P_OUT3 was to be
+programmed to 72MHz on pre-T132 setups.
+
+> Also can this parent clock ever be anything other than PLL_P_OUT3? If
+> not it would probably be better to set that statically in the clock
+> initialization tables.
+
+I'm not entirely certain how I'd set CLK72MHZ statically in the init
+tables, could you elaborate? I can get it to work by re-parenting
+mipi-cal to clk72mhz, however I'm not sure if that would break other
+platforms.
+
+My initial thought was to add a compatible = "nvidia,tegra132-mipi",
+which then would require the parent to be present in the dt.
+
+>
+>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>> index 9882ea1..4dd91fd 100644
+>> --- a/drivers/gpu/host1x/mipi.c
+>> +++ b/drivers/gpu/host1x/mipi.c
+>> @@ -80,7 +80,8 @@ static const struct module {
+>>  struct tegra_mipi {
+>>       void __iomem *regs;
+>>       struct mutex lock;
+>> -     struct clk *clk;
+>> +     struct clk *clk_parent;
+>> +     struct clk *clk_mipi_cal;
+>
+> I don't think the clk -> clk_mipi_cal rename is warranted here.
+
+Will do.
+
+Sean
+
+>
+> Thierry
