@@ -1,60 +1,99 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v3 0/4] Add eMMC and SD card support for rk3288-evb
-Date: Thu, 07 Aug 2014 17:24:37 +0900
-Message-ID: <53E337C5.3020802@samsung.com>
-References: <1407344984-14176-1-git-send-email-dianders@chromium.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 09/12] [v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
+Date: Thu, 7 Aug 2014 10:27:21 +0200
+Message-ID: <CAMuHMdU+o=CGFMyDVSxSKbpAx1oi1id7zABf-pm_pYzvuGOrWw@mail.gmail.com>
+References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
+	<1407329949-5695-10-git-send-email-geert+renesas@glider.be>
+	<20140807003755.GF32652@verge.net.au>
+	<20140807003908.GA30872@verge.net.au>
+	<20140807004107.GB30872@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1407344984-14176-1-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140807004107.GB30872-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Doug.
+Hi Simon,
 
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+On Thu, Aug 7, 2014 at 2:41 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Thu, Aug 07, 2014 at 09:39:08AM +0900, Simon Horman wrote:
+>> On Thu, Aug 07, 2014 at 09:37:56AM +0900, Simon Horman wrote:
+>> > On Wed, Aug 06, 2014 at 02:59:06PM +0200, Geert Uytterhoeven wrote:
+>> > > Add a DMA property to the QSPI node
+>> > >
+>> > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> > > ---
+>> > > This depends on "[PATCH v2 8/8] ARM: shmobile: r8a7791: Add DMAC devices
+>> > > to DT" of series "[PATCH v2 0/8] R-Car Gen2 DMA Controller driver".
+>> >
+>> > Hi Geert, Hi Laurent,
+>> >
+>> > Am I correct in assuming that with this patch applied things
+>> > will continue to work the old way until the patch above applied
+>> > to the same tree and from there on the user will get the new behaviour?
+>> >
+>> > If so I think that I can take this patch as although the driver hasn't been
+>> > merged the relevant bindings were added to the subsystem maintainers tree
+>> > by "dmaengine: rcar-dmac: Add device tree bindings documentation" and are
+>> > available in linux-next.
+>> >
+>> > Likewise for "[v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIO".
+>>
+>> ... and "ARM: shmobile: r8a7790 dtsi: Enable DMA for QSPI"
+>
+> ... and "ARM: shmobile: r8a7790 dtsi: Enable DMA for MSIO"
+>
+> and any other similar patches I didn't list above :)
 
-On 08/07/2014 02:09 AM, Doug Anderson wrote:
-> This series adds basic eMMC and SD card support for the rk3288-evb
-> board based on Addy's posted dw_mmc patch from:
->   https://patchwork.kernel.org/patch/4653631/
-> 
-> The series is a little tricky because:
-> * Jaehoon has some outstanding patches to remove the slot node.  Since
->   those haven't landed yet, I've posted my original patch with the
->   slot node and then some future patches that can land with Jaehoon's
->   patches.
-> 
-> So just to be explicit:
-> - Patch #1 and #2 can land after Addy's patch lands.
-> - Patch #3 and #4 can land after Jaehoon's patch lands, though there's
->   no huge hurry since Jaehoon's patch supports the old mode (it just
->   prints a warning).
-> 
-> Note that we don't have regulators specified yet (no regulator driver
-> for rk808-based board).  We also don't yet support UHS modes or MMC
-> DDR50 (which require regulator support plus dw_mmc driver support for
-> tuning).  Those features can come later.
-> 
-> Changes in v3:
-> - Removed DDR50 mode since it needs tuning, which isn't there yet.
-> 
-> Changes in v2:
-> - New patchwork link for Addy's patch
-> - Squashed in the DDR50 mode since Addy spun his patch.
-> - Refer to the new title of Jaehoon's patch
-> 
-> Doug Anderson (4):
->   ARM: dts: Add emmc and sdmmc to the rk3288 device tree
->   ARM: dts: Enable emmc and sdmmc on the rk3288-evb boards
->   ARM: dts: Take the mmc slot node out of rk3288-evb
->   ARM: dts: mmc slot node gone on rk3288 => no more address / size cells
-> 
->  arch/arm/boot/dts/rk3288-evb.dtsi | 24 ++++++++++++++++++++++++
->  arch/arm/boot/dts/rk3288.dtsi     | 18 ++++++++++++++++++
->  2 files changed, 42 insertions(+)
-> 
+Yes[*].
 
+If rcar-dma is not available, drivers fall back to PIO, cfr. for rspi:
+
+-renesas_spi e6b10000.spi: DMA available
++renesas_spi e6b10000.spi: dma_request_slave_channel_compat failed
++renesas_spi e6b10000.spi: DMA not available, using PIO
+ renesas_spi e6b10000.spi: registered master spi0
+ spi spi0.0: setup mode 0, 8 bits/w, 30000000 Hz max --> 0
+ m25p80 spi0.0: s25fl512s (65536 Kbytes)
+ 3 ofpart partitions found on MTD device spi0.0
+ Creating 3 MTD partitions on "spi0.0":
+ 0x000000000000-0x000000080000 : "loader"
+ 0x000000080000-0x000000100000 : "bootenv"
+ 0x000000100000-0x000004000000 : "data"
+ renesas_spi e6b10000.spi: registered child spi0.0
+
+and sh-msiof:
+
+-spi_sh_msiof e6e20000.spi: DMA available
++spi_sh_msiof e6e20000.spi: dma_request_slave_channel_compat failed
++spi_sh_msiof e6e20000.spi: DMA not available, using PIO
+ spi_sh_msiof e6e20000.spi: registered master spi1
+ spi spi1.0: setup mode 3, 8 bits/w, 6000000 Hz max --> 0
+ spi_sh_msiof e6e20000.spi: registered child spi1.0
+
+and everything still works, but slower.
+
+[*] If the individual DMA slave drivers properly handle DMA request
+    failures. If they don't, they will already fail now, as there is no DMA
+    platform configuration without the dmas/dma-names properties
+    (ignoring Magnus' DMA prototypes using auxdata, as DT is the way
+     forward).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
