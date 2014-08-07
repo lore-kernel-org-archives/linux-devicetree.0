@@ -1,74 +1,148 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_sai: Add asynchronous mode support
-Date: Thu, 7 Aug 2014 10:45:27 +0100
-Message-ID: <20140807094527.GC17528@sirena.org.uk>
-References: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
+From: Ajay kumar <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
+Date: Thu, 7 Aug 2014 15:24:17 +0530
+Message-ID: <CAEC9eQNRCRBr7THFdu9=qtzcTn=oxVO8jRQWL3WCa8q70aagTQ@mail.gmail.com>
+References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
+	<20140731115644.GB12627@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Gpwijd/hIJ1U6yrH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, b42378@freescale.com, b02247@freescale.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140731115644.GB12627@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Thierry,
 
---Gpwijd/hIJ1U6yrH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for adding me.
 
-On Tue, Aug 05, 2014 at 03:32:05PM +0800, Nicolin Chen wrote:
-> From: Nicolin Chen <Guangyu.Chen@freescale.com>
->=20
-> SAI supports these operation modes:
-> 1) asynchronous mode
->    Both Tx and Rx are set to be asynchronous.
-> 2) synchronous mode (Rx sync with Tx)
->    Tx is set to be asynchronous, Rx is set to be synchronous.
-> 3) synchronous mode (Tx sync with Rx)
->    Rx is set to be asynchronous, Tx is set to be synchronous.
-> 4) synchronous mode (Tx/Rx sync with another SAI's Tx)
-> 5) synchronous mode (Tx/Rx sync with another SAI's Rx)
+On Thu, Jul 31, 2014 at 5:26 PM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Cc'ing Ajay (who raised this on a different thread recently), therefore
+> quoting all of the original email.
+>
+> Thierry
+>
+> On Thu, Jul 31, 2014 at 01:42:50PM +0200, Thierry Reding wrote:
+>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> The default for backlight devices is to be enabled immediately when
+>> registering with the backlight core. This can be useful for setups that
+>> use a simple framebuffer device and where the backlight cannot otherwise
+>> be hooked up to the panel.
+>>
+>> However, when dealing with more complex setups, such as those of recent
+>> ARM SoCs, this can be problematic. Since the backlight is usually setup
+>> separately from the display controller, the probe order is not usually
+>> deterministic. That can lead to situations where the backlight will be
+>> powered up and the panel will show an uninitialized framebuffer.
+>>
+>> Furthermore, subsystems such as DRM have advanced functionality to set
+>> the power mode of a panel. In order to allow such setups to power up the
+>> panel at exactly the right moment, a way is needed to prevent the
+>> backlight core from powering the backlight up automatically when it is
+>> registered.
+>>
+>> This commit introduces a new boot_off field in the platform data (and
+>> also implements getting the same information from device tree). When set
+>> the initial backlight power mode will be set to "off".
+>>
+>> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> I've been meaning to send this for a while but was always holding back
+>> because of the indoctrination that this type of configuration shouldn't
+>> be part of device tree. However this issue was recently raised again in
+>> the context of power up sequences for display panels. As described above
+>> the issue is that panel datasheets recommend that the backlight attached
+>> to a panel be turned on at the very last step to avoid visual glitches
+>> during the panel's power up sequence. With the current implementation it
+>> is typical for the backlight to be probed before the display panel. That
+>> has, in many cases, the side-effect of enabling the backlight, therefore
+>> making the screen content visible before it's actually initialized.
+>>
+>> Some panels come up with random garbage when uninitialized, others show
+>> all white. With some luck the panel will be all black and users won't
+>> really notice.
+Right, most of the DSI panels are lucky. But the case is not the same
+with few eDP/LVDS panels.
 
-This seems to conflict with something else on my branch - not checked
-what.  Can you take a look please?
+>> This patch is an attempt to enable boards to override the default of
+>> turning on the backlight for the pwm-backlight driver. I'm not sure if
+>> there was a specific reason to turn on the backlight by default when
+>> this driver was initially written, but the fact is that since it has
+>> pretty much always been like this we can't really go and change the
+>> default, otherwise a lot of people may end up with no backlight and no
+>> clue as to how to enable it. So the only reasonable thing we can do is
+>> to keep the old behaviour and give new boards a way to override it if
+>> they know that some other part of the stack will enable it at the right
+>> moment.
+Agreed! And, I have tested this patch.
+This resolves the only remaining problem for display on peach_pi.
+I cannot see the boot time glitch anymore :)
 
-> +Note:
-> +- If both fsl,sai-asynchronous and fsl,sai-synchronous-rx are absent, the
-> +  default synchronous mode (sync Rx with Tx) will be used, which means b=
-oth
-> +  transimitter and receiver will send and receive data by following cloc=
-ks
-> +  of transimitter.
-> +- fsl,sai-asynchronous will be ignored if fsl,sai-synchronous-rx propert=
-y is
-> +  already present.
+Ajay
 
-Might be worth printing an error here.
-
---Gpwijd/hIJ1U6yrH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT40q0AAoJELSic+t+oim9L/IP/09XmprJfNXyU1qqKlJhv70c
-tj+U4iIPJlroeCqeOWfpG4qfqsJ8cGKkT7y9/c2+MFbh5aKn4yD8/WaG9gBzDZ6n
-WwXLuD5c/yaAhWnlN2ekYOS7oG/Odzmb//BZNnPssxQW21hR8pqAT+KgUN6waslu
-qlv7s/p1qqg67J/bEzHeh+D9VhCJooVdRvl843TDDZDUeaM/PyXOyJKpz8KawSs2
-Txn5PKLh6UOOFSHQegZ7i84k8gjEwo0Rtl3edLtHjKUKGZf2azDrd4iffb9heiGH
-OXb+N20qzFgCi6afkzx8B8fU4vvwd8tCGALe3kiStokVfYZvNG/2MB5MB7as+/7Z
-XLpd1JCqJo3UXFBGS57RGH2jguIxla+0RJLbGMU4+4JCsHicUws3AqQl/yAtkgJs
-2Xp++ABOQRum9jx/6q6LQfkegVzStr6KMC/aaIVUZCRFXRsdVpHMxqi/9hq7/7AB
-ALG0R2J6qTCRTpCUNCmw6M+Xa0REODq4e6zZhyZy2UKrPwfYk1+f0HQfNTieCmmP
-al8tU58vpKfMEjPSMcAA0SHb94VbBansfK8/43jm7itnVJYAZ6WNw5+nr/LmkmRz
-gyh/7qrOeNml4NAs3CpPyrBgSP2CacH/LFpPEoDSytaPXbafUlisTtQBRDriYIRU
-sO39I/WMNnI9lYcXI80e
-=yhVo
------END PGP SIGNATURE-----
-
---Gpwijd/hIJ1U6yrH--
+>>  .../devicetree/bindings/video/backlight/pwm-backlight.txt         | 1 +
+>>  drivers/video/backlight/pwm_bl.c                                  | 8 ++++++++
+>>  include/linux/pwm_backlight.h                                     | 2 ++
+>>  3 files changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>> index 764db86d441a..65e001a1733d 100644
+>> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>> @@ -17,6 +17,7 @@ Optional properties:
+>>                 "pwms" property (see PWM binding[0])
+>>    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+>>                    and disables the backlight (see GPIO binding[1])
+>> +  - backlight-boot-off: keep the backlight disabled on boot
+>>
+>>  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+>>  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+>> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+>> index d7a3d13e72ec..62adfc9d37a7 100644
+>> --- a/drivers/video/backlight/pwm_bl.c
+>> +++ b/drivers/video/backlight/pwm_bl.c
+>> @@ -173,6 +173,8 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>>               data->max_brightness--;
+>>       }
+>>
+>> +     data->boot_off = of_property_read_bool(node, "backlight-boot-off");
+>> +
+>>       return 0;
+>>  }
+>>
+>> @@ -317,6 +319,12 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+>>       }
+>>
+>>       bl->props.brightness = data->dft_brightness;
+>> +
+>> +     if (data->boot_off)
+>> +             bl->props.power = FB_BLANK_POWERDOWN;
+>> +     else
+>> +             bl->props.power = FB_BLANK_UNBLANK;
+>> +
+>>       backlight_update_status(bl);
+>>
+>>       platform_set_drvdata(pdev, bl);
+>> diff --git a/include/linux/pwm_backlight.h b/include/linux/pwm_backlight.h
+>> index efdd9227a49c..1fc14989da4a 100644
+>> --- a/include/linux/pwm_backlight.h
+>> +++ b/include/linux/pwm_backlight.h
+>> @@ -15,6 +15,8 @@ struct platform_pwm_backlight_data {
+>>       unsigned int *levels;
+>>       /* TODO remove once all users are switched to gpiod_* API */
+>>       int enable_gpio;
+>> +     bool boot_off;
+>> +
+>>       int (*init)(struct device *dev);
+>>       int (*notify)(struct device *dev, int brightness);
+>>       void (*notify_after)(struct device *dev, int brightness);
+>> --
+>> 2.0.3
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
