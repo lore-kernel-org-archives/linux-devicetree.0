@@ -1,153 +1,36 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH] mmc: dw_mmc: add support for RK3288
-Date: Thu, 07 Aug 2014 17:47:38 +0900
-Message-ID: <53E33D2A.7030109@samsung.com>
-References: <1404963109-3906-1-git-send-email-addy.ke@rock-chips.com>
- <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3] Thermal: imx: add i.mx6sx thermal support
+Date: Thu, 7 Aug 2014 16:50:26 +0800
+Message-ID: <20140807085024.GE27051@dragon>
+References: <1407309129-5562-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407309129-5562-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+On Wed, Aug 06, 2014 at 03:12:09PM +0800, Anson Huang wrote:
+> i.MX6SX has some new features of thermal interrupt function,
+> there are LOW, HIGH and PANIC irq for thermal sensor, so add
+> platform data to separate different thermal version;
+> 
+> The reset value of LOW ALARM is 0 which means the highest
+> temp, so the LOW ALARM will be triggered once irq is enabled,
+> so we need to correct it before enabling thermal irq;
+> 
+> Enable PANIC ALARM as critical trip point, it will trigger
+> system reset via SRC module once PANIC IRQ is triggered, it
+> is pure hardware function, so use it instead of software
+> reset by cooling device.
+> 
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Best Regards,
-Jaehoon Chung
-
-On 07/31/2014 03:01 PM, Addy Ke wrote:
-> This patch focuses on clock setting for RK3288 mmc controller.
-> 
-> In RK3288 mmc controller, CLKDIV register can only be set 0 or 1,
-> and if DDR 8bit mode, CLKDIV register must be set 1.
-> 
-> Reported-by Doug Anderson <dianders@chromium.org>
-> Suggested-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Suggested-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> ---
-> changes since v1:
-> - dw_mci_rk3288_setup_clock: do not call clk_get_rate(), just use the
->   host->bus_hz which is already called by dw_mmc.c, suggested by Jaehoon Chung
-> 
-> changes since v2:
-> - merge from ChromiumOS tree, fix up clock settting bug, 
->   which cause DDR50 mode for emmc not to work, reported by Doug Anderson
-> - remove MMC_TIMING_UHS_DDR50 condition, because on RK3288 only emmc can work
->   in 8bit mode, suggested by Doug Anderson
-> 
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  6 ++-
->  drivers/mmc/host/dw_mmc-pltfm.c                    | 56 +++++++++++++++++++++-
->  2 files changed, 58 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> index c559f3f..c327c2d 100644
-> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> @@ -10,12 +10,14 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
->  Required Properties:
->  
->  * compatible: should be
-> -	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following
-> +	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
-> +							before RK3288
-> +	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
->  
->  Example:
->  
->  	rkdwmmc0@12200000 {
-> -		compatible = "rockchip,rk2928-dw-mshc";
-> +		compatible = "rockchip,rk3288-dw-mshc";
->  		reg = <0x12200000 0x1000>;
->  		interrupts = <0 75 0>;
->  		#address-cells = <1>;
-> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-> index d4a47a9..b547f7a 100644
-> --- a/drivers/mmc/host/dw_mmc-pltfm.c
-> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
-> @@ -21,17 +21,67 @@
->  #include <linux/mmc/mmc.h>
->  #include <linux/mmc/dw_mmc.h>
->  #include <linux/of.h>
-> +#include <linux/clk.h>
->  
->  #include "dw_mmc.h"
->  #include "dw_mmc-pltfm.h"
->  
-> +#define RK3288_CLKGEN_DIV	2
-> +
->  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
->  {
->  	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
->  }
->  
-> -static const struct dw_mci_drv_data rockchip_drv_data = {
-> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-> +{
-> +	host->bus_hz /= RK3288_CLKGEN_DIV;
-> +
-> +	return 0;
-> +}
-> +
-> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +	int ret;
-> +	unsigned int cclkin;
-> +	u32 bus_hz;
-> +
-> +	/*
-> +	 * cclkin: source clock of mmc controller.
-> +	 * bus_hz: card interface clock generated by CLKGEN.
-> +	 * bus_hz = cclkin / RK3288_CLKGEN_DIV;
-> +	 * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
-> +	 *
-> +	 * Note: div can only be 0 or 1
-> +	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
-> +	 *       div must be set 1
-> +	 */
-> +	if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
-> +	    (ios->timing == MMC_TIMING_MMC_DDR52))
-> +		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
-> +	else
-> +		cclkin = ios->clock * RK3288_CLKGEN_DIV;
-> +
-> +	ret = clk_set_rate(host->ciu_clk, cclkin);
-> +	if (ret)
-> +		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-> +
-> +	bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-> +	if (bus_hz != host->bus_hz) {
-> +		host->bus_hz = bus_hz;
-> +		/* force dw_mci_setup_bus() */
-> +		host->current_speed = 0;
-> +	}
-> +}
-> +
-> +static const struct dw_mci_drv_data rk2928_drv_data = {
-> +	.prepare_command	= dw_mci_pltfm_prepare_command,
-> +};
-> +
-> +static const struct dw_mci_drv_data rk3288_drv_data = {
->  	.prepare_command	= dw_mci_pltfm_prepare_command,
-> +	.set_ios	= dw_mci_rk3288_set_ios,
-> +	.setup_clock	= dw_mci_rk3288_setup_clock,
->  };
->  
->  static const struct dw_mci_drv_data socfpga_drv_data = {
-> @@ -95,7 +145,9 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
->  static const struct of_device_id dw_mci_pltfm_match[] = {
->  	{ .compatible = "snps,dw-mshc", },
->  	{ .compatible = "rockchip,rk2928-dw-mshc",
-> -		.data = &rockchip_drv_data },
-> +		.data = &rk2928_drv_data },
-> +	{ .compatible = "rockchip,rk3288-dw-mshc",
-> +		.data = &rk3288_drv_data },
->  	{ .compatible = "altr,socfpga-dw-mshc",
->  		.data = &socfpga_drv_data },
->  	{},
-> 
-
+Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
