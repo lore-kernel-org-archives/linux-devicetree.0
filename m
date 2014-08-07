@@ -1,237 +1,44 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH] coresight: bindings for coresight drivers
-Date: Thu,  7 Aug 2014 12:34:06 -0600
-Message-ID: <1407436446-19634-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: pratikp@codeaurora.org, panchaxari.prasannamurthy@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v2 1/2] tty: serial: 8250: Add Mediatek UART driver
+Date: Thu, 7 Aug 2014 19:35:12 +0100
+Message-ID: <20140807193512.1825b291@alan.etchedpixels.co.uk>
+References: <1407394292-26317-1-git-send-email-matthias.bgg@gmail.com>
+	<1407394292-26317-2-git-send-email-matthias.bgg@gmail.com>
+	<1407417714.8334.8.camel@acox1-desk.ger.corp.intel.com>
+	<CABuKBeKJ=KFc1DfvyHgD+iAC1=yLqYjjDUc0CH+1zbRQzw_DJw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CABuKBeKJ=KFc1DfvyHgD+iAC1=yLqYjjDUc0CH+1zbRQzw_DJw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Alan Cox <alan@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.cz, Grant Likely <grant.likely@linaro.org>, Varka Bhadram <varkabhadram@gmail.com>, Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>, Yingjoe Chen <yingjoe.chen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pratik Patel <pratikp@codeaurora.org>
+On Thu, 7 Aug 2014 16:07:41 +0200
+Matthias Brugger <matthias.bgg@gmail.com> wrote:
 
-Coresight IP blocks allow for the support of HW assisted tracing
-on ARM SoCs.  Bindings for the currently available blocks are
-presented herein.
+> 2014-08-07 15:21 GMT+02:00 Alan Cox <alan@linux.intel.com>:
+> >
+> >> +      * Some baudrates are not supported by the chip, so we use the next
+> >> +      * lower rate supported and update termios c_flag.
+> >
+> > I don't see the termios updating being done now ?
+> 
+> Please have a look on the usage of the SET_CFLAG_BAUD macro in the patch.
+> I'm not sure if it is the way to go though.
 
-Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
-Signed-off-by: Panchaxari Prasannamurthy <panchaxari.prasannamurthy@linaro.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- .../devicetree/bindings/arm/coresight.txt          | 205 +++++++++++++++++++++
- 1 file changed, 205 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+Ah missed that - no it's not the right way to go. From
+8250_core:serial8250_do_set_termios() do
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-new file mode 100644
-index 0000000..2ee594d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -0,0 +1,205 @@
-+* CoreSight Components
-+
-+CoreSight components are compliant with the ARM CoreSight architecture
-+specification and can be connected in various topologies to suit a particular
-+SoCs tracing needs. These trace components can generally be classified as sinks,
-+links and sources. Trace data produced by one or more sources flows through the
-+intermediate links connecting the source to the currently selected sink. Each
-+CoreSight component device should use these properties to describe its hardware
-+characteristcs.
-+
-+Required properties for all components *except* non-configurable replicators:
-+
-+- compatible : name of the component used for driver matching.  Possible values
-+include: "arm,coresight-etb10", "arm,coresight-tpiu", "arm,coresight-tmc",
-+"arm,coresight-funnel", and "arm,coresight-etm3x".  All of these have to
-+be supplemented with "arm,primecell" as drivers are using the AMBA bus
-+interface.  Since non-configurable replicators don't show up on the AMBA
-+bus they don't need to be post-fixed with "arm,primecell".
-+
-+- reg : physical base address and length of the register set(s) of the component.
-+
-+- clocks : the clock associated to this component.
-+
-+- clock-names: the name of the clock as referenced by the code.  Since we are
-+using the AMBA framework, the name should be "apb_pclk".
-+
-+- ports or port: The representation of the component's port layout using the
-+generic DT graph presentation found in "bindings/graph.txt".
-+
-+Non-configurable replicators:
-+
-+- compatible: currently supported value is "arm-replicator".  Since non-configurable
-+replicators don't show up on the AMBA hey don't need to be post-fixed with
-+"arm,primecell".
-+
-+- id: a unique number that will identify this replicator.
-+
-+- ports or port: same as above.
-+
-+Optional properties for Sinks:
-+
-+- coresight-default-sink: must be specified for one of the sink devices that is
-+intended to be made the default sink. Other sink devices must not have this
-+specified. Not specifying this property on any of the sinks is invalid.
-+
-+Optional properties for ETM/PTMs:
-+
-+- arm,cp14: must be present if the system accesses ETM/PTM management registers
-+via co-processor 14.
-+
-+- arm,cp14: access to ETM/PTM management registers is made via cp14.
-+
-+- cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
-+considered to belong to CPU0.
-+
-+Optional property for TMC:
-+
-+- arm,buffer-size: size of contiguous buffer space for TMC ETR (embedded trace router)
-+
-+
-+Example:
-+
-+1. Sinks
-+	etb: etb@20010000 {
-+		compatible = "arm,coresight-etb10", "arm,primecell";
-+		reg = <0 0x20010000 0 0x1000>;
-+
-+		coresight-default-sink;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etb_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port0>;
-+			};
-+		};
-+	};
-+
-+	tpiu: tpiu@20030000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0 0x20030000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			tpiu_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port1>;
-+			};
-+		};
-+	};
-+
-+2. Links
-+	replicator {
-+		/* non-configurable replicators don't show up on the
-+		 * AMBA bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-replicator";
-+		/* this will show up in debugfs as "0.replicator" */
-+		id = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* replicator output ports */
-+			port@0 {
-+				reg = <0>;
-+				replicator_out_port0: endpoint {
-+					remote-endpoint = <&etb_in_port>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				replicator_out_port1: endpoint {
-+					remote-endpoint = <&tpiu_in_port>;
-+				};
-+			};
-+
-+			/* replicator input port */
-+			port@2 {
-+				reg = <0>;
-+				replicator_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel_out_port0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	funnel@20040000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x20040000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* funnel output port */
-+			port@0 {
-+				reg = <0>;
-+				funnel_out_port0: endpoint {
-+					remote-endpoint = <&replicator_in_port0>;
-+				};
-+			};
-+
-+			/* funnel input ports */
-+			port@1 {
-+				reg = <0>;
-+				funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm1_out_port>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <2>;
-+				funnel_in_port2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out_port>;
-+				};
-+			};
-+
-+		};
-+	};
-+
-+3. Sources
-+	ptm0: ptm@2201c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201c000 0 0x1000>;
-+
-+		cpu = <&cpu0>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm0_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	ptm1: ptm@2201d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201d000 0 0x1000>;
-+
-+		cpu = <&cpu1>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm1_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port1>;
-+			};
-+		};
-+	};
--- 
-1.9.1
+        /* Don't rewrite B0 */
+        if (tty_termios_baud_rate(termios))
+                tty_termios_encode_baud_rate(termios, baud, baud);
+
+
+which will encoding the baud rate correctly for all cases, and where
+possible encode it in the old style format rather than using BOTHER
+(which old old apps cannot handle)
+
+Alan
