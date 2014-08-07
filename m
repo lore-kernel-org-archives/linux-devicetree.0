@@ -1,359 +1,213 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v2 1/2] tty: serial: 8250: Add Mediatek UART driver
-Date: Thu,  7 Aug 2014 08:51:31 +0200
-Message-ID: <1407394292-26317-2-git-send-email-matthias.bgg@gmail.com>
-References: <1407394292-26317-1-git-send-email-matthias.bgg@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: Dual-channel DSI
+Date: Thu, 07 Aug 2014 08:53:47 +0200
+Message-ID: <53E3227B.1010000@samsung.com>
+References: <20140805153923.GA3072@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407394292-26317-1-git-send-email-matthias.bgg@gmail.com>
+In-reply-to: <20140805153923.GA3072@ulmo.nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, matthias.bgg@gmail.com, alan@linux.intel.com, varkabhadram@gmail.com, heiko@sntech.de, yingjoe.chen@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, YoungJun Cho <yj44.cho@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the UART block found on Mediatek SoCs.
-The device has a highspeed register which influences the calcualtion of the
-divisor. The chip lacks support for some baudrates. When requested, we set the
-divisor to the next smaller baudrate and adjust the c_cflag accordingly.
+Hi Thierry,
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- drivers/tty/serial/8250/8250_mtk.c |  302 ++++++++++++++++++++++++++++++++++++
- drivers/tty/serial/8250/Kconfig    |    7 +
- drivers/tty/serial/8250/Makefile   |    1 +
- 3 files changed, 310 insertions(+)
- create mode 100644 drivers/tty/serial/8250/8250_mtk.c
+Nice case.
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-new file mode 100644
-index 0000000..038d7e2
---- /dev/null
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -0,0 +1,302 @@
-+/*
-+ * Mediatek 8250 driver.
-+ *
-+ * Copyright (c) 2014 MundoReader S.L.
-+ * Author: Matthias Brugger <matthias.bgg@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/serial_8250.h>
-+#include <linux/serial_reg.h>
-+
-+#include "8250.h"
-+
-+#define UART_MTK_HIGHS		0x09	/* Highspeed register */
-+#define UART_MTK_SAMPLE_COUNT	0x0a	/* Sample count register */
-+#define UART_MTK_SAMPLE_POINT	0x0b	/* Sample point register */
-+#define MTK_UART_RATE_FIX	0x0d	/* UART Rate Fix Register */
-+
-+#define SET_CFLAG_BAUD(flag, baud) { \
-+		(flag) &= ~CBAUD; \
-+		(flag) |= (baud); \
-+	}
-+
-+struct mtk8250_data {
-+	int			line;
-+	struct clk		*clk;
-+};
-+
-+static void
-+mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
-+			struct ktermios *old)
-+{
-+	unsigned long flags;
-+	unsigned int baud, quot;
-+
-+	struct uart_8250_port *up =
-+		container_of(port, struct uart_8250_port, port);
-+
-+	serial8250_do_set_termios(port, termios, old);
-+
-+	/*
-+	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
-+	 *
-+	 * We need to recalcualte the quot register, as the claculation depends
-+	 * on the vaule in the highspeed register.
-+	 *
-+	 * Some baudrates are not supported by the chip, so we use the next
-+	 * lower rate supported and update termios c_flag.
-+	 *
-+	 * If highspeed register is set to 3, we need to specify sample count
-+	 * and sample point to increase accuracy. If not, we reset the
-+	 * registers to their default values.
-+	 */
-+	baud = uart_get_baud_rate(port, termios, old,
-+				  port->uartclk / 16 / 0xffff,
-+				  port->uartclk / 16);
-+
-+	if (baud <= 115200) {
-+		serial_port_out(port, UART_MTK_HIGHS, 0x0);
-+		quot = uart_get_divisor(port, baud);
-+	} else if (baud <= 576000) {
-+		serial_port_out(port, UART_MTK_HIGHS, 0x2);
-+
-+		/* Set to next lower baudrate supported */
-+		if ((baud == 500000) || (baud == 576000)) {
-+			baud = 460800;
-+			SET_CFLAG_BAUD(termios->c_cflag, B460800);
-+		}
-+		quot = DIV_ROUND_CLOSEST(port->uartclk, 4 * baud);
-+	} else {
-+		serial_port_out(port, UART_MTK_HIGHS, 0x3);
-+
-+		/* Set to highest baudrate supported */
-+		if (baud >= 1152000) {
-+			baud = 921600;
-+			SET_CFLAG_BAUD(termios->c_cflag, B921600);
-+		}
-+		quot = DIV_ROUND_CLOSEST(port->uartclk, 256 * baud);
-+	}
-+
-+	/*
-+	 * Ok, we're now changing the port state.  Do it with
-+	 * interrupts disabled.
-+	 */
-+	spin_lock_irqsave(&port->lock, flags);
-+
-+	/* set DLAB we have cval saved in up->lcr from the call to the core */
-+	serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
-+	serial_dl_write(up, quot);
-+
-+	/* reset DLAB */
-+	serial_port_out(port, UART_LCR, up->lcr);
-+
-+	if (baud > 460800) {
-+		unsigned int tmp;
-+
-+		tmp = DIV_ROUND_CLOSEST(port->uartclk, quot * baud);
-+		serial_port_out(port, UART_MTK_SAMPLE_COUNT, tmp - 1);
-+		serial_port_out(port, UART_MTK_SAMPLE_POINT,
-+					(tmp - 2) >> 1);
-+	} else {
-+		serial_port_out(port, UART_MTK_SAMPLE_COUNT, 0x00);
-+		serial_port_out(port, UART_MTK_SAMPLE_POINT, 0xff);
-+	}
-+
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static void
-+mtk8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
-+{
-+	if (!state)
-+		pm_runtime_get_sync(port->dev);
-+
-+	serial8250_do_pm(port, state, old);
-+
-+	if (state)
-+		pm_runtime_put_sync_suspend(port->dev);
-+}
-+
-+static int mtk8250_probe_of(struct uart_port *p,
-+			   struct mtk8250_data *data)
-+{
-+	int err;
-+	struct device_node	*np = p->dev->of_node;
-+
-+	data->clk = of_clk_get(np, 0);
-+	if (IS_ERR(data->clk)) {
-+		pr_warn("Can't get timer clock");
-+		return PTR_ERR(data->clk);
-+	}
-+
-+	err = clk_prepare_enable(data->clk);
-+	if (err) {
-+		pr_warn("Can't prepare clock");
-+		clk_put(data->clk);
-+		return err;
-+	}
-+	p->uartclk = clk_get_rate(data->clk);
-+
-+	return 0;
-+}
-+
-+static int mtk8250_probe(struct platform_device *pdev)
-+{
-+	struct uart_8250_port uart = {};
-+	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	struct mtk8250_data *data;
-+	int err;
-+
-+	if (!regs || !irq) {
-+		dev_err(&pdev->dev, "no registers/irq defined\n");
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_init(&uart.port.lock);
-+	uart.port.mapbase = regs->start;
-+	uart.port.irq = irq->start;
-+	uart.port.pm = mtk8250_do_pm;
-+	uart.port.type = PORT_16550;
-+	uart.port.flags = UPF_BOOT_AUTOCONF | UPF_FIXED_PORT;
-+	uart.port.dev = &pdev->dev;
-+
-+	uart.port.membase = devm_ioremap(&pdev->dev, regs->start,
-+					 resource_size(regs));
-+	if (!uart.port.membase)
-+		return -ENOMEM;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	uart.port.iotype = UPIO_MEM32;
-+	uart.port.regshift = 2;
-+	uart.port.private_data = data;
-+	uart.port.set_termios = mtk8250_set_termios;
-+
-+	if (pdev->dev.of_node) {
-+		err = mtk8250_probe_of(&uart.port, data);
-+		if (err)
-+			return err;
-+	} else
-+		return -ENODEV;
-+
-+	/* Disable Rate Fix function */
-+	writel(0x0, uart.port.membase +
-+			(MTK_UART_RATE_FIX << uart.port.regshift));
-+
-+	data->line = serial8250_register_8250_port(&uart);
-+	if (data->line < 0)
-+		return data->line;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int mtk8250_remove(struct platform_device *pdev)
-+{
-+	struct mtk8250_data *data = platform_get_drvdata(pdev);
-+
-+	pm_runtime_get_sync(&pdev->dev);
-+
-+	serial8250_unregister_port(data->line);
-+	if (!IS_ERR(data->clk)) {
-+		clk_disable_unprepare(data->clk);
-+		clk_put(data->clk);
-+	}
-+
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int mtk8250_suspend(struct device *dev)
-+{
-+	struct mtk8250_data *data = dev_get_drvdata(dev);
-+
-+	serial8250_suspend_port(data->line);
-+
-+	return 0;
-+}
-+
-+static int mtk8250_resume(struct device *dev)
-+{
-+	struct mtk8250_data *data = dev_get_drvdata(dev);
-+
-+	serial8250_resume_port(data->line);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_PM_RUNTIME
-+static int mtk8250_runtime_suspend(struct device *dev)
-+{
-+	struct mtk8250_data *data = dev_get_drvdata(dev);
-+
-+	if (!IS_ERR(data->clk))
-+		clk_disable_unprepare(data->clk);
-+
-+	return 0;
-+}
-+
-+static int mtk8250_runtime_resume(struct device *dev)
-+{
-+	struct mtk8250_data *data = dev_get_drvdata(dev);
-+
-+	if (!IS_ERR(data->clk))
-+		clk_prepare_enable(data->clk);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops mtk8250_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mtk8250_suspend, mtk8250_resume)
-+	SET_RUNTIME_PM_OPS(mtk8250_runtime_suspend, mtk8250_runtime_resume,
-+				NULL)
-+};
-+
-+static const struct of_device_id mtk8250_of_match[] = {
-+	{ .compatible = "mediatek,mt6577-uart" },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mtk8250_of_match);
-+
-+static struct platform_driver mtk8250_platform_driver = {
-+	.driver = {
-+		.name		= "mt6577-uart",
-+		.owner		= THIS_MODULE,
-+		.pm		= &mtk8250_pm_ops,
-+		.of_match_table	= mtk8250_of_match,
-+	},
-+	.probe			= mtk8250_probe,
-+	.remove			= mtk8250_remove,
-+};
-+module_platform_driver(mtk8250_platform_driver);
-+
-+MODULE_AUTHOR("Matthias Brugger");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Mediatek 8250 serial port driver");
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index 349ee59..fac34aa 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -298,3 +298,10 @@ config SERIAL_8250_RT288X
- 	  If you have a Ralink RT288x/RT305x SoC based board and want to use the
- 	  serial port, say Y to this option. The driver can handle up to 2 serial
- 	  ports. If unsure, say N.
-+
-+config SERIAL_8250_MT6577
-+	bool "Mediatek serial port support"
-+	depends on SERIAL_8250 && ARCH_MEDIATEK
-+	help
-+	  If you have a Mediatek based board and want to use the
-+	  serial port, say Y to this option. If unsure, say N.
-diff --git a/drivers/tty/serial/8250/Makefile b/drivers/tty/serial/8250/Makefile
-index 36d68d0..6dcb46b 100644
---- a/drivers/tty/serial/8250/Makefile
-+++ b/drivers/tty/serial/8250/Makefile
-@@ -20,3 +20,4 @@ obj-$(CONFIG_SERIAL_8250_HUB6)		+= 8250_hub6.o
- obj-$(CONFIG_SERIAL_8250_FSL)		+= 8250_fsl.o
- obj-$(CONFIG_SERIAL_8250_DW)		+= 8250_dw.o
- obj-$(CONFIG_SERIAL_8250_EM)		+= 8250_em.o
-+obj-$(CONFIG_SERIAL_8250_MT6577)	+= 8250_mtk.o
--- 
-1.7.9.5
+On 08/05/2014 05:39 PM, Thierry Reding wrote:
+> Hi everyone,
+>
+> I've been working on adding support for a panel that uses what's
+> commonly known as dual-channel DSI. Sometimes this is referred to as
+> ganged-mode as well.
+>
+> What is it, you ask? It's essentially a hack to work around the band-
+> width restrictions of DSI, albeit one that's been commonly implemented
+> by several SoC vendors.
+>
+> This typically works by equipping a peripheral with two DSI interfaces,
+> each of which driving one half of the screen (symmetric left-right mode)
+> or every other line (symmetric odd-even mode). Apparently there can be
+> asymmetric modes in addition to those two, but they seem to be the
+> common ones. Often both of the DSI interfaces need to be configured
+> using DCS commands and vendor specific registers.
+>
+> A single display controller is typically used video data transmission.
+> This is necessary to provide synchronization and avoid tearing and all
+> kinds of other ugliness. For this to work both DSI controllers need to
+> be made aware of which chunk of the video data stream is addressing
+> them.
+>
+> From a software perspective, this poses two problems:
+>
+> 1) A dual-channel device is composed of two DSI peripheral devices which
+>    cannot be programmed independently of each other. A typical example
+>    is that the frame memory extents need to be configured differently
+>    for each of the devices (using the DCS set_column_address and
+>    set_page_address commands). Therefore each device must know of the
+>    other, or there must be a driver that binds against a dummy device
+>    that pulls in the two real devices.
+
+I am not sure if I understand correctly, but I see it rather as one
+device with two dsi-slave interfaces. Probably panel driver can
+create dsi dummy device to program some registers
+via second dsi interface but the panel will be attached to one control bus.
+It seems to be very similar to mfd/i2c devices with two or more i2c
+addresses.
+
+>
+> 2) On the DSI host side, each of the controller instances needs to know
+>    the intimate details of the other controller (or alternatively, one
+>    controller needs to be a "master" and the other a "slave").
+
+The question is if they need to communicate each other, or they have
+to have similar configurations applied?
+
+>
+> I'm looking for feedback on how this is handled on other SoCs, hence
+> adding a few people that I know are working on DSI as well (or have in
+> the past). If you know of any other people that might have useful advice
+> on this topic, feel free to include them.
+>
+> Another goal of this discussion is to come up with a somewhat standard
+> way to represent this in device tree (oh no!) so that panels can be
+> easily reused on different SoCs.
+>
+> What I currently have for Tegra is something along these lines:
+>
+> 	dsi@54300000 {
+> 		nvidia,ganged-mode = <&dsib>;
+>
+> 		panel@0 {
+> 			compatible = "sharp,lq101r1sx01";
+> 			reg = <0>;
+>
+> 			secondary = <&secondary>;
+> 		};
+> 	};
+>
+> 	dsib: dsi@54400000 {
+> 		nvidia,ganged-mode;
+>
+> 		secondary: panel@0 {
+> 			reg = <0>;
+> 		};
+> 	};
+>
+> There are a couple of other properties in those nodes, such as
+> regulators and such, but I've omitted them so that the discussion can
+> focus on the important bits.
+>
+> In the above the panel driver will bind against dsi@54300000/panel@0 and
+> use the "secondary" property to obtain a reference to the DSI peripheral
+> device of the second DSI interface of the device.
+>
+> Similarly, the dsi@54300000 primary DSI host will obtain a reference to
+> a "slave" DSI host via the "nvidia,ganged-mode" property. The secondary
+> DSI host dsi@54400000 will know that it's not a fully functional DSI
+> output by the presence of the empty "nvidia,ganged-mode" property.
+>
+> Using the above I can get things to work, but it seems somewhat kludgy.
+> For example it assumes that both DSI hosts are the same type. I'm not
+> sure if it makes sense for dual-channel to use completely different DSI
+> hosts given that they need to be very tightly coupled (take input from
+> the same display controller, use the same PLL, ...). It's also kind of
+> redundant to have to specify the dual relationship twice (once for the
+> peripheral and once for the DSI hosts). There's also the issue that we
+> should really be specifying a compatible string for the secondary
+> instance of the DSI peripheral, but that would mean that it will bind
+> against the same driver and then both would be programmed independently
+> in the same way (without taking into account the differences between the
+> two interfaces).
+>
+> One alternative to the above could be something like this:
+>
+> 	dsi@54300000 {
+> 		nvidia,ganged-mode = <&dsib>;
+> 		nvidia,panel = <&panel>
+>
+> 		primary: panel@0 {
+> 			compatible = "sharp,lq101r1sx01-left";
+> 			reg = <0>;
+> 		};
+> 	};
+>
+> 	dsib: dsi@54400000 {
+> 		nvidia,ganged-mode;
+>
+> 		secondary: panel@0 {
+> 			compatible = "sharp,lq101r1sx01-right";
+> 			reg = <0>;
+> 		};
+> 	};
+>
+> 	panel {
+> 		compatible = "sharp,lq101r1sx01";
+> 		sharp,left = <&primary>;
+> 		sharp,right = <&secondary>;
+> 	};
+>
+> Which would give us a more natural way to represent this. On the other
+> hand we loose information about the device type (/panel is no longer a
+> DSI device) and associated meta-data (number of DSI lanes, ...).
+>
+> My primary concern is that this may not work for other SoCs since I've
+> only tested it against Tegra. But the goal would be that the same panel
+> connected to a different SoC would still be able to work with the same
+> device tree binding.
+>
+> It would be great if anybody could share if they know how this works on
+> other SoCs and if somebody's thought about how to implement it.
+
+What about strictly following general 'rules' in DT:
+1. Control bus is modeled using subnodes.
+2. Video bus is modeled using video interface bindings.
+
+Assuming this we will put panel node inside the first dsi node and we
+should make
+video link to other dsi node. Something like this:
+
+dsiA {
+    ports {
+        port@0 {
+            remote-endpoint = <&dc_port0>;
+        };
+        dsiA_port1: port@1 {
+            remote-endpoint = <&panel_port0>;
+    };
+    panel@0 {
+        compatible = "...";
+        reg = <0>;
+        ports {
+            /* maybe common configuration for all ports */
+            panel_port0: port@0 {
+                /* configuration specific for port@0 */
+                remote-endpoint = <&dsiA_port1>;
+            };
+            panel_port1: port@1 {
+                /* configuration specific for port@1 */
+                remote-endpoint = <&dsiB_port1>;
+            };
+        };
+    };
+};
+
+dsiB {
+    ports {
+        port@0 {
+            remote-endpoint = <&dc_port1>;
+        };
+        dsiA_port1: port@1 {
+            remote-endpoint = <&panel_port1>;
+    };
+};
+
+Regards
+Andrzej
+
+
+>
+> Thierry
