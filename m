@@ -1,69 +1,67 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] host1x: mipi: Set MIPI_CAL_BIAS_PAD_CFG1 register
-Date: Thu, 7 Aug 2014 10:39:45 +0200
-Message-ID: <20140807083944.GB13315@ulmo.nvidia.com>
-References: <1407391907-19488-1-git-send-email-seanpaul@chromium.org>
- <1407391907-19488-5-git-send-email-seanpaul@chromium.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v6 00/10] ARM: dts: exynos: Prepare Spring
+Date: Thu, 07 Aug 2014 10:40:36 +0200
+Message-ID: <53E33B84.2010108@collabora.co.uk>
+References: <1406940750-15880-1-git-send-email-afaerber@suse.de>	<53DC4E41.4050200@collabora.co.uk>	<CAD=FV=V_vXZLMaTMFdgr62=zRXucZA6D3PvS0Mb40he0ShHTfA@mail.gmail.com>	<53DCBC84.8080600@suse.de> <CAD=FV=WFNW_5KZvLMk0kK1JQsdWLeo2kCjpQsFuxKNSnOKzfgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407391907-19488-5-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WFNW_5KZvLMk0kK1JQsdWLeo2kCjpQsFuxKNSnOKzfgw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/04/2014 05:42 PM, Doug Anderson wrote:
+> 
+> 
+>> For the touchpad it seems DT support has landed in the input tree as
+>> "atmel,maxtouch". Backporting just that patch does not make it work
+>> though. (Tried the rejected pinctrl approach to be on the safe side.)
+>> https://code.google.com/p/chromium/issues/detail?id=371114
+>> https://patchwork.kernel.org/patch/3976801/
+> 
+> This is the same work as needed for pit and pi, I believe.  Perhaps
+> Javier or Dmitry has this on their todo list?
+> 
+> 
 
-On Thu, Aug 07, 2014 at 02:11:47AM -0400, Sean Paul wrote:
-> During calibration, set the "internal reference level for drive
-> pull-down" to the value specified in the tegra TRM.
->=20
-> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  drivers/gpu/host1x/mipi.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
-> index 80578dc..84ed422 100644
-> --- a/drivers/gpu/host1x/mipi.c
-> +++ b/drivers/gpu/host1x/mipi.c
-> @@ -235,6 +235,8 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *de=
-vice)
->  	value |=3D MIPI_CAL_BIAS_PAD_E_VCLAMP_REF;
->  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_BIAS_PAD_CFG0);
-> =20
-> +	tegra_mipi_writel(device->mipi, 0x20000, MIPI_CAL_BIAS_PAD_CFG1);
+I posted a couple of patches that allowed me to have the atmel touchpad working
+on Peach Pit. I found two issues while testing the driver:
 
-Can you add field definitions for this, please?
+a) The device keycode event capabilities are hardcoded in the downstream Chrome
+OS driver while the mainline driver expect these to be defined in the DT. The
+property is called "linux,gpio-keymap" since it seems that the actual
+implementation is using a set of GPIOs. But this is handled by the firmware
+since the kernel just read a status register from the atmel T9 object.
 
-Thierry
+I found the property confusing at first since it didn't have anything to do with
+Linux GPIO so posted a patch to add an example to the DT binding doc in order to
+make it easier to understand [0].
 
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature
+b) The driver overwrites the edge/level flags parsed by OF core and expects that
+the IRQ type will be passed using platform data. The downstream Chrome OS driver
+defaults the type to IRQF_TRIGGER_FALLING if this is not provided while the
+mainline does not have a default so it's just 0 (IRQ_TYPE_NONE).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+This is fixed by reading back the IRQ type from the struct irq_data when parsing
+the DT data [1].
 
-iQIcBAEBAgAGBQJT4ztQAAoJEN0jrNd/PrOhmyAP/3G+mkigBRfhZx+J4Oj9/c1K
-inh2yhGBXhn+elqqpjULOPkWid4iftKcb5TeHP29IIJS411cnKz51FlnnENgw76v
-xkO0pHYpvXWIDwue04WGzRausTxJmjsdgMf7zAENBhQNHuXeoMAIXh9ghpKsSqfJ
-QKEkIis91hLH8sJopMIvV8IZC0duU1wDOug1erg7qUIKHlLCuV6xxe78SO96RLLx
-qZUlPik0z2CErIOyRN1mnzv4XD4Y/GP0+XhmIYLHq4Bih+6V4IclPYFasmSHGCOt
-VJz9ATOuFjpQScv8cCHM+H/6u+wEKn/Mp4Y42YXkpnO4iri4TAsw1vUW2y65EMg7
-TIYNG3ePP7kMqFL+XlBGpDxfnkYuWm+7uoDy+MwY3RspoKyOXY4GCYDiFq0PW6Nr
-p7keqtPAs6M2PxkUg5MgQKdwC5KkY2oRHV6noMBjFuiDxGrZm09QhV9T7fermvVB
-aW7ytauVvuedF09lcyV8VJPwmFYdUmkecXrIK0H7gi2JPFM+gfObe0cFhTEbQ5l/
-ArZ4PTPuyvgNl5pXL/VkkcQaKQa8U/z69L0lusm/yPvd6q6kOhVPcz0dPkHy4aBv
-JoyWFOxstlnpUhz7m1kIZcNuvdy5ulmgtGfY/uYWr2ROHu4hWLWutHGgxcpyzhu7
-XC4htI8+ST4KTIbVdUEF
-=HfF9
------END PGP SIGNATURE-----
+The DTS changes to make the atmel touchpad work on Peach Pit were posted in [2].
+Changes for Pi were included as well since it should be the same but it was not
+tested since I don't have access to that machine, testing will be highly
+appreciated.
 
---7ZAtKRhVyVSsbBD2--
+> 
+> -Doug
+> 
+
+Thanks a lot and best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/8/6/584
+[1]: https://lkml.org/lkml/2014/8/7/82
+[2]: https://lkml.org/lkml/2014/8/6/589
