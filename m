@@ -1,99 +1,131 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 09/12] [v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
-Date: Thu, 7 Aug 2014 10:27:21 +0200
-Message-ID: <CAMuHMdU+o=CGFMyDVSxSKbpAx1oi1id7zABf-pm_pYzvuGOrWw@mail.gmail.com>
-References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
-	<1407329949-5695-10-git-send-email-geert+renesas@glider.be>
-	<20140807003755.GF32652@verge.net.au>
-	<20140807003908.GA30872@verge.net.au>
-	<20140807004107.GB30872@verge.net.au>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
+Date: Thu, 07 Aug 2014 10:31:57 +0200
+Message-ID: <53E3397D.8050708@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
+ <53E336FA.2050306@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140807004107.GB30872-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <53E336FA.2050306@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Thu, Aug 7, 2014 at 2:41 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Thu, Aug 07, 2014 at 09:39:08AM +0900, Simon Horman wrote:
->> On Thu, Aug 07, 2014 at 09:37:56AM +0900, Simon Horman wrote:
->> > On Wed, Aug 06, 2014 at 02:59:06PM +0200, Geert Uytterhoeven wrote:
->> > > Add a DMA property to the QSPI node
->> > >
->> > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> > > ---
->> > > This depends on "[PATCH v2 8/8] ARM: shmobile: r8a7791: Add DMAC devices
->> > > to DT" of series "[PATCH v2 0/8] R-Car Gen2 DMA Controller driver".
->> >
->> > Hi Geert, Hi Laurent,
->> >
->> > Am I correct in assuming that with this patch applied things
->> > will continue to work the old way until the patch above applied
->> > to the same tree and from there on the user will get the new behaviour?
->> >
->> > If so I think that I can take this patch as although the driver hasn't been
->> > merged the relevant bindings were added to the subsystem maintainers tree
->> > by "dmaengine: rcar-dmac: Add device tree bindings documentation" and are
->> > available in linux-next.
->> >
->> > Likewise for "[v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIO".
+On 08/07/2014 10:21 AM, Jacek Anaszewski wrote:
+> Hi Sakari,
+>
+> On 08/06/2014 08:53 AM, Sakari Ailus wrote:
+>> Hi Jacek,
 >>
->> ... and "ARM: shmobile: r8a7790 dtsi: Enable DMA for QSPI"
+>> On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
+>> ...
+>>> 1) Who should register V4L2 Flash sub-device?
+>>>
+>>> LED Flash Class devices, after introduction of the Flash Manager,
+>>> are not tightly coupled with any media controller. They are maintained
+>>> by the Flash Manager and made available for dynamic assignment to
+>>> any media system they are connected to through multiplexing devices.
+>>>
+>>> In the proposed rough solution, when support for V4L2 Flash sub-devices
+>>> is enabled, there is a v4l2_device created for them to register in.
+>>> This however implies that V4L2 Flash device will not be available
+>>> in any media controller, which calls its existence into question.
+>>>
+>>> Therefore I'd like to consult possible ways of solving this issue.
+>>> The option I see is implementing a mechanism for moving V4L2 Flash
+>>> sub-devices between media controllers. A V4L2 Flash sub-device
+>>> would initially be assigned to one media system in the relevant
+>>> device tree binding, but it could be dynamically reassigned to
+>>> the other one. However I'm not sure if media controller design
+>>> is prepared for dynamic modifications of its graph and how many
+>>> modifications in the existing drivers this solution would require.
+>>
+>> Do you have a use case where you would need to strobe a flash from
+>> multiple
+>> media devices at different times, or is this entirely theoretical?
+>> Typically
+>> flash controllers are connected to a single source of hardware strobe (if
+>> there's one) since the flash LEDs are in fact mounted next to a specific
+>> camera sensor.
 >
-> ... and "ARM: shmobile: r8a7790 dtsi: Enable DMA for MSIO"
+> I took into account such arrangements in response to your message [1],
+> where you were considering configurations like "one flash but two
+> cameras", "one camera and two flashes". And you also called for
+> proposing generic solution.
 >
-> and any other similar patches I didn't list above :)
+> One flash and two (or more) cameras case is easily conceivable -
+> You even mentioned stereo cameras. One camera and many flashes
+> arrangement might be useful in case of some professional devices which
+> might be designed so that they would be able to apply different scene
+> lighting. I haven't heard about such devices, but as you said
+> such a configuration isn't unthinkable.
+>
+>> If this is a real issue the way to solve it would be to have a single
+>> media
+>> device instead of many.
+>
+> I was considering adding media device, that would be a representation
+> of a flash manager, gathering all the registered flashes. Nonetheless,
+> finally I came to conclusion that a v4l2-device alone should suffice,
+> just to provide a Flash Manager representation allowing for v4l2-flash
+> sub-devices to register in.
+> All the features provided by the media device are useless in case
+> of a set of V4L2 Flash sub-devices. They couldn't have any linkage
+> in such a device. The only benefit from having media device gathering
+> V4L2 Flash devices would be possibility of listing them.
+>
+>>> 2) Consequences of locking the Flash Manager during flash strobe
+>>>
+>>> In case a LED Flash Class device depends on muxes involved in
+>>> routing the other LED Flash Class device's strobe signals,
+>>> the Flash Manager must be locked for the time of strobing
+>>> to prevent reconfiguration of the strobe signal routing
+>>> by the other device.
+>>
+>> I wouldn't be concerned of this in particular. It's more important we do
+>> actully have V4L2 flash API supported by LED flash drivers and that
+>> they do
+>> implement the API correctly.
+>>
+>> It's at least debatable whether you should try to prevent user space from
+>> doing silly things or not. With complex devices it may relatively easily
+>> lead to wrecking havoc with actual use cases which we certainly do not
+>> want.
+>>
+>> In this case, if you just prevent changing the routing (do you have a use
+>> case for it?) while strobing, someone else could still change the routing
+>> just before you strobe.
+>
+> Originally I started to implementing this so that strobe signal routing
+> was altered upon setting strobe source. With such an implementation the
+> use case would be as follows:
+>
+> 1. Process 1 sets strobe source to external
+> 2. Process 2 sets strobe source to software
+> 3. Process 1 strobes the flash, unaware that strobe source setting has
+>     been changed
 
-Yes[*].
+It is of course too generic use case. The more specific one could
+be the situation when there are many users in the system that
+want to take the picture in the same time. It is not valid in
+case of mobile devices though.
 
-If rcar-dma is not available, drivers fall back to PIO, cfr. for rspi:
-
--renesas_spi e6b10000.spi: DMA available
-+renesas_spi e6b10000.spi: dma_request_slave_channel_compat failed
-+renesas_spi e6b10000.spi: DMA not available, using PIO
- renesas_spi e6b10000.spi: registered master spi0
- spi spi0.0: setup mode 0, 8 bits/w, 30000000 Hz max --> 0
- m25p80 spi0.0: s25fl512s (65536 Kbytes)
- 3 ofpart partitions found on MTD device spi0.0
- Creating 3 MTD partitions on "spi0.0":
- 0x000000000000-0x000000080000 : "loader"
- 0x000000080000-0x000000100000 : "bootenv"
- 0x000000100000-0x000004000000 : "data"
- renesas_spi e6b10000.spi: registered child spi0.0
-
-and sh-msiof:
-
--spi_sh_msiof e6e20000.spi: DMA available
-+spi_sh_msiof e6e20000.spi: dma_request_slave_channel_compat failed
-+spi_sh_msiof e6e20000.spi: DMA not available, using PIO
- spi_sh_msiof e6e20000.spi: registered master spi1
- spi spi1.0: setup mode 3, 8 bits/w, 6000000 Hz max --> 0
- spi_sh_msiof e6e20000.spi: registered child spi1.0
-
-and everything still works, but slower.
-
-[*] If the individual DMA slave drivers properly handle DMA request
-    failures. If they don't, they will already fail now, as there is no DMA
-    platform configuration without the dmas/dma-names properties
-    (ignoring Magnus' DMA prototypes using auxdata, as DT is the way
-     forward).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To avoid such problems I changed the implementation so that the
+> routing is set in the led_flash_manager_setup_strobe function called
+> from led_set_flash_strobe and led_set_external_strobe functions.
+> led_flash_manager_setup_strobe sets strobe signal routing
+> and strobes the flash under lock and holds it for the flash timeout
+> period, which prevents spurious reconfiguration.
+>
+> Nonetheless, I agree that trying to handle this problem is troublesome,
+> and would affect current V4L2 Flash SPI semantics. If you don't share
+> my concerns I am happy to leave this locking solution out :)
+>
+> Best Regards,
+> Jacek Anaszewski
+>
+> [1] http://www.spinics.net/lists/linux-leds/msg01617.html
