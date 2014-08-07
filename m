@@ -1,63 +1,50 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v4 3/4] ARM: dts: add rk3288 dwc2 controller support
-Date: Thu,  7 Aug 2014 17:34:54 +0800
-Message-ID: <1407404095-3265-4-git-send-email-kever.yang@rock-chips.com>
+From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 4/4] ARM: dts: Enable USB otg and host1(dwc) on rk3288-evb
+Date: Thu,  7 Aug 2014 17:34:55 +0800
+Message-ID: <1407404095-3265-5-git-send-email-kever.yang@rock-chips.com>
 References: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Zimmerman <paulz@synopsys.com>, heiko@sntech.de
-Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407404095-3265-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-rk3288 has two kind of usb controller, this add the dwc2 controller
-for otg and host1.
+USB otg port is the usb3.0 b-port on the board.
+USB host1 port is the host A port nearby the otg port.
 
-Controller can works with usb PHY default setting and Vbus on.
-
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
 ---
 
 Changes in v4: None
 Changes in v3:
-- EHCI and HSIC move new for version 3.
+- Rebase
 
-Changes in v2: None
+Changes in v2:
+- evb patch added in version 2
 
- arch/arm/boot/dts/rk3288.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/rk3288-evb.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index e7cb008..9713054 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -156,6 +156,26 @@
- 		status = "disabled";
- 	};
- 
-+	usb_host1: usb@ff540000 {
-+		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
-+				"snps,dwc2";
-+		reg = <0xff540000 0x40000>;
-+		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_USBHOST1>;
-+		clock-names = "otg";
-+		status = "disabled";
-+	};
-+
-+	usb_otg: usb@ff580000 {
-+		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
-+				"snps,dwc2";
-+		reg = <0xff580000 0x40000>;
-+		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_OTG0>;
-+		clock-names = "otg";
-+		status = "disabled";
-+	};
-+
- 	uart2: serial@ff690000 {
- 		compatible = "rockchip,rk3288-uart", "snps,dw-apb-uart";
- 		reg = <0xff690000 0x100>;
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index 4f57209..a322100 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -94,3 +94,9 @@
+ &usb_host0_ehci {
+ 	status = "okay";
+ };
++&usb_host1 {
++	status = "okay";
++};
++&usb_otg {
++	status = "okay";
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
