@@ -1,131 +1,87 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Thu, 07 Aug 2014 10:31:57 +0200
-Message-ID: <53E3397D.8050708@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
- <53E336FA.2050306@samsung.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] host1x: mipi: Include clock lanes in mipi calibrate
+Date: Thu, 7 Aug 2014 10:34:30 +0200
+Message-ID: <20140807083429.GA13315@ulmo.nvidia.com>
+References: <1407391907-19488-1-git-send-email-seanpaul@chromium.org>
+ <1407391907-19488-4-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <53E336FA.2050306@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407391907-19488-4-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/07/2014 10:21 AM, Jacek Anaszewski wrote:
-> Hi Sakari,
->
-> On 08/06/2014 08:53 AM, Sakari Ailus wrote:
->> Hi Jacek,
->>
->> On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
->> ...
->>> 1) Who should register V4L2 Flash sub-device?
->>>
->>> LED Flash Class devices, after introduction of the Flash Manager,
->>> are not tightly coupled with any media controller. They are maintained
->>> by the Flash Manager and made available for dynamic assignment to
->>> any media system they are connected to through multiplexing devices.
->>>
->>> In the proposed rough solution, when support for V4L2 Flash sub-devices
->>> is enabled, there is a v4l2_device created for them to register in.
->>> This however implies that V4L2 Flash device will not be available
->>> in any media controller, which calls its existence into question.
->>>
->>> Therefore I'd like to consult possible ways of solving this issue.
->>> The option I see is implementing a mechanism for moving V4L2 Flash
->>> sub-devices between media controllers. A V4L2 Flash sub-device
->>> would initially be assigned to one media system in the relevant
->>> device tree binding, but it could be dynamically reassigned to
->>> the other one. However I'm not sure if media controller design
->>> is prepared for dynamic modifications of its graph and how many
->>> modifications in the existing drivers this solution would require.
->>
->> Do you have a use case where you would need to strobe a flash from
->> multiple
->> media devices at different times, or is this entirely theoretical?
->> Typically
->> flash controllers are connected to a single source of hardware strobe (if
->> there's one) since the flash LEDs are in fact mounted next to a specific
->> camera sensor.
->
-> I took into account such arrangements in response to your message [1],
-> where you were considering configurations like "one flash but two
-> cameras", "one camera and two flashes". And you also called for
-> proposing generic solution.
->
-> One flash and two (or more) cameras case is easily conceivable -
-> You even mentioned stereo cameras. One camera and many flashes
-> arrangement might be useful in case of some professional devices which
-> might be designed so that they would be able to apply different scene
-> lighting. I haven't heard about such devices, but as you said
-> such a configuration isn't unthinkable.
->
->> If this is a real issue the way to solve it would be to have a single
->> media
->> device instead of many.
->
-> I was considering adding media device, that would be a representation
-> of a flash manager, gathering all the registered flashes. Nonetheless,
-> finally I came to conclusion that a v4l2-device alone should suffice,
-> just to provide a Flash Manager representation allowing for v4l2-flash
-> sub-devices to register in.
-> All the features provided by the media device are useless in case
-> of a set of V4L2 Flash sub-devices. They couldn't have any linkage
-> in such a device. The only benefit from having media device gathering
-> V4L2 Flash devices would be possibility of listing them.
->
->>> 2) Consequences of locking the Flash Manager during flash strobe
->>>
->>> In case a LED Flash Class device depends on muxes involved in
->>> routing the other LED Flash Class device's strobe signals,
->>> the Flash Manager must be locked for the time of strobing
->>> to prevent reconfiguration of the strobe signal routing
->>> by the other device.
->>
->> I wouldn't be concerned of this in particular. It's more important we do
->> actully have V4L2 flash API supported by LED flash drivers and that
->> they do
->> implement the API correctly.
->>
->> It's at least debatable whether you should try to prevent user space from
->> doing silly things or not. With complex devices it may relatively easily
->> lead to wrecking havoc with actual use cases which we certainly do not
->> want.
->>
->> In this case, if you just prevent changing the routing (do you have a use
->> case for it?) while strobing, someone else could still change the routing
->> just before you strobe.
->
-> Originally I started to implementing this so that strobe signal routing
-> was altered upon setting strobe source. With such an implementation the
-> use case would be as follows:
->
-> 1. Process 1 sets strobe source to external
-> 2. Process 2 sets strobe source to software
-> 3. Process 1 strobes the flash, unaware that strobe source setting has
->     been changed
 
-It is of course too generic use case. The more specific one could
-be the situation when there are many users in the system that
-want to take the picture in the same time. It is not valid in
-case of mobile devices though.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> To avoid such problems I changed the implementation so that the
-> routing is set in the led_flash_manager_setup_strobe function called
-> from led_set_flash_strobe and led_set_external_strobe functions.
-> led_flash_manager_setup_strobe sets strobe signal routing
-> and strobes the flash under lock and holds it for the flash timeout
-> period, which prevents spurious reconfiguration.
->
-> Nonetheless, I agree that trying to handle this problem is troublesome,
-> and would affect current V4L2 Flash SPI semantics. If you don't share
-> my concerns I am happy to leave this locking solution out :)
->
-> Best Regards,
-> Jacek Anaszewski
->
-> [1] http://www.spinics.net/lists/linux-leds/msg01617.html
+On Thu, Aug 07, 2014 at 02:11:46AM -0400, Sean Paul wrote:
+> When calibrating the mipi phy, also include the clock lanes
+> in the calibration.
+>=20
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  drivers/gpu/host1x/mipi.c | 70 +++++++++++++++++++++++++++++++++++++----=
+------
+>  1 file changed, 56 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> index 0af2892..80578dc 100644
+> --- a/drivers/gpu/host1x/mipi.c
+> +++ b/drivers/gpu/host1x/mipi.c
+> @@ -49,10 +49,18 @@
+>  #define MIPI_CAL_CONFIG_DSIC		0x10
+>  #define MIPI_CAL_CONFIG_DSID		0x11
+> =20
+> +#define MIPI_CAL_CONFIG_DSIAB_CLK	0x19
+> +#define MIPI_CAL_CONFIG_DSICD_CLK	0x1a
+> +#define MIPI_CAL_CONFIG_CSIAB_CLK	0x1b
+> +#define MIPI_CAL_CONFIG_CSICD_CLK	0x1c
+> +#define MIPI_CAL_CONFIG_CSIE_CLK	0x1d
+> +
+
+These registers don't seem to exist on Tegra114 and earlier. It also
+seems like MIPI_CAL_CONFIG_DSIC and MIPI_CAL_CONFIG_DSID no longer exist
+on Tegra124 and later. And CSIC and CSID seem to be shared with DSIB
+(channel A and B) now.
+
+So I think we'll need something more elaborate than this. It should be
+differentiating between SoC revisions to allow checking for valid pad
+selection when calibrating.
+
+I'll see if I can find out what's up with the change between Tegra114
+and Tegra124 regarding the DSIC and DSID pads. It looks to me like they
+were merged to match the DSIA and DSIB controllers, whereas before DSIA
+and DSIB were used for controller DSIA and DSIC and DSID were used for
+controller DSIB.
+
+Thierry
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT4zoVAAoJEN0jrNd/PrOhhZAQAI4dGAS3zHIOl0u7VKB19JWO
+fCG4AeGn/FEv1p0Ozi4vnTpXC1P2JAz81uTYvy3FPq7sLQeJnoZhMgLp9K86mUhG
+QO2ZXf1e97mXFEJLvmQ+t23Zn3VgJBy1vXF9FUsZhF3sXfXtGDlvBsEcms/84y0I
+tdUOmyoNvhpjnV4Io7SJs2V8nh0fUVPlx16qFz3pPJbiaZLhYmZWBEPxyuQulEN9
+SHU+s0kDxT/Hh02BHquVwy1XMJM/mQKva1k6O97Sun+26gaawXXUoJUdAEWwGE3A
+JRcaCpMR6iVJsrA5XslW4QrkYKXt7BC2zLzLqt/lfghvALx8nWRC+eQg2Uz78XxM
++/z99yq1Fb5NUvs9WdIK3aLYp+g5dgGkGZSPIXCJn1WiduyqM0GlOLyeo2PLsuzY
+VMiI51ir96vONoOG6kIPS5rzTSZl9ktAlHxfbi9/k87u/EZ8DsOksxkA6lHf/Wi0
+Md0t8XB6HOccBTP0AYRapnlW+LbnU1qCVYmSEJUOg/dcYdkSCekK7FGXVYnU75zq
+v4reGXld4tOInI7xVqzNtjCbJZWn7oIV6UT8o6W8YEntUVvZfmq8HHmvWqFfcAMw
+/mXMXNtoniKO9qzyTQfIHuO8sJZipeZlxdUtGZDIttpuIeILjHnFJNtK5CTRFK/D
+hH6816t5sJ9UxlwEwCnv
+=Fns3
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
