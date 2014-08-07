@@ -1,123 +1,60 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Thu, 07 Aug 2014 10:21:14 +0200
-Message-ID: <53E336FA.2050306@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3 0/4] Add eMMC and SD card support for rk3288-evb
+Date: Thu, 07 Aug 2014 17:24:37 +0900
+Message-ID: <53E337C5.3020802@samsung.com>
+References: <1407344984-14176-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140806065358.GC16460-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1407344984-14176-1-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi, Doug.
 
-On 08/06/2014 08:53 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
-> ...
->> 1) Who should register V4L2 Flash sub-device?
->>
->> LED Flash Class devices, after introduction of the Flash Manager,
->> are not tightly coupled with any media controller. They are maintained
->> by the Flash Manager and made available for dynamic assignment to
->> any media system they are connected to through multiplexing devices.
->>
->> In the proposed rough solution, when support for V4L2 Flash sub-devices
->> is enabled, there is a v4l2_device created for them to register in.
->> This however implies that V4L2 Flash device will not be available
->> in any media controller, which calls its existence into question.
->>
->> Therefore I'd like to consult possible ways of solving this issue.
->> The option I see is implementing a mechanism for moving V4L2 Flash
->> sub-devices between media controllers. A V4L2 Flash sub-device
->> would initially be assigned to one media system in the relevant
->> device tree binding, but it could be dynamically reassigned to
->> the other one. However I'm not sure if media controller design
->> is prepared for dynamic modifications of its graph and how many
->> modifications in the existing drivers this solution would require.
->
-> Do you have a use case where you would need to strobe a flash from multiple
-> media devices at different times, or is this entirely theoretical? Typically
-> flash controllers are connected to a single source of hardware strobe (if
-> there's one) since the flash LEDs are in fact mounted next to a specific
-> camera sensor.
+Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-I took into account such arrangements in response to your message [1], 
-where you were considering configurations like "one flash but two
-cameras", "one camera and two flashes". And you also called for 
-proposing generic solution.
+On 08/07/2014 02:09 AM, Doug Anderson wrote:
+> This series adds basic eMMC and SD card support for the rk3288-evb
+> board based on Addy's posted dw_mmc patch from:
+>   https://patchwork.kernel.org/patch/4653631/
+> 
+> The series is a little tricky because:
+> * Jaehoon has some outstanding patches to remove the slot node.  Since
+>   those haven't landed yet, I've posted my original patch with the
+>   slot node and then some future patches that can land with Jaehoon's
+>   patches.
+> 
+> So just to be explicit:
+> - Patch #1 and #2 can land after Addy's patch lands.
+> - Patch #3 and #4 can land after Jaehoon's patch lands, though there's
+>   no huge hurry since Jaehoon's patch supports the old mode (it just
+>   prints a warning).
+> 
+> Note that we don't have regulators specified yet (no regulator driver
+> for rk808-based board).  We also don't yet support UHS modes or MMC
+> DDR50 (which require regulator support plus dw_mmc driver support for
+> tuning).  Those features can come later.
+> 
+> Changes in v3:
+> - Removed DDR50 mode since it needs tuning, which isn't there yet.
+> 
+> Changes in v2:
+> - New patchwork link for Addy's patch
+> - Squashed in the DDR50 mode since Addy spun his patch.
+> - Refer to the new title of Jaehoon's patch
+> 
+> Doug Anderson (4):
+>   ARM: dts: Add emmc and sdmmc to the rk3288 device tree
+>   ARM: dts: Enable emmc and sdmmc on the rk3288-evb boards
+>   ARM: dts: Take the mmc slot node out of rk3288-evb
+>   ARM: dts: mmc slot node gone on rk3288 => no more address / size cells
+> 
+>  arch/arm/boot/dts/rk3288-evb.dtsi | 24 ++++++++++++++++++++++++
+>  arch/arm/boot/dts/rk3288.dtsi     | 18 ++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+> 
 
-One flash and two (or more) cameras case is easily conceivable -
-You even mentioned stereo cameras. One camera and many flashes
-arrangement might be useful in case of some professional devices which
-might be designed so that they would be able to apply different scene
-lighting. I haven't heard about such devices, but as you said
-such a configuration isn't unthinkable.
-
-> If this is a real issue the way to solve it would be to have a single media
-> device instead of many.
-
-I was considering adding media device, that would be a representation
-of a flash manager, gathering all the registered flashes. Nonetheless,
-finally I came to conclusion that a v4l2-device alone should suffice,
-just to provide a Flash Manager representation allowing for v4l2-flash 
-sub-devices to register in.
-All the features provided by the media device are useless in case
-of a set of V4L2 Flash sub-devices. They couldn't have any linkage
-in such a device. The only benefit from having media device gathering
-V4L2 Flash devices would be possibility of listing them.
-
->> 2) Consequences of locking the Flash Manager during flash strobe
->>
->> In case a LED Flash Class device depends on muxes involved in
->> routing the other LED Flash Class device's strobe signals,
->> the Flash Manager must be locked for the time of strobing
->> to prevent reconfiguration of the strobe signal routing
->> by the other device.
->
-> I wouldn't be concerned of this in particular. It's more important we do
-> actully have V4L2 flash API supported by LED flash drivers and that they do
-> implement the API correctly.
->
-> It's at least debatable whether you should try to prevent user space from
-> doing silly things or not. With complex devices it may relatively easily
-> lead to wrecking havoc with actual use cases which we certainly do not want.
->
-> In this case, if you just prevent changing the routing (do you have a use
-> case for it?) while strobing, someone else could still change the routing
-> just before you strobe.
-
-Originally I started to implementing this so that strobe signal routing
-was altered upon setting strobe source. With such an implementation the 
-use case would be as follows:
-
-1. Process 1 sets strobe source to external
-2. Process 2 sets strobe source to software
-3. Process 1 strobes the flash, unaware that strobe source setting has
-    been changed
-
-To avoid such problems I changed the implementation so that the
-routing is set in the led_flash_manager_setup_strobe function called
-from led_set_flash_strobe and led_set_external_strobe functions.
-led_flash_manager_setup_strobe sets strobe signal routing
-and strobes the flash under lock and holds it for the flash timeout
-period, which prevents spurious reconfiguration.
-
-Nonetheless, I agree that trying to handle this problem is troublesome,
-and would affect current V4L2 Flash SPI semantics. If you don't share
-my concerns I am happy to leave this locking solution out :)
-
-Best Regards,
-Jacek Anaszewski
-
-[1] http://www.spinics.net/lists/linux-leds/msg01617.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
