@@ -1,59 +1,61 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: fsl_sai: Add asynchronous mode support
-Date: Thu, 7 Aug 2014 11:05:53 +0100
-Message-ID: <20140807100553.GF17528@sirena.org.uk>
-References: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
- <20140807094527.GC17528@sirena.org.uk>
- <20140807094404.GB3088@MrMyself>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] Adding a support for Skyworks SKY81452
+Date: Thu, 7 Aug 2014 11:09:52 +0100
+Message-ID: <20140807100952.GH10136@lee--X1>
+References: <1407398738-7582-1-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RPBrhutAYpIit0OE"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140807094404.GB3088@MrMyself>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+In-Reply-To: <1407398738-7582-1-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: rdunlap@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jg1.han@samsung.com, cooloney@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, grant.likely@linaro.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, jack.yoo@skyworksinc.com, florian.vaussard@epfl.ch, thierry.reding@gmail.com, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 07 Aug 2014, Gyungoh Yoo wrote:
 
---RPBrhutAYpIit0OE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> ---
+>  Documentation/backlight/sky81452.txt               |  25 ++
+>  Documentation/devicetree/bindings/mfd/sky81452.txt |  24 ++
+>  .../bindings/regulator/sky81452-regulator.txt      |  16 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  .../video/backlight/sky81452-backlight.txt         |  20 ++
+>  drivers/mfd/Kconfig                                |  12 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/sky81452.c                             | 115 +++++++
+>  drivers/regulator/Kconfig                          |  11 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/sky81452-regulator.c             | 127 ++++++++
+>  drivers/video/backlight/Kconfig                    |  10 +
+>  drivers/video/backlight/Makefile                   |   1 +
+>  drivers/video/backlight/sky81452-backlight.c       | 333 +++++++++++=
+++++++++++
+>  include/linux/mfd/sky81452.h                       |  31 ++
+>  include/linux/sky81452-backlight.h                 |  46 +++
+>  16 files changed, 774 insertions(+)
+>  create mode 100644 Documentation/backlight/sky81452.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.tx=
+t
+>  create mode 100644 Documentation/devicetree/bindings/regulator/sky81=
+452-regulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/video/backlight=
+/sky81452-backlight.txt
+>  create mode 100644 drivers/mfd/sky81452.c
+>  create mode 100644 drivers/regulator/sky81452-regulator.c
+>  create mode 100644 drivers/video/backlight/sky81452-backlight.c
+>  create mode 100644 include/linux/mfd/sky81452.h
+>  create mode 100644 include/linux/sky81452-backlight.h
 
-On Thu, Aug 07, 2014 at 05:44:05PM +0800, Nicolin Chen wrote:
-> On Thu, Aug 07, 2014 at 10:45:27AM +0100, Mark Brown wrote:
+Wow, no way.  Please split this up into separate patches.  Ideally, at
+least one per subsystem and separate ones again for the DT bindings.
 
-> > Might be worth printing an error here.
+[...]
 
-> Hmm...Do I need to send a v2?
-
-Send an incremental patch.
-
---RPBrhutAYpIit0OE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT409+AAoJELSic+t+oim9ysYP/A0CFYRbS/nhwGKrxjI9PRJt
-/xGfd+Ke39ZYSMy+lW2rXlvmK3yHnHQd68fr64cdH148dEZD2eYlfrzcjpC0kGOb
-Ax0tkjXhRjd5axgmPLqCmSTLXmg+DeTiqk+ReOsXLj/M6qYrPhMY5p39/9KvnGwj
-Hw5PuUWaeS7+K91NIwFgWFYilxQx+Z3WXXN7++3UfRdh6v7Xr/czp4CgzaBGO94z
-idji4VUxO66tERbU8iakdXlwSpzCuT6WhuN1taKZboCyPEQh/CFZdJtMm/NDzKwI
-XrtLnA5o6HATngQpRw+lwOUsdZZUvvsKD1ob8dFOeTUXFE1mPDMiL5GN4tAkOFJy
-WaFQiX9JjZoF0TYr3YsI5hNwgJL9mJNeo+bcSsfZ2p+EAMptkk28apRsVXiRKC1r
-vBet+/vba6MbQAP9TakJICUMdUBbqRw8GM+u1uT2+0VqCypAls7gv/ojwKhisyuh
-2v33tiBtqhI0Ho99QyCBpEXNlzU78T1xMAgkcXST1RFrBLoomYJxwXSaDa7wyLi/
-SyiHRZYgvoKgni446skmTt7NYFCZmAEjpBhzjTyQ/Bk9ADm7r/qdOyNl6pWc0PUE
-tlpX6K4Btr/KGQPgdIhruXgYh8jjNpcfJKaKK/dP5jRQ14PL3ow3pC5MBN4Kpj4H
-gsjT/Dl07Fg9DDTt4wRz
-=KJ79
------END PGP SIGNATURE-----
-
---RPBrhutAYpIit0OE--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
