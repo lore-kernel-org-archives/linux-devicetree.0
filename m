@@ -1,51 +1,68 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/2] tty: serial: 8250: Add Mediatek UART driver
-Date: Thu, 7 Aug 2014 16:07:41 +0200
-Message-ID: <CABuKBeKJ=KFc1DfvyHgD+iAC1=yLqYjjDUc0CH+1zbRQzw_DJw@mail.gmail.com>
-References: <1407394292-26317-1-git-send-email-matthias.bgg@gmail.com>
-	<1407394292-26317-2-git-send-email-matthias.bgg@gmail.com>
-	<1407417714.8334.8.camel@acox1-desk.ger.corp.intel.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v3 2/6] usb: host: ehci-st: Add EHCI support for ST STB
+ devices
+Date: Thu, 7 Aug 2014 15:13:07 +0100
+Message-ID: <20140807141307.GA12137@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
+ <1407344589-24863-3-git-send-email-peter.griffin@linaro.org>
+ <201408062307.18851.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407417714.8334.8.camel@acox1-desk.ger.corp.intel.com>
+Content-Disposition: inline
+In-Reply-To: <201408062307.18851.arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cox <alan@linux.intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.cz, Grant Likely <grant.likely@linaro.org>, Varka Bhadram <varkabhadram@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Yingjoe Chen <yingjoe.chen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-serial@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-08-07 15:21 GMT+02:00 Alan Cox <alan@linux.intel.com>:
->
->> +      * Some baudrates are not supported by the chip, so we use the next
->> +      * lower rate supported and update termios c_flag.
->
-> I don't see the termios updating being done now ?
+Hi Arnd,
 
-Please have a look on the usage of the SET_CFLAG_BAUD macro in the patch.
-I'm not sure if it is the way to go though.
+Thanks for reviewing, see my comments below: -
 
->
->> +     data->clk = of_clk_get(np, 0);
->> +     if (IS_ERR(data->clk)) {
->> +             pr_warn("Can't get timer clock");
->> +             return PTR_ERR(data->clk);
->> +     }
->> +
->> +     err = clk_prepare_enable(data->clk);
->> +     if (err) {
->> +             pr_warn("Can't prepare clock");
->
-> and these do need a newline on them. They are also not very useful as
-> they don't indicate what device was involved. If you passed pdev from
-> mtk8250_probe you'd be able to use dev_warn instead
->
-> Otherwise looks great and exactly as 8250_core is intended to be used.
->
-> Alan
->
->
+> > +static int st_ehci_platform_reset(struct usb_hcd *hcd)
+> > +{
+> > +	struct platform_device *pdev = to_platform_device(hcd->self.controller);
+> > +	struct usb_ehci_pdata *pdata = dev_get_platdata(&pdev->dev);
+> > +	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+> > +	int retval;
+> > +
+> > +	if (pdata->pre_setup) {
+> > +		retval = pdata->pre_setup(hcd);
+> > +		if (retval < 0)
+> > +			return retval;
+> > +	}
+> 
+> What is the point in going through a platform data function pointer here?
+> Can't you just open-code st_ehci_configure_bus() here?
 
+Yes I can, I've done as you suggest in v4.
+> 
+> > +	 * Use reasonable defaults so platforms don't have to provide these
+> > +	 * with DT probing on ARM.
+> > +	 */
+> > +	if (!pdata)
+> > +		pdata = &ehci_platform_defaults;
+> 
+> How would you ever get here with pdata set?
 
+This is left over from using ohci-platform as a starting point. pdata is not
+set when booting via DT and gets initialized here.
 
--- 
-motzblog.wordpress.com
+As this driver depends on OF and will never run without DT I've initialised
+pdata where it gets defined in V4.
+
+I've then also removed the check further down in probe that causes some unnecessary
+indentation where we get the phys / clocks.
+> 
+> > +	err = dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
+> > +	if (err)
+> > +		return err;
+> 
+> Remove this here, and rely on the correct mask to be set from the DT scan.
+
+I've removed in V4.
+
+regards,
+
+Peter.
