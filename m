@@ -1,104 +1,60 @@
-From: "Priebe, Sebastian" <Sebastian.Priebe-hnW+OuB6jW6zQB+pC5nmwQ@public.gmane.org>
-Subject: AW: driver using another driver
-Date: Thu, 7 Aug 2014 07:49:19 +0000
-Message-ID: <E70AF999396FDF4EAE40E195B84709611F848308@SPMDEGHN001.CADCON.INTERN>
-References: <E70AF999396FDF4EAE40E195B84709611F84671F@SPMDEGHN001.CADCON.INTERN>
-	<20140801063105.GV23235@pengutronix.de>
-	<E70AF999396FDF4EAE40E195B84709611F847086@SPMDEGHN001.CADCON.INTERN>
-	<20140801085148.GW23235@pengutronix.de>
-	<E70AF999396FDF4EAE40E195B84709611F8470FA@SPMDEGHN001.CADCON.INTERN>
- <CA+8Hj81tTdCMm-we8F6ZbNq8wPVWsEZZ8tYixLN3--tjiQpyfw@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/2] Input: atmel_mxt_ts - Get IRQ edge/level flags on
+ DT booting
+Date: Thu, 07 Aug 2014 09:49:49 +0200
+Message-ID: <53E32F9D.2080705@collabora.co.uk>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <53E2D2F8.7010606@gmail.com> <53E2DAAC.1060602@collabora.co.uk> <20140807060926.GA651@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+8Hj81tTdCMm-we8F6ZbNq8wPVWsEZZ8tYixLN3--tjiQpyfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: de-DE
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liu Ying <liu.y.victor-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140807060926.GA651@core.coreip.homeip.net>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCm5vLCBJIGRvbid0IGhhdmUgdGhpcyBwYXRjaC4NCkkgd2lsbCBnaXZlIGl0IGEgdHJ5
-Lg0KVGhhbmtzLg0KDQpHcmVldGluZ3MNClNlYmFzdGlhbiBQcmllYmUNCg0KDQoNCg0KPT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpDQURDT04NCkluZ2VuaWV1cmdl
-c2VsbHNjaGFmdCBtYkggJiBDby4gS0cNCkdlc2NoYWVmdHNmdWVocmVyOiBSb2JlcnQgQmF1ZXIs
-IEFuZHJlYXMgR3VuZGVsDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IEQtODYzNjggR2Vyc3Rob2Zl
-bg0KUmVnaXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodCBBdWdzYnVyZyBIUkEgMTQ1MjENCj09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KDQotLS0tLVVyc3Byw7xuZ2xp
-Y2hlIE5hY2hyaWNodC0tLS0tDQpWb246IExpdSBZaW5nIFttYWlsdG86bGl1LnkudmljdG9yQGdt
-YWlsLmNvbV0NCkdlc2VuZGV0OiBNaXR0d29jaCwgNi4gQXVndXN0IDIwMTQgMTY6MDINCkFuOiBQ
-cmllYmUsIFNlYmFzdGlhbg0KQ2M6IFNhc2NoYSBIYXVlcjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmcNCkJldHJlZmY6IFJlOiBkcml2ZXIgdXNpbmcgYW5vdGhlciBkcml2ZXINCg0KSGkgU2Vi
-YXN0aWFuLA0KDQoNCjIwMTQtMDgtMDEgMTc6MDggR01UKzA4OjAwIFByaWViZSwgU2ViYXN0aWFu
-IDxTZWJhc3RpYW4uUHJpZWJlQGNhZGNvbi5kZT46DQoNCg0KICAgICAgICBIZWxsbyBTYXNjaGEs
-DQoNCiAgICAgICAgSSBkb24ndCByZWdpc3RlciBhIHBsYXRmb3JtIGRyaXZlciBtYW51YWxseSBh
-bnltb3JlLg0KICAgICAgICBBcyBJIHdyb3RlIGJlZm9yZSwgSSB0dXJuZWQgdGhlIENQTEQgZHJp
-dmVyIGluIGEgcGxhdGZvcm0gZHJpdmVyIGFuZCBjcmVhdGVkIGFuIGVudHJ5IGluIHRoZSBkZXZp
-Y2UgdHJlZS4NCiAgICAgICAgQnV0IEkgZ2V0IGFuIGVycm9yIGluIHRoZSBwcm9iZTogcmVzID0g
-cGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKSByZXR1cm5zIE5V
-TEwuDQoNCg0KDQpEb2VzIHlvdXIga2VybmVsIGNvbnRhaW4gdGhpcyBwYXRjaFsxXT8NClRoaXMg
-cGF0Y2ggaXMgbmVlZGVkIHRvIHBvcHVsYXRlIHRoZSBkZXZpY2VzIG9uIHRoZSBzaW1wbGUgYnVz
-IG9mIGkuTVggV0VJTS4NCkFuZCwgaXQgaGFzIGJlZW4gcXVldWVkIGluIGxpbnV4LW5leHQuDQoN
-ClsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC83LzQvMTI5DQoNCg0KUmVnYXJkcywNCg0K
-TGl1IFlpbmcNCg0KDQoNCiAgICAgICAgR3JlZXRpbmdzDQoNCiAgICAgICAgU2ViYXN0aWFuIFBy
-aWViZQ0KICAgICAgICBUZWxlZm9uOiArNDkgKDApNjIxIDY4NTk5Ni0yNiA8dGVsOiUyQjQ5JTIw
-JTI4MCUyOTYyMSUyMDY4NTk5Ni0yNj4NCg0KDQoNCg0KDQogICAgICAgID09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KICAgICAgICBDQURDT04NCiAgICAgICAgSW5n
-ZW5pZXVyZ2VzZWxsc2NoYWZ0IG1iSCAmIENvLiBLRw0KICAgICAgICBHZXNjaGFlZnRzZnVlaHJl
-cjogUm9iZXJ0IEJhdWVyLCBBbmRyZWFzIEd1bmRlbA0KICAgICAgICBTaXR6IGRlciBHZXNlbGxz
-Y2hhZnQ6IEQtODYzNjggR2Vyc3Rob2Zlbg0KICAgICAgICBSZWdpc3RlcmdlcmljaHQ6IEFtdHNn
-ZXJpY2h0IEF1Z3NidXJnIEhSQSAxNDUyMQ0KICAgICAgICA9PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT0NCg0KICAgICAgICAtLS0tLVVyc3Byw7xuZ2xpY2hlIE5hY2hy
-aWNodC0tLS0tDQogICAgICAgIFZvbjogU2FzY2hhIEhhdWVyIFttYWlsdG86cy5oYXVlckBwZW5n
-dXRyb25peC5kZV0NCg0KICAgICAgICBHZXNlbmRldDogRnJlaXRhZywgMS4gQXVndXN0IDIwMTQg
-MTA6NTINCg0KICAgICAgICBBbjogUHJpZWJlLCBTZWJhc3RpYW4NCiAgICAgICAgQ2M6IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnDQogICAgICAgIEJldHJlZmY6IFJlOiBkcml2ZXIgdXNpbmcg
-YW5vdGhlciBkcml2ZXINCg0KDQogICAgICAgIE9uIEZyaSwgQXVnIDAxLCAyMDE0IGF0IDA3OjE1
-OjQxQU0gKzAwMDAsIFByaWViZSwgU2ViYXN0aWFuIHdyb3RlOg0KICAgICAgICA+IEhlbGxvIFNh
-c2NoYSwNCiAgICAgICAgPg0KICAgICAgICA+IHRoYW5rcyBmb3IgeW91ciBhbnN3ZXIuDQogICAg
-ICAgID4gV2UgYXJlIHVzaW5nIGFuIGlteDM1IGNwdSBhbmQgb3VyIENQTEQgaXMgaW4gZmFjdCBj
-b25uZWN0ZWQgdmlhIHdlaW0gKENTMSkuDQogICAgICAgID4gVGhvdWdoIEkgY3JlYXRlZCB0aGUg
-Zm9sbG93aW5nIGRldmljZSBub2RlIGluIG91ciBkdHM6DQogICAgICAgID4gJndlaW0gew0KICAg
-ICAgICA+ICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCiAgICAgICAgPiAgICAg
-ICAgIHN0YXR1cyA9ICJva2F5IjsNCiAgICAgICAgPg0KICAgICAgICA+ICAgICAgICAgcGxkQDEs
-MCB7DQogICAgICAgID4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicm9jaGUsaGJtLXBs
-ZCI7DQogICAgICAgID4gICAgICAgICAgICAgICAgIHJlZyA9IDwxIDB4MDAwMDAwMDAgMHgwMDAx
-MDAwPjsNCiAgICAgICAgPiAgICAgICAgICAgICAgICAgZnNsLHdlaW0tY3MtdGltaW5nID0gPDB4
-MCAweDAgMHgwPjsgLyogZG9uJ3Qga25vdyB3aGF0IHRvIHB1dCBoZXJlICovDQogICAgICAgID4g
-ICAgICAgICB9Ow0KICAgICAgICA+IH07DQogICAgICAgID4NCiAgICAgICAgPiBBbmQgSSB0dXJu
-ZWQgdGhlIENQTEQgZHJpdmVyIGludG8gYSBwbGF0Zm9ybSBkcml2ZXIuIEJ1dCBJIGRvbid0IGdl
-dCB0aGUgcmVzb3VyY2UgaW4gcHJvYmU6DQogICAgICAgID4gcmVzID0gcGxhdGZvcm1fZ2V0X3Jl
-c291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKSByZXR1cm5zIE5VTEwuDQogICAgICAgID4N
-CiAgICAgICAgPiBJbiBvdXIgcGxhdGZvcm0gY29kZSB3ZSBoYWQ6DQogICAgICAgID4gc3RhdGlj
-IHN0cnVjdCByZXNvdXJjZSBoYm1fcGxkX3Jlc291cmNlX2RhdGEgPSB7DQogICAgICAgID4gICAg
-ICAgICAuc3RhcnQgPSAweEE4MDAwMDAwLA0KICAgICAgICA+ICAgICAgICAgLmVuZCA9IDB4QTgw
-MDAwMDAgKyAweDEwMDAgLSAxLA0KICAgICAgICA+ICAgICAgICAgLmZsYWdzID0gSU9SRVNPVVJD
-RV9NRU0sDQogICAgICAgID4gfTsNCg0KICAgICAgICBXaHkgZG8geW91IG1hbnVhbGx5IHJlZ2lz
-dGVyIGEgcGxhdGZvcm1fZGV2aWNlPyBZb3Ugc2hvdWxkIGFkZCB0aGUgQ1BMRCBkZXZpY2UgdG8g
-dGhlIGRldmljZSB0cmVlIGluc3RlYWQuDQoNCiAgICAgICAgPg0KICAgICAgICA+IEFuZCBmb3Ig
-dGhlIHNldHRpbmcgb2YgQ1MxOg0KICAgICAgICA+IF9fcmF3X3dyaXRlbCgoMHgyMiA8PCA4KSwg
-TVgzNV9JT19BRERSRVNTKE1YM3hfV0VJTV9CQVNFX0FERFIpICsNCiAgICAgICAgPiAweDEwKTsg
-X19yYXdfd3JpdGVsKCgoMHgwYSA8PCAyOCkgfCAoMHgwNiA8PCAxMikgfCAoMHgwMyA8PCA4KSB8
-ICgweDA0DQogICAgICAgID4gPDwgNCkgfCAoMHgwMSA8PCAwKSksIE1YMzVfSU9fQUREUkVTUyhN
-WDN4X1dFSU1fQkFTRV9BRERSKSArIDB4MTQpOw0KICAgICAgICA+DQogICAgICAgID4gV2hlcmUg
-ZG8gSSBwdXQgdGhpcyBpbiB0aGUgZGV2aWNlIHRyZWU/DQoNCiAgICAgICAgSW4gdGhlIGZzbCx3
-ZWltLWNzLXRpbWluZyBwcm9wZXJ0eS4gU2VlDQogICAgICAgIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9idXMvaW14LXdlaW0udHh0DQoNCiAgICAgICAgU2FzY2hhDQoNCiAgICAg
-ICAgLS0NCiAgICAgICAgUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCiAgICAgICAgSW5kdXN0cmlhbCBMaW51
-eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8g
-IHwNCiAgICAgICAgUGVpbmVyIFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwg
-UGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wIDx0ZWw6JTJCNDktNTEyMS0yMDY5MTctMD4gICAgIHwN
-CiAgICAgICAgQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4
-OiAgICs0OS01MTIxLTIwNjkxNy01NTU1IDx0ZWw6JTJCNDktNTEyMS0yMDY5MTctNTU1NT4gIHwN
-Cg0KDQogICAgICAgIC0tDQogICAgICAgIFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBz
-ZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbg0KICAgICAgICB0aGUgYm9k
-eSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZw0KICAgICAgICBNb3Jl
-IG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZv
-Lmh0bWwNCg0KDQoNCg0KDQotLQ0KDQpCZXN0IFJlZ2FyZHMsDQpMaXUgWWluZw0K
+Hello Dmitry,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 08/07/2014 08:09 AM, Dmitry Torokhov wrote:
+>> 
+>> > irq_of_parse_and_map() already sets up IRQ trigger type based on DT
+>> > data, by calling irq_create_of_mapping() which in turn calls
+>> > irq_set_irq_type().
+>> >
+>> 
+>> Right but somehow when the IRQ is actually requested the type is overwritten by
+>> the value passed to request_threaded_irq() and interrupts are not being
+>> generated by the device without this patch.
+>> 
+>> Do you think that this is a bug in the "interrupt-parent" irqchip driver or the
+>> IRQ core? I'm not that familiar with the IRQ subsystem.
+> 
+> No, this is clearly driver fault - it smashed previously done setup with new
+> flags.
+>
+
+Thanks a lot for the clarification. That was my understanding as well but wanted
+to be sure.
+
+>> > 
+>> > It might be a bit cleaner to just assign the flags to pdata->irqflags in
+>> > mxt_parse_dt() instead. That would also account for the fact that pdata,
+>> > if provided, should have priority over DT.
+>> > 
+>> 
+>> You are totally right, also this will break if CONFIG_OF is not enabled since
+>> dev.of_node will not be defined. While this already is taken into account for
+>> mxt_parse_dt() by defining an empty function.
+>> 
+>> I'll change it in v2 if getting the flags from the driver is the right approach
+> 
+> Yes, please.
+> 
+
+Just posted a v2 [0] with Tomasz suggestion and the patch is indeed a lot cleaner.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/8/7/82
