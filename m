@@ -1,64 +1,64 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/2] pwm: rockchip: Added to support for RK3288 SoC
-Date: Wed, 6 Aug 2014 15:46:21 -0700
-Message-ID: <CAD=FV=V4Kp-H3CcAKZPV1jBnYX+Ntwvxx6RB13TLxS5RRPHTWA@mail.gmail.com>
-References: <1406197295-10604-1-git-send-email-caesar.wang@rock-chips.com>
-	<1406197295-10604-3-git-send-email-caesar.wang@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 09/12] [v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for
+ QSPI
+Date: Thu, 7 Aug 2014 09:37:56 +0900
+Message-ID: <20140807003755.GF32652@verge.net.au>
+References: <1407329949-5695-1-git-send-email-geert+renesas@glider.be>
+ <1407329949-5695-10-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1406197295-10604-3-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, b.galvani@gmail.com, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, Kumar Gala <galak@codeaurora.org>, Eddie Cai <cf@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Addy Ke <addy.ke@rock-chips.com>, =?UTF-8?B?6ZmI5riQ6aOe?= <cjf@rock-chips.com>, han jiang <hj@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pwm <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407329949-5695-10-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Brown <broonie@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Caesar,
+On Wed, Aug 06, 2014 at 02:59:06PM +0200, Geert Uytterhoeven wrote:
+> Add a DMA property to the QSPI node
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: devicetree@vger.kernel.org
+> ---
+> This depends on "[PATCH v2 8/8] ARM: shmobile: r8a7791: Add DMAC devices
+> to DT" of series "[PATCH v2 0/8] R-Car Gen2 DMA Controller driver".
 
-On Thu, Jul 24, 2014 at 3:21 AM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
-> +static const struct rockchip_pwm_data pwm_data_v1 = {
-> +       .regs.duty = PWM_HRC,
-> +       .regs.period = PWM_LRC,
-> +       .regs.cntr = PWM_CNTR,
-> +       .regs.ctrl = PWM_CTRL,
-> +       .prescaler = PRESCALER,
-> +       .set_enable = rockchip_pwm_set_enable_v1,
-> +};
-> +
-> +static const struct rockchip_pwm_data pwm_data_v2 = {
-> +       .regs.duty = PWM_LRC,
-> +       .regs.period = PWM_HRC,
-> +       .regs.cntr = PWM_CNTR,
-> +       .regs.ctrl = PWM_CTRL,
-> +       .prescaler = PRESCALER-1,
-> +       .set_enable = rockchip_pwm_set_enable_v2,
-> +};
-> +
-> +static const struct rockchip_pwm_data pwm_data_vop = {
-> +       .regs.duty = PWM_LRC,
-> +       .regs.period = PWM_HRC,
-> +       .regs.cntr = PWM_CTRL,
-> +       .regs.ctrl = PWM_CNTR,
+Hi Geert, Hi Laurent,
 
-Did you really mean to flip CTRL and CNTR here?  If so, that's super
-confusing and deserves a comment.  AKA, I think the above should not
-be:
+Am I correct in assuming that with this patch applied things
+will continue to work the old way until the patch above applied
+to the same tree and from there on the user will get the new behaviour?
 
- +       .regs.cntr = PWM_CTRL,
- +       .regs.ctrl = PWM_CNTR,
+If so I think that I can take this patch as although the driver hasn't been
+merged the relevant bindings were added to the subsystem maintainers tree
+by "dmaengine: rcar-dmac: Add device tree bindings documentation" and are
+available in linux-next.
 
-...but should be
+Likewise for "[v3] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIO".
 
- +       .regs.cntr = PWM_CNTR,
- +       .regs.ctrl = PWM_CTRL,
-
-If you didn't mean to flip CTRL and CNTR here, then just get rid of
-pwm_data_vop and refer to pwm_data_v2.  In fact, I'd suggest that you
-totally remove the "rockchip,vop-pwm" since there's nothing different
-between "rockchip,rk3288-pwm" and "rockchip,vop-pwm".
-
-
-Have you validated Thierry's suggestion to allow you to access your
-memory range?
-
--Doug
+> v2:
+>   - Update DMA specifiers to match the renesas,rcar-dmac bindings,
+> v2:
+>   - QSPI needs to use 8-bit accesses for DMA, not 32-bit,
+>   - Reorder: TX first, RX second.
+> ---
+>  arch/arm/boot/dts/r8a7791.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+> index d59af615e365..8186c9f4a18a 100644
+> --- a/arch/arm/boot/dts/r8a7791.dtsi
+> +++ b/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -1044,6 +1044,8 @@
+>  		reg = <0 0xe6b10000 0 0x2c>;
+>  		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&mstp9_clks R8A7791_CLK_QSPI_MOD>;
+> +		dmas = <&dmac0 0x17>, <&dmac0 0x18>;
+> +		dma-names = "tx", "rx";
+>  		num-cs = <1>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> -- 
+> 1.9.1
+> 
