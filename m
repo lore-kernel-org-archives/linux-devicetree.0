@@ -1,69 +1,101 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 3/4] host1x: mipi: Include clock lanes in mipi calibrate
-Date: Thu, 7 Aug 2014 13:14:33 -0400
-Message-ID: <CAOw6vbJPtzCesuMVjv06Abe-2PpdhmdJ75EHYU1N+TCfUVssNQ@mail.gmail.com>
-References: <1407391907-19488-1-git-send-email-seanpaul@chromium.org>
- <1407391907-19488-4-git-send-email-seanpaul@chromium.org> <20140807083429.GA13315@ulmo.nvidia.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2] serial: uart: add hw flow control support configuration
+Date: Thu, 7 Aug 2014 13:24:02 -0400
+Message-ID: <53E3B632.9050902@ti.com>
+References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com> <53E39B44.60406@hurleysoftware.com> <53E3A67B.6070709@ti.com> <20140807171254.GA13097@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140807083429.GA13315-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140807171254.GA13097@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Peter Hurley <peter@hurleysoftware.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 7, 2014 at 4:34 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Aug 07, 2014 at 02:11:46AM -0400, Sean Paul wrote:
->> When calibrating the mipi phy, also include the clock lanes
->> in the calibration.
->>
->> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>  drivers/gpu/host1x/mipi.c | 70 +++++++++++++++++++++++++++++++++++++----------
->>  1 file changed, 56 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
->> index 0af2892..80578dc 100644
->> --- a/drivers/gpu/host1x/mipi.c
->> +++ b/drivers/gpu/host1x/mipi.c
->> @@ -49,10 +49,18 @@
->>  #define MIPI_CAL_CONFIG_DSIC         0x10
->>  #define MIPI_CAL_CONFIG_DSID         0x11
->>
->> +#define MIPI_CAL_CONFIG_DSIAB_CLK    0x19
->> +#define MIPI_CAL_CONFIG_DSICD_CLK    0x1a
->> +#define MIPI_CAL_CONFIG_CSIAB_CLK    0x1b
->> +#define MIPI_CAL_CONFIG_CSICD_CLK    0x1c
->> +#define MIPI_CAL_CONFIG_CSIE_CLK     0x1d
->> +
+On 08/07/2014 01:12 PM, Greg Kroah-Hartman wrote:
+> On Thu, Aug 07, 2014 at 12:16:59PM -0400, Murali Karicheri wrote:
+>> On 08/07/2014 11:29 AM, Peter Hurley wrote:
+>>> On 05/01/2014 03:04 PM, Murali Karicheri wrote:
+>>>> 8250 uart driver currently supports only software assisted hw flow
+>>>> control. The software assisted hw flow control maintains a hw_stopped
+>>>> flag in the tty structure to stop and start transmission and use modem
+>>>> status interrupt for the event to drive the handshake signals. This is
+>>>> not needed if hw has flow control capabilities. This patch adds a
+>>>> DT attribute for enabling hw flow control for a uart port. Also skip
+>>>> stop and start if this flag is present in flag field of the port
+>>>> structure.
+>>>>
+>>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>>>>
+>>>> CC: Rob Herring<robh+dt@kernel.org>
+>>>> CC: Pawel Moll<pawel.moll@arm.com>
+>>>> CC: Mark Rutland<mark.rutland@arm.com>
+>>>> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
+>>>> CC: Kumar Gala<galak@codeaurora.org>
+>>>> CC: Randy Dunlap<rdunlap@infradead.org>
+>>>> CC: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
+>>>> CC: Jiri Slaby<jslaby@suse.cz>
+>>>> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
+>>>> ---
+>>>>   .../devicetree/bindings/serial/of-serial.txt       |    1 +
+>>>>   drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+>>>>   drivers/tty/serial/of_serial.c                     |    4 ++++
+>>>>   drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+>>>>   4 files changed, 18 insertions(+), 5 deletions(-)
+>>>>
+>>> [...]
+>>>
+>>>> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+>>>> index b68550d..851707a 100644
+>>>> --- a/drivers/tty/serial/serial_core.c
+>>>> +++ b/drivers/tty/serial/serial_core.c
+>>>> @@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+>>>>   			if (tty->termios.c_cflag&   CBAUD)
+>>>>   				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+>>>>   		}
+>>>> -
+>>>> -		if (tty_port_cts_enabled(port)) {
+>>>> +		/*
+>>>> +		 * if hw support flow control without software intervention,
+>>>> +		 * then skip the below check
+>>>> +		 */
+>>>> +		if (tty_port_cts_enabled(port)&&
+>>>> +		    !(uport->flags&   UPF_HARD_FLOW)) {
+>>>>   			spin_lock_irq(&uport->lock);
+>>>>   			if (!(uport->ops->get_mctrl(uport)&   TIOCM_CTS))
+>>>>   				tty->hw_stopped = 1;
+>>>> @@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
+>>>>
+>>>>   	uport->icount.cts++;
+>>>>
+>>>> -	if (tty_port_cts_enabled(port)) {
+>>>> +	/* skip below code if the hw flow control is supported */
+>>>> +	if (tty_port_cts_enabled(port)&&
+>>>> +	    !(uport->flags&   UPF_HARD_FLOW)) {
+>>> Why is a modem status interrupt being generated for DCTS
+>>> if autoflow control is enabled?
+>>>
+>>> This should be:
+>>>
+>>> 	WARN_ON_ONCE(uport->flags&   UPF_HARD_FLOW);
+>>>
+>>> to indicate a mis-configured driver/device.
+>> This patch is already merged to the upstream branch and if you see any
+>> issue, please
+>> post a patch for review.
 >
-> These registers don't seem to exist on Tegra114 and earlier. It also
-> seems like MIPI_CAL_CONFIG_DSIC and MIPI_CAL_CONFIG_DSID no longer exist
-> on Tegra124 and later. And CSIC and CSID seem to be shared with DSIB
-> (channel A and B) now.
+> If someone points out a problem in a patch of yours that is accepted
+> upstream, it is nice to provide a fix, otherwise I will just revert it
+> upstream, as it looks to be incorrect.
 >
-> So I think we'll need something more elaborate than this. It should be
-> differentiating between SoC revisions to allow checking for valid pad
-> selection when calibrating.
+> So, should I just revert it?
 >
+> greg k-h
+Greg,
 
-Yeah, definitely now that you point that out, we'll need something
-better. I've altered the patch so the regs available depends on
-compatible value. I'll wait on the following before re-posting.
+Sorry, I misunderstood it. I think it would have been better to start a 
+new thread to point this out. Anyways I will send out a patch to add 
+this and please don't revert.
 
-> I'll see if I can find out what's up with the change between Tegra114
-> and Tegra124 regarding the DSIC and DSID pads. It looks to me like they
-> were merged to match the DSIA and DSIB controllers, whereas before DSIA
-> and DSIB were used for controller DSIA and DSIC and DSID were used for
-> controller DSIB.
->
-
-Thanks for checking in on this. It would be useful to know which clock
-lanes need to be configured for which pads. The documentation isn't
-particularly good on this, so it's possible that my mapping between
-data lane/clock lane in the modules array is incorrect.
-
-Sean
-
-> Thierry
+Murali
