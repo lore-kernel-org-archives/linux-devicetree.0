@@ -1,88 +1,35 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v10 3/4] dts: Add bindings for APM X-Gene SoC ethernet driver
-Date: Thu,  7 Aug 2014 15:14:27 -0700
-Message-ID: <1407449668-13520-4-git-send-email-isubramanian@apm.com>
-References: <1407449668-13520-1-git-send-email-isubramanian@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407449668-13520-1-git-send-email-isubramanian@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: dnelson@redhat.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/3] Introduce of_match_machine() helper
+Date: Fri, 8 Aug 2014 02:01:52 +0300
+Message-ID: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for APM X-Gene SoC ethernet driver.
+Some mach-specific drivers that don't require their own node in the device tree
+(for example drivers/soc/*, cpufreq, cpuidle etc.) want to match on the device
+tree root compatible property instead. Instead of open-coding (and forgetting
+to call of_node_put on the root node) everywhere, add a helper to the OF core.
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Ravi Patel <rapatel@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
----
- arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
- arch/arm64/boot/dts/apm-storm.dtsi  | 30 +++++++++++++++++++++++++++---
- 2 files changed, 31 insertions(+), 3 deletions(-)
+Tuomas Tynkkynen (3):
+  of: Add of_match_machine helper
+  soc/tegra: Use of_match_machine in soc_is_tegra()
+  cpuidle: big.LITTLE: Use of_match_machine
 
-diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-index 6541962..b2f5622 100644
---- a/arch/arm64/boot/dts/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm-mustang.dts
-@@ -28,3 +28,7 @@
- &serial0 {
- 	status = "ok";
- };
-+
-+&menet {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 40aa96c..c0aceef 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -167,14 +167,13 @@
- 				clock-output-names = "ethclk";
- 			};
- 
--			eth8clk: eth8clk {
-+			menetclk: menetclk {
- 				compatible = "apm,xgene-device-clock";
- 				#clock-cells = <1>;
- 				clocks = <&ethclk 0>;
--				clock-names = "eth8clk";
- 				reg = <0x0 0x1702C000 0x0 0x1000>;
- 				reg-names = "csr-reg";
--				clock-output-names = "eth8clk";
-+				clock-output-names = "menetclk";
- 			};
- 
- 			sataphy1clk: sataphy1clk@1f21c000 {
-@@ -397,5 +396,30 @@
- 			#clock-cells = <1>;
- 			clocks = <&rtcclk 0>;
- 		};
-+
-+		menet: ethernet@17020000 {
-+			compatible = "apm,xgene-enet";
-+			status = "disabled";
-+			reg = <0x0 0x17020000 0x0 0xd100>,
-+			      <0x0 0X17030000 0x0 0X400>,
-+			      <0x0 0X10000000 0x0 0X200>;
-+			reg-names = "enet_csr", "ring_csr", "ring_cmd";
-+			interrupts = <0x0 0x3c 0x4>;
-+			dma-coherent;
-+			clocks = <&menetclk 0>;
-+			local-mac-address = [00 01 73 00 00 01];
-+			phy-connection-type = "rgmii";
-+			phy-handle = <&menetphy>;
-+			mdio {
-+				compatible = "apm,xgene-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				menetphy: menetphy@3 {
-+					compatible = "ethernet-phy-id001c.c915";
-+					reg = <0x3>;
-+				};
-+
-+			};
-+		};
- 	};
- };
+ drivers/cpuidle/cpuidle-big_little.c |  6 +-----
+ drivers/of/base.c                    | 21 +++++++++++++++++++++
+ drivers/soc/tegra/common.c           |  8 +-------
+ include/linux/of.h                   |  3 +++
+ 4 files changed, 26 insertions(+), 12 deletions(-)
+
 -- 
-1.9.1
+1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
