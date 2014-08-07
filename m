@@ -1,40 +1,62 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] usb: host: usb-st-common: Add common code
- required by ohci-st and ehci-st
-Date: Thu, 7 Aug 2014 15:16:31 +0100
-Message-ID: <20140807141631.GC12137@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
- <1407344589-24863-2-git-send-email-peter.griffin@linaro.org>
- <201408062259.10697.arnd@arndb.de>
- <20140807141457.GB12137@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 06/11] pwm: sti: Add new driver for ST's PWM IP
+Date: Thu, 7 Aug 2014 16:23:46 +0200
+Message-ID: <20140807142344.GA11095@ulmo.nvidia.com>
+References: <1405348412-7352-1-git-send-email-lee.jones@linaro.org>
+ <1405348412-7352-7-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140807141457.GB12137@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1405348412-7352-7-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-> > > (priv->rst);
-> > > +		if (ret)
-> > > +			goto err_assert_power;
-> > > +	}
-> > 
-> > I wouldn't make these optional, just call the functions
-> > unconditionally and fail the probe function if they are
-> > not available.
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Also I've also done as you suggest and made
-these non optional in V4.
+On Mon, Jul 14, 2014 at 03:33:27PM +0100, Lee Jones wrote:
+[...]
+> +static int sti_pwm_probe(struct platform_device *pdev)
+> +{
+[...]
+> +	pc->clk = of_clk_get_by_name(np, "pwm");
 
-regards,
+This didn't compile because the np variable isn't declared. It was easy
+to fix up, so I did, but please be more careful next time that the
+patches you submit at least compile (preferably without sparse warnings
+of which I also fixed up a couple).
 
-Peter.
+Thierry
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT44vwAAoJEN0jrNd/PrOhpFoQAJwqmsIk7noDjJTpYqAUBCpp
+xYopvk4EtZfEe9Fl8yzDTr8oRC1wyijP72PmdKUO1D33gPqgiNqPn33ky4OwOK/U
+pMqjlUioZPU8dVWjVewy3f/XCRFtedkIw9mu9v50i2grORY18yYVmuas/O2RoRG/
+/dJVZyP0GqrcaKfstpiTuxtDpMeucpdMFd1ppRvA5LBmdSvdun6qaTcqXrfUwbVN
+QzNxTB/QkOlezA5qSvKHkIPRigDrpb+zCNmfWj8pcG2pDz6vKwHukAZ1/rXf+Ww1
+laPwQ3/Cke/IYx78+wdUtbBbooTRZcZBqdMLpAxHPqnGQUOb23CLXNdDkGjBFPUk
+MmOpUob3vg4cF8vzuivwDc4K/TMwU6Zmxf/nSeUDCca6uD7BjyWQS21nRkwOz7ob
+Fobr4n16kSt9jEgAe1g1VowrKI4mla4t2ngRJXH2V5rzeoO9rpGrbi67a04bV/MV
+RMMv6Gr2iuslR6+re8uALuX0JLxBqdT02i9pibWkCuJJLoMRMqkS2F1LJ1CfyAq2
+ucs9UErC57Jfh4m3UYn9c9meeUF7K+5oyPuuRvTA1csVLnStC5WEb7+PEJzuHLBA
+22KzbCGXUg+Fq8FZS8VWaW5kCVsSsg0A3nvSYcFkPiBlV4MTz9HJysNtkIAMUn6x
+OeT8S/WhocGLv7BHYjCv
+=0kUt
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
