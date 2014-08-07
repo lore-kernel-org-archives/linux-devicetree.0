@@ -1,55 +1,58 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 09/11] pwm: sti: Ensure same period values for all
- channels
-Date: Thu, 7 Aug 2014 16:24:48 +0200
-Message-ID: <20140807142446.GB11095@ulmo.nvidia.com>
-References: <1405348412-7352-1-git-send-email-lee.jones@linaro.org>
- <1405348412-7352-10-git-send-email-lee.jones@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] Add EHCI and OHCI drivers for STi SoC's
+Date: Thu, 7 Aug 2014 15:47:10 +0100
+Message-ID: <20140807144710.GD12137@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1407344589-24863-1-git-send-email-peter.griffin@linaro.org>
+ <201408062318.28958.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1405348412-7352-10-git-send-email-lee.jones@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
+In-Reply-To: <201408062318.28958.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
---PmA2V3Z32TCmWXqI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for reviewing, see my comments below: -
 
-On Mon, Jul 14, 2014 at 03:33:30PM +0100, Lee Jones wrote:
-[...]
-> +/* Calculate the number of PWM devices configured with a period. */
-> +unsigned int sti_pwm_count_configured(struct pwm_chip *chip)
+> > Changes since v2:
+> >  - Based on Arnd Berghman feedback, split out into 2 devices / drivers
+> >  - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
+> >    to allow possible re-merge in the furture.
+> 
+> Hi Peter,
+> 
+> This looks much better than the first version. I have some remaining comments for
+> how it could be simplified a bit more.
 
-This should've been static, which is what made sparse complain. I've
-fixed it up.
+Yes I think I've addressed these now in V4, which I will send in a moment.
 
-Thierry
+> 
+> The way that you deal with the 48mhz clock seems like it should fit in well
+> with the generic driver, just like all the rest (once the usb-st-common
+> stuff is moved into the ohci/ehci drivers), so the alternative would be
+> to make it all generic now.
 
---PmA2V3Z32TCmWXqI
-Content-Type: application/pgp-signature
+Yes I tried to do it in a way which would, however I would prefer not to merge into 
+the generic one for now because: -
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+1) There are some other subtle changes versus the generic drivers. For example in power_on() and power_off()
+I put the IP into reset and power down, which isn't done in the generic driver. Also with this IP it needs 
+power signal asserted before reset, otherwise it can hang the chip.
 
-iQIcBAEBAgAGBQJT44wuAAoJEN0jrNd/PrOh0aIP/0HXvRYtb6MKcrdPpJ0UtPrt
-P7uI8KgGT78WzZBAKvkBmn9ljk57U/iFDn579TD9ZAItjF4BwMvjg0fGHOYXP5bD
-W6qHnzavyE492GZSHP1fIENM652siWZCywg8LdYKOPP9If7a4oI+e+xB5gaSWLHd
-hCl3Oq3G/ATbLr7ZIB9M4lvPGOLkYv4l/q7TPxnC2rA9EurQmCI/Ipf6dXv9uF5Q
-4Ggnz6n/uvNQzV2WDJ/GxNt8/gz/RFgOwvDLGpngWHPDpGCjQiZjKuIAzxHRRzfB
-kkZhL86cPnD9j2W0hM6V8zi/yR9Q/SbfVpObkZxrf8lpyt++we3wkPisB+yn1Ua3
-MxO9YEh8NuLzUT4Jkac35rv8uhjHRlHL1uAjl8fkXEBm1CtW7BoO3Yx31Q18IJqu
-R5DP8pH04a1h73P2rMiHFSQyMvGe91TnEeMb7VRziGuMxzLOREqG7cpITaNcj2Ef
-1NW2MPStklLh2fLkj0sapA+oL9kd8FQkQZumY3pQIL0pvsp0bk3pbB6rB1uz+p57
-6rzHjYtljkF7UcM4w3yNUqW6+uXLT86/MRryeTp0L1s4CLnIMri3zJ5Yklnb3dSG
-m18p34/JCw0aVdvD2+fX39lH7EemgM61z5rkOkH+BQdxEa1aEzOTC5VaQue9aPN9
-EmiiDnSpTwVwfu7CjNr3
-=7ixd
------END PGP SIGNATURE-----
+2) I don't have any of the other hardware which uses ehci-platform / ohci-platform to test 
+I haven't broken things.
 
---PmA2V3Z32TCmWXqI--
+regards,
+
+Peter.
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
