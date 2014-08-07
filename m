@@ -1,44 +1,74 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v4 1/4] Documentation: dt-bindings: add dt binding info for Rockchip dwc2
-Date: Thu,  7 Aug 2014 17:34:52 +0800
-Message-ID: <1407404095-3265-2-git-send-email-kever.yang@rock-chips.com>
-References: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_sai: Add asynchronous mode support
+Date: Thu, 7 Aug 2014 10:45:27 +0100
+Message-ID: <20140807094527.GC17528@sirena.org.uk>
+References: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Gpwijd/hIJ1U6yrH"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <1407223925-29678-1-git-send-email-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Zimmerman <paulz@synopsys.com>, heiko@sntech.de
-Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <mporter@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, b42378@freescale.com, b02247@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-This add necessary dwc2 binding documentation for Rockchip socs:
-rk3066, rk3188 and rk3288
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Acked-by: Stephen Warren <swarren@nvidia.com>
----
+--Gpwijd/hIJ1U6yrH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- Split out dr_mode and rk3288 bindings.
-- add compatible "snps,dwc2" bingding info
+On Tue, Aug 05, 2014 at 03:32:05PM +0800, Nicolin Chen wrote:
+> From: Nicolin Chen <Guangyu.Chen@freescale.com>
+>=20
+> SAI supports these operation modes:
+> 1) asynchronous mode
+>    Both Tx and Rx are set to be asynchronous.
+> 2) synchronous mode (Rx sync with Tx)
+>    Tx is set to be asynchronous, Rx is set to be synchronous.
+> 3) synchronous mode (Tx sync with Rx)
+>    Rx is set to be asynchronous, Tx is set to be synchronous.
+> 4) synchronous mode (Tx/Rx sync with another SAI's Tx)
+> 5) synchronous mode (Tx/Rx sync with another SAI's Rx)
 
- Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
- 1 file changed, 3 insertions(+)
+This seems to conflict with something else on my branch - not checked
+what.  Can you take a look please?
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 467ddd1..2899679 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
- Required properties:
- - compatible : One of:
-   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-+  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
-+  - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
-+  - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
-   - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
--- 
-1.9.1
+> +Note:
+> +- If both fsl,sai-asynchronous and fsl,sai-synchronous-rx are absent, the
+> +  default synchronous mode (sync Rx with Tx) will be used, which means b=
+oth
+> +  transimitter and receiver will send and receive data by following cloc=
+ks
+> +  of transimitter.
+> +- fsl,sai-asynchronous will be ignored if fsl,sai-synchronous-rx propert=
+y is
+> +  already present.
+
+Might be worth printing an error here.
+
+--Gpwijd/hIJ1U6yrH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT40q0AAoJELSic+t+oim9L/IP/09XmprJfNXyU1qqKlJhv70c
+tj+U4iIPJlroeCqeOWfpG4qfqsJ8cGKkT7y9/c2+MFbh5aKn4yD8/WaG9gBzDZ6n
+WwXLuD5c/yaAhWnlN2ekYOS7oG/Odzmb//BZNnPssxQW21hR8pqAT+KgUN6waslu
+qlv7s/p1qqg67J/bEzHeh+D9VhCJooVdRvl843TDDZDUeaM/PyXOyJKpz8KawSs2
+Txn5PKLh6UOOFSHQegZ7i84k8gjEwo0Rtl3edLtHjKUKGZf2azDrd4iffb9heiGH
+OXb+N20qzFgCi6afkzx8B8fU4vvwd8tCGALe3kiStokVfYZvNG/2MB5MB7as+/7Z
+XLpd1JCqJo3UXFBGS57RGH2jguIxla+0RJLbGMU4+4JCsHicUws3AqQl/yAtkgJs
+2Xp++ABOQRum9jx/6q6LQfkegVzStr6KMC/aaIVUZCRFXRsdVpHMxqi/9hq7/7AB
+ALG0R2J6qTCRTpCUNCmw6M+Xa0REODq4e6zZhyZy2UKrPwfYk1+f0HQfNTieCmmP
+al8tU58vpKfMEjPSMcAA0SHb94VbBansfK8/43jm7itnVJYAZ6WNw5+nr/LmkmRz
+gyh/7qrOeNml4NAs3CpPyrBgSP2CacH/LFpPEoDSytaPXbafUlisTtQBRDriYIRU
+sO39I/WMNnI9lYcXI80e
+=yhVo
+-----END PGP SIGNATURE-----
+
+--Gpwijd/hIJ1U6yrH--
