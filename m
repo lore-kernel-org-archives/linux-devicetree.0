@@ -1,70 +1,48 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC] pwm-backlight: Allow backlight to remain disabled on boot
-Date: Thu, 07 Aug 2014 18:30:47 +0900
-Message-ID: <009e01cfb222$4555d940$d0018bc0$%han@samsung.com>
-References: <1406806970-12561-1-git-send-email-thierry.reding@gmail.com>
- <20140731115429.GA12627@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/4] Patches to add support for Rockchip dwc2 controller
+Date: Thu,  7 Aug 2014 17:34:51 +0800
+Message-ID: <1407404095-3265-1-git-send-email-kever.yang@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140731115429.GA12627@ulmo>
-Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Bryan Wu' <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Russell King' <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, 'Eric Miao' <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Ajay Kumar' <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 31, 2014 8:55 PM, Thierry Reding wrote:
-> On Thu, Jul 31, 2014 at 01:42:50PM +0200, Thierry Reding wrote:
-> [...]
-> > @@ -317,6 +319,12 @@ static int pwm_backlight_probe(struct platform_device *pdev)
-> >  	}
-> >
-> >  	bl->props.brightness = data->dft_brightness;
-> > +
-> > +	if (data->boot_off)
-> > +		bl->props.power = FB_BLANK_POWERDOWN;
-> > +	else
-> > +		bl->props.power = FB_BLANK_UNBLANK;
-> > +
-> >  	backlight_update_status(bl);
-> 
-> Looking at this again, perhaps a more sensible thing to do would be to
-> not call backlight_update_status() in the first place. For example if
-> the board defines that backlight should be kept off at boot, but the
-> bootloader had already enabled it, then this would effectively turn off
-> the backlight again.
+These patches to add support for dwc2 controller found in
+Rockchip processors rk3066, rk3188 and rk3288,
+and enable dts for rk3288 evb.
 
-(+cc Ajay Kumar)
+Changes in v4:
+- max_transfer_size change to 65536, this should be enough
+  for most transfer, the hardware auto-detect will set this
+  to 0x7ffff which may make dma_alloc_coherent fail when
+  non-dword aligned buf from driver like usbnet happen.
+- remove EHCI and HSIC dts patch for Doug had post it seprately.
 
-Personally, I prefer not to call backlight_update_status(), when the
-backlight was already turned on by bootloader. Also, it would be better
-for subsystems such as DRM to handle the power of panel.
+Changes in v3:
+- EHCI and HSIC move new for version 3.
+- Rebase
 
-> 
-> I think it's safe to assume that if the bootloader sets up the backlight
-> then it would also set up the display. Therefore not touching the
-> backlight state at all at probe time seems like the safest default.
-> 
-> Of course that doesn't help people who use some dumb framebuffer driver
-> and therefore nothing explicitly enables the backlight. So it would
-> still be changing behaviour for people for whom the bootloader doesn't
-> set up the backlight at all and who therefore rely on the kernel to turn
-> it on.
-> 
-> We could perhaps alleviate that pain a little by making this dependent
-> on whether or not the board is booted using DT on the assumption that
-> anything that uses DT would be "modern" enough to provide a means to
-> automatically enable the backlight at the right moment.
+Changes in v2:
+- Split out dr_mode and rk3288 bindings.
+- add compatible "snps,dwc2" bingding info
+- set most parameters as driver auto-detect
+- evb patch added in version 2
 
-I also agree with the way to use DT.
+Kever Yang (4):
+  Documentation: dt-bindings: add dt binding info for Rockchip dwc2
+  usb: dwc2: add compatible data for rockchip soc
+  ARM: dts: add rk3288 dwc2 controller support
+  ARM: dts: Enable USB otg and host1(dwc) on rk3288-evb
 
-Best regards,
-Jingoo Han
+ Documentation/devicetree/bindings/usb/dwc2.txt |  3 +++
+ arch/arm/boot/dts/rk3288-evb.dtsi              |  6 ++++++
+ arch/arm/boot/dts/rk3288.dtsi                  | 20 ++++++++++++++++++
+ drivers/usb/dwc2/platform.c                    | 29 ++++++++++++++++++++++++++
+ 4 files changed, 58 insertions(+)
 
-> 
-> Thierry
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
