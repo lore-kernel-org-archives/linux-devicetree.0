@@ -1,80 +1,88 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 3/5] usb: host: ehci-st: Add ehci-st devicetree bindings
- documentation
-Date: Thu,  7 Aug 2014 16:21:42 +0100
-Message-ID: <1407424904-19251-4-git-send-email-peter.griffin@linaro.org>
-References: <1407424904-19251-1-git-send-email-peter.griffin@linaro.org>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH v2] serial: uart: add hw flow control support configuration
+Date: Thu, 07 Aug 2014 11:29:08 -0400
+Message-ID: <53E39B44.60406@hurleysoftware.com>
+References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407424904-19251-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, lee.jones@linaro.org
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the device tree bindings required for the
-ehci on-chip controller found in ST consumer electronics SoC's.
+On 05/01/2014 03:04 PM, Murali Karicheri wrote:
+> 8250 uart driver currently supports only software assisted hw flow
+> control. The software assisted hw flow control maintains a hw_stopped
+> flag in the tty structure to stop and start transmission and use modem
+> status interrupt for the event to drive the handshake signals. This is
+> not needed if hw has flow control capabilities. This patch adds a
+> DT attribute for enabling hw flow control for a uart port. Also skip
+> stop and start if this flag is present in flag field of the port
+> structure.
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Pawel Moll <pawel.moll@arm.com>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala <galak@codeaurora.org>
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CC: Jiri Slaby <jslaby@suse.cz>
+> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> ---
+>  .../devicetree/bindings/serial/of-serial.txt       |    1 +
+>  drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+>  drivers/tty/serial/of_serial.c                     |    4 ++++
+>  drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+>  4 files changed, 18 insertions(+), 5 deletions(-)
+> 
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- Documentation/devicetree/bindings/usb/ehci-st.txt | 39 +++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ehci-st.txt
+[...]
 
-diff --git a/Documentation/devicetree/bindings/usb/ehci-st.txt b/Documentation/devicetree/bindings/usb/ehci-st.txt
-new file mode 100644
-index 0000000..fb45fa5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ehci-st.txt
-@@ -0,0 +1,39 @@
-+ST USB EHCI controller
-+
-+Required properties:
-+ - compatible		: must be "st,st-ehci-300x"
-+ - reg			: physical base addresses of the controller and length of memory mapped
-+			  region
-+ - interrupts		: one EHCI interrupt should be described here
-+ - pinctrl-names	: a pinctrl state named "default" must be defined
-+ - pinctrl-0		: phandle referencing pin configuration of the USB controller
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+ - clocks		: phandle list of usb clocks
-+ - clock-names		: should be "ic" for interconnect clock and "clk48"
-+See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+ - phys			: phandle for the PHY device
-+ - phy-names		: should be "usb"
-+ - resets		: phandle + reset specifier pairs to the powerdown and softreset lines
-+			  of the USB IP
-+ - reset-names		: should be "power" and "softreset"
-+See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
-+See: Documentation/devicetree/bindings/reset/reset.txt
-+
-+Example:
-+
-+	ehci1: usb@0xfe203e00 {
-+		compatible = "st,st-ehci-300x";
-+		reg = <0xfe203e00 0x100>;
-+		interrupts = <GIC_SPI 148 IRQ_TYPE_NONE>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usb1>;
-+		clocks = <&clk_s_a1_ls 0>;
-+		phys = <&usb2_phy>;
-+		phy-names = "usb";
-+		status = "okay";
-+
-+		resets = <&powerdown STIH416_USB1_POWERDOWN>,
-+			 <&softreset STIH416_USB1_SOFTRESET>;
-+		reset-names = "power", "softreset";
-+	};
--- 
-1.9.1
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index b68550d..851707a 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+>  			if (tty->termios.c_cflag & CBAUD)
+>  				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+>  		}
+> -
+> -		if (tty_port_cts_enabled(port)) {
+> +		/*
+> +		 * if hw support flow control without software intervention,
+> +		 * then skip the below check
+> +		 */
+> +		if (tty_port_cts_enabled(port) &&
+> +		    !(uport->flags & UPF_HARD_FLOW)) {
+>  			spin_lock_irq(&uport->lock);
+>  			if (!(uport->ops->get_mctrl(uport) & TIOCM_CTS))
+>  				tty->hw_stopped = 1;
+> @@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
+>  
+>  	uport->icount.cts++;
+>  
+> -	if (tty_port_cts_enabled(port)) {
+> +	/* skip below code if the hw flow control is supported */
+> +	if (tty_port_cts_enabled(port) &&
+> +	    !(uport->flags & UPF_HARD_FLOW)) {
+
+Why is a modem status interrupt being generated for DCTS
+if autoflow control is enabled?
+
+This should be:
+
+	WARN_ON_ONCE(uport->flags & UPF_HARD_FLOW);
+
+to indicate a mis-configured driver/device.
+
+>  		if (tty->hw_stopped) {
+>  			if (status) {
+>  				tty->hw_stopped = 0;
+> 
+
