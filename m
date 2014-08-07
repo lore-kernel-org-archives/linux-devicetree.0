@@ -1,70 +1,92 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: koelsch: add VIN1/ADV7180 DT support
-Date: Thu, 07 Aug 2014 19:31:05 +0400
-Message-ID: <53E39BB9.7030809@cogentembedded.com>
-References: <201408020402.14560.sergei.shtylyov@cogentembedded.com>	<2131152.vMTPsJUYLQ@wasted.cogentembedded.com> <CANqRtoQhr-7RjZTxdk_e--if7ruSPQzyoGOR7VEy2saih64duw@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2] serial: uart: add hw flow control support configuration
+Date: Thu, 7 Aug 2014 12:16:59 -0400
+Message-ID: <53E3A67B.6070709@ti.com>
+References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com> <53E39B44.60406@hurleysoftware.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoQhr-7RjZTxdk_e--if7ruSPQzyoGOR7VEy2saih64duw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <53E39B44.60406@hurleysoftware.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 08/07/2014 08:01 AM, Magnus Damm wrote:
-
->> Define the Koelsch board dependent part of the VIN1 device node. Add the device
->> node for Analog  Devices ADV7180  video decoder to  I2C2 bus. Add the necessary
->> subnodes to interconnect VIN1 and ADV7180 devices.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+On 08/07/2014 11:29 AM, Peter Hurley wrote:
+> On 05/01/2014 03:04 PM, Murali Karicheri wrote:
+>> 8250 uart driver currently supports only software assisted hw flow
+>> control. The software assisted hw flow control maintains a hw_stopped
+>> flag in the tty structure to stop and start transmission and use modem
+>> status interrupt for the event to drive the handshake signals. This is
+>> not needed if hw has flow control capabilities. This patch adds a
+>> DT attribute for enabling hw flow control for a uart port. Also skip
+>> stop and start if this flag is present in flag field of the port
+>> structure.
+>>
+>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>>
+>> CC: Rob Herring<robh+dt@kernel.org>
+>> CC: Pawel Moll<pawel.moll@arm.com>
+>> CC: Mark Rutland<mark.rutland@arm.com>
+>> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
+>> CC: Kumar Gala<galak@codeaurora.org>
+>> CC: Randy Dunlap<rdunlap@infradead.org>
+>> CC: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
+>> CC: Jiri Slaby<jslaby@suse.cz>
+>> CC: Santosh Shilimkar<santosh.shilimkar@ti.com>
 >> ---
->> This patch is against the 'renesas-devel-v3.16-20140804' tag of Simon Horman's
->> 'renesas.git' repo. It requires the 'soc_camera' and 'rcar_vin' device tree
->> support patches (already merged to the 'media_tree.git' repo) in order to work.
+>>   .../devicetree/bindings/serial/of-serial.txt       |    1 +
+>>   drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+>>   drivers/tty/serial/of_serial.c                     |    4 ++++
+>>   drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+>>   4 files changed, 18 insertions(+), 5 deletions(-)
+>>
+> [...]
+>
+>> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+>> index b68550d..851707a 100644
+>> --- a/drivers/tty/serial/serial_core.c
+>> +++ b/drivers/tty/serial/serial_core.c
+>> @@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+>>   			if (tty->termios.c_cflag&  CBAUD)
+>>   				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+>>   		}
+>> -
+>> -		if (tty_port_cts_enabled(port)) {
+>> +		/*
+>> +		 * if hw support flow control without software intervention,
+>> +		 * then skip the below check
+>> +		 */
+>> +		if (tty_port_cts_enabled(port)&&
+>> +		    !(uport->flags&  UPF_HARD_FLOW)) {
+>>   			spin_lock_irq(&uport->lock);
+>>   			if (!(uport->ops->get_mctrl(uport)&  TIOCM_CTS))
+>>   				tty->hw_stopped = 1;
+>> @@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
+>>
+>>   	uport->icount.cts++;
+>>
+>> -	if (tty_port_cts_enabled(port)) {
+>> +	/* skip below code if the hw flow control is supported */
+>> +	if (tty_port_cts_enabled(port)&&
+>> +	    !(uport->flags&  UPF_HARD_FLOW)) {
+> Why is a modem status interrupt being generated for DCTS
+> if autoflow control is enabled?
+>
+> This should be:
+>
+> 	WARN_ON_ONCE(uport->flags&  UPF_HARD_FLOW);
+>
+> to indicate a mis-configured driver/device.
+This patch is already merged to the upstream branch and if you see any 
+issue, please
+post a patch for review.
 
->>   arch/arm/boot/dts/r8a7791-koelsch.dts |   35 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
-
->> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
->> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
->> @@ -289,6 +289,11 @@
->>                  renesas,groups = "usb1";
->>                  renesas,function = "usb1";
->>          };
->> +
->> +       vin1_pins: vin1 {
->> +               renesas,groups = "vin1_data8", "vin1_clk";
->> +               renesas,function = "vin1";
->> +       };
->>   };
-
-> Quick question: Does this pin description match to the board layout? I
-
-    Yes, it does.
-
-> suspect that clock and data by themselves are not enough.
-
-    They are enough as BT.656 interconnect is used between VIN1 and ADV7180.
-
-> I'm not sure about Koelsch, but  in case of older SoCs using the CEU
-> there were signals used like horizontal and vertical sync and
-> sometimes even something that was used to determine interlace.
-
-    The HS and VS/FIELD pins of ADV7180 are left unconnected.  There's also 
-ADV7612 connected to VIN0 on this board, there the HSYNC and VSYNC/FIELD pins 
-are connected; however, ADV7612 is not supported yet.
-
-> Thanks,
-
-> / magnus
-
-WBR, Sergei
+Murali
+>
+>>   		if (tty->hw_stopped) {
+>>   			if (status) {
+>>   				tty->hw_stopped = 0;
+>>
 
