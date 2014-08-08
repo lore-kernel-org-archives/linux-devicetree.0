@@ -1,40 +1,212 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: Re: [PATCH] Adding a support for Skyworks SKY81452
-Date: Fri, 8 Aug 2014 09:20:38 +0200
-Message-ID: <20140808072037.GD29832@distanz.ch>
-References: <1407398738-7582-1-git-send-email-jack.yoo@skyworksinc.com>
- <20140807123439.GC29832@distanz.ch>
- <20140808070913.GB5387@ulmo>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: Dual-channel DSI
+Date: Fri, 08 Aug 2014 09:26:17 +0200
+Message-ID: <53E47B99.3040105@samsung.com>
+References: <20140805153923.GA3072@ulmo.nvidia.com>
+ <53E3227B.1010000@samsung.com> <20140807072530.GE17340@ulmo>
+ <53E33B48.1080401@samsung.com> <20140807085424.GC13315@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140808070913.GB5387@ulmo>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140807085424.GC13315@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Gyungoh Yoo <gyungoh@gmail.com>, rdunlap@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jg1.han@samsung.com, cooloney@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, grant.likely@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, jack.yoo@skyworksinc.com, florian.vaussard@epfl.ch, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-08-08 at 09:09:19 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Thu, Aug 07, 2014 at 02:34:39PM +0200, Tobias Klauser wrote:
-> > On 2014-08-07 at 10:05:38 +0200, Gyungoh Yoo <gyungoh@gmail.com> wrote:
-> [...]
-> > > +#ifdef CONFIG_OF
-> > > +static const struct of_device_id sky81452_of_match[] = {
-> > > +	{.compatible = "sky,sky81452",},
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, sky81452_of_match);
-> > > +#endif
-> > 
-> > The #ifdefery here is not needed since you use of_match_ptr below, whcih
-> > will expand to NULL of CONFIG_OF is not set.
-> 
-> On the contrary, that's exactly why the #ifdef is needed here. If you
-> don't guard the OF match table here, then of_match_ptr() evaluating to
-> NULL will cause the table to become unused and the compiler warning
-> about it.
+On 08/07/2014 10:54 AM, Thierry Reding wrote:
+> On Thu, Aug 07, 2014 at 10:39:36AM +0200, Andrzej Hajda wrote:
+>> On 08/07/2014 09:25 AM, Thierry Reding wrote:
+>>> On Thu, Aug 07, 2014 at 08:53:47AM +0200, Andrzej Hajda wrote:
+>>>> Hi Thierry,
+>>>>
+>>>> Nice case.
+>>>>
+>>>> On 08/05/2014 05:39 PM, Thierry Reding wrote:
+>>>>> Hi everyone,
+>>>>>
+>>>>> I've been working on adding support for a panel that uses what's
+>>>>> commonly known as dual-channel DSI. Sometimes this is referred to as
+>>>>> ganged-mode as well.
+>>>>>
+>>>>> What is it, you ask? It's essentially a hack to work around the band-
+>>>>> width restrictions of DSI, albeit one that's been commonly implemented
+>>>>> by several SoC vendors.
+>>>>>
+>>>>> This typically works by equipping a peripheral with two DSI interfaces,
+>>>>> each of which driving one half of the screen (symmetric left-right mode)
+>>>>> or every other line (symmetric odd-even mode). Apparently there can be
+>>>>> asymmetric modes in addition to those two, but they seem to be the
+>>>>> common ones. Often both of the DSI interfaces need to be configured
+>>>>> using DCS commands and vendor specific registers.
+>>>>>
+>>>>> A single display controller is typically used video data transmission.
+>>>>> This is necessary to provide synchronization and avoid tearing and all
+>>>>> kinds of other ugliness. For this to work both DSI controllers need to
+>>>>> be made aware of which chunk of the video data stream is addressing
+>>>>> them.
+>>>>>
+>>>>> From a software perspective, this poses two problems:
+>>>>>
+>>>>> 1) A dual-channel device is composed of two DSI peripheral devices which
+>>>>>    cannot be programmed independently of each other. A typical example
+>>>>>    is that the frame memory extents need to be configured differently
+>>>>>    for each of the devices (using the DCS set_column_address and
+>>>>>    set_page_address commands). Therefore each device must know of the
+>>>>>    other, or there must be a driver that binds against a dummy device
+>>>>>    that pulls in the two real devices.
+>>>> I am not sure if I understand correctly, but I see it rather as one
+>>>> device with two dsi-slave interfaces. Probably panel driver can
+>>>> create dsi dummy device to program some registers
+>>>> via second dsi interface but the panel will be attached to one control bus.
+>>>> It seems to be very similar to mfd/i2c devices with two or more i2c
+>>>> addresses.
+>>> They are in fact attached to two different control busses. The DSI
+>>> controllers that talk to each are separate. On Tegra they are the same
+>>> type of IP block, but still two separate instances (with their own
+>>> clock, reset, etc. inputs).
+>>>
+>>> So the panel driver can't create a dummy device to talk to the second
+>>> DSI interface because the second DSI interface uses a different DSI
+>>> host.
+>> Why different DSI host does not allow that? The only thing panel needs
+>> is the reference to another DSI host and this can be provided via
+>> DT direct phandle or video interface.
+> I'm sure one could find ways to make it work. That doesn't mean it's a
+> good idea, though. The second peripheral is physically there on the
+> second DSI host controller's bus, so it the device should be in device
+> tree because so that the device tree matches reality.
 
-Oops, yes of course. Sorry about that and thanks for your correction.
+The question is what is the reality? Do we have two separate dsi
+devices? In such case
+both devices should appear in DT.
+If we have single device attached to two different DSI hosts I suppose
+device should appear
+only in one location in DT with link to another DSI host.
 
-Tobias
+>
+>>>>> 2) On the DSI host side, each of the controller instances needs to know
+>>>>>    the intimate details of the other controller (or alternatively, one
+>>>>>    controller needs to be a "master" and the other a "slave").
+>>>> The question is if they need to communicate each other, or they have
+>>>> to have similar configurations applied?
+>>> On Tegra at least the configuration needs to be almost the same. There
+>>> are two registers that may need to be programmed differently. But they
+>>> don't have to communicate with each other. Essentially the two registers
+>>> that require different programming define which parts of the display
+>>> controller's data stream they need to capture and turn into DSI packets.
+>>>
+>>> Theoretically it would be possible to make this work with two completely
+>>> different DSI controllers, but in practice I'd expect that to never
+>>> happen. So I'm not sure we need to consider the case where the register
+>>> layout is different between the two DSI host controllers.
+>> So maybe the configuration could be provided by the panel.
+> What configuration? I suppose one idea would be for the panel driver to
+> set the type of dual-channel mode that it's using. Panels can typically
+> be configured to do symmetric left-right or symmetric odd-even. I think
+> technically it's possible to have asymmetric modes, too, but to be
+> honest I don't want to think about those yet.
+>
+> So I think it's reasonable for the DSI device to provide information as
+> to what mode it's using. Perhaps that could be done as part of the slave
+> setup.
+>
+>>> I've come up with another alternative that works:
+>>>
+>>> 	dsi@54300000 {
+>>> 		panel: panel@0 {
+>>> 			compatible = "sharp,lq101r1sx01";
+>>> 			reg = <0>;
+>>> 		};
+>>> 	};
+>>>
+>>> 	dsi@54400000 {
+>>> 		panel@0 {
+>>> 			compatible = "sharp,lq101r1sx01";
+>>> 			reg = <0>;
+>>>
+>>> 			master = <&panel>;
+>>> 		};
+>>> 	};
+>> But here you have again two compatibles and two devices in DT representing
+>> one HW device.
+> Because that's what they really are. There are two different devices,
+> it's just that they happen to be driving two separate halves of the same
+> panel.
+
+Compatible string "sharp,lq101r1sx01" clearly indicates that there are
+two panels of type LQ101R1SX01.
+If you really want to split this panel as two separate devices maybe you
+should probably use separate
+compatibles to make it more clear, sth like: "sharp,lq101r1sx01_link1",
+"sharp,lq101r1sx01_link2".
+Anyway it looks odd to me :)
+
+>
+>> I am not sure if it is better. If you do not like video
+>> interfaces
+>> maybe better would be sth like this:
+>>
+>> 	dsi@54300000 {
+>> 		panel: panel@0 {
+>> 			compatible = "sharp,lq101r1sx01";
+>> 			reg = <0>;
+>> 			secondary_dsi = <&dsiB>;
+>>  		};
+>> 	};
+>>
+>> 	dsiB: dsi@54400000 {
+>> 	};
+> That's pretty much the same thing that I proposed, except that it
+> reverses the link between the two.
+For me it is fundamentally different - in your proposition you have two
+different panels, in my you have only one, attached to one dsi with
+phandle to 2nd dsi.
+> In fact I tried something similar to
+> that before, but it has a couple of problems: if the secondary device
+> does not have a compatible string (that's probably not valid in device
+> tree to begin with) then there's no way for the device to report what
+> format it expects or what number of lanes it uses. But those are
+> parameters that are needed to set up the DSI (and display controllers).
+
+I2C has:
+struct i2c_client *
+i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
+
+DSI could have something similar, this way you could pass everything you
+need.
+
+>
+> One other problem with the above is that the dependency implied by your
+> "secondary_dsi" property is the wrong way around. The above would mean
+> that &panel requires &dsiB's services to function, but that's not the
+> case. If anything it's the other way around. &panel could still work
+> standalone (though only drive the left half of the screen).
+
+Why? Interpretation of the private property is up to this specific
+binding documentation
+and it can define the property optional. On the other side if the
+property is present
+and the panel driver cannot connect to dsiB it is up to the panel driver
+what to do,
+it can fail or continue to work with single dsi.
+
+Summarizing it seems the core of the problem is to answer the question
+if the panel should be represented
+as single device or as two devices.
+
+
+Regards
+Andrzej
+
+>
+> Thierry
