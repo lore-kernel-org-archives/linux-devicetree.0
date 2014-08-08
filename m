@@ -1,180 +1,94 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v2 4/5] ARM: shmobile: r8a7740: add MSTP clock assignments to DT
-Date: Fri,  8 Aug 2014 16:23:11 +0200
-Message-ID: <1407507792-8121-5-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au
-Cc: linux-sh@vger.kernel.org, mturquette@linaro.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
+Date: Fri, 08 Aug 2014 16:52:13 +0200
+Message-ID: <53E4E41D.4070703@collabora.co.uk>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <53E37329.4020002@itdev.co.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Nick Dyer <nick.dyer@itdev.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Assigns clocks to ether, i2c*, scif*, tpu, mmcif0, sdhi*, and fsi2.
+Hello Nick,
 
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
----
- arch/arm/boot/dts/r8a7740.dtsi | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+On 08/07/2014 02:38 PM, Nick Dyer wrote:
+>> 
+>> Also, the current documentation says that the array limit
+>> is four entries but the driver dynamically allocates the
+>> keymap array and does not limit the array size.
+> 
+> There is a physical limit to the number of GPIOs on the device. The number
+> 4 is wrong, the protocol does allow for up to 8 GPIOs. But it is a hard limit.
+>
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 3c61c5d..6cd6a46 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -126,7 +126,7 @@
- 		reg = <0xe9a00000 0x800>,
- 		      <0xe9a01800 0x800>;
- 		interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH>;
--		/* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
-+		clocks = <&mstp3_clks R8A7740_CLK_GETHER>;
- 		phy-mode = "mii";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -142,6 +142,7 @@
- 			      0 202 IRQ_TYPE_LEVEL_HIGH
- 			      0 203 IRQ_TYPE_LEVEL_HIGH
- 			      0 204 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp1_clks R8A7740_CLK_IIC0>;
- 		status = "disabled";
- 	};
- 
-@@ -154,6 +155,7 @@
- 			      0 71 IRQ_TYPE_LEVEL_HIGH
- 			      0 72 IRQ_TYPE_LEVEL_HIGH
- 			      0 73 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7740_CLK_IIC1>;
- 		status = "disabled";
- 	};
- 
-@@ -161,6 +163,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6c40000 0x100>;
- 		interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -168,6 +172,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6c50000 0x100>;
- 		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA1>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -175,6 +181,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6c60000 0x100>;
- 		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -182,6 +190,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6c70000 0x100>;
- 		interrupts = <0 103 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA3>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -189,6 +199,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6c80000 0x100>;
- 		interrupts = <0 104 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA4>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -196,6 +208,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6cb0000 0x100>;
- 		interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA5>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -203,6 +217,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6cc0000 0x100>;
- 		interrupts = <0 106 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA6>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -210,6 +226,8 @@
- 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
- 		reg = <0xe6cd0000 0x100>;
- 		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFA7>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -217,6 +235,8 @@
- 		compatible = "renesas,scifb-r8a7740", "renesas,scifb";
- 		reg = <0xe6c30000 0x100>;
- 		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_SCIFB>;
-+		clock-names = "sci_ick";
- 		status = "disabled";
- 	};
- 
-@@ -240,6 +260,7 @@
- 	tpu: pwm@e6600000 {
- 		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
- 		reg = <0xe6600000 0x100>;
-+		clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
- 		status = "disabled";
- 		#pwm-cells = <3>;
- 	};
-@@ -249,6 +270,7 @@
- 		reg = <0xe6bd0000 0x100>;
- 		interrupts = <0 56 IRQ_TYPE_LEVEL_HIGH
- 			      0 57 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7740_CLK_MMC>;
- 		status = "disabled";
- 	};
- 
-@@ -258,6 +280,7 @@
- 		interrupts = <0 117 IRQ_TYPE_LEVEL_HIGH
- 			      0 118 IRQ_TYPE_LEVEL_HIGH
- 			      0 119 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7740_CLK_SDHI0>;
- 		cap-sd-highspeed;
- 		cap-sdio-irq;
- 		status = "disabled";
-@@ -269,6 +292,7 @@
- 		interrupts = <0 121 IRQ_TYPE_LEVEL_HIGH
- 			      0 122 IRQ_TYPE_LEVEL_HIGH
- 			      0 123 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7740_CLK_SDHI1>;
- 		cap-sd-highspeed;
- 		cap-sdio-irq;
- 		status = "disabled";
-@@ -280,6 +304,7 @@
- 		interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH
- 			      0 126 IRQ_TYPE_LEVEL_HIGH
- 			      0 127 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp4_clks R8A7740_CLK_SDHI2>;
- 		cap-sd-highspeed;
- 		cap-sdio-irq;
- 		status = "disabled";
-@@ -290,6 +315,7 @@
- 		compatible = "renesas,fsi2-r8a7740", "renesas,sh_fsi2";
- 		reg = <0xfe1f0000 0x400>;
- 		interrupts = <0 9 0x4>;
-+		clocks = <&mstp3_clks R8A7740_CLK_FSI>;
- 		status = "disabled";
- 	};
- 
--- 
-1.8.4.5
+Thanks a lot for the explanation, then I guess s/4/8 is enough.
 
+>> 
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> ---
+>>  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> index baef432..be50476 100644
+>> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> @@ -11,7 +11,7 @@ Required properties:
+>>  
+>>  Optional properties for main touchpad device:
+>>  
+>> -- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
+>> +- linux,gpio-keymap: An array of entries indicating the Linux
+>>      keycode generated by each GPIO. Linux keycodes are defined in
+>>      <dt-bindings/input/input.h>.
+>>  
+>> @@ -22,4 +22,10 @@ Example:
+>>  		reg = <0x4b>;
+>>  		interrupt-parent = <&gpio>;
+>>  		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+>> +		linux,gpio-keymap = < BTN_LEFT
+>> +				      BTN_TOOL_FINGER
+>> +				      BTN_TOOL_DOUBLETAP
+>> +				      BTN_TOOL_TRIPLETAP
+>> +				      BTN_TOOL_QUADTAP
+>> +				      BTN_TOOL_QUINTTAP >;
+> 
+> I'm afraid you have misunderstood the impact of this change to the way that
+> the GPIOs coming in to the touch controller are mapped to key codes. Look
+
+Unfortunately there are no boards in mainline using this "linux,gpio-keymap"
+property so I tried to figure out what the expected values were by reading the
+driver. So is more than possible that I got them wrong.
+
+By passing all these keycodes the touchpad worked as expected for me and the
+driver did the same than the Chrome OS driver that has these keycodes hardcoded
+when is_tp is true.
+
+> at the protocol guide for T19.
+> 
+
+I don't have access to proper documentation and I wouldn't expect people to have
+access to non-public docs in order to use a Device Tree binding.
+
+That's why I wanted to document an example, so using this property could be
+easier for others and they shouldn't have to look at the driver in order to
+figure it out (and getting it wrong as you said :) )
+
+So it would be great if you could provide an example on how this is supposed to
+be used.
+
+> The DOUBLE/TRIPLE/QUAD/QUINTTAP stuff is filled in for us by the input core
+> when we use INPUT_MT_POINTER, anyway.
+> 
+
+Thanks for the hint, I didn't know that this was the case but I just looked at
+input_mt_init_slots() [0] and indeed those are not needed.
+
+Best regards,
+Javier
+
+[0]: http://lxr.free-electrons.com/source/drivers/input/input-mt.c#L69
