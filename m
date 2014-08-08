@@ -1,238 +1,98 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH][resend] mtd: atmel_nand: make PMECC lookup table and offset property optional
-Date: Fri, 8 Aug 2014 17:28:30 +0800
-Message-ID: <1407490110-16735-1-git-send-email-josh.wu@atmel.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: Add of_match_machine helper
+Date: Fri, 8 Aug 2014 11:41:25 +0200
+Message-ID: <20140808094123.GC5387@ulmo>
+References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
+ <1407452515-2390-2-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407452515-2390-2-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If there is no PMECC lookup table stored in ROM, or lookup table offset is
-not specified, PMECC driver should build it in DDR by itself.
 
-That make the PMECC driver work for some board which doesn't has PMECC
-lookup table in ROM.
+--jy6Sn24JjFx/iggw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-Hi, 
+On Fri, Aug 08, 2014 at 02:01:53AM +0300, Tuomas Tynkkynen wrote:
+> Add of_match_machine function to test the device tree root for an
+> of_match array. This can be useful when testing SoC versions at runtime,
+> for example.
+>=20
+> Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/of/base.c  | 21 +++++++++++++++++++++
+>  include/linux/of.h |  3 +++
+>  2 files changed, 24 insertions(+)
+>=20
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d8574ad..37798ea 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -977,6 +977,27 @@ struct device_node *of_find_matching_node_and_match(=
+struct device_node *from,
+>  EXPORT_SYMBOL(of_find_matching_node_and_match);
+> =20
+>  /**
+> + * of_match_machine - Tell if root of device tree has a matching of_matc=
+h struct
+> + *	@matches:	array of of device match structures to search in
+> + *
+> + *	Returns the result of of_match_node for the root node.
+> + */
 
-In this resend patch, I add devicetree mail-list in CC.
-Sorry for the previou patch which forget put devicetree in cc list.
+I was going to say that this kerneldoc is weirdly formatted, but when I
+looked at the other kerneldoc comments in this file it seems that they
+use similarly weird formatting...
 
-Best Regards,
-Josh Wu
+> +const struct of_device_id *of_match_machine(const struct of_device_id *m=
+atches)
+> +{
+> +	const struct of_device_id *match;
+> +	struct device_node *root;
+> +
+> +	root =3D of_find_node_by_path("/");
+> +	if (!root)
+> +		return NULL;
+> +
+> +	match =3D of_match_node(matches, root);
+> +	of_node_put(root);
+> +	return match;
+> +}
+> +EXPORT_SYMBOL(of_match_machine);
 
- .../devicetree/bindings/mtd/atmel-nand.txt         |   6 +-
- drivers/mtd/nand/atmel_nand.c                      | 136 ++++++++++++++++++++-
- 2 files changed, 136 insertions(+), 6 deletions(-)
+I wonder if of_find_node_by_path("/") is somewhat overkill here. Perhaps
+simply of_node_get(of_allnodes) would be more appropriate here since the
+function is implemented in the core?
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-index c472883..75d1847 100644
---- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -5,7 +5,9 @@ Required properties:
- - reg : should specify localbus address and size used for the chip,
- 	and hardware ECC controller if available.
- 	If the hardware ECC is PMECC, it should contain address and size for
--	PMECC, PMECC Error Location controller and ROM which has lookup tables.
-+	PMECC and PMECC Error Location controller.
-+	The PMECC lookup table address and size in ROM is optional. If not
-+	specified, driver will build it in runtime.
- - atmel,nand-addr-offset : offset for the address latch.
- - atmel,nand-cmd-offset : offset for the command latch.
- - #address-cells, #size-cells : Must be present if the device has sub-nodes
-@@ -27,7 +29,7 @@ Optional properties:
-   are: 512, 1024.
- - atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
-   for different sector size. First one is for sector size 512, the next is for
--  sector size 1024.
-+  sector size 1024. If not specified, driver will build the table in runtime.
- - nand-bus-width : 8 or 16 bus width if not present 8
- - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
- - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
-diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-index effa7a29..84af313 100644
---- a/drivers/mtd/nand/atmel_nand.c
-+++ b/drivers/mtd/nand/atmel_nand.c
-@@ -124,6 +124,7 @@ struct atmel_nand_host {
- 	bool			has_pmecc;
- 	u8			pmecc_corr_cap;
- 	u16			pmecc_sector_size;
-+	bool			has_no_lookup_table;
- 	u32			pmecc_lookup_table_offset;
- 	u32			pmecc_lookup_table_offset_512;
- 	u32			pmecc_lookup_table_offset_1024;
-@@ -1109,12 +1110,121 @@ static int pmecc_choose_ecc(struct atmel_nand_host *host,
- 	return 0;
- }
- 
-+static int pmecc_build_galois_table(int mm,
-+		int16_t *index_of, int16_t *alpha_to)
-+{
-+	unsigned int i, mask, nn;
-+	unsigned int p[PMECC_GF_DIMENSION_14 + 1];
-+
-+	nn = (1 << mm) - 1;
-+	/* set default value */
-+	for (i = 1; i < mm; i++)
-+		p[i] = 0;
-+
-+	/* 1 + X^mm */
-+	p[0]  = 1;
-+	p[mm] = 1;
-+
-+	/* others  */
-+	switch (mm) {
-+	case 3:
-+	case 4:
-+	case 6:
-+	case 15:
-+		p[1] = 1;
-+		break;
-+	case 5:
-+	case 11:
-+		p[2] = 1;
-+		break;
-+	case 7:
-+	case 10:
-+		p[3] = 1;
-+		break;
-+	case 8:
-+		p[2] = p[3] = p[4] = 1;
-+		break;
-+	case 9:
-+		p[4] = 1;
-+		break;
-+	case 12:
-+		p[1] = p[4] = p[6] = 1;
-+		break;
-+	case 13:
-+		p[1] = p[3] = p[4] = 1;
-+		break;
-+	case 14:
-+		p[1] = p[6] = p[10] = 1;
-+		break;
-+	default:
-+		/* Error */
-+		return -EINVAL;
-+	}
-+
-+	/* Build alpha ^ mm it will help to generate the field (primitiv) */
-+	alpha_to[mm] = 0;
-+	for (i = 0; i < mm; i++)
-+		if (p[i])
-+			alpha_to[mm] |= 1 << i;
-+
-+	/*
-+	 * Then build elements from 0 to mm - 1. As degree is less than mm
-+	 * so it is just a logical shift.
-+	 */
-+	mask = 1;
-+	for (i = 0; i < mm; i++) {
-+		alpha_to[i] = mask;
-+		index_of[alpha_to[i]] = i;
-+		mask <<= 1;
-+	}
-+
-+	index_of[alpha_to[mm]] = mm;
-+
-+	/* use a mask to select the MSB bit of the LFSR */
-+	mask >>= 1;
-+
-+	/* then finish the building */
-+	for (i = mm + 1; i <= nn; i++) {
-+		/* check if the msb bit of the lfsr is set */
-+		if (alpha_to[i - 1] & mask)
-+			alpha_to[i] = alpha_to[mm] ^
-+				((alpha_to[i - 1] ^ mask) << 1);
-+		else
-+			alpha_to[i] = alpha_to[i - 1] << 1;
-+
-+		index_of[alpha_to[i]] = i % nn;
-+	}
-+
-+	/* index of 0 is undefined in a multiplicative field */
-+	index_of[0] = -1;
-+
-+	return 0;
-+}
-+
-+uint16_t *create_lookup_table(struct device *dev, int sector_size)
-+{
-+	int table_size = (sector_size == 512) ?
-+			PMECC_LOOKUP_TABLE_SIZE_512 :
-+			PMECC_LOOKUP_TABLE_SIZE_1024;
-+	int degree = (sector_size == 512) ?
-+			PMECC_GF_DIMENSION_13 :
-+			PMECC_GF_DIMENSION_14;
-+	uint16_t *addr = devm_kzalloc(dev, 2 * table_size * sizeof(uint16_t),
-+			GFP_KERNEL);
-+
-+	if (addr)
-+		pmecc_build_galois_table(degree, addr, addr + table_size);
-+
-+	return addr;
-+}
-+
- static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
- 					 struct atmel_nand_host *host)
- {
- 	struct mtd_info *mtd = &host->mtd;
- 	struct nand_chip *nand_chip = &host->nand_chip;
- 	struct resource *regs, *regs_pmerr, *regs_rom;
-+	uint16_t *galois_table;
- 	int cap, sector_size, err_no;
- 
- 	err_no = pmecc_choose_ecc(host, &cap, &sector_size);
-@@ -1160,8 +1270,24 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
- 	regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
- 	host->pmecc_rom_base = devm_ioremap_resource(&pdev->dev, regs_rom);
- 	if (IS_ERR(host->pmecc_rom_base)) {
--		err_no = PTR_ERR(host->pmecc_rom_base);
--		goto err;
-+		if (!host->has_no_lookup_table)
-+			/* Don't display the information again */
-+			dev_err(host->dev, "Can not get I/O resource for ROM, will build a lookup table in runtime!\n");
-+
-+		host->has_no_lookup_table = true;
-+	}
-+
-+	if (host->has_no_lookup_table) {
-+		/* Build the look-up table in runtime */
-+		galois_table = create_lookup_table(host->dev, sector_size);
-+		if (!galois_table) {
-+			dev_err(host->dev, "Failed to build a lookup table in runtime!\n");
-+			err_no = -ENOMEM;
-+			goto err;
-+		}
-+
-+		host->pmecc_rom_base = galois_table;
-+		host->pmecc_lookup_table_offset = 0;
- 	}
- 
- 	nand_chip->ecc.size = sector_size;
-@@ -1498,8 +1624,10 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
- 
- 	if (of_property_read_u32_array(np, "atmel,pmecc-lookup-table-offset",
- 			offset, 2) != 0) {
--		dev_err(host->dev, "Cannot get PMECC lookup table offset\n");
--		return -EINVAL;
-+		dev_err(host->dev, "Cannot get PMECC lookup table offset, will build a lookup table in runtime.\n");
-+		host->has_no_lookup_table = true;
-+		/* Will build a lookup table and initialize the offset later */
-+		return 0;
- 	}
- 	if (!offset[0] && !offset[1]) {
- 		dev_err(host->dev, "Invalid PMECC lookup table offset\n");
--- 
-1.9.1
+Thierry
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--jy6Sn24JjFx/iggw
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT5JtDAAoJEN0jrNd/PrOhAMoQAJmn0fEnb/b1lt3a+d+kS0JT
+Ll8hWzjUy3/C6wH7enSRF+IuishkYq9GBdQhd5sEuNxOw3IQBvNOfFUYOa8VF+ps
+1/wOVmviYU0gyK8PTdtGJnXuFChG8kxuGq01hnOnue0UZ2KD+o+0Ihl5wHdXOpBW
+O+NiddN24l33kcR6KoMTU95R+xOozKuUjiRHQGZDiSUbwN4u+vUcyptVv/lQlwtv
+P0zrREqb8GNiGg5CLeTr38E7SY10NY4ZxGmy5rxNTazxgai2wNFy+kzV3e509t4b
+GN53vmkeB/hwOafE5lLSn1LV7IWggCHnAC86mb+E6f3NctEdQstXlwZuag6ATX0g
+p0AtabEJD6JnGO2R5PKL33RfeWQB3J1ozIhNRnDe+ajcsYVAOKjAGpjyx3q3D5M+
+R68r7SIPr/kox0d+BaAhh9+xnZnEX2y+3lCEJIUTDCY0k9W/OjUl64LWRDs3cb7H
+zQeYbErtDjrmoIps6Btaask6tlKtLoVOCTnijuOW38Xg5UX4ZrGGjFfbTX6eM02l
+gMYQdhAvrVD9vFiq7l6J5FyLwZv7KXbdreMT2SLK96JK4muyzyYDGBOGeFA4Nr3x
+cVqeS8OOPh8cVTaTrwiuvGC/VFzTq6wGu0OM6Ws+t7gJV9b/6XNUAsyW2ST4xpky
+f94msh57NEoPl3XGM8Rt
+=hWNI
+-----END PGP SIGNATURE-----
+
+--jy6Sn24JjFx/iggw--
