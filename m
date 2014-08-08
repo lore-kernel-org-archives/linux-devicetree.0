@@ -1,56 +1,57 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: Fwd: Multiple devices with same SMBus address
-Date: Fri, 8 Aug 2014 10:10:09 +0200
-Message-ID: <CAL8zT=i8eHvJUH68gSZoPxVE994U_329=-tTkbhz4vksjmZ9zw@mail.gmail.com>
-References: <CAL8zT=hs42xkjp9WYPf=baLjJURzhR9_v-icLX73_uxrqsuh8Q@mail.gmail.com>
+From: =?ISO-8859-1?Q?S=F8ren?= Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>
+Subject: [patch v2 3/3] dt-bindings Help for MCP ADCs
+Date: Fri, 08 Aug 2014 11:01:48 +0200
+Message-ID: <1407488508.6599.8.camel@sanws1.rosetechnology.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL8zT=hs42xkjp9WYPf=baLjJURzhR9_v-icLX73_uxrqsuh8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Soeren Andersen <san at rosetechnology.dk>
+---
+ Documentation/devicetree/bindings/iio/adc/mcp320x.txt | 30
+++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-I have a custom board which has two LMH0303 SDI drivers on the same
-i2c bus. They are connected in some daisy chain form, like on the
-schematics in the datasheet on page 9 :
-http://www.ti.com/lit/ds/symlink/lmh0303.pdf
-
-My problem is how to declare these devices in the DT in order to set
-the new adress of the first one when probed.
-
-I thought that something like that could do the trick but it seems crappy :
-
-lmh0303@17 {
-    new-addr = <0x16>;
-    rsti_n = <&gpio1_17>; /* GPIO signal connected to the RSTI signal
-of the first LMH0303 */
-};
-lmh0303@17 {
-    /* Nothing to do right now */
-};
-
-This is a draft thought :).
-
-Maybe would it also be possible do define a "super device" like this :
-lmh0303@17 {
-    lmh0303_1 {
-        new-addr = <0x16>;
-        rsti_n = <&gpio1_17>; /* GPIO signal connected to the RSTI
-signal of the first LMH0303 */
-    };
-    lmh0303_2 {
-    };
-};
-
-This would be something like the gpio-leds binding...
-But there is probably already a nice way to do that :-) ?
-
-Thanks for your advices !
-JM
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+new file mode 100644
+index 0000000..0ab577a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+@@ -0,0 +1,30 @@
++* Microchip Analog to Digital Converter (ADC)
++
++The node for this driver must be a child node of a SPI controller,
+hence
++all mandatory properties described in
++
++        Documentation/devicetree/bindings/spi/spi-bus.txt
++
++must be specified.
++
++Required properties:
++ 	- compatible:  	Must be one of the following, depending on the
++                 	model:
++				"mcp3001"
++				"mcp3002"
++				"mcp3004"
++				"mcp3008"
++				"mcp3201"
++				"mcp3202"
++				"mcp3204"
++				"mcp3208"
++
++
++Examples:
++spi_controller {
++	mcp3x0x@0 {
++		compatible = "mcp3002";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
++};
