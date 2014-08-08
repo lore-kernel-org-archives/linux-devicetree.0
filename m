@@ -1,36 +1,43 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 3/5] pinctrl: exynos: add exynos5410 SoC specific data
-Date: Fri, 8 Aug 2014 14:55:39 +0200
-Message-ID: <CACRpkdazZTUS50_mrXd+sNVAdf2m7meT1_LX5r6BKg3U-tC3Kw@mail.gmail.com>
-References: <1406549892-5558-1-git-send-email-afaerber@suse.de>
-	<1406549892-5558-4-git-send-email-afaerber@suse.de>
+From: =?iso-8859-1?Q?Ren=E9_Moll?= <Rene.Moll@xsens.com>
+Subject: [PATCH 0/2] power: reset: add LTC2952 poweroff support
+Date: Fri, 8 Aug 2014 13:12:10 +0000
+Message-ID: <8B68774BB69A844693005BA12A50F1146D4B78@XSMBXSVR01.xsens-tech.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406549892-5558-4-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hakjoo Kim <ruppi.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>, Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Frans Klaver <Frans.Klaver@xsens.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 28, 2014 at 2:18 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>=
- wrote:
+Hi,
 
-> From: Hakjoo Kim <ruppi.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
->
-> Add Samsung EXYNOS5410 SoC specific data to enable pinctrl
-> support for all platforms based on EXYNOS5410.
->
-> Cc: Hakjoo Kim <ruppi.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>
-> [AF: Rebased onto Exynos5260]
+This series add a driver for the LTC2952, an external power control chi=
+p, which
+signals the OS to shut down. Additionally this driver lets the kernel p=
+ower
+down the board.
 
-I'm waiting for Tomasz to review this before applying.
+This driver was tested with:
+- kernel version 3.15.8
+- ARM based processor (TI AM335x series)
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Ren=E9
+
+Ren=E9 Moll (2):
+      power: reset: add LTC2952 poweroff support
+      doc: power: reset: add binding info LTC2952 driver
+
+ Documentation/devicetree/bindings/power/reset/ltc2952-poweroff.txt |  =
+26 ++++++++
+ drivers/power/reset/Kconfig                                        |  =
+ 7 ++
+ drivers/power/reset/Makefile                                       |  =
+ 1 +
+ drivers/power/reset/ltc2952-poweroff.c                             | 3=
+87 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 421 insertions(+)
