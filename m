@@ -1,45 +1,68 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v5 4/4] ARM: dts: Enable USB host1(dwc) on rk3288-evb
-Date: Fri,  8 Aug 2014 11:55:59 +0800
-Message-ID: <1407470159-14722-5-git-send-email-kever.yang@rock-chips.com>
-References: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Zimmerman <paulz@synopsys.com>, heiko@sntech.de
-Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Gyungoh Yoo <gyungoh@gmail.com>
+Subject: Re: [PATCH] Adding a support for Skyworks SKY81452
+Date: Fri, 8 Aug 2014 15:22:57 +0900
+Message-ID: <20140808062257.GB14907@jack-ThinkPad-T520>
+References: <1407398738-7582-1-git-send-email-jack.yoo@skyworksinc.com>
+ <20140807100952.GH10136@lee--X1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140807100952.GH10136@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: rdunlap@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jg1.han@samsung.com, cooloney@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, grant.likely@linaro.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, jack.yoo@skyworksinc.com, florian.vaussard@epfl.ch, thierry.reding@gmail.com, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-USB host1 port is the host A port nearby the otg port.
+On Thu, Aug 07, 2014 at 11:09:52AM +0100, Lee Jones wrote:
+> On Thu, 07 Aug 2014, Gyungoh Yoo wrote:
+>=20
+> > Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> > ---
+> >  Documentation/backlight/sky81452.txt               |  25 ++
+> >  Documentation/devicetree/bindings/mfd/sky81452.txt |  24 ++
+> >  .../bindings/regulator/sky81452-regulator.txt      |  16 +
+> >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+> >  .../video/backlight/sky81452-backlight.txt         |  20 ++
+> >  drivers/mfd/Kconfig                                |  12 +
+> >  drivers/mfd/Makefile                               |   1 +
+> >  drivers/mfd/sky81452.c                             | 115 +++++++
+> >  drivers/regulator/Kconfig                          |  11 +
+> >  drivers/regulator/Makefile                         |   1 +
+> >  drivers/regulator/sky81452-regulator.c             | 127 ++++++++
+> >  drivers/video/backlight/Kconfig                    |  10 +
+> >  drivers/video/backlight/Makefile                   |   1 +
+> >  drivers/video/backlight/sky81452-backlight.c       | 333 +++++++++=
+++++++++++++
+> >  include/linux/mfd/sky81452.h                       |  31 ++
+> >  include/linux/sky81452-backlight.h                 |  46 +++
+> >  16 files changed, 774 insertions(+)
+> >  create mode 100644 Documentation/backlight/sky81452.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.=
+txt
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/sky=
+81452-regulator.txt
+> >  create mode 100644 Documentation/devicetree/bindings/video/backlig=
+ht/sky81452-backlight.txt
+> >  create mode 100644 drivers/mfd/sky81452.c
+> >  create mode 100644 drivers/regulator/sky81452-regulator.c
+> >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
+> >  create mode 100644 include/linux/mfd/sky81452.h
+> >  create mode 100644 include/linux/sky81452-backlight.h
+>=20
+> Wow, no way.  Please split this up into separate patches.  Ideally, a=
+t
+> least one per subsystem and separate ones again for the DT bindings.
+>=20
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Sorry I didn't know. I will split them and resubmit.
+Thank you.
 
----
-
-Changes in v5:
-- don't enable otg port for evb
-
-Changes in v4: None
-Changes in v3:
-- Rebase
-
-Changes in v2:
-- evb patch added in version 2
-
- arch/arm/boot/dts/rk3288-evb.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 4f57209..4b62df6 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -94,3 +94,7 @@
- &usb_host0_ehci {
- 	status = "okay";
- };
-+
-+&usb_host1 {
-+	status = "okay";
-+};
--- 
-1.9.1
+> [...]
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
