@@ -1,59 +1,76 @@
-From: Joe.C <srv_yingjoe.chen@mediatek.com>
-Subject: [PATCH v2 4/4] dt-bindings: add bindings for mediatek intpol
-Date: Fri, 8 Aug 2014 21:43:31 +0800
-Message-ID: <1407505411-2207-5-git-send-email-srv_yingjoe.chen@mediatek.com>
-References: <1407505411-2207-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+From: Nick Dyer <nick.dyer-8YpZQSjhsQH10XsdtD+oqA@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] Input: atmel_mxt_ts - Get IRQ edge/level flags
+ on DT booting
+Date: Fri, 08 Aug 2014 15:07:33 +0100
+Message-ID: <53E4D9A5.908@itdev.co.uk>
+References: <1407397492-17475-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407505411-2207-1-git-send-email-srv_yingjoe.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "open
- list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open
- list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: srv_heupstream@mediatek.com, hc.yen@mediatek.com, yh.chen@mediatek.com, nathan.chung@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407397492-17475-1-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Yufeng Shen <miletus-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Joe.C" <yingjoe.chen@mediatek.com>
+On 07/08/14 08:44, Javier Martinez Canillas wrote:
+> The Atmel maXTouch driver assumed that the IRQ type flags will
+> always be passed using platform data but this is not true when
+> booting using Device Trees. In these setups the interrupt type
+> was ignored by the driver when requesting an IRQ.
+> 
+> This means that it will fail if a machine specified other type
+> than IRQ_TYPE_NONE. The right approach is to get the IRQ flags
+> that was parsed by OF from the "interrupt" Device Tree propery.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-Add binding documentation for Mediatek SoC GIC interrupt polarity extension.
+I'm happy for this to go in if Dmitry will accept it. It does seem to be a
+quirk of some platforms that it is necessary, but it's only one line.
 
-Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
----
- .../bindings/interrupt-controller/mediatek,intpol.txt    | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
+Thanks for spending so much time debugging this.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
-new file mode 100644
-index 0000000..16ea372
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
-@@ -0,0 +1,16 @@
-+Mediatek 65xx/81xx GIC interrupt polarity extension
-+
-+Mediatek SOCs contain controllable inverter for each GIC SPI interrupt,
-+these can be used as GIC interrupt polarity extension.
-+
-+Required properties:
-+- compatible: Compatible property value should be "mediatek,mt6577-intpol"
-+
-+- reg: Physical base address of the int pol registers and length of memory
-+  mapped region.
-+
-+Example:
-+       intpol: intpol@10200100 {
-+               compatible = "mediatek,mt6577-intpol";
-+               reg = <0x10200100 0x1c>;
-+       };
--- 
-1.8.1.1.dirty
+Signed-off-by: Nick Dyer <nick.dyer-8YpZQSjhsQH10XsdtD+oqA@public.gmane.org>
+
+> ---
+> 
+> This patch was first sent as a part of a two part series along
+> with [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example.
+> 
+> But there are no dependencies between these two patches so there
+> is no need to resend that one with no changes for v2.
+> 
+> Changes since v1:
+>  - Assign flags to pdata->irqflags in mxt_parse_dt() instead of probe().
+>    Suggested by Tomasz Figa.
+> 
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 03b8571..5c8cbd3 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/i2c/atmel_mxt_ts.h>
+>  #include <linux/input/mt.h>
+> +#include <linux/irq.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/of.h>
+>  #include <linux/slab.h>
+> @@ -2093,6 +2094,8 @@ static struct mxt_platform_data *mxt_parse_dt(struct i2c_client *client)
+>  	if (!pdata)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> +	pdata->irqflags = irq_get_trigger_type(client->irq);
+> +
+>  	if (of_find_property(client->dev.of_node, "linux,gpio-keymap",
+>  			     &proplen)) {
+>  		pdata->t19_num_keys = proplen / sizeof(u32);
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
