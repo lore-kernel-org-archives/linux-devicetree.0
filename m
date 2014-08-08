@@ -1,94 +1,44 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
-Date: Fri, 08 Aug 2014 16:52:13 +0200
-Message-ID: <53E4E41D.4070703@collabora.co.uk>
-References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] Documentation: dt-bindings: add dt binding info
+ for Rockchip dwc2
+Date: Fri, 8 Aug 2014 08:42:14 -0700
+Message-ID: <CAD=FV=WzGJ5HMffxRKMTS_Rue5VRK+M6kU3suv316sJS=81sQw@mail.gmail.com>
+References: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com>
+	<1407470159-14722-2-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <53E37329.4020002@itdev.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Nick Dyer <nick.dyer@itdev.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407470159-14722-2-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Nick,
+Kever,
 
-On 08/07/2014 02:38 PM, Nick Dyer wrote:
->> 
->> Also, the current documentation says that the array limit
->> is four entries but the driver dynamically allocates the
->> keymap array and does not limit the array size.
-> 
-> There is a physical limit to the number of GPIOs on the device. The number
-> 4 is wrong, the protocol does allow for up to 8 GPIOs. But it is a hard limit.
+On Thu, Aug 7, 2014 at 8:55 PM, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This add necessary dwc2 binding documentation for Rockchip socs:
+> rk3066, rk3188 and rk3288
 >
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+> - Split out dr_mode and rk3288 bindings.
+> - add compatible "snps,dwc2" bingding info
+>
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Thanks a lot for the explanation, then I guess s/4/8 is enough.
+IMHO this series is ready to go in for 3.18 whenever maintainers feel
+it's the right time.
 
->> 
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> ---
->>  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->> 
->> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> index baef432..be50476 100644
->> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> @@ -11,7 +11,7 @@ Required properties:
->>  
->>  Optional properties for main touchpad device:
->>  
->> -- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
->> +- linux,gpio-keymap: An array of entries indicating the Linux
->>      keycode generated by each GPIO. Linux keycodes are defined in
->>      <dt-bindings/input/input.h>.
->>  
->> @@ -22,4 +22,10 @@ Example:
->>  		reg = <0x4b>;
->>  		interrupt-parent = <&gpio>;
->>  		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
->> +		linux,gpio-keymap = < BTN_LEFT
->> +				      BTN_TOOL_FINGER
->> +				      BTN_TOOL_DOUBLETAP
->> +				      BTN_TOOL_TRIPLETAP
->> +				      BTN_TOOL_QUADTAP
->> +				      BTN_TOOL_QUINTTAP >;
-> 
-> I'm afraid you have misunderstood the impact of this change to the way that
-> the GPIOs coming in to the touch controller are mapped to key codes. Look
-
-Unfortunately there are no boards in mainline using this "linux,gpio-keymap"
-property so I tried to figure out what the expected values were by reading the
-driver. So is more than possible that I got them wrong.
-
-By passing all these keycodes the touchpad worked as expected for me and the
-driver did the same than the Chrome OS driver that has these keycodes hardcoded
-when is_tp is true.
-
-> at the protocol guide for T19.
-> 
-
-I don't have access to proper documentation and I wouldn't expect people to have
-access to non-public docs in order to use a Device Tree binding.
-
-That's why I wanted to document an example, so using this property could be
-easier for others and they shouldn't have to look at the driver in order to
-figure it out (and getting it wrong as you said :) )
-
-So it would be great if you could provide an example on how this is supposed to
-be used.
-
-> The DOUBLE/TRIPLE/QUAD/QUINTTAP stuff is filled in for us by the input core
-> when we use INPUT_MT_POINTER, anyway.
-> 
-
-Thanks for the hint, I didn't know that this was the case but I just looked at
-input_mt_init_slots() [0] and indeed those are not needed.
-
-Best regards,
-Javier
-
-[0]: http://lxr.free-electrons.com/source/drivers/input/input-mt.c#L69
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
