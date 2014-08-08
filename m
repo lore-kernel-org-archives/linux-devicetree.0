@@ -1,99 +1,72 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2 1/1] Input: atmel_mxt_ts - Get IRQ edge/level flags
- on DT booting
-Date: Fri, 08 Aug 2014 18:38:51 +0200
-Message-ID: <53E4FD1B.6060600@collabora.co.uk>
-References: <1407397492-17475-1-git-send-email-javier.martinez@collabora.co.uk> <53E4D9A5.908@itdev.co.uk> <20140808162146.GC26820@core.coreip.homeip.net>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
+Date: Fri, 8 Aug 2014 09:59:24 -0700
+Message-ID: <CAK5ve-+3WmaU+OEX1T_xMWDRDgNxD6YXrqTB-=UyaQxHknVbow@mail.gmail.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <CAK5ve-L67=q-EpWvxD5-x+cFT7dh8p0HHuoUbAWA-j5BqCO52A@mail.gmail.com>
+ <CAK5ve-+xyXyjPqejTPRvz=bJ4M5v19Uq1oaVv94QKqBWf1D4dA@mail.gmail.com> <53E47186.5000309@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20140808162146.GC26820@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>
-Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Abraham <thomas.ab@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53E47186.5000309@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-+Thomas Gleixner, Jason Cooper, Benjamin Herrenschmidt and Thomas Abraham
+On Thu, Aug 7, 2014 at 11:43 PM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Hi Bryan,
+>
+>
+> On 07/16/2014 07:21 PM, Bryan Wu wrote:
+>>
+>> On Wed, Jul 16, 2014 at 10:19 AM, Bryan Wu <cooloney@gmail.com> wrote:
+>>>
+>>> On Fri, Jul 11, 2014 at 7:04 AM, Jacek Anaszewski
+>>> <j.anaszewski@samsung.com> wrote:
+>>>>
+>>>> This is is the fourth version of the patch series being a follow up
+>>>> of the discussion on Media summit 2013-10-23, related to the
+>>>> LED / flash API integration (the notes from the discussion were
+>>>> enclosed in the message [1], paragraph 5).
+>>>> The series is based on linux-next-20140707
+>>>>
+>>>
+>>> I really apologize that I missed your discussion email in my Gmail
+>>> inbox, it was archived some where. Even in this series some of these
+>>> patches are archived in different tab.
+>>>
+>>> I will start to review and help to push this.
+>>>
+>>
+>> In the mean time, could you please provide an git tree for me to pull?
+>> It's much easier for me to review in my git.
+>
+>
+> Few days ago I sent to your private email the path to the git
+> repository to pull, but I am resending it through the lists to
+> make sure that it will not get filtered somehow again.
+>
+>
+> git://linuxtv.org/snawrocki/samsung.git
+> branch: led_flash_integration_v4
+>
+> gitweb:
+> http://git.linuxtv.org/cgit.cgi/snawrocki/samsung.git/log/?h=led_flash_integration_v4
+>
 
-Hello Dmitry,
+Yes, I got it. I merged some leds core fixing patches from you
+recently. So could you please split these big patchset into several
+small parts which should be easier for reviewing and discussion.
+ - led core fixing
+ - led flash core patches
+ - led flash manager patches
+ - v4l2 led patches
+ - Documentations
 
-On 08/08/2014 06:21 PM, Dmitry Torokhov wrote:
-> On Fri, Aug 08, 2014 at 03:07:33PM +0100, Nick Dyer wrote:
->> On 07/08/14 08:44, Javier Martinez Canillas wrote:
->> > The Atmel maXTouch driver assumed that the IRQ type flags will
->> > always be passed using platform data but this is not true when
->> > booting using Device Trees. In these setups the interrupt type
->> > was ignored by the driver when requesting an IRQ.
->> > 
->> > This means that it will fail if a machine specified other type
->> > than IRQ_TYPE_NONE. The right approach is to get the IRQ flags
->> > that was parsed by OF from the "interrupt" Device Tree propery.
->> > 
->> > Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> 
->> I'm happy for this to go in if Dmitry will accept it. It does seem to be a
->> quirk of some platforms that it is necessary, but it's only one line.
-> 
-> I'd rather not as it masks the deeper platform issue. There might be
-> other drovers also expecting platform/OF code set up interrupt triggers
-> and working/not working by chance.
-> 
+My plan is to review these and merge them to my -devel branch. Then
+invite people for testing.
 
-I totally agree. When posted the patch I thought that it was the right fix but
-after your explanation and studying the IRQ core I see that as you said this i
-just hiding a more fundamental issue. We should fix the root cause instead of
-adding a workaround for every driver.
-
-> Can we figure out why the platform in question needs this change?
-> 
-
-I dig further on this. First I wanted to see if the problem was on IRQ core or
-in the irqchip driver so I tried calling the chip's .irq_set_type function
-handler directly using the flags set by __irq_set_trigger() the first time that
-it's called from OF when the "interrupts" property is parsed.
-
-Doing that makes the device to trigger interrupts so the problem seems to be
-related to the pinctrl-exynos driver and is not in the IRQ core.
-
-So, this is the change I did just for testing purposes to make it work again:
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 3dc6a61..ed76b25 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1176,6 +1176,10 @@ __setup_irq(unsigned int irq, struct irq_desc *desc,
-struct irqaction *new)
-
- 			if (ret)
- 				goto out_mask;
-+		} else if (irq == 283 /* mapped IRQ number for touchpad */) {
-+			struct irq_chip *chip = desc->irq_data.chip;
-+			chip->irq_set_type(&desc->irq_data,
-+					   irq_get_trigger_type(irq));
- 		}
-
- 		desc->istate &= ~(IRQS_AUTODETECT | IRQS_SPURIOUS_DISABLED | \
-
-
-It seems as if the first call to exynos_irq_set_type() that is made by OF is a
-no-op while the second call is the one that actually setups the hw correctly.
-Does this make any sense? Maybe is related to the pin not being muxed in the
-correct function when the "interrupts" property is parsed by OF?
-
-Now I added some debug logs to see what could be different but all the variables
-have the same values in both cases:
-
-When called happens due irq_parse_and_map():
-
-irq 283 type 2 pin 1 shift 4 base 4026679296 reg_con 3588 con 32 flags 0 mask 0
-
-When called happens due request_threaded_irq():
-
-irq 283 type 2 pin 1 shift 4 base 4026679296 reg_con 3588 con 32 flags 0 mask 0
-
-I would really appreciate if someone that is more familiar with the driver or
-this chip can provide some hints.
-
-Thanks a lot and best regards,
-Javier
+Thanks,
+-Bryan
