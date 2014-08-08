@@ -1,46 +1,47 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add phy-stih41x-usb.c to ARCH/STI architecture
-Date: Fri, 8 Aug 2014 16:45:35 +0530
-Message-ID: <53E4B157.6080405@ti.com>
-References: <1407493175-2611-1-git-send-email-peter.griffin@linaro.org> <1407493175-2611-4-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407493175-2611-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v3 0/2] tty: serial: Add mediatek UART driver
+Date: Fri,  8 Aug 2014 13:32:02 +0200
+Message-ID: <1407497524-26535-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, matthias.bgg@gmail.com, alan@linux.intel.com, varkabhadram@gmail.com, heiko@sntech.de, yingjoe.chen@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch set adds support for the UART found in Mediatek SoCs.
+The chip is a changed version of a 8250 controller.
+Especially it introduces a new register called highspeed. The value
+in this register has to be set depending on the baudrate. The value
+in the register influences the way the divisor has to be calculated.
 
-On Friday 08 August 2014 03:49 PM, Peter Griffin wrote:
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+The patch series is build against v3.16-rc1 and tested on mt6589. Should
+work as well on mt6577 and mt6582.
 
-Empty commit message is not recommended even though the patch seems obvious.
+Thanks,
+Matthias
 
-Thanks
-Kishon
+Changes for v3:
+- use dev_warn instead of pr_warn
+- use 8250_core function to update termios
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c2066f4..6283d83 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1356,6 +1356,7 @@ F:	drivers/pinctrl/pinctrl-st.c
->  F:	drivers/media/rc/st_rc.c
->  F:	drivers/i2c/busses/i2c-st.c
->  F:	drivers/tty/serial/st-asc.c
-> +F:	drivers/phy/phy-stih41x-usb.c
->  
->  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
->  M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes for v2:
+- drop 8250_core capability extension for the chip
+- encapsulate set_termios in the driver method
+
+---
+
+Matthias Brugger (2):
+  tty: serial: 8250: Add Mediatek UART driver
+  DTS: serial: Add bindings documention for the Mediatek UARTs
+
+ .../devicetree/bindings/serial/mtk-uart.txt        |   19 ++
+ drivers/tty/serial/8250/8250_mtk.c                 |  296 ++++++++++++++++++++
+ drivers/tty/serial/8250/Kconfig                    |    7 +
+ drivers/tty/serial/8250/Makefile                   |    1 +
+ 4 files changed, 323 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
+ create mode 100644 drivers/tty/serial/8250/8250_mtk.c
+
+-- 
+1.7.9.5
+
