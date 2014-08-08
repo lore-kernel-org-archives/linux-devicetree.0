@@ -1,57 +1,72 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] cpuidle: big.LITTLE: Use of_match_machine
-Date: Fri, 8 Aug 2014 11:45:28 +0200
-Message-ID: <20140808094525.GB15852@ulmo>
-References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
- <1407452515-2390-4-git-send-email-ttynkkynen@nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 06/11] pwm: sti: Add new driver for ST's PWM IP
+Date: Fri, 8 Aug 2014 11:46:55 +0200
+Message-ID: <20140808094655.GC15852@ulmo>
+References: <1405348412-7352-1-git-send-email-lee.jones@linaro.org>
+ <1405348412-7352-7-git-send-email-lee.jones@linaro.org>
+ <20140807142344.GA11095@ulmo.nvidia.com>
+ <20140808073802.GC21618@lee--X1>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SkvwRMAIpAhPCcCJ"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="KDt/GgjP6HVcx58l"
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1407452515-2390-4-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20140808073802.GC21618@lee--X1>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
 List-Id: devicetree@vger.kernel.org
 
 
---SkvwRMAIpAhPCcCJ
+--KDt/GgjP6HVcx58l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 08, 2014 at 02:01:55AM +0300, Tuomas Tynkkynen wrote:
-> Use the new helper function, also fixing a device_node refcount leak.
+On Fri, Aug 08, 2014 at 08:38:02AM +0100, Lee Jones wrote:
+> On Thu, 07 Aug 2014, Thierry Reding wrote:
+> > On Mon, Jul 14, 2014 at 03:33:27PM +0100, Lee Jones wrote:
+> > [...]
+> > > +static int sti_pwm_probe(struct platform_device *pdev)
+> > > +{
+> > [...]
+> > > +	pc->clk =3D of_clk_get_by_name(np, "pwm");
+> >=20
+> > This didn't compile because the np variable isn't declared. It was easy
+> > to fix up, so I did, but please be more careful next time that the
+> > patches you submit at least compile (preferably without sparse warnings
+> > of which I also fixed up a couple).
 >=20
-> Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Compile tested only.
+> That's annoying, I thought I did build test the final changes.
+> However, there's a mistake in the Makefile meaning that it wasn't
+> building with no warning/error messages - it actually wasn't building
+> at all!  Sorry about that Thierry.
 >=20
->  drivers/cpuidle/cpuidle-big_little.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+> I guess if you can build the driver, you've already fixed that?
 
-Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Yes, it should be all taken care of in the PWM for-next branch.
 
---SkvwRMAIpAhPCcCJ
+Thierry
+
+--KDt/GgjP6HVcx58l
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT5Jw1AAoJEN0jrNd/PrOhv58QAJQ+7QEy+lCmrZl/FZxclODm
-/SeF3BfFa9bn295JeerkH2mQAHRSpQhkvBvHjl2LNVLXE239mSbJBalB3giBb5N8
-yFGiUJgd+h7ykYz1JkpbqC71Ko1IW3rTllM1WcjZM6TdASWIPtb32MIrvE0dMlyU
-QB51RWYwnuu0b2CiVORAHiohUi0ay+rFCkcfZGf7mObgDVGuKwDtpVpnY2Y5Bpjy
-L++wMbEwimJxoPoWNMeGYcV+v/L+EbjC9kacQORi2/49WpPKijZmBHVWIrwhqdEP
-69SVDtUUbNxN0db/zvGZ/KqMwMvnaXmlvvj2qu9HWh98a554lrryhWtaBsKpJ3h2
-Wv/nZe1hDBy+Fn+KVgTxN2iCRpjQsUkXlHmTBi7uLoGEemov7WXXWzN0olN0wjOF
-MC9cXXZiisFhWBrY+92171LfmphT31XQJSbqseB9Bpia7rF2EMZVrHumz8GoKsMF
-fmbY7GZKy7xW6nIozM0+fNoOjYeyOYN6FJFl8WwTb1qUvPuD6/4P328FEwcpYUPA
-KpAO9ndYMACfDXr0QKUqZqGRSORKscw4Lr/SVeVOxgBUR0OOjucweBj2Tsmd3VQ6
-y0sufdWRKTK4Z8Ah2rKuJDsQtWWIZkwAfYcHScD2w6RO4q3CsX2GS0XzswasV0bl
-A8mG1laO1d8PsXbP4/mi
-=To51
+iQIcBAEBAgAGBQJT5JyPAAoJEN0jrNd/PrOhiYsQALs5+YuEzMr3gzPXaVvgP5vj
+3Nm7+3jH8UgNUqQMbw3gJjitkn50nP4Uowe6+xKQs16cSkM5aGHY2I5nnzVH9ftT
+hbisisxFb6VaOUWGAfFnuKzIlG/EAPu/Nlh/T5ED2DyDwB3Blkqo+ztfsfhzKOHe
+e04uywaHiEA1MKnBxyxplgjJPm4uK18XsDf0SRxZCait5DCTRTe7OsaRv5a/f7vv
+ui6c1fc5Hmha8yspQFI5nTCEl6gcZMMq10aTso3ShMrufvQ9fT685+GrgA4QfLf0
+V+U6gl5n57OBhS1veXaF5eoneq7OsKIUjyGXtlLN5I0aeOSaQ0ayBe/NYJYP6P5t
+zOuH7dhqPcvOlj2behCAkJLMiecLBpZVLtIZZ0alGIcc1D3DToYDYbZTP3Nzvd7A
+52l1WNcwnXcTWfd2uLULj7qZSMiKzzSuGKJMgEq8JnkDnK9uzPDiIQF/L9wBdT3z
+bLIOEgyGpfUfWSgxXKSTUv/qWtoUWei5CrOq5gmFAPI/gvG5iB/SQ40y0eJ7PnSw
+7bDPLEbZf91hOxHXtUCLhR0RUrSQff7u5s6QAfrSO1tf3ABVFDoTVsTqRbwVLk4f
+TfVSDeyfAydTnM+bOgabER3Wc46ho9E4GPnrugYF1527sLWZMFHousKTS0JYVNCT
+Qx2gqPa6LplU0ViRocgM
+=rVJs
 -----END PGP SIGNATURE-----
 
---SkvwRMAIpAhPCcCJ--
+--KDt/GgjP6HVcx58l--
