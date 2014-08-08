@@ -1,39 +1,61 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [RFC 4/5] ARM: dts: add pinctrl support to Exynos5410
-Date: Fri, 08 Aug 2014 15:29:30 +0200
-Message-ID: <53E4D0BA.7050106@gmail.com>
-References: <1406549892-5558-1-git-send-email-afaerber@suse.de> <1406549892-5558-5-git-send-email-afaerber@suse.de>
+From: Joe.C <srv_yingjoe.chen@mediatek.com>
+Subject: [PATCH v2 3/4] arm: mediatek: Add intpol in mt6589.dtsi
+Date: Fri, 8 Aug 2014 21:43:30 +0800
+Message-ID: <1407505411-2207-4-git-send-email-srv_yingjoe.chen@mediatek.com>
+References: <1407505411-2207-1-git-send-email-srv_yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406549892-5558-5-git-send-email-afaerber@suse.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org, Hakjoo Kim <ruppi.kim@hardkernel.com>
-Cc: Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1407505411-2207-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open
+ list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: srv_heupstream@mediatek.com, hc.yen@mediatek.com, yh.chen@mediatek.com, nathan.chung@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: "Joe.C" <yingjoe.chen@mediatek.com>
 
-Please see my comment inline.
+Add intpol settings for mt6589.
+This also correct timer interrupt flag setting. The old setting
+works because 6589 boot loader already set polarity for time
+interrupt. Without intpol support, the setting was not changed
+so gic can get the irq correctly.
 
-On 28.07.2014 14:18, Andreas F=E4rber wrote:
-> From: Hakjoo Kim <ruppi.kim@hardkernel.com>
->=20
-> Add the required pin configuration support to Exynos5410 using pinctr=
-l
-> interface.
+Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+---
+ arch/arm/boot/dts/mt6589.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-[snip]
-
-> +	pinctrl_0: pinctrl@13400000 {
-> +		compatible =3D "samsung,exynos5410-pinctrl";
-> +		reg =3D <0x13400000 0x1000>;
-> +		interrupts =3D <0 45 0>;
-
-I believe you are missing the wake-up IRQ controller node here, which i=
-s
-needed to handle the interrupts of EINTW (gpxN) banks.
-
-Best regards,
-Tomasz
+diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+index d0297a0..18df47f 100644
+--- a/arch/arm/boot/dts/mt6589.dtsi
++++ b/arch/arm/boot/dts/mt6589.dtsi
+@@ -76,11 +76,16 @@
+ 		timer: timer@10008000 {
+ 			compatible = "mediatek,mt6577-timer";
+ 			reg = <0x10008000 0x80>;
+-			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
++		intpol: intpol@10200100 {
++			compatible = "mediatek,mt6577-intpol";
++			reg = <0x10200100 0x1c>;
++		};
++
+ 		gic: interrupt-controller@10212000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			interrupt-controller;
+-- 
+1.8.1.1.dirty
