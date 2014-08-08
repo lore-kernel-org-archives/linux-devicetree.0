@@ -1,45 +1,67 @@
 From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v5 1/4] Documentation: dt-bindings: add dt binding info for Rockchip dwc2
-Date: Fri,  8 Aug 2014 11:55:56 +0800
-Message-ID: <1407470159-14722-2-git-send-email-kever.yang@rock-chips.com>
+Subject: [PATCH v5 3/4] ARM: dts: add rk3288 dwc2 controller support
+Date: Fri,  8 Aug 2014 11:55:58 +0800
+Message-ID: <1407470159-14722-4-git-send-email-kever.yang@rock-chips.com>
 References: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Zimmerman <paulz@synopsys.com>, heiko@sntech.de
-Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Porter <mporter@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, wulf@rock-chips.com, lyz@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This add necessary dwc2 binding documentation for Rockchip socs:
-rk3066, rk3188 and rk3288
+rk3288 has two kind of usb controller, this add the dwc2 controller
+for otg and host1.
+
+Controller can works with usb PHY default setting and Vbus on.
 
 Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Acked-by: Stephen Warren <swarren@nvidia.com>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Tested-by: Doug Anderson <dianders@chromium.org>
 ---
 
-Changes in v5: None
+Changes in v5:
+- change the sort order of dwc2 in rk3288.dtsi
+
 Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- Split out dr_mode and rk3288 bindings.
-- add compatible "snps,dwc2" bingding info
+Changes in v3:
+- EHCI and HSIC move new for version 3.
 
- Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2: None
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 467ddd1..2899679 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -4,6 +4,9 @@ Platform DesignWare HS OTG USB 2.0 controller
- Required properties:
- - compatible : One of:
-   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-+  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
-+  - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
-+  - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
-   - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
+ arch/arm/boot/dts/rk3288.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 5950b0a..58167f1 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -206,6 +206,26 @@
+ 
+ 	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
+ 
++	usb_host1: usb@ff540000 {
++		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
++				"snps,dwc2";
++		reg = <0xff540000 0x40000>;
++		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_USBHOST1>;
++		clock-names = "otg";
++		status = "disabled";
++	};
++
++	usb_otg: usb@ff580000 {
++		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
++				"snps,dwc2";
++		reg = <0xff580000 0x40000>;
++		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_OTG0>;
++		clock-names = "otg";
++		status = "disabled";
++	};
++
+ 	usb_hsic: usb@ff5c0000 {
+ 		compatible = "generic-ehci";
+ 		reg = <0xff5c0000 0x100>;
 -- 
 1.9.1
