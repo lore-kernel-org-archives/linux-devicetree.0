@@ -1,69 +1,52 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH] ASoC: fsl_sai: Make Synchronous and
-	Asynchronous modes exclusive
-Date: Fri, 8 Aug 2014 18:41:19 +0800
-Message-ID: <1407494479-9877-1-git-send-email-nicoleotsuka@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 0/2] This series adds support for RK3288 SoC
+ integrated PWM
+Date: Fri, 8 Aug 2014 13:12:11 +0200
+Message-ID: <20140808111209.GA20064@ulmo.nvidia.com>
+References: <1407482929-13050-1-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, galak@codeaurora.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407482929-13050-1-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, b.galvani@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dianders@chromium.org, cf@rock-chips.com, addy.ke@rock-chips.com, cjf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The previous patch (ASoC: fsl_sai: Add asynchronous mode support) added
-new Device Tree bindings for Asynchronous and Synchronous modes support.
-However, these two shall not be present at the same time.
 
-So this patch just simply makes them exclusive so as to avoid incorrect
-Device Tree binding usage.
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 +--
- sound/soc/fsl/fsl_sai.c                             | 7 +++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+On Fri, Aug 08, 2014 at 03:28:47PM +0800, Caesar Wang wrote:
+> This patch will make applying on the top of Beniamino's submission,
+> the Beniamino's submission come from [1].
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index 77864f4..dc9f9c3 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -38,8 +38,7 @@ Note:
-   default synchronous mode (sync Rx with Tx) will be used, which means both
-   transimitter and receiver will send and receive data by following clocks
-   of transimitter.
--- fsl,sai-asynchronous will be ignored if fsl,sai-synchronous-rx property is
--  already present.
-+- fsl,sai-asynchronous and fsl,sai-synchronous-rx are exclusive.
- 
- Example:
- sai2: sai@40031000 {
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index ef7c758..4c9e71c 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -634,6 +634,13 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 	fsl_sai_dai.symmetric_channels = 1;
- 	fsl_sai_dai.symmetric_samplebits = 1;
- 
-+	if (of_find_property(np, "fsl,sai-synchronous-rx", NULL) &&
-+	    of_find_property(np, "fsl,sai-asynchronous", NULL)) {
-+		/* error out if both synchronous and asynchronous are present */
-+		dev_err(&pdev->dev, "invalid binding for synchronous mode\n");
-+		return -EINVAL;
-+	}
-+
- 	if (of_find_property(np, "fsl,sai-synchronous-rx", NULL)) {
- 		/* Sync Rx with Tx */
- 		sai->synchronous[RX] = false;
--- 
-1.8.4
+Both patches applied (with last-minute minor stylistic fixups), thanks.
+
+Thierry
+
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT5LCJAAoJEN0jrNd/PrOhCAIP/2+OdkQPLc980cGNUbpp1wUr
+w1tXuroPmz1ov09h9sgQvvZ6Da3dn2fBI7v1s0NXVZL32zm1nRIopdcbon4wqSvy
+OHi6L9v6ZK7la0PTk/gM/H+8dbvNYm8aF4I0V6kSRkJhFFOP2KZILvNit19pmkVy
+pXTWWlC7fCL9LQV+H68UlK6uidBJKLYCAAP5eUnTlsOGV1CIvBTEkrJRYon1YZCL
+BGMLWoalwZoGogd2r6HcohPP9qbbM2rVc+chya2WGtGpBwpSwW7h3uwWNXUR9lcW
+9fqWgER80iA0ZdCLX6vF/RRVtWuIUjmkfrrE/IH3RacSopEpB7iUUiJR/MyA9JlW
+vcXdYJFKZHhZusvWM/usZZHkQmrp1YBEZ/xAn1rTCucoteSge92wRur1wS4Yi9aY
+OFmeq5mGvB2oCB6mmsoiJv/h0GeIuoqiozqK4eb88tv6ZCI3174Ai213Yi02Lqq/
+zAnbIm2jGqLxh6t55zAn0G7Afs6CW9oBGmdEEEYLSrlCeuqS7o3z3DnVPiqvpZyu
+x8ACFTORtleCeJIFLeGIl9PemaMRmg4pfYl5nGhe7PAT6fZ+9Xzo2YO7KoMRRf8s
+QxDoWzxrPfmXvs/svdPTX6JpEe6A+UkTiY4aricpitEGPHVzwBC62nNOWIlcoUai
+o7wbgTsjQ7/fBCzj9e3o
+=3k42
+-----END PGP SIGNATURE-----
+
+--LQksG6bCIzRHxTLp--
