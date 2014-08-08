@@ -1,54 +1,71 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] ARM: dts: add rk3288 dwc2 controller support
-Date: Fri, 08 Aug 2014 17:53:45 +0200
-Message-ID: <1596739.u7ZntKLW7r@diego>
-References: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com> <1407470159-14722-4-git-send-email-kever.yang@rock-chips.com> <CAD=FV=XNSp85H2zVrLPdxDfhokEWFspvwUHjVMWRu8k_wFFm0Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=XNSp85H2zVrLPdxDfhokEWFspvwUHjVMWRu8k_wFFm0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v6 0/2] ahci_xgene: Fixes related to APM X-Gene SATA host controller driver.
+Date: Fri,  8 Aug 2014 21:44:24 +0530
+Message-ID: <1407514466-25312-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 8. August 2014, 08:45:16 schrieb Doug Anderson:
-> Kever,
-> 
-> On Thu, Aug 7, 2014 at 8:55 PM, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> 
-wrote:
-> > rk3288 has two kind of usb controller, this add the dwc2 controller
-> > for otg and host1.
-> > 
-> > Controller can works with usb PHY default setting and Vbus on.
-> > 
-> > Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> > 
-> > Changes in v5:
-> > - change the sort order of dwc2 in rk3288.dtsi
-> > 
-> > Changes in v4: None
-> > Changes in v3:
-> > - EHCI and HSIC move new for version 3.
-> > 
-> > Changes in v2: None
-> > 
-> >  arch/arm/boot/dts/rk3288.dtsi | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> 
-> IMHO this series is ready to go in for 3.18.  I'm assuming Heiko will
-> pick it up once the bindings have landed.  It already has my tags.  ;)
+This patch set contains a couple of fixes related to APM X-Gene SATA
+controller driver.
 
-correct ... the dts changes look ok, so I'll take patches 3 and 4 once patches 
-1 and 2 are included somewhere.
+v2 Change:
+   1. Drop the Link down retry patch from this patch set.
 
+v4 Change:
+   1. Drop the patch to fix the csr-mask in dts for PHY clock
+     node of SATA Host Controller 1.
+   2. Add the patch to correct the OOB tunning parameters for
+     the COMINIT/COMWAKE parameters.
+   3. Add the patch to remove the NCQ support from the APM
+     X-Gene AHCI SATA Host controller driver.
+   4. Add the patch to remove the clock and PHY reference nodes
+     from the APM X-Gene Host controller dts node.
 
-Heiko
+v5 Change :
+   1. All the patches are based on 3.16.0-rc6/for-3.17 kernel.
+   2. Drop the patch to remove the clock and PHY reference nodes
+     from the APM X-Gene Host controller dts node as it breaks
+     with old firmware.
+   3. Add the patch to skip phy and clock initialisation if
+     already done in the firmware.
+   4. Add the patch to fix the csr-mask in dts for PHY clock
+     node of SATA Host Controller 1.
+   5. Add the patch to remove the NCQ support from the APM
+     X-Gene AHCI SATA Host controller driver based on 3.16.0-rc6/
+     for-3.17 kernel.
+   6. Drop the patch to correct the OOB tunning parameters for
+     the COMINIT/COMWAKE parameters as it is already applied to
+     3.16/for-3.17 branch by the maintainer.
+   7. Drop the patch to fix the watermark threshold as it is
+     already applied to 3.16/for-3.17 branch by the maintainer.
+
+v6 change :
+   1. Drop the patch to skip phy and clock initialisation if
+     already done in the firmware.
+   2. Drop the patch to fix the csr-mask in dts for PHY clock
+     node of SATA Host Controller 1.
+   3. Add the remove the clock and PHY node patch as it
+     fixes the dropped patches together. This patch works with
+     old and new firmware as well.
+
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+
+Suman Tripathi (2):
+  ahci_xgene: Removing NCQ support from the APM X-Gene SoC AHCI SATA
+    Host Controller driver.
+  arm64: Remove the clock and PHY reference from the APM X-Gene SoC AHCI
+    SATA Host controller dts node.
+
+ .../devicetree/bindings/ata/apm-xgene.txt          | 10 +--
+ arch/arm64/boot/dts/apm-storm.dtsi                 | 93 ----------------------
+ drivers/ata/ahci_xgene.c                           |  4 +-
+ 3 files changed, 7 insertions(+), 100 deletions(-)
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
+
