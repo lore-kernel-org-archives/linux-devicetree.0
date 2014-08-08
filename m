@@ -1,72 +1,31 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Fri, 8 Aug 2014 09:59:24 -0700
-Message-ID: <CAK5ve-+3WmaU+OEX1T_xMWDRDgNxD6YXrqTB-=UyaQxHknVbow@mail.gmail.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <CAK5ve-L67=q-EpWvxD5-x+cFT7dh8p0HHuoUbAWA-j5BqCO52A@mail.gmail.com>
- <CAK5ve-+xyXyjPqejTPRvz=bJ4M5v19Uq1oaVv94QKqBWf1D4dA@mail.gmail.com> <53E47186.5000309@samsung.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/9] ARM: dts: am33xx: Add external clock provider
+Date: Fri, 8 Aug 2014 14:26:47 -0300
+Message-ID: <20140808172646.GA28938@arch.cereza>
+References: <cover.1407332062.git.jsarha@ti.com>
+ <a6888259f9508e0cc4be720a5f17a487d1d6cd0c.1407332062.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53E47186.5000309@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <a6888259f9508e0cc4be720a5f17a487d1d6cd0c.1407332062.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 7, 2014 at 11:43 PM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> Hi Bryan,
->
->
-> On 07/16/2014 07:21 PM, Bryan Wu wrote:
->>
->> On Wed, Jul 16, 2014 at 10:19 AM, Bryan Wu <cooloney@gmail.com> wrote:
->>>
->>> On Fri, Jul 11, 2014 at 7:04 AM, Jacek Anaszewski
->>> <j.anaszewski@samsung.com> wrote:
->>>>
->>>> This is is the fourth version of the patch series being a follow up
->>>> of the discussion on Media summit 2013-10-23, related to the
->>>> LED / flash API integration (the notes from the discussion were
->>>> enclosed in the message [1], paragraph 5).
->>>> The series is based on linux-next-20140707
->>>>
->>>
->>> I really apologize that I missed your discussion email in my Gmail
->>> inbox, it was archived some where. Even in this series some of these
->>> patches are archived in different tab.
->>>
->>> I will start to review and help to push this.
->>>
->>
->> In the mean time, could you please provide an git tree for me to pull?
->> It's much easier for me to review in my git.
->
->
-> Few days ago I sent to your private email the path to the git
-> repository to pull, but I am resending it through the lists to
-> make sure that it will not get filtered somehow again.
->
->
-> git://linuxtv.org/snawrocki/samsung.git
-> branch: led_flash_integration_v4
->
-> gitweb:
-> http://git.linuxtv.org/cgit.cgi/snawrocki/samsung.git/log/?h=led_flash_integration_v4
->
+On 06 Aug 04:47 PM, Jyri Sarha wrote:
+> Add external clock provaider for am33xx devices.
 
-Yes, I got it. I merged some leds core fixing patches from you
-recently. So could you please split these big patchset into several
-small parts which should be easier for reviewing and discussion.
- - led core fixing
- - led flash core patches
- - led flash manager patches
- - v4l2 led patches
- - Documentations
+Typo: s/provaider/provider
 
-My plan is to review these and merge them to my -devel branch. Then
-invite people for testing.
-
-Thanks,
--Bryan
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
