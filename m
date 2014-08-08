@@ -1,106 +1,61 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v2 2/5] ARM: shmobile: r8a7740: clock register bits
-Date: Fri,  8 Aug 2014 16:23:09 +0200
-Message-ID: <1407507792-8121-3-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au
-Cc: linux-sh@vger.kernel.org, mturquette@linaro.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
+ specific reset
+Date: Fri, 08 Aug 2014 16:23:09 +0200
+Message-ID: <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
+References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
+	 <CACRpkdYfu8HmVCkn9JFh+YP5OPdr8o9nTfoCnkJ7SSpGoenQUg@mail.gmail.com>
+	 <20140708080535.GJ13423@lukather>
+	 <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Houcheng Lin <houcheng@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Contains the header file with the clock pulse generator and MSTP bits.
+Am Dienstag, den 08.07.2014, 11:38 +0200 schrieb Linus Walleij:
+> On Tue, Jul 8, 2014 at 10:05 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > On Tue, Jul 08, 2014 at 09:52:03AM +0200, Linus Walleij wrote:
+> >> On Wed, Jun 18, 2014 at 3:37 PM, Houcheng Lin <houcheng@gmail.com> wrote:
+> >>
+> >> > The Problem
+> >> > -----------
+> >> > The reset signal on a hardware board is send either:
+> >> >     - during machine initialization
+> >> >     - during bus master's initialization
+> >>
+> >> I just thought about this a bit, since there isn't already a generic GPIO
+> >> reset driver, just call this drivers/reset/reset-gpio.c and make the
+> >> ability to deferral just a configuration detail of the GPIO reset driver.
+> >
+> > Philipp has been working on one for quite some time. See
+> > http://www.spinics.net/lists/arm-kernel/msg321927.html
+> >
+> > However, it seems to progress slowly, and we don't seem to be able to
+> > reach a consensus here.
 
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
----
- include/dt-bindings/clock/r8a7740-clock.h | 77 +++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 include/dt-bindings/clock/r8a7740-clock.h
+Mostly because Maxime and I seem to have a completely different opinion
+and nobody else argued one way or the other.
 
-diff --git a/include/dt-bindings/clock/r8a7740-clock.h b/include/dt-bindings/clock/r8a7740-clock.h
-new file mode 100644
-index 0000000..f6b4b0f
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a7740-clock.h
-@@ -0,0 +1,77 @@
-+/*
-+ * Copyright 2014 Ulrich Hecht
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_R8A7740_H__
-+#define __DT_BINDINGS_CLOCK_R8A7740_H__
-+
-+/* CPG */
-+#define R8A7740_CLK_SYSTEM	0
-+#define R8A7740_CLK_PLLC0	1
-+#define R8A7740_CLK_PLLC1	2
-+#define R8A7740_CLK_PLLC2	3
-+#define R8A7740_CLK_R		4
-+#define R8A7740_CLK_USB24S	5
-+#define R8A7740_CLK_I		6
-+#define R8A7740_CLK_ZG		7
-+#define R8A7740_CLK_B		8
-+#define R8A7740_CLK_M1		9
-+#define R8A7740_CLK_HP		10
-+#define R8A7740_CLK_HPP		11
-+#define R8A7740_CLK_USBP	12
-+#define R8A7740_CLK_S		13
-+#define R8A7740_CLK_ZB		14
-+#define R8A7740_CLK_M3		15
-+#define R8A7740_CLK_CP		16
-+
-+/* MSTP1 */
-+#define R8A7740_CLK_CEU21	28
-+#define R8A7740_CLK_CEU20	27
-+#define R8A7740_CLK_TMU0	25
-+#define R8A7740_CLK_LCDC1	17
-+#define R8A7740_CLK_IIC0	16
-+#define R8A7740_CLK_TMU1	11
-+#define R8A7740_CLK_LCDC0	0
-+
-+/* MSTP2 */
-+#define R8A7740_CLK_SCIFA6	30
-+#define R8A7740_CLK_SCIFA7	22
-+#define R8A7740_CLK_DMAC1	18
-+#define R8A7740_CLK_DMAC2	17
-+#define R8A7740_CLK_DMAC3	16
-+#define R8A7740_CLK_USBDMAC	14
-+#define R8A7740_CLK_SCIFA5	7
-+#define R8A7740_CLK_SCIFB	6
-+#define R8A7740_CLK_SCIFA0	4
-+#define R8A7740_CLK_SCIFA1	3
-+#define R8A7740_CLK_SCIFA2	2
-+#define R8A7740_CLK_SCIFA3	1
-+#define R8A7740_CLK_SCIFA4	0
-+
-+/* MSTP3 */
-+#define R8A7740_CLK_CMT1	29
-+#define R8A7740_CLK_FSI		28
-+#define R8A7740_CLK_IIC1	23
-+#define R8A7740_CLK_USBF	20
-+#define R8A7740_CLK_SDHI0	14
-+#define R8A7740_CLK_SDHI1	13
-+#define R8A7740_CLK_MMC		12
-+#define R8A7740_CLK_GETHER	9
-+#define R8A7740_CLK_TPU0	4
-+
-+/* MSTP4 */
-+#define R8A7740_CLK_USBH	16
-+#define R8A7740_CLK_SDHI2	15
-+#define R8A7740_CLK_USBFUNC	7
-+#define R8A7740_CLK_USBPHY	6
-+
-+/* SUBCK* */
-+#define R8A7740_CLK_SUBCK	9
-+#define R8A7740_CLK_SUBCK2	10
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7740_H__ */
--- 
-1.8.4.5
+> > If you ask me, having to set a few extra properties like this just
+> > advocates for a regular reset driver and DT node for the reset GPIO,
+> > but I'm pretty sure Philipp will feel otherwise :)
+> 
+> Hm haha yeah let's fight it out :-)
+> 
+> This is not my subsystem so I'm getting some popcorn.
 
+Sorry about missing this earlier, I hope the popcorn is not stale.
+
+I think a reset that needs to be released before a fixed device appears
+on the bus, should be handled by the bus driver. The reset framework
+could be made to help with that, but I don't think a separate entity
+that scans the whole device tree itself is the right solution.
+
+regards
+Philipp
