@@ -1,141 +1,263 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
-Date: Sat, 09 Aug 2014 00:20:46 +0200
-Message-ID: <3332039.dxD4mlCSgf@diego>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <2434370.xFIeZvuJnT@diego> <CAD=FV=XA31T9i6nLaDhVS+BkJ=U-PiMye_ouC1QY8EMoKqMCiQ@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2] serial: uart: add hw flow control support configuration
+Date: Fri, 8 Aug 2014 16:46:24 -0400
+Message-ID: <53E53720.7090706@ti.com>
+References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com> <53E39B44.60406@hurleysoftware.com> <53E3A67B.6070709@ti.com> <20140807171254.GA13097@kroah.com> <53E3B67E.80705@hurleysoftware.com> <53E3B88C.2000209@ti.com> <53E3C685.5010600@hurleysoftware.com> <53E3E597.7070305@ti.com> <53E405B6.7030602@hurleysoftware.com> <53E526CB.6060504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=XA31T9i6nLaDhVS+BkJ=U-PiMye_ouC1QY8EMoKqMCiQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <53E526CB.6060504@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 8. August 2014, 14:58:11 schrieb Doug Anderson:
-> Heiko,
->=20
-> On Fri, Aug 1, 2014 at 1:15 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wro=
-te:
-> > Am Donnerstag, 31. Juli 2014, 17:30:25 schrieb Mike Turquette:
-> >> Quoting Heiko St=FCbner (2014-07-31 16:29:34)
-> >>=20
-> >> > Hi Mike,
-> >> >=20
-> >> > Am Donnerstag, 31. Juli 2014, 15:45:23 schrieb Mike Turquette:
-> >> > > Quoting Heiko Stuebner (2014-07-29 12:12:05)
-> >> > >=20
-> >> > > > The clock-tree contains clocks that should never get disable=
-d
-> >> > > > automatically. One example are the base ACLKs, the base supp=
-lies
-> >> > > > for
-> >> > > > all
-> >> > > > peripherals.
-> >> > > >=20
-> >> > > > Therefore add a structure similar to the sunxi clock-tree to
-> >> > > > protect
-> >> > > > these
-> >> > > > special clocks from being disabled.
-> >> > > >=20
-> >> > > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> >> > > > ---
-> >> > > >=20
-> >> > > >  drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
-> >> > > >  drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
-> >> > > >  drivers/clk/rockchip/clk.c        | 13 +++++++++++++
-> >> > > >  drivers/clk/rockchip/clk.h        |  1 +
-> >> > > >  4 files changed, 28 insertions(+)
-> >> > > >=20
-> >> > > > diff --git a/drivers/clk/rockchip/clk-rk3188.c
-> >> > > > b/drivers/clk/rockchip/clk-rk3188.c index a83a6d8..5aef277 1=
-00644
-> >> > > > --- a/drivers/clk/rockchip/clk-rk3188.c
-> >> > > > +++ b/drivers/clk/rockchip/clk-rk3188.c
-> >> > > > @@ -599,6 +599,11 @@ static struct rockchip_clk_branch
-> >> > > > rk3188_clk_branches[] __initdata =3D {>
-> >> > > >=20
-> >> > > >         GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0,
-> >> > > >         RK2928_CLKGATE_CON(8),
-> >> > > >         13, GFLAGS),>
-> >> > > > =20
-> >> > > >  };
-> >> > > >=20
-> >> > > > +static const char *rk3188_critical_clocks[] __initconst =3D=
- {
-> >> > > > +       "aclk_cpu",
-> >> > > > +       "aclk_peri",
-> >> > >=20
-> >> > > I'm not against the idea of critical clocks, but I want to ver=
-ify
-> >> > > that
-> >> > > there is no other driver out there that is a better fit for cl=
-aiming
-> >> > > these clks via clk_get and enabling them the normal way via
-> >> > > clk_enable?
-> >> >=20
-> >> > In the clock hierarchy of Rockchip SoCs, both aclks listed here,=
- are
-> >> > sources for pclk and hclk, as well as sourcing some other periph=
-eral
-> >> > gates further below too. So from what I've seen from the clock
-> >> > diagrams,
-> >> > there is nothing that would claim these clocks directly, and it
-> >> > wouldn't
-> >> > also make any sense to let them get disabled as there will alway=
-s be
-> >> > something using them (for example the dram-controller).
-> >>=20
-> >> Sounds good. Just out of curiosity, under what circumstances would=
- you
-> >> want to gate them? Is there a use case for it?
-> >=20
-> > hmm, I don't see a use-case for gating these at runtime right now, =
-simply
-> > because there should be a user for them all the time. (both aclks c=
-ombined
-> > have at least 68 consumers on the rk3288 and a similar number on th=
-e
-> > previous socs)
-> >=20
-> > The only thing I could think of would be something suspend related =
-- which
-> > we don't have yet. But then this would probably happen in the clock
-> > controller itself anyway in some late suspend-related action, so it=
- could
-> > take into account them being defined as critical clocks.
->=20
-> I know Rockchip has some funky stuff planned for memory scaling too.
-> Perhaps Kever can comment whether these two clocks might need to be
-> disabled in that case?
+On 08/08/2014 03:36 PM, Murali Karicheri wrote:
+> On 08/07/2014 07:03 PM, Peter Hurley wrote:
+>
+> ----Cut-------------
+>>>>>
+>>>>>>
+>>>>>> 1. The patch enables UPF_HARD_FLOW, but provides no throttle() and
+>>>>>> unthrottle()
+>>>>>> methods for 8250, which is guaranteed to blow-up when either
+>>>>>> uart_throttle() or
+>>>>>> uart_unthrottle() is called.
+>>>>>>
+>>>>>> 2. The patch adds capabilities which already exist, namely
+>>>>>> UART_CAP_AFE.
+>>>>
+>>>>> AFAIK, UART_CAP_AFE is a software assisted hw flow control and it
+>>>>> was described in my commit log as well where as this patch add
+>>>>> support for pure h/w controlled flow control and no software
+>>>>> intervention is needed. Do you think uart_throttle() or
+>>>>> uart_unthrottle() is applicable
+>>>>> in this case?
+>>>>
+>>>> UART_CAP_AFE is used to indicate 16750-compatible hw flow control,
+>>>> which is
+>>>> auto-CTS and auto-RTS flow control as described in the TI datasheet at
+>>>> http://www.ti.com/lit/ds/symlink/tl16c750.pdf
+>>>
+>>> Peter,
+>>>
+>>> This patch was added to support hw flow control on boards based on
+>>> Keystone SoCs that has UART with h/w flow control capability.
+>>> Keystone SoCs UART spec is at
+>>> http://www.ti.com/lit/ug/sprugp1/sprugp1.pdf
+>>> and it uses tl16550c as per the document. The equivalent spec seems
+>>> to be http://www.ti.com/lit/ds/symlink/tl16c550c.pdf. Only difference
+>>> between tl16c750 and tl16c550 seems to be 16 byte FIFO available
+>>> instead of 16 or 64 byte FIFO in 16c750.
+>>
+>> So this is just a way to avoid the fifo size check.
+>> Then I'd rather see a capability that only overrides the fifo size check
+>> and does not enable UPF_HARD_FLOW.
+>>
+>> Or show that the fifo size check is not actually required for AFE.
+>>
+>>
+>>> And about your original question
+>>>>>>>>> Why is a modem status interrupt being generated for DCTS
+>>>>>>>>> if autoflow control is enabled?
+>>>
+>>> Are you asking why this patch didn't disable generating CTS interrupt
+>>> when h/w flow control is enable?
+>>
+>> No. I was asking what chip had AFE on but still generated modem status
+>> interrupts for delta CTS.
+>>
+>> But I realize now that a different question needs asking:
+>> Is the MSR read showing delta CTS set when AFE is on, ever?
+>
+> Unfortunately this was tested on a customer board that I don't have
+> access to and can't check this out right away. I am trying to findout if
+> I can get some hardware to test the patch to address the issue being
+> discussed. Customer board is currently using RTS and CTS lines and the
+> same works fine for them with this patch.
+>
+>>
+>> Because serial8250_modem_status() assumes the answer is no for
+>> _all_ AFE-capable devices, and if yes, would mean that
+>> serial8250_modem_status()
+>> is broken if AFE is on.
+>
+> As per Keystone UART spec
+>
+> bit 0 in MSR: DCTS: Change in CTS indicator bit. DCTS indicates that the
+> CTS input has changed state since the last time it was read by the CPU.
+> When DCTS is set (autoflow control is not enabled and the modem status
+> interrupt is enabled), a modem status interrupt is generated. When
+> autoflow control is enabled, no interrupt is generated
+>
+> So based on this, there shouldn't be any CTS change if AFE is enabled
+> and will indicate change if AFE is disabled. Probably add WARN_ON_ONCE()
+> as you suggested to detect any offending h/w.
+>
+>>
+>>
+>>> If so,
+>>>
+>>> unsigned int serial8250_modem_status(struct uart_8250_port *up)
+>>> {
+>>> ...
+>>> if (status& UART_MSR_DCTS)
+>>> uart_handle_cts_change(port, status& UART_MSR_CTS);
+>>> }
+>>>
+>>> Probably in the above check if UPF_HARD_FLOW is set, we can avoid
+>>> calling
+>  >> uart_handle_cts_change() and undo the current code change in
+> uart_handle_cts_change()
+>  >> and just add a WARN_ON_ONCE() as you have suggested.
+>>
+>> Let's come back to this question after determining the answer for the
+>> above question.
+>>
+>>
+>>>>
+>>>> uart_throttle() and uart_unthrottle() are used indirectly by line
+>>>> disciplines
+>>>> for high-level rx flow control, such as when a read buffer fills up
+>>>> because
+>>>> there is no userspace reader. The 8250 core doesn't define a
+>>>> throttle/unthrottle
+>>>> method because writing MCR to drop RTS is sufficient to disable
+>>>> auto-RTS.
+>>>
+>>> As per spec. hardware has rx threshold levels set to trigger an RTS
+>>> level change to tell
+>  >> the remote from sending more bytes. So if h/w flow control is
+> enabled, then not sure why
+>  >> uart_throttle() is to be doing anything when h/w flow control is
+> supported? A dummy
+>  >> function required to satisfy the line discipline?
+>>
+>> I understand how auto-RTS works.
+>>
+>> Let's pretend for a moment that uart_throttle() does nothing when
+>> auto-RTS is enabled:
+>>
+>> 1. tty buffers start to fill up because no process is reading the data.
+>> 2. The throttle threshold is reached.
+>> 3. uart_throttle() is called but does nothing.
+>> 4. more data arrives and the DR interrupt is triggered
+>> 5. serial8250_rx_chars() reads in the new data.
+>> 6. tty buffers keep filling up even though the driver was told to
+>> throttle
+>> 7. eventually the tty buffers will cap at about 64KB and start counting
+>> buf_overrun errors
+>>
+> Ok.
+>
+> Couple of observation on the AFE implementation in 8250 driver prior to
+> my patch.
+>
+>  From the discussion so far, AFE is actually hardware assisted hardware
+> flow control. Auto CTS is sw assisted hardware flow control
+> where sw uses RTS line for recieve side flow control and I assume it
+> uses MCR RTS bit for this where AFE does this automatically. From
+> the 16550 or Keystone UART spec, I can't find how RTS line can be
+> asserted to do this through sw instead of hardware doing it
+> automatically. Spec says
+>
+> MCR RTS bit: RTS control. When AFE = 1, the RTS bit determines th
+> e autoflow control enabled. Note that all UARTs do not support this
+> feature. See the device-specific data manual for supported features. If
+> this feature is not available, this bit is reserved and should be
+> cleared to 0.
+> 0 = UARTn_RTS is disabled, only UARTn_CTS is enabled.
+> 1 = UARTn_RTS and UARTn_CTS are enabled.
+>
+> Then since AFE was already supported before my patch for FIFO size
+> 32bytes or higher, I am wondering why there was no implementation of
+> throttle()/unthrottle() to begin with and why UPF_HARD_FLOW flag is not
+> set at all if AFE implemented in 8250 driver is hw assisted, hw flow
+> control. Also what do these API supposed to do?
+>
+> in serial_core.c, uart_throttle() function
+>
+> if CRTSCTS is set
+> port->ops->throttle(port);
+> Also call at the end
+> uart_clear_mctrl(port, TIOCM_RTS);
+> and this go an clear the MCR RTS bit.
+>
+> So what does uart_throttle() API expected to do since MCR is updated
+> using uart_clear_mctrl().
+>
+> I searched who sets the UPF_HARD_FLOW in port->flags and only driver
+> that does set this flag is omap-serial.c. The check was introduced by
+> commit from Ruessel King to support h/w assisted h/w flow control.
+>
+> ======================================================================
+> commit dba05832cbe4f305dfd998fb26d7c685d91fbbd8
+> Author: Russell King <rmk+kernel@arm.linux.org.uk>
+> Date: Tue Apr 17 16:41:10 2012 +0100
+>
+> SERIAL: core: add hardware assisted h/w flow control support
+>
+> Ports which are handling h/w flow control in hardware must not have
+> their RTS state altered depending on the tty's hardware-stopped state.
+> Avoid this additional logic when setting the termios state.
+>
+> Acked-by: Alan Cox <alan@linux.intel.com>
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ======================================================================
+>
+> This flag is checked in uart_set_termios() and the reason is in the
+> commit log above.
+>
+> So shouldn't AFE support in 8250 make use of this flag? My patch uses DT
+> attribute to set this flag so above uart_set_termios() function behave
+> as expected. But as you have rightly pointed out throttle()/unthrottle()
+> is missing that needs to be added. Only driver that I can find that has
+> implemented this is omap_serial.c. It does disable RDI and RLSI as part
+> of throttle() interrupt and re-enable it as part of unthrottle().
+> Probably I can add this in this driver as well if this is what is
+> expected. I will post a patch for this anyways, with some basic testing,
+> but testing on customer h/w for this was initialially implemented has to
+> wait until my return from vacation (on vacation from 08/11-08/16).
+>
+>>
+>>> Also 8250.c support other port types that doesn't have AFE. So shoudl
+>>> this
+>  >> be driving RTS line to stop the sender and resume when
+> uart_unthrottle() is called?
+>>
+>> Yes, because that's how sw-assisted CTS flow control works, and the
+>> default behavior of uart_throttle/uart_unthrottle.
+>>
+>> IOW, with no extra code or special-casing, AFE just works.
+>>
+>
+> Based on my above discussion, there are few things required to be done
+> on top of AFE and some of it is done by my patch and the remaining thing
+> to be addressed in another patch.
+>
+>>> I want to work to fix this rather than revert this change as our
+>>> customer is already using this feature.
+>>
+>> 3.16 was released 4 days ago.
+>
+> As I said, I will work to address this with priority.
+Peter, Greg,
 
-hmm looking at the core clock tree, I wouldn't think so.
+I have send out an RFC "serial: uart: update to support hw assisted hw 
+flow control" to address this issue based on this thread.
+I did only some basic testing on this and want to get your feedback.
+I will work to test this patch on our customer board once I return from 
+my vacation. Please review and give your comments..
 
-The only intersection between the ddr-clk, aclk_cpu and aclk_peri is th=
-e gpll=20
-which can be a source to both. But the ddr-clk is mainly sourced from t=
-he dpll=20
-anyway.
+Thanks and regards,
 
-In any case, turning off aclk_cpu/aclk_peri in this scenario wouldn't n=
-ormally=20
-be possible anyway, as most of the time some pclk_* would be active any=
-way.
+Murali Karicheri
 
+>
+>>
+>> Regards,
+>> Peter Hurley
+>>
+>
 
-> In any case, this patch fixes a hang at boot when using the PWM drive=
-r
-> that just landed, so:
->=20
-> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-thanks
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
