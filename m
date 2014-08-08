@@ -1,207 +1,79 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: Re: [PATCH v3 1/2] tty: serial: 8250: Add Mediatek UART driver
-Date: Fri, 8 Aug 2014 14:28:20 +0200
-Message-ID: <20140808122820.GF29832@distanz.ch>
-References: <1407497524-26535-1-git-send-email-matthias.bgg@gmail.com>
- <1407497524-26535-2-git-send-email-matthias.bgg@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/8] pinctrl: add driver for MB86S7x
+Date: Fri, 8 Aug 2014 14:42:21 +0200
+Message-ID: <CACRpkdb_8HBzLUKedZKwPxDZ8TQiNMs5QV_eFfkqD=-9TTK55w@mail.gmail.com>
+References: <1405233067-4725-1-git-send-email-mollie.wu@linaro.org>
+	<CACRpkdb_NC7j=XkbMPv8YYLSeEd1AOpFqmD8x+ohC7ds3cPCfg@mail.gmail.com>
+	<CAJe_Zhc2gz8DZjzo-4YAucAZ2P=UamZ2MtTP1fHmxC0vspZJDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407497524-26535-2-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, alan@linux.intel.com, varkabhadram@gmail.com, heiko@sntech.de, yingjoe.chen@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_Zhc2gz8DZjzo-4YAucAZ2P=UamZ2MtTP1fHmxC0vspZJDw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-08-08 at 13:32:03 +0200, Matthias Brugger <matthias.bgg@gmail.com> wrote:
-> This patch adds support for the UART block found on Mediatek SoCs.
-> The device has a highspeed register which influences the calcualtion of the
-> divisor. The chip lacks support for some baudrates. When requested, we set the
-> divisor to the next smaller baudrate and adjust the c_cflag accordingly.
-> 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  drivers/tty/serial/8250/8250_mtk.c |  296 ++++++++++++++++++++++++++++++++++++
->  drivers/tty/serial/8250/Kconfig    |    7 +
->  drivers/tty/serial/8250/Makefile   |    1 +
->  3 files changed, 304 insertions(+)
->  create mode 100644 drivers/tty/serial/8250/8250_mtk.c
-> 
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> new file mode 100644
-> index 0000000..d63080b
-> --- /dev/null
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -0,0 +1,296 @@
+On Thu, Jul 24, 2014 at 8:04 PM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 22 July 2014 21:41, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Sun, Jul 13, 2014 at 8:31 AM, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-[...]
+>>> +               if (pchip->pin_busy[p + 3]) {
+>>> +                       pr_err("%s:%d:%d %d busy\n",
+>>> +                              __func__, __LINE__, pins[i], p+3);
+>>> +                       goto busy_exit;
+>>> +               }
+>>
+>> I don't understand this either.
+>>
+>> Why all this fuzz around the four pins from p ... p+3?
+>>
+> Pinctrl exposes each pin individually, but the controller clubs 4 pins
+> together to work in same mode... so we have to reject any attempt to
+> change mode of a pin if any other pin in the same group [p,.. p+3] is
+> already taken by some user and is in a different mode i.e, busy. And
+> no, we can't expose each group of 4 as a 'virtual' pin because some
+> groups serve to 2 different IPs.
 
-> +static int mtk8250_probe(struct platform_device *pdev)
-> +{
-> +	struct uart_8250_port uart = {};
-> +	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +	struct mtk8250_data *data;
-> +	int err;
-> +
-> +	if (!regs || !irq) {
-> +		dev_err(&pdev->dev, "no registers/irq defined\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock_init(&uart.port.lock);
-> +	uart.port.mapbase = regs->start;
-> +	uart.port.irq = irq->start;
-> +	uart.port.pm = mtk8250_do_pm;
-> +	uart.port.type = PORT_16550;
-> +	uart.port.flags = UPF_BOOT_AUTOCONF | UPF_FIXED_PORT;
-> +	uart.port.dev = &pdev->dev;
-> +
-> +	uart.port.membase = devm_ioremap(&pdev->dev, regs->start,
-> +					 resource_size(regs));
-> +	if (!uart.port.membase)
-> +		return -ENOMEM;
+OK I get it now I think, seems valid.
 
-You can use devm_ioremap_resource here and get rid of the check for
-!regs above, since devm_ioremap_resource already does that.
+>>> +               pr_debug(" %d", p);
+>>> +               pchip->pin_busy[p] = true;
+>>
+>> So I'm questioning this....
+>>
+>>> +               if (p < PINS_VIRT) /* Not for virtual pins */
+>>
+>> We need an explanation somewhere about what "virtual pins"
+>> means in this driver, I have never seen that before.
+>>
+> Now, these are really 'virtual' :)
+> The registers for physically individual pins are uniformly spaced and
+> we can compact the offsets with simple math.
+> However for some peripherals like PCI, USB etc, the pins are all tied
+> together as one 'virtual' pin. To reuse the same math to calculate
+> offsets, we assign virtual numbers to these virtual pins, assuming
+> 'holes' wherever necessary.
 
-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+Aha. OK, well I guess readability is paramount, the scheme
+you come up with is likely to stick so make sure that whatever
+way it works is very clear and documented so others can follow
+the example later on.
 
-	...
+>>> +MODULE_DEVICE_TABLE(of, mb86s70_gpio_dt_ids);
+>>
+>> "fujitsu" does not seem to exist in
+>> Documentation/devicetree/bindings/vendor-prefixes.txt
+>> Do you want to add it?
+>>
+> Yup, in a later patch of this set :)
 
-	uart.port.membase = devm_ioremap_resource(&pdev->dev, regs);
-	if (IS_ERR(uart.port.membase))
-		return PTR_ERR(uart.port.membase);
+OK thanks. Dunno if there is already some v2 in my inbox, I've
+got some stuff to process...
 
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-
-I'd suggest to move this kzalloc and the ioremap before the uart.port
-initialization part above, so you can error out early in case of any
-failure.
-
-> +
-> +	uart.port.iotype = UPIO_MEM32;
-> +	uart.port.regshift = 2;
-> +	uart.port.private_data = data;
-> +	uart.port.set_termios = mtk8250_set_termios;
-> +
-> +	if (pdev->dev.of_node) {
-> +		err = mtk8250_probe_of(&uart.port, data);
-> +		if (err)
-> +			return err;
-> +	} else
-> +		return -ENODEV;
-
-This could also be moved up, directly below devm_kzalloc.
-
-> +
-> +	/* Disable Rate Fix function */
-> +	writel(0x0, uart.port.membase +
-> +			(MTK_UART_RATE_FIX << uart.port.regshift));
-> +
-> +	data->line = serial8250_register_8250_port(&uart);
-> +	if (data->line < 0)
-> +		return data->line;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	pm_runtime_set_active(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk8250_remove(struct platform_device *pdev)
-> +{
-> +	struct mtk8250_data *data = platform_get_drvdata(pdev);
-> +
-> +	pm_runtime_get_sync(&pdev->dev);
-> +
-> +	serial8250_unregister_port(data->line);
-> +	if (!IS_ERR(data->clk)) {
-> +		clk_disable_unprepare(data->clk);
-> +		clk_put(data->clk);
-> +	}
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +	pm_runtime_put_noidle(&pdev->dev);
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int mtk8250_suspend(struct device *dev)
-> +{
-> +	struct mtk8250_data *data = dev_get_drvdata(dev);
-> +
-> +	serial8250_suspend_port(data->line);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk8250_resume(struct device *dev)
-> +{
-> +	struct mtk8250_data *data = dev_get_drvdata(dev);
-> +
-> +	serial8250_resume_port(data->line);
-> +
-> +	return 0;
-> +}
-> +#endif /* CONFIG_PM_SLEEP */
-> +
-> +#ifdef CONFIG_PM_RUNTIME
-> +static int mtk8250_runtime_suspend(struct device *dev)
-> +{
-> +	struct mtk8250_data *data = dev_get_drvdata(dev);
-> +
-> +	if (!IS_ERR(data->clk))
-> +		clk_disable_unprepare(data->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk8250_runtime_resume(struct device *dev)
-> +{
-> +	struct mtk8250_data *data = dev_get_drvdata(dev);
-> +
-> +	if (!IS_ERR(data->clk))
-> +		clk_prepare_enable(data->clk);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops mtk8250_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(mtk8250_suspend, mtk8250_resume)
-> +	SET_RUNTIME_PM_OPS(mtk8250_runtime_suspend, mtk8250_runtime_resume,
-> +				NULL)
-> +};
-> +
-> +static const struct of_device_id mtk8250_of_match[] = {
-> +	{ .compatible = "mediatek,mt6577-uart" },
-> +	{ /* Sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mtk8250_of_match);
-> +
-> +static struct platform_driver mtk8250_platform_driver = {
-> +	.driver = {
-> +		.name		= "mt6577-uart",
-> +		.owner		= THIS_MODULE,
-
-This doesn't need to be set here,
-module_platform_driver/platform_driver_register take care of setting it.
-
-> +		.pm		= &mtk8250_pm_ops,
-> +		.of_match_table	= mtk8250_of_match,
-> +	},
-> +	.probe			= mtk8250_probe,
-> +	.remove			= mtk8250_remove,
-> +};
-> +module_platform_driver(mtk8250_platform_driver);
-> +
-> +MODULE_AUTHOR("Matthias Brugger");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Mediatek 8250 serial port driver");
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
