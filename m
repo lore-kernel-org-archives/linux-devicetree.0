@@ -1,52 +1,66 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Fri, 08 Aug 2014 08:43:18 +0200
-Message-ID: <53E47186.5000309@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <CAK5ve-L67=q-EpWvxD5-x+cFT7dh8p0HHuoUbAWA-j5BqCO52A@mail.gmail.com>
- <CAK5ve-+xyXyjPqejTPRvz=bJ4M5v19Uq1oaVv94QKqBWf1D4dA@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] Adding a support for Skyworks SKY81452
+Date: Fri, 8 Aug 2014 09:09:19 +0200
+Message-ID: <20140808070913.GB5387@ulmo>
+References: <1407398738-7582-1-git-send-email-jack.yoo@skyworksinc.com>
+ <20140807123439.GC29832@distanz.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CAK5ve-+xyXyjPqejTPRvz=bJ4M5v19Uq1oaVv94QKqBWf1D4dA@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LyciRD1jyfeSSjG0"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140807123439.GC29832@distanz.ch>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tobias Klauser <tklauser@distanz.ch>
+Cc: Gyungoh Yoo <gyungoh@gmail.com>, rdunlap@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jg1.han@samsung.com, cooloney@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, grant.likely@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, jack.yoo@skyworksinc.com, florian.vaussard@epfl.ch, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bryan,
 
-On 07/16/2014 07:21 PM, Bryan Wu wrote:
-> On Wed, Jul 16, 2014 at 10:19 AM, Bryan Wu <cooloney@gmail.com> wrote:
->> On Fri, Jul 11, 2014 at 7:04 AM, Jacek Anaszewski
->> <j.anaszewski@samsung.com> wrote:
->>> This is is the fourth version of the patch series being a follow up
->>> of the discussion on Media summit 2013-10-23, related to the
->>> LED / flash API integration (the notes from the discussion were
->>> enclosed in the message [1], paragraph 5).
->>> The series is based on linux-next-20140707
->>>
->>
->> I really apologize that I missed your discussion email in my Gmail
->> inbox, it was archived some where. Even in this series some of these
->> patches are archived in different tab.
->>
->> I will start to review and help to push this.
->>
->
-> In the mean time, could you please provide an git tree for me to pull?
-> It's much easier for me to review in my git.
+--LyciRD1jyfeSSjG0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Few days ago I sent to your private email the path to the git
-repository to pull, but I am resending it through the lists to
-make sure that it will not get filtered somehow again.
+On Thu, Aug 07, 2014 at 02:34:39PM +0200, Tobias Klauser wrote:
+> On 2014-08-07 at 10:05:38 +0200, Gyungoh Yoo <gyungoh@gmail.com> wrote:
+[...]
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id sky81452_of_match[] =3D {
+> > +	{.compatible =3D "sky,sky81452",},
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, sky81452_of_match);
+> > +#endif
+>=20
+> The #ifdefery here is not needed since you use of_match_ptr below, whcih
+> will expand to NULL of CONFIG_OF is not set.
 
-git://linuxtv.org/snawrocki/samsung.git
-branch: led_flash_integration_v4
+On the contrary, that's exactly why the #ifdef is needed here. If you
+don't guard the OF match table here, then of_match_ptr() evaluating to
+NULL will cause the table to become unused and the compiler warning
+about it.
 
-gitweb:
-http://git.linuxtv.org/cgit.cgi/snawrocki/samsung.git/log/?h=led_flash_integration_v4
+Thierry
 
-Best Regards,
-Jacek Anaszewski
+--LyciRD1jyfeSSjG0
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT5HeZAAoJEN0jrNd/PrOhB9EP/2Hd2EA1+jw5UI/TXC1Qtyrf
+J04aSZe68LEZ6qLc3IcZubQPU8b7Les+28+xmgW6YjD2k8V+KN+/q5YgilcuS8xp
+qlUhCtxwuCoKZWZ9wvhXw68cZ0n327NU7Ho/XVkWLhN7QeqMK7RMvhv5lG0t8ult
+K8Zx1CGQsG/GWzUjoCiMmYmMUc7VrzGPRtiYReQDlQcu5d3BGrp5lcdcezbP2vcz
+pMPenD9YUe6lHkZZoEk+uL7auzPDQx/IUk8+p5KqZUWOi55EWh0pXpOhEh6+kfm0
+0/92kyBdet2YJACR5vmvCkjQFF5yX0LpM65Bz8ENUX4RTTpFoBz44Qb2sFgDzmV3
+hepqYX0x4Hten+4fs8ygrmmLkqsH5KEVoAG+O3555L+tLwpxbi0VMEDtjFYA9sUF
+0eUKsJ1ZdkLOoX2fcXbIp0MlE4VU1Wx9bjxvT3+W7FEpegKS0WrTrUeRlONg5nyw
+pssEBARWi06EhvwPdrOJ0MICwXu7N5RCYtI6dNK+LOad6Ugne6gPoLV2zDXG1xLf
+kqiI7/mEJ+rAddmRaqqm0P47cEjGapFED/eDyMkm3iQnBg9eUw+nCV8qx1sFceHI
+3e0VzK0Y7Wys+LHmHWggDii0pFy0kqFyW1FKmLO5M2Ah5uzo0gbi85HVd0n7EDDB
+KglYQFEvALBLQrjCguIc
+=w9XX
+-----END PGP SIGNATURE-----
+
+--LyciRD1jyfeSSjG0--
