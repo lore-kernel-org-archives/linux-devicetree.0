@@ -1,61 +1,180 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
- specific reset
-Date: Fri, 08 Aug 2014 16:23:09 +0200
-Message-ID: <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
-References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
-	 <CACRpkdYfu8HmVCkn9JFh+YP5OPdr8o9nTfoCnkJ7SSpGoenQUg@mail.gmail.com>
-	 <20140708080535.GJ13423@lukather>
-	 <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Houcheng Lin <houcheng@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v2 4/5] ARM: shmobile: r8a7740: add MSTP clock assignments to DT
+Date: Fri,  8 Aug 2014 16:23:11 +0200
+Message-ID: <1407507792-8121-5-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au
+Cc: linux-sh@vger.kernel.org, mturquette@linaro.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 08.07.2014, 11:38 +0200 schrieb Linus Walleij:
-> On Tue, Jul 8, 2014 at 10:05 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Tue, Jul 08, 2014 at 09:52:03AM +0200, Linus Walleij wrote:
-> >> On Wed, Jun 18, 2014 at 3:37 PM, Houcheng Lin <houcheng@gmail.com> wrote:
-> >>
-> >> > The Problem
-> >> > -----------
-> >> > The reset signal on a hardware board is send either:
-> >> >     - during machine initialization
-> >> >     - during bus master's initialization
-> >>
-> >> I just thought about this a bit, since there isn't already a generic GPIO
-> >> reset driver, just call this drivers/reset/reset-gpio.c and make the
-> >> ability to deferral just a configuration detail of the GPIO reset driver.
-> >
-> > Philipp has been working on one for quite some time. See
-> > http://www.spinics.net/lists/arm-kernel/msg321927.html
-> >
-> > However, it seems to progress slowly, and we don't seem to be able to
-> > reach a consensus here.
+Assigns clocks to ether, i2c*, scif*, tpu, mmcif0, sdhi*, and fsi2.
 
-Mostly because Maxime and I seem to have a completely different opinion
-and nobody else argued one way or the other.
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+---
+ arch/arm/boot/dts/r8a7740.dtsi | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-> > If you ask me, having to set a few extra properties like this just
-> > advocates for a regular reset driver and DT node for the reset GPIO,
-> > but I'm pretty sure Philipp will feel otherwise :)
-> 
-> Hm haha yeah let's fight it out :-)
-> 
-> This is not my subsystem so I'm getting some popcorn.
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 3c61c5d..6cd6a46 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -126,7 +126,7 @@
+ 		reg = <0xe9a00000 0x800>,
+ 		      <0xe9a01800 0x800>;
+ 		interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH>;
+-		/* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
++		clocks = <&mstp3_clks R8A7740_CLK_GETHER>;
+ 		phy-mode = "mii";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -142,6 +142,7 @@
+ 			      0 202 IRQ_TYPE_LEVEL_HIGH
+ 			      0 203 IRQ_TYPE_LEVEL_HIGH
+ 			      0 204 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7740_CLK_IIC0>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -154,6 +155,7 @@
+ 			      0 71 IRQ_TYPE_LEVEL_HIGH
+ 			      0 72 IRQ_TYPE_LEVEL_HIGH
+ 			      0 73 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7740_CLK_IIC1>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -161,6 +163,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6c40000 0x100>;
+ 		interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -168,6 +172,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6c50000 0x100>;
+ 		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA1>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -175,6 +181,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6c60000 0x100>;
+ 		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -182,6 +190,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6c70000 0x100>;
+ 		interrupts = <0 103 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA3>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -189,6 +199,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6c80000 0x100>;
+ 		interrupts = <0 104 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA4>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -196,6 +208,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6cb0000 0x100>;
+ 		interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA5>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -203,6 +217,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6cc0000 0x100>;
+ 		interrupts = <0 106 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA6>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -210,6 +226,8 @@
+ 		compatible = "renesas,scifa-r8a7740", "renesas,scifa";
+ 		reg = <0xe6cd0000 0x100>;
+ 		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFA7>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -217,6 +235,8 @@
+ 		compatible = "renesas,scifb-r8a7740", "renesas,scifb";
+ 		reg = <0xe6c30000 0x100>;
+ 		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_SCIFB>;
++		clock-names = "sci_ick";
+ 		status = "disabled";
+ 	};
+ 
+@@ -240,6 +260,7 @@
+ 	tpu: pwm@e6600000 {
+ 		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
+ 		reg = <0xe6600000 0x100>;
++		clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
+ 		status = "disabled";
+ 		#pwm-cells = <3>;
+ 	};
+@@ -249,6 +270,7 @@
+ 		reg = <0xe6bd0000 0x100>;
+ 		interrupts = <0 56 IRQ_TYPE_LEVEL_HIGH
+ 			      0 57 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7740_CLK_MMC>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -258,6 +280,7 @@
+ 		interrupts = <0 117 IRQ_TYPE_LEVEL_HIGH
+ 			      0 118 IRQ_TYPE_LEVEL_HIGH
+ 			      0 119 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7740_CLK_SDHI0>;
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -269,6 +292,7 @@
+ 		interrupts = <0 121 IRQ_TYPE_LEVEL_HIGH
+ 			      0 122 IRQ_TYPE_LEVEL_HIGH
+ 			      0 123 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7740_CLK_SDHI1>;
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -280,6 +304,7 @@
+ 		interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH
+ 			      0 126 IRQ_TYPE_LEVEL_HIGH
+ 			      0 127 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp4_clks R8A7740_CLK_SDHI2>;
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -290,6 +315,7 @@
+ 		compatible = "renesas,fsi2-r8a7740", "renesas,sh_fsi2";
+ 		reg = <0xfe1f0000 0x400>;
+ 		interrupts = <0 9 0x4>;
++		clocks = <&mstp3_clks R8A7740_CLK_FSI>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.8.4.5
 
-Sorry about missing this earlier, I hope the popcorn is not stale.
-
-I think a reset that needs to be released before a fixed device appears
-on the bus, should be handled by the bus driver. The reset framework
-could be made to help with that, but I don't think a separate entity
-that scans the whole device tree itself is the right solution.
-
-regards
-Philipp
