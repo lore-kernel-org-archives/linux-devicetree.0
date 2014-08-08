@@ -1,389 +1,176 @@
-From: <suravee.suthikulpanit@amd.com>
-Subject: [PATCH 4/4] irqchip: gic-v2m: Restructure the initalization code for
- v2m
-Date: Fri, 8 Aug 2014 18:17:16 -0500
-Message-ID: <1407539836-9768-5-git-send-email-suravee.suthikulpanit@amd.com>
-References: <1407539836-9768-1-git-send-email-suravee.suthikulpanit@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407539836-9768-1-git-send-email-suravee.suthikulpanit@amd.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
-Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin.Marinas@arm.com, Harish.Kasiviswanathan@amd.com, linux-kernel@vger.kernel.org, Will.Deacon@arm.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, linux-pci@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 1/1] pinctrl: exynos: Lock GPIOs as interrupts when used as EINTs
+Date: Sat,  9 Aug 2014 01:48:05 +0200
+Message-ID: <1407541685-20021-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+From: Tomasz Figa <t.figa@samsung.com>
 
-This patch remove register index 4 in gic binding, and
-introduce the "v2m" subnode. It also changes in the
-gic_of_init function to probe for v2m subnode before calling
-the gicv2m_of_init.
+Currently after configuring a GPIO pin as an interrupt related pinmux
+registers are changed, but there is no protection from calling
+gpio_direction_*() in a badly written driver, which would cause the same
+pinmux register to be reconfigured for regular input/output and this
+disabling interrupt capability of the pin.
 
-Besides, this patch also moves the "struct msi_chip" from
-"struct gic_chip_data" to "struct v2m_data".
+This patch addresses this issue by moving pinmux reconfiguration to
+.irq_{request,release}_resources() callback of irq_chip and calling
+gpio_lock_as_irq() helper to prevent reconfiguration of pin direction.
 
-Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
+Setting up a GPIO interrupt on Samsung SoCs is a two-step operation -
+in addition to trigger configuration in a dedicated register, the pinmux
+must be also reconfigured to GPIO interrupt, which is a different function
+than normal GPIO input, although I/O-wise they both behave in the same way
+and gpio_get_value() can be used on a pin configured as IRQ as well.
+
+Such design implies subtleties such as gpio_direction_input() not having
+to fail if a pin is already configured as an interrupt nor change the
+configuration to normal input. But the FLAG_USED_AS_IRQ set in gpiolib by
+gpio_lock_as_irq() is only used to check that gpio_direction_output() is
+not called, it's not used to prevent gpio_direction_input() to be called.
+So this is not a complete solution for Samsung SoCs but it's definitely a
+move in the right direction.
+
+Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+[javier: use request resources instead of startup and expand commit message]
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 ---
- Documentation/devicetree/bindings/arm/gic.txt |  37 +++++++--
- drivers/irqchip/irq-gic-v2m.c                 | 115 +++++++++-----------------
- drivers/irqchip/irq-gic.c                     |  30 +++----
- drivers/irqchip/irq-gic.h                     |  10 +--
- 4 files changed, 91 insertions(+), 101 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index d2eea0b..9e38abe 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -12,7 +12,6 @@ Main node required properties:
+This patch solves the issue explained in https://lkml.org/lkml/2014/8/8/461
+
+ drivers/pinctrl/samsung/pinctrl-exynos.c  | 69 ++++++++++++++++++++++++++++---
+ drivers/pinctrl/samsung/pinctrl-samsung.h |  1 +
+ 2 files changed, 64 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index 003bfd8..d7154ed 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -127,14 +127,10 @@ static int exynos_irq_set_type(struct irq_data *irqd, unsigned int type)
+ 	struct irq_chip *chip = irq_data_get_irq_chip(irqd);
+ 	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
+ 	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
+-	struct samsung_pin_bank_type *bank_type = bank->type;
+ 	struct samsung_pinctrl_drv_data *d = bank->drvdata;
+-	unsigned int pin = irqd->hwirq;
+-	unsigned int shift = EXYNOS_EINT_CON_LEN * pin;
++	unsigned int shift = EXYNOS_EINT_CON_LEN * irqd->hwirq;
+ 	unsigned int con, trig_type;
+ 	unsigned long reg_con = our_chip->eint_con + bank->eint_offset;
+-	unsigned long flags;
+-	unsigned int mask;
  
- - compatible : should be one of:
- 	"arm,gic-400"
--	"arm,gic-400-v2m"
- 	"arm,cortex-a15-gic"
- 	"arm,cortex-a9-gic"
- 	"arm,cortex-a7-gic"
-@@ -49,7 +48,6 @@ Main node required properties:
-      1   | GIC cpu interface register base and size
-      2   | VGIC interface control register base and size (Optional)
-      3   | VGIC CPU interface register base and size (Optional)
--     4   | GICv2m MSI interface register base and size (Optional)
+ 	switch (type) {
+ 	case IRQ_TYPE_EDGE_RISING:
+@@ -167,8 +163,32 @@ static int exynos_irq_set_type(struct irq_data *irqd, unsigned int type)
+ 	con |= trig_type << shift;
+ 	writel(con, d->virt_base + reg_con);
  
- Optional
- - interrupts	: Interrupt source of the parent interrupt controller on
-@@ -66,9 +64,6 @@ Optional
- 		  input line is assigned dynamically when the corresponding
- 		  peripheral's crossbar line is mapped.
- 
--- msi-controller : Identifies the node as an MSI controller.
--                   (Required for GICv2m)
--
- Example:
- 
- 	intc: interrupt-controller@fff11000 {
-@@ -109,3 +104,35 @@ Example:
- 		      <0x2c006000 0x2000>;
- 		interrupts = <1 9 0xf04>;
- 	};
-+
-+
-+* GICv2m extension for MSI/MSI-x support (Optional)
-+
-+Certain revision of GIC-400 supports MSI/MSI-x via V2M register frame.
-+This is enabled by specifying v2m sub-node.
-+
-+Required properties:
-+
-+- msi-controller : Identifies the node as an MSI controller.
-+
-+- reg : GICv2m MSI interface register base and size
-+
-+Example:
-+
-+	interrupt-controller@e1101000 {
-+		compatible = "arm,gic-400";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		interrupt-controller;
-+		interrupts = <1 8 0xf04>;
-+		ranges = <0 0 0 0xe1100000 0 0x100000>;
-+		reg = <0x0 0xe1110000 0 0x01000>,
-+		      <0x0 0xe112f000 0 0x02000>,
-+		      <0x0 0xe1140000 0 0x10000>,
-+		      <0x0 0xe1160000 0 0x10000>;
-+		v2m {
-+			msi-controller;
-+			reg = <0x0 0x80000 0 0x1000>;
-+		};
-+	};
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index 57b5a51..1ac0ace 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -42,8 +42,6 @@
- #define V2M_MIN_SPI			32
- #define V2M_MAX_SPI			1019
- 
--#define GIC_OF_MSIV2M_RANGE_INDEX	4
--
- /*
-  * alloc_msi_irq - Allocate MSIs from avaialbe MSI bitmap.
-  * @data: Pointer to v2m_data
-@@ -85,17 +83,10 @@ static int alloc_msi_irq(struct v2m_data *data, int nvec, int *irq)
- 	return ret;
- }
- 
--static struct v2m_data *to_v2m_data(struct msi_chip *chip)
--{
--	struct gic_chip_data *gic = container_of(chip, struct gic_chip_data,
--						 msi_chip);
--	return &gic->v2m_data;
--}
--
- static void gicv2m_teardown_msi_irq(struct msi_chip *chip, unsigned int irq)
- {
- 	int pos;
--	struct v2m_data *data = to_v2m_data(chip);
-+	struct v2m_data *data = container_of(chip, struct v2m_data, msi_chip);
- 
- 	spin_lock(&data->msi_cnt_lock);
- 
-@@ -112,7 +103,7 @@ static int gicv2m_setup_msi_irq(struct msi_chip *chip, struct pci_dev *pdev,
- 	int avail, irq = 0;
- 	struct msi_msg msg;
- 	phys_addr_t addr;
--	struct v2m_data *data = to_v2m_data(chip);
-+	struct v2m_data *data = container_of(chip, struct v2m_data, msi_chip);
- 
- 	if (!desc) {
- 		dev_err(&pdev->dev,
-@@ -141,18 +132,46 @@ static int gicv2m_setup_msi_irq(struct msi_chip *chip, struct pci_dev *pdev,
- 	return 0;
- }
- 
--static int __init
--gicv2m_msi_init(struct device_node *node, struct v2m_data *v2m)
-+static void gicv2m_mask_irq(struct irq_data *d)
-+{
-+	gic_mask_irq(d);
-+	if (d->msi_desc)
-+		mask_msi_irq(d);
++	return 0;
 +}
 +
-+static void gicv2m_unmask_irq(struct irq_data *d)
- {
-+	gic_unmask_irq(d);
-+	if (d->msi_desc)
-+		unmask_msi_irq(d);
-+}
-+
-+static struct irq_chip gicv2m_chip;
-+
-+#ifdef CONFIG_OF
-+int __init
-+gicv2m_of_init(struct device_node *node, struct gic_chip_data *gic)
++static int exynos_irq_request_resources(struct irq_data *irqd)
 +{
++	struct irq_chip *chip = irq_data_get_irq_chip(irqd);
++	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
++	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
++	struct samsung_pin_bank_type *bank_type = bank->type;
++	struct samsung_pinctrl_drv_data *d = bank->drvdata;
++	unsigned int shift = EXYNOS_EINT_CON_LEN * irqd->hwirq;
++	unsigned long reg_con = our_chip->eint_con + bank->eint_offset;
++	unsigned long flags;
++	unsigned int mask;
++	unsigned int con;
 +	int ret;
- 	unsigned int val;
-+	struct v2m_data *v2m = &gic->v2m_data;
- 
--	if (of_address_to_resource(node, GIC_OF_MSIV2M_RANGE_INDEX,
--				   &v2m->res)) {
-+	v2m->msi_chip.owner = THIS_MODULE;
-+	v2m->msi_chip.of_node = node;
-+	v2m->msi_chip.setup_irq = gicv2m_setup_msi_irq;
-+	v2m->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
-+	ret = of_pci_msi_chip_add(&v2m->msi_chip);
++
++	ret = gpio_lock_as_irq(&bank->gpio_chip, irqd->hwirq);
 +	if (ret) {
-+		pr_info("GICv2m: Failed to add msi_chip.\n");
++		dev_err(bank->gpio_chip.dev, "unable to lock pin %s-%lu IRQ\n",
++			bank->name, irqd->hwirq);
 +		return ret;
 +	}
 +
-+	if (of_address_to_resource(node, 0, &v2m->res)) {
- 		pr_err("GICv2m: Failed locate GICv2m MSI register frame\n");
- 		return -EINVAL;
- 	}
+ 	reg_con = bank->pctl_offset + bank_type->reg_offset[PINCFG_TYPE_FUNC];
+-	shift = pin * bank_type->fld_width[PINCFG_TYPE_FUNC];
++	shift = irqd->hwirq * bank_type->fld_width[PINCFG_TYPE_FUNC];
+ 	mask = (1 << bank_type->fld_width[PINCFG_TYPE_FUNC]) - 1;
  
--	v2m->base = of_iomap(node, GIC_OF_MSIV2M_RANGE_INDEX);
-+	v2m->base = of_iomap(node, 0);
- 	if (!v2m->base) {
- 		pr_err("GICv2m: Failed to map GIC MSI registers\n");
- 		return -EINVAL;
-@@ -184,65 +203,13 @@ gicv2m_msi_init(struct device_node *node, struct v2m_data *v2m)
- 	pr_info("GICv2m: SPI range [%d:%d]\n",
- 		v2m->spi_start, (v2m->spi_start + v2m->nr_spis));
+ 	spin_lock_irqsave(&bank->slock, flags);
+@@ -180,9 +200,42 @@ static int exynos_irq_set_type(struct irq_data *irqd, unsigned int type)
  
--	return 0;
--}
-+	memcpy(&gicv2m_chip, gic->irq_chip, sizeof(struct irq_chip));
-+	gicv2m_chip.name = "GICv2m",
-+	gicv2m_chip.irq_mask = gicv2m_mask_irq;
-+	gicv2m_chip.irq_unmask = gicv2m_unmask_irq;
-+	gic->irq_chip = &gicv2m_chip;
+ 	spin_unlock_irqrestore(&bank->slock, flags);
  
--static void gicv2m_mask_irq(struct irq_data *d)
--{
--	gic_mask_irq(d);
--	if (d->msi_desc)
--		mask_msi_irq(d);
--}
--
--static void gicv2m_unmask_irq(struct irq_data *d)
--{
--	gic_unmask_irq(d);
--	if (d->msi_desc)
--		unmask_msi_irq(d);
-+	return 0;
- }
- 
--static struct irq_chip gicv2m_chip = {
--	.name			= "GICv2m",
--	.irq_mask		= gicv2m_mask_irq,
--	.irq_unmask		= gicv2m_unmask_irq,
--	.irq_eoi		= gic_eoi_irq,
--	.irq_set_type		= gic_set_type,
--	.irq_retrigger		= gic_retrigger,
--#ifdef CONFIG_SMP
--	.irq_set_affinity	= gic_set_affinity,
--#endif
--#ifdef CONFIG_PM
--	.irq_set_wake		= gic_set_wake,
--#endif
--};
--
--#ifdef CONFIG_OF
--static int __init
--gicv2m_of_init(struct device_node *node, struct device_node *parent)
--{
--	struct gic_chip_data *gic;
--	int ret;
--
--	ret = _gic_of_init(node, parent, &gicv2m_chip, &gic);
--	if (ret) {
--		pr_err("GICv2m: Failed to initialize GIC\n");
--		return ret;
--	}
--
--	gic->msi_chip.owner = THIS_MODULE;
--	gic->msi_chip.of_node = node;
--	gic->msi_chip.setup_irq = gicv2m_setup_msi_irq;
--	gic->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
--	ret = of_pci_msi_chip_add(&gic->msi_chip);
--	if (ret) {
--		/*
--		* Note: msi-controller is checked in of_pci_msi_chip_add().
--		* MSI support is optional, and enabled only if msi-controller
--		* is specified. Hence, return 0.
--		*/
--		return 0;
--	}
--
--	return gicv2m_msi_init(node, &gic->v2m_data);
--}
- #endif /* CONFIG_OF */
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index cedaeb4..d308d93 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -116,6 +116,7 @@ struct gic_chip_data *irq_data_get_gic_chip_data(struct irq_data *d)
- {
- 	struct gic_chip_data *gic_data;
- 	struct msi_chip *mchip;
-+	struct v2m_data *v2mdat;
- 
- 	/*
- 	 * For MSI, irq_data.chip_data points to struct msi_chip.
-@@ -123,7 +124,8 @@ struct gic_chip_data *irq_data_get_gic_chip_data(struct irq_data *d)
- 	 */
- 	if (d->msi_desc) {
- 		mchip = irq_data_get_irq_chip_data(d);
--		gic_data = container_of(mchip, struct gic_chip_data, msi_chip);
-+		v2mdat = container_of(mchip, struct v2m_data, msi_chip);
-+		gic_data = container_of(v2mdat, struct gic_chip_data, v2m_data);
- 	} else {
- 		gic_data = irq_data_get_irq_chip_data(d);
- 	}
-@@ -989,14 +991,14 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
- #ifdef CONFIG_OF
- static int gic_cnt __initdata;
- 
--int __init
--_gic_of_init(struct device_node *node, struct device_node *parent,
--	     struct irq_chip *chip, struct gic_chip_data **gic)
-+static int
-+__init gic_of_init(struct device_node *node, struct device_node *parent)
- {
-+	struct device_node *child;
- 	void __iomem *cpu_base;
- 	void __iomem *dist_base;
- 	u32 percpu_offset;
--	int irq;
-+	int irq, ret;
- 
- 	if (WARN_ON(!node))
- 		return -ENODEV;
-@@ -1010,7 +1012,15 @@ _gic_of_init(struct device_node *node, struct device_node *parent,
- 	if (of_property_read_u32(node, "cpu-offset", &percpu_offset))
- 		percpu_offset = 0;
- 
--	gic_data[gic_cnt].irq_chip = chip;
-+	gic_data[gic_cnt].irq_chip = &gic_chip;
++	exynos_irq_unmask(irqd);
 +
-+	/* Currently, we only support one v2m subnode. */
-+	child = of_get_child_by_name(node, "v2m");
-+	if (child) {
-+		ret = gicv2m_of_init(child, &gic_data[gic_cnt]);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	gic_init_bases(gic_cnt, -1, dist_base, cpu_base, percpu_offset, node);
- 	if (!gic_cnt)
-@@ -1021,18 +1031,10 @@ _gic_of_init(struct device_node *node, struct device_node *parent,
- 		gic_cascade_irq(gic_cnt, irq);
- 	}
- 
--	if (gic)
--		*gic = &gic_data[gic_cnt];
- 	gic_cnt++;
  	return 0;
  }
  
--static int __init
--gic_of_init(struct device_node *node, struct device_node *parent)
--{
--	return _gic_of_init(node, parent, &gic_chip, NULL);
--}
--
- IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
- IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
- IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
-diff --git a/drivers/irqchip/irq-gic.h b/drivers/irqchip/irq-gic.h
-index 83aa772..2ec6bc3 100644
---- a/drivers/irqchip/irq-gic.h
-+++ b/drivers/irqchip/irq-gic.h
-@@ -11,6 +11,7 @@ union gic_base {
- #ifdef CONFIG_ARM_GIC_V2M
- struct v2m_data {
- 	spinlock_t msi_cnt_lock;
-+	struct msi_chip msi_chip;
- 	struct resource res;      /* GICv2m resource */
- 	void __iomem *base;       /* GICv2m virt address */
- 	unsigned int spi_start;   /* The SPI number that MSIs start */
-@@ -35,20 +36,13 @@ struct gic_chip_data {
- 	void __iomem *(*get_base)(union gic_base *);
- #endif
- 	struct irq_chip *irq_chip;
--	struct msi_chip msi_chip;
- #ifdef CONFIG_ARM_GIC_V2M
- 	struct v2m_data v2m_data;
- #endif
- };
++static void exynos_irq_release_resources(struct irq_data *irqd)
++{
++	struct irq_chip *chip = irq_data_get_irq_chip(irqd);
++	struct exynos_irq_chip *our_chip = to_exynos_irq_chip(chip);
++	struct samsung_pin_bank *bank = irq_data_get_irq_chip_data(irqd);
++	struct samsung_pin_bank_type *bank_type = bank->type;
++	struct samsung_pinctrl_drv_data *d = bank->drvdata;
++	unsigned int shift = EXYNOS_EINT_CON_LEN * irqd->hwirq;
++	unsigned long reg_con = our_chip->eint_con + bank->eint_offset;
++	unsigned long flags;
++	unsigned int mask;
++	unsigned int con;
++
++	reg_con = bank->pctl_offset + bank_type->reg_offset[PINCFG_TYPE_FUNC];
++	shift = irqd->hwirq * bank_type->fld_width[PINCFG_TYPE_FUNC];
++	mask = (1 << bank_type->fld_width[PINCFG_TYPE_FUNC]) - 1;
++
++	exynos_irq_mask(irqd);
++
++	spin_lock_irqsave(&bank->slock, flags);
++
++	con = readl(d->virt_base + reg_con);
++	con &= ~(mask << shift);
++	con |= FUNC_INPUT << shift;
++	writel(con, d->virt_base + reg_con);
++
++	spin_unlock_irqrestore(&bank->slock, flags);
++
++	gpio_unlock_as_irq(&bank->gpio_chip, irqd->hwirq);
++}
++
+ /*
+  * irq_chip for gpio interrupts.
+  */
+@@ -193,6 +246,8 @@ static struct exynos_irq_chip exynos_gpio_irq_chip = {
+ 		.irq_mask = exynos_irq_mask,
+ 		.irq_ack = exynos_irq_ack,
+ 		.irq_set_type = exynos_irq_set_type,
++		.irq_request_resources = exynos_irq_request_resources,
++		.irq_release_resources = exynos_irq_release_resources,
+ 	},
+ 	.eint_con = EXYNOS_GPIO_ECON_OFFSET,
+ 	.eint_mask = EXYNOS_GPIO_EMASK_OFFSET,
+@@ -336,6 +391,8 @@ static struct exynos_irq_chip exynos_wkup_irq_chip = {
+ 		.irq_ack = exynos_irq_ack,
+ 		.irq_set_type = exynos_irq_set_type,
+ 		.irq_set_wake = exynos_wkup_irq_set_wake,
++		.irq_request_resources = exynos_irq_request_resources,
++		.irq_release_resources = exynos_irq_release_resources,
+ 	},
+ 	.eint_con = EXYNOS_WKUP_ECON_OFFSET,
+ 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
+index 2b88232..5cedc9d 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.h
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+@@ -26,6 +26,7 @@
+ #include <linux/gpio.h>
  
--#ifdef CONFIG_OF
--int _gic_of_init(struct device_node *node,
--		 struct device_node *parent,
--		 struct irq_chip *chip,
--		 struct gic_chip_data **gic) __init;
--#endif
--
- void gic_mask_irq(struct irq_data *d);
- void gic_unmask_irq(struct irq_data *d);
-+int gicv2m_of_init(struct device_node *node, struct gic_chip_data *gic) __init;
+ /* pinmux function number for pin as gpio output line */
++#define FUNC_INPUT	0x0
+ #define FUNC_OUTPUT	0x1
  
- #endif /* _IRQ_GIC_H_ */
+ /**
 -- 
-1.9.0
+2.0.0.rc2
