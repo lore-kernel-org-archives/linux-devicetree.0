@@ -1,319 +1,1079 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: =?UTF-8?q?=5BPatch=20v3=202/6=5D=20Documentation=3A=20dt=3A=20soc=3A=20add=20Keystone=20Navigator=20QMSS=20bindings?=
-Date: Fri, 8 Aug 2014 14:19:41 -0400
-Message-ID: <1407521985-22574-3-git-send-email-santosh.shilimkar@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: [Patch v3 5/6] soc: ti: add Keystone Navigator DMA support
+Date: Fri, 8 Aug 2014 14:19:44 -0400
+Message-ID: <1407521985-22574-6-git-send-email-santosh.shilimkar@ti.com>
 References: <1407521985-22574-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407521985-22574-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1407521985-22574-1-git-send-email-santosh.shilimkar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, gregkh@linuxfoundation.org, galak@codeaurora.org, olof@lixom.net, mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, sandeep_n@ti.com, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
+The Keystone Navigator DMA driver sets up the dma channels and flows for
+the QMSS(Queue Manager SubSystem) who triggers the actual data movements
+across clients using destination queues. Every client modules like
+NETCP(Network Coprocessor), SRIO(Serial Rapid IO) and CRYPTO
+Engines has its own instance of packet dma hardware. QMSS has also
+an internal packet DMA module which is used as an infrastructure
+DMA with zero copy.
 
-The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
-the main hardware sub system which forms the backbone of the Keystone
-Multi-core Navigator. QMSS consist of queue managers, packed-data struc=
-ture
-processors(PDSP), linking RAM, descriptor pools and infrastructure
-Packet DMA.
+Initially this driver was proposed as DMA engine driver but since the
+hardware is not typical DMA engine and hence doesn't comply with typical
+DMA engine driver needs, that approach was naked. Link to that
+discussion -
+	https://lkml.org/lkml/2014/3/18/340
 
-The Queue Manager is a hardware module that is responsible for accelera=
-ting
-management of the packet queues. Packets are queued/de-queued by writin=
-g or
-reading descriptor address to a particular memory mapped location. The =
-PDSPs
-perform QMSS related functions like accumulation, QoS, or event managem=
-ent.
-Linking RAM registers are used to link the descriptors which are stored=
- in
-descriptor RAM. Descriptor RAM is configurable as internal or external =
-memory.
+As aligned, now we pair the Navigator DMA with its companion Navigator
+QMSS subsystem driver.
 
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- .../bindings/soc/ti/keystone-navigator-qmss.txt    |  232 ++++++++++++=
-++++++++
- 1 file changed, 232 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/keystone-n=
-avigator-qmss.txt
+ drivers/soc/ti/Kconfig          |   10 +
+ drivers/soc/ti/Makefile         |    1 +
+ drivers/soc/ti/knav_dma.c       |  813 +++++++++++++++++++++++++++++++++++++++
+ include/linux/soc/ti/knav_dma.h |  175 +++++++++
+ 4 files changed, 999 insertions(+)
+ create mode 100644 drivers/soc/ti/knav_dma.c
+ create mode 100644 include/linux/soc/ti/knav_dma.h
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigato=
-r-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigato=
-r-qmss.txt
+diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
+index f73896f..7266b21 100644
+--- a/drivers/soc/ti/Kconfig
++++ b/drivers/soc/ti/Kconfig
+@@ -18,4 +18,14 @@ config KEYSTONE_NAVIGATOR_QMSS
+ 
+ 	  If unsure, say N.
+ 
++config KEYSTONE_NAVIGATOR_DMA
++	tristate "TI Keystone Navigator Packet DMA support"
++	depends on ARCH_KEYSTONE
++	help
++	  Say y tp enable support for the Keystone Navigator Packet DMA on
++	  on Keystone family of devices. It sets up the dma channels for the
++	  Queue Manager Sub System.
++
++	  If unsure, say N.
++
+ endif # SOC_TI
+diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
+index bf85cac..6bed611 100644
+--- a/drivers/soc/ti/Makefile
++++ b/drivers/soc/ti/Makefile
+@@ -2,3 +2,4 @@
+ # TI Keystone SOC drivers
+ #
+ obj-$(CONFIG_KEYSTONE_NAVIGATOR_QMSS)	+= knav_qmss_queue.o knav_qmss_acc.o
++obj-$(CONFIG_KEYSTONE_NAVIGATOR_DMA)	+= knav_dma.o
+diff --git a/drivers/soc/ti/knav_dma.c b/drivers/soc/ti/knav_dma.c
 new file mode 100644
-index 0000000..d8e8cdb
+index 0000000..499c215
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.=
-txt
-@@ -0,0 +1,232 @@
-+* Texas Instruments Keystone Navigator Queue Management SubSystem driv=
-er
++++ b/drivers/soc/ti/knav_dma.c
+@@ -0,0 +1,813 @@
++/*
++ * Copyright (C) 2014 Texas Instruments Incorporated
++ * Authors:	Santosh Shilimkar <santosh.shilimkar@ti.com>
++ *		Sandeep Nair <sandeep_n@ti.com>
++ *		Cyril Chemparathy <cyril@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
-+the main hardware sub system which forms the backbone of the Keystone
-+multi-core Navigator. QMSS consist of queue managers, packed-data stru=
-cture
-+processors(PDSP), linking RAM, descriptor pools and infrastructure
-+Packet DMA.
-+The Queue Manager is a hardware module that is responsible for acceler=
-ating
-+management of the packet queues. Packets are queued/de-queued by writi=
-ng or
-+reading descriptor address to a particular memory mapped location. The=
- PDSPs
-+perform QMSS related functions like accumulation, QoS, or event manage=
-ment.
-+Linking RAM registers are used to link the descriptors which are store=
-d in
-+descriptor RAM. Descriptor RAM is configurable as internal or external=
- memory.
-+The QMSS driver manages the PDSP setups, linking RAM regions,
-+queue pool management (allocation, push, pop and notify) and descripto=
-r
-+pool management.
++#include <linux/io.h>
++#include <linux/sched.h>
++#include <linux/module.h>
++#include <linux/dma-direction.h>
++#include <linux/interrupt.h>
++#include <linux/pm_runtime.h>
++#include <linux/of_dma.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/soc/ti/knav_dma.h>
++#include <linux/debugfs.h>
++#include <linux/seq_file.h>
++
++#define REG_MASK		0xffffffff
++
++#define DMA_LOOPBACK		BIT(31)
++#define DMA_ENABLE		BIT(31)
++#define DMA_TEARDOWN		BIT(30)
++
++#define DMA_TX_FILT_PSWORDS	BIT(29)
++#define DMA_TX_FILT_EINFO	BIT(30)
++#define DMA_TX_PRIO_SHIFT	0
++#define DMA_RX_PRIO_SHIFT	16
++#define DMA_PRIO_MASK		GENMASK(3, 0)
++#define DMA_PRIO_DEFAULT	0
++#define DMA_RX_TIMEOUT_DEFAULT	17500 /* cycles */
++#define DMA_RX_TIMEOUT_MASK	GENMASK(16, 0)
++#define DMA_RX_TIMEOUT_SHIFT	0
++
++#define CHAN_HAS_EPIB		BIT(30)
++#define CHAN_HAS_PSINFO		BIT(29)
++#define CHAN_ERR_RETRY		BIT(28)
++#define CHAN_PSINFO_AT_SOP	BIT(25)
++#define CHAN_SOP_OFF_SHIFT	16
++#define CHAN_SOP_OFF_MASK	GENMASK(9, 0)
++#define DESC_TYPE_SHIFT		26
++#define DESC_TYPE_MASK		GENMASK(2, 0)
++
++/*
++ * QMGR & QNUM together make up 14 bits with QMGR as the 2 MSb's in the logical
++ * navigator cloud mapping scheme.
++ * using the 14bit physical queue numbers directly maps into this scheme.
++ */
++#define CHAN_QNUM_MASK		GENMASK(14, 0)
++#define DMA_MAX_QMS		4
++#define DMA_TIMEOUT		1	/* msecs */
++#define DMA_INVALID_ID		0xffff
++
++struct reg_global {
++	u32	revision;
++	u32	perf_control;
++	u32	emulation_control;
++	u32	priority_control;
++	u32	qm_base_address[DMA_MAX_QMS];
++};
++
++struct reg_chan {
++	u32	control;
++	u32	mode;
++	u32	__rsvd[6];
++};
++
++struct reg_tx_sched {
++	u32	prio;
++};
++
++struct reg_rx_flow {
++	u32	control;
++	u32	tags;
++	u32	tag_sel;
++	u32	fdq_sel[2];
++	u32	thresh[3];
++};
++
++struct knav_dma_pool_device {
++	struct device			*dev;
++	struct list_head		list;
++};
++
++struct knav_dma_device {
++	bool				loopback, enable_all;
++	unsigned			tx_priority, rx_priority, rx_timeout;
++	unsigned			logical_queue_managers;
++	unsigned			qm_base_address[DMA_MAX_QMS];
++	struct reg_global __iomem	*reg_global;
++	struct reg_chan __iomem		*reg_tx_chan;
++	struct reg_rx_flow __iomem	*reg_rx_flow;
++	struct reg_chan __iomem		*reg_rx_chan;
++	struct reg_tx_sched __iomem	*reg_tx_sched;
++	unsigned			max_rx_chan, max_tx_chan;
++	unsigned			max_rx_flow;
++	char				name[32];
++	atomic_t			ref_count;
++	struct list_head		list;
++	struct list_head		chan_list;
++	spinlock_t			lock;
++};
++
++struct knav_dma_chan {
++	enum dma_transfer_direction	direction;
++	struct knav_dma_device		*dma;
++	atomic_t			ref_count;
++
++	/* registers */
++	struct reg_chan __iomem		*reg_chan;
++	struct reg_tx_sched __iomem	*reg_tx_sched;
++	struct reg_rx_flow __iomem	*reg_rx_flow;
++
++	/* configuration stuff */
++	unsigned			channel, flow;
++	struct knav_dma_cfg		cfg;
++	struct list_head		list;
++	spinlock_t			lock;
++};
++
++#define chan_number(ch)	((ch->direction == DMA_MEM_TO_DEV) ? \
++			ch->channel : ch->flow)
++
++static struct knav_dma_pool_device *kdev;
++
++static bool check_config(struct knav_dma_chan *chan, struct knav_dma_cfg *cfg)
++{
++	if (!memcmp(&chan->cfg, cfg, sizeof(*cfg)))
++		return true;
++	else
++		return false;
++}
++
++static int chan_start(struct knav_dma_chan *chan,
++			struct knav_dma_cfg *cfg)
++{
++	u32 v = 0;
++
++	spin_lock(&chan->lock);
++	if ((chan->direction == DMA_MEM_TO_DEV) && chan->reg_chan) {
++		if (cfg->u.tx.filt_pswords)
++			v |= DMA_TX_FILT_PSWORDS;
++		if (cfg->u.tx.filt_einfo)
++			v |= DMA_TX_FILT_EINFO;
++		writel_relaxed(v, &chan->reg_chan->mode);
++		writel_relaxed(DMA_ENABLE, &chan->reg_chan->control);
++	}
++
++	if (chan->reg_tx_sched)
++		writel_relaxed(cfg->u.tx.priority, &chan->reg_tx_sched->prio);
++
++	if (chan->reg_rx_flow) {
++		v = 0;
++
++		if (cfg->u.rx.einfo_present)
++			v |= CHAN_HAS_EPIB;
++		if (cfg->u.rx.psinfo_present)
++			v |= CHAN_HAS_PSINFO;
++		if (cfg->u.rx.err_mode == DMA_RETRY)
++			v |= CHAN_ERR_RETRY;
++		v |= (cfg->u.rx.desc_type & DESC_TYPE_MASK) << DESC_TYPE_SHIFT;
++		if (cfg->u.rx.psinfo_at_sop)
++			v |= CHAN_PSINFO_AT_SOP;
++		v |= (cfg->u.rx.sop_offset & CHAN_SOP_OFF_MASK)
++			<< CHAN_SOP_OFF_SHIFT;
++		v |= cfg->u.rx.dst_q & CHAN_QNUM_MASK;
++
++		writel_relaxed(v, &chan->reg_rx_flow->control);
++		writel_relaxed(0, &chan->reg_rx_flow->tags);
++		writel_relaxed(0, &chan->reg_rx_flow->tag_sel);
++
++		v =  cfg->u.rx.fdq[0] << 16;
++		v |=  cfg->u.rx.fdq[1] & CHAN_QNUM_MASK;
++		writel_relaxed(v, &chan->reg_rx_flow->fdq_sel[0]);
++
++		v =  cfg->u.rx.fdq[2] << 16;
++		v |=  cfg->u.rx.fdq[3] & CHAN_QNUM_MASK;
++		writel_relaxed(v, &chan->reg_rx_flow->fdq_sel[1]);
++
++		writel_relaxed(0, &chan->reg_rx_flow->thresh[0]);
++		writel_relaxed(0, &chan->reg_rx_flow->thresh[1]);
++		writel_relaxed(0, &chan->reg_rx_flow->thresh[2]);
++	}
++
++	/* Keep a copy of the cfg */
++	memcpy(&chan->cfg, cfg, sizeof(*cfg));
++	spin_unlock(&chan->lock);
++
++	return 0;
++}
++
++static int chan_teardown(struct knav_dma_chan *chan)
++{
++	unsigned long end, value;
++
++	if (!chan->reg_chan)
++		return 0;
++
++	/* indicate teardown */
++	writel_relaxed(DMA_TEARDOWN, &chan->reg_chan->control);
++
++	/* wait for the dma to shut itself down */
++	end = jiffies + msecs_to_jiffies(DMA_TIMEOUT);
++	do {
++		value = readl_relaxed(&chan->reg_chan->control);
++		if ((value & DMA_ENABLE) == 0)
++			break;
++	} while (time_after(end, jiffies));
++
++	if (readl_relaxed(&chan->reg_chan->control) & DMA_ENABLE) {
++		dev_err(kdev->dev, "timeout waiting for teardown\n");
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
++static void chan_stop(struct knav_dma_chan *chan)
++{
++	spin_lock(&chan->lock);
++	if (chan->reg_rx_flow) {
++		/* first detach fdqs, starve out the flow */
++		writel_relaxed(0, &chan->reg_rx_flow->fdq_sel[0]);
++		writel_relaxed(0, &chan->reg_rx_flow->fdq_sel[1]);
++		writel_relaxed(0, &chan->reg_rx_flow->thresh[0]);
++		writel_relaxed(0, &chan->reg_rx_flow->thresh[1]);
++		writel_relaxed(0, &chan->reg_rx_flow->thresh[2]);
++	}
++
++	/* teardown the dma channel */
++	chan_teardown(chan);
++
++	/* then disconnect the completion side */
++	if (chan->reg_rx_flow) {
++		writel_relaxed(0, &chan->reg_rx_flow->control);
++		writel_relaxed(0, &chan->reg_rx_flow->tags);
++		writel_relaxed(0, &chan->reg_rx_flow->tag_sel);
++	}
++
++	memset(&chan->cfg, 0, sizeof(struct knav_dma_cfg));
++	spin_unlock(&chan->lock);
++
++	dev_dbg(kdev->dev, "channel stopped\n");
++}
++
++static void dma_hw_enable_all(struct knav_dma_device *dma)
++{
++	int i;
++
++	for (i = 0; i < dma->max_tx_chan; i++) {
++		writel_relaxed(0, &dma->reg_tx_chan[i].mode);
++		writel_relaxed(DMA_ENABLE, &dma->reg_tx_chan[i].control);
++	}
++}
 +
 +
-+Required properties:
-+- compatible	: Must be "ti,keystone-navigator-qmss";
-+- clocks	: phandle to the reference clock for this device.
-+- queue-range	: <start number> total range of queue numbers for the de=
-vice.
-+- linkram0	: <address size> for internal link ram, where size is the t=
-otal
-+		  link ram entries.
-+- linkram1	: <address size> for external link ram, where size is the t=
-otal
-+		  external link ram entries. If the address is specified as "0"
-+		  driver will allocate memory.
-+- qmgrs         : child node describing the individual queue managers =
-on the
-+		  SoC. On keystone 1 devices there should be only one node.
-+		  On keystone 2 devices there can be more than 1 node.
-+  -- managed-queues	: the actual queues managed by each queue manager
-+			  instance, specified as <"base queue #" "# of queues">.
-+  -- reg		: Address and size of the register set for the device.
-+			  Register regions should be specified in the following
-+			  order
-+			  - Queue Peek region.
-+			  - Queue status RAM.
-+			  - Queue configuration region.
-+			  - Descriptor memory setup region.
-+			  - Queue Management/Queue Proxy region for queue Push.
-+			  - Queue Management/Queue Proxy region for queue Pop.
-+- queue-pools	: child node classifying the queue ranges into pools.
-+		  Queue ranges are grouped into 3 type of pools:
-+		  - qpend	    : pool of qpend(interruptible) queues
-+		  - general-purpose : pool of general queues, primarly used
-+				      as free descriptor queues or the
-+				      transmit DMA queues.
-+		  - accumulator	    : pool of queues on PDSP accumulator channel
-+		  Each range can have the following properties:
-+  -- qrange		: number of queues to use per queue range, specified as
-+			  <"base queue #" "# of queues">.
-+  -- interrupts		: Optional property to specify the interrupt mapping
-+			  for interruptible queues. The driver additionaly sets
-+			  the interrupt affinity hint based on the cpu mask.
-+  -- qalloc-by-id	: Optional property to specify that the queues in th=
-is
-+			  range can only be allocated by queue id.
-+  -- accumulator	: Accumulator channel specification. Any of the PDSPs=
- in
-+			  QMSS can be loaded with the accumulator firmware. The
-+			  accumulator firmware=E2=80=99s job is to poll a select number of
-+			  queues looking for descriptors that have been pushed
-+			  into them. Descriptors are popped from the queue and
-+			  placed in a buffer provided by the host. When the list
-+			  becomes full or a programmed time period expires, the
-+			  accumulator triggers an interrupt to the host to read
-+			  the buffer for descriptor information. This firmware
-+			  comes in 16, 32, and 48 channel builds. Each of these
-+			  channels can be configured to monitor 32 contiguous
-+			  queues.  Accumulator channel property is specified as:
-+			  <pdsp-id, channel, entries, pacing mode, latency>
-+			  pdsp-id     : QMSS PDSP running accumulator firmware
-+					on which the channel has to be
-+					configured
-+			  channel     : Accumulator channel number
-+			  entries     : Size of the accumulator descriptor list
-+			  pacing mode : Interrupt pacing mode
-+					0 : None, i.e interrupt on list full only
-+					1 : Time delay since last interrupt
-+					2 : Time delay since first new packet
-+					3 : Time delay since last new packet
-+			  latency     : time to delay the interrupt, specified
-+					in microseconds.
-+  -- multi-queue	: Optional property to specify that the channel has t=
-o
-+			  monitor upto 32 queues starting at the base queue #.
-+- descriptor-regions	: child node describing the memory regions for ke=
-ystone
-+			  navigator packet DMA descriptors. The memory for
-+			  descriptors will be allocated by the driver.
-+  -- id				: region number in QMSS.
-+  -- region-spec		: specifies the number of descriptors in the
-+				  region, specified as
-+				  <"# of descriptors" "descriptor size">.
-+  -- link-index			: start index, i.e. index of the first
-+				  descriptor in the region.
++static void knav_dma_hw_init(struct knav_dma_device *dma)
++{
++	unsigned v;
++	int i;
 +
-+Optional properties:
-+- dma-coherent	: Present if DMA operations are coherent.
-+- pdsps		: child node describing the PDSP configuration.
-+  -- firmware		: firmware to be loaded on the PDSP.
-+  -- id			: the qmss pdsp that will run the firmware.
-+  -- reg		: Address and size of the register set for the PDSP.
-+			  Register regions should be specified in the following
-+			  order
-+			  - PDSP internal RAM region.
-+			  - PDSP control/status region registers.
-+			  - QMSS interrupt distributor registers.
-+			  - PDSP command interface region.
++	spin_lock(&dma->lock);
++	v  = dma->loopback ? DMA_LOOPBACK : 0;
++	writel_relaxed(v, &dma->reg_global->emulation_control);
 +
-+Example:
++	v = readl_relaxed(&dma->reg_global->perf_control);
++	v |= ((dma->rx_timeout & DMA_RX_TIMEOUT_MASK) << DMA_RX_TIMEOUT_SHIFT);
++	writel_relaxed(v, &dma->reg_global->perf_control);
 +
-+qmss: qmss@2a40000 {
-+	compatible =3D "ti,keystone-qmss";
-+	dma-coherent;
-+	#address-cells =3D <1>;
-+	#size-cells =3D <1>;
-+	clocks =3D <&chipclk13>;
-+	ranges;
-+	queue-range	=3D <0 0x4000>;
-+	linkram0	=3D <0x100000 0x8000>;
-+	linkram1	=3D <0x0 0x10000>;
++	v = ((dma->tx_priority << DMA_TX_PRIO_SHIFT) |
++	     (dma->rx_priority << DMA_RX_PRIO_SHIFT));
 +
-+	qmgrs {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		ranges;
-+		qmgr0 {
-+			managed-queues =3D <0 0x2000>;
-+			reg =3D <0x2a40000 0x20000>,
-+			      <0x2a06000 0x400>,
-+			      <0x2a02000 0x1000>,
-+			      <0x2a03000 0x1000>,
-+			      <0x23a80000 0x20000>,
-+			      <0x2a80000 0x20000>;
-+		};
++	writel_relaxed(v, &dma->reg_global->priority_control);
 +
-+		qmgr1 {
-+			managed-queues =3D <0x2000 0x2000>;
-+			reg =3D <0x2a60000 0x20000>,
-+			      <0x2a06400 0x400>,
-+			      <0x2a04000 0x1000>,
-+			      <0x2a05000 0x1000>,
-+			      <0x23aa0000 0x20000>,
-+			      <0x2aa0000 0x20000>;
-+		};
-+	};
-+	queue-pools {
-+		qpend {
-+			qpend-0 {
-+				qrange =3D <658 8>;
-+				interrupts =3D<0 40 0xf04 0 41 0xf04 0 42 0xf04
-+					     0 43 0xf04 0 44 0xf04 0 45 0xf04
-+					     0 46 0xf04 0 47 0xf04>;
-+			};
-+			qpend-1 {
-+				qrange =3D <8704 16>;
-+				interrupts =3D <0 48 0xf04 0 49 0xf04 0 50 0xf04
-+					      0 51 0xf04 0 52 0xf04 0 53 0xf04
-+					      0 54 0xf04 0 55 0xf04 0 56 0xf04
-+					      0 57 0xf04 0 58 0xf04 0 59 0xf04
-+					      0 60 0xf04 0 61 0xf04 0 62 0xf04
-+					      0 63 0xf04>;
-+				qalloc-by-id;
-+			};
-+			qpend-2 {
-+				qrange =3D <8720 16>;
-+				interrupts =3D <0 64 0xf04 0 65 0xf04 0 66 0xf04
-+					      0 59 0xf04 0 68 0xf04 0 69 0xf04
-+					      0 70 0xf04 0 71 0xf04 0 72 0xf04
-+					      0 73 0xf04 0 74 0xf04 0 75 0xf04
-+					      0 76 0xf04 0 77 0xf04 0 78 0xf04
-+					      0 79 0xf04>;
-+			};
-+		};
-+		general-purpose {
-+			gp-0 {
-+				qrange =3D <4000 64>;
-+			};
-+			netcp-tx {
-+				qrange =3D <640 9>;
-+				qalloc-by-id;
-+			};
-+		};
-+		accumulator {
-+			acc-0 {
-+				qrange =3D <128 32>;
-+				accumulator =3D <0 36 16 2 50>;
-+				interrupts =3D <0 215 0xf01>;
-+				multi-queue;
-+				qalloc-by-id;
-+			};
-+			acc-1 {
-+				qrange =3D <160 32>;
-+				accumulator =3D <0 37 16 2 50>;
-+				interrupts =3D <0 216 0xf01>;
-+				multi-queue;
-+			};
-+			acc-2 {
-+				qrange =3D <192 32>;
-+				accumulator =3D <0 38 16 2 50>;
-+				interrupts =3D <0 217 0xf01>;
-+				multi-queue;
-+			};
-+			acc-3 {
-+				qrange =3D <224 32>;
-+				accumulator =3D <0 39 16 2 50>;
-+				interrupts =3D <0 218 0xf01>;
-+				multi-queue;
-+			};
-+		};
-+	};
-+	descriptor-regions {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		ranges;
-+		region-12 {
-+			id =3D <12>;
-+			region-spec =3D <8192 128>; /* num_desc desc_size */
-+			link-index =3D <0x4000>;
-+		};
-+	};
-+	pdsps {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		ranges;
-+		pdsp0@0x2a10000 {
-+			firmware =3D "keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw";
-+			reg =3D <0x2a10000 0x1000>,
-+			      <0x2a0f000 0x100>,
-+			      <0x2a0c000 0x3c8>,
-+			      <0x2a20000 0x4000>;
-+			id =3D <0>;
-+		};
-+	};
-+}; /* qmss */
---=20
++	/* Always enable all Rx channels. Rx paths are managed using flows */
++	for (i = 0; i < dma->max_rx_chan; i++)
++		writel_relaxed(DMA_ENABLE, &dma->reg_rx_chan[i].control);
++
++	for (i = 0; i < dma->logical_queue_managers; i++)
++		writel_relaxed(dma->qm_base_address[i],
++			       &dma->reg_global->qm_base_address[i]);
++	spin_unlock(&dma->lock);
++}
++
++static void knav_dma_hw_destroy(struct knav_dma_device *dma)
++{
++	int i;
++	unsigned v;
++
++	spin_lock(&dma->lock);
++	v = ~DMA_ENABLE & REG_MASK;
++
++	for (i = 0; i < dma->max_rx_chan; i++)
++		writel_relaxed(v, &dma->reg_rx_chan[i].control);
++
++	for (i = 0; i < dma->max_tx_chan; i++)
++		writel_relaxed(v, &dma->reg_tx_chan[i].control);
++	spin_unlock(&dma->lock);
++}
++
++static void dma_debug_show_channels(struct seq_file *s,
++					struct knav_dma_chan *chan)
++{
++	int i;
++
++	seq_printf(s, "\t%s %d:\t",
++		((chan->direction == DMA_MEM_TO_DEV) ? "tx chan" : "rx flow"),
++		chan_number(chan));
++
++	if (chan->direction == DMA_MEM_TO_DEV) {
++		seq_printf(s, "einfo - %d, pswords - %d, priority - %d\n",
++			chan->cfg.u.tx.filt_einfo,
++			chan->cfg.u.tx.filt_pswords,
++			chan->cfg.u.tx.priority);
++	} else {
++		seq_printf(s, "einfo - %d, psinfo - %d, desc_type - %d\n",
++			chan->cfg.u.rx.einfo_present,
++			chan->cfg.u.rx.psinfo_present,
++			chan->cfg.u.rx.desc_type);
++		seq_printf(s, "\t\t\tdst_q: [%d], thresh: %d fdq: ",
++			chan->cfg.u.rx.dst_q,
++			chan->cfg.u.rx.thresh);
++		for (i = 0; i < KNAV_DMA_FDQ_PER_CHAN; i++)
++			seq_printf(s, "[%d]", chan->cfg.u.rx.fdq[i]);
++		seq_printf(s, "\n");
++	}
++}
++
++static void dma_debug_show_devices(struct seq_file *s,
++					struct knav_dma_device *dma)
++{
++	struct knav_dma_chan *chan;
++
++	list_for_each_entry(chan, &dma->chan_list, list) {
++		if (atomic_read(&chan->ref_count))
++			dma_debug_show_channels(s, chan);
++	}
++}
++
++static int dma_debug_show(struct seq_file *s, void *v)
++{
++	struct knav_dma_device *dma;
++
++	list_for_each_entry(dma, &kdev->list, list) {
++		if (atomic_read(&dma->ref_count)) {
++			seq_printf(s, "%s : max_tx_chan: (%d), max_rx_flows: (%d)\n",
++			dma->name, dma->max_tx_chan, dma->max_rx_flow);
++			dma_debug_show_devices(s, dma);
++		}
++	}
++
++	return 0;
++}
++
++static int knav_dma_debug_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, dma_debug_show, NULL);
++}
++
++static const struct file_operations knav_dma_debug_ops = {
++	.open		= knav_dma_debug_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++};
++
++static int of_channel_match_helper(struct device_node *np, const char *name,
++					const char **dma_instance)
++{
++	struct of_phandle_args args;
++	struct device_node *dma_node;
++	int index;
++
++	dma_node = of_parse_phandle(np, "ti,navigator-dmas", 0);
++	if (!dma_node)
++		return -ENODEV;
++
++	*dma_instance = dma_node->name;
++	index = of_property_match_string(np, "ti,navigator-dma-names", name);
++	if (index < 0) {
++		dev_err(kdev->dev, "No 'ti,navigator-dma-names' propery\n");
++		return -ENODEV;
++	}
++
++	if (of_parse_phandle_with_fixed_args(np, "ti,navigator-dmas",
++					1, index, &args)) {
++		dev_err(kdev->dev, "Missing the pahndle args name %s\n", name);
++		return -ENODEV;
++	}
++
++	if (args.args[0] < 0) {
++		dev_err(kdev->dev, "Missing args for %s\n", name);
++		return -ENODEV;
++	}
++
++	return args.args[0];
++}
++
++/**
++ * knav_dma_open_channel() - try to setup an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ * @config:	dma configuration parameters
++ *
++ * Returns pointer to appropriate DMA channel on success or NULL.
++ */
++void *knav_dma_open_channel(struct device *dev, const char *name,
++					struct knav_dma_cfg *config)
++{
++	struct knav_dma_chan *chan;
++	struct knav_dma_device *dma;
++	bool found = false;
++	int chan_num = -1;
++	const char *instance;
++
++	if (!kdev) {
++		pr_err("keystone-navigator-dma driver not registered\n");
++		return (void *)-EINVAL;
++	}
++
++	chan_num = of_channel_match_helper(dev->of_node, name, &instance);
++	if (chan_num < 0) {
++		dev_err(kdev->dev, "No DMA instace with name %s\n", name);
++		return (void *)-EINVAL;
++	}
++
++	dev_dbg(kdev->dev, "initializing %s channel %d from DMA %s\n",
++		  config->direction == DMA_MEM_TO_DEV   ? "transmit" :
++		  config->direction == DMA_DEV_TO_MEM ? "receive"  :
++		  "unknown", chan_num, instance);
++
++	if (config->direction != DMA_MEM_TO_DEV &&
++	    config->direction != DMA_DEV_TO_MEM) {
++		dev_err(kdev->dev, "bad direction\n");
++		return (void *)-EINVAL;
++	}
++
++	/* Look for correct dma instance */
++	list_for_each_entry(dma, &kdev->list, list) {
++		if (!strcmp(dma->name, instance)) {
++			found = true;
++			break;
++		}
++	}
++	if (!found) {
++		dev_err(kdev->dev, "No DMA instace with name %s\n", instance);
++		return (void *)-EINVAL;
++	}
++
++	/* Look for correct dma channel from dma instance */
++	found = false;
++	list_for_each_entry(chan, &dma->chan_list, list) {
++		if (config->direction == DMA_MEM_TO_DEV) {
++			if (chan->channel == chan_num) {
++				found = true;
++				break;
++			}
++		} else {
++			if (chan->flow == chan_num) {
++				found = true;
++				break;
++			}
++		}
++	}
++	if (!found) {
++		dev_err(kdev->dev, "channel %d is not in DMA %s\n",
++				chan_num, instance);
++		return (void *)-EINVAL;
++	}
++
++	if (atomic_read(&chan->ref_count) >= 1) {
++		if (!check_config(chan, config)) {
++			dev_err(kdev->dev, "channel %d config miss-match\n",
++				chan_num);
++			return (void *)-EINVAL;
++		}
++	}
++
++	if (atomic_inc_return(&chan->dma->ref_count) <= 1)
++		knav_dma_hw_init(chan->dma);
++
++	if (atomic_inc_return(&chan->ref_count) <= 1)
++		chan_start(chan, config);
++
++	dev_dbg(kdev->dev, "channel %d opened from DMA %s\n",
++				chan_num, instance);
++
++	return chan;
++}
++EXPORT_SYMBOL_GPL(knav_dma_open_channel);
++
++/**
++ * knav_dma_close_channel()	- Destroy a dma channel
++ *
++ * channel:	dma channel handle
++ *
++ */
++void knav_dma_close_channel(void *channel)
++{
++	struct knav_dma_chan *chan = channel;
++
++	if (!kdev) {
++		pr_err("keystone-navigator-dma driver not registered\n");
++		return;
++	}
++
++	if (atomic_dec_return(&chan->ref_count) <= 0)
++		chan_stop(chan);
++
++	if (atomic_dec_return(&chan->dma->ref_count) <= 0)
++		knav_dma_hw_destroy(chan->dma);
++
++	dev_dbg(kdev->dev, "channel %d or flow %d closed from DMA %s\n",
++			chan->channel, chan->flow, chan->dma->name);
++}
++EXPORT_SYMBOL_GPL(knav_dma_close_channel);
++
++static void __iomem *pktdma_get_regs(struct knav_dma_device *dma,
++				struct device_node *node,
++				unsigned index, resource_size_t *_size)
++{
++	struct device *dev = kdev->dev;
++	struct resource res;
++	void __iomem *regs;
++	int ret;
++
++	ret = of_address_to_resource(node, index, &res);
++	if (ret) {
++		dev_err(dev, "Can't translate of node(%s) address for index(%d)\n",
++			node->name, index);
++		return ERR_PTR(ret);
++	}
++
++	regs = devm_ioremap_resource(kdev->dev, &res);
++	if (IS_ERR(regs))
++		dev_err(dev, "Failed to map register base for index(%d) node(%s)\n",
++			index, node->name);
++	if (_size)
++		*_size = resource_size(&res);
++
++	return regs;
++}
++
++static int pktdma_init_rx_chan(struct knav_dma_chan *chan, u32 flow)
++{
++	struct knav_dma_device *dma = chan->dma;
++
++	chan->flow = flow;
++	chan->reg_rx_flow = dma->reg_rx_flow + flow;
++	chan->channel = DMA_INVALID_ID;
++	dev_dbg(kdev->dev, "rx flow(%d) (%p)\n", chan->flow, chan->reg_rx_flow);
++
++	return 0;
++}
++
++static int pktdma_init_tx_chan(struct knav_dma_chan *chan, u32 channel)
++{
++	struct knav_dma_device *dma = chan->dma;
++
++	chan->channel = channel;
++	chan->reg_chan = dma->reg_tx_chan + channel;
++	chan->reg_tx_sched = dma->reg_tx_sched + channel;
++	chan->flow = DMA_INVALID_ID;
++	dev_dbg(kdev->dev, "tx channel(%d) (%p)\n", chan->channel, chan->reg_chan);
++
++	return 0;
++}
++
++static int pktdma_init_chan(struct knav_dma_device *dma,
++				enum dma_transfer_direction dir,
++				unsigned chan_num)
++{
++	struct device *dev = kdev->dev;
++	struct knav_dma_chan *chan;
++	int ret = -EINVAL;
++
++	chan = devm_kzalloc(dev, sizeof(*chan), GFP_KERNEL);
++	if (!chan)
++		return -ENOMEM;
++
++	INIT_LIST_HEAD(&chan->list);
++	chan->dma	= dma;
++	chan->direction	= DMA_NONE;
++	atomic_set(&chan->ref_count, 0);
++	spin_lock_init(&chan->lock);
++
++	if (dir == DMA_MEM_TO_DEV) {
++		chan->direction = dir;
++		ret = pktdma_init_tx_chan(chan, chan_num);
++	} else if (dir == DMA_DEV_TO_MEM) {
++		chan->direction = dir;
++		ret = pktdma_init_rx_chan(chan, chan_num);
++	} else {
++		dev_err(dev, "channel(%d) direction unknown\n", chan_num);
++	}
++
++	list_add_tail(&chan->list, &dma->chan_list);
++
++	return ret;
++}
++
++static int dma_init(struct device_node *cloud, struct device_node *dma_node)
++{
++	unsigned max_tx_chan, max_rx_chan, max_rx_flow, max_tx_sched;
++	struct device_node *node = dma_node;
++	struct knav_dma_device *dma;
++	int ret, len, num_chan = 0;
++	resource_size_t size;
++	u32 timeout;
++	u32 i;
++
++	dma = devm_kzalloc(kdev->dev, sizeof(*dma), GFP_KERNEL);
++	if (!dma) {
++		dev_err(kdev->dev, "could not allocate driver mem\n");
++		return -ENOMEM;
++	}
++	INIT_LIST_HEAD(&dma->list);
++	INIT_LIST_HEAD(&dma->chan_list);
++
++	if (!of_find_property(cloud, "ti,navigator-cloud-address", &len)) {
++		dev_err(kdev->dev, "unspecified navigator cloud addresses\n");
++		return -ENODEV;
++	}
++
++	dma->logical_queue_managers = len / sizeof(u32);
++	if (dma->logical_queue_managers > DMA_MAX_QMS) {
++		dev_warn(kdev->dev, "too many queue mgrs(>%d) rest ignored\n",
++			 dma->logical_queue_managers);
++		dma->logical_queue_managers = DMA_MAX_QMS;
++	}
++
++	ret = of_property_read_u32_array(cloud, "ti,navigator-cloud-address",
++					dma->qm_base_address,
++					dma->logical_queue_managers);
++	if (ret) {
++		dev_err(kdev->dev, "invalid navigator cloud addresses\n");
++		return -ENODEV;
++	}
++
++	dma->reg_global	 = pktdma_get_regs(dma, node, 0, &size);
++	if (!dma->reg_global)
++		return -ENODEV;
++	if (size < sizeof(struct reg_global)) {
++		dev_err(kdev->dev, "bad size %pa for global regs\n", &size);
++		return -ENODEV;
++	}
++
++	dma->reg_tx_chan = pktdma_get_regs(dma, node, 1, &size);
++	if (!dma->reg_tx_chan)
++		return -ENODEV;
++
++	max_tx_chan = size / sizeof(struct reg_chan);
++	dma->reg_rx_chan = pktdma_get_regs(dma, node, 2, &size);
++	if (!dma->reg_rx_chan)
++		return -ENODEV;
++
++	max_rx_chan = size / sizeof(struct reg_chan);
++	dma->reg_tx_sched = pktdma_get_regs(dma, node, 3, &size);
++	if (!dma->reg_tx_sched)
++		return -ENODEV;
++
++	max_tx_sched = size / sizeof(struct reg_tx_sched);
++	dma->reg_rx_flow = pktdma_get_regs(dma, node, 4, &size);
++	if (!dma->reg_rx_flow)
++		return -ENODEV;
++
++	max_rx_flow = size / sizeof(struct reg_rx_flow);
++	dma->rx_priority = DMA_PRIO_DEFAULT;
++	dma->tx_priority = DMA_PRIO_DEFAULT;
++
++	dma->enable_all	= (of_get_property(node, "ti,enable-all", NULL) != NULL);
++	dma->loopback	= (of_get_property(node, "ti,loop-back",  NULL) != NULL);
++
++	ret = of_property_read_u32(node, "ti,rx-retry-timeout", &timeout);
++	if (ret < 0) {
++		dev_dbg(kdev->dev, "unspecified rx timeout using value %d\n",
++			DMA_RX_TIMEOUT_DEFAULT);
++		timeout = DMA_RX_TIMEOUT_DEFAULT;
++	}
++
++	dma->rx_timeout = timeout;
++	dma->max_rx_chan = max_rx_chan;
++	dma->max_rx_flow = max_rx_flow;
++	dma->max_tx_chan = min(max_tx_chan, max_tx_sched);
++	atomic_set(&dma->ref_count, 0);
++	strcpy(dma->name, node->name);
++	spin_lock_init(&dma->lock);
++
++	for (i = 0; i < dma->max_tx_chan; i++) {
++		if (pktdma_init_chan(dma, DMA_MEM_TO_DEV, i) >= 0)
++			num_chan++;
++	}
++
++	for (i = 0; i < dma->max_rx_flow; i++) {
++		if (pktdma_init_chan(dma, DMA_DEV_TO_MEM, i) >= 0)
++			num_chan++;
++	}
++
++	list_add_tail(&dma->list, &kdev->list);
++
++	/*
++	 * For DSP software usecases or userpace transport software, setup all
++	 * the DMA hardware resources.
++	 */
++	if (dma->enable_all) {
++		atomic_inc(&dma->ref_count);
++		knav_dma_hw_init(dma);
++		dma_hw_enable_all(dma);
++	}
++
++	dev_info(kdev->dev, "DMA %s registered %d logical channels, flows %d, tx chans: %d, rx chans: %d%s\n",
++		dma->name, num_chan, dma->max_rx_flow,
++		dma->max_tx_chan, dma->max_rx_chan,
++		dma->loopback ? ", loopback" : "");
++
++	return 0;
++}
++
++static int knav_dma_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *node = pdev->dev.of_node;
++	struct device_node *child;
++	int ret = 0;
++
++	if (!node) {
++		dev_err(&pdev->dev, "could not find device info\n");
++		return -EINVAL;
++	}
++
++	kdev = devm_kzalloc(dev,
++			sizeof(struct knav_dma_pool_device), GFP_KERNEL);
++	if (!kdev) {
++		dev_err(dev, "could not allocate driver mem\n");
++		return -ENOMEM;
++	}
++
++	kdev->dev = dev;
++	INIT_LIST_HEAD(&kdev->list);
++
++	pm_runtime_enable(kdev->dev);
++	ret = pm_runtime_get_sync(kdev->dev);
++	if (ret < 0) {
++		dev_err(kdev->dev, "unable to enable pktdma, err %d\n", ret);
++		return ret;
++	}
++
++	/* Initialise all packet dmas */
++	for_each_child_of_node(node, child) {
++		ret = dma_init(node, child);
++		if (ret) {
++			dev_err(&pdev->dev, "init failed with %d\n", ret);
++			break;
++		}
++	}
++
++	if (list_empty(&kdev->list)) {
++		dev_err(dev, "no valid dma instance\n");
++		return -ENODEV;
++	}
++
++	debugfs_create_file("knav_dma", S_IFREG | S_IRUGO, NULL, NULL,
++			    &knav_dma_debug_ops);
++
++	return ret;
++}
++
++static int knav_dma_remove(struct platform_device *pdev)
++{
++	struct knav_dma_device *dma;
++
++	list_for_each_entry(dma, &kdev->list, list) {
++		if (atomic_dec_return(&dma->ref_count) == 0)
++			knav_dma_hw_destroy(dma);
++	}
++
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static struct of_device_id of_match[] = {
++	{ .compatible = "ti,keystone-navigator-dma", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, of_match);
++
++static struct platform_driver knav_dma_driver = {
++	.probe	= knav_dma_probe,
++	.remove	= knav_dma_remove,
++	.driver = {
++		.name		= "keystone-navigator-dma",
++		.owner		= THIS_MODULE,
++		.of_match_table	= of_match,
++	},
++};
++module_platform_driver(knav_dma_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("TI Keystone Navigator Packet DMA driver");
+diff --git a/include/linux/soc/ti/knav_dma.h b/include/linux/soc/ti/knav_dma.h
+new file mode 100644
+index 0000000..e864a3e
+--- /dev/null
++++ b/include/linux/soc/ti/knav_dma.h
+@@ -0,0 +1,175 @@
++/*
++ * Copyright (C) 2014 Texas Instruments Incorporated
++ * Authors:	Sandeep Nair <sandeep_n@ti.com
++ *		Cyril Chemparathy <cyril@ti.com
++		Santosh Shilimkar <santosh.shilimkar@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __SOC_TI_KEYSTONE_NAVIGATOR_DMA_H__
++#define __SOC_TI_KEYSTONE_NAVIGATOR_DMA_H__
++
++/*
++ * PKTDMA descriptor manipulation macros for host packet descriptor
++ */
++#define MASK(x)					(BIT(x) - 1)
++#define KNAV_DMA_DESC_PKT_LEN_MASK		MASK(22)
++#define KNAV_DMA_DESC_PKT_LEN_SHIFT		0
++#define KNAV_DMA_DESC_PS_INFO_IN_SOP		BIT(22)
++#define KNAV_DMA_DESC_PS_INFO_IN_DESC		0
++#define KNAV_DMA_DESC_TAG_MASK			MASK(8)
++#define KNAV_DMA_DESC_SAG_HI_SHIFT		24
++#define KNAV_DMA_DESC_STAG_LO_SHIFT		16
++#define KNAV_DMA_DESC_DTAG_HI_SHIFT		8
++#define KNAV_DMA_DESC_DTAG_LO_SHIFT		0
++#define KNAV_DMA_DESC_HAS_EPIB			BIT(31)
++#define KNAV_DMA_DESC_NO_EPIB			0
++#define KNAV_DMA_DESC_PSLEN_SHIFT		24
++#define KNAV_DMA_DESC_PSLEN_MASK		MASK(6)
++#define KNAV_DMA_DESC_ERR_FLAG_SHIFT		20
++#define KNAV_DMA_DESC_ERR_FLAG_MASK		MASK(4)
++#define KNAV_DMA_DESC_PSFLAG_SHIFT		16
++#define KNAV_DMA_DESC_PSFLAG_MASK		MASK(4)
++#define KNAV_DMA_DESC_RETQ_SHIFT		0
++#define KNAV_DMA_DESC_RETQ_MASK			MASK(14)
++#define KNAV_DMA_DESC_BUF_LEN_MASK		MASK(22)
++
++#define KNAV_DMA_NUM_EPIB_WORDS			4
++#define KNAV_DMA_NUM_PS_WORDS			16
++#define KNAV_DMA_FDQ_PER_CHAN			4
++
++/* Tx channel scheduling priority */
++enum knav_dma_tx_priority {
++	DMA_PRIO_HIGH	= 0,
++	DMA_PRIO_MED_H,
++	DMA_PRIO_MED_L,
++	DMA_PRIO_LOW
++};
++
++/* Rx channel error handling mode during buffer starvation */
++enum knav_dma_rx_err_mode {
++	DMA_DROP = 0,
++	DMA_RETRY
++};
++
++/* Rx flow size threshold configuration */
++enum knav_dma_rx_thresholds {
++	DMA_THRESH_NONE		= 0,
++	DMA_THRESH_0		= 1,
++	DMA_THRESH_0_1		= 3,
++	DMA_THRESH_0_1_2	= 7
++};
++
++/* Descriptor type */
++enum knav_dma_desc_type {
++	DMA_DESC_HOST = 0,
++	DMA_DESC_MONOLITHIC = 2
++};
++
++/**
++ * struct knav_dma_tx_cfg:	Tx channel configuration
++ * @filt_einfo:			Filter extended packet info
++ * @filt_pswords:		Filter PS words present
++ * @knav_dma_tx_priority:	Tx channel scheduling priority
++ */
++struct knav_dma_tx_cfg {
++	bool				filt_einfo;
++	bool				filt_pswords;
++	enum knav_dma_tx_priority	priority;
++};
++
++/**
++ * struct knav_dma_rx_cfg:	Rx flow configuration
++ * @einfo_present:		Extended packet info present
++ * @psinfo_present:		PS words present
++ * @knav_dma_rx_err_mode:	Error during buffer starvation
++ * @knav_dma_desc_type:	Host or Monolithic desc
++ * @psinfo_at_sop:		PS word located at start of packet
++ * @sop_offset:			Start of packet offset
++ * @dst_q:			Destination queue for a given flow
++ * @thresh:			Rx flow size threshold
++ * @fdq[]:			Free desc Queue array
++ * @sz_thresh0:			RX packet size threshold 0
++ * @sz_thresh1:			RX packet size threshold 1
++ * @sz_thresh2:			RX packet size threshold 2
++ */
++struct knav_dma_rx_cfg {
++	bool				einfo_present;
++	bool				psinfo_present;
++	enum knav_dma_rx_err_mode	err_mode;
++	enum knav_dma_desc_type		desc_type;
++	bool				psinfo_at_sop;
++	unsigned int			sop_offset;
++	unsigned int			dst_q;
++	enum knav_dma_rx_thresholds	thresh;
++	unsigned int			fdq[KNAV_DMA_FDQ_PER_CHAN];
++	unsigned int			sz_thresh0;
++	unsigned int			sz_thresh1;
++	unsigned int			sz_thresh2;
++};
++
++/**
++ * struct knav_dma_cfg:	Pktdma channel configuration
++ * @sl_cfg:			Slave configuration
++ * @tx:				Tx channel configuration
++ * @rx:				Rx flow configuration
++ */
++struct knav_dma_cfg {
++	enum dma_transfer_direction direction;
++	union {
++		struct knav_dma_tx_cfg	tx;
++		struct knav_dma_rx_cfg	rx;
++	} u;
++};
++
++/**
++ * struct knav_dma_desc:	Host packet descriptor layout
++ * @desc_info:			Descriptor information like id, type, length
++ * @tag_info:			Flow tag info written in during RX
++ * @packet_info:		Queue Manager, policy, flags etc
++ * @buff_len:			Buffer length in bytes
++ * @buff:			Buffer pointer
++ * @next_desc:			For chaining the descriptors
++ * @orig_len:			length since 'buff_len' can be overwritten
++ * @orig_buff:			buff pointer since 'buff' can be overwritten
++ * @epib:			Extended packet info block
++ * @psdata:			Protocol specific
++ */
++struct knav_dma_desc {
++	u32	desc_info;
++	u32	tag_info;
++	u32	packet_info;
++	u32	buff_len;
++	u32	buff;
++	u32	next_desc;
++	u32	orig_len;
++	u32	orig_buff;
++	u32	epib[KNAV_DMA_NUM_EPIB_WORDS];
++	u32	psdata[KNAV_DMA_NUM_PS_WORDS];
++	u32	pad[4];
++} ____cacheline_aligned;
++
++#ifdef CONFIG_KEYSTONE_NAVIGATOR_DMA
++void *knav_dma_open_channel(struct device *dev, const char *name,
++				struct knav_dma_cfg *config);
++void knav_dma_close_channel(void *channel);
++#else
++static inline void *knav_dma_open_channel(struct device *dev, const char *name,
++				struct knav_dma_cfg *config)
++{
++	return (void *) NULL;
++}
++static inline void knav_dma_close_channel(void *channel)
++{}
++
++#endif
++
++#endif /* __SOC_TI_KEYSTONE_NAVIGATOR_DMA_H__ */
+-- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
