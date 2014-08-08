@@ -1,57 +1,69 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH 1/14] i2c: mpc: delete unneeded test before of_node_put
-Date: Fri, 8 Aug 2014 12:27:03 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1408081226400.2348@hadrien>
-References: <1407492475-26283-1-git-send-email-Julia.Lawall@lip6.fr> <20140808102536.GZ1933@pengutronix.de>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH] ASoC: fsl_sai: Make Synchronous and
+	Asynchronous modes exclusive
+Date: Fri, 8 Aug 2014 18:41:19 +0800
+Message-ID: <1407494479-9877-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1811163182-1407493623=:2348"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140808102536.GZ1933-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, galak@codeaurora.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The previous patch (ASoC: fsl_sai: Add asynchronous mode support) added
+new Device Tree bindings for Asynchronous and Synchronous modes support.
+However, these two shall not be present at the same time.
 
---8323329-1811163182-1407493623=:2348
-Content-Type: TEXT/PLAIN; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+So this patch just simply makes them exclusive so as to avoid incorrect
+Device Tree binding usage.
 
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 +--
+ sound/soc/fsl/fsl_sai.c                             | 7 +++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-
-On Fri, 8 Aug 2014, Uwe Kleine-König wrote:
-
-> Hello,
->
-> On Fri, Aug 08, 2014 at 12:07:42PM +0200, Julia Lawall wrote:
-> > From: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-> >
-> > Of_node_put supports NULL as its argument, so the initial test is not
-> > necessary.
-> >
-> > Suggested by Uwe Kleine-König.
-> Thanks for picking up my suggestion.
->
-> > The semantic patch that fixes this problem is as follows:
-> > (http://coccinelle.lip6.fr/)
-> >
-> > // <smpl>
-> > @@
-> > expression e;
-> > @@
-> >
-> > -if (e)
-> >    of_node_put(e);
-> > // </smpl>
-> >
->
-> I added devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org to Cc. Maybe they want to comment the
-> series? If it's acceptable the logical next step is to add the patch to
-> the collection of semantic patches, right?
-
-Yes, I will do that.
-
-julia
---8323329-1811163182-1407493623=:2348--
+diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+index 77864f4..dc9f9c3 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+@@ -38,8 +38,7 @@ Note:
+   default synchronous mode (sync Rx with Tx) will be used, which means both
+   transimitter and receiver will send and receive data by following clocks
+   of transimitter.
+-- fsl,sai-asynchronous will be ignored if fsl,sai-synchronous-rx property is
+-  already present.
++- fsl,sai-asynchronous and fsl,sai-synchronous-rx are exclusive.
+ 
+ Example:
+ sai2: sai@40031000 {
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index ef7c758..4c9e71c 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -634,6 +634,13 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 	fsl_sai_dai.symmetric_channels = 1;
+ 	fsl_sai_dai.symmetric_samplebits = 1;
+ 
++	if (of_find_property(np, "fsl,sai-synchronous-rx", NULL) &&
++	    of_find_property(np, "fsl,sai-asynchronous", NULL)) {
++		/* error out if both synchronous and asynchronous are present */
++		dev_err(&pdev->dev, "invalid binding for synchronous mode\n");
++		return -EINVAL;
++	}
++
+ 	if (of_find_property(np, "fsl,sai-synchronous-rx", NULL)) {
+ 		/* Sync Rx with Tx */
+ 		sai->synchronous[RX] = false;
+-- 
+1.8.4
