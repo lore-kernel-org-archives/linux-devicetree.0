@@ -1,174 +1,59 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [Patch v3 4/6] Documentation: dt: soc: add Keystone Navigator DMA
- bindings
-Date: Fri, 8 Aug 2014 14:19:43 -0400
-Message-ID: <1407521985-22574-5-git-send-email-santosh.shilimkar@ti.com>
-References: <1407521985-22574-1-git-send-email-santosh.shilimkar@ti.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v2 1/1] Input: atmel_mxt_ts - Get IRQ edge/level flags
+ on DT booting
+Date: Fri, 08 Aug 2014 20:29:32 +0200
+Message-ID: <53E5170C.10302@collabora.co.uk>
+References: <1407397492-17475-1-git-send-email-javier.martinez@collabora.co.uk> <53E4D9A5.908@itdev.co.uk> <20140808162146.GC26820@core.coreip.homeip.net> <53E4FD1B.6060600@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407521985-22574-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, sandeep_n@ti.com, olof@lixom.net, Santosh Shilimkar <santosh.shilimkar@ti.com>, galak@codeaurora.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <53E4FD1B.6060600@collabora.co.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>
+Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Abraham <thomas.ab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The Keystone Navigator DMA driver sets up the dma channels and flows for
-the QMSS(Queue Manager SubSystem) who triggers the actual data movements
-across clients using destination queues. Every client modules like
-NETCP(Network Coprocessor), SRIO(Serial Rapid IO) and CRYPTO
-Engines has its own instance of packet dma hardware. QMSS has also
-an internal packet DMA module which is used as an infrastructure
-DMA with zero copy.
+Hello,
 
-Initially this driver was proposed as DMA engine driver but since the
-hardware is not typical DMA engine and hence doesn't comply with typical
-DMA engine driver needs, that approach was naked. Link to that
-discussion -
-	https://lkml.org/lkml/2014/3/18/340
+On 08/08/2014 06:38 PM, Javier Martinez Canillas wrote:
+> 
+> 
+> It seems as if the first call to exynos_irq_set_type() that is made by OF is a
+> no-op while the second call is the one that actually setups the hw correctly.
+> Does this make any sense? Maybe is related to the pin not being muxed in the
+> correct function when the "interrupts" property is parsed by OF?
+> 
 
-As aligned, now we pair the Navigator DMA with its companion Navigator
-QMSS subsystem driver.
+So after a conversation with Tomasz Figa over IRC the problem was after all that
+the pin was reconfigured. The IRQ trigger type resulted to be just a red herring
+and not a direct cause.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
----
- .../bindings/soc/ti/keystone-navigator-dma.txt     |  111 ++++++++++++++++++++
- 1 file changed, 111 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/keystone-navigator-dma.txt
+The pinctrl-eyxnos driver does the IRQ pinmux setup in the .irq_set_type
+function handler. So what happened was that OF parsed the "interrupts" property
+and called exynos_irq_set_type() which did the pinmux setup.
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-dma.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-dma.txt
-new file mode 100644
-index 0000000..337c4ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-dma.txt
-@@ -0,0 +1,111 @@
-+Keystone Navigator DMA Controller
-+
-+This document explains the device tree bindings for the packet dma
-+on keystone devices. The Keystone Navigator DMA driver sets up the dma
-+channels and flows for the QMSS(Queue Manager SubSystem) who triggers
-+the actual data movements across clients using destination queues. Every
-+client modules like  NETCP(Network Coprocessor), SRIO(Serial Rapid IO),
-+CRYPTO Engines etc has its own instance of dma hardware. QMSS has also
-+an internal packet DMA module which is used as an infrastructure DMA
-+with zero copy.
-+
-+Navigator DMA cloud layout:
-+	------------------
-+	| Navigator DMAs |
-+	------------------
-+		|
-+		|-> DMA instance #0
-+		|
-+		|-> DMA instance #1
-+			.
-+			.
-+		|
-+		|-> DMA instance #n
-+
-+Navigator DMA properties:
-+Required properties:
-+ - compatible: Should be "ti,keystone-navigator-dma"
-+ - clocks: phandle to dma instances clocks. The clock handles can be as
-+	many as the dma instances. The order should be maintained as per
-+	the dma instances.
-+ - ti,navigator-cloud-address: Should contain base address for the multi-core
-+	navigator cloud and number of addresses depends on SOC integration
-+	configuration.. Navigator cloud global address needs to be programmed
-+	into DMA and the DMA uses it as the physical addresses to reach queue
-+	managers. Note that these addresses though points to queue managers,
-+	they are relevant only from DMA perspective. The QMSS may not choose to
-+	use them since it has a different address space view to reach all
-+	its components.
-+
-+DMA instance properties:
-+Required properties:
-+ - reg: Should contain register location and length of the following dma
-+	register regions. Register regions should be specified in the following
-+	order.
-+	- Global control register region (global).
-+	- Tx DMA channel configuration register region (txchan).
-+	- Rx DMA channel configuration register region (rxchan).
-+	- Tx DMA channel Scheduler configuration register region (txsched).
-+	- Rx DMA flow configuration register region (rxflow).
-+
-+Optional properties:
-+ - reg-names: Names for the register regions.
-+ - ti,enable-all: Enable all DMA channels vs clients opening specific channels
-+	what they need. This property is useful for the userspace fast path
-+	case where the linux drivers enables the channels used by userland
-+	stack.
-+ - ti,loop-back: To loopback Tx streaming I/F to Rx streaming I/F. Used for
-+	      infrastructure transfers.
-+ - ti,rx-retry-timeout: Number of dma cycles to wait before retry on buffer
-+		     starvation.
-+
-+Example:
-+
-+	knav_dmas: knav_dmas@0 {
-+		compatible = "ti,keystone-navigator-dma";
-+		clocks = <&papllclk>, <&clkxge>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		ti,navigator-cloud-address = <0x23a80000 0x23a90000
-+					   0x23aa0000 0x23ab0000>;
-+
-+		dma_gbe: dma_gbe@0 {
-+			reg = <0x2004000 0x100>,
-+				  <0x2004400 0x120>,
-+				  <0x2004800 0x300>,
-+				  <0x2004c00 0x120>,
-+				  <0x2005000 0x400>;
-+			reg-names = "global", "txchan", "rxchan",
-+					"txsched", "rxflow";
-+		};
-+
-+		dma_xgbe: dma_xgbe@0 {
-+			reg = <0x2fa1000 0x100>,
-+				<0x2fa1400 0x200>,
-+				<0x2fa1800 0x200>,
-+				<0x2fa1c00 0x200>,
-+				<0x2fa2000 0x400>;
-+			reg-names = "global", "txchan", "rxchan",
-+					"txsched", "rxflow";
-+		};
-+	};
-+
-+Navigator DMA client:
-+Required properties:
-+ - ti,navigator-dmas: List of one or more DMA specifiers, each consisting of
-+			- A phandle pointing to DMA instance node
-+			- A DMA channel number as a phandle arg.
-+ - ti,navigator-dma-names: Contains dma channel name for each DMA specifier in
-+			the 'ti,navigator-dmas' property.
-+
-+Example:
-+
-+	netcp: netcp@2090000 {
-+		..
-+		ti,navigator-dmas = <&dma_gbe 22>,
-+				<&dma_gbe 23>,
-+				<&dma_gbe 8>;
-+		ti,navigator-dma-names = "netrx0", "netrx1", "nettx";
-+		..
-+	};
--- 
-1.7.9.5
+But after that, due a DTS pinctrl configuration the pin function was changed as
+a GPIO input and that happened before the atmel driver was probed. So when the
+driver called request_threaded_irq(), the correct flags were used but the pin
+was not configured as an IRQ anymore so IRQ were not fired.
+
+Setting a trigger type just had the side effect of calling exynos_irq_set_type()
+which again setup the pin as an IRQ.
+
+To fix the issue a variation of patch [0] will be posted that moves the IRQ
+pinmux setup from .irq_set_type to the .irq_request_resources function handler.
+That way the pin will be setup as IRQ regardless of the the trigger type [1]
+when someone calls request_[threaded]_irq().
+
+Only the mentioned patch fixes the issue but Tomasz said that even a call to
+gpio_direction_{input,output} can change the pin configuration so he will post
+another patch that will add a bit mask to samsung_pin_bank to prevent any pinmux
+reconfiguration.
+
+Thanks a lot and best regards,
+Javier
+
+[0]: http://thread.gmane.org/gmane.linux.kernel.samsung-soc/34259/focus=34261
+[1]: http://lxr.free-electrons.com/source/kernel/irq/manage.c#L1162
+
