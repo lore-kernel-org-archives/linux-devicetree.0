@@ -1,77 +1,46 @@
+Return-Path: <gregkh@linuxfoundation.org>
+Date: Sat, 9 Aug 2014 08:49:57 -0700
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/3] fpga manager framework core
+Message-ID: <20140809154957.GD22689@kroah.com>
+References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
+ <1406932118-13885-2-git-send-email-atull@opensource.altera.com>
+ <20140802001848.GB11170@amd.pavel.ucw.cz>
+ <CANk1AXTAMCo_0c2+B9_6AbPPPof=rHZnE+NyxipzVYFnNuS2LQ@mail.gmail.com>
+ <20140809145024.GA6764@pollux.denx.de>
 MIME-Version: 1.0
-In-Reply-To: <1406843944-7780-2-git-send-email-atull@opensource.altera.com>
-References: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
-	<1406843944-7780-2-git-send-email-atull@opensource.altera.com>
-Date: Fri, 8 Aug 2014 16:16:34 -0500
-Message-ID: <CAL_JsqLBfjNrphkLF95v==4+4VRNn-bht+kruMpPMyEKCyQcBA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] fpga manager framework core
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Alan Tull <atull@opensource.altera.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20140809145024.GA6764@pollux.denx.de>
+To: Pavel Machek <pavel@denx.de>
+Cc: Alan Tull <delicious.quinoa@gmail.com>, atull@opensource.altera.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jul 31, 2014 at 4:59 PM, Alan Tull <atull@opensource.altera.com> wrote:
-> This core exports methods of doing operations on FPGAs.
+On Sat, Aug 09, 2014 at 04:50:24PM +0200, Pavel Machek wrote:
+> On Tue 2014-08-05 15:05:40, Alan Tull wrote:
+> > On Fri, Aug 1, 2014 at 7:18 PM, Pavel Machek <pavel@denx.de> wrote:
+> > > Hi!
+> > >
+> > >> +     nr = ida_simple_get(&fpga_mgr_ida, start, FPGA_MAX_MINORS, GFP_KERNEL);
+> > >> +
+> > >
+> > > Actually, are you sure ida framework is a good idea here? AFAICT, you
+> > > only use it to keep track of used minors.
+> > >                                                                 pavel
+> > >
+> > 
+> > Yes, the ida is to keep track of minors.  I think that was the intent
+> > of introducing ida into the kernel (looking at git logs of idr.c).
+> > SImilar to idr, but uses less memory.  I see some other frameworks
+> > using it for this purpose, such as the rtc class.  I can change this
+> > if this is something the kernel wants to move away from.  What issues
+> > are you seeing here and what would you suggest?
+> 
+> Well, it looked to me like a job for bitfield, since we don't plan that many 
+> minors...
 
-I'm sticking to some high-level comments for the moment...
+Use ida, it's simple, works correctly, and I don't have to audit crazy
+special-case bitfield manipulation that odds are, is wrong in some odd
+corner condition.
 
-> EXPORT_SYMBOL_GPL(fpga_mgr_write);
->   Write FPGA given a buffer and count.
->
-> EXPORT_SYMBOL_GPL(fpga_mgr_firmware_write);
->   Request firmware and write that to a fpga
->
-> EXPORT_SYMBOL_GPL(fpga_mgr_status_get);
->   Get a status string, including failure information
->
-> EXPORT_SYMBOL_GPL(fpga_mgr_name);
->   Get name of FPGA manager
->
-> EXPORT_SYMBOL_GPL(register_fpga_manager);
-> EXPORT_SYMBOL_GPL(remove_fpga_manager);
->   Register/unregister low level fpga driver
-
-I understand these 2 being for low-level drivers, but ...
-
->
-> All userspace interfaces are in separate files so that
-> they can be compiled out on production builds where
-> appropriate.
-
-How do you envision the other functions to be used besides by
-userspace? Automatically loading bit files embedded in your DT?
-
->
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-
-[...]
-
-> +const char *state_str[] = {
-> +       "default",
-> +       "firmware_request",
-> +       "write_init",
-> +       "write",
-> +       "write_complete",
-> +       "write_success",
-> +       "read_init",
-> +       "read",
-> +       "read_complete",
-> +       "read_done",
-> +};
-> +
-> +/*
-> + * Provide status as: [state] [fail] [busy] such as
-> + *  'firmware_request fail' = failed to load firmware image from filesystem
-> + *  'write fail'            = failed while writing to FPGA
-> + *  'write_success'         = after writing, low level driver returns success
-
-I would combine the sysfs patch with this as they are clearly related.
-
-You seem to mix state and status here. For example, "write_success
-fail" makes no sense. I think you are exposing to many low level
-details both to userspace and perhaps specific to Altera.
-
-How is read used?
-
-Rob
+greg k-h
