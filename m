@@ -1,66 +1,42 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] pinctrl: Add mux options 3 and 4 for rockchip pinctrl
-Date: Sat, 09 Aug 2014 17:34:45 +0200
-Message-ID: <10830677.MYpxgOr8EG@diego>
-References: <1407536949-31323-1-git-send-email-dianders@chromium.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] arm64: Remove the clock and PHY reference from the APM X-Gene SoC AHCI SATA Host controller dts node.
+Date: Sat, 9 Aug 2014 22:00:34 +0200
+Message-ID: <201408092200.34651.arnd@arndb.de>
+References: <1407514466-25312-1-git-send-email-stripathi@apm.com> <1407514466-25312-3-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407536949-31323-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Sonny Rao <sonnyrao@chromium.org>, eddie.cai@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1407514466-25312-3-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 8. August 2014, 15:29:09 schrieb Doug Anderson:
-> Newer Rockchip SoCs have more muxing slots.  Add slots 3 and 4 since
-> the rk3288 table goes all the way up to 4.
+On Friday 08 August 2014, Suman Tripathi wrote:
+> This patch removes all clocks and PHY references from the APM X-Gene
+> SoC AHCI SATA host controller and PHY DTS nodes. The clock and PHY
+> are no longer needed as they are handled by the firmware. By removing
+> only the reference is not enough as any un-used clock entry will get
+> disabled by the clock framework. This patch also updates the APM X-Gene
+> SOC AHCI SATA Host controller clock and PHY bindings as optional
+> properties.
 > 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 6 +++---
->  include/dt-bindings/pinctrl/rockchip.h                         | 2 ++
->  2 files changed, 5 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/ata/apm-xgene.txt          | 10 +--
+>  arch/arm64/boot/dts/apm-storm.dtsi                 | 93 ----------------------
+>  2 files changed, 5 insertions(+), 98 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt index
-> 4658b69..388b213 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> @@ -2,8 +2,8 @@
-> 
->  The Rockchip Pinmux Controller, enables the IC
->  to share one PAD to several functional blocks. The sharing is done by
-> -multiplexing the PAD input/output signals. For each PAD there are up to
-> -4 muxing options with option 0 being the use as a GPIO.
-> +multiplexing the PAD input/output signals. For each PAD there are several
-> +muxing options with option 0 being the use as a GPIO.
-> 
->  Please refer to pinctrl-bindings.txt in this directory for details of the
->  common pinctrl bindings used by client devices, including the meaning of
-> the @@ -58,7 +58,7 @@ Deprecated properties for gpio sub nodes:
->  Required properties for pin configuration node:
->    - rockchip,pins: 3 integers array, represents a group of pins mux and
-> config setting. The format is rockchip,pins = <PIN_BANK PIN_BANK_IDX MUX
-> &phandle>. -    The MUX 0 means gpio and MUX 1 to 3 mean the specific
-> device function. +    The MUX 0 means gpio and MUX 1 to N mean the specific
-> device function. The phandle of a node containing the generic pinconfig
-> options to use, as described in pinctrl-bindings.txt in this directory.
-> 
-> diff --git a/include/dt-bindings/pinctrl/rockchip.h
-> b/include/dt-bindings/pinctrl/rockchip.h index cd5788b..743e66a 100644
-> --- a/include/dt-bindings/pinctrl/rockchip.h
-> +++ b/include/dt-bindings/pinctrl/rockchip.h
-> @@ -28,5 +28,7 @@
->  #define RK_FUNC_GPIO	0
->  #define RK_FUNC_1	1
->  #define RK_FUNC_2	2
-> +#define RK_FUNC_3	3
-> +#define RK_FUNC_4	4
-> 
->  #endif
+
+What is the upgrade path here? It sounds like this will still break new kernels
+running on old firmware if you also upgrade the dtb file. You write in the
+introductory email that this will work with old firmware as well, but I don't
+understand how.
+
+How about modifying the dtb at boot time by the firmware according to the
+requirements of the firmware itself?
+
+	Arnd
