@@ -1,42 +1,116 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 2/2] arm64: Remove the clock and PHY reference from the APM X-Gene SoC AHCI SATA Host controller dts node.
-Date: Sat, 9 Aug 2014 22:00:34 +0200
-Message-ID: <201408092200.34651.arnd@arndb.de>
-References: <1407514466-25312-1-git-send-email-stripathi@apm.com> <1407514466-25312-3-git-send-email-stripathi@apm.com>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Gateworks GW5520 support (i.MX6)
+Date: Sun, 10 Aug 2014 01:01:03 -0700
+Message-ID: <CAJ+vNU3dW_L-Oc_2_wof9pAogovaOpy3ymfm_RwNN3mMCCaZ8w@mail.gmail.com>
+References: <1407572602-14017-1-git-send-email-tharvey@gateworks.com>
+	<CABxcv=kSfVoPgdDsodSPMSC7u_B6YiVuqHsh5T_Y4eucU6bQWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1407514466-25312-3-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=kSfVoPgdDsodSPMSC7u_B6YiVuqHsh5T_Y4eucU6bQWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 08 August 2014, Suman Tripathi wrote:
-> This patch removes all clocks and PHY references from the APM X-Gene
-> SoC AHCI SATA host controller and PHY DTS nodes. The clock and PHY
-> are no longer needed as they are handled by the firmware. By removing
-> only the reference is not enough as any un-used clock entry will get
-> disabled by the clock framework. This patch also updates the APM X-Gene
-> SOC AHCI SATA Host controller clock and PHY bindings as optional
-> properties.
-> 
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->  .../devicetree/bindings/ata/apm-xgene.txt          | 10 +--
->  arch/arm64/boot/dts/apm-storm.dtsi                 | 93 ----------------------
->  2 files changed, 5 insertions(+), 98 deletions(-)
-> 
+On Sat, Aug 9, 2014 at 4:44 AM, Javier Martinez Canillas
+<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+> Hello Tim,
+>
+> On Sat, Aug 9, 2014 at 10:23 AM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
+>> +/*
+>> + * Copyright 2014 Gateworks Corporation
+>> + *
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+>> + *
+>> + * http://www.opensource.org/licenses/gpl-license.html
+>> + * http://www.gnu.org/copyleft/gpl.html
+>> + */
+>
+> There was a discussion [0] recently about what license(s) should be
+> used for Device Tree source files. It seems that we have been using
+> GPLv2-only just because is the Linux kernel license but unlike other
+> source files, the DTS could be used verbatim in other operating
+> systems / bootloaders so we have to better think the implications of
+> the licensing.
+>
+> Of course this shouldn't hold your patch, I'm just mentioning so you
+> can keep an eye in case an agreement is made while you are pushing
+> this.
 
-What is the upgrade path here? It sounds like this will still break new kernels
-running on old firmware if you also upgrade the dtb file. You write in the
-introductory email that this will work with old firmware as well, but I don't
-understand how.
+Javier,
 
-How about modifying the dtb at boot time by the firmware according to the
-requirements of the firmware itself?
+Thanks for pointing this out - The discussion makes sense. I'll try to
+keep an eye on it.
 
-	Arnd
+>
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +
+>> +/ {
+>> +       /* these are used by bootloader for disabling nodes */
+>> +       aliases {
+>> +               led0 = &led0;
+>> +               led1 = &led1;
+>> +               led2 = &led2;
+>> +               nand = &gpmi;
+>> +               usb0 = &usbh1;
+>> +               usb1 = &usbotg;
+>> +       };
+>> +
+>> +       chosen {
+>> +               bootargs = "console=ttymxc1,115200";
+>> +       };
+>> +
+>> +       leds {
+>> +               compatible = "gpio-leds";
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&pinctrl_gpio_leds>;
+>> +
+>> +               led0: user1 {
+>> +                       label = "user1";
+>> +                       gpios = <&gpio4 6 0>; /* MX6_PANLEDG */
+>
+> You are already including <dt-bindings/gpio/gpio.h> so please use the
+> GPIO constants instead of magic numbers (e.g: GPIO_ACTIVE_HIGH in this
+> case). Same for others gpios properties.
+
+Agreed - I will change this for v2.
+
+>
+>> +                       default-state = "on";
+>> +                       linux,default-trigger = "heartbeat";
+>> +               };
+>> +
+>> +               led1: user2 {
+>> +                       label = "user2";
+>> +                       gpios = <&gpio4 7 0>; /* MX6_PANLEDR */
+>> +                       default-state = "off";
+>> +               };
+>> +
+>> +               led2: user3 {
+>> +                       label = "user3";
+>> +                       gpios = <&gpio4 15 1>; /* MX6_LOCLED# */
+>> +                       default-state = "off";
+>> +               };
+>> +       };
+>> +
+>
+> Overall, looks good to me. After the changes mentioned above:
+>
+> Reviewed-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+>
+> [0]: http://www.spinics.net/lists/devicetree/msg44439.html
+
+Thanks for the review.
+
+Regards,
+
+Tim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
