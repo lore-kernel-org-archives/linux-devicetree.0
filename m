@@ -1,53 +1,47 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: rockchip: enable the AMBA bus
-Date: Mon, 11 Aug 2014 09:50:12 +0200
-Message-ID: <16000182.xrvOKsDCOX@diego>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <1406661128-7614-3-git-send-email-heiko@sntech.de> <53E839F3.7040208@rock-chips.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 0/4] irqchip: gic-v2m: Rework GICv2m Initialization
+Date: Mon, 11 Aug 2014 09:12:10 +0100
+Message-ID: <53E87ADA.6040204@arm.com>
+References: <1407539836-9768-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53E839F3.7040208-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1407539836-9768-1-git-send-email-suravee.suthikulpanit@amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 11. August 2014, 11:35:15 schrieb Kever Yang:
-> Heiko:
+Hi Suravee,
+
+On 09/08/14 00:17, suravee.suthikulpanit@amd.com wrote:
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 > 
-> On 07/30/2014 03:12 AM, Heiko Stuebner wrote:
-> > This is needed to access the pl330 dma controllers on Rockchip SoCs.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> > 
-> >   arch/arm/mach-rockchip/Kconfig | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm/mach-rockchip/Kconfig
-> > b/arch/arm/mach-rockchip/Kconfig index d168669..ac5803c 100644
-> > --- a/arch/arm/mach-rockchip/Kconfig
-> > +++ b/arch/arm/mach-rockchip/Kconfig
-> > @@ -4,6 +4,7 @@ config ARCH_ROCKCHIP
-> > 
-> >   	select PINCTRL_ROCKCHIP
-> >   	select ARCH_HAS_RESET_CONTROLLER
-> >   	select ARCH_REQUIRE_GPIOLIB
-> > 
-> > +	select ARM_AMBA
+> This patch set reworks the GICv2m initialization based on Marc Zyngier
+> review comments.
 > 
-> These two config is also needed by pl330 dma driver. Can we add it here?
->      DMADEVICES
->      PL330_DMA
+> * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/gic-v2m
+> 
+> Suravee Suthikulpanit (1):
+>   irqchip/gic-v2m: Restructure the initalization code for v2m
+> 
+>  Documentation/devicetree/bindings/arm/gic.txt |  37 +++++++--
+>  drivers/irqchip/irq-gic-v2m.c                 | 115 +++++++++-----------------
+>  drivers/irqchip/irq-gic.c                     |  30 +++----
+>  drivers/irqchip/irq-gic.h                     |  10 +--
+>  4 files changed, 91 insertions(+), 101 deletions(-)
+> 
 
-I guess this should simply be done via the regular Kconfig (and _defconfig) and 
-not be automatically selected. There may always be use-cases where people do 
-not want to use dma operations and drivers needing them.
+While I appreciate that you're trying to reduce the amount of stuff we
+review, it is actually much easier to look at the patch series as a
+whole, rather then as a diff against the previous version.
 
+Please squash this into your original series and repost it with a log of
+what has changed in the cover letter.
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
