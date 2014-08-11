@@ -1,85 +1,99 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Mon, 11 Aug 2014 16:24:35 +0200
-Message-ID: <53E8D223.4000407@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <CAK5ve-L67=q-EpWvxD5-x+cFT7dh8p0HHuoUbAWA-j5BqCO52A@mail.gmail.com>
- <CAK5ve-+xyXyjPqejTPRvz=bJ4M5v19Uq1oaVv94QKqBWf1D4dA@mail.gmail.com>
- <53E47186.5000309@samsung.com>
- <CAK5ve-+3WmaU+OEX1T_xMWDRDgNxD6YXrqTB-=UyaQxHknVbow@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCHv10 5/5] ARM: dts: rockchip: unuse the slot-node and
+ deprecate the supports-highspeed for dw-mmc
+Date: Mon, 11 Aug 2014 16:38:31 +0200
+Message-ID: <2216569.yZfKCR5Kzu@diego>
+References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
+ <1407397082-32495-6-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CAK5ve-+3WmaU+OEX1T_xMWDRDgNxD6YXrqTB-=UyaQxHknVbow@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1407397082-32495-6-git-send-email-jh80.chung@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, kgene.kim@samsung.com, tgih.jun@samsung.com, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bryan,
+Am Donnerstag, 7. August 2014, 16:38:02 schrieb Jaehoon Chung:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced with "cap-sd/mmc-highspeed".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Reviewed-by: Tushar Behera <trblinux@gmail.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
 
-On 08/08/2014 06:59 PM, Bryan Wu wrote:
-> On Thu, Aug 7, 2014 at 11:43 PM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> Hi Bryan,
->>
->>
->> On 07/16/2014 07:21 PM, Bryan Wu wrote:
->>>
->>> On Wed, Jul 16, 2014 at 10:19 AM, Bryan Wu <cooloney@gmail.com> wrote:
->>>>
->>>> On Fri, Jul 11, 2014 at 7:04 AM, Jacek Anaszewski
->>>> <j.anaszewski@samsung.com> wrote:
->>>>>
->>>>> This is is the fourth version of the patch series being a follow up
->>>>> of the discussion on Media summit 2013-10-23, related to the
->>>>> LED / flash API integration (the notes from the discussion were
->>>>> enclosed in the message [1], paragraph 5).
->>>>> The series is based on linux-next-20140707
->>>>>
->>>>
->>>> I really apologize that I missed your discussion email in my Gmail
->>>> inbox, it was archived some where. Even in this series some of these
->>>> patches are archived in different tab.
->>>>
->>>> I will start to review and help to push this.
->>>>
->>>
->>> In the mean time, could you please provide an git tree for me to pull?
->>> It's much easier for me to review in my git.
->>
->>
->> Few days ago I sent to your private email the path to the git
->> repository to pull, but I am resending it through the lists to
->> make sure that it will not get filtered somehow again.
->>
->>
->> git://linuxtv.org/snawrocki/samsung.git
->> branch: led_flash_integration_v4
->>
->> gitweb:
->> http://git.linuxtv.org/cgit.cgi/snawrocki/samsung.git/log/?h=led_flash_integration_v4
->>
->
-> Yes, I got it. I merged some leds core fixing patches from you
-> recently. So could you please split these big patchset into several
-> small parts which should be easier for reviewing and discussion.
->   - led core fixing
->   - led flash core patches
->   - led flash manager patches
->   - v4l2 led patches
->   - Documentations
->
-> My plan is to review these and merge them to my -devel branch. Then
-> invite people for testing.
+I've added this one to my queue for 3.18
 
-Thanks for merging the fixes. I will come up with a new patch sets,
-in the form as you requested, but I would like to apply as many
-improvements, in comparison to the version 4, as possible. Therefore
-I'd be grateful if you could express your opinion in the discussion [1].
 
-Best Regards,
-Jacek Anaszewski
+Heiko
 
-[1] http://www.spinics.net/lists/linux-media/msg79400.html
+> ---
+>  arch/arm/boot/dts/rk3066a-bqcurie2.dts |   15 ++++-----------
+>  arch/arm/boot/dts/rk3188-radxarock.dts |    7 ++-----
+>  2 files changed, 6 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+> b/arch/arm/boot/dts/rk3066a-bqcurie2.dts index 042f821d..665dd56 100644
+> --- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+> +++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+> @@ -150,12 +150,8 @@
+>  	num-slots = <1>;
+>  	status = "okay";
+>  	vmmc-supply = <&vcc_sd0>;
+> -
+> -	slot@0 {
+> -		reg = <0>;
+> -		bus-width = <4>;
+> -		disable-wp;
+> -	};
+> +	bus-width = <4>;
+> +	disable-wp;
+>  };
+> 
+>  &mmc1 { /* wifi */
+> @@ -166,11 +162,8 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus4>;
+> 
+> -	slot@0 {
+> -		reg = <0>;
+> -		bus-width = <4>;
+> -		disable-wp;
+> -	};
+> +	bus-width = <4>;
+> +	disable-wp;
+>  };
+> 
+>  &uart0 {
+> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts
+> b/arch/arm/boot/dts/rk3188-radxarock.dts index 171b610..ef72faf 100644
+> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
+> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+> @@ -181,11 +181,8 @@
+>  	status = "okay";
+>  	vmmc-supply = <&vcc_sd0>;
+> 
+> -	slot@0 {
+> -		reg = <0>;
+> -		bus-width = <4>;
+> -		disable-wp;
+> -	};
+> +	bus-width = <4>;
+> +	disable-wp;
+>  };
+> 
+>  &pinctrl {
