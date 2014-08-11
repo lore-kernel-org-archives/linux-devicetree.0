@@ -1,70 +1,30 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND PATCH 2/2] ARM: dts: Add tps65090 FET constraints on
- Peach Pit and Pi
-Date: Mon, 11 Aug 2014 17:02:22 +0100
-Message-ID: <20140811160222.GF17528@sirena.org.uk>
-References: <1407757091-18730-1-git-send-email-javier.martinez@collabora.co.uk>
- <1407757091-18730-2-git-send-email-javier.martinez@collabora.co.uk>
- <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: rockchip: enable the AMBA bus
+Date: Mon, 11 Aug 2014 09:19:18 -0700
+Message-ID: <CAD=FV=V2qAd0MAAZubr-rUgA+DDLk-G0RLOvvME2=ym4vO-2-Q@mail.gmail.com>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
+	<1406661128-7614-3-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OcnKVgjPbDryjMrG"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406661128-7614-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Heiko,
 
---OcnKVgjPbDryjMrG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Jul 29, 2014 at 12:12 PM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> This is needed to access the pl330 dma controllers on Rockchip SoCs.
+>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  arch/arm/mach-rockchip/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-On Mon, Aug 11, 2014 at 08:57:24AM -0700, Doug Anderson wrote:
-> On Mon, Aug 11, 2014 at 4:38 AM, Javier Martinez Canillas
-
-> > After the switch is turned on, a safety timer is started
-> > and before this timer times out the output voltage must
-> > have reached the input voltage. Otherwise the switch is
-> > turned off expecting an overload condition.
-
-> > So using the maximum output voltage slew rate and the timer
-> > minimum and maximum timeouts, a voltage constraints can be
-> > expressed as bounded limits for the timeout. That is what
-> > is used in the board schematics and should be in the DT too.
-
-> I don't understand this, but if you and Mark are happy with it...
-
-I have not looked at this change to my knowledge.
-
-> ...I'm also not 100% certain what the above description has to do with
-> this change, but I'll admit to having only skimmed some of the earlier
-> conversations.
-
-It's not at all clear to me either looking at the quoted section.
-
---OcnKVgjPbDryjMrG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT6OkLAAoJELSic+t+oim97YUQAICQvlFzyYVNH3zJTAQH2r0N
-uPbM0fCwk+q9wp0ZaLHcN0GJra0CjVI90y/amrJ1fW4fNPkQYjs3V4gaqzqqUX3e
-ZGM6+dH9MZQktzt2IJAYi57q+Xdao64V6KE/lK+YwsJpgHsyCH6s/IJ2gkKQt0J3
-8VCqusD1Mzpi7bfJst9Z4vVco9RnhsHk5eRDI4NBon+zIVRUBVLeHg4PszVe0lls
-W0SzAncDSNXNw5ztxGu8s0ueYrQ//Vj/YL0exLzonmMasjxFQjtpgvGPBydvsAly
-5SPIq4NwXDwp2qWST8jPq4DmCbhPPYjduqFctqye80YCoPtfLCNIV3jOv4MgaQbQ
-/wuAiV+H6RnQYwSMk2wzmBrVpYP9VEeXaX80Bh9nOYxt7EwY4zfm4JspBQWGk0dn
-sfkdYVmUcB5z+IVDcHkDq7a9qzomf8SN3B/PD+hfDT6N7dsgLg094h07T10QABx1
-Wli/9UAd7IfahDyWaolEZSgo18IMolPDzhT4EgpzeynskI/TmhXUIvlmGT/DpEwI
-hOCORgV5c5+CmIAhYDvbPaauSM4ZxWx8QlUblh9uItlznqMzlqjYNMwFhIcw7M87
-NFbeIFCBAC6x5uf21wZzY+jdOpVafYJmodn9WPIzGLGtwUU4C6UVzQHo+iYysWlu
-XDHs2egIHupQL93lLKZr
-=x5oc
------END PGP SIGNATURE-----
-
---OcnKVgjPbDryjMrG--
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
