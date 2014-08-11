@@ -1,50 +1,89 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2 1/1] Input: atmel_mxt_ts - Get IRQ edge/level flags
- on DT booting
-Date: Mon, 11 Aug 2014 11:09:37 +0200
-Message-ID: <53E88851.6000705@collabora.co.uk>
-References: <1407397492-17475-1-git-send-email-javier.martinez@collabora.co.uk>	<53E4D9A5.908@itdev.co.uk>	<20140808162146.GC26820@core.coreip.homeip.net>	<53E4FD1B.6060600@collabora.co.uk>	<53E5170C.10302@collabora.co.uk>	<CAD=FV=WSNqjHLLbTh1LBF3RFrCnWnj498hivivcmx1SbuYp=Hw@mail.gmail.com>	<53E54E91.9060905@collabora.co.uk> <CACRpkdZ9-5Pw-SHFNuGtvxDDHrA13ShSSFN9uZRBLTfpe=m5ug@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCHv10 1/5] mmc: dw_mmc: Slot quirk "disable-wp" is deprecated.
+Date: Mon, 11 Aug 2014 11:45:33 +0200
+Message-ID: <CAPDyKFrbsFzTKSrM+sHrEuH9yd8kOX5vnWG7EiMZTGLU45hUOA@mail.gmail.com>
+References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
+	<1407397082-32495-2-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ9-5Pw-SHFNuGtvxDDHrA13ShSSFN9uZRBLTfpe=m5ug@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Nick Dyer <nick.dyer@itdev.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Abraham <thomas.ab@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1407397082-32495-2-git-send-email-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Linus,
+On 7 August 2014 09:37, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Slot quirks "disable-wp" is deprecated.
+> Instead, use the host quirk "disable-wp".
+> (Because the slot-node is removed in dt-file.)
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
+> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Tested-by: Doug Anderson <dianders@chromium.org>
 
-On 08/11/2014 10:32 AM, Linus Walleij wrote:
-> I guess this discussion is about drivers/pinctrl/samsung/pinctrl-exynos.c?
-> 
-> Or else I'm not really following this... $SUBJECT is a bit confusing.
-> 
+Thanks! Applied for next!
 
-Yes, the thing is that at the beginning I (wrongly) thought that the IRQ trigger
-type flags defined in the DTS were discarded if someone called
-request_threaded_irq() with a flags != 0. And since the atmel touchpad driver
-was pass pdata->irqflags | IRQF_ONESHOT I posted this patch to get the trigger
-type parsed from DT and pass it to request_threaded_irq().
+Kind regards
+Uffe
 
-But after digging further I found that the issue was in the pinctrl-exynos
-driver and Tomasz explained to me that the real cause was that the pin was being
-configured from GPIO IRQ to GPIO input (which on other platforms is just the
-same mode but on Exynos are two different modes).
-
-At the end passing the trigger type to request_threaded_irq() just had the side
-effect to call the exynos .irq_set_type function handler that reconfigured the
-pin as GPIO-IRQ and that is why it made it to work. So I posted a patch from
-Tomasz that fixes the real cause [0].
-
-I'm so sorry for the confusion.
-
-> Yours,
-> Linus Walleij
-> 
-
-Best regards,
-Javier
-
-[0]: https://lkml.org/lkml/2014/8/8/962
+> ---
+>  drivers/mmc/host/dw_mmc.c  |   11 +++++++++--
+>  include/linux/mmc/dw_mmc.h |    2 ++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 1ac227c..47b52cc 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -997,7 +997,8 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
+>         int gpio_ro = mmc_gpio_get_ro(mmc);
+>
+>         /* Use platform get_ro function, else try on board write protect */
+> -       if (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT)
+> +       if ((slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT) ||
+> +                       (slot->host->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT))
+>                 read_only = 0;
+>         else if (!IS_ERR_VALUE(gpio_ro))
+>                 read_only = gpio_ro;
+> @@ -2021,8 +2022,11 @@ static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
+>
+>         /* get quirks */
+>         for (idx = 0; idx < ARRAY_SIZE(of_slot_quirks); idx++)
+> -               if (of_get_property(np, of_slot_quirks[idx].quirk, NULL))
+> +               if (of_get_property(np, of_slot_quirks[idx].quirk, NULL)) {
+> +                       dev_warn(dev, "Slot quirk %s is deprecated\n",
+> +                                       of_slot_quirks[idx].quirk);
+>                         quirks |= of_slot_quirks[idx].id;
+> +               }
+>
+>         return quirks;
+>  }
+> @@ -2238,6 +2242,9 @@ static struct dw_mci_of_quirks {
+>         {
+>                 .quirk  = "broken-cd",
+>                 .id     = DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
+> +       }, {
+> +               .quirk  = "disable-wp",
+> +               .id     = DW_MCI_QUIRK_NO_WRITE_PROTECT,
+>         },
+>  };
+>
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index babaea9..29ce014 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -213,6 +213,8 @@ struct dw_mci_dma_ops {
+>  #define DW_MCI_QUIRK_HIGHSPEED                 BIT(2)
+>  /* Unreliable card detection */
+>  #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION     BIT(3)
+> +/* No write protect */
+> +#define DW_MCI_QUIRK_NO_WRITE_PROTECT          BIT(4)
+>
+>  /* Slot level quirks */
+>  /* This slot has no write protect */
+> --
+> 1.7.9.5
+>
