@@ -1,187 +1,184 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] clk: rockchip: protect critical clocks from getting disabled
-Date: Mon, 11 Aug 2014 12:22:55 +0200
-Message-ID: <2409512.SMPOXYcGMQ@diego>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <3332039.dxD4mlCSgf@diego> <53E894F5.4060205@rock-chips.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v5 05/10] ARM: dts: Move dp_hpd from exynos5250 into
+ smdk5250 and snow
+Date: Mon, 11 Aug 2014 19:24:12 +0900
+Message-ID: <003601cfb54e$655130d0$2ff39270$%han@samsung.com>
+References: <1406868897-26874-1-git-send-email-afaerber@suse.de>
+ <1406868897-26874-6-git-send-email-afaerber@suse.de>
+ <CAD=FV=WhocoyQ=rU7dU1EPM-PAQq06gg9HhamSOm+BgMDeM8NA@mail.gmail.com>
+ <53DBFE8A.7020505@suse.de> <53DBFF22.3010905@gmail.com>
+ <000e01cfb0a7$25d0ed70$7172c850$%han@samsung.com> <53E73827.7000703@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53E894F5.4060205-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53E73827.7000703@suse.de>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?'Andreas_F=C3=A4rber'?= <afaerber@suse.de>
+Cc: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Doug Anderson' <dianders@chromium.org>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 'Stephan van Schaik' <stephan@synkhronix.com>, 'Vincent Palatin' <vpalatin@chromium.org>, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, 'Tomasz Figa' <t.figa@samsung.com>, 'Ben Dooks' <ben-linux@fluff.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Russell King' <linux@arm.linux.org.uk>, 'open list' <linux-kernel@vger.kernel.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kever,
-
-Am Montag, 11. August 2014, 18:03:33 schrieb Kever Yang:
-> On 08/09/2014 06:20 AM, Heiko St=FCbner wrote:
-> > Am Freitag, 8. August 2014, 14:58:11 schrieb Doug Anderson:
-> >> Heiko,
-> >>=20
-> >> On Fri, Aug 1, 2014 at 1:15 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> =
-wrote:
-> >>> Am Donnerstag, 31. Juli 2014, 17:30:25 schrieb Mike Turquette:
-> >>>> Quoting Heiko St=FCbner (2014-07-31 16:29:34)
-> >>>>=20
-> >>>>> Hi Mike,
-> >>>>>=20
-> >>>>> Am Donnerstag, 31. Juli 2014, 15:45:23 schrieb Mike Turquette:
-> >>>>>> Quoting Heiko Stuebner (2014-07-29 12:12:05)
-> >>>>>>=20
-> >>>>>>> The clock-tree contains clocks that should never get disabled
-> >>>>>>> automatically. One example are the base ACLKs, the base suppl=
-ies
-> >>>>>>> for
-> >>>>>>> all
-> >>>>>>> peripherals.
-> >>>>>>>=20
-> >>>>>>> Therefore add a structure similar to the sunxi clock-tree to
-> >>>>>>> protect
-> >>>>>>> these
-> >>>>>>> special clocks from being disabled.
-> >>>>>>>=20
-> >>>>>>> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> >>>>>>> ---
-> >>>>>>>=20
-> >>>>>>>   drivers/clk/rockchip/clk-rk3188.c |  7 +++++++
-> >>>>>>>   drivers/clk/rockchip/clk-rk3288.c |  7 +++++++
-> >>>>>>>   drivers/clk/rockchip/clk.c        | 13 +++++++++++++
-> >>>>>>>   drivers/clk/rockchip/clk.h        |  1 +
-> >>>>>>>   4 files changed, 28 insertions(+)
-> >>>>>>>=20
-> >>>>>>> diff --git a/drivers/clk/rockchip/clk-rk3188.c
-> >>>>>>> b/drivers/clk/rockchip/clk-rk3188.c index a83a6d8..5aef277 10=
-0644
-> >>>>>>> --- a/drivers/clk/rockchip/clk-rk3188.c
-> >>>>>>> +++ b/drivers/clk/rockchip/clk-rk3188.c
-> >>>>>>> @@ -599,6 +599,11 @@ static struct rockchip_clk_branch
-> >>>>>>> rk3188_clk_branches[] __initdata =3D {>
-> >>>>>>>=20
-> >>>>>>>          GATE(ACLK_GPS, "aclk_gps", "aclk_peri", 0,
-> >>>>>>>          RK2928_CLKGATE_CON(8),
-> >>>>>>>          13, GFLAGS),>
-> >>>>>>>  =20
-> >>>>>>>   };
-> >>>>>>>=20
-> >>>>>>> +static const char *rk3188_critical_clocks[] __initconst =3D =
-{
-> >>>>>>> +       "aclk_cpu",
-> >>>>>>> +       "aclk_peri",
-> >>>>>>=20
-> >>>>>> I'm not against the idea of critical clocks, but I want to ver=
-ify
-> >>>>>> that
-> >>>>>> there is no other driver out there that is a better fit for cl=
-aiming
-> >>>>>> these clks via clk_get and enabling them the normal way via
-> >>>>>> clk_enable?
-> >>>>>=20
-> >>>>> In the clock hierarchy of Rockchip SoCs, both aclks listed here=
-, are
-> >>>>> sources for pclk and hclk, as well as sourcing some other perip=
-heral
-> >>>>> gates further below too. So from what I've seen from the clock
-> >>>>> diagrams,
-> >>>>> there is nothing that would claim these clocks directly, and it
-> >>>>> wouldn't
-> >>>>> also make any sense to let them get disabled as there will alwa=
-ys be
-> >>>>> something using them (for example the dram-controller).
-> >>>>=20
-> >>>> Sounds good. Just out of curiosity, under what circumstances wou=
-ld you
-> >>>> want to gate them? Is there a use case for it?
-> >>>=20
-> >>> hmm, I don't see a use-case for gating these at runtime right now=
-,
-> >>> simply
-> >>> because there should be a user for them all the time. (both aclks
-> >>> combined
-> >>> have at least 68 consumers on the rk3288 and a similar number on =
-the
-> >>> previous socs)
-> >>>=20
-> >>> The only thing I could think of would be something suspend relate=
-d -
-> >>> which
-> >>> we don't have yet. But then this would probably happen in the clo=
-ck
-> >>> controller itself anyway in some late suspend-related action, so =
-it
-> >>> could
-> >>> take into account them being defined as critical clocks.
-> >>=20
-> >> I know Rockchip has some funky stuff planned for memory scaling to=
-o.
-> >> Perhaps Kever can comment whether these two clocks might need to b=
-e
-> >> disabled in that case?
-> >=20
-> > hmm looking at the core clock tree, I wouldn't think so.
-> >=20
-> > The only intersection between the ddr-clk, aclk_cpu and aclk_peri i=
-s the
-> > gpll which can be a source to both. But the ddr-clk is mainly sourc=
-ed
-> > from the dpll anyway.
-> >=20
-> > In any case, turning off aclk_cpu/aclk_peri in this scenario wouldn=
-'t
-> > normally be possible anyway, as most of the time some pclk_* would =
-be
-> > active anyway.
-> Basically, aclk_cpu/aclk_peri have very little chance to be gated dur=
-ing
-> run-time,
-> but both of then may be gated when system enter suspend mode.
+On Sunday, August 10, 2014 6:15 PM, Andreas Farber wrote:
+> Am 05.08.2014 13:16, schrieb Jingoo Han:
+> > On Saturday, August 02, 2014 5:57 AM, Tomasz Figa wrote:
+> >> On 01.08.2014 22:54, Andreas F=C3=A4rber wrote:
+> >>> Am 01.08.2014 22:33, schrieb Doug Anderson:
+> >>>> On Thu, Jul 31, 2014 at 9:54 PM, Andreas F=C3=A4rber <afaerber@s=
+use.de> wrote:
+> >>>>> Spring uses a different GPIO, so this is not a generic SoC piec=
+e.
+> >>>>>
+> >>>>> Suggested-by: Tomasz Figa <t.figa@samsung.com>
+> >>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> >>>>> ---
+> >>>>>  v5: New (Tomasz Figa)
+> >>>>>  Frees dp_hpd for Spring.
+> >>>>>
+> >>>>>  arch/arm/boot/dts/exynos5250-pinctrl.dtsi | 7 -------
+> >>>>>  arch/arm/boot/dts/exynos5250-smdk5250.dts | 9 +++++++++
+> >>>>>  arch/arm/boot/dts/exynos5250-snow.dts     | 7 +++++++
+> >>>>>  3 files changed, 16 insertions(+), 7 deletions(-)
+> >>>>>
+> >>>>> diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/a=
+rm/boot/dts/exynos5250-
+> pinctrl.dtsi
+> >>>>> index 886cfca044ac..ed0e5230514b 100644
+> >>>>> --- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+> >>>>> +++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+> >>>>> @@ -581,13 +581,6 @@
+> >>>>>                         samsung,pin-pud =3D <0>;
+> >>>>>                         samsung,pin-drv =3D <0>;
+> >>>>>                 };
+> >>>>> -
+> >>>>> -               dp_hpd: dp_hpd {
+> >>>>> -                       samsung,pins =3D "gpx0-7";
+> >>>>> -                       samsung,pin-function =3D <3>;
+> >>>>> -                       samsung,pin-pud =3D <0>;
+> >>>>> -                       samsung,pin-drv =3D <0>;
+> >>>>> -               };
+> >>>>>         };
+> >>>>>
+> >>>>>         pinctrl@13400000 {
+> >>>>> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/a=
+rm/boot/dts/exynos5250-
+> smdk5250.dts
+> >>>>> index aaa055ac0fe3..5d30fe1dcda4 100644
+> >>>>> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> >>>>> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> >>>>> @@ -414,3 +414,12 @@
+> >>>>>                 };
+> >>>>>         };
+> >>>>>  };
+> >>>>> +
+> >>>>> +&pinctrl_0 {
+> >>>>> +       dp_hpd: dp_hpd {
+> >>>>> +               samsung,pins =3D "gpx0-7";
+> >>>>> +               samsung,pin-function =3D <3>;
+> >>>>> +               samsung,pin-pud =3D <0>;
+> >>>>> +               samsung,pin-drv =3D <0>;
+> >>>>> +       };
+> >>>>> +};
+> >>>>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/b=
+oot/dts/exynos5250-snow.dts
+> >>>>> index c4b0c73c736d..a9a2f2743794 100644
+> >>>>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> >>>>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> >>>>> @@ -547,6 +547,13 @@
+> >>>>>  };
+> >>>>>
+> >>>>>  &pinctrl_0 {
+> >>>>> +       dp_hpd: dp_hpd {
+> >>>>> +               samsung,pins =3D "gpx0-7";
+> >>>>> +               samsung,pin-function =3D <3>;
+> >>>>> +               samsung,pin-pud =3D <0>;
+> >>>>> +               samsung,pin-drv =3D <0>;
+> >>>>> +       };
+> >>>>> +
+> >>>>
+> >>>> NAK.  dp_hpd is a generic SoC piece.  Pin function 0 and 1 are G=
+PIOs.
+> >>>> Pin function 3 is special function.  This pin _is_ the hot plug =
+detect
+> >>>> pin for display port.  When it's set as special function 3 it go=
+es
+> >>>> straight into the hot plug logic of the display port controller.
+> >>>>
+> >>>> Spring may have had its reasons to detect hot plug events on a G=
+PIO
+> >>>> instead of using this pin, but that doesn't make this pin any le=
+ss the
+> >>>> "hot plug pin".
+> >>>
+> >>> Please advise how to handle it then: Should there be two differen=
+t
+> >>> pinctrl entries (if so, how should it be named?),
+> >>
+> >> IMHO this is the right way. Just name the GPIO variant dp_hpd_gpio=
+=2E
+> >
+> > Hi Andreas F=C3=A4rber,
+> >
+> > I agree with Tomasz Figa and Doug Anderson.
+> > Please refer to the following.
+> >
+> > 1. case: Standard HPD pin is used. (smdk5420)
+> > arch/arm/boot/dts/exynos5420-pinctrl.dts
+> > 	pinctrl@13400000 {
+> > 		dp_hpd: dp_hpd {
+> > 			samsung,pins =3D "gpx0-7";
+> > 			samsung,pin-function =3D <3>;
+> > 			samsung,pin-pud =3D <0>;
+> > 			samsung,pin-drv =3D <0>;
+> > 		};
+> > arch/arm/boot/dts/exynos5420-smdk5420.dts
+> > 	dp-controller@145B0000 {
+> > 		pinctrl-names =3D "default";
+> > 		pinctrl-0 =3D <&dp_hpd>;
+> > 		...
+> >
+> > 2. case: non-standard HPD pin such as GPIO is used. (peach pit)
+> > arch/arm/boot/dts/exynos5420-peach-pit.dts
+> > 	pinctrl@13400000 {
+> > 		dp_hpd_gpio: dp_hpd_gpio {
+> > 			samsung,pins =3D "gpx2-6";
+> > 			samsung,pin-function =3D <0>;
+> > 			samsung,pin-pud =3D <3>;
+> > 			samsung,pin-drv =3D <0>;
+> > 		};
+> > 	dp-controller@145B0000 {
+> > 		pinctrl-names =3D "default";
+> > 		pinctrl-0 =3D <&dp_hpd_gpio>;
+> > 		...
+> > 		samsung,hpd-gpio =3D <&gpx2 6 0>;
+> >
+> > So, you need to follow the second case.
+> > "dp_hpd_gpio" can be used for Spring board.
 >=20
-> For aclk_cpu, this clock supplies most of clocks in pd_bus actually,
-> some clocks not listed
-> as a module clock will be needed, like cpu I/D bus fetch
-> instruction/data from dram via
-> bus based on aclk_cpu. For this situation, can we use a dummy clock t=
-o
-> hold the
-> aclk_cpu not to be gated at run-time?
->=20
-> For aclk_peri, this clock is able to be gated run-time in theory,
-> although it's no use
-> in actual system, because we have many devices on this clock and at m=
-ost
-> of the time
-> some of then would be active just as you have mentioned.
->=20
-> The system suspend is another scenario, and we tend to gate both of t=
-he
-> clock if possible,
-> can we do that if this patch is applied?
+> I believe I already did so in v6 [0]? Please take a look there and le=
+t
+> me know if you still need anything changed. The label name seems
+> identical, whereas for the node name I adopted the dashes convention.
 
-as we will need suspend operations in the clock driver anyway [likely=20
-something like the Samsung clk driver does], it shouldn't be a problem =
-to lift=20
-the hold on the critical clocks when suspending.
+OK, I checked v6 patches.
+I have no objection. It looks good.
+Thank you.
 
-
-Heiko
+Best regards,
+Jingoo Han
 
 >=20
-> -Kever
+> Thanks,
+> Andreas
 >=20
-> >> In any case, this patch fixes a hang at boot when using the PWM dr=
-iver
-> >> that just landed, so:
-> >>=20
-> >> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >=20
-> > thanks
-> >=20
-> >=20
-> > Heiko
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [0] https://patchwork.kernel.org/patch/4664691/
+>=20
+> --
+> SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+> GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=
+=C3=BCrnberg
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
+ng-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
