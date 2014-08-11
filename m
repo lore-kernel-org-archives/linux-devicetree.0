@@ -1,90 +1,62 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: rockchip: add rk3288 dma controllers
-Date: Mon, 11 Aug 2014 10:01:08 -0700
-Message-ID: <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
-	<1406661128-7614-4-git-send-email-heiko@sntech.de>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RESEND PATCH 2/2] ARM: dts: Add tps65090 FET constraints on
+ Peach Pit and Pi
+Date: Mon, 11 Aug 2014 19:31:16 +0200
+Message-ID: <53E8FDE4.40005@collabora.co.uk>
+References: <1407757091-18730-1-git-send-email-javier.martinez@collabora.co.uk> <1407757091-18730-2-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com> <20140811160222.GF17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406661128-7614-4-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140811160222.GF17528@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+Hello Mark,
 
-On Tue, Jul 29, 2014 at 12:12 PM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> Add both the bus and peripheral pl330 dma controllers present in rk3288 socs.
-> The first dma controller can change between secure and non-secure mode and is
-> left by the bootloader in secure mode, which gets added here.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+On 08/11/2014 06:02 PM, Mark Brown wrote:
+> On Mon, Aug 11, 2014 at 08:57:24AM -0700, Doug Anderson wrote:
+>> On Mon, Aug 11, 2014 at 4:38 AM, Javier Martinez Canillas
+> 
+>> > After the switch is turned on, a safety timer is started
+>> > and before this timer times out the output voltage must
+>> > have reached the input voltage. Otherwise the switch is
+>> > turned off expecting an overload condition.
+> 
+>> > So using the maximum output voltage slew rate and the timer
+>> > minimum and maximum timeouts, a voltage constraints can be
+>> > expressed as bounded limits for the timeout. That is what
+>> > is used in the board schematics and should be in the DT too.
+> 
+>> I don't understand this, but if you and Mark are happy with it...
+> 
+> I have not looked at this change to my knowledge.
+> 
 
-This is outside of my area of expertise, but comparing this to
-bindings, TRM, and other platforms it looks reasonable to me.
+No worries, I have to re-spin anyways to fix the 17v typo that Doug pointed out.
+But basically is related to our previous discussion in patch:
 
+"[RFC 3/5] regulator: core: Only apply constraints if available on list voltage"
 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 3ef8951..3f39d26 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -62,6 +62,33 @@
->                 };
->         };
->
-> +       amba {
-> +               compatible = "arm,amba-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               dmac1: dma@ffb20000 {
+where you explained [0] to me that child regulators should explicit set their
+constraints instead of getting from its parent supply. So this patch adds the
+needed constraints for the children FETs even when their output voltage depend
+on its parent supply.
 
-I'm curious: why did you choose "dmac1" for the alias here?  I would
-have called it "dmac_peri", "pdma", or something similar as per the
-address map in the TRM.  I found a single reference in the TRM to
-"dmac2" but it wasn't immediately clear to me which DMA that was
-referring to.  In a commit in a temporary tree I see that someone at
-Rockchip called the DMA at ff250000 "pdma1".
+>> ...I'm also not 100% certain what the above description has to do with
+>> this change, but I'll admit to having only skimmed some of the earlier
+>> conversations.
+> 
+> It's not at all clear to me either looking at the quoted section.
+> 
 
+Yes, the commit message is not great to say the least. Also I didn't have the
+last version of the documentation so I misunderstood from where the constraints
+mentioned in the schematics came from. Will fix the commit message when posting v2.
 
-> +                       compatible = "arm,pl330", "arm,primecell";
-> +                       reg = <0xffb20000 0x4000>;
-> +                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> +                       #dma-cells = <1>;
-> +                       clocks = <&cru ACLK_DMAC1>;
-> +                       clock-names = "apb_pclk";
-> +               };
-> +
-> +               dmac2: dma@ff250000 {
+Thanks a lot and best regards,
+Javier
 
-nit: when we have easy addresses to compare to, we should probably
-sort by address?
-
-
-> +                       compatible = "arm,pl330", "arm,primecell";
-> +                       reg = <0xff250000 0x4000>;
-> +                       interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +                       #dma-cells = <1>;
-> +                       clocks = <&cru ACLK_DMAC2>;
-> +                       clock-names = "apb_pclk";
-> +               };
-> +       };
-> +
->         xin24m: oscillator {
->                 compatible = "fixed-clock";
->                 clock-frequency = <24000000>;
-> --
-> 2.0.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0]: https://lkml.org/lkml/2014/7/30/99
