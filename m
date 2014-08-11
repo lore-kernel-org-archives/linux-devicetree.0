@@ -1,99 +1,31 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCHv10 5/5] ARM: dts: rockchip: unuse the slot-node and
- deprecate the supports-highspeed for dw-mmc
-Date: Mon, 11 Aug 2014 16:38:31 +0200
-Message-ID: <2216569.yZfKCR5Kzu@diego>
-References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
- <1407397082-32495-6-git-send-email-jh80.chung@samsung.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/4] irqchip: gic-v2m: Rework GICv2m Initialization
+Date: Mon, 11 Aug 2014 10:54:09 -0400
+Message-ID: <20140811145409.GD5063@titan.lakedaemon.net>
+References: <1407539836-9768-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <53E87ADA.6040204@arm.com>
+ <02D2024799561B48A732D1A51CB969E836F74ABC@satlexdag05.amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407397082-32495-6-git-send-email-jh80.chung@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, kgene.kim@samsung.com, tgih.jun@samsung.com, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dinguyen@altera.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <02D2024799561B48A732D1A51CB969E836F74ABC@satlexdag05.amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Cc: 'Marc Zyngier' <marc.zyngier@arm.com>, 'Mark Rutland' <Mark.Rutland@arm.com>, 'Pawel Moll' <Pawel.Moll@arm.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, "'tglx@linutronix.de'" <tglx@linutronix.de>, "Kasiviswanathan, Harish" <Harish.Kasiviswanathan@amd.com>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'linux-pci@vger.kernel.org'" <linux-pci@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 7. August 2014, 16:38:02 schrieb Jaehoon Chung:
-> dw-mmc controller can support multiple slots.
-> But, there are no use-cases anywhere. So we don't need to support the
-> slot-node for dw-mmc controller.
-> And "supports-highspeed" property in dw-mmc is deprecated.
-> "supports-highspeed" property can be replaced with "cap-sd/mmc-highspeed".
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Reviewed-by: Tushar Behera <trblinux@gmail.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+Suravee,
 
-I've added this one to my queue for 3.18
+On Mon, Aug 11, 2014 at 01:30:50PM +0000, Suthikulpanit, Suravee wrote:
+> Jason already created a branch irqchip/gic-v2m, which I have created
+> my patch against.  So, what branch do you want me to re-create a patch
+> against for you to review?
 
+Ideally, against v3.17-rc1.  That's a few weeks away, though.  In the
+mean time, please base against irqchip/core.  It has the relevant
+patches that are going to be in v3.17-rc1.
 
-Heiko
+thx,
 
-> ---
->  arch/arm/boot/dts/rk3066a-bqcurie2.dts |   15 ++++-----------
->  arch/arm/boot/dts/rk3188-radxarock.dts |    7 ++-----
->  2 files changed, 6 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-> b/arch/arm/boot/dts/rk3066a-bqcurie2.dts index 042f821d..665dd56 100644
-> --- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-> +++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-> @@ -150,12 +150,8 @@
->  	num-slots = <1>;
->  	status = "okay";
->  	vmmc-supply = <&vcc_sd0>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -		disable-wp;
-> -	};
-> +	bus-width = <4>;
-> +	disable-wp;
->  };
-> 
->  &mmc1 { /* wifi */
-> @@ -166,11 +162,8 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus4>;
-> 
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -		disable-wp;
-> -	};
-> +	bus-width = <4>;
-> +	disable-wp;
->  };
-> 
->  &uart0 {
-> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts
-> b/arch/arm/boot/dts/rk3188-radxarock.dts index 171b610..ef72faf 100644
-> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
-> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-> @@ -181,11 +181,8 @@
->  	status = "okay";
->  	vmmc-supply = <&vcc_sd0>;
-> 
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -		disable-wp;
-> -	};
-> +	bus-width = <4>;
-> +	disable-wp;
->  };
-> 
->  &pinctrl {
+Jason.
