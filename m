@@ -1,49 +1,48 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] devicetree: bindings: Document Gateworks vendor prefix
-Date: Sun, 10 Aug 2014 13:16:37 -0700
-Message-ID: <53E7D325.4060802@gmail.com>
-References: <1407658509-1773-1-git-send-email-tharvey@gateworks.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/5] ARM: shmobile: r8a7740: document MSTP clock
+ support
+Date: Mon, 11 Aug 2014 10:12:14 +0900
+Message-ID: <20140811011214.GI26570@verge.net.au>
+References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1407507792-8121-2-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407658509-1773-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407507792-8121-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: linux-sh@vger.kernel.org, mturquette@linaro.org, devicetree@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Le 10/08/2014 01:15, Tim Harvey a =E9crit :
-> Add Gateworks Corporation to the list of device tree vendor prefixes.
->
-> Gateworks designs and manufactures single board computers designed fo=
-r
-> embedded wireless and wired network applications.
->
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 46a311e..803fa4f 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -54,6 +54,7 @@ globalscale	Globalscale Technologies, Inc.
->   gmt	Global Mixed-mode Technology, Inc.
->   google	Google, Inc.
->   gumstix	Gumstix, Inc.
-> +gw	Gateworks Corporation
+On Fri, Aug 08, 2014 at 04:23:08PM +0200, Ulrich Hecht wrote:
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 
-I would go with "gateworks" here, "gw" is usually a shorter term for=20
-"gateway", and there is an actual company called "Gateway" also=20
-manufacturing various types of computers.
---=20
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+Mike, could you consider taking this?
+
+> ---
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> index 8a92b5f..b3c0617 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> @@ -11,6 +11,7 @@ Required Properties:
+>  
+>    - compatible: Must be one of the following
+>      - "renesas,r7s72100-mstp-clocks" for R7S72100 (RZ) MSTP gate clocks
+> +    - "renesas,r8a7740-mstp-clocks" for R8A7740 (R-Mobile A1) MSTP gate clocks
+>      - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
+>      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+>      - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
+> -- 
+> 1.8.4.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
