@@ -1,106 +1,111 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH v2] power: twl4030-madc-battery: Convert to iio consumer.
-Date: Mon, 11 Aug 2014 21:52:52 +0200
-Message-ID: <CAAfyv35Hi-aE+SnTiN9O39ANi63gkNMz-Bz6hqCkkxJARSFcOg@mail.gmail.com>
-References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
-	<1394052739-8589-2-git-send-email-marek@goldelico.com>
-	<20140305232513.GA9542@earth.universe>
-	<CAAfyv34X1naNEyht0q+bD3QUjCxLJribmfWfZkP073WS7ve4kA@mail.gmail.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCHv10 4/5] ARM: dts: socfpga: unuse the slot-node and
+ deprecate the supports-highspeed for dw-mmc
+Date: Mon, 11 Aug 2014 16:03:52 -0500
+Message-ID: <CADhT+wcKrL8f-OyLnKKzsBgyU3PSYFLfsZgvCcdAgVV5BAT76Q@mail.gmail.com>
+References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
+	<1407397082-32495-5-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAfyv34X1naNEyht0q+bD3QUjCxLJribmfWfZkP073WS7ve4kA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1407397082-32495-5-git-send-email-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Thu, Aug 7, 2014 at 2:38 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced with "cap-sd/mmc-highspeed".
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Reviewed-by: Tushar Behera <trblinux@gmail.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+> Acked-by: Dinh Nguyen <dinguyen@altera.com>
+> ---
 
-can you please take this series (I'll post update version with
-removing debug code). Thanks.
+I've queued this patch in my tree for v3.18.
 
-On Thu, Mar 6, 2014 at 10:10 PM, Belisko Marek <marek.belisko@gmail.com> wrote:
-> Hi Sebastian,
+Thanks,
+Dinh
+
+>  arch/arm/boot/dts/socfpga_arria5.dtsi   |    9 +++------
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi |    9 +++------
+>  arch/arm/boot/dts/socfpga_vt.dts        |    9 +++------
+>  3 files changed, 9 insertions(+), 18 deletions(-)
 >
-> On Thu, Mar 6, 2014 at 12:25 AM, Sebastian Reichel <sre@debian.org> wrote:
->> Hi Marek,
->>
->> I just have one comment:
->>
->> On Wed, Mar 05, 2014 at 09:52:17PM +0100, Marek Belisko wrote:
->>> [...]
->>> -static int madc_read(int index)
->>> +static int madc_read(struct iio_channel *channel)
->>>  {
->>> -     struct twl4030_madc_request req;
->>> -     int val;
->>> -
->>> -     req.channels = index;
->>> -     req.method = TWL4030_MADC_SW2;
->>> -     req.type = TWL4030_MADC_WAIT;
->>> -     req.do_avg = 0;
->>> -     req.raw = false;
->>> -     req.func_cb = NULL;
->>> -
->>> -     val = twl4030_madc_conversion(&req);
->>> -     if (val < 0)
->>> -             return val;
->>> -
->>> -     return req.rbuf[ffs(index) - 1];
->>> +     int val, err;
->>> +     err = iio_read_channel_processed(channel, &val);
->>> +     if (err < 0) {
->>> +             pr_info("Error:%d\n", err);
->>
->> This should be "Error: %d\n" (with a space).
-> Ups this is remain from debugging messages. I'll remove it and re-post patches.
-> Thanks.
->>
->> Apart from that you should use dev_info() or dev_err(), so that the
->> message is properly prefixed by the device. Currently there is no
->> hint where this error message is generated.
->>
->>> +             return err;
->>> +     }
->>> +     return val;
->>>  }
->>> [...]
->>
->> After fixing this you can add
->>
->> Reviewed-By: Sebastian Reichel <sre@debian.org>
->>
->> -- Sebastian
+> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> index 12d1c2c..468fc4c 100644
+> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> @@ -29,13 +29,10 @@
 >
-> BR,
+>                 dwmmc0@ff704000 {
+>                         num-slots = <1>;
+> -                       supports-highspeed;
+>                         broken-cd;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                       };
+> +                       bus-width = <4>;
+> +                       cap-mmc-highspeed;
+> +                       cap-sd-highspeed;
+>                 };
 >
-> marek
+>                 sysmgr@ffd08000 {
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> index bf51182..1ee03c4 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> @@ -30,13 +30,10 @@
 >
+>                 dwmmc0@ff704000 {
+>                         num-slots = <1>;
+> -                       supports-highspeed;
+>                         broken-cd;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                       };
+> +                       bus-width = <4>;
+> +                       cap-mmc-highspeed;
+> +                       cap-sd-highspeed;
+>                 };
+>
+>                 ethernet@ff702000 {
+> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+> index 09792b4..f9345e0 100644
+> --- a/arch/arm/boot/dts/socfpga_vt.dts
+> +++ b/arch/arm/boot/dts/socfpga_vt.dts
+> @@ -43,13 +43,10 @@
+>
+>                 dwmmc0@ff704000 {
+>                         num-slots = <1>;
+> -                       supports-highspeed;
+>                         broken-cd;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                       };
+> +                       bus-width = <4>;
+> +                       cap-mmc-highspeed;
+> +                       cap-sd-highspeed;
+>                 };
+>
+>                 ethernet@ff700000 {
 > --
-> as simple and primitive as possible
-> -------------------------------------------------
-> Marek Belisko - OPEN-NANDRA
-> Freelance Developer
+> 1.7.9.5
 >
-> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-> Tel: +421 915 052 184
-> skype: marekwhite
-> twitter: #opennandra
-> web: http://open-nandra.com
-
-BR,
-
-marek
-
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
