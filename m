@@ -1,60 +1,90 @@
-From: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: RE: [PATCH 0/4] irqchip: gic-v2m: Rework GICv2m Initialization
-Date: Mon, 11 Aug 2014 13:30:50 +0000
-Message-ID: <02D2024799561B48A732D1A51CB969E836F74ABC@satlexdag05.amd.com>
-References: <1407539836-9768-1-git-send-email-suravee.suthikulpanit@amd.com>
- <53E87ADA.6040204@arm.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v4 15/21] media: Add registration helpers for V4L2 flash
+Date: Mon, 11 Aug 2014 15:45:27 +0200
+Message-ID: <53E8C8F7.2070101@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <1405087464-13762-16-git-send-email-j.anaszewski@samsung.com>
+ <53CCF59E.3070200@iki.fi> <53DF9C2A.8060403@samsung.com>
+ <20140811122628.GG16460@valkosipuli.retiisi.org.uk>
+ <53E8C4BA.6050805@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53E87ADA.6040204@arm.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Marc Zyngier' <marc.zyngier@arm.com>
-Cc: 'Mark Rutland' <Mark.Rutland@arm.com>, "'jason@lakedaemon.net'" <jason@lakedaemon.net>, 'Pawel Moll' <Pawel.Moll@arm.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, "'tglx@linutronix.de'" <tglx@linutronix.de>, "Kasiviswanathan, Harish" <Harish.Kasiviswanathan@amd.com>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'linux-pci@vger.kernel.org'" <linux-pci@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <53E8C4BA.6050805@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Marc,
+> On 08/11/2014 02:26 PM, Sakari Ailus wrote:
+>>
+>> Hi Jacek,
+>>
 
-Jason already created a branch irqchip/gic-v2m, which I have created my patch against.  So, what branch do you want me to re-create a patch against for you to review?
+...
 
-Suravee
+>>>>> +static int v4l2_flash_s_ctrl(struct v4l2_ctrl *c)
+>>>>> +{
+>>>>> +    struct v4l2_flash *v4l2_flash = v4l2_ctrl_to_v4l2_flash(c);
+>>>>> +    struct led_classdev_flash *flash = v4l2_flash->flash;
+>>>>> +    struct v4l2_flash_ctrl *ctrl = &v4l2_flash->ctrl;
+>>>>> +    struct v4l2_flash_ctrl_config *config = &v4l2_flash->config;
+>>>>> +    enum led_brightness torch_brightness;
+>>>>> +    bool external_strobe;
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    switch (c->id) {
+>>>>> +    case V4L2_CID_FLASH_LED_MODE:
+>>>>> +        switch (c->val) {
+>>>>> +        case V4L2_FLASH_LED_MODE_NONE:
+>>>>> +            call_flash_op(v4l2_flash, torch_brightness_set,
+>>>>> +                            &flash->led_cdev, 0);
+>>>>> +            return call_flash_op(v4l2_flash, strobe_set, flash,
+>>>>> +                            false);
+>>>>> +        case V4L2_FLASH_LED_MODE_FLASH:
+>>>>> +            /* Turn off torch LED */
+>>>>> +            call_flash_op(v4l2_flash, torch_brightness_set,
+>>>>> +                            &flash->led_cdev, 0);
+>>>>> +            external_strobe = (ctrl->source->val ==
+>>>>> +                    V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
+>>>>> +            return call_flash_op(v4l2_flash, external_strobe_set,
+>>>>> +                        flash, external_strobe);
+>>>>> +        case V4L2_FLASH_LED_MODE_TORCH:
+>>>>> +            /* Stop flash strobing */
+>>>>> +            ret = call_flash_op(v4l2_flash, strobe_set, flash,
+>>>>> +                            false);
+>>>>> +            if (ret)
+>>>>> +                return ret;
+>>>>> +
+>>>>> +            torch_brightness =
+>>>>> +                v4l2_flash_intensity_to_led_brightness(
+>>>>> +                        &config->torch_intensity,
+>>>>> +                        ctrl->torch_intensity->val);
+>>>>> +            call_flash_op(v4l2_flash, torch_brightness_set,
+>>>>> +                    &flash->led_cdev, torch_brightness);
+>>>>> +            return ret;
+>>>>> +        }
+>>>>> +        break;
+>>>>> +    case V4L2_CID_FLASH_STROBE_SOURCE:
+>>>>> +        external_strobe = (c->val ==
+>>>>> V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
+>>>>
+>>>> Is the external_strobe argument match exactly to the strobe source
+>>>> control? You seem to assume that in g_volatile_ctrl() above. I think
+>>>> having it the either way is fine but not both. :-)
+>>>
+>>> The STROBE_SOURCE_EXTERNAL control state is volatile if a flash device
+>>> depends on muxes that route strobe signals to more then one flash
+>>> device. In such a case it behaves similarly to FLASH_STROBE control,
+>>> i.e. it activates external strobe only for the flash timeout period.
+>>> I touched this issue in the cover letter of this patch series,
+>>> paragraph 2.
+>>
+>> I meant that flash->external_strobe is directly used as
+>> V4L2_CID_FLASH_STROBE_SOURCE. Are the two guaranteed to be the same?
 
------Original Message-----
-From: Marc Zyngier [mailto:marc.zyngier@arm.com] 
-Sent: Monday, August 11, 2014 3:12 AM
-To: Suthikulpanit, Suravee
-Cc: Mark Rutland; jason@lakedaemon.net; Pawel Moll; Catalin Marinas; Will Deacon; tglx@linutronix.de; Kasiviswanathan, Harish; linux-arm-kernel@lists.infradead.org; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/4] irqchip: gic-v2m: Rework GICv2m Initialization
+Yes, the external_strobe sysfs attribute is mapped to it.
 
-Hi Suravee,
-
-On 09/08/14 00:17, suravee.suthikulpanit@amd.com wrote:
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> 
-> This patch set reworks the GICv2m initialization based on Marc Zyngier 
-> review comments.
-> 
-> * Rebase to git://git.infradead.org/users/jcooper/linux.git 
-> irqchip/gic-v2m
-> 
-> Suravee Suthikulpanit (1):
->   irqchip/gic-v2m: Restructure the initalization code for v2m
-> 
->  Documentation/devicetree/bindings/arm/gic.txt |  37 +++++++--
->  drivers/irqchip/irq-gic-v2m.c                 | 115 +++++++++-----------------
->  drivers/irqchip/irq-gic.c                     |  30 +++----
->  drivers/irqchip/irq-gic.h                     |  10 +--
->  4 files changed, 91 insertions(+), 101 deletions(-)
-> 
-
-While I appreciate that you're trying to reduce the amount of stuff we review, it is actually much easier to look at the patch series as a whole, rather then as a diff against the previous version.
-
-Please squash this into your original series and repost it with a log of what has changed in the cover letter.
-
-Thanks,
-
-	M.
---
-Jazz is not dead. It just smells funny...
+Best Regards,
+Jacek Anaszewski
