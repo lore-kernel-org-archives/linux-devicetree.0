@@ -1,28 +1,69 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: fec: Support phys probed from devicetree and
- fixed-link
-Date: Mon, 11 Aug 2014 14:41:25 -0700 (PDT)
-Message-ID: <20140811.144125.43958671448712475.davem@davemloft.net>
-References: <1407771333-24683-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v5 0/3] Qualcomm Resource Power Manager driver
+Date: Mon, 11 Aug 2014 15:43:05 -0700
+Message-ID: <1407796988-25872-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1407771333-24683-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: u.kleine-koenig@pengutronix.de
-Cc: netdev@vger.kernel.org, f.fainelli@gmail.com, thomas.petazzoni@free-electrons.com, fabio.estevam@freescale.com, kernel@pengutronix.de, devicetree@vger.kernel.org, s.hauer@pengutronix.de
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-Date: Mon, 11 Aug 2014 17:35:33 +0200
+This series adds a regulator driver for the Resource Power Manager found in
+Qualcomm 8660, 8960 and 8064 based devices.
 
-> This adds support for specifying the phy to be used with the fec in t=
-he
-> devicetree using the standard phy-handle property and also supports
-> fixed-link.
->=20
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+The RPM driver exposes resources to its child devices, that can be accessed to
+implement drivers for the regulators, clocks and bus frequency control that's
+owned by the RPM in these devices.
 
-Applied, thanks.
+
+After receiving little interest and some confusion regarding maintainership of
+drivers/soc/qcom I had a chat with Andy Gross and we concluded that "the rpm
+driver is not glue code and should therefore not be in drivers/soc". So I'm
+moving it back into MFD.
+
+Changes since v4:
+  - Moved RPM driver to mfd
+
+Changes since v3:
+  - IPC register is acquired through syscon, as it's shared with others
+
+Changes since v2:
+  - Fix copy-paste error in dt binding
+  - Correct incomplete move from mfd to soc
+  - Correct const mistake in regulator driver
+
+Changes since v1:
+  - Moved rpm driver to drivers/soc
+  - Extracted resource table structs from rpm struct, as per Srinivas request
+  - Dropped mode setting support for the regulators for now. Unsure if we need
+    it and it requires some rework from the codeaurora solution.
+  - Using set_voltage_sel instead of rolling my own "snapping", as per Marks
+    request
+  - Split regulator ops in mV, uV and swtich versions as per Marks request.
+  - Added devicetree property to enable pull down.
+
+Bjorn Andersson (3):
+  mfd: devicetree: bindings: Add Qualcomm RPM DT binding
+  mfd: qcom-rpm: Driver for the Qualcomm RPM
+  regulator: qcom-rpm: Regulator driver for the Qualcomm RPM
+
+ Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 263 +++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/qcom_rpm.c                             | 596 ++++++++++++++++
+ drivers/regulator/Kconfig                          |  12 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/qcom_rpm-regulator.c             | 787 +++++++++++++++++++++
+ include/dt-bindings/mfd/qcom,rpm.h                 | 142 ++++
+ include/linux/mfd/qcom_rpm.h                       |  12 +
+ 9 files changed, 1828 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+ create mode 100644 drivers/mfd/qcom_rpm.c
+ create mode 100644 drivers/regulator/qcom_rpm-regulator.c
+ create mode 100644 include/dt-bindings/mfd/qcom,rpm.h
+ create mode 100644 include/linux/mfd/qcom_rpm.h
+
+-- 
+1.8.2.2
