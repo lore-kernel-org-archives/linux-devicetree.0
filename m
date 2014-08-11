@@ -1,110 +1,77 @@
-From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: rockchip: add rk3288 dma controllers
-Date: Mon, 11 Aug 2014 19:37:29 +0100
-Message-ID: <53E90D69.6000307@suse.de>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <1406661128-7614-4-git-send-email-heiko@sntech.de> <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com> <1560376.L4H27Lgx9N@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] ARM: dts: Move the PMIC interrupt pinctrl line to rk3288-evb common
+Date: Mon, 11 Aug 2014 11:47:29 -0700
+Message-ID: <1407782849-11056-1-git-send-email-dianders@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1560376.L4H27Lgx9N@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 11.08.2014 19:01, schrieb Heiko St=FCbner:
-> Also for an upcoming v2, I've also changed the structure a bit, as th=
-e first=20
-> dma-controller has both a secure and non-secure version of it.
-> So currently the rk3288.dtsi looks like [0]:
->=20
-> 	amba {
-> 		compatible =3D "arm,amba-bus";
-> 		#address-cells =3D <1>;
-> 		#size-cells =3D <1>;
-> 		ranges;
->=20
-> 		/* dma1 in secure state */
-> 		dma-controller@ffb20000 {
-> 			compatible =3D "arm,pl330", "arm,primecell";
-> 			reg =3D <0xffb20000 0x4000>;
-> 			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> 				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> 			#dma-cells =3D <1>;
-> 			clocks =3D <&cru ACLK_DMAC1>;
-> 			clock-names =3D "apb_pclk";
-> 			status =3D "disabled";
-> 		};
->=20
-> 		/* dma1 in non-secure state */
-> 		dma-controller@ffb60000 {
-> 			compatible =3D "arm,pl330", "arm,primecell";
-> 			reg =3D <0xffb60000 0x4000>;
-> 			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> 				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> 			#dma-cells =3D <1>;
-> 			clocks =3D <&cru ACLK_DMAC1>;
-> 			clock-names =3D "apb_pclk";
-> 			status =3D "disabled";
-> 		};
->=20
-> 		dmac2: dma-controller@ff250000 {
-> 			compatible =3D "arm,pl330", "arm,primecell";
-> 			reg =3D <0xff250000 0x4000>;
-> 			interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> 				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> 			#dma-cells =3D <1>;
-> 			clocks =3D <&cru ACLK_DMAC2>;
-> 			clock-names =3D "apb_pclk";
-> 		};
-> 	};
->=20
-> and the board is responsible for enabling the correct variant [1], as=
- most=20
-> likely the bootloader decides in which mode to start the dma controll=
-er:
->=20
-> 	amba {
-> 		/* dma1 in secure state */
-> 		dmac1: dma-controller@ffb20000 {
-> 			status =3D "okay";
-> 		};
-> 	};
->=20
-> This is based on some mailinglist discussion, I found at some point, =
-about=20
-> this but for the life of me am not able to find anymore. So of course=
- feedback=20
-> would appreciated there too.
+The PMIC interrupt pinctrl line was added to the rk3288-evb-act8846,
+but it's the same line on both the ACT8846 version and the RK808
+version.  This makes a lot of sense since they share the same SoC
+daugherboard.  Move the pinctrl definition to the common file so we
+can use it for the RK808 version.
 
-I would suggest to give labels such as dmac1_s and dmac1_ns like you di=
-d
-for dmac2 in the former snippet, so that you can override the status in
-the latter without replicating the amba/dma-controller hierarchy.
+NOTE: The PMIC interrupt doesn't _actually_ go to the PMIC on the
+ACT8846 version of the board (it does on the RK808), but our
+convention is to label things as they're labelled on the schematics.
+In the very least you can argue that this is the interrupt from the
+PMIC daughtercard even if it doesn't actually go to the PMIC chip.
 
-However, for the Zynq SoC we chose to just model the secure DMAC though
-[*]. I was told that either the bootloader or the user should change th=
-e
-DT when running in such a non-secure scenario.
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-evb-act8846.dts | 10 +---------
+ arch/arm/boot/dts/rk3288-evb.dtsi        |  6 ++++++
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-Cheers,
-Andreas
+diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+index 7d59ff4..a76dd44 100644
+--- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
++++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+@@ -26,7 +26,7 @@
+ 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+ 
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&hym8563_int>;
++		pinctrl-0 = <&pmic_int>;
+ 
+ 		#clock-cells = <0>;
+ 		clock-output-names = "xin32k";
+@@ -124,11 +124,3 @@
+ 		};
+ 	};
+ };
+-
+-&pinctrl {
+-	hym8563 {
+-		hym8563_int: hym8563-int {
+-			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index 4f57209..ae3e10b 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -84,6 +84,12 @@
+ 		};
+ 	};
+ 
++	pmic {
++		pmic_int: pmic-int {
++			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+2.0.0.526.g5318336
 
-[*] https://patchwork.kernel.org/patch/4620251/
-
-> [0] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch=
-/arm/boot/dts/rk3288.dtsi
-> [1] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch=
-/arm/boot/dts/rk3288-evb.dtsi
-[snip]
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
