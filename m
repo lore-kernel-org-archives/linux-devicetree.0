@@ -1,90 +1,93 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v4 15/21] media: Add registration helpers for V4L2 flash
-Date: Mon, 11 Aug 2014 15:45:27 +0200
-Message-ID: <53E8C8F7.2070101@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <1405087464-13762-16-git-send-email-j.anaszewski@samsung.com>
- <53CCF59E.3070200@iki.fi> <53DF9C2A.8060403@samsung.com>
- <20140811122628.GG16460@valkosipuli.retiisi.org.uk>
- <53E8C4BA.6050805@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 0/6] thermal: sti: Add new Thermal driver
+Date: Mon, 11 Aug 2014 14:56:45 +0100
+Message-ID: <20140811135645.GD31769@lee--X1>
+References: <20140624092309.GD13803@lee--X1>
+ <20140709120823.GA32573@lee--X1>
+ <1404911964.28592.4.camel@rzhang1-toshiba>
+ <20140709134646.GB479@lee--X1>
+ <20140714130824.GA3993@lee--X1>
+ <1405347277.28592.25.camel@rzhang1-toshiba>
+ <20140714142703.GC3993@lee--X1>
+ <20140721091753.GV30888@lee--X1>
+ <1405935299.2455.3.camel@rzhang1-toshiba>
+ <20140721101306.GW30888@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <53E8C4BA.6050805@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140721101306.GW30888@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On 08/11/2014 02:26 PM, Sakari Ailus wrote:
->>
->> Hi Jacek,
->>
+On Mon, 21 Jul 2014, Lee Jones wrote:
+> On Mon, 21 Jul 2014, Zhang Rui wrote:
+> > On Mon, 2014-07-21 at 10:17 +0100, Lee Jones wrote:
+> > > On Mon, 14 Jul 2014, Lee Jones wrote:
+> > > > On Mon, 14 Jul 2014, Zhang Rui wrote:
+> > > > > On Mon, 2014-07-14 at 14:08 +0100, Lee Jones wrote:
+> > > > > > On Wed, 09 Jul 2014, Lee Jones wrote:
+> > > > > > > On Wed, 09 Jul 2014, Zhang Rui wrote:
+> > > > > > > > On Wed, 2014-07-09 at 13:08 +0100, Lee Jones wrote:
+> > > > > > > > > On Tue, 24 Jun 2014, Lee Jones wrote:
+> > > > > > > > >=20
+> > > > > > > > > > > I'm re-sending this set, as one of the maintainer=
+s' email addresses
+> > > > > > > > > > > is incorrect in the MAINTAINERS file.
+> > > > > > > > > > >=20
+> > > > > > > > > > > This patchset adds full support for 2 types of Th=
+ermal Controllers
+> > > > > > > > > > > produced by STMicroelectronics.  One is a more tr=
+aditional memory
+> > > > > > > > > > > mapped variant, the other is controlled solely by=
+ system configuration
+> > > > > > > > > > > registers.
+> > > > > > > > > >=20
+> > > > > > > > > > Any thing from the Thermal guys? Has this set falle=
+n through the gaps?
+> > > > > > > > >=20
+> > > > > > > > > Anything at all?  It's been well over a month now.
+> > > > > > > > >=20
+> > > > > > > > Well, for the soc thermal drivers, I'd prefer to take t=
+hem via Eduardo,
+> > > > > > > > but as we didn't get any feedback from Eduardo, I will =
+take them.
+> > > > > > >=20
+> > > > > > > Thanks Rui.
+> > > > > > >=20
+> > > > > > > So have you taken all 4 "thermal: sti: *" patches?
+> > > > > >=20
+> > > > > > Have you taken these yet?
+> > > > >=20
+> > > > > Not yet. will do tomorrow.
+> > >=20
+> > > I waited 7 days and still don't see them?
+> > >=20
+> > Done, they're in my local tree and I forgot to push them.
+> > thanks for the reminder.
+>=20
+> Thanks dude.
 
-...
+Hi Rui,
 
->>>>> +static int v4l2_flash_s_ctrl(struct v4l2_ctrl *c)
->>>>> +{
->>>>> +    struct v4l2_flash *v4l2_flash = v4l2_ctrl_to_v4l2_flash(c);
->>>>> +    struct led_classdev_flash *flash = v4l2_flash->flash;
->>>>> +    struct v4l2_flash_ctrl *ctrl = &v4l2_flash->ctrl;
->>>>> +    struct v4l2_flash_ctrl_config *config = &v4l2_flash->config;
->>>>> +    enum led_brightness torch_brightness;
->>>>> +    bool external_strobe;
->>>>> +    int ret;
->>>>> +
->>>>> +    switch (c->id) {
->>>>> +    case V4L2_CID_FLASH_LED_MODE:
->>>>> +        switch (c->val) {
->>>>> +        case V4L2_FLASH_LED_MODE_NONE:
->>>>> +            call_flash_op(v4l2_flash, torch_brightness_set,
->>>>> +                            &flash->led_cdev, 0);
->>>>> +            return call_flash_op(v4l2_flash, strobe_set, flash,
->>>>> +                            false);
->>>>> +        case V4L2_FLASH_LED_MODE_FLASH:
->>>>> +            /* Turn off torch LED */
->>>>> +            call_flash_op(v4l2_flash, torch_brightness_set,
->>>>> +                            &flash->led_cdev, 0);
->>>>> +            external_strobe = (ctrl->source->val ==
->>>>> +                    V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
->>>>> +            return call_flash_op(v4l2_flash, external_strobe_set,
->>>>> +                        flash, external_strobe);
->>>>> +        case V4L2_FLASH_LED_MODE_TORCH:
->>>>> +            /* Stop flash strobing */
->>>>> +            ret = call_flash_op(v4l2_flash, strobe_set, flash,
->>>>> +                            false);
->>>>> +            if (ret)
->>>>> +                return ret;
->>>>> +
->>>>> +            torch_brightness =
->>>>> +                v4l2_flash_intensity_to_led_brightness(
->>>>> +                        &config->torch_intensity,
->>>>> +                        ctrl->torch_intensity->val);
->>>>> +            call_flash_op(v4l2_flash, torch_brightness_set,
->>>>> +                    &flash->led_cdev, torch_brightness);
->>>>> +            return ret;
->>>>> +        }
->>>>> +        break;
->>>>> +    case V4L2_CID_FLASH_STROBE_SOURCE:
->>>>> +        external_strobe = (c->val ==
->>>>> V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
->>>>
->>>> Is the external_strobe argument match exactly to the strobe source
->>>> control? You seem to assume that in g_volatile_ctrl() above. I think
->>>> having it the either way is fine but not both. :-)
->>>
->>> The STROBE_SOURCE_EXTERNAL control state is volatile if a flash device
->>> depends on muxes that route strobe signals to more then one flash
->>> device. In such a case it behaves similarly to FLASH_STROBE control,
->>> i.e. it activates external strobe only for the flash timeout period.
->>> I touched this issue in the cover letter of this patch series,
->>> paragraph 2.
->>
->> I meant that flash->external_strobe is directly used as
->> V4L2_CID_FLASH_STROBE_SOURCE. Are the two guaranteed to be the same?
+Do you know when you will send your pull-request?
 
-Yes, the external_strobe sysfs attribute is mapped to it.
+We are half way through the merge window and I don't see any new
+Thermal patches?
 
-Best Regards,
-Jacek Anaszewski
+Kind regards,
+Lee
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
