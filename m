@@ -1,177 +1,110 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 Subject: Re: [PATCH 3/4] ARM: dts: rockchip: add rk3288 dma controllers
-Date: Mon, 11 Aug 2014 20:01:41 +0200
-Message-ID: <1560376.L4H27Lgx9N@diego>
-References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
- <1406661128-7614-4-git-send-email-heiko@sntech.de>
- <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com>
+Date: Mon, 11 Aug 2014 19:37:29 +0100
+Message-ID: <53E90D69.6000307@suse.de>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de> <1406661128-7614-4-git-send-email-heiko@sntech.de> <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com> <1560376.L4H27Lgx9N@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Kever Yang <kever.yang@rock-chips.com>, arm@kernel.org, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1560376.L4H27Lgx9N@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 11. August 2014, 10:01:08 schrieb Doug Anderson:
-> Heiko,
-> 
-> On Tue, Jul 29, 2014 at 12:12 PM, Heiko Stuebner <heiko@sntech.de> wrote:
-> > Add both the bus and peripheral pl330 dma controllers present in rk3288
-> > socs. The first dma controller can change between secure and non-secure
-> > mode and is left by the bootloader in secure mode, which gets added here.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
-> > 
-> >  arch/arm/boot/dts/rk3288.dtsi | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> 
-> This is outside of my area of expertise, but comparing this to
-> bindings, TRM, and other platforms it looks reasonable to me.
-> 
-> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> > index 3ef8951..3f39d26 100644
-> > --- a/arch/arm/boot/dts/rk3288.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> > @@ -62,6 +62,33 @@
-> > 
-> >                 };
-> >         
-> >         };
-> > 
-> > +       amba {
-> > +               compatible = "arm,amba-bus";
-> > +               #address-cells = <1>;
-> > +               #size-cells = <1>;
-> > +               ranges;
-> > +
-> > +               dmac1: dma@ffb20000 {
-> 
-> I'm curious: why did you choose "dmac1" for the alias here?  I would
-> have called it "dmac_peri", "pdma", or something similar as per the
-> address map in the TRM.  I found a single reference in the TRM to
-> "dmac2" but it wasn't immediately clear to me which DMA that was
-> referring to.  In a commit in a temporary tree I see that someone at
-> Rockchip called the DMA at ff250000 "pdma1".
+Am 11.08.2014 19:01, schrieb Heiko St=FCbner:
+> Also for an upcoming v2, I've also changed the structure a bit, as th=
+e first=20
+> dma-controller has both a secure and non-secure version of it.
+> So currently the rk3288.dtsi looks like [0]:
+>=20
+> 	amba {
+> 		compatible =3D "arm,amba-bus";
+> 		#address-cells =3D <1>;
+> 		#size-cells =3D <1>;
+> 		ranges;
+>=20
+> 		/* dma1 in secure state */
+> 		dma-controller@ffb20000 {
+> 			compatible =3D "arm,pl330", "arm,primecell";
+> 			reg =3D <0xffb20000 0x4000>;
+> 			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> 				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> 			#dma-cells =3D <1>;
+> 			clocks =3D <&cru ACLK_DMAC1>;
+> 			clock-names =3D "apb_pclk";
+> 			status =3D "disabled";
+> 		};
+>=20
+> 		/* dma1 in non-secure state */
+> 		dma-controller@ffb60000 {
+> 			compatible =3D "arm,pl330", "arm,primecell";
+> 			reg =3D <0xffb60000 0x4000>;
+> 			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> 				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> 			#dma-cells =3D <1>;
+> 			clocks =3D <&cru ACLK_DMAC1>;
+> 			clock-names =3D "apb_pclk";
+> 			status =3D "disabled";
+> 		};
+>=20
+> 		dmac2: dma-controller@ff250000 {
+> 			compatible =3D "arm,pl330", "arm,primecell";
+> 			reg =3D <0xff250000 0x4000>;
+> 			interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> 				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> 			#dma-cells =3D <1>;
+> 			clocks =3D <&cru ACLK_DMAC2>;
+> 			clock-names =3D "apb_pclk";
+> 		};
+> 	};
+>=20
+> and the board is responsible for enabling the correct variant [1], as=
+ most=20
+> likely the bootloader decides in which mode to start the dma controll=
+er:
+>=20
+> 	amba {
+> 		/* dma1 in secure state */
+> 		dmac1: dma-controller@ffb20000 {
+> 			status =3D "okay";
+> 		};
+> 	};
+>=20
+> This is based on some mailinglist discussion, I found at some point, =
+about=20
+> this but for the life of me am not able to find anymore. So of course=
+ feedback=20
+> would appreciated there too.
 
-I think I just kept the alias similar to the clock-name. The naming of the 
-dma-controllers seems to be inconsistent ... the clocks are named dmac1 and 
-dmac2, while the interrupt table in the rk3188-TRM calls them dmac0 and dmac1. 
-So I guess I just duplicated the naming for the rk3288.
+I would suggest to give labels such as dmac1_s and dmac1_ns like you di=
+d
+for dmac2 in the former snippet, so that you can override the status in
+the latter without replicating the amba/dma-controller hierarchy.
 
-I guess for the rk3288, the one at 0xffb20000 should be named something like 
-dmac_bus and the other one dmac_peri, reflecting what they're called in the 
-TRM, but I'm of course open for suggestions :-) .
+However, for the Zynq SoC we chose to just model the secure DMAC though
+[*]. I was told that either the bootloader or the user should change th=
+e
+DT when running in such a non-secure scenario.
 
+Cheers,
+Andreas
 
-Also for an upcoming v2, I've also changed the structure a bit, as the first 
-dma-controller has both a secure and non-secure version of it.
-So currently the rk3288.dtsi looks like [0]:
+[*] https://patchwork.kernel.org/patch/4620251/
 
-	amba {
-		compatible = "arm,amba-bus";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges;
+> [0] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch=
+/arm/boot/dts/rk3288.dtsi
+> [1] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch=
+/arm/boot/dts/rk3288-evb.dtsi
+[snip]
 
-		/* dma1 in secure state */
-		dma-controller@ffb20000 {
-			compatible = "arm,pl330", "arm,primecell";
-			reg = <0xffb20000 0x4000>;
-			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-			#dma-cells = <1>;
-			clocks = <&cru ACLK_DMAC1>;
-			clock-names = "apb_pclk";
-			status = "disabled";
-		};
-
-		/* dma1 in non-secure state */
-		dma-controller@ffb60000 {
-			compatible = "arm,pl330", "arm,primecell";
-			reg = <0xffb60000 0x4000>;
-			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-			#dma-cells = <1>;
-			clocks = <&cru ACLK_DMAC1>;
-			clock-names = "apb_pclk";
-			status = "disabled";
-		};
-
-		dmac2: dma-controller@ff250000 {
-			compatible = "arm,pl330", "arm,primecell";
-			reg = <0xff250000 0x4000>;
-			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-			#dma-cells = <1>;
-			clocks = <&cru ACLK_DMAC2>;
-			clock-names = "apb_pclk";
-		};
-	};
-
-and the board is responsible for enabling the correct variant [1], as most 
-likely the bootloader decides in which mode to start the dma controller:
-
-	amba {
-		/* dma1 in secure state */
-		dmac1: dma-controller@ffb20000 {
-			status = "okay";
-		};
-	};
-
-This is based on some mailinglist discussion, I found at some point, about 
-this but for the life of me am not able to find anymore. So of course feedback 
-would appreciated there too.
-
-
-
-[0] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch/arm/boot/dts/rk3288.dtsi
-[1] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch/arm/boot/dts/rk3288-evb.dtsi
-
-> 
-> > +                       compatible = "arm,pl330", "arm,primecell";
-> > +                       reg = <0xffb20000 0x4000>;
-> > +                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                    <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       #dma-cells = <1>;
-> > +                       clocks = <&cru ACLK_DMAC1>;
-> > +                       clock-names = "apb_pclk";
-> > +               };
-> > +
-> > +               dmac2: dma@ff250000 {
-> 
-> nit: when we have easy addresses to compare to, we should probably
-> sort by address?
-
-correct :-)
-
-> 
-> > +                       compatible = "arm,pl330", "arm,primecell";
-> > +                       reg = <0xff250000 0x4000>;
-> > +                       interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                    <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       #dma-cells = <1>;
-> > +                       clocks = <&cru ACLK_DMAC2>;
-> > +                       clock-names = "apb_pclk";
-> > +               };
-> > +       };
-> > +
-> > 
-> >         xin24m: oscillator {
-> >         
-> >                 compatible = "fixed-clock";
-> >                 clock-frequency = <24000000>;
-> > 
-> > --
-> > 2.0.1
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
