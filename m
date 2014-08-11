@@ -1,110 +1,176 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
- specific reset
-Date: Mon, 11 Aug 2014 19:33:56 +0200
-Message-ID: <20140811173356.GN15297@lukather>
-References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
- <CACRpkdYfu8HmVCkn9JFh+YP5OPdr8o9nTfoCnkJ7SSpGoenQUg@mail.gmail.com>
- <20140708080535.GJ13423@lukather>
- <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
- <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RESEND PATCH 2/2] ARM: dts: Add tps65090 FET constraints on
+ Peach Pit and Pi
+Date: Mon, 11 Aug 2014 19:47:18 +0200
+Message-ID: <53E901A6.2020902@collabora.co.uk>
+References: <1407757091-18730-1-git-send-email-javier.martinez@collabora.co.uk>	<1407757091-18730-2-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jdM5ZcN/ZcXXVwZs"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
+In-Reply-To: <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Houcheng Lin <houcheng@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Doug,
 
---jdM5ZcN/ZcXXVwZs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/11/2014 05:57 PM, Doug Anderson wrote:
+> Javier,
+> 
+> On Mon, Aug 11, 2014 at 4:38 AM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk> wrote:
+>> Both Exynos5420 Peach Pit and Exynos5800 Peach Pi boards
+>> have a tps65090 PMU that has a number of switches (FETs)
+>> that are just on/off devices but they do have a current
+>> limit and the output voltage of the switch is ramped up
+>> within a controlled slope.
+>>
+>> After the switch is turned on, a safety timer is started
+>> and before this timer times out the output voltage must
+>> have reached the input voltage. Otherwise the switch is
+>> turned off expecting an overload condition.
+>>
+>> So using the maximum output voltage slew rate and the timer
+>> minimum and maximum timeouts, a voltage constraints can be
+>> expressed as bounded limits for the timeout. That is what
+>> is used in the board schematics and should be in the DT too.
+> 
+> I don't understand this, but if you and Mark are happy with it...
+> 
+> ...I'm also not 100% certain what the above description has to do with
+> this change, but I'll admit to having only skimmed some of the earlier
+> conversations.
+>
 
-On Fri, Aug 08, 2014 at 04:23:09PM +0200, Philipp Zabel wrote:
-> Am Dienstag, den 08.07.2014, 11:38 +0200 schrieb Linus Walleij:
-> > On Tue, Jul 8, 2014 at 10:05 AM, Maxime Ripard
-> > <maxime.ripard@free-electrons.com> wrote:
-> > > On Tue, Jul 08, 2014 at 09:52:03AM +0200, Linus Walleij wrote:
-> > >> On Wed, Jun 18, 2014 at 3:37 PM, Houcheng Lin <houcheng@gmail.com> w=
-rote:
-> > >>
-> > >> > The Problem
-> > >> > -----------
-> > >> > The reset signal on a hardware board is send either:
-> > >> >     - during machine initialization
-> > >> >     - during bus master's initialization
-> > >>
-> > >> I just thought about this a bit, since there isn't already a generic=
- GPIO
-> > >> reset driver, just call this drivers/reset/reset-gpio.c and make the
-> > >> ability to deferral just a configuration detail of the GPIO reset dr=
-iver.
-> > >
-> > > Philipp has been working on one for quite some time. See
-> > > http://www.spinics.net/lists/arm-kernel/msg321927.html
-> > >
-> > > However, it seems to progress slowly, and we don't seem to be able to
-> > > reach a consensus here.
->=20
-> Mostly because Maxime and I seem to have a completely different opinion
-> and nobody else argued one way or the other.
+As I stated before, I wrongly assumed from where the constraints in the
+schematics came from. From the latest doc I now know that there is a
+"recommended operating conditions table". I'll fix it in v2, sorry for the
+confusion...
 
-Yep, mostly because I don't see how a generic approach can work.
+> 
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> ---
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 14 ++++++++++++++
+>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 14 ++++++++++++++
+>>  2 files changed, 28 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> index d8710c1..eefafe6 100644
+>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> @@ -386,27 +386,41 @@
+>>                                         };
+>>                                         tps65090_fet1: fet1 {
+>>                                                 regulator-name = "vcd_led";
+>> +                                               regulator-min-microvolt = <5000000>;
+>> +                                               regulator-max-microvolt = <1700000>;
+> 
+> This is almost certainly wrong.  Your max is smaller than your min.
+> Perhaps you want an extra 0.
+> 
+>>                                         };
+>>                                         tps65090_fet2: fet2 {
+>>                                                 regulator-name = "video_mid";
+>> +                                               regulator-min-microvolt = <4500000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_fet3: fet3 {
+>>                                                 regulator-name = "wwan_r";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_fet4: fet4 {
+>>                                                 regulator-name = "sdcard";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_fet5: fet5 {
+>>                                                 regulator-name = "camout";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                         };
+>>                                         tps65090_fet6: fet6 {
+>>                                                 regulator-name = "lcd_vdd";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                         };
+>>                                         tps65090_fet7: fet7 {
+>>                                                 regulator-name = "video_mid_1a";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_ldo1: ldo1 {
+>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> index 07b29b7..5c38bc0 100644
+>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> @@ -384,27 +384,41 @@
+>>                                         };
+>>                                         tps65090_fet1: fet1 {
+>>                                                 regulator-name = "vcd_led";
+>> +                                               regulator-min-microvolt = <5000000>;
+>> +                                               regulator-max-microvolt = <1700000>;
+> 
+> Here, too.
+> 
+>>                                         };
+>>                                         tps65090_fet2: fet2 {
+>>                                                 regulator-name = "video_mid";
+>> +                                               regulator-min-microvolt = <4500000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_fet3: fet3 {
+>>                                                 regulator-name = "wwan_r";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_fet4: fet4 {
+>>                                                 regulator-name = "sdcard";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_fet5: fet5 {
+>>                                                 regulator-name = "camout";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                         };
+>>                                         tps65090_fet6: fet6 {
+>>                                                 regulator-name = "lcd_vdd";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                         };
+>>                                         tps65090_fet7: fet7 {
+>>                                                 regulator-name = "video_mid_1a";
+>> +                                               regulator-min-microvolt = <3000000>;
+>> +                                               regulator-max-microvolt = <5500000>;
+>>                                                 regulator-always-on;
+>>                                         };
+>>                                         tps65090_ldo1: ldo1 {
+> 
+> Other than 1.7V vs. 17V, this matches what I see in the tps65090
+> specifications.  Technically I think that this should also be applied
+> to other tps65090 users in mainline since it's a property shared among
+> every user of tps65090.  That means exynos5250-snow and
+> tegra114-dalmore.  I'd be tempted to say that it belongs in source
+> code or in a dts fragment as well.
+> 
 
-The existing reset-gpios property only provide the gpio to use, but
-some informations are encoded in the driver, such as the reset
-duration, or a reset sequence if any.
+Agreed, now is clear from the table that these are operating conditions related
+to the PMIC and is not a per board value. So since these are constants, they
+should be added to the driver source code and not in the DTS. I'll do this in v2
+as well.
 
-How do you plan on giving that information to your generic driver?
+> -Doug
+> 
 
-The only solution I can think of would be to add an extra property
-that your code would parse. But then, you break the existing DT
-bindings.
-
-And if we're going to break those bindings, at least do it in a way
-consistent with reset bindings.
-
-Plus, your approach doesn't cover the weird corner cases such as:
-  - reset-gpio
-  - wlf,reset-gpios
-  - phy-reset-gpios
-  - snps,reset-gpio
-  - the drivers that need several gpio and expect the reset one as a
-    positional argument.
-  - etc.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---jdM5ZcN/ZcXXVwZs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT6P6EAAoJEBx+YmzsjxAgeykP/2GNQxfk2wdXbNum225uiKFe
-qIkEVovztjBUQUyLePq4dltRSGqm3dXKNDVymcvCsv5RaNqgQAxXuDr/ElhGnOHr
-KyCMZjYpDh6ta7LdJmH5vkr3UBhmCdtpKM9j3W5j5yjc6YqaykzNCwOAxrMenDsY
-VG0FpmRe4XsGBUCi/au8cfNMdGGNeyF3jidPZrz8LKz1KsWqtIv4+gnwZzkxWYjW
-NioFXRjPl8BA+nLdKUCRib/gcK1Ok6TKI4+ehPw13sF8sSbfVgSAbSuH6SXa/89I
-rePDvKYOStnBcwANqMZa3MGPqb3/KER+5krTPKr1UduQn+OQ23UlhjIVMpkpqIiq
-bXIbUNmjBCAqTpLN4E8LrNmmjRFeDNfdLUjwG/RalFfpciq4JoEaohgRQ0F2Eppk
-1kC8pZWE8B+0iBe7CE29Wj5fK6IqKwldncBZMy7315H1AqrTbtkXXt8VZGmjebZH
-BfvS5bsVkKXL5Bqe83m5CcfYCFBsVwAkLcAirWxDPiqZzoM0eDDSkLKVXq/x2eCb
-kWe4VDrW1FPWYUXhjGhzYLWdYvq06hpP4w2ScJo4ii4O9vvPS8fWdhOxhAu56JoU
-/5OQRc32DQlq0o/TxjGDAmIJFQheuYWncstSvTgcgKxYkn9pgjGMrq8G9AGzZrlZ
-PC59BjM75QyuZs4K5Irk
-=Cba6
------END PGP SIGNATURE-----
-
---jdM5ZcN/ZcXXVwZs--
+Best regards,
+Javier
