@@ -1,176 +1,177 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [RESEND PATCH 2/2] ARM: dts: Add tps65090 FET constraints on
- Peach Pit and Pi
-Date: Mon, 11 Aug 2014 19:47:18 +0200
-Message-ID: <53E901A6.2020902@collabora.co.uk>
-References: <1407757091-18730-1-git-send-email-javier.martinez@collabora.co.uk>	<1407757091-18730-2-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 3/4] ARM: dts: rockchip: add rk3288 dma controllers
+Date: Mon, 11 Aug 2014 20:01:41 +0200
+Message-ID: <1560376.L4H27Lgx9N@diego>
+References: <1406661128-7614-1-git-send-email-heiko@sntech.de>
+ <1406661128-7614-4-git-send-email-heiko@sntech.de>
+ <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XRmNkxXoxWaEfxFADrTgBrOPVX746woxiZoKck1ajwgA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD=FV=VWBh3STfZWLDuYerS9wiceQL=UEJyjqp0-GLh0=-hTdw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Doug Anderson <dianders@chromium.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Kever Yang <kever.yang@rock-chips.com>, arm@kernel.org, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
+Am Montag, 11. August 2014, 10:01:08 schrieb Doug Anderson:
+> Heiko,
+> 
+> On Tue, Jul 29, 2014 at 12:12 PM, Heiko Stuebner <heiko@sntech.de> wrote:
+> > Add both the bus and peripheral pl330 dma controllers present in rk3288
+> > socs. The first dma controller can change between secure and non-secure
+> > mode and is left by the bootloader in secure mode, which gets added here.
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > ---
+> > 
+> >  arch/arm/boot/dts/rk3288.dtsi | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> 
+> This is outside of my area of expertise, but comparing this to
+> bindings, TRM, and other platforms it looks reasonable to me.
+> 
+> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> > index 3ef8951..3f39d26 100644
+> > --- a/arch/arm/boot/dts/rk3288.dtsi
+> > +++ b/arch/arm/boot/dts/rk3288.dtsi
+> > @@ -62,6 +62,33 @@
+> > 
+> >                 };
+> >         
+> >         };
+> > 
+> > +       amba {
+> > +               compatible = "arm,amba-bus";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               ranges;
+> > +
+> > +               dmac1: dma@ffb20000 {
+> 
+> I'm curious: why did you choose "dmac1" for the alias here?  I would
+> have called it "dmac_peri", "pdma", or something similar as per the
+> address map in the TRM.  I found a single reference in the TRM to
+> "dmac2" but it wasn't immediately clear to me which DMA that was
+> referring to.  In a commit in a temporary tree I see that someone at
+> Rockchip called the DMA at ff250000 "pdma1".
 
-On 08/11/2014 05:57 PM, Doug Anderson wrote:
-> Javier,
-> 
-> On Mon, Aug 11, 2014 at 4:38 AM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->> Both Exynos5420 Peach Pit and Exynos5800 Peach Pi boards
->> have a tps65090 PMU that has a number of switches (FETs)
->> that are just on/off devices but they do have a current
->> limit and the output voltage of the switch is ramped up
->> within a controlled slope.
->>
->> After the switch is turned on, a safety timer is started
->> and before this timer times out the output voltage must
->> have reached the input voltage. Otherwise the switch is
->> turned off expecting an overload condition.
->>
->> So using the maximum output voltage slew rate and the timer
->> minimum and maximum timeouts, a voltage constraints can be
->> expressed as bounded limits for the timeout. That is what
->> is used in the board schematics and should be in the DT too.
-> 
-> I don't understand this, but if you and Mark are happy with it...
-> 
-> ...I'm also not 100% certain what the above description has to do with
-> this change, but I'll admit to having only skimmed some of the earlier
-> conversations.
->
+I think I just kept the alias similar to the clock-name. The naming of the 
+dma-controllers seems to be inconsistent ... the clocks are named dmac1 and 
+dmac2, while the interrupt table in the rk3188-TRM calls them dmac0 and dmac1. 
+So I guess I just duplicated the naming for the rk3288.
 
-As I stated before, I wrongly assumed from where the constraints in the
-schematics came from. From the latest doc I now know that there is a
-"recommended operating conditions table". I'll fix it in v2, sorry for the
-confusion...
+I guess for the rk3288, the one at 0xffb20000 should be named something like 
+dmac_bus and the other one dmac_peri, reflecting what they're called in the 
+TRM, but I'm of course open for suggestions :-) .
+
+
+Also for an upcoming v2, I've also changed the structure a bit, as the first 
+dma-controller has both a secure and non-secure version of it.
+So currently the rk3288.dtsi looks like [0]:
+
+	amba {
+		compatible = "arm,amba-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		/* dma1 in secure state */
+		dma-controller@ffb20000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0xffb20000 0x4000>;
+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+			#dma-cells = <1>;
+			clocks = <&cru ACLK_DMAC1>;
+			clock-names = "apb_pclk";
+			status = "disabled";
+		};
+
+		/* dma1 in non-secure state */
+		dma-controller@ffb60000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0xffb60000 0x4000>;
+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+			#dma-cells = <1>;
+			clocks = <&cru ACLK_DMAC1>;
+			clock-names = "apb_pclk";
+			status = "disabled";
+		};
+
+		dmac2: dma-controller@ff250000 {
+			compatible = "arm,pl330", "arm,primecell";
+			reg = <0xff250000 0x4000>;
+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+			#dma-cells = <1>;
+			clocks = <&cru ACLK_DMAC2>;
+			clock-names = "apb_pclk";
+		};
+	};
+
+and the board is responsible for enabling the correct variant [1], as most 
+likely the bootloader decides in which mode to start the dma controller:
+
+	amba {
+		/* dma1 in secure state */
+		dmac1: dma-controller@ffb20000 {
+			status = "okay";
+		};
+	};
+
+This is based on some mailinglist discussion, I found at some point, about 
+this but for the life of me am not able to find anymore. So of course feedback 
+would appreciated there too.
+
+
+
+[0] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch/arm/boot/dts/rk3288.dtsi
+[1] https://github.com/mmind/linux-rockchip/blob/devel/workbench/arch/arm/boot/dts/rk3288-evb.dtsi
 
 > 
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> ---
->>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 14 ++++++++++++++
->>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 14 ++++++++++++++
->>  2 files changed, 28 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> index d8710c1..eefafe6 100644
->> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> @@ -386,27 +386,41 @@
->>                                         };
->>                                         tps65090_fet1: fet1 {
->>                                                 regulator-name = "vcd_led";
->> +                                               regulator-min-microvolt = <5000000>;
->> +                                               regulator-max-microvolt = <1700000>;
+> > +                       compatible = "arm,pl330", "arm,primecell";
+> > +                       reg = <0xffb20000 0x4000>;
+> > +                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       #dma-cells = <1>;
+> > +                       clocks = <&cru ACLK_DMAC1>;
+> > +                       clock-names = "apb_pclk";
+> > +               };
+> > +
+> > +               dmac2: dma@ff250000 {
 > 
-> This is almost certainly wrong.  Your max is smaller than your min.
-> Perhaps you want an extra 0.
-> 
->>                                         };
->>                                         tps65090_fet2: fet2 {
->>                                                 regulator-name = "video_mid";
->> +                                               regulator-min-microvolt = <4500000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_fet3: fet3 {
->>                                                 regulator-name = "wwan_r";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_fet4: fet4 {
->>                                                 regulator-name = "sdcard";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_fet5: fet5 {
->>                                                 regulator-name = "camout";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                         };
->>                                         tps65090_fet6: fet6 {
->>                                                 regulator-name = "lcd_vdd";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                         };
->>                                         tps65090_fet7: fet7 {
->>                                                 regulator-name = "video_mid_1a";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_ldo1: ldo1 {
->> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> index 07b29b7..5c38bc0 100644
->> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> @@ -384,27 +384,41 @@
->>                                         };
->>                                         tps65090_fet1: fet1 {
->>                                                 regulator-name = "vcd_led";
->> +                                               regulator-min-microvolt = <5000000>;
->> +                                               regulator-max-microvolt = <1700000>;
-> 
-> Here, too.
-> 
->>                                         };
->>                                         tps65090_fet2: fet2 {
->>                                                 regulator-name = "video_mid";
->> +                                               regulator-min-microvolt = <4500000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_fet3: fet3 {
->>                                                 regulator-name = "wwan_r";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_fet4: fet4 {
->>                                                 regulator-name = "sdcard";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_fet5: fet5 {
->>                                                 regulator-name = "camout";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                         };
->>                                         tps65090_fet6: fet6 {
->>                                                 regulator-name = "lcd_vdd";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                         };
->>                                         tps65090_fet7: fet7 {
->>                                                 regulator-name = "video_mid_1a";
->> +                                               regulator-min-microvolt = <3000000>;
->> +                                               regulator-max-microvolt = <5500000>;
->>                                                 regulator-always-on;
->>                                         };
->>                                         tps65090_ldo1: ldo1 {
-> 
-> Other than 1.7V vs. 17V, this matches what I see in the tps65090
-> specifications.  Technically I think that this should also be applied
-> to other tps65090 users in mainline since it's a property shared among
-> every user of tps65090.  That means exynos5250-snow and
-> tegra114-dalmore.  I'd be tempted to say that it belongs in source
-> code or in a dts fragment as well.
-> 
+> nit: when we have easy addresses to compare to, we should probably
+> sort by address?
 
-Agreed, now is clear from the table that these are operating conditions related
-to the PMIC and is not a per board value. So since these are constants, they
-should be added to the driver source code and not in the DTS. I'll do this in v2
-as well.
+correct :-)
 
-> -Doug
 > 
-
-Best regards,
-Javier
+> > +                       compatible = "arm,pl330", "arm,primecell";
+> > +                       reg = <0xff250000 0x4000>;
+> > +                       interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       #dma-cells = <1>;
+> > +                       clocks = <&cru ACLK_DMAC2>;
+> > +                       clock-names = "apb_pclk";
+> > +               };
+> > +       };
+> > +
+> > 
+> >         xin24m: oscillator {
+> >         
+> >                 compatible = "fixed-clock";
+> >                 clock-frequency = <24000000>;
+> > 
+> > --
+> > 2.0.1
