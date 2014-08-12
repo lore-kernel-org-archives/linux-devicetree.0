@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v5 1/2] ARM: shmobile: r8a7790: add VIN device nodes
-Date: Wed, 13 Aug 2014 00:16:18 +0400
-Message-ID: <3266734.k9AqsXjshd@wasted.cogentembedded.com>
+Subject: [PATCH v5 2/2] ARM: shmobile: lager: add VIN1/ADV7180 device nodes
+Date: Wed, 13 Aug 2014 00:18:26 +0400
+Message-ID: <703960137.fSsccWupA3@wasted.cogentembedded.com>
 References: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -9,79 +9,84 @@ Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-Add device nodes for the four video input controllers on the R8A7790.
+Add the Lager board specific device node part for VIN1 (composite video in);
+add the device node for Analog Devices ADV7180 video decoder to IIC2 bus.
+Add the necessary subnodes to interconnect VIN1 and ADV7180 devices.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-[Sergei: renamed VIN device nodes, edited changelog]
+[Sergei: rebased, edited changelog and summary]
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 Changes in version 5:
-- renamed VIN device nodes;
 - edited changelog and summary;
-- refreshed patch.
+- resolved reject, refreshed patch.
 
- arch/arm/boot/dts/r8a7790.dtsi |   36 ++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7790-lager.dts |   36 ++++++++++++++++++++++++++++++++++++
  1 file changed, 36 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -33,6 +33,10 @@
- 		spi2 = &msiof1;
- 		spi3 = &msiof2;
- 		spi4 = &msiof3;
-+		vin0 = &vin0;
-+		vin1 = &vin1;
-+		vin2 = &vin2;
-+		vin3 = &vin3;
+--- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
++++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -234,6 +234,11 @@
+ 		renesas,groups = "usb2";
+ 		renesas,function = "usb2";
  	};
++
++	vin1_pins: vin {
++		renesas,groups = "vin1_data8", "vin1_clk";
++		renesas,function = "vin1";
++	};
+ };
  
- 	cpus {
-@@ -564,6 +568,38 @@
- 		status = "disabled";
- 	};
+ &ether {
+@@ -370,6 +375,19 @@
+ 	status = "ok";
+ 	pinctrl-0 = <&iic2_pins>;
+ 	pinctrl-names = "default";
++
++	composite-in@20 {
++		compatible = "adi,adv7180";
++		reg = <0x20>;
++		remote = <&vin1>;
++
++		port {
++			adv7180: endpoint {
++				bus-width = <8>;
++				remote-endpoint = <&vin1ep0>;
++			};
++		};
++	};
+ };
  
-+	vin0: video@e6ef0000 {
-+		compatible = "renesas,vin-r8a7790";
-+		clocks = <&mstp8_clks R8A7790_CLK_VIN0>;
-+		reg = <0 0xe6ef0000 0 0x1000>;
-+		interrupts = <0 188 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
+ &iic3 {
+@@ -405,3 +423,21 @@
+ 	pinctrl-0 = <&usb2_pins>;
+ 	pinctrl-names = "default";
+ };
 +
-+	vin1: video@e6ef1000 {
-+		compatible = "renesas,vin-r8a7790";
-+		clocks = <&mstp8_clks R8A7790_CLK_VIN1>;
-+		reg = <0 0xe6ef1000 0 0x1000>;
-+		interrupts = <0 189 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
++/* composite video input */
++&vin1 {
++	pinctrl-0 = <&vin1_pins>;
++	pinctrl-names = "default";
 +
-+	vin2: video@e6ef2000 {
-+		compatible = "renesas,vin-r8a7790";
-+		clocks = <&mstp8_clks R8A7790_CLK_VIN2>;
-+		reg = <0 0xe6ef2000 0 0x1000>;
-+		interrupts = <0 190 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
++	status = "ok";
 +
-+	vin3: video@e6ef3000 {
-+		compatible = "renesas,vin-r8a7790";
-+		clocks = <&mstp8_clks R8A7790_CLK_VIN3>;
-+		reg = <0 0xe6ef3000 0 0x1000>;
-+		interrupts = <0 191 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
- 	clocks {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
++		vin1ep0: endpoint {
++			remote-endpoint = <&adv7180>;
++			bus-width = <8>;
++		};
++	};
++};
 
