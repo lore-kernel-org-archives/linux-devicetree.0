@@ -1,7 +1,7 @@
 From: Yaniv Gardi <ygardi@codeaurora.org>
-Subject: [PATCH v1] scsi: ufs-msm: add UFS controller support for Qualcomm MSM chips
-Date: Tue, 12 Aug 2014 10:53:04 +0300
-Message-ID: <1407829993-12924-1-git-send-email-ygardi@codeaurora.org>
+Subject: [PATCH v2] scsi: ufs-msm: add UFS controller support for Qualcomm MSM chips
+Date: Tue, 12 Aug 2014 11:03:38 +0300
+Message-ID: <1407830620-19974-1-git-send-email-ygardi@codeaurora.org>
 Return-path: <linux-scsi-owner@vger.kernel.org>
 Sender: linux-scsi-owner@vger.kernel.org
 To: James.Bottomley@HansenPartnership.com, hch@infradead.org
@@ -3770,4 +3770,6 @@ index 0000000..6e93f1e
 +#endif /* UFS_MSM_H_ */
 -- 
 1.8.5.2
+-- 
+QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
