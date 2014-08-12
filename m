@@ -1,85 +1,92 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Tue, 12 Aug 2014 11:02:15 +0200
-Message-ID: <CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
- <1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
- <CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v5] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Tue, 12 Aug 2014 11:37:22 +0200
+Message-ID: <53E9E052.3070308@monstr.eu>
+References: <1406131381-25577-1-git-send-email-sthokal@xilinx.com>	<CA+mB=1JhDF=BBXcyTbgVB8S7qH=Mb1JH78HLL4pA9OBH19hQvA@mail.gmail.com>	<8258903.Rn4s07GKGV@wuerfel> <CA+mB=1LeZn1k2VHNby2TRBcb1xuFFTQio=C845_xe2A=ZciYqg@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stefan@agner.ch, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "Berg,
- Anders" <anders.berg@lsi.com>, Jason Cooper <ja>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="q6kIRpcKTBjkk9TCMqwk5g6kquBLV1CXU"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CA+mB=1LeZn1k2VHNby2TRBcb1xuFFTQio=C845_xe2A=ZciYqg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, svemula@xilinx.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, anirudh@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-2014-08-11 9:15 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Thu, Jul 31, 2014 at 6:42 PM, Matthias Brugger
-> <matthias.bgg@gmail.com> wrote:
->
->> We enable GTP6 which ungates the arch timer clock. Apart we write the
->> frequency with which the timer is running in the CNTFREQ register.
->> In the future this should be done in the bootloader.
->>
->> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> (...)
->
->> +       if (of_machine_is_compatible("mediatek,mt6589")) {
->> +               /* set cntfreq register which is not done in bootloader */
->> +               asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (13000000));
->
-> I guess this is for something like the ARM arch timer in
-> drivers/clocksource/arm_arch_timer.c
->
-> Instead of doing this, use the DT property "clock-frequency" on
-> the ARM arch timer node, as that overrides the CP15 setting.
->
->> +
->> +               /* turn on GPT6 which ungates arch timer clocks */
->> +               gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
->> +       }
->> +
->> +       /* enabel clock and set to free-run */
->> +       if (gpt_base)
->> +               writel(0x31, gpt_base);
->
-> Why is this not done properly in the GPT driver (I guess
-> in drivers/clocksource/mtk_timer.c) instead of remapping
-> it and fiddling around in the machine?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--q6kIRpcKTBjkk9TCMqwk5g6kquBLV1CXU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I didn't put it in the GPT driver, because that would mean, that you
-need to have the mtk_timer to be able to use the ARM arch timer.
->From my understanding this are two independent blocks in the SoC.
-Apart from that, as stated in the commit message, this patch is a
-workaround until we have a bootloader which does this for us.
-Therefore I thought the init_time function would be the better place to do this.
+Hi Bjorn,
+
+On 07/30/2014 01:24 PM, Srikanth Thokala wrote:
+> Hi Arnd,
+>=20
+> On Mon, Jul 28, 2014 at 6:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Monday 28 July 2014 18:04:34 Srikanth Thokala wrote:
+>>> Hi Arnd and Rob,
+>>>
+>>> I discussed with Bjorn and we believe this patch is in good shape to
+>>> apply.  And Bjorn requires ACKs to apply this patch.  So, could you
+>>> guys please review this patch and provided your ACKs to this patch.
+>>
+>> Looks great for the most part. I've looked through the whole driver
+>> again, and I have two small issues remaining:
+>>
+>> a) Please clarify in the changeset description why there is no support=
+
+>>    for PCI I/O space.
+>=20
+> Sure, I will add to my changeset.
+>=20
+>>
+>> b) I think you should use the 'msi-parent' property, and the
+>>    of_pci_find_msi_chip_by_node() to find the msi_chip for the
+>>    PCI controller. This will make it possible to forward MSIs
+>>    to the main interrupt controller in the system, which is more
+>>    efficient. See the pcie-mvebu driver for an example of this.
+>=20
+> Ok, I need to look into this and I will plan to implement on top of thi=
+s patch.
+>=20
+>>
+>> Other than these:
+>>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Thanks Arnd for the Ack.
+
+What's the status on this one?
+
+Srikanth:
+Isn't pcie-xilinx.c better name if this is just pcie host bridge?
 
 Thanks,
-Matthias
+Michal
 
->
-> If it only affects the mt6589 just add another compatible string
-> to that driver like "mediatek,mt6589-timer" as it properly reflects the
-> fact that this timer is slightly different on the 6589.
->
-> Also use a #define for the magic constant 0x31.
->
-> Yours,
-> Linus Walleij
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
--- 
-motzblog.wordpress.com
+--q6kIRpcKTBjkk9TCMqwk5g6kquBLV1CXU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlPp4FYACgkQykllyylKDCHy1ACfQqu74eitbokR7l/BnmFHNqzZ
+cIUAnR96rLi4FehQknsDgvflZSHGx00K
+=fxph
+-----END PGP SIGNATURE-----
+
+--q6kIRpcKTBjkk9TCMqwk5g6kquBLV1CXU--
