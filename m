@@ -1,68 +1,299 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Tue, 12 Aug 2014 10:03:48 -0500
-Message-ID: <CAL_JsqJLn=dKKEgWFtvg_PnLFa5PEKM1J-M+fVbdirBWD2ii2A@mail.gmail.com>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
- <1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
- <CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com> <CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: Dual-channel DSI
+Date: Tue, 12 Aug 2014 18:00:58 +0200
+Message-ID: <53EA3A3A.7000600@samsung.com>
+References: <20140805153923.GA3072@ulmo.nvidia.com>
+ <53E3227B.1010000@samsung.com> <20140807072530.GE17340@ulmo>
+ <53E33B48.1080401@samsung.com> <20140807085424.GC13315@ulmo.nvidia.com>
+ <53E47B99.3040105@samsung.com> <20140808101447.GF15852@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Berg, Anders" <anders.berg-M7mHMAq9Yzo@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-ke
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140808101447.GF15852@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 12, 2014 at 4:02 AM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2014-08-11 9:15 GMT+02:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->> On Thu, Jul 31, 2014 at 6:42 PM, Matthias Brugger
->> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->>> We enable GTP6 which ungates the arch timer clock. Apart we write the
->>> frequency with which the timer is running in the CNTFREQ register.
->>> In the future this should be done in the bootloader.
->>>
->>> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> (...)
->>
->>> +       if (of_machine_is_compatible("mediatek,mt6589")) {
->>> +               /* set cntfreq register which is not done in bootloader */
->>> +               asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (13000000));
->>
->> I guess this is for something like the ARM arch timer in
->> drivers/clocksource/arm_arch_timer.c
->>
->> Instead of doing this, use the DT property "clock-frequency" on
->> the ARM arch timer node, as that overrides the CP15 setting.
->>
->>> +
->>> +               /* turn on GPT6 which ungates arch timer clocks */
->>> +               gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
->>> +       }
->>> +
->>> +       /* enabel clock and set to free-run */
->>> +       if (gpt_base)
->>> +               writel(0x31, gpt_base);
->>
->> Why is this not done properly in the GPT driver (I guess
->> in drivers/clocksource/mtk_timer.c) instead of remapping
->> it and fiddling around in the machine?
+Added DT maintainers as we have here quite fundamental DT question:
+
+How shall we model hardware connected to multiple buses, in DT?
+
+Here we have panel connected to two MIPI-DSI buses.
+
+Below is the summary of our propositions, followed by lengthly detailed
+discussion,
+including proposed bindings.
+
+Current propositions (ordered according to my preferences):
+1. Subnode of the first DSI master with phandle to 2nd DSI master.
+2. Separate node with phandles to both DSI masters.
+3. Two different subnodes of both DSI masters with the same compatible
+string,
+and phandle in one node to another one.
+4. Two different subnodes of both DSI masters with the same compatible
+string
+and separate node with another compatible string with phandles to both
+DSI subnodes.
+
+Notes:
+- in the first two cases I guess phandles should be accompanied with bus
+addresses,
+- here we have two DSI buses but the problem will be similar with other
+non-discoverable buses,
+- case of 3 and 4 are original Thierry propositions, if they are
+preferred I would consider to
+  use different compatible strings for DSI subnodes as they describe
+different HW interfaces.
+
+My additional comments below.
+
+On 08/08/2014 12:14 PM, Thierry Reding wrote:
+> On Fri, Aug 08, 2014 at 09:26:17AM +0200, Andrzej Hajda wrote:
+>> On 08/07/2014 10:54 AM, Thierry Reding wrote:
+>>> On Thu, Aug 07, 2014 at 10:39:36AM +0200, Andrzej Hajda wrote:
+>>>> On 08/07/2014 09:25 AM, Thierry Reding wrote:
+>>>>> On Thu, Aug 07, 2014 at 08:53:47AM +0200, Andrzej Hajda wrote:
+>>>>>> Hi Thierry,
+>>>>>>
+>>>>>> Nice case.
+>>>>>>
+>>>>>> On 08/05/2014 05:39 PM, Thierry Reding wrote:
+>>>>>>> Hi everyone,
+>>>>>>>
+>>>>>>> I've been working on adding support for a panel that uses what's
+>>>>>>> commonly known as dual-channel DSI. Sometimes this is referred to as
+>>>>>>> ganged-mode as well.
+>>>>>>>
+>>>>>>> What is it, you ask? It's essentially a hack to work around the band-
+>>>>>>> width restrictions of DSI, albeit one that's been commonly implemented
+>>>>>>> by several SoC vendors.
+>>>>>>>
+>>>>>>> This typically works by equipping a peripheral with two DSI interfaces,
+>>>>>>> each of which driving one half of the screen (symmetric left-right mode)
+>>>>>>> or every other line (symmetric odd-even mode). Apparently there can be
+>>>>>>> asymmetric modes in addition to those two, but they seem to be the
+>>>>>>> common ones. Often both of the DSI interfaces need to be configured
+>>>>>>> using DCS commands and vendor specific registers.
+>>>>>>>
+>>>>>>> A single display controller is typically used video data transmission.
+>>>>>>> This is necessary to provide synchronization and avoid tearing and all
+>>>>>>> kinds of other ugliness. For this to work both DSI controllers need to
+>>>>>>> be made aware of which chunk of the video data stream is addressing
+>>>>>>> them.
+>>>>>>>
+>>>>>>> From a software perspective, this poses two problems:
+>>>>>>>
+>>>>>>> 1) A dual-channel device is composed of two DSI peripheral devices which
+>>>>>>>    cannot be programmed independently of each other. A typical example
+>>>>>>>    is that the frame memory extents need to be configured differently
+>>>>>>>    for each of the devices (using the DCS set_column_address and
+>>>>>>>    set_page_address commands). Therefore each device must know of the
+>>>>>>>    other, or there must be a driver that binds against a dummy device
+>>>>>>>    that pulls in the two real devices.
+>>>>>> I am not sure if I understand correctly, but I see it rather as one
+>>>>>> device with two dsi-slave interfaces. Probably panel driver can
+>>>>>> create dsi dummy device to program some registers
+>>>>>> via second dsi interface but the panel will be attached to one control bus.
+>>>>>> It seems to be very similar to mfd/i2c devices with two or more i2c
+>>>>>> addresses.
+>>>>> They are in fact attached to two different control busses. The DSI
+>>>>> controllers that talk to each are separate. On Tegra they are the same
+>>>>> type of IP block, but still two separate instances (with their own
+>>>>> clock, reset, etc. inputs).
+>>>>>
+>>>>> So the panel driver can't create a dummy device to talk to the second
+>>>>> DSI interface because the second DSI interface uses a different DSI
+>>>>> host.
+>>>> Why different DSI host does not allow that? The only thing panel needs
+>>>> is the reference to another DSI host and this can be provided via
+>>>> DT direct phandle or video interface.
+>>> I'm sure one could find ways to make it work. That doesn't mean it's a
+>>> good idea, though. The second peripheral is physically there on the
+>>> second DSI host controller's bus, so it the device should be in device
+>>> tree because so that the device tree matches reality.
+>> The question is what is the reality? Do we have two separate dsi
+>> devices? In such case
+>> both devices should appear in DT.
+>> If we have single device attached to two different DSI hosts I suppose
+>> device should appear
+>> only in one location in DT with link to another DSI host.
+> Doesn't the fact that both devices are connected to different DSI hosts
+> make them separate device? While it's physically one device only (there
+> is one panel), device tree defines devices in terms of the control bus
+> that they are connected to. Since in this case both subdevices are
+> controlled by different DSI hosts that makes them separate devices.
 >
-> I didn't put it in the GPT driver, because that would mean, that you
-> need to have the mtk_timer to be able to use the ARM arch timer.
-> From my understanding this are two independent blocks in the SoC.
-> Apart from that, as stated in the commit message, this patch is a
-> workaround until we have a bootloader which does this for us.
-> Therefore I thought the init_time function would be the better place to do this.
+>>>>>>> 2) On the DSI host side, each of the controller instances needs to know
+>>>>>>>    the intimate details of the other controller (or alternatively, one
+>>>>>>>    controller needs to be a "master" and the other a "slave").
+>>>>>> The question is if they need to communicate each other, or they have
+>>>>>> to have similar configurations applied?
+>>>>> On Tegra at least the configuration needs to be almost the same. There
+>>>>> are two registers that may need to be programmed differently. But they
+>>>>> don't have to communicate with each other. Essentially the two registers
+>>>>> that require different programming define which parts of the display
+>>>>> controller's data stream they need to capture and turn into DSI packets.
+>>>>>
+>>>>> Theoretically it would be possible to make this work with two completely
+>>>>> different DSI controllers, but in practice I'd expect that to never
+>>>>> happen. So I'm not sure we need to consider the case where the register
+>>>>> layout is different between the two DSI host controllers.
+>>>> So maybe the configuration could be provided by the panel.
+>>> What configuration? I suppose one idea would be for the panel driver to
+>>> set the type of dual-channel mode that it's using. Panels can typically
+>>> be configured to do symmetric left-right or symmetric odd-even. I think
+>>> technically it's possible to have asymmetric modes, too, but to be
+>>> honest I don't want to think about those yet.
+>>>
+>>> So I think it's reasonable for the DSI device to provide information as
+>>> to what mode it's using. Perhaps that could be done as part of the slave
+>>> setup.
+>>>
+>>>>> I've come up with another alternative that works:
+>>>>>
+>>>>> 	dsi@54300000 {
+>>>>> 		panel: panel@0 {
+>>>>> 			compatible = "sharp,lq101r1sx01";
+>>>>> 			reg = <0>;
+>>>>> 		};
+>>>>> 	};
+>>>>>
+>>>>> 	dsi@54400000 {
+>>>>> 		panel@0 {
+>>>>> 			compatible = "sharp,lq101r1sx01";
+>>>>> 			reg = <0>;
+>>>>>
+>>>>> 			master = <&panel>;
+>>>>> 		};
+>>>>> 	};
+>>>> But here you have again two compatibles and two devices in DT representing
+>>>> one HW device.
+>>> Because that's what they really are. There are two different devices,
+>>> it's just that they happen to be driving two separate halves of the same
+>>> panel.
+>> Compatible string "sharp,lq101r1sx01" clearly indicates that there are
+>> two panels of type LQ101R1SX01.
+>> If you really want to split this panel as two separate devices maybe you
+>> should probably use separate
+>> compatibles to make it more clear, sth like: "sharp,lq101r1sx01_link1",
+>> "sharp,lq101r1sx01_link2".
+>> Anyway it looks odd to me :)
+> As best as I can tell both subdevices are actually the same.
 
-I agree that the bootloader is the right place, and the fixup in the
-machine code until that is in place is the right place for the fixup.
+The first represents LINK1 according to spec, more specifically
+pins 2-16 of the chip, the 2nd represents LINK2 (pins 17-31) :)
+The first is probably only for the left part, the 2nd for the right part
+of the panel,
+or respectively even/odd lines.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What about TE pin? It is single for the whole panel. Where do you want
+to place it?
+The same question regarding power pins.
+
+>  Although it
+> seems like commands written to the primary channel have an effect on the
+> device as a whole. For example if you send a DCS exit_sleep_mode command
+> to the primary channel then both devices will wake up. Similarly sending
+> the DCS set_display_on command will turn on the display on both halves,
+> not just the one. I haven't checked yet whether the same is true when
+> the commands are sent to the secondary.
+>
+> One other solution I had thought about looked something like this:
+>
+> 	dsi@54300000 {
+> 		left: panel@0 {
+> 			compatible = "sharp,lq101r1sx01-link";
+> 			reg = <0>;
+> 			...
+> 		};
+> 	};
+>
+> 	dsi@54400000 {
+> 		right: panel@0 {
+> 			compatible = "sharp,lq101r1sx01-link";
+> 			reg = <0>;
+> 			...
+> 		};
+> 	};
+>
+> 	panel: panel {
+> 		compatible = "sharp,lq101r1sx01";
+> 		links = <&left &right>;
+> 	};
+>
+> The downside of that being that &panel becomes a non-DSI device and we
+> loose meta information such as the number of lanes etc.
+>
+> Perhaps this could be solved by using a device_type = "dsi" property and
+> thereby cause the driver core to instantiate a DSI device rather than a
+> platform device. Or perhaps even device_type = "dual-dsi" so that it
+> could directly hook up both channels.
+>
+> But that's not all that different from the minimal proposal above, and I
+> don't know if it's worth the trouble. Anyway, it would be good to hear
+> thoughts on this from the device tree maintainers.
+>
+>>>> I am not sure if it is better. If you do not like video
+>>>> interfaces
+>>>> maybe better would be sth like this:
+>>>>
+>>>> 	dsi@54300000 {
+>>>> 		panel: panel@0 {
+>>>> 			compatible = "sharp,lq101r1sx01";
+>>>> 			reg = <0>;
+>>>> 			secondary_dsi = <&dsiB>;
+>>>>  		};
+>>>> 	};
+>>>>
+>>>> 	dsiB: dsi@54400000 {
+>>>> 	};
+>>> That's pretty much the same thing that I proposed, except that it
+>>> reverses the link between the two.
+>> For me it is fundamentally different - in your proposition you have two
+>> different panels, in my you have only one, attached to one dsi with
+>> phandle to 2nd dsi.
+> Looking at the example again I don't see how it could work. The phandle
+> references the second DSI host, but we need a reference to the second
+> DSI peripheral. We can't just assume that it's on the same virtual
+> channel as the first.
+
+Phandle can be accompanied by bus address:
+    secondary_dsi = <&dsiB 0>;
+
+The rest of configuration if necessary can be specified by other properties.
+This way the driver can create 2nd device using DSI equivalent of
+i2c_new_device.
+And we do not have problem where to put TE gpio, regulators, maybe PWM
+phandle.
+
+Regards
+Andrzej
+
+>
+>>> In fact I tried something similar to
+>>> that before, but it has a couple of problems: if the secondary device
+>>> does not have a compatible string (that's probably not valid in device
+>>> tree to begin with) then there's no way for the device to report what
+>>> format it expects or what number of lanes it uses. But those are
+>>> parameters that are needed to set up the DSI (and display controllers).
+>> I2C has:
+>> struct i2c_client *
+>> i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
+>>
+>> DSI could have something similar, this way you could pass everything you
+>> need.
+> We don't need any of that if both devices have a proper compatible
+> string, which they should have anyway, since then the driver can fill in
+> those values as appropriate.
+>
+> Thierry
