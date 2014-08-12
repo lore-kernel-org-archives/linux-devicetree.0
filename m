@@ -1,73 +1,54 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
-Date: Tue, 12 Aug 2014 22:27:57 +0100
-Message-ID: <20140812212757.GY17528@sirena.org.uk>
-References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>
- <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk>
- <20140812172552.GU17528@sirena.org.uk>
- <53EA61B9.2070805@collabora.co.uk>
+Subject: Re: [PATCH 1/9] ASoC: mcasp: Fix implicit BLCK divider setting
+Date: Tue, 12 Aug 2014 23:04:48 +0100
+Message-ID: <20140812220448.GG17528@sirena.org.uk>
+References: <cover.1407332062.git.jsarha@ti.com>
+ <5e5987c830439e39d26a44580ebe01de631c10cc.1407332062.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UU1ixziQytOgr6B7"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="VZ4xAPYFtuHTmUjI"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53EA61B9.2070805@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <5e5987c830439e39d26a44580ebe01de631c10cc.1407332062.git.jsarha@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: linux-kernel@vger.kernel.org, mturquette@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, zonque@gmail.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
---UU1ixziQytOgr6B7
+--VZ4xAPYFtuHTmUjI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 12, 2014 at 08:49:29PM +0200, Javier Martinez Canillas wrote:
+On Wed, Aug 06, 2014 at 04:47:16PM +0300, Jyri Sarha wrote:
+> The implicit BLCK divider setting was broken by "ASoC: mcasp: don't
+> override bclk divider if it was provided by the machine"-patch. After
+> the BCLK divider is implicitly set for the first time the
+> mcasp->bclk_div gets a non zero value and the implicit setting is
+> "turned off".
 
-> So, is adding these voltages ranges (the design limits) in the Peach Pit =
-DTS
-> file directly an acceptable solution? Basically what my previous patch [0=
-] did.
+Applied, thanks.
 
-> That matches what is in the board schematic so I assume that it's safe to=
- use
-> these voltage ranges for that machine. If so I'll drop this series and re=
-post
-> that patch fixing the typo error and commit message pointed by Doug that =
-were
-> already addressed in $subject.
-
-Well, I think the question is if you understand where those numbers come
-=66rom and if they make sense.  I've not seen the schematic for the board
-so I can't comment but it is quite unusual to see ranges listed for so
-many supplies, for things like SD it's obviously normal but things like
-video_mid are a bit more surprising.  Does anything actually vary those
-voltages?
-
-The change where you fix up the supply mappings still makes sense of
-course.
-
---UU1ixziQytOgr6B7
+--VZ4xAPYFtuHTmUjI
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT6obaAAoJELSic+t+oim909kP/1okMQECkjemzwIec4io27fl
-qYZJEBgB9Jsm6J1k2iko77mU6fkQVoLJPbXKXhY1n7TecUbb7uPIcoYfAeVSTdKR
-AI0jwaOZTyWbPf87/UIiW6WUIgzRmp5Ckit6FsQFm0bQkfIRJgF6NCYsx8KAOEEX
-w90F0tncP0DkS6Z3lYaXwp9WL5G7STWJRopHjhYxTSXOeD/Uhu41PsIJ/aDHlnMi
-2JiyoBzVX3fGRxfa6uLAxPNUBXTVGtQUreet+HcQRZmnXRkXTgb0wluQ3o6gG0qj
-bh5JipFtjQ0v/d6ivPqaS9UraEF+Po8qW37Lswpv102xwmEViQpQIPqCcRRl1x6i
-0EDJdXczVBKH6YJWHuoswPuMrLIJ1I0OqPWaIQTVfx1v9DXgTpHBZYyzPLGf9KRs
-fmq6S1mNgYHnhMlapp2VbSWsH9PHlVKPbVrcSmVWQx67QaFg1C23z50lTUh82zxK
-nPM5ET3fYkxs0RbYbrNw5eAKO6SdYswBggD9ciMDL1pyo12+qEoNX3/SFzPlSnjz
-ppO82J4GImONl3FuuiXw9GY0I9IGjGcIeL7bUZ9JQNno+wyG29lpuii4xLft3yMD
-i63dM6Q76/VR3JYDotQabSaj4U/U4s2Y+8OJjLjvRIc0jAQE7jA4E7ef3tfgGWp6
-gtaPrvtN6bi4xxWUvq6j
-=XQWs
+iQIcBAEBAgAGBQJT6o99AAoJELSic+t+oim9ZiUP/3ZKLuAEGdJVdEDSJe5+eQ12
+ZEToqUdQ90TXh9h3wLE3Y8zW6R+Al/Gm8uOR3XnLe78eKlmHO5DqepLJsjfG6CEe
+VaveBkg4PQxiT9rvXgQG8r4WG4WmdcIp8Qel5Gx5jKfiIhLYpv78kfOpe/Mn6KdV
+cnDUzpqc2u461papufww8nOzxay95jNv4SrYPlytYikFtwZ45/BEkWLCdjqF41tk
+v34s8Sduzgu7sdr7odDDs2rc03BaI+B8M0jYMIWznZbZToPCi5+gMCqnCqXGYol8
+sre+0OBBGXZUawUZDHWWdV/77wPbS8eve3Uulzl7GIZPi3r6rWS5eeKpf4QhVjW6
+INqiIqsmiHX61Rwnx6d+nX+t8fks3r5TwbzD/v6U1Y77lXYt1pm5xNpxC/WPmVyB
+KrW+dDTnINDISFdapJzFzffkb2SIzz4C29CCeZudS9KjXuvse0l+BCXa39Kn8hVn
+iodcA9hKhV0YBTZeA0bp5W3xzgdb8vXX0ktBV/BfKCXNS3oSXIdRrjoKzN0Tq/H2
+Z9KUxuYLIpDCHHJktTZqD9kV2HSwZ15f/skG7k3Vj4pn4ZJrFjV92autDF+CVymf
+5Hi9UEBXPODaG0GbQKkDA4ifABV38TGnb41lMYqRUgv9iGNJkPKKBQPeqoWNagut
+FtuCUMfWtz07+ceJ6lvt
+=xopG
 -----END PGP SIGNATURE-----
 
---UU1ixziQytOgr6B7--
+--VZ4xAPYFtuHTmUjI--
