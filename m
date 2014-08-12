@@ -1,53 +1,57 @@
-From: Vince Hsu <vinceh@nvidia.com>
-Subject: Re: [PATCH v2 08/16] clk: tegra: Add Tegra124 DFLL clocksource platform
- driver
-Date: Tue, 12 Aug 2014 18:37:12 +0800
-Message-ID: <53E9EE58.3060408@nvidia.com>
-References: <1405957142-19416-1-git-send-email-ttynkkynen@nvidia.com> <1405957142-19416-9-git-send-email-ttynkkynen@nvidia.com>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: dra72-evm: Add i2c1 and tps65917 nodes
+Date: Tue, 12 Aug 2014 18:05:50 +0530
+Message-ID: <53EA0A26.1050301@ti.com>
+References: <1406528334-4415-1-git-send-email-j-keerthy@ti.com> <53D5EE21.1040000@ti.com> <53D61643.4070005@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1405957142-19416-9-git-send-email-ttynkkynen@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Paul Walmsley <pwalmsley@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53D61643.4070005-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 07/21/2014 11:38 PM, Tuomas Tynkkynen wrote:
-> Add basic platform driver support for the fast CPU cluster DFLL
-> clocksource found on Tegra124 SoCs. This small driver selects the
-> appropriate Tegra124-specific characterization data and integration
-> code. It relies on the DFLL common code to do most of the work.
+On Monday 28 July 2014 02:52 PM, Keerthy wrote:
+> On Monday 28 July 2014 12:00 PM, Lokesh Vutla wrote:
+>> On Monday 28 July 2014 11:48 AM, Keerthy wrote:
+>>> The patch series adds i2c1 and tps65917 and related nodes.
+>>> The patch series is boot tested on DRA72-EVM.
+>>>
+>>> Thanks to Lokesh <lokeshvutla-l0cyMroinI0@public.gmane.org> for testing the series.
 >
-> diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
-> index 47320ca..2f87188 100644
-> --- a/drivers/clk/tegra/Makefile
-> +++ b/drivers/clk/tegra/Makefile
-> @@ -16,3 +16,5 @@ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
->   obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
->   obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
->   obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
-> +obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124-dfll-fcpu.o
-> +obj-y					+= cvb.o
-> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> new file mode 100644
-> index 0000000..f068360
-> --- /dev/null
-> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-...
-> +	if (IS_ERR(cvb)) {
-> +		pr_err("couldn't build OPP table: %ld\n", PTR_ERR(cvb));
-> +		return PTR_ERR(cvb);
-> +	}
-> +
-> +	soc.assert_dvco_reset = tegra124_clock_assert_dfll_dvco_reset,
-> +	soc.deassert_dvco_reset = tegra124_clock_deassert_dfll_dvco_reset,
-nit: Use semicolon instead at the end of the two lines above.
+> Correcting the 'to' list.
 
+Hi Tony,
 
-Thanks,
-Vince
+If there are no comments could you please pull these two patches?
 
+Regards,
+Keerthy
+>
+>> For booting, this is dependent on recent hwmod fix patch series 
+>> posted by me:
+>> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg108001.html
+>>
+>> Boot log for this series can be found here:
+>> http://paste.ubuntu.com/7881545/
+>
+> Thanks Lokesh!
+>
+>> Thanks and regards,
+>> Lokesh
+>>> Keerthy J (2):
+>>>    ARM: dts: dra72-evm: Enable I2C1 node
+>>>    ARM: dts: dra72-evm: Add tps65917 PMIC node
+>>>
+>>>   arch/arm/boot/dts/dra72-evm.dts |  120 
+>>> +++++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 120 insertions(+)
+>>>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
