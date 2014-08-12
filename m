@@ -1,44 +1,60 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Allow mem_reserve of memory with a base address of
- zero
-Date: Tue, 12 Aug 2014 17:48:13 +0100
-Message-ID: <20140812164813.6B202C405D3@trevor.secretlab.ca>
-References: <1407357004-31713-1-git-send-email-alcooperx@gmail.com>
-	<CAL_Jsq+=EZu6_Dy59sAEE0B5T_uS1vA5YQQmKAe9vj0VOHVyCQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+=EZu6_Dy59sAEE0B5T_uS1vA5YQQmKAe9vj0VOHVyCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/6] ARM: dts: Create fragment for tps65090 PMU
+Date: Tue, 12 Aug 2014 17:58:52 +0100
+Message-ID: <20140812165852.GT17528@sirena.org.uk>
+References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1407861868-20097-2-git-send-email-javier.martinez@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="opPAX5Xc6j4THLmW"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407861868-20097-2-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Aug 2014 17:02:44 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Aug 6, 2014 at 3:30 PM, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > __reserved_mem_reserve_reg() won't reserve memory if the base address
-> > is zero. This change removes the check for a base address of zero and
-> > allows it to be reserved.
-> >
-> > Allowing the first 4K of memory to be reserved will help solve a
-> > problem on some ARM systems where the the first 16K of memory is
-> > unused and becomes allocable memory. This will prevent this memory
-> > from being used for DMA by drivers like the USB OHCI driver which
-> > consider a physical address of zero to be illegal.
-> 
-> OHCI driver or hardware? I agree with the change, but really think
-> this should be fixed in the driver in the former case or a property of
-> the OHCI node in the latter.
 
-I'm not hard and fast on that. I don't think it is unreasonable to
-reserve the base of memory as the platform level if there is a bug
-causing DMA to fail at that address.
+--opPAX5Xc6j4THLmW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If this is a common problem (and not merely a few boards) then I agree.
-Fixing it this way is just asking for the same problem to show up again
-and again on new boards that haven't explicitly reserved the memory.
+On Tue, Aug 12, 2014 at 06:44:23PM +0200, Javier Martinez Canillas wrote:
+> The tps65090 is a Power Management Unit (PMU) used in several
+> boards so the same information is described on different DTS.
+> It is better to create a .dtsi fragment that can be included.
 
-g.
+Why is it better to do this?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	regulators {
+> +		tps65090_dcdc1: dcdc1 {
+> +		};
+> +
+
+It appears to be largely content free, exactly the same effect should be
+achieved by removing the entire regulators node.
+
+--opPAX5Xc6j4THLmW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT6kfJAAoJELSic+t+oim9VVYP/iUUHeUs610ceooZPqBP1L+s
+f96QsZpIikhxYXW42eYY3IHxW2E82yF86quid6Gq+c9bdWQEWxuH1rS10BzYrBZX
+Lvbk0fma844K8MNb06/gsfLTrr4eSK0/zZTeUWMNgPFSaSY/+9wN7cCKu8S9ilv4
+43Ylehc2rvTBFYvQetf/Vdsth8gjthTmDhYrLCUpUiYifuaRth5PQnSR64Nhvl8z
+bKoEwMKCFjOHMxrIVSn7xVVpeUv4+3GG2Ed+Sy//ZuRgBrNRT2npI1MHW+pRLq+j
+MliFKetEwnKYSZ8mRDuN6acC2/QyIr/QatGZQx8HhO6DSGolhDQaMSv3qeIDitWl
+yuNq52WHK+IgtpkjXRBvjkRrHYnIfOA/kVtcS+LM283Bq0uZaAc/vbXx0zPdYxve
+Mr1e1wQx/7aaBFoURR7x55S4V1U6jFCwE3LmuJLBy+RvxPAhG8KVAeCUOhv4FMj5
+nD0DZZImBXFdTz2hbXh2UD06lfhJ715eVILuuBKorMeFiqWjtcLwnUA+nZ0kU6pF
+cogck/gGjlJqG5RfHIcLXasHkYJcWmuJVH+XdQnul3sQwyMGjF4BNGqmU6E1FjjG
+S18vfl4/7uFryUZing9hiiraBd3f4oUDwzl6J2kzd6IR7uHw+W6wh4W4MsL6A/IK
+Uijx9WTj3lEnRcQ2G9VX
+=D5qG
+-----END PGP SIGNATURE-----
+
+--opPAX5Xc6j4THLmW--
