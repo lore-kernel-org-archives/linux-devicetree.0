@@ -1,50 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RESEND: PATCH 1/2] mfd: tc3589x: Add device tree bindings
-Date: Tue, 12 Aug 2014 20:02:02 +0200
-Message-ID: <CACRpkdY2xjp9=muE5WFoN3smzgC+cqR0ijgD306nXi7owEGyyw@mail.gmail.com>
-References: <1397028480-15413-1-git-send-email-linus.walleij@linaro.org>
-	<20140617202340.GW29841@lee--X1>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
+Date: Tue, 12 Aug 2014 20:49:29 +0200
+Message-ID: <53EA61B9.2070805@collabora.co.uk>
+References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk> <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk> <20140812172552.GU17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20140617202340.GW29841@lee--X1>
-Sender: linux-input-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linux Input <linux-input@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140812172552.GU17528@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 10:23 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Wed, 09 Apr 2014, Linus Walleij wrote:
->
->> This defines the device tree bindings for the Toshiba TC3589x
->> series of multi-purpose expanders. Only the stuff I can test
->> is defined: GPIO and keypad. Others may implement more
->> subdevices further down the road.
->>
->> This is to complement
->> commit a435ae1d51e2f18414f2a87219fdbe068231e692
->> "mfd: Enable the tc3589x for Device Tree" which left off
->> the definition of the device tree bindings.
->>
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> ---
->> ChangeLog v2->v3:
->> - Fix the keys/rows bindings to be u32 rather than
->>   /bits/ 8, inconsistency noted by Mark Rutland.
->> ChangeLog v1->v2:
->> - Include a verbose example in the DT bindings.
->> - Explain why this is a stand-alone bindings patch.
->> ---
->>  Documentation/devicetree/bindings/mfd/tc3589x.txt | 107 ++++++++++++++++++++++
->>  1 file changed, 107 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/tc3589x.txt
->
-> Looks about right, been on the list for ages and doesn't add any new
-> properties.  Applied, thanks.
+On 08/12/2014 07:25 PM, Mark Brown wrote:
+> 
+>>  		tps65090_fet1: fet1 {
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <17000000>;
+>>  		};
+> 
+> No, this is completely broken and exactly the sort of thing that makes
+> doing generic device .dtsi a bad idea.  We have absolutely no idea if
+> these voltage ranges are suitable for use on a given board using the
+> device, these are the design limits for the device but tell us nothing
+> about the system they are deployed in.
+> 
 
-This wasn't in the v3.17 pull request AFAICT :-(
+Thanks for the explanation. I did the refactoring because I saw that there are
+.dtsi files for other PMICs already (twl4030, twl6030, tps65*) but now you also
+explained that those are broken as well.
 
-Did it get dropped to the floor accidentally?
+So, is adding these voltages ranges (the design limits) in the Peach Pit DTS
+file directly an acceptable solution? Basically what my previous patch [0] did.
 
-Yours,
-Linus Walleij
+That matches what is in the board schematic so I assume that it's safe to use
+these voltage ranges for that machine. If so I'll drop this series and repost
+that patch fixing the typo error and commit message pointed by Doug that were
+already addressed in $subject.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/8/11/204
