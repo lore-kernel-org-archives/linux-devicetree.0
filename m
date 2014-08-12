@@ -1,240 +1,154 @@
-Return-Path: <westeri@linux.intel.com>
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [RFC PATCH 6/9] gpiolib: add API to get gpio desc and flags
-Date: Sat, 16 Aug 2014 09:53:56 +0300
-Message-Id: <1408172039-32513-7-git-send-email-mika.westerberg@linux.intel.com>
-In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+In-Reply-To: <53EA6830.1010600@opensource.altera.com>
+References: <1406843944-7780-1-git-send-email-atull@opensource.altera.com>
+	<1406843944-7780-2-git-send-email-atull@opensource.altera.com>
+	<CAL_JsqLBfjNrphkLF95v==4+4VRNn-bht+kruMpPMyEKCyQcBA@mail.gmail.com>
+	<53EA6830.1010600@opensource.altera.com>
+Date: Tue, 12 Aug 2014 17:01:47 -0500
+Message-ID: <CAL_JsqKNbj5PVzxBg5gmLq_uNC21FrOhBTjXOP7VOiYXBaixZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] fpga manager framework core
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To: Alan Tull <atull@opensource.altera.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Cesar Eduardo Barros <cesarb@cesarb.net>, Samuel Ortiz <sameo@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Aaron Lu <aaron.lu@intel.com>
+=20
 
-Add a new API to get the GPIO's description pointer and its flags for
-both OF based system and ACPI based system. This is useful in drivers
-that do not need to care about the underlying firmware interface.
-
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-Signed-off-by: Max Eliaser <max.eliaser@intel.com>
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c   | 81 ++++++++++++++++++++++++++++++++-----------
- drivers/gpio/gpiolib.c        | 18 ++++++++++
- drivers/gpio/gpiolib.h        |  8 +++++
- include/linux/gpio/consumer.h | 11 ++++++
- 4 files changed, 97 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 4a987917c186..f35e88d29a47 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -293,11 +293,38 @@ static int acpi_find_gpio(struct acpi_resource *ares, void *data)
- 			agpio->connection_type == ACPI_RESOURCE_GPIO_TYPE_INT;
- 		lookup->info.active_low =
- 			agpio->polarity == ACPI_ACTIVE_LOW;
-+		lookup->info.pin_config = agpio->pin_config;
- 	}
- 
- 	return 1;
- }
- 
-+static struct gpio_desc *
-+__acpi_get_gpiod_by_index(struct acpi_device *adev, int index,
-+			  struct acpi_gpio_info *info)
-+{
-+	struct acpi_gpio_lookup lookup;
-+	struct list_head resource_list;
-+	int ret;
-+
-+	memset(&lookup, 0, sizeof(lookup));
-+	lookup.index = index;
-+
-+	INIT_LIST_HEAD(&resource_list);
-+	ret = acpi_dev_get_resources(adev, &resource_list, acpi_find_gpio,
-+				     &lookup);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	acpi_dev_free_resource_list(&resource_list);
-+
-+	if (lookup.desc && info)
-+		*info = lookup.info;
-+
-+	return lookup.desc ? lookup.desc : ERR_PTR(-ENOENT);
-+}
-+
-+
- /**
-  * acpi_get_gpiod_by_index() - get a GPIO descriptor from device resources
-  * @dev: pointer to a device to get GPIO from
-@@ -318,34 +345,46 @@ static int acpi_find_gpio(struct acpi_resource *ares, void *data)
- struct gpio_desc *acpi_get_gpiod_by_index(struct device *dev, int index,
- 					  struct acpi_gpio_info *info)
- {
--	struct acpi_gpio_lookup lookup;
--	struct list_head resource_list;
--	struct acpi_device *adev;
--	acpi_handle handle;
--	int ret;
--
--	if (!dev)
-+	if (!dev || !ACPI_COMPANION(dev))
- 		return ERR_PTR(-EINVAL);
-+	return __acpi_get_gpiod_by_index(ACPI_COMPANION(dev), index, info);
-+}
- 
--	handle = ACPI_HANDLE(dev);
--	if (!handle || acpi_bus_get_device(handle, &adev))
--		return ERR_PTR(-ENODEV);
--
--	memset(&lookup, 0, sizeof(lookup));
--	lookup.index = index;
-+struct gpio_desc *acpi_get_gpiod_flags(struct device *dev, int idx,
-+				       enum gpio_lookup_flags *flags)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct acpi_reference_args args;
-+	struct acpi_gpio_info info;
-+	struct gpio_desc *desc;
-+	bool active_low;
-+	int ret;
- 
--	INIT_LIST_HEAD(&resource_list);
--	ret = acpi_dev_get_resources(adev, &resource_list, acpi_find_gpio,
--				     &lookup);
--	if (ret < 0)
-+	ret = acpi_dev_get_property_reference(adev, "gpios", NULL, idx, &args);
-+	if (ret)
- 		return ERR_PTR(ret);
- 
--	acpi_dev_free_resource_list(&resource_list);
-+	desc = __acpi_get_gpiod_by_index(args.adev, args.args[0], &info);
-+	if (IS_ERR(desc))
-+		return desc;
- 
--	if (lookup.desc && info)
--		*info = lookup.info;
-+	/*
-+	 * The 3rd argument optionally specifies the pin polarity. We
-+	 * use that if it exists, otherwise we resort to the pin config.
-+	 * (Note that the first element of the "gpios" package goes into
-+	 * arg.adev, not args.args.)
-+	 */
-+	if (args.nargs >= 3)
-+		active_low = !!args.args[2];
-+	else if (info.gpioint)
-+		active_low = !!info.active_low;
-+	else
-+		active_low = !!(info.pin_config & ACPI_PIN_CONFIG_PULLUP);
- 
--	return lookup.desc ? lookup.desc : ERR_PTR(-ENOENT);
-+	if (active_low)
-+		*flags |= GPIO_ACTIVE_LOW;
-+
-+	return desc;
- }
- 
- static acpi_status
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 2ebc9071e354..e6c2413a6fbf 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2644,6 +2644,24 @@ static struct gpio_desc *acpi_find_gpio(struct device *dev, const char *con_id,
- 	return desc;
- }
- 
-+struct gpio_desc *dev_get_gpiod_flags(struct device *dev, unsigned int idx,
-+				      enum gpio_lookup_flags *flags)
-+{
-+	struct gpio_desc *desc = ERR_PTR(-ENOENT);
-+
-+	if (!dev || !flags)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* Using device tree? */
-+	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
-+		desc = of_find_gpio(dev, NULL, idx, flags);
-+	else if (IS_ENABLED(CONFIG_ACPI) && ACPI_COMPANION(dev))
-+		desc = acpi_get_gpiod_flags(dev, idx, flags);
-+
-+	return desc;
-+}
-+EXPORT_SYMBOL(dev_get_gpiod_flags);
-+
- static struct gpiod_lookup_table *gpiod_find_lookup_table(struct device *dev)
- {
- 	const char *dev_id = dev ? dev_name(dev) : NULL;
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 1a4103dd38df..a759db968e51 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -25,6 +25,7 @@ enum of_gpio_flags;
- struct acpi_gpio_info {
- 	bool gpioint;
- 	bool active_low;
-+	u8 pin_config;
- };
- 
- #ifdef CONFIG_ACPI
-@@ -33,6 +34,8 @@ void acpi_gpiochip_remove(struct gpio_chip *chip);
- 
- struct gpio_desc *acpi_get_gpiod_by_index(struct device *dev, int index,
- 					  struct acpi_gpio_info *info);
-+struct gpio_desc *acpi_get_gpiod_flags(struct device *dev, int index,
-+				       enum gpio_lookup_flags *flags);
- #else
- static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
- static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
-@@ -43,6 +46,11 @@ acpi_get_gpiod_by_index(struct device *dev, int index,
- {
- 	return ERR_PTR(-ENOSYS);
- }
-+static struct gpio_desc *acpi_get_gpiod_flags(struct device *dev, int index,
-+					      enum gpio_lookup_flags *flags)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
- #endif
- 
- int gpiochip_request_own_desc(struct gpio_desc *desc, const char *label);
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 05e53ccb708b..53f422e4f0c9 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -7,6 +7,8 @@
- 
- struct device;
- 
-+enum gpio_lookup_flags;
-+
- /**
-  * Opaque descriptor for a GPIO. These are obtained using gpiod_get() and are
-  * preferable to the old integer-based handles.
-@@ -73,6 +75,9 @@ int gpiod_to_irq(const struct gpio_desc *desc);
- struct gpio_desc *gpio_to_desc(unsigned gpio);
- int desc_to_gpio(const struct gpio_desc *desc);
- 
-+struct gpio_desc *dev_get_gpiod_flags(struct device *dev, unsigned int idx,
-+				      enum gpio_lookup_flags *flags);
-+
- #else /* CONFIG_GPIOLIB */
- 
- static inline struct gpio_desc *__must_check gpiod_get(struct device *dev,
-@@ -254,6 +259,12 @@ static inline int desc_to_gpio(const struct gpio_desc *desc)
- 	return -EINVAL;
- }
- 
-+static inline struct gpio_desc *dev_get_gpiod_flags(struct device *dev,
-+			unsigned int idx, enum gpio_lookup_flags *flags)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
- 
- #endif /* CONFIG_GPIOLIB */
- 
--- 
-2.1.0.rc1
+On Tue, Aug 12, 2014 at 2:17 PM, Alan Tull <atull@opensource.altera.com> wr=
+ote:
+>
+> On 08/08/2014 04:16 PM, Rob Herring wrote:
+>> On Thu, Jul 31, 2014 at 4:59 PM, Alan Tull <atull@opensource.altera.com>=
+ wrote:
+>>> This core exports methods of doing operations on FPGAs.
+>> I'm sticking to some high-level comments for the moment...
+>>
+>>> EXPORT_SYMBOL_GPL(fpga_mgr_write);
+>>>   Write FPGA given a buffer and count.
+>>>
+>>> EXPORT_SYMBOL_GPL(fpga_mgr_firmware_write);
+>>>   Request firmware and write that to a fpga
+>>>
+>>> EXPORT_SYMBOL_GPL(fpga_mgr_status_get);
+>>>   Get a status string, including failure information
+>>>
+>>> EXPORT_SYMBOL_GPL(fpga_mgr_name);
+>>>   Get name of FPGA manager
+>>>
+>>> EXPORT_SYMBOL_GPL(register_fpga_manager);
+>>> EXPORT_SYMBOL_GPL(remove_fpga_manager);
+>>>   Register/unregister low level fpga driver
+>> I understand these 2 being for low-level drivers, but ...
+>>
+>>> All userspace interfaces are in separate files so that
+>>> they can be compiled out on production builds where
+>>> appropriate.
+>> How do you envision the other functions to be used besides by
+>> userspace?
+>
+> fpga_mgr_firmware_write() can by used in a driver's probe function.  Not =
+much more complicated than the current firmware interface.  It requires one=
+ other function - of_fpga_mgr_dev_lookup() which is in the third patch, sho=
+uld move it to the core patch probably.  Eliminating the error checking, a =
+driver probe could add this:
+>
+> struct device_node *np =3D pdev->dev.of_node;
+>
+> /* find the fpga pointed to by this driver's 'fpgamgr' device tree proper=
+ty */
+> struct fpga_manager *mgr =3D of_fpga_mgr_dev_lookup(np, "fpgamgr", &ret);
+>
+> /* request the bitstream file from firmware layer and write it to fpga */
+> fpga_mgr_firmware_write(mgr, "driver-fpga-image.rbf");
+>
+> /* then enable the fpga bridges */
+>
+> Also these low level functions can be used by various interfaces that cou=
+ld put programming in userspace control.  My two main points for this set o=
+f patches are: separating the kernel core stuff from the interface, and ena=
+bling DT control.  So I want to have enough here that any higher level inte=
+rface will have what it needs.
+>
+>> Automatically loading bit files embedded in your DT?
+>
+> Yes.  There's an example device tree fragment in the third patch.   Usual=
+ly multiple soft ip blocks are included in a single fpga image, so the exam=
+ple in the third patch has the device drivers one level below the fpga mana=
+ger bus (the example only shows one gpio driver).  The fpga image will get =
+loaded, then the drivers get probed due to Pantelis's dynamic DT code.
+>
+> The fpga bus adds two DT properties: 'fpgamgr' and 'fpga-firmware' proper=
+ties.  The 'fpgamgr' property is the phandle for the fpga to load (so multi=
+ple fpgas are supported, but not hard coded anywhere).  The 'fpga-firmware'=
+ property is the name of the firmware file to load.
+>
+> The part I want to add to the next version is enabling bridges, which has=
+ to happen between loading the fpga image and probing the drivers.
+>
+>>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+>> [...]
+>>
+>>> +const char *state_str[] =3D {
+>>> +       "default",
+>>> +       "firmware_request",
+>>> +       "write_init",
+>>> +       "write",
+>>> +       "write_complete",
+>>> +       "write_success",
+>>> +       "read_init",
+>>> +       "read",
+>>> +       "read_complete",
+>>> +       "read_done",
+>>> +};
+>>> +
+>>> +/*
+>>> + * Provide status as: [state] [fail] [busy] such as
+>>> + *  'firmware_request fail' =3D failed to load firmware image from fil=
+esystem
+>>> + *  'write fail'            =3D failed while writing to FPGA
+>>> + *  'write_success'         =3D after writing, low level driver return=
+s success
+>> I would combine the sysfs patch with this as they are clearly related.
+>
+> Yeah, this limited read-only sysfs could be merged to the core.  There wa=
+s some thinking behind having it separate that I want to be clear about.
+>
+> Some users of the fpga manager need to have the load sequence tightly con=
+trolled by userspace.   I want to have that type of interface as a separate=
+ C file and enabled by defconfig.  That way people with really complicated =
+use cases can have the interface that will suit them.
+>
+> The use case I am most aware of can be pretty simple: ARM with a single t=
+ightly coupled FPGA.  I don't want to make any initial decisions that get i=
+n the way of something that will work for PCI FPGAs or other use cases that=
+ are a lot more complicated.  On the other hand, I don't want to saddle thi=
+s with an interface that is driven by the most complicated scenario, especi=
+ally when there could be production cases where the firmware can be loaded =
+by the DT and won't need a lot of userspace interaction.
+>
+> So this strategy is separating core, bus, and interface(s) that put the f=
+pga manager under userspace control.
+>
+>> You seem to mix state and status here. For example, "write_success
+>> fail" makes no sense.
+>
+> I could have state and status as two separate sysfs entries.  The goal is=
+ to give enough useful information to know what what stage of things went w=
+rong.
+>
+>> I think you are exposing to many low level
+>> details both to userspace and perhaps specific to Altera.
+>
+> Hmm OK, will need to revisit that and keep it usable for everybody.  I st=
+ill am not adamantly opposed to having status be a string reported by the l=
+ower level driver.  Although that can be more manufacturor-specific, that m=
+ight make sense at that point since we want to know what (in this specific =
+FPGA's write sequence) went wrong.
+>
+>> How is read used?
+>
+> Errr by the fpga_mgr_read function that I need to add.
+>> Rob
+>
