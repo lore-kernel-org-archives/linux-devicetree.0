@@ -1,84 +1,73 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/4] ARM: dts: Add emmc and sdmmc to the rk3288 device tree
-Date: Tue, 12 Aug 2014 14:06:11 -0700
-Message-ID: <CAD=FV=Wsc-Pkvg9jumdg9i1oO+T1=jtZTfbc+qE5RDrCXaaezA@mail.gmail.com>
-References: <1407344984-14176-1-git-send-email-dianders@chromium.org>
-	<1407344984-14176-2-git-send-email-dianders@chromium.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
+Date: Tue, 12 Aug 2014 22:27:57 +0100
+Message-ID: <20140812212757.GY17528@sirena.org.uk>
+References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk>
+ <20140812172552.GU17528@sirena.org.uk>
+ <53EA61B9.2070805@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1407344984-14176-2-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UU1ixziQytOgr6B7"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53EA61B9.2070805@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
 
-On Wed, Aug 6, 2014 at 10:09 AM, Doug Anderson <dianders@chromium.org> wrote:
-> This adds support for the sdmmc and emmc ports on the rk3288 using the
-> currently posted driver from Addy at:
->   https://patchwork.kernel.org/patch/4653631/
->
-> Note:
-> * This is not baesd on Jaehoon's patch series removing the slot node,
->   but it does use new syntax like putting the bus width at the top
->   level and using the new cap-mmc-highspeed / cap-sd-highspeed.  A
->   future patch will modify this one to remove the slot node.
->
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Changes in v3: None
-> Changes in v2:
-> - New patchwork link for Addy's patch
->
->  arch/arm/boot/dts/rk3288.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index e7cb008..dc98a5b 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -78,6 +78,28 @@
->                 clock-frequency = <24000000>;
->         };
->
-> +       sdmmc: dwmmc@ff0c0000 {
-> +               compatible = "rockchip,rk3288-dw-mshc";
-> +               clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
-> +               clock-names = "biu", "ciu";
-> +               fifo-depth = <0x100>;
-> +               interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0xff0c0000 0x4000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
+--UU1ixziQytOgr6B7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When doing other testing I realized that I missed a:
-  status = "disabled";
+On Tue, Aug 12, 2014 at 08:49:29PM +0200, Javier Martinez Canillas wrote:
 
-...from both of these two nodes.  I'm happy to repost with this fix or
-I'm happy if you want to add to the patch when applying.
+> So, is adding these voltages ranges (the design limits) in the Peach Pit =
+DTS
+> file directly an acceptable solution? Basically what my previous patch [0=
+] did.
 
-Let me know.  Thanks!
+> That matches what is in the board schematic so I assume that it's safe to=
+ use
+> these voltage ranges for that machine. If so I'll drop this series and re=
+post
+> that patch fixing the typo error and commit message pointed by Doug that =
+were
+> already addressed in $subject.
 
+Well, I think the question is if you understand where those numbers come
+=66rom and if they make sense.  I've not seen the schematic for the board
+so I can't comment but it is quite unusual to see ranges listed for so
+many supplies, for things like SD it's obviously normal but things like
+video_mid are a bit more surprising.  Does anything actually vary those
+voltages?
 
-> +       };
-> +
-> +       emmc: dwmmc@ff0f0000 {
-> +               compatible = "rockchip,rk3288-dw-mshc";
-> +               clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
-> +               clock-names = "biu", "ciu";
-> +               fifo-depth = <0x100>;
-> +               interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0xff0f0000 0x4000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +       };
-> +
->         i2c1: i2c@ff140000 {
->                 compatible = "rockchip,rk3288-i2c";
->                 reg = <0xff140000 0x1000>;
-> --
-> 2.0.0.526.g5318336
->
+The change where you fix up the supply mappings still makes sense of
+course.
+
+--UU1ixziQytOgr6B7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT6obaAAoJELSic+t+oim909kP/1okMQECkjemzwIec4io27fl
+qYZJEBgB9Jsm6J1k2iko77mU6fkQVoLJPbXKXhY1n7TecUbb7uPIcoYfAeVSTdKR
+AI0jwaOZTyWbPf87/UIiW6WUIgzRmp5Ckit6FsQFm0bQkfIRJgF6NCYsx8KAOEEX
+w90F0tncP0DkS6Z3lYaXwp9WL5G7STWJRopHjhYxTSXOeD/Uhu41PsIJ/aDHlnMi
+2JiyoBzVX3fGRxfa6uLAxPNUBXTVGtQUreet+HcQRZmnXRkXTgb0wluQ3o6gG0qj
+bh5JipFtjQ0v/d6ivPqaS9UraEF+Po8qW37Lswpv102xwmEViQpQIPqCcRRl1x6i
+0EDJdXczVBKH6YJWHuoswPuMrLIJ1I0OqPWaIQTVfx1v9DXgTpHBZYyzPLGf9KRs
+fmq6S1mNgYHnhMlapp2VbSWsH9PHlVKPbVrcSmVWQx67QaFg1C23z50lTUh82zxK
+nPM5ET3fYkxs0RbYbrNw5eAKO6SdYswBggD9ciMDL1pyo12+qEoNX3/SFzPlSnjz
+ppO82J4GImONl3FuuiXw9GY0I9IGjGcIeL7bUZ9JQNno+wyG29lpuii4xLft3yMD
+i63dM6Q76/VR3JYDotQabSaj4U/U4s2Y+8OJjLjvRIc0jAQE7jA4E7ef3tfgGWp6
+gtaPrvtN6bi4xxWUvq6j
+=XQWs
+-----END PGP SIGNATURE-----
+
+--UU1ixziQytOgr6B7--
