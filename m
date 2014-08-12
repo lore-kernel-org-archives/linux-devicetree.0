@@ -1,58 +1,93 @@
-From: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: Allow mem_reserve of memory with a base address of
- zero
-Date: Tue, 12 Aug 2014 10:02:35 -0700
-Message-ID: <53EA48AB.4030902@codeaurora.org>
-References: <1407357004-31713-1-git-send-email-alcooperx@gmail.com>	<CAL_Jsq+=EZu6_Dy59sAEE0B5T_uS1vA5YQQmKAe9vj0VOHVyCQ@mail.gmail.com> <20140812164813.6B202C405D3@trevor.secretlab.ca>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: sama5d3: add usart dma configurations
+Date: Tue, 12 Aug 2014 19:08:53 +0200
+Message-ID: <53EA4A25.1040707@atmel.com>
+References: <1407854277-328-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140812164813.6B202C405D3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1407854277-328-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/12/2014 9:48 AM, Grant Likely wrote:
-> On Wed, 6 Aug 2014 17:02:44 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Aug 6, 2014 at 3:30 PM, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> __reserved_mem_reserve_reg() won't reserve memory if the base address
->>> is zero. This change removes the check for a base address of zero and
->>> allows it to be reserved.
->>>
->>> Allowing the first 4K of memory to be reserved will help solve a
->>> problem on some ARM systems where the the first 16K of memory is
->>> unused and becomes allocable memory. This will prevent this memory
->>> from being used for DMA by drivers like the USB OHCI driver which
->>> consider a physical address of zero to be illegal.
->>
->> OHCI driver or hardware? I agree with the change, but really think
->> this should be fixed in the driver in the former case or a property of
->> the OHCI node in the latter.
+On 12/08/2014 16:37, Ludovic Desroches :
+> Add the DMA configuration for USARTs mainly because it is not obvious to
+> add the FIFO flag which is needed for rx.
+
+Indeed.
+
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Thanks, best regards,
+
+> ---
+>  arch/arm/boot/dts/sama5d3.dtsi |   15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> I'm not hard and fast on that. I don't think it is unreasonable to
-> reserve the base of memory as the platform level if there is a bug
-> causing DMA to fail at that address.
-> 
-> If this is a common problem (and not merely a few boards) then I agree.
-> Fixing it this way is just asking for the same problem to show up again
-> and again on new boards that haven't explicitly reserved the memory.
-> 
-> g.
+> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+> index e0b15a6..829c162 100644
+> --- a/arch/arm/boot/dts/sama5d3.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+> @@ -177,6 +177,9 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xf001c000 0x100>;
+>  				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(3)>,
+> +				       <&dma0 2 (AT91_DMA_CFG_PER_ID(4) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart0>;
+>  				clocks = <&usart0_clk>;
+> @@ -188,6 +191,9 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xf0020000 0x100>;
+>  				interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
+> +				       <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart1>;
+>  				clocks = <&usart1_clk>;
+> @@ -333,6 +339,9 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xf8020000 0x100>;
+>  				interrupts = <14 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(7)>,
+> +				       <&dma1 2 (AT91_DMA_CFG_PER_ID(8) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart2>;
+>  				clocks = <&usart2_clk>;
+> @@ -344,6 +353,9 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xf8024000 0x100>;
+>  				interrupts = <15 IRQ_TYPE_LEVEL_HIGH 5>;
+> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(9)>,
+> +				       <&dma1 2 (AT91_DMA_CFG_PER_ID(10) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_usart3>;
+>  				clocks = <&usart3_clk>;
+> @@ -410,6 +422,9 @@
+>  				compatible = "atmel,at91sam9260-usart";
+>  				reg = <0xffffee00 0x200>;
+>  				interrupts = <2 IRQ_TYPE_LEVEL_HIGH 7>;
+> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(13)>,
+> +				       <&dma1 2 (AT91_DMA_CFG_PER_ID(14) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_dbgu>;
+>  				clocks = <&dbgu_clk>;
 > 
 
-Reserving memory at physical address 0 has been semi-common on our boards
-for many issues. Sometimes it's been for temporary debugging purposes
-to catch an unknown driver corrupting physical address 0. Sometimes it has
-been a permanent fix to a hardware limitation.
-
-Thanks,
-Laura
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
