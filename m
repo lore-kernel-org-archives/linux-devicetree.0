@@ -1,52 +1,26 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 3/6] ARM: dts: Create cros-tps65090 fragment
-Date: Tue, 12 Aug 2014 20:58:09 +0200
-Message-ID: <53EA63C1.2040302@collabora.co.uk>
-References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>	<1407861868-20097-4-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=XNsQ_8h-d8epU_gzWRH=A49a8iuirWCUe4TO6VGCvDSw@mail.gmail.com>
+From: sergei.shtylyov@cogentembedded.com
+Subject: [PATCH v5 0/2] Add VIN and ADV7180 device tree support for R8A7790/Lager board
+Date: Wed, 13 Aug 2014 00:10:19 +0400
+Message-ID: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XNsQ_8h-d8epU_gzWRH=A49a8iuirWCUe4TO6VGCvDSw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
+Hello.
 
-Thanks for your feedback.
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-v3.16-20140811' tag. Here Ben Dooks adds the VIN and ADV7180
+video decoder device tree support on the R8A7790/Lager board. The patchset
+requires Ben Dooks' 'rcar_vin' and 'soc_camera' DT support patches (already
+merged to the 'media_tree.git' repo) in order to work.
 
-On 08/12/2014 07:26 PM, Doug Anderson wrote:
-> Javier,
-> 
-> On Tue, Aug 12, 2014 at 9:44 AM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->> The tps65090 PMU is a component used in many ChromeOS devices
->> so instead of having the same device tree definitions in many
->> files, create a .dtsi fragment that can be included in DTS.
->>
->> This fragment is based on the DT definitions for Peach boards.
->>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> ---
->>  arch/arm/boot/dts/cros-tps65090.dtsi | 81 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 81 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/cros-tps65090.dtsi
-> 
-> I'd probably skip this patch (just have duplication in pit vs. pi), or
-> make it "peach" specific (like exynos-peach-tps65090.dtsi?).  This is
-> really board-specific info and trying to guess what the various FETs
-> are going to be for for all peach variants doesn't seem great.
->
+[1/2] ARM: shmobile: r8a7790: add VIN device nodes
+[2/2] ARM: shmobile: lager: add VIN1/ADV7180 device nodes
 
-Yes, I guess I went to far on the refactoring with this patch. Most likely I'll
-drop the whole series anyway and just add the voltage constraints and parent
-supplies to the board DTS, now that Mark explained to me that this refactoring
-is actually doing more harm than good.
+WBR, Sergei
 
-> -Doug
-> 
-
-Best regards,
-Javier
