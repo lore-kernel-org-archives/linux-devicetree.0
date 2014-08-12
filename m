@@ -1,92 +1,84 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v5 2/2] ARM: shmobile: lager: add VIN1/ADV7180 device nodes
-Date: Wed, 13 Aug 2014 00:18:26 +0400
-Message-ID: <703960137.fSsccWupA3@wasted.cogentembedded.com>
-References: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/4] ARM: dts: Add emmc and sdmmc to the rk3288 device tree
+Date: Tue, 12 Aug 2014 14:06:11 -0700
+Message-ID: <CAD=FV=Wsc-Pkvg9jumdg9i1oO+T1=jtZTfbc+qE5RDrCXaaezA@mail.gmail.com>
+References: <1407344984-14176-1-git-send-email-dianders@chromium.org>
+	<1407344984-14176-2-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1407344984-14176-2-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
+Heiko,
 
-Add the Lager board specific device node part for VIN1 (composite video in);
-add the device node for Analog Devices ADV7180 video decoder to IIC2 bus.
-Add the necessary subnodes to interconnect VIN1 and ADV7180 devices.
+On Wed, Aug 6, 2014 at 10:09 AM, Doug Anderson <dianders@chromium.org> wrote:
+> This adds support for the sdmmc and emmc ports on the rk3288 using the
+> currently posted driver from Addy at:
+>   https://patchwork.kernel.org/patch/4653631/
+>
+> Note:
+> * This is not baesd on Jaehoon's patch series removing the slot node,
+>   but it does use new syntax like putting the bus width at the top
+>   level and using the new cap-mmc-highspeed / cap-sd-highspeed.  A
+>   future patch will modify this one to remove the slot node.
+>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> Changes in v3: None
+> Changes in v2:
+> - New patchwork link for Addy's patch
+>
+>  arch/arm/boot/dts/rk3288.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index e7cb008..dc98a5b 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -78,6 +78,28 @@
+>                 clock-frequency = <24000000>;
+>         };
+>
+> +       sdmmc: dwmmc@ff0c0000 {
+> +               compatible = "rockchip,rk3288-dw-mshc";
+> +               clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
+> +               clock-names = "biu", "ciu";
+> +               fifo-depth = <0x100>;
+> +               interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +               reg = <0xff0c0000 0x4000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-[Sergei: rebased, edited changelog and summary]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+When doing other testing I realized that I missed a:
+  status = "disabled";
 
----
-Changes in version 5:
-- edited changelog and summary;
-- resolved reject, refreshed patch.
+...from both of these two nodes.  I'm happy to repost with this fix or
+I'm happy if you want to add to the patch when applying.
 
- arch/arm/boot/dts/r8a7790-lager.dts |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Let me know.  Thanks!
 
-Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
-+++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -234,6 +234,11 @@
- 		renesas,groups = "usb2";
- 		renesas,function = "usb2";
- 	};
-+
-+	vin1_pins: vin {
-+		renesas,groups = "vin1_data8", "vin1_clk";
-+		renesas,function = "vin1";
-+	};
- };
- 
- &ether {
-@@ -370,6 +375,19 @@
- 	status = "ok";
- 	pinctrl-0 = <&iic2_pins>;
- 	pinctrl-names = "default";
-+
-+	composite-in@20 {
-+		compatible = "adi,adv7180";
-+		reg = <0x20>;
-+		remote = <&vin1>;
-+
-+		port {
-+			adv7180: endpoint {
-+				bus-width = <8>;
-+				remote-endpoint = <&vin1ep0>;
-+			};
-+		};
-+	};
- };
- 
- &iic3 {
-@@ -405,3 +423,21 @@
- 	pinctrl-0 = <&usb2_pins>;
- 	pinctrl-names = "default";
- };
-+
-+/* composite video input */
-+&vin1 {
-+	pinctrl-0 = <&vin1_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "ok";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vin1ep0: endpoint {
-+			remote-endpoint = <&adv7180>;
-+			bus-width = <8>;
-+		};
-+	};
-+};
 
+> +       };
+> +
+> +       emmc: dwmmc@ff0f0000 {
+> +               compatible = "rockchip,rk3288-dw-mshc";
+> +               clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
+> +               clock-names = "biu", "ciu";
+> +               fifo-depth = <0x100>;
+> +               interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +               reg = <0xff0f0000 0x4000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +       };
+> +
+>         i2c1: i2c@ff140000 {
+>                 compatible = "rockchip,rk3288-i2c";
+>                 reg = <0xff140000 0x1000>;
+> --
+> 2.0.0.526.g5318336
+>
