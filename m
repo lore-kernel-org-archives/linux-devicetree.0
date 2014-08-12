@@ -1,94 +1,53 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: sama5d3: add usart dma configurations
-Date: Tue, 12 Aug 2014 19:08:53 +0200
-Message-ID: <53EA4A25.1040707@atmel.com>
-References: <1407854277-328-1-git-send-email-ludovic.desroches@atmel.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/6] ARM: dts: Create fragment for tps65090 PMU
+Date: Tue, 12 Aug 2014 19:21:35 +0200
+Message-ID: <53EA4D1F.2030406@collabora.co.uk>
+References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk> <1407861868-20097-2-git-send-email-javier.martinez@collabora.co.uk> <20140812165852.GT17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407854277-328-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140812165852.GT17528@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/2014 16:37, Ludovic Desroches :
-> Add the DMA configuration for USARTs mainly because it is not obvious to
-> add the FIFO flag which is needed for rx.
+Hello Mark,
 
-Indeed.
-
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Thanks, best regards,
-
-> ---
->  arch/arm/boot/dts/sama5d3.dtsi |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+On 08/12/2014 06:58 PM, Mark Brown wrote:
+> On Tue, Aug 12, 2014 at 06:44:23PM +0200, Javier Martinez Canillas wrote:
+>> The tps65090 is a Power Management Unit (PMU) used in several
+>> boards so the same information is described on different DTS.
+>> It is better to create a .dtsi fragment that can be included.
 > 
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-> index e0b15a6..829c162 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -177,6 +177,9 @@
->  				compatible = "atmel,at91sam9260-usart";
->  				reg = <0xf001c000 0x100>;
->  				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 5>;
-> +				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(3)>,
-> +				       <&dma0 2 (AT91_DMA_CFG_PER_ID(4) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
-> +				dma-names = "tx", "rx";
->  				pinctrl-names = "default";
->  				pinctrl-0 = <&pinctrl_usart0>;
->  				clocks = <&usart0_clk>;
-> @@ -188,6 +191,9 @@
->  				compatible = "atmel,at91sam9260-usart";
->  				reg = <0xf0020000 0x100>;
->  				interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
-> +				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
-> +				       <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
-> +				dma-names = "tx", "rx";
->  				pinctrl-names = "default";
->  				pinctrl-0 = <&pinctrl_usart1>;
->  				clocks = <&usart1_clk>;
-> @@ -333,6 +339,9 @@
->  				compatible = "atmel,at91sam9260-usart";
->  				reg = <0xf8020000 0x100>;
->  				interrupts = <14 IRQ_TYPE_LEVEL_HIGH 5>;
-> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(7)>,
-> +				       <&dma1 2 (AT91_DMA_CFG_PER_ID(8) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
-> +				dma-names = "tx", "rx";
->  				pinctrl-names = "default";
->  				pinctrl-0 = <&pinctrl_usart2>;
->  				clocks = <&usart2_clk>;
-> @@ -344,6 +353,9 @@
->  				compatible = "atmel,at91sam9260-usart";
->  				reg = <0xf8024000 0x100>;
->  				interrupts = <15 IRQ_TYPE_LEVEL_HIGH 5>;
-> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(9)>,
-> +				       <&dma1 2 (AT91_DMA_CFG_PER_ID(10) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
-> +				dma-names = "tx", "rx";
->  				pinctrl-names = "default";
->  				pinctrl-0 = <&pinctrl_usart3>;
->  				clocks = <&usart3_clk>;
-> @@ -410,6 +422,9 @@
->  				compatible = "atmel,at91sam9260-usart";
->  				reg = <0xffffee00 0x200>;
->  				interrupts = <2 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(13)>,
-> +				       <&dma1 2 (AT91_DMA_CFG_PER_ID(14) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
-> +				dma-names = "tx", "rx";
->  				pinctrl-names = "default";
->  				pinctrl-0 = <&pinctrl_dbgu>;
->  				clocks = <&dbgu_clk>;
+> Why is it better to do this?
+>
+
+Is better IMHO because we have a single place where the tps65090 information can
+be updated instead of duplicating the same definition on each DTS.
+
+This appears to be the current trend to better manage shared DTS snippet across
+different boards. Others examples are arch/arm/boot/dts/omap-gpmc-smsc911x.dtsi
+and arch/arm/boot/dts/twl6030.dtsi.
+
+>> +	regulators {
+>> +		tps65090_dcdc1: dcdc1 {
+>> +		};
+>> +
+> 
+> It appears to be largely content free, exactly the same effect should be
+> achieved by removing the entire regulators node.
 > 
 
+Yes it's content free but later "[PATCH 6/6] ARM: dts: Add tps65090 FETs
+constraints" [0] fills the FETs constraints [0]. This is a preparatory patch.
 
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, having all the regulators allows DTS files to reference the node by the
+label if they want to add other properties. I can squash this patch and 06/06 if
+you think that is better but I thought that the split makes it easier to review.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/8/12/377
