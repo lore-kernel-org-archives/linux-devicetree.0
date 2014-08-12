@@ -1,299 +1,67 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: Dual-channel DSI
-Date: Tue, 12 Aug 2014 18:00:58 +0200
-Message-ID: <53EA3A3A.7000600@samsung.com>
-References: <20140805153923.GA3072@ulmo.nvidia.com>
- <53E3227B.1010000@samsung.com> <20140807072530.GE17340@ulmo>
- <53E33B48.1080401@samsung.com> <20140807085424.GC13315@ulmo.nvidia.com>
- <53E47B99.3040105@samsung.com> <20140808101447.GF15852@ulmo>
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH Resend 0/2] arm64: Add PMU node for APM X-Gene Storm SoC
+Date: Tue, 12 Aug 2014 09:20:50 -0700
+Message-ID: <CAL85gmDw3-yacob+t+DcBU2qNhTUSj=cTBkv7kNc9ocTb+=FCA@mail.gmail.com>
+References: <1407800853-3149-1-git-send-email-fkan@apm.com>
+	<CALrVBkumLjUZMsfWTn3e_5U=jDFerx0LLzESiuNPZrnBVVfgQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140808101447.GF15852@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALrVBkumLjUZMsfWTn3e_5U=jDFerx0LLzESiuNPZrnBVVfgQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: patches <patches-qTEPVZfXA3Y@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added DT maintainers as we have here quite fundamental DT question:
-
-How shall we model hardware connected to multiple buses, in DT?
-
-Here we have panel connected to two MIPI-DSI buses.
-
-Below is the summary of our propositions, followed by lengthly detailed
-discussion,
-including proposed bindings.
-
-Current propositions (ordered according to my preferences):
-1. Subnode of the first DSI master with phandle to 2nd DSI master.
-2. Separate node with phandles to both DSI masters.
-3. Two different subnodes of both DSI masters with the same compatible
-string,
-and phandle in one node to another one.
-4. Two different subnodes of both DSI masters with the same compatible
-string
-and separate node with another compatible string with phandles to both
-DSI subnodes.
-
-Notes:
-- in the first two cases I guess phandles should be accompanied with bus
-addresses,
-- here we have two DSI buses but the problem will be similar with other
-non-discoverable buses,
-- case of 3 and 4 are original Thierry propositions, if they are
-preferred I would consider to
-  use different compatible strings for DSI subnodes as they describe
-different HW interfaces.
-
-My additional comments below.
-
-On 08/08/2014 12:14 PM, Thierry Reding wrote:
-> On Fri, Aug 08, 2014 at 09:26:17AM +0200, Andrzej Hajda wrote:
->> On 08/07/2014 10:54 AM, Thierry Reding wrote:
->>> On Thu, Aug 07, 2014 at 10:39:36AM +0200, Andrzej Hajda wrote:
->>>> On 08/07/2014 09:25 AM, Thierry Reding wrote:
->>>>> On Thu, Aug 07, 2014 at 08:53:47AM +0200, Andrzej Hajda wrote:
->>>>>> Hi Thierry,
->>>>>>
->>>>>> Nice case.
->>>>>>
->>>>>> On 08/05/2014 05:39 PM, Thierry Reding wrote:
->>>>>>> Hi everyone,
->>>>>>>
->>>>>>> I've been working on adding support for a panel that uses what's
->>>>>>> commonly known as dual-channel DSI. Sometimes this is referred to as
->>>>>>> ganged-mode as well.
->>>>>>>
->>>>>>> What is it, you ask? It's essentially a hack to work around the band-
->>>>>>> width restrictions of DSI, albeit one that's been commonly implemented
->>>>>>> by several SoC vendors.
->>>>>>>
->>>>>>> This typically works by equipping a peripheral with two DSI interfaces,
->>>>>>> each of which driving one half of the screen (symmetric left-right mode)
->>>>>>> or every other line (symmetric odd-even mode). Apparently there can be
->>>>>>> asymmetric modes in addition to those two, but they seem to be the
->>>>>>> common ones. Often both of the DSI interfaces need to be configured
->>>>>>> using DCS commands and vendor specific registers.
->>>>>>>
->>>>>>> A single display controller is typically used video data transmission.
->>>>>>> This is necessary to provide synchronization and avoid tearing and all
->>>>>>> kinds of other ugliness. For this to work both DSI controllers need to
->>>>>>> be made aware of which chunk of the video data stream is addressing
->>>>>>> them.
->>>>>>>
->>>>>>> From a software perspective, this poses two problems:
->>>>>>>
->>>>>>> 1) A dual-channel device is composed of two DSI peripheral devices which
->>>>>>>    cannot be programmed independently of each other. A typical example
->>>>>>>    is that the frame memory extents need to be configured differently
->>>>>>>    for each of the devices (using the DCS set_column_address and
->>>>>>>    set_page_address commands). Therefore each device must know of the
->>>>>>>    other, or there must be a driver that binds against a dummy device
->>>>>>>    that pulls in the two real devices.
->>>>>> I am not sure if I understand correctly, but I see it rather as one
->>>>>> device with two dsi-slave interfaces. Probably panel driver can
->>>>>> create dsi dummy device to program some registers
->>>>>> via second dsi interface but the panel will be attached to one control bus.
->>>>>> It seems to be very similar to mfd/i2c devices with two or more i2c
->>>>>> addresses.
->>>>> They are in fact attached to two different control busses. The DSI
->>>>> controllers that talk to each are separate. On Tegra they are the same
->>>>> type of IP block, but still two separate instances (with their own
->>>>> clock, reset, etc. inputs).
->>>>>
->>>>> So the panel driver can't create a dummy device to talk to the second
->>>>> DSI interface because the second DSI interface uses a different DSI
->>>>> host.
->>>> Why different DSI host does not allow that? The only thing panel needs
->>>> is the reference to another DSI host and this can be provided via
->>>> DT direct phandle or video interface.
->>> I'm sure one could find ways to make it work. That doesn't mean it's a
->>> good idea, though. The second peripheral is physically there on the
->>> second DSI host controller's bus, so it the device should be in device
->>> tree because so that the device tree matches reality.
->> The question is what is the reality? Do we have two separate dsi
->> devices? In such case
->> both devices should appear in DT.
->> If we have single device attached to two different DSI hosts I suppose
->> device should appear
->> only in one location in DT with link to another DSI host.
-> Doesn't the fact that both devices are connected to different DSI hosts
-> make them separate device? While it's physically one device only (there
-> is one panel), device tree defines devices in terms of the control bus
-> that they are connected to. Since in this case both subdevices are
-> controlled by different DSI hosts that makes them separate devices.
->
->>>>>>> 2) On the DSI host side, each of the controller instances needs to know
->>>>>>>    the intimate details of the other controller (or alternatively, one
->>>>>>>    controller needs to be a "master" and the other a "slave").
->>>>>> The question is if they need to communicate each other, or they have
->>>>>> to have similar configurations applied?
->>>>> On Tegra at least the configuration needs to be almost the same. There
->>>>> are two registers that may need to be programmed differently. But they
->>>>> don't have to communicate with each other. Essentially the two registers
->>>>> that require different programming define which parts of the display
->>>>> controller's data stream they need to capture and turn into DSI packets.
->>>>>
->>>>> Theoretically it would be possible to make this work with two completely
->>>>> different DSI controllers, but in practice I'd expect that to never
->>>>> happen. So I'm not sure we need to consider the case where the register
->>>>> layout is different between the two DSI host controllers.
->>>> So maybe the configuration could be provided by the panel.
->>> What configuration? I suppose one idea would be for the panel driver to
->>> set the type of dual-channel mode that it's using. Panels can typically
->>> be configured to do symmetric left-right or symmetric odd-even. I think
->>> technically it's possible to have asymmetric modes, too, but to be
->>> honest I don't want to think about those yet.
->>>
->>> So I think it's reasonable for the DSI device to provide information as
->>> to what mode it's using. Perhaps that could be done as part of the slave
->>> setup.
->>>
->>>>> I've come up with another alternative that works:
->>>>>
->>>>> 	dsi@54300000 {
->>>>> 		panel: panel@0 {
->>>>> 			compatible = "sharp,lq101r1sx01";
->>>>> 			reg = <0>;
->>>>> 		};
->>>>> 	};
->>>>>
->>>>> 	dsi@54400000 {
->>>>> 		panel@0 {
->>>>> 			compatible = "sharp,lq101r1sx01";
->>>>> 			reg = <0>;
->>>>>
->>>>> 			master = <&panel>;
->>>>> 		};
->>>>> 	};
->>>> But here you have again two compatibles and two devices in DT representing
->>>> one HW device.
->>> Because that's what they really are. There are two different devices,
->>> it's just that they happen to be driving two separate halves of the same
->>> panel.
->> Compatible string "sharp,lq101r1sx01" clearly indicates that there are
->> two panels of type LQ101R1SX01.
->> If you really want to split this panel as two separate devices maybe you
->> should probably use separate
->> compatibles to make it more clear, sth like: "sharp,lq101r1sx01_link1",
->> "sharp,lq101r1sx01_link2".
->> Anyway it looks odd to me :)
-> As best as I can tell both subdevices are actually the same.
-
-The first represents LINK1 according to spec, more specifically
-pins 2-16 of the chip, the 2nd represents LINK2 (pins 17-31) :)
-The first is probably only for the left part, the 2nd for the right part
-of the panel,
-or respectively even/odd lines.
-
-What about TE pin? It is single for the whole panel. Where do you want
-to place it?
-The same question regarding power pins.
-
->  Although it
-> seems like commands written to the primary channel have an effect on the
-> device as a whole. For example if you send a DCS exit_sleep_mode command
-> to the primary channel then both devices will wake up. Similarly sending
-> the DCS set_display_on command will turn on the display on both halves,
-> not just the one. I haven't checked yet whether the same is true when
-> the commands are sent to the secondary.
->
-> One other solution I had thought about looked something like this:
->
-> 	dsi@54300000 {
-> 		left: panel@0 {
-> 			compatible = "sharp,lq101r1sx01-link";
-> 			reg = <0>;
-> 			...
-> 		};
-> 	};
->
-> 	dsi@54400000 {
-> 		right: panel@0 {
-> 			compatible = "sharp,lq101r1sx01-link";
-> 			reg = <0>;
-> 			...
-> 		};
-> 	};
->
-> 	panel: panel {
-> 		compatible = "sharp,lq101r1sx01";
-> 		links = <&left &right>;
-> 	};
->
-> The downside of that being that &panel becomes a non-DSI device and we
-> loose meta information such as the number of lanes etc.
->
-> Perhaps this could be solved by using a device_type = "dsi" property and
-> thereby cause the driver core to instantiate a DSI device rather than a
-> platform device. Or perhaps even device_type = "dual-dsi" so that it
-> could directly hook up both channels.
->
-> But that's not all that different from the minimal proposal above, and I
-> don't know if it's worth the trouble. Anyway, it would be good to hear
-> thoughts on this from the device tree maintainers.
->
->>>> I am not sure if it is better. If you do not like video
->>>> interfaces
->>>> maybe better would be sth like this:
->>>>
->>>> 	dsi@54300000 {
->>>> 		panel: panel@0 {
->>>> 			compatible = "sharp,lq101r1sx01";
->>>> 			reg = <0>;
->>>> 			secondary_dsi = <&dsiB>;
->>>>  		};
->>>> 	};
->>>>
->>>> 	dsiB: dsi@54400000 {
->>>> 	};
->>> That's pretty much the same thing that I proposed, except that it
->>> reverses the link between the two.
->> For me it is fundamentally different - in your proposition you have two
->> different panels, in my you have only one, attached to one dsi with
->> phandle to 2nd dsi.
-> Looking at the example again I don't see how it could work. The phandle
-> references the second DSI host, but we need a reference to the second
-> DSI peripheral. We can't just assume that it's on the same virtual
-> channel as the first.
-
-Phandle can be accompanied by bus address:
-    secondary_dsi = <&dsiB 0>;
-
-The rest of configuration if necessary can be specified by other properties.
-This way the driver can create 2nd device using DSI equivalent of
-i2c_new_device.
-And we do not have problem where to put TE gpio, regulators, maybe PWM
-phandle.
-
-Regards
-Andrzej
-
->
->>> In fact I tried something similar to
->>> that before, but it has a couple of problems: if the secondary device
->>> does not have a compatible string (that's probably not valid in device
->>> tree to begin with) then there's no way for the device to report what
->>> format it expects or what number of lanes it uses. But those are
->>> parameters that are needed to set up the DSI (and display controllers).
->> I2C has:
->> struct i2c_client *
->> i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
+On Mon, Aug 11, 2014 at 8:47 PM, Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 12 August 2014 05:17, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> This patch series adds PMU node for APM X-Gene's Potenza CPU.
+>> Potenza CPU PMU is compatible with ARMv8-PMUv3.
 >>
->> DSI could have something similar, this way you could pass everything you
->> need.
-> We don't need any of that if both devices have a proper compatible
-> string, which they should have anyway, since then the driver can fill in
-> those values as appropriate.
+>> I have remove the previous notice regarding the dependancy on the GIC driver
+>> from the commit message.
+>>
+>> Feng Kan (1):
+>>   dt-bindings: Add Potenza PMU binding
+>>
+>> Vinayak Kale (1):
+>>   arm64: dts: Add PMU node for APM X-Gene Storm SOC
+>>
+>>  Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+>>  arch/arm64/boot/dts/apm-storm.dtsi            | 5 +++++
+>>  2 files changed, 6 insertions(+)
+>>
+>> --
+>> 1.9.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 >
-> Thierry
+> Hi Feng,
+>
+> Please follow proper protocol when resending patchset originally
+> authored by someone else.
+> (http://comments.gmane.org/gmane.linux.ports.arm.kernel/310795)
+I will retract this patch and reauthor it. The person originally started the
+patch has left the company. I will take over to resubmit it.
+
+
+>
+> Also, I see that original patchset clearly states that second patch
+> depends on a GIC patch [1] authored by you:
+>
+> [1]- https://lkml.org/lkml/2014/2/27/605
+> (irqchip:gic: change access of gicc_ctrl register to read modify write)
+>
+> I have recently posted RFC patch for PMU support in KVM ARM64
+> which also requires your GIC patch for APM X-Gene.
+>
+> Regards,
+> Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
