@@ -1,54 +1,102 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/9] ASoC: mcasp: Fix implicit BLCK divider setting
-Date: Tue, 12 Aug 2014 23:04:48 +0100
-Message-ID: <20140812220448.GG17528@sirena.org.uk>
-References: <cover.1407332062.git.jsarha@ti.com>
- <5e5987c830439e39d26a44580ebe01de631c10cc.1407332062.git.jsarha@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/4] ARM: dts: Add emmc and sdmmc to the rk3288 device tree
+Date: Wed, 13 Aug 2014 00:07:38 +0200
+Message-ID: <1445128.HbmmWnRJOL@phil>
+References: <1407344984-14176-1-git-send-email-dianders@chromium.org> <1407344984-14176-2-git-send-email-dianders@chromium.org> <CAD=FV=Wsc-Pkvg9jumdg9i1oO+T1=jtZTfbc+qE5RDrCXaaezA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VZ4xAPYFtuHTmUjI"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5e5987c830439e39d26a44580ebe01de631c10cc.1407332062.git.jsarha@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: linux-kernel@vger.kernel.org, mturquette@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, zonque@gmail.com, t-kristo@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=Wsc-Pkvg9jumdg9i1oO+T1=jtZTfbc+qE5RDrCXaaezA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Addy Ke <addy.ke@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Am Dienstag, 12. August 2014, 14:06:11 schrieb Doug Anderson:
+> Heiko,
+> 
+> On Wed, Aug 6, 2014 at 10:09 AM, Doug Anderson <dianders@chromium.org> 
+wrote:
+> > This adds support for the sdmmc and emmc ports on the rk3288 using the
+> > 
+> > currently posted driver from Addy at:
+> >   https://patchwork.kernel.org/patch/4653631/
+> > 
+> > Note:
+> > * This is not baesd on Jaehoon's patch series removing the slot node,
+> > 
+> >   but it does use new syntax like putting the bus width at the top
+> >   level and using the new cap-mmc-highspeed / cap-sd-highspeed.  A
+> >   future patch will modify this one to remove the slot node.
+> > 
+> > Signed-off-by: Doug Anderson <dianders@chromium.org>
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > Changes in v3: None
+> > Changes in v2:
+> > - New patchwork link for Addy's patch
+> > 
+> >  arch/arm/boot/dts/rk3288.dtsi | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> > index e7cb008..dc98a5b 100644
+> > --- a/arch/arm/boot/dts/rk3288.dtsi
+> > +++ b/arch/arm/boot/dts/rk3288.dtsi
+> > @@ -78,6 +78,28 @@
+> > 
+> >                 clock-frequency = <24000000>;
+> >         
+> >         };
+> > 
+> > +       sdmmc: dwmmc@ff0c0000 {
+> > +               compatible = "rockchip,rk3288-dw-mshc";
+> > +               clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
+> > +               clock-names = "biu", "ciu";
+> > +               fifo-depth = <0x100>;
+> > +               interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> > +               reg = <0xff0c0000 0x4000>;
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> 
+> When doing other testing I realized that I missed a:
+>   status = "disabled";
+> 
+> ...from both of these two nodes.  I'm happy to repost with this fix or
+> I'm happy if you want to add to the patch when applying.
+> 
+> Let me know.  Thanks!
 
---VZ4xAPYFtuHTmUjI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't really have a preference :-) . Btw. I also did plan on merging patches 
+1 +4 and 2+3 now that the slot-removal series has landed.
+Would this be ok with you?
 
-On Wed, Aug 06, 2014 at 04:47:16PM +0300, Jyri Sarha wrote:
-> The implicit BLCK divider setting was broken by "ASoC: mcasp: don't
-> override bclk divider if it was provided by the machine"-patch. After
-> the BCLK divider is implicitly set for the first time the
-> mcasp->bclk_div gets a non zero value and the implicit setting is
-> "turned off".
+So if you want to repost, you could do this as two patches already :-).
 
-Applied, thanks.
 
---VZ4xAPYFtuHTmUjI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Heiko
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> 
+> > +       };
+> > +
+> > +       emmc: dwmmc@ff0f0000 {
+> > +               compatible = "rockchip,rk3288-dw-mshc";
+> > +               clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
+> > +               clock-names = "biu", "ciu";
+> > +               fifo-depth = <0x100>;
+> > +               interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> > +               reg = <0xff0f0000 0x4000>;
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +       };
+> > +
+> > 
+> >         i2c1: i2c@ff140000 {
+> >         
+> >                 compatible = "rockchip,rk3288-i2c";
+> >                 reg = <0xff140000 0x1000>;
+> > 
+> > --
+> > 2.0.0.526.g5318336
 
-iQIcBAEBAgAGBQJT6o99AAoJELSic+t+oim9ZiUP/3ZKLuAEGdJVdEDSJe5+eQ12
-ZEToqUdQ90TXh9h3wLE3Y8zW6R+Al/Gm8uOR3XnLe78eKlmHO5DqepLJsjfG6CEe
-VaveBkg4PQxiT9rvXgQG8r4WG4WmdcIp8Qel5Gx5jKfiIhLYpv78kfOpe/Mn6KdV
-cnDUzpqc2u461papufww8nOzxay95jNv4SrYPlytYikFtwZ45/BEkWLCdjqF41tk
-v34s8Sduzgu7sdr7odDDs2rc03BaI+B8M0jYMIWznZbZToPCi5+gMCqnCqXGYol8
-sre+0OBBGXZUawUZDHWWdV/77wPbS8eve3Uulzl7GIZPi3r6rWS5eeKpf4QhVjW6
-INqiIqsmiHX61Rwnx6d+nX+t8fks3r5TwbzD/v6U1Y77lXYt1pm5xNpxC/WPmVyB
-KrW+dDTnINDISFdapJzFzffkb2SIzz4C29CCeZudS9KjXuvse0l+BCXa39Kn8hVn
-iodcA9hKhV0YBTZeA0bp5W3xzgdb8vXX0ktBV/BfKCXNS3oSXIdRrjoKzN0Tq/H2
-Z9KUxuYLIpDCHHJktTZqD9kV2HSwZ15f/skG7k3Vj4pn4ZJrFjV92autDF+CVymf
-5Hi9UEBXPODaG0GbQKkDA4ifABV38TGnb41lMYqRUgv9iGNJkPKKBQPeqoWNagut
-FtuCUMfWtz07+ceJ6lvt
-=xopG
------END PGP SIGNATURE-----
-
---VZ4xAPYFtuHTmUjI--
