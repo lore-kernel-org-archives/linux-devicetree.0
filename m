@@ -1,26 +1,87 @@
-From: sergei.shtylyov@cogentembedded.com
-Subject: [PATCH v5 0/2] Add VIN and ADV7180 device tree support for R8A7790/Lager board
-Date: Wed, 13 Aug 2014 00:10:19 +0400
-Message-ID: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v5 1/2] ARM: shmobile: r8a7790: add VIN device nodes
+Date: Wed, 13 Aug 2014 00:16:18 +0400
+Message-ID: <3266734.k9AqsXjshd@wasted.cogentembedded.com>
+References: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-v3.16-20140811' tag. Here Ben Dooks adds the VIN and ADV7180
-video decoder device tree support on the R8A7790/Lager board. The patchset
-requires Ben Dooks' 'rcar_vin' and 'soc_camera' DT support patches (already
-merged to the 'media_tree.git' repo) in order to work.
+Add device nodes for the four video input controllers on the R8A7790.
 
-[1/2] ARM: shmobile: r8a7790: add VIN device nodes
-[2/2] ARM: shmobile: lager: add VIN1/ADV7180 device nodes
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+[Sergei: renamed VIN device nodes, edited changelog]
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-WBR, Sergei
+---
+Changes in version 5:
+- renamed VIN device nodes;
+- edited changelog and summary;
+- refreshed patch.
+
+ arch/arm/boot/dts/r8a7790.dtsi |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
++++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+@@ -33,6 +33,10 @@
+ 		spi2 = &msiof1;
+ 		spi3 = &msiof2;
+ 		spi4 = &msiof3;
++		vin0 = &vin0;
++		vin1 = &vin1;
++		vin2 = &vin2;
++		vin3 = &vin3;
+ 	};
+ 
+ 	cpus {
+@@ -564,6 +568,38 @@
+ 		status = "disabled";
+ 	};
+ 
++	vin0: video@e6ef0000 {
++		compatible = "renesas,vin-r8a7790";
++		clocks = <&mstp8_clks R8A7790_CLK_VIN0>;
++		reg = <0 0xe6ef0000 0 0x1000>;
++		interrupts = <0 188 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
++	vin1: video@e6ef1000 {
++		compatible = "renesas,vin-r8a7790";
++		clocks = <&mstp8_clks R8A7790_CLK_VIN1>;
++		reg = <0 0xe6ef1000 0 0x1000>;
++		interrupts = <0 189 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
++	vin2: video@e6ef2000 {
++		compatible = "renesas,vin-r8a7790";
++		clocks = <&mstp8_clks R8A7790_CLK_VIN2>;
++		reg = <0 0xe6ef2000 0 0x1000>;
++		interrupts = <0 190 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
++	vin3: video@e6ef3000 {
++		compatible = "renesas,vin-r8a7790";
++		clocks = <&mstp8_clks R8A7790_CLK_VIN3>;
++		reg = <0 0xe6ef3000 0 0x1000>;
++		interrupts = <0 191 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
+ 	clocks {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
 
