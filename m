@@ -1,49 +1,81 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v4 2/2] DTS: serial: Add bindings documention for the Mediatek UARTs
-Date: Tue, 12 Aug 2014 16:12:17 +0200
-Message-ID: <1407852737-17265-3-git-send-email-matthias.bgg@gmail.com>
-References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, matthias.bgg@gmail.com, alan@linux.intel.com, varkabhadram@gmail.com, tklauser@distanz.ch, heiko@sntech.de, yingjoe.chen@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91: sama5d3: add usart dma configurations
+Date: Tue, 12 Aug 2014 16:37:57 +0200
+Message-ID: <1407854277-328-1-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation for the Mediatek UART.
+Add the DMA configuration for USARTs mainly because it is not obvious to
+add the FIFO flag which is needed for rx.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/serial/mtk-uart.txt        |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
+ arch/arm/boot/dts/sama5d3.dtsi |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-new file mode 100644
-index 0000000..6ca0e15
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-@@ -0,0 +1,20 @@
-+* Mediatek Universal Asynchronous Receiver/Transmitter (UART)
-+
-+Required properties:
-+- compatible: "mediatek,mt6577-uart"
-+  Compatibility with mt6577, mt6589, mt6582
-+
-+- reg: The base address of the UART register bank.
-+
-+- interrupts: A single interrupt specifier.
-+
-+- clocks: Clock driving the hardware.
-+
-+Example:
-+
-+	uart0: serial@11006000 {
-+		compatible = "mediatek,mt6577-uart";
-+		reg = <0x11006000 0x400>;
-+		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+	};
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index e0b15a6..829c162 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -177,6 +177,9 @@
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xf001c000 0x100>;
+ 				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 5>;
++				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(3)>,
++				       <&dma0 2 (AT91_DMA_CFG_PER_ID(4) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
++				dma-names = "tx", "rx";
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_usart0>;
+ 				clocks = <&usart0_clk>;
+@@ -188,6 +191,9 @@
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xf0020000 0x100>;
+ 				interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
++				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
++				       <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
++				dma-names = "tx", "rx";
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_usart1>;
+ 				clocks = <&usart1_clk>;
+@@ -333,6 +339,9 @@
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xf8020000 0x100>;
+ 				interrupts = <14 IRQ_TYPE_LEVEL_HIGH 5>;
++				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(7)>,
++				       <&dma1 2 (AT91_DMA_CFG_PER_ID(8) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
++				dma-names = "tx", "rx";
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_usart2>;
+ 				clocks = <&usart2_clk>;
+@@ -344,6 +353,9 @@
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xf8024000 0x100>;
+ 				interrupts = <15 IRQ_TYPE_LEVEL_HIGH 5>;
++				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(9)>,
++				       <&dma1 2 (AT91_DMA_CFG_PER_ID(10) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
++				dma-names = "tx", "rx";
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_usart3>;
+ 				clocks = <&usart3_clk>;
+@@ -410,6 +422,9 @@
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xffffee00 0x200>;
+ 				interrupts = <2 IRQ_TYPE_LEVEL_HIGH 7>;
++				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(13)>,
++				       <&dma1 2 (AT91_DMA_CFG_PER_ID(14) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
++				dma-names = "tx", "rx";
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+ 				clocks = <&dbgu_clk>;
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
