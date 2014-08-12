@@ -1,98 +1,44 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH 1/6] ARM: dts: Create fragment for tps65090 PMU
-Date: Tue, 12 Aug 2014 18:44:23 +0200
-Message-ID: <1407861868-20097-2-git-send-email-javier.martinez@collabora.co.uk>
-References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Allow mem_reserve of memory with a base address of
+ zero
+Date: Tue, 12 Aug 2014 17:48:13 +0100
+Message-ID: <20140812164813.6B202C405D3@trevor.secretlab.ca>
+References: <1407357004-31713-1-git-send-email-alcooperx@gmail.com>
+	<CAL_Jsq+=EZu6_Dy59sAEE0B5T_uS1vA5YQQmKAe9vj0VOHVyCQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+=EZu6_Dy59sAEE0B5T_uS1vA5YQQmKAe9vj0VOHVyCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The tps65090 is a Power Management Unit (PMU) used in several
-boards so the same information is described on different DTS.
-It is better to create a .dtsi fragment that can be included.
+On Wed, 6 Aug 2014 17:02:44 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Aug 6, 2014 at 3:30 PM, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > __reserved_mem_reserve_reg() won't reserve memory if the base address
+> > is zero. This change removes the check for a base address of zero and
+> > allows it to be reserved.
+> >
+> > Allowing the first 4K of memory to be reserved will help solve a
+> > problem on some ARM systems where the the first 16K of memory is
+> > unused and becomes allocable memory. This will prevent this memory
+> > from being used for DMA by drivers like the USB OHCI driver which
+> > consider a physical address of zero to be illegal.
+> 
+> OHCI driver or hardware? I agree with the change, but really think
+> this should be fixed in the driver in the former case or a property of
+> the OHCI node in the latter.
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
- arch/arm/boot/dts/tps65090.dtsi | 57 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 arch/arm/boot/dts/tps65090.dtsi
+I'm not hard and fast on that. I don't think it is unreasonable to
+reserve the base of memory as the platform level if there is a bug
+causing DMA to fail at that address.
 
-diff --git a/arch/arm/boot/dts/tps65090.dtsi b/arch/arm/boot/dts/tps65090.dtsi
-new file mode 100644
-index 0000000..a2ff534
---- /dev/null
-+++ b/arch/arm/boot/dts/tps65090.dtsi
-@@ -0,0 +1,57 @@
-+/*
-+ * Copyright (C) 2014 Google, Inc
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * Integrated Power Management Chip
-+ * http://www.ti.com/lit/ds/symlink/tps65090.pdf
-+ */
-+&tps {
-+	compatible = "ti,tps65090";
-+
-+	regulators {
-+		tps65090_dcdc1: dcdc1 {
-+		};
-+
-+		tps65090_dcdc2: dcdc2 {
-+		};
-+
-+		tps65090_dcdc3: dcdc3 {
-+		};
-+
-+		tps65090_fet1: fet1 {
-+		};
-+
-+		tps65090_fet2: fet2 {
-+		};
-+
-+		tps65090_fet3: fet3 {
-+		};
-+
-+		tps65090_fet4: fet4 {
-+		};
-+
-+		tps65090_fet5: fet5 {
-+		};
-+
-+		tps65090_fet6: fet6 {
-+		};
-+
-+		tps65090_fet7: fet7 {
-+		};
-+
-+		tps65090_ldo1: ldo1 {
-+		};
-+
-+		tps65090_ldo2: ldo2 {
-+		};
-+	};
-+
-+	tps65090_charger: charger {
-+		compatible = "ti,tps65090-charger";
-+	};
-+};
--- 
-2.0.0.rc2
+If this is a common problem (and not merely a few boards) then I agree.
+Fixing it this way is just asking for the same problem to show up again
+and again on new boards that haven't explicitly reserved the memory.
+
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
