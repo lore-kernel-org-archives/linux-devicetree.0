@@ -1,157 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5] input: drv260x: Add TI drv260x haptics driver
-Date: Wed, 13 Aug 2014 10:20:01 +0100
-Message-ID: <20140813092001.GB32644@leverpostej>
-References: <1406834089-15095-1-git-send-email-dmurphy@ti.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
+ timer working
+Date: Wed, 13 Aug 2014 11:29:12 +0200
+Message-ID: <CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
+References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
+	<1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
+	<CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
+	<CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
+	<CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406834089-15095-1-git-send-email-dmurphy@ti.com>
+In-Reply-To: <CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "madcatxster@devoid-pointer.net" <madcatxster@devoid-pointer.net>, "simon@mungewell.org" <simon@mungewell.org>, "elias.vds@gmail.com" <elias.vds@gmail.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Stephen Warren <swarren@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, stefan@agner.ch, Maxime Ripard <maxime.ripard@free-electrons.com>, "Berg, Anders" <anders.berg@lsi.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+2014-08-13 10:47 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Tue, Aug 12, 2014 at 11:02 AM, Matthias Brugger
+> <matthias.bgg@gmail.com> wrote:
+>> 2014-08-11 9:15 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+>>> On Thu, Jul 31, 2014 at 6:42 PM, Matthias Brugger
+>>> <matthias.bgg@gmail.com> wrote:
+>>>
+>>>> We enable GTP6 which ungates the arch timer clock. Apart we write the
+>>>> frequency with which the timer is running in the CNTFREQ register.
+>>>> In the future this should be done in the bootloader.
+>>>>
+>>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>> (...)
+>>>
+>>>> +       if (of_machine_is_compatible("mediatek,mt6589")) {
+>>>> +               /* set cntfreq register which is not done in bootloader */
+>>>> +               asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (13000000));
+>>>
+>>> I guess this is for something like the ARM arch timer in
+>>> drivers/clocksource/arm_arch_timer.c
+>>>
+>>> Instead of doing this, use the DT property "clock-frequency" on
+>>> the ARM arch timer node, as that overrides the CP15 setting.
+>>>
+>>>> +
+>>>> +               /* turn on GPT6 which ungates arch timer clocks */
+>>>> +               gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
+>>>> +       }
+>>>> +
+>>>> +       /* enabel clock and set to free-run */
+>>>> +       if (gpt_base)
+>>>> +               writel(0x31, gpt_base);
+>>>
+>>> Why is this not done properly in the GPT driver (I guess
+>>> in drivers/clocksource/mtk_timer.c) instead of remapping
+>>> it and fiddling around in the machine?
+>>
+>> I didn't put it in the GPT driver, because that would mean, that you
+>> need to have the mtk_timer to be able to use the ARM arch timer.
+>> From my understanding this are two independent blocks in the SoC.
+>> Apart from that, as stated in the commit message, this patch is a
+>> workaround until we have a bootloader which does this for us.
+>> Therefore I thought the init_time function would be the better place to do this.
+>
+> OK I get the point...
+>
+> What about the ARM arch timer fixup then, will that also be
+> fixed in the boot loader eventually?
 
-Apologies for the delay.
+Do you refer to clock frequency in the cntfreq register? I think that
+this should go in the DTS as you said.
+Same holds for the magic 0x31, which should be done through defines.
 
-On Thu, Jul 31, 2014 at 08:14:49PM +0100, Dan Murphy wrote:
-> Add the TI drv260x haptics/vibrator driver.
-> This device uses the input force feedback
-> to produce a wave form to driver an
-> ERM or LRA actuator device.
-> 
-> The initial driver supports the devices
-> real time playback mode.  But the device
-> has additional wave patterns in ROM.
-> 
-> This functionality will be added in
-> future patchsets.
-> 
-> Product data sheet is located here:
-> http://www.ti.com/product/drv2605
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v5 - Move register defines to c file and rm header file, error check
-> init in probe, fixed identation, remove empty labels in probe
-> and just return on fail and removed the remove callback and function.
-> Did not factor out the suspend into a stop function. - https://patchwork.kernel.org/patch/4649631/
-> v4 - Convert regulator to devm, added error checking where required,
-> updated bindings doc, moved dt parsing to separate call and made platform
-> data the first data point, moved vibrator enable and mode programming from
-> play entry to worker thread, added user check and input mutex in suspend/resume
-> calls, moved platform data to individual file and into include platform-data directory,
-> removed file names from file headers - https://patchwork.kernel.org/patch/4642221/
-> v3 - Updated binding doc, changed to memless device, updated input alloc to
-> devm, removed mutex locking, add sanity checks for mode and library - https://patchwork.kernel.org/patch/4635421/
-> v2 - Fixed binding doc and patch headline - https://patchwork.kernel.org/patch/4619641/
-> 
-> 
->  .../devicetree/bindings/input/ti,drv260x.txt       |   50 ++
->  drivers/input/misc/Kconfig                         |    9 +
->  drivers/input/misc/Makefile                        |    1 +
->  drivers/input/misc/drv260x.c                       |  697 ++++++++++++++++++++
->  include/dt-bindings/input/ti-drv260x.h             |   35 +
->  include/linux/platform_data/drv260x-pdata.h        |   29 +
->  6 files changed, 821 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/ti,drv260x.txt
->  create mode 100644 drivers/input/misc/drv260x.c
->  create mode 100644 include/dt-bindings/input/ti-drv260x.h
->  create mode 100644 include/linux/platform_data/drv260x-pdata.h
-> 
-> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> new file mode 100644
-> index 0000000..8e6970d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> @@ -0,0 +1,50 @@
-> +Texas Instruments - drv260x Haptics driver family
-> +
-> +The drv260x family serial control bus communicates through I2C protocols
-> +
-> +Required properties:
-> +       - compatible - One of:
-> +               "ti,drv2604" - DRV2604
-> +               "ti,drv2605" - DRV2605
-> +               "ti,drv2605l" - DRV2605L
-> +       - reg -  I2C slave address
-> +       - supply- Required supply regulators are:
-> +               "vbat" - battery voltage
+Cheers,
+Matthias
 
-This looks a bit odd, and seems to imply the name would be supply-vbat,
-which doesn't sound right. I assume this should be vbat-supply?
+>
+> Yours,
+> Linus Walleij
 
-If so, just have this as:
 
-- vbat-supply - regulator supplying battery voltage.
 
-> +       - mode - Power up mode of the chip (defined in include/dt-bindings/input/ti-drv260x.h)
-> +               DRV260X_LRA_MODE - Linear Resonance Actuator mode (Piezoelectric)
-> +               DRV260X_LRA_NO_CAL_MODE - This is a LRA Mode but there is no calibration
-> +                               sequence during init.  And the device is configured for real
-> +                               time playback mode (RTP mode).
-> +               DRV260X_ERM_MODE - Eccentric Rotating Mass mode (Rotary vibrator)
-> +       - library-sel - These are ROM based waveforms pre-programmed into the IC.
-> +                               This should be set to set the library to use at power up.
-> +                               (defined in include/dt-bindings/input/ti-drv260x.h)
-> +               DRV260X_LIB_A - Pre-programmed Library
-> +               DRV260X_LIB_B - Pre-programmed Library
-> +               DRV260X_LIB_C - Pre-programmed Library
-> +               DRV260X_LIB_D - Pre-programmed Library
-> +               DRV260X_LIB_E - Pre-programmed Library
-> +               DRV260X_LIB_F - Pre-programmed Library
-
-In the datasheet these seem to be ERM libraries A-E, then LRA library
-(not F).
-
-How does the library selection interact with the mode? Surely it only
-makes sense to select an ERM library in ERM mode?
-
-> +
-> +Optional properties:
-> +       - enable-gpio - gpio pin to enable/disable the device.
-> +       - vib_rated_voltage - The rated voltage of the actuator in millivolts.
-> +                         If this is not set then the value will be defaulted to
-> +                         3.2 v.
-> +       - vib_overdrive_voltage - The overdrive voltage of the actuator in millivolts.
-> +                         If this is not set then the value will be defaulted to
-> +                         3.2 v.
-
-It looks like you forogt to s/_/-/ here when the code was last updated.
-
-These would be better suffixed with -mv given they are in millivolts
-rather than volts.
-
-> +               enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +               mode = <DRV260X_LRA_MODE>;
-> +               library-sel = <DRV260X_LIB_SEL_DEFAULT>;
-
-This value is not described above. What happens if
-DRV260X_LIB_SEL_DEFAULT is selected?
-
-[...]
-
-> +/**
-> + * Rated and Overdriver Voltages:
-> + * Calculated using the formula r = v * 255 / 5.6
-> + * where r is what will be written to the register
-> + * and v is the rated or overdriver voltage of the actuator
-> + **/
-> +#define DRV260X_DEF_RATED_VOLT         0x90
-> +#define DRV260X_DEF_OD_CLAMP_VOLT      0x90
-> +
-> +static int drv260x_calculate_voltage(int voltage)
-> +{
-> +       return (voltage * 255 / 5600);
-> +}
-> +
-
-Shouldn't the comment be attached to the function rather than the
-defines?
-
-Thanks,
-Mark.
+-- 
+motzblog.wordpress.com
