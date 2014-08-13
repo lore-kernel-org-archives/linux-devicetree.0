@@ -1,70 +1,90 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
-Date: Wed, 13 Aug 2014 13:31:44 +0200
-Message-ID: <53EB4CA0.3010006@collabora.co.uk>
-References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk> <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk> <20140812172552.GU17528@sirena.org.uk> <53EA61B9.2070805@collabora.co.uk> <20140812212757.GY17528@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140812212757.GY17528@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/7] Add MFD and regulator drivers for Hi6421 PMIC SoC
+Date: Wed, 13 Aug 2014 19:33:37 +0800
+Message-ID: <1407929624-8737-1-git-send-email-guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+This patchset adds an MFD core driver and a regulator driver for Hi6421 PMIC
+SoC.
 
-On 08/12/2014 11:27 PM, Mark Brown wrote:
-> On Tue, Aug 12, 2014 at 08:49:29PM +0200, Javier Martinez Canillas wrote:
-> 
->> So, is adding these voltages ranges (the design limits) in the Peach Pit DTS
->> file directly an acceptable solution? Basically what my previous patch [0] did.
-> 
->> That matches what is in the board schematic so I assume that it's safe to use
->> these voltage ranges for that machine. If so I'll drop this series and repost
->> that patch fixing the typo error and commit message pointed by Doug that were
->> already addressed in $subject.
-> 
-> Well, I think the question is if you understand where those numbers come
-> from and if they make sense.  I've not seen the schematic for the board
-> so I can't comment but it is quite unusual to see ranges listed for so
-> many supplies, for things like SD it's obviously normal but things like
-> video_mid are a bit more surprising.  Does anything actually vary those
-> voltages?
-> 
+Hi6421 is a PMIC SoC designed and manufactured by HiSilicon Ltd. It includes
+multi-functions, such as regulators, codec, ADCs, Coulomb counter, etc.
+Hi6421 can be used in various Hi3620 SoC based boards. Registers in Hi6421 are
+memory bus mapped, so in this design they are accessed by regmap-mmio APIs.
 
-You are right, in fact even the voltage for the SD supply (tps65090 fet4) does
-not change but still their constraints have to be defined, since it is used as a
-vmmc-supply and the series "Adding UHS support for dw_mmc driver" [0] calls
-mmc_regulator_get_ocrmask()/mmc_regulator_set_ocr() for mmc->supply.vmmc.
+Hi6421 has a requirement to keep a guard delay between its regulator's
+disable and next enable. Implement this requirement in regulator core,
+per Mark Brown's suggestion.
 
-For fixed regulators (like fet4), mmc_regulator_set_ocr() just skips varying the
-regulator voltage but still expects to be able to obtain its voltage.
+---
+changes in v5:
+ * rename _regulator_delay to _regulator_enable_delay
+ * clean up hi6421_regulator_enable(), add 100us protective gap into
+     regulator_desc's .enable_time
+ * code clean up, fixes for style checking
+changes in v4:
+ * regulator: core:
+  - add const qualifier to ops in struct regulator_desc
+  - factor out _regulator_delay from _regulator_do_enable
+  - add guard delay between calling regulator_disable and _enable
+ * hi6421 regulator:
+  - bug fix: missing min_uV for linear regualtor BUCK0~2
+  - bug fix: wrong volt values in buck_3_voltages table
+  - add const to hi6421 regulator_ops
+  - use ldo_linear and ldo_linear_range in applicable LDOs.
+  - rename regulator-name to conform to names in board schematics.
+changes in v3:
+ * hi6421: regulator: remove setting of constraints on board-specific
+     capabilities
+ * delete unecessary compatible property "hisilicon,hi6421-regulators"
+ * change regulator enable/disable callback APIs to support protection
+gaps, as
+     required by hi6421 spec
+ * split regulator set_mode/get_mode callback APIs to LDOs and BUCKs
+ * delete hi6421.dtsi, mfd and regulator nodes are now in board config .dts
+changes in v2:
+ * use MFD APIs to manage sub-devices of Hi6421
+ * use regmap-mmio for register access
+ * use only generic regulator device tree property
+ * rewrite regulator driver using helper APIs from both regulator and regmap
+v1: first drop
 
-Since the FET is just a switch and doesn't have an output voltage, the regulator
-core gets its parent supply voltage but regulator_list_voltge() [1] checks that
-the obtained parent voltage is between the child regulator constraints.
+Guodong Xu (7):
+  regulator: core: add const qualifier to ops in struct regulator_desc
+  regulator: core: factor out delay function from _regulator_do_enable
+  regulator: core: add guard delay between calling regulator_disable and
+    _enable
+  mfd: Add hi6421 PMIC core driver
+  regulator: add driver for hi6421 voltage regulator
+  ARM: dts: hi3620-hi4511: Add HI6421 MFD and regulator nodes
+  ARM: hi3xxx_defconfig: Enable HI6421 MFD and Regulators
 
-So in this particular case it makes sense to compare that the parent voltage is
-between the (design limits) voltage ranges for the FET but I agree that it may
-not make sense on other boards.
+ Documentation/devicetree/bindings/mfd/hi6421.txt |  37 ++
+ arch/arm/boot/dts/hi3620-hi4511.dts              | 233 ++++++++
+ arch/arm/configs/hi3xxx_defconfig                |   3 +
+ drivers/mfd/Kconfig                              |  13 +
+ drivers/mfd/Makefile                             |   1 +
+ drivers/mfd/hi6421-pmic-core.c                   | 119 ++++
+ drivers/regulator/Kconfig                        |  10 +
+ drivers/regulator/Makefile                       |   1 +
+ drivers/regulator/core.c                         | 129 +++--
+ drivers/regulator/hi6421-regulator.c             | 657 +++++++++++++++++++++++
+ include/linux/mfd/hi6421-pmic.h                  |  39 ++
+ include/linux/regulator/driver.h                 |   8 +-
+ 12 files changed, 1203 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/hi6421.txt
+ create mode 100644 drivers/mfd/hi6421-pmic-core.c
+ create mode 100644 drivers/regulator/hi6421-regulator.c
+ create mode 100644 include/linux/mfd/hi6421-pmic.h
 
-Since I needed to add the ranges for fet4 I (wrongly) thought that it would make
-sense to add the ranges for all the other FETs in case other boards had a
-similar need. But now I understand your concerns about this series so I'll drop
-it and just post a patch that adds to the Peach Pit and Pi DTS, the constraints
-for the fet4 used as vmmc-supply instead of pretending that it's a common setup.
+-- 
+1.9.1
 
-> The change where you fix up the supply mappings still makes sense of
-> course.
->
-
-Good to know, again thanks a lot for your feedback and explanations.
-
-Best regards,
-Javier
-
-[0]: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265657.html
-[1]:
-https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/tree/drivers/regulator/core.c?h=for-next#n2209
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
