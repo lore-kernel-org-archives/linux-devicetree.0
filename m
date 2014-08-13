@@ -1,104 +1,36 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5/8] mtd: nand: stm_nand_bch: provide Device Tree documentation
-Date: Wed, 13 Aug 2014 10:12:04 +0100
-Message-ID: <1407921127-8590-6-git-send-email-lee.jones@linaro.org>
-References: <1407921127-8590-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1407921127-8590-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, computersforpeace@gmail.com, pekon@pek-sem.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] leds: add a driver for syscon-based LEDs
+Date: Wed, 13 Aug 2014 11:14:33 +0200
+Message-ID: <CACRpkdb5p5EO2G7TMQMdiugWN_oLC6fODKk-jG-VcTdcWHfqRQ@mail.gmail.com>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
+	<1406294628-16079-2-git-send-email-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1406294628-16079-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is where we describe the different new and generic options used by
-the ST BCH driver.
+On Fri, Jul 25, 2014 at 3:23 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/mtd/stm-nand.txt | 74 ++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
+> This makes it possible to create a set of LEDs from a syscon
+> MFD instance, which is lean mean and clean on the ARM
+> reference designs and can replace the Versatile LEDs driver
+> in the long run, as well as other custom syscon LEDs drivers.
+>
+> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt b/Documentation/devicetree/bindings/mtd/stm-nand.txt
-new file mode 100644
-index 0000000..3176252
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
-@@ -0,0 +1,74 @@
-+STM BCH NAND Support
-+--------------------
-+
-+Required properties:
-+
-+- compatible		: Should be "st,nand-bch"
-+- reg			: Should contain register's location and length
-+- reg-names		: "nand_mem" - NAND Controller register map
-+			  "nand_dma" - BCH Controller DMA configuration map
-+- interrupts		: Interrupt number
-+- interrupt-names	: "nand_irq" - NAND Controller IRQ
-+- st,nand-banks		: Subnode representing one or more "banks" of NAND
-+			  Flash, connected to an STM NAND Controller (see
-+			  description below).
-+- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
-+			  Options are; 0, 18 or 30. If not present, the driver
-+			  will choose the strongest scheme compatible if the
-+			  OOB size.
-+
-+Properties describing Bank of NAND Flash ("st,nand-banks"):
-+
-+- st,nand-csn		: Chip select associated with the Bank.
-+
-+- st,nand-timing-relax	: [Optional] Number of IP clock cycles by which to
-+			  "relax" timing configuration.  Required on some boards
-+			  to accommodate board-level limitations. Applies to
-+			  ONFI timing mode configuration.
-+
-+- nand-on-flash-bbt	: Generic NAND property (See mtd/nand.txt)
-+
-+- partitions		: [Optional] Subnode describing MTD partition map
-+			  (see mtd/partition.txt)
-+
-+Note, during initialisation, the NAND Controller timing registers are configured
-+according to one of the following methods, in order of precedence:
-+
-+	   1. Configuration based on ONFI timing mode, as advertised by the
-+	      device during ONFI-probing (ONFI-compliant NAND only).
-+
-+	   2. Use reset/safe timing values
-+
-+Example:
-+
-+	nand@fe901000 {
-+		compatible = "st,nand-bch";
-+		reg = <0xfe901000 0x1000>, <0xfef00800 0x0800>;
-+		reg-names = "nand_mem", "nand_dma";
-+		interrupts = <0 139 0x0>;
-+		interrupt-names = "nand_irq";
-+		nand-ecc-strength = <30>;
-+
-+		status = "okay";
-+
-+		bank0 {
-+			/* NAND_BBT_USE_FLASH */
-+			nand-on-flash-bbt;
-+			st,nand-csn		= <0>;
-+
-+			partitions {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				partition@0{
-+					label = "NANDFlash1";
-+					reg = <0x00000000 0x00800000>;
-+				};
-+
-+				partition@800000{
-+					label = "NANDFlash2";
-+					reg = <0x00800000 0x0f800000>;
-+				};
-+			};
-+		};
-+	};
--- 
-1.9.1
+Bryan can you have a look at this driver? It can be merged
+stand-alone through the LEDs tree for v3.18 once you're
+happy with it.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
