@@ -1,45 +1,60 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
-Date: Wed, 13 Aug 2014 10:16:16 -0600
-Message-ID: <53EB8F50.7090505@wwwdotorg.org>
-References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk> <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] media: adv7604: Add ability to read default input
+ port from DT
+Date: Wed, 13 Aug 2014 17:24:40 +0100
+Message-ID: <20140813162439.GG32644@leverpostej>
+References: <1407758719-12474-1-git-send-email-ian.molton@codethink.co.uk>
+ <1407758719-12474-3-git-send-email-ian.molton@codethink.co.uk>
+ <20140811121902.GA16295@leverpostej>
+ <20140813131435.e0da6946bcd69e04a2305ef9@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140813131435.e0da6946bcd69e04a2305ef9@codethink.co.uk>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Ian Molton <ian.molton@codethink.co.uk>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "shubhrajyoti@ti.com" <shubhrajyoti@ti.com>, "william.towle@codethink.co.uk" <william.towle@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 08/12/2014 10:44 AM, Javier Martinez Canillas wrote:
-> The tps65090 PMU data manual [0] has a table that list the
-> "Recommended operating conditions" for each regulator. Add
-> the information about the FET constraints to its dtsi file.
->
-> [0]: http://www.ti.com/lit/ds/symlink/tps65090.pdf
+On Wed, Aug 13, 2014 at 01:14:35PM +0100, Ian Molton wrote:
+> On Mon, 11 Aug 2014 13:19:02 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > > -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
+> > > +  - pclk-sample:  Pixel clock polarity. Defaults to output on the falling edge.
+> > 
+> > Unrelated whitespace change?
+> 
+> Is there a sensible way to get miniscule whitespace changes in?
 
-I'm worried that this file represents the limits of the PMIC itself, 
-whereas the DT should be representing the limits of the circuits that 
-the various PMIC regulators are attached to on the board.
+Just mention it in the commit message.
 
-For example:
+> > >    If none of hsync-active, vsync-active and pclk-sample is specified the
+> > >    endpoint will use embedded BT.656 synchronization.
+> > >  
+> > > +  - default-input: Select which input is selected after reset.
+> > 
+> > Valid values are?
+> 
+> Chip dependent. 0 for 7611, 0-1 for 7612, I expect there are other chips in the family with differing numbers of inputs.
 
-> diff --git a/arch/arm/boot/dts/tps65090.dtsi b/arch/arm/boot/dts/tps65090.dtsi
+Ok. Can this be mentioned in the documentation?
 
->   		tps65090_fet3: fet3 {
-> +			regulator-min-microvolt = <3000000>;
-> +			regulator-max-microvolt = <5500000>;
->   		};
+Cheers,
+Mark.
 
-I guess that on some boards, this output rail might be attached to 
-devices that must run at 3.3V exactly, and on other boards it might be 
-attached to devices that must run at 5V exactly. The DT for those two 
-boards should each have regulator-{min,max}-microvolt set to the same 
-value, which describes the board requirements.
-
-It feels dangerous/misleading to define the PMIC range by default. It 
-might lead people to think that since the property already has a defined 
-value, they don't need to think about what the correct value for their 
-board is, and hence not change the value in their board file.
+> > > +	 if (!of_property_read_u32(endpoint, "default_input", &v))
+> > 
+> > This doesn't match the binding ('_' vs '-').
+> 
+> Good catch!
+> 
+> -- 
+> Ian Molton <ian.molton@codethink.co.uk>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
