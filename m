@@ -1,241 +1,62 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v3] mmc: implement Driver Stage Register handling
-Date: Wed, 13 Aug 2014 17:44:16 +0200
-Message-ID: <1407944656-14592-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
+Date: Wed, 13 Aug 2014 16:51:22 +0100
+Message-ID: <20140813155122.GX17528@sirena.org.uk>
+References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk>
+ <20140812172552.GU17528@sirena.org.uk>
+ <53EA61B9.2070805@collabora.co.uk>
+ <20140812212757.GY17528@sirena.org.uk>
+ <53EB4CA0.3010006@collabora.co.uk>
+ <20140813122910.GQ17528@sirena.org.uk>
+ <53EB6954.3040207@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tq-group.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Mj/0swo4/Fjabs+K"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53EB6954.3040207@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Sascha Hauer <s.hauer@pengutronix.de>
 
-Some (e)MMC and SD cards implement a DSR register that allows to tune
-raise/fall times and drive strength of the CMD and DATA outputs.
-The values to use depend on the card in use and the host.
-It might be needed to reduce the drive strength to prevent voltage peak=
-s
-above the host's specification.
+--Mj/0swo4/Fjabs+K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Implement a 'dsr' devicetree property that allows to specify the value
-to set the DSR to. For non-dt setups the new members of mmc_host can be
-set by board code.
+On Wed, Aug 13, 2014 at 03:34:12PM +0200, Javier Martinez Canillas wrote:
 
-This patch was initially authored by Sascha Hauer. It contains
-improvements authored by Markus Niebel and Uwe Kleine-K=C3=B6nig.
+> Indeed. I'll change mmc_regulator_get_ocrmask() in MMC core then to use
+> regulator_can_change_voltage() to detect if the regulator is a fixed one
+> and call regulator_get_voltage() instead of list_voltage() in that case.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
-Hello,
+> Do you agree that this is the correct solution?
 
-earlier incarnations of this patch can be found at
+I would just fall back to get_voltage() if there are no voltages listed,
+that seems more robust.
 
-	http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/272983=
-=2Ehtml
-	http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259281.=
-html
+--Mj/0swo4/Fjabs+K
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I need this functionallity on a machine where the default driver streng=
-th of
-the eMMC chip is too big for the SoC. It seems to work without adapting=
- the
-drive strength, but the vendor reports that the DSR should be set to a =
-certain
-value to prevent poor signal integrity and increased wearout.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Best regards
-Uwe
+iQIcBAEBAgAGBQJT64l2AAoJELSic+t+oim9tDIP/1+BkXGMNhigfK+dKTq25hr/
+esf41/ND4jsM5betOXL17OGEX4wxDgXEOLn9r+rr1GtPjHvQOx9NHfM3g76wo0R4
+UJTqGw4OFuYBHDcrgb8+RRgN4HX4BPd14BKnHoXZTnMlgNsx+XqRw2O0rcHPEvTF
+vupSwukxS6IADZASiOLEwjhX5Xr/Fa8qtL5UVf2vSqVAbrchKHD1HH6CJQkg2/g5
+C11pYokfG22ug0qa1Mw48q+Yo9i8nzDj3qorUXbdO/aPBpc4EO1AayKvqDJCFnKY
+K+FB5JC908uJU+c3xDqQTL3qbwvhmJuCKAMghVjz13vRuDFQmZaKtCwhrG7IYWMs
+dH33/CsdB/0vr/XoXF+XtSBq3j4uQrseKKl0NvWL7mVzGzKTznqybYPQjae9Hjn1
+QiEIYOnfA8NDpJR1bVv2DfGFAYF3mGfsWO77HVZ3BMeWMKjLdv4Jn/7hl2HX8MgO
+HEFdaJgLLaIize+3wwlWzEkn7yXTx0Ws5LglLF6Us/tQ7GU8w3HeYLC46flEo3GD
+SMlTqoEOWtjeOgQgtXul/BRy7SSSP3rJd84aBzCM9uBibLfljvVMDMo9EpraKS9p
+09qRx2PLNKDC6phzYaQQ4hBZOgbbJwgzgw38T2AOqQE0hev8XRO1ikjEm9xMF5Je
+8td6xkSibUsiwUgrkGkW
+=7UIM
+-----END PGP SIGNATURE-----
 
- Documentation/devicetree/bindings/mmc/mmc.txt |  2 ++
- drivers/mmc/core/host.c                       |  8 ++++++++
- drivers/mmc/core/mmc.c                        |  8 ++++++++
- drivers/mmc/core/mmc_ops.c                    | 21 +++++++++++++++++++=
-++
- drivers/mmc/core/mmc_ops.h                    |  1 +
- drivers/mmc/core/sd.c                         |  8 ++++++++
- include/linux/mmc/card.h                      |  3 ++-
- include/linux/mmc/host.h                      |  3 +++
- 8 files changed, 53 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentat=
-ion/devicetree/bindings/mmc/mmc.txt
-index 3c18001dfd5d..05bac770b4d0 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -40,6 +40,8 @@ Optional properties:
- - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
- - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
- - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
-+- dsr: Value the card's (optional) Driver Stage Register (DSR) should =
-be
-+  programmed with.
-=20
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host contro=
-llers line
- polarity properties, we have to fix the meaning of the "normal" and "i=
-nverted"
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 95cceae96944..52e83f389428 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -452,6 +452,14 @@ int mmc_of_parse(struct mmc_host *host)
- 	if (of_find_property(np, "mmc-hs400-1_2v", &len))
- 		host->caps2 |=3D MMC_CAP2_HS400_1_2V | MMC_CAP2_HS200_1_2V_SDR;
-=20
-+	if (of_find_property(np, "dsr", &len)) {
-+		u32 tmp;
-+
-+		of_property_read_u32(np, "dsr", &tmp);
-+		host->dsr_req =3D 1;
-+		host->dsr =3D (u16)tmp;
-+	}
-+
- 	return 0;
-=20
- out:
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index 793c6f7ddb04..fdc1ac1360c4 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -162,6 +162,7 @@ static int mmc_decode_csd(struct mmc_card *card)
- 	csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
- 	csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
- 	csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
-+	csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
- 	csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
- 	csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
- 	csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
-@@ -1273,6 +1274,13 @@ static int mmc_init_card(struct mmc_host *host, =
-u32 ocr,
- 	}
-=20
- 	/*
-+	 * handling only for cards supporting DSR and hosts requesting
-+	 * DSR configuration
-+	 */
-+	if (card->csd.dsr_imp && host->dsr_req)
-+		mmc_set_dsr(host);
-+
-+	/*
- 	 * Select card, as all following commands rely on that.
- 	 */
- 	if (!mmc_host_is_spi(host)) {
-diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-index f51b5ba3bbea..37ed493d8030 100644
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -93,6 +93,27 @@ int mmc_deselect_cards(struct mmc_host *host)
- 	return _mmc_select_card(host, NULL);
- }
-=20
-+/*
-+ * Write the value specified in the device tree or board code into the=
- optional
-+ * 16 bit Driver Stage Register. This can be used to tune raise/fall t=
-imes and
-+ * drive strength of the DAT and CMD outputs. The actual meaning of a =
-given
-+ * value is hardware dependant.
-+ * The presence of the DSR register can be determined from the CSD reg=
-ister,
-+ * bit 76.
-+ */
-+int mmc_set_dsr(struct mmc_host *host)
-+{
-+	int err;
-+	struct mmc_command cmd =3D {0};
-+
-+	cmd.opcode =3D MMC_SET_DSR;
-+
-+	cmd.arg =3D ((u32)host->dsr << 16) | 0xffff;
-+	cmd.flags =3D MMC_RSP_NONE | MMC_CMD_AC;
-+
-+	return mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
-+}
-+
- int mmc_go_idle(struct mmc_host *host)
- {
- 	int err;
-diff --git a/drivers/mmc/core/mmc_ops.h b/drivers/mmc/core/mmc_ops.h
-index 80ae9f4e0293..390dac665b2a 100644
---- a/drivers/mmc/core/mmc_ops.h
-+++ b/drivers/mmc/core/mmc_ops.h
-@@ -14,6 +14,7 @@
-=20
- int mmc_select_card(struct mmc_card *card);
- int mmc_deselect_cards(struct mmc_host *host);
-+int mmc_set_dsr(struct mmc_host *host);
- int mmc_go_idle(struct mmc_host *host);
- int mmc_send_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr);
- int mmc_all_send_cid(struct mmc_host *host, u32 *cid);
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 0c44510bf717..25913889cbaa 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -127,6 +127,7 @@ static int mmc_decode_csd(struct mmc_card *card)
- 		csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
- 		csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
- 		csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
-+		csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
- 		csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
- 		csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
- 		csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
-@@ -954,6 +955,13 @@ static int mmc_sd_init_card(struct mmc_host *host,=
- u32 ocr,
- 	}
-=20
- 	/*
-+	 * handling only for cards supporting DSR and hosts requesting
-+	 * DSR configuration
-+	 */
-+	if (card->csd.dsr_imp && host->dsr_req)
-+		mmc_set_dsr(host);
-+
-+	/*
- 	 * Select card, as all following commands rely on that.
- 	 */
- 	if (!mmc_host_is_spi(host)) {
-diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-index d424b9de3aff..680a7f0188bb 100644
---- a/include/linux/mmc/card.h
-+++ b/include/linux/mmc/card.h
-@@ -42,7 +42,8 @@ struct mmc_csd {
- 	unsigned int		read_partial:1,
- 				read_misalign:1,
- 				write_partial:1,
--				write_misalign:1;
-+				write_misalign:1,
-+				dsr_imp:1;
- };
-=20
- struct mmc_ext_csd {
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 7960424d0bc0..9e9ad7b31bb9 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -319,6 +319,7 @@ struct mmc_host {
- #ifdef CONFIG_MMC_DEBUG
- 	unsigned int		removed:1;	/* host is being removed */
- #endif
-+	unsigned int		dsr_req:1;	/* DSR is requested for Host */
-=20
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
-@@ -365,6 +366,8 @@ struct mmc_host {
-=20
- 	unsigned int		slotno;	/* used for sdio acpi binding */
-=20
-+	u16			dsr;	/* optional driver stage (dsr) value */
-+
- 	unsigned long		private[0] ____cacheline_aligned;
- };
-=20
---=20
-2.0.1
-
+--Mj/0swo4/Fjabs+K--
