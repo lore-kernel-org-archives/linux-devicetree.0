@@ -1,62 +1,44 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v8 03/11] ARM: brcmstb: add debug UART for earlyprintk support
-Date: Wed, 13 Aug 2014 15:16:24 -0700
-Message-ID: <CAOesGMh5wX5eaCmPvXQs4fmNQsD+370P=O8PSdH2oMHKL_neDQ@mail.gmail.com>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
-	<1405976886-27807-4-git-send-email-computersforpeace@gmail.com>
-	<20140802083040.GY30282@n2100.arm.linux.org.uk>
-	<20140804165627.GT3711@ld-irv-0074>
-	<CAN8TOE8w5bUT5byHiJrYr8AzaZ+EADzE+aoH6f2x2tFc1+1eQw@mail.gmail.com>
+From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH Resend v2 0/2] arm64: Add PMU node for APM X-Gene Storm SoC
+Date: Wed, 13 Aug 2014 16:31:39 -0600
+Message-ID: <CALdTtns=oOxqfrak0umDyhRO4L2EUF-jOJq3Rq8PpjYX_xOfPA@mail.gmail.com>
+References: <1407954730-9768-1-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN8TOE8w5bUT5byHiJrYr8AzaZ+EADzE+aoH6f2x2tFc1+1eQw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1407954730-9768-1-git-send-email-fkan-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 3:11 PM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Ping (Olof or Matt?)
+On Wed, Aug 13, 2014 at 12:32 PM, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch series adds PMU node for APM X-Gene's Potenza CPU.
+> Potenza CPU PMU is compatible with ARMv8-PMUv3.
 >
-> On Mon, Aug 4, 2014 at 9:56 AM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Aug 02, 2014 at 09:30:40AM +0100, Russell King wrote:
->>> On Mon, Jul 21, 2014 at 02:07:58PM -0700, Brian Norris wrote:
->>> > From: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> >
->>> > Add the UART definitions needed to support earlyprintk on brcmstb machines.
->>> >
->>> > Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> > Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>
->>> I noticed that you sent this to the patch system.  I asked Olof last
->>> night whether he had anything in arm-soc touching Kconfig.debug, and
->>> he does (a number of other platforms have updated it.)  This means
->>> that if I apply it to my tree, it may conflict, so I'm reluctant to
->>> take it.
->>
->> OK... Matt told me that such patches go through you. So which is it?
->> Should all Kconfig.debug patches go through the arm-soc route?
+> I am resending this patch since the original author has left the company and
+> I am taking over for the work. There is no change to the original patch.
 >
-> How should this get in? Should I rebase/resend through Matt and
-> arm-soc? Or can you pick this up as-is?
+> Just a comment on the dependency on the second part of the patch. Though I
+> agree that without the GIC patch, perf utility does not function correctly on
+> our current platform. However, it also requires the correct bootloader to be
+> installed to perform the correct actions. This does not break Linux, which
+> lead me to remove the statement in the previous attempt. I have since put
+> back the statement and hope that the maintainer would provide some guidance
+> on if the patch would be postponed because the dependancy.
+>
+> Feng Kan (2):
+>   dt-bindings: Add Potenza PMU binding
+>   arm64: dts: Add PMU node for APM X-Gene Storm SOC
+>
+>  Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+>  arch/arm64/boot/dts/apm-storm.dtsi            | 5 +++++
+>  2 files changed, 6 insertions(+)
 
-Kconfig.debug is something that we usually merge new platforms for
-through arm-soc. The main exception has been release cycles when
-Russell has been doing major surgery on the file (one of those was a
-few releases ago), where we've backed off to avoid conflicts.
+I can confirm that this gives me hardware counter support with perf on
+X-Gene on latest linus with*out* the referenced additional GIC patch.
 
-That's been the assumed arrangement from our side at least, we haven't
-had anything more formal than that.
-
-So, go ahead and send it through us -- if we end up having a cycle
-where we can't apply it we can send it over to Russell for you.
-
-
--Olof
+Tested-by: dann frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
