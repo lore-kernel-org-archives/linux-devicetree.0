@@ -1,7 +1,7 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v5 3/7] regulator: core: add guard delay between calling regulator_disable and _enable
-Date: Wed, 13 Aug 2014 19:33:40 +0800
-Message-ID: <1407929624-8737-4-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v5 6/7] ARM: dts: hi3620-hi4511: Add HI6421 MFD and regulator nodes
+Date: Wed, 13 Aug 2014 19:33:43 +0800
+Message-ID: <1407929624-8737-7-git-send-email-guodong.xu@linaro.org>
 References: <1407929624-8737-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1407929624-8737-1-git-send-email-guodong.xu@linaro.org>
@@ -10,101 +10,257 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Some regulator require a minimum delay between its disable and next enable.
-This is to avoid damages when out-of-range frequent disable/enable of a
-single regulator can bring to the regulator chip.
-
-Add @off_on_delay to struct regulator_desc. Device drivers' can use this field
-to set this guard time.
-
-Add @last_off_jiffy to struct regulator_dev. When @off_on_delay is set by
-driver, regulator core can store its last off (disable) time into this field.
+Add Hi6421 MFD dts node and regulator nodes into hi3620-hi4511
+board config dts file.
 
 Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- drivers/regulator/core.c         | 31 +++++++++++++++++++++++++++++++
- include/linux/regulator/driver.h |  6 ++++++
- 2 files changed, 37 insertions(+)
+ arch/arm/boot/dts/hi3620-hi4511.dts | 233 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 233 insertions(+)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 67d4246..c218c62 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1807,6 +1807,31 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
- 
- 	trace_regulator_enable(rdev_get_name(rdev));
- 
-+	if (rdev->desc->off_on_delay) {
-+		/* if needed, keep a distance of off_on_delay from last time
-+		 * this regulator was disabled.
-+		 */
-+		unsigned long start_jiffy = jiffies;
-+		unsigned long intended, max_delay, remaining;
+diff --git a/arch/arm/boot/dts/hi3620-hi4511.dts b/arch/arm/boot/dts/hi3620-hi4511.dts
+index fe62392..312c3f9 100644
+--- a/arch/arm/boot/dts/hi3620-hi4511.dts
++++ b/arch/arm/boot/dts/hi3620-hi4511.dts
+@@ -635,6 +635,239 @@
+ 				pinctrl-single,bias-pullup = <0 1 0 1>;
+ 			};
+ 		};
 +
-+		max_delay = usecs_to_jiffies(rdev->desc->off_on_delay);
-+		intended = rdev->last_off_jiffy + max_delay;
++		pmic: pmic@c00000 {
++			compatible = "hisilicon,hi6421-pmic";
++			reg = <0xc00000 0x0180>; /* 0x60 << 2 */
 +
-+		if (time_before(start_jiffy, intended)) {
-+			/* calc remaining jiffies to deal with one-time
-+			 * timer wrapping.
-+			 * in case of multiple timer wrapping, either it can be
-+			 * detected by out-of-range remaining, or it cannot be
-+			 * detected and we gets a panelty of
-+			 * _regulator_enable_delay().
-+			 */
-+			remaining = intended - start_jiffy;
-+			if (remaining <= max_delay)
-+				_regulator_enable_delay(
-+						jiffies_to_usecs(remaining));
-+		}
-+	}
++			regulators {
++				// supply for MLC NAND/ eMMC
++				hi6421_vout0_reg: hi6421_vout0 {
++					regulator-name = "VOUT0";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <2850000>;
++				};
 +
- 	if (rdev->ena_pin) {
- 		ret = regulator_ena_gpio_ctrl(rdev, true);
- 		if (ret < 0)
-@@ -1919,6 +1944,12 @@ static int _regulator_do_disable(struct regulator_dev *rdev)
- 			return ret;
- 	}
- 
-+	/* cares about last_off_jiffy only if off_on_delay is required by
-+	 * device.
-+	 */
-+	if (rdev->desc->off_on_delay)
-+		rdev->last_off_jiffy = jiffies;
++				// supply for 26M Oscillator
++				hi6421_vout1_reg: hi6421_vout1 {
++					regulator-name = "VOUT1";
++					regulator-min-microvolt = <1700000>;
++					regulator-max-microvolt = <2000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
 +
- 	trace_regulator_disable_complete(rdev_get_name(rdev));
- 
- 	return 0;
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 4b62813..efe058f 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -238,6 +238,7 @@ enum regulator_type {
-  * @bypass_val_off: Disabling value for control when using regmap set_bypass
-  *
-  * @enable_time: Time taken for initial enable of regulator (in uS).
-+ * @off_on_delay: guard time (in uS), before re-enabling a regulator
-  */
- struct regulator_desc {
- 	const char *name;
-@@ -276,6 +277,8 @@ struct regulator_desc {
- 	unsigned int bypass_val_off;
- 
- 	unsigned int enable_time;
++				// supply for AP system
++				hi6421_vout2_reg: hi6421_vout2 {
++					regulator-name = "VOUT2";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
 +
-+	unsigned int off_on_delay;
- };
- 
- /**
-@@ -348,6 +351,9 @@ struct regulator_dev {
- 
- 	struct regulator_enable_gpio *ena_pin;
- 	unsigned int ena_gpio_state:1;
++				// supply for DDR PHY I/O
++				hi6421_vout3_reg: hi6421_vout3 {
++					regulator-name = "VOUT3";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
 +
-+	/* time when this regulator was disabled last time */
-+	unsigned long last_off_jiffy;
- };
++				// supply for MIPI, USB2.0, PCIe, PLL Analog
++				hi6421_vout4_reg: hi6421_vout4 {
++					regulator-name = "VOUT4";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for I/O 1.8V
++				hi6421_vout5_reg: hi6421_vout5 {
++					regulator-name = "VOUT5";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for I/O 2.6V
++				hi6421_vout6_reg: hi6421_vout6 {
++					regulator-name = "VOUT6";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for SD I/O
++				hi6421_vout7_reg: hi6421_vout7 {
++					regulator-name = "VOUT7";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for USB PHY
++				hi6421_vout8_reg: hi6421_vout8 {
++					regulator-name = "VOUT8";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for Efuse power
++				hi6421_vout9_reg: hi6421_vout9 {
++					regulator-name = "VOUT9";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for BT RF&PA
++				hi6421_vout10_reg: hi6421_vout10 {
++					regulator-name = "VOUT10";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for GPS RF&PA
++				hi6421_vout11_reg: hi6421_vout11 {
++					regulator-name = "VOUT11";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for SD card
++				hi6421_vout12_reg: hi6421_vout12 {
++					regulator-name = "VOUT12";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <2850000>;
++				};
++
++				// supply for CMMB
++				hi6421_vout13_reg: hi6421_vout13 {
++					regulator-name = "VOUT13";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for WIFI I/O
++				hi6421_vout14_reg: hi6421_vout14 {
++					regulator-name = "VOUT14";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for WIFI core & PA
++				hi6421_vout15_reg: hi6421_vout15 {
++					regulator-name = "VOUT15";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				// supply for LCD I/O
++				hi6421_vout16_reg: hi6421_vout16 {
++					regulator-name = "VOUT16";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++				};
++
++				// supply for LCD Ananlog
++				hi6421_vout17_reg: hi6421_vout17 {
++					regulator-name = "VOUT17";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++				};
++
++				// supply for Camera I/O
++				hi6421_vout18_reg: hi6421_vout18 {
++					regulator-name = "VOUT18";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for Camera Analog
++				hi6421_vout19_reg: hi6421_vout19 {
++					regulator-name = "VOUT19";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for Camera VCM
++				hi6421_vout20_reg: hi6421_vout20 {
++					regulator-name = "VOUT20";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for Audio, incl. HKADC
++				hi6421_vout_audio_reg: hi6421_vout_audio {
++					regulator-name = "AVDD2";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				// supply for Cortex-A9 CPU core
++				hi6421_buck0_reg: hi6421_buck0 {
++					regulator-name = "VBUCK0";
++					regulator-min-microvolt = <700000>;
++					regulator-max-microvolt = <1600000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for Cortex-A9 CPU core
++				hi6421_buck1_reg: hi6421_buck1 {
++					regulator-name = "VBUCK1";
++					regulator-min-microvolt = <700000>;
++					regulator-max-microvolt = <1600000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for GPU
++				hi6421_buck2_reg: hi6421_buck2 {
++					regulator-name = "VBUCK2";
++					regulator-min-microvolt = <700000>;
++					regulator-max-microvolt = <1600000>;
++					regulator-boot-on;
++				};
++
++				// supply for Peripheral
++				hi6421_buck3_reg: hi6421_buck3 {
++					regulator-name = "VBUCK3";
++					regulator-min-microvolt = <950000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for LPDDR2 and AP I/O
++				hi6421_buck4_reg: hi6421_buck4 {
++					regulator-name = "VBUCK4";
++					regulator-min-microvolt = <1150000>;
++					regulator-max-microvolt = <2000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for Low voltage
++				hi6421_buck5_reg: hi6421_buck5 {
++					regulator-name = "VBUCK5";
++					regulator-min-microvolt = <1150000>;
++					regulator-max-microvolt = <1900000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++			};
++		};
++
+ 	};
  
- struct regulator_dev *
+ 	gpio-keys {
 -- 
 1.9.1
