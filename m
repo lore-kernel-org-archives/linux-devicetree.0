@@ -1,70 +1,54 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 3/6] pinctrl: Add documentation for SPMI PMIC pinctrl
- driver bindings
-Date: Wed, 13 Aug 2014 07:32:47 -0700
-Message-ID: <20140813143247.GE32301@codeaurora.org>
-References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
- <1407771634-14946-4-git-send-email-iivanov@mm-sol.com>
+From: <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Subject: [PATCH 0/2 V4] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Wed, 13 Aug 2014 10:00:39 -0500
+Message-ID: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407771634-14946-4-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11, Ivan T. Ivanov wrote:
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-> new file mode 100644
-> index 0000000..0a64567
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-> @@ -0,0 +1,179 @@
-> +Qualcomm PMIC Multi-Purpose Pin (MPP) block
-> +
-> +This binding describes the MPP block(s) found in the 8xxx series of pmics from
-> +Qualcomm.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,pm8841-mpp"
-> +		    "qcom,pm8941-mpp"
-> +		    "qcom,pma8084-mpp"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Register base of the gpio block
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 
-MPP?
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400.
 
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: Must contain an array of encoded interrupt specifiers for
-> +		    each available gpio
+This depends on and has been tested with the V7 of"Add support for PCI in AArch64"
+(https://lkml.org/lkml/2014/3/14/320).
 
-MPP? Maybe gpio makes sense.
+Changes in V4:
+    * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/core
+    * Remove patch 2 from previous version
+    * Merge patch 1 and 3 from previous version
+    * Reworks the GICv2m initialization based on Marc Zyngier review comments.
+    * Introduce "v2m" subnode in GIC binding
+    * Moves the "struct msi_chip" from "struct gic_chip_data" to "struct v2m_data".
 
-> +
-> +- gpio-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: Mark the device node as a GPIO controller
-> +
-> +- #gpio-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Must be 2;
-> +		    the first cell will be used to define gpio number and the
-> +		    second denotes the flags for this gpio
-> +
+Suravee Suthikulpanit (2):
+  irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+  irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+
+ Documentation/devicetree/bindings/arm/gic.txt |  32 +++
+ arch/arm64/include/asm/msi.h                  |  15 ++
+ arch/arm64/kernel/Makefile                    |   1 +
+ arch/arm64/kernel/msi.c                       |  57 +++++
+ drivers/irqchip/Kconfig                       |   7 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-v2m.c                 | 294 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                     |  75 ++++---
+ drivers/irqchip/irq-gic.h                     |  48 +++++
+ 9 files changed, 500 insertions(+), 30 deletions(-)
+ create mode 100644 arch/arm64/include/asm/msi.h
+ create mode 100644 arch/arm64/kernel/msi.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic.h
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
