@@ -1,40 +1,47 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH] spi: rockchip: return 0 if tx_buf and rx_buf are NULL
-Date: Thu, 14 Aug 2014 08:52:24 +0800
-Message-ID: <1407977544-2989-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, heiko@sntech.de, dianders@chromium.org, grant.likely@linaro.org, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCA0LzRdIEFSTTogZHRzOiBrZXlzdG9uZS1rMmhrOiBhZGQg?=
+ =?UTF-8?B?ZHNwIGdwaW8gY29udHJvbGxlcnMgbm9kZXM=?=
+Date: Wed, 13 Aug 2014 20:06:24 +0400
+Message-ID: <1407945984.545232249__2609.92442858896$1407977943$gmane$org@f170.i.mail.ru>
+References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
+ <1407946582-20927-5-git-send-email-grygorii.strashko@ti.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1407946582-20927-5-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko@ti.com>
+Cc: =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-To do so, spi communication can use an empty buf to pull up CS.
-
-This patch merged from ChromiumOS tree.
-Cros_ec use this function to turn off CS and add a delay to ensure
-the rising edge doesn't come too soon after the end of the data.
-
-Tested-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
----
- drivers/spi/spi-rockchip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 72fb287..1e3bcfa 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -511,8 +511,8 @@ static int rockchip_spi_transfer_one(struct spi_master *master,
- 	WARN_ON((readl_relaxed(rs->regs + ROCKCHIP_SPI_SR) & SR_BUSY));
- 
- 	if (!xfer->tx_buf && !xfer->rx_buf) {
--		dev_err(rs->dev, "No buffer for transfer\n");
--		return -EINVAL;
-+		dev_dbg(rs->dev, "No buffer for transfer\n");
-+		return 0;
- 	}
- 
- 	rs->speed = xfer->speed_hz;
--- 
-1.8.3.2
+V2VkLCAxMyBBdWcgMjAxNCAxOToxNjoyMiArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
+cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEFkZCBLZXlzdG9uZSAyIERTUCBHUElPIG5vZGVz
+Lgo+IERTUCBHUElPIGJhbmtzIDAtNyBjb3JyZXNwb25kIHRvIERTUDAtRFNQNwo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Cj4g
+LS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSB8ICAgNTYgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTYgaW5zZXJ0
+aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9rMmhrLmR0c2kgYi9h
+cmNoL2FybS9ib290L2R0cy9rMmhrLmR0c2kKPiBpbmRleCAzMjFiYTJmLi4wMDllMTgwIDEwMDY0
+NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL2syaGsuZHRzaQo+IEBAIC01MCw1ICs1MCw2MSBAQAo+ICAJCQkjaW50ZXJydXB0LWNl
+bGxzID0gPDE+Owo+ICAJCQl0aSxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MmEwPjsKPiAgCQl9
+Owo+ICsKPiArCQlkc3BncGlvMDoga2V5c3RvbmVfZHNwX2dwaW9AMDI2MjAyNDAgewo+ICsJCQlj
+b21wYXRpYmxlID0gInRpLGtleXN0b25lLW1jdHJsLWdwaW8iOwo+ICsJCQlncGlvLWNvbnRyb2xs
+ZXI7Cj4gKwkJCSNncGlvLWNlbGxzID0gPDI+Owo+ICsJCQlncGlvLHN5c2Nvbi1kZXYgPSA8JmRl
+dmN0cmwgMHgyNDA+Owo+ICsJCX07Cj4gKwo+ICsJCWRzcGdwaW8xOiBrZXlzdG9uZV9kc3BfZ3Bp
+b0AyNjIwMjQ0IHsKPiArCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1tY3RybC1ncGlvIjsK
+PiArCQkJZ3Bpby1jb250cm9sbGVyOwo+ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsKPiArCQkJZ3Bp
+byxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MjQ0PjsKPiArCQl9OwouLi4KPiArCQlkc3BncGlv
+Nzoga2V5c3RvbmVfZHNwX2dwaW9AMjYyMDI1QyB7Cj4gKwkJCWNvbXBhdGlibGUgPSAidGksa2V5
+c3RvbmUtbWN0cmwtZ3BpbyI7Cj4gKwkJCWdwaW8tY29udHJvbGxlcjsKPiArCQkJI2dwaW8tY2Vs
+bHMgPSA8Mj47Cj4gKwkJCWdwaW8sc3lzY29uLWRldiA9IDwmZGV2Y3RybCAweDI1Yz47Cj4gKwkJ
+fTsKClNvLCBkZXZjdHJsIGlzIGEgc3lzY29uIGRldmljZSBhbmQgdGhpcyBEVFMgaW50cm9kdWNl
+IHNldmVyYWwKaWRlbnRpY2FsIEdQSU8gZGVzY3JpcHRpb25zPwoKT24gbXkgb3BpbmlvbiB0aGlz
+IHNob3VsZCBiZSBwbGFjZWQgaW4gdGhlIGdwaW8tc3lzY29uLmMsCndoZXJlIHlvdSBjYW4gYWRk
+IHN1cHBvcnQgZm9yIHRpLGtleXN0b25lLWRzcDB7Li43fS1ncGlvLgpTdWNoIGNoYW5nZSB3aWxs
+IGF2b2lkIHBhcnRzIDIgYW5kIDMgb2YgdGhpcyBwYXRjaC4KCnN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+c3lzY29uX2dwaW9fZGF0YSB0aV9rZXlzdG9uZV9kc3AwX2dwaW8gPSB7CiAgLmNvbXBhdGlibGUg
+PSAidGksa2V5c3RvbmUtc3lzY29uIiwKICAuZGF0X2JpdF9vZmZzZXQgPSAweDI0MCAqIDgsCiAg
+Li4uCiAgLnNldCA9IGV0Yy4uLgp9OwoKLS0tCgo=
