@@ -1,78 +1,41 @@
-From: Stepan Moskovchenko <stepanm@codeaurora.org>
-Subject: [PATCH] of: Deep-copy names of platform devices
-Date: Tue, 12 Aug 2014 17:57:24 -0700
-Message-ID: <1407891444-7311-1-git-send-email-stepanm@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] of: Deep-copy names of platform devices
+Date: Tue, 12 Aug 2014 18:46:36 -0700
+Message-ID: <53EAC37C.4020203@codeaurora.org>
+References: <1407891444-7311-1-git-send-email-stepanm@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1407891444-7311-1-git-send-email-stepanm@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, stepanm@codeaurora.org
+To: Stepan Moskovchenko <stepanm@codeaurora.org>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When we parse the device tree and allocate platform
-devices, the 'name' of the newly-created platform_device
-is set to point to the 'name' field of the 'struct device'
-embedded within the platform_device. This is dangerous,
-because the name of the 'struct device' is dynamically
-allocated. Drivers may call dev_set_name() on the device,
-which will free and reallocate the name of the device,
-leaving the 'name' of the platform_device pointing to the
-now-freed memory.
+On 08/12/14 17:57, Stepan Moskovchenko wrote:
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index f685e55..3e116f6 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
+>
+>  	/* name and id have to be set so that the platform bus doesn't get
+>  	 * confused on matching */
+> -	ofdev->name = dev_name(&ofdev->dev);
+> +	ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
+>  	ofdev->id = -1;
+>
+>  	/* device_add will assume that this device is on the same node as
+> @@ -76,6 +76,7 @@ EXPORT_SYMBOL(of_device_register);
+>  void of_device_unregister(struct platform_device *ofdev)
+>  {
+>  	device_unregister(&ofdev->dev);
+> +	kfree(ofdev->name);
 
-Furthermore, if the dev_set_name() call is made from a
-driver's probe() function and a subsequent request results
-in probe deferral, the dangling 'name' reference may lead
-to the device being re-probed using the wrong driver.
+This probably ought to be swapped because we don't know if ofdev isn't
+pointing to freed memory after device_unregister().
 
-To mitigate these scenarios, we use kstrdup to perform a
-deep copy of the device name when assigning the name of the
-platform_device, so that the platform_device name is
-unaffected by any calls to dev_set_name() that might made
-by drivers to rename the embedded 'struct device'.
-
-Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
----
-This is technically a 'v2' patch, but it looks like I used
-an old version of MAINTAINERS, so I'll just re-send this
-as a new patch to avoid confusion for people who missed the
-original.
-
-I suppose creating a 'pdev_set_name' API may seem like
-another possibility, but I feel that dev.name and pdev.name
-have two different meanings. One is used for device/driver
-binding purposes, whereas the other serves a more general
-identification purpose, and is used for things like sysfs.
-Drivers might want to change dev.name while leaving the
-pdev.name alone. I guess yet another possibility would be
-to prohibit calling dev_set_name() on devices created from
-device tree, but a driver does not necessarily know how a
-given platform_device was allocated.
-
-Steve
-
- drivers/of/device.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index f685e55..3e116f6 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
-
- 	/* name and id have to be set so that the platform bus doesn't get
- 	 * confused on matching */
--	ofdev->name = dev_name(&ofdev->dev);
-+	ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
- 	ofdev->id = -1;
-
- 	/* device_add will assume that this device is on the same node as
-@@ -76,6 +76,7 @@ EXPORT_SYMBOL(of_device_register);
- void of_device_unregister(struct platform_device *ofdev)
- {
- 	device_unregister(&ofdev->dev);
-+	kfree(ofdev->name);
- }
- EXPORT_SYMBOL(of_device_unregister);
-
---
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
