@@ -1,8 +1,7 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 2/5] phy: miphy28lp: Add MiPHY28lp header file for DT x Driver
- defines
-Date: Wed, 13 Aug 2014 17:34:32 +0200
-Message-ID: <1407944075-8093-3-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 4/5] ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
+Date: Wed, 13 Aug 2014 17:34:34 +0200
+Message-ID: <1407944075-8093-5-git-send-email-gabriel.fernandez@linaro.org>
 References: <1407944075-8093-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,36 +18,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, alexandre torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, kernel@stlinux.com
+Cc: devicetree@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-This provides the shared header file which will be reference from both
-the MiPHY28lp driver and its associated Device Tree node(s).
+The MiPHY28lp is a Generic PHY which can serve various SATA, PCIe or
+USB3 devices. The two first ports can be use for either; both SATA, both
+PCIe or one of each in any configuration.
+The Third port is only for USB3.
 
-Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- include/dt-bindings/phy/phy-miphy28lp.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 include/dt-bindings/phy/phy-miphy28lp.h
+ arch/arm/boot/dts/stih407-b2120.dts | 11 +++++++
+ arch/arm/boot/dts/stih407.dtsi      | 65 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
 
-diff --git a/include/dt-bindings/phy/phy-miphy28lp.h b/include/dt-bindings/phy/phy-miphy28lp.h
-new file mode 100644
-index 0000000..7cf9bce
---- /dev/null
-+++ b/include/dt-bindings/phy/phy-miphy28lp.h
-@@ -0,0 +1,12 @@
-+/*
-+ * This header provides constants for the phy framework
-+ * based on the STMicroelectronics miph28lp.
-+ */
-+#ifndef _DT_BINDINGS_PHY_MIPHY28LP
-+#define _DT_BINDINGS_PHY_MIPHY28LP
+diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+index fe69f92..d0837fb 100644
+--- a/arch/arm/boot/dts/stih407-b2120.dts
++++ b/arch/arm/boot/dts/stih407-b2120.dts
+@@ -74,5 +74,16 @@
+ 			st,i2c-min-scl-pulse-width-us = <0>;
+ 			st,i2c-min-sda-pulse-width-us = <5>;
+ 		};
 +
-+#define MIPHY_TYPE_SATA		1
-+#define MIPHY_TYPE_PCIE		2
-+#define MIPHY_TYPE_USB		3
++		miphy28lp_phy: miphy28lp@9b22000 {
 +
-+#endif /* _DT_BINDINGS_PHY_MIPHY28LP */
++			phy_port0: port@9b22000 {
++				st,osc-rdy;
++			};
++
++			phy_port1: port@9b2a000 {
++				st,osc-force-ext;
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
+index d2f1aaa..5ad8b33 100644
+--- a/arch/arm/boot/dts/stih407.dtsi
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -275,5 +275,70 @@
+ 
+ 			status = "disabled";
+ 		};
++
++		miphy28lp_phy: miphy28lp@9b22000 {
++			compatible = "st,miphy28lp-phy";
++			st,syscfg = <&syscfg_core>;
++			#address-cells	= <1>;
++			#size-cells	= <1>;
++			ranges;
++
++			phy_port0: port@9b22000 {
++				reg = <0x9b22000 0xff>,
++				      <0x9b09000 0xff>,
++				      <0x9b04000 0xff>,
++				      <0x114 0x4>, /* sysctrl MiPHY cntrl */
++				      <0x818 0x4>, /* sysctrl MiPHY status*/
++				      <0xe0  0x4>, /* sysctrl PCIe */
++				      <0xec  0x4>; /* sysctrl SATA */
++				reg-names = "sata-up",
++					    "pcie-up",
++					    "pipew",
++					    "miphy-ctrl-glue",
++					    "miphy-status-glue",
++					    "pcie-glue",
++					    "sata-glue";
++				#phy-cells = <1>;
++
++				reset-names = "miphy-sw-rst";
++				resets = <&softreset STIH407_MIPHY0_SOFTRESET>;
++			};
++
++			phy_port1: port@9b2a000 {
++				reg = <0x9b2a000 0xff>,
++				      <0x9b19000 0xff>,
++				      <0x9b14000 0xff>,
++				      <0x118 0x4>,
++				      <0x81c 0x4>,
++				      <0xe4  0x4>,
++				      <0xf0  0x4>;
++				reg-names = "sata-up",
++					    "pcie-up",
++					    "pipew",
++					    "miphy-ctrl-glue",
++					    "miphy-status-glue",
++					    "pcie-glue",
++					    "sata-glue";
++				#phy-cells = <1>;
++
++				reset-names = "miphy-sw-rst";
++				resets = <&softreset STIH407_MIPHY1_SOFTRESET>;
++			};
++
++			phy_port2: port@8f95000 {
++				reg = <0x8f95000 0xff>,
++				      <0x8f90000 0xff>,
++				      <0x11c 0x4>,
++				      <0x820 0x4>;
++				reg-names = "pipew",
++				    "usb3-up",
++				    "miphy-ctrl-glue",
++				    "miphy-status-glue";
++				#phy-cells = <1>;
++
++				reset-names = "miphy-sw-rst";
++				resets = <&softreset STIH407_MIPHY2_SOFTRESET>;
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
