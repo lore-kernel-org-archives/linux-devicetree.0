@@ -1,48 +1,43 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
-Date: Wed, 13 Aug 2014 15:34:12 +0200
-Message-ID: <53EB6954.3040207@collabora.co.uk>
-References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk> <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk> <20140812172552.GU17528@sirena.org.uk> <53EA61B9.2070805@collabora.co.uk> <20140812212757.GY17528@sirena.org.uk> <53EB4CA0.3010006@collabora.co.uk> <20140813122910.GQ17528@sirena.org.uk>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH BUGFIX] ARM: dts: i.MX53: fix apparent bug in VPU clks
+Date: Wed, 13 Aug 2014 15:47:47 +0200
+Message-ID: <1407937667-26678-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140813122910.GQ17528@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2014 02:29 PM, Mark Brown wrote:
-> 
-> Please fix your mailer to word wrap at less than 80 columns, it makes
-> your mails very hard to read when replying.
-> 
+The VPU on i.MX53 has two distinct clocks for register access and
+internal function.
 
-Sorry I had my wrap length configured to 80 but just changed to 74 now.
+Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> On 08/12/2014 11:27 PM, Mark Brown wrote:
-> 
-> No, that makes no sense.  If the voltage isn't allowed to change why
-> should the constraints be specifying a range of voltages for it to be
-> set to, especially a range with more than one value in it?
-> 
-> Please try to think about what you're doing in design terms rather than
-> just bashing on things until you get something that works in your use
-> case, it's important that things are understandable so that we avoid
-> fragility and special casing.
-> 
->> For fixed regulators (like fet4), mmc_regulator_set_ocr() just skips >> varying the regulator voltage but still expects to be able to obtain
->> its voltage.
-> 
-> Which can be done with regulator_get_voltage().
-> 
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dts=
+i
+index 6456a00..87f902d 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -724,7 +724,7 @@
+ 				compatible =3D "fsl,imx53-vpu";
+ 				reg =3D <0x63ff4000 0x1000>;
+ 				interrupts =3D <9>;
+-				clocks =3D <&clks IMX5_CLK_VPU_GATE>,
++				clocks =3D <&clks IMX5_CLK_VPU_REFERENCE_GATE>,
+ 				         <&clks IMX5_CLK_VPU_GATE>;
+ 				clock-names =3D "per", "ahb";
+ 				resets =3D <&src 1>;
+--=20
+1.7.10.4
 
-Indeed. I'll change mmc_regulator_get_ocrmask() in MMC core then to use
-regulator_can_change_voltage() to detect if the regulator is a fixed one
-and call regulator_get_voltage() instead of list_voltage() in that case.
-
-Do you agree that this is the correct solution?
-
-Best regards,
-Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
