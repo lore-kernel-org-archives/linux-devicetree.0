@@ -1,45 +1,53 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v9 12/12] PCI: Introduce pci_remap_iospace() for
- remapping PCI I/O bus resources into CPU space
-Date: Wed, 13 Aug 2014 11:53:58 +0100
-Message-ID: <20140813105358.GD18495@arm.com>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
- <1407860725-25202-13-git-send-email-Liviu.Dudau@arm.com>
- <20140813100118.GC18495@arm.com>
- <20140813103311.GQ25761@e106497-lin.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_sai: Make Synchronous and Asynchronous modes
+ exclusive
+Date: Wed, 13 Aug 2014 12:05:04 +0100
+Message-ID: <20140813110504.GM17528@sirena.org.uk>
+References: <1407494479-9877-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eQwIhY+Mh5cQwJH0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140813103311.GQ25761@e106497-lin.cambridge.arm.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1407494479-9877-1-git-send-email-nicoleotsuka@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 11:33:11AM +0100, Liviu Dudau wrote:
-> On Wed, Aug 13, 2014 at 11:01:18AM +0100, Catalin Marinas wrote:
-> > On Tue, Aug 12, 2014 at 05:25:25PM +0100, Liviu Dudau wrote:
-> > > Introduce a default implementation for remapping PCI bus I/O resources
-> > > onto the CPU address space. Architectures with special needs may
-> > > provide their own version, but most should be able to use this one.
-> > > 
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > 
-> > I guess you could have added the generic pgprot_device definition to
-> > this patch and the arm64 specific one in the separate arm64 PCIe support
-> > (and one less patch in total). But not a big issue either way.
-> 
-> I went by the established history on that file, where a new interface gets
-> introduced together with its use. I guess it makes backing out the change
-> much easier?
 
-The point is that the only user of pgprot_device is pci_remap_iospace()
-currently, so it makes sense to introduce the generic definition
-together with this patch.
+--eQwIhY+Mh5cQwJH0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Catalin
+On Fri, Aug 08, 2014 at 06:41:19PM +0800, Nicolin Chen wrote:
+
+> The previous patch (ASoC: fsl_sai: Add asynchronous mode support) added
+> new Device Tree bindings for Asynchronous and Synchronous modes support.
+> However, these two shall not be present at the same time.
+
+Applied, thanks.
+
+--eQwIhY+Mh5cQwJH0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT60ZdAAoJELSic+t+oim9ybMP/0/F7Tr/d6KL/XbxzCsUVli8
+X516T8JLDNJ0nHUoUJIR3j5zN0mOAlzXt+9OzDX3Nlf5JviVddIc14UH3xUUq/Xq
+g5YFsdnyf8WFXQmhnqsdWCiifJ6WCPIwTEa5zPpNAj0Z/grVXTCRtKIkmFprNgNM
+73BBkhL8mmTSj31HnVK6S6DUXUPAAlpuVcK/ynVrsP9TE//lr8Pmgb44fvqnnm1Y
+k3aSr4LtkPrEojc5USyy75TnNHLy/WQY5urCbGP08ggUICyQPpQGM9p/OZ0Ob2rW
+4bcOP40FfQ5M5VIqGP4OyDfWsqyC+kYI6YaJWZtz5qstuOKy9pPMRg2Pakbv0xYg
+KPLU3HJQTAFuNkiPQhhXiRinJE+XoBxUqBF/fpkLrjPIPi8oKzp5c6RiTl6oI47Y
+NzpF2IvkVkDYs9QsIFpJhM7o4S1YTRfQpY543UuWwIcqAE2yWahe4Ad7JcxZ+7xz
+6XTnHf2l5lwj2QK3s5N/Avha/KZCLFkHuGu8swskO4Rr+92KSewVGNuBc3CSsZ3y
+s8VYRePWOdISdiDYwyyUNR8Vknckq2Pi6vEjMNFts9KOIHUQixLzK3Cpo2B9i644
+Vy3+yBvDpjGb+2DuIubziBoc9io8s8KVk7B+AyEcjPDcKBnyOFFhO8MNEQLiIn5J
+Jcq8SjNxGE16s7X4sb+x
+=afrS
+-----END PGP SIGNATURE-----
+
+--eQwIhY+Mh5cQwJH0--
