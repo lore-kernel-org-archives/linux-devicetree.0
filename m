@@ -1,7 +1,7 @@
 From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH Resend v2 2/2] arm64: dts: Add PMU node for APM X-Gene Storm SOC
-Date: Wed, 13 Aug 2014 11:32:10 -0700
-Message-ID: <1407954730-9768-3-git-send-email-fkan@apm.com>
+Subject: [PATCH Resend v2 1/2] dt-bindings: Add Potenza PMU binding
+Date: Wed, 13 Aug 2014 11:32:09 -0700
+Message-ID: <1407954730-9768-2-git-send-email-fkan@apm.com>
 References: <1407954730-9768-1-git-send-email-fkan@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1407954730-9768-1-git-send-email-fkan-qTEPVZfXA3Y@public.gmane.org>
@@ -12,36 +12,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
 
-This patch adds the PMU device tree node for APM X-Gene Storm SOC.
-
-Please note that this patch has dependancy on a GIC driver patch [1] which is
-yet to be approved by maintainers.
-
-[1]- https://lkml.org/lkml/2014/2/27/605
-(irqchip:gic: change access of gicc_ctrl register to read modify write)
+This patch documents the compatible string for APM X-Gene Potenza CPU's PMU.
 
 Signed-off-by: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
 Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 ---
- arch/arm64/boot/dts/apm-storm.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 40aa96c..a2bb25e 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -97,6 +97,11 @@
- 		clock-frequency = <50000000>;
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+index 75ef91d..6d268b3 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/pmu.txt
+@@ -7,6 +7,7 @@ representation in the device tree should be done as under:-
+ Required properties:
  
-+	pmu {
-+		compatible = "apm,potenza-pmu", "arm,armv8-pmuv3";
-+		interrupts = <1 12 0xff04>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
+ - compatible : should be one of
++	"apm,potenza-pmu"
+ 	"arm,armv8-pmuv3"
+ 	"arm,cortex-a17-pmu"
+ 	"arm,cortex-a15-pmu"
 -- 
 1.9.1
 
