@@ -1,85 +1,85 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/8] Documentation: arm: define DT idle states bindings
-Date: Wed, 13 Aug 2014 13:25:36 -0600
-Message-ID: <20140813192533.GA32624@ilina-mac.local>
-References: <1407945127-27554-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1407945127-27554-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC V8 1/1] clk: Support for clock parents and rates
+ assigned from device tree
+Date: Wed, 13 Aug 2014 21:34:06 +0100
+Message-ID: <20140813203406.GU17528@sirena.org.uk>
+References: <1403105372-30403-1-git-send-email-s.nawrocki@samsung.com>
+ <1403105372-30403-2-git-send-email-s.nawrocki@samsung.com>
+ <53B59221.5080100@samsung.com>
+ <20140725214231.5177.86866@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U75PZdtY8vGTLDHE"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1407945127-27554-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Charles Garcia Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antti Miettinen <ananaza-X3B1VOXEql0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Capella <sebcape-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Chander Kashyap <k.chander-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140725214231.5177.86866@quantum>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
 
-On Wed, Aug 13, 2014 at 04:52:01PM +0100, Lorenzo Pieralisi wrote:
->+===========================================
->+4 - Examples
->+===========================================
->+
->+Example 1 (ARM 64-bit, 16-cpu system, PSCI enable-method):
->+
->+cpus {
->+	#size-cells = <0>;
->+	#address-cells = <2>;
->+
->+	CPU0: cpu@0 {
->+		device_type = "cpu";
->+		compatible = "arm,cortex-a57";
->+		reg = <0x0 0x0>;
->+		enable-method = "psci";
->+		cpu-idle-states = <&CPU_RETENTION_0_0 &CPU_SLEEP_0_0
->+				   &CLUSTER_RETENTION_0 &CLUSTER_SLEEP_0>;
->+	};
-Sorry for jumping in late. I havent gone through all the patches yet or
-followed on previous discussions, if somebody could answer this or point
-me to the discussion, it would be great.
-Why is the cpu defining the possible cluster idle states? Would it be
-better that cluster states form a separate node, something like this -
+--U75PZdtY8vGTLDHE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	CLUSTER0: cluster@0 {
-		...
-		cpus = <&CPU0 &CPU1 &CPU2 &CPU3>;
-		cluster-idle-states = <&CLUTER_RETENTION_0, &CLUSTER_SLEEP_0>;
-		};
-	};	
-		
-Allowing for something like this to be defined - 
+On Fri, Jul 25, 2014 at 02:42:31PM -0700, Mike Turquette wrote:
+> Quoting Sylwester Nawrocki (2014-07-03 10:25:53)
 
-	super_cluster0: cluster@101 {
-		...
-		clusters = <&CLUSTER0  &CLUSTER1>;
-		cluster-idle-states = <&SOC_RETENTION, &SOC_SLEEP>;
-		};
-	};
+> > I would appreciate a DT, SPI or the I2C maintainer opinions.
 
-And each cluster-idle-state follows the general idle definition as
-provided in this document, and an indicator what the compising
-components should idle at, for this idle state to be available.
+> Yes, Acks from SPI and I2C maintainers would be good. I might need to
+> drop those parts of this patch if they don't come through :-(
 
-	CLUSTER_SLEEP_0: cluster-sleep@0 {
-		...
-		/* sleep definition for cluster0's retention */
-		min-idle-state = <CPU_SLEEP_0>;
-	};
+So, I just noticed this.  The reason I didn't see this earlier is that
+it was buried at the end of a large clock API patch rather than a split
+out patch for the SPI subsystem so it fell towards the bottom of
+my review queue.  There seems to be no dependency on adding the feature
+as part of one commit so it should really have been split out.
 
-	SOC_SLEEP: cluster-sleep@101 {
-		...
-		min-idle-state = <&CLUSTER_SLEEP_0>;
-	};
-		
+Please don't assume that people are going to look in detail at patches
+that aren't obviously for them - I know I end up ignoring a lot of what
+I get sent since I get CCed on a lot of random things for no apparent
+reason (or get tediously large numbers of resends of things that are
+tangentially related), I imagine others do the same.  If you're doing
+that please draw attention to it, splitting out per subsystem is the
+best way of doing that.
 
-Opens up the idle state for a lot of heirarchical possibilities, which
-if you think, is generally how the SoC is. 
+This is particularly unfortunate since I am actually a bit confused as
+to why we need to open code this for every bus rather than doing it in
+the driver core, there doesn't seem to be anything at all bus specific
+going on here.  Why can't we just call this from the driver core?
+Having the feature work for some buses and not others is going to get
+old fast.
 
+It's also not clear to me why we're passing false to of_clk_set_defaults()
+when we do call it - it's quite common for I2C and SPI devices to be
+clock providers and have clock trees.  As far as I can tell the
+reasoning is that what's actually going on here is that this is actually
+a mechanism to defer the initialisation to adding of the clock providers
+in which case contrary to the documentation for the function it's
+actually about device registration.  Is that right?
 
-Thanks,
-Lina
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--U75PZdtY8vGTLDHE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT68u6AAoJELSic+t+oim98wgQAJp7tAJdU9zMPvuBFYZbp2VX
+vyhwdDreO6IHBEnhUtPMfFfTxikL3TSHBcsozARYN7mu1cDzxEYR/8gSJQoSheA4
+IlqnqIBpPhGH06MCX7wIRBRDnh7e5hPSdasA2aSa+ehgJIR8cJ4/ua/BuG4dpZph
+xP3wFZ/AtkMxVeqOK/tTtvMKZftuG9ro4T5NumZIbwDPeX3TUk29KzJYMlYJR64H
+C6aAHcQfd59xZJrAP76P1nM0zXllnOjgJrGZngY1/KNOue9BbccTTPBH16HtWVO0
++JFwJ2vaBUvqYFtoSRtdjHmFPUfLzsSQLe7XSe77OBoFbydnjhcYfEB/kYwJEdB7
+gZLe1ktGaUdGKjWFehxtKWT1CbHQFu02cDGIRPOwuW88lN4jppR+rYB60WAs0tBm
+F6+ygFRo/E7hHr9ajceEhVZyhl7hTxceP3O9OOS5aupma6P+ai4fFscUPR0lRT1C
+WNod5/e7/d6VCGYFixff9EJVFi8v+Wry+Ed4VW6lu3EOqkfvi8Rik3BfQ0Q8fzdV
+pNadlgMlq3mhUWsY+9gyXHkL0GqKgOMZtoVcMGjkB8kVGsPX8fs5ZqbtNDwGwpcz
+KVuCndSl7KlidBuRF6EzkHRF0+zqC6F8ZL4WtEnjLA3fK2XrEm6rUInQqIYHEQte
+yP2lm9fcMyMRdbvwS7Au
+=yAzq
+-----END PGP SIGNATURE-----
+
+--U75PZdtY8vGTLDHE--
