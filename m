@@ -1,60 +1,53 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] media: adv7604: Add ability to read default input
- port from DT
-Date: Wed, 13 Aug 2014 17:24:40 +0100
-Message-ID: <20140813162439.GG32644@leverpostej>
-References: <1407758719-12474-1-git-send-email-ian.molton@codethink.co.uk>
- <1407758719-12474-3-git-send-email-ian.molton@codethink.co.uk>
- <20140811121902.GA16295@leverpostej>
- <20140813131435.e0da6946bcd69e04a2305ef9@codethink.co.uk>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH v7 3/8] drivers: cpuidle: implement DT based idle states
+ infrastructure
+Date: Wed, 13 Aug 2014 12:31:11 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1408131223501.1133@knanqh.ubzr>
+References: <1407945127-27554-1-git-send-email-lorenzo.pieralisi@arm.com> <1407945127-27554-4-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140813131435.e0da6946bcd69e04a2305ef9@codethink.co.uk>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Ian Molton <ian.molton@codethink.co.uk>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "shubhrajyoti@ti.com" <shubhrajyoti@ti.com>, "william.towle@codethink.co.uk" <william.towle@codethink.co.uk>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1407945127-27554-4-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Chander Kashyap <k.chander@samsung.com>, Geoff Levand <geoff@infradead.o>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 01:14:35PM +0100, Ian Molton wrote:
-> On Mon, 11 Aug 2014 13:19:02 +0100
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> > > -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
-> > > +  - pclk-sample:  Pixel clock polarity. Defaults to output on the falling edge.
-> > 
-> > Unrelated whitespace change?
-> 
-> Is there a sensible way to get miniscule whitespace changes in?
+On Wed, 13 Aug 2014, Lorenzo Pieralisi wrote:
 
-Just mention it in the commit message.
-
-> > >    If none of hsync-active, vsync-active and pclk-sample is specified the
-> > >    endpoint will use embedded BT.656 synchronization.
-> > >  
-> > > +  - default-input: Select which input is selected after reset.
-> > 
-> > Valid values are?
+> On most common ARM systems, the low-power states a CPU can be put into are
+> not discoverable in HW and require device tree bindings to describe
+> power down suspend operations and idle states parameters.
 > 
-> Chip dependent. 0 for 7611, 0-1 for 7612, I expect there are other chips in the family with differing numbers of inputs.
-
-Ok. Can this be mentioned in the documentation?
-
-Cheers,
-Mark.
-
-> > > +	 if (!of_property_read_u32(endpoint, "default_input", &v))
-> > 
-> > This doesn't match the binding ('_' vs '-').
+> In order to enable DT based idle states and configure idle drivers, this
+> patch implements the bulk infrastructure required to parse the device tree
+> idle states bindings and initialize the corresponding CPUidle driver states
+> data.
 > 
-> Good catch!
+> The parsing API accepts a start index that defines the first idle state
+> that should be initialized by the parsing code in order to give new and
+> legacy driver flexibility over which states should be parsed using the
+> new DT mechanism.
 > 
-> -- 
-> Ian Molton <ian.molton@codethink.co.uk>
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> The idle states list is obtained from the first cpu in the driver
+> cpumask, which implicitly means the parsing code expects idle states
+> (and related list of phandles) to be the same for all CPUs in the
+> CPUidle driver mask. The kernel does not check this assumption, it must
+> be enforced by the bootloader to ensure correct system behaviour.
+
+Can we make the kernel a little less reliant on bootloader to ensure 
+correct system behaviour please?  If assumptions are assumed by the 
+kernel, it should at least print a warning and simply ignore the 
+information when such assumption are not respected.
+
+> +	/*
+> +	 * We get the idle states for the first logical cpu in the
+> +	 * driver mask. The kernel does not check idle states on all
+> +	 * cpus in the driver mask, they are assumed to be the same
+> +	 * by default.
+> +	 */
+
+What if they're not?
+
+
+Nicolas
