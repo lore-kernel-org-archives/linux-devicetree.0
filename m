@@ -1,45 +1,58 @@
-From: Ian Molton <ian.molton@codethink.co.uk>
-Subject: Re: [PATCH 2/2] media: adv7604: Add ability to read default input
- port from DT
-Date: Wed, 13 Aug 2014 13:14:35 +0100
-Message-ID: <20140813131435.e0da6946bcd69e04a2305ef9@codethink.co.uk>
-References: <1407758719-12474-1-git-send-email-ian.molton@codethink.co.uk>
-	<1407758719-12474-3-git-send-email-ian.molton@codethink.co.uk>
-	<20140811121902.GA16295@leverpostej>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 2/2] mfd: arizona: Update DT binding to
+	support INn_MODE init_data
+Date: Wed, 13 Aug 2014 13:18:14 +0100
+Message-ID: <20140813121814.GI15833@opensource.wolfsonmicro.com>
+References: <20140813205456.636abc68@songinha-Samsung-DeskTop-System>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140811121902.GA16295@leverpostej>
-Sender: linux-media-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "shubhrajyoti@ti.com" <shubhrajyoti@ti.com>, william.towle@codethink.co.uk
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140813205456.636abc68@songinha-Samsung-DeskTop-System>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Aug 2014 13:19:02 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
-
-> > -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
-> > +  - pclk-sample:  Pixel clock polarity. Defaults to output on the falling edge.
+On Wed, Aug 13, 2014 at 08:54:56PM +0900, Inha Song wrote:
+> This patch update DT binding to support INn_MODE init_data. Each
+> input signal path can be configurated either as a Analogue or
+> Digital using the INn_MODE registers.
 > 
-> Unrelated whitespace change?
-
-Is there a sensible way to get miniscule whitespace changes in?
-
-> >    If none of hsync-active, vsync-active and pclk-sample is specified the
-> >    endpoint will use embedded BT.656 synchronization.
-> >  
-> > +  - default-input: Select which input is selected after reset.
+> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Valid values are?
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 5c7e723..b8c131e 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -42,6 +42,14 @@ Optional properties:
+>      the chip default will be used.  If present exactly five values must
+>      be specified.
+>  
+> +  - wlf,inmode : A list of INn_MODE register values, where n is the number
+> +    of input signal. Each input signal path can be configurated either as a
+> +    Analogue or Digital using the INn_MODE registers. If absent, INn_MODE
+> +    registers set to 0 by default. If present, values must be specified less
+> +    than or equal to the number of input singal. If values less than the
 
-Chip dependent. 0 for 7611, 0-1 for 7612, I expect there are other chips in the family with differing numbers of inputs.
+Typo here should be "input signals".
 
-> > +	 if (!of_property_read_u32(endpoint, "default_input", &v))
+> +    number of input signal, elements that has not been specifed are set to 0
+> +    by default.
+> +
+>    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+>      they are being externally supplied. As covered in
+>      Documentation/devicetree/bindings/regulator/regulator.txt
+> -- 
+> 2.0.0.390.gcb682f8
 > 
-> This doesn't match the binding ('_' vs '-').
 
-Good catch!
-
--- 
-Ian Molton <ian.molton@codethink.co.uk>
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
