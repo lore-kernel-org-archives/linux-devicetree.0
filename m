@@ -1,145 +1,36 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 2/4] gpio: syscon: retrive syscon node and regs offsets from dt
-Date: Wed, 13 Aug 2014 19:16:20 +0300
-Message-ID: <1407946582-20927-3-git-send-email-grygorii.strashko@ti.com>
-References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, shc_work@mail.ru, linux-gpio@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 5/5] ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, PCIe & USB3) PHY
+Date: Wed, 13 Aug 2014 17:34:35 +0200
+Message-ID: <1407944075-8093-6-git-send-email-gabriel.fernandez@linaro.org>
+References: <1407944075-8093-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407944075-8093-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds handling of new "gpio,syscon-dev" DT property,
-which allows to specify syscon node and data/direction registers
-offsets in DT.
-
-"gpio,syscon-dev" has following format:
-	gpio,syscon-dev = <&syscon_dev data_reg_offset [direction_reg_offset]>;
-
-where
- - syscon_dev - phandle on syscon node
- - data_reg_offset - offset of data register (in bytes)
- - direction_reg_offset - offset of dirrection register (optional, in bytes)
-
-for example:
-	gpio,syscon-dev = <&devctrl 0x254>;
-
-In such way, the support of multiple Syscon GPIO devices is added.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/gpio/gpio-syscon.c |   51 +++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 43 insertions(+), 8 deletions(-)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 03b4699..05d528f 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -55,6 +55,8 @@ struct syscon_gpio_priv {
- 	struct gpio_chip		chip;
- 	struct regmap			*syscon;
- 	const struct syscon_gpio_data	*data;
-+	u32				dreg_offset;
-+	u32				dir_reg_offset;
- };
- 
- static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
-@@ -65,9 +67,11 @@ static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
- static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
- {
- 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
--	unsigned int val, offs = priv->data->dat_bit_offset + offset;
-+	unsigned int val, offs;
- 	int ret;
- 
-+	offs = priv->dreg_offset + priv->data->dat_bit_offset + offset;
-+
- 	ret = regmap_read(priv->syscon,
- 			  (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE, &val);
- 	if (ret)
-@@ -79,7 +83,9 @@ static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
- static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
- {
- 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
--	unsigned int offs = priv->data->dat_bit_offset + offset;
-+	unsigned int offs;
-+
-+	offs = priv->dreg_offset + priv->data->dat_bit_offset + offset;
- 
- 	if (priv->data->set) {
- 		priv->data->set(chip, offset, val);
-@@ -97,7 +103,10 @@ static int syscon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
- 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
- 
- 	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
--		unsigned int offs = priv->data->dir_bit_offset + offset;
-+		unsigned int offs;
-+
-+		offs = priv->dir_reg_offset +
-+		       priv->data->dir_bit_offset + offset;
- 
- 		regmap_update_bits(priv->syscon,
- 				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-@@ -112,7 +121,10 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
- 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
- 
- 	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
--		unsigned int offs = priv->data->dir_bit_offset + offset;
-+		unsigned int offs;
-+
-+		offs = priv->dir_reg_offset +
-+		       priv->data->dir_bit_offset + offset;
- 
- 		regmap_update_bits(priv->syscon,
- 				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-@@ -147,6 +159,8 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	const struct of_device_id *of_id = of_match_device(syscon_gpio_ids, dev);
- 	struct syscon_gpio_priv *priv;
-+	struct device_node *np = dev->of_node;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -154,10 +168,31 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 
- 	priv->data = of_id->data;
- 
--	priv->syscon =
--		syscon_regmap_lookup_by_compatible(priv->data->compatible);
--	if (IS_ERR(priv->syscon))
--		return PTR_ERR(priv->syscon);
-+	if (priv->data->compatible) {
-+		priv->syscon = syscon_regmap_lookup_by_compatible(
-+					priv->data->compatible);
-+		if (IS_ERR(priv->syscon))
-+			return PTR_ERR(priv->syscon);
-+	} else {
-+		priv->syscon =
-+			syscon_regmap_lookup_by_phandle(np, "gpio,syscon-dev");
-+		if (IS_ERR(priv->syscon))
-+			return PTR_ERR(priv->syscon);
-+
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
-+						 &priv->dreg_offset);
-+		if (ret)
-+			dev_err(dev, "can't read the data register offset!\n");
-+
-+		priv->dreg_offset <<= 3;
-+
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
-+						 &priv->dir_reg_offset);
-+		if (ret)
-+			dev_err(dev, "can't read the dir register offset!\n");
-+
-+		priv->dir_reg_offset <<= 3;
-+	}
- 
- 	priv->chip.dev = dev;
- 	priv->chip.owner = THIS_MODULE;
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 5fb95fb..641e367 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -386,6 +386,7 @@ CONFIG_PWM_TEGRA=y
+ CONFIG_PWM_VT8500=y
+ CONFIG_OMAP_USB2=y
+ CONFIG_TI_PIPE3=y
++CONFIG_PHY_MIPHY28LP=y
+ CONFIG_PHY_MIPHY365X=y
+ CONFIG_PHY_SUN4I_USB=y
+ CONFIG_EXT4_FS=y
 -- 
-1.7.9.5
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
