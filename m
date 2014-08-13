@@ -1,53 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_sai: Make Synchronous and Asynchronous modes
- exclusive
-Date: Wed, 13 Aug 2014 12:05:04 +0100
-Message-ID: <20140813110504.GM17528@sirena.org.uk>
-References: <1407494479-9877-1-git-send-email-nicoleotsuka@gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 6/6] ARM: dts: Add tps65090 FETs constraints
+Date: Wed, 13 Aug 2014 13:31:44 +0200
+Message-ID: <53EB4CA0.3010006@collabora.co.uk>
+References: <1407861868-20097-1-git-send-email-javier.martinez@collabora.co.uk> <1407861868-20097-7-git-send-email-javier.martinez@collabora.co.uk> <20140812172552.GU17528@sirena.org.uk> <53EA61B9.2070805@collabora.co.uk> <20140812212757.GY17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eQwIhY+Mh5cQwJH0"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407494479-9877-1-git-send-email-nicoleotsuka@gmail.com>
+In-Reply-To: <20140812212757.GY17528@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Mark,
 
---eQwIhY+Mh5cQwJH0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 08/12/2014 11:27 PM, Mark Brown wrote:
+> On Tue, Aug 12, 2014 at 08:49:29PM +0200, Javier Martinez Canillas wrote:
+> 
+>> So, is adding these voltages ranges (the design limits) in the Peach Pit DTS
+>> file directly an acceptable solution? Basically what my previous patch [0] did.
+> 
+>> That matches what is in the board schematic so I assume that it's safe to use
+>> these voltage ranges for that machine. If so I'll drop this series and repost
+>> that patch fixing the typo error and commit message pointed by Doug that were
+>> already addressed in $subject.
+> 
+> Well, I think the question is if you understand where those numbers come
+> from and if they make sense.  I've not seen the schematic for the board
+> so I can't comment but it is quite unusual to see ranges listed for so
+> many supplies, for things like SD it's obviously normal but things like
+> video_mid are a bit more surprising.  Does anything actually vary those
+> voltages?
+> 
 
-On Fri, Aug 08, 2014 at 06:41:19PM +0800, Nicolin Chen wrote:
+You are right, in fact even the voltage for the SD supply (tps65090 fet4) does
+not change but still their constraints have to be defined, since it is used as a
+vmmc-supply and the series "Adding UHS support for dw_mmc driver" [0] calls
+mmc_regulator_get_ocrmask()/mmc_regulator_set_ocr() for mmc->supply.vmmc.
 
-> The previous patch (ASoC: fsl_sai: Add asynchronous mode support) added
-> new Device Tree bindings for Asynchronous and Synchronous modes support.
-> However, these two shall not be present at the same time.
+For fixed regulators (like fet4), mmc_regulator_set_ocr() just skips varying the
+regulator voltage but still expects to be able to obtain its voltage.
 
-Applied, thanks.
+Since the FET is just a switch and doesn't have an output voltage, the regulator
+core gets its parent supply voltage but regulator_list_voltge() [1] checks that
+the obtained parent voltage is between the child regulator constraints.
 
---eQwIhY+Mh5cQwJH0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+So in this particular case it makes sense to compare that the parent voltage is
+between the (design limits) voltage ranges for the FET but I agree that it may
+not make sense on other boards.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Since I needed to add the ranges for fet4 I (wrongly) thought that it would make
+sense to add the ranges for all the other FETs in case other boards had a
+similar need. But now I understand your concerns about this series so I'll drop
+it and just post a patch that adds to the Peach Pit and Pi DTS, the constraints
+for the fet4 used as vmmc-supply instead of pretending that it's a common setup.
 
-iQIcBAEBAgAGBQJT60ZdAAoJELSic+t+oim9ybMP/0/F7Tr/d6KL/XbxzCsUVli8
-X516T8JLDNJ0nHUoUJIR3j5zN0mOAlzXt+9OzDX3Nlf5JviVddIc14UH3xUUq/Xq
-g5YFsdnyf8WFXQmhnqsdWCiifJ6WCPIwTEa5zPpNAj0Z/grVXTCRtKIkmFprNgNM
-73BBkhL8mmTSj31HnVK6S6DUXUPAAlpuVcK/ynVrsP9TE//lr8Pmgb44fvqnnm1Y
-k3aSr4LtkPrEojc5USyy75TnNHLy/WQY5urCbGP08ggUICyQPpQGM9p/OZ0Ob2rW
-4bcOP40FfQ5M5VIqGP4OyDfWsqyC+kYI6YaJWZtz5qstuOKy9pPMRg2Pakbv0xYg
-KPLU3HJQTAFuNkiPQhhXiRinJE+XoBxUqBF/fpkLrjPIPi8oKzp5c6RiTl6oI47Y
-NzpF2IvkVkDYs9QsIFpJhM7o4S1YTRfQpY543UuWwIcqAE2yWahe4Ad7JcxZ+7xz
-6XTnHf2l5lwj2QK3s5N/Avha/KZCLFkHuGu8swskO4Rr+92KSewVGNuBc3CSsZ3y
-s8VYRePWOdISdiDYwyyUNR8Vknckq2Pi6vEjMNFts9KOIHUQixLzK3Cpo2B9i644
-Vy3+yBvDpjGb+2DuIubziBoc9io8s8KVk7B+AyEcjPDcKBnyOFFhO8MNEQLiIn5J
-Jcq8SjNxGE16s7X4sb+x
-=afrS
------END PGP SIGNATURE-----
+> The change where you fix up the supply mappings still makes sense of
+> course.
+>
 
---eQwIhY+Mh5cQwJH0--
+Good to know, again thanks a lot for your feedback and explanations.
+
+Best regards,
+Javier
+
+[0]: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265657.html
+[1]:
+https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/tree/drivers/regulator/core.c?h=for-next#n2209
