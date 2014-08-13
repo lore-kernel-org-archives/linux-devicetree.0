@@ -1,95 +1,64 @@
-From: Joe.C <srv_yingjoe.chen@mediatek.com>
-Subject: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Wed, 13 Aug 2014 10:11:21 +0800
-Message-ID: <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Olof Johansson <olof@lixom.net>, Jonas Jensen <jonas.jensen@gmail.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, yh.chen@mediatek.com, nathan.chung@mediatek.com, eddie.huang@mediatek.com
+From: Stepan Moskovchenko <stepanm@codeaurora.org>
+Subject: [PATCH v2] of: Deep-copy names of platform devices
+Date: Tue, 12 Aug 2014 19:30:37 -0700
+Message-ID: <1407897037-6037-1-git-send-email-stepanm@codeaurora.org>
+References: <53EAC37C.4020203@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <53EAC37C.4020203@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, stepanm@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Joe.C" <yingjoe.chen@mediatek.com>
+When we parse the device tree and allocate platform
+devices, the 'name' of the newly-created platform_device
+is set to point to the 'name' field of the 'struct device'
+embedded within the platform_device. This is dangerous,
+because the name of the 'struct device' is dynamically
+allocated. Drivers may call dev_set_name() on the device,
+which will free and reallocate the name of the device,
+leaving the 'name' of the platform_device pointing to the
+now-freed memory.
 
-GIC supports the combination with external extensions. But this
-is not reflected in the checks of the interrupt type flag.
-This patch allows interrupt types other than the one supported by GIC,
-if an architecture extension is present and supports them.
+Furthermore, if the dev_set_name() call is made from a
+driver's probe() function and a subsequent request results
+in probe deferral, the dangling 'name' reference may lead
+to the device being re-probed using the wrong driver.
 
-Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+To mitigate these scenarios, we use kstrdup to perform a
+deep copy of the device name when assigning the name of the
+platform_device, so that the platform_device name is
+unaffected by any calls to dev_set_name() that might made
+by drivers to rename the embedded 'struct device'.
+
+Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
 ---
- drivers/irqchip/irq-gic.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+* v2 - swap cleanup order
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 57d165e..66485ab 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -194,23 +194,32 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	u32 confoff = (gicirq / 16) * 4;
- 	bool enabled = false;
- 	u32 val;
-+	int ret = 0;
- 
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (gicirq < 16)
- 		return -EINVAL;
- 
--	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
--		return -EINVAL;
--
- 	raw_spin_lock(&irq_controller_lock);
- 
--	if (gic_arch_extn.irq_set_type)
--		gic_arch_extn.irq_set_type(d, type);
-+	if (gic_arch_extn.irq_set_type) {
-+		ret = gic_arch_extn.irq_set_type(d, type);
-+		if (ret)
-+			goto out;
-+	} else if (type != IRQ_TYPE_LEVEL_HIGH &&
-+		type != IRQ_TYPE_EDGE_RISING) {
-+			ret = -EINVAL;
-+			goto out;
-+	}
- 
- 	val = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
--	if (type == IRQ_TYPE_LEVEL_HIGH)
-+	/* Check for both edge and level here, so we can support GIC irq
-+	   polarity extension in gic_arch_extn.irq_set_type. If arch
-+	   doesn't support polarity extension, the check above will reject
-+	   improper type. */
-+	if (type & IRQ_TYPE_LEVEL_MASK)
- 		val &= ~confmask;
--	else if (type == IRQ_TYPE_EDGE_RISING)
-+	else if (type & IRQ_TYPE_EDGE_BOTH)
- 		val |= confmask;
- 
- 	/*
-@@ -226,10 +235,10 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 
- 	if (enabled)
- 		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff);
--
-+out:
- 	raw_spin_unlock(&irq_controller_lock);
- 
--	return 0;
-+	return ret;
+ drivers/of/device.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index f685e55..e9beae6 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
+
+ 	/* name and id have to be set so that the platform bus doesn't get
+ 	 * confused on matching */
+-	ofdev->name = dev_name(&ofdev->dev);
++	ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
+ 	ofdev->id = -1;
+
+ 	/* device_add will assume that this device is on the same node as
+@@ -75,6 +75,7 @@ EXPORT_SYMBOL(of_device_register);
+
+ void of_device_unregister(struct platform_device *ofdev)
+ {
++	kfree(ofdev->name);
+ 	device_unregister(&ofdev->dev);
  }
- 
- static int gic_retrigger(struct irq_data *d)
--- 
-1.8.1.1.dirty
+ EXPORT_SYMBOL(of_device_unregister);
+--
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
