@@ -1,89 +1,48 @@
-From: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/6] iommu/arm-smmu: add support for specifying regulators
-Date: Wed, 13 Aug 2014 14:17:21 -0700
-Message-ID: <vnkwiolwf5su.fsf@mitchelh-linux.qualcomm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-3-git-send-email-mitchelh@codeaurora.org>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 03/11] ARM: brcmstb: add debug UART for earlyprintk support
+Date: Wed, 13 Aug 2014 15:11:50 -0700
+Message-ID: <CAN8TOE8w5bUT5byHiJrYr8AzaZ+EADzE+aoH6f2x2tFc1+1eQw@mail.gmail.com>
+References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
+	<1405976886-27807-4-git-send-email-computersforpeace@gmail.com>
+	<20140802083040.GY30282@n2100.arm.linux.org.uk>
+	<20140804165627.GT3711@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1407891099-24641-3-git-send-email-mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-	(Mitchel Humpherys's message of "Tue, 12 Aug 2014 17:51:35 -0700")
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140804165627.GT3711@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 12 2014 at 05:51:35 PM, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On some power-constrained platforms it's useful to disable power when a
-> device is not in use. Add support for specifying regulators for SMMUs
-> and only leave power on as long as the SMMU is in use (attached).
+Ping (Olof or Matt?)
+
+On Mon, Aug 4, 2014 at 9:56 AM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sat, Aug 02, 2014 at 09:30:40AM +0100, Russell King wrote:
+>> On Mon, Jul 21, 2014 at 02:07:58PM -0700, Brian Norris wrote:
+>> > From: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >
+>> > Add the UART definitions needed to support earlyprintk on brcmstb machines.
+>> >
+>> > Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> I noticed that you sent this to the patch system.  I asked Olof last
+>> night whether he had anything in arm-soc touching Kconfig.debug, and
+>> he does (a number of other platforms have updated it.)  This means
+>> that if I apply it to my tree, it may conflict, so I'm reluctant to
+>> take it.
 >
-> Signed-off-by: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/iommu/arm,smmu.txt         |   3 +
->  drivers/iommu/arm-smmu.c                           | 102 ++++++++++++++++++---
->  2 files changed, 93 insertions(+), 12 deletions(-)
+> OK... Matt told me that such patches go through you. So which is it?
+> Should all Kconfig.debug patches go through the arm-soc route?
 
-[...]
+How should this get in? Should I rebase/resend through Matt and
+arm-soc? Or can you pick this up as-is?
 
-> @@ -2124,13 +2192,19 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->  	}
->  	dev_notice(dev, "registered %d master devices\n", i);
->  
-> +	err = arm_smmu_init_regulators(smmu);
-> +	if (err)
-> +		goto out_put_masters;
-> +
->  	err = arm_smmu_init_clocks(smmu);
->  	if (err)
->  		goto out_put_masters;
->  
-> +	arm_smmu_enable_regulators(smmu);
->  	arm_smmu_enable_clocks(smmu);
-> -
->  	err = arm_smmu_device_cfg_probe(smmu);
-> +	arm_smmu_disable_clocks(smmu);
-> +	arm_smmu_disable_regulators(smmu);
->  	if (err)
->  		goto out_disable_clocks;
-
-The out_disable_clocks label can go away now that arm_smmu_device_reset
-is done in arm_smmu_attach_dev.
-
-
->  
-> @@ -2163,8 +2237,6 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->  	list_add(&smmu->list, &arm_smmu_devices);
->  	spin_unlock(&arm_smmu_devices_lock);
->  
-> -	arm_smmu_device_reset(smmu);
-> -	arm_smmu_disable_clocks(smmu);
->  	return 0;
->  
->  out_free_irqs:
-> @@ -2173,6 +2245,7 @@ out_free_irqs:
->  
->  out_disable_clocks:
->  	arm_smmu_disable_clocks(smmu);
-> +	arm_smmu_disable_regulators(smmu);
->  
->  out_put_masters:
->  	for (node = rb_first(&smmu->masters); node; node = rb_next(node)) {
-
-
-
--Mitch
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
