@@ -1,83 +1,108 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Wed, 13 Aug 2014 11:29:12 +0200
-Message-ID: <CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
-	<1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
-	<CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
-	<CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
-	<CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6] leds: add device tree bindings for syscon LEDs
+Date: Wed, 13 Aug 2014 11:31:34 +0200
+Message-ID: <CACRpkdYrzsBrvW3dSGDS5yT3YLzpoL+sgAgUJaczR09NfohsdQ@mail.gmail.com>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
+	<1406294628-16079-3-git-send-email-linus.walleij@linaro.org>
+	<CAL_Jsq+-G68wjBLDbELHRDFcGYRa65-Hx9WoD6HypXNjJKVDvA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Stephen Warren <swarren@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, stefan@agner.ch, Maxime Ripard <maxime.ripard@free-electrons.com>, "Berg, Anders" <anders.berg@lsi.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+-G68wjBLDbELHRDFcGYRa65-Hx9WoD6HypXNjJKVDvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-08-13 10:47 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Tue, Aug 12, 2014 at 11:02 AM, Matthias Brugger
-> <matthias.bgg@gmail.com> wrote:
->> 2014-08-11 9:15 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
->>> On Thu, Jul 31, 2014 at 6:42 PM, Matthias Brugger
->>> <matthias.bgg@gmail.com> wrote:
->>>
->>>> We enable GTP6 which ungates the arch timer clock. Apart we write the
->>>> frequency with which the timer is running in the CNTFREQ register.
->>>> In the future this should be done in the bootloader.
->>>>
->>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>> (...)
->>>
->>>> +       if (of_machine_is_compatible("mediatek,mt6589")) {
->>>> +               /* set cntfreq register which is not done in bootloader */
->>>> +               asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (13000000));
->>>
->>> I guess this is for something like the ARM arch timer in
->>> drivers/clocksource/arm_arch_timer.c
->>>
->>> Instead of doing this, use the DT property "clock-frequency" on
->>> the ARM arch timer node, as that overrides the CP15 setting.
->>>
->>>> +
->>>> +               /* turn on GPT6 which ungates arch timer clocks */
->>>> +               gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
->>>> +       }
->>>> +
->>>> +       /* enabel clock and set to free-run */
->>>> +       if (gpt_base)
->>>> +               writel(0x31, gpt_base);
->>>
->>> Why is this not done properly in the GPT driver (I guess
->>> in drivers/clocksource/mtk_timer.c) instead of remapping
->>> it and fiddling around in the machine?
->>
->> I didn't put it in the GPT driver, because that would mean, that you
->> need to have the mtk_timer to be able to use the ARM arch timer.
->> From my understanding this are two independent blocks in the SoC.
->> Apart from that, as stated in the commit message, this patch is a
->> workaround until we have a bootloader which does this for us.
->> Therefore I thought the init_time function would be the better place to do this.
+On Fri, Jul 25, 2014 at 4:07 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Jul 25, 2014 at 8:23 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> This adds the device tree bindings used by syscon-based LEDs.
+(...)
+>> +Device Tree Bindings for Syscon LEDs
+>> +
+>> +Required properties:
+>> +- compatible : must be "syscon-leds".
 >
-> OK I get the point...
+> Not really happy with the name... More below.
+
+[copy paste]
+
+> I think the compatible should be something like
+> "register-bit-led" (perhaps someone has a better name) as syscon is
+> somewhat linux specific term and you could use this binding for any
+> LEDs that have a single register bit control.
+
+Hm... this driver:
+drivers/gpio/gpio-syscon.c
+
+Has some bindings specific to a certain controller here:
+Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
+
+Maybe I should think of something generic for that one
+along the same lines then, so we get some consensus on
+this.
+
+Documentation/devicetree/bindings/mfd/syscon.txt
+Specifies the string "syscon" for such regmap ranges, maybe
+it should rather use the compatible string "misc-register-range"
+or something.
+
+>> +LED sub-node properties:
+>> +- offset : register offset to the register controlling this LED
+>> +- mask : bit mask for the bit controlling this LED in the register
+>> +  typically 0x01, 0x02, 0x04 ...
 >
-> What about the ARM arch timer fixup then, will that also be
-> fixed in the boot loader eventually?
+> This would be a single bit, right? What about inverted bits (i.e. 0 is
+> on or 1 is on)?
 
-Do you refer to clock frequency in the cntfreq register? I think that
-this should go in the DTS as you said.
-Same holds for the magic 0x31, which should be done through defines.
+I can of course add inversion bindings, but cannot add it to
+the driver as I can't test it. Just an "active-low;" string would
+do I guess.
 
-Cheers,
-Matthias
-
+>> +- label : (optional)
 >
-> Yours,
-> Linus Walleij
+> Please group all required and optional properties under those headings.
 
+OK.
 
+>> +Example:
+>> +
+>> +leds: leds@08 {
+>> +       compatible = "syscon-leds";
+>> +       regmap = <&syscon>;
+>> +
+>> +       led@bit0 {
+>
+> Perhaps we can define a way to express unit address as offset+bit like
+> <offset>_<bit> or <offset>.<bit>.
 
--- 
-motzblog.wordpress.com
+I'll come up with something. We don't really have a place to
+document such schemas do we?
+
+> I think we should get rid of the leds node and put this within the
+> syscon device node and each node here should have a compatible
+> property.
+
+OK. But then I guess you also expect to get rid of the
+phandle <&syscon> from the node, so that it implicitly uses
+the syscon it's embedded in? Or is it OK to keep? Or should
+it be optional, so the (syscon) driver will look upward when
+locating the syscon for a node?
+
+Like I need to add a new function
+syscon_regmap_lookup_by_hierarchy() to syscon.c...
+It already has like three ways to look up syscons, now
+we add another one.
+
+I know that is a Linux implementation detail but it reflects the
+fact that similar code will be needed in all operating systems
+using syscon-type things, if it's a case-by-case question
+whether a phandle or hierarchy traversal is to be used for
+getting hold of the interface.
+
+Your,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
