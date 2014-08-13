@@ -1,7 +1,7 @@
 From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 1/4] gpio: syscon: add soc specific callback to assign output value
-Date: Wed, 13 Aug 2014 19:16:19 +0300
-Message-ID: <1407946582-20927-2-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH 4/4] ARM: dts: keystone-k2hk: add dsp gpio controllers nodes
+Date: Wed, 13 Aug 2014 19:16:22 +0300
+Message-ID: <1407946582-20927-5-git-send-email-grygorii.strashko@ti.com>
 References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,53 +12,80 @@ To: Linus Walleij <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, shc_work
 Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs (like Keystone) may require to perform special
-sequence of operations to assign output GPIO value, so default
-implementation of .set() callback from gpio-syscon driver
-can't be used.
-
-Hence, add optional, SoC specific callback to assign output
-gpio value.
+Add Keystone 2 DSP GPIO nodes.
+DSP GPIO banks 0-7 correspond to DSP0-DSP7
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/gpio/gpio-syscon.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/k2hk.dtsi |   56 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 30884fb..03b4699 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -37,6 +37,8 @@
-  * dat_bit_offset:	Offset (in bits) to the first GPIO bit.
-  * dir_bit_offset:	Optional offset (in bits) to the first bit to switch
-  *			GPIO direction (Used with GPIO_SYSCON_FEAT_DIR flag).
-+ * set:		HW specific callback to assigns output value
-+ *			for signal "offset"
-  */
- 
- struct syscon_gpio_data {
-@@ -45,6 +47,8 @@ struct syscon_gpio_data {
- 	unsigned int	bit_count;
- 	unsigned int	dat_bit_offset;
- 	unsigned int	dir_bit_offset;
-+	void		(*set)(struct gpio_chip *chip,
-+			       unsigned offset, int value);
- };
- 
- struct syscon_gpio_priv {
-@@ -77,6 +81,11 @@ static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
- 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
- 	unsigned int offs = priv->data->dat_bit_offset + offset;
- 
-+	if (priv->data->set) {
-+		priv->data->set(chip, offset, val);
-+		return;
-+	}
+diff --git a/arch/arm/boot/dts/k2hk.dtsi b/arch/arm/boot/dts/k2hk.dtsi
+index 321ba2f..009e180 100644
+--- a/arch/arm/boot/dts/k2hk.dtsi
++++ b/arch/arm/boot/dts/k2hk.dtsi
+@@ -50,5 +50,61 @@
+ 			#interrupt-cells = <1>;
+ 			ti,syscon-dev = <&devctrl 0x2a0>;
+ 		};
 +
- 	regmap_update_bits(priv->syscon,
- 			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
- 			   BIT(offs % SYSCON_REG_BITS),
++		dspgpio0: keystone_dsp_gpio@02620240 {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x240>;
++		};
++
++		dspgpio1: keystone_dsp_gpio@2620244 {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x244>;
++		};
++
++		dspgpio2: keystone_dsp_gpio@2620248 {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x248>;
++		};
++
++		dspgpio3: keystone_dsp_gpio@262024c {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x24c>;
++		};
++
++		dspgpio4: keystone_dsp_gpio@2620250 {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x250>;
++		};
++
++		dspgpio5: keystone_dsp_gpio@2620254 {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x254>;
++		};
++
++		dspgpio6: keystone_dsp_gpio@2620258 {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x258>;
++		};
++
++		dspgpio7: keystone_dsp_gpio@262025C {
++			compatible = "ti,keystone-mctrl-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio,syscon-dev = <&devctrl 0x25c>;
++		};
+ 	};
+ };
 -- 
 1.7.9.5
 
