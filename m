@@ -1,49 +1,35 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH] ARM: apq8064: Add pinmux and i2c pinctrl nodes
-Date: Thu, 14 Aug 2014 15:37:51 -0700
-Message-ID: <CAJAp7OiXaumG1Bke2_uuCYX=KvEdckLCct56H4U+rttWhE2P5w@mail.gmail.com>
-References: <1408000853-2764-1-git-send-email-kiran.padwal@smartplayin.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH][resend] mtd: atmel_nand: make PMECC lookup table and
+ offset property optional
+Date: Thu, 14 Aug 2014 15:46:25 -0700
+Message-ID: <20140814224625.GF18411@ld-irv-0074>
+References: <1407490110-16735-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1408000853-2764-1-git-send-email-kiran.padwal@smartplayin.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kiran Padwal <kiran.padwal@smartplayin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407490110-16735-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 14, 2014 at 12:20 AM, Kiran Padwal
-<kiran.padwal@smartplayin.com> wrote:
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 92bf793..fbebf5c 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -70,6 +70,17 @@
->                 ranges;
->                 compatible = "simple-bus";
->
-> +               qcom_pinmux: pinmux@800000 {
+On Fri, Aug 08, 2014 at 05:28:30PM +0800, Josh Wu wrote:
+> If there is no PMECC lookup table stored in ROM, or lookup table offset is
+> not specified, PMECC driver should build it in DDR by itself.
+> 
+> That make the PMECC driver work for some board which doesn't has PMECC
+> lookup table in ROM.
+> 
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-There are (at least) three different pinmuxes in these platforms: TLMM, PMIC
-GPIO, PMIC MPP. Also this is the phandle that is used to reference the gpio
-chip throughout the board.
+drivers/mtd/nand/atmel_nand.c:1204:11: warning: no previous prototype for 'create_lookup_table' [-Wmissing-prototypes]
 
-So I would like to suggest that we name it "tlmm" or like in the downstream
-kernel "msmgpio".
+You probably should make create_lookup_table() static.
 
-> +                       compatible = "qcom,apq8064-pinctrl";
-> +                       reg = <0x800000 0x4000>;
-> +
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       interrupts = <0 32 0x4>;
-
-I must have gotten this wrong in the dt binding example, sorry about that.
-interrupts should be <0 16 0x4>.
-
-> +               };
-
-Regards,
-Bjorn
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
