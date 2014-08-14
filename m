@@ -1,67 +1,62 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi: rockchip: return 0 if tx_buf and rx_buf are NULL
-Date: Thu, 14 Aug 2014 22:02:53 +0100
-Message-ID: <20140814210253.GF17528@sirena.org.uk>
-References: <1407977544-2989-1-git-send-email-addy.ke@rock-chips.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2] power: twl4030-madc-battery: Convert to iio consumer.
+Date: Thu, 14 Aug 2014 23:03:24 +0200
+Message-ID: <20140814210324.GA22572@earth.universe>
+References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
+ <1394052739-8589-2-git-send-email-marek@goldelico.com>
+ <20140305232513.GA9542@earth.universe>
+ <CAAfyv34X1naNEyht0q+bD3QUjCxLJribmfWfZkP073WS7ve4kA@mail.gmail.com>
+ <CAAfyv35Hi-aE+SnTiN9O39ANi63gkNMz-Bz6hqCkkxJARSFcOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DMVR+kHVjCKdhElC"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1407977544-2989-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <CAAfyv35Hi-aE+SnTiN9O39ANi63gkNMz-Bz6hqCkkxJARSFcOg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Belisko Marek <marek.belisko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---DMVR+kHVjCKdhElC
+--jI8keyz6grp/JLjh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Aug 14, 2014 at 08:52:24AM +0800, Addy Ke wrote:
-> To do so, spi communication can use an empty buf to pull up CS.
+Hi Marek,
 
-> This patch merged from ChromiumOS tree.
-> Cros_ec use this function to turn off CS and add a delay to ensure
-> the rising edge doesn't come too soon after the end of the data.
+On Mon, Aug 11, 2014 at 09:52:52PM +0200, Belisko Marek wrote:
+> can you please take this series (I'll post update version with
+> removing debug code). Thanks.
 
->  	if (!xfer->tx_buf && !xfer->rx_buf) {
-> -		dev_err(rs->dev, "No buffer for transfer\n");
-> -		return -EINVAL;
-> +		dev_dbg(rs->dev, "No buffer for transfer\n");
-> +		return 0;
->  	}
+mh. I will not pull this with "(dis)charging-calibration-data" as
+DT property name without an ACK from the DT binding maintainers.
 
-We should be implementing this in the core rather than the driver - just
-not even call into the controller driver if there's nothing to do.  That
-way we make sure that every driver works properly.  After all, the delay
-itself is implemented in the core.
+I would feel fine with pulling this when they are prefixed with
+"ti,". Otherwise the series looks good to me.
 
---DMVR+kHVjCKdhElC
+-- Sebastian
+
+--jI8keyz6grp/JLjh
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJT7SP6AAoJELSic+t+oim9b2kP/17R09sfWwDcnHSoljRanevO
-4FnFbkGMsAmkHwjC8MFF8bJ0V1RhD8ZCiL+0KC4HDBErCOgtkCaIcbwiyYFb/hOB
-6Ft9/D1BbyM+PqgAUiugv4wB8RSwN0UkUkOyKN5HzYJz5NAB7xsHTjCGATVoswQp
-S46f6JNCW3BAikBnGA9Iq6IdF1tJpw5/3UM6zFBpdjpIJy5pNFf0E9GftbgdfjIR
-qo3GML9sOGVR1UYsdWkvujDb7HnRaF/ACRi06swA9cMl1kk81sy7FNPUXfPfoNdN
-wO8RAJVt9ZdZOhLw51PhJjUMU3toEUnpY252g5FOdC2F2h1WN9OYmuJfkwTu3433
-FQM59PfZB62Dh+UPx84LTgQD9q6pGnwyfj9o+OmPgSCzCsXOMde5LaTzuxbBCbTO
-BvBPt3VbPavnvwuJ2XcC118xYjn3aD7XhFfSc6JhgP8gcyPz1xHyKJOcS15SJEFO
-Rp/Ug7fZzOGRW2PyVrVxUW77xkM79K5bNJDKpgxoRl9bJ/2dBurI5poaaSLNkc6h
-xIUji6FGMXZUZOySKuwYWyqGMnsz5YKB6NcK2aXQzyy1d0eArWkEXbZAIa6IPFpu
-tIC1+6rJCIVT+EGIkJTsjVsL58Vdh/6fmbcDYxDpwtfn3nHbineXiQgFMyYusCH1
-7XicWLyUrdA9IldCImxd
-=IId5
+iQIcBAEBCgAGBQJT7SQcAAoJENju1/PIO/qaYAMP/jFo7UTndc6r/VmLDLSLBoTK
+zJuCkjL9720eX/vGGDYG/SkWMUzZtvn3NL9eU3lC9FBXdkYhIRKRFBzidYnRkms8
+JceS6BJsWa1S6RcEReFVK6fbzOCUTNCzR+HkUn+foc0kuEN/ChhffJXIBrDMGGGE
+8TBYSYYPvsADgQEc/po65kWVwpdg0dVkQXD1h7o+Xp0JOpOM3BPi0ESKwCxSLCJS
+CJEgwSrPO0NvOGT8vr8d8DbRa9esXnmfFCIuPmQQMURDuWiu4dWREGHkwniLC5yv
+t3A/lt69O9ffUM5dlI2K9q/FKp3HSrPfGtHdtVZvoMS9uFDRsYB8zbDSxcX9dUMU
+jMWVDNVRbbrRBmW6gqhNs3zLoUGs3rsoVEQEP6i46YyZWoDVyXNNPl+ERRdx4V4v
+Vrw3KVr/6nKhrJWJ1Ml4YnUy1HmuF4xEDuNtbpYKbIw4vrRp7AiD0AFEzRMkz1KW
+RIHxr+UxTlaOKUUfhSE3GUvmEn0cmf6dEBEdu6fQ1fIhC0VjIJeknnunjKuT0C0G
+Suy8uJSbZRQalXvXdR/hDGGo/B2IZfQTLYIXUj8wG/k/gsEjtbpNcHihc8tgI/yF
+LKnjJRXWghaJ0NhODj7NllQt4tsS6fSTE5yY+bhPKFDT1c/RoOyNkYFWaj1ZO/o2
+2BcBjnOnkPBrBpIicCa4
+=3rK3
 -----END PGP SIGNATURE-----
 
---DMVR+kHVjCKdhElC--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--jI8keyz6grp/JLjh--
