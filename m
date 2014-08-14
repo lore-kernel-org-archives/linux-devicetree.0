@@ -1,92 +1,102 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Thu, 14 Aug 2014 19:04:52 +0300
-Message-ID: <87y4ur2h23.fsf@nvidia.com>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<87a9774lf5.fsf@nvidia.com>
-	<cfb1d2ff66004685b7ead3f5e6321681@BL2PR03MB468.namprd03.prod.outlook.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: keystone-k2hk: add dsp gpio controllers
+ nodes
+Date: Thu, 14 Aug 2014 19:54:09 +0300
+Message-ID: <53ECE9B1.4060303@ti.com>
+References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com> <1408018321.928492982@f270.i.mail.ru> <53ECDC54.3060005@ti.com> <1408029982.880621027@f126.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <cfb1d2ff66004685b7ead3f5e6321681-AZ66ij2kwaacCcN9WK45f+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1408029982.880621027@f126.i.mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>, Rob Herring <robh+dt@kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Varun,
+On 08/14/2014 06:26 PM, Alexander Shiyan wrote:
+> Thu, 14 Aug 2014 18:57:08 +0300 =D0=BE=D1=82 Grygorii Strashko <grygo=
+rii.strashko@ti.com>:
+> ...
+>>>>>> +		dspgpio7: keystone_dsp_gpio@262025C {
+>>>>>> +			compatible =3D "ti,keystone-mctrl-gpio";
+>>>>>> +			gpio-controller;
+>>>>>> +			#gpio-cells =3D <2>;
+>>>>>> +			gpio,syscon-dev =3D <&devctrl 0x25c>;
+>>>>>> +		};
+>>>>>
+>>>>> So, devctrl is a syscon device and this DTS introduce several
+>>>>> identical GPIO descriptions?
+>>>>>
+>>>>> On my opinion this should be placed in the gpio-syscon.c,
+>>>>> where you can add support for ti,keystone-dsp0{..7}-gpio.
+>>>>> Such change will avoid parts 2 and 3 of this patch.
+>>>>>
+>>>>> static const struct syscon_gpio_data ti_keystone_dsp0_gpio =3D {
+>>>>>      .compatible =3D "ti,keystone-syscon",
+>>>>>      .dat_bit_offset =3D 0x240 * 8,
+>>>>>      ...
+>>>>>      .set =3D etc...
+>>>>> };
+>>>>
+>>>> So, if I understand you right, you propose to add 8 additional com=
+patible
+>>>> strings just to encode different register offsets. Is it?
+>>>> 1) add "ti,keystone-mctrl-gpio0"..."ti,keystone-mctrl-gpio7"
+>>>
+>>> Yes, but replace "mctrl" with "dsp" since mctrl is not applicable h=
+ere.
+>>>
+>>>> 2) add 8 structures keystone_mctrl_gpio0..keystone_mctrl_gpio7 in =
+gpio-syscon.c
+>>>>      (which will have only different values of field - .dat_bit_of=
+fset =3D 0x2yy * 8,)
+>>>>
+>>>> 3) add 8 additional items in array syscon_gpio_ids
+>>>> 	{
+>>>> 		.compatible	=3D "ti,keystone-mctrl-gpio0",
+>>>> 		.data		=3D &keystone_mctrl_gpio0,
+>>>> 	}, ...
+>>>>
+>>>> I can do it if you strictly insist, BUT I don't like it :(
+>>>> - just imagine how your driver will look look like if 5 or 6 SoCs =
+will re-use it ;)
+>>>> - as I mentioned in cover letter and commit messages even each SoC=
+ revision can have
+>>>>     different Syscon implementation with different registers offse=
+ts and with different
+>>>>     number of Syscon register ranges (for example for Keystone 2 w=
+e already have two
+>>>>     Syscon devices defined in DT).
+>>>
+>>> The initial version of this driver contains addresses and offsets i=
+n, but this approach has
+>>> been criticized by DT maintainers.
+>>
+>> Could you provide link on this thread^, pls?
+>=20
+> Here is a link to first version:
+> https://www.mail-archive.com/linux-gpio@vger.kernel.org/msg01616.html
 
-Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+10x
 
->> -----Original Message-----
->> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
->> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Hiroshi Doyu
->> Sent: Thursday, August 14, 2014 12:18 PM
->> To: Thierry Reding; Stephen Warren; Arnd Bergmann; Will Deacon
->> Cc: Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson;
->> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Rob Herring; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
->> 
->> 
->> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> 
->> > +Multiple-master IOMMU:
->> > +----------------------
->> > +
->> > +       iommu {
->> > +               /* the specifier represents the ID of the master */
->> > +               #iommu-cells = <1>;
->> > +       };
->> > +
->> > +       master@1 {
->> > +               /* device has master ID 42 in the IOMMU */
->> > +               iommus = <&{/iommu} 42>;
->> > +       };
->> > +
->> > +       master@2 {
->> > +               /* device has master IDs 23 and 24 in the IOMMU */
->> > +               iommus = <&{/iommu} 23>, <&{/iommu} 24>;
->> > +       };
->> 
->> I think that this "master ID" will be parsed in IOMMU driver. For example,
->> ARM,SMMU expects "streamID" as "master ID", right?
->> 
->> If a SoC has a feature to configure to assign streamID to devices at runtime,
->> "streamID" is not equal to "master ID".
->> 
->>   iommus = <&{/smmu} "soc specific master ID">;
->> 
->> "soc master ID" needs to be translated into "streamID" by SoC SW. It seems
->> that ARM,SMMU kernel driver doesn't expect this kind of ID translation. If
->> ARM,SMMU kernel driver is used as is, "soc master ID"
->> would be incompatible? ARM,SMMU needs such translation before parsing. Is
->> this my understanding right?
->> 
->> If so I think that this master ID configuration/translation may be quite
->> reasonable requirment for SoC using ARM,SMMU.
->> 
->> Can we consider this ID translation within ARM,SMMU compatibility?
->> 
->> IOW, is it possible to implement some SoC specific hook for ID
->> translation/configuration in ARM,SMMU kernel driver?
->
->
-> Can the id translation be done using a SMR mask?
+>=20
+> Unfortunately, I lost thread for DT-related stuffs.
+>=20
 
-No, "SoC master ID" is completely independenf of SMR.
+Oh, I've just checked ARM dts directory and found that=20
+constructions like this:
+	vendor,syscon =3D <&syscon_phandle>; /// or even this vendor,syscon =3D=
+ <&syscon_phandle 0x60 2>;
+are widely used as of now.
+Also, According to the bindings doc, the Syscon is not a Linux specific=
+ definition (mfd/syscon.txt).
 
-> Also, for dynamic stream ID allocation we would need to represent the
-> specific master register (to store the stream ID) in the device tree.
+Regards,
+-grygorii
 
-I assmue that the above means that iMX has such configuration register
-to map steramID and a device dynamically.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
