@@ -1,51 +1,65 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCA0LzRdIEFSTTogZHRzOiBrZXlzdG9uZS1rMmhrOiBhZGQg?=
- =?UTF-8?B?ZHNwIGdwaW8gY29udHJvbGxlcnMgbm9kZXM=?=
-Date: Wed, 13 Aug 2014 20:06:24 +0400
-Message-ID: <1407945984.545232249__46429.2650264271$1407977955$gmane$org@f170.i.mail.ru>
-References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
- <1407946582-20927-5-git-send-email-grygorii.strashko@ti.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] devicetree: bindings: Document Gateworks vendor prefix
+Date: Wed, 13 Aug 2014 18:13:35 -0700
+Message-ID: <CAJ+vNU1QXMMke+pUy6xbxaYhNqqRivM=_qLpVLPePTQLicj_Zg@mail.gmail.com>
+References: <1407658509-1773-1-git-send-email-tharvey@gateworks.com>
+	<53E7D325.4060802@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407946582-20927-5-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <53E7D325.4060802-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-V2VkLCAxMyBBdWcgMjAxNCAxOToxNjoyMiArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
-cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEFkZCBLZXlzdG9uZSAyIERTUCBHUElPIG5vZGVz
-Lgo+IERTUCBHUElPIGJhbmtzIDAtNyBjb3JyZXNwb25kIHRvIERTUDAtRFNQNwo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Cj4g
-LS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSB8ICAgNTYgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTYgaW5zZXJ0
-aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9rMmhrLmR0c2kgYi9h
-cmNoL2FybS9ib290L2R0cy9rMmhrLmR0c2kKPiBpbmRleCAzMjFiYTJmLi4wMDllMTgwIDEwMDY0
-NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2syaGsuZHRzaQo+IEBAIC01MCw1ICs1MCw2MSBAQAo+ICAJCQkjaW50ZXJydXB0LWNl
-bGxzID0gPDE+Owo+ICAJCQl0aSxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MmEwPjsKPiAgCQl9
-Owo+ICsKPiArCQlkc3BncGlvMDoga2V5c3RvbmVfZHNwX2dwaW9AMDI2MjAyNDAgewo+ICsJCQlj
-b21wYXRpYmxlID0gInRpLGtleXN0b25lLW1jdHJsLWdwaW8iOwo+ICsJCQlncGlvLWNvbnRyb2xs
-ZXI7Cj4gKwkJCSNncGlvLWNlbGxzID0gPDI+Owo+ICsJCQlncGlvLHN5c2Nvbi1kZXYgPSA8JmRl
-dmN0cmwgMHgyNDA+Owo+ICsJCX07Cj4gKwo+ICsJCWRzcGdwaW8xOiBrZXlzdG9uZV9kc3BfZ3Bp
-b0AyNjIwMjQ0IHsKPiArCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1tY3RybC1ncGlvIjsK
-PiArCQkJZ3Bpby1jb250cm9sbGVyOwo+ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsKPiArCQkJZ3Bp
-byxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MjQ0PjsKPiArCQl9OwouLi4KPiArCQlkc3BncGlv
-Nzoga2V5c3RvbmVfZHNwX2dwaW9AMjYyMDI1QyB7Cj4gKwkJCWNvbXBhdGlibGUgPSAidGksa2V5
-c3RvbmUtbWN0cmwtZ3BpbyI7Cj4gKwkJCWdwaW8tY29udHJvbGxlcjsKPiArCQkJI2dwaW8tY2Vs
-bHMgPSA8Mj47Cj4gKwkJCWdwaW8sc3lzY29uLWRldiA9IDwmZGV2Y3RybCAweDI1Yz47Cj4gKwkJ
-fTsKClNvLCBkZXZjdHJsIGlzIGEgc3lzY29uIGRldmljZSBhbmQgdGhpcyBEVFMgaW50cm9kdWNl
-IHNldmVyYWwKaWRlbnRpY2FsIEdQSU8gZGVzY3JpcHRpb25zPwoKT24gbXkgb3BpbmlvbiB0aGlz
-IHNob3VsZCBiZSBwbGFjZWQgaW4gdGhlIGdwaW8tc3lzY29uLmMsCndoZXJlIHlvdSBjYW4gYWRk
-IHN1cHBvcnQgZm9yIHRpLGtleXN0b25lLWRzcDB7Li43fS1ncGlvLgpTdWNoIGNoYW5nZSB3aWxs
-IGF2b2lkIHBhcnRzIDIgYW5kIDMgb2YgdGhpcyBwYXRjaC4KCnN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-c3lzY29uX2dwaW9fZGF0YSB0aV9rZXlzdG9uZV9kc3AwX2dwaW8gPSB7CiAgLmNvbXBhdGlibGUg
-PSAidGksa2V5c3RvbmUtc3lzY29uIiwKICAuZGF0X2JpdF9vZmZzZXQgPSAweDI0MCAqIDgsCiAg
-Li4uCiAgLnNldCA9IGV0Yy4uLgp9OwoKLS0tCgo=
+On Sun, Aug 10, 2014 at 1:16 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+> wrote:
+> Le 10/08/2014 01:15, Tim Harvey a =C3=A9crit :
+>
+>> Add Gateworks Corporation to the list of device tree vendor prefixes=
+=2E
+>>
+>> Gateworks designs and manufactures single board computers designed f=
+or
+>> embedded wireless and wired network applications.
+>>
+>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 46a311e..803fa4f 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -54,6 +54,7 @@ globalscale   Globalscale Technologies, Inc.
+>>   gmt   Global Mixed-mode Technology, Inc.
+>>   google        Google, Inc.
+>>   gumstix       Gumstix, Inc.
+>> +gw     Gateworks Corporation
+>
+>
+> I would go with "gateworks" here, "gw" is usually a shorter term for
+> "gateway", and there is an actual company called "Gateway" also
+> manufacturing various types of computers.
+> --
+> Florian
+
+Hi Florian,
+
+Well... I got to the table first with Gateworks so I don't see why I
+can't take the 'gw' prefix personally. Note that I do have several
+devicetree files in arch/arm/dts/imx6-gw*.dts* already in mainline
+that use the 'gw' vendor prefix (albeit one could argue that I should
+have been asked to add 'gw' to the vendor-prefixes.txt back then, but
+that is not the way things went down).
+
+Tim
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
