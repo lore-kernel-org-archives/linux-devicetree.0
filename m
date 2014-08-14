@@ -1,87 +1,40 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
- Broadcom STB SoCs
-Date: Wed, 13 Aug 2014 16:47:06 -0700
-Message-ID: <20140813234706.GC18411@ld-irv-0074>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
- <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q@mail.gmail.com>
- <20140731022320.GM3711@ld-irv-0074>
- <20140731084315.GJ30282@n2100.arm.linux.org.uk>
- <20140731220642.GQ3711@ld-irv-0074>
- <20140802092756.GZ30282@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: Add mmc0 and mmc1 aliases for rk3288
+Date: Wed, 13 Aug 2014 17:08:00 -0700
+Message-ID: <1407974880-30626-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140802092756.GZ30282@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Marc Carino <marc.ceeeee@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Heiko Stuebner <heiko@sntech.de>, Sonny Rao <sonnyrao@chromium.org>
+Cc: stefan@agner.ch, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Addy Ke <addy.ke@rock-chips.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+It's convenient (and less confusing to people reading logs) if the
+eMMC port on rk3288 is consistenly marked with mmc0 and the sdmmc port
+on rk3288 is consistently marked with mmc1.  Add the appropriate
+aliases.
 
-Picking up this thread again, as things are now set for dropping this
-patch and resubmitting SMP support for 3.18.
+These aliases only actually do something if a patch like
+(https://patchwork.kernel.org/patch/3925551/) lands, but they don't
+hurt even before that patch.
 
-On Sat, Aug 02, 2014 at 10:27:56AM +0100, Russell King wrote:
-> On Thu, Jul 31, 2014 at 03:06:42PM -0700, Brian Norris wrote:
-> > Yes, I noticed this. What I meant is that smp_ops.cpu_die() and
-> > smp_ops.cpu_kill() are not synchronized.
-> ...
-> > We're not relying on the L1 cache, though. Don't sync_cache_{r,w}()
-> > ensure all reads/writes reach at least the L2?
-> 
-> What exactly are you trying to achieve here?
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Sonny Rao <sonnyrao@chromium.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Synchronization between v7_exit_coherency_flush() (on the dying CPU) and
-yanking the power (brcmstb_cpu_kill(), on the murderous CPU). The core
-completion-based synchronization is not sufficient, since it allows
-brcmstb_smp_ops.smp_kill and brcmstb_smp_ops.smp_die to race.
-
-Am I somehow not achieving what I intend here?
-
-> > How does that ensure that the CPU is down by the time the work is
-> > scheduled? It seems like this would just defer the work long enough that
-> > it *most likely* has quiesced, but I don't see how this gives us a
-> > better guarantee. Or maybe I'm missing something. (If so, please do
-> > enlighten!)
-> 
-> Note that I said a delayed work queue.  The dying CPU runs a predictable
-> sequence once cpu_die() has been entered - interrupts at the GIC have
-> been programmed to be routed to other CPUs, interrupts at the CPU are
-> masked, so the CPU isn't going to be doing anything else except executing
-> that code path.  So, it's going to be a predictable number of CPU cycles.
-> 
-> That allows you to arrange a delayed workqueue (or a timer) to fire
-> after a period of time that you can guarantee that the dying CPU has
-> reached that wfi().
-
-OK, that sounds workable for the active hotplug case.
-
-But what about for the suspend case? CPUs are hot-unplugged during
-disable_nonboot_cpus(), and I don't see that this would guarantee the
-workqueue will complete before we enter suspend.
-
-> Another point which raises itself in your patch is this:
-> 
-> +       /* Settle-time from Broadcom-internal DVT reference code */
-> +       udelay(7);
-> 
-> 7us looks very precise, but udelay() may not be that precise.  What is
-> the actual specification?  Does it say "you must wait at least 7us"?
-> 
-> udelay() _may_ return early, especially if it is using the CPU delay
-> loop to perform the delay - I've explained why this happens previously,
-> and why it isn't a bug.
-> 
-> If you're using a timer-based delay for udelay() (which you should be
-> using if you support cpufreq) then the delay should be more accurate,
-> but it's still good practise to give a little leeway on the figure.
-
-I'm looking into this specific delay. I'd bet it's just "wait at least
-7us." I could probably factor in some leeway to be safe.
-
-Thanks,
-Brian
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 36be7bb..0b54b0d 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -29,6 +29,8 @@
+ 		i2c3 = &i2c3;
+ 		i2c4 = &i2c4;
+ 		i2c5 = &i2c5;
++		mmc0 = &emmc;
++		mmc1 = &sdmmc;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+ 		serial2 = &uart2;
+-- 
+2.1.0.rc2.206.gedb03e5
