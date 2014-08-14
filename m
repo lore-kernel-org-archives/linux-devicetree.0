@@ -1,105 +1,115 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
- specific reset
-Date: Thu, 14 Aug 2014 12:47:38 +0200
-Message-ID: <20140814104738.GV15297@lukather>
-References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
- <CACRpkdYfu8HmVCkn9JFh+YP5OPdr8o9nTfoCnkJ7SSpGoenQUg@mail.gmail.com>
- <20140708080535.GJ13423@lukather>
- <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
- <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
- <20140811173356.GN15297@lukather>
- <1408008998.4035.43.camel@paszta.hi.pengutronix.de>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: keystone-k2hk: add dsp gpio controllers
+ nodes
+Date: Thu, 14 Aug 2014 15:13:39 +0300
+Message-ID: <53ECA7F3.7030702@ti.com>
+References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com> <1407946582-20927-5-git-send-email-grygorii.strashko@ti.com> <1407945984.545232249@f170.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="A47bNRIYjYQgpFVi"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408008998.4035.43.camel@paszta.hi.pengutronix.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Houcheng Lin <houcheng@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1407945984.545232249@f170.i.mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Alexander,
 
---A47bNRIYjYQgpFVi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 14, 2014 at 11:36:38AM +0200, Philipp Zabel wrote:
-> Hi Maxime,
+On 08/13/2014 07:06 PM, Alexander Shiyan wrote:
+> Wed, 13 Aug 2014 19:16:22 +0300 =D0=BE=D1=82 Grygorii Strashko <grygo=
+rii.strashko@ti.com>:
+>> Add Keystone 2 DSP GPIO nodes.
+>> DSP GPIO banks 0-7 correspond to DSP0-DSP7
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>   arch/arm/boot/dts/k2hk.dtsi |   56 +++++++++++++++++++++++++++++++=
+++++++++++++
+>>   1 file changed, 56 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/k2hk.dtsi b/arch/arm/boot/dts/k2hk.dt=
+si
+>> index 321ba2f..009e180 100644
+>> --- a/arch/arm/boot/dts/k2hk.dtsi
+>> +++ b/arch/arm/boot/dts/k2hk.dtsi
+>> @@ -50,5 +50,61 @@
+>>   			#interrupt-cells =3D <1>;
+>>   			ti,syscon-dev =3D <&devctrl 0x2a0>;
+>>   		};
+>> +
+>> +		dspgpio0: keystone_dsp_gpio@02620240 {
+>> +			compatible =3D "ti,keystone-mctrl-gpio";
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +			gpio,syscon-dev =3D <&devctrl 0x240>;
+>> +		};
+>> +
+>> +		dspgpio1: keystone_dsp_gpio@2620244 {
+>> +			compatible =3D "ti,keystone-mctrl-gpio";
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +			gpio,syscon-dev =3D <&devctrl 0x244>;
+>> +		};
+> ...
+>> +		dspgpio7: keystone_dsp_gpio@262025C {
+>> +			compatible =3D "ti,keystone-mctrl-gpio";
+>> +			gpio-controller;
+>> +			#gpio-cells =3D <2>;
+>> +			gpio,syscon-dev =3D <&devctrl 0x25c>;
+>> +		};
 >=20
-> Am Montag, den 11.08.2014, 19:33 +0200 schrieb Maxime Ripard:
-> > > Mostly because Maxime and I seem to have a completely different opini=
-on
-> > > and nobody else argued one way or the other.
-> >=20
-> > Yep, mostly because I don't see how a generic approach can work.
-> >=20
-> > The existing reset-gpios property only provide the gpio to use, but
-> > some informations are encoded in the driver, such as the reset
-> > duration, or a reset sequence if any.
+> So, devctrl is a syscon device and this DTS introduce several
+> identical GPIO descriptions?
 >=20
-> The driver should provide the duration.
+> On my opinion this should be placed in the gpio-syscon.c,
+> where you can add support for ti,keystone-dsp0{..7}-gpio.
+> Such change will avoid parts 2 and 3 of this patch.
+>=20
+> static const struct syscon_gpio_data ti_keystone_dsp0_gpio =3D {
+>    .compatible =3D "ti,keystone-syscon",
+>    .dat_bit_offset =3D 0x240 * 8,
+>    ...
+>    .set =3D etc...
+> };
 
-How? This used to be in the code, and reset_control_reset doesn't take
-such argument.
+So, if I understand you right, you propose to add 8 additional compatib=
+le
+strings just to encode different register offsets. Is it?
+1) add "ti,keystone-mctrl-gpio0"..."ti,keystone-mctrl-gpio7"
 
-> I'd really like to see an example where sequencing is necessary.
+2) add 8 structures keystone_mctrl_gpio0..keystone_mctrl_gpio7 in gpio-=
+syscon.c
+   (which will have only different values of field - .dat_bit_offset =3D=
+ 0x2yy * 8,)
 
-Well, if you have several reset lines, the sequencing between each
-might be important.
+3) add 8 additional items in array syscon_gpio_ids
+	{
+		.compatible	=3D "ti,keystone-mctrl-gpio0",
+		.data		=3D &keystone_mctrl_gpio0,
+	}, ...
 
-> I agree that as soon as things get significantly more complicated than
-> pulsing a single GPIO, the reset-gpios binding is too limited.
+I can do it if you strictly insist, BUT I don't like it :(
+- just imagine how your driver will look look like if 5 or 6 SoCs will =
+re-use it ;)
+- as I mentioned in cover letter and commit messages even each SoC revi=
+sion can have
+  different Syscon implementation with different registers offsets and =
+with different
+  number of Syscon register ranges (for example for Keystone 2 we alrea=
+dy have two
+  Syscon devices defined in DT).
 
-While the generic reset bindings are perfect for that.
+Now we already have 3 Keystone 2 SoC revisions (K2HK, K2L, K2E)  and th=
+ere are no guarantee
+that the next revision k2X will have the same register offset for GPIO0=
+=2E
 
-> Still, I'm not happy to mandate a separate gpio reset device for each
-> reset line if most devices are simple enough for it to work without.
+Best regards,
+-grygorii
 
-Well, it's pretty much already the case for other subsystems, such as
-regulator.
-
-I guess we can treat this as a legacy option, but allow the reset-gpio
-code to be a full driver of its own, if we need more advanced use
-cases?
-
-> What about using reset-gpios for the majority of simple cases and have a
-> separate gpio-reset-sequencer driver when multiple GPIO resets have to
-> be timed?
-
-I don't know. I feel like it should be in the driver itself, rather
-than in a generic layer.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---A47bNRIYjYQgpFVi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT7JPKAAoJEBx+YmzsjxAgqoUP/2YeD7cQIo3mFXzDDSqOahUo
-w6NYrevoNsau4/FG5IT3oqrnAlugln2HbGuALQLMcgOgYeEQzmc2oeJkqw8dKHBg
-vvXWV+HZkQeGj2LuW8J2ZcIA1ilX1RIb1/oiPMT0sv0+IRiFnpCk4PAnpty0QWQK
-K4ZDUi0Ki/zq/4ZYfRVzIWsLkKT1KprqjC+/tTWdkS9EnjVPBCnZiIopvhPsr5OM
-AKCGQIn0OpzcGJfynpps3RY9gN2uLTJ2+3JW+3qKWInZs+WimehIH/VuFYlo1k0C
-9qZS9FdBBco4poVynANKNiS2pb1erT/EGwb9PDpxh7CRGe2TtCjkk+XV6aO+HwEh
-kOGFwrWziALZBXmxtevqzchhZ8KmK0W6jOS6n/43HWuQaH16qAznmwxXCL6xtW/9
-fRfzOhPiljpE4dKnbUG9MwHfqrl+VKvKynjAYI7ztLr7HoNxHYi9Ue7t8RwKEx2I
-0sCLg2Jc+1dpmiOV6u0fs9m7O/iXQYEoHqTAPGBqtM3UtkiISWnxsoK+yBOEA7GH
-PYACjyAsuBoIiidELwYdgAyROO6/lS85TyDZND8Wlfan1k1uwibDfa/1hUzDa6bq
-i14WQndnFH4dO6LfRuPXQsGhymRnJCo94EbaQOMWYM9Rr/EwYEcu2RC7PSwy6gz2
-HcXCN1BxiQAfZrLx1cnM
-=gRc3
------END PGP SIGNATURE-----
-
---A47bNRIYjYQgpFVi--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
