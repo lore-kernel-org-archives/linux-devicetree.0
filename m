@@ -1,109 +1,29 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2 V4] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Thu, 14 Aug 2014 18:55:26 +0100
-Message-ID: <20140814175525.GI24018@leverpostej>
-References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1407942041-3291-2-git-send-email-suravee.suthikulpanit@amd.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCHv10 1/2] edac: altera: Add Altera SDRAM EDAC support.
+Date: Thu, 14 Aug 2014 20:49:30 +0200
+Message-ID: <20140814184930.GB11558@amd.pavel.ucw.cz>
+References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com>
+ <1407770293-27190-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1407942041-3291-2-git-send-email-suravee.suthikulpanit@amd.com>
+In-Reply-To: <1407770293-27190-2-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: tthayer@opensource.altera.com
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 04:00:40PM +0100, suravee.suthikulpanit@amd.com wrote:
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+On Mon 2014-08-11 10:18:12, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> ARM GICv2m specification extends GICv2 to support MSI(-X) with
-> a new set of register frame. This patch introduces support for
-> the non-secure GICv2m register frame. Currently, GICV2m is available
-> in certain version of GIC-400.
+> This patch adds support for the CycloneV and ArriaV SDRAM controllers.
+> Correction and reporting of SBEs, Panic on DBEs.
 > 
-> The patch introduces a new property in ARM gic binding, the v2m subnode.
-> It is optional.
-> 
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Cc: Mark Rutland <Mark.Rutland@arm.com>
-> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
-> Cc: Will Deacon <Will.Deacon@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/gic.txt |  32 ++++
->  drivers/irqchip/Kconfig                       |   7 +
->  drivers/irqchip/Makefile                      |   1 +
->  drivers/irqchip/irq-gic-v2m.c                 | 215 ++++++++++++++++++++++++++
->  drivers/irqchip/irq-gic.c                     |  75 +++++----
->  drivers/irqchip/irq-gic.h                     |  48 ++++++
->  6 files changed, 348 insertions(+), 30 deletions(-)
->  create mode 100644 drivers/irqchip/irq-gic-v2m.c
->  create mode 100644 drivers/irqchip/irq-gic.h
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> index 5573c08..8a64179 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -95,3 +95,35 @@ Example:
->                       <0x2c006000 0x2000>;
->                 interrupts = <1 9 0xf04>;
->         };
-> +
-> +
-> +* GICv2m extension for MSI/MSI-x support (Optional)
-> +
-> +Certain revision of GIC-400 supports MSI/MSI-x via V2M register frame.
-> +This is enabled by specifying v2m sub-node.
-> +
-> +Required properties:
-> +
-> +- msi-controller : Identifies the node as an MSI controller.
-> +
-> +- reg : GICv2m MSI interface register base and size
-> +
-> +Example:
-> +
-> +       interrupt-controller@e1101000 {
-> +               compatible = "arm,gic-400";
-> +               #interrupt-cells = <3>;
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               interrupt-controller;
-> +               interrupts = <1 8 0xf04>;
-> +               ranges = <0 0 0 0xe1100000 0 0x100000>;
-> +               reg = <0x0 0xe1110000 0 0x01000>,
-> +                     <0x0 0xe112f000 0 0x02000>,
-> +                     <0x0 0xe1140000 0 0x10000>,
-> +                     <0x0 0xe1160000 0 0x10000>;
-> +               v2m {
-> +                       msi-controller;
-> +                       reg = <0x0 0x80000 0 0x1000>;
-> +               };
-> +       };
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 
-[...]
+Acked-by: Pavel Machek <pavel@denx.de>
 
-> @@ -1009,6 +1012,16 @@ gic_of_init(struct device_node *node, struct device_node *parent)
->         if (of_property_read_u32(node, "cpu-offset", &percpu_offset))
->                 percpu_offset = 0;
-> 
-> +       gic_data[gic_cnt].irq_chip = &gic_chip;
-> +
-> +       /* Currently, we only support one v2m subnode. */
-> +       child = of_get_child_by_name(node, "v2m");
-> +       if (child) {
-> +               ret = gicv2m_of_init(child, &gic_data[gic_cnt]);
-> +               if (ret)
-> +                       return ret;
-> +       }
-
-I can't see how you'd sanely expand this to multiple children, which was
-the main point of having a separate node for the M block.
-
-Give the M block a compatible string and look for children with that
-string.
-
-Thanks,
-Mark.
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
