@@ -1,8 +1,10 @@
 From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] ARM: pxa: dts: fix mmc controller compatible string
-Date: Thu, 14 Aug 2014 11:46:12 +0200
-Message-ID: <1408009573-24523-1-git-send-email-zonque@gmail.com>
+Subject: [PATCH 2/2] ARM: pxa: dts: fix ohci controller compatible string
+Date: Thu, 14 Aug 2014 11:46:13 +0200
+Message-ID: <1408009573-24523-2-git-send-email-zonque@gmail.com>
+References: <1408009573-24523-1-git-send-email-zonque@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408009573-24523-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -17,18 +19,18 @@ Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index febd391..f188f8c 100644
+index f188f8c..6d52a72 100644
 --- a/arch/arm/boot/dts/pxa2xx.dtsi
 +++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -128,7 +128,7 @@
+@@ -121,7 +121,7 @@
  		};
  
- 		mmc0: mmc@41100000 {
--			compatible = "mrvl,pxa-mmc";
-+			compatible = "marvell,pxa-mmc";
- 			reg = <0x41100000 0x1000>;
- 			interrupts = <23>;
- 			dmas = <&dma 21
+ 		usb0: ohci@4c000000 {
+-			compatible = "mrvl,pxa-ohci";
++			compatible = "marvell,pxa-ohci";
+ 			reg = <0x4c000000 0x10000>;
+ 			interrupts = <3>;
+ 			status = "disabled";
 -- 
 2.0.4
 
