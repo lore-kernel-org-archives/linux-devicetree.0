@@ -1,296 +1,157 @@
-From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] mmc: dw_mmc: move rockchip related code to a separate file
-Date: Thu, 14 Aug 2014 16:01:33 +0800
-Message-ID: <1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
-References: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v4 15/21] media: Add registration helpers for V4L2 flash
+Date: Thu, 14 Aug 2014 10:25:28 +0200
+Message-ID: <53EC7278.6040101@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <1405087464-13762-16-git-send-email-j.anaszewski@samsung.com>
+ <53CCF59E.3070200@iki.fi> <53DF9C2A.8060403@samsung.com>
+ <20140811122628.GG16460@valkosipuli.retiisi.org.uk>
+ <53E8C4BA.6050805@samsung.com>
+ <20140814043436.GM16460@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406786498-3935-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-reply-to: <20140814043436.GM16460-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lintao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, chenfen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To support HS200 and UHS-1, we need add a big hunk of code,
-as shown in the following patches. So a separate file for
-rockchip SOCs is suitable.
+On 08/14/2014 06:34 AM, Sakari Ailus wrote:
+> Hi Jacek,
+>
+> On Mon, Aug 11, 2014 at 03:27:22PM +0200, Jacek Anaszewski wrote:
+>
+> ...
+>
+>>>>>> diff --git a/include/media/v4l2-flash.h b/include/media/v4l2-flash.h
+>>>>>> new file mode 100644
+>>>>>> index 0000000..effa46b
+>>>>>> --- /dev/null
+>>>>>> +++ b/include/media/v4l2-flash.h
+>>>>>> @@ -0,0 +1,137 @@
+>>>>>> +/*
+>>>>>> + * V4L2 Flash LED sub-device registration helpers.
+>>>>>> + *
+>>>>>> + *	Copyright (C) 2014 Samsung Electronics Co., Ltd
+>>>>>> + *	Author: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>>> + *
+>>>>>> + * This program is free software; you can redistribute it and/or modify
+>>>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>>>> + * published by the Free Software Foundation."
+>>>>>> + */
+>>>>>> +
+>>>>>> +#ifndef _V4L2_FLASH_H
+>>>>>> +#define _V4L2_FLASH_H
+>>>>>> +
+>>>>>> +#include <media/v4l2-ctrls.h>
+>>>>>> +#include <media/v4l2-device.h>
+>>>>>> +#include <media/v4l2-dev.h>le
+>>>>>> +#include <media/v4l2-event.h>
+>>>>>> +#include <media/v4l2-ioctl.h>
+>>>>>> +
+>>>>>> +struct led_classdev_flash;
+>>>>>> +struct led_classdev;
+>>>>>> +enum led_brightness;
+>>>>>> +
+>>>>>> +struct v4l2_flash_ops {
+>>>>>> +	int (*torch_brightness_set)(struct led_classdev *led_cdev,
+>>>>>> +					enum led_brightness brightness);
+>>>>>> +	int (*torch_brightness_update)(struct led_classdev *led_cdev);
+>>>>>> +	int (*flash_brightness_set)(struct led_classdev_flash *flash,
+>>>>>> +					u32 brightness);
+>>>>>> +	int (*flash_brightness_update)(struct led_classdev_flash *flash);
+>>>>>> +	int (*strobe_set)(struct led_classdev_flash *flash, bool state);
+>>>>>> +	int (*strobe_get)(struct led_classdev_flash *flash, bool *state);
+>>>>>> +	int (*timeout_set)(struct led_classdev_flash *flash, u32 timeout);
+>>>>>> +	int (*indicator_brightness_set)(struct led_classdev_flash *flash,
+>>>>>> +					u32 brightness);
+>>>>>> +	int (*indicator_brightness_update)(struct led_classdev_flash *flash);
+>>>>>> +	int (*external_strobe_set)(struct led_classdev_flash *flash,
+>>>>>> +					bool enable);
+>>>>>> +	int (*fault_get)(struct led_classdev_flash *flash, u32 *fault);
+>>>>>> +	void (*sysfs_lock)(struct led_classdev *led_cdev);
+>>>>>> +	void (*sysfs_unlock)(struct led_classdev *led_cdev);
+>>>>>
+>>>>> These functions are not driver specific and there's going to be just one
+>>>>> implementation (I suppose). Could you refresh my memory regarding why
+>>>>> the LED framework functions aren't called directly?
+>>>>
+>>>> These ops are required to make possible building led-class-flash as
+>>>> a kernel module.
+>>>
+>>> Assuming you'd use the actual implementation directly, what would be the
+>>> dependencies? I don't think the LED flash framework has any callbacks
+>>> towards the V4L2 (LED) flash framework, does it? Please correct my
+>>> understanding if I'm missing something. In Makefile format, assume all
+>>> targets are .PHONY:
+>>>
+>>> led-flash-api: led-api
+>>>
+>>> v4l2-flash: led-flash-api
+>>>
+>>> driver: led-flash-api v4l2-flash
+>>
+>> LED Class Flash driver gains V4L2 Flash API when
+>> CONFIG_V4L2_FLASH_LED_CLASS is defined. This is accomplished in
+>> the probe function by either calling v4l2_flash_init function
+>> or the macro of this name, when the CONFIG_V4L2_FLASH_LED_CLASS
+>> macro isn't defined.
+>>
+>> If the v4l2-flash.c was to call the LED API directly, then the
+>> led-class-flash module symbols would have to be available at
+>> v4l2-flash.o linking time.
+>
+> Is this an issue? EXPORT_SYMBOL_GPL() for the relevant symbols should be
+> enough.
 
-Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/mmc/host/Kconfig           |   9 +++
- drivers/mmc/host/Makefile          |   1 +
- drivers/mmc/host/dw_mmc-pltfm.c    |  57 ---------------
- drivers/mmc/host/dw_mmc-rockchip.c | 146 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 156 insertions(+), 57 deletions(-)
- create mode 100644 drivers/mmc/host/dw_mmc-rockchip.c
+It isn't enough. If I call e.g. led_set_flash_brightness
+directly from v4l2-flash.c and configure led-class-flash to be built as
+a module then I am getting "undefined reference to
+led_set_flash_brightness" error during linking phase.
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index a565254..ae61df6 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -621,6 +621,15 @@ config MMC_DW_PCI
- 
- 	  If unsure, say N.
- 
-+config MMC_DW_ROCKCHIP
-+	tristate "Rockchip specific extensions for Synopsys DW Memory Card Interface"
-+	depends on MMC_DW
-+	select MMC_DW_PLTFM
-+	help
-+	  This selects support for Rockchip SoC specific extensions to the
-+	  Synopsys DesignWare Memory Card Interface driver. Select this option
-+	  for platforms based on RK3066, RK3188 and RK3288 SoC's.
-+
- config MMC_SH_MMCIF
- 	tristate "SuperH Internal MMCIF support"
- 	depends on MMC_BLOCK
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 7f81ddf..5fce465 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -45,6 +45,7 @@ obj-$(CONFIG_MMC_DW_PLTFM)	+= dw_mmc-pltfm.o
- obj-$(CONFIG_MMC_DW_EXYNOS)	+= dw_mmc-exynos.o
- obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
- obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
-+obj-$(CONFIG_MMC_DW_ROCKCHIP)	+= dw_mmc-rockchip.o
- obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
- obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
- obj-$(CONFIG_MMC_VUB300)	+= vub300.o
-diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-index b547f7a..0c56c41 100644
---- a/drivers/mmc/host/dw_mmc-pltfm.c
-+++ b/drivers/mmc/host/dw_mmc-pltfm.c
-@@ -26,64 +26,11 @@
- #include "dw_mmc.h"
- #include "dw_mmc-pltfm.h"
- 
--#define RK3288_CLKGEN_DIV	2
--
- static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
- {
- 	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
- }
- 
--static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
--{
--	host->bus_hz /= RK3288_CLKGEN_DIV;
--
--	return 0;
--}
--
--static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
--{
--	int ret;
--	unsigned int cclkin;
--	u32 bus_hz;
--
--	/*
--	 * cclkin: source clock of mmc controller.
--	 * bus_hz: card interface clock generated by CLKGEN.
--	 * bus_hz = cclkin / RK3288_CLKGEN_DIV;
--	 * ios->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
--	 *
--	 * Note: div can only be 0 or 1
--	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
--	 *       div must be set 1
--	 */
--	if ((ios->bus_width == MMC_BUS_WIDTH_8) &&
--	    (ios->timing == MMC_TIMING_MMC_DDR52))
--		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
--	else
--		cclkin = ios->clock * RK3288_CLKGEN_DIV;
--
--	ret = clk_set_rate(host->ciu_clk, cclkin);
--	if (ret)
--		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
--
--	bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
--	if (bus_hz != host->bus_hz) {
--		host->bus_hz = bus_hz;
--		/* force dw_mci_setup_bus() */
--		host->current_speed = 0;
--	}
--}
--
--static const struct dw_mci_drv_data rk2928_drv_data = {
--	.prepare_command	= dw_mci_pltfm_prepare_command,
--};
--
--static const struct dw_mci_drv_data rk3288_drv_data = {
--	.prepare_command	= dw_mci_pltfm_prepare_command,
--	.set_ios	= dw_mci_rk3288_set_ios,
--	.setup_clock	= dw_mci_rk3288_setup_clock,
--};
--
- static const struct dw_mci_drv_data socfpga_drv_data = {
- 	.prepare_command	= dw_mci_pltfm_prepare_command,
- };
-@@ -144,10 +91,6 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
- 
- static const struct of_device_id dw_mci_pltfm_match[] = {
- 	{ .compatible = "snps,dw-mshc", },
--	{ .compatible = "rockchip,rk2928-dw-mshc",
--		.data = &rk2928_drv_data },
--	{ .compatible = "rockchip,rk3288-dw-mshc",
--		.data = &rk3288_drv_data },
- 	{ .compatible = "altr,socfpga-dw-mshc",
- 		.data = &socfpga_drv_data },
- 	{},
-diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-new file mode 100644
-index 0000000..3d86ef3
---- /dev/null
-+++ b/drivers/mmc/host/dw_mmc-rockchip.c
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ * Author: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/mmc/host.h>
-+#include <linux/mmc/dw_mmc.h>
-+#include <linux/of_address.h>
-+
-+#include "dw_mmc.h"
-+#include "dw_mmc-pltfm.h"
-+
-+#define RK3288_CLKGEN_DIV       2
-+
-+static void dw_mci_rockchip_prepare_command(struct dw_mci *host, u32 *cmdr)
-+{
-+	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
-+}
-+
-+static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-+{
-+	host->bus_hz /= RK3288_CLKGEN_DIV;
-+
-+	return 0;
-+}
-+
-+static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-+{
-+	int ret;
-+	unsigned int cclkin;
-+	u32 bus_hz;
-+
-+	/*
-+	 * cclkin: source clock of mmc controller
-+	 * bus_hz: card interface clock generated by CLKGEN
-+	 * bus_hz = cclkin / RK3288_CLKGEN_DIV
-+	 * os->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
-+	 *
-+	 * Note: div can only be 0 or 1
-+	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
-+	 *       div must be set 1
-+	 */
-+	if (ios->bus_width == MMC_BUS_WIDTH_8 &&
-+	    ios->timing == MMC_TIMING_MMC_DDR52)
-+		cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
-+	else
-+		cclkin = ios->clock * RK3288_CLKGEN_DIV;
-+
-+	ret = clk_set_rate(host->ciu_clk, cclkin);
-+	if (ret)
-+		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-+
-+	bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-+	if (bus_hz != host->bus_hz) {
-+		host->bus_hz = bus_hz;
-+		/* force dw_mci_setup_bus() */
-+		host->current_speed = 0;
-+	}
-+}
-+
-+static const struct dw_mci_drv_data rk2928_drv_data = {
-+	.prepare_command        = dw_mci_rockchip_prepare_command,
-+};
-+
-+static const struct dw_mci_drv_data rk3288_drv_data = {
-+	.prepare_command        = dw_mci_rockchip_prepare_command,
-+	.set_ios		= dw_mci_rk3288_set_ios,
-+	.setup_clock    = dw_mci_rk3288_setup_clock,
-+};
-+
-+static const struct of_device_id dw_mci_rockchip_match[] = {
-+	{ .compatible = "rockchip,rk2928-dw-mshc",
-+		.data = &rk2928_drv_data },
-+	{ .compatible = "rockchip,rk3288-dw-mshc",
-+		.data = &rk3288_drv_data },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_mci_rockchip_match);
-+
-+static int dw_mci_rockchip_probe(struct platform_device *pdev)
-+{
-+	const struct dw_mci_drv_data *drv_data;
-+	const struct of_device_id *match;
-+
-+	match = of_match_node(dw_mci_rockchip_match, pdev->dev.of_node);
-+	drv_data = match->data;
-+
-+	return dw_mci_pltfm_register(pdev, drv_data);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int dw_mci_rockchip_suspend(struct device *dev)
-+{
-+	struct dw_mci *host = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = dw_mci_suspend(host);
-+	if (!ret)
-+		clk_disable_unprepare(host->ciu_clk);
-+
-+	return ret;
-+}
-+
-+static int dw_mci_rockchip_resume(struct device *dev)
-+{
-+	struct dw_mci *host = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(host->ciu_clk);
-+	if (ret) {
-+		dev_err(host->dev, "failed to enable ciu clock\n");
-+		return ret;
-+	}
-+
-+	return dw_mci_resume(host);
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(dw_mci_rockchip_pmops,
-+			 dw_mci_rockchip_suspend,
-+			 dw_mci_rockchip_resume);
-+
-+static struct platform_driver dw_mci_rockchip_pltfm_driver = {
-+	.probe		= dw_mci_rockchip_probe,
-+	.remove		= dw_mci_pltfm_remove,
-+	.driver		= {
-+		.name		= "dwmmc_rockchip",
-+		.of_match_table	= dw_mci_rockchip_match,
-+		.pm		= &dw_mci_rockchip_pmops,
-+	},
-+};
-+
-+module_platform_driver(dw_mci_rockchip_pltfm_driver);
-+
-+MODULE_AUTHOR("Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_DESCRIPTION("Rockchip Specific DW-MSHC Driver Extension");
-+MODULE_ALIAS("platform:dwmmc-rockchip");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.3.2
+It happens because the linker doesn't take into account
+led-flash-class.ko symbols. It is reasonable because initially
+the kernel boots up without led-flash-class.ko module and
+the processor wouldn't know the address to jump to in the
+result of calling a led API function.
+The led-class-flash.ko binary code is loaded into memory not
+sooner than after executing "insmod led-class-flash.ko".
 
+After linking dynamically with kernel the LED API function
+addresses are relocated, and the LED Flash Class core can
+initialize the v4l2_flash_ops structure. Then every LED Flash Class
+driver can obtain the address of this structure with
+led_get_v4l2_flash_ops and pass it to the v4l2_flash_init.
 
+>> This requirement cannot be met if the led-class-flash is built
+>> as a module.
+>>
+>> Use of function pointers in the v4l2-flash.c allows to compile it
+>> into the kernel and enables the possibility of adding the V4L2 Flash
+>> support conditionally, during driver probing.
+>
+> I'd simply decide this during kernel compilation time. If you want
+> something, just enable it. v4l2_flash_init() is called directly by the
+> driver in any case, so unless that is also called through a wrapper the
+> driver is still directly dependent on it.
+
+The problem is that v4l2-flash.o would have to depend on
+led-class-flash.o, which when built as a module isn't available
+during v4l2-flash.o linking time. In order to avoid v4l2-flash.o linking
+problem, it would have to be built as a module.
+
+Nevertheless, in this arrangement, the CONFIG_V4L2_FLASH_LED_CLASS
+macro would be defined only in v4l2-flash.ko module, and
+a LED Flash Class driver couldn't check whether V4L2 Flash support
+is enabled. Its dependence on v4l2-flash.o would have to be fixed,
+which is not what we want.
+
+I have tested all these cases.
+
+Best Regards,
+Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
