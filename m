@@ -1,40 +1,64 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH] ARM: dts: Add mmc0 and mmc1 aliases for rk3288
-Date: Wed, 13 Aug 2014 17:08:00 -0700
-Message-ID: <1407974880-30626-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Sonny Rao <sonnyrao@chromium.org>
-Cc: stefan@agner.ch, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Addy Ke <addy.ke@rock-chips.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv3 0/2] regulator: of: Add support for pasing regulator suspend
+ state
+Date: Thu, 14 Aug 2014 09:40:12 +0900
+Message-ID: <1407976814-21882-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It's convenient (and less confusing to people reading logs) if the
-eMMC port on rk3288 is consistenly marked with mmc0 and the sdmmc port
-on rk3288 is consistently marked with mmc1.  Add the appropriate
-aliases.
+The regulators would set different state/mode according to the kind of suspend
+state. So regulation_constraints structure has already regulator suspend state filed.
+This patch parse regulator suspend state from devicetree file.
 
-These aliases only actually do something if a patch like
-(https://patchwork.kernel.org/patch/3925551/) lands, but they don't
-hurt even before that patch.
+For example:
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-Reviewed-by: Sonny Rao <sonnyrao@chromium.org>
----
- arch/arm/boot/dts/rk3288.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+	ldoX_reg: LDOx {
+		regulator-name = "VAP_XXX_1.2V";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+		regulator-always-on;
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..0b54b0d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -29,6 +29,8 @@
- 		i2c3 = &i2c3;
- 		i2c4 = &i2c4;
- 		i2c5 = &i2c5;
-+		mmc0 = &emmc;
-+		mmc1 = &sdmmc;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
+		regulator-initial-state = <3>;	/* PM_SUSPEND_MEM */
+		regulator-state-standby {
+			regulator-volt = <1200000>;
+		};
+
+		regulator-state-mem {
+			regulator-volt = <1200000>;
+			regulator-off-in-suspend;
+		};
+
+		regulator-state-disk {
+			regulator-volt = <1200000>;
+			regulator-on-in-suspend;
+		};
+	};
+
+Changes from v2:
+- Fix over 80 lines by using checkpatch script
+- Rebase this patchset on latest for-next branch of regulator.git
+
+Changes from v1:
+- Check whether regulator-initial-state and regulator-mode is correct or not
+- Add more detailed description about regulator-initial-state, regulator-mode
+  and regulator-state-[standby/mem/disk] for devicetree bindings
+- Modify example of regulator suspend state in bindings documentation
+
+Chanwoo Choi (2):
+  regulator: of: Add support for parsing regulator_state for suspend state
+  dt-bindings: regulator: Add regulator suspend state for PM state
+
+ .../devicetree/bindings/regulator/regulator.txt    | 32 +++++++++
+ drivers/regulator/of_regulator.c                   | 79 +++++++++++++++++++++-
+ 2 files changed, 109 insertions(+), 2 deletions(-)
+
 -- 
-2.1.0.rc2.206.gedb03e5
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
