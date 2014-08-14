@@ -1,84 +1,229 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH 3/5] phy: miphy28lp: Provide support for the MiPHY28lp
- Generic PHY
-Date: Thu, 14 Aug 2014 14:37:06 +0200
-Message-ID: <CAG374jDFbXi+LEyXbqu_YgXT1Opp-Mb5Pp_5Jbug5Y9zEeSyYQ@mail.gmail.com>
-References: <1407944075-8093-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1407944075-8093-4-git-send-email-gabriel.fernandez@linaro.org>
-	<53ECA866.2080306@linaro.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: Dual-channel DSI
+Date: Thu, 14 Aug 2014 15:59:08 +0300
+Message-ID: <53ECB29C.7070703@ti.com>
+References: <20140805153923.GA3072@ulmo.nvidia.com> <53E3227B.1010000@samsung.com> <20140807072530.GE17340@ulmo> <53E33B48.1080401@samsung.com> <20140807085424.GC13315@ulmo.nvidia.com> <53E47B99.3040105@samsung.com> <20140808101447.GF15852@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53ECA866.2080306@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alexandre torgue <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="hQMgF89s0EuI6WejPqQw1AnMlD7WtpCW2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140808101447.GF15852@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Srini,
+--hQMgF89s0EuI6WejPqQw1AnMlD7WtpCW2
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+On 08/08/14 13:14, Thierry Reding wrote:
+> On Fri, Aug 08, 2014 at 09:26:17AM +0200, Andrzej Hajda wrote:
+>> On 08/07/2014 10:54 AM, Thierry Reding wrote:
+>>> On Thu, Aug 07, 2014 at 10:39:36AM +0200, Andrzej Hajda wrote:
+>>>> On 08/07/2014 09:25 AM, Thierry Reding wrote:
+>>>>> On Thu, Aug 07, 2014 at 08:53:47AM +0200, Andrzej Hajda wrote:
+>>>>>> Hi Thierry,
+>>>>>>
+>>>>>> Nice case.
+>>>>>>
+>>>>>> On 08/05/2014 05:39 PM, Thierry Reding wrote:
+>>>>>>> Hi everyone,
+>>>>>>>
+>>>>>>> I've been working on adding support for a panel that uses what's
+>>>>>>> commonly known as dual-channel DSI. Sometimes this is referred to=
+ as
+>>>>>>> ganged-mode as well.
+>>>>>>>
+>>>>>>> What is it, you ask? It's essentially a hack to work around the b=
+and-
+>>>>>>> width restrictions of DSI, albeit one that's been commonly implem=
+ented
+>>>>>>> by several SoC vendors.
+>>>>>>>
+>>>>>>> This typically works by equipping a peripheral with two DSI inter=
+faces,
+>>>>>>> each of which driving one half of the screen (symmetric left-righ=
+t mode)
+>>>>>>> or every other line (symmetric odd-even mode). Apparently there c=
+an be
+>>>>>>> asymmetric modes in addition to those two, but they seem to be th=
+e
+>>>>>>> common ones. Often both of the DSI interfaces need to be configur=
+ed
+>>>>>>> using DCS commands and vendor specific registers.
+>>>>>>>
+>>>>>>> A single display controller is typically used video data transmis=
+sion.
+>>>>>>> This is necessary to provide synchronization and avoid tearing an=
+d all
+>>>>>>> kinds of other ugliness. For this to work both DSI controllers ne=
+ed to
+>>>>>>> be made aware of which chunk of the video data stream is addressi=
+ng
+>>>>>>> them.
+>>>>>>>
+>>>>>>> From a software perspective, this poses two problems:
+>>>>>>>
+>>>>>>> 1) A dual-channel device is composed of two DSI peripheral device=
+s which
+>>>>>>>    cannot be programmed independently of each other. A typical ex=
+ample
+>>>>>>>    is that the frame memory extents need to be configured differe=
+ntly
+>>>>>>>    for each of the devices (using the DCS set_column_address and
+>>>>>>>    set_page_address commands). Therefore each device must know of=
+ the
+>>>>>>>    other, or there must be a driver that binds against a dummy de=
+vice
+>>>>>>>    that pulls in the two real devices.
+
+I once almost had to write a driver for similar panel, but luckily the pr=
+oject
+was canceled. =3D)
+
+Here are some thoughts:
+
+If we had a panel which is controlled via i2c, but receives the video str=
+eam
+from two DSI interfaces, I think the DT would look something like:
+
+&i2c1 {
+	display@48 {
+		compatible =3D "sharp,lq101r1sx01";
+		reg =3D <0x48>;
+
+		ports {
+			port@0 {
+				reg =3D <0>;
+				lcd_in0: endpoint {
+					remote-endpoint =3D <&dsi1_out_ep>;
+				};
+			};
+
+			port@1 {
+				reg =3D <1>;
+				lcd_in1: endpoint {
+					remote-endpoint =3D <&dsi2_out_ep>;
+				};
+			};
+		};
+	};
+};
+
+&dsi1 {
+	port {
+		dsi1_out_ep: endpoint {
+			remote-endpoint =3D <&lcd_in0>;
+			lanes =3D <0 1 2 3 4 5>;
+		};
+	};
+
+};
+
+&dsi2 {
+	port {
+		dsi2_out_ep: endpoint {
+			remote-endpoint =3D <&lcd_in1>;
+			lanes =3D <0 1 2 3 4 5>;
+		};
+	};
+};
+
+And similarly, if the panel would be controlled via DSI, but only via one=
+ DSI
+interface, I think the DT would look quite similar, except the "display" =
+node
+would be a child of "dsi1".
+
+Now, a panel controlled via two DSI interfaces. I have to say the design =
+sounds
+rather nasty. What were the HW people thinking about? I guess you are _su=
+re_
+that you cannot do the configuration via just a single interface? =3D)
+
+If you really need the control via two DSI interfaces, I'd suggest someth=
+ing
+like this:
+
+&dsi1 {
+	port {
+		dsi1_out_ep: endpoint {
+			remote-endpoint =3D <&lcd_in0>;
+			lanes =3D <0 1 2 3 4 5>;
+		};
+	};
+
+	display {
+		compatible =3D "sharp,lq101r1sx01";
+
+		secondary =3D <&panel_secondary>;
+
+		port {
+			lcd_in0: endpoint {
+				remote-endpoint =3D <&dsi1_out_ep>;
+			};
+		};
+	};
+};
+
+&dsi2 {
+	port {
+		dsi2_out_ep: endpoint {
+			remote-endpoint =3D <&lcd_in1>;
+			lanes =3D <0 1 2 3 4 5>;
+		};
+	};
+
+	panel_secondary: display {
+		compatible =3D "sharp,lq101r1sx01-secondary";
+
+		port {
+			lcd_in1: endpoint {
+				remote-endpoint =3D <&dsi2_out_ep>;
+			};
+		};
+	};
+};
+
+I guess the above was already more or less presented in the thread, but I=
+
+didn't see it written out.
+
+So there would two two devices, a master and a slave, and in the driver s=
+ide
+the slave would not do anything by itself.
+
+ Tomi
 
 
-On 14 August 2014 14:15, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-> Hi Gabi,
->
-> I did not review the full patchset but this function caught my attention..
->
->
->> +};
->> +
->> +static int miphy28lp_get_ressource_byname(struct device_node *child,
->> +                                         char *name, struct resource
->> *res)
->> +{
->
->
-> s/miphy28lp_get_ressource_byname/miphy28lp_get_resource_byname
-ok
 
->
->
->> +       int index, ret = 0, count = 0;
->> +       int reg_tuple_size;
->> +       const __be32 *p;
->> +
->> +       reg_tuple_size = (of_n_addr_cells(child) +
->> +                       of_n_size_cells(child)) * sizeof(u32);
->> +
->> +       p = of_get_property(child, "reg", &count);
->> +       if (count % reg_tuple_size != 0)
->> +               ret = -EINVAL;
->> +
->> +       count /= reg_tuple_size;
->> +
->> +       for (index = 0; index < count; index++) {
->> +               const char *rname = NULL;
->> +
->> +               ret = of_property_read_string_index(child, "reg-names",
->> +                                                   index, &rname);
->> +               if (!strcmp(name, rname))
->> +                       return of_address_to_resource(child, index, res);
->> +       }
->> +
->> +       return 1;
->
-> This function looks bit complicated, can't we just use:
->
->         index = of_property_match_string(np, "reg-names", rname);
->         if (index < 0)
->                 return -ENODEV;
->
->         return of_address_to_resource(child, index, res);
+--hQMgF89s0EuI6WejPqQw1AnMlD7WtpCW2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Indeed it's a little bit simpler... :)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->
->
->
-> --srini
+iQIcBAEBAgAGBQJT7LKcAAoJEPo9qoy8lh71hQcP/jEJQvegRy7VhW+CnI8rMyv5
+MQKZxoBMBbOONPid+ha7rOaVmgLtcUad0uYaWHg5jh+TE9S0x+AItkMBuDOBgK2S
++0gnZIU1QUlOx/UGI34YyI3QQvOKKIZIo3mOHbVWj600GfuUrQ3cWPUI4+Fcu+QE
+Tu9M3zSy+D/lmZ9QcG5BhWXYJAH+km6MhjUXa9uklqcch1g199p4VIM9obin456x
+U5O89oBhveR3cHBf6sUHtK2Bpv11NGbWEbRwjXfTJQFoLp6Tu9wevSGotVMsITZH
+sNvFLfFXjxWpaiPzt/62AHJEa8PzlWjqaUtEE24TEEJgA2OG8ILYyCjB4VGf/okt
+jPrKSD3peJd941eY3ZBXSYo5NX4OHgX2fHy5jofLIp9Kws1cNK7wQ3MoCld0KzoO
+Hsb7gHQ7YsE0UOk8M34Fa9FicKAakWFvnSciV6hFDD/eJAwNyXnLJqoQLaekK/P5
+MRpLMSYHGE5lPFeHTQc/5FlXQzC8+K94mP25HSs1M/mBLxlQeT6Dp7Xe87shXyWG
+FR63Zk6pCMF4muSOsZWoGBstK2WJ0DPN93ig8nltMbNGU+xHGA5RY51WgoUSapWH
+cMCBoXAcDW9oQbHCIqnGudlRWHbbyBl9+Ae7wRvdT4tObUYWsyZ6iaMo++aRAO3g
+lziLHey+qX7WqOMdeTZz
+=7ovo
+-----END PGP SIGNATURE-----
 
-Thanks a lot Srini
-
-Best Regards
-
-Gabriel
+--hQMgF89s0EuI6WejPqQw1AnMlD7WtpCW2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
