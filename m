@@ -1,12 +1,10 @@
 From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: socfpga: memreserve first 4KB for SMP code
-Date: Thu, 14 Aug 2014 10:51:31 -0500
-Message-ID: <1408031491-15609-4-git-send-email-dinguyen@opensource.altera.com>
-References: <1408031491-15609-1-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCH 0/3] ARM: dts: socfpga: updates for SOCFPGA
+Date: Thu, 14 Aug 2014 10:51:28 -0500
+Message-ID: <1408031491-15609-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408031491-15609-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, vbridger-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
@@ -14,40 +12,23 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-The SOCFPGA's SMP code uses 0x0 for as the location for the trampoline to
-bring secondary cores online. This patch adds a /memreserve/ section to
-reserve the first 4K for the SMP trampoline code.
+Just a few DTS updates for the SOCFPGA platform.
 
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- arch/arm/boot/dts/socfpga_arria5.dtsi   | 1 +
- arch/arm/boot/dts/socfpga_cyclone5.dtsi | 1 +
- 2 files changed, 2 insertions(+)
+patch 1/3 : cleanup
+patch 2/3 : Add a SD/MMC card detect entry
+patch 3/3 : Add a /memserve/ section for the platform
 
-diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-index 468fc4c..73b939e 100644
---- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-@@ -15,6 +15,7 @@
-  */
- 
- /dts-v1/;
-+/memreserve/ 0x00000000 0x0001000;
- #include "socfpga.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-index 33cad8b..f0785f0 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-@@ -16,6 +16,7 @@
-  */
- 
- /dts-v1/;
-+/memreserve/ 0x00000000 0x0001000;
- #include "socfpga.dtsi"
- 
- / {
+Dinh Nguyen (3):
+  ARM: dts: socfpga: remove extra alias in the ArriaV devkit
+  ARM: dts: socfpga: Add SD card detect
+  ARM: dts: socfpga: memreserve first 4KB for SMP code
+
+ arch/arm/boot/dts/socfpga_arria5.dtsi        | 1 +
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts   | 7 -------
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi      | 3 ++-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 4 ++++
+ 4 files changed, 7 insertions(+), 8 deletions(-)
+
 -- 
 2.0.3
 
