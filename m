@@ -1,101 +1,105 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Thu, 14 Aug 2014 12:35:05 +0200
-Message-ID: <53EC90D9.6080702@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
- <53E336FA.2050306@samsung.com>
- <20140814050338.GO16460@valkosipuli.retiisi.org.uk>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
+ specific reset
+Date: Thu, 14 Aug 2014 12:47:38 +0200
+Message-ID: <20140814104738.GV15297@lukather>
+References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
+ <CACRpkdYfu8HmVCkn9JFh+YP5OPdr8o9nTfoCnkJ7SSpGoenQUg@mail.gmail.com>
+ <20140708080535.GJ13423@lukather>
+ <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
+ <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
+ <20140811173356.GN15297@lukather>
+ <1408008998.4035.43.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140814050338.GO16460-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A47bNRIYjYQgpFVi"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408008998.4035.43.camel@paszta.hi.pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Houcheng Lin <houcheng@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/14/2014 07:03 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Thu, Aug 07, 2014 at 10:21:14AM +0200, Jacek Anaszewski wrote:
->> On 08/06/2014 08:53 AM, Sakari Ailus wrote:
->>> Hi Jacek,
->>>
->>> On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
->>> ...
->>>> 1) Who should register V4L2 Flash sub-device?
->>>>
->>>> LED Flash Class devices, after introduction of the Flash Manager,
->>>> are not tightly coupled with any media controller. They are maintained
->>>> by the Flash Manager and made available for dynamic assignment to
->>>> any media system they are connected to through multiplexing devices.
->>>>
->>>> In the proposed rough solution, when support for V4L2 Flash sub-devices
->>>> is enabled, there is a v4l2_device created for them to register in.
->>>> This however implies that V4L2 Flash device will not be available
->>>> in any media controller, which calls its existence into question.
->>>>
->>>> Therefore I'd like to consult possible ways of solving this issue.
->>>> The option I see is implementing a mechanism for moving V4L2 Flash
->>>> sub-devices between media controllers. A V4L2 Flash sub-device
->>>> would initially be assigned to one media system in the relevant
->>>> device tree binding, but it could be dynamically reassigned to
->>>> the other one. However I'm not sure if media controller design
->>>> is prepared for dynamic modifications of its graph and how many
->>>> modifications in the existing drivers this solution would require.
->>>
->>> Do you have a use case where you would need to strobe a flash from multiple
->>> media devices at different times, or is this entirely theoretical? Typically
->>> flash controllers are connected to a single source of hardware strobe (if
->>> there's one) since the flash LEDs are in fact mounted next to a specific
->>> camera sensor.
->>
->> I took into account such arrangements in response to your message
->> [1], where you were considering configurations like "one flash but
->> two
->> cameras", "one camera and two flashes". And you also called for
->> proposing generic solution.
->>
->> One flash and two (or more) cameras case is easily conceivable -
->> You even mentioned stereo cameras. One camera and many flashes
->> arrangement might be useful in case of some professional devices which
->> might be designed so that they would be able to apply different scene
->> lighting. I haven't heard about such devices, but as you said
->> such a configuration isn't unthinkable.
->>
->>> If this is a real issue the way to solve it would be to have a single media
->>> device instead of many.
->>
->> I was considering adding media device, that would be a representation
->> of a flash manager, gathering all the registered flashes. Nonetheless,
->> finally I came to conclusion that a v4l2-device alone should suffice,
->> just to provide a Flash Manager representation allowing for
->> v4l2-flash sub-devices to register in.
->> All the features provided by the media device are useless in case
->> of a set of V4L2 Flash sub-devices. They couldn't have any linkage
->> in such a device. The only benefit from having media device gathering
->> V4L2 Flash devices would be possibility of listing them.
->
-> Not quite so. The flash is associated to the sensor (and lens) using the
-> group ID in the Media controller. The user space doesn't need to "know" this
-> association.
->
-> More complex use cases such as the above may need extensions to the Media
-> controller API.
 
-I think that I have unnecessarily complicated the issue. Generally
-there will be always one media controller created for all camera
-sensors available in the system. If there is a single media controller
-then we can easily use async subdev registration API. A media-dev
-driver would have to parse list of flash device phandles from
-the ISP device's DT node and register them as async sub-devices.
+--A47bNRIYjYQgpFVi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best Regards,
-Jacek Anaszewski
+On Thu, Aug 14, 2014 at 11:36:38AM +0200, Philipp Zabel wrote:
+> Hi Maxime,
+>=20
+> Am Montag, den 11.08.2014, 19:33 +0200 schrieb Maxime Ripard:
+> > > Mostly because Maxime and I seem to have a completely different opini=
+on
+> > > and nobody else argued one way or the other.
+> >=20
+> > Yep, mostly because I don't see how a generic approach can work.
+> >=20
+> > The existing reset-gpios property only provide the gpio to use, but
+> > some informations are encoded in the driver, such as the reset
+> > duration, or a reset sequence if any.
+>=20
+> The driver should provide the duration.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How? This used to be in the code, and reset_control_reset doesn't take
+such argument.
+
+> I'd really like to see an example where sequencing is necessary.
+
+Well, if you have several reset lines, the sequencing between each
+might be important.
+
+> I agree that as soon as things get significantly more complicated than
+> pulsing a single GPIO, the reset-gpios binding is too limited.
+
+While the generic reset bindings are perfect for that.
+
+> Still, I'm not happy to mandate a separate gpio reset device for each
+> reset line if most devices are simple enough for it to work without.
+
+Well, it's pretty much already the case for other subsystems, such as
+regulator.
+
+I guess we can treat this as a legacy option, but allow the reset-gpio
+code to be a full driver of its own, if we need more advanced use
+cases?
+
+> What about using reset-gpios for the majority of simple cases and have a
+> separate gpio-reset-sequencer driver when multiple GPIO resets have to
+> be timed?
+
+I don't know. I feel like it should be in the driver itself, rather
+than in a generic layer.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--A47bNRIYjYQgpFVi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT7JPKAAoJEBx+YmzsjxAgqoUP/2YeD7cQIo3mFXzDDSqOahUo
+w6NYrevoNsau4/FG5IT3oqrnAlugln2HbGuALQLMcgOgYeEQzmc2oeJkqw8dKHBg
+vvXWV+HZkQeGj2LuW8J2ZcIA1ilX1RIb1/oiPMT0sv0+IRiFnpCk4PAnpty0QWQK
+K4ZDUi0Ki/zq/4ZYfRVzIWsLkKT1KprqjC+/tTWdkS9EnjVPBCnZiIopvhPsr5OM
+AKCGQIn0OpzcGJfynpps3RY9gN2uLTJ2+3JW+3qKWInZs+WimehIH/VuFYlo1k0C
+9qZS9FdBBco4poVynANKNiS2pb1erT/EGwb9PDpxh7CRGe2TtCjkk+XV6aO+HwEh
+kOGFwrWziALZBXmxtevqzchhZ8KmK0W6jOS6n/43HWuQaH16qAznmwxXCL6xtW/9
+fRfzOhPiljpE4dKnbUG9MwHfqrl+VKvKynjAYI7ztLr7HoNxHYi9Ue7t8RwKEx2I
+0sCLg2Jc+1dpmiOV6u0fs9m7O/iXQYEoHqTAPGBqtM3UtkiISWnxsoK+yBOEA7GH
+PYACjyAsuBoIiidELwYdgAyROO6/lS85TyDZND8Wlfan1k1uwibDfa/1hUzDa6bq
+i14WQndnFH4dO6LfRuPXQsGhymRnJCo94EbaQOMWYM9Rr/EwYEcu2RC7PSwy6gz2
+HcXCN1BxiQAfZrLx1cnM
+=gRc3
+-----END PGP SIGNATURE-----
+
+--A47bNRIYjYQgpFVi--
