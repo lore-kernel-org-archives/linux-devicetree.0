@@ -1,65 +1,69 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] devicetree: bindings: Document Gateworks vendor prefix
-Date: Wed, 13 Aug 2014 18:13:35 -0700
-Message-ID: <CAJ+vNU1QXMMke+pUy6xbxaYhNqqRivM=_qLpVLPePTQLicj_Zg@mail.gmail.com>
-References: <1407658509-1773-1-git-send-email-tharvey@gateworks.com>
-	<53E7D325.4060802@gmail.com>
+From: Addy <addy.ke@rock-chips.com>
+Subject: Re: [PATCH] ARM: dts: Add mmc0 and mmc1 aliases for rk3288
+Date: Thu, 14 Aug 2014 09:57:15 +0800
+Message-ID: <53EC177B.1080706@rock-chips.com>
+References: <1407974880-30626-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53E7D325.4060802-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1407974880-30626-1-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Sonny Rao <sonnyrao@chromium.org>
+Cc: stefan@agner.ch, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 10, 2014 at 1:16 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
-> wrote:
-> Le 10/08/2014 01:15, Tim Harvey a =C3=A9crit :
->
->> Add Gateworks Corporation to the list of device tree vendor prefixes=
-=2E
->>
->> Gateworks designs and manufactures single board computers designed f=
-or
->> embedded wireless and wired network applications.
->>
->> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 46a311e..803fa4f 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -54,6 +54,7 @@ globalscale   Globalscale Technologies, Inc.
->>   gmt   Global Mixed-mode Technology, Inc.
->>   google        Google, Inc.
->>   gumstix       Gumstix, Inc.
->> +gw     Gateworks Corporation
->
->
-> I would go with "gateworks" here, "gw" is usually a shorter term for
-> "gateway", and there is an actual company called "Gateway" also
-> manufacturing various types of computers.
-> --
-> Florian
 
-Hi Florian,
+> It's convenient (and less confusing to people reading logs) if the
+> eMMC port on rk3288 is consistenly marked with mmc0 and the sdmmc port
+> on rk3288 is consistently marked with mmc1.  Add the appropriate
+> aliases.
+>
+> These aliases only actually do something if a patch like
+> (https://patchwork.kernel.org/patch/3925551/) lands, but they don't
+> hurt even before that patch.
+>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Reviewed-by: Sonny Rao <sonnyrao@chromium.org>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 36be7bb..0b54b0d 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -29,6 +29,8 @@
+>  		i2c3 = &i2c3;
+>  		i2c4 = &i2c4;
+>  		i2c5 = &i2c5;
+> +		mmc0 = &emmc;
+> +		mmc1 = &sdmmc;
+There are 8 registers can be configured for clock tunning(see chapter 3,
+page 133):
+sdmmc: CRU_SDMMC_CON0(offset: 0x200)
+CRU_SDMMC_CON1(offset: 0x204)
+sdio0: CRU_SDMMC_CON2(offset: 0x208)
+CRU_SDMMC_CON3(offset: 0x20c)
+sdio1: CRU_SDMMC_CON4(offset: 0x210)
+CRU_SDMMC_CON5(offset: 0x214)
+emmc: CRU_SDMMC_CON6(offset: 0x218)
+CRU_SDMMC_CON7(offset: 0x21c)
 
-Well... I got to the table first with Gateworks so I don't see why I
-can't take the 'gw' prefix personally. Note that I do have several
-devicetree files in arch/arm/dts/imx6-gw*.dts* already in mainline
-that use the 'gw' vendor prefix (albeit one could argue that I should
-have been asked to add 'gw' to the vendor-prefixes.txt back then, but
-that is not the way things went down).
+I think maybe it is suitable as follows:
+mmc0 = &sdmmc
+mmc1 = &sdio0
+mmc2 = &sdio1
+mmc3 = &emmc
 
-Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So we can get ctrl_id:
+ctrl_id = of_alias_get_id(host->dev->of_node, "mshc");
+
+and can get offset of registers:
+offset = 0x200 + ctrl_id * 8 + 4 * drive_or_sample
+
+>  		serial0 = &uart0;
+>  		serial1 = &uart1;
+>  		serial2 = &uart2;
+
+
