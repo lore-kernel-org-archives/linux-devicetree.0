@@ -1,113 +1,59 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v9 02/12] PCI: OF: Parse and map the IRQ when adding the
- PCI device.
-Date: Thu, 14 Aug 2014 16:49:59 +0100
-Message-ID: <20140814154959.GG25761@e106497-lin.cambridge.arm.com>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
- <1407860725-25202-3-git-send-email-Liviu.Dudau@arm.com>
- <20140814145804.GA5586@richard>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: socfpga: Add SD card detect
+Date: Thu, 14 Aug 2014 10:51:30 -0500
+Message-ID: <1408031491-15609-3-git-send-email-dinguyen@opensource.altera.com>
+References: <1408031491-15609-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140814145804.GA5586@richard>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Wei Yang <weiyang@linux.vnet.ibm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408031491-15609-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, vbridger-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 14, 2014 at 03:58:04PM +0100, Wei Yang wrote:
-> On Tue, Aug 12, 2014 at 05:25:15PM +0100, Liviu Dudau wrote:
-> >Enhance the default implementation of pcibios_add_device() to
-> >parse and map the IRQ of the device if a DT binding is available.
-> >
-> >Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >Cc: Grant Likely <grant.likely@linaro.org>
-> >Cc: Rob Herring <robh+dt@kernel.org>
-> >Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> >---
-> > drivers/pci/pci.c | 3 +++
-> > 1 file changed, 3 insertions(+)
-> >
-> >diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >index 1c8592b..29d1775 100644
-> >--- a/drivers/pci/pci.c
-> >+++ b/drivers/pci/pci.c
-> >@@ -17,6 +17,7 @@
-> > #include <linux/spinlock.h>
-> > #include <linux/string.h>
-> > #include <linux/log2.h>
-> >+#include <linux/of_pci.h>
-> > #include <linux/pci-aspm.h>
-> > #include <linux/pm_wakeup.h>
-> > #include <linux/interrupt.h>
-> >@@ -1453,6 +1454,8 @@ EXPORT_SYMBOL(pcim_pin_device);
-> >  */
-> > int __weak pcibios_add_device(struct pci_dev *dev)
-> > {
-> >+	dev->irq =3D of_irq_parse_and_map_pci(dev, 0, 0);
-> >+
-> > 	return 0;
-> > }
->=20
-> Liviu,
->=20
-> For this, my suggestion is to add arch dependent function to setup th=
-e irq
-> line for pci devices. I can't find an obvious reason this won't work =
-on other
-> archs, but maybe this will hurt some of them?
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Hi Wei,
+Revision D of the SOCFGPA devkit has a GPIO line used for SD/MMC card detect.
 
-I'm not sure I understand your point. Architectures that support OF wil=
-l obviously
-benefit from this common approach, and for the other ones the function =
-is empty
-so it will not change existing behaviour. If you are suggesting that I =
-should
-create a new API that each architecture could go and implement for sett=
-ing up the
-IRQ line then I would agree that it would be nice to have that, but the=
- question
-is how many architectures are outside OF that need this?
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi      | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-If I understood you correctly, it is a nice idea but slightly outside t=
-he scope
-of my current patchset.
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+index 1ee03c4..33cad8b 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
++++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+@@ -28,7 +28,7 @@
+ 			};
+ 		};
+ 
+-		dwmmc0@ff704000 {
++		mmc0: dwmmc0@ff704000 {
+ 			num-slots = <1>;
+ 			broken-cd;
+ 			bus-width = <4>;
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 45de151..d7296a5 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -68,6 +68,10 @@
+ 	};
+ };
+ 
++&mmc0 {
++	cd-gpios = <&gpio1 18 0>;
++};
++
+ &usb1 {
+ 	status = "okay";
+ };
+-- 
+2.0.3
 
-Best regards,
-Liviu
-
->=20
-> >
-> >--=20
-> >2.0.4
-> >
-> >--
-> >To unsubscribe from this list: send the line "unsubscribe linux-pci"=
- in
-> >the body of a message to majordomo@vger.kernel.org
-> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
-> --=20
-> Richard Yang
-> Help you, Help me
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
