@@ -1,64 +1,55 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] spi: rockchip: return 0 if tx_buf and rx_buf are NULL
-Date: Thu, 14 Aug 2014 13:09:36 -0700
-Message-ID: <20140814200936.GA13458@core.coreip.homeip.net>
-References: <1407977544-2989-1-git-send-email-addy.ke@rock-chips.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: socfpga: memreserve first 4KB for SMP code
+Date: Thu, 14 Aug 2014 15:56:53 -0500
+Message-ID: <53ED2295.3020700@opensource.altera.com>
+References: <1408031491-15609-1-git-send-email-dinguyen@opensource.altera.com> <1408031491-15609-4-git-send-email-dinguyen@opensource.altera.com> <20140814185432.GE11558@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407977544-2989-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140814185432.GE11558-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, vbridger-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Addy,
 
-On Thu, Aug 14, 2014 at 08:52:24AM +0800, Addy Ke wrote:
-> To do so, spi communication can use an empty buf to pull up CS.
+
+On 8/14/14, 1:54 PM, Pavel Machek wrote:
+> On Thu 2014-08-14 10:51:31, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>
+>> The SOCFPGA's SMP code uses 0x0 for as the location for the trampoline to
+>> bring secondary cores online. This patch adds a /memreserve/ section to
+>> reserve the first 4K for the SMP trampoline code.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/socfpga_arria5.dtsi   | 1 +
+>>  arch/arm/boot/dts/socfpga_cyclone5.dtsi | 1 +
+>>  2 files changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+>> index 468fc4c..73b939e 100644
+>> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+>> @@ -15,6 +15,7 @@
+>>   */
+>>  
+>>  /dts-v1/;
+>> +/memreserve/ 0x00000000 0x0001000;
 > 
-> This patch merged from ChromiumOS tree.
-> Cros_ec use this function to turn off CS and add a delay to ensure
-> the rising edge doesn't come too soon after the end of the data.
+> Actually, comment here explaining that ROM code uses 0x0 for the
+> trampoline would be nice here... if I understand it correctly.
+
+Sure...I'll add a single line comment.
+
+Dinh
 > 
-> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  drivers/spi/spi-rockchip.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Thanks,
+> 									Pavel
 > 
-> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-> index 72fb287..1e3bcfa 100644
-> --- a/drivers/spi/spi-rockchip.c
-> +++ b/drivers/spi/spi-rockchip.c
-> @@ -511,8 +511,8 @@ static int rockchip_spi_transfer_one(struct spi_master *master,
->  	WARN_ON((readl_relaxed(rs->regs + ROCKCHIP_SPI_SR) & SR_BUSY));
->  
->  	if (!xfer->tx_buf && !xfer->rx_buf) {
-> -		dev_err(rs->dev, "No buffer for transfer\n");
-> -		return -EINVAL;
-> +		dev_dbg(rs->dev, "No buffer for transfer\n");
-> +		return 0;
->  	}
-
-Maybe we should only return 0 if xfer->len is also 0, otherwise keep
-complaining loudly?
-
-	if (!xfer->tx_buf && !xfer->rx_buf) {
-		if (xfer->len == 0)
-			return 0;
-
-		dev_err(rs->dev, "Missing transfer buffer\n");
-		return -EINVAL;
-	}
-
-Thanks.
-
--- 
-Dmitry
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
