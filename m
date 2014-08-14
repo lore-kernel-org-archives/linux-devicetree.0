@@ -1,29 +1,111 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 0/2] Add VIN and ADV7180 device tree support for
- R8A7790/Lager board
-Date: Thu, 14 Aug 2014 14:32:31 +0900
-Message-ID: <20140814053231.GA26709@verge.net.au>
-References: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1793694.Z8xUpkGDQx@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Addy Ke <addy.ke@rock-chips.com>
+Subject: [PATCH] ARM: dts: Add sdio0 and sdio1 to the rk3288
+Date: Thu, 14 Aug 2014 13:49:20 +0800
+Message-ID: <1407995360-26009-1-git-send-email-addy.ke@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 12:10:19AM +0400, sergei.shtylyov@cogentembedded.com wrote:
-> Hello.
-> 
->    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-v3.16-20140811' tag. Here Ben Dooks adds the VIN and ADV7180
-> video decoder device tree support on the R8A7790/Lager board. The patchset
-> requires Ben Dooks' 'rcar_vin' and 'soc_camera' DT support patches (already
-> merged to the 'media_tree.git' repo) in order to work.
-> 
-> [1/2] ARM: shmobile: r8a7790: add VIN device nodes
-> [2/2] ARM: shmobile: lager: add VIN1/ADV7180 device nodes
+Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 76 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-Thanks, I have queued these up for v3.18.
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 7a9173d..a440869 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -120,6 +120,32 @@
+ 		//fifo-depth = <0x100>;
+ 	};
+ 
++	sdio0: dwmmc@ff0d0000 {
++		compatible = "rockchip,rk3288-dw-mshc";
++		reg = <0xff0d0000 0x4000>;
++		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
++		clock-names = "biu", "ciu";
++
++		fifo-depth = <0x100>;
++	};
++
++	sdio1: dwmmc@ff0e0000 {
++		compatible = "rockchip,rk3288-dw-mshc";
++		reg = <0xff0e0000 0x4000>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
++		clock-names = "biu", "ciu";
++
++		fifo-depth = <0x100>;
++	};
++
+ 	emmc: dwmmc@ff0f0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		reg = <0xff0f0000 0x4000>;
+@@ -589,6 +615,56 @@
+ 			};
+ 		};
+ 
++		sdio0 {
++			sdio0_clk: sdio0-clk {
++				rockchip,pins = <4 25 RK_FUNC_1 &pcfg_pull_none>;
++			};
++
++			sdio0_cmd: sdio0-cmd {
++				rockchip,pins = <4 24 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_pwr: sdio0-pwr {
++				rockchip,pins = <4 28 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_bus1: sdio0-bus1 {
++				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_bus4: sdio0-bus4 {
++				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>,
++						<4 21 RK_FUNC_1 &pcfg_pull_up>,
++						<4 22 RK_FUNC_1 &pcfg_pull_up>,
++						<4 23 RK_FUNC_1 &pcfg_pull_up>;
++			};
++		};
++
++		sdio1 {
++			sdio1_clk: sdio1-clk {
++				rockchip,pins = <4 7 RK_FUNC_4 &pcfg_pull_none>;
++			};
++
++			sdio1_cmd: sdio1-cmd {
++				rockchip,pins = <4 6 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_pwr: sdio1-pwr {
++				rockchip,pins = <4 9 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_bus1: sdio1-bus1 {
++				rockchip,pins = <4 24 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_bus4: sdio1-bus4 {
++				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>,
++						<3 25 RK_FUNC_4 &pcfg_pull_up>,
++						<3 26 RK_FUNC_4 &pcfg_pull_up>,
++						<3 27 RK_FUNC_4 &pcfg_pull_up>;
++			};
++		};
++
+ 		emmc {
+ 			emmc_clk: emmc-clk {
+ 				rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
+-- 
+1.8.3.2
