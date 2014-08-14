@@ -1,49 +1,193 @@
-Return-Path: <heiko@sntech.de>
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] mmc: dw_mmc: move rockchip related code to a separate file
-Date: Fri, 15 Aug 2014 21:52:32 +0200
-Message-ID: <5377586.rAxPyABi4v@diego>
-In-Reply-To: <CAD=FV=W-UFsELR-pLdqg+CC7bG8J3zCYa=fxy_4pd0vOnvc62w@mail.gmail.com>
-References: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com> <1408003293-27375-1-git-send-email-addy.ke@rock-chips.com> <CAD=FV=W-UFsELR-pLdqg+CC7bG8J3zCYa=fxy_4pd0vOnvc62w@mail.gmail.com>
+Return-Path: <dianders@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-To: Doug Anderson <dianders@chromium.org>
-Cc: Addy Ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, =?utf-8?B?5ae a5pm65oOF?= <yzq@rock-chips.com>, han jiang <hj@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Lin Huang <hl@rock-chips.com>
+Sender: dianders@google.com
+In-Reply-To: <1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
+References: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
+	<1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
+Date: Thu, 14 Aug 2014 10:09:55 -0700
+Message-ID: <CAD=FV=W-UFsELR-pLdqg+CC7bG8J3zCYa=fxy_4pd0vOnvc62w@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: move rockchip related code to a separate file
+From: Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, han jiang <hj@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Lin Huang <hl@rock-chips.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Am Donnerstag, 14. August 2014, 10:09:55 schrieb Doug Anderson:
-> Addy,
-> 
-> On Thu, Aug 14, 2014 at 1:01 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
-> > diff --git a/drivers/mmc/host/dw_mmc-rockchip.c
-> > b/drivers/mmc/host/dw_mmc-rockchip.c new file mode 100644
-> > index 0000000..3d86ef3
-> > --- /dev/null
-> > +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+Addy,
 
-[...]
+On Thu, Aug 14, 2014 at 1:01 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
+> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+> new file mode 100644
+> index 0000000..3d86ef3
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+> @@ -0,0 +1,146 @@
+> +/*
+> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+> + * Author: addy ke <addy.ke@rock-chips.com>
 
-> > +static int dw_mci_rockchip_probe(struct platform_device *pdev)
-> > +{
-> > +       const struct dw_mci_drv_data *drv_data;
-> > +       const struct of_device_id *match;
-> > +
-> > +       match = of_match_node(dw_mci_rockchip_match, pdev->dev.of_node);
-> 
-> Your code doesn't have "if (pdev->dev.of_node)".  That's OK (I think)
-> but it means that your KConfig needs a "depends on OF", right?
+nit: You've already got the author below.  Do you need it here too?
 
-Almost all of_* functions have stubs for the !CONFIG_OF case [0].
-Instead I guess this simply needs a
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/dw_mmc.h>
+> +#include <linux/of_address.h>
+> +
+> +#include "dw_mmc.h"
+> +#include "dw_mmc-pltfm.h"
+> +
+> +#define RK3288_CLKGEN_DIV       2
+> +
+> +static void dw_mci_rockchip_prepare_command(struct dw_mci *host, u32 *cmdr)
+> +{
+> +       *cmdr |= SDMMC_CMD_USE_HOLD_REG;
+> +}
+> +
+> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
+> +{
+> +       host->bus_hz /= RK3288_CLKGEN_DIV;
+> +
+> +       return 0;
+> +}
+> +
+> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> +{
+> +       int ret;
+> +       unsigned int cclkin;
+> +       u32 bus_hz;
+> +
+> +       /*
+> +        * cclkin: source clock of mmc controller
+> +        * bus_hz: card interface clock generated by CLKGEN
+> +        * bus_hz = cclkin / RK3288_CLKGEN_DIV
+> +        * os->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
 
-if (!pdev->dev.of_node)
-	return -ENODEV;
+nit: why did you change "ios->clock" to "os->clock" in the comment?
 
-to handle the case when there is no of_node.
+> +        *
+> +        * Note: div can only be 0 or 1
+> +        *       if DDR50 8bit mode(only emmc work in 8bit mode),
+> +        *       div must be set 1
+> +        */
+> +       if (ios->bus_width == MMC_BUS_WIDTH_8 &&
+> +           ios->timing == MMC_TIMING_MMC_DDR52)
+> +               cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
+> +       else
+> +               cclkin = ios->clock * RK3288_CLKGEN_DIV;
+> +
+> +       ret = clk_set_rate(host->ciu_clk, cclkin);
+> +       if (ret)
+> +               dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
+> +
+> +       bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
+> +       if (bus_hz != host->bus_hz) {
+> +               host->bus_hz = bus_hz;
+> +               /* force dw_mci_setup_bus() */
+> +               host->current_speed = 0;
+> +       }
+> +}
+> +
+> +static const struct dw_mci_drv_data rk2928_drv_data = {
+> +       .prepare_command        = dw_mci_rockchip_prepare_command,
+> +};
+> +
+> +static const struct dw_mci_drv_data rk3288_drv_data = {
+> +       .prepare_command        = dw_mci_rockchip_prepare_command,
+> +       .set_ios                = dw_mci_rk3288_set_ios,
+> +       .setup_clock    = dw_mci_rk3288_setup_clock,
+> +};
+> +
+> +static const struct of_device_id dw_mci_rockchip_match[] = {
+> +       { .compatible = "rockchip,rk2928-dw-mshc",
+> +               .data = &rk2928_drv_data },
+> +       { .compatible = "rockchip,rk3288-dw-mshc",
+> +               .data = &rk3288_drv_data },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_rockchip_match);
+> +
+> +static int dw_mci_rockchip_probe(struct platform_device *pdev)
+> +{
+> +       const struct dw_mci_drv_data *drv_data;
+> +       const struct of_device_id *match;
+> +
+> +       match = of_match_node(dw_mci_rockchip_match, pdev->dev.of_node);
+
+Your code doesn't have "if (pdev->dev.of_node)".  That's OK (I think)
+but it means that your KConfig needs a "depends on OF", right?
 
 
-Heiko
+> +       drv_data = match->data;
+> +
+> +       return dw_mci_pltfm_register(pdev, drv_data);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int dw_mci_rockchip_suspend(struct device *dev)
+> +{
+> +       struct dw_mci *host = dev_get_drvdata(dev);
+> +       int ret;
+> +
+> +       ret = dw_mci_suspend(host);
+> +       if (!ret)
+> +               clk_disable_unprepare(host->ciu_clk);
+> +
+> +       return ret;
+> +}
+> +
+> +static int dw_mci_rockchip_resume(struct device *dev)
+> +{
+> +       struct dw_mci *host = dev_get_drvdata(dev);
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(host->ciu_clk);
+> +       if (ret) {
+> +               dev_err(host->dev, "failed to enable ciu clock\n");
+> +               return ret;
+> +       }
+> +
+> +       return dw_mci_resume(host);
+
+Your suspend/resume are different than the platform suspend/resume.
+You should change that in a separate change.  This change should just
+move code and not change functionality.
 
 
-[0] http://lxr.free-electrons.com/source/include/linux/of.h#L585
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +static SIMPLE_DEV_PM_OPS(dw_mci_rockchip_pmops,
+> +                        dw_mci_rockchip_suspend,
+> +                        dw_mci_rockchip_resume);
+> +
+> +static struct platform_driver dw_mci_rockchip_pltfm_driver = {
+> +       .probe          = dw_mci_rockchip_probe,
+> +       .remove         = dw_mci_pltfm_remove,
+
+On exynos I see the remove wrapped by __exit_p.  Should you do that here, too?
+
+
+> +       .driver         = {
+> +               .name           = "dwmmc_rockchip",
+> +               .of_match_table = dw_mci_rockchip_match,
+> +               .pm             = &dw_mci_rockchip_pmops,
+> +       },
+> +};
+> +
+> +module_platform_driver(dw_mci_rockchip_pltfm_driver);
+> +
+> +MODULE_AUTHOR("Addy Ke <addy.ke@rock-chips.com>");
+> +MODULE_DESCRIPTION("Rockchip Specific DW-MSHC Driver Extension");
+> +MODULE_ALIAS("platform:dwmmc-rockchip");
+> +MODULE_LICENSE("GPL v2");
+
+-Doug
