@@ -1,19 +1,16 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v7 3/8] drivers: cpuidle: implement DT based idle states
- infrastructure
-Date: Thu, 14 Aug 2014 12:29:11 +0100
-Message-ID: <20140814112911.GA5039@red-moon>
-References: <1407945127-27554-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1407945127-27554-4-git-send-email-lorenzo.pieralisi@arm.com>
- <alpine.LFD.2.11.1408131223501.1133@knanqh.ubzr>
- <20140813170440.GA30822@e102568-lin.cambridge.arm.com>
- <alpine.LFD.2.11.1408131319210.1133@knanqh.ubzr>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCA0LzRdIEFSTTogZHRzOiBrZXlzdG9uZS1rMmhrOiBhZGQg?=
+ =?UTF-8?B?ZHNwIGdwaW8gY29udHJvbGxlcnMgbm9kZXM=?=
+Date: Thu, 14 Aug 2014 16:12:01 +0400
+Message-ID: <1408018321.928492982@f270.i.mail.ru>
+References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
+ <1407945984.545232249@f170.i.mail.ru> <53ECA7F3.7030702@ti.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LFD.2.11.1408131319210.1133@knanqh.ubzr>
-Content-Disposition: inline
+In-Reply-To: <53ECA7F3.7030702@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,305 +20,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Tomasz Figa <t.figa@samsung.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, ashwin.chaugule@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@>
+To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko@ti.com>
+Cc: =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, devicetree@vger.kernel.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 06:29:49PM +0100, Nicolas Pitre wrote:
-> On Wed, 13 Aug 2014, Lorenzo Pieralisi wrote:
-
-[...]
-
-> > > > The idle states list is obtained from the first cpu in the driver
-> > > > cpumask, which implicitly means the parsing code expects idle states
-> > > > (and related list of phandles) to be the same for all CPUs in the
-> > > > CPUidle driver mask. The kernel does not check this assumption, it must
-> > > > be enforced by the bootloader to ensure correct system behaviour.
-> > > 
-> > > Can we make the kernel a little less reliant on bootloader to ensure 
-> > > correct system behaviour please?  If assumptions are assumed by the 
-> > > kernel, it should at least print a warning and simply ignore the 
-> > > information when such assumption are not respected.
-> > 
-> > I think the check adds complexity (it means stashing the idle states
-> > phandles for the first cpu, loop through the cpus in the mask and compare
-> > the phandles to the ones stashed for the first cpu for all cpus in the
-> > driver mask) for not much.
-> > 
-> > I was told that it is not up to the kernel to validate the DT, but if
-> > you want I can implement the check even though I really think it is
-> > overkill.
-> 
-> DT validation is not the same as resiliance against messed-up DT 
-> content.  If the kernel is going to boot regardless then this is fine.  
-> If the kernel is going to crash, or work suboptimally without returning 
-> a clue because some implicit assumptions are not respected then this is 
-> bad.
-> 
-> And people _will_ mess up their DT from time to time.
-> 
-> So if you tell me a messed-up DT won't bear much consequences then I'm 
-> fine with that.
-
-Nico, on second thoughts, since Ashwin raised the point too and I think
-that at these early stages it might turn out useful, I gave coding
-the check a go. I tried to make the check self contained so that we can
-yank it out if we do not want it in the final version or we will want
-to remove it later.
-
-Here the refreshed patch is:
-
--- >8 --
-Subject: [PATCH] drivers: cpuidle: implement DT based idle states
- infrastructure
-
-On most common ARM systems, the low-power states a CPU can be put into are
-not discoverable in HW and require device tree bindings to describe
-power down suspend operations and idle states parameters.
-
-In order to enable DT based idle states and configure idle drivers, this
-patch implements the bulk infrastructure required to parse the device tree
-idle states bindings and initialize the corresponding CPUidle driver states
-data.
-
-The parsing API accepts a start index that defines the first idle state
-that should be initialized by the parsing code in order to give new and
-legacy driver flexibility over which states should be parsed using the
-new DT mechanism.
-
-The idle states list is obtained from the first cpu in the driver
-cpumask, which implicitly means the parsing code expects idle states
-(and related list of phandles) to be the same for all CPUs in the
-CPUidle driver mask. The kernel does not check this assumption, it must
-be enforced by the bootloader to ensure correct system behaviour.
-
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
----
- drivers/cpuidle/Kconfig          |   3 +
- drivers/cpuidle/Makefile         |   1 +
- drivers/cpuidle/dt_idle_states.c | 175 +++++++++++++++++++++++++++++++++++++++
- drivers/cpuidle/dt_idle_states.h |   5 ++
- 4 files changed, 184 insertions(+)
- create mode 100644 drivers/cpuidle/dt_idle_states.c
- create mode 100644 drivers/cpuidle/dt_idle_states.h
-
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index 32748c3..8deb934 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -25,6 +25,9 @@ config CPU_IDLE_GOV_MENU
- 	bool "Menu governor (for tickless system)"
- 	default y
- 
-+config DT_IDLE_STATES
-+	bool
-+
- menu "ARM CPU Idle Drivers"
- depends on ARM
- source "drivers/cpuidle/Kconfig.arm"
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index 11edb31..002b653 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -4,6 +4,7 @@
- 
- obj-y += cpuidle.o driver.o governor.o sysfs.o governors/
- obj-$(CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED) += coupled.o
-+obj-$(CONFIG_DT_IDLE_STATES)		  += dt_idle_states.o
- 
- ##################################################################################
- # ARM SoC drivers
-diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
-new file mode 100644
-index 0000000..13273e2
---- /dev/null
-+++ b/drivers/cpuidle/dt_idle_states.c
-@@ -0,0 +1,175 @@
-+/*
-+ * DT idle states parsing code.
-+ *
-+ * Copyright (C) 2014 ARM Ltd.
-+ * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#define pr_fmt(fmt) "DT idle-states: " fmt
-+
-+#include <linux/cpuidle.h>
-+#include <linux/cpumask.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+
-+#include "dt_idle_states.h"
-+
-+static int init_state_node(struct cpuidle_state *idle_state,
-+			   struct device_node *state_node)
-+{
-+	int err;
-+
-+	err = of_property_read_u32(state_node, "wakeup-latency-us",
-+				   &idle_state->exit_latency);
-+	if (err) {
-+		u32 entry_latency, exit_latency;
-+
-+		err = of_property_read_u32(state_node, "entry-latency-us",
-+					   &entry_latency);
-+		if (err) {
-+			pr_debug(" * %s missing entry-latency-us property\n",
-+				 state_node->full_name);
-+			return -EINVAL;
-+		}
-+
-+		err = of_property_read_u32(state_node, "exit-latency-us",
-+					   &exit_latency);
-+		if (err) {
-+			pr_debug(" * %s missing exit-latency-us property\n",
-+				 state_node->full_name);
-+			return -EINVAL;
-+		}
-+		/*
-+		 * If wakeup-latency-us is missing, default to entry+exit
-+		 * latencies as defined in idle states bindings
-+		 */
-+		idle_state->exit_latency = entry_latency + exit_latency;
-+	}
-+
-+	err = of_property_read_u32(state_node, "min-residency-us",
-+				   &idle_state->target_residency);
-+	if (err) {
-+		pr_debug(" * %s missing min-residency-us property\n",
-+			     state_node->full_name);
-+		return -EINVAL;
-+	}
-+
-+	idle_state->flags = CPUIDLE_FLAG_TIME_VALID;
-+	if (of_property_read_bool(state_node, "local-timer-stop"))
-+		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-+	/*
-+	 * TODO:
-+	 *	replace with kstrdup and pointer assignment when name
-+	 *	and desc become string pointers
-+	 */
-+	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN - 1);
-+	strncpy(idle_state->desc, state_node->name, CPUIDLE_DESC_LEN - 1);
-+	return 0;
-+}
-+
-+/*
-+ * Check that the idle state is uniform across all CPUs in the CPUidle driver
-+ * cpumask
-+ */
-+static bool idle_state_valid(struct device_node *state_node, unsigned int idx,
-+			     const cpumask_t *cpumask)
-+{
-+	int cpu;
-+	struct device_node *cpu_node, *curr_state_node;
-+
-+	/*
-+	 * Compare idle state phandles for index idx on all CPUs in the
-+	 * CPUidle driver cpumask. Start from next logical cpu following
-+	 * cpumask_first(cpumask) since that's the CPU state_node was
-+	 * retrieved from. If a mismatch is found bail out straight
-+	 * away since we certainly hit a firmware misconfiguration.
-+	 */
-+	for (cpu = cpumask_next(cpumask_first(cpumask), cpumask);
-+	     cpu < nr_cpu_ids; cpu = cpumask_next(cpu, cpumask)) {
-+		cpu_node = of_cpu_device_node_get(cpu);
-+		curr_state_node = of_parse_phandle(cpu_node, "cpu-idle-states",
-+						   idx);
-+		if (state_node != curr_state_node)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+/**
-+ * dt_init_idle_driver() - Parse the DT idle states and initialize the
-+ *			   idle driver states array
-+ * @drv:	  Pointer to CPU idle driver to be initialized
-+ * @start_idx:    First idle state index to be initialized
-+ *
-+ * If DT idle states are detected and are valid the state count and states
-+ * array entries in the cpuidle driver are initialized accordingly starting
-+ * from index start_idx.
-+ *
-+ * Return: number of valid DT idle states parsed, <0 on failure
-+ */
-+int dt_init_idle_driver(struct cpuidle_driver *drv, unsigned int start_idx)
-+{
-+	struct cpuidle_state *idle_state;
-+	struct device_node *state_node, *cpu_node;
-+	int i;
-+	unsigned int state_idx = start_idx;
-+
-+	if (state_idx >= CPUIDLE_STATE_MAX)
-+		return -EINVAL;
-+	/*
-+	 * We get the idle states for the first logical cpu in the
-+	 * driver mask. The kernel does not check idle states on all
-+	 * cpus in the driver mask, they are assumed to be the same
-+	 * by default.
-+	 */
-+	cpu_node = of_cpu_device_node_get(cpumask_first(drv->cpumask));
-+
-+	for (i = 0; ; i++) {
-+		int err;
-+
-+		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
-+		if (!state_node)
-+			break;
-+
-+		if (!idle_state_valid(state_node, i, drv->cpumask)) {
-+			pr_warn("%s idle state not valid, bailing out\n",
-+				state_node->full_name);
-+			return -EINVAL;
-+		}
-+
-+		if (state_idx == CPUIDLE_STATE_MAX) {
-+			pr_warn("State index reached static CPU idle driver states array size\n");
-+			break;
-+		}
-+
-+		idle_state = &drv->states[state_idx++];
-+		err = init_state_node(idle_state, state_node);
-+		if (err) {
-+			pr_err("Parsing idle state node %s failed with err %d\n",
-+			       state_node->full_name, err);
-+			return err;
-+		}
-+	}
-+	/*
-+	 * Update the driver state count only if some valid DT idle states
-+	 * were detected
-+	 */
-+	if (i)
-+		drv->state_count = state_idx;
-+
-+	/*
-+	 * Return the number of present and valid DT idle states, which can
-+	 * also be 0 on platforms with missing DT idle states or legacy DT
-+	 * configuration predating the DT idle states bindings.
-+	 */
-+	return i;
-+}
-+EXPORT_SYMBOL_GPL(dt_init_idle_driver);
-diff --git a/drivers/cpuidle/dt_idle_states.h b/drivers/cpuidle/dt_idle_states.h
-new file mode 100644
-index 0000000..728c37c
---- /dev/null
-+++ b/drivers/cpuidle/dt_idle_states.h
-@@ -0,0 +1,5 @@
-+#ifndef __DT_IDLE_STATES
-+#define __DT_IDLE_STATES
-+
-+int dt_init_idle_driver(struct cpuidle_driver *drv, unsigned int start_idx);
-+#endif
--- 
-1.8.4
+VGh1LCAxNCBBdWcgMjAxNCAxNToxMzozOSArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
+cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEhpIEFsZXhhbmRlciwKPiAKPiBPbiAwOC8xMy8y
+MDE0IDA3OjA2IFBNLCBBbGV4YW5kZXIgU2hpeWFuIHdyb3RlOgo+ID4gV2VkLCAxMyBBdWcgMjAx
+NCAxOToxNjoyMiArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxncnlnb3JpaS5zdHJhc2hr
+b0B0aS5jb20+Ogo+ID4+IEFkZCBLZXlzdG9uZSAyIERTUCBHUElPIG5vZGVzLgo+ID4+IERTUCBH
+UElPIGJhbmtzIDAtNyBjb3JyZXNwb25kIHRvIERTUDAtRFNQNwo+ID4+Cj4gPj4gU2lnbmVkLW9m
+Zi1ieTogR3J5Z29yaWkgU3RyYXNoa28gPGdyeWdvcmlpLnN0cmFzaGtvQHRpLmNvbT4KPiA+PiAt
+LS0KPiA+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSB8ICAgNTYgKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDU2
+IGluc2VydGlvbnMoKykKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9r
+MmhrLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9rMmhrLmR0c2kKPiA+PiBpbmRleCAzMjFiYTJm
+Li4wMDllMTgwIDEwMDY0NAo+ID4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaQo+
+ID4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaQo+ID4+IEBAIC01MCw1ICs1MCw2
+MSBAQAo+ID4+ICAgCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiA+PiAgIAkJCXRpLHN5c2Nv
+bi1kZXYgPSA8JmRldmN0cmwgMHgyYTA+Owo+ID4+ICAgCQl9Owo+ID4+ICsKPiA+PiArCQlkc3Bn
+cGlvMDoga2V5c3RvbmVfZHNwX2dwaW9AMDI2MjAyNDAgewo+ID4+ICsJCQljb21wYXRpYmxlID0g
+InRpLGtleXN0b25lLW1jdHJsLWdwaW8iOwo+ID4+ICsJCQlncGlvLWNvbnRyb2xsZXI7Cj4gPj4g
+KwkJCSNncGlvLWNlbGxzID0gPDI+Owo+ID4+ICsJCQlncGlvLHN5c2Nvbi1kZXYgPSA8JmRldmN0
+cmwgMHgyNDA+Owo+ID4+ICsJCX07Cj4gPj4gKwo+ID4+ICsJCWRzcGdwaW8xOiBrZXlzdG9uZV9k
+c3BfZ3Bpb0AyNjIwMjQ0IHsKPiA+PiArCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1tY3Ry
+bC1ncGlvIjsKPiA+PiArCQkJZ3Bpby1jb250cm9sbGVyOwo+ID4+ICsJCQkjZ3Bpby1jZWxscyA9
+IDwyPjsKPiA+PiArCQkJZ3BpbyxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MjQ0PjsKPiA+PiAr
+CQl9Owo+ID4gLi4uCj4gPj4gKwkJZHNwZ3Bpbzc6IGtleXN0b25lX2RzcF9ncGlvQDI2MjAyNUMg
+ewo+ID4+ICsJCQljb21wYXRpYmxlID0gInRpLGtleXN0b25lLW1jdHJsLWdwaW8iOwo+ID4+ICsJ
+CQlncGlvLWNvbnRyb2xsZXI7Cj4gPj4gKwkJCSNncGlvLWNlbGxzID0gPDI+Owo+ID4+ICsJCQln
+cGlvLHN5c2Nvbi1kZXYgPSA8JmRldmN0cmwgMHgyNWM+Owo+ID4+ICsJCX07Cj4gPiAKPiA+IFNv
+LCBkZXZjdHJsIGlzIGEgc3lzY29uIGRldmljZSBhbmQgdGhpcyBEVFMgaW50cm9kdWNlIHNldmVy
+YWwKPiA+IGlkZW50aWNhbCBHUElPIGRlc2NyaXB0aW9ucz8KPiA+IAo+ID4gT24gbXkgb3Bpbmlv
+biB0aGlzIHNob3VsZCBiZSBwbGFjZWQgaW4gdGhlIGdwaW8tc3lzY29uLmMsCj4gPiB3aGVyZSB5
+b3UgY2FuIGFkZCBzdXBwb3J0IGZvciB0aSxrZXlzdG9uZS1kc3Awey4uN30tZ3Bpby4KPiA+IFN1
+Y2ggY2hhbmdlIHdpbGwgYXZvaWQgcGFydHMgMiBhbmQgMyBvZiB0aGlzIHBhdGNoLgo+ID4gCj4g
+PiBzdGF0aWMgY29uc3Qgc3RydWN0IHN5c2Nvbl9ncGlvX2RhdGEgdGlfa2V5c3RvbmVfZHNwMF9n
+cGlvID0gewo+ID4gICAgLmNvbXBhdGlibGUgPSAidGksa2V5c3RvbmUtc3lzY29uIiwKPiA+ICAg
+IC5kYXRfYml0X29mZnNldCA9IDB4MjQwICogOCwKPiA+ICAgIC4uLgo+ID4gICAgLnNldCA9IGV0
+Yy4uLgo+ID4gfTsKPiAKPiBTbywgaWYgSSB1bmRlcnN0YW5kIHlvdSByaWdodCwgeW91IHByb3Bv
+c2UgdG8gYWRkIDggYWRkaXRpb25hbCBjb21wYXRpYmxlCj4gc3RyaW5ncyBqdXN0IHRvIGVuY29k
+ZSBkaWZmZXJlbnQgcmVnaXN0ZXIgb2Zmc2V0cy4gSXMgaXQ/Cj4gMSkgYWRkICJ0aSxrZXlzdG9u
+ZS1tY3RybC1ncGlvMCIuLi4idGksa2V5c3RvbmUtbWN0cmwtZ3BpbzciCgpZZXMsIGJ1dCByZXBs
+YWNlICJtY3RybCIgd2l0aCAiZHNwIiBzaW5jZSBtY3RybCBpcyBub3QgYXBwbGljYWJsZSBoZXJl
+LgoKPiAyKSBhZGQgOCBzdHJ1Y3R1cmVzIGtleXN0b25lX21jdHJsX2dwaW8wLi5rZXlzdG9uZV9t
+Y3RybF9ncGlvNyBpbiBncGlvLXN5c2Nvbi5jCj4gICAgKHdoaWNoIHdpbGwgaGF2ZSBvbmx5IGRp
+ZmZlcmVudCB2YWx1ZXMgb2YgZmllbGQgLSAuZGF0X2JpdF9vZmZzZXQgPSAweDJ5eSAqIDgsKQo+
+IAo+IDMpIGFkZCA4IGFkZGl0aW9uYWwgaXRlbXMgaW4gYXJyYXkgc3lzY29uX2dwaW9faWRzCj4g
+CXsKPiAJCS5jb21wYXRpYmxlCT0gInRpLGtleXN0b25lLW1jdHJsLWdwaW8wIiwKPiAJCS5kYXRh
+CQk9ICZrZXlzdG9uZV9tY3RybF9ncGlvMCwKPiAJfSwgLi4uCj4gCj4gSSBjYW4gZG8gaXQgaWYg
+eW91IHN0cmljdGx5IGluc2lzdCwgQlVUIEkgZG9uJ3QgbGlrZSBpdCA6KAo+IC0ganVzdCBpbWFn
+aW5lIGhvdyB5b3VyIGRyaXZlciB3aWxsIGxvb2sgbG9vayBsaWtlIGlmIDUgb3IgNiBTb0NzIHdp
+bGwgcmUtdXNlIGl0IDspCj4gLSBhcyBJIG1lbnRpb25lZCBpbiBjb3ZlciBsZXR0ZXIgYW5kIGNv
+bW1pdCBtZXNzYWdlcyBldmVuIGVhY2ggU29DIHJldmlzaW9uIGNhbiBoYXZlCj4gICBkaWZmZXJl
+bnQgU3lzY29uIGltcGxlbWVudGF0aW9uIHdpdGggZGlmZmVyZW50IHJlZ2lzdGVycyBvZmZzZXRz
+IGFuZCB3aXRoIGRpZmZlcmVudAo+ICAgbnVtYmVyIG9mIFN5c2NvbiByZWdpc3RlciByYW5nZXMg
+KGZvciBleGFtcGxlIGZvciBLZXlzdG9uZSAyIHdlIGFscmVhZHkgaGF2ZSB0d28KPiAgIFN5c2Nv
+biBkZXZpY2VzIGRlZmluZWQgaW4gRFQpLgoKVGhlIGluaXRpYWwgdmVyc2lvbiBvZiB0aGlzIGRy
+aXZlciBjb250YWlucyBhZGRyZXNzZXMgYW5kIG9mZnNldHMgaW4sIGJ1dCB0aGlzIGFwcHJvYWNo
+IGhhcwpiZWVuIGNyaXRpY2l6ZWQgYnkgRFQgbWFpbnRhaW5lcnMuCgoiZGlmZmVyZW50IFN5c2Nv
+biB3aXRoIGRpZmZlcmVudCByZWdpc3RlcnMiIC0gaXMgT0ssIHNpbmNlIHdlIHVzZSBjb21wYXRp
+YmxlIHN0cmluZyBpbiBkZWZpbml0aW9uLgpJZiB5b3UgaGF2ZSB0d28gaWRlbnRpY2FsIHN5c2Nv
+biwganVzdCBhcHBlbmQgYW4gdW5pcXVlIGFkZGl0aW9uYWwgc3RyaW5nIGFuZCB1c2UgaXQgaW4g
+dGhpcyBkcml2ZXIuCgo+IE5vdyB3ZSBhbHJlYWR5IGhhdmUgMyBLZXlzdG9uZSAyIFNvQyByZXZp
+c2lvbnMgKEsySEssIEsyTCwgSzJFKSAgYW5kIHRoZXJlIGFyZSBubyBndWFyYW50ZWUKPiB0aGF0
+IHRoZSBuZXh0IHJldmlzaW9uIGsyWCB3aWxsIGhhdmUgdGhlIHNhbWUgcmVnaXN0ZXIgb2Zmc2V0
+IGZvciBHUElPMC4KClRoZW4gdXNlIG1vcmUgZXhhY3Qgc3RyaW5nIGZvciBzeXNjb24tZ3Bpbywg
+bGlrZSB0aSxrZXlzdG9uZS1rMmhrLWRzcC1ncGlvMC4KCi0tLQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
