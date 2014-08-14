@@ -1,35 +1,35 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH][resend] mtd: atmel_nand: make PMECC lookup table and
- offset property optional
-Date: Thu, 14 Aug 2014 15:46:25 -0700
-Message-ID: <20140814224625.GF18411@ld-irv-0074>
-References: <1407490110-16735-1-git-send-email-josh.wu@atmel.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH] pinctrl: qcom: apq8064: Correct interrupts in example
+Date: Thu, 14 Aug 2014 15:59:21 -0700
+Message-ID: <1408057161-6940-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407490110-16735-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kiran Padwal <kiran.padwal@smartplayin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 08, 2014 at 05:28:30PM +0800, Josh Wu wrote:
-> If there is no PMECC lookup table stored in ROM, or lookup table offset is
-> not specified, PMECC driver should build it in DDR by itself.
-> 
-> That make the PMECC driver work for some board which doesn't has PMECC
-> lookup table in ROM.
-> 
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+The example in the binding document indicates that interrupt 32 is used
+for the TLMM summary IRQ. Correct this to reduce the confusion.
 
-drivers/mtd/nand/atmel_nand.c:1204:11: warning: no previous prototype for 'create_lookup_table' [-Wmissing-prototypes]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ .../bindings/pinctrl/qcom,apq8064-pinctrl.txt      |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You probably should make create_lookup_table() static.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+index 0211c6d..92fae82 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+@@ -62,7 +62,7 @@ Example:
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+-		interrupts = <0 32 0x4>;
++		interrupts = <0 16 0x4>;
+ 
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&gsbi5_uart_default>;
+-- 
+1.7.9.5
