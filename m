@@ -1,35 +1,35 @@
 From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v5 1/2] can: m_can: add device tree binding documentation
-Date: Thu, 14 Aug 2014 11:56:52 +0200
-Message-ID: <53EC87E4.5030107@pengutronix.de>
-References: <1405503050-16796-1-git-send-email-b29396@freescale.com>	<53D8DC6F.8070307@pengutronix.de> <CAA+hA=R94tPcEsbtSODPjV9oxM48rrc4gLAFaoXhL+1H4BmUHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] rcar_can: document device tree bindings
+Date: Thu, 14 Aug 2014 12:07:08 +0200
+Message-ID: <53EC8A4C.101@pengutronix.de>
+References: <201408010124.26505.sergei.shtylyov@cogentembedded.com> <53DAB5CF.8000407@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="UCeodi7sDirtC05KNMhrK9vkvVXnEOSXf"
+ boundary="huIXsEdOghKHtgik9NehnKIfrhbKKXf1K"
 Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <CAA+hA=R94tPcEsbtSODPjV9oxM48rrc4gLAFaoXhL+1H4BmUHQ@mail.gmail.com>
+In-Reply-To: <53DAB5CF.8000407@pengutronix.de>
 Sender: linux-can-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, socketcan@hartkopp.net, Varka Bhadram <varkabhadram@gmail.com>, Rob Herring <robh+dt@kernel.org>, wg@grandegger.com, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, linux-sh@vger.kernel.org, vksavl@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---UCeodi7sDirtC05KNMhrK9vkvVXnEOSXf
+--huIXsEdOghKHtgik9NehnKIfrhbKKXf1K
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 08/14/2014 11:30 AM, Dong Aisheng wrote:
-> Ping...
+On 07/31/2014 11:31 PM, Marc Kleine-Budde wrote:
+> On 07/31/2014 11:24 PM, Sergei Shtylyov wrote:
+>> Document the R-Car CAN device tree bindings.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >=20
-> On Wed, Jul 30, 2014 at 7:52 PM, Marc Kleine-Budde <mkl@pengutronix.de>=
- wrote:
->> On 07/16/2014 11:30 AM, Dong Aisheng wrote:
->>> add M_CAN device tree binding documentation
+> The series looks good from the CAN perpective. I'll apply the patches
+> after we've got an Acked-by from the DT folks.
 
 Applied both to linux-can-next.
 
-Thanks,
 Marc
 
 --=20
@@ -39,7 +39,7 @@ Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
 Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
---UCeodi7sDirtC05KNMhrK9vkvVXnEOSXf
+--huIXsEdOghKHtgik9NehnKIfrhbKKXf1K
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -47,9 +47,9 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlPsh+QACgkQjTAFq1RaXHMDZQCfWP9JekgYXKEMZFW96xQoxttD
-L/IAn0Yc70pG1X/LxHsGhykphyVVMHoo
-=2aUr
+iEYEARECAAYFAlPsikwACgkQjTAFq1RaXHNh7ACeIWidDw7u9rBMF/UpJbyacQr4
+f+YAn2cLEmLeTbEccFH/Oo4Mil1SMK3q
+=6r3X
 -----END PGP SIGNATURE-----
 
---UCeodi7sDirtC05KNMhrK9vkvVXnEOSXf--
+--huIXsEdOghKHtgik9NehnKIfrhbKKXf1K--
