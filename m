@@ -1,84 +1,126 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv3 2/2] dt-bindings: regulator: Add regulator suspend state for
- PM state
-Date: Thu, 14 Aug 2014 09:40:14 +0900
-Message-ID: <1407976814-21882-3-git-send-email-cw00.choi@samsung.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv3 1/2] regulator: of: Add support for parsing regulator_state
+ for suspend state
+Date: Thu, 14 Aug 2014 09:40:13 +0900
+Message-ID: <1407976814-21882-2-git-send-email-cw00.choi@samsung.com>
 References: <1407976814-21882-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1407976814-21882-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1407976814-21882-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, kyungmin.park@samsung.com, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add regulator suspend state to constraint in dt file. The regulation_
-constraints structure already has regulator suspend state field as following.
-The regulator suspend state control the state of regulator according to
-PM (Power Management) state.
-- struct regulator_state state_disk
-- struct regulator_state state_mem
-- struct regulator_state state_standby
+The regulation_constraints structure includes specific field to support
+suspend state for global PMIC STANDBY/HIBERNATE mode. This patch add support
+for parsing regulator_state for suspend state.
 
-Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
- .../devicetree/bindings/regulator/regulator.txt    | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/regulator/of_regulator.c | 79 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 77 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 8607433..c4f566a 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -19,6 +19,33 @@ Optional properties:
-   design requires. This property describes the total system ramp time
-   required due to the combination of internal ramping of the regulator itself,
-   and board design issues such as trace capacitance and load on the supply.
-+- regulator-initial-state: initial state for suspend state, cnd set initial
-+  state among following defined suspend states:
-+  <2>: PM_SUSPEND_STANDBY - Setup regulator according to regulator-state-standby
-+  <3>: PM_SUSPEND_MEM - Setup regulator according to regulator-state-mem
-+  <4>: PM_SUSPEND_MAX - Setup regulator according to regulator-state-disk
-+- regulator-state-standby sub-root node for Standby mode
-+  : the device is in a power-saving state, but can also receive certain events,
-+  specific behavior depends on the specific device.
-+- regulator-state-mem sub-root node for Suspend-to-RAM mode
-+  : suspend to memory, the device goes to sleep, but all data stored in memory,
-+  only some external interrupt can wake the device.
-+- regulator-state-disk sub-root node for Suspend-to-disk mode
-+  : suspend to disk, this state operates similarly to Suspend-to-RAM,
-+  but includes a final step of writing memory contents to disk.
-+- regulator-state-[standby/mem/disk] node has following common properties:
-+	- regulator-volt: voltage consumers may set in suspend state.
-+	- regulator-mode: voltage mode in suspend state, can set mode among
-+	following defined regulator modes:
-+	0x1: REGULATOR_MODE_FAST, Regulator can handle fast changes.
-+	0x2: REGULATOR_MODE_NORMAL, Normal regulator power supply mode.
-+	0x4: REGULATOR_MODE_IDLE, Regulator runs in a more efficient mode.
-+	0x8: REGULATOR_MODE_STANDBY, Regulator runs in the most efficient mode.
-+	- regulator-on-in-suspend: regulator should be on in suspend state.
-+	- regulator-off-in-suspend: regulator should be off in suspend state.
-+	If node don't include regulator-[on/off]-in-suspend, can't change
-+	regulator state in suspend mode and only should sustain the regulator
-+	state of normal state.
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index ee5e67b..24d5952 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -16,12 +16,20 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
  
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
-@@ -34,6 +61,11 @@ Example:
- 		regulator-max-microvolt = <2500000>;
- 		regulator-always-on;
- 		vin-supply = <&vin>;
++const char *const regulator_states[PM_SUSPEND_MAX + 1] = {
++	[PM_SUSPEND_STANDBY]	= "regulator-state-standby",
++	[PM_SUSPEND_MEM]	= "regulator-state-mem",
++	[PM_SUSPEND_MAX]	= "regulator-state-disk",
++};
 +
-+		regulator-state-mem {
-+			regulator-volt = <1000000>;
-+			regulator-off-in-suspend;
-+		};
- 	};
+ static void of_get_regulation_constraints(struct device_node *np,
+ 					struct regulator_init_data **init_data)
+ {
+-	const __be32 *min_uV, *max_uV;
++	const __be32 *min_uV, *max_uV, *suspend_uV;
+ 	struct regulation_constraints *constraints = &(*init_data)->constraints;
+-	int ret;
++	struct regulator_state *suspend_state;
++	struct device_node *suspend_np;
++	int ret, i;
+ 	u32 pval;
  
- Regulator Consumers:
+ 	constraints->name = of_get_property(np, "regulator-name", NULL);
+@@ -70,6 +78,73 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
+ 	if (!ret)
+ 		constraints->enable_time = pval;
++
++	ret = of_property_read_u32(np, "regulator-initial-state", &pval);
++	if (!ret) {
++		switch (pval) {
++		case PM_SUSPEND_STANDBY:
++		case PM_SUSPEND_MEM:
++		case PM_SUSPEND_MAX:
++			constraints->initial_state = pval;
++			break;
++		default:
++			break;
++		};
++	}
++
++	for (i = 0; i < ARRAY_SIZE(regulator_states); i++) {
++		switch (i) {
++		case PM_SUSPEND_STANDBY:
++			suspend_state = &constraints->state_standby;
++			break;
++		case PM_SUSPEND_MEM:
++			suspend_state = &constraints->state_mem;
++			break;
++		case PM_SUSPEND_MAX:
++			suspend_state = &constraints->state_disk;
++			break;
++		case PM_SUSPEND_ON:
++		case PM_SUSPEND_FREEZE:
++		default:
++			continue;
++		};
++
++		suspend_np = of_get_child_by_name(np, regulator_states[i]);
++		if (!suspend_np || !suspend_state)
++			continue;
++
++		suspend_uV = of_get_property(suspend_np, "regulator-volt",
++						NULL);
++		if (suspend_uV) {
++			suspend_state->uV = be32_to_cpu(*suspend_uV);
++
++			if (suspend_state->uV < constraints->min_uV)
++				suspend_state->uV = constraints->min_uV;
++			if (suspend_state->uV > constraints->max_uV)
++				suspend_state->uV = constraints->max_uV;
++		}
++
++		ret = of_property_read_u32(suspend_np, "regulator-mode", &pval);
++		if (!ret) {
++			u32 regulator_mode = REGULATOR_MODE_FAST
++					| REGULATOR_MODE_NORMAL
++					| REGULATOR_MODE_IDLE
++					| REGULATOR_MODE_STANDBY;
++			if (pval <= regulator_mode)
++				suspend_state->mode = pval;
++		}
++
++		if (of_property_read_bool(suspend_np,
++					"regulator-on-in-suspend"))
++			suspend_state->enabled = true;
++
++		if (of_property_read_bool(suspend_np,
++					"regulator-off-in-suspend"))
++			suspend_state->disabled = true;
++
++		suspend_state = NULL;
++		suspend_np = NULL;
++	}
+ }
+ 
+ /**
 -- 
 1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
