@@ -1,92 +1,70 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Thu, 14 Aug 2014 11:35:56 +0200
-Message-ID: <CABuKBe+0HRCg_gK2r60vS-wKCe7dCT5CzVn5-ck4feM-+aUR4g@mail.gmail.com>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
- <1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
- <CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
- <CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
- <1407983065.3412.8.camel@mtksdaap41>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
+ specific reset
+Date: Thu, 14 Aug 2014 11:36:38 +0200
+Message-ID: <1408008998.4035.43.camel@paszta.hi.pengutronix.de>
+References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
+	 <CACRpkdYfu8HmVCkn9JFh+YP5OPdr8o9nTfoCnkJ7SSpGoenQUg@mail.gmail.com>
+	 <20140708080535.GJ13423@lukather>
+	 <CACRpkdbFPAsu1gE-AVyD=-RxyE7mUJPSbFga7HLh0mxjE-mQuQ@mail.gmail.com>
+	 <1407507789.3354.20.camel@paszta.hi.pengutronix.de>
+	 <20140811173356.GN15297@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1407983065.3412.8.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Joe.C" <srv_yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Berg,
- Anders" <anders.berg@lsi.com>, Mike Turquette <mturquette@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stefan@agner.ch, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140811173356.GN15297@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Houcheng Lin <houcheng@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Stephen Gallimore <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Ulf Hansson <ulf.hansson@linaro.org>, sre@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-08-14 4:24 GMT+02:00 Joe.C <srv_yingjoe.chen@mediatek.com>:
-> On Tue, 2014-08-12 at 11:02 +0200, Matthias Brugger wrote:
->> 2014-08-11 9:15 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
->> > On Thu, Jul 31, 2014 at 6:42 PM, Matthias Brugger
->> > <matthias.bgg@gmail.com> wrote:
->> >
->> >> We enable GTP6 which ungates the arch timer clock. Apart we write the
->> >> frequency with which the timer is running in the CNTFREQ register.
->> >> In the future this should be done in the bootloader.
->> >>
->> >> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->> > (...)
->> >
->> >> +       if (of_machine_is_compatible("mediatek,mt6589")) {
->> >> +               /* set cntfreq register which is not done in bootloader */
->> >> +               asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (13000000));
->> >
->> > I guess this is for something like the ARM arch timer in
->> > drivers/clocksource/arm_arch_timer.c
->> >
->> > Instead of doing this, use the DT property "clock-frequency" on
->> > the ARM arch timer node, as that overrides the CP15 setting.
->> >
->> >> +
->> >> +               /* turn on GPT6 which ungates arch timer clocks */
->> >> +               gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
->> >> +       }
->> >> +
->> >> +       /* enabel clock and set to free-run */
->> >> +       if (gpt_base)
->> >> +               writel(0x31, gpt_base);
->> >
->> > Why is this not done properly in the GPT driver (I guess
->> > in drivers/clocksource/mtk_timer.c) instead of remapping
->> > it and fiddling around in the machine?
->>
->> I didn't put it in the GPT driver, because that would mean, that you
->> need to have the mtk_timer to be able to use the ARM arch timer.
->> From my understanding this are two independent blocks in the SoC.
->> Apart from that, as stated in the commit message, this patch is a
->> workaround until we have a bootloader which does this for us.
->> Therefore I thought the init_time function would be the better place to do this.
+Hi Maxime,
+
+Am Montag, den 11.08.2014, 19:33 +0200 schrieb Maxime Ripard:
+> > Mostly because Maxime and I seem to have a completely different opinion
+> > and nobody else argued one way or the other.
+> 
+> Yep, mostly because I don't see how a generic approach can work.
+> 
+> The existing reset-gpios property only provide the gpio to use, but
+> some informations are encoded in the driver, such as the reset
+> duration, or a reset sequence if any.
+
+The driver should provide the duration. I'd really like to see an
+example where sequencing is necessary.
+I agree that as soon as things get significantly more complicated than
+pulsing a single GPIO, the reset-gpios binding is too limited.
+Still, I'm not happy to mandate a separate gpio reset device for each
+reset line if most devices are simple enough for it to work without.
+What about using reset-gpios for the majority of simple cases and have a
+separate gpio-reset-sequencer driver when multiple GPIO resets have to
+be timed?
+
+> How do you plan on giving that information to your generic driver?
+> 
+> The only solution I can think of would be to add an extra property
+> that your code would parse. But then, you break the existing DT
+> bindings.
 >
-> Can we have a separate node like mt6577-timerfixup then?
-> I'm preparing patch for mt8127 and mt8135. They all need this and use
-> same address and. In current form, I'll have to make this check against
-> a compatible string array.
+> And if we're going to break those bindings, at least do it in a way
+> consistent with reset bindings.
 
-The way to go is to add another of_machine_is_compatible for every
-SoC. If the address is the same just use logical or.
+For the backwards compatibility case, the driver already has to provide
+the duration. I don't want to break the existing bindings at all.
 
-Cheers,
-Matthias
+> Plus, your approach doesn't cover the weird corner cases such as:
+>   - reset-gpio
+>   - wlf,reset-gpios
+>   - phy-reset-gpios
+>   - snps,reset-gpio
+>   - the drivers that need several gpio and expect the reset one as a
+>     positional argument.
+>   - etc.
 
->
-> Joe.C
->
->
+Those are just an issue of the implementation I posted earlier because
+gpiod_get doesn't support custom names other than %s-gpios. This could
+be extended and handled just as well if deemed necessary.
 
-
-
--- 
-motzblog.wordpress.com
+regards
+Philipp
