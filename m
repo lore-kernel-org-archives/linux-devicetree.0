@@ -1,67 +1,40 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v2 2/2] mfd: arizona: Update DT binding to
- support INn_MODE init_data
-Date: Thu, 14 Aug 2014 09:40:47 +0900
-Message-ID: <20140814094047.444a3459@songinha-Samsung-DeskTop-System>
-References: <20140813205456.636abc68@songinha-Samsung-DeskTop-System>
- <20140813121814.GI15833@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Addy Ke <addy.ke@rock-chips.com>
+Subject: [PATCH] spi: rockchip: return 0 if tx_buf and rx_buf are NULL
+Date: Thu, 14 Aug 2014 08:52:24 +0800
+Message-ID: <1407977544-2989-1-git-send-email-addy.ke@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140813121814.GI15833@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
+To: broonie@kernel.org, heiko@sntech.de, dianders@chromium.org, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Charles.
-Thanks for your review.
+To do so, spi communication can use an empty buf to pull up CS.
 
-On Wed, 13 Aug 2014 13:18:14 +0100
-Charles Keepax <ckeepax@opensource.wolfsonmicro.com> wrote:
+This patch merged from ChromiumOS tree.
+Cros_ec use this function to turn off CS and add a delay to ensure
+the rising edge doesn't come too soon after the end of the data.
 
-> On Wed, Aug 13, 2014 at 08:54:56PM +0900, Inha Song wrote:
-> > This patch update DT binding to support INn_MODE init_data. Each
-> > input signal path can be configurated either as a Analogue or
-> > Digital using the INn_MODE registers.
-> > 
-> > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/arizona.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > index 5c7e723..b8c131e 100644
-> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > @@ -42,6 +42,14 @@ Optional properties:
-> >      the chip default will be used.  If present exactly five values must
-> >      be specified.
-> >  
-> > +  - wlf,inmode : A list of INn_MODE register values, where n is the number
-> > +    of input signal. Each input signal path can be configurated either as a
-> > +    Analogue or Digital using the INn_MODE registers. If absent, INn_MODE
-> > +    registers set to 0 by default. If present, values must be specified less
-> > +    than or equal to the number of input singal. If values less than the
-> 
-> Typo here should be "input signals".
+Tested-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+---
+ drivers/spi/spi-rockchip.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Oops, Thanks! I will fix this.
-
-Best regards,
-Inha Song.
-
-> 
-> > +    number of input signal, elements that has not been specifed are set to 0
-> > +    by default.
-> > +
-> >    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-> >      they are being externally supplied. As covered in
-> >      Documentation/devicetree/bindings/regulator/regulator.txt
-> > -- 
-> > 2.0.0.390.gcb682f8
-> > 
-> 
-> Thanks,
-> Charles
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 72fb287..1e3bcfa 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -511,8 +511,8 @@ static int rockchip_spi_transfer_one(struct spi_master *master,
+ 	WARN_ON((readl_relaxed(rs->regs + ROCKCHIP_SPI_SR) & SR_BUSY));
+ 
+ 	if (!xfer->tx_buf && !xfer->rx_buf) {
+-		dev_err(rs->dev, "No buffer for transfer\n");
+-		return -EINVAL;
++		dev_dbg(rs->dev, "No buffer for transfer\n");
++		return 0;
+ 	}
+ 
+ 	rs->speed = xfer->speed_hz;
+-- 
+1.8.3.2
