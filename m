@@ -1,168 +1,101 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3] mmc: implement Driver Stage Register handling
-Date: Thu, 14 Aug 2014 12:29:04 +0200
-Message-ID: <CAPDyKFrbx1BdE6Fw1iDz9Z_Gn7WJe=B6F-4DG==uEDxPWPP5Jw@mail.gmail.com>
-References: <1407944656-14592-1-git-send-email-u.kleine-koenig@pengutronix.de>
-	<CAPDyKFqKVvwFi+JoOG-O1jznOB1UyhQW_ovb_N=+G_FtoqXQXA@mail.gmail.com>
-	<20140814094950.GX5134@pengutronix.de>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
+Date: Thu, 14 Aug 2014 12:35:05 +0200
+Message-ID: <53EC90D9.6080702@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
+ <53E336FA.2050306@samsung.com>
+ <20140814050338.GO16460@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140814094950.GX5134@pengutronix.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Chris Ball <chris@printf.net>, linux-mmc <linux-mmc@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Niebel <Markus.Niebel@tq-group.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20140814050338.GO16460-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 August 2014 11:49, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> Hello Ulf,
+On 08/14/2014 07:03 AM, Sakari Ailus wrote:
+> Hi Jacek,
 >
-> On Thu, Aug 14, 2014 at 11:26:28AM +0200, Ulf Hansson wrote:
->> On 13 August 2014 17:44, Uwe Kleine-K=C3=B6nig
->> <u.kleine-koenig@pengutronix.de> wrote:
->> > From: Sascha Hauer <s.hauer@pengutronix.de>
->> >
->> > Some (e)MMC and SD cards implement a DSR register that allows to t=
-une
->> > raise/fall times and drive strength of the CMD and DATA outputs.
->> > The values to use depend on the card in use and the host.
->> > It might be needed to reduce the drive strength to prevent voltage=
- peaks
->> > above the host's specification.
->> >
->> > Implement a 'dsr' devicetree property that allows to specify the v=
-alue
->> > to set the DSR to. For non-dt setups the new members of mmc_host c=
-an be
->> > set by board code.
->> >
->> > This patch was initially authored by Sascha Hauer. It contains
->> > improvements authored by Markus Niebel and Uwe Kleine-K=C3=B6nig.
->> >
->> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->> > Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
->> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.=
-de>
->> > ---
->> > Hello,
->> >
->> > earlier incarnations of this patch can be found at
->> >
->> >         http://lists.infradead.org/pipermail/linux-arm-kernel/2014=
--July/272983.html
->> >         http://lists.infradead.org/pipermail/linux-arm-kernel/2014=
--May/259281.html
->> >
->> > I need this functionallity on a machine where the default driver s=
-trength of
->> > the eMMC chip is too big for the SoC. It seems to work without ada=
-pting the
->> > drive strength, but the vendor reports that the DSR should be set =
-to a certain
->> > value to prevent poor signal integrity and increased wearout.
->> >
->> > Best regards
->> > Uwe
->> >
->> >  Documentation/devicetree/bindings/mmc/mmc.txt |  2 ++
->> >  drivers/mmc/core/host.c                       |  8 ++++++++
->> >  drivers/mmc/core/mmc.c                        |  8 ++++++++
->> >  drivers/mmc/core/mmc_ops.c                    | 21 ++++++++++++++=
-+++++++
->> >  drivers/mmc/core/mmc_ops.h                    |  1 +
->> >  drivers/mmc/core/sd.c                         |  8 ++++++++
->> >  include/linux/mmc/card.h                      |  3 ++-
->> >  include/linux/mmc/host.h                      |  3 +++
->> >  8 files changed, 53 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Docum=
-entation/devicetree/bindings/mmc/mmc.txt
->> > index 3c18001dfd5d..05bac770b4d0 100644
->> > --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->> > +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->> > @@ -40,6 +40,8 @@ Optional properties:
->> >  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->> >  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
->> >  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
->> > +- dsr: Value the card's (optional) Driver Stage Register (DSR) sh=
-ould be
->> > +  programmed with.
+> On Thu, Aug 07, 2014 at 10:21:14AM +0200, Jacek Anaszewski wrote:
+>> On 08/06/2014 08:53 AM, Sakari Ailus wrote:
+>>> Hi Jacek,
+>>>
+>>> On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
+>>> ...
+>>>> 1) Who should register V4L2 Flash sub-device?
+>>>>
+>>>> LED Flash Class devices, after introduction of the Flash Manager,
+>>>> are not tightly coupled with any media controller. They are maintained
+>>>> by the Flash Manager and made available for dynamic assignment to
+>>>> any media system they are connected to through multiplexing devices.
+>>>>
+>>>> In the proposed rough solution, when support for V4L2 Flash sub-devices
+>>>> is enabled, there is a v4l2_device created for them to register in.
+>>>> This however implies that V4L2 Flash device will not be available
+>>>> in any media controller, which calls its existence into question.
+>>>>
+>>>> Therefore I'd like to consult possible ways of solving this issue.
+>>>> The option I see is implementing a mechanism for moving V4L2 Flash
+>>>> sub-devices between media controllers. A V4L2 Flash sub-device
+>>>> would initially be assigned to one media system in the relevant
+>>>> device tree binding, but it could be dynamically reassigned to
+>>>> the other one. However I'm not sure if media controller design
+>>>> is prepared for dynamic modifications of its graph and how many
+>>>> modifications in the existing drivers this solution would require.
+>>>
+>>> Do you have a use case where you would need to strobe a flash from multiple
+>>> media devices at different times, or is this entirely theoretical? Typically
+>>> flash controllers are connected to a single source of hardware strobe (if
+>>> there's one) since the flash LEDs are in fact mounted next to a specific
+>>> camera sensor.
 >>
->> Let's clarify that this is a 16 bit value.
-> ok.
->
->> >  *NOTE* on CD and WP polarity. To use common for all SD/MMC host c=
-ontrollers line
->> >  polarity properties, we have to fix the meaning of the "normal" a=
-nd "inverted"
->> > diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
->> > index 95cceae96944..52e83f389428 100644
->> > --- a/drivers/mmc/core/host.c
->> > +++ b/drivers/mmc/core/host.c
->> > @@ -452,6 +452,14 @@ int mmc_of_parse(struct mmc_host *host)
->> >         if (of_find_property(np, "mmc-hs400-1_2v", &len))
->> >                 host->caps2 |=3D MMC_CAP2_HS400_1_2V | MMC_CAP2_HS=
-200_1_2V_SDR;
->> >
->> > +       if (of_find_property(np, "dsr", &len)) {
->> > +               u32 tmp;
->> > +
->> > +               of_property_read_u32(np, "dsr", &tmp);
->> > +               host->dsr_req =3D 1;
->> > +               host->dsr =3D (u16)tmp;
->> > +       }
->> > +
+>> I took into account such arrangements in response to your message
+>> [1], where you were considering configurations like "one flash but
+>> two
+>> cameras", "one camera and two flashes". And you also called for
+>> proposing generic solution.
 >>
->> Let's simplify the above with just:
->> of_property_read_u16(np, "dsr", &host->dsr);
-> ok.
->
->> >         return 0;
->> >
->> >  out:
->> > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
->> > index 793c6f7ddb04..fdc1ac1360c4 100644
->> > --- a/drivers/mmc/core/mmc.c
->> > +++ b/drivers/mmc/core/mmc.c
->> > @@ -162,6 +162,7 @@ static int mmc_decode_csd(struct mmc_card *car=
-d)
->> >         csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
->> >         csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
->> >         csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
->> > +       csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
->> >         csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
->> >         csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
->> >         csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
->> > @@ -1273,6 +1274,13 @@ static int mmc_init_card(struct mmc_host *h=
-ost, u32 ocr,
->> >         }
->> >
->> >         /*
->> > +        * handling only for cards supporting DSR and hosts reques=
-ting
->> > +        * DSR configuration
->> > +        */
->> > +       if (card->csd.dsr_imp && host->dsr_req)
+>> One flash and two (or more) cameras case is easily conceivable -
+>> You even mentioned stereo cameras. One camera and many flashes
+>> arrangement might be useful in case of some professional devices which
+>> might be designed so that they would be able to apply different scene
+>> lighting. I haven't heard about such devices, but as you said
+>> such a configuration isn't unthinkable.
 >>
->> We don't need host->dsr_req. Instead just check host->dsr.
-> I think this doesn't work. What is your actual suggestion?
+>>> If this is a real issue the way to solve it would be to have a single media
+>>> device instead of many.
+>>
+>> I was considering adding media device, that would be a representation
+>> of a flash manager, gathering all the registered flashes. Nonetheless,
+>> finally I came to conclusion that a v4l2-device alone should suffice,
+>> just to provide a Flash Manager representation allowing for
+>> v4l2-flash sub-devices to register in.
+>> All the features provided by the media device are useless in case
+>> of a set of V4L2 Flash sub-devices. They couldn't have any linkage
+>> in such a device. The only benefit from having media device gathering
+>> V4L2 Flash devices would be possibility of listing them.
 >
->         if (card->csd.dsr_imp && host->dsr)
+> Not quite so. The flash is associated to the sensor (and lens) using the
+> group ID in the Media controller. The user space doesn't need to "know" this
+> association.
 >
-> ? The intended semantic is that if the device tree has:
->
->         dsr =3D <$somevalue>;
->
-> the DSR is written, and if there is no such property, DSR is unhandle=
-d.
-> If you just check for host->dsr being !=3D 0, how to differenciate be=
-tween
->
->         dsr =3D <0>;
+> More complex use cases such as the above may need extensions to the Media
+> controller API.
 
-I didn't think that was a valid mask? If so, you right!
+I think that I have unnecessarily complicated the issue. Generally
+there will be always one media controller created for all camera
+sensors available in the system. If there is a single media controller
+then we can easily use async subdev registration API. A media-dev
+driver would have to parse list of flash device phandles from
+the ISP device's DT node and register them as async sub-devices.
 
-Kind regards
-Uffe
+Best Regards,
+Jacek Anaszewski
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
