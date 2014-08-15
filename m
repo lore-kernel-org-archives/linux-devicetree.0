@@ -1,110 +1,43 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv10 2/2] arm: dts: Add Altera SDRAM EDAC bindings & devicetree entries.
-Date: Fri, 15 Aug 2014 08:42:19 +0200
-Message-ID: <73vbputf04.fsf@dude.hi.pengutronix.de>
-References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com> <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
+Date: Fri, 15 Aug 2014 09:01:50 +0200
+Message-ID: <3533813.fmr1R5OBqN@wuerfel>
+References: <1408061487-20984-1-git-send-email-f.fainelli@gmail.com> <1408061487-20984-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408061487-20984-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi!
-
-tthayer@opensource.altera.com writes:
-
-> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
->
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2: Changes to SoC SDRAM EDAC code.
->
-> v3: Implement code suggestions for SDRAM EDAC code.
->
-> v4: Remove syscon from SDRAM controller bindings.
->
-> v5: No Change, bump version for consistency.
->
-> v6: Only map the ctrlcfg register as syscon.
->
-> v7: No change. Bump for consistency.
->
-> v8: No change. Bump for consistency.
->
-> v9: Changes to support a MFD SDRAM controller with nested EDAC.
->
-> v10: Revert to using syscon based on feedback.
-> ---
->  .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
->  arch/arm/boot/dts/socfpga.dtsi                     |   11 +++++++++++
->  2 files changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-> new file mode 100644
-> index 0000000..d0ce01d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-> @@ -0,0 +1,15 @@
-> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
-> +The EDAC accesses a range of registers in the SDRAM controller.
+On Thursday 14 August 2014 17:11:23 Florian Fainelli wrote:
+> +static void __init bcm63xx_init(void)
+> +{
+> +       of_platform_populate(NULL, of_default_bus_match_table, NULL,
+> +               &platform_bus);
+> +       l2x0_of_init(0, ~0);
+> +}
 > +
-> +Required properties:
-> +- compatible : should contain "altr,sdram-edac";
-> +- altr,sdr-syscon : phandle of the sdr module
-> +- interrupts : Should contain the SDRAM ECC IRQ in the
-> +	appropriate format for the IRQ controller.
+> +static const char * const bcm63xx_dt_compat[] = {
+> +       "brcm,bcm63138",
+> +       NULL
+> +};
 > +
-> +Example:
-> +	sdramedac {
-> +		compatible = "altr,sdram-edac";
-> +		altr,sdr-syscon = <&sdr>;
-> +		interrupts = <0 39 4>;
-> +	};
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 4676f25..45b361e 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -603,6 +603,17 @@
->  			};
->  		};
->  
-> +		sdr: sdr@ffc25000 {
-> +			compatible = "syscon";
-> +			reg = <0xffc25000 0x1000>;
-> +		};
-> +
-> +		sdramedac {
-> +			compatible = "altr,sdram-edac";
-> +			altr,sdr-syscon = <&sdr>;
-> +			interrupts = <0 39 4>;
-> +		};
-> +
->  		L2: l2-cache@fffef000 {
->  			compatible = "arm,pl310-cache";
->  			reg = <0xfffef000 0x1000>;
+> +DT_MACHINE_START(BCM63XXX_DT, "BCM63xx DSL SoC")
+> +       .init_machine   = bcm63xx_init,
+> +       .dt_compat      = bcm63xx_dt_compat,
+> +MACHINE_END
+> 
 
-Sorry, but I personally still don't like this approach.
+You should be able to remove that bcm63xx_init() function if you add
+the l2c_aux_val/l2c_aux_mask settings in the machine descriptor
+instead.
 
-If we do it like this however, shouldn't the different regions of the
-SDR (EDAC, FPGAPORTRST, ...) at least be child nodes of the syscon?
-That seems to match the syscon binding and describes the actual hardware
-better IMHO.
-Oh, and "reg = <...>" for the sdram-edac, maybe ?
-How would I know where the start address of the EDAC is, if I would use
-this DT on another OS where I don't have the same driver?
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           | Steffen Trumtrar            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
