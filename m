@@ -1,114 +1,41 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 15 Aug 2014 15:29:41 +0300
-Message-ID: <87tx5ehr62.fsf@nvidia.com>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<87a9774lf5.fsf@nvidia.com> <20140815115110.GO27466@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140815115110.GO27466-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2] of/irq: lookup 'interrupts-extended' property first
+Date: Fri, 15 Aug 2014 13:51:28 +0100
+Message-ID: <20140815125128.A1E62C410ED@trevor.secretlab.ca>
+References: <1407355347-30286-1-git-send-email-f.fainelli@gmail.com>
+	<20140806201500.GP3711@ld-irv-0074>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140806201500.GP3711@ld-irv-0074>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 6 Aug 2014 13:15:00 -0700, Brian Norris <computersforpeace@gmail.com> wrote:
+> On Wed, Aug 06, 2014 at 01:02:27PM -0700, Florian Fainelli wrote:
+> > In case the Device Tree blob passed by the boot agent supplies both an
+> > 'interrupts-extended' and an 'interrupts' property in order to allow for
+> > older kernels to be usable, prefer the new-style 'interrupts-extended'
+> > property which conveys a lot more information.
+> > 
+> > This allows us to have bootloaders willingly maintaining backwards
+> > compatibility with older kernels without entirely deprecating the
+> > 'interrupts' property.
+> > 
+> > Update the bindings documentation to describe a situation where both the
+> > 'interrupts-extended' and the 'interrupts' property are present, and
+> > which one takes precedence over the other.
+> > 
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> Might we add this?
+> 
+> Cc: <stable@vger.kernel.org> # 3.13+
+> 
+> Brian
 
-Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> writes:
+Applied, thanks.
 
-> On Thu, Aug 14, 2014 at 07:47:42AM +0100, Hiroshi Doyu wrote:
->> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> 
->> > +Multiple-master IOMMU:
->> > +----------------------
->> > +
->> > +       iommu {
->> > +               /* the specifier represents the ID of the master */
->> > +               #iommu-cells = <1>;
->> > +       };
->> > +
->> > +       master@1 {
->> > +               /* device has master ID 42 in the IOMMU */
->> > +               iommus = <&{/iommu} 42>;
->> > +       };
->> > +
->> > +       master@2 {
->> > +               /* device has master IDs 23 and 24 in the IOMMU */
->> > +               iommus = <&{/iommu} 23>, <&{/iommu} 24>;
->> > +       };
->> 
->> I think that this "master ID" will be parsed in IOMMU driver. For
->> example, ARM,SMMU expects "streamID" as "master ID", right?
->> 
->> If a SoC has a feature to configure to assign streamID to devices at
->> runtime, "streamID" is not equal to "master ID".
->> 
->>   iommus = <&{/smmu} "soc specific master ID">;
->> 
->> "soc master ID" needs to be translated into "streamID" by SoC SW. It
->> seems that ARM,SMMU kernel driver doesn't expect this kind of ID
->> translation. If ARM,SMMU kernel driver is used as is, "soc master ID"
->> would be incompatible? ARM,SMMU needs such translation before
->> parsing. Is this my understanding right?
->> 
->> If so I think that this master ID configuration/translation may be quite
->> reasonable requirment for SoC using ARM,SMMU.
->> 
->> Can we consider this ID translation within ARM,SMMU compatibility?
->> 
->> IOW, is it possible to implement some SoC specific hook for ID
->> translation/configuration in ARM,SMMU kernel driver?
->
-> I think there's some confusion here. The ARM architected SMMU does not
-> perform any StreamID translation -- it sees an incoming ID and uses that to
-> lookup a set of translation tables. However, for hotpluggable buses (e.g.
-> PCI), we need a way to communicate the StreamIDs for a newly discovered
-> device to the SMMU. I expect that this would be described as a translation
-> from another ID (e.g. requester id for PCI), so *that* is where the
-> translation occurs.
->
-> This translation can be described as a simple base + offset calculation,
-> e.g. StreamID = RequesterID + offset. Ideally, you'd have one offset per
-> host controller (and described in the host controller DT node), but you
-> could also imagine building tables where each RequesterID maps to a
-> different StreamID.
->
-> The final thing to mention is that some SoCs may have device hotplug
-> architectures that aren't like PCIe, so we may well need glue code there to
-> `allocate' StreamIDs from a fixed portion of the numberspace.
-
-Ok, I can assume that, when parsing generic IOMMU binding, SoC specific
-callback could be called from ARM,SMMU driver to assign allocated
-"StreamIDs" to thier "RequesterIDs".
-
-IOW, IOMMU generic binding for ARM,SMMU can have RequresterID instead of
-StreamID.
-
-  Not:
-  	iommus = <&{/arm-smmu} "StreamID">;
-  
-  Instead, can be:
-  	iommus = <&{/arm-smmu} "RequresterID">;
-
-If I extend the above, even ARM,SMMU driver could have any number of
-params, which SoC requires with keeping "arm,mmu-*" compatibility?
-
-  	iommus = <&{/arm-msmmu} param1 param2 param3 param4 .....>;
-
-How to parse params depends on SoC. Parsing params is done at SoC
-callback, right?
-
-> We don't need to solve all of these problems in one go, but the base +
-> offset code will certainly be useful; not just for the SMMU but also for
-> the GIC (where we have DeviceIDs). Mark Rutland is looking at this.
-
-Any pointer would be really appreciated.
+g.
