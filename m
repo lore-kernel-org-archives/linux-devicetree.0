@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/5] ARM: BCM63XX: add BCM63138 minimal Device Tree
-Date: Thu, 14 Aug 2014 17:11:25 -0700
-Message-ID: <1408061487-20984-4-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH v2 5/5] MAINTAINERS: add entry for the Broadcom BCM63xx ARM SoCs
+Date: Thu, 14 Aug 2014 17:11:27 -0700
+Message-ID: <1408061487-20984-6-git-send-email-f.fainelli@gmail.com>
 References: <1408061487-20984-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1408061487-20984-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,175 +10,36 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a very minimalistic BCM63138 Device Tree include file which
-describes the BCM63138 SoC with only the basic set of required
-peripherals:
-
-- Cortex A9 CPUs
-- ARM GIC
-- ARM SCU
-- PL310 Level-2 cache controller
-- ARM TWD & Global timers
-- ARM TWD watchdog
-- legacy MIPS bus (UBUS)
-- BCM6345-style UARTs (disabled by default)
-
-Since the PL310 L2 cache controller does not come out of reset with
-correct default values, we need to override the 'cache-sets' and
-'cache-size' properties to get its geometry right.
+Add a MAINTAINERS entry covering all the Broadcom BCM63xx ARM DSL SoCs
+files along with the relevant git tree and mailing-list.
 
 Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 Changes in v2:
-- removed buses 'reg' properties since they are unused
-- align buses 'ranges' properties on a nicer boundary
-- moved mpcore peripherals one level higher in the axi bus
-- added uart nodes since we have a driver for it (bcm63xx_uart)
+- rebased against latest changes
 
- arch/arm/boot/dts/bcm63138.dtsi | 134 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm63138.dtsi
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-new file mode 100644
-index 000000000000..b7ce4da3d742
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm63138.dtsi
-@@ -0,0 +1,134 @@
-+/*
-+ * Broadcom BCM63138 DSL SoCs Device Tree
-+ */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7e2eb4c646e3..2075bb579853 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2013,6 +2013,14 @@ F:	arch/arm/mach-bcm/bcm_5301x.c
+ F:	arch/arm/boot/dts/bcm5301x.dtsi
+ F:	arch/arm/boot/dts/bcm470*
+ 
++BROADCOM BCM63XX ARM ARCHITECTURE
++M:	Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
++T:	git git://git.github.com/broadcom/arm-bcm63xx
++S:	Maintained
++F:	arch/arm/mach-bcm/bcm63xx.c
++F:	arch/arm/include/debug/bcm63xx.S
 +
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	compatible = "brcm,bcm63138";
-+	model = "Broadcom BCM63138 DSL SoC";
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		uart0 = &serial0;
-+		uart1 = &serial1;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <1>;
-+		};
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		arm_timer_clk: arm_timer_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <500000000>;
-+		};
-+
-+		periph_clk: periph_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+			clock-output-names = "periph";
-+		};
-+	};
-+
-+	/* ARM bus */
-+	axi@80000000 {
-+		compatible = "simple-bus";
-+		ranges = <0 0x80000000 0x84000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		L2: cache-controller@1d000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0x1d000 0x1000>;
-+			cache-unified;
-+			cache-level = <2>;
-+			cache-sets = <16>;
-+			cache-size = <0x80000>;
-+			interrupts = <GIC_PPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		scu: scu@1e000 {
-+			compatible = "arm,cortex-a9-scu";
-+			reg = <0x1e000 0x100>;
-+		};
-+
-+		gic: interrupt-controller@1e100 {
-+			compatible = "arm,cortex-a9-gic";
-+			reg = <0x1f000 0x1000
-+				0x1e100 0x100>;
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+		};
-+
-+		global_timer: timer@1e200 {
-+			compatible = "arm,cortex-a9-global-timer";
-+			reg = <0x1e200 0x20>;
-+			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&arm_timer_clk>;
-+		};
-+
-+		local_timer: local-timer@1e600 {
-+			compatible = "arm,cortex-a9-twd-timer";
-+			reg = <0x1e600 0x20>;
-+			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&arm_timer_clk>;
-+		};
-+
-+		twd_watchdog: watchdog@1e620 {
-+			compatible = "arm,cortex-a9-twd-wdt";
-+			reg = <0x1e620 0x20>;
-+			interupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	/* Legacy UBUS base */
-+	ubus@fffe8000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xfffe8000 0x8100>;
-+
-+		serial0: uart@600 {
-+			compatible = "brcm,bcm6345-uart";
-+			reg = <0x600 0x1b>;
-+			interrupts = <GIC_SPI 32 0>;
-+			clocks = <&periph_clk>;
-+			clock-names = "periph";
-+			status = "disabled";
-+		};
-+
-+		serial1: uart@620 {
-+			compatible = "brcm,bcm6345-uart";
-+			reg = <0x620 0x1b>;
-+			interrupts = <GIC_SPI 33 0>;
-+			clocks = <&periph_clk>;
-+			clock-names = "periph";
-+			status = "disabled";
-+		};
-+	};
-+};
+ BROADCOM BCM7XXX ARM ARCHITECTURE
+ M:	Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ M:	Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 -- 
 1.9.1
 
