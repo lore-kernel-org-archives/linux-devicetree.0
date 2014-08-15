@@ -1,107 +1,122 @@
-From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH 2/2 V4] irqchip: gicv2m: Add support for multiple MSI
- for ARM64 GICv2m
-Date: Fri, 15 Aug 2014 09:53:25 -0500
-Message-ID: <53EE1EE5.3060103@amd.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 2/2 V4] irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+Date: Fri, 15 Aug 2014 16:08:50 +0100
+Message-ID: <877g29rdrx.fsf@approximate.cambridge.arm.com>
 References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
 	<1407942041-3291-3-git-send-email-suravee.suthikulpanit@amd.com>
- <87k369ri9k.fsf@approximate.cambridge.arm.com>
+	<87k369ri9k.fsf@approximate.cambridge.arm.com>
+	<53EE1EE5.3060103@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <87k369ri9k.fsf@approximate.cambridge.arm.com>
+In-Reply-To: <53EE1EE5.3060103@amd.com> (Suravee Suthikulanit's message of
+	"Fri, 15 Aug 2014 15:53:25 +0100")
 Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
+To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
 Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/15/2014 8:31 AM, Marc Zyngier wrote:
-> Hi Suravee,
+On Fri, Aug 15 2014 at  3:53:25 pm BST, Suravee Suthikulanit <suravee.suthikulpanit@amd.com> wrote:
+> On 8/15/2014 8:31 AM, Marc Zyngier wrote:
+>> Hi Suravee,
+>>
+>>> +/*
+>>> + * ARM64 function for seting up MSI irqs.
+>>> + * Copied from driver/pci/msi.c: arch_setup_msi_irqs().
+>>> + */
+>>> +int arm64_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+>>> +{
+>>> +	struct msi_desc *entry;
+>>> +	int ret;
+>>> +
+>>> +	if (type == PCI_CAP_ID_MSI && nvec > 1)
+>>> +		return 1;
+>>> +
+>>> +	list_for_each_entry(entry, &dev->msi_list, list) {
+>>> +		ret = arch_setup_msi_irq(dev, entry);
+>>> +		if (ret < 0)
+>>> +			return ret;
+>>> +		if (ret > 0)
+>>> +			return -ENOSPC;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>
+>> I'm going to reiterate what I said last time: Why do we need this?
 >
->> +/*
->> + * ARM64 function for seting up MSI irqs.
->> + * Copied from driver/pci/msi.c: arch_setup_msi_irqs().
->> + */
->> +int arm64_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
->> +{
->> +	struct msi_desc *entry;
->> +	int ret;
->> +
->> +	if (type == PCI_CAP_ID_MSI && nvec > 1)
->> +		return 1;
->> +
->> +	list_for_each_entry(entry, &dev->msi_list, list) {
->> +		ret = arch_setup_msi_irq(dev, entry);
->> +		if (ret < 0)
->> +			return ret;
->> +		if (ret > 0)
->> +			return -ENOSPC;
->> +	}
->> +
->> +	return 0;
->> +}
+> [Suravee] Marc, I understand what you described last time but I think 
+> there is one point that missing here. See below.
 >
-> I'm going to reiterate what I said last time: Why do we need this?
-
-[Suravee] Marc, I understand what you described last time but I think 
-there is one point that missing here. See below.
-
-> So far, we have two MSI-capable controllers on their way upstream:
-> GICv2m and GICv3. Both are perfectly capable of handling more than a
-> single MSI per device.
-
-[Suravee] I am aware of this.
-
-> So why should we cater for this? My gut feeling is that we should just
-> have:
+>> So far, we have two MSI-capable controllers on their way upstream:
+>> GICv2m and GICv3. Both are perfectly capable of handling more than a
+>> single MSI per device.
 >
-> int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
-> {
->          struct msi_desc *entry;
->          int ret;
+> [Suravee] I am aware of this.
 >
->          /*
->           * So far, all our MSI controllers are capable of handling more
->           * than a single MSI per device. Should we encounter less
->           * capable devices, we'll consider doing something special for
->           * them.
->           */
->          list_for_each_entry(entry, &dev->msi_list, list) {
->                  ret = arch_setup_msi_irq(dev, entry);
->                  if (ret < 0)
->                          return ret;
->                  if (ret > 0)
->                          return -ENOSPC;
->          }
+>> So why should we cater for this? My gut feeling is that we should just
+>> have:
+>>
+>> int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+>> {
+>>          struct msi_desc *entry;
+>>          int ret;
+>>
+>>          /*
+>>           * So far, all our MSI controllers are capable of handling more
+>>           * than a single MSI per device. Should we encounter less
+>>           * capable devices, we'll consider doing something special for
+>>           * them.
+>>           */
+>>          list_for_each_entry(entry, &dev->msi_list, list) {
+>>                  ret = arch_setup_msi_irq(dev, entry);
+>>                  if (ret < 0)
+>>                          return ret;
+>>                  if (ret > 0)
+>>                          return -ENOSPC;
+>>          }
+>>
+>>          return 0;
+>> }
+>>
+>> and nothing else. Your driver should be able to retrieve the number of
+>> MSI needed by the device, and allocate them. GICv3 manages it, and so
+>> should GICv2m.
+>>
 >
->          return 0;
-> }
->
-> and nothing else. Your driver should be able to retrieve the number of
-> MSI needed by the device, and allocate them. GICv3 manages it, and so
-> should GICv2m.
->
+> [Suravee] Multi-MSI and MSI-x are not the same. For MSI-X, you can treat 
+> each of the MSI separately since it MSI-X capability structure has a 
+> table specific for each one of them.  For Multi-MSI, there is only one 
+> MSI capability structure which control all of them, and you need to 
+> program the "multiple-message enable" field with the encoding for 
+> "power-of-two", and therefore must be in contiguous range.
 
-[Suravee] Multi-MSI and MSI-x are not the same. For MSI-X, you can treat 
-each of the MSI separately since it MSI-X capability structure has a 
-table specific for each one of them.  For Multi-MSI, there is only one 
-MSI capability structure which control all of them, and you need to 
-program the "multiple-message enable" field with the encoding for 
-"power-of-two", and therefore must be in contiguous range.
+I fully understand this.
 
-Your logic above is what the standard MSI-x setup code is using. It is 
-not handling of how many it can allocate all at once.
+> Your logic above is what the standard MSI-x setup code is using. It is 
+> not handling of how many it can allocate all at once.
 
-As for sharing the logic b/w GICv2m and GICv3, unless they are sharing 
-the same common data structure (e.g. the struct v2m which contans 
-msi_chip), and the allocation function (e.g. generic 
-gic_alloc_msi_irqs()), you pretty much need to do this separately since 
-we need to walk the msi_chip back to its container structure.
+This logic can also be applied to MSI, provided that you start by
+allocating all the possible MSIs on the first call to your setup
+function.
 
-I am not saying this cannot be done, but we need to work out the detail 
-together b/w GICv2m and GICv3.
+> As for sharing the logic b/w GICv2m and GICv3, unless they are sharing 
+> the same common data structure (e.g. the struct v2m which contans 
+> msi_chip), and the allocation function (e.g. generic 
+> gic_alloc_msi_irqs()), you pretty much need to do this separately since 
+> we need to walk the msi_chip back to its container structure.
+
+I'm not suggesting we should share code between the GICv3 ITS and the
+v2m block (you definitely don't want the GICv3 madness to creep into
+your code).
+
+What I'm saying is that you can work out how many vectors you need from
+the initial call to gicv2m_setup_msi_irq, and just make sure they are
+effectively contiguous (you already have the code for this in
+alloc_msi_irq).
 
 Thanks,
 
-Suravee
+	M.
+-- 
+Jazz is not dead. It just smells funny.
