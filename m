@@ -1,104 +1,110 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
-Date: Fri, 15 Aug 2014 07:48:12 +0300
-Message-ID: <20140815044811.GP16460@valkosipuli.retiisi.org.uk>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
- <53E336FA.2050306@samsung.com>
- <20140814050338.GO16460@valkosipuli.retiisi.org.uk>
- <53EC90D9.6080702@samsung.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv10 2/2] arm: dts: Add Altera SDRAM EDAC bindings & devicetree entries.
+Date: Fri, 15 Aug 2014 08:42:19 +0200
+Message-ID: <73vbputf04.fsf@dude.hi.pengutronix.de>
+References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com> <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53EC90D9.6080702@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 14, 2014 at 12:35:05PM +0200, Jacek Anaszewski wrote:
-> On 08/14/2014 07:03 AM, Sakari Ailus wrote:
-> >Hi Jacek,
-> >
-> >On Thu, Aug 07, 2014 at 10:21:14AM +0200, Jacek Anaszewski wrote:
-> >>On 08/06/2014 08:53 AM, Sakari Ailus wrote:
-> >>>Hi Jacek,
-> >>>
-> >>>On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
-> >>>...
-> >>>>1) Who should register V4L2 Flash sub-device?
-> >>>>
-> >>>>LED Flash Class devices, after introduction of the Flash Manager,
-> >>>>are not tightly coupled with any media controller. They are maintained
-> >>>>by the Flash Manager and made available for dynamic assignment to
-> >>>>any media system they are connected to through multiplexing devices.
-> >>>>
-> >>>>In the proposed rough solution, when support for V4L2 Flash sub-devices
-> >>>>is enabled, there is a v4l2_device created for them to register in.
-> >>>>This however implies that V4L2 Flash device will not be available
-> >>>>in any media controller, which calls its existence into question.
-> >>>>
-> >>>>Therefore I'd like to consult possible ways of solving this issue.
-> >>>>The option I see is implementing a mechanism for moving V4L2 Flash
-> >>>>sub-devices between media controllers. A V4L2 Flash sub-device
-> >>>>would initially be assigned to one media system in the relevant
-> >>>>device tree binding, but it could be dynamically reassigned to
-> >>>>the other one. However I'm not sure if media controller design
-> >>>>is prepared for dynamic modifications of its graph and how many
-> >>>>modifications in the existing drivers this solution would require.
-> >>>
-> >>>Do you have a use case where you would need to strobe a flash from multiple
-> >>>media devices at different times, or is this entirely theoretical? Typically
-> >>>flash controllers are connected to a single source of hardware strobe (if
-> >>>there's one) since the flash LEDs are in fact mounted next to a specific
-> >>>camera sensor.
-> >>
-> >>I took into account such arrangements in response to your message
-> >>[1], where you were considering configurations like "one flash but
-> >>two
-> >>cameras", "one camera and two flashes". And you also called for
-> >>proposing generic solution.
-> >>
-> >>One flash and two (or more) cameras case is easily conceivable -
-> >>You even mentioned stereo cameras. One camera and many flashes
-> >>arrangement might be useful in case of some professional devices which
-> >>might be designed so that they would be able to apply different scene
-> >>lighting. I haven't heard about such devices, but as you said
-> >>such a configuration isn't unthinkable.
-> >>
-> >>>If this is a real issue the way to solve it would be to have a single media
-> >>>device instead of many.
-> >>
-> >>I was considering adding media device, that would be a representation
-> >>of a flash manager, gathering all the registered flashes. Nonetheless,
-> >>finally I came to conclusion that a v4l2-device alone should suffice,
-> >>just to provide a Flash Manager representation allowing for
-> >>v4l2-flash sub-devices to register in.
-> >>All the features provided by the media device are useless in case
-> >>of a set of V4L2 Flash sub-devices. They couldn't have any linkage
-> >>in such a device. The only benefit from having media device gathering
-> >>V4L2 Flash devices would be possibility of listing them.
-> >
-> >Not quite so. The flash is associated to the sensor (and lens) using the
-> >group ID in the Media controller. The user space doesn't need to "know" this
-> >association.
-> >
-> >More complex use cases such as the above may need extensions to the Media
-> >controller API.
-> 
-> I think that I have unnecessarily complicated the issue. Generally
-> there will be always one media controller created for all camera
-> sensors available in the system. If there is a single media controller
-> then we can easily use async subdev registration API. A media-dev
-> driver would have to parse list of flash device phandles from
-> the ISP device's DT node and register them as async sub-devices.
 
-Currently the media device is created by a driver which is most of the time
-the ISP driver on embedded systems. This driver is also responsible for
-registering the flash device (nodes) to the media device. So "will" is the
-word, I think.
+Hi!
+
+tthayer@opensource.altera.com writes:
+
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>
+> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
+>
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2: Changes to SoC SDRAM EDAC code.
+>
+> v3: Implement code suggestions for SDRAM EDAC code.
+>
+> v4: Remove syscon from SDRAM controller bindings.
+>
+> v5: No Change, bump version for consistency.
+>
+> v6: Only map the ctrlcfg register as syscon.
+>
+> v7: No change. Bump for consistency.
+>
+> v8: No change. Bump for consistency.
+>
+> v9: Changes to support a MFD SDRAM controller with nested EDAC.
+>
+> v10: Revert to using syscon based on feedback.
+> ---
+>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     |   11 +++++++++++
+>  2 files changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+> new file mode 100644
+> index 0000000..d0ce01d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+> @@ -0,0 +1,15 @@
+> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
+> +The EDAC accesses a range of registers in the SDRAM controller.
+> +
+> +Required properties:
+> +- compatible : should contain "altr,sdram-edac";
+> +- altr,sdr-syscon : phandle of the sdr module
+> +- interrupts : Should contain the SDRAM ECC IRQ in the
+> +	appropriate format for the IRQ controller.
+> +
+> +Example:
+> +	sdramedac {
+> +		compatible = "altr,sdram-edac";
+> +		altr,sdr-syscon = <&sdr>;
+> +		interrupts = <0 39 4>;
+> +	};
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 4676f25..45b361e 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -603,6 +603,17 @@
+>  			};
+>  		};
+>  
+> +		sdr: sdr@ffc25000 {
+> +			compatible = "syscon";
+> +			reg = <0xffc25000 0x1000>;
+> +		};
+> +
+> +		sdramedac {
+> +			compatible = "altr,sdram-edac";
+> +			altr,sdr-syscon = <&sdr>;
+> +			interrupts = <0 39 4>;
+> +		};
+> +
+>  		L2: l2-cache@fffef000 {
+>  			compatible = "arm,pl310-cache";
+>  			reg = <0xfffef000 0x1000>;
+
+Sorry, but I personally still don't like this approach.
+
+If we do it like this however, shouldn't the different regions of the
+SDR (EDAC, FPGAPORTRST, ...) at least be child nodes of the syscon?
+That seems to match the syscon binding and describes the actual hardware
+better IMHO.
+Oh, and "reg = <...>" for the sdram-edac, maybe ?
+How would I know where the start address of the EDAC is, if I would use
+this DT on another OS where I don't have the same driver?
+
+Regards,
+Steffen
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Pengutronix e.K.                           | Steffen Trumtrar            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
