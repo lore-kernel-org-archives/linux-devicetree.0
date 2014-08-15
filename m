@@ -1,91 +1,52 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 15 Aug 2014 12:51:11 +0100
-Message-ID: <20140815115110.GO27466@arm.com>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<87a9774lf5.fsf@nvidia.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
+Date: Fri, 15 Aug 2014 14:01:56 +0200
+Message-ID: <53EDF6B4.7080804@collabora.co.uk>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87a9774lf5.fsf-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53E4E41D.4070703@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Nick Dyer <nick.dyer@itdev.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 14, 2014 at 07:47:42AM +0100, Hiroshi Doyu wrote:
-> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> 
-> > +Multiple-master IOMMU:
-> > +----------------------
-> > +
-> > +       iommu {
-> > +               /* the specifier represents the ID of the master */
-> > +               #iommu-cells = <1>;
-> > +       };
-> > +
-> > +       master@1 {
-> > +               /* device has master ID 42 in the IOMMU */
-> > +               iommus = <&{/iommu} 42>;
-> > +       };
-> > +
-> > +       master@2 {
-> > +               /* device has master IDs 23 and 24 in the IOMMU */
-> > +               iommus = <&{/iommu} 23>, <&{/iommu} 24>;
-> > +       };
-> 
-> I think that this "master ID" will be parsed in IOMMU driver. For
-> example, ARM,SMMU expects "streamID" as "master ID", right?
-> 
-> If a SoC has a feature to configure to assign streamID to devices at
-> runtime, "streamID" is not equal to "master ID".
-> 
->   iommus = <&{/smmu} "soc specific master ID">;
-> 
-> "soc master ID" needs to be translated into "streamID" by SoC SW. It
-> seems that ARM,SMMU kernel driver doesn't expect this kind of ID
-> translation. If ARM,SMMU kernel driver is used as is, "soc master ID"
-> would be incompatible? ARM,SMMU needs such translation before
-> parsing. Is this my understanding right?
-> 
-> If so I think that this master ID configuration/translation may be quite
-> reasonable requirment for SoC using ARM,SMMU.
-> 
-> Can we consider this ID translation within ARM,SMMU compatibility?
-> 
-> IOW, is it possible to implement some SoC specific hook for ID
-> translation/configuration in ARM,SMMU kernel driver?
+Hello Nick,
 
-I think there's some confusion here. The ARM architected SMMU does not
-perform any StreamID translation -- it sees an incoming ID and uses that to
-lookup a set of translation tables. However, for hotpluggable buses (e.g.
-PCI), we need a way to communicate the StreamIDs for a newly discovered
-device to the SMMU. I expect that this would be described as a translation
-from another ID (e.g. requester id for PCI), so *that* is where the
-translation occurs.
+On 08/08/2014 04:52 PM, Javier Martinez Canillas wrote:
+On 08/07/2014 02:38 PM, Nick Dyer wrote:
+>> >>
+>> 
+>> I'm afraid you have misunderstood the impact of this change to the way that
+>> the GPIOs coming in to the touch controller are mapped to key codes. Look
+> 
+> Unfortunately there are no boards in mainline using this "linux,gpio-keymap"
+> property so I tried to figure out what the expected values were by reading the
+> driver. So is more than possible that I got them wrong.
+> 
+> By passing all these keycodes the touchpad worked as expected for me and the
+> driver did the same than the Chrome OS driver that has these keycodes hardcoded
+> when is_tp is true.
+> 
+>> at the protocol guide for T19.
+>> 
+> 
+> I don't have access to proper documentation and I wouldn't expect people to have
+> access to non-public docs in order to use a Device Tree binding.
+> 
+> That's why I wanted to document an example, so using this property could be
+> easier for others and they shouldn't have to look at the driver in order to
+> figure it out (and getting it wrong as you said :) )
+> 
+> So it would be great if you could provide an example on how this is supposed to
+> be used.
+> 
 
-This translation can be described as a simple base + offset calculation,
-e.g. StreamID = RequesterID + offset. Ideally, you'd have one offset per
-host controller (and described in the host controller DT node), but you
-could also imagine building tables where each RequesterID maps to a
-different StreamID.
+Any comments on this? I would really appreciate if you can expand on how
+this DT property is supposed to be used so I can re-spin the atmel support
+patch for Peach boards.
 
-The final thing to mention is that some SoCs may have device hotplug
-architectures that aren't like PCIe, so we may well need glue code there to
-`allocate' StreamIDs from a fixed portion of the numberspace.
-
-We don't need to solve all of these problems in one go, but the base +
-offset code will certainly be useful; not just for the SMMU but also for
-the GIC (where we have DeviceIDs). Mark Rutland is looking at this.
-
-Will
+Thanks a lot and best regards,
+Javier
