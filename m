@@ -1,67 +1,68 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v5 0/5] Add EHCI and OHCI drivers for STi SoC's
-Date: Fri, 15 Aug 2014 15:03:25 +0100
-Message-ID: <1408111410-14375-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v5 3/5] usb: host: ehci-st: Add ehci-st devicetree bindings documentation
+Date: Fri, 15 Aug 2014 15:03:28 +0100
+Message-ID: <1408111410-14375-4-git-send-email-peter.griffin@linaro.org>
+References: <1408111410-14375-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408111410-14375-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The series has been re-worked from v2 onwards to split out the ehci and ohci parts
-into their own drivers / devices like most other ARM platforms based on
-feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
+This patch documents the device tree bindings required for the
+ehci on-chip controller found in ST consumer electronics SoC's.
 
-The ehci-platform & ohci-platform have been used as a basis for this in case we
-wish to merge the drivers again in the future.
-
-Changes since v4:
- - Ensure suspend / resume callbacks are wrapped in #ifdef CONFIG_PM_SLEEP as otherwise we
-   will get linker 'unused function' warnings when this option is disabled.
- - Only declare and reference pm_ops struct if CONFIG_PM_SLEEP is enabled, this saves a few bytes
-
-Changes since v3:
- - Make reset / power, clocks etc non optional dt options to simplify code
- - Get rid of non DT boot code left over from *hci-platform drivers
- - Remove DMA mask code
- - Remove pre_setup func ptr and configure ahb2st bus convertor in ehci_platform_reset
- - Unabstract and remove usb-st-common.c
- - Have one kconfig which enables both ehci-st & ohci-st drivers
-
-Changes since v2:
- - Based on Arnd Berghman feedback, split out into 2 devices / drivers
- - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
-   to allow possible re-merge in the furture.
-
-Changes since v1:
- - Correct s/OCHI/OHCI/ spelling
- - Improve kconfig help message
- - Various formating / spelling nits identified by Lee Jones
- - Make driver depend on OF & remove node checks in code
- - Use devm_ioremap_resource
- - Remove unnecessary header files
-
-Peter Griffin (5):
-  usb: host: ehci-st: Add EHCI support for ST STB devices
-  usb: host: ohci-st: Add OHCI driver support for ST STB devices
-  usb: host: ehci-st: Add ehci-st devicetree bindings documentation
-  usb: host: ohci-st: Add ohci-st devicetree bindings documentation
-  MAINTAINERS: Add ehci-st.c and ohci-st.c to ARCH/STI architecture
-
- Documentation/devicetree/bindings/usb/ehci-st.txt |  39 +++
- Documentation/devicetree/bindings/usb/ohci-st.txt |  37 +++
- MAINTAINERS                                       |   2 +
- drivers/usb/host/Kconfig                          |   8 +
- drivers/usb/host/Makefile                         |   1 +
- drivers/usb/host/ehci-st.c                        | 365 ++++++++++++++++++++++
- drivers/usb/host/ohci-st.c                        | 339 ++++++++++++++++++++
- drivers/usb/host/usb-st-common.h                  |  31 ++
- 8 files changed, 822 insertions(+)
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ Documentation/devicetree/bindings/usb/ehci-st.txt | 39 +++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/usb/ehci-st.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-st.txt
- create mode 100644 drivers/usb/host/ehci-st.c
- create mode 100644 drivers/usb/host/ohci-st.c
- create mode 100644 drivers/usb/host/usb-st-common.h
 
+diff --git a/Documentation/devicetree/bindings/usb/ehci-st.txt b/Documentation/devicetree/bindings/usb/ehci-st.txt
+new file mode 100644
+index 0000000..fb45fa5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ehci-st.txt
+@@ -0,0 +1,39 @@
++ST USB EHCI controller
++
++Required properties:
++ - compatible		: must be "st,st-ehci-300x"
++ - reg			: physical base addresses of the controller and length of memory mapped
++			  region
++ - interrupts		: one EHCI interrupt should be described here
++ - pinctrl-names	: a pinctrl state named "default" must be defined
++ - pinctrl-0		: phandle referencing pin configuration of the USB controller
++See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
++ - clocks		: phandle list of usb clocks
++ - clock-names		: should be "ic" for interconnect clock and "clk48"
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++ - phys			: phandle for the PHY device
++ - phy-names		: should be "usb"
++ - resets		: phandle + reset specifier pairs to the powerdown and softreset lines
++			  of the USB IP
++ - reset-names		: should be "power" and "softreset"
++See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
++See: Documentation/devicetree/bindings/reset/reset.txt
++
++Example:
++
++	ehci1: usb@0xfe203e00 {
++		compatible = "st,st-ehci-300x";
++		reg = <0xfe203e00 0x100>;
++		interrupts = <GIC_SPI 148 IRQ_TYPE_NONE>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usb1>;
++		clocks = <&clk_s_a1_ls 0>;
++		phys = <&usb2_phy>;
++		phy-names = "usb";
++		status = "okay";
++
++		resets = <&powerdown STIH416_USB1_POWERDOWN>,
++			 <&softreset STIH416_USB1_SOFTRESET>;
++		reset-names = "power", "softreset";
++	};
 -- 
 1.9.1
