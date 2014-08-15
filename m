@@ -1,41 +1,67 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of/irq: lookup 'interrupts-extended' property first
-Date: Fri, 15 Aug 2014 13:51:28 +0100
-Message-ID: <20140815125128.A1E62C410ED@trevor.secretlab.ca>
-References: <1407355347-30286-1-git-send-email-f.fainelli@gmail.com>
-	<20140806201500.GP3711@ld-irv-0074>
+Subject: Re: [PATCH] of/irq: lookup 'interrupts-extended' property first
+Date: Fri, 15 Aug 2014 13:56:38 +0100
+Message-ID: <20140815125638.C4D61C410ED@trevor.secretlab.ca>
+References: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
+	<CAGVrzcYfA8rCXGRW7g0JhT4GQKT8SQj+pMvCh25yoXLFGNM_Pw@mail.gmail.com>
+	<20140806165452.GN3711@ld-irv-0074>
+	<CAL_JsqK8BiffXgpQSig5EbV3FUW7EBOn9YjZGqOcUcEJiCJ0WA@mail.gmail.com>
+	<20140806201256.GO3711@ld-irv-0074>
+	<CA+bK7J7LQq4S70ScSynbLTjNMmP=9n3KD2suYRg9JN+pEv-Y7g@mail.gmail.com>
+	<53E2A85A.8030406@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140806201500.GP3711@ld-irv-0074>
+In-Reply-To: <53E2A85A.8030406@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Tim Bird <tbird20d@gmail.com>, Brian Norris <computersforpeace@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Aug 2014 13:15:00 -0700, Brian Norris <computersforpeace@gmail.com> wrote:
-> On Wed, Aug 06, 2014 at 01:02:27PM -0700, Florian Fainelli wrote:
-> > In case the Device Tree blob passed by the boot agent supplies both an
-> > 'interrupts-extended' and an 'interrupts' property in order to allow for
-> > older kernels to be usable, prefer the new-style 'interrupts-extended'
-> > property which conveys a lot more information.
+On Wed, 06 Aug 2014 15:12:42 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 08/06/2014 02:50 PM, Tim Bird wrote:
+> > On Wed, Aug 6, 2014 at 1:12 PM, Brian Norris
+> > <computersforpeace@gmail.com> wrote:
+> >> On Wed, Aug 06, 2014 at 01:42:08PM -0500, Rob Herring wrote:
+> >>> On Wed, Aug 6, 2014 at 11:54 AM, Brian Norris <computersforpeace@gmail.com> wrote:
+> >>>> On Thu, Jul 31, 2014 at 11:00:01AM -0700, Florian Fainelli wrote:
+> >>>> I think it is important that a device tree provide some flexibility on
+> >>>> kernel versions. We only invented 'interrupts-extended' in Linux 3.13,
+> >>>> so it's easy to have device trees that could work only on 3.13+.
+> >>>>
+> >>>> Typically, we might say that new features require new kernels, but this
+> >>>> is a very basic piece of the DT infrastructure. In our case, we have
+> >>>> hardware whose basic features can be supported by a single interrupt
+> >>>> parent, and so we used the 'interrupts' property pre-3.13. But when we
+> >>>> want to add some power management features, there's an additional
+> >>>> interrupt parent. Under the current DT binding, we have to switch over
+> >>>> to using 'interrupts-extended' exclusively, and thus we must have a
+> >>>> completely new DTB for >=3.13, and this DTB no longer works with the old
+> >>>> kernels.
+> >>>
+> >>> "Must have" to enable the new features?
+> >>
+> >> Yes. The new feature requires an additional interrupt parent, and so it
+> >> requires interrupts-extended.
 > > 
-> > This allows us to have bootloaders willingly maintaining backwards
-> > compatibility with older kernels without entirely deprecating the
-> > 'interrupts' property.
-> > 
-> > Update the bindings documentation to describe a situation where both the
-> > 'interrupts-extended' and the 'interrupts' property are present, and
-> > which one takes precedence over the other.
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Hold on there.  What about interrupt-map?  That was the traditional DT
+> > feature for
+> > supporting multi-parented interrupts.  Why couldn't the feature have been added
+> > using that instead of interrupts-extended?
 > 
-> Might we add this?
-> 
-> Cc: <stable@vger.kernel.org> # 3.13+
-> 
-> Brian
+> As far as I read it from the ePAPR specification, you have a good point
+> here, it looks like 'interrupt-map' could have been used as-is instead
+> of 'interrupts-extended'. In fact it is a little more general than
+> 'interrupts-extended' since it allows any sort of "child unit address",
+> whether that is an actual interrupt number, or something else, is
+> dependent on the type of node being used.
 
-Applied, thanks.
+Not really any more general. The child unit address is for filtering
+which nodes get a particular map entry. That doesn't have any value when
+the routing information is directly in the device node, which is what
+interrupts-extended does.
+
+interrupt-map certainly still works, but it is quite fiddly to use when
+the use case is merely one device wired to multiple interrupt
+controllers, and it is very easy to get wrong. interrupts-extended is
+far more concise.
 
 g.
