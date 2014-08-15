@@ -1,44 +1,104 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: Specifying the console device using an alias
-Date: Thu, 14 Aug 2014 22:02:10 -0600
-Message-ID: <CAPnjgZ1S-HVZJ7kzt=YKT+jjZEtLdmZSnr6kmNVf+paGKdrgoQ@mail.gmail.com>
-References: <CAPnjgZ2A=DkGSnFLy1En8bH0pZAUAEWCWz_jQ941g3QQEUN9NQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v4 00/21] LED / flash API integration
+Date: Fri, 15 Aug 2014 07:48:12 +0300
+Message-ID: <20140815044811.GP16460@valkosipuli.retiisi.org.uk>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <20140806065358.GC16460@valkosipuli.retiisi.org.uk>
+ <53E336FA.2050306@samsung.com>
+ <20140814050338.GO16460@valkosipuli.retiisi.org.uk>
+ <53EC90D9.6080702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ2A=DkGSnFLy1En8bH0pZAUAEWCWz_jQ941g3QQEUN9NQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53EC90D9.6080702@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-(correct list)
+On Thu, Aug 14, 2014 at 12:35:05PM +0200, Jacek Anaszewski wrote:
+> On 08/14/2014 07:03 AM, Sakari Ailus wrote:
+> >Hi Jacek,
+> >
+> >On Thu, Aug 07, 2014 at 10:21:14AM +0200, Jacek Anaszewski wrote:
+> >>On 08/06/2014 08:53 AM, Sakari Ailus wrote:
+> >>>Hi Jacek,
+> >>>
+> >>>On Fri, Jul 11, 2014 at 04:04:03PM +0200, Jacek Anaszewski wrote:
+> >>>...
+> >>>>1) Who should register V4L2 Flash sub-device?
+> >>>>
+> >>>>LED Flash Class devices, after introduction of the Flash Manager,
+> >>>>are not tightly coupled with any media controller. They are maintained
+> >>>>by the Flash Manager and made available for dynamic assignment to
+> >>>>any media system they are connected to through multiplexing devices.
+> >>>>
+> >>>>In the proposed rough solution, when support for V4L2 Flash sub-devices
+> >>>>is enabled, there is a v4l2_device created for them to register in.
+> >>>>This however implies that V4L2 Flash device will not be available
+> >>>>in any media controller, which calls its existence into question.
+> >>>>
+> >>>>Therefore I'd like to consult possible ways of solving this issue.
+> >>>>The option I see is implementing a mechanism for moving V4L2 Flash
+> >>>>sub-devices between media controllers. A V4L2 Flash sub-device
+> >>>>would initially be assigned to one media system in the relevant
+> >>>>device tree binding, but it could be dynamically reassigned to
+> >>>>the other one. However I'm not sure if media controller design
+> >>>>is prepared for dynamic modifications of its graph and how many
+> >>>>modifications in the existing drivers this solution would require.
+> >>>
+> >>>Do you have a use case where you would need to strobe a flash from multiple
+> >>>media devices at different times, or is this entirely theoretical? Typically
+> >>>flash controllers are connected to a single source of hardware strobe (if
+> >>>there's one) since the flash LEDs are in fact mounted next to a specific
+> >>>camera sensor.
+> >>
+> >>I took into account such arrangements in response to your message
+> >>[1], where you were considering configurations like "one flash but
+> >>two
+> >>cameras", "one camera and two flashes". And you also called for
+> >>proposing generic solution.
+> >>
+> >>One flash and two (or more) cameras case is easily conceivable -
+> >>You even mentioned stereo cameras. One camera and many flashes
+> >>arrangement might be useful in case of some professional devices which
+> >>might be designed so that they would be able to apply different scene
+> >>lighting. I haven't heard about such devices, but as you said
+> >>such a configuration isn't unthinkable.
+> >>
+> >>>If this is a real issue the way to solve it would be to have a single media
+> >>>device instead of many.
+> >>
+> >>I was considering adding media device, that would be a representation
+> >>of a flash manager, gathering all the registered flashes. Nonetheless,
+> >>finally I came to conclusion that a v4l2-device alone should suffice,
+> >>just to provide a Flash Manager representation allowing for
+> >>v4l2-flash sub-devices to register in.
+> >>All the features provided by the media device are useless in case
+> >>of a set of V4L2 Flash sub-devices. They couldn't have any linkage
+> >>in such a device. The only benefit from having media device gathering
+> >>V4L2 Flash devices would be possibility of listing them.
+> >
+> >Not quite so. The flash is associated to the sensor (and lens) using the
+> >group ID in the Media controller. The user space doesn't need to "know" this
+> >association.
+> >
+> >More complex use cases such as the above may need extensions to the Media
+> >controller API.
+> 
+> I think that I have unnecessarily complicated the issue. Generally
+> there will be always one media controller created for all camera
+> sensors available in the system. If there is a single media controller
+> then we can easily use async subdev registration API. A media-dev
+> driver would have to parse list of flash device phandles from
+> the ISP device's DT node and register them as async sub-devices.
 
-On 14 August 2014 21:42, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi,
->
-> In U-Boot we currently specify the console device (typically serial)
-> using something like:
->
-> aliases {
->    console = "/serial@1234";
-> }
->
-> But the question has come up as to whether this should be done another
-> way. I see the "linux.stdout" property in the /chosen node.
->
-> I am concerned that making use of the /chosen node in U-Boot might
-> confuse a lot of people, since this node is normally used to provide
-> selections for the OS to use when booting. If we did use /chosen, then
-> linux,stdout seems plain wrong but perhaps u-boot,stdout could be used
-> instead.
->
-> Does anyone have an opinion about this? It would be good to work this
-> out soon before it proliferates into more code.
->
-> Regards,
-> Simon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Currently the media device is created by a driver which is most of the time
+the ISP driver on embedded systems. This driver is also responsible for
+registering the flash device (nodes) to the media device. So "will" is the
+word, I think.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
