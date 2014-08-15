@@ -1,47 +1,86 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/6] arm64: Add DTS support for FSL's LS2085A SoC
-Date: Fri, 15 Aug 2014 17:02:58 +0100
-Message-ID: <20140815160258.GF18863@arm.com>
-References: <1408096156-29772-1-git-send-email-bhupesh.sharma@freescale.com>
- <1408096156-29772-5-git-send-email-bhupesh.sharma@freescale.com>
- <20140815102329.GB596@leverpostej>
- <c43739ed82a34f6eb2adbbe240e07c5d@DM2PR03MB317.namprd03.prod.outlook.com>
- <0DC5667C-E45A-4781-9AE6-0C5E1C70F268@codeaurora.org>
- <9c8daab7efa446c884409ae3aaaaa151@BY2PR0301MB0743.namprd03.prod.outlook.com>
- <3537CF6F-9BF9-4905-B051-EB94034FC1C2@codeaurora.org>
- <77e80a2d69ee470a8458a85450a1510c@BY2PR0301MB0743.namprd03.prod.outlook.com>
+From: Nick Dyer <nick.dyer@itdev.co.uk>
+Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
+Date: Fri, 15 Aug 2014 17:08:30 +0100
+Message-ID: <53EE307E.8060507@itdev.co.uk>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk> <53EDF6B4.7080804@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <77e80a2d69ee470a8458a85450a1510c-swgC6WJTr6EFQ9CGjnlQrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "arnab.basu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <arnab.basu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <53EDF6B4.7080804@collabora.co.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 15, 2014 at 04:49:53PM +0100, Stuart Yoder wrote:
-> > On Aug 15, 2014, at 10:41 AM, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > So we want to do the standard/conventional thing here that will
-> > > allow are device trees to be used in more than u-boot.
-> > 
-> > Well, I think the guys would say the standard thing is to move to PSCI.
+On 15/08/14 13:01, Javier Martinez Canillas wrote:
+>> By passing all these keycodes the touchpad worked as expected for me and the
+>> driver did the same than the Chrome OS driver that has these keycodes hardcoded
+>> when is_tp is true.
+>>
+>>> at the protocol guide for T19.
+>>
+>> I don't have access to proper documentation and I wouldn't expect people to have
+>> access to non-public docs in order to use a Device Tree binding.
+>>
+>> That's why I wanted to document an example, so using this property could be
+>> easier for others and they shouldn't have to look at the driver in order to
+>> figure it out (and getting it wrong as you said :) )
+>>
+>> So it would be great if you could provide an example on how this is supposed to
+>> be used.
 > 
-> Agree.  That is our plan.  But it looks like at this point in
-> time all the device tree have a common denominator spin table
-> mechanim that gets updated/overriden if PSCI is supported.
+> Any comments on this? I would really appreciate if you can expand on how
+> this DT property is supposed to be used so I can re-spin the atmel support
+> patch for Peach boards.
 
-That's for historical reasons because at the time there was no PSCI and
-now we have to preserve backwards compatibility with older boot
-wrappers. The only hardware currently having a DT in the arm64 tree is
-the APM one which cannot implement PSCI because there is no EL3.
+The below patch improves the documentation for the gpio-property. Stephen
+Warren has a good example here:
+https://github.com/swarren/linux-tegra/commit/09789801
 
-(and I think we should really get a proper arm64 PSCI implementation in
-U-Boot)
+trackpad@4b {
+  compatible = "atmel,maxtouch";
+  reg = <0x4b>;
+  interrupt-parent = <&gpio>;
+  interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+  linux,gpio-keymap = <0 0 0 BTN_LEFT>;
+};
 
+This maps BTN_LEFT to the 4th bit of the T19 message. I haven't looked up
+what GPIO number that corresponds to on the mXT224SL that he has, it varies
+with the particular maXTouch device you have.
+
+Hope this helps.
+
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+---
+ Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+index baef432..1852906 100644
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+@@ -11,10 +11,17 @@ Required properties:
+
+ Optional properties for main touchpad device:
+
+-- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
+-    keycode generated by each GPIO. Linux keycodes are defined in
++- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
++    on GPIO bit changes. An array of up to 8 entries can be provided
++    indicating the Linux keycode mapped to each bit of the status byte,
++    starting at the LSB. Linux keycodes are defined in
+     <dt-bindings/input/input.h>.
+
++    Note: the numbering of the GPIOs and the bit they start at varies between
++    maXTouch devices. You must either refer to the documentation, or
++    experiment to determine which bit corresponds to which input. Use
++    KEY_RESERVED for unused padding values.
++
+ Example:
+
+        touch@4b {
 -- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
