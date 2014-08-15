@@ -1,76 +1,163 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] of: Deep-copy names of platform devices
-Date: Fri, 15 Aug 2014 11:38:33 -0500
-Message-ID: <CAL_JsqKoikzLsXmXrm0GDM=+5ofX=OvrmvUTw3O-qX2hSTztcw@mail.gmail.com>
-References: <53EAC37C.4020203@codeaurora.org> <1407897037-6037-1-git-send-email-stepanm@codeaurora.org>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv10 2/2] arm: dts: Add Altera SDRAM EDAC bindings & devicetree
+ entries.
+Date: Fri, 15 Aug 2014 11:47:09 -0500
+Message-ID: <53EE398D.3060509@opensource.altera.com>
+References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com> <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com> <73vbputf04.fsf@dude.hi.pengutronix.de> <alpine.DEB.2.02.1408151035110.21645@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1407897037-6037-1-git-send-email-stepanm@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stepan Moskovchenko <stepanm@codeaurora.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1408151035110.21645@atx-linux-37>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Adding Greg...
 
-On Tue, Aug 12, 2014 at 9:30 PM, Stepan Moskovchenko
-<stepanm@codeaurora.org> wrote:
-> When we parse the device tree and allocate platform
-> devices, the 'name' of the newly-created platform_device
-> is set to point to the 'name' field of the 'struct device'
-> embedded within the platform_device. This is dangerous,
-> because the name of the 'struct device' is dynamically
-> allocated. Drivers may call dev_set_name() on the device,
-> which will free and reallocate the name of the device,
-> leaving the 'name' of the platform_device pointing to the
-> now-freed memory.
+On 08/15/2014 11:07 AM, atull wrote:
+> On Fri, 15 Aug 2014, Steffen Trumtrar wrote:
 >
-> Furthermore, if the dev_set_name() call is made from a
-> driver's probe() function and a subsequent request results
-> in probe deferral, the dangling 'name' reference may lead
-> to the device being re-probed using the wrong driver.
+>> Hi!
+> Hello
+>
+> Thanks for the feedback...
+>
+>> tthayer@opensource.altera.com writes:
+>>
+>>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>>
+>>> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
+>>>
+>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>>> ---
+>>> v2: Changes to SoC SDRAM EDAC code.
+>>>
+>>> v3: Implement code suggestions for SDRAM EDAC code.
+>>>
+>>> v4: Remove syscon from SDRAM controller bindings.
+>>>
+>>> v5: No Change, bump version for consistency.
+>>>
+>>> v6: Only map the ctrlcfg register as syscon.
+>>>
+>>> v7: No change. Bump for consistency.
+>>>
+>>> v8: No change. Bump for consistency.
+>>>
+>>> v9: Changes to support a MFD SDRAM controller with nested EDAC.
+>>>
+>>> v10: Revert to using syscon based on feedback.
+>>> ---
+>>>   .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
+>>>   arch/arm/boot/dts/socfpga.dtsi                     |   11 +++++++++++
+>>>   2 files changed, 26 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>>> new file mode 100644
+>>> index 0000000..d0ce01d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+>>> @@ -0,0 +1,15 @@
+>>> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
+>>> +The EDAC accesses a range of registers in the SDRAM controller.
+>>> +
+>>> +Required properties:
+>>> +- compatible : should contain "altr,sdram-edac";
+>>> +- altr,sdr-syscon : phandle of the sdr module
+>>> +- interrupts : Should contain the SDRAM ECC IRQ in the
+>>> +	appropriate format for the IRQ controller.
+>>> +
+>>> +Example:
+>>> +	sdramedac {
+>>> +		compatible = "altr,sdram-edac";
+>>> +		altr,sdr-syscon = <&sdr>;
+>>> +		interrupts = <0 39 4>;
+>>> +	};
+>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>>> index 4676f25..45b361e 100644
+>>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>>> @@ -603,6 +603,17 @@
+>>>   			};
+>>>   		};
+>>>   
+>>> +		sdr: sdr@ffc25000 {
+>>> +			compatible = "syscon";
+>>> +			reg = <0xffc25000 0x1000>;
+>>> +		};
+>>> +
+>>> +		sdramedac {
+>>> +			compatible = "altr,sdram-edac";
+>>> +			altr,sdr-syscon = <&sdr>;
+>>> +			interrupts = <0 39 4>;
+>>> +		};
+>>> +
+>>>   		L2: l2-cache@fffef000 {
+>>>   			compatible = "arm,pl310-cache";
+>>>   			reg = <0xfffef000 0x1000>;
+>> Sorry, but I personally still don't like this approach.
+> This is a normal use of syscon.  Syscon is great for this case
+> where multiple drivers need access to an ip block's register
+> range but there is otherwise no need to write a MFD from scratch
+> to allow that.  I think that's the purpose of syscon in the first
+> place.
+>
+>> If we do it like this however, shouldn't the different regions of the
+>> SDR (EDAC, FPGAPORTRST, ...) at least be child nodes of the syscon?
+>> That seems to match the syscon binding and describes the actual hardware
+>> better IMHO.
+> I like that; it would be clean and clear, but I don't think syscon is
+> written such that that would actually work.  I haven't seen anybody else
+> do it that way.
+Hi Steffen!
 
-This seems wrong. I don't think we want drivers to change their own
-device's name. The name is not supposed to change after registration.
+Building on Alan's points, I don't see the reference to the child nodes 
+in the syscon.txt binding documentation - can you point out what I'm 
+missing?
 
-Rob
+I based this patch on other examples of syscon, and there aren't child 
+nodes (exynos5250.dtsi, omap3.dtsi, etc). According to my understanding 
+of the device tree parsing, the parent needs to register child nodes. 
+Since syscon is the parent and doesn't register the child nodes, they 
+won't be automatically probed. The other syscon implementations are at 
+the same level as the syscon and use a phandle to the syscon (for 
+instance the omap3.dtsi).
 
-> To mitigate these scenarios, we use kstrdup to perform a
-> deep copy of the device name when assigning the name of the
-> platform_device, so that the platform_device name is
-> unaffected by any calls to dev_set_name() that might made
-> by drivers to rename the embedded 'struct device'.
+Thanks for reviewing!
+
+Thor
+>> Oh, and "reg = <...>" for the sdram-edac, maybe ?
+> How would that work?  Syscon is already mapping the whole register range
+> for the sdr block.  Are you proposing a device tree binding that this
+> Linux driver would ignore, but some other driver in some other OS might
+> find useful in the future?  I'd rather not put duplicate information
+> in two places, too easy for it to get out of sync.
 >
-> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
-> ---
-> * v2 - swap cleanup order
+>> How would I know where the start address of the EDAC is, if I would use
+>> this DT on another OS where I don't have the same driver?
+> The start address of the EDAC is an offset into the range mapped by
+> syscon here.  The driver knows what the register offsets are.
 >
->  drivers/of/device.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> If we are talking about this device tree being used by some other OS
+> that is not aware of syscon, then that OS won't know what's going on and
+> some modification of the DT will be needed.  I have been advised that
+> u-boot will need a significantly different DT, though I don't know
+> what the issues are there.
 >
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index f685e55..e9beae6 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
->
->         /* name and id have to be set so that the platform bus doesn't get
->          * confused on matching */
-> -       ofdev->name = dev_name(&ofdev->dev);
-> +       ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
->         ofdev->id = -1;
->
->         /* device_add will assume that this device is on the same node as
-> @@ -75,6 +75,7 @@ EXPORT_SYMBOL(of_device_register);
->
->  void of_device_unregister(struct platform_device *ofdev)
->  {
-> +       kfree(ofdev->name);
->         device_unregister(&ofdev->dev);
->  }
->  EXPORT_SYMBOL(of_device_unregister);
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by The Linux Foundation
->
+>> Regards,
+>> Steffen
+>>
+>> -- 
+>> Pengutronix e.K.                           | Steffen Trumtrar            |
+>> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+>>
+
