@@ -1,142 +1,263 @@
-From: Wei Yang <weiyang@linux.vnet.ibm.com>
-Subject: Re: [PATCH v9 02/12] PCI: OF: Parse and map the IRQ when adding the
- PCI device.
-Date: Fri, 15 Aug 2014 16:56:32 +0800
-Message-ID: <20140815085632.GA4954@richard>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
- <1407860725-25202-3-git-send-email-Liviu.Dudau@arm.com>
- <20140814145804.GA5586@richard>
- <20140814154959.GG25761@e106497-lin.cambridge.arm.com>
-Reply-To: Wei Yang <weiyang@linux.vnet.ibm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4] mmc: implement Driver Stage Register handling
+Date: Fri, 15 Aug 2014 11:05:39 +0200
+Message-ID: <CAPDyKFp=1BDeZUC-GNLLT+BK0gqisQ0mP8x4chu43F2pKujGsg@mail.gmail.com>
+References: <1408091882-32123-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140814154959.GG25761@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Wei Yang <weiyang@linux.vnet.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1408091882-32123-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Chris Ball <chris@printf.net>, linux-mmc <linux-mmc@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Niebel <Markus.Niebel@tq-group.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 14, 2014 at 04:49:59PM +0100, Liviu Dudau wrote:
->On Thu, Aug 14, 2014 at 03:58:04PM +0100, Wei Yang wrote:
->> On Tue, Aug 12, 2014 at 05:25:15PM +0100, Liviu Dudau wrote:
->> >Enhance the default implementation of pcibios_add_device() to
->> >parse and map the IRQ of the device if a DT binding is available.
->> >
->> >Cc: Bjorn Helgaas <bhelgaas@google.com>
->> >Cc: Grant Likely <grant.likely@linaro.org>
->> >Cc: Rob Herring <robh+dt@kernel.org>
->> >Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
->> >---
->> > drivers/pci/pci.c | 3 +++
->> > 1 file changed, 3 insertions(+)
->> >
->> >diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> >index 1c8592b..29d1775 100644
->> >--- a/drivers/pci/pci.c
->> >+++ b/drivers/pci/pci.c
->> >@@ -17,6 +17,7 @@
->> > #include <linux/spinlock.h>
->> > #include <linux/string.h>
->> > #include <linux/log2.h>
->> >+#include <linux/of_pci.h>
->> > #include <linux/pci-aspm.h>
->> > #include <linux/pm_wakeup.h>
->> > #include <linux/interrupt.h>
->> >@@ -1453,6 +1454,8 @@ EXPORT_SYMBOL(pcim_pin_device);
->> >  */
->> > int __weak pcibios_add_device(struct pci_dev *dev)
->> > {
->> >+	dev->irq =3D of_irq_parse_and_map_pci(dev, 0, 0);
->> >+
->> > 	return 0;
->> > }
->>=20
->> Liviu,
->>=20
->> For this, my suggestion is to add arch dependent function to setup t=
-he irq
->> line for pci devices. I can't find an obvious reason this won't work=
- on other
->> archs, but maybe this will hurt some of them?
+On 15 August 2014 10:38, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> From: Sascha Hauer <s.hauer@pengutronix.de>
 >
->Hi Wei,
+> Some eMMC and SD cards implement a DSR register that allows to tune
+> raise/fall times and drive strength of the CMD and DATA outputs.
+> The values to use depend on the card in use and the host.
+> It might be needed to reduce the drive strength to prevent voltage pe=
+aks
+> above the host's specification.
 >
->I'm not sure I understand your point. Architectures that support OF wi=
-ll obviously
->benefit from this common approach, and for the other ones the function=
- is empty
->so it will not change existing behaviour. If you are suggesting that I=
- should
->create a new API that each architecture could go and implement for set=
-ting up the
->IRQ line then I would agree that it would be nice to have that, but th=
-e question
->is how many architectures are outside OF that need this?
+> Implement a 'dsr' devicetree property that allows to specify the valu=
+e
+> to set the DSR to. For non-dt setups the new members of mmc_host can =
+be
+> set by board code.
+>
+> This patch was initially authored by Sascha Hauer. It contains
+> improvements authored by Markus Niebel and Uwe Kleine-K=C3=B6nig.
+>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Changes since v3:
+>
+>  - fix a compiler warning about err not being used.
+>  - clearified valid range. I didn't write "16-bit value" because the
+>    value is still expected to be written as 32-bit value in the devic=
+e
+>    tree.
+>  - make host->dsr an u32, which simplified parsing the device tree an=
+d
+>    also makes casting in mmc_set_dsr unnecessary.
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt |  2 ++
+>  drivers/mmc/core/host.c                       |  8 ++++++++
+>  drivers/mmc/core/mmc.c                        |  8 ++++++++
+>  drivers/mmc/core/mmc_ops.c                    | 20 +++++++++++++++++=
++++
+>  drivers/mmc/core/mmc_ops.h                    |  1 +
+>  drivers/mmc/core/sd.c                         |  8 ++++++++
+>  include/linux/mmc/card.h                      |  3 ++-
+>  include/linux/mmc/host.h                      |  3 +++
+>  8 files changed, 52 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Document=
+ation/devicetree/bindings/mmc/mmc.txt
+> index 3c18001dfd5d..a3fe21f2b709 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -40,6 +40,8 @@ Optional properties:
+>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+> +- dsr: Value the card's (optional) Driver Stage Register (DSR) shoul=
+d be
+> +  programmed with. Valid range: [0 .. 0xffff].
+>
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host cont=
+rollers line
+>  polarity properties, we have to fix the meaning of the "normal" and =
+"inverted"
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 95cceae96944..6442eecb672e 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -452,6 +452,14 @@ int mmc_of_parse(struct mmc_host *host)
+>         if (of_find_property(np, "mmc-hs400-1_2v", &len))
+>                 host->caps2 |=3D MMC_CAP2_HS400_1_2V | MMC_CAP2_HS200=
+_1_2V_SDR;
+>
+> +       host->dsr_req =3D of_property_read_u32(np, "dsr", &host->dsr)=
+;
+> +       if (host->dsr_req && (host->dsr & ~0xffff)) {
 
-My suggestion is to define the pcibios_add_device() for arm arch, like =
-the one
-in arch/powerpc/kernel/pci-common.c. If my understanding is correct, th=
-is
-patch set address the pci bus setup mostly on arm arch.
+This doesn't look correct.
+I guess what you want is: if (!host->dsr_req && (host->dsr & ~0xffff))
 
-=46or those archs not support OF, this function is empty and has no eff=
-ect. I
-agree on this one.
+> +               dev_err(host->parent,
+> +                       "device tree specified broken value for DSR: =
+0x%x, ignoring\n",
+> +                       host->dsr);
+> +               host->dsr_req =3D 0;
+> +       }
+> +
+>         return 0;
+>
+>  out:
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index 793c6f7ddb04..fdc1ac1360c4 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -162,6 +162,7 @@ static int mmc_decode_csd(struct mmc_card *card)
+>         csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
+>         csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
+>         csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
+> +       csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
+>         csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
+>         csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
+>         csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
+> @@ -1273,6 +1274,13 @@ static int mmc_init_card(struct mmc_host *host=
+, u32 ocr,
+>         }
+>
+>         /*
+> +        * handling only for cards supporting DSR and hosts requestin=
+g
+> +        * DSR configuration
+> +        */
+> +       if (card->csd.dsr_imp && host->dsr_req)
 
-=46or those archs rely on OF, we still have two cases:
-    1. they would have implement this function like powerpc
-    2. have other way to fix it up,  otherwise how it works now?
-If my assumption is correct, this change will either have no effect, or=
- fix up
-the irq line the second time. Not harmful, but not necessary.
+if (card->csd.dsr_imp && !host->dsr_req)
 
-I am not familiar with other arch, so the second case is my deduction. =
-If this
-is not correct, please let me know.
+> +               mmc_set_dsr(host);
+> +
+> +       /*
+>          * Select card, as all following commands rely on that.
+>          */
+>         if (!mmc_host_is_spi(host)) {
+> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+> index f51b5ba3bbea..ba0275e90617 100644
+> --- a/drivers/mmc/core/mmc_ops.c
+> +++ b/drivers/mmc/core/mmc_ops.c
+> @@ -93,6 +93,26 @@ int mmc_deselect_cards(struct mmc_host *host)
+>         return _mmc_select_card(host, NULL);
+>  }
+>
+> +/*
+> + * Write the value specified in the device tree or board code into t=
+he optional
+> + * 16 bit Driver Stage Register. This can be used to tune raise/fall=
+ times and
+> + * drive strength of the DAT and CMD outputs. The actual meaning of =
+a given
+> + * value is hardware dependant.
+> + * The presence of the DSR register can be determined from the CSD r=
+egister,
+> + * bit 76.
+> + */
+> +int mmc_set_dsr(struct mmc_host *host)
+> +{
+> +       struct mmc_command cmd =3D {0};
+> +
+> +       cmd.opcode =3D MMC_SET_DSR;
+> +
+> +       cmd.arg =3D (host->dsr << 16) | 0xffff;
+> +       cmd.flags =3D MMC_RSP_NONE | MMC_CMD_AC;
+> +
+> +       return mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
+> +}
+> +
+>  int mmc_go_idle(struct mmc_host *host)
+>  {
+>         int err;
+> diff --git a/drivers/mmc/core/mmc_ops.h b/drivers/mmc/core/mmc_ops.h
+> index 80ae9f4e0293..390dac665b2a 100644
+> --- a/drivers/mmc/core/mmc_ops.h
+> +++ b/drivers/mmc/core/mmc_ops.h
+> @@ -14,6 +14,7 @@
+>
+>  int mmc_select_card(struct mmc_card *card);
+>  int mmc_deselect_cards(struct mmc_host *host);
+> +int mmc_set_dsr(struct mmc_host *host);
+>  int mmc_go_idle(struct mmc_host *host);
+>  int mmc_send_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr);
+>  int mmc_all_send_cid(struct mmc_host *host, u32 *cid);
+> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+> index 0c44510bf717..25913889cbaa 100644
+> --- a/drivers/mmc/core/sd.c
+> +++ b/drivers/mmc/core/sd.c
+> @@ -127,6 +127,7 @@ static int mmc_decode_csd(struct mmc_card *card)
+>                 csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
+>                 csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
+>                 csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
+> +               csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
+>                 csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
+>                 csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
+>                 csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
+> @@ -954,6 +955,13 @@ static int mmc_sd_init_card(struct mmc_host *hos=
+t, u32 ocr,
+>         }
+>
+>         /*
+> +        * handling only for cards supporting DSR and hosts requestin=
+g
+> +        * DSR configuration
+> +        */
+> +       if (card->csd.dsr_imp && host->dsr_req)
+
+if (card->csd.dsr_imp && !host->dsr_req)
+
+> +               mmc_set_dsr(host);
+> +
+> +       /*
+>          * Select card, as all following commands rely on that.
+>          */
+>         if (!mmc_host_is_spi(host)) {
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index d424b9de3aff..680a7f0188bb 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -42,7 +42,8 @@ struct mmc_csd {
+>         unsigned int            read_partial:1,
+>                                 read_misalign:1,
+>                                 write_partial:1,
+> -                               write_misalign:1;
+> +                               write_misalign:1,
+> +                               dsr_imp:1;
+>  };
+>
+>  struct mmc_ext_csd {
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 7960424d0bc0..8acaebd866a7 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -319,6 +319,7 @@ struct mmc_host {
+>  #ifdef CONFIG_MMC_DEBUG
+>         unsigned int            removed:1;      /* host is being remo=
+ved */
+>  #endif
+> +       unsigned int            dsr_req:1;      /* DSR is requested f=
+or Host */
+
+Should be an int instead.
 
 >
->If I understood you correctly, it is a nice idea but slightly outside =
-the scope
->of my current patchset.
+>         int                     rescan_disable; /* disable card detec=
+tion */
+>         int                     rescan_entered; /* used with nonremov=
+able devices */
+> @@ -365,6 +366,8 @@ struct mmc_host {
 >
->Best regards,
->Liviu
+>         unsigned int            slotno; /* used for sdio acpi binding=
+ */
 >
->>=20
->> >
->> >--=20
->> >2.0.4
->> >
->> >--
->> >To unsubscribe from this list: send the line "unsubscribe linux-pci=
-" in
->> >the body of a message to majordomo@vger.kernel.org
->> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>=20
->> --=20
->> Richard Yang
->> Help you, Help me
->>=20
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pci"=
- in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>=20
+> +       u32                     dsr;    /* optional driver stage (DSR=
+) value */
+> +
+>         unsigned long           private[0] ____cacheline_aligned;
+>  };
 >
->--=20
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->| I would like to |
->| fix the world,  |
->| but they're not |
->| giving me the   |
-> \ source code!  /
->  ---------------
->    =C2=AF\_(=E3=83=84)_/=C2=AF
+> --
+> 2.0.1
+>
 
---=20
-Richard Yang
-Help you, Help me
+Kind regards
+Uffe
