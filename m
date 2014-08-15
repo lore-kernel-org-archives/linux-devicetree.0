@@ -1,52 +1,76 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
-Date: Fri, 15 Aug 2014 10:13:14 -0600
-Message-ID: <53EE319A.1030304@wwwdotorg.org>
-References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk> <53EDF6B4.7080804@collabora.co.uk> <53EE307E.8060507@itdev.co.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] of: Deep-copy names of platform devices
+Date: Fri, 15 Aug 2014 11:38:33 -0500
+Message-ID: <CAL_JsqKoikzLsXmXrm0GDM=+5ofX=OvrmvUTw3O-qX2hSTztcw@mail.gmail.com>
+References: <53EAC37C.4020203@codeaurora.org> <1407897037-6037-1-git-send-email-stepanm@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <53EE307E.8060507@itdev.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Nick Dyer <nick.dyer@itdev.co.uk>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1407897037-6037-1-git-send-email-stepanm@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stepan Moskovchenko <stepanm@codeaurora.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2014 10:08 AM, Nick Dyer wrote:
-> On 15/08/14 13:01, Javier Martinez Canillas wrote:
->>> By passing all these keycodes the touchpad worked as expected for me and the
->>> driver did the same than the Chrome OS driver that has these keycodes hardcoded
->>> when is_tp is true.
->>>
->>>> at the protocol guide for T19.
->>>
->>> I don't have access to proper documentation and I wouldn't expect people to have
->>> access to non-public docs in order to use a Device Tree binding.
->>>
->>> That's why I wanted to document an example, so using this property could be
->>> easier for others and they shouldn't have to look at the driver in order to
->>> figure it out (and getting it wrong as you said :) )
->>>
->>> So it would be great if you could provide an example on how this is supposed to
->>> be used.
->>
->> Any comments on this? I would really appreciate if you can expand on how
->> this DT property is supposed to be used so I can re-spin the atmel support
->> patch for Peach boards.
+Adding Greg...
+
+On Tue, Aug 12, 2014 at 9:30 PM, Stepan Moskovchenko
+<stepanm@codeaurora.org> wrote:
+> When we parse the device tree and allocate platform
+> devices, the 'name' of the newly-created platform_device
+> is set to point to the 'name' field of the 'struct device'
+> embedded within the platform_device. This is dangerous,
+> because the name of the 'struct device' is dynamically
+> allocated. Drivers may call dev_set_name() on the device,
+> which will free and reallocate the name of the device,
+> leaving the 'name' of the platform_device pointing to the
+> now-freed memory.
 >
-> The below patch improves the documentation for the gpio-property.
+> Furthermore, if the dev_set_name() call is made from a
+> driver's probe() function and a subsequent request results
+> in probe deferral, the dangling 'name' reference may lead
+> to the device being re-probed using the wrong driver.
 
-That patch makes sense, and is a nice description,
-Acked-by: Stephen Warren <swarren@nvidia.com>
+This seems wrong. I don't think we want drivers to change their own
+device's name. The name is not supposed to change after registration.
 
-> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+Rob
 
->   Example:
+> To mitigate these scenarios, we use kstrdup to perform a
+> deep copy of the device name when assigning the name of the
+> platform_device, so that the platform_device name is
+> unaffected by any calls to dev_set_name() that might made
+> by drivers to rename the embedded 'struct device'.
 >
->          touch@4b {
+> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
+> ---
+> * v2 - swap cleanup order
 >
-
-Perhaps it makes sense to add a linux,gpio-keymap property into the 
-example too though; IIRC there was an earlier patch to the docs that did 
-this?
+>  drivers/of/device.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index f685e55..e9beae6 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
+>
+>         /* name and id have to be set so that the platform bus doesn't get
+>          * confused on matching */
+> -       ofdev->name = dev_name(&ofdev->dev);
+> +       ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
+>         ofdev->id = -1;
+>
+>         /* device_add will assume that this device is on the same node as
+> @@ -75,6 +75,7 @@ EXPORT_SYMBOL(of_device_register);
+>
+>  void of_device_unregister(struct platform_device *ofdev)
+>  {
+> +       kfree(ofdev->name);
+>         device_unregister(&ofdev->dev);
+>  }
+>  EXPORT_SYMBOL(of_device_unregister);
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
+>
