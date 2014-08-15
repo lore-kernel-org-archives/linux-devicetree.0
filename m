@@ -1,122 +1,78 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 2/2 V4] irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
-Date: Fri, 15 Aug 2014 16:08:50 +0100
-Message-ID: <877g29rdrx.fsf@approximate.cambridge.arm.com>
-References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
-	<1407942041-3291-3-git-send-email-suravee.suthikulpanit@amd.com>
-	<87k369ri9k.fsf@approximate.cambridge.arm.com>
-	<53EE1EE5.3060103@amd.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/3] net: Add Keystone NetCP ethernet driver support
+Date: Fri, 15 Aug 2014 11:12:39 -0400
+Message-ID: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53EE1EE5.3060103@amd.com> (Suravee Suthikulanit's message of
-	"Fri, 15 Aug 2014 15:53:25 +0100")
-Sender: linux-pci-owner@vger.kernel.org
-To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 15 2014 at  3:53:25 pm BST, Suravee Suthikulanit <suravee.suthikulpanit@amd.com> wrote:
-> On 8/15/2014 8:31 AM, Marc Zyngier wrote:
->> Hi Suravee,
->>
->>> +/*
->>> + * ARM64 function for seting up MSI irqs.
->>> + * Copied from driver/pci/msi.c: arch_setup_msi_irqs().
->>> + */
->>> +int arm64_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
->>> +{
->>> +	struct msi_desc *entry;
->>> +	int ret;
->>> +
->>> +	if (type == PCI_CAP_ID_MSI && nvec > 1)
->>> +		return 1;
->>> +
->>> +	list_for_each_entry(entry, &dev->msi_list, list) {
->>> +		ret = arch_setup_msi_irq(dev, entry);
->>> +		if (ret < 0)
->>> +			return ret;
->>> +		if (ret > 0)
->>> +			return -ENOSPC;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>
->> I'm going to reiterate what I said last time: Why do we need this?
->
-> [Suravee] Marc, I understand what you described last time but I think 
-> there is one point that missing here. See below.
->
->> So far, we have two MSI-capable controllers on their way upstream:
->> GICv2m and GICv3. Both are perfectly capable of handling more than a
->> single MSI per device.
->
-> [Suravee] I am aware of this.
->
->> So why should we cater for this? My gut feeling is that we should just
->> have:
->>
->> int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
->> {
->>          struct msi_desc *entry;
->>          int ret;
->>
->>          /*
->>           * So far, all our MSI controllers are capable of handling more
->>           * than a single MSI per device. Should we encounter less
->>           * capable devices, we'll consider doing something special for
->>           * them.
->>           */
->>          list_for_each_entry(entry, &dev->msi_list, list) {
->>                  ret = arch_setup_msi_irq(dev, entry);
->>                  if (ret < 0)
->>                          return ret;
->>                  if (ret > 0)
->>                          return -ENOSPC;
->>          }
->>
->>          return 0;
->> }
->>
->> and nothing else. Your driver should be able to retrieve the number of
->> MSI needed by the device, and allocate them. GICv3 manages it, and so
->> should GICv2m.
->>
->
-> [Suravee] Multi-MSI and MSI-x are not the same. For MSI-X, you can treat 
-> each of the MSI separately since it MSI-X capability structure has a 
-> table specific for each one of them.  For Multi-MSI, there is only one 
-> MSI capability structure which control all of them, and you need to 
-> program the "multiple-message enable" field with the encoding for 
-> "power-of-two", and therefore must be in contiguous range.
+Update version after incorporating David Miller's comment from earlier
+posting [1]. I would like to get these merged for upcoming 3.18 merge
+window if there are no concerns on this version.
 
-I fully understand this.
+The network coprocessor (NetCP) is a hardware accelerator that processes
+Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+switch sub-module to send and receive packets. NetCP also includes a packet
+accelerator (PA) module to perform packet classification operations such as
+header matching, and packet modification operations such as checksum
+generation. NetCP can also optionally include a Security Accelerator(SA)
+capable of performing IPSec operations on ingress/egress packets.
+    
+Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+1Gb/s rates per Ethernet port.
+    
+NetCP driver has a plug-in module architecture where each of the NetCP
+sub-modules exist as a loadable kernel module which plug in to the netcp
+core. These sub-modules are represented as "netcp-devices" in the dts
+bindings. It is mandatory to have the ethernet switch sub-module for
+the ethernet interface to be operational. Any other sub-module like the
+PA is optional.
 
-> Your logic above is what the standard MSI-x setup code is using. It is 
-> not handling of how many it can allocate all at once.
+Both GBE and XGBE network processors supported using common driver. It
+is also designed to handle future variants of NetCP.
 
-This logic can also be applied to MSI, provided that you start by
-allocating all the possible MSIs on the first call to your setup
-function.
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
 
-> As for sharing the logic b/w GICv2m and GICv3, unless they are sharing 
-> the same common data structure (e.g. the struct v2m which contans 
-> msi_chip), and the allocation function (e.g. generic 
-> gic_alloc_msi_irqs()), you pretty much need to do this separately since 
-> we need to walk the msi_chip back to its container structure.
+Sandeep Nair (3):
+  Documentation: dt: net: Add binding doc for Keystone NetCP ethernet
+    driver
+  net: Add Keystone NetCP ethernet driver
+  MAINTAINER: net: Add TI NETCP Ethernet driver entry
 
-I'm not suggesting we should share code between the GICv3 ITS and the
-v2m block (you definitely don't want the GICv3 madness to creep into
-your code).
+ .../devicetree/bindings/net/keystone-netcp.txt     |  197 ++
+ MAINTAINERS                                        |    6 +
+ drivers/net/ethernet/ti/Kconfig                    |   15 +-
+ drivers/net/ethernet/ti/Makefile                   |    4 +
+ drivers/net/ethernet/ti/netcp.h                    |  227 ++
+ drivers/net/ethernet/ti/netcp_core.c               | 2276 ++++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_ethss.c              | 2178 +++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_sgmii.c              |  130 ++
+ drivers/net/ethernet/ti/netcp_xgbepcsr.c           |  502 +++++
+ 9 files changed, 5532 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/keystone-netcp.txt
+ create mode 100644 drivers/net/ethernet/ti/netcp.h
+ create mode 100644 drivers/net/ethernet/ti/netcp_core.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_ethss.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_sgmii.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_xgbepcsr.c
 
-What I'm saying is that you can work out how many vectors you need from
-the initial call to gicv2m_setup_msi_irq, and just make sure they are
-effectively contiguous (you already have the code for this in
-alloc_msi_irq).
+regards,
+Santosh
 
-Thanks,
+[1] https://lkml.org/lkml/2014/4/22/805
 
-	M.
 -- 
-Jazz is not dead. It just smells funny.
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
