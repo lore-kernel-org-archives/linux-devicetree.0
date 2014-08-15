@@ -1,86 +1,38 @@
-From: Nick Dyer <nick.dyer@itdev.co.uk>
-Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
-Date: Fri, 15 Aug 2014 17:08:30 +0100
-Message-ID: <53EE307E.8060507@itdev.co.uk>
-References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk> <53EDF6B4.7080804@collabora.co.uk>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Move the PMIC interrupt pinctrl line to rk3288-evb common
+Date: Fri, 15 Aug 2014 18:11:13 +0200
+Message-ID: <2248839.hV1QilfnQh@diego>
+References: <1407782849-11056-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <53EDF6B4.7080804@collabora.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407782849-11056-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/08/14 13:01, Javier Martinez Canillas wrote:
->> By passing all these keycodes the touchpad worked as expected for me and the
->> driver did the same than the Chrome OS driver that has these keycodes hardcoded
->> when is_tp is true.
->>
->>> at the protocol guide for T19.
->>
->> I don't have access to proper documentation and I wouldn't expect people to have
->> access to non-public docs in order to use a Device Tree binding.
->>
->> That's why I wanted to document an example, so using this property could be
->> easier for others and they shouldn't have to look at the driver in order to
->> figure it out (and getting it wrong as you said :) )
->>
->> So it would be great if you could provide an example on how this is supposed to
->> be used.
+Am Montag, 11. August 2014, 11:47:29 schrieb Doug Anderson:
+> The PMIC interrupt pinctrl line was added to the rk3288-evb-act8846,
+> but it's the same line on both the ACT8846 version and the RK808
+> version.  This makes a lot of sense since they share the same SoC
+> daugherboard.  Move the pinctrl definition to the common file so we
+> can use it for the RK808 version.
 > 
-> Any comments on this? I would really appreciate if you can expand on how
-> this DT property is supposed to be used so I can re-spin the atmel support
-> patch for Peach boards.
+> NOTE: The PMIC interrupt doesn't _actually_ go to the PMIC on the
+> ACT8846 version of the board (it does on the RK808), but our
+> convention is to label things as they're labelled on the schematics.
+> In the very least you can argue that this is the interrupt from the
+> PMIC daughtercard even if it doesn't actually go to the PMIC chip.
+> 
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-The below patch improves the documentation for the gpio-property. Stephen
-Warren has a good example here:
-https://github.com/swarren/linux-tegra/commit/09789801
+I've added this to my v3.18 dts branch
 
-trackpad@4b {
-  compatible = "atmel,maxtouch";
-  reg = <0x4b>;
-  interrupt-parent = <&gpio>;
-  interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
-  linux,gpio-keymap = <0 0 0 BTN_LEFT>;
-};
 
-This maps BTN_LEFT to the 4th bit of the T19 message. I haven't looked up
-what GPIO number that corresponds to on the mXT224SL that he has, it varies
-with the particular maXTouch device you have.
-
-Hope this helps.
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
----
- Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-index baef432..1852906 100644
---- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-+++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-@@ -11,10 +11,17 @@ Required properties:
-
- Optional properties for main touchpad device:
-
--- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
--    keycode generated by each GPIO. Linux keycodes are defined in
-+- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
-+    on GPIO bit changes. An array of up to 8 entries can be provided
-+    indicating the Linux keycode mapped to each bit of the status byte,
-+    starting at the LSB. Linux keycodes are defined in
-     <dt-bindings/input/input.h>.
-
-+    Note: the numbering of the GPIOs and the bit they start at varies between
-+    maXTouch devices. You must either refer to the documentation, or
-+    experiment to determine which bit corresponds to which input. Use
-+    KEY_RESERVED for unused padding values.
-+
- Example:
-
-        touch@4b {
--- 
-1.9.1
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
