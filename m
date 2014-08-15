@@ -1,67 +1,111 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of/irq: lookup 'interrupts-extended' property first
-Date: Fri, 15 Aug 2014 13:56:38 +0100
-Message-ID: <20140815125638.C4D61C410ED@trevor.secretlab.ca>
-References: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
-	<CAGVrzcYfA8rCXGRW7g0JhT4GQKT8SQj+pMvCh25yoXLFGNM_Pw@mail.gmail.com>
-	<20140806165452.GN3711@ld-irv-0074>
-	<CAL_JsqK8BiffXgpQSig5EbV3FUW7EBOn9YjZGqOcUcEJiCJ0WA@mail.gmail.com>
-	<20140806201256.GO3711@ld-irv-0074>
-	<CA+bK7J7LQq4S70ScSynbLTjNMmP=9n3KD2suYRg9JN+pEv-Y7g@mail.gmail.com>
-	<53E2A85A.8030406@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53E2A85A.8030406@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Tim Bird <tbird20d@gmail.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Stuart Yoder <stuart.yoder@freescale.com>
+Subject: RE: [PATCH 3/6] Documentation: DT: Add entry for FSL Management
+ Complex
+Date: Fri, 15 Aug 2014 13:12:03 +0000
+Message-ID: <fa6ec1987fca45559c58778f664acfa5@BY2PR0301MB0743.namprd03.prod.outlook.com>
+References: <1408096156-29772-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1408096156-29772-4-git-send-email-bhupesh.sharma@freescale.com>
+ <20140815110020.GC15621@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140815110020.GC15621@leverpostej>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, "bhupesh.sharma@freescale.com" <bhupesh.sharma@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Jose Rivera <German.Rivera@freescale.com>, Will Deacon <Will.Deacon@arm.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Catalin Marinas <Catalin.Marinas@arm.com>, "arnab.basu@freescale.com" <arnab.basu@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 06 Aug 2014 15:12:42 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 08/06/2014 02:50 PM, Tim Bird wrote:
-> > On Wed, Aug 6, 2014 at 1:12 PM, Brian Norris
-> > <computersforpeace@gmail.com> wrote:
-> >> On Wed, Aug 06, 2014 at 01:42:08PM -0500, Rob Herring wrote:
-> >>> On Wed, Aug 6, 2014 at 11:54 AM, Brian Norris <computersforpeace@gmail.com> wrote:
-> >>>> On Thu, Jul 31, 2014 at 11:00:01AM -0700, Florian Fainelli wrote:
-> >>>> I think it is important that a device tree provide some flexibility on
-> >>>> kernel versions. We only invented 'interrupts-extended' in Linux 3.13,
-> >>>> so it's easy to have device trees that could work only on 3.13+.
-> >>>>
-> >>>> Typically, we might say that new features require new kernels, but this
-> >>>> is a very basic piece of the DT infrastructure. In our case, we have
-> >>>> hardware whose basic features can be supported by a single interrupt
-> >>>> parent, and so we used the 'interrupts' property pre-3.13. But when we
-> >>>> want to add some power management features, there's an additional
-> >>>> interrupt parent. Under the current DT binding, we have to switch over
-> >>>> to using 'interrupts-extended' exclusively, and thus we must have a
-> >>>> completely new DTB for >=3.13, and this DTB no longer works with the old
-> >>>> kernels.
-> >>>
-> >>> "Must have" to enable the new features?
-> >>
-> >> Yes. The new feature requires an additional interrupt parent, and so it
-> >> requires interrupts-extended.
-> > 
-> > Hold on there.  What about interrupt-map?  That was the traditional DT
-> > feature for
-> > supporting multi-parented interrupts.  Why couldn't the feature have been added
-> > using that instead of interrupts-extended?
+
+
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: Friday, August 15, 2014 6:00 AM
+> To: Sharma Bhupesh-B45370
+> Cc: devicetree@vger.kernel.org; Catalin Marinas; arnd@arndb.de; Rivera Jose-
+> B46482; Will Deacon; Yoder Stuart-B08248; grant.likely@secretlab.ca; Basu
+> Arnab-B45036; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH 3/6] Documentation: DT: Add entry for FSL Management
+> Complex
 > 
-> As far as I read it from the ePAPR specification, you have a good point
-> here, it looks like 'interrupt-map' could have been used as-is instead
-> of 'interrupts-extended'. In fact it is a little more general than
-> 'interrupts-extended' since it allows any sort of "child unit address",
-> whether that is an actual interrupt number, or something else, is
-> dependent on the type of node being used.
+> [devicetree-discuss is no more, fixing up to devicetree@vger.kernel.org]
+> 
+> Hi,
+> 
+> On Fri, Aug 15, 2014 at 10:49:12AM +0100, Bhupesh Sharma wrote:
+> > This patch adds a devicetree binding documentation for FSL's
+> > Management Complex.
+> >
+> > Management Complex is a hardware resource manager that manages
+> > specialized hardware objects used in network-oriented packet
+> > processing applications
+> >
+> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+> > Signed-off-by: Stuart Yoder <stuart.yoder@freescale.com>
+> > Signed-off-by: J. German Rivera <German.Rivera@freescale.com>
+> > ---
+> >  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |   40
+> ++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> > new file mode 100644
+> > index 0000000..608529e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> > @@ -0,0 +1,40 @@
+> > +* Freescale Management Complex
+> > +
+> > +The Freescale Management Complex (fsl-mc) is a hardware resource
+> > +manager that manages specialized hardware objects used in
+> > +network-oriented packet processing applications.  After the fsl-mc
+> > +block is enabled, pools of hardware resources are available, such as
+> > +queues, buffer pools, I/O interfaces.  These resources are building
+> > +blocks that can be used to create functional hardware objects/devices
+> > +such as network interfaces, crypto accelerator instances, L2 switches,
+> > +etc.
+> > +
+> > +Required properties:
+> > +
+> > +    - compatible
+> > +        Value type: <string>
+> > +        Definition: Must be "fsl,qoriq-mc".  A Freescale Management Complex
+> > +                    compatible with this binding must have Block Revision
+> > +                    Registers BRR1 and BRR2 at offset 0x0BF8 and 0x0BFC in
+> > +                    the MC control register region.
+> > +
+> > +    - reg
+> > +        Value type: <prop-encoded-array>
+> > +        Definition: A standard property.  Specifies one or two regions
+> > +                    defining the MC's registers:
+> > +
+> > +                       -the first region is the command portal for the
+> > +                        this machine and must always be present
+> > +
+> > +                       -the second region is the MC control registers. This
+> > +                        region may not be present in some scenarios, such
+> > +                        as in the device tree presented to a virtual
+> machine.
+> 
+> This looks extremely simple. Is this unit self-contained or does it
+> relate to other blocks which will be described separately?
 
-Not really any more general. The child unit address is for filtering
-which nodes get a particular map entry. That doesn't have any value when
-the routing information is directly in the device node, which is what
-interrupts-extended does.
+The block is self-contained.  It's a complicated block, but all interactions
+with happen through the command interface (1st reg region).
 
-interrupt-map certainly still works, but it is quite fiddly to use when
-the use case is merely one device wired to multiple interrupt
-controllers, and it is very easy to get wrong. interrupts-extended is
-far more concise.
+[The MC can do DMA and thus will relate to the SMMU, but there is some
+present churn around the SMMU and we'll define the needed properties
+(#stream-id-cells or whatever) when that is clear.]
 
-g.
+Stuart
