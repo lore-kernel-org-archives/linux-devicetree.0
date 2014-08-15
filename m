@@ -1,75 +1,48 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/5] ARM: BCM63XX: add BCM963138DVT Reference platform DTS
-Date: Thu, 14 Aug 2014 17:11:26 -0700
-Message-ID: <1408061487-20984-5-git-send-email-f.fainelli@gmail.com>
-References: <1408061487-20984-1-git-send-email-f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 3/5] ARM: BCM63XX: add BCM63138 minimal Device Tree
+Date: Thu, 14 Aug 2014 20:03:35 -0700
+Message-ID: <CAGVrzcZZEDBLkBq1=SC-1Ege3AE-jn4e8v9SYBELwFnO6_riGA@mail.gmail.com>
+References: <1408061487-20984-1-git-send-email-f.fainelli@gmail.com> <1408061487-20984-4-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408061487-20984-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1408061487-20984-4-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a DTS file for the Broadcom BCM963138DVT reference platform board
-which leverages the bcm63138.dtsi SoC DTSi file.
+2014-08-14 17:11 GMT-07:00 Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Add a very minimalistic BCM63138 Device Tree include file which
+> describes the BCM63138 SoC with only the basic set of required
+> peripherals:
+>
+> - Cortex A9 CPUs
+> - ARM GIC
+> - ARM SCU
+> - PL310 Level-2 cache controller
+> - ARM TWD & Global timers
+> - ARM TWD watchdog
+> - legacy MIPS bus (UBUS)
+> - BCM6345-style UARTs (disabled by default)
+>
+> Since the PL310 L2 cache controller does not come out of reset with
+> correct default values, we need to override the 'cache-sets' and
+> 'cache-size' properties to get its geometry right.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes in v2:
-- consistently use the prefix 963138 since this is a reference board
-- enable UARTs for that reference board so we get to a prompt
+[snip]
 
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/bcm963138dvt.dts | 25 +++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm963138dvt.dts
+> +       /* ARM bus */
+> +       axi@80000000 {
+> +               compatible = "simple-bus";
+> +               ranges = <0 0x80000000 0x84000>;
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b8c5cd3ddeb9..7ffe736abcf8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -53,6 +53,7 @@ dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
- dtb-$(CONFIG_ARCH_AXXIA) += axm5516-amarillo.dtb
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += bcm4708-netgear-r6250.dtb
-+dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
- 	bcm21664-garnet.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
-diff --git a/arch/arm/boot/dts/bcm963138dvt.dts b/arch/arm/boot/dts/bcm963138dvt.dts
-new file mode 100644
-index 000000000000..c5f7620881f7
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm963138dvt.dts
-@@ -0,0 +1,25 @@
-+/*
-+ * Broadcom BCM63138 Reference Board DTS
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm63138.dtsi"
-+
-+/ {
-+	compatible = "brcm,BCM963138DVT", "brcm,bcm63138";
-+	model = "Broadcom BCM963138DVT";
-+
-+	memory {
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+};
-+
-+&serial0 {
-+	status = "okay";
-+};
-+
-+&serial1 {
-+	status = "okay";
-+};
--- 
-1.9.1
-
+I made a typo here, the range declared here is narrower than it really
+is, I will re-submit this after getting some more feedback. Thanks!
+--
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
