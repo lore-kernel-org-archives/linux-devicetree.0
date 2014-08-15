@@ -1,63 +1,38 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v7 8/8] drivers: cpuidle: initialize Exynos driver
- through DT
-Date: Fri, 15 Aug 2014 22:52:01 +0100
-Message-ID: <20140815215201.GA15590@red-moon>
-References: <1407945127-27554-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1407945127-27554-9-git-send-email-lorenzo.pieralisi@arm.com>
- <20140815211233.GA46224@ilina-mac.local>
- <20140815214034.GA10552@e102568-lin.cambridge.arm.com>
- <20140815214513.GB46224@ilina-mac.local>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/6] clk: tegra: don't abort clk init on error
+Date: Sat, 16 Aug 2014 01:45:13 +0300
+Message-ID: <20140815224513.GM1626@tbergstrom-lnx.Nvidia.com>
+References: <1405437890-6468-1-git-send-email-pdeschrijver@nvidia.com>
+ <1405437890-6468-2-git-send-email-pdeschrijver@nvidia.com>
+ <53CE9C5F.1030005@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140815214513.GB46224@ilina-mac.local>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <k.chander@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Rob Herring <robh+dt@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen
+In-Reply-To: <53CE9C5F.1030005-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 15, 2014 at 10:45:13PM +0100, Lina Iyer wrote:
-> On Fri, Aug 15, 2014 at 10:40:34PM +0100, Lorenzo Pieralisi wrote:
-> >On Fri, Aug 15, 2014 at 10:12:33PM +0100, Lina Iyer wrote:
-> >
-> >[...]
-> >
-> >> > static int exynos_cpuidle_probe(struct platform_device *pdev)
-> >> > {
-> >> >-	int ret;
-> >> >+	int ret, i;
-> >> >+	struct cpuidle_driver *drv = &exynos_idle_driver;
-> >> >
-> >> > 	exynos_enter_aftr = (void *)(pdev->dev.platform_data);
-> >> >
-> >> >-	ret = cpuidle_register(&exynos_idle_driver, NULL);
-> >> >+	drv->cpumask = kzalloc(cpumask_size(), GFP_KERNEL);
-> >> >+	if (!drv->cpumask)
-> >> >+		return -ENOMEM;
-> >> drv->cpumask would not have any cpu set. I dont see it being modified
-> >> elsewhere.
-> >
-> >Gah, I should have missed that while refactoring, I can just compile test this
-> >patch so it went unnoticed. Fixed (by copying the possible mask to
-> >drv->cpumask).
-> >
-> >Thank you !
-> >Lorenzo
-> Noticed that in the big.little exynos driver  as well.
+On Tue, Jul 22, 2014 at 07:16:15PM +0200, Stephen Warren wrote:
+> On 07/15/2014 09:24 AM, Peter De Schrijver wrote:
+> > Just continue initializing clocks if there's an error on one of them. This
+> > is useful if there's a mistake in the inittable, because the system could
+> > hang if clk_disable_unused() disables some of the critical clocks in this
+> > table.
+> 
+> If there's a problem in the init table, we should simply fix it instead
+> of working around it.
+> 
 
-If you mean drivers/cpuidle-big_little.c, there masks are initialized
-before parsing DT, so code is correct and I could test that.
+Yes, ofcourse. However today we silently stop processing the init_table if a
+clock cannot be found. That doesn't sound right either to me and makes detecting
+wrong entries in the table more complex than it should be.
 
-Thanks,
-Lorenzo
+> At the very least, we need to WARN on this rather than just ignoring
+> problems.
+
+Cheers,
+
+Peter.
