@@ -1,93 +1,65 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] Documentation: DT: Add entry for FSL Management
- Complex
-Date: Fri, 15 Aug 2014 12:00:20 +0100
-Message-ID: <20140815110020.GC15621@leverpostej>
-References: <1408096156-29772-1-git-send-email-bhupesh.sharma@freescale.com>
- <1408096156-29772-4-git-send-email-bhupesh.sharma@freescale.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Deep-copy names of platform devices
+Date: Fri, 15 Aug 2014 12:01:49 +0100
+Message-ID: <CACxGe6ttP=eB-t_Dn5wrFawuFE3OLOJQZtstp-FcJ3KuAfau9A@mail.gmail.com>
+References: <1407891444-7311-1-git-send-email-stepanm@codeaurora.org>
+ <53EAC37C.4020203@codeaurora.org> <20140815104507.E6F84C40A89@trevor.secretlab.ca>
+ <CACxGe6tr_hX+XBD=C+y55OixrweVLZvNNFQHxSDHwuHbSYW-XQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408096156-29772-4-git-send-email-bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <CACxGe6tr_hX+XBD=C+y55OixrweVLZvNNFQHxSDHwuHbSYW-XQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arnab.basu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <arnab.basu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stepan Moskovchenko <stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[devicetree-discuss is no more, fixing up to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org]
+On Fri, Aug 15, 2014 at 11:52 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Aug 15, 2014 at 11:45 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, 12 Aug 2014 18:46:36 -0700, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>> On 08/12/14 17:57, Stepan Moskovchenko wrote:
+>>> > diff --git a/drivers/of/device.c b/drivers/of/device.c
+>>> > index f685e55..3e116f6 100644
+>>> > --- a/drivers/of/device.c
+>>> > +++ b/drivers/of/device.c
+>>> > @@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
+>>> >
+>>> >     /* name and id have to be set so that the platform bus doesn't get
+>>> >      * confused on matching */
+>>> > -   ofdev->name = dev_name(&ofdev->dev);
+>>> > +   ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
+>>> >     ofdev->id = -1;
+>>> >
+>>> >     /* device_add will assume that this device is on the same node as
+>>> > @@ -76,6 +76,7 @@ EXPORT_SYMBOL(of_device_register);
+>>> >  void of_device_unregister(struct platform_device *ofdev)
+>>> >  {
+>>> >     device_unregister(&ofdev->dev);
+>>> > +   kfree(ofdev->name);
+>>>
+>>> This probably ought to be swapped because we don't know if ofdev isn't
+>>> pointing to freed memory after device_unregister().
+>>
+>> Actually, the only safe place to free the memory is inside the
+>> platform_device release function. platform_device_release() in
+>> drivers/base/platform.c. Unfortunately there isn't a good way from that
+>> function to figure out if the name has been allocated the 'OF' way.
+>>
+>> It is not safe to free it here because there could still be references
+>> to the platform_device after device_unregister exits.
+>
+> We could fix the problem by making platform_device_alloc() also do a
+> kstrdup() when assigning the name. Then the release function can
+> unconditionally free the name field. Care to try that out?
 
-Hi,
+I don't know how well received that will be though. The vast majority
+of non-OF callers of platform_device_alloc() pass in a static string
+that will never disappear.
 
-On Fri, Aug 15, 2014 at 10:49:12AM +0100, Bhupesh Sharma wrote:
-> This patch adds a devicetree binding documentation for FSL's
-> Management Complex.
-> 
-> Management Complex is a hardware resource manager that manages
-> specialized hardware objects used in network-oriented packet
-> processing applications
-> 
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |   40 ++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> new file mode 100644
-> index 0000000..608529e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> @@ -0,0 +1,40 @@
-> +* Freescale Management Complex
-> +
-> +The Freescale Management Complex (fsl-mc) is a hardware resource
-> +manager that manages specialized hardware objects used in
-> +network-oriented packet processing applications.  After the fsl-mc
-> +block is enabled, pools of hardware resources are available, such as
-> +queues, buffer pools, I/O interfaces.  These resources are building
-> +blocks that can be used to create functional hardware objects/devices
-> +such as network interfaces, crypto accelerator instances, L2 switches,
-> +etc.
-> +
-> +Required properties:
-> +
-> +    - compatible
-> +        Value type: <string>
-> +        Definition: Must be "fsl,qoriq-mc".  A Freescale Management Complex
-> +                    compatible with this binding must have Block Revision
-> +                    Registers BRR1 and BRR2 at offset 0x0BF8 and 0x0BFC in
-> +                    the MC control register region.
-> +
-> +    - reg
-> +        Value type: <prop-encoded-array>
-> +        Definition: A standard property.  Specifies one or two regions
-> +                    defining the MC's registers:
-> +
-> +                       -the first region is the command portal for the
-> +                        this machine and must always be present
-> +
-> +                       -the second region is the MC control registers. This
-> +                        region may not be present in some scenarios, such
-> +                        as in the device tree presented to a virtual machine.
+Another possible solutions: Override the release function for platform
+devices allocated by of_device_alloc() to free the name field.
 
-This looks extremely simple. Is this unit self-contained or does it
-relate to other blocks which will be described separately?
-
-> +
-> +Example:
-> +
-> +        fsl_mc: fsl-mc@80c000000 {
-> +                compatible = "fsl,qoriq-mc";
-> +                reg = <0x00000008 0x0c000000 0 0x40        // MC portal base
-> +                       0x00000000 0x08340000 0 0x40000 >;  // MC control reg
-
-Nit: could we bracket list entries individually please?
-
-Thanks,
-Mark.
+g.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
