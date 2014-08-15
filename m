@@ -1,83 +1,91 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 3/3] ARM: dts: socfpga: memreserve first 4KB for SMP
- code
-Date: Fri, 15 Aug 2014 12:27:58 +0100
-Message-ID: <20140815112758.GE15621@leverpostej>
-References: <1408050814-28595-1-git-send-email-dinguyen@opensource.altera.com>
- <1408050814-28595-4-git-send-email-dinguyen@opensource.altera.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
+Date: Fri, 15 Aug 2014 12:51:11 +0100
+Message-ID: <20140815115110.GO27466@arm.com>
+References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
+	<87a9774lf5.fsf@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1408050814-28595-4-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "vbridger-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <vbridger-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <87a9774lf5.fsf-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
-
-On Thu, Aug 14, 2014 at 10:13:34PM +0100, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Thu, Aug 14, 2014 at 07:47:42AM +0100, Hiroshi Doyu wrote:
+> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 > 
-> The SOCFPGA's SMP code uses 0x0 for as the location for the trampoline to
-> bring secondary cores online. This patch adds a /memreserve/ section to
-> reserve the first 4K for the SMP trampoline code.
-
-I'm slightly confused. 
-
-Sorry to split hairs here, but I think the comment is subtly wrong.
-
-The trampoline code seems to be placed in this location by Linux, so
-it's not that we're protecting the trampoline code, but rather we're
-preserving the location for future use.
-
-I take it that the reset address isn't configurable?
-
-Thanks,
-Mark.
-
+> > +Multiple-master IOMMU:
+> > +----------------------
+> > +
+> > +       iommu {
+> > +               /* the specifier represents the ID of the master */
+> > +               #iommu-cells = <1>;
+> > +       };
+> > +
+> > +       master@1 {
+> > +               /* device has master ID 42 in the IOMMU */
+> > +               iommus = <&{/iommu} 42>;
+> > +       };
+> > +
+> > +       master@2 {
+> > +               /* device has master IDs 23 and 24 in the IOMMU */
+> > +               iommus = <&{/iommu} 23>, <&{/iommu} 24>;
+> > +       };
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Acked-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> ---
-> v2: Add a comment in the dts files
-> ---
->  arch/arm/boot/dts/socfpga_arria5.dtsi   | 2 ++
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi | 2 ++
->  2 files changed, 4 insertions(+)
+> I think that this "master ID" will be parsed in IOMMU driver. For
+> example, ARM,SMMU expects "streamID" as "master ID", right?
 > 
-> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-> index 468fc4c..03e8268 100644
-> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-> @@ -15,6 +15,8 @@
->   */
->  
->  /dts-v1/;
-> +/* First 4KB has trampoline code for secondary cores. */
-> +/memreserve/ 0x00000000 0x0001000;
->  #include "socfpga.dtsi"
->  
->  / {
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-> index 33cad8b..28c05e7 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-> @@ -16,6 +16,8 @@
->   */
->  
->  /dts-v1/;
-> +/* First 4KB has trampoline code for secondary cores. */
-> +/memreserve/ 0x00000000 0x0001000;
->  #include "socfpga.dtsi"
->  
->  / {
-> -- 
-> 2.0.3
+> If a SoC has a feature to configure to assign streamID to devices at
+> runtime, "streamID" is not equal to "master ID".
 > 
+>   iommus = <&{/smmu} "soc specific master ID">;
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> "soc master ID" needs to be translated into "streamID" by SoC SW. It
+> seems that ARM,SMMU kernel driver doesn't expect this kind of ID
+> translation. If ARM,SMMU kernel driver is used as is, "soc master ID"
+> would be incompatible? ARM,SMMU needs such translation before
+> parsing. Is this my understanding right?
+> 
+> If so I think that this master ID configuration/translation may be quite
+> reasonable requirment for SoC using ARM,SMMU.
+> 
+> Can we consider this ID translation within ARM,SMMU compatibility?
+> 
+> IOW, is it possible to implement some SoC specific hook for ID
+> translation/configuration in ARM,SMMU kernel driver?
+
+I think there's some confusion here. The ARM architected SMMU does not
+perform any StreamID translation -- it sees an incoming ID and uses that to
+lookup a set of translation tables. However, for hotpluggable buses (e.g.
+PCI), we need a way to communicate the StreamIDs for a newly discovered
+device to the SMMU. I expect that this would be described as a translation
+from another ID (e.g. requester id for PCI), so *that* is where the
+translation occurs.
+
+This translation can be described as a simple base + offset calculation,
+e.g. StreamID = RequesterID + offset. Ideally, you'd have one offset per
+host controller (and described in the host controller DT node), but you
+could also imagine building tables where each RequesterID maps to a
+different StreamID.
+
+The final thing to mention is that some SoCs may have device hotplug
+architectures that aren't like PCIe, so we may well need glue code there to
+`allocate' StreamIDs from a fixed portion of the numberspace.
+
+We don't need to solve all of these problems in one go, but the base +
+offset code will certainly be useful; not just for the SMMU but also for
+the GIC (where we have DeviceIDs). Mark Rutland is looking at this.
+
+Will
