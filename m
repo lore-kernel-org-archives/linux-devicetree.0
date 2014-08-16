@@ -1,48 +1,295 @@
-MIME-Version: 1.0
-In-Reply-To: <1408542259-415-9-git-send-email-j.anaszewski@samsung.com>
-References: <1408542259-415-1-git-send-email-j.anaszewski@samsung.com>
-	<1408542259-415-9-git-send-email-j.anaszewski@samsung.com>
-Date: Thu, 21 Aug 2014 22:11:02 -0500
-Message-ID: <CAL_Jsq+CWXKRtssRYNs7XOsFUFs7XX+k99=MnpHuvCt-wBk2Yg@mail.gmail.com>
-Subject: Re: [PATCH/RFC v5 08/10] of: Add Skyworks Solutions, Inc. vendor prefix
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-Path: <westeri@linux.intel.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [RFC PATCH 4/9] of: Add property_ops callback for devices with of_node
+Date: Sat, 16 Aug 2014 09:53:54 +0300
+Message-Id: <1408172039-32513-5-git-send-email-mika.westerberg@linux.intel.com>
+In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 20, 2014 at 8:44 AM, Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
-> Use "skyworks" as the vendor prefix for the
-> Skyworks Solutions, Inc.
->
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 34cc1bf..e1c6317 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -118,6 +118,7 @@ renesas     Renesas Electronics Corporation
->  ricoh  Ricoh Co. Ltd.
->  rockchip       Fuzhou Rockchip Electronics Co., Ltd
->  samsung        Samsung Semiconductor
-> +skyworks       Skyworks Solutions, Inc.
->  sbs    Smart Battery System
+From: Aaron Lu <aaron.lu@intel.com>
 
-Alphabetical order by prefix please.
+With the unified device properties interface in place, add device tree support.
+By adding the dev_prop_ops for of_node devices, drivers can access properties
+from ACPI or Device Tree in a generic way.
 
-Rob
+Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/of/base.c        | 194 ++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/of/platform.c    |   4 +-
+ include/linux/property.h |   4 +
+ 3 files changed, 200 insertions(+), 2 deletions(-)
 
->  schindler      Schindler
->  seagate        Seagate Technology PLC
-> --
-> 1.7.9.5
->
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index b9864806e9b8..527004d01423 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -20,7 +20,7 @@
+ #include <linux/ctype.h>
+ #include <linux/cpu.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
++#include <linux/property.h>
+ #include <linux/of_graph.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+@@ -1343,6 +1343,39 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
+ EXPORT_SYMBOL_GPL(of_property_read_u64);
+ 
+ /**
++ * of_property_read_u64_array - Find and read an array of 64 bit integers
++ * from a property.
++ *
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_values:	pointer to return value, modified only if return value is 0.
++ * @sz:		number of array elements to read
++ *
++ * Search for a property in a device node and read 64-bit value(s) from
++ * it. Returns 0 on success, -EINVAL if the property does not exist,
++ * -ENODATA if property does not have a value, and -EOVERFLOW if the
++ * property data isn't large enough.
++ *
++ * The out_values is modified only if a valid u64 value can be decoded.
++ */
++int of_property_read_u64_array(const struct device_node *np,
++			       const char *propname, u64 *out_values,
++			       size_t sz)
++{
++	const __be32 *val = of_find_property_value_of_size(np, propname,
++						(sz * sizeof(*out_values)));
++
++	if (IS_ERR(val))
++		return PTR_ERR(val);
++
++	while (sz--) {
++		*out_values++ = of_read_number(val, 2);
++		val += 2;
++	};
++	return 0;
++}
++
++/**
+  * of_property_read_string - Find and read a string from a property
+  * @np:		device node from which the property value is to be read.
+  * @propname:	name of the property to be searched.
+@@ -1490,6 +1523,47 @@ int of_property_count_strings(struct device_node *np, const char *propname)
+ }
+ EXPORT_SYMBOL_GPL(of_property_count_strings);
+ 
++/**
++ * of_property_read_string_array - Find and read an array of strings
++ * from a multiple strings property.
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_string:	pointer to null terminated return string, modified only if
++ *		return value is 0.
++ * @sz:		number of array elements to read
++ *
++ * Search for a property in a device tree node and retrieve a list of
++ * terminated string value (pointer to data, not a copy) in that property.
++ * Returns 0 on success, -EINVAL if the property does not exist, -ENODATA if
++ * property does not have a value, and -EILSEQ if the string is not
++ * null-terminated within the length of the property data.
++ *
++ * The out_string pointer is modified only if a valid string can be decoded.
++ */
++int of_property_read_string_array(struct device_node *np, const char *propname,
++				  char **output, size_t sz)
++{
++	struct property *prop = of_find_property(np, propname, NULL);
++	int i = 0;
++	size_t l = 0, total = 0;
++	char *p;
++
++	if (!prop)
++		return -EINVAL;
++	if (!prop->value)
++		return -ENODATA;
++	if (strnlen(prop->value, prop->length) >= prop->length)
++		return -EILSEQ;
++
++	p = prop->value;
++
++	for (i = 0; total < prop->length; total += l, p += l) {
++		output[i++] = p;
++		l = strlen(p) + 1;
++	}
++	return 0;
++}
++
+ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+ {
+ 	int i;
+@@ -2376,3 +2450,121 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+ 	return of_get_next_parent(np);
+ }
+ EXPORT_SYMBOL(of_graph_get_remote_port);
++
++static int of_dev_prop_get(struct device *dev, const char *propname,
++			   void **valptr)
++{
++	struct property *pp = of_find_property(dev->of_node, propname, NULL);
++
++	if (!pp)
++		return -ENODATA;
++
++	if (valptr)
++		*valptr = pp->value;
++	return 0;
++}
++
++static int of_dev_prop_read(struct device *dev, const char *propname,
++			    enum dev_prop_type proptype, void *val)
++{
++	void *value;
++	int ret = of_dev_prop_get(dev, propname, &value);
++
++	if (ret)
++		return ret;
++
++	if (proptype >= DEV_PROP_U8 && proptype <= DEV_PROP_U64) {
++		switch (proptype) {
++		case DEV_PROP_U8:
++			*(u8 *)val = *(u8 *)value;
++			break;
++		case DEV_PROP_U16:
++			*(u16 *)val = *(u16 *)value;
++			break;
++		case DEV_PROP_U32:
++			*(u32 *)val = *(u32 *)value;
++			break;
++		default:
++			*(u64 *)val = *(u64 *)value;
++			break;
++		}
++	} else if (proptype == DEV_PROP_STRING) {
++		*(char **)val = value;
++	}
++	return ret;
++
++}
++
++static int of_dev_prop_read_array(struct device *dev, const char *propname,
++				  enum dev_prop_type proptype, void *val,
++				  size_t nval)
++{
++	int ret, elem_size;
++
++	if (!val) {
++		switch (proptype) {
++		case DEV_PROP_U8:
++			elem_size = sizeof(u8);
++			break;
++		case DEV_PROP_U16:
++			elem_size = sizeof(u16);
++			break;
++		case DEV_PROP_U32:
++			elem_size = sizeof(u32);
++			break;
++		case DEV_PROP_U64:
++			elem_size = sizeof(u64);
++			break;
++		case DEV_PROP_STRING:
++			return of_property_count_strings(dev->of_node,
++							 propname);
++		default:
++			return -EINVAL;
++		}
++		return of_property_count_elems_of_size(dev->of_node, propname,
++						       elem_size);
++	}
++
++	switch (proptype) {
++	case DEV_PROP_U8:
++		ret = of_property_read_u8_array(dev->of_node, propname,
++						(u8 *)val, nval);
++		break;
++	case DEV_PROP_U16:
++		ret = of_property_read_u16_array(dev->of_node, propname,
++						 (u16 *)val, nval);
++		break;
++	case DEV_PROP_U32:
++		ret = of_property_read_u32_array(dev->of_node, propname,
++						 (u32 *)val, nval);
++		break;
++	case DEV_PROP_U64:
++		ret = of_property_read_u64_array(dev->of_node, propname,
++						 (u64 *)val, nval);
++		break;
++	case DEV_PROP_STRING:
++		ret = of_property_read_string_array(dev->of_node, propname,
++						    (char **)val, nval);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int of_dev_get_child_count(struct device *dev)
++{
++	struct device_node *node = dev->of_node;
++
++	if (!node)
++		return -EINVAL;
++	return of_get_child_count(node);
++}
++
++struct dev_prop_ops of_property_ops = {
++	.get = of_dev_prop_get,
++	.read = of_dev_prop_read,
++	.read_array = of_dev_prop_read_array,
++	.child_count = of_dev_get_child_count,
++};
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 500436f9be7f..3113d3704eff 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -14,7 +14,7 @@
+ #include <linux/errno.h>
+ #include <linux/module.h>
+ #include <linux/amba/bus.h>
+-#include <linux/device.h>
++#include <linux/property.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/slab.h>
+ #include <linux/of_address.h>
+@@ -138,6 +138,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 	}
+ 
+ 	dev->dev.of_node = of_node_get(np);
++	dev->dev.property_ops = &of_property_ops;
+ 	dev->dev.parent = parent;
+ 
+ 	if (bus_id)
+@@ -293,6 +294,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 	/* setup generic device info */
+ 	dev->dev.coherent_dma_mask = ~0;
+ 	dev->dev.of_node = of_node_get(node);
++	dev->dev.property_ops = &of_property_ops;
+ 	dev->dev.parent = parent;
+ 	dev->dev.platform_data = platform_data;
+ 	if (bus_id)
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 52ea7fe7fe09..a840c1784c82 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -38,6 +38,10 @@ struct dev_prop_ops {
+ extern struct dev_prop_ops acpi_property_ops;
+ #endif
+ 
++#ifdef CONFIG_OF
++extern struct dev_prop_ops of_property_ops;
++#endif
++
+ int device_property_get(struct device *dev, const char *propname,
+ 			void **valptr);
+ int device_property_read(struct device *dev, const char *propname,
+-- 
+2.1.0.rc1
