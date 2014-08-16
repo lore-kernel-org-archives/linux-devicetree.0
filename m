@@ -1,74 +1,61 @@
-From: Daniel <delta.tatham@me.com>
-Subject: Re: [PATCH v3 1/6] pinctrl: Device tree bindings for Qualcomm pm8xxx
- gpio block
-Date: Sat, 16 Aug 2014 16:24:06 +0100
-Message-ID: <ED4952FE-A292-4724-9283-B5226AB20E3E@me.com>
-References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
- <1407771634-14946-2-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1972.3\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-reply-to: <1407771634-14946-2-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 5/7] net: cpsw: Add am33xx MACID readout
+Date: Sat, 16 Aug 2014 11:46:48 -0500
+Message-ID: <20140816164647.GA2858@katana>
+References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de>
+ <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-@Ivan: sorry about the double post.
 
-Am 11.08.2014 um 16:40 schrieb Ivan T. Ivanov <iivanov@mm-sol.com>:
-> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> new file mode 100644
-> index 0000000..994e748
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> @@ -0,0 +1,107 @@
-> +/*
-> + * This header provides constants for the Qualcomm PMIC gpio binding.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PINCTRL_QCOM_PMIC_GPIO_H
-> +#define _DT_BINDINGS_PINCTRL_QCOM_PMIC_GPIO_H
-> +
-> +#define PMIC_GPIO_PULL_UP_30		1
-> +#define PMIC_GPIO_PULL_UP_1P5		2
-> +#define PMIC_GPIO_PULL_UP_31P5		3
-> +#define PMIC_GPIO_PULL_UP_1P5_30	4
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Looking at drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c, shouldn't these defines start at 0?
-e.g. #define PMIC_GPIO_PULL_UP_30 	0
 
-after shifting those 4 defines by -1, /sys/kernel/debug/gpio gives me the proper values for the pins configured to be pull-up:
+> diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+> index 9cfaab8152be..5a31c2b322ee 100644
+> --- a/drivers/net/ethernet/ti/Makefile
+> +++ b/drivers/net/ethernet/ti/Makefile
+> @@ -8,5 +8,6 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += davinci_emac.o
+>  obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+>  obj-$(CONFIG_TI_DAVINCI_CPDMA) += davinci_cpdma.o
+>  obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+> +obj-$(CONFIG_TI_CPSW_CTRL_MACID) += cpsw-ctrl-macid.o
+>  obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+>  ti_cpsw-y := cpsw_ale.o cpsw.o cpts.o
 
-cat /sys/kernel/debug/gpio
-GPIOs 212-255, platform/500000.qcom,ssbi:pmic@0:gpio@150, 500000.qcom,ssbi:pmic@0:gpio@150:
-...
-gpio4 : in   normal  VIN2 pull-up 30uA                push-pull  low  no      inverted
-...
-gpio38: in   normal  VIN2 pull-up 30uA                push-pull  low  no      inverted
-...
-____
-dts:
-[snip]
-                                        pm8921_gpio_keys: gpio-keys {
-                                                volume-keys {
-                                                        pins = "gpio4", "gpio38";
-                                                        function = PMIC_GPIO_FUNC_NORMAL;
+Leftover from your last series?
 
-                                                        input-enable;
-                                                        drive-push-pull;
-                                                        qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
-                                                        qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-                                                        power-source = <PM8921_GPIO_S4>;
-                                                };
-                                        };
-[/snip]
 
-However, I still cannot get any data from those 2 pins if I export them through /sys/class/gpio...
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Device: Nexus 7 2013 WiFi
-Board: APQ8064
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Cheers,
-D
+iQIcBAEBAgAGBQJT74r3AAoJEBQN5MwUoCm2dBAQAIib9q2jmNSLalkIkYywNe+O
+7qcKAtCVZ1u+idRL8UQ2gj/jNFu2Dx7Am7SRw2jXf7c27q77tIa9C9V4qV2wZ+BL
+yc8Qm8I6/4pzN1bbaK5Lmyw5xMIocqE7PcjsVjB/TXEgaw/NuVU2bzB2QpIHsqUB
+tdGLdALA2/f4Uz8gyj+/lRLcuEw23d9icTRIImcU+MMLGfWKxnUP9BnGGkvJEEtF
+Y9mJLOn9ErZ98n98ThZmV+8U0FhYHcsiz2Nz1Yk8hwvBifEz1MJ2UU1CnSArTfxe
+f3Dc661hrW8KTWCV2cnm01wbHDN4H+MWhhO1qIfDICwszE8UQyIKtfMq+Sy4jX4g
+KKa6id0yj0B3Bkfq8TfdJFom1zkukUAAWFXLqJ3NSTetcGGDr1tKgkUIrfnfOClk
+j9HcOMiTyPaUhGUVWHisWb/c5PIm9OmZMBoWwEWcoeK9B+rGc5GCyvhY3SvBlKYw
+SUL0bI/GOQo/hlXqzDbmBqtYfocgAUfh3HUQ3I/VYhxntCiT9N1mnRjLyM5trJOp
+f028/+NrzBLZkeuR71lwI22fIuwjlspVn/PWnjFR87N4VBfDI0r7alOdP/Ka1x88
+2zQQmLTCtw0tP1eFTFxh2KaEuOJp0II3B5/L9n5e7j3E3ho+jGHphsxEmR/rRerO
+30x/hyOsVcFWukrb1BBG
+=Gloq
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
