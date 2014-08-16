@@ -1,193 +1,139 @@
-Return-Path: <dianders@google.com>
-MIME-Version: 1.0
-Sender: dianders@google.com
-In-Reply-To: <1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
-References: <1406786498-3935-1-git-send-email-addy.ke@rock-chips.com>
-	<1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
-Date: Thu, 14 Aug 2014 10:09:55 -0700
-Message-ID: <CAD=FV=W-UFsELR-pLdqg+CC7bG8J3zCYa=fxy_4pd0vOnvc62w@mail.gmail.com>
-Subject: Re: [PATCH] mmc: dw_mmc: move rockchip related code to a separate file
-From: Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, han jiang <hj@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Lin Huang <hl@rock-chips.com>
+Return-Path: <westeri@linux.intel.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [RFC PATCH 5/9] mfd: Add ACPI support
+Date: Sat, 16 Aug 2014 09:53:55 +0300
+Message-Id: <1408172039-32513-6-git-send-email-mika.westerberg@linux.intel.com>
+In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Addy,
+If an MFD device is backed by ACPI namespace, we should allow subdevice
+drivers to access their corresponding ACPI companion devices through normal
+means (e.g using ACPI_COMPANION()).
 
-On Thu, Aug 14, 2014 at 1:01 AM, Addy Ke <addy.ke@rock-chips.com> wrote:
-> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-> new file mode 100644
-> index 0000000..3d86ef3
-> --- /dev/null
-> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> @@ -0,0 +1,146 @@
-> +/*
-> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-> + * Author: addy ke <addy.ke@rock-chips.com>
+This patch adds such support to the MFD core. If the MFD parent device
+doesn't specify any ACPI _HID/_CID for the child device, the child device
+will share the parent ACPI companion device. Otherwise the child device
+will be assigned with the corresponding ACPI companion, if found in the
+namespace below the parent.
 
-nit: You've already got the author below.  Do you need it here too?
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+---
+ Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++
+ drivers/mfd/mfd-core.c             | 41 ++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/core.h           |  3 +++
+ 3 files changed, 71 insertions(+)
 
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/dw_mmc.h>
-> +#include <linux/of_address.h>
-> +
-> +#include "dw_mmc.h"
-> +#include "dw_mmc-pltfm.h"
-> +
-> +#define RK3288_CLKGEN_DIV       2
-> +
-> +static void dw_mci_rockchip_prepare_command(struct dw_mci *host, u32 *cmdr)
-> +{
-> +       *cmdr |= SDMMC_CMD_USE_HOLD_REG;
-> +}
-> +
-> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-> +{
-> +       host->bus_hz /= RK3288_CLKGEN_DIV;
-> +
-> +       return 0;
-> +}
-> +
-> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +       int ret;
-> +       unsigned int cclkin;
-> +       u32 bus_hz;
-> +
-> +       /*
-> +        * cclkin: source clock of mmc controller
-> +        * bus_hz: card interface clock generated by CLKGEN
-> +        * bus_hz = cclkin / RK3288_CLKGEN_DIV
-> +        * os->clock = (div == 0) ? bus_hz : (bus_hz / (2 * div))
-
-nit: why did you change "ios->clock" to "os->clock" in the comment?
-
-> +        *
-> +        * Note: div can only be 0 or 1
-> +        *       if DDR50 8bit mode(only emmc work in 8bit mode),
-> +        *       div must be set 1
-> +        */
-> +       if (ios->bus_width == MMC_BUS_WIDTH_8 &&
-> +           ios->timing == MMC_TIMING_MMC_DDR52)
-> +               cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
-> +       else
-> +               cclkin = ios->clock * RK3288_CLKGEN_DIV;
-> +
-> +       ret = clk_set_rate(host->ciu_clk, cclkin);
-> +       if (ret)
-> +               dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-> +
-> +       bus_hz = clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-> +       if (bus_hz != host->bus_hz) {
-> +               host->bus_hz = bus_hz;
-> +               /* force dw_mci_setup_bus() */
-> +               host->current_speed = 0;
-> +       }
-> +}
-> +
-> +static const struct dw_mci_drv_data rk2928_drv_data = {
-> +       .prepare_command        = dw_mci_rockchip_prepare_command,
-> +};
-> +
-> +static const struct dw_mci_drv_data rk3288_drv_data = {
-> +       .prepare_command        = dw_mci_rockchip_prepare_command,
-> +       .set_ios                = dw_mci_rk3288_set_ios,
-> +       .setup_clock    = dw_mci_rk3288_setup_clock,
-> +};
-> +
-> +static const struct of_device_id dw_mci_rockchip_match[] = {
-> +       { .compatible = "rockchip,rk2928-dw-mshc",
-> +               .data = &rk2928_drv_data },
-> +       { .compatible = "rockchip,rk3288-dw-mshc",
-> +               .data = &rk3288_drv_data },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, dw_mci_rockchip_match);
-> +
-> +static int dw_mci_rockchip_probe(struct platform_device *pdev)
-> +{
-> +       const struct dw_mci_drv_data *drv_data;
-> +       const struct of_device_id *match;
-> +
-> +       match = of_match_node(dw_mci_rockchip_match, pdev->dev.of_node);
-
-Your code doesn't have "if (pdev->dev.of_node)".  That's OK (I think)
-but it means that your KConfig needs a "depends on OF", right?
-
-
-> +       drv_data = match->data;
-> +
-> +       return dw_mci_pltfm_register(pdev, drv_data);
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int dw_mci_rockchip_suspend(struct device *dev)
-> +{
-> +       struct dw_mci *host = dev_get_drvdata(dev);
-> +       int ret;
-> +
-> +       ret = dw_mci_suspend(host);
-> +       if (!ret)
-> +               clk_disable_unprepare(host->ciu_clk);
-> +
-> +       return ret;
-> +}
-> +
-> +static int dw_mci_rockchip_resume(struct device *dev)
-> +{
-> +       struct dw_mci *host = dev_get_drvdata(dev);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(host->ciu_clk);
-> +       if (ret) {
-> +               dev_err(host->dev, "failed to enable ciu clock\n");
-> +               return ret;
-> +       }
-> +
-> +       return dw_mci_resume(host);
-
-Your suspend/resume are different than the platform suspend/resume.
-You should change that in a separate change.  This change should just
-move code and not change functionality.
-
-
-> +}
-> +#endif /* CONFIG_PM_SLEEP */
-> +
-> +static SIMPLE_DEV_PM_OPS(dw_mci_rockchip_pmops,
-> +                        dw_mci_rockchip_suspend,
-> +                        dw_mci_rockchip_resume);
-> +
-> +static struct platform_driver dw_mci_rockchip_pltfm_driver = {
-> +       .probe          = dw_mci_rockchip_probe,
-> +       .remove         = dw_mci_pltfm_remove,
-
-On exynos I see the remove wrapped by __exit_p.  Should you do that here, too?
-
-
-> +       .driver         = {
-> +               .name           = "dwmmc_rockchip",
-> +               .of_match_table = dw_mci_rockchip_match,
-> +               .pm             = &dw_mci_rockchip_pmops,
-> +       },
-> +};
-> +
-> +module_platform_driver(dw_mci_rockchip_pltfm_driver);
-> +
-> +MODULE_AUTHOR("Addy Ke <addy.ke@rock-chips.com>");
-> +MODULE_DESCRIPTION("Rockchip Specific DW-MSHC Driver Extension");
-> +MODULE_ALIAS("platform:dwmmc-rockchip");
-> +MODULE_LICENSE("GPL v2");
-
--Doug
+diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
+index e182be5e3c83..74e35c54febf 100644
+--- a/Documentation/acpi/enumeration.txt
++++ b/Documentation/acpi/enumeration.txt
+@@ -312,3 +312,30 @@ a code like this:
+ 
+ There are also devm_* versions of these functions which release the
+ descriptors once the device is released.
++
++MFD devices
++~~~~~~~~~~~
++The MFD devices create platform devices from their children. For the
++child devices there needs to be an ACPI handle that they can use to
++reference parts of the ACPI namespace that relate to them. In the Linux
++MFD subsystem we provide two ways:
++
++	o The children share the parent ACPI handle.
++	o The MFD cell can specify the ACPI id of the device.
++
++For the first case, the MFD drivers do not need to do anything. The
++resulting child platform device will have its ACPI_COMPANION() set to point
++to the parent device.
++
++If the ACPI namespace has a device that we can match using an ACPI id,
++the id should be set like:
++
++	static struct mfd_cell my_subdevice_cell = {
++		.name = "my_subdevice",
++		/* set the resources relative to the parent */
++		.acpi_pnpid = "XYZ0001",
++	};
++
++The ACPI id "XYZ0001" is then used to lookup an ACPI device directly under
++the MFD device and if found, that ACPI companion device is bound to the
++resulting child platform device.
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 892d343193ad..bb466b28b3b6 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -78,6 +78,45 @@ static int mfd_platform_add_cell(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++#if IS_ENABLED(CONFIG_ACPI)
++static void mfd_acpi_add_device(const struct mfd_cell *cell,
++				struct platform_device *pdev)
++{
++	struct acpi_device *parent_adev;
++	struct acpi_device *adev = NULL;
++
++	parent_adev = ACPI_COMPANION(pdev->dev.parent);
++	if (!parent_adev)
++		return;
++
++	/*
++	 * MFD child device gets its ACPI handle either from the ACPI
++	 * device directly under the parent that matches the acpi_pnpid or
++	 * it will use the parent handle if is no acpi_pnpid is given.
++	 */
++	if (cell->acpi_pnpid) {
++		struct acpi_device_id ids[2] = {};
++		struct acpi_device *child_adev;
++
++		strlcpy(ids[0].id, cell->acpi_pnpid, sizeof(ids[0].id));
++		list_for_each_entry(child_adev, &parent_adev->children, node)
++			if (acpi_match_device_ids(child_adev, ids)) {
++				adev = child_adev;
++				break;
++			}
++	} else {
++		adev = parent_adev;
++	}
++
++	ACPI_COMPANION_SET(&pdev->dev, adev);
++}
++#else
++static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
++				       struct platform_device *pdev)
++{
++}
++#endif
++
+ static int mfd_add_device(struct device *parent, int id,
+ 			  const struct mfd_cell *cell, atomic_t *usage_count,
+ 			  struct resource *mem_base,
+@@ -118,6 +157,8 @@ static int mfd_add_device(struct device *parent, int id,
+ 		}
+ 	}
+ 
++	mfd_acpi_add_device(cell, pdev);
++
+ 	if (cell->pdata_size) {
+ 		ret = platform_device_add_data(pdev,
+ 					cell->platform_data, cell->pdata_size);
+diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+index f543de91ce19..73e1709d4c09 100644
+--- a/include/linux/mfd/core.h
++++ b/include/linux/mfd/core.h
+@@ -44,6 +44,9 @@ struct mfd_cell {
+ 	 */
+ 	const char		*of_compatible;
+ 
++	/* Matches ACPI PNP id, either _HID or _CID */
++	const char		*acpi_pnpid;
++
+ 	/*
+ 	 * These resources can be specified relative to the parent device.
+ 	 * For accessing hardware you should use resources from the platform dev
+-- 
+2.1.0.rc1
