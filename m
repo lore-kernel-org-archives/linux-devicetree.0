@@ -1,50 +1,55 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv6 0/2] add DT endianness binding support for regmap
-Date: Sat, 16 Aug 2014 14:14:26 +0100
-Message-ID: <20140816131426.GG28623@sirena.org.uk>
-References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
+Subject: Re: [PATCH v3] Documentation: devicetree: Fix ADI AXI SPDIF
+ specification
+Date: Sat, 16 Aug 2014 15:59:54 +0100
+Message-ID: <20140816145954.GS28623@sirena.org.uk>
+References: <1406552704-6736-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1giRMj6yz/+FOIRq"
+	protocol="application/pgp-signature"; boundary="H88uUF932U8Oj0a6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
+In-Reply-To: <1406552704-6736-1-git-send-email-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---1giRMj6yz/+FOIRq
-Content-Type: text/plain; charset=us-ascii
+--H88uUF932U8Oj0a6
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 15, 2014 at 12:23:01PM +0800, Xiubo Li wrote:
-> Changes in V6:
-> - there is some mistake for V5 patch series, resend it.
+On Mon, Jul 28, 2014 at 03:05:03PM +0200, Andreas F=E4rber wrote:
+> The specification requires compatible =3D "adi,axi-spdif-1.00.a" but
+> driver and example and file name indicate "adi,axi-spdif-tx-1.00.a".
+> Change the specification to match the implementation.
 
-Applied both, thanks.
+Applied, let me once again remind you to use commit logs that match the
+general style for the subsystem so that it is clear what you are trying
+to change and the changelogs look nice.
 
---1giRMj6yz/+FOIRq
+--H88uUF932U8Oj0a6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT71kvAAoJELSic+t+oim9c4gP/2DgyOxg9YcFp4sBcIEWYGBQ
-0aFROxj2XqXv86AAVp+0NwIx6CCu/UsU2ns6ueB3aq8IRSROv8AXzTEA52jLxUMg
-LBPIUiJy5zj4FkyeHLuOPKYRG7wAXpY7sMZWKVFsFmNizmP3bg4D3eqLBl+wNeHX
-n2D4/Tcllnw8Ofeg3Mz7v2vDugNiRSHN06RlaqYpYmSE+GX8FbCPn4Xq5tmOEHCd
-lOrE2HasiSfc+ePNDNid47VB8git2Zd/Eb+Hwy68V5w9esOyu4OlQ2BAU6Wi+arF
-YktgrrYimlAde1oKpJKbHhOXSWytB9LaC9zdRMzalRvFFHjeNSeCqtlFhGu5UJHP
-zYhiOlatGGPndoFiRtNH9KyFWBxd9gbLRhwTP9h5LrpWgWR7I70AAinGP1WK9JDo
-htprE/pUdwM2QTJWMSN9dBFNOAlAB3KraZ6mvSAtlODHZisr/NJn0CJCwoqLevTG
-SG6OG8bjT4GBQBRVwGkEJaHf3i5Wl/EZNyfwCFzwQzdlaH4e34cWJAeFycqS8RYm
-eJ0Afba6iUtEtUGnx7TLCTq1ebmkrWbwX1W+FfsDf93nIO3kaLg3TeRINHKOJua/
-qlZOeFqdqreirTW3dfBvbXXk0hGYsqUmFutp3xhzCgqA50NLfSJkezlvAhJPf5jL
-d5GLLLoqVDu8c0bDAPQy
-=0EHa
+iQIcBAEBAgAGBQJT73HmAAoJELSic+t+oim9U2YP/04oBlA2cT0KH+dV9kyf5iuD
+K3lvs9wfTDDhNVSKI8qCgyLtwcYjcckVqGNeWua/Zo0lLehauvWchtiwnDhZgQxg
+ykg5zs1WF4IVyR2uP4j3qSW6ZGN7mD9elFG5YKuPBLGJZKRbipPugkMMVji9n4cc
+RDVG0iymWqUoQ1/GN70m4zZmkP/q3XSx9q5K5QPZv56ub4QK5sPuUtRJWQZiUCj5
+ySX2Sp64iOqaKkCgJnZ2QgBax3mM7gel2dXEpZsITMX3enejF3NFuvX085t/dzAn
+0foAioWlB38wN8yFEoOumlZsUDSjRfYWU4ko3Cy9N2ZgWg7UPo8mmsMrkRQIuuO1
+9J3s+cpiB10ZxAF7u4JUu6LCt2vSAZyEIHanW53NkLQhWx9X/A/myIrTtNHnp28K
+dd0ndZjTg5W29TD3WPnJa9bpI8W45lD9AIeaAt77oaCy+LPl2daJNy5nFTbO3L+B
+HIe2c2L9kwf5s8B7TjPYTfDSXm9axkiPdLokIGiK2ChdM+BZoWas93p27jXHrmnS
+TU2ZCZbW7qPy+A/6Q8LLK7TE9OEHA1DlyYwUH9ZFyz4kjNcChi/rttyqSa7G0Yx5
+qME19EOaVQ2xNOk1Pzrb91IPfrIj9n4pVND304zRpRZuLwYffbbt0OXIzuGhnOCk
+lIxpAMbmxzfOL3/Ow+KT
+=WK7q
 -----END PGP SIGNATURE-----
 
---1giRMj6yz/+FOIRq--
+--H88uUF932U8Oj0a6--
