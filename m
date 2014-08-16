@@ -1,133 +1,55 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: Re: [PATCH v4] i2c: busses: i2c-pxa.c: Fix for possible null pointer dereference
-Date: Sat, 16 Aug 2014 23:32:16 +0200
-Message-ID: <CAFo99gb3vASH8k3nhKiQ9+0sST4oeKL=sOK27JjOurAvwWxEJg@mail.gmail.com>
-References: <1405545251-13087-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1405545251-13087-2-git-send-email-rickard_strandqvist@spectrumdigital.se> <20140802113001.GC2739@katana>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC] ASoC: fsl: Add Freescale Generic ASoC Sound Card
+ with ASRC support
+Date: Sat, 16 Aug 2014 14:40:37 +0100
+Message-ID: <20140816134037.GI28623@sirena.org.uk>
+References: <1406719658-20937-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140802113001.GC2739@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="h22Fi9ANawrtbNPX"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406719658-20937-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-08-02 13:30 GMT+02:00 Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>:
-> Hi,
->
->>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
->>       irq = platform_get_irq(dev, 0);
->> -     if (res == NULL || irq < 0) {
->> -             ret = -ENODEV;
->> -             goto eclk;
->> -     }
->> +     if (res == NULL || irq < 0)
->> +             return -ENODEV;
->
-> No need to check for valid 'res' here...
->
->>
->> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
->> -             ret = -ENOMEM;
->> -             goto eclk;
->> -     }
->> +     if (!devm_request_mem_region(&dev->dev, res->start,
->> +                             resource_size(res), res->name))
->> +             return -ENOMEM;
->
-> ... and no need to use 'devm_request_mem_region' ...
->
->> -     i2c->reg_base = ioremap(res->start, resource_size(res));
->> -     if (!i2c->reg_base) {
->> -             ret = -EIO;
->> -             goto eremap;
->> -     }
->> +     i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
->> +     if (IS_ERR(i2c->reg_base))
->> +             return -EIO;
->
-> ... because devm_ioremap_resource does all that for you. Also, don't
-> return -EIO but the PTR_ERR given from the function. Just check other
-> drivers how they do it.
->
->>
->>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
->>       i2c->reg_idbr = i2c->reg_base + pxa_reg_layout[i2c_type].idbr;
->> @@ -1227,10 +1218,12 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
->>       } else {
->>               i2c->adap.algo = &i2c_pxa_algorithm;
->> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
->> -                               dev_name(&dev->dev), i2c);
->> -             if (ret)
->> -                     goto ereqirq;
->> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
->> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
->> +             if (ret) {
->> +                     clk_disable_unprepare(i2c->clk);
->> +                     return ret;
->
-> Maybe you should make a error path with 'goto' out of it...
->
->
->> +             }
->>       }
->>
->>       i2c_pxa_reset(i2c);
->> @@ -1244,7 +1237,7 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>       ret = i2c_add_numbered_adapter(&i2c->adap);
->>       if (ret < 0) {
->>               printk(KERN_INFO "I2C: Failed to add bus\n");
->> -             goto eadapt;
->> +             return ret;
->
-> ... since you forgot disable_unprepare here and could simply reuse it.
->
->
->>       }
->>
->>       platform_set_drvdata(dev, i2c);
->> @@ -1257,20 +1250,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>              dev_name(&i2c->adap.dev));
->>  #endif
->>       return 0;
->> -
->> -eadapt:
->> -     if (!i2c->use_pio)
->> -             free_irq(irq, i2c);
->> -ereqirq:
->> -     clk_disable_unprepare(i2c->clk);
->> -     iounmap(i2c->reg_base);
->> -eremap:
->> -     clk_put(i2c->clk);
->> -eclk:
->> -     kfree(i2c);
->> -emalloc:
->> -     release_mem_region(res->start, resource_size(res));
->> -     return ret;
->>  }
->
-> You forgot to cleanup the remove function.
->
-> BTW I forgot, can you test this patch on real hardware? If not, is there
-> somebody who does?
->
-> All the best,
->
->    Wolfram
 
+--h22Fi9ANawrtbNPX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jul 30, 2014 at 07:27:38PM +0800, Nicolin Chen wrote:
+> The Freescale Generic ASoC Sound Card is a general ASoC DAI Link driver that
+> can be used, ideally, for all Freescale CPU DAI drivers and external CODECs.
 
-Hi
+Applied, thanks.
 
-I have made a lot of changes on changes to changes, and have really
-tried to ensure that all would be right.
+--h22Fi9ANawrtbNPX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-But I feel like that's enough, Wolfram or anyone else may end this.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-And no as I replied earlier, I lack this kind of hardware...
+iQIcBAEBAgAGBQJT719SAAoJELSic+t+oim99cEQAJFas+ffvanUkBZGtzot3rRa
+k3xbLiGrtdYVzOY5yIcvseJAKWC44wOlscyyyNbNH6+3NktiuVQ9ck42cXXUhS3D
+Xic4/FYeJexPqNf5YXdhmdxzOVrUKX8ffNU/9AqGjSdPDn+bAolnS8pGdIN/s3n/
+ed5ssVtYSjuO9eulL8wbm6/nqTTLfzat10sFBjBLEobd1VupCn82E16N9Z6Q0GY3
+VR61YStlPSFp2zPCJnoWth8YTKPT9AbddqUTyLe6rC5Kz+NzxEpewi0v5QTP4uI7
+7RQI+BqG1lta+DwydXfXPdPtal8pgx9Jfuui8z3oKpE2U+TRYD6UipmAy4FebY1F
+8i07Wj9xWiQYJitj5wCP7J5SFAOEf87cQ0UtLtxpIDixq8AwV3d40juRlTD9Py0k
+Wze8wajIDFbHE28egxxhKyIUwVo5qIV2AOL6C77R1xVuhyWXHnePs0kULZqDouwx
+iGICuJVvU39Z2KMdD6ks3TrCaVX3zIN5SPfd+26fUDK2waqDIWQVI7+1BVLZszlc
+pH2QjTu5q9lr4cPGxhoHHYe3Czvn8HIVO/aUBvrY8FYMUJCrU1RdwGPsClTP/cP9
+t5hTEPC2sxRVmm3kxcBVEkGhj0KcoHl7L7Fk6L51Lne9RWe+uTiQanXWaqH1PoBj
+G4WVo84eHsC64XhYFFvR
+=hkzF
+-----END PGP SIGNATURE-----
 
-
-Kind regards
-Rickard Strandqvist
+--h22Fi9ANawrtbNPX--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
