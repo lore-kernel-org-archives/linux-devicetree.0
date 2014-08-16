@@ -1,30 +1,39 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v6 1/2] ahci_xgene: Removing NCQ support from the APM
- X-Gene SoC AHCI SATA Host Controller driver.
-Date: Sat, 16 Aug 2014 09:09:45 -0400
-Message-ID: <20140816130945.GI9305@htj.dyndns.org>
-References: <1407514466-25312-1-git-send-email-stripathi@apm.com>
- <1407514466-25312-2-git-send-email-stripathi@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407514466-25312-2-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v3 1/7] DT doc: net: cpsw mac-address is optional
+Date: Sat, 16 Aug 2014 17:18:29 +0200
+Message-ID: <1408202315-20006-2-git-send-email-mpa@pengutronix.de>
+References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1408202315-20006-1-git-send-email-mpa@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 08, 2014 at 09:44:25PM +0530, Suman Tripathi wrote:
-> This patch removes the NCQ support from the APM X-Gene SoC AHCI
-> Host Controller driver as it doesn't support it.
-> 
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+mac-address is an optional property. If no mac-address is set, a random
+mac-address will be generated.
 
-Applied to libata/for-3.17-fixes w/ stable cc'd.
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ Documentation/devicetree/bindings/net/cpsw.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
-
+diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+index ae2b8b7f9c38..107caf174a0e 100644
+--- a/Documentation/devicetree/bindings/net/cpsw.txt
++++ b/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -29,10 +29,10 @@ Slave Properties:
+ Required properties:
+ - phy_id		: Specifies slave phy id
+ - phy-mode		: See ethernet.txt file in the same directory
+-- mac-address		: See ethernet.txt file in the same directory
+ 
+ Optional properties:
+ - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
++- mac-address		: See ethernet.txt file in the same directory
+ 
+ Note: "ti,hwmods" field is used to fetch the base address and irq
+ resources from TI, omap hwmod data base during device registration.
 -- 
-tejun
+2.0.1
+
