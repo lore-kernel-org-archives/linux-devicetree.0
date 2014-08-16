@@ -1,55 +1,50 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC] ASoC: fsl: Add Freescale Generic ASoC Sound Card
- with ASRC support
-Date: Sat, 16 Aug 2014 14:40:37 +0100
-Message-ID: <20140816134037.GI28623@sirena.org.uk>
-References: <1406719658-20937-1-git-send-email-nicoleotsuka@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv6 0/2] add DT endianness binding support for regmap
+Date: Sat, 16 Aug 2014 14:14:26 +0100
+Message-ID: <20140816131426.GG28623@sirena.org.uk>
+References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="h22Fi9ANawrtbNPX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="1giRMj6yz/+FOIRq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1406719658-20937-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b02247-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+In-Reply-To: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---h22Fi9ANawrtbNPX
+--1giRMj6yz/+FOIRq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jul 30, 2014 at 07:27:38PM +0800, Nicolin Chen wrote:
-> The Freescale Generic ASoC Sound Card is a general ASoC DAI Link driver that
-> can be used, ideally, for all Freescale CPU DAI drivers and external CODECs.
+On Tue, Jul 15, 2014 at 12:23:01PM +0800, Xiubo Li wrote:
+> Changes in V6:
+> - there is some mistake for V5 patch series, resend it.
 
-Applied, thanks.
+Applied both, thanks.
 
---h22Fi9ANawrtbNPX
+--1giRMj6yz/+FOIRq
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT719SAAoJELSic+t+oim99cEQAJFas+ffvanUkBZGtzot3rRa
-k3xbLiGrtdYVzOY5yIcvseJAKWC44wOlscyyyNbNH6+3NktiuVQ9ck42cXXUhS3D
-Xic4/FYeJexPqNf5YXdhmdxzOVrUKX8ffNU/9AqGjSdPDn+bAolnS8pGdIN/s3n/
-ed5ssVtYSjuO9eulL8wbm6/nqTTLfzat10sFBjBLEobd1VupCn82E16N9Z6Q0GY3
-VR61YStlPSFp2zPCJnoWth8YTKPT9AbddqUTyLe6rC5Kz+NzxEpewi0v5QTP4uI7
-7RQI+BqG1lta+DwydXfXPdPtal8pgx9Jfuui8z3oKpE2U+TRYD6UipmAy4FebY1F
-8i07Wj9xWiQYJitj5wCP7J5SFAOEf87cQ0UtLtxpIDixq8AwV3d40juRlTD9Py0k
-Wze8wajIDFbHE28egxxhKyIUwVo5qIV2AOL6C77R1xVuhyWXHnePs0kULZqDouwx
-iGICuJVvU39Z2KMdD6ks3TrCaVX3zIN5SPfd+26fUDK2waqDIWQVI7+1BVLZszlc
-pH2QjTu5q9lr4cPGxhoHHYe3Czvn8HIVO/aUBvrY8FYMUJCrU1RdwGPsClTP/cP9
-t5hTEPC2sxRVmm3kxcBVEkGhj0KcoHl7L7Fk6L51Lne9RWe+uTiQanXWaqH1PoBj
-G4WVo84eHsC64XhYFFvR
-=hkzF
+iQIcBAEBAgAGBQJT71kvAAoJELSic+t+oim9c4gP/2DgyOxg9YcFp4sBcIEWYGBQ
+0aFROxj2XqXv86AAVp+0NwIx6CCu/UsU2ns6ueB3aq8IRSROv8AXzTEA52jLxUMg
+LBPIUiJy5zj4FkyeHLuOPKYRG7wAXpY7sMZWKVFsFmNizmP3bg4D3eqLBl+wNeHX
+n2D4/Tcllnw8Ofeg3Mz7v2vDugNiRSHN06RlaqYpYmSE+GX8FbCPn4Xq5tmOEHCd
+lOrE2HasiSfc+ePNDNid47VB8git2Zd/Eb+Hwy68V5w9esOyu4OlQ2BAU6Wi+arF
+YktgrrYimlAde1oKpJKbHhOXSWytB9LaC9zdRMzalRvFFHjeNSeCqtlFhGu5UJHP
+zYhiOlatGGPndoFiRtNH9KyFWBxd9gbLRhwTP9h5LrpWgWR7I70AAinGP1WK9JDo
+htprE/pUdwM2QTJWMSN9dBFNOAlAB3KraZ6mvSAtlODHZisr/NJn0CJCwoqLevTG
+SG6OG8bjT4GBQBRVwGkEJaHf3i5Wl/EZNyfwCFzwQzdlaH4e34cWJAeFycqS8RYm
+eJ0Afba6iUtEtUGnx7TLCTq1ebmkrWbwX1W+FfsDf93nIO3kaLg3TeRINHKOJua/
+qlZOeFqdqreirTW3dfBvbXXk0hGYsqUmFutp3xhzCgqA50NLfSJkezlvAhJPf5jL
+d5GLLLoqVDu8c0bDAPQy
+=0EHa
 -----END PGP SIGNATURE-----
 
---h22Fi9ANawrtbNPX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--1giRMj6yz/+FOIRq--
