@@ -1,80 +1,133 @@
-From: Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [RFC PATCH 0/9] Add ACPI _DSD and unified device properties
- support
-Date: Sat, 16 Aug 2014 11:48:39 -0700
-Message-ID: <20140816184838.GA12671@thin>
-References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Subject: Re: [PATCH v4] i2c: busses: i2c-pxa.c: Fix for possible null pointer dereference
+Date: Sat, 16 Aug 2014 23:32:16 +0200
+Message-ID: <CAFo99gb3vASH8k3nhKiQ9+0sST4oeKL=sOK27JjOurAvwWxEJg@mail.gmail.com>
+References: <1405545251-13087-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <1405545251-13087-2-git-send-email-rickard_strandqvist@spectrumdigital.se> <20140802113001.GC2739@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>Rob
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140802113001.GC2739@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 16, 2014 at 09:53:50AM +0300, Mika Westerberg wrote:
-> The recent publication of the ACPI 5.1 specification [1] adds a reserved name
-> for Device Specific Data (_DSD, Section 6.2.5). This mechanism allows for
-> passing arbitrary hardware description data to the OS. The exact format of the
-> _DSD data is specific to the UUID paired with it [2].   
-> 
-> An ACPI Device Properties UUID has been defined [3] to provide a format
-> compatible with existing device tree schemas. The purpose for this was to allow
-> for the reuse of the existing schemas and encourage the development of firmware
-> agnostic device drivers.
-> 
-> This series accomplishes the following (as well as some other dependencies):
-> 
->  * Add _DSD support to the ACPI core
->    This simply reads the UUID and the accompanying Package
-> 
->  * Add ACPI Device Properties _DSD format support
->    This understands the hierarchical key:value pair structure
->    defined by the Device Properties UUID
-> 
->  * Add a unified device properties API with ACPI and OF backends
->    This provides for the firmware agnostic device properties
->    Interface to be used by drivers
-> 
->  * Provides 2 example drivers that were previously Device Tree aware that
->    can now be used with either Device Tree or ACPI Device Properties. The
->    both drivers use an arbitrary _HID.
-> 
-> This has been tested on Minnowboard with relevant parts of the modified
-> DSDT at the end of this email.
-> 
-> This series does not provide for a means to append to a system DSDT. That
-> will ultimately be required to make the most effective use of the _DSD
-> mechanism. Work is underway on that as a separate effort.
-> 
-> [1] http://www.uefi.org/sites/default/files/resources/ACPI_5_1release.pdf
-> [2] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
-> [3] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-> 
-> Aaron Lu (3):
->   of: Add property_ops callback for devices with of_node
->   gpiolib: add API to get gpio desc and flags
->   Input: gpio_keys_polled - Make use of device property API
-> 
-> Max Eliaser (1):
->   leds: leds-gpio: Make use of device property API
-> 
-> Mika Westerberg (4):
->   ACPI: Add support for device specific properties
->   ACPI: Document ACPI device specific properties
->   mfd: Add ACPI support
->   gpio: sch: Consolidate core and resume banks
-> 
-> Rafael J. Wysocki (1):
->   Driver core: Unified device properties interface for platform firmware
+2014-08-02 13:30 GMT+02:00 Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>:
+> Hi,
+>
+>>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>>       irq = platform_get_irq(dev, 0);
+>> -     if (res == NULL || irq < 0) {
+>> -             ret = -ENODEV;
+>> -             goto eclk;
+>> -     }
+>> +     if (res == NULL || irq < 0)
+>> +             return -ENODEV;
+>
+> No need to check for valid 'res' here...
+>
+>>
+>> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
+>> -             ret = -ENOMEM;
+>> -             goto eclk;
+>> -     }
+>> +     if (!devm_request_mem_region(&dev->dev, res->start,
+>> +                             resource_size(res), res->name))
+>> +             return -ENOMEM;
+>
+> ... and no need to use 'devm_request_mem_region' ...
+>
+>> -     i2c->reg_base = ioremap(res->start, resource_size(res));
+>> -     if (!i2c->reg_base) {
+>> -             ret = -EIO;
+>> -             goto eremap;
+>> -     }
+>> +     i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
+>> +     if (IS_ERR(i2c->reg_base))
+>> +             return -EIO;
+>
+> ... because devm_ioremap_resource does all that for you. Also, don't
+> return -EIO but the PTR_ERR given from the function. Just check other
+> drivers how they do it.
+>
+>>
+>>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+>>       i2c->reg_idbr = i2c->reg_base + pxa_reg_layout[i2c_type].idbr;
+>> @@ -1227,10 +1218,12 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
+>>       } else {
+>>               i2c->adap.algo = &i2c_pxa_algorithm;
+>> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
+>> -                               dev_name(&dev->dev), i2c);
+>> -             if (ret)
+>> -                     goto ereqirq;
+>> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
+>> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
+>> +             if (ret) {
+>> +                     clk_disable_unprepare(i2c->clk);
+>> +                     return ret;
+>
+> Maybe you should make a error path with 'goto' out of it...
+>
+>
+>> +             }
+>>       }
+>>
+>>       i2c_pxa_reset(i2c);
+>> @@ -1244,7 +1237,7 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>       ret = i2c_add_numbered_adapter(&i2c->adap);
+>>       if (ret < 0) {
+>>               printk(KERN_INFO "I2C: Failed to add bus\n");
+>> -             goto eadapt;
+>> +             return ret;
+>
+> ... since you forgot disable_unprepare here and could simply reuse it.
+>
+>
+>>       }
+>>
+>>       platform_set_drvdata(dev, i2c);
+>> @@ -1257,20 +1250,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>              dev_name(&i2c->adap.dev));
+>>  #endif
+>>       return 0;
+>> -
+>> -eadapt:
+>> -     if (!i2c->use_pio)
+>> -             free_irq(irq, i2c);
+>> -ereqirq:
+>> -     clk_disable_unprepare(i2c->clk);
+>> -     iounmap(i2c->reg_base);
+>> -eremap:
+>> -     clk_put(i2c->clk);
+>> -eclk:
+>> -     kfree(i2c);
+>> -emalloc:
+>> -     release_mem_region(res->start, resource_size(res));
+>> -     return ret;
+>>  }
+>
+> You forgot to cleanup the remove function.
+>
+> BTW I forgot, can you test this patch on real hardware? If not, is there
+> somebody who does?
+>
+> All the best,
+>
+>    Wolfram
 
-One issue I noticed with the series: the new read functions, when given
-an integer type, don't appear to do any range-checking to make sure the
-returned value falls within the range of that type.  They should do so,
-and return -EOVERFLOW if so.  And the documentation of the new functions
-should note that explicitly as an error case.
 
-With that fixed:
-Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+
+Hi
+
+I have made a lot of changes on changes to changes, and have really
+tried to ensure that all would be right.
+
+But I feel like that's enough, Wolfram or anyone else may end this.
+
+And no as I replied earlier, I lack this kind of hardware...
+
+
+Kind regards
+Rickard Strandqvist
