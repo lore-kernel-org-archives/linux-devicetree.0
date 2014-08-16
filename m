@@ -1,88 +1,80 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of: Deep-copy names of platform devices
-Date: Sat, 16 Aug 2014 19:29:58 +0100
-Message-ID: <CACxGe6vMjZsJcLPuUUOzR9zOdrnWM27VxdKYGTj=X8S-MVe53Q@mail.gmail.com>
-References: <53EAC37C.4020203@codeaurora.org> <1407897037-6037-1-git-send-email-stepanm@codeaurora.org>
- <CAL_JsqKoikzLsXmXrm0GDM=+5ofX=OvrmvUTw3O-qX2hSTztcw@mail.gmail.com>
+From: Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [RFC PATCH 0/9] Add ACPI _DSD and unified device properties
+ support
+Date: Sat, 16 Aug 2014 11:48:39 -0700
+Message-ID: <20140816184838.GA12671@thin>
+References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKoikzLsXmXrm0GDM=+5ofX=OvrmvUTw3O-qX2hSTztcw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Stepan Moskovchenko <stepanm@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>Rob
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 15, 2014 at 5:38 PM, Rob Herring <robherring2@gmail.com> wrote:
-> Adding Greg...
->
-> On Tue, Aug 12, 2014 at 9:30 PM, Stepan Moskovchenko
-> <stepanm@codeaurora.org> wrote:
->> When we parse the device tree and allocate platform
->> devices, the 'name' of the newly-created platform_device
->> is set to point to the 'name' field of the 'struct device'
->> embedded within the platform_device. This is dangerous,
->> because the name of the 'struct device' is dynamically
->> allocated. Drivers may call dev_set_name() on the device,
->> which will free and reallocate the name of the device,
->> leaving the 'name' of the platform_device pointing to the
->> now-freed memory.
->>
->> Furthermore, if the dev_set_name() call is made from a
->> driver's probe() function and a subsequent request results
->> in probe deferral, the dangling 'name' reference may lead
->> to the device being re-probed using the wrong driver.
->
-> This seems wrong. I don't think we want drivers to change their own
-> device's name. The name is not supposed to change after registration.
+On Sat, Aug 16, 2014 at 09:53:50AM +0300, Mika Westerberg wrote:
+> The recent publication of the ACPI 5.1 specification [1] adds a reserved name
+> for Device Specific Data (_DSD, Section 6.2.5). This mechanism allows for
+> passing arbitrary hardware description data to the OS. The exact format of the
+> _DSD data is specific to the UUID paired with it [2].   
+> 
+> An ACPI Device Properties UUID has been defined [3] to provide a format
+> compatible with existing device tree schemas. The purpose for this was to allow
+> for the reuse of the existing schemas and encourage the development of firmware
+> agnostic device drivers.
+> 
+> This series accomplishes the following (as well as some other dependencies):
+> 
+>  * Add _DSD support to the ACPI core
+>    This simply reads the UUID and the accompanying Package
+> 
+>  * Add ACPI Device Properties _DSD format support
+>    This understands the hierarchical key:value pair structure
+>    defined by the Device Properties UUID
+> 
+>  * Add a unified device properties API with ACPI and OF backends
+>    This provides for the firmware agnostic device properties
+>    Interface to be used by drivers
+> 
+>  * Provides 2 example drivers that were previously Device Tree aware that
+>    can now be used with either Device Tree or ACPI Device Properties. The
+>    both drivers use an arbitrary _HID.
+> 
+> This has been tested on Minnowboard with relevant parts of the modified
+> DSDT at the end of this email.
+> 
+> This series does not provide for a means to append to a system DSDT. That
+> will ultimately be required to make the most effective use of the _DSD
+> mechanism. Work is underway on that as a separate effort.
+> 
+> [1] http://www.uefi.org/sites/default/files/resources/ACPI_5_1release.pdf
+> [2] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
+> [3] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+> 
+> Aaron Lu (3):
+>   of: Add property_ops callback for devices with of_node
+>   gpiolib: add API to get gpio desc and flags
+>   Input: gpio_keys_polled - Make use of device property API
+> 
+> Max Eliaser (1):
+>   leds: leds-gpio: Make use of device property API
+> 
+> Mika Westerberg (4):
+>   ACPI: Add support for device specific properties
+>   ACPI: Document ACPI device specific properties
+>   mfd: Add ACPI support
+>   gpio: sch: Consolidate core and resume banks
+> 
+> Rafael J. Wysocki (1):
+>   Driver core: Unified device properties interface for platform firmware
 
-Hmmm, you're right. The lifecycle question is theoretically valid but
-it isn't something that should be done. In this case, it is the
-drivers/of/platform code that 'owns' the name.
+One issue I noticed with the series: the new read functions, when given
+an integer type, don't appear to do any range-checking to make sure the
+returned value falls within the range of that type.  They should do so,
+and return -EOVERFLOW if so.  And the documentation of the new functions
+should note that explicitly as an error case.
 
-Stepan, under what circumstance would a device call dev_set_name()
-after registration?
-
-g.
-
->
-> Rob
->
->> To mitigate these scenarios, we use kstrdup to perform a
->> deep copy of the device name when assigning the name of the
->> platform_device, so that the platform_device name is
->> unaffected by any calls to dev_set_name() that might made
->> by drivers to rename the embedded 'struct device'.
->>
->> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
->> ---
->> * v2 - swap cleanup order
->>
->>  drivers/of/device.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/device.c b/drivers/of/device.c
->> index f685e55..e9beae6 100644
->> --- a/drivers/of/device.c
->> +++ b/drivers/of/device.c
->> @@ -54,7 +54,7 @@ int of_device_add(struct platform_device *ofdev)
->>
->>         /* name and id have to be set so that the platform bus doesn't get
->>          * confused on matching */
->> -       ofdev->name = dev_name(&ofdev->dev);
->> +       ofdev->name = kstrdup(dev_name(&ofdev->dev), GFP_KERNEL);
->>         ofdev->id = -1;
->>
->>         /* device_add will assume that this device is on the same node as
->> @@ -75,6 +75,7 @@ EXPORT_SYMBOL(of_device_register);
->>
->>  void of_device_unregister(struct platform_device *ofdev)
->>  {
->> +       kfree(ofdev->name);
->>         device_unregister(&ofdev->dev);
->>  }
->>  EXPORT_SYMBOL(of_device_unregister);
->> --
->> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->> hosted by The Linux Foundation
->>
+With that fixed:
+Reviewed-by: Josh Triplett <josh@joshtriplett.org>
