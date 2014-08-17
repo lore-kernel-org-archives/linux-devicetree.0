@@ -1,99 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] MFD: RK808: Add new mfd device for RK808
-Date: Sun, 17 Aug 2014 09:13:41 -0500
-Message-ID: <20140817141341.GH14537@sirena.org.uk>
-References: <1408240705-29472-1-git-send-email-zyw@rock-chips.com>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH 0/7] ARM: meson: add preliminary support for
+ MesonX/Meson6 SoCs
+Date: Sun, 17 Aug 2014 16:29:13 +0200
+Message-ID: <20140817142912.GA29963@gmail.com>
+References: <1408272594-10814-1-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gKijDXBCEH69PxaN"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1408240705-29472-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <1408272594-10814-1-git-send-email-carlo@caione.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Aug 17, 2014 at 12:49:47PM +0200, Carlo Caione wrote:
+> Amlogic AML8726-MX (codename Meson6) is a highly integrated multimedia
+> application processor SoC for Multimedia Internet Device (MID), tablet
+> and Set Top Box (STB). It integrates a powerful CPU, a 2D/3D graphics
+> subsystem and a state-of-the-art video decoding engine together with
+> all major peripherals. It is manufactured by Amlogic, inc.
+> 
+> This patchset introduces preliminary support for Meson6-based SoCs but
+> several IPs and drivers are common among all the MesonX SoCs.
 
---gKijDXBCEH69PxaN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Carlo,
 
-On Sun, Aug 17, 2014 at 09:58:25AM +0800, Chris Zhong wrote:
+nice job! The patches work fine on a Tronsmart Vega S89 Elite TV box
+(Meson8 S802 SoC) just changing the fixed-clock frequency in the dts.
 
-> +static void rk808_device_shutdown(void)
-> +{
-> +	int ret;
-> +	struct rk808 *rk808 = g_rk808;
-> +
-> +	if (!rk808) {
-> +		dev_err(rk808->dev, "%s have no g_rk808\n", __func__);
-> +		return;
-> +	}
+Beniamino
 
-This is a bit dodgy but I can't think of a better way of doing it :/
-
-> +
-> +	ret = regmap_update_bits(rk808->regmap,
-> +				 RK808_INT_STS_MSK_REG1,
-> +				 (0x3 << 5), (0x3 << 5));
-> +	/* close rtc int when power off */
-> +	ret = regmap_update_bits(rk808->regmap,
-> +				 RK808_RTC_INT_REG,
-> +				 (0x3 << 2), 0);
-> +	/* close rtc int when power off */
-> +	ret = regmap_update_bits(rk808->regmap,
-> +				 RK808_DEVCTRL_REG,
-> +				 (0x1 << 3), (0x1 << 3));
-> +	if (ret < 0)
-> +		dev_err(rk808->dev, "rk808 power off error!\n");
-
-Defines for these bits would be good, though if this turns off the RTC
-alarm then it might be better not to do it - one thing people do with
-RTC alarms is use them to wake the system up from deep sleep.
-
-> +	while (1)
-> +		wfi();
-> +}
-
-Just let the kernel shut down by itself - or is that last write a system
-power off request?
-
-> +	ret = regmap_read(rk808->regmap, 0x2f, &val);
-> +	if (ret < 0) {
-> +		dev_err(rk808->dev, "The device is not rk808 %d\n", ret);
-> +		return ret;
-> +	}
-
-That error message is misleading - an error from regmap_read() means
-that I/O failed, usually "device is not rk808" would mean that you'd
-read back and ID register on the device and it didn't match what was
-expected.
-
---gKijDXBCEH69PxaN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT8LiRAAoJELSic+t+oim9kTcP/jVwefUBbKMRbwYGCPiO4OWR
-3rx1WXCQ4fmZNZ9sxKnrxya42W60vluuhddgCEuhn459If/5Ybq83Fe93dEjJyky
-3cYu1CpaC9kdwMwT3iZdqDope3lo8l7njtlI57Z2b+m59Aipa67AkWGCa+53UxZQ
-e87oMR9mfRN1Q8TKofATAr2DuM5+ogOTLwfPXqvfCP/Ei2DNIEuYy2zoqbqNJdLT
-1rh2w/VkFtjnFdFbVX/CvBIA8Sr9tumjP93usrxWH7LmJHUC03ANFBeIDXw1fu2W
-lRdPp1gj3LWK5Q0B/0TSYX2PLa8Hp7znJOyaakh5ClJAseJRC6h1YcdwM2DBSSEq
-EsVxnc1Ann6g2Gco5D6RM0lkogKTW4aYCxYuHn+yJ1oB8zavxTMhByRBAxkeby1P
-dR452/cJwf6Czy9Pkl0Gkfk+iYwl3AyemgZ7ipgL1ZaIOYf2S33Y1k5zvT3zHhWP
-BdVxlV+623XJjpTiLpYMC0fyCUYDL/YV9nLG8S5H+HP9OcaZHWBBKIUdI0f1Q9KA
-U7YAaQO8P9bi1vhJUoV5jGAe7oKBBvvMWMImT79z4f1LMqJ65VDa4JvjxLXdcbBV
-UVmr4571HyKXL/aIBjsxYUY5ZozrNYGWkuPtCd1JxhDFkBodKVLJBbG0u8mwih7k
-vFPk/MI83eF5xp3UF/+J
-=VwfY
------END PGP SIGNATURE-----
-
---gKijDXBCEH69PxaN--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Amlogic doesn't release any documentation about their SoCs, so the code
+> has been reverse-engineered from the messy source code released at:
+> 
+> http://openlinux.amlogic.com:8000/download/
+> 
+> Carlo Caione (7):
+>   ARM: meson: debug: add debug UART for earlyprintk support
+>   ARM: meson: serial: add MesonX SoC on-chip uart driver
+>   ARM: meson6: clocksource: add Meson6 timer support
+>   ARM: meson: add basic support for MesonX SoCs
+>   ARM: meson: dts: add basic Meson/Meson6/Meson6-atv1200 DTSI/DTS
+>   ARM: meson: update defconfigs
+>   ARM: meson: update documentation (uart, timer and vendors)
+> 
+>  .../bindings/serial/amlogic,meson-uart.txt         |  17 +
+>  .../bindings/timer/amlogic,meson6-timer.txt        |  16 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  arch/arm/Kconfig                                   |   2 +
+>  arch/arm/Kconfig.debug                             |  14 +-
+>  arch/arm/Makefile                                  |   1 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/meson.dtsi                       |  75 +++
+>  arch/arm/boot/dts/meson6-atv1200.dts               |  27 +
+>  arch/arm/boot/dts/meson6.dtsi                      |  44 ++
+>  arch/arm/configs/meson_defconfig                   |  99 ++++
+>  arch/arm/configs/multi_v7_defconfig                |   3 +
+>  arch/arm/include/debug/meson.S                     |  35 ++
+>  arch/arm/mach-meson/Kconfig                        |  13 +
+>  arch/arm/mach-meson/Makefile                       |   1 +
+>  arch/arm/mach-meson/meson.c                        |  36 ++
+>  drivers/clocksource/Kconfig                        |   3 +
+>  drivers/clocksource/Makefile                       |   1 +
+>  drivers/clocksource/meson6_timer.c                 | 187 ++++++
+>  drivers/tty/serial/Kconfig                         |  18 +
+>  drivers/tty/serial/Makefile                        |   1 +
+>  drivers/tty/serial/meson_uart.c                    | 634 +++++++++++++++++++++
+>  include/uapi/linux/serial_core.h                   |   3 +
+>  23 files changed, 1230 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/amlogic,meson6-timer.txt
+>  create mode 100644 arch/arm/boot/dts/meson.dtsi
+>  create mode 100644 arch/arm/boot/dts/meson6-atv1200.dts
+>  create mode 100644 arch/arm/boot/dts/meson6.dtsi
+>  create mode 100644 arch/arm/configs/meson_defconfig
+>  create mode 100644 arch/arm/include/debug/meson.S
+>  create mode 100644 arch/arm/mach-meson/Kconfig
+>  create mode 100644 arch/arm/mach-meson/Makefile
+>  create mode 100644 arch/arm/mach-meson/meson.c
+>  create mode 100644 drivers/clocksource/meson6_timer.c
+>  create mode 100644 drivers/tty/serial/meson_uart.c
+> 
+> -- 
+> 1.9.1
+> 
