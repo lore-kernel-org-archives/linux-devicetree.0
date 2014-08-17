@@ -1,88 +1,529 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 7/7] ARM: meson: update documentation (uart, timer and vendors)
-Date: Sun, 17 Aug 2014 12:49:54 +0200
-Message-ID: <1408272594-10814-8-git-send-email-carlo@caione.org>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408272594-10814-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 3/9] Driver core: Unified device properties
+ interface for platform firmware
+Date: Sun, 17 Aug 2014 13:49:13 +0100
+Message-ID: <20140817124913.A597FC40F4B@trevor.secretlab.ca>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
+	<1408255459-17625-4-git-send-email-mika.westerberg@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1408255459-17625-4-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-New UART and timer bindings are documented. A new vendor is added to the
-vendors list.
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/serial/amlogic,meson-uart.txt   | 17 +++++++++++++++++
- .../devicetree/bindings/timer/amlogic,meson6-timer.txt  | 16 ++++++++++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt   |  1 +
- 3 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
- create mode 100644 Documentation/devicetree/bindings/timer/amlogic,meson6-timer.txt
+Hi Mika and Rafael,
 
-diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-new file mode 100644
-index 0000000..fa1935a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-@@ -0,0 +1,17 @@
-+Amlogic Meson UART
-+
-+Required properties:
-+- compatible : Should be "amlogic,meson-uart"
-+- reg : Address and length of the register set
-+- interrupts : Should contain uart interrupt
-+- clocks: phandle to the source clock
-+
-+Example:
-+
-+uart0: serial@c81004c0 {
-+	compatible = "amlogic,meson-uart";
-+	reg = <0xc81004c0 0x14>;
-+	interrupts = <0 90 1>;
-+	clocks = <&clk81>;
-+};
-+
-diff --git a/Documentation/devicetree/bindings/timer/amlogic,meson6-timer.txt b/Documentation/devicetree/bindings/timer/amlogic,meson6-timer.txt
-new file mode 100644
-index 0000000..cf89894
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/amlogic,meson6-timer.txt
-@@ -0,0 +1,16 @@
-+Amlogic Meson6 SoCs Timer Controller
-+
-+Required properties:
-+
-+- compatible : should be "amlogic,meson6-timer.txt"
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : The interrupt of the first timer
-+
-+Example:
-+
-+timer@c1109940 {
-+	compatible = "amlogic,meson6-timer";
-+	reg = <0xc1109940 0x14>;
-+	interrupts = <0 10 1>;
-+};
-+
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ac7269f..5cf0618 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -14,6 +14,7 @@ allwinner	Allwinner Technology Co., Ltd.
- altr	Altera Corp.
- amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
- amd	Advanced Micro Devices (AMD), Inc.
-+amlogic	Amlogic, Inc.
- ams	AMS AG
- amstaos	AMS-Taos Inc.
- apm	Applied Micro Circuits Corporation (APM)
--- 
-1.9.1
+Comments below...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sun, 17 Aug 2014 09:04:13 +0300, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> Add a uniform interface by which device drivers can request device
+> properties from the platform firmware by providing a property name
+> and the corresponding data type.
+> 
+> Three general helper functions, device_property_get(),
+> device_property_read() and device_property_read_array() are provided.
+> The first one allows the raw value of a given device property to be
+> accessed by the driver.  The remaining two allow the value of a numeric
+> or string property and multiple numeric or string values of one array
+> property to be acquired, respectively.
+> 
+> The interface is supposed to cover both ACPI and Device Trees,
+> although the ACPI part is only implemented at this time.
+
+Nit:
+s/at this time/in this change. The DT component is implemented in a
+subsequent patch./
+
+I almost complained that the DT portion must be implemented before this
+series can even be considered, but then I found it in patch 4/9.  :-)
+
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/acpi/glue.c      |   4 +-
+>  drivers/acpi/property.c  | 179 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/acpi/scan.c      |  12 +++-
+>  drivers/base/Makefile    |   2 +-
+>  drivers/base/property.c  |  48 +++++++++++++
+>  include/acpi/acpi_bus.h  |   1 +
+>  include/linux/device.h   |   3 +
+>  include/linux/property.h |  50 +++++++++++++
+>  8 files changed, 293 insertions(+), 6 deletions(-)
+>  create mode 100644 drivers/base/property.c
+>  create mode 100644 include/linux/property.h
+> 
+> diff --git a/drivers/acpi/glue.c b/drivers/acpi/glue.c
+> index f774c65ecb8b..1df5223bb98d 100644
+> --- a/drivers/acpi/glue.c
+> +++ b/drivers/acpi/glue.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/export.h>
+>  #include <linux/init.h>
+>  #include <linux/list.h>
+> -#include <linux/device.h>
+> +#include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/rwsem.h>
+>  #include <linux/acpi.h>
+> @@ -220,6 +220,7 @@ int acpi_bind_one(struct device *dev, struct acpi_device *acpi_dev)
+>  	list_add(&physical_node->node, physnode_list);
+>  	acpi_dev->physical_node_count++;
+>  
+> +	dev->property_ops = &acpi_property_ops;
+>  	if (!ACPI_COMPANION(dev))
+>  		ACPI_COMPANION_SET(dev, acpi_dev);
+>  
+> @@ -271,6 +272,7 @@ int acpi_unbind_one(struct device *dev)
+>  			acpi_physnode_link_name(physnode_name, entry->node_id);
+>  			sysfs_remove_link(&acpi_dev->dev.kobj, physnode_name);
+>  			sysfs_remove_link(&dev->kobj, "firmware_node");
+> +			dev->property_ops = NULL;
+>  			ACPI_COMPANION_SET(dev, NULL);
+>  			/* Drop references taken by acpi_bind_one(). */
+>  			put_device(dev);
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index 093e834c35db..bdba5f85c919 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -13,8 +13,8 @@
+>   * published by the Free Software Foundation.
+>   */
+>  
+> +#include <linux/property.h>
+>  #include <linux/acpi.h>
+> -#include <linux/device.h>
+>  #include <linux/export.h>
+>  
+>  #include "internal.h"
+> @@ -363,3 +363,180 @@ int acpi_dev_get_property_reference(struct acpi_device *adev, const char *name,
+>  	return -EPROTO;
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_dev_get_property_reference);
+> +
+> +static int acpi_dev_prop_get(struct device *dev, const char *propname,
+> +			     void **valptr)
+> +{
+> +	return acpi_dev_get_property(ACPI_COMPANION(dev), propname,
+> +				     ACPI_TYPE_ANY,
+> +				     (const union acpi_object **)valptr);
+> +}
+> +
+> +static int acpi_dev_prop_read(struct device *dev, const char *propname,
+> +			      enum dev_prop_type proptype, void *val)
+> +{
+> +	const union acpi_object *obj;
+> +	int ret = -EINVAL;
+> +
+> +	if (!val)
+> +		return -EINVAL;
+> +
+> +	if (proptype >= DEV_PROP_U8 && proptype <= DEV_PROP_U64) {
+> +		ret = acpi_dev_get_property(ACPI_COMPANION(dev), propname,
+> +					    ACPI_TYPE_INTEGER, &obj);
+> +		if (ret)
+> +			return ret;
+> +
+> +		switch (proptype) {
+> +		case DEV_PROP_U8:
+> +			*(u8 *)val = obj->integer.value;
+> +			break;
+> +		case DEV_PROP_U16:
+> +			*(u16 *)val = obj->integer.value;
+> +			break;
+> +		case DEV_PROP_U32:
+> +			*(u32 *)val = obj->integer.value;
+> +			break;
+> +		default:
+> +			*(u64 *)val = obj->integer.value;
+> +			break;
+> +		}
+> +	} else if (proptype == DEV_PROP_STRING) {
+> +		ret = acpi_dev_get_property(ACPI_COMPANION(dev), propname,
+> +					    ACPI_TYPE_STRING, &obj);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*(char **)val = obj->string.pointer;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int acpi_copy_property_array_u8(const union acpi_object *items, u8 *val,
+> +				       size_t nval)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nval; i++) {
+> +		if (items[i].type != ACPI_TYPE_INTEGER)
+> +			return -EPROTO;
+> +
+> +		val[i] = items[i].integer.value;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int acpi_copy_property_array_u16(const union acpi_object *items,
+> +					u16 *val, size_t nval)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nval; i++) {
+> +		if (items[i].type != ACPI_TYPE_INTEGER)
+> +			return -EPROTO;
+> +
+> +		val[i] = items[i].integer.value;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int acpi_copy_property_array_u32(const union acpi_object *items,
+> +					u32 *val, size_t nval)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nval; i++) {
+> +		if (items[i].type != ACPI_TYPE_INTEGER)
+> +			return -EPROTO;
+> +
+> +		val[i] = items[i].integer.value;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int acpi_copy_property_array_u64(const union acpi_object *items,
+> +					u64 *val, size_t nval)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nval; i++) {
+> +		if (items[i].type != ACPI_TYPE_INTEGER)
+> +			return -EPROTO;
+> +
+> +		val[i] = items[i].integer.value;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int acpi_copy_property_array_string(const union acpi_object *items,
+> +					   char **val, size_t nval)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nval; i++) {
+> +		if (items[i].type != ACPI_TYPE_STRING)
+> +			return -EPROTO;
+> +
+> +		val[i] = items[i].string.pointer;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int acpi_dev_prop_read_array(struct device *dev, const char *propname,
+> +				    enum dev_prop_type proptype, void *val,
+> +				    size_t nval)
+> +{
+> +	const union acpi_object *obj;
+> +	const union acpi_object *items;
+> +	int ret;
+> +
+> +	ret = acpi_dev_get_property_array(ACPI_COMPANION(dev), propname,
+> +					  ACPI_TYPE_ANY, &obj);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!val)
+> +		return obj->package.count;
+> +
+> +	if (nval > obj->package.count)
+> +		nval = obj->package.count;
+> +
+> +	items = obj->package.elements;
+> +	switch (proptype) {
+> +	case DEV_PROP_U8:
+> +		ret = acpi_copy_property_array_u8(items, (u8 *)val, nval);
+> +		break;
+> +	case DEV_PROP_U16:
+> +		ret = acpi_copy_property_array_u16(items, (u16 *)val, nval);
+> +		break;
+> +	case DEV_PROP_U32:
+> +		ret = acpi_copy_property_array_u32(items, (u32 *)val, nval);
+> +		break;
+> +	case DEV_PROP_U64:
+> +		ret = acpi_copy_property_array_u64(items, (u64 *)val, nval);
+> +		break;
+> +	case DEV_PROP_STRING:
+> +		ret = acpi_copy_property_array_string(items, (char **)val, nval);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int acpi_dev_get_child_count(struct device *dev)
+> +{
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +
+> +	if (!adev)
+> +		return -EINVAL;
+> +	return adev->child_count;
+> +}
+> +
+> +struct dev_prop_ops acpi_property_ops = {
+> +	.get = acpi_dev_prop_get,
+> +	.read = acpi_dev_prop_read,
+> +	.read_array = acpi_dev_prop_read_array,
+> +	.child_count = acpi_dev_get_child_count,
+> +};
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index fc97e6123864..75b1b91e5ab0 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1035,8 +1035,10 @@ struct bus_type acpi_bus_type = {
+>  static void acpi_device_del(struct acpi_device *device)
+>  {
+>  	mutex_lock(&acpi_device_lock);
+> -	if (device->parent)
+> +	if (device->parent) {
+>  		list_del(&device->node);
+> +		device->parent->child_count--;
+
+I worry about housekeeping like this. It is easy for bugs to slip in.
+Unless returning the child count is in a critical path (which it
+shouldn't be), I would drop the child_count member and simply count the
+number of items in the list when required.
+
+This of course is not my subsystem, so I won't ACK or NACK the patch over this.
+
+> +	}
+>  
+>  	list_del(&device->wakeup_list);
+>  	mutex_unlock(&acpi_device_lock);
+> @@ -1222,8 +1224,10 @@ int acpi_device_add(struct acpi_device *device,
+>  	}
+>  	dev_set_name(&device->dev, "%s:%02x", acpi_device_bus_id->bus_id, acpi_device_bus_id->instance_no);
+>  
+> -	if (device->parent)
+> +	if (device->parent) {
+>  		list_add_tail(&device->node, &device->parent->children);
+> +		device->parent->child_count++;
+> +	}
+>  
+>  	if (device->wakeup.flags.valid)
+>  		list_add_tail(&device->wakeup_list, &acpi_wakeup_device_list);
+> @@ -1248,8 +1252,10 @@ int acpi_device_add(struct acpi_device *device,
+>  
+>   err:
+>  	mutex_lock(&acpi_device_lock);
+> -	if (device->parent)
+> +	if (device->parent) {
+>  		list_del(&device->node);
+> +		device->parent->child_count--;
+> +	}
+>  	list_del(&device->wakeup_list);
+>  	mutex_unlock(&acpi_device_lock);
+>  
+> diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> index 04b314e0fa51..1acd294b6514 100644
+> --- a/drivers/base/Makefile
+> +++ b/drivers/base/Makefile
+> @@ -4,7 +4,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+>  			   driver.o class.o platform.o \
+>  			   cpu.o firmware.o init.o map.o devres.o \
+>  			   attribute_container.o transport_class.o \
+> -			   topology.o container.o
+> +			   topology.o container.o property.o
+>  obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+>  obj-$(CONFIG_DMA_CMA) += dma-contiguous.o
+>  obj-y			+= power/
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> new file mode 100644
+> index 000000000000..d770b6edc91a
+> --- /dev/null
+> +++ b/drivers/base/property.c
+> @@ -0,0 +1,48 @@
+> +/*
+> + * property.c - Unified device property interface.
+> + *
+> + * Copyright (C) 2014, Intel Corporation
+> + * All rights reserved.
+> + *
+> + * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/property.h>
+> +#include <linux/export.h>
+> +
+> +int device_property_get(struct device *dev, const char *propname, void **valptr)
+> +{
+> +	return dev->property_ops && dev->property_ops->get ?
+> +		dev->property_ops->get(dev, propname, valptr) : -ENODATA;
+> +}
+> +EXPORT_SYMBOL_GPL(device_property_get);
+> +
+> +int device_property_read(struct device *dev, const char *propname,
+> +			 enum dev_prop_type proptype, void *val)
+> +{
+> +	return dev->property_ops && dev->property_ops->read ?
+> +		dev->property_ops->read(dev, propname, proptype, val) :
+> +		-ENODATA;
+> +}
+> +EXPORT_SYMBOL_GPL(device_property_read);
+> +
+> +int device_property_read_array(struct device *dev, const char *propname,
+> +			       enum dev_prop_type proptype, void *val,
+> +			       size_t nval)
+> +{
+> +	return dev->property_ops && dev->property_ops->read_array ?
+> +		dev->property_ops->read_array(dev, propname, proptype, val, nval) :
+> +		-ENODATA;
+> +}
+> +EXPORT_SYMBOL_GPL(device_property_read_array);
+> +
+> +int device_property_child_count(struct device *dev)
+> +{
+> +	return dev->property_ops && dev->property_ops->child_count ?
+> +		dev->property_ops->child_count(dev) : -ENODATA;
+> +}
+> +EXPORT_SYMBOL_GPL(device_property_child_count);
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index 348bd260a6b4..312813f60a22 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -340,6 +340,7 @@ struct acpi_device_data {
+>  /* Device */
+>  struct acpi_device {
+>  	int device_type;
+> +	int child_count;
+>  	acpi_handle handle;		/* no handle for fixed hardware */
+>  	struct acpi_device *parent;
+>  	struct list_head children;
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index af424acd393d..ea4cf31f8b9e 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -38,6 +38,7 @@ struct class;
+>  struct subsys_private;
+>  struct bus_type;
+>  struct device_node;
+> +struct dev_prop_ops;
+>  struct iommu_ops;
+>  struct iommu_group;
+>  
+> @@ -701,6 +702,7 @@ struct acpi_dev_node {
+>   * @archdata:	For arch-specific additions.
+>   * @of_node:	Associated device tree node.
+>   * @acpi_node:	Associated ACPI device node.
+> + * @property_ops: Firmware interface for device properties
+>   * @devt:	For creating the sysfs "dev".
+>   * @id:		device instance
+>   * @devres_lock: Spinlock to protect the resource of the device.
+> @@ -777,6 +779,7 @@ struct device {
+>  
+>  	struct device_node	*of_node; /* associated device tree node */
+>  	struct acpi_dev_node	acpi_node; /* associated ACPI device node */
+> +	struct dev_prop_ops	*property_ops;
+
+There are only 2 users of this interface. I don't think adding an ops
+pointer to each and every struct device is warrented when the wrapper
+function can check if of_node or acpi_node is set and call the
+appropriate helper. It is unlikely anything else will use this hook. It
+will result in smaller memory footprint. Also smaller code when only one of
+CONFIG_OF and CONFIG_ACPI are selected, which is almost always. :-)
+
+It can be refactored later if that ever changes.
+
+>  
+>  	dev_t			devt;	/* dev_t, creates the sysfs "dev" */
+>  	u32			id;	/* device instance */
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> new file mode 100644
+> index 000000000000..52ea7fe7fe09
+> --- /dev/null
+> +++ b/include/linux/property.h
+> @@ -0,0 +1,50 @@
+> +/*
+> + * property.h - Unified device property interface.
+> + *
+> + * Copyright (C) 2014, Intel Corporation
+> + * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _LINUX_PROPERTY_H_
+> +#define _LINUX_PROPERTY_H_
+> +
+> +#include <linux/device.h>
+> +#include <linux/acpi.h>
+> +#include <linux/of.h>
+> +
+> +enum dev_prop_type {
+> +	DEV_PROP_U8,
+> +	DEV_PROP_U16,
+> +	DEV_PROP_U32,
+> +	DEV_PROP_U64,
+> +	DEV_PROP_STRING,
+> +	DEV_PROP_MAX,
+> +};
+> +
+> +struct dev_prop_ops {
+> +	int (*get)(struct device *dev, const char *propname, void **valptr);
+> +	int (*read)(struct device *dev, const char *propname,
+> +		    enum dev_prop_type proptype, void *val);
+> +	int (*read_array)(struct device *dev, const char *propname,
+> +			  enum dev_prop_type proptype, void *val, size_t nval);
+
+The associated DT functions that implement property reads
+(of_property_read_*) were created in part to provide some type safety
+when reading properties. This proposed API throws that away by accepting
+a void* for the data field, which I don't want to do. This API either
+needs to have a separate accessor for each data type, or it needs some
+other mechanism (accessor macros?) to ensure the right type is passed
+in.
+
+> +	int (*child_count)(struct device *dev);
+> +};
+> +
+> +#ifdef CONFIG_ACPI
+> +extern struct dev_prop_ops acpi_property_ops;
+> +#endif
+
+Rendered moot by my comment about eliminating the ops structure, but the
+above shouldn't appear here. acpi_property_ops shouldn't ever be visible
+outside ACPI core code, so it shouldn't be in this header.
+
+> +
+> +int device_property_get(struct device *dev, const char *propname,
+> +			void **valptr);
+> +int device_property_read(struct device *dev, const char *propname,
+> +			 enum dev_prop_type proptype, void *val);
+> +int device_property_read_array(struct device *dev, const char *propname,
+> +			       enum dev_prop_type proptype, void *val,
+> +			       size_t nval);
+> +int device_property_child_count(struct device *dev);
+> +
+> +#endif /* _LINUX_PROPERTY_H_ */
+> -- 
+> 2.1.0.rc1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
