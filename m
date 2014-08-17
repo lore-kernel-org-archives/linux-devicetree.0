@@ -1,92 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Generating .config from DTS
-Date: Sun, 17 Aug 2014 12:03:58 +0200
-Message-ID: <CAMuHMdW+pGpnwhBGnLCiZ8FXw3wBvtrEwi3JRN6SBrgakRsRJw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH 0/7] ARM: meson: add preliminary support for MesonX/Meson6 SoCs
+Date: Sun, 17 Aug 2014 12:49:47 +0200
+Message-ID: <1408272594-10814-1-git-send-email-carlo@caione.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
+Cc: Carlo Caione <carlo@caione.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduction
-------------
+Amlogic AML8726-MX (codename Meson6) is a highly integrated multimedia
+application processor SoC for Multimedia Internet Device (MID), tablet
+and Set Top Box (STB). It integrates a powerful CPU, a 2D/3D graphics
+subsystem and a state-of-the-art video decoding engine together with
+all major peripherals. It is manufactured by Amlogic, inc.
 
-As a Device Tree provides a description of the hardware, it should be
-possible to derive a Linux kernel .config file from a DTS or DTB file.
+This patchset introduces preliminary support for Meson6-based SoCs but
+several IPs and drivers are common among all the MesonX SoCs.
 
-This would allow developers, users, and distributions to start from a
-hardware-independant "base" .config file (containing software features and
-policies (IPv4, NFS, initrd, ...), and drivers for discoverable hardware
-(PCI expansion cards, USB devices, ...)), and automatically add the options
-needed to support their Linux devices.
+Amlogic doesn't release any documentation about their SoCs, so the code
+has been reverse-engineered from the messy source code released at:
 
-To get the ball rolling, I wrote a simple script to generate a list of
-CONFIG_* options from one or more preprocessed DTS files or DTB files.
+http://openlinux.amlogic.com:8000/download/
 
+Carlo Caione (7):
+  ARM: meson: debug: add debug UART for earlyprintk support
+  ARM: meson: serial: add MesonX SoC on-chip uart driver
+  ARM: meson6: clocksource: add Meson6 timer support
+  ARM: meson: add basic support for MesonX SoCs
+  ARM: meson: dts: add basic Meson/Meson6/Meson6-atv1200 DTSI/DTS
+  ARM: meson: update defconfigs
+  ARM: meson: update documentation (uart, timer and vendors)
 
-Theory of operation
--------------------
+ .../bindings/serial/amlogic,meson-uart.txt         |  17 +
+ .../bindings/timer/amlogic,meson6-timer.txt        |  16 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Kconfig.debug                             |  14 +-
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/meson.dtsi                       |  75 +++
+ arch/arm/boot/dts/meson6-atv1200.dts               |  27 +
+ arch/arm/boot/dts/meson6.dtsi                      |  44 ++
+ arch/arm/configs/meson_defconfig                   |  99 ++++
+ arch/arm/configs/multi_v7_defconfig                |   3 +
+ arch/arm/include/debug/meson.S                     |  35 ++
+ arch/arm/mach-meson/Kconfig                        |  13 +
+ arch/arm/mach-meson/Makefile                       |   1 +
+ arch/arm/mach-meson/meson.c                        |  36 ++
+ drivers/clocksource/Kconfig                        |   3 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/meson6_timer.c                 | 187 ++++++
+ drivers/tty/serial/Kconfig                         |  18 +
+ drivers/tty/serial/Makefile                        |   1 +
+ drivers/tty/serial/meson_uart.c                    | 634 +++++++++++++++++++++
+ include/uapi/linux/serial_core.h                   |   3 +
+ 23 files changed, 1230 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/amlogic,meson6-timer.txt
+ create mode 100644 arch/arm/boot/dts/meson.dtsi
+ create mode 100644 arch/arm/boot/dts/meson6-atv1200.dts
+ create mode 100644 arch/arm/boot/dts/meson6.dtsi
+ create mode 100644 arch/arm/configs/meson_defconfig
+ create mode 100644 arch/arm/include/debug/meson.S
+ create mode 100644 arch/arm/mach-meson/Kconfig
+ create mode 100644 arch/arm/mach-meson/Makefile
+ create mode 100644 arch/arm/mach-meson/meson.c
+ create mode 100644 drivers/clocksource/meson6_timer.c
+ create mode 100644 drivers/tty/serial/meson_uart.c
 
-The script performs the following steps:
+-- 
+1.9.1
 
-  1. Run dtc to convert DTB input to DTS, or convert DTS to canonical DTS for
-     simpler parsing,
-  2. Find all (lists of) "compatible" properties,
-  3. For each (list of) "compatible" properties, find driver sources that
-     provide support for it,
-  4. For each driver source, find the CONFIG_* option that needs to be enabled
-     to build the driver.
-
-
-Limitations
------------
-
-  - Driver sources are found by grepping "*.c" files in the kernel source tree.
-    This may show false positives, like mfd drivers instantiating platform
-    devices with the same name as a compatible entry (e.g. "gpio-keys").
-    Parsing MODULE_DEVICE_TABLEs would be more accurate, but that would
-    requiring building an allmodconfig kernel first.
-    However, that would miss of_device_is_compatible() calls.
-    Perhaps the entries in a MODULE_DEVICE_TABLE should be created by a
-    cpp macro, so we can grep for users of that macro?
-  - CONFIG_* symbols are found by grepping Makefiles in the kernel source tree
-    for the typical "obj-$(CONFIG_FOO) += foo.o" pattern, which causes false
-    negatives if that pattern isn't used.
-  - Some properties are checked for in multiple places, causing false positives
-    in platform-support on different platforms (e.g. "arm,cortex-a9").
-  - Some drivers can be enabled by multiple distinct CONFIG_* symbols, causing
-    false positives.
-  - Drivers that rely on partial matching, i.e. by dropping the vendor-specific
-    prefix, may not be found. This affects several i2c and spi drivers, e.g.
-    at24 and m25p80.
-  - Knowing that a CONFIG_* option needs to be enabled is not sufficient.
-    Kconfig dependencies should be tracked as well, as manually finding which
-    dependencies need to be fulfilled can be a tedious task.
-
-
-Download
---------
-
-You can find the script at
-https://github.com/geertu/linux-scripts/blob/master/linux-config-from-dt
-It must be run from a Linux kernel git repository.
-
-Examples:
-
-    linux-config-from-dt arch/arm/boot/dts/.r8a7791-koelsch.dtb.dts.tmp
-    linux-config-from-dt arch/arm/boot/dts/*dtb
-
-Enjoy, and thanks for your comments!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
