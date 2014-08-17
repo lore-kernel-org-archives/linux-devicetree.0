@@ -1,319 +1,126 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 4/9] of: Add property_ops callback for devices with
- of_node
-Date: Sun, 17 Aug 2014 13:54:16 +0100
-Message-ID: <20140817125416.348C0C41368@trevor.secretlab.ca>
-References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
-	<1408255459-17625-5-git-send-email-mika.westerberg@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1408255459-17625-5-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Removes OF_SELFTEST dependency on OF_DYNAMIC config
+ symbol
+Date: Sun, 17 Aug 2014 14:51:45 +0100
+Message-ID: <20140817135145.6AE99C41205@trevor.secretlab.ca>
+References: <1408244589-16930-1-git-send-email-gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408244589-16930-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Aug 2014 09:04:14 +0300, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> From: Aaron Lu <aaron.lu@intel.com>
+On Sat, 16 Aug 2014 20:03:09 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch is used to remove the selftests dependency on
+> OF_DYNAMIC config flag. Now, it selectively builds
+> only the functions required by the selftests.
 > 
-> With the unified device properties interface in place, add device tree support.
-> By adding the dev_prop_ops for of_node devices, drivers can access properties
-> from ACPI or Device Tree in a generic way.
-> 
-> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Tested with and without OF_DYNAMIC enabled.
 
-Hi Mika,
+Alright, so this /works/ but it isn't really what we want. It still
+builds in the dynamic.c file which I definitely do no want when
+!CONFIG_OF_DYNAMIC. The dynamic functions were split into that file to
+make it really clear which functions are only used by CONFIG_OF_DYNAMIC.
 
-As commented on patch 3, the new API currently throws away type
-information so the compiler won't warn on an error. That needs to be
-fixed and this patch reworked accordingly.
+Instead what I want is to disable testcases the test OF_DYNAMIC features
+when OF_DYNAMIC is disabled. Of course, the one hiccup is that selftest
+uses some dynamic features to load in the testcase data. Some of that
+functionality will need to be duplicated or put into a separate file.
 
+Regardless, this is the end of your project, so I'm not going to ask you
+to do extra work. (I'd be thrilled if you did, but I don't consider it
+part of you GSoC project anymore). The work you've done has been
+fantastic, and I'm happy to have been able to work with you on it.
+
+Cheers,
 g.
 
----
->  drivers/of/base.c        | 194 ++++++++++++++++++++++++++++++++++++++++++++++-
->  drivers/of/platform.c    |   4 +-
->  include/linux/property.h |   4 +
->  3 files changed, 200 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b9864806e9b8..527004d01423 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -20,7 +20,7 @@
->  #include <linux/ctype.h>
->  #include <linux/cpu.h>
->  #include <linux/module.h>
-> -#include <linux/of.h>
-> +#include <linux/property.h>
->  #include <linux/of_graph.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
-> @@ -1343,6 +1343,39 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
->  EXPORT_SYMBOL_GPL(of_property_read_u64);
->  
->  /**
-> + * of_property_read_u64_array - Find and read an array of 64 bit integers
-> + * from a property.
-> + *
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_values:	pointer to return value, modified only if return value is 0.
-> + * @sz:		number of array elements to read
-> + *
-> + * Search for a property in a device node and read 64-bit value(s) from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_values is modified only if a valid u64 value can be decoded.
-> + */
-> +int of_property_read_u64_array(const struct device_node *np,
-> +			       const char *propname, u64 *out_values,
-> +			       size_t sz)
-> +{
-> +	const __be32 *val = of_find_property_value_of_size(np, propname,
-> +						(sz * sizeof(*out_values)));
-> +
-> +	if (IS_ERR(val))
-> +		return PTR_ERR(val);
-> +
-> +	while (sz--) {
-> +		*out_values++ = of_read_number(val, 2);
-> +		val += 2;
-> +	};
-> +	return 0;
-> +}
-
-Considering we don't even have a user of u64 arrays in all of the DT
-drivers, do we even need this type hook in the generic API?
-
-> +
-> +/**
->   * of_property_read_string - Find and read a string from a property
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> @@ -1490,6 +1523,47 @@ int of_property_count_strings(struct device_node *np, const char *propname)
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/Kconfig   |    1 -
+>  drivers/of/Makefile  |    2 +-
+>  drivers/of/dynamic.c |    4 ++++
+>  include/linux/of.h   |    2 +-
+>  4 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 5160c4e..1fe3805 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -10,7 +10,6 @@ menu "Device Tree and Open Firmware support"
+>  config OF_SELFTEST
+>  	bool "Device Tree Runtime self tests"
+>  	depends on OF_IRQ && OF_EARLY_FLATTREE
+> -	select OF_DYNAMIC
+>  	help
+>  	  This option builds in test cases for the device tree infrastructure
+>  	  that are executed once at boot time, and the results dumped to the
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index 2b6a7b1..5e1d493 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -6,7 +6,7 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+>  obj-$(CONFIG_OF_ADDRESS)  += address.o
+>  obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_NET)	+= of_net.o
+> -obj-$(CONFIG_OF_SELFTEST) += of_selftest.o
+> +obj-$(CONFIG_OF_SELFTEST) += dynamic.o of_selftest.o
+>  of_selftest-objs := selftest.o testcase-data/testcases.dtb.o
+>  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_PCI)	+= of_pci.o
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 54fecc4..37ca6af 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -82,6 +82,7 @@ int of_reconfig_notify(unsigned long action, void *p)
+>  	return notifier_to_errno(rc);
 >  }
->  EXPORT_SYMBOL_GPL(of_property_count_strings);
 >  
-> +/**
-> + * of_property_read_string_array - Find and read an array of strings
-> + * from a multiple strings property.
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_string:	pointer to null terminated return string, modified only if
-> + *		return value is 0.
-> + * @sz:		number of array elements to read
-> + *
-> + * Search for a property in a device tree node and retrieve a list of
-> + * terminated string value (pointer to data, not a copy) in that property.
-> + * Returns 0 on success, -EINVAL if the property does not exist, -ENODATA if
-> + * property does not have a value, and -EILSEQ if the string is not
-> + * null-terminated within the length of the property data.
-> + *
-> + * The out_string pointer is modified only if a valid string can be decoded.
-> + */
-> +int of_property_read_string_array(struct device_node *np, const char *propname,
-> +				  char **output, size_t sz)
-> +{
-> +	struct property *prop = of_find_property(np, propname, NULL);
-> +	int i = 0;
-> +	size_t l = 0, total = 0;
-> +	char *p;
-> +
-> +	if (!prop)
-> +		return -EINVAL;
-> +	if (!prop->value)
-> +		return -ENODATA;
-> +	if (strnlen(prop->value, prop->length) >= prop->length)
-> +		return -EILSEQ;
-> +
-> +	p = prop->value;
-> +
-> +	for (i = 0; total < prop->length; total += l, p += l) {
-> +		output[i++] = p;
-> +		l = strlen(p) + 1;
-> +	}
-> +	return 0;
-> +}
-> +
->  void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+> +#ifdef CONFIG_OF_DYNAMIC
+>  int of_property_notify(int action, struct device_node *np,
+>  		       struct property *prop, struct property *oldprop)
 >  {
->  	int i;
-> @@ -2376,3 +2450,121 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
->  	return of_get_next_parent(np);
+> @@ -96,6 +97,7 @@ int of_property_notify(int action, struct device_node *np,
+>  	pr.old_prop = oldprop;
+>  	return of_reconfig_notify(action, &pr);
 >  }
->  EXPORT_SYMBOL(of_graph_get_remote_port);
-> +
-> +static int of_dev_prop_get(struct device *dev, const char *propname,
-> +			   void **valptr)
-> +{
-> +	struct property *pp = of_find_property(dev->of_node, propname, NULL);
-> +
-> +	if (!pp)
-> +		return -ENODATA;
-> +
-> +	if (valptr)
-> +		*valptr = pp->value;
-> +	return 0;
-> +}
-> +
-> +static int of_dev_prop_read(struct device *dev, const char *propname,
-> +			    enum dev_prop_type proptype, void *val)
-> +{
-> +	void *value;
-> +	int ret = of_dev_prop_get(dev, propname, &value);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (proptype >= DEV_PROP_U8 && proptype <= DEV_PROP_U64) {
-> +		switch (proptype) {
-> +		case DEV_PROP_U8:
-> +			*(u8 *)val = *(u8 *)value;
-> +			break;
-> +		case DEV_PROP_U16:
-> +			*(u16 *)val = *(u16 *)value;
-> +			break;
-> +		case DEV_PROP_U32:
-> +			*(u32 *)val = *(u32 *)value;
-> +			break;
-> +		default:
-> +			*(u64 *)val = *(u64 *)value;
-> +			break;
-> +		}
-> +	} else if (proptype == DEV_PROP_STRING) {
-> +		*(char **)val = value;
-> +	}
-> +	return ret;
-> +
-> +}
-> +
-> +static int of_dev_prop_read_array(struct device *dev, const char *propname,
-> +				  enum dev_prop_type proptype, void *val,
-> +				  size_t nval)
-> +{
-> +	int ret, elem_size;
-> +
-> +	if (!val) {
-> +		switch (proptype) {
-> +		case DEV_PROP_U8:
-> +			elem_size = sizeof(u8);
-> +			break;
-> +		case DEV_PROP_U16:
-> +			elem_size = sizeof(u16);
-> +			break;
-> +		case DEV_PROP_U32:
-> +			elem_size = sizeof(u32);
-> +			break;
-> +		case DEV_PROP_U64:
-> +			elem_size = sizeof(u64);
-> +			break;
-> +		case DEV_PROP_STRING:
-> +			return of_property_count_strings(dev->of_node,
-> +							 propname);
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		return of_property_count_elems_of_size(dev->of_node, propname,
-> +						       elem_size);
-> +	}
-> +
-> +	switch (proptype) {
-> +	case DEV_PROP_U8:
-> +		ret = of_property_read_u8_array(dev->of_node, propname,
-> +						(u8 *)val, nval);
-> +		break;
-> +	case DEV_PROP_U16:
-> +		ret = of_property_read_u16_array(dev->of_node, propname,
-> +						 (u16 *)val, nval);
-> +		break;
-> +	case DEV_PROP_U32:
-> +		ret = of_property_read_u32_array(dev->of_node, propname,
-> +						 (u32 *)val, nval);
-> +		break;
-> +	case DEV_PROP_U64:
-> +		ret = of_property_read_u64_array(dev->of_node, propname,
-> +						 (u64 *)val, nval);
-> +		break;
-> +	case DEV_PROP_STRING:
-> +		ret = of_property_read_string_array(dev->of_node, propname,
-> +						    (char **)val, nval);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int of_dev_get_child_count(struct device *dev)
-> +{
-> +	struct device_node *node = dev->of_node;
-> +
-> +	if (!node)
-> +		return -EINVAL;
-> +	return of_get_child_count(node);
-> +}
-> +
-> +struct dev_prop_ops of_property_ops = {
-> +	.get = of_dev_prop_get,
-> +	.read = of_dev_prop_read,
-> +	.read_array = of_dev_prop_read_array,
-> +	.child_count = of_dev_get_child_count,
-> +};
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 500436f9be7f..3113d3704eff 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -14,7 +14,7 @@
->  #include <linux/errno.h>
->  #include <linux/module.h>
->  #include <linux/amba/bus.h>
-> -#include <linux/device.h>
-> +#include <linux/property.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/slab.h>
->  #include <linux/of_address.h>
-> @@ -138,6 +138,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  	}
->  
->  	dev->dev.of_node = of_node_get(np);
-> +	dev->dev.property_ops = &of_property_ops;
->  	dev->dev.parent = parent;
->  
->  	if (bus_id)
-> @@ -293,6 +294,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->  	/* setup generic device info */
->  	dev->dev.coherent_dma_mask = ~0;
->  	dev->dev.of_node = of_node_get(node);
-> +	dev->dev.property_ops = &of_property_ops;
->  	dev->dev.parent = parent;
->  	dev->dev.platform_data = platform_data;
->  	if (bus_id)
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 52ea7fe7fe09..a840c1784c82 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -38,6 +38,10 @@ struct dev_prop_ops {
->  extern struct dev_prop_ops acpi_property_ops;
->  #endif
->  
-> +#ifdef CONFIG_OF
-> +extern struct dev_prop_ops of_property_ops;
 > +#endif
-> +
->  int device_property_get(struct device *dev, const char *propname,
->  			void **valptr);
->  int device_property_read(struct device *dev, const char *propname,
+>  
+>  void __of_attach_node(struct device_node *np)
+>  {
+> @@ -200,6 +202,7 @@ int of_detach_node(struct device_node *np)
+>  	return rc;
+>  }
+>  
+> +#ifdef CONFIG_OF_DYNAMIC
+>  /**
+>   * of_node_release() - release a dynamically allocated node
+>   * @kref: kref element of the node to be released
+> @@ -658,3 +661,4 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
+>  	list_add_tail(&ce->node, &ocs->entries);
+>  	return 0;
+>  }
+> +#endif
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 6c4363b..ccc3f80 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -93,7 +93,7 @@ static inline int of_node_is_attached(struct device_node *node)
+>  	return node && node->kobj.state_in_sysfs;
+>  }
+>  
+> -#ifdef CONFIG_OF_DYNAMIC
+> +#if defined(CONFIG_OF_DYNAMIC) || defined(CONFIG_OF_SELFTEST)
+>  extern struct device_node *of_node_get(struct device_node *node);
+>  extern void of_node_put(struct device_node *node);
+>  #else /* CONFIG_OF_DYNAMIC */
 > -- 
-> 2.1.0.rc1
+> 1.7.9.5
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
