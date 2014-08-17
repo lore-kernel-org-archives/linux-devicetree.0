@@ -1,64 +1,92 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] Add ACPI _DSD and unified device properties
- support
-Date: Sun, 17 Aug 2014 09:55:27 +0300
-Message-ID: <20140817065527.GO2462@lahna.fi.intel.com>
-References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Generating .config from DTS
+Date: Sun, 17 Aug 2014 12:03:58 +0200
+Message-ID: <CAMuHMdW+pGpnwhBGnLCiZ8FXw3wBvtrEwi3JRN6SBrgakRsRJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-acpi@vge
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 16, 2014 at 09:53:50AM +0300, Mika Westerberg wrote:
-> The recent publication of the ACPI 5.1 specification [1] adds a reserved name
-> for Device Specific Data (_DSD, Section 6.2.5). This mechanism allows for
-> passing arbitrary hardware description data to the OS. The exact format of the
-> _DSD data is specific to the UUID paired with it [2].   
-> 
-> An ACPI Device Properties UUID has been defined [3] to provide a format
-> compatible with existing device tree schemas. The purpose for this was to allow
-> for the reuse of the existing schemas and encourage the development of firmware
-> agnostic device drivers.
-> 
-> This series accomplishes the following (as well as some other dependencies):
-> 
->  * Add _DSD support to the ACPI core
->    This simply reads the UUID and the accompanying Package
-> 
->  * Add ACPI Device Properties _DSD format support
->    This understands the hierarchical key:value pair structure
->    defined by the Device Properties UUID
-> 
->  * Add a unified device properties API with ACPI and OF backends
->    This provides for the firmware agnostic device properties
->    Interface to be used by drivers
-> 
->  * Provides 2 example drivers that were previously Device Tree aware that
->    can now be used with either Device Tree or ACPI Device Properties. The
->    both drivers use an arbitrary _HID.
-> 
-> This has been tested on Minnowboard with relevant parts of the modified
-> DSDT at the end of this email.
-> 
-> This series does not provide for a means to append to a system DSDT. That
-> will ultimately be required to make the most effective use of the _DSD
-> mechanism. Work is underway on that as a separate effort.
-> 
-> [1] http://www.uefi.org/sites/default/files/resources/ACPI_5_1release.pdf
-> [2] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
-> [3] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+Introduction
+------------
 
-For some reason this series never reached the mailing lists intented, so
-I re-sent the series with shorter CC list to LKML, linux-acpi and
-devicetree lists. 
+As a Device Tree provides a description of the hardware, it should be
+possible to derive a Linux kernel .config file from a DTS or DTB file.
 
-LKML thread is here:
+This would allow developers, users, and distributions to start from a
+hardware-independant "base" .config file (containing software features and
+policies (IPv4, NFS, initrd, ...), and drivers for discoverable hardware
+(PCI expansion cards, USB devices, ...)), and automatically add the options
+needed to support their Linux devices.
 
-https://lkml.org/lkml/2014/8/17/10
+To get the ball rolling, I wrote a simple script to generate a list of
+CONFIG_* options from one or more preprocessed DTS files or DTB files.
 
-Sorry for the inconvenience.
+
+Theory of operation
+-------------------
+
+The script performs the following steps:
+
+  1. Run dtc to convert DTB input to DTS, or convert DTS to canonical DTS for
+     simpler parsing,
+  2. Find all (lists of) "compatible" properties,
+  3. For each (list of) "compatible" properties, find driver sources that
+     provide support for it,
+  4. For each driver source, find the CONFIG_* option that needs to be enabled
+     to build the driver.
+
+
+Limitations
+-----------
+
+  - Driver sources are found by grepping "*.c" files in the kernel source tree.
+    This may show false positives, like mfd drivers instantiating platform
+    devices with the same name as a compatible entry (e.g. "gpio-keys").
+    Parsing MODULE_DEVICE_TABLEs would be more accurate, but that would
+    requiring building an allmodconfig kernel first.
+    However, that would miss of_device_is_compatible() calls.
+    Perhaps the entries in a MODULE_DEVICE_TABLE should be created by a
+    cpp macro, so we can grep for users of that macro?
+  - CONFIG_* symbols are found by grepping Makefiles in the kernel source tree
+    for the typical "obj-$(CONFIG_FOO) += foo.o" pattern, which causes false
+    negatives if that pattern isn't used.
+  - Some properties are checked for in multiple places, causing false positives
+    in platform-support on different platforms (e.g. "arm,cortex-a9").
+  - Some drivers can be enabled by multiple distinct CONFIG_* symbols, causing
+    false positives.
+  - Drivers that rely on partial matching, i.e. by dropping the vendor-specific
+    prefix, may not be found. This affects several i2c and spi drivers, e.g.
+    at24 and m25p80.
+  - Knowing that a CONFIG_* option needs to be enabled is not sufficient.
+    Kconfig dependencies should be tracked as well, as manually finding which
+    dependencies need to be fulfilled can be a tedious task.
+
+
+Download
+--------
+
+You can find the script at
+https://github.com/geertu/linux-scripts/blob/master/linux-config-from-dt
+It must be run from a Linux kernel git repository.
+
+Examples:
+
+    linux-config-from-dt arch/arm/boot/dts/.r8a7791-koelsch.dtb.dts.tmp
+    linux-config-from-dt arch/arm/boot/dts/*dtb
+
+Enjoy, and thanks for your comments!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
