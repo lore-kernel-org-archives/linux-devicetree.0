@@ -1,48 +1,112 @@
-From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Subject: Re: [PATCH 1/3] of: Add of_match_machine helper
-Date: Mon, 18 Aug 2014 13:10:13 +0300
-Message-ID: <53F1D105.1070107@nvidia.com>
-References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>	<1407452515-2390-2-git-send-email-ttynkkynen@nvidia.com>
- <20140817152854.5406BC40ADD@trevor.secretlab.ca>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv3 3/3] pwm: documentation: Add 'big-endian' property for
+ FTM PWM.
+Date: Mon, 18 Aug 2014 10:59:40 +0100
+Message-ID: <20140818095939.GE14559@leverpostej>
+References: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
+ <1408332755-35102-4-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140817152854.5406BC40ADD@trevor.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J.
- Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408332755-35102-4-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/08/14 18:28, Grant Likely wrote:
-> On Fri, 8 Aug 2014 02:01:53 +0300, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
-[...]
->> +EXPORT_SYMBOL(of_match_machine);
+On Mon, Aug 18, 2014 at 04:32:35AM +0100, Xiubo Li wrote:
+> For the same FTM PWM device, which on different SoCs will in
+> differrent endian mode, using the same linux device driver need
+> one boolean properties to distingush this.
 > 
-> Too wordy...
+> For now the FTM PWM is only applied to the ARM SoCs which are all
+> in LE mode.
 > 
-> 	return of_match_node(matches, of_allnodes);
+> So the DT binding for FTM PWM device endian:
+> SoC     |  FTM-PWM | 'big-endian' property is needed?
+> --------|----------|---------------------------------
+> Vybird  |    LE    |     No
+> LS1     |    BE    |     Yes
+> LS2     |    LE    |     No
 > 
-> :-)
+> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 > 
-> It could be a static inline, but I don't think it's even worth having a
-> helper. The callers could just open code the above.
-> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> index 0bda229..67ed8d6 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> @@ -1,5 +1,23 @@
+>  Freescale FlexTimer Module (FTM) PWM controller
+>  
+> +For the same FTM PWM device, which on different SoCs will in
+> +differrent endian mode, using the same linux device driver need
+> +one boolean properties to distingush this.
 
-Do you mean all the drivers should be referring to of_allnodes directly?
-I see that it's indeed exported, but to me that sounds like relying too
-much on an implementation detail. In fact, Documentation/devicetree/todo.txt
-even seems to have a TODO entry for its removal ("Remove of_allnodes list
-and iterate using list of child nodes alone").
+There is absolutely no need to mention Linux if this is truly a HW
+property.
 
--- 
-nvpublic
+> +
+> +For now the FTM PWM is only applied to the ARM SoCs which are all
+> +in LE mode.
+> +
+> +So the DT binding for FTM PWM device endian:
+> +SoC     |  FTM-PWM | 'big-endian' property is needed?
+> +--------|----------|---------------------------------
+> +Vybird  |    LE    |     No
+> +LS1     |    BE    |     Yes
+> +LS2     |    LE    |     No
+> +
+> +Please see "Documentation/devicetree/bindings/regmap/regmap.txt" for more
+> +detail about the endianness.
+
+Surely all we need is:
+
+The FTM PWM device can be integrated as little-endian or big-endian.
+This endianness differs per SoC:
+
+SoC     | FTM-PWM endianness
+--------+-------------------
+Vybrid  | LE
+LS1     | BE
+LS2     | LE
+
+> +
+> +
+>  Required properties:
+>  - compatible: Should be "fsl,vf610-ftm-pwm".
+>  - reg: Physical base address and length of the controller's registers
+> @@ -16,7 +34,8 @@ Required properties:
+>  - pinctrl-names: Must contain a "default" entry.
+>  - pinctrl-NNN: One property must exist for each entry in pinctrl-names.
+>    See pinctrl/pinctrl-bindings.txt for details of the property values.
+> -
+> +- big-endian: One boolean property, for all the device registers, the BE mode
+> +  will be in use if it's present, or the LE mode will be in use.
+
+- big-endian: Boolean property, required if all the FTM_PWM registers
+  are big-endian rather than little-endian.
+
+Cheers,
+Mark.
+
+>  
+>  Example:
+>  
+> @@ -32,4 +51,5 @@ pwm0: pwm@40038000 {
+>  			<&clks VF610_CLK_FTM0_EXT_FIX_EN>;
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&pinctrl_pwm0_1>;
+> +		big-endian;
+>  };
+> -- 
+> 1.8.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
