@@ -1,55 +1,69 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv3 2/3] pwm: ftm-pwm: Convert to direct regmap API usage.
-Date: Mon, 18 Aug 2014 10:36:49 +0200
-Message-ID: <20140818083648.GC31171@ulmo>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv3 0/3] ftm-pwm: Convert to direct regmap API usage
+Date: Mon, 18 Aug 2014 08:43:56 +0000
+Message-ID: <d8843f498fa64ea9b45fc04e9bb5589d@BY2PR0301MB0613.namprd03.prod.outlook.com>
 References: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
- <1408332755-35102-3-git-send-email-Li.Xiubo@freescale.com>
+ <20140818083134.GB31171@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408332755-35102-3-git-send-email-Li.Xiubo@freescale.com>
+In-Reply-To: <20140818083134.GB31171@ulmo>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: linux-pwm@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+> -----Original Message-----
+> From: Thierry Reding [mailto:thierry.reding@gmail.com]
+> Sent: Monday, August 18, 2014 4:32 PM
+> To: Xiubo Li-B47053
+> Cc: linux-pwm@vger.kernel.org; robh+dt@kernel.org; pawel.moll@arm.com;
+> rdunlap@infradead.org; devicetree@vger.kernel.org; linux-doc@vger.kernel.org
+> Subject: Re: [PATCHv3 0/3] ftm-pwm: Convert to direct regmap API usage
+> 
+> On Mon, Aug 18, 2014 at 11:32:32AM +0800, Xiubo Li wrote:
+> >
+> > This is depended on the following patches, which has been applied by
+> > Mark into his Regmap-Tree:
+> > https://lkml.org/lkml/2014/7/15/6
+> > https://lkml.org/lkml/2014/7/15/5
+> > https://lkml.org/lkml/2014/7/15/7
+> 
+> This doesn't seem to have any build dependencies on the above patches.
 
---TiqCXmo5T1hvSQQg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, you are right.
 
-On Mon, Aug 18, 2014 at 11:32:34AM +0800, Xiubo Li wrote:
-[...]
-> diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
-[...]
-> +static struct regmap_config fsl_pwm_regmap_config = {
 
-This can be static const, but since it's the only comment I can fix that
-up myself when applying.
+> So with only this applied to the PWM tree at worst the registers will be
+> accessed in the wrong endianess and the PWM won't work as expected. Does
+> that matter? 
 
-Thierry
+No, I think it's okay, we'll only test our drivers in the Linus's stable branch.
 
---TiqCXmo5T1hvSQQg
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT8bsgAAoJEN0jrNd/PrOh3acP/1FvHmFjy+wDsMtfsMV1/mN0
-gtpsL1b4y1OFBirYhQVom9BvjIGJ30q/btulGRcbhW/T6MUuBuQIWqe/2tneLrMR
-YI7IiGkYsMva+wdIGaqsXg+vdFHp5m32AI+hzPL4M+ueDqFKq0pr/AwB57DOW5Bm
-6MP46kMNnpA9ZjkLdpEnMAHWZUtaBBOJOOGqUadqsFkX0jckpuRXJH/qbyP9SE5i
-c7D87QY4bNRZkMmqazFoDqB0eBoc+CijX6a5lIRlGW1mrsM1m3K4kB3A8tB8opEH
-fpOtRyfLjjcueWCqo3Xl40HgzVTsfv/Sqprd3+sgQ4q7YLSw/snoud8EDJdujxoe
-SNVi1h+lFeA9YkZYPb8QFIDihIY5gRufn8P49e1jjDChSwVy11Qkp0hVgIAoAZwr
-sNuJwR2eQyqNM8zJAiDE8axki3saxFYO+vGGND+1T8HhM7qjd0/rzmyVTTh6caw5
-4UFVo95916A/km3RzVeRYTxTs9useFD6TDP92xZncZei7gcG8FANJNu9isrtDKQ6
-5dyaq7GhYesBPorVWMLwLFIfKOUWWdis9IHpU01gaGZXzvUHXxDobKdhP7BDaf5I
-FVIs6dwriJkQ3ZYrbOrD7vqOlPqpI0R26RCzPbxbJ5eYO4bXlfaHnO04GmsQq+DB
-7+RVO5vuhdXOhjLCj8q7
-=6iQh
------END PGP SIGNATURE-----
+> Or should I request a stable branch from Mark to pull into
+> the PWM tree so that this doesn't happen?
+> 
+> In linux-next things should be fine since both branches will be merged.
+> I guess there could still be an issue depending on the order in which
+> Linus merges the trees for 3.18, in which case there could be a brief
+> period where Linus' tree runtime-breaks on platforms requiring this. But
+> I'm not sure if that's really an issue.
+> 
 
---TiqCXmo5T1hvSQQg--
+The depended patches has been merged into the Linux-next tree just now already
+today.
+
+And then could we guarantee that these ftm-pwm patches to be in order after the
+depended ones ?
+
+Thanks,
+
+BRs
+Xiubo
+
+
+> Thierry
