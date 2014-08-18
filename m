@@ -1,191 +1,200 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 7/7] usb: host: ohci-exynos: Remove unnecessary usb-phy
- support
-Date: Mon, 18 Aug 2014 10:36:56 +0900
-Message-ID: <00a001cfba84$e57cbb40$b07631c0$%han@samsung.com>
-References: <1408026240-28365-1-git-send-email-gautam.vivek@samsung.com>
- <1408026240-28365-8-git-send-email-gautam.vivek@samsung.com>
+From: Wei Yang <weiyang@linux.vnet.ibm.com>
+Subject: Re: [PATCH v9 02/12] PCI: OF: Parse and map the IRQ when adding the
+ PCI device.
+Date: Mon, 18 Aug 2014 09:44:04 +0800
+Message-ID: <20140818014404.GA11354@richard>
+References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
+ <1407860725-25202-3-git-send-email-Liviu.Dudau@arm.com>
+ <20140814145804.GA5586@richard>
+ <20140814154959.GG25761@e106497-lin.cambridge.arm.com>
+ <20140815085632.GA4954@richard>
+ <20140815103052.GD27553@e106497-lin.cambridge.arm.com>
+Reply-To: Wei Yang <weiyang@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1408026240-28365-8-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: ko
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140815103052.GD27553@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Wei Yang <weiyang@linux.vnet.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, August 14, 2014 11:24 PM, Vivek Gautam wrote:
-> 
-> Now that we have completely moved from older USB-PHY drivers
-> to newer GENERIC-PHY drivers for PHYs available with USB controllers
-> on Exynos series of SoCs, we can remove the support for the same
-> in our host drivers too.
-> This should fix the issue on ohci-exynos, wherein in the absence of
-> SAMSUNG_USB2PHY config symbol, we ended up getting the NOP_USB_XCEIV phy
-> when the same is enabled. And thus the PHYs are not configured properly.
-> 
-> Reported-by: Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Fri, Aug 15, 2014 at 11:30:52AM +0100, Liviu Dudau wrote:
+>On Fri, Aug 15, 2014 at 09:56:32AM +0100, Wei Yang wrote:
+>> On Thu, Aug 14, 2014 at 04:49:59PM +0100, Liviu Dudau wrote:
+>> >On Thu, Aug 14, 2014 at 03:58:04PM +0100, Wei Yang wrote:
+>> >> On Tue, Aug 12, 2014 at 05:25:15PM +0100, Liviu Dudau wrote:
+>> >> >Enhance the default implementation of pcibios_add_device() to
+>> >> >parse and map the IRQ of the device if a DT binding is available=
+=2E
+>> >> >
+>> >> >Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> >> >Cc: Grant Likely <grant.likely@linaro.org>
+>> >> >Cc: Rob Herring <robh+dt@kernel.org>
+>> >> >Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+>> >> >---
+>> >> > drivers/pci/pci.c | 3 +++
+>> >> > 1 file changed, 3 insertions(+)
+>> >> >
+>> >> >diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> >> >index 1c8592b..29d1775 100644
+>> >> >--- a/drivers/pci/pci.c
+>> >> >+++ b/drivers/pci/pci.c
+>> >> >@@ -17,6 +17,7 @@
+>> >> > #include <linux/spinlock.h>
+>> >> > #include <linux/string.h>
+>> >> > #include <linux/log2.h>
+>> >> >+#include <linux/of_pci.h>
+>> >> > #include <linux/pci-aspm.h>
+>> >> > #include <linux/pm_wakeup.h>
+>> >> > #include <linux/interrupt.h>
+>> >> >@@ -1453,6 +1454,8 @@ EXPORT_SYMBOL(pcim_pin_device);
+>> >> >  */
+>> >> > int __weak pcibios_add_device(struct pci_dev *dev)
+>> >> > {
+>> >> >+	dev->irq =3D of_irq_parse_and_map_pci(dev, 0, 0);
+>> >> >+
+>> >> > 	return 0;
+>> >> > }
+>> >>=20
+>> >> Liviu,
+>> >>=20
+>> >> For this, my suggestion is to add arch dependent function to setu=
+p the irq
+>> >> line for pci devices. I can't find an obvious reason this won't w=
+ork on other
+>> >> archs, but maybe this will hurt some of them?
+>> >
+>> >Hi Wei,
+>> >
+>> >I'm not sure I understand your point. Architectures that support OF=
+ will obviously
+>> >benefit from this common approach, and for the other ones the funct=
+ion is empty
+>> >so it will not change existing behaviour. If you are suggesting tha=
+t I should
+>> >create a new API that each architecture could go and implement for =
+setting up the
+>> >IRQ line then I would agree that it would be nice to have that, but=
+ the question
+>> >is how many architectures are outside OF that need this?
+>>=20
+>> My suggestion is to define the pcibios_add_device() for arm arch, li=
+ke the one
+>> in arch/powerpc/kernel/pci-common.c. If my understanding is correct,=
+ this
+>> patch set address the pci bus setup mostly on arm arch.
+>
+>And also arm64 at the least.
+>
+>>=20
+>> For those archs not support OF, this function is empty and has no ef=
+fect. I
+>> agree on this one.
+>>=20
+>> For those archs rely on OF, we still have two cases:
+>>     1. they would have implement this function like powerpc
+>
+>Actually, powerpc seems to be the only OF platform reimplementing this=
+ function.
+>s390 and x86 are not OF platforms.
+>
+>>     2. have other way to fix it up,  otherwise how it works now?
+>
+>Don't forget that my patchset aims to replace existing house-made code=
+ with a more
+>generic version. When architectures and platforms switch to my code th=
+ey will have
+>to add this back in their code if it's needed.
+>
+>> If my assumption is correct, this change will either have no effect,=
+ or fix up
+>> the irq line the second time. Not harmful, but not necessary.
+>
+>Well, it will become necessary as old code gets dismantled and convert=
+ed towards
+>this patchset. To give you an example that I'm familiar with, for arch=
+/arm the
+>host bridge drivers have moved into drivers/pci/host, but they still d=
+epend/use
+>the bios32 infrastructure that takes care of setting up the irq. When =
+they switch
+>to my version they would have to go and debug the "irq not being assig=
+ned" issue
+>and it is quite likely that some of the people doing the conversion wi=
+ll complain
+>about my code rather than understanding the issue. What I'm trying to =
+do is to
+>make switching to my patchset as painless as possible, with a cleanup =
+to remove
+>redundant operations coming after the switchover.
+>
 
-Reviewed-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+This means this is a temporary version for the switchover period and wi=
+ll be
+reverted after switchover?
 
-Best regards,
-Jingoo Han
+>Does that sound like a reasonable plan?
+>
+>Best regards,
+>Liviu
+>
+>>=20
+>> I am not familiar with other arch, so the second case is my deductio=
+n. If this
+>> is not correct, please let me know.
+>>=20
+>> >
+>> >If I understood you correctly, it is a nice idea but slightly outsi=
+de the scope
+>> >of my current patchset.
+>> >
+>> >Best regards,
+>> >Liviu
+>> >
+>> >>=20
+>> >> >
+>> >> >--=20
+>> >> >2.0.4
+>> >> >
+>> >> >--
+>> >> >To unsubscribe from this list: send the line "unsubscribe linux-=
+pci" in
+>> >> >the body of a message to majordomo@vger.kernel.org
+>> >> >More majordomo info at  http://vger.kernel.org/majordomo-info.ht=
+ml
+>> >>=20
+>> >> --=20
+>> >> Richard Yang
+>> >> Help you, Help me
+>> >>=20
+>> >> --
+>> >> To unsubscribe from this list: send the line "unsubscribe linux-p=
+ci" in
+>> >> the body of a message to majordomo@vger.kernel.org
+>> >> More majordomo info at  http://vger.kernel.org/majordomo-info.htm=
+l
+>> >>=20
+>> >
+>>=20
+>> --=20
+>> Richard Yang
+>> Help you, Help me
+>>=20
+>>=20
+>
+>--=20
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>| I would like to |
+>| fix the world,  |
+>| but they're not |
+>| giving me the   |
+> \ source code!  /
+>  ---------------
+>    =C2=AF\_(=E3=83=84)_/=C2=AF
 
-> ---
->  drivers/usb/host/ohci-exynos.c |   64 ++++++----------------------------------
->  1 file changed, 9 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-> index a72ab8f..0199a8b 100644
-> --- a/drivers/usb/host/ohci-exynos.c
-> +++ b/drivers/usb/host/ohci-exynos.c
-> @@ -19,11 +19,8 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
-> -#include <linux/usb/phy.h>
-> -#include <linux/usb/samsung_usb_phy.h>
->  #include <linux/usb.h>
->  #include <linux/usb/hcd.h>
-> -#include <linux/usb/otg.h>
-> 
->  #include "ohci.h"
-> 
-> @@ -38,9 +35,7 @@ static struct hc_driver __read_mostly exynos_ohci_hc_driver;
-> 
->  struct exynos_ohci_hcd {
->  	struct clk *clk;
-> -	struct usb_phy *phy;
-> -	struct usb_otg *otg;
-> -	struct phy *phy_g[PHY_NUMBER];
-> +	struct phy *phy[PHY_NUMBER];
->  };
-> 
->  static int exynos_ohci_get_phy(struct device *dev,
-> @@ -51,28 +46,7 @@ static int exynos_ohci_get_phy(struct device *dev,
->  	int phy_number;
->  	int ret = 0;
-> 
-> -	exynos_ohci->phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> -	if (IS_ERR(exynos_ohci->phy)) {
-> -		ret = PTR_ERR(exynos_ohci->phy);
-> -		if (ret != -ENXIO && ret != -ENODEV) {
-> -			dev_err(dev, "no usb2 phy configured\n");
-> -			return ret;
-> -		}
-> -		dev_dbg(dev, "Failed to get usb2 phy\n");
-> -	} else {
-> -		exynos_ohci->otg = exynos_ohci->phy->otg;
-> -	}
-> -
-> -	/*
-> -	 * Getting generic phy:
-> -	 * We are keeping both types of phys as a part of transiting OHCI
-> -	 * to generic phy framework, so as to maintain backward compatibilty
-> -	 * with old DTB.
-> -	 * If there are existing devices using DTB files built from them,
-> -	 * to remove the support for old bindings in this driver,
-> -	 * we need to make sure that such devices have their DTBs
-> -	 * updated to ones built from new DTS.
-> -	 */
-> +	/* Get the generic phys */
->  	for_each_available_child_of_node(dev->of_node, child) {
->  		ret = of_property_read_u32(child, "reg", &phy_number);
->  		if (ret) {
-> @@ -97,7 +71,7 @@ static int exynos_ohci_get_phy(struct device *dev,
->  			}
->  			dev_dbg(dev, "Failed to get usb2 phy\n");
->  		}
-> -		exynos_ohci->phy_g[phy_number] = phy;
-> +		exynos_ohci->phy[phy_number] = phy;
->  	}
-> 
->  	return ret;
-> @@ -110,16 +84,13 @@ static int exynos_ohci_phy_enable(struct device *dev)
->  	int i;
->  	int ret = 0;
-> 
-> -	if (!IS_ERR(exynos_ohci->phy))
-> -		return usb_phy_init(exynos_ohci->phy);
-> -
->  	for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
-> -		if (!IS_ERR(exynos_ohci->phy_g[i]))
-> -			ret = phy_power_on(exynos_ohci->phy_g[i]);
-> +		if (!IS_ERR(exynos_ohci->phy[i]))
-> +			ret = phy_power_on(exynos_ohci->phy[i]);
->  	if (ret)
->  		for (i--; i >= 0; i--)
-> -			if (!IS_ERR(exynos_ohci->phy_g[i]))
-> -				phy_power_off(exynos_ohci->phy_g[i]);
-> +			if (!IS_ERR(exynos_ohci->phy[i]))
-> +				phy_power_off(exynos_ohci->phy[i]);
-> 
->  	return ret;
->  }
-> @@ -130,14 +101,9 @@ static void exynos_ohci_phy_disable(struct device *dev)
->  	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
->  	int i;
-> 
-> -	if (!IS_ERR(exynos_ohci->phy)) {
-> -		usb_phy_shutdown(exynos_ohci->phy);
-> -		return;
-> -	}
-> -
->  	for (i = 0; i < PHY_NUMBER; i++)
-> -		if (!IS_ERR(exynos_ohci->phy_g[i]))
-> -			phy_power_off(exynos_ohci->phy_g[i]);
-> +		if (!IS_ERR(exynos_ohci->phy[i]))
-> +			phy_power_off(exynos_ohci->phy[i]);
->  }
-> 
->  static int exynos_ohci_probe(struct platform_device *pdev)
-> @@ -209,9 +175,6 @@ skip_phy:
->  		goto fail_io;
->  	}
-> 
-> -	if (exynos_ohci->otg)
-> -		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
-> -
->  	platform_set_drvdata(pdev, hcd);
-> 
->  	err = exynos_ohci_phy_enable(&pdev->dev);
-> @@ -244,9 +207,6 @@ static int exynos_ohci_remove(struct platform_device *pdev)
-> 
->  	usb_remove_hcd(hcd);
-> 
-> -	if (exynos_ohci->otg)
-> -		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
-> -
->  	exynos_ohci_phy_disable(&pdev->dev);
-> 
->  	clk_disable_unprepare(exynos_ohci->clk);
-> @@ -275,9 +235,6 @@ static int exynos_ohci_suspend(struct device *dev)
->  	if (rc)
->  		return rc;
-> 
-> -	if (exynos_ohci->otg)
-> -		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
-> -
->  	exynos_ohci_phy_disable(dev);
-> 
->  	clk_disable_unprepare(exynos_ohci->clk);
-> @@ -293,9 +250,6 @@ static int exynos_ohci_resume(struct device *dev)
-> 
->  	clk_prepare_enable(exynos_ohci->clk);
-> 
-> -	if (exynos_ohci->otg)
-> -		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
-> -
->  	ret = exynos_ohci_phy_enable(dev);
->  	if (ret) {
->  		dev_err(dev, "Failed to enable USB phy\n");
-> --
-> 1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Richard Yang
+Help you, Help me
