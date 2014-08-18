@@ -1,91 +1,55 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v9 4/6] clk: max77686: Improve Maxim 77686 PMIC clocks binding
-Date: Mon, 18 Aug 2014 10:33:02 +0200
-Message-ID: <1408350784-15577-5-git-send-email-javier.martinez@collabora.co.uk>
-References: <1408350784-15577-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1408350784-15577-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCHv3 2/3] pwm: ftm-pwm: Convert to direct regmap API usage.
+Date: Mon, 18 Aug 2014 10:36:49 +0200
+Message-ID: <20140818083648.GC31171@ulmo>
+References: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
+ <1408332755-35102-3-git-send-email-Li.Xiubo@freescale.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408332755-35102-3-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: linux-pwm@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Like most clock drivers, the Maxim 77686 PMIC clock binding
-follows the convention that the "#clock-cells" property is
-used to specify the number of cells in a clock provider.
 
-But the binding document is not clear enough that it shall
-be set to 1 since the PMIC support multiple clocks outputs.
+--TiqCXmo5T1hvSQQg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Also, explain that the clocks identifiers are defined in a
-header file that can be included by Device Tree source with
-client nodes to avoid using magic numbers.
+On Mon, Aug 18, 2014 at 11:32:34AM +0800, Xiubo Li wrote:
+[...]
+> diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
+[...]
+> +static struct regmap_config fsl_pwm_regmap_config = {
 
-Finally, add "clock-output-names" as an optional property
-since now is supported by the clock driver.
+This can be static const, but since it's the only comment I can fix that
+up myself when applying.
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Reviewed-by: Mike Turquette <mturquette@linaro.org>
-Acked-by: Mike Turquette <mturquette@linaro.org>
----
+Thierry
 
-Changes since v6: None
+--TiqCXmo5T1hvSQQg
+Content-Type: application/pgp-signature
 
-Changes since v5:
- - Fix generic driver changes merged into max77802 clock patch by mistake.
-   Suggested by Yadwinder Singh Brar.
- - Register clock lookups using clk_register_clkdev() instead of doing manually.
- - Use the managed devm_clk_register() function and remove clk un-registration.
- - Add "clock-output-names" property support. Suggested by Yadwinder Singh Brar.
- - Return the rate unconditionally in recalc_rate. Suggested by Mike Turquette.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Changes since v4: None
+iQIcBAEBAgAGBQJT8bsgAAoJEN0jrNd/PrOh3acP/1FvHmFjy+wDsMtfsMV1/mN0
+gtpsL1b4y1OFBirYhQVom9BvjIGJ30q/btulGRcbhW/T6MUuBuQIWqe/2tneLrMR
+YI7IiGkYsMva+wdIGaqsXg+vdFHp5m32AI+hzPL4M+ueDqFKq0pr/AwB57DOW5Bm
+6MP46kMNnpA9ZjkLdpEnMAHWZUtaBBOJOOGqUadqsFkX0jckpuRXJH/qbyP9SE5i
+c7D87QY4bNRZkMmqazFoDqB0eBoc+CijX6a5lIRlGW1mrsM1m3K4kB3A8tB8opEH
+fpOtRyfLjjcueWCqo3Xl40HgzVTsfv/Sqprd3+sgQ4q7YLSw/snoud8EDJdujxoe
+SNVi1h+lFeA9YkZYPb8QFIDihIY5gRufn8P49e1jjDChSwVy11Qkp0hVgIAoAZwr
+sNuJwR2eQyqNM8zJAiDE8axki3saxFYO+vGGND+1T8HhM7qjd0/rzmyVTTh6caw5
+4UFVo95916A/km3RzVeRYTxTs9useFD6TDP92xZncZei7gcG8FANJNu9isrtDKQ6
+5dyaq7GhYesBPorVWMLwLFIfKOUWWdis9IHpU01gaGZXzvUHXxDobKdhP7BDaf5I
+FVIs6dwriJkQ3ZYrbOrD7vqOlPqpI0R26RCzPbxbJ5eYO4bXlfaHnO04GmsQq+DB
+7+RVO5vuhdXOhjLCj8q7
+=6iQh
+-----END PGP SIGNATURE-----
 
-Changes since v3:
- - Don't change clock-names property to make clear that it's
-   the consumer clock name and should not match the producer clock.
-   Suggested by Doug Anderson.
----
- .../devicetree/bindings/clock/maxim,max77686.txt         | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/maxim,max77686.txt b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-index 96ce71b..9c40739 100644
---- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-+++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-@@ -9,13 +9,21 @@ The MAX77686 contains three 32.768khz clock outputs that can be controlled
- Following properties should be presend in main device node of the MFD chip.
- 
- Required properties:
--- #clock-cells: simple one-cell clock specifier format is used, where the
--  only cell is used as an index of the clock inside the provider. Following
--  indices are allowed:
-+
-+- #clock-cells: from common clock binding; shall be set to 1.
-+
-+Optional properties:
-+- clock-output-names: From common clock binding.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Following indices are allowed:
-     - 0: 32khz_ap clock,
-     - 1: 32khz_cp clock,
-     - 2: 32khz_pmic clock.
- 
-+Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max77686.h
-+header and can be used in device tree sources.
-+
- Example: Node of the MFD chip
- 
- 	max77686: max77686@09 {
-@@ -34,5 +42,5 @@ Example: Clock consumer node
- 		compatible = "bar,foo";
- 		/* ... */
- 		clock-names = "my-clock";
--		clocks = <&max77686 2>;
-+		clocks = <&max77686 MAX77686_CLK_PMIC>;
- 	};
--- 
-2.0.1
+--TiqCXmo5T1hvSQQg--
