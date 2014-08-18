@@ -1,51 +1,63 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 2/2] Input: atmel_mxt_ts - Add keycodes array example
-Date: Mon, 18 Aug 2014 15:20:04 +0200
-Message-ID: <53F1FD84.5020901@collabora.co.uk>
-References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk> <53EDF6B4.7080804@collabora.co.uk> <53EE307E.8060507@itdev.co.uk>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH 4/7] ARM: meson: add basic support for MesonX SoCs
+Date: Mon, 18 Aug 2014 15:27:13 +0200
+Message-ID: <20140818132713.GA28819@carlo-MacBookPro>
+References: <1408272594-10814-1-git-send-email-carlo@caione.org>
+ <1408272594-10814-5-git-send-email-carlo@caione.org>
+ <20140817142115.GB15297@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <53EE307E.8060507@itdev.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Nick Dyer <nick.dyer@itdev.co.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140817142115.GB15297@lukather>
+Sender: linux-serial-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Nick,
+On Sun, Aug 17, 2014 at 04:21:15PM +0200, Maxime Ripard wrote:
+> Hi Carlo,
 
-On 08/15/2014 06:08 PM, Nick Dyer wrote:
->> 
->> Any comments on this? I would really appreciate if you can expand on how
->> this DT property is supposed to be used so I can re-spin the atmel support
->> patch for Peach boards.
-> 
-> The below patch improves the documentation for the gpio-property. Stephen
-> Warren has a good example here:
-> https://github.com/swarren/linux-tegra/commit/09789801
-> 
-> trackpad@4b {
->   compatible = "atmel,maxtouch";
->   reg = <0x4b>;
->   interrupt-parent = <&gpio>;
->   interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
->   linux,gpio-keymap = <0 0 0 BTN_LEFT>;
-> };
-> 
-> This maps BTN_LEFT to the 4th bit of the T19 message. I haven't looked up
-> what GPIO number that corresponds to on the mXT224SL that he has, it varies
-> with the particular maXTouch device you have.
-> 
-> Hope this helps.
->
+Hi Maxime,
+thank you for reviewing also these patches, I'll keep you in CC for the
+next revisions if you are interested.
 
-Thanks a lot for the patch and the pointer to Stephen's DTS. I'll do some
-experimentation then to figure out the right values since I don't have
-proper documentation. Fortunately the Chrome OS 3.8 downstream driver
-works on -next so I can use evdev to compare if both drivers behave the same.
+> > +static __init void meson_init_machine_devicetree(void)
+> > +{
+> > +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> > +}
+> 
+> This is the default, you can just remove it
 
-> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Agree
 
-Best regards,
-Javier
+> > +static const char * const m6_common_board_compat[] = {
+> > +	"amlogic,8726_mx",
+> > +	"amlogic,8726_mxs",
+> > +	"amlogic,8726_mxl",
+> > +	"amlogic,meson6",
+> 
+> Why are all those compatibles needed? Usually, you add a single one
+> per SoC (which would be the last in your case I guess.
+
+They are taken from the weird DTS in the original Amlogic sources but I
+guess you are right. I am actually more inclined to just leave "8726_mx"
+and "meson6" since online you can find equally both the versions for
+exactly the same SoCs.
+
+> > +	NULL,
+> > +};
+> > +
+> > +DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
+> > +	.init_machine	= meson_init_machine_devicetree,
+> 
+> And since you don't need the init machine, you can just use the
+> generic machine support. I'm not sure what's been decided on this,
+> should we remove such empty machines?
+
+I can get rid of the .init_machine but what about the .dt_compat field?
+
+Thanks,
+
+-- 
+Carlo Caione
