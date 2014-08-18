@@ -1,57 +1,108 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH 0/4] PWM changes for rk3288-evb
-Date: Mon, 18 Aug 2014 10:09:05 -0700
-Message-ID: <1408381749-14156-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
+Subject: [PATCH 3/4] ARM: dts: Add main PWM info to rk3288
+Date: Mon, 18 Aug 2014 10:09:08 -0700
+Message-ID: <1408381749-14156-4-git-send-email-dianders@chromium.org>
+References: <1408381749-14156-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408381749-14156-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Doug Anderson <dianders@chromium.org>, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These patches enable the pwm backlight for the rk3288-evb board.
-There were tested by watching the backlight grow from off to max with
-the following instructions:
+This adds the PWM info (other than the VOP PWM) to the main rk3288
+dtsi file.
 
-  cd /sys/class/backlight/backlight*/
-  for i in $(seq 255); do echo $i > brightness; sleep .01; done
+Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 68 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-The first patch enables the proper IP.  I think it could land in
-Heiko's tree.
-
-The second patch switches PWM cells from 2 to 3 on rk3288.  I think it
-could land in Thierry's tree.  With the PWM subsystem as currently
-structured, I believe this will break backward compatibility.  However
-the rk3288 PWM driver was added so recently (and the rk3288 is so new)
-that this seems OK.  In the worst case if someone yells that they are
-broken, I believe we could fix this in Linux by saying that if a PWM
-driver specifies 3 cells and the DTS definition of the PWM says 2
-cells that we'll just pretend that we have no flags.
-
-The 3rd and 4th patches are DTS ones.  They could land in Heiko's tree
-after the second patch has landed.  They are based atop his current
-WIP 3.18 dts tree.  Note that instantiating the PWM backlight will
-cause the system to hang unless Heiko's (clk: rockchip: protect
-critical clocks from getting disabled)
-<patchwork.kernel.org/patch/4725391> is landed.
-
-There are no compile time or runtime dependencies between these
-patches except that patch #3 needs to come before patch #4.  ...and of
-course the PWM won't work without all 4 patches.
-
-
-Doug Anderson (4):
-  ARM: rockchip: rk3288: Switch to use the proper PWM IP
-  pwm: rockchip: Allow polarity invert on rk3288
-  ARM: dts: Add main PWM info to rk3288
-  ARM: dts: Enable pwm backlight on rk3288-EVB
-
- .../devicetree/bindings/pwm/pwm-rockchip.txt       |  4 +-
- arch/arm/boot/dts/rk3288-evb.dtsi                  | 53 +++++++++++++++++
- arch/arm/boot/dts/rk3288.dtsi                      | 68 ++++++++++++++++++++++
- arch/arm/mach-rockchip/rockchip.c                  | 19 ++++++
- drivers/pwm/pwm-rockchip.c                         | 32 +++++++++-
- 5 files changed, 172 insertions(+), 4 deletions(-)
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 36be7bb..9c9d9c5 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -261,6 +261,50 @@
+ 		status = "disabled";
+ 	};
+ 
++	pwm0: pwm@ff680000 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680000 0x10>;
++		#pwm-cells = <3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm0_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		status = "disabled";
++	};
++
++	pwm1: pwm@ff680010 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680010 0x10>;
++		#pwm-cells = <3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm1_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		status = "disabled";
++	};
++
++	pwm2: pwm@ff680020 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680020 0x10>;
++		#pwm-cells = <3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm2_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		status = "disabled";
++	};
++
++	pwm3: pwm@ff680030 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680030 0x10>;
++		#pwm-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm3_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		status = "disabled";
++	};
++
+ 	pmu: power-management@ff730000 {
+ 		compatible = "rockchip,rk3288-pmu", "syscon";
+ 		reg = <0xff730000 0x100>;
+@@ -611,5 +655,29 @@
+ 				rockchip,pins = <5 15 3 &pcfg_pull_none>;
+ 			};
+ 		};
++
++		pwm0 {
++			pwm0_pin: pwm0-pin {
++				rockchip,pins = <7 0 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
++		pwm1 {
++			pwm1_pin: pwm1-pin {
++				rockchip,pins = <7 1 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
++		pwm2 {
++			pwm2_pin: pwm2-pin {
++				rockchip,pins = <7 22 RK_FUNC_3 &pcfg_pull_none>;
++			};
++		};
++
++		pwm3 {
++			pwm3_pin: pwm3-pin {
++				rockchip,pins = <7 23 RK_FUNC_3 &pcfg_pull_none>;
++			};
++		};
+ 	};
+ };
 -- 
 2.1.0.rc2.206.gedb03e5
-
