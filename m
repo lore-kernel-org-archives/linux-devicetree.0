@@ -1,97 +1,42 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv9 3/3] arm: dts: Add Altera SDRAM controller bindings
-Date: Mon, 18 Aug 2014 09:44:38 -0500
-Message-ID: <53F21156.70400@opensource.altera.com>
-References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-4-git-send-email-tthayer@opensource.altera.com> <53F14DC2.70000@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v7 7/8] drivers: cpuidle: initialize big.LITTLE driver
+ through DT
+Date: Mon, 18 Aug 2014 15:21:59 +0100
+Message-ID: <20140818142159.GI20043@localhost>
+References: <1407945127-27554-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1407945127-27554-8-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53F14DC2.70000@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1407945127-27554-8-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Tomasz Figa <t.figa@samsung.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.ku>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 13, 2014 at 04:52:06PM +0100, Lorenzo Pieralisi wrote:
+> With the introduction of DT based idle states, CPUidle drivers for ARM
+> can now initialize idle states data through properties in the device tree.
+> 
+> This patch adds code to the big.LITTLE CPUidle driver to dynamically
+> initialize idle states data through the updated device tree source file.
+> 
+> Cc: Chander Kashyap <k.chander@samsung.com>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+>  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 23 +++++++++++++++++++++++
+>  drivers/cpuidle/Kconfig.arm                |  1 +
+>  drivers/cpuidle/cpuidle-big_little.c       | 23 ++++++++++++++++++++++-
+>  3 files changed, 46 insertions(+), 1 deletion(-)
 
-On 08/17/2014 07:50 PM, Rob Herring wrote:
-> On 07/30/2014 01:22 PM, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> Add the Altera SDRAM controller bindings and device tree changes to the Altera SoC project.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->> v2: Changes to SoC SDRAM EDAC code.
->>
->> v3: Implement code suggestions for SDRAM EDAC code.
->>
->> v4: Remove syscon from SDRAM controller bindings.
->>
->> v5: No Change, bump version for consistency.
->>
->> v6: Only map the ctrlcfg register as syscon.
->>
->> v7: No change. Bump for consistency.
->>
->> v8: No change. Bump for consistency.
->>
->> v9: Changes to support a MFD SDRAM controller with nested EDAC.
->> ---
->>   .../devicetree/bindings/arm/altera/socfpga-sdr.txt |   13 +++++++++++++
->>   arch/arm/boot/dts/socfpga.dtsi                     |   10 ++++++++++
->>   2 files changed, 23 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
->> new file mode 100644
->> index 0000000..2bb1ddf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
->> @@ -0,0 +1,13 @@
->> +Altera SOCFPGA SDRAM Controller
->> +The SDRAM controller is implemented as a MFD so various drivers may
->> +nest under this main SDRAM controller binding.
->> +
->> +Required properties:
->> +- compatible : "altr,sdr";
->> +- reg : Should contain 1 register range(address and length)
->> +
->> +Example:
->> +	sdr@0xffc25000 {
->> +		compatible = "altr,sdr";
->> +		reg = <0xffc25000 0x1000>;
->> +	};
->> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> index 4676f25..ecb306d 100644
->> --- a/arch/arm/boot/dts/socfpga.dtsi
->> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> @@ -603,6 +603,16 @@
->>   			};
->>   		};
->>   
->> +		sdr@0xffc25000 {
->> +			compatible = "altr,sdr";
->> +			reg = <0xffc25000 0x1000>;
->> +
->> +			sdramedac@0 {
->> +				compatible = "altr,sdram-edac";
->> +				interrupts = <0 39 4>;
->> +			};
-> This doesn't match the documentation, but I don't think this is a move
-> in the right direction anyway. Because Linux has/wants an MFD driver is
-> not a reason to add a sub node. It is a single h/w block and DT should
-> reflect that.
->
-> Rob
-Hi Rob,
-
-Thanks for reviewing. After discussions with the community and 
-internally, I reverted to using the syscon case in revision 10. I 
-apologize for the confusion but the syscon method seems to be a cleaner 
-solution. I submitted the sycon version on 8/11/14.
-
-Thanks,
-
-Thor
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
