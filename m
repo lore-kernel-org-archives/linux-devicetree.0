@@ -1,89 +1,75 @@
-From: Srikanth Thokala <sthokal@xilinx.com>
-Subject: Re: [PATCH v5] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Mon, 18 Aug 2014 14:47:23 +0530
-Message-ID: <CA+mB=1LX=yOqkx1xNoCBQLbYna76qAeRTqiW6SDpb1MYco7ZVQ@mail.gmail.com>
-References: <1406131381-25577-1-git-send-email-sthokal@xilinx.com>
-	<CA+mB=1JhDF=BBXcyTbgVB8S7qH=Mb1JH78HLL4pA9OBH19hQvA@mail.gmail.com>
-	<8258903.Rn4s07GKGV@wuerfel>
-	<CA+mB=1LeZn1k2VHNby2TRBcb1xuFFTQio=C845_xe2A=ZciYqg@mail.gmail.com>
-	<53E9E052.3070308@monstr.eu>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/5] drm/exynos: mipi-dsi: add Exynos3 SoC support
+Date: Mon, 18 Aug 2014 11:22:20 +0200
+Message-ID: <53F1C5CC.4030803@samsung.com>
+References: <1408350093-26220-1-git-send-email-inki.dae@samsung.com>
+ <1408350093-26220-2-git-send-email-inki.dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53E9E052.3070308@monstr.eu>
-Sender: linux-pci-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Srikanth Thokala <sthokal@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, svemula@xilinx.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, anirudh@xilinx.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1408350093-26220-2-git-send-email-inki.dae@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
-
-On Tue, Aug 12, 2014 at 3:07 PM, Michal Simek <monstr@monstr.eu> wrote:
-> Hi Bjorn,
+On 08/18/2014 10:21 AM, Inki Dae wrote:
+> This patch adds Exynos3250/3472 SoCs support.
 >
-> On 07/30/2014 01:24 PM, Srikanth Thokala wrote:
->> Hi Arnd,
->>
->> On Mon, Jul 28, 2014 at 6:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->>> On Monday 28 July 2014 18:04:34 Srikanth Thokala wrote:
->>>> Hi Arnd and Rob,
->>>>
->>>> I discussed with Bjorn and we believe this patch is in good shape to
->>>> apply.  And Bjorn requires ACKs to apply this patch.  So, could you
->>>> guys please review this patch and provided your ACKs to this patch.
->>>
->>> Looks great for the most part. I've looked through the whole driver
->>> again, and I have two small issues remaining:
->>>
->>> a) Please clarify in the changeset description why there is no support
->>>    for PCI I/O space.
->>
->> Sure, I will add to my changeset.
->>
->>>
->>> b) I think you should use the 'msi-parent' property, and the
->>>    of_pci_find_msi_chip_by_node() to find the msi_chip for the
->>>    PCI controller. This will make it possible to forward MSIs
->>>    to the main interrupt controller in the system, which is more
->>>    efficient. See the pcie-mvebu driver for an example of this.
->>
->> Ok, I need to look into this and I will plan to implement on top of this patch.
->>
->>>
->>> Other than these:
->>>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>
->> Thanks Arnd for the Ack.
+> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+--
+Regards
+Andrzej
+> ---
+>  .../devicetree/bindings/video/exynos_dsim.txt      |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c            |    8 ++++++++
+>  2 files changed, 9 insertions(+)
 >
-> What's the status on this one?
-
-It looks like Bjorn is on vacation.  I have sent v6 patch by adding
-Ack from Arnd, which
-I feel is in good shape to be applied.
-
->
-> Srikanth:
-> Isn't pcie-xilinx.c better name if this is just pcie host bridge?
-
-Yes, it looks better.  But, many other drivers which are basically
-drivers for PCIe host
-controllers has the prefix 'pci-' in the file name.  So, I feel it
-should be fine and would
-be happy to change if I have to.
-
-Thanks
-Srikanth
-
->
-> Thanks,
-> Michal
->
-> --
-> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-> w: www.monstr.eu p: +42-0-721842854
-> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
->
->
+> diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> index 31036c6..e74243b 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> @@ -2,6 +2,7 @@ Exynos MIPI DSI Master
+>  
+>  Required properties:
+>    - compatible: value should be one of the following
+> +		"samsung,exynos3250-mipi-dsi" /* for Exynos3250/3472 SoCs */
+>  		"samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
+>  		"samsung,exynos5410-mipi-dsi" /* for Exynos5410/5420/5440 SoCs */
+>    - reg: physical base address and length of the registers set for the device
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 9a186c0..a8c0c4f 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -304,6 +304,12 @@ struct exynos_dsi {
+>  #define host_to_dsi(host) container_of(host, struct exynos_dsi, dsi_host)
+>  #define connector_to_dsi(c) container_of(c, struct exynos_dsi, connector)
+>  
+> +static struct exynos_dsi_driver_data exynos3_dsi_driver_data = {
+> +	.plltmr_reg = 0x50,
+> +	.has_freqband = 1,
+> +	.has_clklane_stop = 1,
+> +};
+> +
+>  static struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
+>  	.plltmr_reg = 0x50,
+>  	.has_freqband = 1,
+> @@ -315,6 +321,8 @@ static struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
+>  };
+>  
+>  static struct of_device_id exynos_dsi_of_match[] = {
+> +	{ .compatible = "samsung,exynos3250-mipi-dsi",
+> +	  .data = &exynos3_dsi_driver_data },
+>  	{ .compatible = "samsung,exynos4210-mipi-dsi",
+>  	  .data = &exynos4_dsi_driver_data },
+>  	{ .compatible = "samsung,exynos5410-mipi-dsi",
