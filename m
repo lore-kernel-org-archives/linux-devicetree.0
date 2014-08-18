@@ -1,56 +1,97 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [alsa-devel] [PATCH v3 2/2] mfd: arizona: Update DT binding to
-	support INn_MODE init_data
-Date: Mon, 18 Aug 2014 15:29:45 +0100
-Message-ID: <20140818142945.GD7556@opensource.wolfsonmicro.com>
-References: <20140818200009.12a52dfa@songinha-Samsung-DeskTop-System>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv9 3/3] arm: dts: Add Altera SDRAM controller bindings
+Date: Mon, 18 Aug 2014 09:44:38 -0500
+Message-ID: <53F21156.70400@opensource.altera.com>
+References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-4-git-send-email-tthayer@opensource.altera.com> <53F14DC2.70000@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140818200009.12a52dfa@songinha-Samsung-DeskTop-System>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53F14DC2.70000@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 18, 2014 at 08:00:09PM +0900, Inha Song wrote:
-> This patch update DT binding to support INn_MODE init_data. Each
-> input signal path can be configurated either as a Analogue or
-> Digital using the INn_MODE registers.
-> 
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index 5c7e723..0064b21 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -42,6 +42,14 @@ Optional properties:
->      the chip default will be used.  If present exactly five values must
->      be specified.
->  
-> +  - wlf,inmode : A list of INn_MODE register values, where n is the number
-> +    of input signals. Each input signal path can be configurated either as a
-> +    Analogue or Digital using the INn_MODE registers. If absent, INn_MODE
 
-I would replace the second sentence here with something like
-"Valid values are 0 (Differential), 1 (Single-ended) and 2 (Digital
-Microphone)."
+On 08/17/2014 07:50 PM, Rob Herring wrote:
+> On 07/30/2014 01:22 PM, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Add the Altera SDRAM controller bindings and device tree changes to the Altera SoC project.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> ---
+>> v2: Changes to SoC SDRAM EDAC code.
+>>
+>> v3: Implement code suggestions for SDRAM EDAC code.
+>>
+>> v4: Remove syscon from SDRAM controller bindings.
+>>
+>> v5: No Change, bump version for consistency.
+>>
+>> v6: Only map the ctrlcfg register as syscon.
+>>
+>> v7: No change. Bump for consistency.
+>>
+>> v8: No change. Bump for consistency.
+>>
+>> v9: Changes to support a MFD SDRAM controller with nested EDAC.
+>> ---
+>>   .../devicetree/bindings/arm/altera/socfpga-sdr.txt |   13 +++++++++++++
+>>   arch/arm/boot/dts/socfpga.dtsi                     |   10 ++++++++++
+>>   2 files changed, 23 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
+>> new file mode 100644
+>> index 0000000..2bb1ddf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
+>> @@ -0,0 +1,13 @@
+>> +Altera SOCFPGA SDRAM Controller
+>> +The SDRAM controller is implemented as a MFD so various drivers may
+>> +nest under this main SDRAM controller binding.
+>> +
+>> +Required properties:
+>> +- compatible : "altr,sdr";
+>> +- reg : Should contain 1 register range(address and length)
+>> +
+>> +Example:
+>> +	sdr@0xffc25000 {
+>> +		compatible = "altr,sdr";
+>> +		reg = <0xffc25000 0x1000>;
+>> +	};
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index 4676f25..ecb306d 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -603,6 +603,16 @@
+>>   			};
+>>   		};
+>>   
+>> +		sdr@0xffc25000 {
+>> +			compatible = "altr,sdr";
+>> +			reg = <0xffc25000 0x1000>;
+>> +
+>> +			sdramedac@0 {
+>> +				compatible = "altr,sdram-edac";
+>> +				interrupts = <0 39 4>;
+>> +			};
+> This doesn't match the documentation, but I don't think this is a move
+> in the right direction anyway. Because Linux has/wants an MFD driver is
+> not a reason to add a sub node. It is a single h/w block and DT should
+> reflect that.
+>
+> Rob
+Hi Rob,
+
+Thanks for reviewing. After discussions with the community and 
+internally, I reverted to using the syscon case in revision 10. I 
+apologize for the confusion but the syscon method seems to be a cleaner 
+solution. I submitted the sycon version on 8/11/14.
 
 Thanks,
-Charles
 
-> +    registers set to 0 by default. If present, values must be specified less
-> +    than or equal to the number of input singals. If values less than the
-> +    number of input signals, elements that has not been specifed are set to 0
-> +    by default.
-> +
->    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
->      they are being externally supplied. As covered in
->      Documentation/devicetree/bindings/regulator/regulator.txt
-> -- 
-> 2.0.0.390.gcb682f8
-> 
+Thor
+
