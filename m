@@ -1,57 +1,41 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] mfd: Add hi6421 PMIC core driver
-Date: Mon, 18 Aug 2014 08:57:38 -0500
-Message-ID: <20140818135738.GV14537@sirena.org.uk>
-References: <1408367356-2628-1-git-send-email-guodong.xu@linaro.org>
- <1408367356-2628-5-git-send-email-guodong.xu@linaro.org>
+From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCHv10 3/5] ARM: dts: exynos: unuse the slot-node and deprecate
+ the supports-highspeed for dw-mmc
+Date: Mon, 18 Aug 2014 16:10:29 +0200
+Message-ID: <53F20955.2050806@suse.de>
+References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com> <1407397082-32495-4-git-send-email-jh80.chung@samsung.com> <53F1F027.7060609@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y2illNFYgwJwqOHD"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408367356-2628-5-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, zhangnian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <53F1F027.7060609@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jaehoon,
 
---Y2illNFYgwJwqOHD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am 18.08.2014 14:23, schrieb Jaehoon Chung:
+> Socfpga and Rockchip were queued into each SoC tree.
+> I want to know whether this patch is queued or not into Samsung-Soc t=
+ree.
+> Do you have any other plan for this patch?
 
-On Mon, Aug 18, 2014 at 09:09:14PM +0800, Guodong Xu wrote:
-> This adds driver to support HiSilicon Hi6421 PMIC. Hi6421 includes multi-
-> functions, such as regulators, codec, ADCs, Coulomb counter, etc.
-> This driver includes core APIs _only_.
+It isn't applied in his tree:
 
-Please don't resend already applied patches, if there are any updates
-that need applying please send incremental patches.
+http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/
 
---Y2illNFYgwJwqOHD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In fact Kukjin has not applied any patches for 3 weeks now, which likel=
+y
+means he's on vacation. I am hoping he will review this and the other
+pending conflicting patches to decide on a merge order and fix any
+trivial conflicts himself. ;)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Cheers,
+Andreas
 
-iQIcBAEBAgAGBQJT8gZOAAoJELSic+t+oim9vgsQAIac0+4CETBsFxqFSqoE4xqD
-TJLX06Yw2Aain903XH2rYMxwHSfZGxoI8dbZBn+a1pVXvhxohuLDDtteOR0vTv1E
-WFSh5+s3DAsh8qVQNoiii1lD9nBSl7b4ZQifySuVFBdAfL6XWnOCqYqiiT9j3dlP
-pymY9XM6geDnk2/0kYLCwDh9yGVYs8Dvq7fwkb2HSJkWwyaQSJuF+gviFqpEwrpU
-lc8p8av+vpHM4VYGRNDPOVKCxkwuwFMPMVpwwhu9rMfoOq8sVKms7ngGTNqt6028
-+27br2/tKk42CJKN9zusgORyWcBKkJq8tkSXQl3UWC3G1O4jxosnDUet5cVDO9Ln
-T77C77aZV0KPHYl3umz1SHNFDz57dbTB7gzpbtOpa8z5wWVl0W7cYBwKDXS0mD6O
-k6BtJnNSO3rX8Inx5zsEFPRYli+Rougz3Wm4MtnOsAAmKF7O/18ScUeSHNCii2l4
-L9GspjNqYmLgnvggdGkL1OkpywcncCDxK/qUFTgRHCK53Auu+31X7b2wfwsmbJuo
-F4+0zcZddMD8mVylx8e7RT7eOJHTULcxtApYDjO1OGX+gOHw0SP0Cqd4sp7KMwmt
-4W5fenCpEXlkOkP04xkpajdW+colwJbuiIUfSnFltNy32ErTq0enyQ3jHkxkf/ne
-WSmkxSVi8TRlPdvay/2J
-=TRBH
------END PGP SIGNATURE-----
-
---Y2illNFYgwJwqOHD--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
