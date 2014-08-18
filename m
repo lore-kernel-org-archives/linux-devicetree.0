@@ -1,121 +1,87 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [PATCH 3/7] ARM: meson6: clocksource: add Meson6 timer support
-Date: Mon, 18 Aug 2014 16:11:04 +0200
-Message-ID: <20140818141104.GD28819@carlo-MacBookPro>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org>
- <1408272594-10814-4-git-send-email-carlo@caione.org>
- <53F1EAAA.8020904@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v7 1/8] arm64: kernel: refactor the CPU suspend API for
+ retention states
+Date: Mon, 18 Aug 2014 15:20:30 +0100
+Message-ID: <20140818142030.GB20043@localhost>
+References: <1407945127-27554-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1407945127-27554-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <53F1EAAA.8020904@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
+In-Reply-To: <1407945127-27554-2-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Tomasz Figa <t.figa@samsung.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.ku>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 18, 2014 at 01:59:38PM +0200, Matthias Brugger wrote:
-> On 17/08/14 12:49, Carlo Caione wrote:
-> >+enum {
-> >+	A = 0,
-> >+	B,
-> >+	C,
-> >+	D,
-> >+};
+On Wed, Aug 13, 2014 at 04:52:00PM +0100, Lorenzo Pieralisi wrote:
+> CPU suspend is the standard kernel interface to be used to enter
+> low-power states on ARM64 systems. Current cpu_suspend implementation
+> by default assumes that all low power states are losing the CPU context,
+> so the CPU registers must be saved and cleaned to DRAM upon state
+> entry. Furthermore, the current cpu_suspend() implementation assumes
+> that if the CPU suspend back-end method returns when called, this has
+> to be considered an error regardless of the return code (which can be
+> successful) since the CPU was not expected to return from a code path that
+> is different from cpu_resume code path - eg returning from the reset vector.
 > 
-> You are just using timer A, so this enum is unnecessary. Please use
-> a define instead. Also it would be better, if the define would be
-> explenatory then just the letter 'A'.
-
-In the meson6 SoCs there are 4 timers (TIMERA, TIMERB, TIMERC and
-TIMERD). From the source code released by Amlogic it seems that they
-have exactly the same characteristics and any of them can be used for
-the clockevents. So either I fix the usage of only the TIMERA in the
-driver or use the DTS to specify which one to use.
-
-> >+
-> >+#define TIMER_ISA_MUX		0
-> >+#define TIMER_ISA_E_VAL		0x14
-> >+#define TIMER_ISA_t_VAL(t)	((t + 1) << 2)
-> >+
-> >+#define TIMER_t_INPUT_BIT(t)	(2 * t)
+> All in all this means that the current API does not cope well with low-power
+> states that preserve the CPU context when entered (ie retention states),
+> since first of all the context is saved for nothing on state entry for
+> those states and a successful state entry can return as a normal function
+> return, which is considered an error by the current CPU suspend
+> implementation.
 > 
-> Please put braces around 't'.
-
-Ok
-
-> >+#define TIMER_E_INPUT_BIT	8
+> This patch refactors the cpu_suspend() API so that it can be split in
+> two separate functionalities. The arm64 cpu_suspend API just provides
+> a wrapper around CPU suspend operation hook. A new function is
+> introduced (for architecture code use only) for states that require
+> context saving upon entry:
 > 
-> From the enum above, missing timer E would be 4 so you can use the
-> TIMER_t_INPUT_BIT(t) macro, right?
-
-Right. It was to be consistent since the mask for TIMERE is different.
-But I'll fix it.
-
-> >+#define TIMER_t_INPUT_MASK(t)	(3UL << TIMER_t_INPUT_BIT(t))
-> >+#define TIMER_E_INPUT_MASK	(7UL << TIMER_E_INPUT_BIT)
-> >+#define TIMER_t_ENABLE_BIT(t)	(16 + t)
-> >+#define TIMER_E_ENABLE_BIT	20
-> >+#define TIMER_t_PERIODIC_BIT(t)	(12 + t)
+> __cpu_suspend(unsigned long arg, int (*fn)(unsigned long))
 > 
-> Please put braces around 't'.
-
-I'll do
-
-> >+
-> >+#define TIMER_UNIT_1us		0
-> >+#define TIMER_E_UNIT_1us	1
+> __cpu_suspend() saves the context on function entry and calls the
+> so called suspend finisher (ie fn) to complete the suspend operation.
+> The finisher is not expected to return, unless it fails in which case
+> the error is propagated back to the __cpu_suspend caller.
 > 
-> Please don't use lower case characters in defines.
-
-Ok
-
-<cut>
-
-> >+static void __init meson6_timer_init(struct device_node *node)
-> >+{
-> >+	u32 val;
-> >+	int ret, irq;
-> >+
-> >+	timer_base = of_iomap(node, 0);
+> The API refactoring results in the following pseudo code call sequence for a
+> suspending CPU, when triggered from a kernel subsystem:
 > 
-> Please use of_io_request_and_map instead.
-
-Agree. Fix in v2.
-
-> >+	if (!timer_base)
-> >+		panic("Can't map registers");
-> >+
-> >+	irq = irq_of_parse_and_map(node, 0);
-> >+	if (irq <= 0)
-> >+		panic("Can't parse IRQ");
-> >+
-> >+	/* Set 1us for timer E */
-> >+	val = readl(timer_base + TIMER_ISA_MUX);
-> >+	val &= ~TIMER_E_INPUT_MASK;
-> >+	val |= TIMER_E_UNIT_1us << TIMER_E_INPUT_BIT;
-> >+	writel(val, timer_base + TIMER_ISA_MUX);
-> >+
-> >+	sched_clock_register(meson6_timer_sched_read, 32, USEC_PER_SEC);
-> >+	clocksource_register_khz(&clocksource_timer_e, 1000);
+> /*
+>  * int cpu_suspend(unsigned long idx)
+>  * @idx: idle state index
+>  */
+> {
+> -> cpu_suspend(idx)
+> 	|---> CPU operations suspend hook called, if present
+> 		|--> if (retention_state)
+> 			|--> direct suspend back-end call (eg PSCI suspend)
+> 		     else
+> 			|--> __cpu_suspend(idx, &back_end_finisher);
+> }
 > 
-> Why don't you use clocksource_mmio_init?
-
-No real reason, I just missed that one.
-
-> >+
-> >+	/* Timer A base 1us */
-> >+	val &= ~TIMER_t_INPUT_MASK(A);
-> >+	val |= TIMER_UNIT_1us << TIMER_t_INPUT_BIT(A);
-> >+	writel(val, timer_base + TIMER_ISA_MUX);
+> By refactoring the cpu_suspend API this way, the CPU operations back-end
+> has a chance to detect whether idle states require state saving or not
+> and can call the required suspend operations accordingly either through
+> simple function call or indirectly through __cpu_suspend() which carries out
+> state saving and suspend finisher dispatching to complete idle state entry.
 > 
-> Is this dependant on any clocking of the timer?
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+>  arch/arm64/include/asm/suspend.h |  1 +
+>  arch/arm64/kernel/sleep.S        | 47 +++++++++++++++++++++++++++++-----------
+>  arch/arm64/kernel/suspend.c      | 47 ++++++++++++++++++++++++----------------
+>  3 files changed, 63 insertions(+), 32 deletions(-)
 
-No. At least this is what I can infer from the messy source code released by
-Amlogic. I wish I had any documentation for these SoCs.
-
-Thank you for your review,
- 
--- 
-Carlo Caione
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
