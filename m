@@ -1,82 +1,69 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 2/2] mtd: nand: add sunxi NFC dt bindings doc
-Date: Mon, 18 Aug 2014 19:26:28 +0200
-Message-ID: <1408382788-32153-3-git-send-email-boris.brezillon@free-electrons.com>
-References: <1408382788-32153-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v2 0/4] PWM changes for rk3288-evb
+Date: Mon, 18 Aug 2014 10:29:38 -0700
+Message-ID: <1408382982-2077-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBSXOZCPQKGQESSE5LHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1408382788-32153-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Dmitriy B." <rzk333-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Meyer <quitte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Eddie Cai <eddie.cai@rock-chips.com>, galak@codeaurora.org, olof@lixom.net, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the sunxi NAND Flash Controller dt bindings documentation.
+These patches enable the pwm backlight for the rk3288-evb board.
+There were tested by watching the backlight grow from off to max with
+the following instructions:
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/mtd/sunxi-nand.txt         | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+  cd /sys/class/backlight/backlight*/
+  for i in $(seq 255); do echo $i > brightness; sleep .01; done
 
-diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-new file mode 100644
-index 0000000..798c691
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-@@ -0,0 +1,45 @@
-+Allwinner NAND Flash Controller (NFC)
-+
-+Required properties:
-+- compatible : "allwinner,sun4i-nand".
-+- reg : shall contain registers location and length for data and reg.
-+- interrupts : shall define the nand controller interrupt.
-+- #address-cells: shall be set to 1. Encode the nand CS.
-+- #size-cells : shall be set to 0.
-+- clocks : shall reference nand controller clocks.
-+- clock-names : nand controller internal clock names. Shall contain :
-+    * "ahb_clk" : AHB gating clock
-+    * "sclk" : nand controller clock
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Optional properties:
-+- allwinner,rb : shall contain the native Ready/Busy ids.
-+ or
-+- rb-gpios : shall contain the gpios used as R/B pins.
-+- nand-ecc-mode : one of the supported ECC modes ("hw", "hw_syndrome", "soft",
-+  "soft_bch" or "none")
-+
-+see Documentation/devicetree/mtd/nand.txt for generic bindings.
-+
-+
-+Examples:
-+nfc: nand@01c03000 {
-+	compatible = "allwinner,sun4i-nand";
-+	reg = <0x01c03000 0x1000>;
-+	interrupts = <0 37 1>;
-+	clocks = <&ahb_gates 13>, <&nand_clk>;
-+	clock-names = "ahb_clk", "sclk";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_pins_a &nand_cs0_pins_a &nand_rb0_pins_a>;
-+	status = "okay";
-+
-+	nand@0 {
-+		reg = <0>;
-+		allwinner,rb = <0>;
-+		nand-ecc-mode = "soft_bch";
-+	};
-+};
+The first patch enables the proper IP.  I think it could land in
+Heiko's tree.
+
+The second patch switches PWM cells from 2 to 3 on rk3288.  I think it
+could land in Thierry's tree.  With the PWM subsystem as currently
+structured, I believe this will break backward compatibility.  However
+the rk3288 PWM driver was added so recently (and the rk3288 is so new)
+that this seems OK.  In the worst case if someone yells that they are
+broken, I believe we could fix this in Linux by saying that if a PWM
+driver specifies 3 cells and the DTS definition of the PWM says 2
+cells that we'll just pretend that we have no flags.
+
+The 3rd and 4th patches are DTS ones.  They could land in Heiko's tree
+after the second patch has landed.  They are based atop his current
+WIP 3.18 dts tree.  Note that instantiating the PWM backlight will
+cause the system to hang unless Heiko's (clk: rockchip: protect
+critical clocks from getting disabled)
+<patchwork.kernel.org/patch/4725391> is landed.
+
+There are no compile time or runtime dependencies between these
+patches except that patch #3 needs to come before patch #4.  ...and of
+course the PWM won't work without all 4 patches.
+
+Changes in v2:
+- Check for failed ioremap()
+
+Doug Anderson (4):
+  ARM: rockchip: rk3288: Switch to use the proper PWM IP
+  pwm: rockchip: Allow polarity invert on rk3288
+  ARM: dts: Add main PWM info to rk3288
+  ARM: dts: Enable pwm backlight on rk3288-EVB
+
+ .../devicetree/bindings/pwm/pwm-rockchip.txt       |  4 +-
+ arch/arm/boot/dts/rk3288-evb.dtsi                  | 53 +++++++++++++++++
+ arch/arm/boot/dts/rk3288.dtsi                      | 68 ++++++++++++++++++++++
+ arch/arm/mach-rockchip/rockchip.c                  | 24 ++++++++
+ drivers/pwm/pwm-rockchip.c                         | 32 +++++++++-
+ 5 files changed, 177 insertions(+), 4 deletions(-)
+
 -- 
-1.9.1
+2.1.0.rc2.206.gedb03e5
