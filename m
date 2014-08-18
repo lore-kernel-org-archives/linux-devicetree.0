@@ -1,85 +1,48 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 4/7] ARM: meson: add basic support for MesonX SoCs
-Date: Mon, 18 Aug 2014 17:10:39 +0200
-Message-ID: <CABuKBeLSJkxPM_gyhGXN5pft0R4-+RrdiURuPwH9VxA-cSzQNQ@mail.gmail.com>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org>
-	<1408272594-10814-5-git-send-email-carlo@caione.org>
-	<20140817142115.GB15297@lukather>
-	<20140818132713.GA28819@carlo-MacBookPro>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ASoC: fsl-asrc: Convert to use regmap framework's endianness
+ method.
+Date: Mon, 18 Aug 2014 20:54:13 +0530
+Message-ID: <53F21A9D.4010507@gmail.com>
+References: <1408352215-12014-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20140818132713.GA28819@carlo-MacBookPro>
-Sender: linux-serial-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg KH <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Beniamino Galvani <b.galvani@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, jslaby@suse.cz, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408352215-12014-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-08-18 15:27 GMT+02:00 Carlo Caione <carlo@caione.org>:
-> On Sun, Aug 17, 2014 at 04:21:15PM +0200, Maxime Ripard wrote:
->> Hi Carlo,
->
-> Hi Maxime,
-> thank you for reviewing also these patches, I'll keep you in CC for the
-> next revisions if you are interested.
->
->> > +static __init void meson_init_machine_devicetree(void)
->> > +{
->> > +   of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
->> > +}
->>
->> This is the default, you can just remove it
->
-> Agree
->
->> > +static const char * const m6_common_board_compat[] = {
->> > +   "amlogic,8726_mx",
->> > +   "amlogic,8726_mxs",
->> > +   "amlogic,8726_mxl",
->> > +   "amlogic,meson6",
->>
->> Why are all those compatibles needed? Usually, you add a single one
->> per SoC (which would be the last in your case I guess.
->
-> They are taken from the weird DTS in the original Amlogic sources but I
-> guess you are right. I am actually more inclined to just leave "8726_mx"
-> and "meson6" since online you can find equally both the versions for
-> exactly the same SoCs.
->
->> > +   NULL,
->> > +};
->> > +
->> > +DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
->> > +   .init_machine   = meson_init_machine_devicetree,
->>
->> And since you don't need the init machine, you can just use the
->> generic machine support. I'm not sure what's been decided on this,
->> should we remove such empty machines?
->
-> I can get rid of the .init_machine but what about the .dt_compat field?
 
-AFIAK there is no consensus about that.
-For now I would leave the .dt_compat field. There are proposals which
-try to get rid of the name_str
-in the DT_MACHINE_START [0], but from what I know they are not yet merged.
-
-Cheers,
-Matthias
-
-[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/208878.html
-
+On Monday 18 August 2014 02:26 PM, Xiubo Li wrote:
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
 >
-> Thanks,
+> This is depended on the following regmap framework patches, which have
+> just been merged into linux-next tree:
 >
-> --
-> Carlo Caione
+> https://lkml.org/lkml/2014/7/15/6
+> https://lkml.org/lkml/2014/7/15/5
+> https://lkml.org/lkml/2014/7/15/7
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
+>
+>
+>
+>   Documentation/devicetree/bindings/sound/fsl,asrc.txt | 10 +++++++---
+>   sound/soc/fsl/fsl_asrc.c                             |  6 +-----
+>   2 files changed, 8 insertions(+), 8 deletions(-)
+>
+Reviewed-by: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 
+--
+Regards,
+Varka Bhadram.
 
--- 
-motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
