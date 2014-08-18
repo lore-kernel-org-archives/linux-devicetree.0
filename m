@@ -1,101 +1,91 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [RFC PATCH 4/9] of: Add property_ops callback for devices with
- of_node
-Date: Mon, 18 Aug 2014 12:29:37 +0300
-Message-ID: <20140818092937.GT2462@lahna.fi.intel.com>
-References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
- <1408255459-17625-5-git-send-email-mika.westerberg@linux.intel.com>
- <20140817125416.348C0C41368@trevor.secretlab.ca>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v2 1/2] dma: Add Xilinx Central DMA DT Binding
+ Documentation
+Date: Mon, 18 Aug 2014 15:07:08 +0530
+Message-ID: <CA+mB=1+coeN9Qcm_CmEwzK4fETiWdZdcskcxjcFNEomjN98sKA@mail.gmail.com>
+References: <1407238791-3370-1-git-send-email-sthokal@xilinx.com>
+ <53E0C70E.2010603@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140817125416.348C0C41368@trevor.secretlab.ca>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53E0C70E.2010603@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, svemula@xilinx.com, Michal Simek <michal.simek@xilinx.com>, Srikanth Thokala <sthokal@xilinx.com>, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, anirudh@xilinx.com, Grant Likely <grant.likely@linaro.org>, "Williams,
+ Dan J" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 17, 2014 at 01:54:16PM +0100, Grant Likely wrote:
-> On Sun, 17 Aug 2014 09:04:14 +0300, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> > From: Aaron Lu <aaron.lu@intel.com>
-> > 
-> > With the unified device properties interface in place, add device tree support.
-> > By adding the dev_prop_ops for of_node devices, drivers can access properties
-> > from ACPI or Device Tree in a generic way.
-> > 
-> > Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-> > Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> Hi Mika,
-> 
-> As commented on patch 3, the new API currently throws away type
-> information so the compiler won't warn on an error. That needs to be
-> fixed and this patch reworked accordingly.
+Hi Varka Bhadram,
 
-The compiler should warn when we add static inline property accessor
-functions for each type.
+On Tue, Aug 5, 2014 at 5:29 PM, Varka Bhadram <varkabhadram@gmail.com> wrote:
+> On 08/05/2014 05:09 PM, Srikanth Thokala wrote:
+>>
+>> Device-tree binding documentation of Xilinx Central DMA Engine
+>>
+>> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+>> ---
+>> Changes in v2:
+>> - Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
+>>    to match the implementation.
+>>
+>> ---
+>>   .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt |   54
+>> ++++++++++++++++++++
+>>   1 file changed, 54 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+>> b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+>> new file mode 100644
+>> index 0000000..b04f76b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+>> @@ -0,0 +1,54 @@
+>> +Xilinx AXI CDMA engine, it does transfers between memory-mapped source
+>> +address and a memory-mapped destination address.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "xlnx,axi-cdma-1.00.a"
+>> +- #dma-cells: Should be <1>, see "dmas" property below
+>> +- reg: Should contain cdma registers location and length.
+>> +- dma-channel child node: Should have only one channel
+>> +
+>> +
+>
+>
+> proper alignment for all the properties...
+> Required properties:
+> - compatible    : Should be "xlnx,axi-cdma-1.00.a"
+>
+> - #dma-cells    : Should be <1>, see "dmas" property below
+> - reg           : Should contain cdma registers location and length.
+> .....
 
-> 
-> g.
-> 
-> ---
-> >  drivers/of/base.c        | 194 ++++++++++++++++++++++++++++++++++++++++++++++-
-> >  drivers/of/platform.c    |   4 +-
-> >  include/linux/property.h |   4 +
-> >  3 files changed, 200 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index b9864806e9b8..527004d01423 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -20,7 +20,7 @@
-> >  #include <linux/ctype.h>
-> >  #include <linux/cpu.h>
-> >  #include <linux/module.h>
-> > -#include <linux/of.h>
-> > +#include <linux/property.h>
-> >  #include <linux/of_graph.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/slab.h>
-> > @@ -1343,6 +1343,39 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
-> >  EXPORT_SYMBOL_GPL(of_property_read_u64);
-> >  
-> >  /**
-> > + * of_property_read_u64_array - Find and read an array of 64 bit integers
-> > + * from a property.
-> > + *
-> > + * @np:		device node from which the property value is to be read.
-> > + * @propname:	name of the property to be searched.
-> > + * @out_values:	pointer to return value, modified only if return value is 0.
-> > + * @sz:		number of array elements to read
-> > + *
-> > + * Search for a property in a device node and read 64-bit value(s) from
-> > + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> > + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> > + * property data isn't large enough.
-> > + *
-> > + * The out_values is modified only if a valid u64 value can be decoded.
-> > + */
-> > +int of_property_read_u64_array(const struct device_node *np,
-> > +			       const char *propname, u64 *out_values,
-> > +			       size_t sz)
-> > +{
-> > +	const __be32 *val = of_find_property_value_of_size(np, propname,
-> > +						(sz * sizeof(*out_values)));
-> > +
-> > +	if (IS_ERR(val))
-> > +		return PTR_ERR(val);
-> > +
-> > +	while (sz--) {
-> > +		*out_values++ = of_read_number(val, 2);
-> > +		val += 2;
-> > +	};
-> > +	return 0;
-> > +}
-> 
-> Considering we don't even have a user of u64 arrays in all of the DT
-> drivers, do we even need this type hook in the generic API?
+I would like to change, but is it documented anywhere? Because, I didn't
+receive any such comments on other drivers, so I am just wondering.
 
-Indeed, I think we can remove it for now.
+Thanks
+Srikanth
+
+>
+>
+>
+> --
+> Regards,
+> Varka Bhadram.
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
