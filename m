@@ -1,102 +1,79 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] mtd: nand: add sunxi NFC dt bindings doc
-Date: Mon, 18 Aug 2014 20:58:10 +0200
-Message-ID: <20140818185810.GG15297@lukather>
-References: <1408382788-32153-1-git-send-email-boris.brezillon@free-electrons.com>
- <1408382788-32153-3-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: OMAP2+: board-generic: add support for AM57xx family
+Date: Mon, 18 Aug 2014 14:07:55 -0500
+Message-ID: <1408388875-7360-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6S+CllbbV/7E5K18"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNE2ZGPQKGQE6TTZTZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408382788-32153-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Dmitriy B." <rzk333-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Meyer <quitte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+AM57xx processor family are variants of DRA7 family of processors and
+targetted at industrial and non-automotive applications.
 
---6S+CllbbV/7E5K18
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+---
 
-Hi Boris,
+NOTE: there is no discrenable features yet defined in register set at
+this point in time.
 
-On Mon, Aug 18, 2014 at 07:26:28PM +0200, Boris BREZILLON wrote:
-> Add the sunxi NAND Flash Controller dt bindings documentation.
->=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/sunxi-nand.txt         | 45 ++++++++++++++++=
-++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Docum=
-entation/devicetree/bindings/mtd/sunxi-nand.txt
-> new file mode 100644
-> index 0000000..798c691
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-> @@ -0,0 +1,45 @@
-> +Allwinner NAND Flash Controller (NFC)
-> +
-> +Required properties:
-> +- compatible : "allwinner,sun4i-nand".
+Tested on AM5728 compatible platform and based on v3.17-rc1
 
-The pattern we usually have for the sunxi SoCs is
-allwinner,family-soc-*, which would be allwinner,sun4i-a10-nand in
-this case.
+ .../devicetree/bindings/arm/omap/omap.txt          |   12 ++++++++++++
+ arch/arm/mach-omap2/board-generic.c                |    4 ++++
+ 2 files changed, 16 insertions(+)
 
-> +- reg : shall contain registers location and length for data and reg.
-> +- interrupts : shall define the nand controller interrupt.
-> +- #address-cells: shall be set to 1. Encode the nand CS.
-> +- #size-cells : shall be set to 0.
-> +- clocks : shall reference nand controller clocks.
-> +- clock-names : nand controller internal clock names. Shall contain :
-> +    * "ahb_clk" : AHB gating clock
-> +    * "sclk" : nand controller clock
+diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+index 0edc903..ddd9bcd 100644
+--- a/Documentation/devicetree/bindings/arm/omap/omap.txt
++++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+@@ -85,6 +85,18 @@ SoCs:
+ - DRA722
+   compatible = "ti,dra722", "ti,dra72", "ti,dra7"
+ 
++- AM5728
++  compatible = "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7"
++
++- AM5726
++  compatible = "ti,am5726", "ti,dra742", "ti,dra74", "ti,dra7"
++
++- AM5718
++  compatible = "ti,am5718", "ti,dra722", "ti,dra72", "ti,dra7"
++
++- AM5716
++  compatible = "ti,am5716", "ti,dra722", "ti,dra72", "ti,dra7"
++
+ - AM4372
+   compatible = "ti,am4372", "ti,am43"
+ 
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index 9480997..bdb5194 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -241,6 +241,8 @@ MACHINE_END
+ 
+ #ifdef CONFIG_SOC_DRA7XX
+ static const char *dra74x_boards_compat[] __initconst = {
++	"ti,am5728",
++	"ti,am5726",
+ 	"ti,dra742",
+ 	"ti,dra7",
+ 	NULL,
+@@ -260,6 +262,8 @@ DT_MACHINE_START(DRA74X_DT, "Generic DRA74X (Flattened Device Tree)")
+ MACHINE_END
+ 
+ static const char *dra72x_boards_compat[] __initconst = {
++	"ti,am5718",
++	"ti,am5716",
+ 	"ti,dra722",
+ 	NULL,
+ };
+-- 
+1.7.9.5
 
-And we're usually using "ahb" and "mod" in such a case.
-
-It looks fine otherwise.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---6S+CllbbV/7E5K18
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT8kzCAAoJEBx+YmzsjxAgovsQAKVS7HRggRv6xTKlPP+3jzTx
-I3nWydlAfO9HJ5U9lxJ1CUZeuptXVq+rfqNmNqrMNyJzFYjrYAIqryaKeM4CP0b6
-WV6rTX2u6nBJ2mmRi4lx1WRnAaCBrqsl7QOMAyPhdAJQzd23vidvDLXKB1XnFLhQ
-jDFC5bO00XhCOoCrtVlVekWUu18s5aY28VjcaJP/xxok2aQsh/DVqoHPNrh8Fx4d
-kEcI8MscDOsbpSz5PugHo7B4vuKfJ7Rd86B76oYXqHi5FbInj1xwqVb69gGvO/AX
-qkizphhrmDJGvGHR7xTE3K6m1nx6eCLdfP2PQpPSwePRsZ4m0tO3NooNbgnhOdhN
-I8LVjZzgL0Kn9VP+JNVqDY15hEoFRrdjKYPTZh5/1TcEA0pwEOX6TydCVviAko5e
-G95+H6meVCKEPuxGP5zO0S5CL1Cv+kyfVXGm89CWp3Vp46uU9Xc+UW0aBh2BeVsB
-IHxfwKCg8S7ThVPOYtK/0x52XPW+psfFrnDieCFwfckOkAFiVu4LA5RNipWHn0ad
-w5lxIUutIwmNlcXw2PwwekTIL6h6P6mqPT9O+JyPlrxtdHvsOiFR0x09RiV7Rhv4
-O89ArjzKtT103BVMDc+EQeSbkg4Q3lGHSryL1mnomZDdzPZJNrwhrxS2m/0vxyv4
-HCFs0yjEqw26oNACMB6k
-=CIrS
------END PGP SIGNATURE-----
-
---6S+CllbbV/7E5K18--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
