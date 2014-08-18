@@ -1,43 +1,57 @@
-From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] omap-serial high-speed fixes/improvements
-Date: Mon, 18 Aug 2014 16:45:21 +0200
-Message-ID: <20140818144521.GB9319@ci00147.xsens-tech.local>
-References: <1406645577-18620-1-git-send-email-frans.klaver@xsens.com>
- <20140818134507.GC9662@saruman.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/9] arm: mediatek: Add more basic features
+Date: Mon, 18 Aug 2014 16:58:28 +0200
+Message-ID: <1408373917-10002-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140818134507.GC9662-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, anders.berg-M7mHMAq9Yzo@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, srv_yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 18, 2014 at 08:45:08AM -0500, Felipe Balbi wrote:
-> Hi,
-> 
-> On Tue, Jul 29, 2014 at 04:52:54PM +0200, Frans Klaver wrote:
-> > Hi,
-> > 
-> > Here's a couple of patches that should improve the behavior of the omap serial
-> > driver at high data rates and baud rates.
-> > 
-> > I was actually surprised to see that proper dma support isn't there yet, but
-> > there you go. Anyone got news on that, by the way?
-> 
-> please resend these patches and make sure you get the right Cc list.
-> 
-> You're missing linux-omap, Tony Lingren, linux-arm-kernel...
-> scripts/get_maintainer.pl would give you a more exaustive list of
-> people to Cc.
+This patch set adds some minor changes to the Mediatek mt6589 support.
 
-This CC list is what I got from get_maintainer.pl. I should have at
-least remembered to add linux-omap, though. I take it everyone gets all
-patches for consistency?
+The most important patch enables the arm arch timer for mt6589. As already seen
+on other vendor SoCs, to enable the arch timer we have to enable a SoC timer.
+This should be normally done by the bootloader. As up to now no open source
+bootloader exists for the mt6589, I added the functionality to the init_time
+function.
 
-Thanks,
-Frans
+Other features are low-level debugging on the mt6589, the addition to the
+"make dtbs" and multi_v7_defconfig, as well as a small typo in the dtsi file.
+
+The patch set is based on v3.17-rc1
+
+Changes for v2:
+- rebased on v3.17-rc1
+- add patch for the compatible property of aquaris5
+- add patch setting GIC compatible string to new "arm,cortex-a7-gic"
+- set ARM arch timer frequency in DTS
+
+--- 
+
+Matthias Brugger (9):
+  arm: dts: Build dtb for Mediatek board
+  arm: multi_v7_defconfig: Enable Mediatek platform
+  arm: dts: mt6589: Fix typo in GIC unit address
+  arm: mediatek: Add earlyprintk support for mt6589
+  arm: dts: mt6589-aquaris5: Add boot argument earlyprintk
+  arm: mediatek: enable gpt6 on boot up to make arch timer working
+  arm: dts: mt6589: Add arm arch timer node
+  arm: dts: mediatek: Add compatible property for aquaris5
+  arm: dts: mt6589: Change compatible string for GIC
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    6 +++++
+ arch/arm/Kconfig.debug                             |   10 ++++++++
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |    5 ++++
+ arch/arm/boot/dts/mt6589.dtsi                      |   17 ++++++++++---
+ arch/arm/configs/multi_v7_defconfig                |    1 +
+ arch/arm/mach-mediatek/mediatek.c                  |   26 ++++++++++++++++++++
+ 7 files changed, 62 insertions(+), 4 deletions(-)
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
