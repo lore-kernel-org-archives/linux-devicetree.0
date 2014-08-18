@@ -1,55 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi: fsl-dspi: Convert to use regmap framework's
- endianness method.
-Date: Mon, 18 Aug 2014 09:43:13 -0500
-Message-ID: <20140818144313.GB14537@sirena.org.uk>
-References: <1408348100-28819-1-git-send-email-Li.Xiubo@freescale.com>
+From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] omap-serial high-speed fixes/improvements
+Date: Mon, 18 Aug 2014 16:45:21 +0200
+Message-ID: <20140818144521.GB9319@ci00147.xsens-tech.local>
+References: <1406645577-18620-1-git-send-email-frans.klaver@xsens.com>
+ <20140818134507.GC9662@saruman.home>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="edESjMboOAwUFn6i"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1408348100-28819-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140818134507.GC9662-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Aug 18, 2014 at 08:45:08AM -0500, Felipe Balbi wrote:
+> Hi,
+> 
+> On Tue, Jul 29, 2014 at 04:52:54PM +0200, Frans Klaver wrote:
+> > Hi,
+> > 
+> > Here's a couple of patches that should improve the behavior of the omap serial
+> > driver at high data rates and baud rates.
+> > 
+> > I was actually surprised to see that proper dma support isn't there yet, but
+> > there you go. Anyone got news on that, by the way?
+> 
+> please resend these patches and make sure you get the right Cc list.
+> 
+> You're missing linux-omap, Tony Lingren, linux-arm-kernel...
+> scripts/get_maintainer.pl would give you a more exaustive list of
+> people to Cc.
 
---edESjMboOAwUFn6i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This CC list is what I got from get_maintainer.pl. I should have at
+least remembered to add linux-omap, though. I take it everyone gets all
+patches for consistency?
 
-On Mon, Aug 18, 2014 at 03:48:20PM +0800, Xiubo Li wrote:
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Chao Fu <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Applied, thanks.
-
---edESjMboOAwUFn6i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT8hD+AAoJELSic+t+oim9P08QAI46pf8BkHNjwYdTSJ2S6Iwm
-4jyfX7tZ7drxxwoTu+oxm8YOxNywTQj044jQv0KmTpvW08MNYaEM94eEXbfE9q42
-C0TSmTQ3p8mgDqRtsQKll+sZktIJMmVS/Jd6ncpssh1LEZrbktLrmFDahFIbLHGZ
-GFTq5Vrt1fROSuokwrtEi2Wi0xw6oj9ksloAklCZ1ryqL0FJ+RPg1AynTJ/UgUrL
-khHpOhsMVJd1j5yC5K2PTRBTKZiZcqiplFrjrVHqv1khDExNXrvsHeTx4nvyt3Bu
-wgY/nf/sFlJXLnNVCsomIFzmPIuUWmAldNhIjB4dObjMaq6oLksOrJuDJXYVyoRA
-d2LwSujbZCJxqwGdINVJYhw8Yb0S07wd3x312Pp9qImdvyfBCxPZmNUO11I4NaFd
-AB8warnEfU0YlA7gBJwYo0Acodi21EK2AWLtfhPLpNA0m0PqbP+/Q8g883aCBvJA
-dH8pvWdWD/2qLqqaIqbqUHA4C8VPSezRh9X2EECNZQIjla+/Co643q2iLXD64MFm
-iW466yhu2iPegSm2cXep2hcmBhaZrYeuW3lqM8zRUyS8Jrr5bUUVXeXvtGhU/e7v
-r+CMEIU9+ZT5kaeHuUh9Cb/p9Qmc4VeOgeN4WwR2Y/H26p3NSsyL9cSakjhXRDOt
-AqFOWM7L896j6wvsLX1c
-=slOk
------END PGP SIGNATURE-----
-
---edESjMboOAwUFn6i--
+Thanks,
+Frans
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
