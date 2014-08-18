@@ -1,77 +1,57 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] arm64: Add new cpu-return-addr device tree binding
-Date: Mon, 18 Aug 2014 10:21:56 +0100
-Message-ID: <20140818092156.GA14559@leverpostej>
-References: <1408132130.22761.64.camel@smoke>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 3/5] ARM: dts: add fimd device node to exynos3250.dsti
+Date: Mon, 18 Aug 2014 11:23:02 +0200
+Message-ID: <53F1C5F6.5050406@samsung.com>
+References: <1408350093-26220-1-git-send-email-inki.dae@samsung.com>
+ <1408350093-26220-4-git-send-email-inki.dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408132130.22761.64.camel@smoke>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1408350093-26220-4-git-send-email-inki.dae@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Geoff,
-
-On Fri, Aug 15, 2014 at 08:48:50PM +0100, Geoff Levand wrote:
-> Add a new device tree binding cpu-return-addr.  This binding is required for
-> all ARM v8 CPUs that have an "enable-method" property value of "spin-table". The
-> value is a 64 bit read-only physical address that secondary CPU execution will
-> transfer to upon CPU shutdown.
-
-As we already have implementations of spin-table which won't necessarily
-be able to implement cpu-return-addr I do not think this can be required
-for all spin-table implementations.
-
-Given that it's probably not worth updating the topology documentation.
-
-> Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> ---
-> Hi All,
-> 
-> We currently have no way for arm64 spin-table CPUs to re-enter the spin
-> table code, and some way to do so is needed to implement a hot-plug
-> cpu_die() for these CPUs.  
-> 
-> I just wanted to get this binding patch out for review now.  I have other
-> patches that implement the spin-table hot-plug in my kexec repo [1].
-> 
-> Please consider.
-> 
-> -Geoff
-> 
-> [1] https://git.linaro.org/people/geoff.levand/linux-kexec.git
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt     | 26 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/arm/topology.txt | 16 +++++++++++++
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 1fe72a0..24b98a9 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -201,6 +201,16 @@ nodes to be present and contain the properties described below.
->  			  property identifying a 64-bit zero-initialised
->  			  memory location.
->  
-> +	- cpu-return-addr
-> +		Usage: required for all ARM v8 CPUs that have an "enable-method"
-> +		       property value of "spin-table".
-> +		Value type: <prop-encoded-array>
-> +		Definition:
-> +			# On ARM v8 64-bit systems must be a two cell property.
-> +			The value is a 64 bit read-only physical address that
-> +			secondary CPU execution will transfer to upon CPU
-> +			shutdown.
-
-I'm not sure what's meant by read-only here. We're never likely to read
-anything from that physical address, just branch the CPU there.
-
-Cheers,
-Mark.
+On 08/18/2014 10:21 AM, Inki Dae wrote:
+> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Andrzej
+> ---
+>  arch/arm/boot/dts/exynos3250.dtsi |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> index 1d52de6..0ec2584 100644
+> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> @@ -216,6 +216,18 @@
+>  			interrupts = <0 240 0>;
+>  		};
+>  
+> +		fimd: fimd@11c00000 {
+> +			compatible = "samsung,exynos3250-fimd";
+> +			reg = <0x11c00000 0x30000>;
+> +			interrupt-names = "fifo", "vsync", "lcd_sys";
+> +			interrupts = <0 84 0>, <0 85 0>, <0 86 0>;
+> +			clocks = <&cmu CLK_SCLK_FIMD0>, <&cmu CLK_FIMD0>;
+> +			clock-names = "sclk_fimd", "fimd";
+> +			samsung,power-domain = <&pd_lcd0>;
+> +			samsung,sysreg = <&sys_reg>;
+> +			status = "disabled";
+> +		};
+> +
+>  		mshc_0: mshc@12510000 {
+>  			compatible = "samsung,exynos5250-dw-mshc";
+>  			reg = <0x12510000 0x1000>;
