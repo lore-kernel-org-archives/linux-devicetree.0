@@ -1,66 +1,83 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] ASoC: fsl-asrc: Convert to use regmap framework's
- endianness method.
-Date: Mon, 18 Aug 2014 12:03:14 +0000
-Message-ID: <e2a8e001e3d945a9ba9fafc1cfebe0a8@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1408352215-12014-1-git-send-email-Li.Xiubo@freescale.com>,<20140818095155.GD14559@leverpostej>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 3/6] irqchip: irq-st: Add documentation for STi based
+ syscfg IRQs
+Date: Mon, 18 Aug 2014 08:05:45 -0400
+Message-ID: <20140818120545.GQ12769@titan.lakedaemon.net>
+References: <1406642744-22589-1-git-send-email-lee.jones@linaro.org>
+ <1406642744-22589-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140818095155.GD14559@leverpostej>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1406642744-22589-4-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, tglx@linutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 10 +++++++---
->>  sound/soc/fsl/fsl_asrc.c                             |  6 +-----
->>  2 files changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
->> index b93362a..791f372 100644
->> --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
->> +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
->> @@ -26,9 +26,12 @@ Required properties:
->>       "ipg"             Peripheral clock to driver module.
->>       "asrck_<0-f>"     Clock sources for input and output clock.
->>
->> -   - big-endian              : If this property is absent, the little endian mode
->>-                       will be in use as default. Otherwise, the big endian
->> -                       mode will be in use for all the device registers.
->> +   - big-endian              : If this property is absent, the native endian mode
->> +                       (same with CPU) will be in use as default. Otherwise,
->> +                       the big endian mode will be in use for all the device
->> +                       registers.
->> +                       See Documentation/devicetree/bindings/regmap/regmap.txt
->> +                       for more detail.
->
->Why does this have to change the semantics of the DT binding?
->
+Hey Lee,
 
-I'm thinking that maybe in the late fulture, this device will be applied to some PowerPC SoC, 
-from the regmap framework code, we can see that the 'big-endian' property could be ignored.
+Rob, Grant, question for you below:
 
-So,in this case,  if it is absent, the default endian mode should be used as defualt or native as 
-the regmap framework said.
+On Tue, Jul 29, 2014 at 03:05:41PM +0100, Lee Jones wrote:
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  .../interrupt-controller/st,sti-irq-syscfg.txt     | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+> new file mode 100644
+> index 0000000..ced6014
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+> @@ -0,0 +1,35 @@
+> +STMicroelectronics STi System Configuration Controlled IRQs
+> +-----------------------------------------------------------
+> +
+> +On STi based systems; External, CTI (Core Sight), PMU (Performance Management),
+> +and PL310 L2 Cache IRQs are controlled using System Configuration registers.
+> +This driver is used to unmask them prior to use.
 
-Thanks,
+We don't usually refer to the driver in binding docs as they are
+supposed to be OS-agnostic.
 
-BRs
-Xiubo
+> +
+> +Required properties:
+> +- compatible	: Should be set to one of:
+> +			"st,stih415-irq-syscfg"
+> +			"st,stih416-irq-syscfg"
+> +			"st,stih407-irq-syscfg"
+> +			"st,stid127-irq-syscfg"
+> +- st,syscfg	: Phandle to Cortex-A9 IRQ system config registers
+> +- st,irq-device	: Array of IRQs to enable - should be 2 in length
+> +- st,fiq-device	: Array of FIQs to enable - should be 2 in length
+> +
+> +Optional properties:
+> +- st,invert-ext	: External IRQs can be inverted at will.  This property inverts
+> +		  these IRQs using bitwise logic.  A number of defines have been
+> +		  provided for convenience:
+> +			ST_IRQ_SYSCFG_EXT_1_INV
+> +			ST_IRQ_SYSCFG_EXT_2_INV
+> +			ST_IRQ_SYSCFG_EXT_3_INV
+> +Example:
 
+Rob, Grant, should we be mingling implementation details (macros from
+include files) with the binding documentation?  It just _seems_ wrong
+too me.  But if we agree that the binding docs, the dts files, and their
+includes are always kept together, I also don't see the harm...
 
+> +
+> +irq-syscfg {
+> +	compatible    = "st,stih416-irq-syscfg";
+> +	st,syscfg     = <&syscfg_cpu>;
+> +	st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
+> +			<ST_IRQ_SYSCFG_PMU_1>;
+> +	st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
+> +			<ST_IRQ_SYSCFG_DISABLED>;
+> +	st,invert-ext = <(ST_IRQ_SYSCFG_EXT_1_INV | ST_IRQ_SYSCFG_EXT_3_INV)>;
+> +};
 
->
->
->Mark.
->
->>
->>     - fsl,asrc-rate   : Defines a mutual sample rate used by DPCM Back Ends.
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thx,
+
+Jason.
